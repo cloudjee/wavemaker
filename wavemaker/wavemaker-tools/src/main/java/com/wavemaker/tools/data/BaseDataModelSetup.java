@@ -39,6 +39,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
@@ -46,6 +47,7 @@ import com.wavemaker.runtime.data.dialect.MySQLDialect;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.JDBCUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
@@ -172,6 +174,16 @@ public abstract class BaseDataModelSetup {
 
     public BaseDataModelSetup(Project project) {
         this.project = project;
+        RuntimeAccess runtimeAccess;
+        try {
+            runtimeAccess = RuntimeAccess.getInstance();
+            if (runtimeAccess != null) {
+                this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
+                this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+                this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
+            }
+        } catch (WMRuntimeException ex) {
+        }        
     }
 
     private final WMHibernateToolTask parentTask = new WMHibernateToolTask();

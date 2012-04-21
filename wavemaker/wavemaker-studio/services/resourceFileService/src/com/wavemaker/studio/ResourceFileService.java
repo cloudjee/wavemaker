@@ -63,7 +63,7 @@ public class ResourceFileService {
     }
 
     private List<Hashtable<String, Object>> listChildren(Folder folder) {
-        Resources<Resource> list = folder.list(ResourceFiltering.hiddenResources());
+        Resources<Resource> list = folder.list(ResourceFiltering.nonHiddenResources());
         List<Hashtable<String, Object>> children = new ArrayList<Hashtable<String, Object>>();
         for (Resource child : list) {
             children.add(asHashTable(child));

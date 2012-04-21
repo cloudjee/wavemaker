@@ -265,6 +265,7 @@
     "descSideMenuTemplate": "A 800px wide centered page container with header and footer and menu on the left",
     "descTabsTemplate": "Premade page with tabs to navigate between its major sections",
     "descTopMenuTemplate": "Premade page with menubar on top for navigation",
+    "descMobileTemplate": "Premade page designed for tablets",
     
     "descSecurityTemplate": "Logout button and label for showing 'Welcome ' + user's name",
     "descTitleBarTemplate": "One way to structure a title bar for your page",

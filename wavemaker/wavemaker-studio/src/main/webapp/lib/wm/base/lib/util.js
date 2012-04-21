@@ -175,7 +175,9 @@ wm.forEach = function(inObject, inFunc) {
 
 wm.forEachProperty = function(inObject, inFunc) {
 	for (var i in inObject) {
-			inFunc(inObject[i], i);
+	    if (!inObject.hasOwnProperty || inObject.hasOwnProperty(i)) {
+		inFunc(inObject[i], i);
+	    }
 	}
 }
 

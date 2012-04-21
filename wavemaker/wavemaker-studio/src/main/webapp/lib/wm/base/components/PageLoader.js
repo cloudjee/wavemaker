@@ -32,7 +32,7 @@ wm.load = function(inFile, allowCache,async) {
 // And you dont have to put this in try catch block either since that is taken care of.
 wm.dojoScriptLoader = function(uri){
 	try{
-		dojo._loadUri(uri);
+	        dojo._loadUri(uri);
 	}catch(e){
 		console.error(e);
 		return false; // Boolean
@@ -58,6 +58,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	    } else {
 		this.randomNum =  Math.floor(Math.random()*1000000);
 	    }
+	    this.randomParam = window["PhoneGap"] ? "" : "?dojo.preventCache="+this.randomNum;
 		this.inherited(arguments);
 		this._pageConnections = [];
 		this.pageProps = {};
@@ -79,7 +80,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		return dojo.getObject(this.className || "");
 	},
     loadCombinedFiles: function(inName, inPath) {
-	var randpath = inPath + ".a.js?dojo.preventCache="+this.randomNum;
+	var randpath = inPath + ".a.js" + this.randomParam;
 	delete dojo._loadedUrls[randpath];
 	wm.dojoScriptLoader(randpath);
 	var ctor = dojo.getObject(inName);
@@ -95,7 +96,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	    ctor = this.loadCombinedFiles(inName, inPath);
 	}
 	if (!ctor) {
-	    var randpath = inPath + ".js?dojo.preventCache="+this.randomNum;
+	    var randpath = inPath + ".js" +  this.randomParam
 	    delete dojo._loadedUrls[randpath];
 	    wm.dojoScriptLoader(randpath);
 	    ctor = dojo.getObject(inName);
@@ -111,16 +112,16 @@ dojo.declare("wm.PageLoader", wm.Component, {
     },
 	loadSupport: function(inCtor, inPath) {
 		if (!inCtor._supported) {
-		    this.cssLoader.setUrl(inPath + ".css?rand="+this.randomNum);
+		    this.cssLoader.setUrl(inPath + ".css" + this.randomParam);
 			inCtor.css = this.cssLoader.css;
-		    this.htmlLoader.setUrl(inPath + ".html?rand="+this.randomNum);
+		    this.htmlLoader.setUrl(inPath + ".html" + this.randomParam);
 			inCtor.html = this.htmlLoader.html;
 			inCtor.html = inCtor.css = "";
 			
 			// We do not propertly cache the widgets.js file after its been loaded... 
 			// we delete it from memory.  But dojoScriptLoader assumes we keep it in memory and refuses to reload it.
 			// By deleting it from its list of loaded urls, it should always reload.
-		        var randpath = inPath + ".widgets.js?rand=" + this.randomNum;
+		    var randpath = inPath + ".widgets.js" +  this.randomParam;
 		        delete dojo._loadedUrls[randpath];
 		        wm.dojoScriptLoader(randpath);
 			inCtor._supported = true;
@@ -144,7 +145,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	    if (!ctor)
 		ctor = this.loadController(inName, path);
 	    if (ctor) {
-		if (ctor.prototype._cssText === undefined)
+		if (ctor.prototype._cssText === undefined  || wm.isEmpty(ctor.widgets))
 		    this.loadSupport(ctor, path);
 		if (ctor.prototype.i18n) {
 			try {

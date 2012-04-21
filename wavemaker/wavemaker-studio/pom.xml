@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wavemaker</artifactId>
-		<version>6.5.0.BUILD-SNAPSHOT</version>
+		<version>6.5.0.M1</version>
 	</parent>
 	<artifactId>wavemaker-studio</artifactId>
 	<packaging>war</packaging>
@@ -219,6 +219,29 @@
 				<configuration>
 					<wtpContextName>wavemaker</wtpContextName>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>inject studio version info</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- Write Version for Client -->
+								<exec executable="git" outputproperty="version.revision" failifexecutionfails="false">
+									<arg line="rev-parse --verify HEAD"/>
+								</exec>
+						        <replaceregexp file="${basedir}/src/main/webapp/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />
+								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js" match="wm\.version \= '(.*)';" replace="wm.version = '${project.version}';" />
+								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js" match="wm\.fullVersion \= '(.*)';" replace="wm.fullVersion = '${project.version} at ${version.revision}';" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

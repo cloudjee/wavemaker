@@ -25,11 +25,11 @@ dojo.declare("ResourceEditor", wm.Page, {
     },
     setItem: function(inItem) {
 	this.item = inItem;
-
+	this._fullPath = this.item.getFilePath();
 	if (this.item instanceof wm.ImageResourceItem) {
 	    this.editor.hide();
 	    this.picture.show();
-	    var path = this.item.getFilePath();
+	    var path = this._fullPath;
 	    path = path.replace(/\/webapproot/,"");
 	    path = "projects/" + studio.project.getProjectPath() + path;
 	    this.picture.setSource(path);
@@ -38,7 +38,8 @@ dojo.declare("ResourceEditor", wm.Page, {
 	} else {
 	    studio.resourceManagerService.requestAsync("readFile", [this.item.getFilePath()], dojo.hitch(this, "receiveItem"));
 	}
-	this.fullPath.setCaption(this.item.getFilePath());
+	this.fullPath.setCaption(this._fullPath);
+
     },
     receiveItem: function(inResult) {
 	    var text = inResult;
@@ -90,14 +91,14 @@ dojo.declare("ResourceEditor", wm.Page, {
     },
     saveTextEditor: function() {	
 	studio.beginWait("Saving...");
-	studio.resourceManagerService.requestSync("writeFile", [this.item.getFilePath(), this.editor.getDataValue()],
+	studio.resourceManagerService.requestSync("writeFile", [this._fullPath, this.editor.getDataValue()],
 						  dojo.hitch(this, function() {
 						      this.saveBtn.setDisabled(true);
 						      studio.endWait("Saving...");
 						      app.toastSuccess(this.getDictionaryItem("EDITS_SAVED"));
 						      this.editor.clearDirty();
 						      this.editor.focus();
-						      this.onFileChange(this.item.getFilePath(), this.editor.getDataValue());
+						      this.onFileChange(this._fullPath, this.editor.getDataValue());
 						  }),
 						  dojo.hitch(this, function() {
 						      studio.endWait("Saving...");

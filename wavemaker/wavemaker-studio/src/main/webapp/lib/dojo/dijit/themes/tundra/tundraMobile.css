@@ -54,5 +54,4 @@
 /*@ import url("../../../dojox/layout/resources/GridContainer.css"); removed as wm.Dashboard not common */
 /*@ import url("../../../dojox/widget/Portlet/Portlet.css");  removed as wm.Dashboard not common */
 
-@import url("../../../../../../wm/base/widget/themes/default/mtheme.css"); 
 @import url("../../../../../../wm/base/styles/wavemaker.css");

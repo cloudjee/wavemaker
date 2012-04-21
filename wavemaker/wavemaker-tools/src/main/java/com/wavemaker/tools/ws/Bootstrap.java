@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,15 +12,25 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.desktop.launcher.ui;
+package com.wavemaker.tools.ws;
+
+import com.wavemaker.tools.service.ServiceFactoryManager;
 
 /**
- * @author RJ
+ * Registers factories for the web service subsystem.
  * 
+ * @author Frankie Fu
  */
-public interface CancelListener {
+public class Bootstrap {
 
-    public boolean cancelRequested(CancelEvent ev);
+    public static void main(String[] args) {
+        ServiceFactoryManager mgr = ServiceFactoryManager.getInstance();
+        WebServiceFactory fac = new WebServiceFactory();
+        mgr.addServiceDefinitionFactory(fac);
+        mgr.addServiceGeneratorFactory(fac);
+    }
 
-    public void cancelPerformed(CancelEvent ev);
+    private Bootstrap() {
+    }
+
 }

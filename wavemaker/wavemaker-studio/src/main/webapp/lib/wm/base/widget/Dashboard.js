@@ -38,7 +38,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		    this.dijitPortlets = [];
 		dojo.require("dojox.layout.GridContainer");
 		dojo.require("dojox.widget.Portlet");
-		dojorequire("dijit.TooltipDialog");
+		dojo.require("dijit.TooltipDialog");
 		this.inherited(arguments);
             //wm.requireCss("lib.dojo.dijit.layout.ContentPane");
             //wm.requireCss("lib.dojo.dijit.layout.BorderContainer");

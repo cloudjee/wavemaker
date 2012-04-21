@@ -41,6 +41,8 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
 
     private final File root;
 
+    private final ResourceOrigin resourceOrigin = ResourceOrigin.LOCAL_FILE_SYSTEM;
+
     public LocalFileSystem(File root) {
         Assert.notNull(root, "Root must not be null");
         if (!root.exists()) {
@@ -169,5 +171,15 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
         }
         LocalFileSystem other = (LocalFileSystem) obj;
         return this.root.equals(other.root);
+    }
+
+    @Override
+    public ResourceOrigin getResourceOrigin() {
+        return this.resourceOrigin;
+    }
+
+    @Override
+    public Object getOriginalResource() {
+        return this.root;
     }
 }

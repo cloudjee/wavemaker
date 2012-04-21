@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wavemaker-desktop</artifactId>
-		<version>6.5.0.BUILD-SNAPSHOT</version>
+		<version>6.5.0.M1</version>
 	</parent>
 	<artifactId>wavemaker-installer</artifactId>
 	<packaging>pom</packaging>
@@ -93,10 +93,11 @@
 								</copy>
 								
 								<!-- Version -->
-								<echo file="${project.build.directory}/VERSION.txt">Version: ${project.version}
-Build number: ${env.BUILD_NUMBER}
-Job name: ${env.JOB_NAME}
+								<echo file="${project.build.directory}/VERSION.txt">WaveMaker ${project.version} at commit:
         						</echo>
+								<exec executable="git" output="${project.build.directory}/VERSION.txt" append="true" failifexecutionfails="false">
+									<arg line="rev-parse --verify HEAD"/>
+								</exec>	
 							</target>
 						</configuration>
 					</execution>
@@ -155,6 +156,19 @@ Job name: ${env.JOB_NAME}
 												<filter token="VERSION.NUMBER" value="${project.version}" />
 											</filterset>
 										</copy>
+
+										<copy file="${project.build.directory}/LICENSE.txt"                                 
+												tofile="${buildroot}/WaveMaker.app/LICENSE.txt" >
+										</copy>
+
+										<copy file="${project.build.directory}/NOTICE.txt"                                 
+												tofile="${buildroot}/WaveMaker.app/NOTICE.txt" >
+										</copy>
+
+										<copy file="${project.build.directory}/VERSION.txt"                                 
+												tofile="${buildroot}/WaveMaker.app/VERSION.txt" >
+										</copy>
+										
 										<exec executable="chmod" failonerror="true">
 											<arg value="+x" />
 											<arg value="${buildroot}/WaveMaker.app/Contents/MacOS/wmstart.sh" />
@@ -217,6 +231,21 @@ Job name: ${env.JOB_NAME}
 											<fileset dir="${project.build.directory}/contents" />
 										</move>
 
+									   <copy file="${project.build.directory}/LICENSE.txt" 
+											   tofile="${buildroot}/opt/wavemaker-${project.version}/LICENSE" >
+									   </copy>
+
+										<copy file="${project.build.directory}/NOTICE.txt" 
+												tofile="${buildroot}/opt/wavemaker-${project.version}/NOTICE" >
+										</copy>
+
+										<copy file="${project.build.directory}/NOTICE.txt" 
+												tofile="${buildroot}/opt/wavemaker-${project.version}/copyright" >
+										</copy>
+										
+									   <copy file="${project.build.directory}/VERSION.txt" 
+												tofile="${buildroot}/opt/wavemaker-${project.version}/VERSION" >
+										</copy>
 
 										<mkdir dir="${buildroot}/opt/wavemaker-${project.version}/bin" />
 										<copy file="${basedir}/src/linux/bin/wavemaker.sh.template"

@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 //
 // Studio module manifest
 // all loads except for css should be nop in production mode.
@@ -25,12 +25,12 @@ wm.registerPaths(
 wm.loadLibs([
 	"css.wm.base.widget.themes.default.design",
 	"wm.base.Component_design",
-	"wm.base.Widget_design",
+    //"wm.base.Widget_design",
 	"wm.base.Control_design",
 	"wm.base.components.Security_design",
-	"wm.base.components.LiveView_design",
+	"wm.base.components.LiveView_Design",
 	"wm.base.components.Application_design",
-	"wm.base.widget.Box_design",
+    //"wm.base.widget.Box_design",
 	"wm.base.widget.Picture_design",
 	"wm.base.widget.Content_design",
 	"wm.base.widget.Html_design",
@@ -114,6 +114,7 @@ wm.loadLibs([
 wm.loadLibs([
 	"wm.studio.app.StudioApplication",
 	"wm.studio.pages.Studio.Studio",
+    "css.wm.studio.pages.Studio.properties",
 	"wm.studio.app.util",
 	"wm.studio.app.keyconfig",
 	"wm.studio.app.binding",

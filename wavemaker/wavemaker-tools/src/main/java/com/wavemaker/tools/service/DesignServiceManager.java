@@ -1223,7 +1223,7 @@ public class DesignServiceManager {
             }
             // XXX MAV-569 should do a real build here, or actually outside
             // this method maybe
-            SortedSet<Service> s = new TreeSet<Service>();
+            SortedSet<Service> s = new TreeSet<Service>(new ServiceComparator());
             s.add(service);
             generateRuntimeConfiguration(s);
         } catch (JAXBException e) {

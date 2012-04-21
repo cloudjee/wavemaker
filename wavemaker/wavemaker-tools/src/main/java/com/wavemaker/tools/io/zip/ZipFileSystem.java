@@ -121,6 +121,16 @@ public class ZipFileSystem implements FileSystem<ZipFileSystemKey> {
         throw createReadOnlyException();
     }
 
+    @Override
+    public ResourceOrigin getResourceOrigin() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object getOriginalResource() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * create a new {@link ReadOnlyResourceException} that should be thrown on any write operations.
      * 

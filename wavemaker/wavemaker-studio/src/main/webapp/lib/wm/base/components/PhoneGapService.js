@@ -254,6 +254,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 		contact.organization[prop] = inContact.organization[prop];
 	    }
 
+	    contact.rawId = Number(contact.id);
 	    contact.save(
 		function(inResult) {
 		    //alert("Save Success");
@@ -288,9 +289,13 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 						return result;
 					    }
 					    for (var i = 0; i < inResult.length; i++) {
-						inResult[i].phoneNumbers = normalize(inResult[i].phoneNumbers);
-						inResult[i].emails = normalize(inResult[i].emails);
-						inResult[i].urls = normalize(inResult[i].urls);
+						try {
+						    inResult[i].phoneNumbers = normalize(inResult[i].phoneNumbers);
+						    inResult[i].emails = normalize(inResult[i].emails);
+						    inResult[i].urls = normalize(inResult[i].urls);
+						    inResult[i].birthday = Number(inResult[i].birthday);
+						    inResult[i].id = Number(inResult[i].id);
+						} catch(e) {console.error(e);console.log(inResult[i]);}
 						//inResult[i].categories = normalize(inResult[i].categories);
 						//inResult[i].photos = normalize(inResult[i].photos);
 
@@ -326,7 +331,7 @@ wm.typeManager.addType("phonegap.Contact", {internal: false,
 						addresses: {type: "phonegap.Address", isList: true, order: 7, hidden: true},
 						ims: {type: "EntryData", isList: true, order: 8, hidden: true},
 						organizations: {type: "phonegap.ContactOrganization", isList: true, order: 9, hidden: true},
-						birthday: {type: "date", order: 10},
+						birthday: {type: "java.util.Date", order: 10},
 						note: {type: "string", order: 11},
 						photos: {type: "StringData", isList: true, order: 12, hidden: true},
 						categories: {type: "StringData", isList: true, order: 13, hidden: true},
@@ -399,10 +404,10 @@ dojo.declare("wm.PhoneGapCall", [wm.ServiceVariable], {
 	if (this.autoUpdate || this.startUpdate) this.update();
     },
     update: function() {
-	if (this._deviceReady) this.inherited(arguments);
+	if (this._deviceReady) return this.inherited(arguments);
     },
     updateInternal: function() {
-	if (this._deviceReady) this.inherited(arguments);
+	if (this._deviceReady) return this.inherited(arguments);
     }
 });
 

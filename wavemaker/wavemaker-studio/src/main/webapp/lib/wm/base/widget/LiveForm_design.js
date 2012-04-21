@@ -125,10 +125,11 @@ wm.LiveFormBase.extend({
 	//===========================================================================
 	set_dataSet: function(inDataSet) {
 		if (inDataSet instanceof wm.Variable) {
-			this.setDataSet(inDataSet);
-			if (this.canAddEditors()) {
-				this.addEditors();
-			}
+		    this.setDataSet(inDataSet);
+		    
+		    if (this.canAddEditors(inDataSet)) {
+			this.addEditors();
+		    }
 		// set via drop down or cleared
 		} else {
 			var
@@ -181,8 +182,9 @@ wm.LiveFormBase.extend({
 		this.reflow();
 		wm.fire(this, "updateDesignTrees");
 	},
-	canAddEditors: function() {
+	canAddEditors: function(inDataSet) {
 		if (!this._loading && this.isDesignLoaded()) {
+		    if (inDataSet && this.dataSet && inDataSet.type == this.dataSet.type && this.getEditorsArray().length > 0) return false;
 			if (!wm.typeManager.isStructuredType((this.dataSet || 0).type)) {
 				wm.logging && console.log(this.name, "dataSet with known data type required before generating editors.");
 			} else

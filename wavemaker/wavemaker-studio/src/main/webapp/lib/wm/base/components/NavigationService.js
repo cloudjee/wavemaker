@@ -36,7 +36,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 	_operations: {
 		gotoLayer: {
 			parameters: {
-			    layer: { type: "wm.Layer", },
+			    layer: { type: "wm.Layer"},
 				showOnlyParentLayer: {type: "boolean"}
 			},
 			returnType: "any",

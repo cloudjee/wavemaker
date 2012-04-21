@@ -94,7 +94,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		
 	wm.onidle(this, function() {
 	    this.tabClicked(inLayer,pseudoEvent);
-	    pseudoEvent.target.style.borderWidth = null;
+	    pseudoEvent.target.style.borderWidth = "";
 	});
     },
     touchTabStart: function(inLayer,evt) {

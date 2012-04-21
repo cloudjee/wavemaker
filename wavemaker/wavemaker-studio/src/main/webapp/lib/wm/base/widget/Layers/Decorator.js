@@ -75,7 +75,11 @@ dojo.declare("wm.LayersDecorator", null, {
 	    } else {			    
 		inLayer.domNode.style.display = inActive ? '' : 'none';
 	    }
-
+/*
+	    if (inActive) {
+		inLayer.reflowParent();
+	    }
+	    */
 		// design only code: need to show / hide designwrapper
 		wm.fire(inLayer, 'domNodeShowingChanged', [inActive]);
 	},
@@ -85,7 +89,6 @@ dojo.declare("wm.LayersDecorator", null, {
 		// Need to render it so it will slide correctly; needs to be non-hidden (but set opacity as low as it will go so its not visible either)
 		inLayer.domNode.style.opacity = "0.1"; 
 		inLayer.domNode.style.display = "";
-		inLayer.reflowParent();
 
 		// ok, now move it to its starting positino and reset opacity
 		var left = inLayer.bounds.w + "px";
@@ -129,6 +132,8 @@ dojo.declare("wm.LayersDecorator", null, {
 		if (!inShowing) {
 		    inLayer.domNode.style.display = "none";
 		    inLayer.domNode.style.opacity = 1;
+		} else {
+		    inLayer.reflow();
 		}
 	    });
 	    anim.play();
@@ -143,7 +148,7 @@ dojo.declare("wm.LayersDecorator", null, {
 			this.setLayerActive(old, false);		    
 		}
 		this.setLayerActive(inLayer, true);
-		d.reflow();
+	    d.reflowParent();
 	},
 	// default decorator has no caption
 	applyLayerCaption: function() {

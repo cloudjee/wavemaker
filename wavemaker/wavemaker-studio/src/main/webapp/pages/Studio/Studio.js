@@ -959,6 +959,7 @@ dojo.declare("Studio", wm.Page, {
 		    if (s && !s.noInspector) {
 			    this.inspect(s, true);
 		    }
+		    this.propertySearchBar.clear();
 		} finally {
 		}
 		this.updateCutPasteUi();
@@ -1550,11 +1551,16 @@ dojo.declare("Studio", wm.Page, {
 	else if  (requestedCanvasWidth == "") {
 	    this.PIPanel.setWidth("250px");
 	    requestedCanvasWidth = 0;
+	} else if (requestedCanvasWidth == 1150) {
+	    requestedCanvasWidth = "100%";
 	} else {
 	    requestedCanvasWidth = parseInt(requestedCanvasWidth);
 	}
 	if (requestedCanvasWidth) {
-	    if  (requestedCanvasWidth >= this.designer.bounds.w) {
+	    if (requestedCanvasWidth == "100%") {
+		this.designer.setMargin("0");
+		this.designer.setWidth("100%");
+	    } else if  (requestedCanvasWidth >= this.designer.bounds.w) {
 		this.designer.setMargin("0");
 	    } else {
 		var margin = Math.floor((this.designer.bounds.w - requestedCanvasWidth)/2);
@@ -1993,5 +1999,8 @@ dojo.declare("Studio", wm.Page, {
     editPublishedProperties: function() {
 	this.publishedPropsDialog.show();
 	this.publishedPropsDialog.page.reset(this.selected);
+    },
+    showDeviceBarHelp: function() {
+	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/WM65RelNotes#HNewmobilesupport");
     }
 });

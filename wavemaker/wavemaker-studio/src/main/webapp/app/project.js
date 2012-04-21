@@ -580,7 +580,6 @@ dojo.declare("wm.studio.Project", null, {
 	return runtime ? 0 : 16;
     },
 	saveApplication: function(callback) {
-
 	    var f = [];
 
 	        try {
@@ -593,8 +592,14 @@ dojo.declare("wm.studio.Project", null, {
 	    
 	    var allProjectJS = "";
 
-	    var d = new dojo.Deferred();
-	    //d.addCallback(dojo.hitch(this, function() {
+
+	    /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or 
+	     * losing a cookie by opening studio in another tab
+	     */
+	    var d = studio.studioService.requestAsync("openProject", [this.projectName]);
+
+	    var loadSMDDeferred = new dojo.Deferred();
+	    d.addCallback(dojo.hitch(this, function() {
 	        studio.incrementSaveProgressBar(1);
 		allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
 		allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
@@ -609,11 +614,11 @@ dojo.declare("wm.studio.Project", null, {
 		var bootJs = loadDataSync(bootJsPath);
 
 		var dlocal = this.saveProjectData("boot.js", bootJs,false,true);
-		dlocal.addCallback(function() {d.callback();});
-	//}));
+		dlocal.addCallback(function() {loadSMDDeferred.callback();});
+	    }));
 
 	    var d1 = new dojo.Deferred();
-	    d.addCallback(dojo.hitch(this, function() {
+	    loadSMDDeferred.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
 		    var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", []);
@@ -761,7 +766,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var d10 = new dojo.Deferred();
 	    d9.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
-		var dlocal = this.saveProjectData("project.js", allProjectJS, false, true);
+		var dlocal = this.saveProjectData("project.a.js", allProjectJS, false, true);
 		dlocal.addCallback(function() {d10.callback();});
 	    }));
 
@@ -788,7 +793,7 @@ dojo.declare("wm.studio.Project", null, {
     getPhonegapBuild: function() {
 	var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
 	d.addCallback(dojo.hitch(this, function(inHost) {
-	    app.prompt("Enter the network name or IP address of the server that this application will connect to. Add a port number to the address if needed (e.g. host.mydomain.com:880)", inHost, dojo.hitch(this, function(inValue) {
+	    app.prompt("Enter the network name or IP address of the server that this application will connect to. Add a port number to the address if needed (e.g. host.mydomain.com:8080)", inHost, dojo.hitch(this, function(inValue) {
 		var serverName, portNumb;
 		inValue = inValue.replace(/^http.?\:\/\//,"");
 		var results = inValue.split(/\:/);

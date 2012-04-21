@@ -340,7 +340,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			this.dumpTypeList(inNode, wm.typeManager.getTypeSchema(inNode.type));
 		}
 	},
-    hasServiceTreeDrop: function(inNode) {return true;},
+    hasServiceTreeDrop: function(inNode) {return true;}
 
     /* TODO: 1. If isList: Grid + svar; 2. If isComplexType: Form + svar; 3. else just SVar; 4. move on to WebServices */
 /*

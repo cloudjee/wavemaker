@@ -17,6 +17,7 @@
 
 .wmdesignable {
 	background-color: #FBFBFB; /* must be something or IE won't get events */
+	filter: alpha(opacity = 5);
 }
 
 .wmsurfacehint {

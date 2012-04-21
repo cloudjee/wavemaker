@@ -2078,8 +2078,7 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
 		getWidgetProps: function(inDatum){
 		    var props = this.inherited(arguments);
 		    return props;
-		},
-
+		}
 	});
 	dojox.grid.cells.ValidationTextBox.markupFactory = function(node, cell){
 		dojox.grid.cells._Widget.markupFactory(node, cell);

@@ -501,7 +501,7 @@ dojo.declare("wm.Application", wm.Component, {
 		if (wm.isMobile) {
 		    dojo.addClass(document.body, "wmmobile")
 		}
-		if (window["PhoneGap"]) {
+		if (window["PhoneGap"] && navigator.userAgent.match(/(iphone|ipad)/i)) {
 		    this.appTitleBar = new wm.Panel({
 						 owner: this, 
 						 parent: this.appRoot,
@@ -1214,10 +1214,14 @@ dojo.declare("wm.Application", wm.Component, {
 		this._handlingBack = true;
 		this._generateStateUrl(currentState);
 		delete this._handlingBack;
-		if (window.history.pushState)
-		    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
 
-		/* By adding this to the title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
+		/* Using state.title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
+
+		if (window.history.pushState)
+		    window.history.pushState(null, "" /*state.title*/, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
+
+		/* No longer updating the title; this is great for populating the back history, but as we don't support jumping around the back history,
+		 * more misleading than helpful.
 		if (state.title) {
 		    var title = dojo.query("title")[0];
 		    if (title) {
@@ -1225,6 +1229,7 @@ dojo.declare("wm.Application", wm.Component, {
 			title.innerHTML = titleHtml +  "#" + state.title;
 		    }
 		}
+		*/ 
 
 		if (this.backButton) {
 		    this.backButton.setDisabled(this.history.length == 0);

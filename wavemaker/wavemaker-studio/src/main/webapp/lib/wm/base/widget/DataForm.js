@@ -325,6 +325,10 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	if (!this._inDataSet) {
 	    this.populateDataOutput();
 	}
+	var parentForm = this.getParentForm();
+	if (parentForm) {
+	    parentForm._onEditorChange();
+	}
     },
     _setReadonly: function(inReadonly, inCanChangeFunc) {
 	this.inherited(arguments);

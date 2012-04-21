@@ -48,6 +48,12 @@ wm.Object.extendSchema(wm.LiveVariable, {
 
 wm.LiveVariable.extend({
 	_operations: ["read", "insert", "update", "delete"],
+        set_name: function(inName) {
+	    this.unsubscribe(this.filter.getRuntimeId() + "-changed");
+	    this.unsubscribe(this.sourceData.getRuntimeId() + "-changed");
+	    this.inherited(arguments);
+	    this.setupSubscriptions();
+	},
 	makePropEdit: function(inName, inValue, inEditorProps) {
 	    if (inName == "operation") {
 		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this._operations}));

@@ -20,7 +20,6 @@
 }
 */
 
-@import "pages/Studio/properties.css";
 
 .Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
     width: 24px !important;
@@ -1774,3 +1773,4 @@ color: rgb(0,270,0);
 .Studio-navigationBar {
     font-family: "Nimbus Sans L", sans-serif;
 }
+

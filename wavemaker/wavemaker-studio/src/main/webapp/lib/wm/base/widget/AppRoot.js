@@ -26,7 +26,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	},
 	build: function() {
-	    this.domNode = dojo.byId(this.owner.domNode) || document.body;
+	    this.domNode = this.owner.domNode = dojo.byId(this.owner.domNode) || document.body;
 	    this.domNode.style.cssText += this.style + "overflow: hidden; position: relative;";
 	},
 	init: function() {
@@ -37,14 +37,12 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	     *
 	     * WARNING: onresize may not be provided to android devices within phonegap applications.
 	     */
-	    this._isOldAndroidBrowser = navigator.vendor.match(/Google/i) && navigator.userAgent.match(/android/i);
+	    this._isOldAndroidBrowser = (navigator.vendor||"").match(/Google/i) && navigator.userAgent.match(/android/i);
 	    this._isIOS = navigator.userAgent.match(/(ipad|iphone)/i);
-	    if (this._isOldAndroidBrowser) {
-		window.addEventListener("resize", dojo.hitch(this,"resize"));
-	    } else if ("onorientationchange" in window) {
+	    if (!this._isOldAndroidBrowser && "onorientationchange" in window) {
 		window.addEventListener("orientationchange", dojo.hitch(this, "resize"));
 	    } else {
-		window.addEventListener("resize", dojo.hitch(this,"resize"));
+		this.subscribe("window-resize", this, "resize");
 	    }
 	},
     getRuntimeId: function() {return "approot";},
@@ -137,9 +135,9 @@ this._inResize = true;
 
 	    if (wm.isMobile) {
 		if (!width)
-		    width = Math.min(screen.width, window.innerWidth, pn.offsetWidth);
+		    width = Math.min(screen.width, window.innerWidth || 20000, pn.offsetWidth);
 		if (!height)
-		    height = Math.min(screen.height, window.innerHeight, pn.offsetHeight || 1000);
+		    height = Math.min(screen.height, window.innerHeight || 20000, pn.offsetHeight || 1000);
 	    } else {
 		width = pn.offsetWidth;
 		height = pn.offsetHeight;

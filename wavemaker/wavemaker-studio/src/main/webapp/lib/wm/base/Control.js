@@ -579,8 +579,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 	    if (this.widgets) {
 		var wids = [];
-		for (var n in this.widgets) 
-		    wids.push(this.widgets[n]);
+		wm.forEachProperty(this.widgets, function(w,name) {
+		    wids.push(w);
+		});
 		for (var i = 0, w; (w = wids[i]); i++) 
 		    w.destroy();
 		wids = [];
@@ -805,8 +806,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
     /* NOTE: I don't see this called anywhere */
     insertDomNodes: function() {
-	for (var i in this.widgets) 
-	    this.widgets[i].insertDomNodes();
+	wm.forEachProperty(this.widgets, function(w, name) {
+	    w.insertDomNodes();
+	});
 	
 	var parentPage = this.getParentPage();
 	try {
@@ -827,8 +829,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	//	}
     },
     leafFirstRenderCss: function() {
-	for (var i in this.widgets) 
-	    this.widgets[i].leafFirstRenderCss();
+	wm.forEachProperty(this.widgets, function(w,name) {
+	    w.leafFirstRenderCss();
+	});
 	if (this.invalidCss) {
 	    this.render(1);
 	}
@@ -1260,10 +1263,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (!this.domNode) return;
 
 	    var cssTextItems = [];	    
-	    for (var styleName in cssObj) {
-		cssTextItems.push(styleName.replace(/([A-Z])/g,function(inLetter) {return "-" + inLetter.toLowerCase();}) + ":" + cssObj[styleName]);
-		this._appliedStyles[styleName] = cssObj[styleName];
-	    }
+	    wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
+		cssTextItems.push(styleName.replace(/([A-Z])/g,function(inLetter) {return "-" + inLetter.toLowerCase();}) + ":" + styleValue);
+		this._appliedStyles[styleName] = styleValue;
+	    }));
 
 	    /* margin/padding/border all affect the layout and sizing of widgets and can't be left to stylesheets */
 	    cssTextItems.push("margin:" + cssObj.margin);
@@ -1302,7 +1305,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (!this.domNode) return;
 	    var s = this.domNode.style;
 	    var borderSet = false;
-	    for (var styleName in cssObj) {
+	    wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
 		try {
 		    if (this.designBorderState && styleName.match(/^border/)) {
 			if (!borderSet) {
@@ -1312,7 +1315,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			    s.borderTop = cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor;
 			    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
 			}
-		    } else if (this._appliedStyles[styleName] != cssObj[styleName]) {
+		    } else if (this._appliedStyles[styleName] != styleValue) {
 			if (styleName == "backgroundGradient") {
 			    var gradient = cssObj[styleName];
 			    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
@@ -1322,8 +1325,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 				s.background = inValue;
 			    }
 			} else {
-			    s[styleName] = cssObj[styleName];
-			    this._appliedStyles[styleName] = cssObj[styleName];
+			    s[styleName] = styleValue;
+			    this._appliedStyles[styleName] = styleValue;
 			}
 		    } 
 		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
@@ -1332,7 +1335,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		} catch(e) {
 		    console.error("Invalid style for " + this.name + "; " + styleName + ": " + cssObj[styleName]);
 		}
-	    }
+	    }));
 	},
 	getCssSplitter: function (value) {
 	    var splitter = ",";
@@ -1541,9 +1544,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    this.disabled = d;
 	    this._disabled = d || this._parentDisabled;
 
-	    for (var i in this.widgets) {
-		this.widgets[i].setParentDisabled(this._disabled);
-	    }
+	    wm.forEachProperty(this.widget, dojo.hitch(this, function(w, name) {
+		w.setParentDisabled(this._disabled);
+	    }));
 	    
 	    dojo.toggleClass(this.domNode, "Disabled", this._disabled);
 	},
@@ -1788,7 +1791,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (this.parent) {
 		this.parent.update();
 	    }
-	},
+	}
 
     });
 

@@ -68,6 +68,7 @@ try
 	    ]);
 	    */
 
+	    wm.loadLibs(["css.wm.base.widget.themes.default." + (wm.isMobile ? "mtheme" : "theme")]);
 	    if (dojo.isIE)
 	    {
 		wm.loadLibs([ 
