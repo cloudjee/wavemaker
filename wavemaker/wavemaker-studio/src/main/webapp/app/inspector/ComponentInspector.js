@@ -1419,9 +1419,9 @@
 	     var g = groups[i];
 	     var layer = this.addLayer(g.displayName,true);
 	     layer.propertyGroup = g;
-	     layer.header.setMargin("0,2,2,2");
-	     layer.header.setBorder("1");
-	     layer.header.setBorderColor("#333");
+	     layer.header.setMargin("2,0,2,0");
+	     //layer.header.setBorder("1");
+	     //layer.header.setBorderColor("");
 	     layer._groupName = g.name;
 	     this.generateLayer = layer;
 	     //this.generateEditors(inComponent,g.name, layer);
