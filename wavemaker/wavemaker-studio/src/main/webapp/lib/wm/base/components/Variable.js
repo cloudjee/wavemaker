@@ -341,8 +341,11 @@ dojo.declare("wm.Variable", wm.Component, {
 	    }
 	},
 	_setArrayData: function(inArray) {
-		this.data = { list: inArray };
-		this.isList = true;
+	    if (wm.defaultTypes[this.type] && inArray.length && typeof inArray[0] != "object") {
+		inArray = dojo.map(inArray, function(v) {return {dataValue: v};});
+	    }
+	    this.data = { list: inArray };
+	    this.isList = true;
 	    this._isNull = inArray.length == 0;
 	},
 	_setObjectData: function(inObject) {
