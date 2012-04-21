@@ -874,8 +874,8 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     updateOptions: function() {
 	this.inherited(arguments);
 	if (this.useLiterals) {
-	    this.options = ["","string", "number", "date", "boolean"];
-	    this.values = ["", "string", "number", "date", "boolean"];
+	    this.options = ["","String", "Number", "Date", "Boolean"];
+	    this.values = ["", "String", "Number", "Date", "Boolean"];
 	} else {
 	    this.options = [""];
 	    this.values = [""];
