@@ -250,14 +250,16 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 /* End Palette */
 
 /* Start Dialogs */
-.studiodialog .dialogtitlebar.Docked {
+.Studio .studiodialog.Docked .dialogtitlebar {
+    background-image:none;
         background-color: #414B5C;
 	color: #FFF;
 	text-align: left;
 	font-size: 100%;
 }
 .studiodialog .dialogtitlebar {
-        background-color: #414B5C;
+	background-image:url(images/dark_toolbar_bg.gif);
+	background-repeat:repeat-x;
 	color: #FFF;
 	border-bottom:1px #363b44 solid;
 	border-left: 1px solid #c0c4ca;
@@ -1566,9 +1568,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
     background-color: rgb(80,80,80);
 }
 
-.wmBindInspector-.wmdialog .dialogtitlebar {
-    background-color: #5D6678;
-}
+
 
 .BindSourceDialog .wmlist {
     background-color: #424A5A;

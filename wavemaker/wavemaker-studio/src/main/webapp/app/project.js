@@ -1760,6 +1760,7 @@ Studio.extend({
 
 		var
 		    props = {
+			_classes: {domNode: ["studiodialog"]},
 			owner: this,
 			pageName: "BindSourceDialog",
 			modal: false,

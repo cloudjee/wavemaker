@@ -35,6 +35,7 @@ dojo.declare(
         getHelpDialog : function() {
             if (!this.helpDialog) {
                 var props = {
+		    _classes: {domNode: ["studiodialog"]},
                     owner : this,
                     pageName : "PopupHelp",
                     width : "500px",

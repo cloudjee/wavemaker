@@ -31,8 +31,8 @@ dojo.declare("StudioApplication", wm.Application, {
     confirm: function() {
         this.inherited(arguments);
 	dojo.addClass(this.confirmDialog.domNode, "studiodialog");
-        this.confirmDialog.setBorderColor("white");
-        this.confirmDialog.setBorder("2");        
+        this.confirmDialog.setBorderColor("#55555");
+        this.confirmDialog.setBorder("3");        
         this.confirmDialog.$.genericInfoPanel.setBorder("10");
         this.confirmDialog.$.genericInfoPanel.setBorderColor("#424A5A");
     },
@@ -41,8 +41,8 @@ dojo.declare("StudioApplication", wm.Application, {
         this.inherited(arguments);
         if (!hasAlert) {
 	    dojo.addClass(this.alertDialog.domNode, "studiodialog");
-            this.alertDialog.setBorderColor("white");
-            this.alertDialog.setBorder("2");        
+        this.alertDialog.setBorderColor("#55555");
+        this.alertDialog.setBorder("3");        
             this.alertDialog.$.genericInfoPanel.setBorder("10");
             this.alertDialog.$.genericInfoPanel.setBorderColor("#424A5A");
         }

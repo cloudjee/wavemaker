@@ -1387,6 +1387,7 @@
 	 getHelpDialog: function() {
 		 if (!studio.helpPopup) {
 		     var props = {
+			 _classes: {domNode: ["studiodialog"]},
 			 owner: this,
 			 pageName: "PopupHelp",
 			 width: "500px",
