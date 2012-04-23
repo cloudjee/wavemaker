@@ -337,7 +337,6 @@
     "SAVE_DIALOG_ERROR_REPORT_PROJECT_FILES": "Project Files",
     "TOAST_SAVE_PROJECT_SUCCESS": "Project Saved",
     "IMPORT_RESOURCE_BUTTON_CAPTION": "Import",
-    "TITLE_BIND_DIALOG": "Binding...",
     "WAIT_PROJECT_CLOSING": "Closing...",
     "WAIT_PROJECT_DELETING": "Deleting...",
     "RUN_BUTTON_CAPTION": "Run",

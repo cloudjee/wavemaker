@@ -12,6 +12,7 @@
  *  limitations under the License.
  */
 {
+    CONNECTIONS_DIALOG_TITLE: "Database Connection Settings",
 TITLE_IMPORT_DATABASE: "New Data Model",
 CONFIRM_NO_SAVE: "Current changes will not be saved; Leave anyway?",
 ALERT_SELECT_KEY: "Please select a column to use as foreign key first",

@@ -74,11 +74,12 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	getCreateDataModelDialog: function() {
 	    if (!studio.importDBDialog) {
 		var props = {
+		    _classes: {domNode: ["studiodialog"]},
 		    owner: app,
 		    pageName: "ImportDatabase",
 		    hideControls: true,
 		    width: 750,
-		    height: 270,
+		    height: 290,
 		    title: studio.getDictionaryItem("wm.DataModel.IMPORT_DATABASE_TITLE")
 		};
 		var d = studio.importDBDialog = new wm.PageDialog(props);

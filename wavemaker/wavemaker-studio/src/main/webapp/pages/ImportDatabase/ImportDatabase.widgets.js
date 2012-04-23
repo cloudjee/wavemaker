@@ -14,8 +14,8 @@
 
 ImportDatabase.widgets = {
     layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
-	importDBDialogInner: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
-	    panel1: ["wm.TabLayers", {height: "100%", padding: "10"}, {}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
+	    panel1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "DarkLayers"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
 		panel2: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "center", verticalAlign: "middle"}, {}, {
 
 
@@ -44,8 +44,9 @@ ImportDatabase.widgets = {
 			activeDirectoryDomain: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Active Directory Domain", width: "100%", showing: false, disabled: true, emptyValue: "emptyString", helpText: "If specified, the Active Directory Domain name will be prefixed to the authenticated user's name when running the \"EXECUTE AS\" statement against the active DB connection."}]
 		    }]
 		}]
-	    }],
-	    footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+	    }]
+	}],
+	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 		testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
@@ -61,6 +62,5 @@ ImportDatabase.widgets = {
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	    }]
 
-	}]
     }]
 }

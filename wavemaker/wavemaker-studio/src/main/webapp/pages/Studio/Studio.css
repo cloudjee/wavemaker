@@ -156,6 +156,10 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     border-bottom: 1px solid #c0c4ca;
     padding-top: 8px;
 }
+.StudioTabs.TransparentTabBar > .wmtablayers-tabbar {
+    background: none;
+    background-color: transparent;
+}
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar {
     background: none;
     background-color: #414B5C;
@@ -169,6 +173,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     border: 0px solid transparent;
     background: none;
     height: 24px;
+    font-size: 10px;
 }
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	-moz-border-radius-topleft: 8px; 
@@ -180,7 +185,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 	border: 1px solid #959DAB;
 	border-bottom: 0px solid transparent;
 	background-color: #414B5C;
-	top: 3px;
+	top: 2px;
 }
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
@@ -188,6 +193,15 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
     background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
+}
+
+.StudioTabs.DarkLayers .wmlayer {
+    background-color: #414B5C;
+    color: white;
+}
+.StudioTabs.DarkLayers .wmlayer .wmlabel,
+.StudioTabs.DarkLayers .wmlayer .wmeditor-caption {
+    color: white;
 }
 /* END 6.5 Tabs */
 
@@ -1324,9 +1338,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_databaseSubTab > .wmtablayers-tabbar,
 #studio_webServiceSubTab > .wmtablayers-tabbar,
 #studio_securitySubTab > .wmtablayers-tabbar,
-#app_importDatabase_panel1 > .wmtablayers-tabbar,
-.ResourceManager .wmtablayers-tabbar,
-.EditVariable .EditVariable-tabs .wmtablayers-tabbar
+.ResourceManager .wmtablayers-tabbar
  {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
@@ -1346,12 +1358,9 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_databaseSubTab > .wmtablayers-tabbar,
 #studio_webServiceSubTab > .wmtablayers-tabbar,
 #studio_securitySubTab > .wmtablayers-tabbar,
-#app_importDatabase_panel1 > .wmtablayers-tabbar,
-.EditVariable .EditVariable-tabs .wmtablayers-tabbar,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar ,
 #studio_PIContents > .wmtablayers-tabbar,
-.ResourceManager .wmtablayers-tabbar,
-.GridDesigner .wmtablayers-tabbar
+.ResourceManager .wmtablayers-tabbar
 {
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
@@ -1376,13 +1385,10 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-#app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
-.EditVariable .EditVariable-tabs .wmtablayers-tab,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
 #studio_PIContents  .wmtablayers-tab,
-.ResourceManager .wmtablayers-tab,
-.GridDesigner .wmtablayers-tab
+.ResourceManager .wmtablayers-tab
  {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
@@ -1421,7 +1427,6 @@ body.wm-darksnazzy .wmToolbar button:hover {
 .df_ff3 #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 .JavaEditor-logTabs .wmtablayers-tabbar,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar {
@@ -1437,12 +1442,9 @@ body.wm-darksnazzy .wmToolbar button:hover {
  #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
  #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
  #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-selected,
-#app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-selected,
-.EditVariable .EditVariable-tabs .wmtablayers-selected,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
 #studio_PIContents .wmtablayers-selected,
-.ResourceManager .wmtablayers-selected,
-.GridDesigner .wmtablayers-selected
+.ResourceManager .wmtablayers-selected
  {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;

@@ -1710,7 +1710,7 @@ Studio.extend({
     },
     saveProjectSuccess: function() {}, // for dojo.connect
     beginBind: function(inPropName, editArea, type) {
-	    var bd = this.getBindDialog();
+	var bd = this.bindDialog;
 		    //p = this.getBindDialogProps(inPropName),
 	    var  p = {targetProperty: inPropName,
 		      object: editArea // random object
@@ -1750,20 +1750,20 @@ Studio.extend({
 		return true;
 	    }
 	},
-	endBind: function(inPropName, inNode) {
+    endBind: function(inSender, inPropName, inNode) {
 	    if (this.bindDialog) {
 		this.bindDialog.destroy();
 		this.bindDialog = undefined;
 	    }
 	},
-	getBindDialog: function() {
+/*	getBindDialog: function() {
 
 		var
 		    props = {
-			_classes: {domNode: ["studiodialog"]},
+			
 			owner: this,
 			pageName: "BindSourceDialog",
-			modal: false,
+			mo dal: false,
 			positionLocation: "tl",
 			border: "1px",
 			width: 650,
@@ -1779,7 +1779,7 @@ Studio.extend({
 		dojo.disconnect(b._hideConnect);
 	    b._hideConnect = dojo.connect(b, "onHide", this, "endBind");
 	    return b;
-	},
+	},*/
 	deleteSelectedProjectPageClick: function(inSender) {
 		var n = this.projectsTree.selected;
 		if (!n)

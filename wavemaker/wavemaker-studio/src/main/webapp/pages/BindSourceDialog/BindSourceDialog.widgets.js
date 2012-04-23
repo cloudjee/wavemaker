@@ -13,18 +13,20 @@
  */
  
 BindSourceDialog.widgets = {
-	layoutBox: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, padding: "2", height: "100%", width: "100%"}, {}, {
-		bindPanel1: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
-			binderSource: ["wm.BinderSource", {border: 0, margin: 0, layoutKind: "top-to-bottom" , height: "100%", width: "100%"}, {onBindNodeSelected: "bindNodeSelected"}, {}],
-			bindPanel: ["wm.Panel", {border: 0, width: "100%", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-			        bindTargetTypeLabel: ["wm.Label", {width: "100%", border: "0",height: "22px"}, {}, {
-				   format: ["wm.DataFormatter", {}, {}]
-				}],
-			    clearButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Clear", width: "70px"}, {onclick: "clearButtonClick"}],
-			    applyButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Bind", width: "70px"}, {onclick: "applyButtonClick"}],
-			    doneButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Done", width: "70px"}, {onclick: "cancelButtonClick"}],
-		    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "70px"}, {onclick: "cancelButtonClick"}]
-			}]
+	layoutBox: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
+            bindPanel1: ["wm.studio.DialogMainPanel", {},{}, {
+		binderSource: ["wm.BinderSource", {border: 0, margin: 0, layoutKind: "top-to-bottom" , height: "100%", width: "100%"}, {onBindNodeSelected: "bindNodeSelected"}, {}],
+		bindPanel: ["wm.Panel", {border: 0, width: "100%", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+		    bindTargetTypeLabel: ["wm.Label", {width: "100%", border: "0",height: "22px"}, {}, {
+			format: ["wm.DataFormatter", {}, {}]
+		    }]
 		}]
-	}]
+	    }],
+	    buttonPanel: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, verticalAlign: "top", horizontalAlign: "right", height: "32px", width: "100%"}, {}, {
+		    clearButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Clear", width: "70px"}, {onclick: "clearButtonClick"}],
+		    applyButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Bind", width: "70px"}, {onclick: "applyButtonClick"}],
+		    doneButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Done", width: "70px"}, {onclick: "cancelButtonClick"}],
+		    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "70px"}, {onclick: "cancelButtonClick"}]
+		}]
+	    }]
 }

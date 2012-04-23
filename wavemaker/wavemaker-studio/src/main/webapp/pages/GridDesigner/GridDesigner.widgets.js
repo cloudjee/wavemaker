@@ -67,7 +67,7 @@ GridDesigner.widgets = {
     liveSourceVar:  ["wm.Variable", {isList: true, type: "StringData"}],
 
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-	panel1: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {layoutKind: "left-to-right"},{}, {
 	    panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"185px"}, {}, {
 		grid: ["wm.DojoGrid", {"columns":[{"show":true,"id":"show","title":"Show","width":"60px","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool"},{"show":true,"id":"field","title":"Field","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":""}],selectFirstRow: true, "height":"100%","localizationStructure":{},"margin":"4", border: "1", borderColor: "black"}, {onCellEdited: "onCellEdited"}, {
 		    binding: ["wm.Binding", {}, {}, {
@@ -89,7 +89,7 @@ GridDesigner.widgets = {
 		    }]
 		}]
 	    }],
-	    tabLayers1: ["wm.TabLayers", {"margin":"4", clientBorder: "1", clientBorderColor: "black"}, {}, {
+	    tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "DarkLayers"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB",_lockHeaderHeight:1, headerHeight: "32px"}, {}, {
 		layer1: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Basic Settings","horizontalAlign":"left","margin":"2,0,0,0","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
 		    label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0","padding":"4","width":"100%"}, {}, {
 			binding: ["wm.Binding", {}, {}, {

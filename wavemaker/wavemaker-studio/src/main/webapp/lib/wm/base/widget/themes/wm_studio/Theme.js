@@ -56,6 +56,7 @@
 		"border": "0"
 	}, 
 	"wm.TabLayers": {
+	         headerHeight: "32px",
 		"layersType": "Tabs", 
 		"margin": "0", 
 		"border": "0", 
@@ -74,43 +75,56 @@
             "padding": "0"
 	}, 
 	"wm.Dialog": {
-		"border": "1", 
-		"titlebarBorder": "0,0,1,0", 
-	    "titlebarBorderColor": "#FBFBFB",
-		"footerBorder": "1,0,0,0", 
-	    "footerBorderColor": "#FBFBFB",
-		"titlebarHeight": "23"
-	}, 
-	"wm.GenericDialog": {
-		"border": "1", 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#FBFBFB"
-	}, 
-	"wm.RichTextDialog": {
-		"border": "1", 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#FBFBFB"
+	    "border": "3", 
+	    "margin": "0",
+	    borderColor: "#555555",
+	    "titlebarBorder": "0,0,1,0", 
+	    "titlebarBorderColor": "#777777",
+	    "footerBorder": "1,0,0,0", 
+	    "footerBorderColor": "#777777",
+	    "titlebarHeight": "23"
 	}, 
 	"wm.PageDialog": {
-		"border": "1", 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#FBFBFB", 
-		"noBevel": true
+	    "noBevel": true,
+	    "border": "3", 
+	    "margin": "0",
+	    borderColor: "#555555",
+	    "titlebarBorder": "0,0,1,0", 
+	    "titlebarBorderColor": "#777777",
+	    "footerBorder": "1,0,0,0", 
+	    "footerBorderColor": "#777777",
+	    "titlebarHeight": "23"
 	}, 
 	"wm.DesignableDialog": {
-		"border": "1", 
-		"titlebarBorder": "0,0,1,0", 
-		"titlebarBorderColor": "#FBFBFB", 
-		"footerBorder": "1,0,0,0", 
-		"footerBorderColor": "#FBFBFB", 
-		"noBevel": true
+	    "border": "3", 
+	    "margin": "0",
+	    borderColor: "#555555",
+	    "titlebarBorder": "0,0,1,0", 
+	    "titlebarBorderColor": "#777777",
+	    "footerBorder": "1,0,0,0", 
+	    "footerBorderColor": "#777777",
+	    "titlebarHeight": "23"
 	}, 
+	"wm.GenericDialog": {
+	    "border": "3", 
+	    "margin": "0",
+	    borderColor: "#555555",
+	    "titlebarBorder": "0,0,1,0", 
+	    "titlebarBorderColor": "#777777",
+	    "footerBorder": "1,0,0,0", 
+	    "footerBorderColor": "#777777",
+	    "titlebarHeight": "23"
+	}, 
+    "wm.studio.DialogMainPanel": {
+	width: "100%",
+	height: "100%",
+	horizontalAlign: "left",
+	verticalAlign: "top",
+	padding: "5,15,5,15",
+	border: "10",
+	borderColor: "#313743",
+	backgroundColor: "#848c99"
+    },
 	"wm.DojoMenu": {
 		"padding": "0", 
 		"border": "0", 

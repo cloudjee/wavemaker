@@ -31,7 +31,7 @@ dojo.declare("ConfirmSaveDialog", wm.Page, {
 	    this._onCancel = onCancel;
 	    this.owner.owner.show();
 	    this.html.doAutoSize(true,true);
-	    this.owner.owner.setHeight((this.html.bounds.h + this.buttonBar.bounds.h + this.owner.owner.padBorderMargin.t + this.owner.owner.padBorderMargin.b) + "px");
+	    this.owner.owner.setHeight((this.html.bounds.h + this.buttonBar.bounds.h + this.mainPanel.padBorderMargin.t + this.mainPanel.padBorderMargin.b + this.owner.owner.padBorderMargin.t + this.owner.owner.padBorderMargin.b) + "px");
 	}
     },
     saveClick: function() {

@@ -15,8 +15,10 @@
 
 AddPatch.widgets = {  
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
-	html: ["wm.Html", {width: "100%", height: "120px", margin: "10,50,5,50", html: "<p>Click the <b>Load Patches</b> button to automatically retrieve and load the latest <i>recommended</i> patches.  If you are behind a firewall, or the patches do not load automatically, click <b>Get matches manually</b> to open a page from which you can copy the patches into the editor below.</p><p>Click Apply to apply the patches to your installation of Studio</p>"}],
-	editor: ["wm.AceEditor", {syntax: "javascript", width: "100%", height: "100%", border: "1,0,0,0", borderColor: "#cccccc", margin: "0"}],
+        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
+	    html: ["wm.Html", {width: "100%", height: "100px", html: "<p>Click the <b>Load Patches</b> button to automatically retrieve and load the latest <i>recommended</i> patches.  If you are behind a firewall, or the patches do not load automatically, click <b>Get matches manually</b> to open a page from which you can copy the patches into the editor below.</p><p>Click Apply to apply the patches to your installation of Studio</p>"}],
+	    editor: ["wm.AceEditor", {syntax: "javascript", width: "100%", height: "100%", border: "1,0,0,0", borderColor: "#cccccc", margin: "0"}],
+	}],
 	buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, width: "100%", height: "34px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 	    loadPatchesButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "120px", caption: "Load Patches", hint: "Don't use if behind firewall"}, {onclick: "loadPatchesClick"}],
 	    findCodeLabel: ["wm.Label", {caption: "Get patches manually", align: "right",singleLine: true,height: "100%", width: "160px", margin: "0,0,0,20", link:"#"},{onclick: "findCodeButtonClick"}],

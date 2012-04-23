@@ -14,8 +14,8 @@
 DeploymentDialog.widgets = {
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
-    cloudFoundryAppListDialog: ["wm.DesignableDialog", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "cfAppListPanel", buttonBarId: "buttonBar5", width: "400px", height: "500px"}, {}, {
-	cfAppListPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom", padding: "0", border: "10", borderColor: "#424a5a"}, {}, {
+    cloudFoundryAppListDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "cfAppListPanel", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
+        mainPanel1: ["wm.studio.DialogMainPanel", {},{}, {
 	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
 	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: true, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
 	}],
@@ -37,11 +37,11 @@ DeploymentDialog.widgets = {
 					      }],
 					      */
     deploymentListVar: ["wm.Variable", {type: "EntryData", isList:true}],
-    confirmSaveDialog: ["wm.DesignableDialog", {"border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"containerWidget4","buttonBarId":"buttonBar4"}, {}, {
-	containerWidget4: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","margin":"0","verticalAlign":"top","width":"100%"}, {}, {
-	    confirmSaveDialogHtml1: ["wm.Html", {"border":"0","height":"100%","width":"100%", padding: "10,30,10,30", html: "You have unsaved changes that will be lost; continue?"}, {}]
+    confirmSaveDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"containerWidget4","buttonBarId":"buttonBar4"}, {}, {
+        mainPanel2: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
+	    confirmSaveDialogHtml1: ["wm.Html", {"border":"0","height":"100%","width":"100%", html: "You have unsaved changes that will be lost; continue?"}, {}]
 	}],
-	buttonBar4: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+	buttonBar4: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		saveDialogDontSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Don't Save","margin":"4","width":"100px"}, {}],
 		spacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	        saveDialogCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {}],
@@ -49,10 +49,10 @@ DeploymentDialog.widgets = {
 	}]
     }],
 
-    newDeploymentDialog: ["wm.DesignableDialog", {"buttonBarId":"buttonBar","containerWidgetId":"containerWidget2",width: "400px", "height":"200px","title":"Choose Deployment Type"}, {}, {
-	containerWidget2: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","verticalAlign":"top","width":"100%"}, {}, {
+    newDeploymentDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "buttonBarId":"buttonBar","containerWidgetId":"containerWidget2",width: "400px", "height":"200px","title":"Choose Deployment Type"}, {}, {
+        mainPanel3: ["wm.studio.DialogMainPanel", {autoScroll:true, layoutKind: "left-to-right"},{}, {
 	    iconOrMarginPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
-	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","padding":"5,40,5,0","verticalAlign":"top","width":"100%"}, {}, {
+	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
 		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
@@ -64,8 +64,8 @@ DeploymentDialog.widgets = {
 	    okButton: ["wm.Button", {"caption":"OK","margin":"4"}, {onclick: "onNewDeployOk"}]
 	}]
     }],
-    cfLoginDialog: ["wm.DesignableDialog", {"height":"170px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"containerWidget3","buttonBarId":"buttonBar2"}, {}, {
-	containerWidget3: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","verticalAlign":"top","width":"100%"}, {}, {
+    cfLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"containerWidget3","buttonBarId":"buttonBar2"}, {}, {
+        mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
 		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "caption":"CloudFoundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
@@ -81,7 +81,8 @@ DeploymentDialog.widgets = {
 	}]
     }],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-	deploymentMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "left-to-right", padding: "20"}, {}, {
+        mainPanel5: ["wm.studio.DialogMainPanel", {autoScroll:true, layoutKind: "left-to-right"},{}, {
+
 	    deploymentListPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"150px", margin: "0,10,0,0"}, {}, {
 		listButtonPanel: ["wm.Panel", {"border":"0","height":"25px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","height":"100%","margin":"1","width":"40px"}, {"onclick":"addButtonClick"}],

@@ -14,20 +14,14 @@
  
 DBConnectionSettings.widgets = {
     layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", border: "0",  width: "100%", autoScroll: false}, {}, {
-		importDBDialog: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
-			importDBDialogInner: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
-				titleBar: ["wm.Panel", {border: "0", height: "29px", layoutKind: "left-to-right"}, {}, {
-					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, caption: "Database Connection Settings", width: "100%", height: "100%", border: "0"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					}]
-				}],
-				connectionSettingsPanel: ["wm.Panel", {padding: "10", border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
-					panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "5", height: "100%", width: "50%"}, {}, {
-						dataModelList: ["wm.List", {_classes: {domNode: ["wm_Border_StyleSolid", "wm_Border_Size1px"]}, width: "100%", height: "100%"}, {onselect: "dataModelListSelect"}]
-					}],
-					panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "5,50,5,50", border: "0", height: "100%", width: "100%"}, {}, {
-					    conUserInput: ["wm.Text", {captionSize: "150px", caption: "Username", width: "100%", border: "0", changeOnKey:true, emptyValue: "emptyString", helpText: "Enter the username for connecting to the database server", required: true}, {onchange: "conUsernameChanged"}],
-					    conPasswordInput: ["wm.Text", {captionSize: "150px", caption: "Password", password: true, width: "100%", border: "0", changeOnKey:true, helpText: "Enter the password for connecting to the database server", emptyValue: "emptyString"}, {onchange: "conPasswordChanged"}],
+        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
+	    connectionSettingsPanel: ["wm.Panel", {height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
+		panel1: ["wm.Panel", {padding: "5", height: "100%", width: "50%"}, {}, {
+		    dataModelList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%"}, {onselect: "dataModelListSelect"}]
+		}],
+		panel2: ["wm.Panel", {padding: "5,50,5,50", border: "0", height: "100%", width: "100%"}, {}, {
+		    conUserInput: ["wm.Text", {captionSize: "150px", caption: "Username", width: "100%", border: "0", changeOnKey:true, emptyValue: "emptyString", helpText: "Enter the username for connecting to the database server", required: true}, {onchange: "conUsernameChanged"}],
+		    conPasswordInput: ["wm.Text", {captionSize: "150px", caption: "Password", password: true, width: "100%", border: "0", changeOnKey:true, helpText: "Enter the password for connecting to the database server", emptyValue: "emptyString"}, {onchange: "conPasswordChanged"}],
 					    conDBdropdown: ["wm.SelectMenu", {captionSize: "150px", caption: "RDBMS", width: "100%", changeOnKey:true, helpText: "Choose what type of database server you are connecting to"}, {onchange: "conDBdropdownChanged"}, {}],
 					    conHostInput: ["wm.Text", {captionSize: "150px", caption: "Hostname", width: "100%", border: "0", changeOnKey:true, helpText: "The network host for the database. The default value is localhost, meaning that the database is located on the same computer that WaveMaker studio is running on."}, {onchange: "conHostChanged"}],
 					    conPortInput: ["wm.Text", {captionSize: "150px", caption: "Port", width: "100%", border: "0", changeOnKey:true, helpText: "The port number for the database. Typically this is set automatically when the database type is selected and should not be changed."}, {onchange: "conPortChanged"}],
@@ -44,8 +38,9 @@ DBConnectionSettings.widgets = {
 					    activeDirectoryDomain: ["wm.Text", {captionSize: "150px", caption: "Active Directory Domain", width: "100%", showing: false, disabled: true, emptyValue: "emptyString", helpText: "If specified, the Active Directory Domain name will be prefixed to the authenticated user's name when running the \"EXECUTE AS\" statement against the active DB connection."}],
 					    overrideFlagInput: ["wm.Checkbox", {captionSize: "150px", caption: "Overwrite database", width: "100%", dataType: "boolean", displayValue: true, emptyValue: "false", helpText: "If you are using the \"Export\" button and this is checked, then the database already exists, all tables and data will be dropped and deleted. A new database will be created whether or not there is an existing database."}, {onchange: "overrideFlagInputChanged"}]
 					}]
-				}],
-				footer: ["wm.Panel", {border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+	    }]
+	}],
+	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 				    testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", autoSize: false, width: "130px", margin: "4"}, {onclick: "testConnectionBtnClick"}],
 				    spacer1: ["wm.Spacer", {width: "10px", border: "0"}, {}],
 				    saveBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Save", autoSize: false, width: "80px", margin: "4"}, {onclick: "saveBtnClick"}, {
@@ -69,7 +64,5 @@ DBConnectionSettings.widgets = {
 				    cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", autoSize: false, width: "80px", margin: "4"}, {onclick: "cancelBtnClick"}]
 				}]
 			}]
-		}]
-	}]
-
 }
+

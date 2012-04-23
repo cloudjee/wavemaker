@@ -182,11 +182,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 			d.page.setup();
 		} else {
 			this.dbConnectDialog = d = new wm.PageDialog({
+			    _classes: {domNode: ["studiodialog"]},
 				owner: app,
 				pageName: "DBConnectionSettings", 
 				hideControls: true,
 				width:720,
-				height:510
+			    height:510,
+			    title: this.getDictionaryItem("CONNECTIONS_DIALOG_TITLE")
 			});
 			this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
 		}

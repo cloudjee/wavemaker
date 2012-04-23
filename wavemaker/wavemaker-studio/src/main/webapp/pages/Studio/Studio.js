@@ -128,7 +128,6 @@ dojo.declare("Studio", wm.Page, {
 			this.liveLayoutBtn.setDisabled(true);
 		*/
 
-	    this.bindDialog = this.getBindDialog();
 
 		this.clearTrees();
 		// Listen to some events
@@ -2004,3 +2003,7 @@ dojo.declare("Studio", wm.Page, {
 	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/WM65RelNotes#HNewmobilesupport");
     }
 });
+
+
+// Inherits some properties via wm_studio/Theme.js
+dojo.declare("wm.studio.DialogMainPanel", wm.Panel, {});
