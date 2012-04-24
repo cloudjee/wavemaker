@@ -306,7 +306,7 @@ height: "29px", width: "420px",
 					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 */
-			left: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "1,1,0,0",clientBorderColor: "#959DAB"}, {onchange: "leftTabsChange"}, {
+			left: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "1,1,0,0",clientBorderColor: "#959DAB"}, {onchange: "leftTabsChange"}, {
 			    mlpal: ["wm.Layer", {_classes: {domNode: ["StudioLeftLayer"]}, caption: "Palette", padding: "3,0,0,0"}, {onShow: "resetPaletteSearch"}, {
 					paletteSearch: ["wm.Text", {caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
@@ -360,7 +360,7 @@ height: "29px", width: "420px",
 		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px"}],
 		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left"}, {}]
 		}],
-		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
+		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "NoRightMarginOnTab"]}, conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "1,1,0,1", layoutKind: "top-to-bottom", borderColor: "#959DAB"}, {}, {
@@ -431,7 +431,7 @@ height: "29px", width: "420px",
 					}],
 			    splitter3b: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]},border: ""}, {}],
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true, border: "1,0,0,1", borderColor: "#959DAB" }, {}, {
-				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked"]}, width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
+				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked"]}, autoScroll:true,width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
 				    inspectorToolbarOuter: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, width:"100%", height: "60px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"3,0,2,0"},{},{
 					inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
 					    propertySearchBar: ["wm.Text", {resetButton: true, width: "100%", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
@@ -450,12 +450,12 @@ height: "29px", width: "420px",
 					propMenuButton: ["wm.ToolButton", {height: "100%", width: "20px", caption: ""}, {onclick: "propertiesMenu"}]
 				    }],
 
-					inspectorToolbar: ["wm.ToggleButtonPanel", {_classes: {domNode: ["StudioToolBar"]},width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "center", verticalAlign: "top",border: "0", margin:"3,0,0,0", buttonMargins: "5,0,5,0"},{},{
+					inspectorToolbar: ["wm.ToggleButtonPanel", {_classes: {domNode: ["StudioToolBar"]},width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "", verticalAlign: "top",border: "0", margin:"3,0,0,0", buttonMargins: "5,0,5,0"},{},{
 					togglePropertiesButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "100px", minWidth: 100, caption: "Recommended", border:"0,1,0,0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
 					togglePropertiesButton2: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "40px", caption: "All", border:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
 				    }]
 				    }],
-				    inspector: ["wm.PropertyInspector", {_classes: {domNode: ["Inspector"]},clientBorder: "1", clientBorderColor: "black", captionBorderColor: "", captionBorder: "1", height: "100%", width:"100%",border: "0", padding: "4"}, {}, {}]
+				    inspector: ["wm.PropertyInspector", {_classes: {domNode: ["Inspector"]},clientBorder: "0", clientBorderColor: "black", captionBorderColor: "", captionBorder: "1", height: "100px", width:"100%",border: "0", padding: "2",margin: "3"}, {}, {}]
 				}]/*,
 				benchbevel4: ["wm.Bevel", {}, {}]*/
 			    }]
@@ -582,16 +582,16 @@ height: "29px", width: "420px",
 					}]
 		}],
 			JavaEditorTab: ["wm.Layer", {caption: "Java", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    JavaEditorSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, border: "0", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    JavaEditorSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioTabsInverted"]}, border: "1",borderColor: "#959DAB", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
 			databaseTab: ["wm.Layer", {caption: "Database", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    databaseSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, border: "0", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    databaseSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioTabsInverted"]}, border: "1", borderColor: "#959DAB", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
 			webServiceTab: ["wm.Layer", {caption: "WebServices", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    webServiceSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, border: "0", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    webServiceSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioTabsInverted"]}, border: "1", borderColor: "#959DAB",  width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
-			securityTab: ["wm.Layer", {caption: "Security", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    securitySubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, border: "0", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+		    securityTab: ["wm.Layer", {caption: "Security", layoutKind: "top-to-bottom", showing: false, closable: true, border: "1",borderColor: "#959DAB"}, {}, {
+			    securitySubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},  border: "1", borderColor: "#959DAB",  width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}]
 
 			}]

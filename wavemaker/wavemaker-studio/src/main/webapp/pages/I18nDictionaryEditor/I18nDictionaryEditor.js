@@ -29,7 +29,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	    inResult.sort();
 	    this.dictionaryList = inResult;
 	    this.dictionaryHash = {};
-	    var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + studio.project.pageName + ".js");
+	    var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + studio.project.pageName + ".js") || "{}";
 	    try {
 		this.dictionaryHash["default"] = dojo.fromJson(data);
 		var itemList = [];

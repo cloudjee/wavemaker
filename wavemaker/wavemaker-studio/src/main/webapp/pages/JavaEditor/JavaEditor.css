@@ -13,50 +13,6 @@
  */
 
 
-.JavaEditor-logArea {
-   background-color: white;
-}
-
-.JavaEditor-editorToolbar {
-/*	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;*/
-	/*border-top:1px #FFFFFF solid;*/
-	border-bottom:1px #363b44 solid;
-	/*padding: 2px;*/
-	color: #FFF;
-}
-
-.JavaEditor-logoBtmHolder {
-	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
-}
-
-.JavaEditor-toolbarBtnHolder button, .JavaEditor-javaServiceToolbar button {
-/*
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-       */
-	height: 24px;
-	text-align: center;
-}
-
-.JavaEditor-toolbarBtnHolder button:hover, .JavaEditor-javaServiceToolbar button:hover {
-	background-image:url(images/dark_toolbar_btn_sm_on.gif);
-	background-repeat:no-repeat;
-	height: 24px;
-}
-
-.JavaEditor-javaServiceOutputLabel {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	/*border-top:1px #FFFFFF solid;*/
-	border-bottom:1px #363b44 solid;
-	/*padding: 2px;*/
-	color: #FFF;
-	padding-top: 6px;
-	text-align: center;
-	font-weight: bold;
-}
-
 .JavaEditor-splitter1 {
 	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
 	border-left: 1px solid #c0c4ca;
@@ -82,8 +38,4 @@
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
-}
-
-.JavaEditor-toolbarspacer1, JavaEditor-toolbarspacer2,.JavaEditor-toolbarspacer3 {
-	background-image:url(images/toolbarspacer.gif);
 }

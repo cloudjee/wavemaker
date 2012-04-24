@@ -475,14 +475,26 @@ dojo.declare("QueryEditor", wm.Page, {
 	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
 		if (this.isDestroyed) return;
 		var changed = this.getCachedData() != this._cachedData;
-		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
-		    this.queryNameInput.getDataValue() + " (" + studio.getDictionaryItem("wm.Query.TAB_CAPTION") + ")";
-		this.dirty = changed;
+		var dirty = this.dirty = changed;
+//		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+//		    this.queryNameInput.getDataValue() + " (" + studio.getDictionaryItem("wm.Query.TAB_CAPTION") + ")";
+//		this.dirty = changed;
+		var layer = this.owner.parent;
+		if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
+		    if (!dirty) {
+			dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
+		    }
+		} else if (dirty) {
+			dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
+		}
 
-		if (caption != this.owner.parent.caption) {
+/*		if (caption != this.owner.parent.caption) {
 		    this.owner.parent.setCaption(caption);
 		    studio.updateServicesDirtyTabIndicators();
 		}
+		*/
 		this.saveQueryBtn.setDisabled(!changed);
 
 	    }));

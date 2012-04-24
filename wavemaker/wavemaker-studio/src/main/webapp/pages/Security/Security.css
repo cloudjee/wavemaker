@@ -13,12 +13,7 @@
  */
 
 
-.Security .Security-editorToolbar {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	border-bottom:1px #363b44 solid;
-	color: #FFF;
-}
+
 
 .Security .Security-label1a, .Security .Security-label2a {
 	padding-top: 6px;
@@ -28,17 +23,6 @@
 	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
 }
 
-.Security .Security-toolbarBtnHolder button {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	height: 24px;
-}
-
-.Security .Security-toolbarBtnHolder button:hover {
-	background-image:url(images/dark_toolbar_btn_sm_on.gif);
-	background-repeat:no-repeat;
-	height: 24px;
-}
 
 .Security .Security-secDetailsPanel, .Security .Security-panel14a {
 	background-image:url(images/dark_toolbar_bg.gif);
@@ -92,13 +76,3 @@
 	padding-left: 10px;
 }
 
-.Security button {
-	background-image:url(images/wmbutton_bg.png);
-	background-repeat:repeat-x;
-	color: #FFF;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
-	cursor: pointer;
-}

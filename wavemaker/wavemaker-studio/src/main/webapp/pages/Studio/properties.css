@@ -126,8 +126,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 }
 
 .wminspector .wminspector-subgroupLabel {
-    font-weight: bold;
-    text-align: center;
+    text-align: left;
 }
 
 .tundra .studio_EventPicker_CSS .dijitMenuItemIcon {

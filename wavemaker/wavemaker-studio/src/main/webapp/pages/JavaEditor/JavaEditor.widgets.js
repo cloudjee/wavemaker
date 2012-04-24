@@ -15,7 +15,7 @@
 JavaEditor.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	layoutBox1: ["wm.Layout", {height: "100%", imageList: "smallToolbarImageList"}, {}, {
-		editorToolbar: ["wm.Panel", {border: "0", layoutKind: "left-to-right", height: "29px"}, {}, {
+	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0", layoutKind: "left-to-right", height: "29px"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", padding: "0,4", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {
 				javaServiceSaveButton: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%",  hint: "Save Java service", border: "0", margin: "0"}, {onclick: "javaServiceSaveButtonClick"}],
 				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
@@ -39,7 +39,7 @@ JavaEditor.widgets = {
 				javaServicePanel: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
 				    javaCodeEditor: ["wm.AceEditor", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onChange: "setDirty"}],
 					javaCodeSplitter: ["wm.Splitter", {layout: "bottom", border: "0"}, {}],
-				    logTabs: ["wm.TabLayers", {width: "100%", height: "200px",clientBorder: "2,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "changeLogTab"}, {
+				    logTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, width: "100%", height: "200px",clientBorder: "1,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "changeLogTab"}, {
 					    complierTab: ["wm.Layer", {caption: "Compiler Messages"}, {}, {
 						    /*
 						javaCompilerOutputPanel: ["wm.Panel", {border: "0", height: "150px"}, {}, {
@@ -47,7 +47,7 @@ JavaEditor.widgets = {
 							format: ["wm.DataFormatter", {}, {}]
 						    }],
 							    */
-						    javaCompilerOutputEditor: ["wm.TextArea", {height: "100%", width: "100%", readonly: true, readOnly: true, border: "0", scrollY: true}, {}]
+						    javaCompilerOutputEditor: ["wm.Html", {height: "100%", width: "100%", readonly: true, readOnly: true, border: "0", scrollY: true}, {}]
 						}],
 					    serverTab: ["wm.Layer", {caption: "Server Logs"}, {onclick: "updateLogs"}, {
 						logViewer: ["wm.PageContainer", {pageName: "LogViewer",  width: "100%", height: "100%"}]

@@ -17,7 +17,7 @@ NewLiveFormDialog.widgets = {
     behaviorsVar: ["wm.Variable", {type: "EntryData", isList: true, json: "[{name: 'Standard', dataValue: 'standard'}, {name: 'Insert Only', dataValue: 'insertOnly'},{name: 'Update Only', dataValue: 'updateOnly'}]"}],
     readonlyManagerVar: ["wm.Variable", {type: "EntryData", isList: true, json: "[{name: 'Readonly Manager', dataValue: true}, {name: 'Always Editable', dataValue: false}]"}],
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
-        mainPanel: ["wm.Panel", {_classes: {domNode: ["dialogcontainer"]},layoutKind: "top-to-bottom", width: "100%", height: "100%", horizontalAlign: "left", verticalAlign: "top", padding: "15", border: "10", borderColor: "#313743", backgroundColor: "#848c99"},{}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 	    typeSelect: ["wm.prop.DataTypeSelect", {liveTypes: true, width: "100%", captionSize: "130px", captionAlign: "left",caption: "Type", helpText: "The type of database object to edit with this form"}, {}, {
 		binding: ["wm.Binding", {},{},{
 		    wire: ["wm.Wire", {source: "typesVar", targetProperty: "dataSet"}]

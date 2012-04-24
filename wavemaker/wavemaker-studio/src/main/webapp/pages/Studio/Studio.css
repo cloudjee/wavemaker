@@ -17,7 +17,7 @@
 /* 6.5 Menu Bar */
 .Studio .StudioMenuBar {
     font-family: Arial, Geneva, Helvetica, sans-serif;    
-    font-size: 12pt;
+    font-size: 12px;
     color: white;
     background-color: #2B323D;
     background: -webkit-linear-gradient(top, #91959a 0%,#2B323D 43%,#2B323D 100%);
@@ -173,7 +173,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     border: 0px solid transparent;
     background: none;
     height: 24px;
-    font-size: 10px;
+    font-size: 12px;
 }
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	-moz-border-radius-topleft: 8px; 
@@ -195,13 +195,22 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
 }
 
-.StudioTabs.DarkLayers .wmlayer {
+.StudioDarkPanel,
+.StudioTabs.StudioDarkLayers > div > .wmlayer,
+.StudioWizard.StudioDarkLayers > div > .wmlayer {
     background-color: #414B5C;
     color: white;
 }
-.StudioTabs.DarkLayers .wmlayer .wmlabel,
-.StudioTabs.DarkLayers .wmlayer .wmeditor-caption {
+.StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel,
+.StudioTabs.StudioDarkLayers > div > .wmlayer .wmeditor-caption {
     color: white;
+}
+.StudioTabs.StudioDarkLayers > div > .wmlayer .wmeditor input {
+    color: black;
+}
+
+.StudioTabs.NoRightMarginOnTab > .wmtablayers-tabbar > .wmtablayers-tab {
+    margin-left: 0px !important;
 }
 /* END 6.5 Tabs */
 
@@ -239,7 +248,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     background-color: transparent;
     background-image: none;
     font-weight: normal;
-    color: #bbb;
+    color: #eee;
 }
 .Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton.toggleButtonDown,
 .Studio .StudioToolBar.wmtogglebuttonpanel .wmbutton.toggleButtonDown {
@@ -284,30 +293,50 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 /* End Dialogs */
 
 /* Start Inspector */
-.Studio .Inspector .wmlayer {
-    background-color: #2B323D;
+.Studio .Inspector {
+background-color: #2B323D;
+    -moz-border-radius: 8px; 
+    -webkit-border-radius: 8px; 
+    border-radius: 8px;
+}
+/*
+.Studio .Inspector > .wmlayer {
     -moz-border-radius: 4px; 
     -webkit-border-radius: 4px; 
     border-radius: 4px;
 }
+*/
 .Studio .Inspector .wmlabel,
 .Studio .Inspector .wmeditor-caption {
     font-weight: normal;
-    font-size: 11pt;
+    font-size: 11px;
     font-family: Arial, Geneva, Helvetica, sans-serif;
     color: white;
 }    
 .Studio .Inspector .wmaccordion-header {
-    font-size: 9pt;
-    border-color: #9FACC1 #333 #333 #9FACC1;
+    font-size: 11px;
+    /*border-color: #9FACC1 #333 #333 #9FACC1;*/
+    border-color: #a6b2c5 #5b6575 #5b6575 #7b8697;
+
 	-moz-border-radius: 4px; 
 	-webkit-border-radius: 4px; 
 	border-radius: 4px; 
-	background-color: #959dab;
+	background: -webkit-linear-gradient(top, #798597 0%,#636f80 50%,#636f80 100%);
+	background: -moz-linear-gradient(top, #798597 0%,#636f80 50%,#636f80 100%);
+	background: -o-linear-gradient(top, #798597 0%,#636f80 50%,#636f80 100%);
+	background: -ms-linear-gradient(top, #798597 0%,#636f80 50%,#636f80 100%);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#798597', endColorstr='#636f80');
 	color: #FFF;	
 }
 .Studio .Inspector .wmaccordion-header.wmaccordion-collapsed {
-	background-color: #5e6678;
+
+}
+.Studio .Inspector .StudioTabs > .wmtablayers-tabbar {
+    background-color: transparent;
+    background: none;
+}
+.Studio .Inspector .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+    background-color: #2B323D;
 }
 /* END 6.5 Retheming Effort */
 
@@ -1330,131 +1359,6 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	color: #FFF;
 }
 
-.Studio .Security-tabs > .wmtablayers-tabbar,
-#studio_documentationTabs > .wmtablayers-tabbar,
-#studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
-.JavaEditor-logTabs .wmtablayers-tabbar,
-#studio_JavaEditorSubTab > .wmtablayers-tabbar,
-#studio_databaseSubTab > .wmtablayers-tabbar,
-#studio_webServiceSubTab > .wmtablayers-tabbar,
-#studio_securitySubTab > .wmtablayers-tabbar,
-.ResourceManager .wmtablayers-tabbar
- {
-   /*
-        background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
-	background: -moz-linear-gradient(top,  #222222,  #5D6778);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#5D6778');
-*/
-            background: -webkit-gradient(linear, left top, left bottom, from(#5D6778), to(#BDC7D8));
-	background: -moz-linear-gradient(top,  #5D6778,  #BDC7D8);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D6778', endColorstr='#BDC7D8');
-}
-
-.Studio .Security-tabs > .wmtablayers-tabbar,
-#studio_documentationTabs > .wmtablayers-tabbar,
-#studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
-.JavaEditor-logTabs .wmtablayers-tabbar,
-#studio_JavaEditorSubTab > .wmtablayers-tabbar,
-#studio_databaseSubTab > .wmtablayers-tabbar,
-#studio_webServiceSubTab > .wmtablayers-tabbar,
-#studio_securitySubTab > .wmtablayers-tabbar,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar ,
-#studio_PIContents > .wmtablayers-tabbar,
-.ResourceManager .wmtablayers-tabbar
-{
-	border-bottom: 1px solid #c0c4ca;
-	background-repeat:repeat-x;
-	padding-top: 8px;
-}
-/*
-.wm-darksnazzy .wmtablayers .wmtablayers-tab,
-#studio_javaEditorContainer_javaEditor_logTabs .wmtablayers-tab,
-#studio_tabs .wmtablayers-tab,
-#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab {
-	cursor: pointer;
-}
-*/
-
-
-
-.Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_documentationTabs > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
-.JavaEditor-logTabs .wmtablayers-tab,
-#studio_JavaEditorSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
-#studio_PIContents  .wmtablayers-tab,
-.ResourceManager .wmtablayers-tab
- {
-	-moz-border-radius-topleft: 4px; 
-	-moz-border-radius-topright: 4px; 
-	-webkit-border-top-left-radius: 4px; 
-	-webkit-border-top-right-radius: 4px;
-	border-radius-topleft: 4px; 
-	border-radius-topright: 4px;
-
-
-	cursor: pointer;
-	border-top: 1px solid #5e6678;
-	border-right: none;
-	border-left: none;
-	border-bottom: 1px solid #5e6678 /*#c0c4ca*/;
-	margin: 0px 0px 0px 6px;
-	background-color: #5e6678;
-	background-image:none;
-	color: #FFF;
-    padding: 2px 5px 3px 5px;
-}
-/*
-.StudioButton.wmtogglebutton {
-	-moz-border-radius: 0px; 
-	-webkit-border-radius: 0px; 
-	border-radius: 0px; 
-	background-image: none !important;
-}
-*/
-
-
-.dj_ff3 .Studio .Security-tabs > .wmtablayers-tabbar,
-.dj_ff3 #studio_tabs > .wmtablayers-tab,
-.dj_ff3 #studio_left > .wmtablayers-tab,
-.df_ff3 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 #studio_JavaEditorSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
-.df_ff3 .JavaEditor-logTabs .wmtablayers-tabbar,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar {
-    padding: 2px 2px 3px 2px;
-}
-
-
-.Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-selected,
-#studio_documentationTabs > .wmtablayers-tabbar > .wmtablayers-selected,
-#studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-selected,
-.JavaEditor-logTabs .wmtablayers-selected,
- #studio_JavaEditorSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
- #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
- #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
- #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-selected,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
-#studio_PIContents .wmtablayers-selected,
-.ResourceManager .wmtablayers-selected
- {
-	border-top: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	border-left: 1px solid #c0c4ca;
-	background-color: #959dab;
-	border-bottom: 1px solid #959dab;
-	background-image: none;
-	margin: 0px 0px 0px 6px;
-	color: #FFF;
-}
 
 #studio_tabs .wmtablayers-closabletab {
     padding-right: 2px;
@@ -1773,34 +1677,30 @@ color: rgb(0,270,0);
     background: transparent url(images/wm/component_16.png) no-repeat;
 }
 
-.StudioDirtyIcon {
+.StudioDirtyIcon:before {
+    content: "*";
+    color: red;
+    padding-right: 2px;
+
+/*
+
     height: 12px;
     width: 12px;
     border: solid 1px #444444;
-
         background: -webkit-gradient(linear, left top, left bottom, from(#AAAAAA), to(#333333));
 	background: -moz-linear-gradient(top,  #AAAAAA,  #333333);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#AAAAAA', endColorstr='#333333');
-
 	-moz-border-radius: 12px; 
 	-webkit-border-radius: 12px;
 	border-radius: 12px;
     position: relative;
     top: 2px;
-}
-.dj_ie9 .StudioDirtyIcon {
-	border-radius: 0px;
+*/
+
 }
 
-#studio_workspace .StudioDirtyIcon,
-#studio_sourceTabs .StudioDirtyIcon,
-#studio_JavaEditorSubTab .StudioDirtyIcon,
-#studio_databaseSubTab .StudioDirtyIcon,
-#studio_webServiceSubTab .StudioDirtyIcon,
-#studio_securitySubTab .StudioDirtyIcon {
-    height: 8px;
-    width: 8px;
-}
+
+
 .LicenseError {
     background-color: red;
 }

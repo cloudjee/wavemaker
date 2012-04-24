@@ -13,6 +13,10 @@
  */
 
 
+.Start .wmlayer {
+    background-color: rgb(99, 111, 128);
+}
+
 .Start a, .Start a:visited, .Start a:hover {
     color: white;
 }
@@ -27,41 +31,6 @@
 .Start .Start-panel1 {
 	color: white;
 	background-color: #424a5a;
-}
-
-.Start .Start-tabLayers1 {
-	color: white;
-	background-color: #959dab;
-}
-
-.Start .wmtablayers-tabbar {
-	background-image: none;
-	background-color: #424a5a;
-}
-
-.Start .wmtablayers-tab {
-	font-size: 100%;
-  	font-weight: 600;
-	cursor: pointer;
-	border-top: 1px solid #424a5a;
-	border-right: none;
-	border-left: none;
-	border-bottom: 1px solid #424a5a;
-	margin: 0px 0px 0px 6px;
-	background-color: #424a5a;
-	background-image:none;
-	color: #FFF;
-}
-
-.Start .wmtablayers-selected {
-	border-top: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	/*border-left: 1px solid #c0c4ca;*/
-	background-color: #959dab;
-	border-bottom: 1px solid #959dab;
-	background-image: none;
-	margin: 0px 0px 0px 0px;
-	color: #FFF;
 }
 
 .Start .Start-welcomeTitleLabel {
@@ -111,26 +80,10 @@
 	font-size: 120%;
 }
 
-.Start .Start-panel3, .Start .Start-panel2 {
+.Start .Start-panel3 {
 	background-color: #0D2744;
 }
 
-.Start .Start-panel8 {
-	background-color: #6F798A;
-}
-
-.Start .Start-openProjectBtn,
-.Start .Start-deleteProjectBtn,
-.Start .Start-newProjectBtn {
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-}
-
-.Start .Start-panel9 {
-	background-color: #959dab;
-}
 .Start .Start-projectSearch {
     color: black !important;
 }
@@ -147,4 +100,12 @@
     -moz-box-shadow: 4px 4px 4px #111;
     -webkit-box-shadow: 4px 4px 4px #111;
     box-shadow: 4px 4px 4px #111;
+}
+
+.Start .Start-existingProjectList.StudioList.wmlist {
+    background-color: inherit;
+    color: white;
+}
+.Start .Start-existingProjectList.StudioList.wmlist .wmlist-cell {
+    border-bottom: solid 1px #687585;
 }

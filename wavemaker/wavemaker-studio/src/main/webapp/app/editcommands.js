@@ -608,7 +608,7 @@ Studio.extend({
 						       corner: "tr",
 						       modal: false,
 						       onDock: dojo.hitch(this, "onAutoCompletionDock"),
-						       onUndock: dojo.hitch(this, "onAutoCompletionDock"),
+						       onUndock: dojo.hitch(this, "onAutoCompletionDock")
 						       });
 	    this.autoCompletionDialog.containerWidget.setPadding("0,10,10,10");
 	    this.autoCompletionDialog.containerWidget.setBackgroundColor("#424959");
@@ -820,11 +820,21 @@ Studio.extend({
 	while (parent instanceof wm.Layer == false) {
 	    parent = parent.parent;
 	}
-	var caption = parent.caption;
-	var newCaption = (changed ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + caption.replace(/^\<.*?\>\s*/,"");
-	if (caption != newCaption) {
-	    parent.setCaption(newCaption);
-	    this.updateSourceDirty();
+	if (dojo.hasClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon")) {
+	    if (!changed) {
+		dojo.removeClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon");
+		this.updateSourceDirty();
+	    } 
+	} else if (changed) {
+		dojo.addClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon");
+		this.updateSourceDirty();
 	}
+//	var caption = parent.caption;
+//	var newCaption = (changed ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + caption.replace(/^\<.*?\>\s*/,"");
+//	if (caption != newCaption) {
+//	    parent.setCaption(newCaption);
+//	    this.updateSourceDirty();
+//	}
+
     }
 });

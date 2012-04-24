@@ -16,7 +16,7 @@
 I18nDictionaryEditor.widgets = {
         dictionaryTermListVar: ["wm.Variable", {type: "StringData"}],
 	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-	    containerWidget: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"top-to-bottom","verticalAlign":"top","width":"100%", padding: "2"}, {}, {
+            mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 		dictionaryListPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100px", verticalAlign: "top", horizontalAlign: "left"},{}, {
 		    dictionaryItemList: ["wm.List", {width: "200px", height: "100%", border: "1", borderColor: "black", headerVisible: false},{onselect: "dictionaryItemSelect"}, {
 			binding: ["wm.Binding", {}, {}, {
@@ -35,7 +35,7 @@ I18nDictionaryEditor.widgets = {
 			wire1: ["wm.Wire", {"expression":undefined,"source":"dictionaryItemList.selectedItem.dataValue","targetProperty":"dataValue"}, {}]
 		    }]
 		}],
-		    instructions: ["wm.Html", {width: "100%", height: "100px", html: "Enter a word or phrase below.  You can also add parameters like<code>My name is ${myname}, your name is ${yourname}</code> which can then be called from your script using <code>this.getDictionaryItem('DictionaryTerm', {myname: 'I forgot', yourname: 'you forgot'})</code>"}],
+		    instructions: ["wm.Html", {width: "100%", height: "150px", html: "Enter a word or phrase below.  You can also add parameters like<code>My name is ${myname}, your name is ${yourname}</code> which can then be called from your script using <code>this.getDictionaryItem('DictionaryTerm', {myname: 'I forgot', yourname: 'you forgot'})</code>"}],
 		splitter1: ["wm.Splitter", {border:"0",layout:"top"}],
 		editTermPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left", autoScroll: true},{}, {
 		    

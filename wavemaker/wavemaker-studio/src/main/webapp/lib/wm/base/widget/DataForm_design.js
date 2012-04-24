@@ -808,6 +808,7 @@ wm.DBForm.extend({
         this.inherited(arguments);
         if (!studio.newLiveFormDialog) {
             studio.newLiveFormDialog = new wm.PageDialog({
+		_classes: {domNode: ["studiodialog"]},
                 owner: studio,
                 name: "newLiveFormDialog",
                 pageName: "NewLiveFormDialog",

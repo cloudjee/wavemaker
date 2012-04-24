@@ -115,9 +115,8 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 		params = null;
 	    });
 				      
-	    var d = new wm.Dialog({owner: app, 
-                                   borderColor: "white",
-                                   border: "2",
+	    var d = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+				   owner: app, 
 				   width: "400px",
 				   height: "400px",
 				   modal: true,
@@ -125,20 +124,20 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
                                    useButtonBar: true,
 				   fitToContentHeight: true,
 				   title: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_TITLE")});
-            d.containerWidget.setBorder("10");
-            d.containerWidget.setBorderColor("#424A5A");
+	    d.containerWidget.setPadding("0");
+	    var mainPanel = new wm.studio.DialogMainPanel({owner: d, parent: d.containerWidget, layoutKind: "top-to-bottom"});
             d.buttonBar.addUserClass("wmDialogFooter");
 	    for(var i = 0; i < params.length; i++) {
                 new wm.Label({singleLine: false,
                               owner: d,
-                              parent: d.containerWidget,
+                              parent: mainPanel,
                               height: "20px",
                               width: "100%",                             
                               autoSizeHeight: true,
                               caption: "<b>" + params[i].name  + "</b> "+ params[i].description});
 		params[i].editor = 
 		    new wm.Text({owner: d,
-				 parent: d.containerWidget,
+                              parent: mainPanel,
 				 captionSize: "100px",
 				 captionAlign: "left",
 				 padding: "4,10,4,10",
@@ -225,11 +224,12 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 			return wm.JavaService.newJavaServiceDialog;
 		}
 		var props = {
+		    _classes: {domNode: ["studiodialog"]},
 		    owner: studio,
 		    pageName: "NewJavaService",
 		    hideControls: true,
 		    width: 400,
-		    height: 180,
+		    height: 140,
 		    title: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_TITLE")
 		};
 		var d = wm.JavaService.newJavaServiceDialog = new wm.PageDialog(props);

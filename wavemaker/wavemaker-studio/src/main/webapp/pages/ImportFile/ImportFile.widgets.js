@@ -15,7 +15,7 @@
 
 ImportFile.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: ["wm-darksnazzy"]}, {}, {
-	dialog: ["wm.Panel", {layoutKind: "top-to-bottom",  width: "100%", height: "100%", border: "10", borderColor: "#424959"}, {}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 	    panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], 
 				 layoutKind: "left-to-right", 
 				 width: "100%", 

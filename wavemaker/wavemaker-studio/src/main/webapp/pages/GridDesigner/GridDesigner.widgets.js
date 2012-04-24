@@ -69,7 +69,7 @@ GridDesigner.widgets = {
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {layoutKind: "left-to-right"},{}, {
 	    panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"185px"}, {}, {
-		grid: ["wm.DojoGrid", {"columns":[{"show":true,"id":"show","title":"Show","width":"60px","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool"},{"show":true,"id":"field","title":"Field","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":""}],selectFirstRow: true, "height":"100%","localizationStructure":{},"margin":"4", border: "1", borderColor: "black"}, {onCellEdited: "onCellEdited"}, {
+		grid: ["wm.DojoGrid", {"columns":[{"show":true,"id":"show","title":"Show","width":"60px","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool"},{"show":true,"id":"field","title":"Field","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":""}],selectFirstRow: true, "height":"100%","localizationStructure":{},"margin":"4", border: "1", borderColor: "#959DAB"}, {onCellEdited: "onCellEdited"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {"expression":undefined,"source":"columnsVar","targetProperty":"dataSet"}, {}]
 		    }]
@@ -89,9 +89,9 @@ GridDesigner.widgets = {
 		    }]
 		}]
 	    }],
-	    tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "DarkLayers"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB",_lockHeaderHeight:1, headerHeight: "32px"}, {}, {
-		layer1: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Basic Settings","horizontalAlign":"left","margin":"2,0,0,0","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
-		    label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0","padding":"4","width":"100%"}, {}, {
+	    tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers", "NoRightMarginOnTab"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB",_lockHeaderHeight:1, headerHeight: "32px"}, {}, {
+		layer1: ["wm.Layer", {"borderColor":"#999999","caption":"Basic Settings","horizontalAlign":"left","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
+		    label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0",borderColor: "#959DAB", "padding":"4","width":"100%"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.field","targetProperty":"caption"}, {}]
 			}]
@@ -118,7 +118,7 @@ GridDesigner.widgets = {
 			    wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.align","targetProperty":"dataValue"}, {}]
 			}]
 		    }],
-		    formattersPanels: ["wm.Panel", {title: "Formatters", width: "100%", height: "100%", margin: "10,0,10,0", padding: "0", fitToContentHeight: true, border: "1", layoutKind: "top-to-bottom"}, {}, {
+		    formattersPanels: ["wm.Panel", {title: "Formatters", width: "100%", height: "100%", margin: "10,0,10,0", padding: "0", fitToContentHeight: true, border: "1",borderColor: "#959DAB", layoutKind: "top-to-bottom"}, {}, {
 			formatEditor: ["wm.SelectMenu", {changeOnSetData: false, restrictValues: false, "caption":"Format","captionAlign":"left","helpText":"Leave alone to just show the raw data for this column.  Specify a formatter to customize how its displayed.  Create a custom formatter and write code to control how its displayed","width":"100%", dataField: "dataValue", displayField: "name"}, {onchange: "onFormatChange"}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.formatFunc","targetProperty":"dataValue"}, {}],
@@ -247,13 +247,13 @@ GridDesigner.widgets = {
 			}]
 		    }]
 		}],
-		    advancedLayer: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Advanced Settings","horizontalAlign":"left","margin":"2,0,0,0","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
-			label2: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0","padding":"4","width":"100%"}, {}, {
+		    advancedLayer: ["wm.Layer", {"caption":"Advanced Settings","horizontalAlign":"left","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
+			label2: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0",borderColor: "#959DAB","padding":"4","width":"100%"}, {}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.field","targetProperty":"caption"}, {}]
 			    }]
 			}],
-			editorPanels: ["wm.Panel", {title: "Editors", width: "100%", height: "100%", margin: "0", padding: "0", border: "1", fitToContentHeight: true, layoutKind: "top-to-bottom"}, {}, {
+			editorPanels: ["wm.Panel", {title: "Editors", width: "100%", height: "100%", margin: "0", padding: "0", border: "1",borderColor: "#959DAB", fitToContentHeight: true, layoutKind: "top-to-bottom"}, {}, {
 			    editorPanelNote: ["wm.Label", {caption: "Please note that edit fields will not work on tablets and phones", width: "100%"}],
 			    editorSelector: ["wm.SelectMenu", {changeOnSetData: false, "caption":"Edit Field Type","captionAlign":"left","helpText":"Leave this blank unless you want your users to be able to edit your grid.  NOTE: You'll need onCellEditted event handlers for any changes in value to have meaning.", dataField: "dataValue", displayField: "name", width: "100%"}, {onchange: "onEditFieldChange"}, {
 				binding: ["wm.Binding", {}, {}, {

@@ -75,7 +75,9 @@ wm.DojoMenu.extend({
     editMenuItems: function() {
 		    if (!studio.menuDesignerDialog) {
 			studio.menuDesignerDialog = 
-			    new wm.PageDialog({pageName: "MenuDesigner", 
+			    new wm.PageDialog({
+				_classes: {domNode: ["studiodialog"]},
+				pageName: "MenuDesigner", 
 					       name: "MenuDesignerDialog",
 					       title: studio.getDictionaryItem("wm.DojoMenu.MENU_DESIGNER_TITLE"),
 					       hideControls: true,

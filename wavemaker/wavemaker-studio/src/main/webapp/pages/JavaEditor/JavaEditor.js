@@ -31,12 +31,23 @@ dojo.declare("JavaEditor", wm.Page, {
     setDirty: function() {
 		wm.job(this.getRuntimeId() + "_keydown", 500, dojo.hitch(this, function() {
 		    if (this.isDestroyed) return;
-		    this.dirty = this.javaCodeEditor.getText() != this._cachedData;
-		    var caption =  (this.dirty ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + this.tree.serviceId;
-		    if (caption != this.owner.parent.caption) {
-			this.owner.parent.setCaption(caption);
+		    var dirty = this.dirty = this.javaCodeEditor.getText() != this._cachedData;
+//		    var caption =  (this.dirty ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + this.tree.serviceId;
+//		    if (caption != this.owner.parent.caption) {
+//			this.owner.parent.setCaption(caption);
+//			studio.updateServicesDirtyTabIndicators();
+//		    }
+		var layer = this.owner.parent;
+		if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
+		    if (!dirty) {
+			dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
 			studio.updateServicesDirtyTabIndicators();
 		    }
+		} else if (dirty) {
+			dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
+		}
+
 		}));
     },
 
@@ -126,34 +137,8 @@ dojo.declare("JavaEditor", wm.Page, {
 		this.typeTree.renderData(inData.dataObjectsTree);
 	},
 	newJavaBtnClick: function(inSender) {
-		var d = this.newJavaServiceDialog;
-		if (d) {
-			d.page.clearAll();
-		} else {
-			this.newJavaServiceDialog = d = new wm.PageDialog({
-				pageName: "NewJavaService",
-				owner: studio,
-				hideControls: true,
-				height: 180,
-			        width: 400,
-			    title: this.getDictionaryItem("TITLE_NEW_SERVICE")
-			});
-			d.onClose = dojo.hitch(this, function(inWhy) {
-				if (inWhy == "OK")
-					this.newJavaServiceCallback();
-			});
-		}
-		d.show();
-	},
-	newJavaServiceCallback: function(inData) {
-		if (this.newJavaServiceDialog && this.newJavaServiceDialog.page.newServiceId) {
-			this.tree.serviceId = this.newJavaServiceDialog.page.newServiceId;
-			this.javaCodeEditor.getText(this.newJavaServiceDialog.page.newJavaCode || "");
-		}
-		this.javaService = new wm.JavaService({name: this.tree.serviceId, serviceId: this.tree.serviceId});
-		studio.application.addServerComponent(this.javaService);
-		this.update();
-		studio.select(this.javaService);
+	    var s = new wm.JavaService({owner: studio.application});
+	    s.newJavaServiceDialog();
 	},
 	delJavaBtnClick: function(inSender) {
 	    if (this.tree.serviceId)
@@ -246,7 +231,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	    }
 	    m += "\n\n";
 
-	        this.javaCompilerOutputEditor.setInputValue(m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9));
+	    this.javaCompilerOutputEditor.setHtml("<pre>" + m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9) + "</pre>");
 		this.logViewer.page.clearLog();
 		this.updateJavaLogs();
 		this.openCmpOutBtnClick();

@@ -14,22 +14,16 @@
  
 NewJavaService.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
-		dialog: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
-			dialogInner: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
-				panel: ["wm.Panel", {border: "0", height: "100%", width: "100%", verticalAlign: "center", padding: "10"}, {}, {
-					panel1: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, border: "0", height: "100%", width: "100%", verticalAlign: "center", padding: "10"}, {}, {
-					    newJavaServiceIdInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Service Name"}, {onEnterKeyPress: "okButtonClick"}, {
-						}],
-						newJavaClassNameInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Package and Class Name"}, {onEnterKeyPress: "okButtonClick"}, {
-						}]
-					}]
-				}],
-				footer: ["wm.Panel", {border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-					okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "96px", margin: "4"}, {onclick: "okButtonClick"}],
+            mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
+			newJavaServiceIdInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Service Name"}, {onEnterKeyPress: "okButtonClick"}, {
+			}],
+			newJavaClassNameInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "150px", caption: "Package and Class Name"}, {onEnterKeyPress: "okButtonClick"}, {
+			}]
+	    }],
+		footer: ["wm.Panel", {border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+		    okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "96px", margin: "4"}, {onclick: "okButtonClick"}],
 					spacer4: ["wm.Spacer", {width: "10px"}, {}],
 					cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "96px", margin: "4"}, {onclick: "cancelButtonClick"}]
 				}]
 			}]
-		}]
-	}]
 }

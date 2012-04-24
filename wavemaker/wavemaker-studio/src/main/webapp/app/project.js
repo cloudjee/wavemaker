@@ -1271,13 +1271,15 @@ Studio.extend({
 	    }
 
 
-	    if (dirty && !caption.match(/\<img/)) {
-		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-		this.workspace.setCaption(caption);
-	    } else if (!dirty && caption.match(/\<img/)) {
-		caption = caption.replace(/^.*\/\>\s*/,"");
-		this.workspace.setCaption(caption);
-	    }
+//	    if (dirty && !caption.match(/\<img/)) {
+//		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//		this.workspace.setCaption(caption);
+//	    } else if (!dirty && caption.match(/\<img/)) {
+//		caption = caption.replace(/^.*\/\>\s*/,"");
+//		this.workspace.setCaption(caption);
+//	    }
+
+	    dojo.toggleClass(this.tabs.decorator.btns[this.workspace.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1299,13 +1301,14 @@ Studio.extend({
 
 
 
-	    if (dirty && !caption.match(/\<img/)) {
-		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-		this.sourceTab.setCaption(caption);
-	    } else if (!dirty && caption.match(/\<img/)) {
-		caption = caption.replace(/^.*\/\>\s*/,"");
-		this.sourceTab.setCaption(caption);
-	    }
+//	    if (dirty && !caption.match(/\<img/)) {
+//		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//		this.sourceTab.setCaption(caption);
+//	    } else if (!dirty && caption.match(/\<img/)) {
+//		caption = caption.replace(/^.*\/\>\s*/,"");
+//		this.sourceTab.setCaption(caption);
+//	    }
+	    dojo.toggleClass(this.tabs.decorator.btns[this.sourceTab.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1318,13 +1321,14 @@ Studio.extend({
 	    var dirty = c.js != this.getScript();
 
 	    var caption = this.scriptLayer.caption;
-	    if (dirty && !caption.match(/\<img/)) {
-		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-		this.scriptLayer.setCaption(caption);
-	    } else if (!dirty && caption.match(/\<img/)) {
-		caption = caption.replace(/^.*\/\>\s*/,"");
-		this.scriptLayer.setCaption(caption);
-	    }
+//	    if (dirty && !caption.match(/\<img/)) {
+//		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//		this.scriptLayer.setCaption(caption);
+//	    } else if (!dirty && caption.match(/\<img/)) {
+//		caption = caption.replace(/^.*\/\>\s*/,"");
+//		this.scriptLayer.setCaption(caption);
+//	    }
+	    dojo.toggleClass(this.tabs.decorator.btns[this.scriptLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1341,13 +1345,14 @@ Studio.extend({
 	    }
 	    var dirty = c1.css != this.getCss() || c2.css != this.getAppCss();
 
-	    if (dirty && !caption.match(/\<img/)) {
-		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-		this.cssLayer.setCaption(caption);
-	    } else if (!dirty && caption.match(/\<img/)) {
-		caption = caption.replace(/^.*\/\>\s*/,"");
-		this.cssLayer.setCaption(caption);
-	    }
+//	    if (dirty && !caption.match(/\<img/)) {
+//		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//		this.cssLayer.setCaption(caption);
+//	    } else if (!dirty && caption.match(/\<img/)) {
+//		caption = caption.replace(/^.*\/\>\s*/,"");
+//		this.cssLayer.setCaption(caption);
+//	    }
+	    dojo.toggleClass(this.tabs.decorator.btns[this.cssLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1364,13 +1369,14 @@ Studio.extend({
 	    var dirty = c.html != this.getMarkup()
 
 
-	    if (dirty && !caption.match(/\<img/)) {
-		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-		this.markupLayer.setCaption(caption);
-	    } else if (!dirty && caption.match(/\<img/)) {
-		caption = caption.replace(/^.*\/\>\s*/,"");
-		this.markupLayer.setCaption(caption);
-	    }
+//	    if (dirty && !caption.match(/\<img/)) {
+//		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//		this.markupLayer.setCaption(caption);
+//	    } else if (!dirty && caption.match(/\<img/)) {
+//		caption = caption.replace(/^.*\/\>\s*/,"");
+//		this.markupLayer.setCaption(caption);
+//	    }
+	    dojo.toggleClass(this.tabs.decorator.btns[this.markupLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1387,13 +1393,14 @@ Studio.extend({
 	    var dirty = c.js != this.appsourceEditor.getText();
 
 
-	    if (dirty && !caption.match(/\<img/)) {
-		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-		this.appsource.setCaption(caption);
-	    } else if (!dirty && caption.match(/\<img/)) {
-		caption = caption.replace(/^.*\/\>\s*/,"");
-		this.appsource.setCaption(caption);
-	    }
+//	    if (dirty && !caption.match(/\<img/)) {
+//		caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//		this.appsource.setCaption(caption);
+//	    } else if (!dirty && caption.match(/\<img/)) {
+//		caption = caption.replace(/^.*\/\>\s*/,"");
+//		this.appsource.setCaption(caption);
+//	    }
+	    dojo.toggleClass(this.tabs.decorator.btns[this.appsource.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	}
 });
@@ -1898,6 +1905,8 @@ Studio.extend({
 			d.page.update();
 		} else {
 			d = this.importPageDialog = new wm.PageDialog({
+			    _classes: {domNode: ["studiodialog"]},
+			    title: "Copy Page",
 				owner: studio,
 				name: "importPageDialog",
 				pageName: "ImportPageDialog",
@@ -1929,13 +1938,15 @@ Studio.extend({
 		if (d) {
 			d.page.update();
 		} else {
-			this.preferencesDialog = d = new wm.PageDialog({pageName: "PreferencesPane", 
-									title: this.getDictionaryItem("TITLE_PREFERENCES"),
-									modal: false,
-									owner: studio, 
-									hideControls: true, 
-									height: "150px", 
-									width: "500px"});
+			this.preferencesDialog = d = new wm.PageDialog({
+			    _classes: {domNode: ["studiodialog"]},
+			    pageName: "PreferencesPane", 
+			    title: this.getDictionaryItem("TITLE_PREFERENCES"),
+			    modal: false,
+			    owner: studio, 
+			    hideControls: true, 
+			    height: "170px", 
+			    width: "500px"});
 			d.onClose = function(inWhy) {
 			    /* Removal of projects tab
 				if (inWhy == "OK")

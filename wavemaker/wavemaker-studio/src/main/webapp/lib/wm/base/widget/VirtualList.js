@@ -215,8 +215,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
     },
     postRenderBounds: function() {
 	if (!this.isAncestorHidden()) {
-	    var coords = dojo.marginBox(this.headerNode);
+	    var coords = (this.noHeader || !this.headerVisible) ? {h:0} : dojo.marginBox(this.headerNode);
 	    var bodyheight = this.getContentBounds().h - coords.h;
+	    console.log("LIST DOM:" + this.bounds.h + " | " + bodyheight);
 	    this.listNode.style.height = bodyheight + "px";
 	}
     },

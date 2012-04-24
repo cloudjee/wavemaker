@@ -1669,7 +1669,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.editors = {};
 
 	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
 		basicLayer: ["wm.Layer", {caption: "Basic"}, {
 		}],
 		styleLayer: ["wm.Layer", {caption: "Styles"}, {},{
@@ -2463,7 +2463,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 	this.editors = {};
 	this.parent.setFitToContentHeight(true);
 	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
 		descLayer: ["wm.Layer", {caption: "Description"}, {},{
 		    descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}],
 		}],

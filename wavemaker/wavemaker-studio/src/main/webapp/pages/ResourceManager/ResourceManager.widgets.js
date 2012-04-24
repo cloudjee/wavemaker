@@ -70,7 +70,7 @@ ResourceManager.widgets = {
 	    rightPanel: ["wm.Panel", {width: "100%", height: "100%",layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 		readmeHtml: ["wm.Html", {width: "100%", height: "70px"}],
 		splitter2: ["wm.Splitter", {}],
-		editorTabs: ["wm.TabLayers", {showing: false, width: "100%", height: "100%", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB"},{onCloseOrDestroy: "editorClosed"}]
+		editorTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, showing: false, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB"},{onCloseOrDestroy: "editorClosed"}]
 		}]
 	    }]
     }]

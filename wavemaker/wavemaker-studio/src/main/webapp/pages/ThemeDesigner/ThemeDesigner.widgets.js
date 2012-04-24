@@ -71,7 +71,7 @@ ThemeDesigner.widgets = {
                 widgetEditPanel: ["wm.Panel", {_classes: {domNode:["wm-darksnazzy"]},height: "100%", autoScroll: true, width: "100%", layoutKind: "top-to-bottom", padding: "0,0,10,0"}]
             }],
 
-	    demoPanelTabLayers: ["wm.TabLayers", {height: "100%", width: "100%", clientBorder: "2"},{onchange: "regenerateADemo"},{
+	    demoPanelTabLayers: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, height: "100%", width: "100%", clientBorder: "1,0,0,1", clientBorderColor: "#959DAB"},{onchange: "regenerateADemo"},{
 		pageWithTopNavLayer: ["wm.Layer", {caption: "Preview Doc with Toolbar", themeWidgets: "themeGroupWidgets_TopNav"},{},{
 			demoPanel: ["wm.Panel", { height: "100%", width: "100%", layoutKind: "top-to-bottom", margin: "15", padding: "15",  border: "2", borderColor: "#F0F0F0"}]
 		    }],

@@ -144,7 +144,8 @@ Studio.extend({
 	//=====================================================================
 	getImportProjectDialog: function() {
 	  if (!this.importProjectDialog) {
-	      this.importProjectDialog = new wm.PageDialog({owner: studio, 
+	      this.importProjectDialog = new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
+							    owner: studio, 
 							    pageName: "ImportFile", 
 							    width: "500px", 
 							    height: "120px", 

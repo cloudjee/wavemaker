@@ -19,13 +19,13 @@ Security.widgets = {
 	varRoleList: ["wm.Variable", {"isList":true,"type":"EntryData"}, {}],
         
 	layoutBox: ["wm.Layout", {"_classes":{"domNode":["wm-darksnazzy"]},"height":"100%"}, {}, {
-		    editorToolbar: ["wm.Panel", {"border":"0","height":"29px","layoutKind":"left-to-right"}, {}, {
+	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, "border":"0","height":"29px","layoutKind":"left-to-right"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {"border":"0","imageList":"smallToolbarImageList","layoutKind":"left-to-right","padding":"0,4","width":"100%"}, {}, {
 			    saveButton: ["wm.ToolButton", {"border":"0","hint":"Save Security settings","imageIndex":8,"width":"24px"}, {"onclick":"saveButtonClick"}]
 			}],
 			logoBtmHolder: ["wm.Panel", {"border":"0","width":"221px"}, {}]
 		    }],
-	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioTabsInverted"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
 		securityLayer: ["wm.Layer", {caption: "Setup Security"}, {}, {
 		    label1a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Security Configuration","padding":"4"}],
 		    panel1a: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left"}, {}, {

@@ -13,36 +13,18 @@
  */
  
 PreferencesPane.widgets = {
-	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
-		prefsDialog: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right"}, {}, {
-			prefsDialogInner: ["wm.Panel", {_classes: {domnode: ["wm-darksnazzy", "dialogTitleBar"]}, height: "100%", width: "100%"}, {}, {
-/*
-				titleBar: ["wm.Panel", {height: "29px", layoutKind: "left-to-right"}, {}, {
-					dialogLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px", "wm_FontColor_White"]}, height: "100%", width: "100%", caption: "WaveMaker Preferences", border: "0"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					}]
-				}],
-				*/
-				prefsPanel: ["wm.Panel", {height: "100%", width: "100%", padding: "10"}, {}, {
-				    panel2: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, padding: "10", margin: "0,0,5,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
-					    wavemakerFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "WaveMaker Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {}],
-						demoFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
-						}]
-					}],
-/*
-					panel3: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, margin: "5,0,0,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
-						useLopEditor: ["wm.Editor", {captionSize: "400px", width: "100%", caption: "Open the last opened project on startup", displayValue: true, display: "CheckBox", captionAlign: "left", captionPosition: "right"}, {onchange: "useLopEditorChange"}, {
-							editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
-						}]
-					}]
-					*/
-				}],
-				footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-					okButton: ["wm.Button", {caption: "OK", width: "70px", padding: "0"}, {onclick: "okButtonClick"}],
-					spacer4: ["wm.Spacer", {width: "10px"}, {}],
-					cancelButton: ["wm.Button", {caption: "Cancel", width: "70px", padding: "0"}, {onclick: "cancelButtonClick"}]
-				}]
-			}]
+	layoutBox1: ["wm.Layout", {height: "100%", width: "100%"}, {}, {
+            mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
+		panel2: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left", layoutKind: "top-to-bottom"}, {}, {
+		    wavemakerFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "WaveMaker Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {}],
+		    demoFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
+		    }]
 		}]
+	    }],
+	    footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+		okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK", width: "70px", padding: "0"}, {onclick: "okButtonClick"}],
+		spacer4: ["wm.Spacer", {width: "10px"}, {}],
+		cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "70px", padding: "0"}, {onclick: "cancelButtonClick"}]
+	    }]
 	}]
 }

@@ -243,14 +243,24 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
 		if (this.isDestroyed) return;
 		var changed = this._cachedData != this.getCachedData();
-		this.dirty = changed;
+		var dirty = this.dirty = changed;
 
-		var oldCaption = this.owner.parent.caption;
-		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
-		    oldCaption.replace(/^\<.*\>\s*/,"")
-		if (caption != this.owner.parent.caption) {
-		    this.owner.parent.setCaption(caption);
-		    studio.updateServicesDirtyTabIndicators();
+//		var oldCaption = this.owner.parent.caption;
+//		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+//		    oldCaption.replace(/^\<.*\>\s*/,"")
+//		if (caption != this.owner.parent.caption) {
+//		    this.owner.parent.setCaption(caption);
+//		    studio.updateServicesDirtyTabIndicators();
+//		}
+		var layer = this.owner.parent;
+		if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
+		    if (!dirty) {
+			dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
+		    }
+		} else if (dirty) {
+			dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
 		}
 		this.saveButton1.setDisabled(!changed);
 	    }));

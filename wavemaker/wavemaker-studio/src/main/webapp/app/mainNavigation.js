@@ -178,10 +178,13 @@ Studio.extend({
 		    break;
 		}
 	    }
-	    var caption = tab.parent.caption.replace(/^\<.*?\>\s*/, "");
-	    if (isDirty) caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-	    if (caption != tab.parent.caption)
-		tab.parent.setCaption(caption);
+//	    var caption = tab.parent.caption.replace(/^\<.*?\>\s*/, "");
+//	    if (isDirty) caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+//	    if (caption != tab.parent.caption)
+//		tab.parent.setCaption(caption);
+	    if (tab.parent) {
+		dojo.toggleClass(tab.parent.decorator.btns[tab.parent.getIndex()], "StudioDirtyIcon", isDirty);
+	    }
 	}
     },
     closeServiceTab: function(inSender, inLayer) {

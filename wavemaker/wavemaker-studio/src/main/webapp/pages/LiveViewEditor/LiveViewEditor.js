@@ -422,9 +422,21 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	    wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
 		if (this.isDestroyed) return;
 		var changed = this._cachedData != this.clientLiveView.write("") ;
-		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
-		    this.clientLiveView.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
-		this.dirty = changed;
+		var dirty = changed;
+//		var caption = (!changed ? "" : "<img class='StudioDirtyIcon'  src='images/blank.gif' /> ") +
+//		    this.clientLiveView.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
+//		this.dirty = changed;
+		var layer = this.owner.parent;
+		if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
+		    if (!dirty) {
+			dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
+		    }
+		} else if (dirty) {
+			dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			studio.updateServicesDirtyTabIndicators();
+		}
+
 
 		if (this.owner.owner instanceof wm.Dialog == false) {
 		    if (caption != this.owner.parent.caption) {

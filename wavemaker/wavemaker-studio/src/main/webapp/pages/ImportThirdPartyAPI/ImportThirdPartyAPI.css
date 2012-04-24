@@ -43,16 +43,6 @@
     background-image:url(images/wmbutton_bg.png) !important;
 }
 
-#studio_jarDownloadDialog_handleRequiredJars_layers_buttonPanel {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	border-bottom:1px #363b44 solid;
-	color: #FFF;
-	padding: 4px;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-}
-
 .ImportThirdPartyAPI .wmWizardLayers-buttonPanel button,
 .ImportThirdPartyAPI .wmDojoFileUpload-button {
     pointer: cursor;

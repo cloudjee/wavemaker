@@ -764,7 +764,7 @@
 	 return newprops;
      },
      addSubGroupIndicator: function(inName, inParent, inShowing) {
-	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,2,0", borderColor: "#959DAB", showing: inShowing}));
+	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,1,0", borderColor: "#959DAB", showing: inShowing, padding: "0", margin: "0"}));
      },
      generateEditors: function(inComponent, inGroupName, inLayer) {
 	 var groupObj;
@@ -1420,7 +1420,9 @@
 	     var g = groups[i];
 	     var layer = this.addLayer(g.displayName,true);
 	     layer.propertyGroup = g;
-	     layer.header.setMargin("2,0,2,0");
+	     layer.setMargin("2,0,2,0");
+	     //layer.header.setMargin("2,0,2,0");
+	     layer.header.setMargin(layer.getIndex() == 0 ? "2" : "0,2,2,2");
 	     //layer.header.setBorder("1");
 	     //layer.header.setBorderColor("");
 	     layer._groupName = g.name;
@@ -1447,6 +1449,7 @@
 	     this.layers[i].setPadding("5,4,5,4");
 	     this.layers[i].setFitToContentHeight(true);
 	 }	
+	 this.setFitToContentHeight(true);
      },
 	 // property groups
 	 initGroups: function(inProps) {

@@ -19,7 +19,8 @@ wm.LivePanel.extend({
 	afterPaletteDrop: function() {
 	    wm.Container.prototype.afterPaletteDrop.call(this);
 	    if (!studio.LivePanelTypeChooserDialog) {
-		studio.LivePanelTypeChooserDialog = new wm.PageDialog({owner: studio,
+		studio.LivePanelTypeChooserDialog = new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
+								       owner: studio,
 								       name: "LivePanelTypeChooserDialog",
 								       pageName: "NewLivePanelDialog",
 								       width: "415px",
