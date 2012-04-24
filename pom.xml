@@ -92,6 +92,13 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
+		<pluginRepository>
+			<id>codehaus-snapshots</id>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
 	</pluginRepositories>
 
 	<dependencyManagement>
@@ -564,6 +571,27 @@
 		</extensions>
 		<pluginManagement>
 			<plugins>
+				 <plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jslint-maven-plugin</artifactId>
+					<version>1.0.1</version>
+					 <configuration>
+						<sourceJsFolder>${basedir}/src/main/webapp</sourceJsFolder>
+						<includes>
+							<include>**/app\**/*.js</include>
+							<include>**/types.js</include>
+							<include>**/pages/**/*.js</include>
+							<include>**/lib/boot/manifest.js</include>
+							<include>**/lib/boot/runtimeloader.js</include>
+							<include>**/lib/boot/**/*.js</include>
+							<include>**/lib/github/**/*.js</include>
+							<include>**/lib/wm/**/*.js</include>
+							<include>**/branding/**/*.js</include>
+							<include>**/language/**/*.js</include>
+						</includes>
+						<!--<filter>**/*.widgets.js</filter>-->
+					 </configuration>
+				</plugin>
 				<plugin>
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>1.7</version>
