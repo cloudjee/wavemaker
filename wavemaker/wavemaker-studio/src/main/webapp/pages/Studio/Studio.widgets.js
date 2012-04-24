@@ -356,9 +356,9 @@ height: "29px", width: "420px",
 				}]
 			}]
 		}],
-		splitterPanel1: ["wm.Panel", {_classes: {domNode: ["StudioSplitterPanel"]}, border: "0", margin: "0", padding: "0", layoutKind: "top-to-bottom", width:"4px",height: "100%"},{},{
-		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px"}],
-		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left"}, {}]
+		splitterPanel1: ["wm.Panel", {_classes: {domNode: ["StudioSplitterPanel"]}, border: "0", margin: "0", padding: "0", layoutKind: "top-to-bottom", width:"4px",height: "100%", horizontalAlign: "left", verticalAlign: "top"},{},{
+		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px", width:"100%"}],
+		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left", parentIsSplitter:1, height: "100%", width: "4px"}, {}]
 		}],
 		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "NoRightMarginOnTab"]}, conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
