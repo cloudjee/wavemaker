@@ -547,6 +547,8 @@
             </property>
             <property name="studioConfiguration" ref="studioConfiguration"/>
         </bean>
+        
+        <bean id="waveMakerSecurityFilter" class="com.wavemaker.tools.security.LocalSecurityFilter"/>
     </beans>
 
     <beans profile="cloud-test">
@@ -575,6 +577,8 @@
             <property name="projectCompiler" ref="projectCompiler"/>
             <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
         </bean>
+        
+        <bean id="waveMakerSecurityFilter" class="com.wavemaker.tools.security.LocalSecurityFilter"/>
     </beans>
     
     <beans profile="cloud">
@@ -601,6 +605,8 @@
             <property name="projectCompiler" ref="projectCompiler"/>
             <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
         </bean>
+        
+        <bean id="waveMakerSecurityFilter" class="com.wavemaker.tools.security.CloudFoundrySecurityFilter"/>
     </beans>
     
 </beans>

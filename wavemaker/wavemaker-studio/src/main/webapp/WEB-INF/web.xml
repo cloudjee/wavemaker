@@ -180,8 +180,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
     <!-- security configuration -->
+	<filter>
+		<filter-name>WaveMaker Security Filter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>waveMakerSecurityFilter</param-value>
+		</init-param>
+	</filter>
+
     <filter>
         <filter-name>Acegi Ajax Filter</filter-name>
         <filter-class>com.wavemaker.runtime.security.AcegiAjaxFilter</filter-class>
@@ -195,6 +203,11 @@
             <param-value>filterChainProxy</param-value>
         </init-param>
     </filter>
+
+	<filter-mapping>
+		<filter-name>WaveMaker Security Filter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
 
     <filter-mapping>
         <filter-name>Acegi Ajax Filter</filter-name>
