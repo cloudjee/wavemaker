@@ -327,5 +327,50 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>JSlint</id>
+			<properties>
+			</properties>
+			<build>
+				<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jslint-maven-plugin</artifactId>
+					<executions>
+						<execution>
+						<goals>
+							<goal>jslint</goal>
+							<goal>test-jslint</goal>
+						 </goals>
+						 <phase>process-resources</phase>
+						</execution>
+					</executions>
+					<configuration>
+					<tolerateEval>
+						true
+					</tolerateEval>
+					<disallowInsecureCharsInRegExp>
+						false
+					</disallowInsecureCharsInRegExp>
+					<disallowUndefinedVariables>
+						false
+					</disallowUndefinedVariables>
+					<assumeConsoleAlertEtc>
+						true
+					</assumeConsoleAlertEtc>
+						<predefinedVars>
+							dojo,
+							studio,
+							Studio,
+							app,
+							loadDataSync,
+							wm,
+							window
+						</predefinedVars>
+					</configuration>
+				</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

@@ -64,11 +64,6 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>wavemaker-tools-cloudfoundry</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<!-- Dependency on studio to ensure correct reactor build order -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
