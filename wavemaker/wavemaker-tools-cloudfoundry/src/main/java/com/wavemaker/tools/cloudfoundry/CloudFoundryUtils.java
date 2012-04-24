@@ -20,6 +20,7 @@ import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudApplication.AppState;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * General purpose {@link CloudFoundryClient} utilities.
@@ -27,6 +28,8 @@ import org.springframework.util.Assert;
  * @author Phillip Webb
  */
 public abstract class CloudFoundryUtils {
+
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     static long SLEEP_TIME = TimeUnit.SECONDS.toMillis(1);
 
@@ -104,5 +107,20 @@ public abstract class CloudFoundryUtils {
         int expectedInstances = application.getInstances();
         int runningInstances = application.getRunningInstances();
         return started && expectedInstances == runningInstances;
+    }
+
+    /**
+     * @return The actual controller URL to use.
+     */
+    public static String getControllerUrl() {
+        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        return "http://api.cloudfoundry.com";
     }
 }

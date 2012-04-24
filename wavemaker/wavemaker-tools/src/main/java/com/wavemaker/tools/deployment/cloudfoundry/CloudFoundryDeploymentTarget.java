@@ -64,8 +64,6 @@ import com.wavemaker.tools.project.Project;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
-    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
-
     public static final String SUCCESS_RESULT = "SUCCESS";
 
     public static final String TOKEN_EXPIRED_RESULT = "ERROR: CloudFoundry login token expired";
@@ -176,7 +174,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private DeploymentInfo getSelfDeploymentInfo(Project project) {
         try {
-            String cloudControllerUrl = getControllerUrl();
+            String cloudControllerUrl = CloudFoundryUtils.getControllerUrl();
             AuthenticationToken token = getAuthenticationToken();
             if (token == null) {
                 // FIXME remove hard coded details
@@ -210,21 +208,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         }
         AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
         return authenticationToken;
-    }
-
-    /**
-     * @return The actual controller URL to use.
-     */
-    private String getControllerUrl() {
-        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
-        if (StringUtils.hasLength(systemEnv)) {
-            return systemEnv;
-        }
-        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
-        if (StringUtils.hasLength(systemEnv)) {
-            return systemEnv;
-        }
-        return "http://api.cloudfoundry.com";
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
