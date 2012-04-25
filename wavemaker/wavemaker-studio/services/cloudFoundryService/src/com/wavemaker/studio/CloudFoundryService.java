@@ -17,20 +17,32 @@ package com.wavemaker.studio;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.WebUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
 
 @ExposeToClient
 public class CloudFoundryService {
+
+    private final SharedSecretPropagation propagation = new SharedSecretPropagation();
 
     public String login(String username, String password, String target) {
         try {
@@ -106,6 +118,9 @@ public class CloudFoundryService {
     @HideFromClient
     private <V> V execute(String token, String target, String errorMessage, CloudFoundryCallable<V> callable) {
         try {
+            if (!StringUtils.hasLength(token)) {
+                token = getAuthenticationToken();
+            }
             CloudFoundryClient client = new CloudFoundryClient(token, target);
             return callable.call(client);
         } catch (CloudFoundryException ex) {
@@ -117,6 +132,18 @@ public class CloudFoundryService {
         } catch (MalformedURLException ex) {
             throw new WMRuntimeException(errorMessage, ex);
         }
+    }
+
+    private String getAuthenticationToken() {
+        RuntimeAccess runtimeAccess = RuntimeAccess.getInstance();
+        Assert.state(runtimeAccess != null, "Unable to access runtime information");
+        Cookie cookie = WebUtils.getCookie(runtimeAccess.getRequest(), "wavemaker_authentication_token");
+        Assert.state(cookie != null, "Unable to access security cookie");
+        Assert.state(StringUtils.hasLength(cookie.getValue()), "Unable to access security cookie value");
+        SharedSecret sharedSecret = this.propagation.getForSelf(false);
+        Assert.state(sharedSecret != null, "Unable to access security shared secret");
+        AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
+        return authenticationToken.toString();
     }
 
     private static interface CloudFoundryCallable<V> {
