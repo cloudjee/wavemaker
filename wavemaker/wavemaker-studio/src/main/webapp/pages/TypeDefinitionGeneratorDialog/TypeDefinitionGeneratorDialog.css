@@ -1,0 +1,10 @@
+.TypeDefinitionGeneratorDialog .TypeDefinitionGeneratorDialog-mainPanel,
+.TypeDefinitionGeneratorDialog .TypeDefinitionGeneratorDialog-mainPanel .wmeditor-caption,
+.TypeDefinitionGeneratorDialog .TypeDefinitionGeneratorDialog-mainPanel .wmlabel {
+background-color: "#848c99";
+color: white;
+font-weight: bold;
+}
+.TypeDefinitionGeneratorDialog .TypeDefinitionGeneratorDialog-mainPanel input {
+    color: black;
+}
