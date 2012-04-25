@@ -25,6 +25,7 @@ wavemaker/wavemaker-studio/src/main/webapp/lib/wm/compressed
 wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/dijit/themes/tundra/t.css
 wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/dijit/themes/tundra/tmobile.css
 wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/dojo/dojo_build.js.gz
+wavemaker/wavemaker-studio/src/main/webapp/lib/wm/WMVersion.txt
 wavemaker/wavemaker-common/src/main/webapp/
 wavemaker/wavemaker-json/src/main/webapp/
 wavemaker/wavemaker-runtime/src/main/webapp/

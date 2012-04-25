@@ -237,7 +237,11 @@
 								</exec>
 						        <replaceregexp file="${basedir}/src/main/webapp/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />
 								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js" match="wm\.version \= '(.*)';" replace="wm.version = '${project.version}';" />
-								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js" match="wm\.fullVersion \= '(.*)';" replace="wm.fullVersion = '${project.version} at ${version.revision}';" />
+								<echo file="${basedir}/src/main/webapp/lib/wm/WMVersion.txt">WaveMaker ${project.version} at commit:
+								</echo>
+								<exec executable="git" output="${basedir}/src/main/webapp/lib/wm/WMVersion.txt" append="true" failifexecutionfails="false">
+									<arg line="rev-parse --verify HEAD"/>
+								</exec>
 							</target>
 						</configuration>
 					</execution>
