@@ -123,6 +123,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 	FileUploadResponse r =  importFromZip(outputFile);
 
         org.springframework.core.io.Resource finalProjectFolder;
+
         try {
 
             // returns null if fails to unzip; need a handler for this...
