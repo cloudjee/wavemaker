@@ -48,7 +48,9 @@ public class CloudFoundrySecurityFilter implements Filter {
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
         try {
-            checkAuthenticationCookie(request);
+            if (isSecurityEnabled()) {
+                checkAuthenticationCookie(request);
+            }
             chain.doFilter(request, response);
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
@@ -56,6 +58,10 @@ public class CloudFoundrySecurityFilter implements Filter {
             }
             redirectToSpinup(response);
         }
+    }
+
+    private boolean isSecurityEnabled() {
+        return Boolean.valueOf(CloudFoundryUtils.getEnvironmentVariable("check-wavemaker-credentials", "true"));
     }
 
     private void checkAuthenticationCookie(HttpServletRequest request) throws TransportTokenDigestMismatchException {
