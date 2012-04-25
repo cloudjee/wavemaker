@@ -120,10 +120,8 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
         OutputStream fos = this.fileSystem.getOutputStream(outputFile);
         FileCopyUtils.copy(file.getInputStream(), fos);
-	FileUploadResponse r =  importFromZip(outputFile);
 
         org.springframework.core.io.Resource finalProjectFolder;
-
         try {
 
             // returns null if fails to unzip; need a handler for this...
@@ -205,7 +203,10 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
             }
         } finally {
-
+            // If the user uploaded a zipfile that had many high level folders,
+            // they could make a real mess of things,
+            // so just purge the tmp folder after we're done
+            this.fileSystem.deleteFile(tmpDir);
         }
 
         response.setPath(finalProjectFolder.getFilename());
