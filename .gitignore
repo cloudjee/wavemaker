@@ -31,3 +31,5 @@ wavemaker/wavemaker-runtime/src/main/webapp/
 wavemaker/wavemaker-test-support/src/main/webapp/
 wavemaker/wavemaker-tools-cloudfoundry/src/main/webapp/
 wavemaker/wavemaker-tools/src/main/webapp/
+wavemaker/wavemaker-tools/src/main/webapp/
+wavemaker-cloudfoundry/wavemaker-cloudfoundry-spinup/src/main/webapp/
