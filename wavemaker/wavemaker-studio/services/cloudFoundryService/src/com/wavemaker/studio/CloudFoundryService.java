@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
 
@@ -40,79 +41,92 @@ public class CloudFoundryService {
     }
 
     public List<CloudApplication> listApps(String token, String target) {
-        try {
-            return new CloudFoundryClient(token, target).getApplications();
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException("Failed to retrieve CloudFoundry application list.", ex);
+        return execute(token, target, "Failed to retrieve CloudFoundry application list.", new CloudFoundryCallable<List<CloudApplication>>() {
+
+            @Override
+            public List<CloudApplication> call(CloudFoundryClient client) {
+                return client.getApplications();
             }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to retrieve CloudFoundry application list.", ex);
-        }
+        });
     }
 
     public List<CloudService> listServices(String token, String target) {
-        try {
-            return new CloudFoundryClient(token, target).getServices();
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException("Failed to retrieve CloudFoundry service list.", ex);
+        return execute(token, target, "Failed to retrieve CloudFoundry service list.", new CloudFoundryCallable<List<CloudService>>() {
+
+            @Override
+            public List<CloudService> call(CloudFoundryClient client) {
+                return client.getServices();
             }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to retrieve CloudFoundry service list.", ex);
-        }
+        });
     }
 
-    public CloudService getService(String token, String target, String service) {
-        try {
-            return new CloudFoundryClient(token, target).getService(service);
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else if (HttpStatus.NOT_FOUND == ex.getStatusCode()) {
+    public CloudService getService(String token, String target, final String service) {
+        return execute(token, target, "Failed to retrieve CloudFoundry service.", new CloudFoundryCallable<CloudService>() {
+
+            @Override
+            public CloudService call(CloudFoundryClient client) {
+                return client.getService(service);
+            }
+        });
+    }
+
+    public void createService(String token, String target, final DeploymentDB db, final String appName) {
+        execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                CloudService service = CloudFoundryDeploymentTarget.createPostgresqlService(db);
+                client.createService(service);
+                client.bindService(appName, service.getName());
+            }
+        });
+    }
+
+    public void deleteService(String token, String target, final String service) {
+        execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                client.deleteService(service);
+            }
+        });
+    }
+
+    private void execute(String token, String target, String errorMessage, final CloudFoundryRunnable runnable) {
+        execute(token, target, errorMessage, new CloudFoundryCallable<Object>() {
+
+            @Override
+            public Object call(CloudFoundryClient client) {
+                runnable.run(client);
                 return null;
-            } else {
-                throw new WMRuntimeException("Failed to retrieve CloudFoundry service.", ex);
             }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to retrieve CloudFoundry service.", ex);
-        }
+        });
     }
 
-    public void createService(String token, String target, DeploymentDB db, String appName) {
+    @HideFromClient
+    private <V> V execute(String token, String target, String errorMessage, CloudFoundryCallable<V> callable) {
         try {
             CloudFoundryClient client = new CloudFoundryClient(token, target);
-            CloudService service = CloudFoundryDeploymentTarget.createPostgresqlService(db);
-            client.createService(service);
-            client.bindService(appName, service.getName());
-
+            return callable.call(client);
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
                 throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
             } else {
-                throw new WMRuntimeException("Failed to create service in CloudFoundry.", ex);
+                throw new WMRuntimeException(errorMessage, ex);
             }
         } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to create service in CloudFoundry.", ex);
+            throw new WMRuntimeException(errorMessage, ex);
         }
     }
 
-    public void deleteService(String token, String target, String service) {
-        try {
-            CloudFoundryClient client = new CloudFoundryClient(token, target);
-            client.deleteService(service);
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException("Failed to delete service in CloudFoundry.", ex);
-            }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to delete service in CloudFoundry.", ex);
-        }
-    }
+    private static interface CloudFoundryCallable<V> {
+
+        V call(CloudFoundryClient client);
+    };
+
+    private static interface CloudFoundryRunnable {
+
+        void run(CloudFoundryClient client);
+    };
+
 }
