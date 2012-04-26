@@ -1,16 +1,3 @@
-/*
- *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 body .wm_wireframe input:focus,
 .wm_wireframe button, .wm_wireframe button:focus {
 outline-width: 0 !important;
@@ -36,6 +23,25 @@ color: #000000;
 }
 }
 @media screen {
+.wm_wireframe .wmtogglebuttonpanel .wmbutton:first-child {
+border-radius-topleft: 2px !important;
+border-radius-bottomleft: 2px !important;
+-webkit-border-top-left-radius: 2px !important;
+-webkit-border-bottom-left-radius: 2px !important;
+}
+.wm_wireframe .wmtogglebuttonpanel .wmbutton:last-child {
+border-radius-topright: 2px !important;
+border-radius-bottomright: 2px !important;
+-webkit-border-top-right-radius: 2px !important;
+-webkit-border-bottom-right-radius: 2px !important;
+}
+.wm_wireframe .wmtogglebuttonpanel .wmbutton {
+border-radius-topright: 0px !important;
+border-radius-bottomright: 0px !important;
+-webkit-border-top-right-radius: 0px !important;
+-webkit-border-bottom-right-radius: 0px !important;
+}
+.wm_wireframe .wmtogglebuttonpanel,
 .wm_wireframe   .wmbutton,
 .wm_wireframe   .wmtogglebutton,
 .wm_wireframe   .wmbutton.wmbutton-disabled:hover,
@@ -131,18 +137,6 @@ box-shadow: 0px 0px 0px #444444;
 .wm_wireframe .wmPopupButton .popupIcon {
 background-image: url(images/comboArrowDownDark.png) !important;
 }
-.wm_wireframe table .dijitCalendarYearContainer tr {
-background-color: #ffffff;
-border-style: solid;
-border-color: #ffffff;
-border-top-width: 1px;
-}
-.wm_wireframe table .dijitCalendarYearContainer td span {
-color: #000000 !important;
-}
-.wm_wireframe .dijitCalendarYearLabel {
-font-size: 10px;
-}
 .wm_wireframe .dijitCalendarDayLabel,
 .wm_wireframe .dijitCalendarDateLabel {
 font-size: 9px;
@@ -186,8 +180,7 @@ border-left-width: 0px;
 border-bottom-width: 0px;
 }
 .wm_wireframe .dijitCalendarContainer td.dijitCalendarSelectedDate,
-.wm_wireframe .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
-.wm_wireframe .dijitCalendarContainer .dijitCalendarSelectedYear {
+.wm_wireframe .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth {
 background-color: #eeeeee !important;
 color: #000000 !important;
 }
@@ -198,6 +191,14 @@ color: #000000 !important;
 .wm_wireframe .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
 background-color: #ffffff !important;
 color: #000000 !important;
+}
+.wm_wireframe tr.dijitCalendarMonthContainer th .dijitCalendarPreviousYear,
+.wm_wireframe tr.dijitCalendarMonthContainer th .dijitCalendarNextYear,
+.wm_wireframe tr.dijitCalendarMonthContainer th .dijitCalendarCurrentMonthLabel {
+padding: 2px 5px;
+border-width: 1px;
+border-color: #000000;
+border: solid 1px white;
 }
 .wm_wireframe .dijitCalendarContainer {
 background-color: #ffffff;

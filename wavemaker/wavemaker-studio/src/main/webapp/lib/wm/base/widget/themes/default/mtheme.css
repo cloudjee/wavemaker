@@ -1106,3 +1106,32 @@ background-repeat:no-repeat;
 .dijitSliderV {
 height: 100%;
 }
+html .wm_default .dijitTimePickerItem, 
+html .wm_default .dijitTimePickerMarker.dijitTimePickerItemHover,
+html .wm_default .dijitTimePickerItem.dijitTimePickerItemHover {
+    font-size: 1em;
+    background-image: none;
+    border-top: 0px;
+    border-bottom:solid 1px #ccc; 
+} 
+html .tundra .dijitTimePickerTick .dijitTimePickerItemInner,
+html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemInner {
+    font-size: 0.9em;
+}
+.CalendarCloseButton {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+    width: 20px;
+    text-align: center;
+    -webkit-border-radius: 8px 8px;
+    -moz-border-radius: 8px 8px;
+    -o-border-radius: 8px 8px;
+    -ms-border-radius: 8px 8px;
+    border-radius: 8px 8px;
+}

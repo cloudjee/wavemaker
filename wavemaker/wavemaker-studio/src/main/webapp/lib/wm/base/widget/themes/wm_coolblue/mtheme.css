@@ -137,18 +137,6 @@ box-shadow: 0px 0px 0px #444444;
 .wm_coolblue .wmPopupButton .popupIcon {
 background-image: url(images/comboArrowDownLight.png) !important;
 }
-.wm_coolblue table .dijitCalendarYearContainer tr {
-background-color: #333333;
-border-style: solid;
-border-color: #0e1601;
-border-top-width: 1px;
-}
-.wm_coolblue table .dijitCalendarYearContainer td span {
-color: #ffffff !important;
-}
-.wm_coolblue .dijitCalendarYearLabel {
-font-size: 10px;
-}
 .wm_coolblue .dijitCalendarDayLabel,
 .wm_coolblue .dijitCalendarDateLabel {
 font-size: 9px;
@@ -192,8 +180,7 @@ border-left-width: 0px;
 border-bottom-width: 0px;
 }
 .wm_coolblue .dijitCalendarContainer td.dijitCalendarSelectedDate,
-.wm_coolblue .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
-.wm_coolblue .dijitCalendarContainer .dijitCalendarSelectedYear {
+.wm_coolblue .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth {
 background-color: #a0c0e0 !important;
 color: #000000 !important;
 }
@@ -204,6 +191,14 @@ color: #000000 !important;
 .wm_coolblue .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
 background-color: #0e1601 !important;
 color: #FFFFFF !important;
+}
+.wm_coolblue tr.dijitCalendarMonthContainer th .dijitCalendarPreviousYear,
+.wm_coolblue tr.dijitCalendarMonthContainer th .dijitCalendarNextYear,
+.wm_coolblue tr.dijitCalendarMonthContainer th .dijitCalendarCurrentMonthLabel {
+padding: 2px 5px;
+border-width: 1px;
+border-color: #000000;
+border: solid 1px white;
 }
 .wm_coolblue .dijitCalendarContainer {
 background-color: #ffffff;

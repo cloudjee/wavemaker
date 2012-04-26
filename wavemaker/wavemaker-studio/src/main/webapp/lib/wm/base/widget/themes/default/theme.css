@@ -1093,6 +1093,11 @@ float: none;
     border: 0px;
     
 }
+
+.dijitCalendarMonthContainer .dijitButtonText {
+    width: 100%;
+}
+
 .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
         height: 50% !important;
 }
@@ -1186,9 +1191,6 @@ float: none;
     background-color: black;
 }
 
-.dijitCalendarMonthContainer .dijitButtonText {
-    width: 100%;
-}
 
 
 .wmGenericDialog-userQuestionLabel {
@@ -1330,10 +1332,24 @@ height: 100%;
          border-top-right-radius: 0px !important;        
 }
 
-#app_DateTimePopup_calendar .dijitCalendarContainer {
-    border-width: 0px;
-}
 
 .dijitSliderV {
 height: 100%;
+}
+
+html .tundra .dijitTimePickerTick {
+    color: black;
+}
+
+html .wm_default .dijitTimePickerItem, 
+html .wm_default .dijitTimePickerMarker.dijitTimePickerItemHover,
+html .wm_default .dijitTimePickerItem.dijitTimePickerItemHover {
+    font-size: 1em;
+    background-image: none;
+    border-top: 0px;
+    border-bottom:solid 1px #ccc; 
+} 
+html .tundra .dijitTimePickerTick .dijitTimePickerItemInner,
+html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemInner {
+    font-size: 0.9em;
 }

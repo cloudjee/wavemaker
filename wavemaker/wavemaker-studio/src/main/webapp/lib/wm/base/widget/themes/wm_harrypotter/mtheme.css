@@ -137,18 +137,6 @@ box-shadow: 0px 0px 0px #444444;
 .wm_harrypotter .wmPopupButton .popupIcon {
 background-image: url(images/comboArrowDownLight.png) !important;
 }
-.wm_harrypotter table .dijitCalendarYearContainer tr {
-background-color: #b30000;
-border-style: solid;
-border-color: #fe9603;
-border-top-width: 1px;
-}
-.wm_harrypotter table .dijitCalendarYearContainer td span {
-color: #ffffff !important;
-}
-.wm_harrypotter .dijitCalendarYearLabel {
-font-size: 10px;
-}
 .wm_harrypotter .dijitCalendarDayLabel,
 .wm_harrypotter .dijitCalendarDateLabel {
 font-size: 12px;
@@ -192,8 +180,7 @@ border-left-width: 0px;
 border-bottom-width: 0px;
 }
 .wm_harrypotter .dijitCalendarContainer td.dijitCalendarSelectedDate,
-.wm_harrypotter .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
-.wm_harrypotter .dijitCalendarContainer .dijitCalendarSelectedYear {
+.wm_harrypotter .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth {
 background-color: #161616 !important;
 color: #fdd949 !important;
 }
@@ -204,6 +191,14 @@ color: #fdd949 !important;
 .wm_harrypotter .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
 background-color: #fe9603 !important;
 color: #232323 !important;
+}
+.wm_harrypotter tr.dijitCalendarMonthContainer th .dijitCalendarPreviousYear,
+.wm_harrypotter tr.dijitCalendarMonthContainer th .dijitCalendarNextYear,
+.wm_harrypotter tr.dijitCalendarMonthContainer th .dijitCalendarCurrentMonthLabel {
+padding: 2px 5px;
+border-width: 1px;
+border-color: #fdd949;
+border: solid 1px white;
 }
 .wm_harrypotter .dijitCalendarContainer {
 background-color: #ffffff;

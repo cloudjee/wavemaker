@@ -42,6 +42,8 @@ wm.Object.extendSchema(wm.Time, {
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
 
     /* Ignored group */
+    use24Time: {hidden:1},
+    useWMDropDown: {hidden:1},
     minimum: { ignore: 1},
     maximum: { ignore: 1}
 });
@@ -62,6 +64,10 @@ wm.Object.extendSchema(wm.DateTime, {
 });
 
 wm.DateTime.extend({
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.flow();
+    },
         makePropEdit: function(inName, inValue, inEditorProps) {
 	    switch (inName) {
 	    case "dataValue":
