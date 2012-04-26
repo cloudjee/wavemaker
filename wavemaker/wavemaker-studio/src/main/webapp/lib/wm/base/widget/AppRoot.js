@@ -122,9 +122,7 @@ this._inResize = true;
 		} else {
 		    height = Math.max(window.innerHeight, window.innerWidth); // don't assume width and height have updated since the last orientation change, just figure out width and height based on window.orientation = 0
 		    width = Math.min(window.innerHeight, window.innerWidth); 
-
 		}
-		console.log("HEY HO: " + width + " | " + height + " | " + window.orientation) ;
 		//pn.style.height = (height + 100) + "px"; // without that extra height, setting scrollTop will fail
 		this.domNode.style.position = "relative";
 	    } else if (wm.device == "phone") {
@@ -142,7 +140,6 @@ this._inResize = true;
 		width = pn.offsetWidth;
 		height = pn.offsetHeight;
 	    }
-	    console.log("innerHeight: " + height + "; scrollTop:" + document.body.scrollTop);
 	    this.setBounds(0, 0, width, height);
 	},
 	reflow: function() {
@@ -153,12 +150,13 @@ this._inResize = true;
 	    }
 	    this.renderBounds();
 	    this.inherited(arguments);
+/*
 	    if (wm.isMobile) {
 		// get rid of the location bar on any mobile browser that is in landscape mode
 		// in an attempt to get a usable amount of height
 		//document.body.scrollTop = (this.bounds.w > this.bounds.h) ? 1 : 0;
-		console.log("SCROLL TOP " + document.body.scrollTop);
 	    }
+	    */
 	},
     calcDeviceSize: function(width) {	
 	if (width >= 1150) {
