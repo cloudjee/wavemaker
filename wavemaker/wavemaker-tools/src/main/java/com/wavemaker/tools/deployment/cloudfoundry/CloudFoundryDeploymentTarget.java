@@ -48,6 +48,7 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToke
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.ProjectnameWithRandomApplicationNamingStrategy;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -185,7 +186,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             }
             DeploymentInfo deploymentInfo = new DeploymentInfo();
             deploymentInfo.setToken(token.toString());
-            deploymentInfo.setApplicationName("deployedproject");
+            deploymentInfo.setApplicationName(project.getProjectName());
             deploymentInfo.setTarget(cloudControllerUrl);
             return deploymentInfo;
         } catch (Exception e) {
@@ -294,7 +295,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
         }
-        return url.replace("api", deploymentInfo.getApplicationName());
+        ProjectnameWithRandomApplicationNamingStrategy pNameStrat = new ProjectnameWithRandomApplicationNamingStrategy(deploymentInfo.getApplicationName());
+        return url.replace("api", pNameStrat.generateName());
     }
 
     /**
