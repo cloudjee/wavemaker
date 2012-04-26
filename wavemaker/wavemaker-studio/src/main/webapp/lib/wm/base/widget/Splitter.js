@@ -71,6 +71,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	    }
 	},
 	updateSize: function() {
+	    if (this._isDestroying) return;
 	    var widget = this.parentIsSplitter ? this.parent : this;
 	    var h = (widget.parent||0).layoutKind == "left-to-right", d = this.bevelSize + "px";
 	    this.setWidth(h ? d : "100%");
@@ -195,20 +196,16 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	    return inValue;
 	},
 	adjustSize: function() {
-	    var jobid = this.getRuntimeId() + ".adjustSize";
-	    if (wm.hasJob(jobid)) return;
-	    wm.job(jobid, 50, this, function() {
-		var dx = this.position.left - this.initialPosition.left;
-		var dy = this.position.top - this.initialPosition.top;
-		var w = this.size.w + (this.layout=="right" ? -dx : dx);
-		var h = this.size.h + (this.layout=="bottom" ? -dy : dy);
-		//console.log(w, h, dx, dy);
-		//dojo._setMarginBox(this.sizeNode, NaN, NaN, w, h);
-		if (this.layout == "top" || this.layout == "bottom")
-		    this.sizeControl.setHeight(h + "px");
-		else
-		    this.sizeControl.setWidth(w + "px");
-	    });
+	    var dx = this.position.left - this.initialPosition.left;
+	    var dy = this.position.top - this.initialPosition.top;
+	    var w = this.size.w + (this.layout=="right" ? -dx : dx);
+	    var h = this.size.h + (this.layout=="bottom" ? -dy : dy);
+	    //console.log(w, h, dx, dy);
+	    //dojo._setMarginBox(this.sizeNode, NaN, NaN, w, h);
+	    if (this.layout == "top" || this.layout == "bottom")
+		this.sizeControl.setHeight(h + "px");
+	    else
+		this.sizeControl.setWidth(w + "px");
 	},
 	move: function(inD, inOrd, inExtent) {
 		if (inD == 0)
