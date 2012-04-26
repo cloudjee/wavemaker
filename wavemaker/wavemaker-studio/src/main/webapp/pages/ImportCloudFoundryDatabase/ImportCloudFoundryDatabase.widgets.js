@@ -13,23 +13,29 @@
  */
 
 ImportCloudFoundryDatabase.widgets = {
+    "wm.studio.CloudFoundryService": ["wm.TypeDefinition", {}, {}, {
+	meta: ["wm.TypeDefinitionField", {"fieldName":"meta","fieldType":"wm.studio.CloudFoundryService.meta"}, {}],
+	name: ["wm.TypeDefinitionField", {"fieldName":"name"}, {}],
+	tier: ["wm.TypeDefinitionField", {"fieldName":"tier"}, {}],
+	type: ["wm.TypeDefinitionField", {"fieldName":"type"}, {}],
+	vendor: ["wm.TypeDefinitionField", {"fieldName":"vendor"}, {}],
+	version: ["wm.TypeDefinitionField", {"fieldName":"version"}, {}]
+    }], 
+    "wm.studio.CloudFoundryService.meta": ["wm.TypeDefinition", {}, {}, {
+	created: ["wm.TypeDefinitionField", {"fieldName":"created","fieldType":"Number"}, {}],
+	version: ["wm.TypeDefinitionField", {"fieldName":"version","fieldType":"Number"}, {}]
+    }],
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
-    serviceListVar: ["wm.Variable", {type: "StringData", isList:true}],
-    cfLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"containerWidget3","buttonBarId":"buttonBar2"}, {}, {
-        mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
-	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
-		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your CloudFoundry Account Info; <b>this dialog will be removed soon</b>","padding":"4","width":"100%"}, {}],
-		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "caption":"CloudFoundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
-		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
-		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}]
-	    }]
-	}],
+    serviceListVar: ["wm.Variable", {type: "wm.studio.CloudFoundryService", isList:true}],
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    instructions: ["wm.Html", {width: "100%", height: "30px", html: "Select a database service you have setup in CloudFoundry, or <a target='caldecott' href='http://blog.cloudfoundry.com/post/12928974099/now-you-can-tunnel-into-any-cloud-foundry-data-service'>Setup a new database service</a>"}],
-	    serviceList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", columns:[{show:true, field: "dataValue"}], noHeader:true}, {}, {
+	    instructions: ["wm.Html", {width: "100%", height: "30px", html: "Select a database service you have setup in CloudFoundry, or <a target='caldecott' href='http://docs.cloudfoundry.com/tools/vmc/caldecott.html'>Setup a new database service</a>"}],
+	    serviceList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", 
+				      columns:[{show:true, field: "name", width: "100%", title: "Name"},
+					       {show:true, field: "vendor", width: "80px", title: "Type"},
+					       {show:true, field: "meta.created", width: "80px", title: "Created", "formatFunc":"wm_date_formatter"}]}, {}, {
 		binding: ["wm.Binding",{},{},{
-		    wire: ["wm.Wire", {source: "serviceListVar", targetProp: "dataSet"}]
+		    wire: ["wm.Wire", {source: "serviceListVar", targetProperty: "dataSet"}]
 		}]
 	    }]
 	}],
@@ -40,7 +46,9 @@ ImportCloudFoundryDatabase.widgets = {
 		    }]
 		}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
-	    }]
-
+	}]
     }]
-    }
+}
+
+		   
+    

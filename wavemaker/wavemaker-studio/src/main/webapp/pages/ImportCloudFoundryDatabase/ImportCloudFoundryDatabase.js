@@ -25,36 +25,25 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	this.update();
     },
     update: function(inImportDataModel) {
-	var token = dojo.cookie( "Studio.DeploymentDialog.CFTOKEN");
-	if (token) {
-	    this.cloudFoundryService.requestAsync("listServices", [token,this.loginDialogTargetEditor.getDataValue()],
-						  dojo.hitch(this, function(inResult) {
-						      this.populateCloudFoundryAppList(inResult, optionalCallback);
-						  }),
-						  dojo.hitch(this, function(inError) {
-						      app.alert(inError);
-						      this.cfLoginDialog.show();
-						  }));	
-	} else {
-	    this.cfLoginDialog.show();
-	}
+	this.cloudFoundryService.requestAsync("listDatabaseServices", ["","http://api.mkantor.cloudfoundry.me"],
+					      dojo.hitch(this, function(inResult) {
+						  this.populateCloudFoundryAppList(inResult);
+					      }),
+					      dojo.hitch(this, function(inError) {
+						  app.alert(inError);
+					      }));	
     },
 	cancelBtnClick: function(inSender) {
 	    this.owner.owner.hide();
 	},
+    populateCloudFoundryAppList: function(inResult) {
+	debugger;
+	this.serviceListVar.setData(inResult);
+    },
 	importBtnClick: function(inSender) {
-	    if (this.dbdropdown.getDataValue("").toLowerCase() == "mysql" && dojo.isMac) {
-		app.confirm(this.getDictionaryItem("CONFIRM_MYSQL_MAC_IMPORT"), false, dojo.hitch(this, "importBtnClick2"));
-	    } else if (this.dbdropdown.getDataValue("").toLowerCase() == "postgresql") {
-		app.confirm(this.getDictionaryItem("CONFIRM_POSTGRES_IMPORT"), false, dojo.hitch(this, "importBtnClick2"));
-	    } else {
-		this.importBtnClick2();
-	    }
-	},
-	importBtnClick2: function(inSender) {
-		this.dataModelName = null;
+	    this.dataModelName = null;
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
-		studio.dataService.requestAsync(IMPORT_DB_OP,
+	    studio.dataService.requestAsync(IMPORT_DB_OP,
 					[this.serviceNameInput.getDataValue(),
 					this.packageInput.getDataValue(),
 					this.usernameInput.getDataValue(),
@@ -71,20 +60,10 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 					dojo.hitch(this, "_importError"));
 	},
 	_importResult: function() {
-		studio.endWait();
-		this.dataModelName = this.serviceNameInput.getDataValue();
-		studio.updateServices();
-/*
-	        var layers = studio.databaseSubTab.layers;
-	    for (var i = 0; i < layers.length; i++) {
-		var pageContainer = layers[i].c$[0];
-		if (pageContainer.page instanceof DataObjectsEditor ||
-		    pageContainer.page instanceof QueryEditor) {
-		    pageContainer.page.update();
-		}
-	    }
-	    */
-	    this._close("Import");
+	    studio.endWait();
+	    this.dataModelName = this.serviceNameInput.getDataValue();
+	    studio.updateServices();
+	    this.owner.owner.hide();
 	},
 	_importError: function(inError) {
 		studio.endWait();
@@ -98,28 +77,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 
 
 
-    cfLoginOkClick: function() {
-	studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
-	this.cloudFoundryService.requestSync(
-	    "login",
-	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this.loginDialogTargetEditor.getDataValue()],
-	    dojo.hitch(this, function(inData) {
-		dojo.cookie( "Studio.DeploymentDialog.CFTOKEN", inData, {expires: 1});
-		studio.endWait();
-		this.cfLoginDialog.hide();
-		this.update();
-	    }),
-	    dojo.hitch(this, function(inError) {
-		studio.endWait();
-		var message = inError.message;
-		if (message.match(/^403/)) {
-		    app.toastError(this.getDictionaryItem("INVALID_USER_PASS"));
-		} else {
-		    app.toastError(message);
-		}
-		this.loginDialogUserEditor.focus();
-	    }));
-    },
+
 
   _end: 0
 });
