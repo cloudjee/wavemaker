@@ -397,6 +397,7 @@ outline-width: 0;
 .wm_graphite  .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_graphite  .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #807e7e;
+background-image: none;
 }
 .wm_graphite  .wmeditor .dijitTextBox,
 .wm_graphite  .wmeditor .dijitTextArea,

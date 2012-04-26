@@ -397,6 +397,7 @@ outline-width: 0;
 .wm_green  .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_green  .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #cccccc;
+background-image: none;
 }
 .wm_green  .wmeditor .dijitTextBox,
 .wm_green  .wmeditor .dijitTextArea,

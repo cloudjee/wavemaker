@@ -397,6 +397,7 @@ outline-width: 0;
 .wm_darkdawn  .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_darkdawn  .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #555555;
+background-image: none;
 }
 .wm_darkdawn  .wmeditor .dijitTextBox,
 .wm_darkdawn  .wmeditor .dijitTextArea,

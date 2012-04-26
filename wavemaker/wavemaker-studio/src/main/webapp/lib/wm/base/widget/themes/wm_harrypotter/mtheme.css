@@ -397,6 +397,7 @@ outline-width: 0;
 .wm_harrypotter  .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_harrypotter  .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #fe9603;
+background-image: none;
 }
 .wm_harrypotter  .wmeditor .dijitTextBox,
 .wm_harrypotter  .wmeditor .dijitTextArea,
