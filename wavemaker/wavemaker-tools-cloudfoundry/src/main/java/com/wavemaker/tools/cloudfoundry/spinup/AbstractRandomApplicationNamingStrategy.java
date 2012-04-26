@@ -34,7 +34,7 @@ public abstract class AbstractRandomApplicationNamingStrategy implements Applica
 
     private static final Random RANDOM = new SecureRandom();
 
-    private final String applicationName;
+    protected final String applicationName;
 
     /**
      * Create a new {@link AbstractRandomApplicationNamingStrategy} instance.
@@ -56,6 +56,16 @@ public abstract class AbstractRandomApplicationNamingStrategy implements Applica
         url = url.replace("https", "http");
         url = url.replace("api.", generateName(context) + ".");
         return new ApplicationDetails(this.applicationName, url);
+    }
+
+    public String generateName(){
+        String name = replaceInvalidChars(this.applicationName);
+        String random = generateRandom();
+        int maxNameLength = MAX_NAME_LENGTH - random.length();
+        if (name.length() > maxNameLength) {
+            name = name.substring(0, maxNameLength);
+        }
+        return (name + random).toLowerCase();
     }
 
     private String generateName(ApplicationNamingStrategyContext context) {
