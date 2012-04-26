@@ -14,7 +14,7 @@
 DeploymentDialog.widgets = {
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
-    cloudFoundryAppListDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "cfAppListPanel", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
+    cloudFoundryAppListDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
         mainPanel1: ["wm.studio.DialogMainPanel", {},{}, {
 	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
 	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: true, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
@@ -37,7 +37,7 @@ DeploymentDialog.widgets = {
 					      }],
 					      */
     deploymentListVar: ["wm.Variable", {type: "EntryData", isList:true}],
-    confirmSaveDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"containerWidget4","buttonBarId":"buttonBar4"}, {}, {
+    confirmSaveDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"mainPanel2","buttonBarId":"buttonBar4"}, {}, {
         mainPanel2: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    confirmSaveDialogHtml1: ["wm.Html", {"border":"0","height":"100%","width":"100%", html: "You have unsaved changes that will be lost; continue?"}, {}]
 	}],
@@ -49,7 +49,7 @@ DeploymentDialog.widgets = {
 	}]
     }],
 
-    newDeploymentDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "buttonBarId":"buttonBar","containerWidgetId":"containerWidget2",width: "400px", "height":"200px","title":"Choose Deployment Type"}, {}, {
+    newDeploymentDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "buttonBarId":"buttonBar","containerWidgetId":"mainPanel3",width: "400px", "height":"200px","title":"Choose Deployment Type"}, {}, {
         mainPanel3: ["wm.studio.DialogMainPanel", {autoScroll:true, layoutKind: "left-to-right"},{}, {
 	    iconOrMarginPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
 	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
@@ -64,7 +64,7 @@ DeploymentDialog.widgets = {
 	    okButton: ["wm.Button", {"caption":"OK","margin":"4"}, {onclick: "onNewDeployOk"}]
 	}]
     }],
-    cfLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"containerWidget3","buttonBarId":"buttonBar2"}, {}, {
+    cfLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"mainPanel4","buttonBarId":"buttonBar2"}, {}, {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
