@@ -15,7 +15,11 @@
 package com.wavemaker.studio;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
@@ -41,6 +45,8 @@ import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
 
 @ExposeToClient
 public class CloudFoundryService {
+
+    private static final Set<String> DATABASE_SERVICE_VENDORS = new HashSet<String>(Arrays.asList("postgresql", "mysql"));
 
     private final SharedSecretPropagation propagation = new SharedSecretPropagation();
 
@@ -70,6 +76,20 @@ public class CloudFoundryService {
                 return client.getServices();
             }
         });
+    }
+
+    public List<CloudService> listDatabaseServices(String token, String target) {
+        List<CloudService> databaseServices = new ArrayList<CloudService>();
+        for (CloudService cloudService : listServices(token, target)) {
+            if (isDatabaseService(cloudService)) {
+                databaseServices.add(cloudService);
+            }
+        }
+        return databaseServices;
+    }
+
+    private boolean isDatabaseService(CloudService cloudService) {
+        return DATABASE_SERVICE_VENDORS.contains(cloudService.getVendor());
     }
 
     public CloudService getService(String token, String target, final String service) {
