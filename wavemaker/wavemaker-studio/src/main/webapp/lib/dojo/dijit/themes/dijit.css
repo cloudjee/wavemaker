@@ -1885,19 +1885,19 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	padding:2px 8px 2px 8px;
 }
 
-.dijitTimePickerTick,
+/*.dijitTimePickerTick,*/
 .dijitTimePickerMarker {
 	border-bottom:1px solid gray;
 }
 
-.dijitTimePicker .dijitDownArrowButton {
+.dijitTimePicker .dijitDownArrowButton { 
 	border-top: none !important;
 }
-
+/*
 .dijitTimePickerTick {
 	color:#CCC;
 }
-
+*/
 .dijitTimePickerMarker {
 	color:black;
 	background-color:#CCC;
