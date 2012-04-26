@@ -61,9 +61,11 @@ dojo.declare("wm.VirtualListItem", null, {
 		this._selectionIndicatorOnly = true;
 		this.select();
 		this.selected = false;
+		this.list._ontouchstart =  this;
+		wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
 	    }
-	    this.list._ontouchstart =  this;
-	    wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+
+
 	},
         touchMove: function(evt) {
     if (this.list._ontouchstart == this) {
@@ -300,12 +302,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	},
 	setHeaderVisible: function(inHeaderVisible) {
 		this.headerVisible = inHeaderVisible;
-		if (this.getCount()) {
 			if (this.headerVisible)
 				this.renderHeader();
 			this._setHeaderVisible(this.headerVisible);
 			this.reflow();
-		}
 	},
 	// selection
 /*
@@ -462,10 +462,12 @@ dojo.declare("wm.VirtualList", wm.Control, {
 
 		    /* Seperates the thread for indicating/giving feedback as to a selection and the thread for handling
 		     * events from the selection which might slow down the rendering or hide the rendering of the selection inidcator */
-		    wm.job(this.getRuntimeId() + ".eventSelect", 0, dojo.hitch(this, function() {
-			this.onSelect(inItem);
-			this.onSelectionChange();
-		    }));
+		    if (!this._cupdating) {
+			wm.job(this.getRuntimeId() + ".eventSelect", 0, dojo.hitch(this, function() {
+			    this.onSelect(inItem);
+			    this.onSelectionChange();
+			}));
+		    }
 		//}));
 		}
 	},
