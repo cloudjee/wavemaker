@@ -982,7 +982,7 @@ dojo.declare(
             this._urlMap = dojo.clone(inResponse);
             this.varUrlMap.setData(inResponse);
         },
-        etAttributesDisplay : function(inAttribute) {
+        getAttributesDisplay : function(inAttribute) {
             if (!inAttribute)
                 inAttribute = "";
             var data = this.varRoleList.getData();
