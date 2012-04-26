@@ -1158,3 +1158,8 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     -ms-border-radius: 8px 8px;
     border-radius: 8px 8px;
 }
+
+.dijitReset, .dijitReset.dijitTextBoxFocused {
+    outline: none;
+}
+
