@@ -15,8 +15,7 @@
 
 OpenProjectOptions.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: ["wm-darksnazzy"]}, {}, {
-	dialog: ["wm.Panel", {layoutKind: "top-to-bottom", verticalAlign: "middle", width: "100%", height: "100%"}, {}, {
-			panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], layoutKind: "top-to-bottom",  width: "100%", height: "100%", horizontalAlign: "center"}, {}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 			    message: ["wm.Html", {autoSizeHeight: true, width: "100%", height: "30px", caption: "Your project needs to be upgraded.  Please choose:"}],
 			    radioOpen: ["wm.RadioButton", {captionSize: "100%", captionPosition: "right", captionAlign:"left",caption: "Upgrade existing project", helpText: "A copy of your pre-upgraded project will be saved to your project's exports folder", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {onDblClick: "okButtonClick"}],
 			    radioCopy: ["wm.RadioButton", {captionSize: "100%", captionPosition: "right", captionAlign:"left", caption: "Leave project unchanged, open upgraded project with new name:", helpText: "Your project will be copied to the name you provide; the copy will be upgraded, your original project left untouched", width: "100%", height: "24px", _classes: {captionNode: ["wm_FontColor_White"]}}, {onDblClick: "okButtonClick"}],
@@ -25,11 +24,10 @@ OpenProjectOptions.widgets = {
 				    wire: ["wm.Wire", {targetProperty: "disabled", expression: "!${radioCopy.checked}"}]
 				}]
 			    }]
-			}],
-	buttonBar1: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+	}],
+	buttonBar1: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 	    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cancelButtonClick"}],
 	    okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "okButtonClick"}]
-	}]
 	}]
     }]
 }
