@@ -294,7 +294,8 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 
 /* Start Inspector */
 .Studio .Inspector {
-background-color: #2B323D;
+    background-color: #2B323D;
+    color: white;
     -moz-border-radius: 8px; 
     -webkit-border-radius: 8px; 
     border-radius: 8px;
