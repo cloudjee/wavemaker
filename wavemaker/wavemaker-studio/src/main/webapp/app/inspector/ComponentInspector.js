@@ -481,7 +481,7 @@
 	     id = id.substring(id.indexOf(".") + 1) + ".";
 	 }
 	 */
-	 return  id + "." + propName;
+	 return  id + "__" + propName;
      },
      reinspect: function(inSubComponent) {
 	 /* the previous reinspect will trigger onEditorChange events which will trigger additional reinspects; insure that all of the onEditorChange
@@ -1064,7 +1064,7 @@
 			  hint: inProp.ignoretmp && inProp.ignoreHint ?  this.ignoreHintPrefix + inProp.ignoreHint : "", // a bound editor of an ignored property
 			  resetButton: true,
 			  showing: isBound,
-			  name: "propEditBind_" + inComponent.getId() + "." + inProp.name,
+			  name: "propEditBind_" + inComponent.getId() + "__" + inProp.name,
 			  _resetButtonUrl: "images/inspector_bind_disabled.gif"
 			});
 	 var bindableEditor = new wm.Text(editorProps);
