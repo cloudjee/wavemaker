@@ -29,13 +29,26 @@ ImportCloudFoundryDatabase.widgets = {
     serviceListVar: ["wm.Variable", {type: "wm.studio.CloudFoundryService", isList:true}],
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    instructions: ["wm.Html", {width: "100%", height: "30px", html: "Select a database service you have setup in CloudFoundry, or <a target='caldecott' href='http://docs.cloudfoundry.com/tools/vmc/caldecott.html'>Setup a new database service</a>"}],
-	    serviceList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", 
-				      columns:[{show:true, field: "name", width: "100%", title: "Name"},
-					       {show:true, field: "vendor", width: "80px", title: "Type"},
-					       {show:true, field: "meta.created", width: "80px", title: "Created", "formatFunc":"wm_date_formatter"}]}, {}, {
-		binding: ["wm.Binding",{},{},{
-		    wire: ["wm.Wire", {source: "serviceListVar", targetProperty: "dataSet"}]
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers","NoRightMarginOnTab"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
+		layer1: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "middle", padding: "10"}, {}, {
+		    instructions: ["wm.Html", {width: "100%", height: "30px", html: "Select a database service you have setup in CloudFoundry, or <a target='caldecott' href='http://docs.cloudfoundry.com/tools/vmc/caldecott.html'>Setup a new database service</a>"}],
+		    serviceList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", 
+					      columns:[{show:true, field: "name", width: "100%", title: "Name"},
+						       {show:true, field: "vendor", width: "80px", title: "Type"},
+						       {show:true, field: "meta.created", width: "80px", title: "Created", "formatFunc":"wm_date_formatter"}]}, 
+				  {onSelect: "selectedServiceChange"}, {
+							   binding: ["wm.Binding",{},{},{
+							       wire: ["wm.Wire", {source: "serviceListVar", targetProperty: "dataSet"}]
+							   }]
+						       }]
+		}],
+		layer2: ["wm.Layer", {caption: "Advanced Options", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "middle", padding: "10"}, {}, {
+		    serviceNameInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Service Name", width: "100%", border: "0", emptyValue: "emptyString", helpText: "The service name is the name that is added to your service tree, and the name your ServiceVariables will use"}, {onchange: "serviceNameChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
+		    packageInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Java Package", width: "100%", border: "0", emptyValue: "emptyString", helpText: "WaveMaker Studio generates Java classes for you when you import a database. If you want a different Java package name than the default name we generate, type it in here."}, {onEnterKeyPress: "importBtnClick"}],
+		    tablePatternInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Table Filter", width: "100%", border: "0", emptyValue: "emptyString", helpText: "By default WaveMaker Studio imports all the tables in the database. If you want to import only a subset of the tables, type in a comma-delimited list of regular expressions here."}, {onEnterKeyPress: "importBtnClick"}],
+		    schemaPatternInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Schema Filter", width: "100%", border: "0", emptyValue: "emptyString",helpText: "When you are importing a database that supports schemas, WaveMaker Studio imports only the tables for the default schema. If you want to import tables from other schemas, add the schema names in this field."}, {onEnterKeyPress: "importBtnClick"}],
+		    revengNamingStrategyInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Naming Strategy", width: "100%", border: "0", emptyValue: "emptyString", helpText: "Most users should leave this blank.  Enter the name of a java class you created for handling the naming strategy."}, {onEnterKeyPress: "importBtnClick"}],
+		    dumpEditor: ["wm.Text", {showing: false}]
 		}]
 	    }]
 	}],
@@ -47,6 +60,7 @@ ImportCloudFoundryDatabase.widgets = {
 		}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	}]
+
     }]
 }
 

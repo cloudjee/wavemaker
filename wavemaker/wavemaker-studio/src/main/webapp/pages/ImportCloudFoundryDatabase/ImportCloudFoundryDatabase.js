@@ -40,24 +40,42 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	debugger;
 	this.serviceListVar.setData(inResult);
     },
+        selectedServiceChange: function(inSender) {
+	    var serviceName = this.serviceList.selectedItem.getValue("name");
+	    var type =  this.serviceList.selectedItem.getValue("vendor");
+	    this.serviceNameInput.setDataValue(serviceName + "DB");
+	    this.packageInput.setDataValue(DEFAULT_PACKAGE_ROOT + serviceName);
+	    setupWidgetsForDatabaseType(type, 
+					"", 
+					this.dumpEditor,
+					this.dumpEditor,
+					this.dumpEditor,
+					this.dumpEditor,
+					this.tablePatternInput,
+					this.schemaPatternInput,
+					this.dumpEditor,
+					this.dumpEditor,
+					this.dumpEditor,
+					this.dumpEditor);
+	},
 	importBtnClick: function(inSender) {
 	    this.dataModelName = null;
+	    var serviceName = this.serviceList.selectedItem.getValue("name");
+	    var type =  this.serviceList.selectedItem.getValue("vendor");
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
-	    studio.dataService.requestAsync(IMPORT_DB_OP,
-					[this.serviceNameInput.getDataValue(),
-					this.packageInput.getDataValue(),
-					this.usernameInput.getDataValue(),
-					this.passwordInput.getDataValue(),
-					this.connectionUrlInput.getDataValue(),
-					this.tablePatternInput.getDataValue(),
-					this.schemaPatternInput.getDataValue(),
-					this.driverClassInput.getDataValue(),
-					this.dialectInput.getDataValue(),
-					 this.revengNamingStrategyInput.getDataValue(),
-					 this.executeAsMenu.getDataValue() == "Logged in user",
-					 this.activeDirectoryDomain.getDataValue()],
-					dojo.hitch(this, "_importResult"), 
-					dojo.hitch(this, "_importError"));
+	    studio.dataService.requestAsync("cfImportDatabase",
+					    [this.serviceNameInput.getDataValue(),
+					     this.packageInput.getDataValue(),
+					     this.tablePatternInput.getDataValue(),
+					     this.schemaPatternInput.getDataValue(),
+					     "",
+					     "",
+					     this.revengNamingStrategyInput.getDataValue(),
+					     false,
+					     ""],
+				dojo.hitch(this, "_importResult"), 
+				dojo.hitch(this, "_importError"));
+
 	},
 	_importResult: function() {
 	    studio.endWait();
