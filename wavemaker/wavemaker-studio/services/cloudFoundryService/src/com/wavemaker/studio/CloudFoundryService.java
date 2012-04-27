@@ -36,6 +36,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
@@ -140,6 +141,9 @@ public class CloudFoundryService {
         try {
             if (!StringUtils.hasLength(token)) {
                 token = getAuthenticationToken();
+            }
+            if (!StringUtils.hasLength(target)) {
+                target = CloudFoundryUtils.getControllerUrl();
             }
             CloudFoundryClient client = new CloudFoundryClient(token, target);
             return callable.call(client);
