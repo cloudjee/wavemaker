@@ -18,7 +18,7 @@ import java.io.InputStream;
 
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import com.wavemaker.tools.io.filesystem.FileSystem;
+
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 /**
@@ -87,11 +87,6 @@ public class ClassPathFile extends AbstractReadOnlyFile {
 
     @Override
     public Object getOriginalResource() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T extends Resource> Folder copyTo(Folder folder, ResourceFilter<T> filter) {
         throw new UnsupportedOperationException();
     }
 }

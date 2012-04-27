@@ -46,8 +46,17 @@ public interface Folder extends Resource, Iterable<Resource> {
     @Override
     Folder copyTo(Folder folder);
 
-    @Override
-    <T extends Resource> Resource copyTo(Folder folder, ResourceFilter<T> filter);
+    /**
+     * Recursively copy this resource to the specified folder, filtering resources. Any duplicate {@link File}s will be
+     * replaced (existing {@link Folder} resources will be merged). If the resource does not exist a
+     * {@link ResourceDoesNotExistException} is thrown.
+     * 
+     * @param folder the folder to copy the resource to
+     * @param fileIncludeFilter a filter used to restrict the files that are copied (must not be <tt>null</tt>).
+     * @return a new resource (the current resource will no longer {@link #exists() exist}
+     * @throws ResourceDoesNotExistException if this resource no longer exists
+     */
+    Folder copyTo(Folder folder, ResourceIncludeFilter<File> fileIncludeFilter);
 
     /**
      * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
@@ -128,10 +137,10 @@ public interface Folder extends Resource, Iterable<Resource> {
      * List immediate child resource of this folder, filtering results as necessary. If this resource does not exist
      * empty resources are returned.
      * 
-     * @param filter a filter used to restrict results (must not be <tt>null</tt>).
+     * @param includeFilter a filter used to include results (must not be <tt>null</tt>).
      * @return a list of immediate child resources that match the filter
      */
-    <T extends Resource> Resources<T> list(ResourceFilter<T> filter);
+    <T extends Resource> Resources<T> list(ResourceIncludeFilter<T> includeFilter);
 
     /**
      * Perform the specified operation on all children in folder, recursively processing all nested folders.

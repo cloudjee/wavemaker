@@ -20,16 +20,16 @@ public class FilteredResourcesTest {
     public void shouldFilterBasedOnFileGeneric() throws Exception {
         File file = mock(File.class);
         Resources<File> resources = new ResourcesCollection<File>(file);
-        assertThat(FilteredResources.apply(resources, ResourceFiltering.files()).iterator().next(), is(file));
-        assertThat(FilteredResources.apply(resources, ResourceFiltering.folders()).iterator().hasNext(), is(false));
+        assertThat(FilteredResources.apply(resources, Including.files()).iterator().next(), is(file));
+        assertThat(FilteredResources.apply(resources, Including.folders()).iterator().hasNext(), is(false));
     }
 
     @Test
     public void shouldFilterBasedOnFolderGeneric() throws Exception {
         Folder folder = mock(Folder.class);
         Resources<Folder> resources = new ResourcesCollection<Folder>(folder);
-        assertThat(FilteredResources.apply(resources, ResourceFiltering.files()).iterator().hasNext(), is(false));
-        assertThat(FilteredResources.apply(resources, ResourceFiltering.folders()).iterator().next(), is(folder));
+        assertThat(FilteredResources.apply(resources, Including.files()).iterator().hasNext(), is(false));
+        assertThat(FilteredResources.apply(resources, Including.folders()).iterator().next(), is(folder));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class FilteredResourcesTest {
         final File file2 = mock(File.class);
         final Folder folder2 = mock(Folder.class);
         Resources<Resource> resources = new ResourcesCollection<Resource>(file1, folder1, file2, folder2);
-        Iterator<Resource> filtered = FilteredResources.apply(resources, new ResourceFilter<Resource>() {
+        Iterator<Resource> filtered = FilteredResources.apply(resources, new ResourceIncludeFilter<Resource>() {
 
             @Override
             public boolean include(Resource resource) {

@@ -63,7 +63,7 @@ public interface Resource {
     Resource moveTo(Folder folder);
 
     /**
-     * Recursively copy this resource to the specified folder.Any duplicate {@link File}s will be replaced (existing
+     * Recursively copy this resource to the specified folder. Any duplicate {@link File}s will be replaced (existing
      * {@link Folder} resources will be merged). If the resource does not exist a {@link ResourceDoesNotExistException}
      * is thrown.
      * 
@@ -72,18 +72,6 @@ public interface Resource {
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
     Resource copyTo(Folder folder);
-
-    /**
-     * Recursively copy this resource to the specified folder.Any duplicate {@link File}s will be replaced (existing
-     * {@link Folder} resources will be merged). If the resource does not exist a {@link ResourceDoesNotExistException}
-     * is thrown.
-     *
-     * @param folder the folder to copy the resource to
-     * @param filter a filter used to restrict resources to copy (must not be <tt>null</tt>).
-     * @return a new resource (the current resource will no longer {@link #exists() exist}
-     * @throws ResourceDoesNotExistException if this resource no longer exists
-     */
-    <T extends Resource> Resource copyTo(Folder folder, ResourceFilter<T> filter);
 
     /**
      * Rename the current resource. The rename operation cannot be used not move the resource to a different folder, use
@@ -139,14 +127,14 @@ public interface Resource {
 
     /**
      * Returns an enum value that indicates the origin of the resource (eg. os file system or mongo db)
-     *
+     * 
      * @return the origin of the resource
      */
     ResourceOrigin getResourceOrigin();
 
     /**
      * Returns the original resource object that can be casted to the appropriate rsource origin
-     *
+     * 
      * @return the original resource object
      */
     Object getOriginalResource();

@@ -23,8 +23,8 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceFiltering;
-import com.wavemaker.tools.io.ResourceFiltering.ResourceAttributeFilter;
+import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.Including.ResourceAttributeFilter;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DownloadableFolder;
 import com.wavemaker.tools.project.Project;
@@ -155,27 +155,27 @@ public class PhoneGapService {
     }
 
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
-        phoneGapLibFolder.getFolder("build/Gzipped").list(ResourceFiltering.fileNames().ending(".gz")).delete();
-        phoneGapLibFolder.getFolder("build/themes").list(ResourceFiltering.resourceNames().notEnding(".css").notMatching("tundra")).delete();
-        phoneGapLibFolder.getFolder("build").list(ResourceFiltering.fileNames().ending(".js")).delete();
+        phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending(".gz")).delete();
+        phoneGapLibFolder.getFolder("build/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
+        phoneGapLibFolder.getFolder("build").list(Including.fileNames().ending(".js")).delete();
         phoneGapLibFolder.getFolder("images/boolean/").delete();
         //phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
         Folder dojo = phoneGapLibFolder.getFolder("dojo");
         dojo.getFolder("util").delete();
         dojo.getFolder("dojox").delete();
-        dojo.getFolder("dojo").list(ResourceFiltering.fileNames().notMatching("dojo_build.js")).delete();
-        dojo.getFolder("dijit").list(ResourceFiltering.resourceNames().notMatching("themes")).delete();
-        dojo.getFolder("dijit/themes").list(ResourceFiltering.resourceNames().notEnding(".css").notMatching("tundra")).delete();
+        dojo.getFolder("dojo").list(Including.fileNames().notMatching("dojo_build.js")).delete();
+        dojo.getFolder("dijit").list(Including.resourceNames().notMatching("themes")).delete();
+        dojo.getFolder("dijit/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
         Folder wm = phoneGapLibFolder.getFolder("wm");
         wm.getFolder("compressed").delete();
         wm.getFolder("etc").delete();
         Folder base = wm.getFolder("base");
-        base.list(ResourceFiltering.resourceNames().matching("deprecated", "components", "design", "drag", "styles", "templates", "debug")).delete();
-        base.list(ResourceFiltering.resourceNames().ending(".js")).delete();
+        base.list(Including.resourceNames().matching("deprecated", "components", "design", "drag", "styles", "templates", "debug")).delete();
+        base.list(Including.resourceNames().ending(".js")).delete();
         Folder widget = base.getFolder("widget");
         widget.getFolder("Editors").delete(); // all editors are in a build layer
-        widget.list(ResourceFiltering.fileNames().ending("_design.js")).delete();
+        widget.list(Including.fileNames().ending("_design.js")).delete();
         String[] purgedWidgetResources = { "Buttons/Button_design.js", "Trees/Tree_design.js", "Dialogs/Dialog_design.js", "AccordionLayers.js",
             "DojoMenu.js", "AppRoot.js", "PageContainer.js", "Bevel.js", "EditPanel.js", "Panel.js", "BreadcrumbLayers.js", "Button.js", "Editor.js",
             "Picture.js", "Container.js", "FileUpload.js", "Formatters.js", "Scrim.js", "Select.js", "Html.js", "Spacer.js", "ContextMenuDialog.js",
@@ -198,7 +198,7 @@ public class PhoneGapService {
         String url = "http://" + host + ":" + port + "/" + this.projectManager.getCurrentProject().getProjectName();
 
         // Delete all pages, resources and project files so we can re-copy updated version of them
-        ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("config.js", "lib");
+        ResourceAttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
         phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
         // Copy project files for phonegap
         projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
@@ -218,7 +218,7 @@ public class PhoneGapService {
     }
 
     private String getPhoneGapScript(Folder phoneGapFolder) {
-        Resources<Resource> files = phoneGapFolder.list(ResourceFiltering.resourceNames().starting("cordova-").ending(".js"));
+        Resources<Resource> files = phoneGapFolder.list(Including.resourceNames().starting("cordova-").ending(".js"));
         for (Resource resource : files) {
             return resource.getName();
         }

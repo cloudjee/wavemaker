@@ -19,7 +19,10 @@ import java.io.OutputStream;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.io.*;
+import com.wavemaker.tools.io.AbstractFileContent;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FileContent;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
@@ -90,11 +93,6 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
         File destination = folder.getFile(getName().toString());
         destination.getContent().write(getContent().asInputStream());
         return destination;
-    }
-
-    @Override
-    public <T extends Resource> Folder copyTo(Folder folder, ResourceFilter<T> filter) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

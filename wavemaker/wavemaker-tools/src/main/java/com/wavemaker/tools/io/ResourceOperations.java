@@ -25,14 +25,14 @@ public abstract class ResourceOperations {
 
     /**
      * Copy all files, keeping the same folder structure relative to the source. See
-     * {@link #copyFilesKeepingSameFolderStructure(Folder, ResourceFilter)} for details.
+     * {@link #copyFilesKeepingSameFolderStructure(Folder, ResourceIncludeFilter)} for details.
      * 
      * @param source the source folder
      * @param destination the destination folder
      * @return the operation
      */
     public static ResourceOperation<File> copyFilesKeepingSameFolderStructure(Folder source, Folder destination) {
-        return copyFilesKeepingSameFolderStructure(source, destination, ResourceFiltering.<File> none());
+        return copyFilesKeepingSameFolderStructure(source, destination, Including.<File> all());
     }
 
     /**
@@ -44,16 +44,16 @@ public abstract class ResourceOperations {
      * @return the operation
      */
     public static ResourceOperation<File> copyFilesKeepingSameFolderStructure(final Folder source, final Folder destination,
-        final ResourceFilter<File> filter) {
+        final ResourceIncludeFilter<File> fileIncludeFilter) {
         Assert.notNull(source, "Source must not be null");
         Assert.notNull(destination, "Destination must not be null");
-        Assert.notNull(filter, "Filter must not be null");
+        Assert.notNull(fileIncludeFilter, "Filter must not be null");
         final String sourcePath = source.toString();
         return new ResourceOperation<File>() {
 
             @Override
             public void perform(File resource) {
-                if (filter.include(resource)) {
+                if (fileIncludeFilter.include(resource)) {
                     Assert.state(resource.toString().startsWith(sourcePath), "The file " + resource + " is not contained in the source folder "
                         + sourcePath);
                     String relativeLocation = resource.toString().substring(sourcePath.length());
