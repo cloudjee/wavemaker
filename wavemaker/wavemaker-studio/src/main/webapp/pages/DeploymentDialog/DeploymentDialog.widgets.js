@@ -125,7 +125,7 @@ DeploymentDialog.widgets = {
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%"}, {}, {
 					binding: ["wm.Binding", {}, {}, {
-					    wire: ["wm.Wire", {"expression":"${cfHostEditor.dataValue}.replace(/\:.*$/,\"\") + \"://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\") + \"/\"","source":false,"targetProperty":"dataValue"}, {}]
+					    wire: ["wm.Wire", {"expression":"${cfHostEditor.dataValue}.replace(/\:.*$/,\"\") + \"://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\")","source":false,"targetProperty":"dataValue"}, {}]
 					}]
 				    }]
 				}],
