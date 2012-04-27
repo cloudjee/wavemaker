@@ -678,6 +678,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  if (selectOnAdd || selectOnAdd === undefined) {
 	    this.setSelectedRow(0);
 	    this.selectionChange(); // needs committing
+
+	      /* If the grid isn't bound to its dataSet, then it won't automatically regenerate when its dataSet is changed */
+	      if (!this.$.binding || !this.$.binding.wires.dataSet || this.$.binding.wires.dataSet != this.dataSet) {
+		  this.setDataSet(this.dataSet);
+	      }
 		var self = this;
 		setTimeout(function(){
 			self.dojoObj.scrollToRow(0);
@@ -1152,7 +1157,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    }
 
 		    if (col.editorProps && col.editorProps.selectDataSet && col.fieldType == "dojox.grid.cells.ComboBox") {
-			var selectDataSet = this.owner.getValueById(col.editorProps.selectDataSet);
+			var selectDataSet = this.owner[col.editorProps.selectDataSet] || this.owner.getValueById(col.editorProps.selectDataSet);
 			if (selectDataSet) {
 			    if (!selectDataSet.isEmpty()) {
 				obj.options = selectDataSet.getData();
@@ -1869,7 +1874,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 	    if (inValue && inValue != '') {
 		var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
-		var onclick = "onclick='" + this.getRuntimeId() + ".gridButtonClicked(\"" + field + "\"," + rowIdx + ")' ";
+		var onclick = "onclick='app.getValueById(\"" + this.getRuntimeId() + "\").gridButtonClicked(\"" + field + "\"," + rowIdx + ")' ";
 		return '<button ' + onclick + formatterProps.buttonclick + '" style="width:100%;display:inline-block" ' + classList + '>' + inValue + '</button>';
 	    }
 	    return inValue;
@@ -2004,13 +2009,21 @@ wm.DojoGrid.extend({
 
 dojo.require("dojox.grid.cells.dijit");
 dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
-		widgetClass: dijit.form.ComboBox,
-		getWidgetProps: function(inDatum){
-			return dojo.mixin({}, this.widgetProps||{}, {
-				value: inDatum,
-			    store: this.generateStore(this.options, this.widgetProps.displayField)
-			});
-		},
+    restrictValues: true,
+    isSimpleType: false,
+    widgetClass: dijit.form.ComboBox,
+    getWidgetProps: function(inDatum){
+	if (this.widgetProps && this.widgetProps.isSimpleType) {
+	    this.isSimpleType = this.widgetProps.isSimpleType;
+	}
+	if (this.widgetProps && this.widgetProps.restrictValues !== undefined) {
+	    this.restrictValues = this.widgetProps.restrictValues;
+	}
+	return dojo.mixin({}, this.widgetProps||{}, {
+	    value: inDatum,
+	    store: this.generateStore(this.options, this.widgetProps.displayField)
+	});
+    },
     generateStore: function(options, displayField) {
 			var items=[];
 			dojo.forEach(options, function(o){
@@ -2020,23 +2033,28 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
 			var store = new dojo.data.ItemFileReadStore({data: {identifier: displayField, items: items}});
 	return store;
     },
-		apply: function(inRowIndex){		    
-		    //this.inherited(arguments);
-		    if (this.grid.canEdit(this, inRowIndex)) {
-			if (!this.widget) return;
-		    var name = this.field;
-		    var objName = name.replace(/\..*?$/,"");
-		    var item = this.widget.item;
-		    var store = this.widget.store;
-		    if (this.widgetProps.owner) {
-			var value = this.widgetProps.owner.itemToJSONObject(store, item);
-			var rowitem = this.grid.getItem(inRowIndex);
-			this.grid.doApplyCellEdit(value, inRowIndex, objName);
-		    }
-		    }
-		    this._finish(inRowIndex);
-
-		},
+    apply: function(inRowIndex){		    
+	//this.inherited(arguments);
+	if (this.grid.canEdit(this, inRowIndex)) {
+	    if (!this.widget) return;
+	    var name = this.field;
+	    var objName = name.replace(/\..*?$/,"");
+	    var item = this.widget.item;
+	    var store = this.widget.store;
+	    if (this.widgetProps.owner) {
+		var value = this.widgetProps.owner.itemToJSONObject(store, item);
+		if (this.isSimpleType && typeof value == "object") {
+		    value = value[this.widgetProps.displayField];
+		}
+		var rowitem = this.grid.getItem(inRowIndex);
+		if (!this.restrictValues && value === undefined) {
+		    value = this.widget.get("value");
+		}
+		this.grid.doApplyCellEdit(value, inRowIndex, objName);
+	    }
+	}
+	this._finish(inRowIndex);
+    },
 
 		getValue: function(){
 			var e = this.widget;
@@ -2045,6 +2063,7 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
 			return e.get('value');
 		}
 	});
+
 
 dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     apply: function(inRowIndex){
