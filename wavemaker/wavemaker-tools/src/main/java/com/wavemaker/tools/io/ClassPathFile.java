@@ -89,4 +89,9 @@ public class ClassPathFile extends AbstractReadOnlyFile {
     public Object getOriginalResource() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public <T extends Resource> Folder copyTo(Folder folder, ResourceFilter<T> filter) {
+        throw new UnsupportedOperationException();
+    }
 }

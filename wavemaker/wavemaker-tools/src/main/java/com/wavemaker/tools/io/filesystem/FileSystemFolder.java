@@ -158,6 +158,19 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
+    public <T extends Resource> Folder copyTo(Folder folder, ResourceFilter<T> filter) {
+        Assert.notNull(folder, "Folder must not be empty");
+        Assert.notNull(filter, "Filter must not be null");
+        ensureExists();
+        Assert.state(getPath().getParent() != null, "Unable to copy a root folder");
+        Folder destination = createDestinationFolder(folder);
+        for (T child : list(filter)) {
+            child.copyTo(destination);
+        }
+        return destination;
+    }
+
+    @Override
     public Resources<Resource> copyContentsTo(Folder folder) {
         return list().copyTo(folder);
     }

@@ -46,6 +46,9 @@ public interface Folder extends Resource, Iterable<Resource> {
     @Override
     Folder copyTo(Folder folder);
 
+    @Override
+    <T extends Resource> Resource copyTo(Folder folder, ResourceFilter<T> filter);
+
     /**
      * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
      * {@link Resources#copyTo(Folder) copyTo(folder)}.
