@@ -276,14 +276,23 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
-        String url = getUrl(deploymentInfo);
+        if(deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty())
+        	deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo));  //testrun
+        String url = deploymentInfo.getDeploymentUrl();
+        //URL could already be in use - CF allows for such   
         String appName = deploymentInfo.getApplicationName();
-        Integer memory = client.getDefaultApplicationMemory(CloudApplication.SPRING);
+    	//AppName can not already be in use
         if (checkExist && appNameInUse(client, appName)) {
-            throw new DeploymentStatusException("ERROR: Application name already in use. Choose another name");
-        }
+        	try{
+        		client.deleteApplication(appName); //redploy of same app 
+        	}
+        	catch(Exception e){
+        		e.printStackTrace();
+        		throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
+        		}
+        }   
         try {
-            client.createApplication(appName, CloudApplication.SPRING, memory, Collections.singletonList(url), null, true);
+            client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
             return url;
         } catch (CloudFoundryException e) {
             throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
