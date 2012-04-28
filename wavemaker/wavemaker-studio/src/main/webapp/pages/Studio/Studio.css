@@ -209,8 +209,10 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: white;
 }
 
-.StudioDarkPanels > div .wmeditor input,
-.StudioDarkLayers > div > .wmlayer .wmeditor input {
+.StudioDarkPanels > div td,
+.StudioDarkLayers > div td,
+.StudioDarkPanels > div  input,
+.StudioDarkLayers > div > .wmlayer input {
     color: black;
 }
 
