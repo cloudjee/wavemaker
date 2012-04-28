@@ -33,7 +33,7 @@ public class ResourceOperationsTest {
 
         Folder source = from.getFolder("a");
         source.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(source, destination,
-            ResourceFiltering.fileNames().notEnding(".bak")));
+            Including.fileNames().notEnding(".bak")));
 
         assertThat(destination.getFile("b/c/d.txt").getContent().asString(), is("d"));
         assertThat(destination.getFile("b/c/d.bak").exists(), is(false));

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 
 /**
- * Tests for {@link ResourceFiltering}.
+ * Tests for {@link Including}.
  * 
  * @author Phillip Webb
  */
@@ -18,7 +18,7 @@ public class ResourceFilteringTest {
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void shouldFilterFiles() throws Exception {
-        ResourceFilter filter = ResourceFiltering.fileNames();
+        ResourceIncludeFilter filter = Including.fileNames();
         assertThat(filter.include(fileWithName("test")), is(true));
         assertThat(filter.include(folderWithName("test")), is(false));
     }
@@ -26,42 +26,42 @@ public class ResourceFilteringTest {
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void shouldFilterFolders() throws Exception {
-        ResourceFilter filter = ResourceFiltering.folderNames();
+        ResourceIncludeFilter filter = Including.folderNames();
         assertThat(filter.include(fileWithName("test")), is(false));
         assertThat(filter.include(folderWithName("test")), is(true));
     }
 
     @Test
     public void shouldFilterOnFileName() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().matching("a");
+        ResourceIncludeFilter<File> filter = Including.fileNames().matching("a");
         assertThat(filter.include(fileWithName("a")), is(true));
         assertThat(filter.include(fileWithName("b")), is(false));
     }
 
     @Test
     public void shouldFilterOnFolderName() throws Exception {
-        ResourceFilter<Folder> filter = ResourceFiltering.folderNames().matching("a");
+        ResourceIncludeFilter<Folder> filter = Including.folderNames().matching("a");
         assertThat(filter.include(folderWithName("a")), is(true));
         assertThat(filter.include(folderWithName("b")), is(false));
     }
 
     @Test
     public void shouldFilterOnFilePath() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.filePaths().matching("/a/b.txt");
+        ResourceIncludeFilter<File> filter = Including.filePaths().matching("/a/b.txt");
         assertThat(filter.include(fileWithPath("/a/b.txt")), is(true));
         assertThat(filter.include(fileWithPath("/a/c.txt")), is(false));
     }
 
     @Test
     public void shouldFilterOnFolderPath() throws Exception {
-        ResourceFilter<Folder> filter = ResourceFiltering.folderPaths().matching("/a/b/");
+        ResourceIncludeFilter<Folder> filter = Including.folderPaths().matching("/a/b/");
         assertThat(filter.include(folderWithPath("/a/b/")), is(true));
         assertThat(filter.include(folderWithPath("/a/c/")), is(false));
     }
 
     @Test
     public void shouldFilterNamesStarting() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().starting("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().starting("a", "b");
         assertThat(filter.include(fileWithName("acd")), is(true));
         assertThat(filter.include(fileWithName("bcd")), is(true));
         assertThat(filter.include(fileWithName("ACD")), is(true));
@@ -71,7 +71,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesStarting() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().starting("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().starting("a", "b");
         assertThat(filter.include(fileWithName("acd")), is(true));
         assertThat(filter.include(fileWithName("bcd")), is(true));
         assertThat(filter.include(fileWithName("ACD")), is(false));
@@ -81,7 +81,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesNotStarting() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().notStarting("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().notStarting("a", "b");
         assertThat(filter.include(fileWithName("acd")), is(false));
         assertThat(filter.include(fileWithName("bcd")), is(false));
         assertThat(filter.include(fileWithName("ACD")), is(false));
@@ -91,7 +91,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesNotStarting() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().notStarting("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().notStarting("a", "b");
         assertThat(filter.include(fileWithName("acd")), is(false));
         assertThat(filter.include(fileWithName("bcd")), is(false));
         assertThat(filter.include(fileWithName("ACD")), is(true));
@@ -101,7 +101,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesEnding() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().ending("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().ending("a", "b");
         assertThat(filter.include(fileWithName("dca")), is(true));
         assertThat(filter.include(fileWithName("dcb")), is(true));
         assertThat(filter.include(fileWithName("DCA")), is(true));
@@ -111,7 +111,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesEnding() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().ending("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().ending("a", "b");
         assertThat(filter.include(fileWithName("dca")), is(true));
         assertThat(filter.include(fileWithName("dcb")), is(true));
         assertThat(filter.include(fileWithName("DCA")), is(false));
@@ -121,7 +121,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesNotEnding() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().notEnding("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().notEnding("a", "b");
         assertThat(filter.include(fileWithName("dca")), is(false));
         assertThat(filter.include(fileWithName("dcb")), is(false));
         assertThat(filter.include(fileWithName("DCA")), is(false));
@@ -131,7 +131,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesNotEnding() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().notEnding("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().notEnding("a", "b");
         assertThat(filter.include(fileWithName("dca")), is(false));
         assertThat(filter.include(fileWithName("dcb")), is(false));
         assertThat(filter.include(fileWithName("DCA")), is(true));
@@ -141,7 +141,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesContaining() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().containing("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().containing("a", "b");
         assertThat(filter.include(fileWithName("cad")), is(true));
         assertThat(filter.include(fileWithName("cbd")), is(true));
         assertThat(filter.include(fileWithName("CAD")), is(true));
@@ -151,7 +151,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesContaining() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().containing("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().containing("a", "b");
         assertThat(filter.include(fileWithName("cad")), is(true));
         assertThat(filter.include(fileWithName("cbd")), is(true));
         assertThat(filter.include(fileWithName("CAD")), is(false));
@@ -161,7 +161,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesNotContaining() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().notContaining("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().notContaining("a", "b");
         assertThat(filter.include(fileWithName("cad")), is(false));
         assertThat(filter.include(fileWithName("cbd")), is(false));
         assertThat(filter.include(fileWithName("CAD")), is(false));
@@ -171,7 +171,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesNotContaining() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().notContaining("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().notContaining("a", "b");
         assertThat(filter.include(fileWithName("cad")), is(false));
         assertThat(filter.include(fileWithName("cbd")), is(false));
         assertThat(filter.include(fileWithName("CAD")), is(true));
@@ -181,7 +181,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesMatching() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().matching("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().matching("a", "b");
         assertThat(filter.include(fileWithName("a")), is(true));
         assertThat(filter.include(fileWithName("b")), is(true));
         assertThat(filter.include(fileWithName("A")), is(true));
@@ -191,7 +191,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesMatching() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().matching("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().matching("a", "b");
         assertThat(filter.include(fileWithName("a")), is(true));
         assertThat(filter.include(fileWithName("b")), is(true));
         assertThat(filter.include(fileWithName("A")), is(false));
@@ -201,7 +201,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNamesNotMatching() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().notMatching("a", "b");
+        ResourceIncludeFilter<File> filter = Including.fileNames().notMatching("a", "b");
         assertThat(filter.include(fileWithName("a")), is(false));
         assertThat(filter.include(fileWithName("b")), is(false));
         assertThat(filter.include(fileWithName("A")), is(false));
@@ -211,7 +211,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterCaseSensitiveNamesNotMatching() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.caseSensitiveFileNames().notMatching("a", "b");
+        ResourceIncludeFilter<File> filter = Including.caseSensitiveFileNames().notMatching("a", "b");
         assertThat(filter.include(fileWithName("a")), is(false));
         assertThat(filter.include(fileWithName("b")), is(false));
         assertThat(filter.include(fileWithName("A")), is(true));
@@ -221,7 +221,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldSupportCompoundFilters() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.fileNames().starting("~").ending(".tmp", ".bak").notContaining("keep");
+        ResourceIncludeFilter<File> filter = Including.fileNames().starting("~").ending(".tmp", ".bak").notContaining("keep");
         assertThat(filter.include(fileWithName("~file.tmp")), is(true));
         assertThat(filter.include(fileWithName("~file.bak")), is(true));
         assertThat(filter.include(fileWithName("file.tmp")), is(false));
@@ -231,7 +231,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterHiddenResources() throws Exception {
-        ResourceFilter<Resource> filter = ResourceFiltering.hiddenResources();
+        ResourceIncludeFilter<Resource> filter = Including.hiddenResources();
         assertThat(filter.include(fileWithName(".hidden")), is(true));
         assertThat(filter.include(fileWithName("nothidden")), is(false));
         assertThat(filter.include(folderWithName(".hidden")), is(true));
@@ -240,7 +240,7 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterNonHiddenResources() throws Exception {
-        ResourceFilter<Resource> filter = ResourceFiltering.nonHiddenResources();
+        ResourceIncludeFilter<Resource> filter = Including.nonHiddenResources();
         assertThat(filter.include(fileWithName(".hidden")), is(false));
         assertThat(filter.include(fileWithName("nothidden")), is(true));
         assertThat(filter.include(folderWithName(".hidden")), is(false));
@@ -249,28 +249,28 @@ public class ResourceFilteringTest {
 
     @Test
     public void shouldFilterHiddenFolders() throws Exception {
-        ResourceFilter<Folder> filter = ResourceFiltering.hiddenFolders();
+        ResourceIncludeFilter<Folder> filter = Including.hiddenFolders();
         assertThat(filter.include(folderWithName(".hidden")), is(true));
         assertThat(filter.include(folderWithName("nothidden")), is(false));
     }
 
     @Test
     public void shouldFilterNonHiddenFolders() throws Exception {
-        ResourceFilter<Folder> filter = ResourceFiltering.nonHiddenFolders();
+        ResourceIncludeFilter<Folder> filter = Including.nonHiddenFolders();
         assertThat(filter.include(folderWithName(".hidden")), is(false));
         assertThat(filter.include(folderWithName("nothidden")), is(true));
     }
 
     @Test
     public void shouldFilterHiddenFiles() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.hiddenFiles();
+        ResourceIncludeFilter<File> filter = Including.hiddenFiles();
         assertThat(filter.include(fileWithName(".hidden")), is(true));
         assertThat(filter.include(fileWithName("nothidden")), is(false));
     }
 
     @Test
     public void shouldFilterNonHiddenFiles() throws Exception {
-        ResourceFilter<File> filter = ResourceFiltering.nonHiddenFiles();
+        ResourceIncludeFilter<File> filter = Including.nonHiddenFiles();
         assertThat(filter.include(fileWithName(".hidden")), is(false));
         assertThat(filter.include(fileWithName("nothidden")), is(true));
     }

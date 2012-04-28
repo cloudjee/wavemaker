@@ -22,7 +22,7 @@ import org.apache.commons.io.FileUtils;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -46,7 +46,7 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Folder svc = project.getRootFolder().getFolder("services");
-        Resources<Folder> mdls = svc.list(ResourceFiltering.folders());
+        Resources<Folder> mdls = svc.list(Including.folders());
         for (Folder mdl : mdls) {
             Folder mdlsrc = mdl.getFolder("src");
             processSingleMdl(mdlsrc);

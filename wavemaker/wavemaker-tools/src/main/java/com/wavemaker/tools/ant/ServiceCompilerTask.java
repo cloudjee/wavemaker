@@ -24,7 +24,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.ServiceClassGenerator;
 import com.wavemaker.tools.service.ServiceFile;
@@ -48,7 +48,7 @@ public class ServiceCompilerTask extends CompilerTask {
     }
 
     private Resources<com.wavemaker.tools.io.File> getServiceFiles(Folder folder) {
-        return folder.list(ResourceFiltering.fileNames().notEnding(".properties"));
+        return folder.list(Including.fileNames().notEnding(".properties"));
     }
 
     @Override

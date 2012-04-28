@@ -41,8 +41,8 @@ import com.wavemaker.tools.apt.ServiceProcessorConstants;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.ResourceOperations;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.project.Project;
@@ -61,7 +61,7 @@ public class ProjectCompiler {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    private static final ResourceFilter<File> JAR_FILE_FILTER = new ResourceFilter<File>() {
+    private static final ResourceIncludeFilter<File> JAR_FILE_FILTER = new ResourceIncludeFilter<File>() {
 
         @Override
         public boolean include(File resource) {
@@ -126,7 +126,7 @@ public class ProjectCompiler {
     private void copyResources(final Project project) {
         for (Folder sourceFolder : project.getSourceFolders()) {
             sourceFolder.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder,
-                project.getClassOutputFolder(), ResourceFiltering.fileNames().notEnding(".java")));
+                project.getClassOutputFolder(), Including.fileNames().notEnding(".java")));
         }
     }
 

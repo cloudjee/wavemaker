@@ -57,7 +57,7 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
@@ -665,7 +665,7 @@ public class DesignServiceManager {
      */
     public SortedSet<String> getServiceIds() {
         SortedSet<String> serviceIds = new TreeSet<String>();
-        Resources<Folder> childFolders = getServicesFolder().list(ResourceFiltering.folders());
+        Resources<Folder> childFolders = getServicesFolder().list(Including.folders());
         for (Folder child : childFolders) {
             String serviceId = child.getName();
             File serviceDefXmlFile = getServiceDefXmlFile(serviceId);

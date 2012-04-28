@@ -28,10 +28,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
@@ -263,7 +264,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
-        Resources<File> resources = this.folder.list(ResourceFiltering.files());
+        Resources<File> resources = this.folder.list(Including.files());
         Iterator<File> iterator = resources.iterator();
         File file = iterator.next();
         assertThat(iterator.hasNext(), is(false));
@@ -277,7 +278,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
-        Resources<File> resources = this.folder.list(new ResourceFilter<File>() {
+        Resources<File> resources = this.folder.list(new ResourceIncludeFilter<File>() {
 
             @Override
             public boolean include(File resource) {
@@ -374,18 +375,54 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldCopyChildren() throws Exception {
-        Folder destination = mock(Folder.class);
-        Folder destinationChild = mock(Folder.class);
-        Folder destinationGrandchild = mock(Folder.class);
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         FileSystemFolder<Object> grandchild = child.getFolder("b");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
+
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        Folder destinationGrandchild = mock(Folder.class);
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
+
         child.copyTo(destination);
         verify(destinationGrandchild).createIfMissing();
+    }
+
+    @Test
+    public void shouldCopyWithFileFilter() throws Exception {
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFile<Object> javaFile = child.getFile("a.java");
+        FileSystemFile<Object> classFile = child.getFile("a.class");
+        FileSystemFolder<Object> grandchild = child.getFolder("b");
+
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(javaFile.getKey())).willReturn(ResourceType.FILE);
+        given(this.fileSystem.getResourceType(classFile.getKey())).willReturn(ResourceType.FILE);
+        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.list(child.getKey())).willReturn(Arrays.asList("a.java", "a.class", "b"));
+
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        File destinationJavaFile = mock(File.class);
+        FileContent destinationJavaFileContent = mock(FileContent.class);
+        File destinationClassFile = mock(File.class);
+        FileContent destinationClassFileContent = mock(FileContent.class);
+        Folder destinationGrandchild = mock(Folder.class);
+
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        given(destinationChild.getFile("a.java")).willReturn(destinationJavaFile);
+        given(destinationJavaFile.getContent()).willReturn(destinationJavaFileContent);
+        given(destinationChild.getFile("a.class")).willReturn(destinationClassFile);
+        given(destinationClassFile.getContent()).willReturn(destinationClassFileContent);
+        given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
+
+        child.copyTo(destination, Including.fileNames().notEnding(".class"));
+        verify(destinationGrandchild).createIfMissing();
+        verify(destinationJavaFileContent).write(any(InputStream.class));
+        verify(destinationClassFileContent, never()).write(any(InputStream.class));
     }
 
     @Test

@@ -204,6 +204,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	data.applicationName = this.cfNameEditor.getDataValue();
 	data.name = this.cfDeploymentNameEditor.getDataValue();
 	data.target = this.cfHostEditor.getDataValue();
+	data.deploymentUrl=this.cfUrlEditor.getDataValue();
 
 	/* Delete the old databases and replace it with a new databases structure */
 	var databases = data.databases = []
@@ -1034,7 +1035,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.owner.owner.show();
 	this.cloudFoundryLayer.activate();
 	var targetName = this.setUniqueDeploymentName("CloudFoundry 1", this.cfDeploymentNameEditor, this.CF_DEPLOY);
-	this.cfHostEditor.setDataValue("https://api.cloudfoundry.com");
+	this.cfHostEditor.setDataValue("http://api.cloudfoundry.com");
 	this.cfNameEditor.setDataValue(studio.project.projectName);
 
 	var boxes = this.generateDataModelBoxes();

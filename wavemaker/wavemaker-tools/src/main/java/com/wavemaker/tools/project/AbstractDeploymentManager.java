@@ -42,7 +42,7 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.Deployments;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Including;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
 
@@ -371,13 +371,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
         // Add common themes
         Folder commonThemes = this.fileSystem.getCommonFolder().getFolder(THEMES_DIR);
-        for (Folder theme : commonThemes.list(ResourceFiltering.nonHiddenFolders())) {
+        for (Folder theme : commonThemes.list(Including.nonHiddenFolders())) {
             themes.add(theme.getName());
         }
 
         // Add studio themes
         Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
-        for (Folder theme : widgetThemes.list(ResourceFiltering.folderNames().starting("wm_"))) {
+        for (Folder theme : widgetThemes.list(Including.folderNames().starting("wm_"))) {
             themes.add(theme.getName());
         }
 

@@ -20,9 +20,9 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 
 /**
- * Implementation of of {@link Resources} that dynamically filters items based on a {@link ResourceFilter}.
+ * Implementation of of {@link Resources} that dynamically filters items based on a {@link ResourceIncludeFilter}.
  * 
- * @see #apply(Resources, ResourceFilter)
+ * @see #apply(Resources, ResourceIncludeFilter)
  * 
  * @author Phillip Webb
  */
@@ -32,13 +32,13 @@ public class FilteredResources<S extends Resource, T extends Resource> extends A
 
     private final Class<?> filterType;
 
-    private final ResourceFilter<T> filter;
+    private final ResourceIncludeFilter<T> filter;
 
-    private FilteredResources(Resources<S> resources, ResourceFilter<T> filter) {
+    private FilteredResources(Resources<S> resources, ResourceIncludeFilter<T> filter) {
         Assert.notNull(resources, "Resources must not be null");
         Assert.notNull(filter, "Filter must not be null");
         this.resources = resources;
-        this.filterType = GenericTypeResolver.resolveTypeArgument(filter.getClass(), ResourceFilter.class);
+        this.filterType = GenericTypeResolver.resolveTypeArgument(filter.getClass(), ResourceIncludeFilter.class);
         this.filter = filter;
     }
 
@@ -59,13 +59,13 @@ public class FilteredResources<S extends Resource, T extends Resource> extends A
     }
 
     /**
-     * Apply the given {@link ResourceFilter} to the specified {@link Resources}.
+     * Apply the given {@link ResourceIncludeFilter} to the specified {@link Resources}.
      * 
      * @param resources the resources to filter
      * @param filter the filter to apply
      * @return filtered resources.
      */
-    public static <S extends Resource, T extends Resource> Resources<T> apply(Resources<S> resources, ResourceFilter<T> filter) {
+    public static <S extends Resource, T extends Resource> Resources<T> apply(Resources<S> resources, ResourceIncludeFilter<T> filter) {
         return new FilteredResources<S, T>(resources, filter);
     }
 }
