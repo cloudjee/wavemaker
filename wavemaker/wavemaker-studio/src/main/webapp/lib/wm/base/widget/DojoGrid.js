@@ -645,56 +645,59 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.dojoObj.render();
 	},
 	addRow: function(inFields, selectOnAdd) {
-	  if (this.getRowCount() == 0 && this.variable) {
-	    this.variable.setData([inFields]);
-	    this.renderDojoObj();
-	    if (selectOnAdd) {
-		this.setSelectedRow(0);
-		this.selectionChange(); // needs committing
-	    }
-	    return;
-	  }
-	  var data = dojo.clone(inFields);
-	    var v = new wm.Variable({type: this.dataSet.type});
-	    v.setData(data);
+	    try {
+		if (this.getRowCount() == 0 && this.variable) {
+		    this.variable.setData([inFields]);
+		    this.renderDojoObj();
+		    if (selectOnAdd) {
+			this.setSelectedRow(0);
+			this.selectionChange(); // needs committing
+		    }
+		    return;
+		}
+		var data = dojo.clone(inFields);
+		var v = new wm.Variable({type: this.dataSet.type});
+		v.setData(data);
 
-	    /* Adding it to the dojo store does not work well if its a large store where not all of the data is loaded into the store; it seems to get confused */
-/*
-	    data._wmVariable = v;
-	  var schema = this.selectedItem._dataSchema;
-	  for (var key in schema) {
-	    if (!(key in data)) {
-	      data[key] = "";
-	    }
-	  }
-	    data._new = true;
-	    data._wmVariable = new wm.Variable({type: this.dataSet.type, owner: this});
-	    data._wmVariable.setData(data);
-	    debugger;
-	    var result = this.store.newItem(data);
-	    */
-	    this.dataSet.addItem(v,0);
-	    this.dataSet.getItem(0).data._new = true;
-	  if (selectOnAdd || selectOnAdd === undefined) {
-	    this.setSelectedRow(0);
-	    this.selectionChange(); // needs committing
+		/* Adding it to the dojo store does not work well if its a large store where not all of the data is loaded into the store; it seems to get confused */
+		/*
+		  data._wmVariable = v;
+		  var schema = this.selectedItem._dataSchema;
+		  for (var key in schema) {
+		  if (!(key in data)) {
+		  data[key] = "";
+		  }
+		  }
+		  data._new = true;
+		  data._wmVariable = new wm.Variable({type: this.dataSet.type, owner: this});
+		  data._wmVariable.setData(data);
+		  debugger;
+		  var result = this.store.newItem(data);
+		*/
+		this.dataSet.addItem(v,0);
+		this.dataSet.getItem(0).data._new = true;
+		if (selectOnAdd || selectOnAdd === undefined) {
+		    this.setSelectedRow(0);
+		    this.selectionChange(); // needs committing
 
+		    var self = this;
+		    setTimeout(function(){
+			self.dojoObj.scrollToRow(0);
+			for (var i = 0; i < self.columns.length; i++) {
+			    if (self.columns[i].fieldType) {
+				self.editCell(0, self.columns[i].field);
+				break;
+			    }
+			}
+		    },0);
+		    
+		}
+	    } finally {
 	      /* If the grid isn't bound to its dataSet, then it won't automatically regenerate when its dataSet is changed */
 	      if (!this.$.binding || !this.$.binding.wires.dataSet || this.$.binding.wires.dataSet != this.dataSet) {
 		  this.setDataSet(this.dataSet);
 	      }
-		var self = this;
-		setTimeout(function(){
-			self.dojoObj.scrollToRow(0);
-		    for (var i = 0; i < self.columns.length; i++) {
-			if (self.columns[i].fieldType) {
-			    self.editCell(0, self.columns[i].field);
-			    break;
-			}
-		    }
-		},0);
-		
-	  }
+	    }
 	},
     addEmptyRow: function(selectOnAdd) {
 	var set = function(obj, parts, value) {
@@ -770,7 +773,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	this.addRow(obj,selectOnAdd);
     },
 	getRowCount: function() {
-	    return Math.max(this.dojoObj.rowCount, this.dojoObj._by_idx.length);
+	    if (!this.dojoObj && this.dataSet) {
+		return this.dataSet.getCount();
+	    } else if (!this.dojoObj) {
+		return 0;
+	    } else {
+		return Math.max(this.dojoObj.rowCount, this.dojoObj._by_idx.length);
+	    }
 	},
 	hasSelection: function() {
 	    var index = this.getSelectedIndex();
