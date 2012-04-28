@@ -114,6 +114,7 @@ dojo.declare("Studio", wm.Page, {
 	    this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
 		// populate palettes
 		loadPackages();
+	this.disableMenuBar(true);
 		// init some UI
 		this.outlinedClick();
 		if (this.getUserSetting('explode')) {
