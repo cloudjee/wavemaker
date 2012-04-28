@@ -38,7 +38,7 @@ public interface DeploymentTarget {
      * @param deploymentInfo
      * @return status message
      */
-    void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException;
+    String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException;
 
     /**
      * Undeploy an app.

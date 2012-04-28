@@ -466,11 +466,14 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deploySuccess: function(inResult, inData) {
 	studio.endWait();
-	if (inResult == "SUCCESS" || inResult.match(/^OK/)) {
+	if (inResult == "SUCCESS" || inResult.match(/^OK/) || inResult.match(/http:/)) {
 	    switch (inData.deploymentType) {
 	    case this.TC_DEPLOY:
-	    case this.CF_DEPLOY:
 		app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {url: this.getTargetUrl(inData),
+                                                                         version: studio.application.getFullVersionNumber()}));
+		break;
+	    case this.CF_DEPLOY:
+		app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {url: inResult,
 									  version: studio.application.getFullVersionNumber()}));
 		break;
 	    case this.FILE_DEPLOY:

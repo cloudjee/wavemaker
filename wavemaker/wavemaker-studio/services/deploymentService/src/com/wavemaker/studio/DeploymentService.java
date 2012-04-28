@@ -211,9 +211,9 @@ public class DeploymentService {
                     return SUCCESS;
                 }
             }
-            this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
+            String ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
                 this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
-            return SUCCESS;
+            return ret;
         } catch (DeploymentStatusException e) {
             return e.getStatusMessage();
         }

@@ -122,22 +122,22 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     @Deprecated
-    void deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    String deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
             validateWar(webapp);
             ZipFile zipFile = new ZipFile(webapp);
             ApplicationArchive applicationArchive = new ZipApplicationArchive(zipFile);
-            doDeploy(applicationArchive, deploymentInfo);
+            return(doDeploy(applicationArchive, deploymentInfo));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
 
     @Override
-    public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
         applicationArchive = modifyApplicationArchive(applicationArchive);
-        doDeploy(applicationArchive, deploymentInfo);
+        return(doDeploy(applicationArchive, deploymentInfo));
     }
 
     /**
