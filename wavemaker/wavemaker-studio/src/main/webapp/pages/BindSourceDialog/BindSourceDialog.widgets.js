@@ -22,7 +22,7 @@ BindSourceDialog.widgets = {
 		    }]
 		}]
 	    }],
-	    buttonPanel: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, verticalAlign: "top", horizontalAlign: "right", height: "32px", width: "100%"}, {}, {
+	    buttonPanel: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, verticalAlign: "top", horizontalAlign: "right", height: "32px", width: "100%", layoutKind: "left-to-right"}, {}, {
 		    clearButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Clear", width: "70px"}, {onclick: "clearButtonClick"}],
 		    applyButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Bind", width: "70px"}, {onclick: "applyButtonClick"}],
 		    doneButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Done", width: "70px"}, {onclick: "cancelButtonClick"}],
