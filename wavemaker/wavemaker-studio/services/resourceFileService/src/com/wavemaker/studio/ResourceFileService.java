@@ -75,6 +75,8 @@ public class ResourceFileService {
         Hashtable<String, Object> hashtable = new Hashtable<String, Object>();
         hashtable.put("file", resource.getName());
         hashtable.put("type", resource instanceof Folder ? "folder" : "file");
+	if (resource instanceof File)
+	    hashtable.put("modified", ((File)resource).getLastModified());
         return hashtable;
     }
 
