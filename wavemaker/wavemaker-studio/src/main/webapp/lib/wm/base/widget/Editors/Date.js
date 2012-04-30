@@ -239,13 +239,15 @@ dojo.declare("wm.DateTime", wm.Date, {
 
     _createEditor: function(inNode, inProps) {
 	this.containerWidget = new wm.Container({width: "100%", 
-				  height: "100%", 
-				  layoutKind: "left-to-right",
-				  horizontalAlign: "left",
-				  verticalAlign: "top",
-					   name: "containerWidget",
-				  owner: this});
-	inNode.appendChild(this.containerWidget.domNode);
+						 height: "100%", 
+						 layoutKind: "left-to-right",
+						 horizontalAlign: "left",
+						 verticalAlign: "top",
+						 name: "containerWidget",
+						 owner: this,
+						 domNode: inNode
+						});
+
 	this.dateEditor = new wm.Date({owner: this,
 				       parent: this.containerWidget,
 				       name: "date",
@@ -276,23 +278,28 @@ dojo.declare("wm.DateTime", wm.Date, {
 	if (this.containerWidget && !this.containerWidget.isDestroyed)
 	    this.containerWidget.flow();
     },
-/*    sizeEditor: function() {
+    sizeEditor: function() {
 	this.inherited(arguments);
-	this.container.setWidth(this.editor.style.width);
-	this.container.setHeight(this.editor.style.height);
-	this.container.flow();
-    },*/
-    setReadonly: function(inValue) {
-	this.readonly = inValue;
-	this.dateEditor.setReadonly(inValue);
-	this.timeEditor.setReadonly(inValue);
+	this.flow();
     },
+
     setDisabled: function(inValue) {
 	wm.Control.prototype.setDisabled.call(this, inValue);
 	if (this.dateEditor)
 	    this.dateEditor.setDisabled(inValue);
 	if (this.timeEditor)
 	    this.timeEditor.setDisabled(inValue);
+    },
+    focus: function(inValue) {
+	    switch(this.dateMode) {
+	    case "Date and Time":
+	    case "Date":
+		this.dateEditor.focus();
+		break;
+	    case "Time":
+		this.timeEditor.focus();
+		break;
+	    }
     },
     _getValidatorNode: function() {return null;},
     setEditorValue: function(inValue) {
@@ -466,6 +473,7 @@ dojo.declare("wm.DateTime", wm.Date, {
 
 });
 
+/* Overrides dojo's dijit to provide a popup that sizes itself for phones, and adds a close button */
 dojo.declare("wm.form.DateTextBox", dijit.form.DateTextBox, {
     openDropDown: function(/*Function*/ callback){
 	this.inherited(arguments);
@@ -494,6 +502,7 @@ dojo.declare("wm.form.DateTextBox", dijit.form.DateTextBox, {
     }
 });
 
+/* Overrides dojo's dijit to provide a popup that is more mobile friendly and less annoying on desktop */
 dojo.declare(
     "wm.form.TimeTextBox",
     dijit.form.TimeTextBox,

@@ -124,7 +124,7 @@ wm.Lookup.extend({
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 	        props.startUpdate.ignoretmp = !this.autoDataSet;
-	        props.displayExpression.ignoretmp = this.autoDataSet && parentForm;
+
 		return props;
 	},
 	set_formField: function(inFieldName) {
@@ -148,6 +148,14 @@ wm.Lookup.extend({
 });
 
 
+wm.FilteringLookup.extend({
+    listProperties: function() {
+	var props = this.inherited(arguments);
+	var parentForm = this.getParentForm();
+	props.displayExpression.ignoretmp = this.autoDataSet && parentForm;
+	return props;
+    }
+});
 
 wm.Object.extendSchema(wm.FilteringLookup, {
     ignoreCase: {group: "editor", subgroup: "dataSet"},

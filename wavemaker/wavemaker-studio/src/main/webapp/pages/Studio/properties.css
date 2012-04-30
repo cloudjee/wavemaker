@@ -2,6 +2,9 @@
     border: solid 0px black;
     background-color: transparent;
     -webkit-appearance: none;
+
+#studio_PIContents .wminspector-subgroupLabel.wmlabel .wmSizeNode {
+    border-bottom: solid 1px white;
 }
 
 #studio_PIContents .isPublishedProp label,

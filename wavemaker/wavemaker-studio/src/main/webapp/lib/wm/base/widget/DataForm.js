@@ -476,7 +476,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     beginEditUpdate: function() {
 	this.dataOutput.beginUpdate();
 	dojo.forEach(this.getEditorsArray(), function(e) {
-	    wm.fire(e, "beginEditUpdate");
+	    wm.fire(e, "beginEditUpdate"); // disables bindings and events until endEditUpdate
 	});
     },
     endEditUpdate: function() {
@@ -527,6 +527,8 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 		}
 	    }
 	}));
+	var relatedEditors = this.getRelatedEditorsArray();
+	dojo.forEach(relatedEditors, function(e) {e.applyDataValueBindings(inOperation);});
     },
     /****************
      * METHOD: populateDataOutput (PRIVATE)
