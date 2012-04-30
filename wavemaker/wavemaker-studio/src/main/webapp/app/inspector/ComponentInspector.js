@@ -64,7 +64,7 @@
   * 8. Find all bindable/bindTarget properties that should be readonly and make them readonly
   */
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
-     captionSize: "45%",
+     captionSize: "35%",
      advancedMode: false,
      preferredMultiActive: false,
      multiActive: false,
@@ -448,7 +448,9 @@
 						    owner: this, 
 						    caption:inName, 
 						    width: "100%", 
-						    border: "0,0,1,0", 
+						    singleLine: false,
+						    //border: "0,0,1,0", 
+						    border: "0",
 						    borderColor: inBigSeparator ? "#959DAB" : "#444444", 
 						    showing: inShowing, 
 						    padding: "0", 
@@ -693,7 +695,8 @@
 	if (!inSource && !inExpr)
 	    ;
 	else if (inSource) 
-	    inValue = "bind: " + inSource;
+	    //inValue = "bind: " + inSource;
+	    inValue = inSource;
 	else if (inExpr === undefined || inExpr === null || inExpr === "" || String(inExpr).match(/^\s*$/))
 	    inValue = "";
 	else if (inExpr == "true")
@@ -717,7 +720,7 @@
 	else {
 	    var matches = inExpr.match(/^\s*\"([^\"]*)\"\s*$/);
 	    if (matches)
-		inValue = "str: " + matches[1];
+		inValue = "\"" + matches[1] + "\"";
 	    else
 		inValue = "expr: " + inExpr;
 	    inValue = String(inValue).replace(/\"/g, "'") || "";
@@ -1206,7 +1209,14 @@
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
 	     result.equivalentName = wm.propertyGroups[inName].equivalentName;
-	     result.layer = wm.propertyGroups[inName].layer;
+	     if (wm.propertyGroups[inName].layer === true) {
+		 result.layer = true;
+	     } else if (wm.propertyGroups[inName].layer === undefined) {
+		 result.layer = false;
+	     } else if (typeof wm.propertyGroups[inName].layer == "function") {
+		 result.layer = this.inspected instanceof wm.propertyGroups[inName].layer;
+	     }
+
 	     result.noDisplayName =  wm.propertyGroups[inName].noDisplayName;
 	     if (inName == "widgetName") {
 		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Properties"; // TODO: Localize
@@ -1730,7 +1740,7 @@ wm.addPropertyGroups({
 		 }
 		},
     data: {displayName: "Data", 
-	   layer: true,
+	   layer: wm.Control,
 	   order: 70,
 	   subgroups: {
 	       data: {displayName: "Data",

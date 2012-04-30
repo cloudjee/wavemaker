@@ -1,3 +1,7 @@
+#studio_PIContents .wminspector-subgroupLabel.wmlabel .wmSizeNode {
+    border-bottom: solid 1px white;
+}
+
 #studio_PIContents .isPublishedProp label,
 #studio_PIContents .isPublishedProp.wmlabel {
     background-image: url(../../lib/images/silkIcons/arrow_up.png);
