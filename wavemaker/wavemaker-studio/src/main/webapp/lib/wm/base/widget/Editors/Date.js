@@ -290,6 +290,17 @@ dojo.declare("wm.DateTime", wm.Date, {
 	if (this.timeEditor)
 	    this.timeEditor.setDisabled(inValue);
     },
+    focus: function(inValue) {
+	    switch(this.dateMode) {
+	    case "Date and Time":
+	    case "Date":
+		this.dateEditor.focus();
+		break;
+	    case "Time":
+		this.timeEditor.focus();
+		break;
+	    }
+    },
     _getValidatorNode: function() {return null;},
     setEditorValue: function(inValue) {
 	var d;
