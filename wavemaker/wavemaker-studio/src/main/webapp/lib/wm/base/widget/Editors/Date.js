@@ -21,6 +21,7 @@ dojo.require("dijit.form.TimeTextBox");
 // Date Editor
 //===========================================================================
 dojo.declare("wm.Date", wm.Text, {
+        openOnClick: true,
         useLocalTime: false,
 	promptMessage: "",
 	invalidMessage: "",
@@ -46,6 +47,7 @@ dojo.declare("wm.Date", wm.Text, {
 			invalidMessage: this.invalidMessage || "$_unset_$",
 			constraints: constraints,
 			required: this.required,
+		        openOnClick: this.openOnClick,
 			value: this.convertValue(this.displayValue)
 		}, inProps || {});
 		
@@ -254,6 +256,7 @@ dojo.declare("wm.DateTime", wm.Date, {
 				       showing: this.dateMode != "Time",
 				       width: "100%",
 				       height: "100%",
+				       openOnClick: this.openOnClick,
 				       useLocalTime: this.useLocalTime,
 				       formatLength: this.formatLength,
 				       maximum: this.maximum,
@@ -267,6 +270,7 @@ dojo.declare("wm.DateTime", wm.Date, {
 				       showing: this.dateMode != "Date",
 				       width: "100%",
 				       height: "100%",
+				       openOnClick: this.openOnClick,
 				       useLocalTime: this.useLocalTime,
 				       formatLength: this.formatLength,
 				       use24Time: this.use24Time,

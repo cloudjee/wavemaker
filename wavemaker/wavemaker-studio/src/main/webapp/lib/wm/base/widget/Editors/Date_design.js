@@ -24,6 +24,9 @@ wm.Object.extendSchema(wm.Date, {
     defaultInsert: { editor: "wm.Date"},
     editorType: {options: ["Date", "Time", "DateTime"]},
 
+    /* Behavior subgroup */
+    openOnClick: {group: "editor", subgroup: "behavior", order: 50},
+
     /* Editor group; validation subgroup */
     minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
     maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
