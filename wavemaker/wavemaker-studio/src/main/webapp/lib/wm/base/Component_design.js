@@ -235,7 +235,8 @@ wm.Component.extend({
 			o.push(s);
 		}
 		// <indent>name: [ type, {props}, {events}, {children} ]
-		return [inIndent, this.name, ': [', o.join(', '), ']'].join('');
+	        var name = this.name.match(/[^a-zA-Z0-9_]/) ? "\"" + this.name + "\"" : this.name;
+		return [inIndent, name, ': [', o.join(', '), ']'].join('');
 		//return sourcer_component(this, inIndent);
 	},
         getDocumentationHash: function() {
