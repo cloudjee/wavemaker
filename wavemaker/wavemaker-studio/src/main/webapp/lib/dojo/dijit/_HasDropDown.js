@@ -88,7 +88,10 @@ dojo.declare("dijit._HasDropDown",
 			this._docHandler = this.connect(dojo.doc, "onmouseup", "_onDropDownMouseUp");
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: This was misfiring on the ipad, and seems like you always want to open it */
-		    this._opened = false;
+		    if (e.type.match(/touch/i)) {
+			this._opened = false;
+		    }
+
 		    this.toggleDropDown();
 		},
 
@@ -221,7 +224,7 @@ dojo.declare("dijit._HasDropDown",
 		if (e) dojo.stopEvent(e);
 		this.domNode.style.backgroundColor = "";
 		this.domNode.style.color = "";
-		this._onDropDownMouseDown();
+		this._onDropDownMouseDown(e);
 	    },
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Added handling of mobile and touch; END HERE */
