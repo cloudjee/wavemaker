@@ -1398,7 +1398,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    break;
 		case "notificationCall":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "notification") == -1) return;
-		    componentList = navList;
+		    componentList = notificationList;
 		    break;
 
 		case "serviceVariable":
