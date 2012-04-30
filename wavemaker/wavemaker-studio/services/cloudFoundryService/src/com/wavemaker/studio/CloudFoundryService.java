@@ -103,6 +103,22 @@ public class CloudFoundryService {
         });
     }
 
+    public boolean isServiceBound(String token, String target, String service, String appName) {
+        List<String> services = getServicesForApplication(token, target, appName);
+        return (service != null && services.contains(service));
+    }
+
+    public List<String> getServicesForApplication(String token, String target, final String appName) {
+        return execute(token, target, "Failed to retrieve CloudFoundry service.", new CloudFoundryCallable<List<String>>() {
+
+            @Override
+            public List<String> call(CloudFoundryClient client) {
+                CloudApplication app = client.getApplication(appName);
+                return app.getServices();
+            }
+        });
+    }
+
     public void createService(String token, String target, final DeploymentDB db, final String appName) {
         execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
 
@@ -121,6 +137,16 @@ public class CloudFoundryService {
             @Override
             public void run(CloudFoundryClient client) {
                 client.deleteService(service);
+            }
+        });
+    }
+
+    public void bindService(String token, String target, final String service, final String appName) {
+        execute(token, target, "Failed to bind service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                client.bindService(appName, service);
             }
         });
     }
