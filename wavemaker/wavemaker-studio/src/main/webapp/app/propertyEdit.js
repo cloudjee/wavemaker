@@ -417,6 +417,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					   parent: this.editor,
 					   width: "100%",
 					   name: "numberEditor",
+					 minWidth: 40,
 					   padding: "0,1,0,0",
 				    readonly: this.readonly
 					  });
@@ -426,7 +427,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					     options: "px,%",
 					     dataField: "dataValue",
 					     displayField: "dataValue",
-					     width: "55px",
+					     width: "45px",
 					     padding: "0",
 				    readonly: this.readonly
 					    });
@@ -1692,12 +1693,12 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.classListEditor = this.classListLayer.c$[0];
 	this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
 	var defaultProps = {
-	    captionPosition: "top",
+	    captionPosition: "left",
 	    captionAlign: "left",
-	    captionSize: "20px",
+	    captionSize: "70px",
 	    singleLine: false,
 	    width: "100%",
-	    height: "42px",
+	    height: "28px",
 	    allowNone: true,
 	    owner: this,
 	    parent: this,
@@ -2461,6 +2462,7 @@ dojo.declare("wm.prop.FormatterEditor", wm.prop.SubComponentEditor, {
 dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
     displayField: "name",
+    forceCaptionPositionTop: true,
     setDataValue: function(inValue) {
 	if (wm.isEmpty(inValue)) {
 	    this.inherited(arguments, [["All"]]);

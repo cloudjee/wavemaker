@@ -121,8 +121,12 @@ dojo.declare("Studio", wm.Page, {
 			this.explodedClick();
 		}
 	        var multiActiveProperties = this.getUserSetting("multiActive");
+/*
 	        studio.inspector.preferredMultiActive =(multiActiveProperties === undefined || multiActiveProperties);
 	        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
+		this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+		*/
+
 
 		/*
 		if (wm.studioConfig.preventLiveData)
@@ -215,7 +219,7 @@ dojo.declare("Studio", wm.Page, {
 	    s.display = "inline-block";
 	    this.pageSelect.renderBounds = function() {};
 		*/
-	    this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+
 
 	this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
 	this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");

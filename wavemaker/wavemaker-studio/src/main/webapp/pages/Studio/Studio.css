@@ -307,6 +307,12 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     -webkit-border-radius: 8px; 
     border-radius: 8px;
 }
+.Studio .Inspector .wmeditor .dijitTextBox {
+    -moz-border-radius: 4px; 
+    -webkit-border-radius: 4px; 
+    border-radius: 4px;
+}
+
 /*
 .Studio .Inspector > .wmlayer {
     -moz-border-radius: 4px; 
