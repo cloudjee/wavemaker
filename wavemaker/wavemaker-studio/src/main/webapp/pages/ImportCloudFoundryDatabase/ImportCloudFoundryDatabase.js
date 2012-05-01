@@ -25,7 +25,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	this.update();
     },
     update: function(inImportDataModel) {
-	this.cloudFoundryService.requestAsync("listDatabaseServices", ["","http://api.mkantor.cloudfoundry.me"],
+	this.cloudFoundryService.requestAsync("listDatabaseServices", ["",""],
 					      dojo.hitch(this, function(inResult) {
 						  this.populateCloudFoundryAppList(inResult);
 					      }),
@@ -37,13 +37,11 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	    this.owner.owner.hide();
 	},
     populateCloudFoundryAppList: function(inResult) {
-	debugger;
 	this.serviceListVar.setData(inResult);
     },
         selectedServiceChange: function(inSender) {
 	    var serviceName = this.serviceList.selectedItem.getValue("name");
 	    var type =  this.serviceList.selectedItem.getValue("vendor");
-	    this.serviceNameInput.setDataValue(serviceName + "DB");
 	    this.packageInput.setDataValue(DEFAULT_PACKAGE_ROOT + serviceName);
 	    setupWidgetsForDatabaseType(type, 
 					"", 
@@ -62,40 +60,90 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	    this.dataModelName = null;
 	    var serviceName = this.serviceList.selectedItem.getValue("name");
 	    var type =  this.serviceList.selectedItem.getValue("vendor");
-	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
-	    studio.dataService.requestAsync("cfImportDatabase",
-					    [this.serviceNameInput.getDataValue(),
-					     this.packageInput.getDataValue(),
-					     this.tablePatternInput.getDataValue(),
-					     this.schemaPatternInput.getDataValue(),
-					     "",
-					     "",
-					     this.revengNamingStrategyInput.getDataValue(),
-					     false,
-					     ""],
-				dojo.hitch(this, "_importResult"), 
-				dojo.hitch(this, "_importError"));
 
+	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING")+" Testing Service");
+	    this.cloudFoundryService.requestAsync("isServiceBound", ["", "", serviceName, "wavemaker-studio"], 
+					    dojo.hitch(this, function(isBound) {
+						if (isBound) {
+						    this.doImport(serviceName, type);
+						} else {
+						    this.doBind(serviceName, type);
+						}
+					    }),
+					    function(inError) {
+						app.alert(inError.toString());
+						studio.endWait();
+					    }
+					   );
 	},
-	_importResult: function() {
+    doBind: function(serviceName, type) {
+	studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING") + " Binding Service");
+	// this will restart the studio server
+	this.cloudFoundryService.requestAsync("bindService", ["", "", serviceName, "wavemaker-studio"],
+					      dojo.hitch(this, function() {
+						    this.waitForStudioToRestart(serviceName, type);
+					      }),
+						function(inError) {
+						    app.alert(inError);
+						    studio.endWait();
+						}
+					       );
+    },
+    waitForStudioToRestart: function(serviceName, type) {
+	window.setTimeout(dojo.hitch(this, function() {
+	    this.waitForStudioToRestart2(serviceName, type);
+	}), 5000);
+    },
+    waitForStudioToRestart2: function(serviceName, type) {
+	var timeout = wm.connectionTimeout;
+	wm.connectionTimeout = 0;
+	studio.studioService.requestAsync("getOpenProject", [], 
+					  dojo.hitch(this, function(inResult) {
+					      wm.connectionTimeout = timeout;
+					      // if a project is still open, the server hasn't yet restarted
+					      this.waitForStudioToRestart(serviceName, type);
+					  }),
+					  dojo.hitch(this, function(inError) {
+					      wm.connectionTimeout = timeout;
+					      // server has restarted, and is now responding
+					      if (inError.message.match(/No open project/i)) {
+						  this.waitForStudioToRestart3(serviceName, type);
+					      } else {
+						  // threw an error, the server has definitely restarted, but isn't yet online
+						  this.waitForStudioToRestart(serviceName, type);
+					      }
+					  })
+					 );
+    },
+    waitForStudioToRestart3: function(serviceName, type) {
+	studio.studioService.requestAsync("openProject", [studio.project.projectName], dojo.hitch(this, function() {
+	    this.doImport(serviceName, type);
+	}));
+    },
+    doImport: function(serviceName, type) {
+	studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
+	studio.dataService.requestAsync("cfImportDatabase",
+					[serviceName,
+					 this.packageInput.getDataValue(),
+					 this.tablePatternInput.getDataValue(),
+					 this.schemaPatternInput.getDataValue(),
+					 "",
+					 "",
+					 this.revengNamingStrategyInput.getDataValue(),
+					 false,
+					 ""],
+					dojo.hitch(this, "_importResult"), 
+					    function(inError) {
+						app.alert(inError.toString());
+						studio.endWait();
+					    }
+				       );
+    },
+    _importResult: function() {
 	    studio.endWait();
-	    this.dataModelName = this.serviceNameInput.getDataValue();
 	    studio.updateServices();
 	    this.owner.owner.hide();
-	},
-	_importError: function(inError) {
-		studio.endWait();
-		var msg = "";
-		if (inError.message) {
-		    msg = ": " + inError.message;
-		}
-	    app.alert(this.getDictionaryItem("ALERT_IMPORT_FAILED", {error: inError.message}));
-	    app.alertDialog.setWidth("600px");
-	},
-
-
-
-
+    },
 
   _end: 0
 });
