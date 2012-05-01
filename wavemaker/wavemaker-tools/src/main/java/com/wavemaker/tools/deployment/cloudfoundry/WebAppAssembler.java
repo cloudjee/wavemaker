@@ -102,7 +102,7 @@ public class WebAppAssembler implements InitializingBean {
 
     private void collectEntries(Set<ApplicationArchiveEntry> entries, String basePath, Resource root, ResourceFilter filter, String newPath)
         throws IOException {
-        filter = filter == null ? ResourceFilter.NO_FILTER : filter;
+        filter = filter == null ? ResourceFilter.DEPLOY_FILTER : filter;
         List<Resource> children = this.fileSystem.listChildren(root, filter);
         for (Resource child : children) {
             String name = newPath + this.fileSystem.getPath(child).replace(basePath, "");
