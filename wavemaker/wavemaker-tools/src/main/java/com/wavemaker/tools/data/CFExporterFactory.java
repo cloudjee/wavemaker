@@ -17,9 +17,10 @@ import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.ant.ExporterTask;
 import org.springframework.core.io.Resource;
 import net.sf.cglib.proxy.Enhancer;
+import com.wavemaker.tools.io.Folder;
 
 public class CFExporterFactory implements ExporterFactory {
-    private Resource destDir;
+    private Folder destDir;
     private String packageName;
     private String dataPackage;
     private String className;
@@ -64,7 +65,7 @@ public class CFExporterFactory implements ExporterFactory {
         return proxy;
     }
 
-    public void setDestDir(Resource destDir) {
+    public void setDestDir(Folder destDir) {
         this.destDir = destDir;   
     }
 

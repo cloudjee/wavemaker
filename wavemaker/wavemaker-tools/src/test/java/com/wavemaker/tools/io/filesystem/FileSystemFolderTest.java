@@ -389,6 +389,65 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
+    public void shouldFilteredCopyWithoutChildren() throws Exception {
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        @SuppressWarnings("unchecked")
+        ResourceFilter<Resource> filter = mock(ResourceFilter.class);
+        given(filter.include(any(Resource.class))).willReturn(true);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        child.copyTo(destination, filter);
+        verify(destination).getFolder("a");
+        verify(destinationChild).createIfMissing();
+    }
+
+    @Test
+    public void shouldNotFilteredCopyIfDoesNotExist() throws Exception {
+        Folder destination = mock(Folder.class);
+        @SuppressWarnings("unchecked")
+        ResourceFilter<Resource> filter = mock(ResourceFilter.class);
+        given(filter.include(any(Resource.class))).willReturn(true);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.thrown.expect(ResourceDoesNotExistException.class);
+        child.copyTo(destination, filter);
+    }
+
+    @Test
+    public void shouldNotFilteredCopyRoot() throws Exception {
+        Folder destination = mock(Folder.class);
+        @SuppressWarnings("unchecked")
+        ResourceFilter<Resource> filter = mock(ResourceFilter.class);
+        given(filter.include(any(Resource.class))).willReturn(true);
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Unable to copy a root folder");
+        this.folder.copyTo(destination, filter);
+    }
+
+    @Test
+    public void shouldFilteredCopyChildren() throws Exception {
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        Folder destinationGrandchild = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFolder<Object> grandchild = child.getFolder("b");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
+        child.copyTo(destination, new ResourceFilter<Resource>() {
+            @Override
+            public boolean include(Resource resource) {
+                return true;
+            }
+        });
+        verify(destinationGrandchild).createIfMissing();
+    }
+
+    @Test
     public void shouldRename() throws Exception {
         // FIXME
     }

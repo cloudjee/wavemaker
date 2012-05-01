@@ -44,6 +44,8 @@ import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Operation;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.File;
 
 /**
  * @author Simon Toens
@@ -66,7 +68,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
 
     private ElementTypeFactory elementTypeFactory = DEFAULT_ELEMENT_TYPE_FACTORY;
 
-    public DataServiceDefinition(String serviceId, ExternalDataModelConfig externalConfig, DesignServiceManager serviceManager, Resource serviceDir)
+    public DataServiceDefinition(String serviceId, ExternalDataModelConfig externalConfig, DesignServiceManager serviceManager, File serviceDir)
         throws IOException {
 
         this.owner = true;

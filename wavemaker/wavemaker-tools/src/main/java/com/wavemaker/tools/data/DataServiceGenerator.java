@@ -64,6 +64,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * DataService class generation.
@@ -417,9 +418,9 @@ public class DataServiceGenerator extends ServiceGenerator {
         String relPath = StringUtils.classNameToSrcFilePath(this.constantsClass.getFullyQualifiedClassName());
         OutputStream os = null;
         try {
-            Resource f = this.configuration.getOutputDirectory().createRelative(relPath);
-            fileSystem.createPath(fileSystem.getParent(f), "");
-            os = fileSystem.getOutputStream(f);
+            com.wavemaker.tools.io.File f = this.configuration.getOutputDirectory().getFile(relPath);
+            f.getParent().createIfMissing();
+            os = f.getContent().asOutputStream();
             this.constantsClass.generate(os);
             os.close();
         } catch (IOException ex) {

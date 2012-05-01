@@ -33,6 +33,7 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.DesignServiceType;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -88,7 +89,7 @@ public class DesignTimeUtils {
      * @return DesignServiceManager instance
      */
     public static DesignServiceManager getDesignServiceManager(Project project) {
-        return getDSMForProjectRoot(project.getProjectRoot());
+        return getDSMForProjectRoot(project.getRootFolder());
     }
 
     /**
@@ -97,16 +98,14 @@ public class DesignTimeUtils {
      * 
      * @param projectRoot
      * @return DesignServiceManager instance
-     * @deprecated use getDesignServiceManager when possible
      */
-    @Deprecated
-    public static DesignServiceManager getDSMForProjectRoot(Resource projectRoot) {
+    public static DesignServiceManager getDSMForProjectRoot(Folder projectRoot) {
         try {
             String oldProp = getDefaultProjectHome();
 
             try {
                 // override configuration
-                setDefaultProjectHome(projectRoot.getFile().getParentFile().getAbsolutePath());
+                setDefaultProjectHome(projectRoot.getParent().toString());
 
                 DesignServiceManager dsm = new DesignServiceManager();
 
@@ -121,11 +120,11 @@ public class DesignTimeUtils {
                 }
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                sf.setTestWaveMakerHome(projectRoot.getFile().getParentFile());
+                sf.setTestWaveMakerHome(projectRoot.getParent());
 
                 ProjectManager pm = new ProjectManager();
                 pm.setFileSystem(sf);
-                pm.openProject(projectRoot.getFilename(), true);
+                pm.openProject(projectRoot.getName(), true);
                 dsm.setProjectManager(pm);
 
                 LocalDeploymentManager dep = new LocalDeploymentManager();

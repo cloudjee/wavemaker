@@ -345,6 +345,21 @@ public class DataService {
         }
     }
 
+    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName,
+        String dialectClassName, boolean overrideTable) {
+        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+        if (cfEnv != null) {
+            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
+            String connectionUrl = info.getUrl();
+            String username = info.getUserName();
+            String password = info.getPassword();
+            return this.dataModelMgr.getExportDDL(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+                overrideTable);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     public RdbmsServiceInfo getCFRdbmsServiceInfo(CloudEnvironment cfEnv, String serviceId) throws WMRuntimeException {
         try {
             return cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);

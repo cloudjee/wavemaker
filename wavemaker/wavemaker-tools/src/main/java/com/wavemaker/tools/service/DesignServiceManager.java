@@ -229,12 +229,12 @@ public class DesignServiceManager {
      * @throws IOException
      * @throws JAXBException
      */
-    @Deprecated
+    /*@Deprecated
     public static void generateSpringServiceConfig(String serviceId, String serviceClass, DesignServiceType designServiceType,
         Resource serviceBeanFile, Project project) throws JAXBException, IOException {
         Beans beans = generateSpringServiceBeans(serviceId, serviceClass, designServiceType);
         SpringConfigSupport.writeBeans(beans, serviceBeanFile, project);
-    }
+    }*/
 
     /**
      * Generates (and returns) a Beans object containing a single bean, one which will correctly create the specified
@@ -307,10 +307,10 @@ public class DesignServiceManager {
         Map<String, Service> serviceDefs = getCurrentServiceDefinitions();
         serviceDefs.remove(serviceId);
 
-        Resource serviceHome = getServiceHome(serviceId);
+        Folder serviceHome = getServiceFolder(serviceId);
         Project project = this.projectManager.getCurrentProject();
         project.deleteFile(serviceHome);
-        project.deleteFile(ConfigurationCompiler.getSmdResource(project, serviceId));
+        project.deleteFile(ConfigurationCompiler.getSmdFile(project, serviceId));
 
         // salesforce - if salesforceService is deleted, delete the relevant
         // loginService as well
@@ -333,7 +333,7 @@ public class DesignServiceManager {
     public void deleteServiceSmd(String serviceId) throws IOException, NoSuchMethodException {
 
         Project project = getProjectManager().getCurrentProject();
-        project.deleteFile(ConfigurationCompiler.getSmdResource(project, serviceId));
+        project.deleteFile(ConfigurationCompiler.getSmdFile(project, serviceId));
         generateRuntimeConfiguration(null);// XXX MAV-569 should do a real build
         this.deploymentManager.testRunClean();
     }
@@ -423,7 +423,7 @@ public class DesignServiceManager {
         saveServiceDefinition(service.getId());
 
         // and, create the service bean
-        Resource serviceBeanFile = getServiceBeanXml(service.getId());
+        File serviceBeanFile = getServiceBeanXmlFile(service.getId());
         if (getServiceBeanName(service.getId()).equals(service.getSpringFile()) && !serviceBeanFile.exists()) {
 
             try {
@@ -816,8 +816,8 @@ public class DesignServiceManager {
         SortedSet<Service> allServices = getServices();
 
         try {
-            ConfigurationCompiler.generateServices(project, ConfigurationCompiler.getRuntimeServicesXml(project), allServices);
-            ConfigurationCompiler.generateManagers(project, ConfigurationCompiler.getRuntimeManagersXml(project), allServices);
+            ConfigurationCompiler.generateServices(ConfigurationCompiler.getRuntimeServicesXmlFile(project), allServices);
+            ConfigurationCompiler.generateManagers(ConfigurationCompiler.getRuntimeManagersXmlFile(project), allServices);
         } catch (JAXBException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -1026,8 +1026,8 @@ public class DesignServiceManager {
         // it has the src dir also so that services have the option of not
         // relying on 'testrun' having run
         // TODO - revisit this for Cloud Foundry
-        return ResourceClassLoaderUtils.getClassLoaderForResources(getServiceRuntimeDirectory(sid),
-            this.projectManager.getCurrentProject().getWebInfClasses());
+        return ResourceClassLoaderUtils.getClassLoaderForResources(getServiceRuntimeFolder(sid),
+            this.projectManager.getCurrentProject().getClassOutputFolder());
     }
 
     // -----------------------------------------------------------------------

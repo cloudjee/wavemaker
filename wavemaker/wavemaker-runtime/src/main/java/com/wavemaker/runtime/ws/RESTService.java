@@ -71,10 +71,10 @@ public class RESTService {
         this.bindingProperties = bindingProperties;
     }
 
-    public <T extends Object> T invoke(Map<String, Object> inputs,
+    /*public <T extends Object> T invoke(Map<String, Object> inputs,
             Class<T> responseType) {
         return invoke(inputs, null, null, null, responseType, null);
-    }
+    }*/
 
     public <T extends Object> T invoke(Map<String, Object> urlParams, Class<T> responseType, Map<String, Object> headerParams) {
         return invoke(urlParams, null, null, null, responseType, headerParams);

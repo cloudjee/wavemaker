@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
 /**
@@ -79,6 +80,11 @@ public class FileSystemResourceTest {
 
         @Override
         public Resource copyTo(Folder folder) {
+            return null;
+        }
+
+        @Override
+        public <T extends Resource> Folder copyTo(Folder folder, ResourceFilter<T> filter) {
             return null;
         }
 

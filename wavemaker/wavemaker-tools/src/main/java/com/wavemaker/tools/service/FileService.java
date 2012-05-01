@@ -21,7 +21,9 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
-import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Resource;
 
 /**
  * Abstraction for reading and writing files. Each FileService handles encoding issues (reading and writing files using
@@ -42,7 +44,7 @@ public interface FileService {
     /**
      * Return the root for this FileService.
      */
-    Resource getFileServiceRoot();
+    Folder getFileServiceRoot();
 
     /**
      * Write the specified contents to a relative path.
@@ -60,7 +62,7 @@ public interface FileService {
      * @param data The data to write (using the FileService's encoding).
      * @throws IOException
      */
-    void writeFile(Resource file, String data) throws IOException;
+    void writeFile(File file, String data) throws IOException;
 
     /**
      * Read arbitrary data from a file.
@@ -74,29 +76,27 @@ public interface FileService {
     /**
      * Read arbitrary data from a file.
      * 
-     * @param path The absolute path to read from.
+     * @param file The file to read,
      * @return The data read.
      * @throws IOException
      */
-    String readFile(Resource file) throws IOException;
+    String readFile(File file) throws IOException;
 
     /**
      * Delete a file at the specified path.
      * 
      * @param path The path to delete.
-     * @return True iff the file delete was successful.
      * @throws IOException
      */
-    boolean deleteFile(String path) throws IOException;
+    void deleteFile(String path) throws IOException;
 
     /**
      * Delete a specified file
      * 
      * @param file The file to delete.
-     * @return True iff the file delete was successful.
      * @throws IOException
      */
-    boolean deleteFile(Resource file) throws IOException;
+    void deleteFile(Resource file) throws IOException;
 
     /**
      * Get a Reader for the specified relative path, using this FileService's encoding.
@@ -110,7 +110,7 @@ public interface FileService {
      * 
      * @throws IOException
      */
-    Reader getReader(Resource file) throws UnsupportedEncodingException, FileNotFoundException, IOException;
+    Reader getReader(File file) throws UnsupportedEncodingException, FileNotFoundException, IOException;
 
     /**
      * Get a Writer for the specified relative path, using this FileService's encoding.
@@ -122,7 +122,7 @@ public interface FileService {
     /**
      * Get a Writer for the specified file, using this FileService's encoding.
      */
-    Writer getWriter(Resource file) throws UnsupportedEncodingException, FileNotFoundException;
+    Writer getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException;
 
     /**
      * Returns true if the file exists.
@@ -136,5 +136,5 @@ public interface FileService {
      */
     boolean fileExists(Resource file);
 
-    OutputStream getOutputStream(Resource resource);
+    OutputStream getOutputStream(File resource);
 }

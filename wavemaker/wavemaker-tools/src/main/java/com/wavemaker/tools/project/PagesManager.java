@@ -119,12 +119,12 @@ public class PagesManager {
      */
     public void copyPage(String sourceProjectName, String sourcePageName, String destProjectName, String destPageName) throws IOException {
 
-        Resource sourcePane = getPageDir(sourceProjectName, sourcePageName);
+        Folder sourcePane = getPageFolder(this.projectManager.getProject(sourceProjectName, true), sourcePageName);
         if (!sourcePane.exists()) {
             throw new WMRuntimeException(MessageResource.PAGECP_SOURCEDNE, sourcePageName, sourceProjectName);
         }
 
-        Resource destPane = getPageDir(destProjectName, destPageName);
+        Folder destPane = getPageFolder(this.projectManager.getProject(destProjectName, true), destPageName);
         if (destPane.exists()) {
             throw new WMRuntimeException(MessageResource.PAGECP_TARGET_EXISTS, destPageName, destProjectName);
         }
@@ -132,20 +132,20 @@ public class PagesManager {
         Project sourceProject = this.projectManager.getProject(sourceProjectName, false);
         Project destProject = this.projectManager.getProject(destProjectName, false);
 
-        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_HTML),
-            sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_HTML)));
+        destProject.writeFile(destPane.getFile(destPageName + "." + PAGE_HTML),
+            sourceProject.readFile(sourcePane.getFile(sourcePageName + "." + PAGE_HTML)));
 
-        String cssContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_CSS));
+        String cssContents = sourceProject.readFile(sourcePane.getFile(sourcePageName + "." + PAGE_CSS));
         cssContents = cssContents.replace("." + sourcePageName, "." + destPageName);
-        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_CSS), cssContents);
+        destProject.writeFile(destPane.getFile(destPageName + "." + PAGE_CSS), cssContents);
 
-        String jsContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_JS));
+        String jsContents = sourceProject.readFile(sourcePane.getFile(sourcePageName + "." + PAGE_JS));
         jsContents = jsContents.replaceAll("^dojo.declare\\(\"" + sourcePageName + "\"", "dojo.declare(\"" + destPageName + "\"");
-        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_JS), jsContents);
+        destProject.writeFile(destPane.getFile(destPageName + "." + PAGE_JS), jsContents);
 
-        String widgetsContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_WIDGETS));
+        String widgetsContents = sourceProject.readFile(sourcePane.getFile(sourcePageName + "." + PAGE_WIDGETS));
         widgetsContents = widgetsContents.replaceAll("^" + sourcePageName + ".widgets ", destPageName + ".widgets ");
-        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_WIDGETS), widgetsContents);
+        destProject.writeFile(destPane.getFile(destPageName + "." + PAGE_WIDGETS), widgetsContents);
     }
 
     @Deprecated

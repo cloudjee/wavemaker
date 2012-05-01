@@ -37,6 +37,7 @@ import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
 import com.wavemaker.tools.spring.beans.Entry;
 import com.wavemaker.tools.spring.beans.Map;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -60,16 +61,15 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements U
 
         final DesignServiceManager mgr = getDesignServiceManager();
 
-        LocalStudioFileSystem fileSystem = new LocalStudioFileSystem();
-        FileService fileService = new AbstractFileService(fileSystem) {
+        FileService fileService = new AbstractFileService() {
 
             @Override
-            public Resource getFileServiceRoot() {
-                return mgr.getServiceHome(id);
+            public Folder getFileServiceRoot() {
+                return mgr.getServiceFolder(id);
             }
         };
 
-        File cfgFile = getCfgFile(id);
+        com.wavemaker.tools.io.File cfgFile = getCfgFile(id);
 
         Beans beans = DataServiceUtils.readBeans(cfgFile, fileService);
 
@@ -78,7 +78,7 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements U
         upgradeSpringDataServiceManager(beans);
         upgradeTaskManager(beans);
 
-        String path = cfgFile.getParentFile().getName() + "/" + cfgFile.getName();
+        String path = cfgFile.getParent().toString() + "/" + cfgFile.getName();
         DataServiceUtils.writeBeans(beans, fileService, path);
     }
 

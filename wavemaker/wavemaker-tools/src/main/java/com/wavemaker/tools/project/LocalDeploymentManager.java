@@ -35,7 +35,9 @@ import org.springframework.core.io.Resource;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Main deployment class.
@@ -112,7 +114,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     public class Undeployer implements HttpSessionBindingListener {
 
-        private Resource projectDir;
+        private Folder projectDir;
 
         private String projectName;
 
@@ -153,13 +155,9 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String testRunStart() {
-        try {
-            String deployName = getDeployName();
-            testRunStart(getProjectDir().getFile().getCanonicalPath(), deployName);
-            return "/" + deployName;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        String deployName = getDeployName();
+        testRunStart(getProjectDir().toString(), deployName);
+        return "/" + deployName;
     }
 
     /**
@@ -167,12 +165,8 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String compile() {
-        try {
-            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
-            return this.projectCompiler.compile();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        antExecute(getProjectDir().toString(), getDeployName(), COPY_JARS_OPERATION);
+        return this.projectCompiler.compile();
     }
 
     /**
@@ -180,12 +174,8 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String cleanCompile() {
-        try {
-            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
-            return compile();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        antExecute(getProjectDir().toString(), getDeployName(), CLEAN_OPERATION);
+        return compile();
     }
 
     /**
@@ -193,12 +183,8 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String build() {
-        try {
-            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), BUILD_OPERATION);
-            return compile();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        antExecute(getProjectDir().toString(), getDeployName(), BUILD_OPERATION);
+        return compile();
     }
 
     /**
@@ -206,11 +192,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String generateRuntime() {
-        try {
-            return antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), GEN_RTFILES_OPERATION);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        return antExecute(getProjectDir().toString(), getDeployName(), GEN_RTFILES_OPERATION);
     }
 
     /**
@@ -218,15 +200,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String cleanBuild() {
-        try {
-            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
-            return build();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        antExecute(getProjectDir().toString(), getDeployName(), CLEAN_OPERATION);
+        return build();
     }
 
-    private void buildWar(String projectDir, String buildDir, String warFile, boolean includeEar) {
+    private void buildWar(Folder projectDir, String buildDir, String warFile, boolean includeEar) {
 
         int len = warFile.length();
         String earFileName = warFile.substring(0, len - 4) + ".ear";
@@ -242,15 +220,15 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
             throw new WMRuntimeException(ex);
         }
 
-        properties.put(PROJECT_DIR_PROPERTY, projectDir);
-        properties.put(DEPLOY_NAME_PROPERTY, getFileSystem().getResourceForURI(projectDir).getFilename());
+        properties.put(PROJECT_DIR_PROPERTY, projectDir.toString());
+        properties.put(DEPLOY_NAME_PROPERTY, projectDir.getName());
 
         build();
 
-        antExecute(projectDir, BUILD_WAR_OPERATION, properties);
+        antExecute(projectDir.toString(), BUILD_WAR_OPERATION, properties);
 
         if (includeEar) {
-            antExecute(projectDir, BUILD_EAR_OPERATION, properties);
+            antExecute(projectDir.toString(), BUILD_EAR_OPERATION, properties);
         }
     }
 
@@ -258,22 +236,33 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public String buildWar(Resource warFile, boolean includeEar) throws IOException {
-        String warFileLocation = warFile.getFile().getPath();
+    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
+        String warFileLocation = warFile.toString();
         buildWar(warFileLocation, includeEar);
-        return warFileLocation;
+        return warFile;
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
+    /*@Override
     public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
         Resource buildDir = getFileSystem().createTempDir();
         try {
             buildWar(getProjectDir().getFile().getCanonicalPath(), buildDir.getFile().getPath(), warFileLocation, includeEar);
         } finally {
             getFileSystem().deleteFile(buildDir);
+        }
+    }*/
+
+    public void buildWar(String warFileName, boolean includeEar)
+        throws IOException
+    {
+        File tempDir = IOUtils.createTempDirectory();
+        try {
+            buildWar(getProjectDir(), tempDir.getAbsolutePath(), warFileName, includeEar);
+        } finally {
+            IOUtils.deleteRecursive(tempDir);
         }
     }
 
@@ -285,11 +274,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(WAR_FILE_NAME_PROPERTY, warFileName);
 
-        try {
-            return antExecute(getProjectDir().getFile().getCanonicalPath(), deployName, DEPLOY_WAR_OPERATION, properties);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        return antExecute(getProjectDir().toString(), deployName, DEPLOY_WAR_OPERATION, properties);
     }
 
     /**
@@ -305,11 +290,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public void testRunClean() {
-        try {
-            testRunClean(getProjectDir().getFile().getCanonicalPath(), getDeployName());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        testRunClean(getProjectDir().toString(), getDeployName());
     }
 
     /**
@@ -317,11 +298,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public void undeploy() {
-        try {
-            undeploy(getProjectDir().getFile().getCanonicalPath(), getDeployName());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        undeploy(getProjectDir().toString(), getDeployName());
     }
 
     private String undeploy(String projectDir, String deployName) {
@@ -346,14 +323,10 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     @Override
     public String exportProject(String zipFileName) {
-        try {
-            Resource exportDir = getProjectDir().createRelative(EXPORT_DIR_DEFAULT);
-            File file = exportDir.createRelative(zipFileName).getFile();
-            exportProject(getProjectDir().getFile().getCanonicalPath(), file.getCanonicalPath());
-            return file.getCanonicalPath();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        Folder exportDir = getProjectDir().getFolder(EXPORT_DIR_DEFAULT);
+        com.wavemaker.tools.io.File file = exportDir.getFile(zipFileName);
+        exportProject(getProjectDir().toString(), file.toString());
+        return file.toString();
     }
 
     public String antExecute(String projectDir, String targetName, Map<String, String> properties) {

@@ -43,6 +43,7 @@ import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.Deployments;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.File;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
 
@@ -84,20 +85,20 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         this.projectCompiler = projectCompiler;
     }
 
-    protected org.springframework.core.io.Resource getProjectDir() {
+    protected Folder getProjectDir() {
         Project currentProject = this.projectManager.getCurrentProject();
         if (currentProject == null) {
             throw new WMRuntimeException("Current project must be set");
         }
-        return currentProject.getProjectRoot();
+        return currentProject.getRootFolder();
     }
 
     protected String getDeployName() {
         return getDeployName(getProjectDir());
     }
 
-    protected String getDeployName(org.springframework.core.io.Resource projectDir) {
-        return projectDir.getFilename();
+    protected String getDeployName(Folder projectDir) {
+        return projectDir.getName();
     }
 
     /**
@@ -148,7 +149,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 throw new WMRuntimeException("That didn't look like a project folder; if it was, files were missing");
             }
 
-            org.springframework.core.io.Resource indexhtml = project.getWebAppRoot().createRelative("index.html");
+            com.wavemaker.tools.io.File indexhtml = project.getWebAppRootFolder().getFile("index.html");
             String indexstring = project.readFile(indexhtml);
             int endIndex = indexstring.lastIndexOf("({domNode: \"wavemakerNode\"");
             int startIndex = indexstring.lastIndexOf(" ", endIndex);
@@ -180,15 +181,15 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
                 // Correction 1: Rename the js file
                 com.wavemaker.tools.project.Project finalProject = new com.wavemaker.tools.project.Project(finalProjectFolder, this.fileSystem);
-                org.springframework.core.io.Resource jsFile = finalProject.getWebAppRoot().createRelative(originalFinalname + ".js");
-                org.springframework.core.io.Resource newJsFile = finalProject.getWebAppRoot().createRelative(finalname + ".js");
-                this.fileSystem.rename(jsFile, newJsFile);
+                File jsFile = finalProject.getWebAppRootFolder().getFile(originalFinalname + ".js");
+                File newJsFile = finalProject.getWebAppRootFolder().getFile(finalname + ".js");
+                jsFile.rename(newJsFile.toString());
 
                 // Correction 2: Change the class name in the js file
                 com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, newJsFile, originalFinalname, finalname);
 
                 // Corection3: Change the constructor in index.html
-                org.springframework.core.io.Resource index_html = finalProject.getWebAppRoot().createRelative("index.html");
+                File index_html = finalProject.getWebAppRootFolder().getFile("index.html");
                 com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, index_html, "new " + originalFinalname
                     + "\\(\\{domNode", "new " + finalname + "({domNode");
 
@@ -657,17 +658,18 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     }
 
     protected Deployments readDeployments() {
-        org.springframework.core.io.Resource deploymentsResource;
+        com.wavemaker.tools.io.File deploymentsResource;
         try {
-            deploymentsResource = this.fileSystem.getCommonDir().createRelative(DEPLOYMENTS_FILE);
+            deploymentsResource = this.fileSystem.getCommonFolder().getFile(DEPLOYMENTS_FILE);
             if (!deploymentsResource.exists()) {
                 this.projectManager.getCurrentProject().writeFile(deploymentsResource, "{}");
                 return new Deployments();
             } else {
-                String s = FileCopyUtils.copyToString(new InputStreamReader(deploymentsResource.getInputStream()));
+                String s = FileCopyUtils.copyToString(new InputStreamReader(deploymentsResource.getContent().asInputStream()));
                 if (s.length() > 0) {
                     JSON result = JSONUnmarshaller.unmarshal(s);
-                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.getDescription() + " is in an unexpected format.");
+                    //cftempfix - deploymentsResource.getDescription()
+                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.toString() + " is in an unexpected format.");
                     return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
                 } else {
                     return new Deployments();

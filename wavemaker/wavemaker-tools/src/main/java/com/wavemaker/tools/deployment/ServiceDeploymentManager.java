@@ -15,6 +15,7 @@
 package com.wavemaker.tools.deployment;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
@@ -34,6 +36,9 @@ import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * @author Simon Toens
@@ -54,7 +59,7 @@ public class ServiceDeploymentManager {
         this.serviceDeployments.add(new DataModelDeploymentConfiguration());
     }
 
-    public Resource generateWebapp(DeploymentInfo info) {
+    public com.wavemaker.tools.io.File generateWebapp(DeploymentInfo info) {
         Map<String, String> allDbProps = new HashMap<String, String>();
         for (DeploymentDB db : info.getDatabases()) {
             allDbProps.putAll(db.asProperties());
@@ -62,12 +67,12 @@ public class ServiceDeploymentManager {
         return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
     }
 
-    public Resource generateWebapp(Map<String, String> properties) {
+    public com.wavemaker.tools.io.File generateWebapp(Map<String, String> properties) {
         return generateWebapp(getProjectRoot(), properties, false);
     }
 
-    public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) {
-        Resource stagingProjectDir = null;
+    /*public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) {
+        Folder stagingProjectDir = null;
         try {
             stagingProjectDir = this.fileSystem.createTempDir();
             this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>());
@@ -82,30 +87,42 @@ public class ServiceDeploymentManager {
             } catch (Exception ignore) {
             }
         }
-    }
+    }*/
 
-    public Resource getWarFile() {
-        Resource projectRoot = getProjectRoot();
+    public com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, boolean includeEar) {
+        File stagingProjectDir = null;
+
         try {
-            Resource destDir = projectRoot.createRelative(DeploymentManager.DIST_DIR_DEFAULT);
-            String warFileName = projectRoot.getFilename();
-            return destDir.createRelative(warFileName + ".war");
+            stagingProjectDir = IOUtils.createTempDirectory("dplstaging", "dir");
+            LocalFileSystem fileSystem = new LocalFileSystem(stagingProjectDir);
+            Folder stagingProjectDirFolder = FileSystemFolder.getRoot(fileSystem);
+            projectRoot.copyTo(stagingProjectDirFolder);
+            DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
+            prepareForDeployment(mgr, properties);
+            return buildWar(getWarFile(), includeEar);
         } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
+            throw new ConfigurationException(ex);
+        } finally {
+            try {
+                IOUtils.deleteRecursive(stagingProjectDir);
+            } catch (Exception ignore) {
+            }
         }
     }
 
-    public Resource getEarFile() {
-        Resource projectRoot = getProjectRoot();
-        Resource destDir;
-        try {
-            destDir = projectRoot.createRelative(DeploymentManager.DIST_DIR_DEFAULT);
-            String earFileName = projectRoot.getFilename();
-            return destDir.createRelative(earFileName + ".ear");
+    public com.wavemaker.tools.io.File getWarFile() {
+        Folder projectRoot = getProjectRoot();
+        Folder destDir = projectRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
+        String warFileName = projectRoot.getName();
+        return destDir.getFile(warFileName + ".war");
+    }
 
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+    public com.wavemaker.tools.io.File getEarFile() {
+        Folder projectRoot = getProjectRoot();
+        Folder destDir;
+        destDir = projectRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
+        String earFileName = projectRoot.getName();
+        return destDir.getFile(earFileName + ".ear");
     }
 
     public void setServiceDeployments(List<ServiceDeployment> serviceDeployments) {
@@ -128,15 +145,15 @@ public class ServiceDeploymentManager {
         this.deploymentManager = deploymentManager;
     }
 
-    private Resource getProjectRoot() {
-        return this.projectMgr.getCurrentProject().getProjectRoot();
+    private Folder getProjectRoot() {
+        return this.projectMgr.getCurrentProject().getRootFolder();
     }
 
-    private Resource buildWar(ProjectManager projectMgr, Resource warFile, boolean includeEar) throws IOException {
+    private com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
-        String war = this.deploymentManager.buildWar(warFile, includeEar);
-        return this.fileSystem.getResourceForURI(war);
+        com.wavemaker.tools.io.File war = this.deploymentManager.buildWar(warFile, includeEar);
+        return war;
     }
 
     private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties) {

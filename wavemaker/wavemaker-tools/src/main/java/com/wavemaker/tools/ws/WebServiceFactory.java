@@ -14,10 +14,6 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
@@ -32,6 +28,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
+import com.wavemaker.tools.io.File;
 
 /**
  * 
@@ -40,7 +37,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 
-    public DeprecatedServiceDefinition getServiceDefinition(Resource f) {
+    public DeprecatedServiceDefinition getServiceDefinition(File f) {
         return getServiceDefinition(f, null, null);
     }
 
@@ -49,13 +46,11 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
         return getServiceDefinition(serviceFile.asResource(), serviceId, serviceMgr);
     }
 
-    public DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
-        if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
+    public DeprecatedServiceDefinition getServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
+        if (f.getName().endsWith(Constants.WSDL_EXT)) {
             try {
-                return WSDLManager.processWSDL(f.getURL().toString(), serviceId, null, null);
+                return WSDLManager.processWSDL(f.toString(), serviceId, null, null);
             } catch (WSDLException e) {
-                throw new WMRuntimeException(e);
-            } catch (IOException e) {
                 throw new WMRuntimeException(e);
             }
         }

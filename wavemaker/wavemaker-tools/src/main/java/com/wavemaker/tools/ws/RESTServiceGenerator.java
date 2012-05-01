@@ -43,6 +43,7 @@ import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.io.File;
 
 /**
  * This class generates REST service stubs.
@@ -87,12 +88,9 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         List<String> wsdlFilePaths = new ArrayList<String>();
         wsdlFilePaths.add(this.wsdl.getURI());
         List<String> jaxbBindingFilePaths = new ArrayList<String>();
-        for (Resource jaxbBindingFile : this.jaxbBindingFiles) {
-            try {
-                jaxbBindingFilePaths.add(jaxbBindingFile.getURI().toString());
-            } catch (IOException ex) {
-                throw new GenerationException(ex);
-            }
+        for (File jaxbBindingFile : this.jaxbBindingFiles) {
+                //cftempfix
+            jaxbBindingFilePaths.add(jaxbBindingFile.toString());      
         }
         S2JJAXBModel model = ((JAXBTypeMapper) this.wsdl.getTypeMapper()).getJAXBModel();
         if (model != null) {

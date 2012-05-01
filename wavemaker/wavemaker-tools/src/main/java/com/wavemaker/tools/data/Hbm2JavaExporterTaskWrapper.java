@@ -16,11 +16,12 @@ package com.wavemaker.tools.data;
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.ant.Hbm2JavaExporterTask;
 import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
 
 public class Hbm2JavaExporterTaskWrapper extends Hbm2JavaExporterTask {
-    private Resource destDir;
+    private Folder destDir;
     
-    public Hbm2JavaExporterTaskWrapper(HibernateToolTask parent, Resource destDir) {
+    public Hbm2JavaExporterTaskWrapper(HibernateToolTask parent, Folder destDir) {
         super(parent);
         this.destDir = destDir;
     }
@@ -29,11 +30,11 @@ public class Hbm2JavaExporterTaskWrapper extends Hbm2JavaExporterTask {
         return super.parent;
     }
 
-    public void setDestDir(Resource destDir) {
+    public void setDestDir(Folder destDir) {
         this.destDir = destDir;
     }
 
-    public Resource getDestDir() {
+    public Folder getDestDir() {
         return this.destDir;
     }
 }

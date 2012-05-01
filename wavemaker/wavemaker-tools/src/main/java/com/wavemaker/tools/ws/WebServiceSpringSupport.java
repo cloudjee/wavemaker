@@ -29,6 +29,7 @@ import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.Property;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Utility methods for managing web service spring file.
@@ -57,13 +58,13 @@ public class WebServiceSpringSupport {
      * @throws JAXBException
      * @throws IOException
      */
-    public static BindingProperties getBindingProperties(FileService fileService, DesignServiceManager designServiceMgr, String serviceId)
+    public static BindingProperties getBindingProperties(DesignServiceManager designServiceMgr, String serviceId)
         throws JAXBException, IOException {
-        File serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeDirectory(serviceId).getFile();
+        Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
         Service service = designServiceMgr.getService(serviceId);
-        File springFile = new File(serviceRuntimeDirectory, service.getSpringFile());
+        com.wavemaker.tools.io.File springFile = serviceRuntimeDirectory.getFile(service.getSpringFile());
         if (springFile.exists()) {
-            Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(springFile), fileService);
+            Beans beans = SpringConfigSupport.readBeans(springFile);
             Bean bean = beans.getBeanById(serviceId);
             Property property = bean.getProperty(BINDING_PROPERTIES_PROPERTY_NAME);
 
@@ -101,14 +102,14 @@ public class WebServiceSpringSupport {
      * @throws JAXBException
      * @throws IOException
      */
-    public static void setBindingProperties(FileService fileService, DesignServiceManager designServiceMgr, String serviceId,
+    public static void setBindingProperties(DesignServiceManager designServiceMgr, String serviceId,
         BindingProperties bindingProperties) throws JAXBException, IOException {
         if (bindingProperties != null) {
-            File serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeDirectory(serviceId).getFile();
+            Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
             Service service = designServiceMgr.getService(serviceId);
-            File springFile = new File(serviceRuntimeDirectory, service.getSpringFile());
+            com.wavemaker.tools.io.File springFile = serviceRuntimeDirectory.getFile(service.getSpringFile());
 
-            Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(springFile), fileService);
+            Beans beans = SpringConfigSupport.readBeans(springFile);
             Bean bean = beans.getBeanById(serviceId);
             Property property = bean.getProperty(BINDING_PROPERTIES_PROPERTY_NAME);
             if (property == null) {
@@ -150,7 +151,7 @@ public class WebServiceSpringSupport {
 
             property.setBean(bindingPropsBean);
 
-            SpringConfigSupport.writeBeans(beans, new FileSystemResource(springFile), fileService);
+            SpringConfigSupport.writeBeans(beans, springFile);
         }
     }
 }

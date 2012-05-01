@@ -200,7 +200,8 @@ public class ConfigurationCompiler {
         return getSmdFile(currentProject.getWebAppRootFolder().getFolder(RUNTIME_SERVICES_DIR), serviceName);
     }
 
-    public static Resource getTypesFile(Resource webAppRoot) {
+    @Deprecated
+    public static Resource getTypesFileDeprecated(Resource webAppRoot) {
         try {
             return webAppRoot.createRelative(TYPE_RUNTIME_FILE);
         } catch (IOException ex) {
@@ -208,17 +209,26 @@ public class ConfigurationCompiler {
         }
     }
 
-    public static Resource getTypesFile(Project project) {
-        return getTypesFile(project.getWebAppRoot());
+    public static File getTypesFile(Folder webAppRoot) {
+        return webAppRoot.getFile(TYPE_RUNTIME_FILE);
     }
 
     @Deprecated
-    public static void generateServices(FileService fileService, Resource servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
+    public static Resource getTypesFileDeprecated(Project project) {
+        return getTypesFileDeprecated(project.getWebAppRoot());
+    }
+
+    public static File getTypesFile(Project project) {
+        return getTypesFile(project.getWebAppRootFolder());
+    }
+
+    /*@Deprecated
+    public static void generateServices(FileService fileService, File servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
         // Previously the top service file included imports for service bean spring definitions, since 6.5 all
         // *.spring.xml files are loaded using classpath scanning so the imports are no londer necessary. For now we
         // still write an empty file to ensure older projects remain operational.
         SpringConfigSupport.writeBeans(new Beans(), servicesXml, fileService);
-    }
+    }*/
 
     public static void generateServices(File servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
         // Previously the top service file included imports for service bean spring definitions, since 6.5 all
@@ -314,16 +324,29 @@ public class ConfigurationCompiler {
     }
 
     public static void generateSMDs(Project currentProject, SortedSet<Service> services) throws IOException, NoSuchMethodException {
-        Resource servicesDir = currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR);
+        Folder servicesDir = currentProject.getWebAppRootFolder().getFolder(RUNTIME_SERVICES_DIR);
         generateSMDs(currentProject, servicesDir, services);
     }
 
-    @Deprecated
+    //TODO:API - delete this method when it is no longer needed
+    /*@Deprecated
     public static void generateSMDs(FileService fileService, Resource servicesDir, SortedSet<Service> services) throws IOException,
         NoSuchMethodException {
         for (Service service : services) {
             SMD smd = getSMD(service);
-            Resource smdFile = getSmdResource(servicesDir, service.getId());
+            Resource smdFile = getSmdFile(servicesDir, service.getId());
+            JSONState js = new JSONState();
+            Writer writer = fileService.getWriter(smdFile);
+            JSONMarshaller.marshal(writer, smd, js, true, true);
+            writer.close();
+        }
+    }*/
+
+    public static void generateSMDs(FileService fileService, Folder servicesDir, SortedSet<Service> services) throws IOException,
+        NoSuchMethodException {
+        for (Service service : services) {
+            SMD smd = getSMD(service);
+            File smdFile = getSmdFile(servicesDir, service.getId());
             JSONState js = new JSONState();
             Writer writer = fileService.getWriter(smdFile);
             JSONMarshaller.marshal(writer, smd, js, true, true);
@@ -357,11 +380,11 @@ public class ConfigurationCompiler {
         }
     }
 
-    @Deprecated
+    /*@Deprecated
     public static void generateManagers(FileService fileService, Resource managersXml, SortedSet<Service> services) throws JAXBException, IOException {
         Beans beans = getManagers(services);
         SpringConfigSupport.writeBeans(beans, managersXml, fileService);
-    }
+    }*/
 
     public static void generateManagers(File managersXml, SortedSet<Service> services) throws JAXBException, IOException {
         Beans beans = getManagers(services);
@@ -411,7 +434,7 @@ public class ConfigurationCompiler {
     }
 
     @Deprecated
-    public static void generateTypes(FileService fileService, Resource typesFile, SortedSet<Service> services, List<DataObject> primitiveTypes)
+    public static void generateTypes(FileService fileService, File typesFile, SortedSet<Service> services, List<DataObject> primitiveTypes)
         throws IOException {
         Writer writer = fileService.getWriter(typesFile);
         generateTypes(services, primitiveTypes, writer);

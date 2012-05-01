@@ -33,6 +33,8 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
+import com.wavemaker.tools.io.ClassPathFile;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Base Task.
@@ -42,7 +44,7 @@ import com.wavemaker.tools.util.ResourceClassLoaderUtils;
  */
 public abstract class CompilerTask extends Task {
 
-    private File projectRoot;
+    private Folder projectRoot;
 
     private Project agProject;
 
@@ -73,13 +75,13 @@ public abstract class CompilerTask extends Task {
         this.classpath = s;
     }
 
-    public File getProjectRoot() {
+    public Folder getProjectRoot() {
         return this.projectRoot;
     }
 
-    public void setProjectRoot(File projectRoot) {
+    public void setProjectRoot(Folder projectRoot) {
         this.projectRoot = projectRoot;
-        this.agProject = new Project(new FileSystemResource(projectRoot), new LocalStudioFileSystem());
+        this.agProject = new Project(projectRoot, new LocalStudioFileSystem());
     }
 
     public void setVerbose(boolean verbose) {
@@ -97,7 +99,7 @@ public abstract class CompilerTask extends Task {
     protected synchronized DesignServiceManager getDesignServiceManager() {
         if (this.designServiceManager == null) {
             if (this.projectRoot != null) {
-                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(this.projectRoot));
+                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(this.projectRoot);
             }
         }
         return this.designServiceManager;
@@ -136,10 +138,6 @@ public abstract class CompilerTask extends Task {
             if (!this.projectRoot.exists()) {
                 throw new BuildException("projectRoot: " + this.projectRoot + "doesn't exist");
             }
-
-            if (!this.projectRoot.isDirectory()) {
-                throw new BuildException("projectRoot: " + this.projectRoot + "is not a directory");
-            }
         }
     }
 
@@ -167,12 +165,11 @@ public abstract class CompilerTask extends Task {
                 parent = getClass().getClassLoader();
             }
             String[] paths = this.classpath.split(":");
-            File[] classPathFiles = new File[paths.length];
+            ClassPathFile[] classPathFiles = new ClassPathFile[paths.length];
             for (int i = 0; i < paths.length; i++) {
-                classPathFiles[i] = new File(paths[i]);
+                classPathFiles[i] = new ClassPathFile(paths[i]);
             }
-            List<Resource> classPathResources = ConversionUtils.convertToResourceList(Arrays.asList(classPathFiles));
-            return ResourceClassLoaderUtils.getClassLoaderForResources(parent, classPathResources.toArray(new Resource[classPathFiles.length]));
+            return ResourceClassLoaderUtils.getClassLoaderForResources(parent, classPathFiles);
         }
 
     }
