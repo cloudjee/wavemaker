@@ -379,7 +379,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
 		    labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
   		    if (labelWidthWithSpacing < 0) labelWidthWithSpacing = 0;		    
+		    if (!this.maxCaptionWidth) {
 			s.width =  labelWidthWithSpacing + "px";
+		    } else {
+			s.display = "inline-block";
+			s.maxWidth = this.maxCaptionWidth + "px";
+		    }
 		    s.height = ((labelHeight && labelHeight > 0) ? labelHeight : 0) + "px";
 		    
 		     // if height changes, then lineHeight may have to change
