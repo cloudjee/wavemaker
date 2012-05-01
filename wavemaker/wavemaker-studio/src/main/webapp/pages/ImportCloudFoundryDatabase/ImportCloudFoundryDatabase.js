@@ -96,7 +96,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
     },
     waitForStudioToRestart2: function(serviceName, type) {
 	var timeout = wm.connectionTimeout;
-	wm.connectionTimeout = 0;
+	wm.connectionTimeout = 0; // turn off longpolling which screws up during a studio reboot
 	studio.studioService.requestAsync("getOpenProject", [], 
 					  dojo.hitch(this, function(inResult) {
 					      wm.connectionTimeout = timeout;
