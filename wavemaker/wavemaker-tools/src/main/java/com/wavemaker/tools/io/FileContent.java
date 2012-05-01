@@ -17,6 +17,7 @@ package com.wavemaker.tools.io;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import com.wavemaker.tools.io.exception.ResourceException;
@@ -96,7 +97,7 @@ public interface FileContent {
      * 
      * @return The writer
      */
-    Writer asWriter();
+    Writer asWriter() throws ResourceException;
 
     /**
      * Write the contents of the specified file to this file.

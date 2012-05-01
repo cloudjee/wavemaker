@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import org.springframework.util.FileCopyUtils;
@@ -32,6 +33,8 @@ import com.wavemaker.tools.io.exception.ResourceException;
  * @author Phillip Webb
  */
 public abstract class AbstractFileContent implements FileContent {
+
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     @Override
     public abstract InputStream asInputStream();
@@ -81,8 +84,14 @@ public abstract class AbstractFileContent implements FileContent {
     public abstract OutputStream asOutputStream();
 
     @Override
-    public Writer asWriter() {
-        return new OutputStreamWriter(asOutputStream());
+    public Writer asWriter() throws ResourceException {
+    	try{
+    		return new OutputStreamWriter(asOutputStream(), DEFAULT_ENCODING);
+    	}
+    	catch (UnsupportedEncodingException e){
+    		e.printStackTrace();
+    		throw new ResourceException(e);
+    	}
     }
 
     @Override
