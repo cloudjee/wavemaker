@@ -209,9 +209,9 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: white;
 }
 
-.StudioDarkPanels > div td,
+.StudioDarkPanel > div td,
 .StudioDarkLayers > div td,
-.StudioDarkPanels > div  input,
+.StudioDarkPanel > div  input,
 .StudioDarkLayers > div > .wmlayer input {
     color: black;
 }
