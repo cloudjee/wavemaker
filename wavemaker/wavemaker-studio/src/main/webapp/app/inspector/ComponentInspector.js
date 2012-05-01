@@ -65,7 +65,7 @@
   */
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
      captionSize: "35%",
-     advancedMode: false,
+     mode: "recommended",
      preferredMultiActive: false,
      multiActive: false,
      ignoreHintPrefix: "<p><b>Why is this disabled?</b></p>",
@@ -377,8 +377,11 @@
 	 */     
      },
      isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {
-	 if (!skipIsAdvanced && inProp.advanced && !this.isAdvancedMode())
+	 if (!skipIsAdvanced && (inProp.advanced && !this.isAdvancedMode() ||
+				 !inProp.requiredGroup && this.isRequiredMode())) {
 	     return false;
+	 }
+
 	 if (inProp.group == "style" && inProp.editor != "wm.prop.StyleEditor" && !allowStyleInspector)
 	     return false; // handled by the style inspector only
 	 if (inProp.ignore)
@@ -495,14 +498,15 @@
 			   caption: "Show " + hiddenCount + " more",
 			   align: "right",
 			   width: "80px"});	 
-	     l.onclick = function() {
+	 l.onclick = dojo.hitch(this, function() {
 		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
 		     w._showAllClicked = true;
 		     w.show();
 		 }});
 		 l.hide();
-	     }
-	     this.moreLabelList.push(l);
+		 this.updateCaptionSizes();
+	 });
+	 this.moreLabelList.push(l);
 
 	 inLayer.setShowing(inLayer.c$.length);
      },
@@ -520,8 +524,38 @@
 		 var e = this.generateEditor(inComponent,p, inLayer);
 	     }
 	 }
+	 this.updateCaptionSizes();
      },
+     updateCaptionSizes: function() {
 
+
+	 // let the editor caption sizes be resolved
+	 wm.job("Inspector.resizeEditors", 1, this, function() {
+	     var max = 0;
+	     wm.forEachProperty(this.editorHash, function(e) {
+		 if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%") {
+		     var w = e.captionNode.clientWidth;
+		     if (w > max) {
+			 max = Math.min(w, e.bounds.w - 105); // 105 appears to be about as small as we can go before the editors start to fail
+		     }
+		 }
+	     });
+	     max += 5; // 5px space before editor
+	     if (max > this.bounds.w/2) {
+		 max = Math.floor(this.bounds.w/2);
+	     }
+	     wm.forEachProperty(this.editorHash, function(e) {
+		 if (e.setCaptionSize && e.captionSize != "100%") {
+		     e.setCaptionSize(max + "px");
+		     e.captionNode.style.maxWidth = (max-5) + "px";
+		 }
+	     });
+	 });
+     },
+     renderBounds: function() {
+	 this.inherited(arguments);
+	 this.updateCaptionSizes();
+     },
      generateButton: function(inComponent,inProp, inLayer) {
 	 var p = new wm.Panel({
 	     parent: inLayer,
@@ -1336,20 +1370,22 @@
 
      propertySearch:  function(inSender,inDisplayValue,inDataValue) {
 	 if (Boolean(inDisplayValue)) {
-	     if (this._advancedBeforeSearch === undefined) {
-		 this._advancedBeforeSearch = this.advancedMode;
-		 this.advancedMode = true;
+	     if (this._modeBeforeSearch === undefined) {
+		 this._modeBeforeSearch = this.isAdvancedMode();
+		 this.mode = "advanced";
 	     }
-	 } else if (this._advancedBeforeSearch !== undefined) {
-	     this.advancedMode = this._advancedBeforeSearch; 
-	     delete this._advancedBeforeSearch;
+	 } else if (this._modeBeforeSearch !== undefined) {
+	     this.mode = this._modeBeforeSearch; 
+	     delete this._modeBeforeSearch;
 	     delete this._searchEditorsGenerated;
 	 } else {
-	     this.advancedMode = dojo.hasClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
-	     delete this._advancedBeforeSearch;
+	     this.mode = dojo.hasClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown") ? "advanced" :
+		 dojo.hasClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown") ? "recommended" : "required";
+	     delete this._modeBeforeSearch;
 	     delete this._searchEditorsGenerated;
 	 }
-	 var advanced = this.advancedMode;
+
+	 var mode = this.mode;
 
 	 this.multiActive = Boolean(inDisplayValue) || this.preferredMultiActive;
 	 if (!this.multiActive) {
@@ -1364,7 +1400,7 @@
 	 }
 
 	 /* Search only works if all property editors are generated */
-	 if (inDisplayValue && (this._advancedBeforeSearch != this.advancedMode && !this._searchEditorsGenerated)) {
+	 if (inDisplayValue && (this._modeBeforeSearch != this.mode && !this._searchEditorsGenerated)) {
 	     this._searchEditorsGenerated = true;
 	     for (var i = 0; i < this.layers.length; i++) {
 		 var layer = this.layers[i];
@@ -1381,9 +1417,9 @@
 	     if (prop) {
 		 if (inDisplayValue === "") {
 		     if (editor.parent instanceof wm.Layer) {
-			 editor.setShowing(!prop.advanced || advanced);
+			 editor.setShowing(!prop.advanced || mode == "advanced");
 		     } else {
-			 editor.parent.setShowing(!prop.advanced || advanced);
+			 editor.parent.setShowing(!prop.advanced || mode == "advanced");
 		     }
 		 } else if (editor.search) {
 		     if (editor.search(inDisplayValue)) {
@@ -1479,22 +1515,39 @@
 
 	 }	 
      },
+     toggleRequiredProperties: function(inSender) {
+	 studio.propertySearchBar.setDataValue("");
+	 dojo.removeClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
+	 dojo.addClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
+	 this.mode = "required";
+	 this.inspect(this.inspected, true);
+     },
+
      toggleAdvancedPropertiesSome: function(inSender) {
 	 studio.propertySearchBar.setDataValue("");
-	 dojo.removeClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
-	 dojo.addClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
-	 this.advancedMode = false;
+	 dojo.removeClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
+	 dojo.addClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
+	 this.mode = "recommended";
 	 this.inspect(this.inspected, true);
      },
      toggleAdvancedPropertiesAll: function(inSender) {
 	 studio.propertySearchBar.setDataValue("");
-	 dojo.addClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
-	 dojo.removeClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
-	 this.advancedMode = true;
+	 dojo.addClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
+	 this.mode = "advanced";
 	 this.inspect(this.inspected, true);
      },
      isAdvancedMode: function() {
-	 return this.advancedMode; 
+	 return this.mode == "advanced"; 
+     },
+     isRequiredMode: function() {
+	 return this.mode == "required"; 
+     },
+     isRecommendedMode: function() {
+	 return this.mode == "recommended"; 
      },
      generateComponentInfo: function() {
 	 var html = this.inspected.generateDocumentation();
@@ -1520,6 +1573,7 @@
 
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent, inName) {
 	 var editorProps = {
+	     maxCaptionWidth: Math.floor(this.bounds.w/2),
 	     propDef: inProp,
 	     owner: inOwner,
 	     parent: inParent,

@@ -195,7 +195,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
 }
 
-.StudioDarkPanel,
+.Studio .StudioDarkPanel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer,
 .StudioWizard.StudioDarkLayers > div > .wmlayer {
     background-color: #414B5C;
