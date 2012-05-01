@@ -25,7 +25,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	this.update();
     },
     update: function(inImportDataModel) {
-	this.cloudFoundryService.requestAsync("listDatabaseServices", ["","http://api.mkantor.cloudfoundry.me"],
+	this.cloudFoundryService.requestAsync("listDatabaseServices", ["",""],
 					      dojo.hitch(this, function(inResult) {
 						  this.populateCloudFoundryAppList(inResult);
 					      }),
