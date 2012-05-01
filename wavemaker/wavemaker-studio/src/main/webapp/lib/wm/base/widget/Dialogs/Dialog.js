@@ -367,6 +367,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.titleClose.setShowing(!this.modal && !this.noEscape  && !wm.isMobile);
     },	
     setDocked: function(inDock, optionalParent, optionalEdge) {
+	if (this._isDesignLoaded) return;
 	var wasDocked = this.docked
 	if (Boolean(wasDocked) == Boolean(inDock)) return;
 	this.docked = inDock;

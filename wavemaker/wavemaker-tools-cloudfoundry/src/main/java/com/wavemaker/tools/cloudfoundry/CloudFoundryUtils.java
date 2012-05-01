@@ -20,6 +20,7 @@ import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudApplication.AppState;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * General purpose {@link CloudFoundryClient} utilities.
@@ -27,6 +28,8 @@ import org.springframework.util.Assert;
  * @author Phillip Webb
  */
 public abstract class CloudFoundryUtils {
+
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     static long SLEEP_TIME = TimeUnit.SECONDS.toMillis(1);
 
@@ -104,5 +107,34 @@ public abstract class CloudFoundryUtils {
         int expectedInstances = application.getInstances();
         int runningInstances = application.getRunningInstances();
         return started && expectedInstances == runningInstances;
+    }
+
+    /**
+     * Return the cloud controller URL.
+     * 
+     * @return The actual controller URL to use.
+     */
+    public static String getControllerUrl() {
+        return getEnvironmentVariable(CLOUD_CONTROLLER_VARIABLE_NAME, "http://api.cloudfoundry.com");
+    }
+
+    /**
+     * Return an environment variable value
+     * 
+     * @param name the name of the variable
+     * @param defaultValue the default value to use if the variable has not been set
+     * @return the value
+     */
+    public static String getEnvironmentVariable(String name, String defaultValue) {
+        String value = System.getenv(name);
+        if (StringUtils.hasLength(value)) {
+            return value;
+        }
+        value = System.getProperty(name);
+        if (StringUtils.hasLength(value)) {
+            return value;
+        }
+        return defaultValue;
+
     }
 }

@@ -175,10 +175,11 @@ dojo.declare("wm.Palette", wm.Tree, {
 				this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
 			}
 			if (!wm.fire(comp, "afterPaletteDrop")) {
-				// FIXME: should not refresh entire tree when dropping from palette.
-				studio.refreshDesignTrees();
+			    // FIXME: should not refresh entire tree when dropping from palette.
+			    studio.refreshDesignTrees();
 			    //studio.inspector.resetInspector();
-				studio.select(comp);
+			    studio.select(comp);
+			    studio.inspector.toggleRequiredProperties();
 			}
 		}
 	},

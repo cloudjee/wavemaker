@@ -31,8 +31,8 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFiltering;
-import com.wavemaker.tools.io.ResourceFiltering.ResourceAttributeFilter;
+import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.Including.ResourceAttributeFilter;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 
@@ -44,7 +44,7 @@ import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
  */
 public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
 
-    private static final ResourceAttributeFilter<File> CLASS_OR_JAVA_FILES = ResourceFiltering.fileNames().ending(".class", ".java");
+    private static final ResourceAttributeFilter<File> CLASS_OR_JAVA_FILES = Including.fileNames().ending(".class", ".java");
 
     private static final char FILE_SEPARATOR = java.io.File.separatorChar;
 

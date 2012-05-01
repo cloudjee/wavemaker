@@ -15,7 +15,7 @@
 ImportDatabase.widgets = {
     layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    panel1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
+	    panel1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers","NoRightMarginOnTab"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
 		panel2: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "center", verticalAlign: "middle"}, {}, {
 
 

@@ -417,6 +417,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					   parent: this.editor,
 					   width: "100%",
 					   name: "numberEditor",
+					 minWidth: 40,
 					   padding: "0,1,0,0",
 				    readonly: this.readonly
 					  });
@@ -426,7 +427,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					     options: "px,%",
 					     dataField: "dataValue",
 					     displayField: "dataValue",
-					     width: "55px",
+					     width: "45px",
 					     padding: "0",
 				    readonly: this.readonly
 					    });
@@ -1055,7 +1056,7 @@ dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDrop
 	}
 	*/
 	wm.prop.EventDijit.menu.update(null, this.owner, true);
-    },
+    }
 /*
     generateIndex: function(currentIndex) {
 	this.currentIndex = currentIndex;
@@ -1397,7 +1398,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    break;
 		case "notificationCall":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "notification") == -1) return;
-		    componentList = navList;
+		    componentList = notificationList;
 		    break;
 
 		case "serviceVariable":
@@ -1692,12 +1693,12 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.classListEditor = this.classListLayer.c$[0];
 	this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
 	var defaultProps = {
-	    captionPosition: "top",
+	    captionPosition: "left",
 	    captionAlign: "left",
-	    captionSize: "20px",
+	    captionSize: "70px",
 	    singleLine: false,
 	    width: "100%",
-	    height: "42px",
+	    height: "28px",
 	    allowNone: true,
 	    owner: this,
 	    parent: this,
@@ -1756,15 +1757,14 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	var b = new wm.Button({
 	     owner: this,
 	     parent: p,
-	     width: "100px",
+	     width: "100%",
 	     height: "30px",
-	    caption: "Create Class",
-	    hint: "Creates a css class based on these styles",
+	    caption: "Create CSS Class from these styles",
+	    //hint: "Creates a css class based on these styles",
+	    hint: "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.",
 	    onclick: dojo.hitch(this, "generateCssRule")
 	});
-	wm.Spacer({owner: this,
-		   width: "100%",
-		   parent: p});
+/*
 	 wm.Label({owner: this,
 		   caption: "",
 		   parent: p,
@@ -1774,10 +1774,9 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 		   onclick: function() {
 		       studio.helpPopup = studio.inspector.getHelpDialog();
 		       studio.inspector.beginHelp(null, p.domNode, null, "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.");
-		       /* TODO: Localize */
 		   },
 		   _classes: {domNode: ["StudioHelpIcon"]}});
-
+    */
 	    /*
 	var b = new wm.Button({
 	     owner: this,
@@ -1816,7 +1815,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	}));
     },
     generateCssRule: function() {
-	app.prompt("What do you want to name this css class?  NOTE: Clicking ok will create this rule based on the styles you've set for this widget, and replace your styles with the new CSS Class", this.inspected.name, dojo.hitch(this, function(inClassName) {
+	app.prompt("<p>Enter a name for the CSS class you want to create.</p><p>A new CSS class will be created using the style currently specified for this widget.  Classes can be reused to apply the same styles to other widgets, and can be customized to add new styles.", this.inspected.name, dojo.hitch(this, function(inClassName) {
 	    if (!inClassName) return;
 	    var cssText = "." + inClassName + " {\n";
 	    "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
@@ -1838,10 +1837,15 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    }
 	    cssText += "\n}\n";
 
-	    this.classListEditor.addClass(inClassName);
-	    studio.cssLayer.activate();
-	    studio.sourceTab.activate();
-	    studio.appCssEditArea.setDataValue(studio.appCssEditArea.getDataValue() + "\n\n" + cssText);
+	    this.classLayer.activate();
+	    // let the grid render if it hasn't already
+	    wm.onidle(this, function() {
+		this.classListEditor.addClass(inClassName);
+		this.classListEditor.changed();
+		studio.appCssEditArea.setDataValue(studio.appCssEditArea.getDataValue() + "\n\n" + cssText);
+		studio.cssChanged();
+		this.classListEditor.editClass(inClassName);
+	    });
 	}));
     },
 /*
@@ -1900,7 +1904,50 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 		      parent: this,
 		      width: "100%",
 		      caption: "Current CSS Classes:"});
-	var grid = this.grid = 
+	var classListVar = this.classListVar = wm.Variable({owner: this, name: "classListVar", type: "StringData", isList: true});
+	// Extract the classes used in the style sheets
+	var matches1 = studio.cssEditArea.getDataValue().replace(/\n/gm, " ").replace(/\/\*.*?\*\//g,"").match(/\.([a-zA-Z0-9_\-]*)/g);
+	var matches2 = studio.appCssEditArea.getDataValue().replace(/\n/gm, " ").replace(/\/\*.*?\*\//g,"").match(/\.([a-zA-Z0-9_\-]*)/g);
+
+	// Make sure that our class list contains only unique items
+	var classesHash = {dialogfooter: true};
+	dojo.forEach(matches1, function(className) {classesHash[className.substring(1)] = 1;}); 
+	dojo.forEach(matches2, function(className) {classesHash[className.substring(1)] = 1;});
+	wm.forEachProperty(classesHash, function(obj,name) {classListVar.addItem({dataValue: name});});
+	classListVar.sort();
+
+	var dataSet = this.dataSet = new wm.Variable({owner: this, name: "dataSet", type: "StringData", isList: true});
+	var classList =  (this.inspected._classes && this.inspected._classes.domNode && this.inspected._classes.domNode.length) ? dojo.clone(this.inspected._classes.domNode) : [];
+	dojo.forEach(classList, dojo.hitch(this, function(className) {this.dataSet.addItem({dataValue: className});}));
+	var grid = this.grid = wm.DojoGrid({
+	    owner: this,
+	    parent: this,
+	    name: "grid",
+	    singleClickEdit:true,
+	    width: "100%",
+	    height: "100%",
+	    columns: [{show: true, field: "dataValue", width: "100%", "fieldType":"dojox.grid.cells.ComboBox","editorProps":{"selectDataSet":"classListVar","displayField":"dataValue", isSimpleType: true, restrictValues: false}},
+		      {show: true, field: "edit", width: "16px","formatFunc":"wm_button_formatter","formatProps":{"buttonclass":"Studio_silkIconImageList_75"}, "expression":"\"&nbsp;\""},
+		      {show: true, field: "delete", width: "16px","formatFunc":"wm_button_formatter","formatProps":{"buttonclass":"wmDeleteColumn"},"expression":"\"&nbsp;\""}],
+	    onGridButtonClick: dojo.hitch(this, function(fieldName, rowData, rowIndex) {
+		switch(fieldName) {
+		case "delete":
+		    var item = this.dataSet.getItem(rowIndex);
+		    this.dataSet.removeItem(rowIndex);
+		    this.grid.deleteRow(rowIndex);
+		    this.changed();
+		    break;
+		case "edit":
+		    var item = this.dataSet.getItem(rowIndex);
+		    var className = item.getValue("dataValue");
+		    this.editClass(className);
+		    break;
+		}
+	    }),
+	    onCellEdited: dojo.hitch(this, "changed")
+	});
+	this.grid.setDataSet(this.dataSet);
+/*
 	    new wm.ListSet({owner: this,
 			    parent: this,
 			    showSearchBar: false,
@@ -1912,6 +1959,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 			   });
 	grid.grid.setDeleteColumn(grid.options != this.emptyList);
 	grid.grid.connect(grid.grid, "onRowDeleted", this, "removeClass");
+	*/
 	var addPanel = new wm.Panel({owner: this,
 				     parent: this,
 				     width: "100%", 
@@ -1920,22 +1968,14 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 				     verticalAlign: "top",
 				     horizontalAlign: "left"
 				    });
-	this.textInput = new wm.Text({owner: this,
-				parent: addPanel,
-				      caption: "",
-				placeHolder: "Class Name",
-				captionSize: "80px",
-				width: "100%",
-				height: "100%",
-				      onEnterKeyPress: dojo.hitch(this, "_addClass")});
-	this.addButton = new wm.Label({owner: this,
-					    parent: addPanel,
-					    name: "addButton",
-					_classes: {domNode: ["wmPlusToolButton"]},
-				    caption: "+",
-				    width: "20px",
-				    height: "20px",
-				    onclick: dojo.hitch(this, "_addClass")});
+
+	this.addButton = new wm.Button({owner: this,
+					parent: addPanel,
+					name: "addButton",
+					caption: "Add Class",
+					_classes: {domNode: ["StudioButton"]},
+					width: "100px",
+					onclick: dojo.hitch(this, "addClass")});
 	new wm.Label({owner: this, 
 		      parent: this,
 		      width: "100%",
@@ -1944,6 +1984,60 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 		      caption: "Add a CSS class to this widget to style it"});
 	this.reflow();
     },
+    addClass: function(inClassName) {
+	this.grid.addRow({dataValue: inClassName || ""}, true);
+    },
+    editClass: function(className) {
+	studio.editCodeDialog.show();
+
+	var cssText = studio.cssEditArea.getDataValue();
+	if (studio.cssEditArea.getDataValue().indexOf("." + className) == -1) {
+	    cssText = studio.appCssEditArea.getDataValue();
+	}
+	var code = "";
+	var currentIndex = 0;
+	var startAndEndList = [];
+	while (true) {
+	    var startIndex = cssText.indexOf("." + className, currentIndex);
+	    if (startIndex == -1) break;
+	    var endIndex = cssText.indexOf("}", startIndex) + 1;
+
+	    // there may be rules before this rule: ".xxx, .wmbutton" so just go back to the end of the previous rule ".....}"
+	    startIndex = cssText.lastIndexOf("}", startIndex) + 1; 
+
+	    currentIndex = endIndex;
+	    
+	    code += cssText.substring(startIndex,endIndex) + "\n";
+	    startAndEndList.push({start: startIndex, end: endIndex});
+	}
+		    studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
+			var editArea;
+			if (cssText == studio.cssEditArea.getDataValue()) {
+			    editArea = studio.cssEditArea;
+			} else if  (cssText == studio.appCssEditArea.getDataValue()) {
+			    editArea = studio.appCssEditArea;
+			}
+			// if either editor has somehow changed, this edit is invalidated
+			if (editArea) {
+			    if (startAndEndList.length > 1) {
+				/* If there are multiple places showing the selected class, the chance of us doing a good job updating
+				 * the right ones is pretty slim; the user may have added a new rule, removed an old rule, maintaining
+				 * the order just isn't trivial.  So, remove all blocks of code wherever they are so that we can put in
+				 * a new block with all the user's new CSS in a single place
+				 */
+				for (var i = startAndEndList.length - 1; i >= 0; i--) {				
+				    cssText = cssText.substring(0, startAndEndList[i].start) + cssText.substring(startAndEndList[i].end);
+				}
+				cssText += inCode;
+			    } else {
+				cssText = cssText.substring(0, startAndEndList[0].start) + inCode + cssText.substring(startAndEndList[0].end);
+			    }
+			    editArea.setDataValue(cssText);
+			    studio.cssChanged();
+			}
+		    }));
+    },
+/*
     addClass: function(inClassName) {
 	this.textInput.setDataValue(inClassName);
 	this._addClass();
@@ -1976,6 +2070,17 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	} else {
 	    this.setOptions(this.emptyList);
 	    this.grid.grid.setDeleteColumn(false);
+	}
+    },
+    */
+    changed: function() {
+	if (this.inspected._classes && this.inspected._classes.domNode) {
+	    for (var i = this.inspected._classes.domNode.length-1; i >= 0; i--) {
+		this.inspected.removeUserClass(this.inspected._classes.domNode[i]);
+	    }
+	}
+	for (var i = 0; i < this.dataSet.getCount(); i++) {
+	    this.inspected.addUserClass(this.dataSet.getItem(i).getValue("dataValue"));
 	}
     },
     getDataValue: function() {
@@ -2357,6 +2462,7 @@ dojo.declare("wm.prop.FormatterEditor", wm.prop.SubComponentEditor, {
 dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
     displayField: "name",
+    forceCaptionPositionTop: true,
     setDataValue: function(inValue) {
 	if (wm.isEmpty(inValue)) {
 	    this.inherited(arguments, [["All"]]);
@@ -2465,7 +2571,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 	this.tabs = this.createComponents({
 	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
 		descLayer: ["wm.Layer", {caption: "Description"}, {},{
-		    descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}],
+		    descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}]
 		}],
 		notesLayer: ["wm.Layer", {caption: "Notes"}, {},{
 		    notesEditor: ["wm.RichText", {syntax: "text", width: "100%", height: "300px"}]

@@ -24,18 +24,6 @@
    ************************************************************************************************/
 
 
-.wm_template table .dijitCalendarYearContainer tr {
-    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
-    border-style: solid;
-    border-color: #AAAAAA; /* Document-ClickablesHover-Background_Color */
-    border-top-width: 1px;
-}
-.wm_template table .dijitCalendarYearContainer td span {
-    color: #FFFFFF !important; /* Document-ClickablesDefault-Font_Color */
-}
-.wm_template .dijitCalendarYearLabel {
-    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
-}
 
 .wm_template .dijitCalendarDayLabel,
 .wm_template .dijitCalendarDateLabel {
@@ -92,8 +80,7 @@
 }
 
 .wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate,
-.wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
-.wm_template .dijitCalendarContainer .dijitCalendarSelectedYear {
+.wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth {
     background-color: #AAAAAA !important; /* Document-ClickablesActive-Background_Color */
     color: #FFFFFF !important; /* Document-ClickablesActive-Font_Color */
 }
@@ -107,7 +94,14 @@
     color: #FFFFFF !important; /* Document-ClickablesHover-Font_Color */
 }
 
-
+.wm_template tr.dijitCalendarMonthContainer th .dijitCalendarPreviousYear,
+.wm_template tr.dijitCalendarMonthContainer th .dijitCalendarNextYear,
+.wm_template tr.dijitCalendarMonthContainer th .dijitCalendarCurrentMonthLabel {
+    padding: 2px 5px;
+    border-width: 1px;
+    border-color: #FFFFFF;  /* Document-ClickablesActive-Font_Color */
+    border: solid 1px white;
+}
 
 .wm_template .dijitCalendarContainer {
     background-color: #FFFFFF; /* PageContent-Styles-Background_Color */

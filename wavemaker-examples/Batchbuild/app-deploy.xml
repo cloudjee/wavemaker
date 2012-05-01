@@ -167,6 +167,7 @@
 		<copy todir="${build.app.webapproot.dir}/lib/wm">
 			<fileset dir="${wavemaker.home}">
                 <include name="${custom.wm.dir}/**"/>
+                <exclude name="${custom.wm.dir}/**/deployments.js"/>
             </fileset>
         </copy>
 

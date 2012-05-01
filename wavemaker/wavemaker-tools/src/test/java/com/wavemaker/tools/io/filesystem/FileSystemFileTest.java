@@ -87,6 +87,16 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
+    public void shouldTouchNonExistingFile() throws Exception {
+        // FIXME
+    }
+
+    @Test
+    public void shouldThrowOnTouchExistingFile() throws Exception {
+        // FIXME
+    }
+
+    @Test
     public void shouldGetContentInputStreamFromFileSystem() throws Exception {
         InputStream inputStream = mock(InputStream.class);
         given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
@@ -120,14 +130,14 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
-    public void shouldTouchNewFile() throws Exception {
+    public void shouldCreateIfMissingNewFile() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         this.file.createIfMissing();
         verify(this.fileSystem).createFile(this.file.getKey());
     }
 
     @Test
-    public void shouldNotTouchExistingFile() throws Exception {
+    public void shouldNotCreateIfMissingExistingFile() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FOLDER);
         this.file.createIfMissing();
         verify(this.fileSystem, never()).createFile(this.file.getKey());

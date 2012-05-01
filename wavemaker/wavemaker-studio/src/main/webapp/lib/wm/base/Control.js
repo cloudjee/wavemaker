@@ -1544,7 +1544,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    this.disabled = d;
 	    this._disabled = d || this._parentDisabled;
 
-	    wm.forEachProperty(this.widget, dojo.hitch(this, function(w, name) {
+	    wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
 		w.setParentDisabled(this._disabled);
 	    }));
 	    

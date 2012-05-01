@@ -12,336 +12,11 @@
   *  limitations under the License.
   */
 
+/* TODO: 1. Required | Recommended | All
+ *       2. Work on show More labels, styling and handling during search
+ * 
+
  dojo.provide("wm.studio.app.inspector.ComponentInspector");
- dojo.require("wm.studio.app.inspector.Inspector");
- dojo.require("wm.studio.app.inspector.BindInspector");
- dojo.require("wm.studio.app.inspector.StyleInspector");
- dojo.require("wm.studio.app.inspector.SecurityInspector");
- dojo.require("wm.base.widget.Tree");
-
- dojo.declare("wm.ComponentInspector", wm.Layers, {
-     inspectors: {
-	 Properties: wm.BindInspector,
-	 "Events": wm.EventInspector,
-	 "CustomMethods": wm.CustomMethodInspector,
-	 Styles: wm.StyleInspector,
-	 Security: wm.SecurityInspector,
-	 Data: wm.DataInspector,
-	 Navigation: wm.NavigationInspector
-     },
-     init: function() {
-	 //this.subscribe("wmwidget-rename", this, "reinspect");
-	 this.inherited(arguments);
-	 this._inspectors = {};
-	 for (var i in this.inspectors) {
-	     var ctor = this.inspectors[i];
-	     this._inspectors[i] = new ctor({border: 0, name: i, parent: this.addLayer(i), owner: this});
-	 }
-     },
-     /* Inspect the specified component
-      * NOTE: inInspectorProps is actually a tree node from the tree over the properties panel, 
-      *       and is used to tell us which subcomponent we are editting properties for
-      */
-     inspect: function(inComponent, inInspectorProps) {
-	 try {
-	     var wasInspecting = this.inspected;
-
-	     var c = this.inspected = inComponent;
-	     if (inInspectorProps)
-		 this.inspectorProps = inInspectorProps;
-	     var ip = this.inspectorProps ;
-	     var n = ip && ip.inspector;
-	     var inspector = this.getInspector();
-
-	     var changedNode = (this._lastNodeName != ip._nodeName);
-	     this._lastNodeName = ip._nodeName;
-
-	     // If we're inspecting the same component with the same inspector, call reinspect
-	     if (inspector == this._currentInspector && inComponent == wasInspecting && !changedNode && this.dijits && inspector.tableContainer.innerHTML) {
-
-		 // Update all values in the property inspector UI
-		 this._currentInspector.reinspect();
-	     } else if (inspector) {
-
-		 // If we have any dijits, we'll need to destroy them all as we'll be reusing those IDs
-		 if (this.dijits) dojo.forEach(this.dijits,function(d) {
-		     var node = d.domNode;
-		     while (node && node.id.match(/^propinspect_row/) == null) {
-			 node = node.parentNode;
-		     }
-		     d.destroy();
-		     if (node)
-			 dojo.destroy(node); // we need to clean up these node IDs so that data fields in the data inspector can use these names as well
-		 });
-
-		 // Cache the current inspector
-		 this._currentInspector = inspector;
-
-		 // Generate the property inspector UI
-		 inspector.inspect(c);
-
-		 // Turn all editors into dijits and cache them so we can destroy them later
-		 try {
-		     this.dijits = dojo.parser.parse(this.domNode);
-		 } catch(e) {
-		     dijit.registry._hash = {};
-		     this.dijits = dojo.parser.parse(this.domNode);
-		 }
-	     }
-	 } catch(e) {
-	     console.error(e);
-	 }
-     },
-
-     /* Lookup which inspector should do the editting based on which node in the top property tree is selected */
-     getInspector: function() {
-	 var selected = this.parent.tree.selected.inspector;
-	 switch(selected) {
-	 case "Properties":
-	     return this._inspectors.Properties;
-	 case "Events":
-	     return this._inspectors.Events;
-	 case "CustomMethods":
-	     return this._inspectors.CustomMethods;
-	 case "Security":
-	     return this._inspectors.Security;
-	 case "Data":
-	     return this._inspectors.Data;
-	 case "Navigation":
-	     return this._inspectors.Navigation;
-	 case "Styles":
-	     if (this._inspectors.Styles.getActiveLayer().name == "properties") {
-		 return this._inspectors.Properties;
-	     } else {
-		 return this._inspectors.Styles;
-	     }
-	 }
-
-     },
-
-     /* If reinspect is called, verify that we are using the same inspector or we need to call inspect to generate new
-      * editors instead of reinspect to populate existing editors
-      */
-     reinspect: function() {	    
-	 var requiredInspector = this.getInspector();
-	 var inspectorProps = this.parent.tree.selected.inspector;
-	 if (this._currentInspector != requiredInspector || this.inspectorProps.inspector != inspectorProps || !requiredInspector.tableContainer.innerHTML)
-	     return this.inspect(this.inspected);
-	 if (this.inspected && this.inspectorProps) {
-	     this._currentInspector.reinspect(this.inspected);
-	 }
-     },
-
-     /* Focus on the default property; we've discontinued doing this, but may resume... */
-     focusDefault: function() {
-	 var inspector = this.getInspector();
-	 wm.fire(inspector, "focusDefault");
-     },
-
-     /* I believe that select mode is used when seting up composites and wm.Property classes */
-     setSelectMode: function(inMode) {
-	 for (var i in this.inspectors) {
-	     this._inspectors[i].setSelectMode(inMode);
-	 }
-     },
-     writeChildren: function() {
-     }
- });
-
- // magic schema stuff:
- // category: inspector root tree node name
- // categoryProps: inspector root tree node properties
- // categoryParent: a parent node in the inspector
- dojo.declare("wm.ComponentInspectorPanel", wm.Panel, {
-
-     /* The ComponentInspectorPanel is a Tree, splitter and a ComponentInspector */
-     init: function() {
-	 this.inherited(arguments);
-	 var t = ['{',
-		  'inspectorTree: ["wm.Tree", {height: "120px", border: 0}, {}, {}],',
-		  'splitter3: ["wm.Splitter", {layout: "top", border: 0}, {}, {}],',
-		  'inspectorLayers: ["wm.ComponentInspector", {border: 0, flex: 1, box: "v", autoScroll: false}, {}, {}]',
-		  '}'];
-	 this.readComponents(t.join(''));
-	 this.tree = this.owner.inspectorTree;
-	 this.inspector = this.owner.inspectorLayers;
-	 this.connect(this.tree, "onselect", this, "treeSelect");
-     },
-
-     clearTree: function() {
-	 if (this.tree)
-	     this.tree.clear();
-	 this.treeNodes = {};
-     },
-
-     // whether a tree node is shown is controlled by the property info first and then the inspector
-     canInspect: function(inInspector, inNodeProps) {
-	 var i = inInspector, cs = inNodeProps.canInspect, ics = "canInspect", r;
-	 if (cs && this[cs])
-	     r = this[cs](this.inspected, this.props);
-	 else if (i && i[ics])
-	     r = i[ics](this.inspected, this.props);
-	 else
-	     r = true;
-	 if (inInspector)
-	     inInspector.active = r;
-	 return r;
-     },
-
-     // Add nodes to the tree...
-	 _addTreeNode: function(inInspector, inParent, inProps) {
-		 var i = inInspector, a = inProps.addTreeNode, ia = (i||0).addTreeNode;
-		 if (a && this[a])
-			 return this[a](inParent, this.inspected, inProps, this.props)
-		 else if (ia)
-			 return ia.apply(i, [inParent, this.inspected, inProps, this.props, this.treeNodes]);
-		 else
-			 return new wm.TreeNode(inParent, inProps);
-	 },
-	 addTreeNode: function(inNodeName, inProps, inParent) {
-		 inParent = inParent || this.tree.root;
-		 inProps = inProps || {};
-		 inProps.inspected = this.inspected && this.inspected.getId();
-		 inProps._nodeName = inNodeName;
-		 inProps.content = wm.extendSchemaDictionary["NODE_" + inNodeName] || inProps.content || inNodeName;
-		 inProps.inspector = inProps.inspector || inParent.inspector;
-		 inProps.image = inProps.image || inParent.image;
-		 // FIXME: need to potentially create inspector if it doesn't exist
-		 var ni = this.getInspector(inProps.inspector);
-		 if (!this.canInspect(ni, inProps))
-			 return;
-		 // add node
-		 var n = this._addTreeNode(ni, inParent, inProps);
-		 if (n)
-			 this.treeNodes[n._nodeName || inNodeName] = n;
-		 return n;
-	 },
-	 addTreeSubNode: function(inName, inProps, inParent) {
-		 var
-			 np = { content: inName };
-		 dojo.mixin(np, inProps || {});
-		 this.addTreeNode(inParent._nodeName + '.' + inName, np, inParent);
-	 },
-	 // FIXME: let's not add these to prop tree
-	 /*addCollectionTreeNode: function(inComponent) {
-		 var
-			 collection = inComponent.collection,
-			 comps = inComponent.getCollection();
-		 if (!this.treeNodes[collection])
-			 this.addTreeNode(collection, {image: "images/item.png", isCollection: true});
-		 var n = this.treeNodes[collection];
-		 dojo.forEach(comps, dojo.hitch(this, function(c) {
-			 this.addComponentTreeNode(c.name, {isCollection: true}, n);
-		 }));
-	 },*/
-	 initTree: function(inComponent) {
-		 this.clearTree();
-		 this.props = inComponent && inComponent.listProperties();
-	     this.addTreeNode("Properties", {content: studio.getDictionaryItem("wm.ComponentInpsectorPanel.PROPERTY_NODE_CAPTION"), image: "images/properties_16.png", inspector: "Properties"});
-		 this.addTreeNode("Events", {content: studio.getDictionaryItem("wm.ComponentInpsectorPanel.EVENT_NODE_CAPTION"), image: "images/star_16.png", inspector: "Events"});
-		 this.addTreeNode("CustomMethods", {content: studio.getDictionaryItem("wm.ComponentInpsectorPanel.CUSTOMMETHOD_NODE_CAPTION"), image: "images/star_16.png", inspector: "CustomMethods"});
-		 // component props
-		 var props = this.props, p;
-		 for (var i in props) {
-			 p = props[i];
-			 if (p.category && !(p.category in this.treeNodes) && p.categoryProps)
-				 this.addTreeNode(p.category, p.categoryProps);
-			 // specific to adding components.
-			 else if (p.categoryParent) {
-				 var n = this.treeNodes[p.categoryParent];
-				 if (n)
-					 this.addTreeSubNode(i, p.categoryProps, n);
-			 }
-		 }
-		 // FIXME: let's not put these in tree
-		 // auto add collection
-		 /*for (var i in props)
-			 if (i == "collection")
-				 this.addCollectionTreeNode(inComponent);
-		 */
-	 },
-	 // FIXME: just refreshes the node if it's part of a collection right now
-	 /*refreshTree: function() {
-		 var c = this.selectedNode, c = (n || 0).component;
-		 var nodes = this.tree.root.kids;
-		 for (var i=0, n; (n=nodes[i]); i++)
-			 if (n.isCollection) {
-				 n.removeChildren();
-				 this.addCollectionTreeNode(this.inspected);
-				 break;
-			 }
-		 if (c && n)
-			 this._selectComponent(n, c);
-	 },*/
-	 _selectComponent: function(inNode, inComponentName) {
-		 for (var i=0, kids = inNode.kids; (k=kids[i]); i++)
-			 if (k.component == inComponentName) {
-				 k.tree.select(k);
-				 this.selectedNode = k;
-				 return true;
-			 }
-	 },
-	 getInspector: function(inInspectorName) {
-		 return this.inspector._inspectors[inInspectorName];
-	 },
-	 updateInspectorLayer: function(inInspectorName) {
-		 var
-			 n = this.inspectorName = inInspectorName,
-			 i = this.getInspector(n);
-		 wm.fire((i||0).parent, "activate");
-	 },
-	 resetInspector: function() {
-		 this.inspectorName = null;
-	 },
-	 // inspector api
-	 inspect: function(inComponent) {
-		 if (inComponent.noInspector) return;
-		 this.inspected = inComponent;
-		 this.initTree(inComponent);
-		 // update tree selection...
-		 var n = this.selectedNode = this.treeNodes[this.inspectorName] || this.treeNodes["Properties"];
-		 this.tree.select(n);	        
-	 },
-	 reinspect: function() {
-		 // if we have a component, inspect it
-		 var n = (this.selectedNode ||0).component;
-		 if (n) {
-			 this.inspectComponent(n, this.selectedNode);
-		 } else if (this.inspector.inspected == this.inspected) {
-		     this.inspector.reinspect();
-		 } else {
-		     this.inspector.inspect(this.inspected, this.selectedNode);
-		 }
-	 },
-	 focusDefault: function() {
-		 wm.fire(this.inspector, "focusDefault");
-	 },
-	 treeSelect: function(inNode) {
-		 if (inNode.inspector)
-			 this.updateInspectorLayer(inNode.inspector);
-		 this.selectedNode = inNode._nodeName && this.treeNodes[inNode._nodeName];
-		 this.reinspect();
-	 },
-	 inspectComponent: function(inComponentName, inInspectorProps) {
-		 this.inspector.inspect(this.inspected.getComponent(inComponentName), inInspectorProps);
-	 },
-	 refreshComponent: function(inSubComponent) {
-		 // look for component in properties or collection node
-		 var n = (inSubComponent || 0).name;
-		 for (var i=0, kids = this.tree.root.kids, k, f; (k=kids[i]); i++)
-			 if (k._nameName == "Properties" || k.isCollection) {
-				 var f = this._selectComponent(k, n);
-				 if (f)
-					 break;
-			 }
-	 },
-	 setSelectMode: function(inMode) {
-		 this.inspector.setSelectMode(inMode);
-	 },
-	 writeChildren: function() {
-	 }
- });
-
 
  /* New definition for property schema
   * ignore: not written; not editable EVEN IF IT IS A bindTarget (this EVEN IF is new and will cause a few bugs till everything is updated)
@@ -389,7 +64,8 @@
   * 8. Find all bindable/bindTarget properties that should be readonly and make them readonly
   */
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
-     advancedMode: false,
+     captionSize: "35%",
+     mode: "recommended",
      preferredMultiActive: false,
      multiActive: false,
      ignoreHintPrefix: "<p><b>Why is this disabled?</b></p>",
@@ -402,12 +78,12 @@
      postInit: function() {
 	 this.inherited(arguments);
 	 this.connect(this.decorator, "headerClicked", this, "updateCurrentLayersList");
-	 this._activeLayers  = ["required", "widgetName"];
+	 this._activeLayers  = [];//["required", "widgetName"];
      },
      updateCurrentLayersList: function() {
 	 this._activeLayers = [];
 	 dojo.forEach(this.layers, function(l) {
-	     if (l.isActive()) this._activeLayers.push(l.propertyGroup.equivalentName || l.propertyGroup.name);
+	     if (l.isActive() && l.propertyGroup) this._activeLayers.push(l.propertyGroup.equivalentName || l.propertyGroup.name);
 	 }, this);
      },
      inspect: function(inComponent, forceInspect) {	
@@ -443,11 +119,14 @@
 	 this.layerIndex = -1; // make sure it rerenders when we call setLayerIndex
 	 if (!this.selectLayers(this._activeLayers)) {
 	     while(this._activeLayers.length) this._activeLayers.pop();
+	     this.layers[0].activate();
+/*
 	     this._activeLayers.push("required");
 	     if (this.preferredMultiActive) {
 		 this._activeLayers.push("widgetName");
 	     }
 	     this.selectLayers(this._activeLayers);
+	     */
 	 }
 
 /*
@@ -462,7 +141,7 @@
 	 var found = false;
 	 for (var i = 0; i < this.layers.length; i++) {
 	     var g = this.layers[i].propertyGroup;
-	     if (dojo.indexOf(this._activeLayers, g.equivalentName || g.name) != -1) {
+	     if (g && dojo.indexOf(this._activeLayers, g.equivalentName || g.name) != -1) {
 		 this.layers[i].activate();
 		 found = true;
 	     }
@@ -481,7 +160,7 @@
 	     id = id.substring(id.indexOf(".") + 1) + ".";
 	 }
 	 */
-	 return  id + "." + propName;
+	 return  id + "__" + propName;
      },
      reinspect: function(inSubComponent) {
 	 /* the previous reinspect will trigger onEditorChange events which will trigger additional reinspects; insure that all of the onEditorChange
@@ -698,8 +377,11 @@
 	 */     
      },
      isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {
-	 if (!skipIsAdvanced && inProp.advanced && !this.isAdvancedMode())
+	 if (!skipIsAdvanced && (inProp.advanced && !this.isAdvancedMode() ||
+				 !inProp.requiredGroup && this.isRequiredMode())) {
 	     return false;
+	 }
+
 	 if (inProp.group == "style" && inProp.editor != "wm.prop.StyleEditor" && !allowStyleInspector)
 	     return false; // handled by the style inspector only
 	 if (inProp.ignore)
@@ -763,8 +445,19 @@
 
 	 return newprops;
      },
-     addSubGroupIndicator: function(inName, inParent, inShowing) {
-	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,1,0", borderColor: "#959DAB", showing: inShowing, padding: "0", margin: "0"}));
+     addSubGroupIndicator: function(inName, inParent, inShowing, inBigSeparator) {
+	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, 
+						    parent: inParent,
+						    owner: this, 
+						    caption:inName, 
+						    width: "100%", 
+						    singleLine: false,
+						    //border: "0,0,1,0", 
+						    border: "0",
+						    borderColor: inBigSeparator ? "#959DAB" : "#444444", 
+						    showing: inShowing, 
+						    padding: "0", 
+						    margin: "0"}));
      },
      generateEditors: function(inComponent, inGroupName, inLayer) {
 	 var groupObj;
@@ -780,8 +473,10 @@
 	 if (groupObj) {
 	     wm.forEachProperty(groupObj.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
 		 if (subgroup.props.length) {
-		     this.addSubGroupIndicator(subgroup.displayName || subgroupName,inLayer,  
-					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}));
+		     this.addSubGroupIndicator((groupObj.displayName || groupObj.name) + " - " + (subgroup.displayName || subgroupName),
+					       inLayer,  
+					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}), 
+					       false);
 		     this._generateEditors(inComponent, inLayer, subgroup.props);
 		 }
 	     }));
@@ -803,14 +498,15 @@
 			   caption: "Show " + hiddenCount + " more",
 			   align: "right",
 			   width: "80px"});	 
-	     l.onclick = function() {
+	 l.onclick = dojo.hitch(this, function() {
 		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
 		     w._showAllClicked = true;
 		     w.show();
 		 }});
 		 l.hide();
-	     }
-	     this.moreLabelList.push(l);
+		 this.updateCaptionSizes();
+	 });
+	 this.moreLabelList.push(l);
 
 	 inLayer.setShowing(inLayer.c$.length);
      },
@@ -828,22 +524,71 @@
 		 var e = this.generateEditor(inComponent,p, inLayer);
 	     }
 	 }
+	 this.updateCaptionSizes();
+     },
+     updateCaptionSizes: function() {
+
+
+	 // let the editor caption sizes be resolved
+	 wm.job("Inspector.resizeEditors", 1, this, function() {
+	     var max = 0;
+	     wm.forEachProperty(this.editorHash, function(e) {
+		 if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%") {
+		     var w = e.captionNode.clientWidth;
+		     if (w > max) {
+			 max = Math.min(w, e.bounds.w - 105); // 105 appears to be about as small as we can go before the editors start to fail
+		     }
+		 }
+	     });
+	     max += 5; // 5px space before editor
+	     if (max > this.bounds.w/2) {
+		 max = Math.floor(this.bounds.w/2);
+	     }
+	     wm.forEachProperty(this.editorHash, function(e) {
+		 if (e.setCaptionSize && e.captionSize != "100%") {
+		     e.setCaptionSize(max + "px");
+		     e.captionNode.style.maxWidth = (max-5) + "px";
+		 }
+	     });
+	 });
+     },
+     renderBounds: function() {
+	 this.inherited(arguments);
+	 this.updateCaptionSizes();
      },
      generateButton: function(inComponent,inProp, inLayer) {
+	 var p = new wm.Panel({
+	     parent: inLayer,
+	     owner: this,
+	     layoutKind: "left-to-right",
+	     height: "30px",
+	     width: "100%",
+	     verticalAlign: "top",
+	     horizontalAlign: "left"
+	 });
+	 var s = new wm.Spacer({width: this.captionSize,
+				parent: p,
+				owner: this				
+			       });
 	 var b = new wm.Button({
 	     owner: this,
-	     parent: inLayer,
+	     parent: p,
 	     name: "wminspector-" + inLayer.name + "-" + inProp.name,
-	     width: "100%",
+	     width: this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
 	     height: "30px",
 	     caption: (inProp.shortname || inProp.name),
 	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
-	     margin: "4,40,4,40",
+	     margin: "4,2,4,2",
 	     propDef: inProp,
 	     showing: !inProp.ignoretmp || this.isAdvancedMode(),
 	     hint: inProp.ignoretmp && inProp.ignoreHint ? this.ignoreHintPrefix + inProp.ignoreHint : "",
 	     disabled: inProp.ignoretmp
 	 });
+
+	 var s = new wm.Spacer({width: "20px",
+				parent: p,
+				owner: this				
+			       });
 	 this.editorHash[this.getHashId(inComponent,inProp.name)] = b;
 	 b.connect(b, "onclick", this, function() {
 	     inComponent[typeof inProp.operation == "string" ? inProp.operation : inProp.name]();
@@ -963,10 +708,12 @@
 	 if ((inProp.bindable || inProp.bindTarget) && !e.noBindColumn) {
 	     this.createBindEditor(inProp, editorProps, e, isBound, inComponent,optionalAppendToHashName);
 	 } else if (!e.noBindColumn) {
+/*
 	     new wm.Spacer({owner:this,
 			    parent: panel,
 			    width: "20px",
 			    height: "20px"});
+			    */
 	 }
 	 var self = this;
 	 if (!e.noHelpButton) {
@@ -982,7 +729,8 @@
 	if (!inSource && !inExpr)
 	    ;
 	else if (inSource) 
-	    inValue = "bind: " + inSource;
+	    //inValue = "bind: " + inSource;
+	    inValue = inSource;
 	else if (inExpr === undefined || inExpr === null || inExpr === "" || String(inExpr).match(/^\s*$/))
 	    inValue = "";
 	else if (inExpr == "true")
@@ -1006,7 +754,7 @@
 	else {
 	    var matches = inExpr.match(/^\s*\"([^\"]*)\"\s*$/);
 	    if (matches)
-		inValue = "str: " + matches[1];
+		inValue = "\"" + matches[1] + "\"";
 	    else
 		inValue = "expr: " + inExpr;
 	    inValue = String(inValue).replace(/\"/g, "'") || "";
@@ -1064,7 +812,7 @@
 			  hint: inProp.ignoretmp && inProp.ignoreHint ?  this.ignoreHintPrefix + inProp.ignoreHint : "", // a bound editor of an ignored property
 			  resetButton: true,
 			  showing: isBound,
-			  name: "propEditBind_" + inComponent.getId() + "." + inProp.name,
+			  name: "propEditBind_" + inComponent.getId() + "__" + inProp.name,
 			  _resetButtonUrl: "images/inspector_bind_disabled.gif"
 			});
 	 var bindableEditor = new wm.Text(editorProps);
@@ -1215,6 +963,10 @@
 	 }
 	 editorProps.dataValue = value;
 	 var e =  new ctor(editorProps);
+	 if (e.forceCaptionPositionTop) {
+	     e.setCaptionPosition("top");
+	     e.setCaptionSize("20px");
+	 }
 	 return e;
      },
 	      /* If the default height for the editor is larger than the default height of a regular
@@ -1416,19 +1168,21 @@
 
      generateGroups: function(inComponent) {
 	 var groups = this.initGroups(this.props);
+	 var layer = this.addLayer("Properties",true);
 	 for (var i = 0; i < groups.length; i++) {
 	     var g = groups[i];
-	     var layer = this.addLayer(g.displayName,true);
-	     layer.propertyGroup = g;
-	     layer.setMargin("2,0,2,0");
+	     if (g.layer) {
+		 var layer = this.addLayer(g.displayName,true);
+		 layer.propertyGroup = g;
+
 	     //layer.header.setMargin("2,0,2,0");
-	     layer.header.setMargin(layer.getIndex() == 0 ? "2" : "0,2,2,2");
+
 	     //layer.header.setBorder("1");
 	     //layer.header.setBorderColor("");
-	     layer._groupName = g.name;
-	     this.generateLayer = layer;
+		 layer._groupName = g.name;
+		 this.generateLayer = layer;
 	     //this.generateEditors(inComponent,g.name, layer);
-	     g.layer = layer;
+		 g.layer = layer;
 /*
 	     if (this._activeLayer == g.name || g.equivalentName) {
 		 this._reselectLayerIndex = this.layers.length-1;		
@@ -1444,9 +1198,22 @@
 		     l.reflow();
 		 }
 	     });
+	     }
 	 }
+     
+     for (var i = 0; i < groups.length; i++) {
+	 var g = groups[i];
+	 if (!g.layer) {
+	     if (!g.noDisplayName && g.subgroups.length == 0) {
+		 this.addSubGroupIndicator(g.displayName || g.name, this.layers[0], true, true);
+	     }
+	     this.generateEditors(inComponent, g.name, this.layers[0]);
+	 }
+     }
 	 for (var i = 0; i < this.layers.length; i++) {
 	     this.layers[i].setPadding("5,4,5,4");
+	     this.layers[i].setMargin("2,0,2,0");
+	     this.layers[i].header.setMargin(i == 0 ? "2" : "0,2,2,2");
 	     this.layers[i].setFitToContentHeight(true);
 	 }	
 	 this.setFitToContentHeight(true);
@@ -1476,6 +1243,15 @@
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
 	     result.equivalentName = wm.propertyGroups[inName].equivalentName;
+	     if (wm.propertyGroups[inName].layer === true) {
+		 result.layer = true;
+	     } else if (wm.propertyGroups[inName].layer === undefined) {
+		 result.layer = false;
+	     } else if (typeof wm.propertyGroups[inName].layer == "function") {
+		 result.layer = this.inspected instanceof wm.propertyGroups[inName].layer;
+	     }
+
+	     result.noDisplayName =  wm.propertyGroups[inName].noDisplayName;
 	     if (inName == "widgetName") {
 		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Properties"; // TODO: Localize
 	     } else {
@@ -1544,9 +1320,11 @@
 		 }
 		 
 		 /* Enter into the required group if needed */
+/*
 		 if (newPropDef.requiredGroup) {
 		     groups.required.props.push(newPropDef);
 		 }
+		 */
 	     }));
 
 	     /* Build the groupsArray; make sure required group is first */
@@ -1592,20 +1370,22 @@
 
      propertySearch:  function(inSender,inDisplayValue,inDataValue) {
 	 if (Boolean(inDisplayValue)) {
-	     if (this._advancedBeforeSearch === undefined) {
-		 this._advancedBeforeSearch = this.advancedMode;
-		 this.advancedMode = true;
+	     if (this._modeBeforeSearch === undefined) {
+		 this._modeBeforeSearch = this.isAdvancedMode();
+		 this.mode = "advanced";
 	     }
-	 } else if (this._advancedBeforeSearch !== undefined) {
-	     this.advancedMode = this._advancedBeforeSearch; 
-	     delete this._advancedBeforeSearch;
+	 } else if (this._modeBeforeSearch !== undefined) {
+	     this.mode = this._modeBeforeSearch; 
+	     delete this._modeBeforeSearch;
 	     delete this._searchEditorsGenerated;
 	 } else {
-	     this.advancedMode = dojo.hasClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
-	     delete this._advancedBeforeSearch;
+	     this.mode = dojo.hasClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown") ? "advanced" :
+		 dojo.hasClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown") ? "recommended" : "required";
+	     delete this._modeBeforeSearch;
 	     delete this._searchEditorsGenerated;
 	 }
-	 var advanced = this.advancedMode;
+
+	 var mode = this.mode;
 
 	 this.multiActive = Boolean(inDisplayValue) || this.preferredMultiActive;
 	 if (!this.multiActive) {
@@ -1620,7 +1400,7 @@
 	 }
 
 	 /* Search only works if all property editors are generated */
-	 if (inDisplayValue && (this._advancedBeforeSearch != this.advancedMode && !this._searchEditorsGenerated)) {
+	 if (inDisplayValue && (this._modeBeforeSearch != this.mode && !this._searchEditorsGenerated)) {
 	     this._searchEditorsGenerated = true;
 	     for (var i = 0; i < this.layers.length; i++) {
 		 var layer = this.layers[i];
@@ -1637,9 +1417,9 @@
 	     if (prop) {
 		 if (inDisplayValue === "") {
 		     if (editor.parent instanceof wm.Layer) {
-			 editor.setShowing(!prop.advanced || advanced);
+			 editor.setShowing(!prop.advanced || mode == "advanced");
 		     } else {
-			 editor.parent.setShowing(!prop.advanced || advanced);
+			 editor.parent.setShowing(!prop.advanced || mode == "advanced");
 		     }
 		 } else if (editor.search) {
 		     if (editor.search(inDisplayValue)) {
@@ -1735,22 +1515,39 @@
 
 	 }	 
      },
+     toggleRequiredProperties: function(inSender) {
+	 studio.propertySearchBar.setDataValue("");
+	 dojo.removeClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
+	 dojo.addClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
+	 this.mode = "required";
+	 this.inspect(this.inspected, true);
+     },
+
      toggleAdvancedPropertiesSome: function(inSender) {
 	 studio.propertySearchBar.setDataValue("");
-	 dojo.removeClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
-	 dojo.addClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
-	 this.advancedMode = false;
+	 dojo.removeClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
+	 dojo.addClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
+	 this.mode = "recommended";
 	 this.inspect(this.inspected, true);
      },
      toggleAdvancedPropertiesAll: function(inSender) {
 	 studio.propertySearchBar.setDataValue("");
-	 dojo.addClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
-	 dojo.removeClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
-	 this.advancedMode = true;
+	 dojo.addClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
+	 this.mode = "advanced";
 	 this.inspect(this.inspected, true);
      },
      isAdvancedMode: function() {
-	 return this.advancedMode; 
+	 return this.mode == "advanced"; 
+     },
+     isRequiredMode: function() {
+	 return this.mode == "required"; 
+     },
+     isRecommendedMode: function() {
+	 return this.mode == "recommended"; 
      },
      generateComponentInfo: function() {
 	 var html = this.inspected.generateDocumentation();
@@ -1776,6 +1573,7 @@
 
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent, inName) {
 	 var editorProps = {
+	     maxCaptionWidth: Math.floor(this.bounds.w/2),
 	     propDef: inProp,
 	     owner: inOwner,
 	     parent: inParent,
@@ -1784,9 +1582,9 @@
 	     name: "propEdit_" + (inName ? inName : inProp.name),
 	     propName: inProp.name,
 	     width: "100%",
-	     height: "42px",
-	     captionSize: "20px",
-	     captionPosition: "top",
+	     height: "28px",
+	     captionSize: this.captionSize,
+	     captionPosition: "left",
 	     captionAlign: "left",
 	     caption: (inProp.shortname || inProp.name),
 	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
@@ -1814,7 +1612,8 @@ wm.addPropertyGroups({
     required: {displayName: "Required", 
 	       order: 1,
 	       subgroups: {}},
-    common: {displayName: "Common", 
+    common: {//displayName: "Common", 
+	noDisplayName: true,
 	     order: 10,
 	     subgroups: {}},
     display: {displayName: "Display", 
@@ -1953,6 +1752,7 @@ wm.addPropertyGroups({
 
     /* Confirmed */
     dialog: {displayName: "Dialog",
+	      layer: true,
 		 order: 55,
 		 subgroups: {
 		     behavior: {displayName: "Behaviors",
@@ -1963,6 +1763,7 @@ wm.addPropertyGroups({
 		},
 	/* Confirmed */
     mobile: {displayName: "Mobile",
+	     layer: true,
 	     order: 100,
 	     subgroups: {
 		 layout: {displayName: "Layout",
@@ -1979,6 +1780,7 @@ wm.addPropertyGroups({
 	    },
 
     subwidgets: {displayName: "Children", 
+		 layer: true,
 		 order: 60,
 		 subgroups: {
 		     text: {displayName: "Text",
@@ -1992,6 +1794,7 @@ wm.addPropertyGroups({
 		 }
 		},
     data: {displayName: "Data", 
+	   layer: wm.Control,
 	   order: 70,
 	   subgroups: {
 	       data: {displayName: "Data",
@@ -2007,22 +1810,22 @@ wm.addPropertyGroups({
 	   }
 	  },
 	/* Confirmed */
-    style: {displayName: "Style", order: 80},
+    style: {displayName: "Style", order: 80, layer: true},
     /* Confirmed */
-    events: {displayName: "Events", order: 100},
+    events: {displayName: "Events", order: 100, layer: true},
     /* Confirmed */
-    custommethods: {displayName: "Custom Methods", order: 101},
+    custommethods: {displayName: "Custom Methods", order: 101, layer: true},
     /* Confirmed */
-    roles: {displayName: "Roles", order: 110},
+    roles: {displayName: "Roles", order: 110, layer: true},
     /* Confirmed */
-    devices: {displayName: "Devices", order: 120},
+    devices: {displayName: "Devices", order: 120, layer: true},
     /* Confirmed */
-    operation: {displayName: "Operations", order: 200},
+    operation: {displayName: "Operations", order: 200, layer: true},
     /* Confirmed */
-    diagnostics: {displayName: "Docs/Diagnostics", order: 300},
+    diagnostics: {displayName: "Docs/Diagnostics", order: 300, layer: true},
 
     /* Confirmed */
-    deprecated: {displayName: "Deprecated", order: 100000},
+    deprecated: {displayName: "Deprecated", order: 100000, layer: true},
 /* OLD SCHEMA */
 
 

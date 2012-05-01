@@ -37,8 +37,8 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		return true;
 	},
 	newDataModelDialog: function(inSender) {
-	    if (this._type == "import") {
-		var d = this.getCreateDataModelDialog();
+	    if (this._type == "import") {		
+		var d = studio.isCloud() ? this.getCloudFoundryDatabasesDialog() : this.getCreateDataModelDialog();
 		if (d.page)
 		    d.page.update(this);
 		d.show();
@@ -71,6 +71,23 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	    studio.endWait(studio.getDictionaryItem("wm.DataModel.WAIT_ADDING", {dataModel: this._dataModelName}));
 	},
 
+    getCloudFoundryDatabasesDialog: function() {
+	if (!studio.importCFDBDialog) {
+	    var props = {
+		_classes: {domNode: ["studiodialog"]},
+		owner: app,
+		pageName: "ImportCloudFoundryDatabase",
+		hideControls: true,
+		width: "550px",
+		height: "290px",
+		title: studio.getDictionaryItem("wm.DataModel.IMPORT_DATABASE_TITLE")
+	    };
+	    var d = studio.importCFDBDialog = new wm.PageDialog(props);
+	} else {
+	    var d = studio.importCFDBDialog;
+	}
+	return d;
+    },
 	getCreateDataModelDialog: function() {
 	    if (!studio.importDBDialog) {
 		var props = {

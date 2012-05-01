@@ -275,6 +275,7 @@ dependencies = {
 			    "wm.base.components.Service",
 			    "wm.base.components.ServiceCall",
 			    "wm.base.components.NavigationService",
+			    "wm.base.components.NotificationService",
 			    //"wm.base.components.FunctionService",
 			    "wm.base.components.PhoneGapService",
 			    "wm.base.components.JsonRpcService",
@@ -368,6 +369,7 @@ dependencies = {
 			    /* Services */
 			    "wm.base.components.Service",
 			    "wm.base.components.NavigationService",
+			    "wm.base.components.NotificationService",
 			    "wm.base.components.ServiceCall",
 			    //"wm.base.components.FunctionService",
 			    "wm.base.components.PhoneGapService",

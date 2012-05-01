@@ -56,6 +56,7 @@ wm.Object.extendSchema(wm.Checkbox, {
     dataType:     { group: "editor", subgroup: "value", order: 55, options: ["string", "boolean", "number"]},
     displayValue: {writeonly: 1},
     checkedValue: {group: "editor", subgroup: "value",  bindTarget: 1,order: 40, type: "any", doc: 1},    
+    checked: {ignore: 1, bindSource: 1},
     required: {ignore: 1},
     getChecked: {method:1, returns: "Boolean"},
     setChecked: {method:1}

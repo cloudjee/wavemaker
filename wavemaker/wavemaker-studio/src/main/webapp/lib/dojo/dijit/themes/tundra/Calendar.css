@@ -109,6 +109,11 @@
 	background-color:#bbc4d0 !important;
 	color:black !important;
 }
+
+
+/* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+ * WaveMaker: Moved year to header for cleaner mobile UI */
+@media none {
 .tundra .dijitCalendarYearContainer {
 	/* footer of the table that contains the year display/selector */
 	background:white url("images/calendarYearLabel.png") repeat-x bottom;
@@ -135,6 +140,7 @@
 	/* label for next/prev years */
 	color:black !important;
 	font-weight:normal;
+}
 }
 
 /* Styling for month DropDownButton */

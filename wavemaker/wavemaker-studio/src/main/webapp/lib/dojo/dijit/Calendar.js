@@ -220,15 +220,19 @@ dojo.declare(
 
 			// Repopulate month drop down list based on current year.
 			// Need to do this to hide leap months in Hebrew calendar.
+
 			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang, month);
 			this.monthDropDownButton.dropDown.set("months", monthNames);
 
 			// Set name of current month and also fill in spacer element with all the month names
 			// (invisible) so that the maximum width will affect layout.   But not on IE6 because then
 			// the center <TH> overlaps the right <TH> (due to a browser bug).
+			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			     * WaveMaker: Added month.getFullYear() to header for cleaner mobile UI */
+			var monthShortNames = this.dateLocaleModule.getNames('months', 'abbr', 'standAlone', this.lang, month);
 			this.monthDropDownButton.containerNode.innerHTML =
 				(dojo.isIE == 6 ? "" : "<div class='dijitSpacer'>" + this.monthDropDownButton.dropDown.domNode.innerHTML + "</div>") +
-				"<div class='dijitCalendarMonthLabel dijitCalendarCurrentMonthLabel'>" +  monthNames[month.getMonth()] + "</div>";
+			"<div class='dijitCalendarMonthLabel dijitCalendarCurrentMonthLabel'>" +  monthShortNames[month.getMonth()] + " " + month.getFullYear() + "</div>";
 
 			// Fill in localized prev/current/next years
 			var y = month.getFullYear() - 1;

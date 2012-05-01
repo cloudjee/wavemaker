@@ -48,6 +48,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	},
 	init: function() {
 		this.inherited(arguments);
+	        this.splitterWidget = this.parentIsSplitter ? this.parent : this;
 		this.findLayout();
 		this.connectEvents(this.domNode, ["mousedown", "dblclick"]);
 	},
@@ -62,13 +63,21 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	},
 	*/
 	findLayout: function() {
-	    var v = this.parent.layoutKind == "left-to-right";
-	    var p = this.parent.prevSibling(this,true);
+	    var v = this.splitterWidget.parent.layoutKind == "left-to-right";
+	    var p = this.splitterWidget.parent.prevSibling(this.splitterWidget,true);
 	    if (p) {
 		var l = v ? (p.width == "100%" ? "right" : "left") : (p.height == "100%" ? "bottom" : "top");
 		this.setLayout(l);
 	    }
 	},
+	updateSize: function() {
+	    if (this._isDestroying) return;
+	    var widget = this.parentIsSplitter ? this.parent : this;
+	    var h = (widget.parent||0).layoutKind == "left-to-right", d = this.bevelSize + "px";
+	    this.setWidth(h ? d : "100%");
+	    this.setHeight(h ? "100%" : d);
+	},
+
 	setLayout: function(inLayout) {
 		this.layout = inLayout;
 		this.removeOrientation();
@@ -77,21 +86,22 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 		this.updateSize();
 	},
 	getSizeControl: function() {
+	    var widget = this.splitterWidget;
 		//if (!this.layout) 
 			//this.findLayout();
 		switch (this.layout) {
 			case "left":
 			case "top":		    
-		                this.percentSizeControl = this.parent.nextSibling(this,true);
-		                return this.parent.prevSibling(this,true);
+		                this.percentSizeControl = widget.parent.nextSibling(widget,true);
+		                return widget.parent.prevSibling(widget,true);
 				/*var node = this.domNode.previousSibling;
 				while (node && node.nodeType != 1)
 					node = node.previousSibling;
 				break;*/
 			case "right":
 			case "bottom":
-		                this.percentSizeControl = this.parent.prevSibling(this,true);
-		                return this.parent.nextSibling(this, true);
+		                this.percentSizeControl = widget.parent.prevSibling(widget,true);
+		                return widget.parent.nextSibling(widget, true);
 				/*var node = this.domNode.nextSibling;
 				while (node && node.nodeType != 1)
 					node = node.nextSibling;
@@ -101,7 +111,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	},
 	getPosition: function() {
 		//return { top: this.domNode.offsetTop, left: this.domNode.offsetLeft };
-		return { top: this.bounds.t, left: this.bounds.l };
+		return { top: this.splitterWidget.bounds.t, left: this.splitterWidget.bounds.l };
 	},
 	mousedown: function(e) {
 		this.sizeControl = this.getSizeControl();
@@ -152,6 +162,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 		this.adjustSize();
 	},
 	boundValue: function(inValue) {
+	    var widget = this.splitterWidget;
 		var x = inValue;
 		if (this.minimum != -1)
 			inValue = Math.max(this.minimum, inValue);
@@ -161,19 +172,19 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	    switch(this.layout) {
 	    case "top":
 		var min = this.sizeControl.getMinHeightProp();
-		var max = this.parent.bounds.h - this.percentSizeControl.getMinHeightProp() - this.bounds.h;
+		var max = widget.parent.bounds.h - this.percentSizeControl.getMinHeightProp() - widget.bounds.h;
 		break;
 	    case "bottom":
 		var min = this.percentSizeControl.getMinHeightProp();
-		var max = this.parent.bounds.h - this.sizeControl.getMinHeightProp() - this.bounds.h;
+		var max = widget.parent.bounds.h - this.sizeControl.getMinHeightProp() - widget.bounds.h;
 		break;
 	    case "left":
 		var min = this.sizeControl.getMinWidthProp();
-		var max = this.parent.bounds.w - this.percentSizeControl.getMinWidthProp() - this.bounds.w;
+		var max = widget.parent.bounds.w - this.percentSizeControl.getMinWidthProp() - widget.bounds.w;
 		break;
 	    case "right":
 		var min = this.percentSizeControl.getMinWidthProp();
-		var max = this.parent.bounds.w - this.sizeControl.getMinWidthProp() - this.bounds.w;
+		var max = widget.parent.bounds.w - this.sizeControl.getMinWidthProp() - widget.bounds.w;
 		break;
 	    }
 	    if (inValue < min)
@@ -189,8 +200,8 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	    var dy = this.position.top - this.initialPosition.top;
 	    var w = this.size.w + (this.layout=="right" ? -dx : dx);
 	    var h = this.size.h + (this.layout=="bottom" ? -dy : dy);
-		//console.log(w, h, dx, dy);
-		//dojo._setMarginBox(this.sizeNode, NaN, NaN, w, h);
+	    //console.log(w, h, dx, dy);
+	    //dojo._setMarginBox(this.sizeNode, NaN, NaN, w, h);
 	    if (this.layout == "top" || this.layout == "bottom")
 		this.sizeControl.setHeight(h + "px");
 	    else
@@ -206,7 +217,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 			var e = this.containerSize[inExtent];
 			this.position[inOrd] = e - this.boundValue(e - this.position[inOrd]);
 		}
-		this.domNode.style[inOrd] = this.position[inOrd] + "px";
+	        this.splitterWidget.domNode.style[inOrd] = this.position[inOrd] + "px";
 	},
 	moveX: function(inDx) {
 		this.move(inDx, "left", "w");

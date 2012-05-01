@@ -6,8 +6,9 @@
 	<bean id="timeoutProtectionFilter"
 		class="com.wavemaker.tools.cloudfoundry.timeout.TimeoutProtectionFilter">
 		<property name="protector">
-			<bean
-				class="com.wavemaker.tools.cloudfoundry.timeout.HotSwappingTimeoutProtectionStrategy" />
+			<bean class="com.wavemaker.tools.cloudfoundry.timeout.ReplayingTimeoutProtectionStrategy">
+				<property name="failTimeout" value="240"/>
+			</bean>
 		</property>
 	</bean>
 </beans>

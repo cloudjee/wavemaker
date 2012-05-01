@@ -43,7 +43,7 @@ Studio.widgets = {
     jarDownloadDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "HandleRequiredJars",   width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File"}],
     ImportThirdPartyAPIDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "ImportThirdPartyAPI",   width: "500px", height: "240px", hideControls: true, modal: false, title: "Import Partner Services", deferLoad: true}],
     dictionaryDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "I18nDictionaryEditor",   width: "400px", height: "80%", hideControls: true, modal: false, title: "Dictionary Editor", deferLoad: true, corner: "cr"}],
-
+    editCodeDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "CodeEditorDialog",   width: "800px", height: "400px", hideControls: true, modal: true, title: "Edit Code", deferLoad: true, corner: "cl", positionNear: "PIContents"}],
 
 	//tempData used to show grid on FancyTemplate
 	varTemplateData: ["wm.Variable", {"json":"[{name: \"Vestibulum\", dataValue: \"sodales magna mollis purus iaculis sagittis\"},\n{name: \"Lacinia\", dataValue: \" aliquam mauris nulla, consequat\"},\n{name: \"Consequat\", dataValue: \"rhoncus diam metus id arcu\"},\n{name: \"Elementum\", dataValue: \"quis odio sodales ornare quis eu\"},\n{name: \"Sagittis\", dataValue: \"torquent per conubia nostra, per inceptos\"},\n{name: \"Aliquam\", dataValue: \"molestie auctor tortor ac tincidunt\"},\n{name: \"Nullam\", dataValue: \"in orci eros, vitae convallis neque\"},\n{name: \"Mauris\", dataValue: \"luctus adipiscing ligula urna a nisl\"},\n{name: \"Pellentesque\", dataValue: \" ante lectus, mollis ut suscipit id\"}]","type":"EntryData"}, {}],
@@ -356,9 +356,9 @@ height: "29px", width: "420px",
 				}]
 			}]
 		}],
-		splitterPanel1: ["wm.Panel", {_classes: {domNode: ["StudioSplitterPanel"]}, border: "0", margin: "0", padding: "0", layoutKind: "top-to-bottom", width:"4px",height: "100%"},{},{
-		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px"}],
-		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left"}, {}]
+		splitterPanel1: ["wm.Panel", {_classes: {domNode: ["StudioSplitterPanel"]}, border: "0", margin: "0", padding: "0", layoutKind: "top-to-bottom", width:"4px",height: "100%", horizontalAlign: "left", verticalAlign: "top"},{},{
+		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px", width:"100%"}],
+		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left", parentIsSplitter:1, height: "100%", width: "4px"}, {}]
 		}],
 		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "NoRightMarginOnTab"]}, conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
@@ -431,7 +431,7 @@ height: "29px", width: "420px",
 					}],
 			    splitter3b: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]},border: ""}, {}],
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true, border: "1,0,0,1", borderColor: "#959DAB" }, {}, {
-				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked"]}, autoScroll:true,width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
+				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked", "StudioDarkPanel"]},width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
 				    inspectorToolbarOuter: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, width:"100%", height: "60px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"3,0,2,0"},{},{
 					inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
 					    propertySearchBar: ["wm.Text", {resetButton: true, width: "100%", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
@@ -451,11 +451,14 @@ height: "29px", width: "420px",
 				    }],
 
 					inspectorToolbar: ["wm.ToggleButtonPanel", {_classes: {domNode: ["StudioToolBar"]},width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "", verticalAlign: "top",border: "0", margin:"3,0,0,0", buttonMargins: "5,0,5,0"},{},{
-					togglePropertiesButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "100px", minWidth: 100, caption: "Recommended", border:"0,1,0,0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
-					togglePropertiesButton2: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "40px", caption: "All", border:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
+					    togglePropertiesRequiredButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "100px", minWidth: 100, caption: "Required", border:"0,1,0,0",clicked:true}, {onclick: "inspector.toggleRequiredProperties"}],
+					togglePropertiesRecommendedButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "100px", minWidth: 100, caption: "Recommended", border:"0,1,0,0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
+					togglePropertiesAdvancedButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "40px", caption: "All", border:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
 				    }]
 				    }],
-				    inspector: ["wm.PropertyInspector", {_classes: {domNode: ["Inspector"]},clientBorder: "0", clientBorderColor: "black", captionBorderColor: "", captionBorder: "1", height: "100px", width:"100%",border: "0", padding: "2",margin: "3"}, {}, {}]
+				    inspectorWrapper: ["wm.Panel", {width: "100%", height: "100%", autoScroll:true, layoutKind: "top-to-bottom",padding: "2,0,2,0", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+					inspector: ["wm.PropertyInspector", {_classes: {domNode: ["Inspector"]},clientBorder: "0", clientBorderColor: "black", captionBorderColor: "", captionBorder: "1", height: "100px", width:"100%",border: "0", padding: "2",margin: "3"}, {}, {}]
+				    }]
 				}]/*,
 				benchbevel4: ["wm.Bevel", {}, {}]*/
 			    }]

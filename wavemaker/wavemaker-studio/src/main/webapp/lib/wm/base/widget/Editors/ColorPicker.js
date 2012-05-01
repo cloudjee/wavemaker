@@ -16,6 +16,7 @@ dojo.require("wm.base.widget.Editors.Text");
 dojo.require("wm.base.widget.Dialogs.ColorPickerDialog");
 
 dojo.declare("wm.ColorPicker", wm.Text, {
+    changeOnKey: true,
     className: "wmeditor wmcolorpickereditor",
     _editorBackgroundColor: true,
     defaultColor: "",
@@ -48,6 +49,11 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	if (this.gradient && inValue && typeof inValue == "object")
 	    inValue = dojo.toJson(inValue);
 	this.inherited(arguments);
+    },
+    doChangeOnKey: function(inEvent) {
+	this.changed();
+	if (this.editor)
+	    this.editor.onChange(this.dataValue);
     }
 });
 

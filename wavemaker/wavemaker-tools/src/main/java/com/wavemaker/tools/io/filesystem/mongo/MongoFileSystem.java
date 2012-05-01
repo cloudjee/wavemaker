@@ -17,6 +17,7 @@ package com.wavemaker.tools.io.filesystem.mongo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
@@ -142,6 +143,11 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     @Override
     public Object getOriginalResource() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void touch(MongoFileSystemKey key) {
+        getFile(key).put("uploadDate", new Date());
     }
 
     private GridFSInputFile create(MongoFileSystemKey key, ResourceType type) {

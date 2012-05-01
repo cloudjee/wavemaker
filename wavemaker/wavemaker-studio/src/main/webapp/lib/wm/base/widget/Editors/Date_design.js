@@ -24,6 +24,9 @@ wm.Object.extendSchema(wm.Date, {
     defaultInsert: { editor: "wm.Date"},
     editorType: {options: ["Date", "Time", "DateTime"]},
 
+    /* Behavior subgroup */
+    openOnClick: {group: "editor", subgroup: "behavior", order: 50},
+
     /* Editor group; validation subgroup */
     minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
     maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
@@ -42,6 +45,8 @@ wm.Object.extendSchema(wm.Time, {
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
 
     /* Ignored group */
+    use24Time: {hidden:1},
+    useWMDropDown: {hidden:1},
     minimum: { ignore: 1},
     maximum: { ignore: 1}
 });
@@ -62,6 +67,10 @@ wm.Object.extendSchema(wm.DateTime, {
 });
 
 wm.DateTime.extend({
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.flow();
+    },
         makePropEdit: function(inName, inValue, inEditorProps) {
 	    switch (inName) {
 	    case "dataValue":

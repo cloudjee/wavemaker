@@ -18,7 +18,7 @@ import java.io.InputStream;
 
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import com.wavemaker.tools.io.filesystem.FileSystem;
+
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 /**

@@ -48,6 +48,7 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToke
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.ProjectnameWithRandomApplicationNamingStrategy;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -63,8 +64,6 @@ import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
 import com.wavemaker.tools.project.Project;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
-
-    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     public static final String SUCCESS_RESULT = "SUCCESS";
 
@@ -123,22 +122,22 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     @Deprecated
-    void deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    String deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
             validateWar(webapp);
             ZipFile zipFile = new ZipFile(webapp);
             ApplicationArchive applicationArchive = new ZipApplicationArchive(zipFile);
-            doDeploy(applicationArchive, deploymentInfo);
+            return(doDeploy(applicationArchive, deploymentInfo));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
 
     @Override
-    public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
         applicationArchive = modifyApplicationArchive(applicationArchive);
-        doDeploy(applicationArchive, deploymentInfo);
+        return(doDeploy(applicationArchive, deploymentInfo));
     }
 
     /**
@@ -176,7 +175,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private DeploymentInfo getSelfDeploymentInfo(Project project) {
         try {
-            String cloudControllerUrl = getControllerUrl();
+            String cloudControllerUrl = CloudFoundryUtils.getControllerUrl();
             AuthenticationToken token = getAuthenticationToken();
             if (token == null) {
                 // FIXME remove hard coded details
@@ -187,7 +186,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             }
             DeploymentInfo deploymentInfo = new DeploymentInfo();
             deploymentInfo.setToken(token.toString());
-            deploymentInfo.setApplicationName("deployedproject");
+            deploymentInfo.setApplicationName(project.getProjectName());
             deploymentInfo.setTarget(cloudControllerUrl);
             return deploymentInfo;
         } catch (Exception e) {
@@ -210,21 +209,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         }
         AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
         return authenticationToken;
-    }
-
-    /**
-     * @return The actual controller URL to use.
-     */
-    private String getControllerUrl() {
-        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
-        if (StringUtils.hasLength(systemEnv)) {
-            return systemEnv;
-        }
-        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
-        if (StringUtils.hasLength(systemEnv)) {
-            return systemEnv;
-        }
-        return "http://api.cloudfoundry.com";
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
@@ -292,14 +276,23 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
-        String url = getUrl(deploymentInfo);
+        if(deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty())
+        	deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo));  //testrun
+        String url = deploymentInfo.getDeploymentUrl();
+        //URL could already be in use - CF allows for such   
         String appName = deploymentInfo.getApplicationName();
-        Integer memory = client.getDefaultApplicationMemory(CloudApplication.SPRING);
+    	//AppName can not already be in use
         if (checkExist && appNameInUse(client, appName)) {
-            throw new DeploymentStatusException("ERROR: Application name already in use. Choose another name");
-        }
+        	try{
+        		client.deleteApplication(appName); //redploy of same app 
+        	}
+        	catch(Exception e){
+        		e.printStackTrace();
+        		throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
+        		}
+        }   
         try {
-            client.createApplication(appName, CloudApplication.SPRING, memory, Collections.singletonList(url), null, true);
+            client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
             return url;
         } catch (CloudFoundryException e) {
             throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
@@ -311,7 +304,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
         }
-        return url.replace("api", deploymentInfo.getApplicationName());
+        ProjectnameWithRandomApplicationNamingStrategy pNameStrat = new ProjectnameWithRandomApplicationNamingStrategy(deploymentInfo.getApplicationName());
+        return url.replace("api", pNameStrat.generateName());
     }
 
     /**

@@ -102,6 +102,11 @@ public abstract class AbstractReadOnlyFile implements File {
     }
 
     @Override
+    public void touch() throws ResourceDoesNotExistException {
+        throw newReadOnlyResourceException();
+    }
+
+    @Override
     public long getSize() {
         return 0;
     }

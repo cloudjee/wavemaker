@@ -101,6 +101,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     autoUpdate:       {group: "data", subgroup: "behavior", order: 25, requiredGroup: 1},
     startUpdate:      {group: "data", subgroup: "behavior", order: 26, requiredGroup: 1},
     inFlightBehavior: {group: "data", subgroup: "behavior", order: 27, options: ["executeLast", "executeAll", "dontExecute"]},
+    loadingDialog:    {group: "data", subgroup: "behavior", order: 100, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}},
 
     /* Data group; serverOptions subgroup */
     firstRow:         {group: "data", subgroup: "serverOptions", order: 15},

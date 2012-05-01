@@ -195,17 +195,24 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
 }
 
-.StudioDarkPanel,
+.Studio .StudioDarkPanel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer,
 .StudioWizard.StudioDarkLayers > div > .wmlayer {
     background-color: #414B5C;
     color: white;
 }
+
+.StudioTabs.StudioDarkLayers > div > .wmlayer a,
+.StudioTabs.StudioDarkLayers > div > .wmlayer a:visited,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .wmeditor-caption {
     color: white;
 }
-.StudioTabs.StudioDarkLayers > div > .wmlayer .wmeditor input {
+
+.StudioDarkPanel > div td,
+.StudioDarkLayers > div td,
+.StudioDarkPanel > div  input,
+.StudioDarkLayers > div > .wmlayer input {
     color: black;
 }
 
@@ -294,11 +301,18 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 
 /* Start Inspector */
 .Studio .Inspector {
-background-color: #2B323D;
+    background-color: #2B323D;
+    color: white;
     -moz-border-radius: 8px; 
     -webkit-border-radius: 8px; 
     border-radius: 8px;
 }
+.Studio .Inspector .wmeditor .dijitTextBox {
+    -moz-border-radius: 4px; 
+    -webkit-border-radius: 4px; 
+    border-radius: 4px;
+}
+
 /*
 .Studio .Inspector > .wmlayer {
     -moz-border-radius: 4px; 
@@ -1122,10 +1136,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 .Studio-PIPanel {
 	padding: 5px;
 	background-color: #6f798a;
-}
-
-.Studio-PIContents {
-	background-color: #424a5a;
 }
 
 .Studio-PISpacer, .Studio-PILabelContainer, .Studio-PITreeLabelContainer {

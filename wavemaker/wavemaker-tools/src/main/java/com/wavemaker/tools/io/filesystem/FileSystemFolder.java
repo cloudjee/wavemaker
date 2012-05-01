@@ -29,8 +29,8 @@ import com.wavemaker.tools.io.FilteredResources;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceStringFormat;
@@ -114,12 +114,12 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public Resources<Resource> list() {
-        return list(ResourceFiltering.none());
+        return list(Including.all());
     }
 
     @Override
-    public <T extends Resource> Resources<T> list(ResourceFilter<T> filter) {
-        Assert.notNull(filter, "Filter must not be null");
+    public <T extends Resource> Resources<T> list(ResourceIncludeFilter<T> includeFilter) {
+        Assert.notNull(includeFilter, "Filter must not be null");
         if (!exists()) {
             return ResourcesCollection.emptyResources();
         }
@@ -128,7 +128,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
             return ResourcesCollection.emptyResources();
         }
         Resources<Resource> resources = new FileSystemResources<K>(getPath(), getFileSystem(), list);
-        return FilteredResources.apply(resources, filter);
+        return FilteredResources.apply(resources, includeFilter);
     }
 
     @Override
@@ -147,12 +147,26 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public Folder copyTo(Folder folder) {
+        return copyTo(folder, Including.<File> all());
+    }
+
+    @Override
+    public Folder copyTo(Folder folder, ResourceIncludeFilter<File> fileIncludeFilter) {
         Assert.notNull(folder, "Folder must not be empty");
+        Assert.notNull(fileIncludeFilter, "FileFilter must not be null");
         ensureExists();
         Assert.state(getPath().getParent() != null, "Unable to copy a root folder");
         Folder destination = createDestinationFolder(folder);
         for (Resource child : list()) {
-            child.copyTo(destination);
+            if (child instanceof Folder) {
+                Folder childFolder = (Folder) child;
+                childFolder.copyTo(destination, fileIncludeFilter);
+            } else {
+                File childFile = (File) child;
+                if (fileIncludeFilter.include(childFile)) {
+                    child.copyTo(destination);
+                }
+            }
         }
         return destination;
     }

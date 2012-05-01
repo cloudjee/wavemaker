@@ -61,11 +61,11 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException{
         try {
             Resource warFile = project.getProjectRoot().createRelative(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
             TomcatServer tomcat = initTomcat(deploymentInfo);
-            verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName()));
+            return(verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName())));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
@@ -77,10 +77,10 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         verifyOK(tomcat.undeploy(deploymentInfo.getApplicationName()));
     }
 
-    private void verifyOK(String output) throws DeploymentStatusException {
+    private String verifyOK(String output) throws DeploymentStatusException {
         if (output != null) {
             if (output.trim().startsWith("OK") || output.trim().equals("SUCCESS")) {
-                return;
+                return output;
             }
         }
         throw new DeploymentStatusException(output);

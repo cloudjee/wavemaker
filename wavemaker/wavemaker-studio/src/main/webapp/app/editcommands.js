@@ -427,7 +427,10 @@ Studio.extend({
 	return object;
     },
     updateAutoComplete: function(inSender, inValue) {
-	if (!inSender.isAncestorHidden()) {
+	if (this.autoCompletionDialog) {
+	    this.autoCompletionDialog.setShowing(true);
+	}
+	if (studio && !studio._loadingPage && studio.page && !inSender.isAncestorHidden()) {
 	    this.listCompletions();
 	}
     },
@@ -439,6 +442,38 @@ Studio.extend({
 	/* Clear the description text if we're loading new completions */
 	if (this.autoCompletionHtml)
 	    this.autoCompletionHtml.setHtml("");
+	
+	var currentLine = this.editArea.getTextBeforeCursor(false);
+
+	// we might not be inside of a comment, but if this user is putting comments in the middle
+	// of a line of text, its probably ok to stop autocompleting for them.
+	if (currentLine.indexOf("//") != -1 ||
+	    currentLine.indexOf("/*") != -1) {
+	    this.autoCompletionVariable.setData([]);
+	    this.autoCompletionList.setDataSet(this.autoCompletionVariable);
+	    return; 
+	}
+
+	// if we are inside of a quote, don't bother with autocompletion
+	currentLine = currentLine.replace(/".*?"/g);
+	currentLine = currentLine.replace(/'.*?'/g);
+	if (currentLine.match(/['"]/)) {
+	    this.autoCompletionVariable.setData([]);
+	    this.autoCompletionList.setDataSet(this.autoCompletionVariable);
+	    return;
+	}
+
+	/* If it looks like we're in a comment block "/ *", then don't bother with autocompletion */
+	var precedingMultilineText = this.editArea.getTextBeforeCursor(false, true);
+	for (var i = precedingMultilineText.length-2; i>=0; i--) {
+	    var substringText = precedingMultilineText.substring(i,i+2);
+	    if (substringText == "*/") break;
+	    if (substringText == "/*") {
+		this.autoCompletionVariable.setData([]);
+		this.autoCompletionList.setDataSet(this.autoCompletionVariable);
+		return;
+	    }
+	}
 
 	/* Lets work with a trimmed version of the selected text...
 	 * or if no selected text, a trimmed version of the text before the cursor
@@ -446,6 +481,8 @@ Studio.extend({
 	var text = dojo.trim(this.editArea.getSelectedText());
 	if (!text) 
 	    text = dojo.trim(this.editArea.getTextBeforeCursor(true));
+
+
 
 	/* If there is no text, then presume the user wants a "this." */
 	if (!text) text = "this.";
@@ -610,6 +647,12 @@ Studio.extend({
 						       onDock: dojo.hitch(this, "onAutoCompletionDock"),
 						       onUndock: dojo.hitch(this, "onAutoCompletionDock")
 						       });
+	    this.autoCompletionDialog.connect(this.autoCompletionDialog, "setShowing", this.autoCompletionDialog, function(inShowing) {
+		if (inShowing) {
+		    this.setDocked(true, studio.dockLeftPanel);
+		}
+	    });
+
 	    this.autoCompletionDialog.containerWidget.setPadding("0,10,10,10");
 	    this.autoCompletionDialog.containerWidget.setBackgroundColor("#424959");
 	    var topPanel = new wm.Panel({owner: this,
@@ -729,7 +772,7 @@ Studio.extend({
 						       name: "autoCompletionVariable",
 						       type: "com.wavemaker.editor.completions"});
 
-	    this.autoCompletionDialog.setDocked(true, studio.dockLeftPanel);
+	    this.autoCompletionDialog.setShowing(true);
 	}
 	this.autoCompletionHtml.setHtml("<b>" + this.getDictionaryItem("AUTOCOMPLETION_HTML") + "</b>");
 	//this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
@@ -748,7 +791,7 @@ Studio.extend({
 	    this.autoCompletionHtml.setHtml(this.getDictionaryItem("AUTOCOMPLETION_TYPE_NOT_SUPPORTED"));
 
 	this.autoCompletionDialog.setTitle(object && object.declaredClass && object instanceof wm.Page == false ? object.declaredClass : "Completions");
-	this.autoCompletionDialog.show();
+	//this.autoCompletionDialog.show();
 	window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
     },
     hideAutoComplete: function() {
@@ -776,7 +819,7 @@ Studio.extend({
 	}
 		if (!this.editArea.getSelectedText()) {
 		    var pos = this.editArea.getCursorPosition();
-		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length - 1), pos.row,pos.column);
+		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length ), pos.row,pos.column);
 		    var replaceText = this.editArea.getSelectedText();
 		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
 		    var range = this.editArea.getSelectionRange();

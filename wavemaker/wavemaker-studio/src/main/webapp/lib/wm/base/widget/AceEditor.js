@@ -297,10 +297,13 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	}
     },
 
-
-    getTextBeforeCursor: function(getSingleTerm) {
+    getTextBeforeCursor: function(getSingleTerm, allLines) {
 	var position = this.getCursorPosition();
-	var text = dojo.trim(this.getDataValue().split(/\n/)[position.row].substring(0,position.column))
+	if (!allLines) {
+	    var text = dojo.trim(this.getDataValue().split(/\n/)[position.row].substring(0,position.column))
+	} else {
+	    var text = dojo.trim(this.getDataValue().substring(0, this.getPositionInText()));
+	}
 	if (getSingleTerm) {
 	    text = text.replace(/^.*[^a-zA-Z0-9.]/,"");
 	}

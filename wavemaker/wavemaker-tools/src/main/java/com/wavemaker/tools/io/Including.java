@@ -20,18 +20,18 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * Builder class that can be used to easily construct {@link ResourceFilter}s. Filters can be built for {@link File}s,
+ * Builder class that can be used to easily construct {@link ResourceIncludeFilter}s. Filters can be built for {@link File}s,
  * {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
  * {@link Resource#toString() paths}. Builders can be chained together to form compound (AND) matches.
  * 
  * @author Phillip Webb
  */
-public abstract class ResourceFiltering {
+public abstract class Including {
 
     /**
      * No Filtering.
      */
-    public static final ResourceFilter<Resource> NONE = new ResourceFilter<Resource>() {
+    public static final ResourceIncludeFilter<Resource> ALL = new ResourceIncludeFilter<Resource>() {
 
         @Override
         public boolean include(Resource resource) {
@@ -39,16 +39,16 @@ public abstract class ResourceFiltering {
         }
     };
 
-    private static final ResourceFilter<File> FILE_FILTER = new ResourceTypeFilter<File>(File.class);
+    private static final ResourceIncludeFilter<File> FILE_FILTER = new ResourceTypeFilter<File>(File.class);
 
-    private static final ResourceFilter<Folder> FOLDER_FILTER = new ResourceTypeFilter<Folder>(Folder.class);
+    private static final ResourceIncludeFilter<Folder> FOLDER_FILTER = new ResourceTypeFilter<Folder>(Folder.class);
 
     /**
      * Filter that only accepts {@link File}s.
      * 
      * @return the filter
      */
-    public static ResourceFilter<File> files() {
+    public static ResourceIncludeFilter<File> files() {
         return FILE_FILTER;
     }
 
@@ -57,13 +57,13 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<Folder> folders() {
+    public static ResourceIncludeFilter<Folder> folders() {
         return FOLDER_FILTER;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Resource> ResourceFilter<T> none() {
-        return (ResourceFilter<T>) NONE;
+    public static <T extends Resource> ResourceIncludeFilter<T> all() {
+        return (ResourceIncludeFilter<T>) ALL;
     }
 
     /**
@@ -192,7 +192,7 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<Resource> hiddenResources() {
+    public static ResourceIncludeFilter<Resource> hiddenResources() {
         return resourceNames().starting(".");
     }
 
@@ -201,7 +201,7 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<Resource> nonHiddenResources() {
+    public static ResourceIncludeFilter<Resource> nonHiddenResources() {
         return resourceNames().notStarting(".");
     }
 
@@ -210,7 +210,7 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<Folder> hiddenFolders() {
+    public static ResourceIncludeFilter<Folder> hiddenFolders() {
         return folderNames().starting(".");
     }
 
@@ -219,7 +219,7 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<Folder> nonHiddenFolders() {
+    public static ResourceIncludeFilter<Folder> nonHiddenFolders() {
         return folderNames().notStarting(".");
     }
 
@@ -228,7 +228,7 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<File> hiddenFiles() {
+    public static ResourceIncludeFilter<File> hiddenFiles() {
         return fileNames().starting(".");
     }
 
@@ -237,7 +237,7 @@ public abstract class ResourceFiltering {
      * 
      * @return the filter
      */
-    public static ResourceFilter<File> nonHiddenFiles() {
+    public static ResourceIncludeFilter<File> nonHiddenFiles() {
         return fileNames().notStarting(".");
     }
 
@@ -289,17 +289,17 @@ public abstract class ResourceFiltering {
     }
 
     /**
-     * The {@link ResourceFilter} and builder used to further restrict filtering.
+     * The {@link ResourceIncludeFilter} and builder used to further restrict filtering.
      */
-    public static class ResourceAttributeFilter<T extends Resource> implements ResourceFilter<T> {
+    public static class ResourceAttributeFilter<T extends Resource> implements ResourceIncludeFilter<T> {
 
         private final ResourceAttribute attribute;
 
         private final ResourceAttributeFilter<T> parent;
 
-        private final ResourceFilter<T> filter;
+        private final ResourceIncludeFilter<T> filter;
 
-        public ResourceAttributeFilter(ResourceAttribute attribute, ResourceAttributeFilter<T> parent, ResourceFilter<T> filter) {
+        public ResourceAttributeFilter(ResourceAttribute attribute, ResourceAttributeFilter<T> parent, ResourceIncludeFilter<T> filter) {
             this.attribute = attribute;
             this.parent = parent;
             this.filter = filter;
@@ -386,7 +386,7 @@ public abstract class ResourceFiltering {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.MATCHES, value)));
         }
 
-        private ResourceFilter<T> stringFilter(StringOperation operation, CharSequence... values) {
+        private ResourceIncludeFilter<T> stringFilter(StringOperation operation, CharSequence... values) {
             CompoundFilter<T> filter = new CompoundFilter<T>();
             for (CharSequence value : values) {
                 filter.add(new StringFilter<T>(this.attribute, operation, value));
@@ -394,11 +394,11 @@ public abstract class ResourceFiltering {
             return filter;
         }
 
-        private ResourceFilter<T> not(ResourceFilter<T> filter) {
+        private ResourceIncludeFilter<T> not(ResourceIncludeFilter<T> filter) {
             return new InvertFilter<T>(filter);
         }
 
-        private ResourceAttributeFilter<T> newResourceAttributeFilter(ResourceFilter<T> filter) {
+        private ResourceAttributeFilter<T> newResourceAttributeFilter(ResourceIncludeFilter<T> filter) {
             return new ResourceAttributeFilter<T>(this.attribute, this, filter);
         }
 
@@ -411,7 +411,7 @@ public abstract class ResourceFiltering {
         }
     }
 
-    private static class ResourceTypeFilter<T extends Resource> implements ResourceFilter<T> {
+    private static class ResourceTypeFilter<T extends Resource> implements ResourceIncludeFilter<T> {
 
         private final Class<T> resourceType;
 
@@ -425,17 +425,17 @@ public abstract class ResourceFiltering {
         }
     }
 
-    private static class CompoundFilter<T extends Resource> implements ResourceFilter<T> {
+    private static class CompoundFilter<T extends Resource> implements ResourceIncludeFilter<T> {
 
-        private final List<ResourceFilter<T>> filters = new ArrayList<ResourceFilter<T>>();
+        private final List<ResourceIncludeFilter<T>> filters = new ArrayList<ResourceIncludeFilter<T>>();
 
-        public void add(ResourceFilter<T> filter) {
+        public void add(ResourceIncludeFilter<T> filter) {
             this.filters.add(filter);
         }
 
         @Override
         public boolean include(T resource) {
-            for (ResourceFilter<T> filter : this.filters) {
+            for (ResourceIncludeFilter<T> filter : this.filters) {
                 if (filter.include(resource)) {
                     return true;
                 }
@@ -444,11 +444,11 @@ public abstract class ResourceFiltering {
         }
     }
 
-    private static class InvertFilter<T extends Resource> implements ResourceFilter<T> {
+    private static class InvertFilter<T extends Resource> implements ResourceIncludeFilter<T> {
 
-        private final ResourceFilter<T> filter;
+        private final ResourceIncludeFilter<T> filter;
 
-        public InvertFilter(ResourceFilter<T> filter) {
+        public InvertFilter(ResourceIncludeFilter<T> filter) {
             this.filter = filter;
         }
 
@@ -462,7 +462,7 @@ public abstract class ResourceFiltering {
         STARTS, ENDS, CONTAINS, MATCHES
     }
 
-    private static class StringFilter<T extends Resource> implements ResourceFilter<T> {
+    private static class StringFilter<T extends Resource> implements ResourceIncludeFilter<T> {
 
         private final ResourceAttribute attribute;
 

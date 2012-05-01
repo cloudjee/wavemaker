@@ -4,12 +4,13 @@
 	border-color: #ccc;
 }
 
+/*
 .tundra .dijitTimePickerTick {
 	color:white;
-}
+}*/
 
 .tundra .dijitTimePickerMarker {
-	background:#d3d3d3 url("images/titleBar.png") repeat-x top;
+/*	background:#d3d3d3 url("images/titleBar.png") repeat-x top; Commented out by WaveMaker/VMware 2012 */ 
 	color:#293a4b;
 	font-weight: bold;
 }
@@ -30,8 +31,9 @@
 	z-index: 10;
 }
 
+
 .tundra .dijitTimePickerTick .dijitTimePickerItemInner {
-	font-size:0.4em;
+    font-size:0.4em;
 }
 
 .tundra .dijitTimePickerItemHover .dijitTimePickerItemInner,
@@ -43,6 +45,7 @@
 	border-top: 1px solid #ccc;
 }
 
+/*
 .tundra .dijitTimePickerTickHover,
 .tundra .dijitTimePickerTickSelected {
 	margin-top:-0.3em;
@@ -50,3 +53,4 @@
 	border-bottom: none;
 }
 
+*/

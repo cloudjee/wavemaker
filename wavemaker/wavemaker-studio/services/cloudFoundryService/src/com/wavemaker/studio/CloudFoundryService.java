@@ -15,21 +15,41 @@
 package com.wavemaker.studio;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
 
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.WebUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
 
 @ExposeToClient
 public class CloudFoundryService {
+
+    private static final Set<String> DATABASE_SERVICE_VENDORS = new HashSet<String>(Arrays.asList("postgresql", "mysql"));
+
+    private final SharedSecretPropagation propagation = new SharedSecretPropagation();
 
     public String login(String username, String password, String target) {
         try {
@@ -40,79 +60,150 @@ public class CloudFoundryService {
     }
 
     public List<CloudApplication> listApps(String token, String target) {
-        try {
-            return new CloudFoundryClient(token, target).getApplications();
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException("Failed to retrieve CloudFoundry application list.", ex);
+        return execute(token, target, "Failed to retrieve CloudFoundry application list.", new CloudFoundryCallable<List<CloudApplication>>() {
+
+            @Override
+            public List<CloudApplication> call(CloudFoundryClient client) {
+                return client.getApplications();
             }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to retrieve CloudFoundry application list.", ex);
-        }
+        });
     }
 
     public List<CloudService> listServices(String token, String target) {
-        try {
-            return new CloudFoundryClient(token, target).getServices();
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException("Failed to retrieve CloudFoundry service list.", ex);
+        return execute(token, target, "Failed to retrieve CloudFoundry service list.", new CloudFoundryCallable<List<CloudService>>() {
+
+            @Override
+            public List<CloudService> call(CloudFoundryClient client) {
+                return client.getServices();
             }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to retrieve CloudFoundry service list.", ex);
-        }
+        });
     }
 
-    public CloudService getService(String token, String target, String service) {
-        try {
-            return new CloudFoundryClient(token, target).getService(service);
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else if (HttpStatus.NOT_FOUND == ex.getStatusCode()) {
+    public List<CloudService> listDatabaseServices(String token, String target) {
+        List<CloudService> databaseServices = new ArrayList<CloudService>();
+        for (CloudService cloudService : listServices(token, target)) {
+            if (isDatabaseService(cloudService)) {
+                databaseServices.add(cloudService);
+            }
+        }
+        return databaseServices;
+    }
+
+    private boolean isDatabaseService(CloudService cloudService) {
+        return DATABASE_SERVICE_VENDORS.contains(cloudService.getVendor());
+    }
+
+    public CloudService getService(String token, String target, final String service) {
+        return execute(token, target, "Failed to retrieve CloudFoundry service.", new CloudFoundryCallable<CloudService>() {
+
+            @Override
+            public CloudService call(CloudFoundryClient client) {
+                return client.getService(service);
+            }
+        });
+    }
+
+    public boolean isServiceBound(String token, String target, String service, String appName) {
+        List<String> services = getServicesForApplication(token, target, appName);
+        return (service != null && services.contains(service));
+    }
+
+    public List<String> getServicesForApplication(String token, String target, final String appName) {
+        return execute(token, target, "Failed to retrieve CloudFoundry service.", new CloudFoundryCallable<List<String>>() {
+
+            @Override
+            public List<String> call(CloudFoundryClient client) {
+                CloudApplication app = client.getApplication(appName);
+                return app.getServices();
+            }
+        });
+    }
+
+    public void createService(String token, String target, final DeploymentDB db, final String appName) {
+        execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                CloudService service = CloudFoundryDeploymentTarget.createPostgresqlService(db);
+                client.createService(service);
+                client.bindService(appName, service.getName());
+            }
+        });
+    }
+
+    public void deleteService(String token, String target, final String service) {
+        execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                client.deleteService(service);
+            }
+        });
+    }
+
+    public void bindService(String token, String target, final String service, final String appName) {
+        execute(token, target, "Failed to bind service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                client.bindService(appName, service);
+            }
+        });
+    }
+
+    private void execute(String token, String target, String errorMessage, final CloudFoundryRunnable runnable) {
+        execute(token, target, errorMessage, new CloudFoundryCallable<Object>() {
+
+            @Override
+            public Object call(CloudFoundryClient client) {
+                runnable.run(client);
                 return null;
-            } else {
-                throw new WMRuntimeException("Failed to retrieve CloudFoundry service.", ex);
             }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to retrieve CloudFoundry service.", ex);
-        }
+        });
     }
 
-    public void createService(String token, String target, DeploymentDB db, String appName) {
+    @HideFromClient
+    private <V> V execute(String token, String target, String errorMessage, CloudFoundryCallable<V> callable) {
         try {
+            if (!StringUtils.hasLength(token)) {
+                token = getAuthenticationToken();
+            }
+            if (!StringUtils.hasLength(target)) {
+                target = CloudFoundryUtils.getControllerUrl();
+            }
             CloudFoundryClient client = new CloudFoundryClient(token, target);
-            CloudService service = CloudFoundryDeploymentTarget.createPostgresqlService(db);
-            client.createService(service);
-            client.bindService(appName, service.getName());
-
+            return callable.call(client);
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
                 throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
             } else {
-                throw new WMRuntimeException("Failed to create service in CloudFoundry.", ex);
+                throw new WMRuntimeException(errorMessage, ex);
             }
         } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to create service in CloudFoundry.", ex);
+            throw new WMRuntimeException(errorMessage, ex);
         }
     }
 
-    public void deleteService(String token, String target, String service) {
-        try {
-            CloudFoundryClient client = new CloudFoundryClient(token, target);
-            client.deleteService(service);
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException("Failed to delete service in CloudFoundry.", ex);
-            }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException("Failed to delete service in CloudFoundry.", ex);
-        }
+    private String getAuthenticationToken() {
+        RuntimeAccess runtimeAccess = RuntimeAccess.getInstance();
+        Assert.state(runtimeAccess != null, "Unable to access runtime information");
+        Cookie cookie = WebUtils.getCookie(runtimeAccess.getRequest(), "wavemaker_authentication_token");
+        Assert.state(cookie != null, "Unable to access security cookie");
+        Assert.state(StringUtils.hasLength(cookie.getValue()), "Unable to access security cookie value");
+        SharedSecret sharedSecret = this.propagation.getForSelf(false);
+        Assert.state(sharedSecret != null, "Unable to access security shared secret");
+        AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
+        return authenticationToken.toString();
     }
+
+    private static interface CloudFoundryCallable<V> {
+
+        V call(CloudFoundryClient client);
+    };
+
+    private static interface CloudFoundryRunnable {
+
+        void run(CloudFoundryClient client);
+    };
+
 }

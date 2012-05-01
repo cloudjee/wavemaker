@@ -114,14 +114,19 @@ dojo.declare("Studio", wm.Page, {
 	    this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
 		// populate palettes
 		loadPackages();
+	this.disableMenuBar(true);
 		// init some UI
 		this.outlinedClick();
 		if (this.getUserSetting('explode')) {
 			this.explodedClick();
 		}
 	        var multiActiveProperties = this.getUserSetting("multiActive");
+/*
 	        studio.inspector.preferredMultiActive =(multiActiveProperties === undefined || multiActiveProperties);
 	        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
+		this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+		*/
+
 
 		/*
 		if (wm.studioConfig.preventLiveData)
@@ -214,7 +219,7 @@ dojo.declare("Studio", wm.Page, {
 	    s.display = "inline-block";
 	    this.pageSelect.renderBounds = function() {};
 		*/
-	    this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+
 
 	this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
 	this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
@@ -905,7 +910,7 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	    if (this.selected == inComponent) {
 		/* Make sure the tree shows its selected */
-		if (this.selected._studioTreeNode && !this.selected._studioTreeNode.selected) {
+		if (this.selected && this.selected._studioTreeNode && !this.selected._studioTreeNode.selected) {
 		    this.selected._studioTreeNode.tree.eventSelect(this.selected._studioTreeNode);
 		}
 		return;

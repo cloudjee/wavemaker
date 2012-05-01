@@ -96,7 +96,7 @@ public interface FileContent {
      * 
      * @return The writer
      */
-    Writer asWriter();
+    Writer asWriter() throws ResourceException;
 
     /**
      * Write the contents of the specified file to this file.

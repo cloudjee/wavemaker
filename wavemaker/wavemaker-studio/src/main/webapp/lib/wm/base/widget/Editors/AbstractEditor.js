@@ -119,7 +119,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	postInit: function() {
 	        this.createEditor();
 		this.inherited(arguments);
-
 		wm.fire(this, "ownerLoaded"); // TODO: Replace this with call in SelectEditor.postInit
 		if (this.captionPosition != "left")
 		  this.setCaptionPosition(this.captionPosition);
@@ -242,6 +241,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     createEditor: function(inProps) {
 		// Its possible for createEditor to be called before postInit where createCaption is called,
 		// and we need it for styleEditor to work correctly.
+
 		if (!this.captionNode) this.createCaption();
            	if (this.helpText && !this.helpNode) {
 		    this.createHelpNode();
@@ -252,7 +252,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
 	        dojo.attr(this.captionNode, "for", this.editor.id);
-	if (this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
+	if (this.editor instanceof wm.Control == false && this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
 	    dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
 	}
 /*
@@ -379,7 +379,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
 		    labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
   		    if (labelWidthWithSpacing < 0) labelWidthWithSpacing = 0;		    
+		    if (!this.maxCaptionWidth) {
 			s.width =  labelWidthWithSpacing + "px";
+		    } else {
+			s.display = "inline-block";
+			s.maxWidth = this.maxCaptionWidth + "px";
+		    }
 		    s.height = ((labelHeight && labelHeight > 0) ? labelHeight : 0) + "px";
 		    
 		     // if height changes, then lineHeight may have to change
