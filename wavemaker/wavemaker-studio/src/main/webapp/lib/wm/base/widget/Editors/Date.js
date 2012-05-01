@@ -295,6 +295,7 @@ dojo.declare("wm.DateTime", wm.Date, {
 	    this.timeEditor.setDisabled(inValue);
     },
     focus: function(inValue) {
+	if (!this.editor) return;
 	    switch(this.dateMode) {
 	    case "Date and Time":
 	    case "Date":
@@ -307,6 +308,7 @@ dojo.declare("wm.DateTime", wm.Date, {
     },
     _getValidatorNode: function() {return null;},
     setEditorValue: function(inValue) {
+	if (!this.editor) return;
 	var d;
 	if (inValue instanceof Date) {
 	    d = new Date(inValue); // else our date calculations modify the input object which can cause ugly side effects
