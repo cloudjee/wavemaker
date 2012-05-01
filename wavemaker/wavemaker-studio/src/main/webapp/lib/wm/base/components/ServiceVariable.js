@@ -28,6 +28,8 @@ dojo.require("wm.base.components.ServiceCall");
 	@extends wm.ServiceCall
 */
 dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
+    loadingDialog: null, 
+
         downloadFile: false,
 	total: 0,
 	_page: 0,
@@ -89,6 +91,17 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 		  this.update();
 		}
 	},
+    _update: function() {
+	if (this.loadingDialog && !this._isDesignLoaded) {
+	    if (this.loadingDialog instanceof wm.LoadingDialog == false) {
+		this.loadingDialog = new wm.LoadingDialog({owner: this,
+							   name: "loadingDialog",
+							   widgetToCover: this.loadingDialog,
+							   serviceVariableToTrack: this});
+	    }
+	}
+	return this.inherited(arguments);
+    },
     toString: function(inText) {   
 	var t = inText || "";
 	t += "; " + wm.getDictionaryItem("wm.ServiceVariable.toString_FIRING", {isFiring: Boolean(this._requester)})
