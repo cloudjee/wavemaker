@@ -128,16 +128,22 @@ public interface FileSystem<K> {
 
     /**
      * Returns an enum value that indicates the origin of the resource (eg. os file system or mongo db)
-     *
+     * 
      * @return the origin of the resource
      */
     ResourceOrigin getResourceOrigin();
 
     /**
      * Returns the original resource object that can be casted to the appropriate rsource origin
-     *
+     * 
      * @return the original resource object
      */
     Object getOriginalResource();
 
+    /**
+     * Touch the underlying file.
+     * 
+     * @param key the key to touch
+     */
+    void touch(K key);
 }

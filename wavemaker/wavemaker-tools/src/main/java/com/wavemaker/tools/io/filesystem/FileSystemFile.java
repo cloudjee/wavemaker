@@ -23,6 +23,7 @@ import com.wavemaker.tools.io.AbstractFileContent;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
@@ -62,6 +63,12 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     @Override
     public long getLastModified() {
         return getFileSystem().getLastModified(getKey());
+    }
+
+    @Override
+    public void touch() throws ResourceDoesNotExistException {
+        ensureExists();
+        getFileSystem().touch(getKey());
     }
 
     @Override

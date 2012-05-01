@@ -85,13 +85,11 @@ public abstract class AbstractFileContent implements FileContent {
 
     @Override
     public Writer asWriter() throws ResourceException {
-    	try{
-    		return new OutputStreamWriter(asOutputStream(), DEFAULT_ENCODING);
-    	}
-    	catch (UnsupportedEncodingException e){
-    		e.printStackTrace();
-    		throw new ResourceException(e);
-    	}
+        try {
+            return new OutputStreamWriter(asOutputStream(), DEFAULT_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new ResourceException(e);
+        }
     }
 
     @Override

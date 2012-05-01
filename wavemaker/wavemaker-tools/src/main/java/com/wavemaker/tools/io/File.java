@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.io;
 
+import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
 /**
@@ -50,6 +51,13 @@ public interface File extends Resource {
      *         occurred, or if the operation is not supported
      */
     long getLastModified();
+
+    /**
+     * Update the {@link #getLastModified() last modified timestamp} of the file to now.
+     * 
+     * @throws ResourceDoesNotExistException if the resource does not exist
+     */
+    void touch() throws ResourceDoesNotExistException;
 
     /**
      * Provides access to file content. Calling any method on a file that does not {@link #exists() exist} will cause it
