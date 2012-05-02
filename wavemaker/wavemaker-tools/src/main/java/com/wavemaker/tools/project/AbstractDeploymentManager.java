@@ -94,11 +94,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     }
 
     protected String getDeployName() {
-        return getDeployName(getProjectDir());
-    }
-
-    protected String getDeployName(Folder projectDir) {
-        return projectDir.getName();
+        return this.projectManager.getCurrentProject().getProjectName();
     }
 
     /**
@@ -630,7 +626,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     }
 
     /**
-     * @param deploymentInfo
+     * @param deploymentId
      * @return
      */
     @Override

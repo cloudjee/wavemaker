@@ -53,8 +53,8 @@ import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
@@ -295,9 +295,9 @@ public class DataModelManager {
             Folder serviceRoot = getServicePathFolder(serviceId);
 
             //this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
-            tmpServiceRootFolder.copyTo(serviceRoot, new ResourceFilter<Resource>() {
+            tmpServiceRootFolder.copyTo(serviceRoot, new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
                 @Override
-                public boolean include(Resource resource) {
+                public boolean include(com.wavemaker.tools.io.File resource) {
                     if (resource == null) {
                         return false;
                     } else {
@@ -309,9 +309,9 @@ public class DataModelManager {
             });
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-            tmpServiceRootFolder.copyTo(classesDir, new ResourceFilter<Resource>() {
+            tmpServiceRootFolder.copyTo(classesDir, new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
                 @Override
-                public boolean include(Resource resource) {
+                public boolean include(com.wavemaker.tools.io.File resource) {
                     if (resource == null) {
                         return false;
                     } else {

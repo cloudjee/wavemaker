@@ -39,6 +39,9 @@ import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Frankie Fu
@@ -66,7 +69,9 @@ public class RESTServiceGeneratorTest extends WMTestCase {
         String resource = ClassLoaderUtils.getResource(wsdlResource);
         WSDL wsdl = WSDLManager.processWSDL(resource, null, null, null);
 
-        GenerationConfiguration genConfig = new GenerationConfiguration(wsdl, new FileSystemResource(this.outputDir));
+        LocalFileSystem fileSystem = new LocalFileSystem(this.outputDir);
+        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        GenerationConfiguration genConfig = new GenerationConfiguration(wsdl, folder);
         RESTServiceGenerator generator = new RESTServiceGenerator(genConfig);
         generator.generate();
 

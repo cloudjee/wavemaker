@@ -30,6 +30,9 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -42,7 +45,9 @@ public class SpringCfgGeneratorTest extends WMTestCase {
         try {
             SpringUtils.initSpringConfig();
             SpringCfgGenerator g = new SpringCfgGenerator();
-            g.setDestDir(new FileSystemResource(f));
+            LocalFileSystem fileSystem = new LocalFileSystem(f);
+            Folder folder = FileSystemFolder.getRoot(fileSystem);
+            g.setDestDir(folder);
             g.setClassName("Foo");
             g.setPackage("com.blah");
             g.setFileSystem(new LocalStudioFileSystem());

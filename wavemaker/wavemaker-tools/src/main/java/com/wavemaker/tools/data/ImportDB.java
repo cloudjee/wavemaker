@@ -54,9 +54,8 @@ import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
 
 /**
  * Database import.
@@ -337,7 +336,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void removeConstructor() {
 
-        ResourceFilter<com.wavemaker.tools.io.File> filter = new ResourceFilter<com.wavemaker.tools.io.File>() {
+        ResourceIncludeFilter<com.wavemaker.tools.io.File> filter = new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
 
             @Override
             public boolean include(com.wavemaker.tools.io.File resource) {
