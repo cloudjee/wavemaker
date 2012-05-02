@@ -680,7 +680,7 @@ public class DataModelConfiguration {
         updateReferences(entityName, newEntityName, ei.getRelatedProperties());
     }
 
-    private String getProjectRoot() {
+    /*private String getProjectRoot() {
         // ProjectManager projMgr = (ProjectManager)
         // RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
         String projRoot;
@@ -691,7 +691,7 @@ public class DataModelConfiguration {
         }
 
         return projRoot;
-    }
+    }*/
 
     private Folder getProjectRootFolder() {
         return this.projMgr.getCurrentProject().getRootFolder();
@@ -847,18 +847,11 @@ public class DataModelConfiguration {
 
     public synchronized void writeConnectionProperties(Properties props) {
         String connUrl = props.getProperty(DataServiceConstants.DB_URL_KEY);
-        // ProjectManager projMgr = (ProjectManager)
-        // RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-        String projRoot;
-        try {
-            projRoot = this.projMgr.getCurrentProject().getWebAppRoot().getFile().getPath();
-            connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
-            props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
+        String projRoot = ((java.io.File)this.projMgr.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
+        connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
+        props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
 
-            this.springConfiguration.writeProperties(props);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+        this.springConfiguration.writeProperties(props);
     }
 
     public void checkQuery(final String query, final Input[] inputs, final String values) {

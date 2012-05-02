@@ -24,6 +24,8 @@ import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
+import java.io.IOException;
+
 /**
  * {@link Resource} implementation backed by a {@link FileSystem}.
  * 
@@ -111,6 +113,11 @@ public abstract class FileSystemResource<K> implements Resource {
     }
 
     @Override
+    public String getLastName() {
+        return this.path.getUnjailedPath().getName();
+    }
+
+    @Override
     public String toString() {
         return toString(ResourceStringFormat.FULL);
     }
@@ -151,6 +158,11 @@ public abstract class FileSystemResource<K> implements Resource {
     @Override
     public Object getOriginalResource() {
         return this.fileSystem.getOriginalResource();
+    }
+
+    @Override
+    public String getCanonicalPath() {
+        return this.fileSystem.getCanonicalPath();
     }
 
 }

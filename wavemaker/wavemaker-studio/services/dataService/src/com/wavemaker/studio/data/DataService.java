@@ -272,17 +272,13 @@ public class DataService {
     }
 
     private String rewriteConnectionUrlIfNecessary(String connectionUrl) {
-        try {
-            if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-                ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                    DataServiceConstants.CURRENT_PROJECT_MANAGER);
-                String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFile().getCanonicalPath();
-                return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
-            }
-            return connectionUrl;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
+            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+                DataServiceConstants.CURRENT_PROJECT_MANAGER);
+            String projRoot = projMgr.getCurrentProject().getWebAppRootFolder().getCanonicalPath();
+            return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
         }
+        return connectionUrl;
     }
 
     private void sortColumns(List<ColumnInfo> columns) {

@@ -114,14 +114,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     public class Undeployer implements HttpSessionBindingListener {
 
-        private Folder projectDir;
-
         private String projectName;
 
         @Override
         public void valueBound(HttpSessionBindingEvent event) {
-            this.projectDir = getProjectDir();
-            this.projectName = getDeployName(this.projectDir);
+            this.projectName = getDeployName();
             LocalDeploymentManager.logger.info("SESSION BOUND " + this.projectName + "!!!!!!!!!!!!!!!");
         }
 
@@ -156,7 +153,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String testRunStart() {
         String deployName = getDeployName();
-        testRunStart(getProjectDir().toString(), deployName);
+        testRunStart(getProjectDir().getCanonicalPath(), deployName);
         return "/" + deployName;
     }
 

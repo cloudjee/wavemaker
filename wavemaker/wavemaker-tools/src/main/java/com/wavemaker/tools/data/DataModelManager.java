@@ -589,13 +589,7 @@ public class DataModelManager {
         }
         String path = mappingPaths.iterator().next();
         File hbmFiles = new File(serviceDir, new File(path).getParent());
-
-        File classesDir;
-        try {
-            classesDir = this.projectManager.getCurrentProject().getWebInfClasses().getFile();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        File classesDir = (File)this.projectManager.getCurrentProject().getClassOutputFolder().getOriginalResource();
 
         ExportDB exporter = new ExportDB();
         exporter.setHbmFilesDir(hbmFiles);
@@ -895,11 +889,7 @@ public class DataModelManager {
     }
 
     public String getWebAppRoot() {
-        try {
-            return this.projectManager.getCurrentProject().getWebAppRoot().getFile().getPath();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        return ((File)this.projectManager.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
     }
 
     private String extractHsqlDBFileName(String connectionUrl) {
