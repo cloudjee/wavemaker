@@ -121,11 +121,9 @@ dojo.declare("Studio", wm.Page, {
 			this.explodedClick();
 		}
 	        var multiActiveProperties = this.getUserSetting("multiActive");
-/*
-	        studio.inspector.preferredMultiActive =(multiActiveProperties === undefined || multiActiveProperties);
+	        studio.inspector.preferredMultiActive =  multiActiveProperties;
 	        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
 		this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
-		*/
 
 
 		/*
@@ -865,7 +863,7 @@ dojo.declare("Studio", wm.Page, {
 		    this.inspector.inspect(inspected);
 	    }				
     },
-        inspect: function(inComponent) {
+    inspect: function(inComponent) {
 	    wm.job("studio.inspect", 1, dojo.hitch(this, function() {
 		this._inspect(inComponent);
 	    }));
@@ -882,7 +880,7 @@ dojo.declare("Studio", wm.Page, {
     setInspectedCaption: function(inComponent) {
 	this.PIContents.setTitle(inComponent ? inComponent.name  + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
     },
-	select: function(inComponent) {
+	select: function(inComponent, isNew) {	    
 	        if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
 /*
 		    if (this._lastBindSelect == inComponent) {
@@ -931,6 +929,11 @@ dojo.declare("Studio", wm.Page, {
 			inComponent = inComponent.parent;
 
 	    if (inComponent) {
+		if (isNew && !this.inspector.isRequiredMode()) {
+		    this.inspector.toggleRequiredProperties();
+		} else if (!isNew && this.inspector.isRequiredMode()) {
+		    this.inspector.toggleAdvancedPropertiesSome();
+		}
 		if (this.treeSearch.getDataValue()) {
 		    this.treeSearch.setDataValue("");
 		    this.refreshVisualTree();
@@ -940,6 +943,7 @@ dojo.declare("Studio", wm.Page, {
 		    this.refreshServiceTree();
 		    this.refreshComponentTree();
 		}
+		this.statusBarLabel.setCaption("Editing " + inComponent.declaredClass);
 	    }
 		try {
 			var s = this.selected = inComponent;

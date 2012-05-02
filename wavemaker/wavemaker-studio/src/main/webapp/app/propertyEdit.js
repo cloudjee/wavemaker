@@ -417,7 +417,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					   parent: this.editor,
 					   width: "100%",
 					   name: "numberEditor",
-					 minWidth: 40,
+					 minWidth: 30,
 					   padding: "0,1,0,0",
 				    readonly: this.readonly
 					  });
@@ -987,6 +987,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     },
     addEditors: function() {
 	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
+	dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
 	this.editors = [];
 	this.addEditor(0,this.inspected.getProp(this.propName));
 	for (var i = 1; i < 20; i++) {
@@ -1006,7 +1007,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 						   propName: propertyName,
 						   propertyNumber: parseInt(inIndex),
 						   width: "100%",
-						   height: "22px",
+						   height: studio.inspector.defaultEditorHeight,
 						   captionSize: inIndex > 0 ? "60px" : "0px",
 						   caption: inIndex > 0 ? "And then" : "",
 						   captionPosition: "left",
@@ -1698,7 +1699,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    captionSize: "70px",
 	    singleLine: false,
 	    width: "100%",
-	    height: "28px",
+	    height: studio.inspector.defaultEditorHeight,
 	    allowNone: true,
 	    owner: this,
 	    parent: this,
@@ -1985,7 +1986,8 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	this.reflow();
     },
     addClass: function(inClassName) {
-	this.grid.addRow({dataValue: inClassName || ""}, true);
+	var className =  (typeof inClassName == "string") ? inClassName : "";
+	this.grid.addRow({dataValue: className || ""}, true);
     },
     editClass: function(className) {
 	studio.editCodeDialog.show();
@@ -2010,6 +2012,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	    code += cssText.substring(startIndex,endIndex) + "\n";
 	    startAndEndList.push({start: startIndex, end: endIndex});
 	}
+	if (!code) {
+	    code = "." + className + " {\n\n}";
+	}
 		    studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
 			var editArea;
 			if (cssText == studio.cssEditArea.getDataValue()) {
@@ -2019,7 +2024,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 			}
 			// if either editor has somehow changed, this edit is invalidated
 			if (editArea) {
-			    if (startAndEndList.length > 1) {
+			    if (startAndEndList.length == 0) {
+				cssText += inCode;
+			    } else if (startAndEndList.length > 1) {
 				/* If there are multiple places showing the selected class, the chance of us doing a good job updating
 				 * the right ones is pretty slim; the user may have added a new rule, removed an old rule, maintaining
 				 * the order just isn't trivial.  So, remove all blocks of code wherever they are so that we can put in
@@ -2238,9 +2245,11 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	if (fields) {
 	    this.fieldPanel =  panel = new wm.Panel({owner: this,
 						     parent: this,
+						     _classes: {domNode: ["StudioFieldGroupPanel"]},
 						     name: "FieldGroupInnerPanel_" + propDef.name,
 						     showing: !isBound,
 						     layoutKind: "top-to-bottom",
+						     margin: "0,0,0,20",
 						     width: "100%",
 						     height: "100%"});
 
@@ -2303,10 +2312,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 			matchComponentType: isStructured,
 
 			/* if the user types in a value into a text editor, treat it as a bind expression */
-		        createExpressionWire: !isStructured, 
-
-			/* Indent these editors */
-			margin: "0,0,0,20"
+		        createExpressionWire: !isStructured
 		    },
 
 		    /* When this editor changes, create a wire rather than calling c.setValue(propName,newValue) */
