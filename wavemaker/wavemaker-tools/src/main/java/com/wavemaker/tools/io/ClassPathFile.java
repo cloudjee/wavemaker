@@ -89,4 +89,9 @@ public class ClassPathFile extends AbstractReadOnlyFile {
     public Object getOriginalResource() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String getCanonicalPath() {
+        throw new UnsupportedOperationException();
+    }
 }

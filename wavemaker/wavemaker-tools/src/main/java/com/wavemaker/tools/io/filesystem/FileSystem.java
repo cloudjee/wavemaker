@@ -146,4 +146,11 @@ public interface FileSystem<K> {
      * @param key the key to touch
      */
     void touch(K key);
+
+    /**
+     * Returns the cannonical pathname string for the original resource
+     *
+     * @return the original resource object
+     */
+    String getCanonicalPath();
 }

@@ -150,6 +150,11 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
         getFile(key).put("uploadDate", new Date());
     }
 
+    @Override
+    public String getCanonicalPath() {
+        throw new UnsupportedOperationException();
+    }
+
     private GridFSInputFile create(MongoFileSystemKey key, ResourceType type) {
         Assert.notNull(type, "Type must not be null");
         Assert.state(type != ResourceType.DOES_NOT_EXIST);
