@@ -99,6 +99,7 @@ public class SpinupController {
             TransportToken transportToken = this.spinupService.login(secret, credentials);
             String url = performSpinup(credentials, secret, transportToken, response);
             Cookie cookie = new Cookie(COOKIE_NAME, transportToken.encode());
+            cookie.setMaxAge(2592000); // 30 days
             cookie.setDomain(this.spinupService.getDomain());
             response.addCookie(cookie);
             response.setHeader("X-Ajax-Redirect", url);

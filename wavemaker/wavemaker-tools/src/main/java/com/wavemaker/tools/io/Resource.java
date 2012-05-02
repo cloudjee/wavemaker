@@ -18,6 +18,8 @@ import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
+import java.io.IOException;
+
 /**
  * Base abstract for {@link File}s and {@link Folder}s that may be stored on a physical disk or using some other
  * mechanism. Subclasses will either implement {@link File} or {@link Folder} (but never both).
@@ -138,5 +140,12 @@ public interface Resource {
      * @return the original resource object
      */
     Object getOriginalResource();
+
+    /**
+     * Returns the cannonical pathname string for the original resource
+     *
+     * @return the original resource object
+     */
+    String getCanonicalPath();
 
 }
