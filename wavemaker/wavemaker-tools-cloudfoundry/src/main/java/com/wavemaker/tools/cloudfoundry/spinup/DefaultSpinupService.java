@@ -50,7 +50,9 @@ public class DefaultSpinupService implements SpinupService {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    private static final int MAX_ATTEMPTS = 5;
+    private static final int MAX_NAMING_ATTEMPTS = 5;
+
+    private static final int MAX_UPLOAD_ATTEMPTS = 3;
 
     private String controllerUrl;
 
@@ -293,12 +295,31 @@ public class DefaultSpinupService implements SpinupService {
             try {
                 ApplicationArchive archive = DefaultSpinupService.this.archiveFactory.getArchive();
                 try {
-                    this.cloudFoundryClient.uploadApplication(name, archive);
+                    uploadApplication(name, archive, 1);
                 } finally {
                     DefaultSpinupService.this.archiveFactory.closeArchive(archive);
                 }
             } catch (Exception e) {
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e;
+                }
                 throw new IllegalStateException(e);
+            }
+        }
+
+        private void uploadApplication(String name, ApplicationArchive archive, int attempt) {
+            try {
+                this.cloudFoundryClient.uploadApplication(name, archive);
+            } catch (Exception e) {
+                if (attempt >= MAX_UPLOAD_ATTEMPTS) {
+                    throw new IllegalStateException(e);
+                } else {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException interruptedException) {
+                    }
+                    uploadApplication(name, archive, attempt + 1);
+                }
             }
         }
 
@@ -341,7 +362,7 @@ public class DefaultSpinupService implements SpinupService {
                         DefaultSpinupService.this.serviceNames, false);
                     return applicationDetails;
                 } catch (CloudFoundryException e) {
-                    if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_ATTEMPTS) {
+                    if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_NAMING_ATTEMPTS) {
                         if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                             DefaultSpinupService.this.logger.debug("Application naming failed due to exception after " + attempt + " attempts");
                         }
