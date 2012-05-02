@@ -262,6 +262,7 @@ public class DefaultSpinupService implements SpinupService {
         }
 
         private ApplicationDetails deployAsNecessary() {
+            boolean upgrading = false;
             List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
             for (CloudApplication application : applications) {
                 for (String uri : application.getUris()) {
@@ -270,11 +271,16 @@ public class DefaultSpinupService implements SpinupService {
                     }
                     ApplicationDetails applicationDetails = new ApplicationDetails(application.getName(), uri);
                     if (DefaultSpinupService.this.namingStrategy.isMatch(applicationDetails)) {
-                        if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                            DefaultSpinupService.this.logger.debug("Skipping deployment of already installed application "
-                                + applicationDetails.getName());
+                        upgrading = DefaultSpinupService.this.namingStrategy.isUpgradeRequired(applicationDetails);
+                        if (!upgrading) {
+                            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                                DefaultSpinupService.this.logger.debug("Skipping deployment of already installed up to date application "
+                                    + applicationDetails.getName());
+                            }
+                            return applicationDetails;
+                        } else {
+                            deleteExistingApplication(applicationDetails);
                         }
-                        return applicationDetails;
                     }
                 }
             }
@@ -289,6 +295,10 @@ public class DefaultSpinupService implements SpinupService {
             env.put(CLOUD_CONTROLLER_VARIABLE_NAME, getControllerUrl());
             this.cloudFoundryClient.updateApplicationEnv(applicationDetails.getName(), env);
             return applicationDetails;
+        }
+
+        private void deleteExistingApplication(ApplicationDetails applicationDetails) {
+            this.cloudFoundryClient.deleteApplication(applicationDetails.getName());
         }
 
         private void uploadApplication(String name) {

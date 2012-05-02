@@ -30,11 +30,19 @@ public interface ApplicationNamingStrategy {
     boolean isMatch(ApplicationDetails applicationDetails);
 
     /**
+     * Determine if a matched application requires an upgrade. This method should only be called if
+     * {@link #isMatch(ApplicationDetails)} returns <tt>true</tt>.
+     * 
+     * @param applicationDetails the application details
+     * @return if the upgrade is required
+     */
+    boolean isUpgradeRequired(ApplicationDetails applicationDetails);
+
+    /**
      * Create new application details named correctly.
      * 
      * @param context Context that can be used to obtain relevant details
      * @return the application details
      */
     ApplicationDetails newApplicationDetails(ApplicationNamingStrategyContext context);
-
 }

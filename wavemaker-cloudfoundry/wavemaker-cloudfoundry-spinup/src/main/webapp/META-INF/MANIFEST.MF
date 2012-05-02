@@ -8,5 +8,5 @@ Class-Path: aopalliance-1.0.jar cloudfoundry-client-lib-0.7.1.jar comm
  ontext-3.1.0.RELEASE.jar spring-context-support-3.1.0.RELEASE.jar spr
  ing-core-3.1.0.RELEASE.jar spring-expression-3.1.0.RELEASE.jar spring
  -web-3.1.0.RELEASE.jar spring-webmvc-3.1.0.RELEASE.jar validation-api
- -1.0.0.GA.jar wavemaker-tools-cloudfoundry-6.5.0.M1.jar
+ -1.0.0.GA.jar wavemaker-tools-cloudfoundry.jar
 
