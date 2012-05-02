@@ -357,7 +357,8 @@ Studio.extend({
 			;
 		    } else if (c.declaredClass != lastClass) {
 			var img = this.getComponentImage(c);
-			if (n.length > 1 && (i == 0 &&  n[0].declaredClass != n[1].declaredClass ||
+			if (n.length <= 1 ||
+			    n.length > 1 && (i == 0 &&  n[0].declaredClass != n[1].declaredClass ||
 					     i == n.length - 1 && n[i].declaredClass !=n[i-1].declaredClass ||
 					     i > 0 && i < n.length - 2 && n[i].declaredClass != n[i-1].declaredClass && n[i].declaredClass != n[i+1].declaredClass)) {
 			    var lastParent = inNode;
