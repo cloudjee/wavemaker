@@ -79,7 +79,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
     doBind: function(serviceName, type) {
 	studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING") + " Binding Service");
 	// this will restart the studio server
-	this.cloudFoundryService.requestAsync("bindService", ["", "", serviceName, "wavemaker-studio"],
+	this.cloudFoundryService.requestAsync("bindService", ["", "", serviceName, "wavemaker-studio-6_5_0_M1"],
 					      dojo.hitch(this, function() {
 						    this.waitForStudioToRestart(serviceName, type);
 					      }),
