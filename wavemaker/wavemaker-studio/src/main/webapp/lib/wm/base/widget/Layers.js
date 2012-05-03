@@ -698,13 +698,16 @@ dojo.declare("wm.Layers", wm.Container, {
 	    if (this.decorator.tabsControl.isDestroyed)
 		return;
 
+	    wm.job(this.getRuntimeId() + ".renderBounds", 10, this, function() {
 	    this.decorator.tabsControl.domNode.style.height = 'auto';
-	    var newheight = this.decorator.tabsControl.domNode.clientHeight;
-	    if (newheight > parseInt(this.headerHeight)) {
+	    var newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
+	    if (this._isDesignLoaded) console.log("HEIGHT: " + newheight);
+	    if (newheight != this.decorator.tabsControl.bounds.h) {
 		this.decorator.tabsControl.setHeight(newheight + "px");
 	    } else {
 		this.decorator.tabsControl.domNode.style.height = this.headerHeight;
 	    }
+	    });
 	},
         getMinHeightProp: function() {
             if (this.minHeight) return this.minHeight;
