@@ -698,31 +698,13 @@ dojo.declare("wm.Layers", wm.Container, {
 	    if (this.decorator.tabsControl.isDestroyed)
 		return;
 
-	    // for purposes of IE6, we need to get the current height, change the style, and then wait
-	    // before doing anything
-	    if (!this._lastTabHeight)
-		this._lastTabHeight = dojo.marginBox(this.decorator.tabsControl.domNode).h;
 	    this.decorator.tabsControl.domNode.style.height = 'auto';
-	    wm.job(this.getRuntimeId() + ":updateHeaderHeight", 1, dojo.hitch(this, function() {
-		if (this.isDestroyed) return;
-		try {
-		    var newHeight = this.decorator.tabsControl.updateHeaderHeight();
-		    if (newHeight != this._lastTabHeight){
-			this._lastTabHeight = newHeight;
-			if (this.userDefHeaderHeight && parseInt(this.userDefHeaderHeight) + 5 > newHeight)
-			    newHeight = parseInt(this.userDefHeaderHeight);
-			if (this.isDesignLoaded()) {
-			    this.decorator.tabsControl.setHeight(newHeight+ "px");
-			} else {
-			    this.setHeaderHeight(newHeight+'px');
-			    this.reflow();
-			}
-		    }
-
-		} catch(e) {
-		    console.error(e);
-		}
-	    }));
+	    var newheight = this.decorator.tabsControl.domNode.clientHeight;
+	    if (newheight > parseInt(this.headerHeight)) {
+		this.decorator.tabsControl.setHeight(newheight + "px");
+	    } else {
+		this.decorator.tabsControl.domNode.style.height = this.headerHeight;
+	    }
 	},
         getMinHeightProp: function() {
             if (this.minHeight) return this.minHeight;
