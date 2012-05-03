@@ -2277,6 +2277,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		    propDef.editorProps.widgetDataSets = true;
 		    propDef.editorProps.matchComponentType = true;
 		}
+		
 		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
 						    propDef, /* Property we are editing within the component */
 						    panel, /* Parent panel */
@@ -2353,6 +2354,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	} else {
 	    /* Else call reinspectEditor on each editor */
 	    wm.forEachProperty(this.editors, dojo.hitch(this, function(e,editorName) {
+		// don't know how its losing this value, but it must have this value
+		e.bindValuesOnly = true;
 		studio.inspector.reinspectEditor(editorName === "_ROOT" ? this.inspected || this.inspectedSubcomponent : inspected, /* Component we are editing */
 						 e, /* Editor used to edit this component property */
 						 null, /* Bind editor used to edit this component (wm.PropertyInspector will look this up) */

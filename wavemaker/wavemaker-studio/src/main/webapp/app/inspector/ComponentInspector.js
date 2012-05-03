@@ -295,7 +295,7 @@
 	     if (isBound) {
 		 var wire = inComponent.$.binding.wires[propPath];
 		 newVal = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
-	     } else {
+	     } else if (!e.bindValuesOnly) {
 		 if (inProp.treeBindRoot) {
 		     newVal = inComponent.getValue(propPath);
 		 } else {
