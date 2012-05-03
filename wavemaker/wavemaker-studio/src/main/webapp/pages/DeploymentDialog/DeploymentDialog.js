@@ -248,6 +248,29 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}));
 	return databases;
     },
+	cfGetUrlbuttonClick: function(inSender){
+		try{
+		this.cfUrlEditor.clear();
+		var data = this.generateCloudFoundryDeploymentStruct();
+		studio.beginWait(this.getDictionaryItem("WAIT_GENERATE"));
+		studio.deploymentService.requestAsync("getDeploymentURL", [data],
+						dojo.hitch(this, function(inResult) {
+						    this.cfGetUrlSuccess(inResult,false);
+						}),
+						dojo.hitch(this, "cfGetUrlFailed"));
+		} catch(e) {
+          console.error('ERROR IN cfGetUrlbuttonClick: ' + e);
+      }
+	  },
+	cfGetUrlSuccess: function(inResult){
+		this.cfUrlEditor.setDataValue(inResult);
+	    studio.endWait();
+	},
+
+	cfGetUrlFailed: function(inResult){
+	    studio.endWait();
+		app.toastError(this.getDictionaryItem("TOAST_GENERATE_FAIL"));
+	},
     saveButtonClick: function(inSender) {
       try {
 	  
