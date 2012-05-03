@@ -806,24 +806,20 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	var name = inSender.name;
 	var number = name.match(/(\d+)$/);
 	number = number[1];
-/*
-	var result;
-	if (this["databaseTypeEditor" + number].getDataValue() == "HSQLDB") {
-	    result = "jdbc:hsqldb:file:" + this["databaseNameEditor" + number].getDataValue() + ";shutdown=true;ifexists=true";
-	} else {
-	    result = "jdbc:" + this["databaseTypeEditor" + number].getDataValue() + "://" + this["databaseHostEditor" + number].getDataValue() + ":" + this["databasePortEditor" + number].getDataValue() + "/" + this["databaseNameEditor" + number].getDataValue();
-	}
-	    */
+
 	var box = this["databasePanel" + number];
 	var designConnectionUrl = box.dataProperties.connectionUrl;
 	var data = parseConnectionUrl( designConnectionUrl);
 	if (data) {
 	    var extrasField = data[3];
+	    if (designConnectionUrl.toLowerCase().indexOf("hsqldb") != 0) {
+		extrasField = this["databaseNameEditor" + number].getDataValue();
+	    }
 	}
 	var result = buildConnectionUrl(this["databaseTypeEditor" + number].getDataValue(), 
-							this["databaseHostEditor" + number].getDataValue(),
-							this["databasePortEditor" + number].getDataValue(),
-							extrasField
+					this["databaseHostEditor" + number].getDataValue(),
+					this["databasePortEditor" + number].getDataValue(),
+					extrasField
 				 );
 	this["databaseURLEditor" + number].setDataValue(result);
     },
