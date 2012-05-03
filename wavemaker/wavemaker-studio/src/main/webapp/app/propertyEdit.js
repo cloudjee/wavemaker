@@ -883,6 +883,7 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 	}
 	if (this.includeLiveViews) {
 	    this.options =this.options.concat(this.getLiveViews());
+	    this.values =this.values.concat(this.getLiveViews());
 	}
 	this.addOptionValues(this.getDataTypes(), true);
     },
