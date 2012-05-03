@@ -16,8 +16,6 @@ package com.wavemaker.spinup.web;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.jar.Manifest;
 import java.util.zip.ZipFile;
 
 import javax.servlet.ServletContext;
@@ -26,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 import org.cloudfoundry.client.lib.archive.ZipApplicationArchive;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
@@ -43,10 +42,12 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 
     private File studioWarFile;
 
+    private VersionProvider versionProvider;
+
     @Override
     public void setServletContext(ServletContext servletContext) {
         try {
-            String version = getVersion(servletContext);
+            String version = this.versionProvider.getVersion(servletContext);
             String path = "/resources/wavemaker-studio-" + version + ".war";
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Using studio resource " + path);
@@ -60,17 +61,6 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
         }
     }
 
-    private String getVersion(ServletContext servletContext) throws IOException {
-        ServletContextResource manifestResource = new ServletContextResource(servletContext, "/META-INF/MANIFEST.MF");
-        InputStream manifestStream = manifestResource.getInputStream();
-        try {
-            Manifest manifest = new Manifest(manifestStream);
-            return manifest.getMainAttributes().getValue("Implementation-Version");
-        } finally {
-            manifestStream.close();
-        }
-    }
-
     @Override
     public ApplicationArchive getArchive() throws Exception {
         return new WavemakerStudioApplicationArchive(new ZipFile(this.studioWarFile));
@@ -79,6 +69,11 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
     @Override
     public void closeArchive(ApplicationArchive archive) throws Exception {
         ((WavemakerStudioApplicationArchive) archive).close();
+    }
+
+    @Autowired
+    public void setVersionProvider(VersionProvider versionProvider) {
+        this.versionProvider = versionProvider;
     }
 
     private static class WavemakerStudioApplicationArchive extends ZipApplicationArchive {

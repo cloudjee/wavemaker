@@ -14,8 +14,15 @@
 
 package com.wavemaker.spinup.web;
 
-import org.springframework.stereotype.Component;
+import java.io.IOException;
 
+import javax.servlet.ServletContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.ServletContextAware;
+
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
 import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategy;
 import com.wavemaker.tools.cloudfoundry.spinup.UsernameWithRandomApplicationNamingStrategy;
 
@@ -23,11 +30,42 @@ import com.wavemaker.tools.cloudfoundry.spinup.UsernameWithRandomApplicationNami
  * {@link ApplicationNamingStrategy} for WaveMaker.
  */
 @Component
-public class WavemakeApplicationNamingStrategy extends UsernameWithRandomApplicationNamingStrategy {
+public class WavemakeApplicationNamingStrategy extends UsernameWithRandomApplicationNamingStrategy implements ServletContextAware {
 
     private static final String APPLICATION_NAME = "wavemaker-studio";
 
-    public WavemakeApplicationNamingStrategy() {
-        super(APPLICATION_NAME);
+    private VersionProvider versionProvider;
+
+    private String version;
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        try {
+            this.version = this.versionProvider.getVersion(servletContext);
+            this.version = this.version.replace(".", "_");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    @Override
+    protected String getApplicationName() {
+        return APPLICATION_NAME + "-" + this.version;
+    }
+
+    @Override
+    public boolean isMatch(ApplicationDetails applicationDetails) {
+        return applicationDetails.getName().startsWith(APPLICATION_NAME);
+    }
+
+    @Override
+    public boolean isUpgradeRequired(ApplicationDetails applicationDetails) {
+        return !applicationDetails.getName().equals(getApplicationName());
+    }
+
+    @Autowired
+    public void setVersionProvider(VersionProvider versionProvider) {
+        this.versionProvider = versionProvider;
+    }
+
 }

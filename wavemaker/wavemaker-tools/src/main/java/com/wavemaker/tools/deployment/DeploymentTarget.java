@@ -73,4 +73,12 @@ public interface DeploymentTarget {
      * @return status message
      */
     String stop(DeploymentInfo deploymentInfo);
+
+    /**
+     * Generate a deployment URL for this app.
+     * @param deploymentInfo
+     *
+     * @return generated url
+     */
+    String getUrl(DeploymentInfo deploymentInfo);
 }

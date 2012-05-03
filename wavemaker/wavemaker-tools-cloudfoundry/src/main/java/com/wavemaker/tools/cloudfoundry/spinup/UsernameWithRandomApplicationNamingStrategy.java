@@ -23,11 +23,7 @@ import java.util.regex.Pattern;
  * 
  * @author Phillip Webb
  */
-public class UsernameWithRandomApplicationNamingStrategy extends AbstractRandomApplicationNamingStrategy {
-
-    public UsernameWithRandomApplicationNamingStrategy(String applicationName) {
-        super(applicationName);
-    }
+public abstract class UsernameWithRandomApplicationNamingStrategy extends AbstractRandomApplicationNamingStrategy {
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("([^@]*)@.*");
 
@@ -40,5 +36,4 @@ public class UsernameWithRandomApplicationNamingStrategy extends AbstractRandomA
         }
         return name;
     }
-
 }

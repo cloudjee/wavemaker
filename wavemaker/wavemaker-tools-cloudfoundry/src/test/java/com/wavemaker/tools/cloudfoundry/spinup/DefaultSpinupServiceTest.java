@@ -147,6 +147,31 @@ public class DefaultSpinupServiceTest {
     }
 
     @Test
+    public void shouldUpgrade() throws Exception {
+        CloudApplication deployedApplication = mock(CloudApplication.class);
+        given(deployedApplication.getName()).willReturn("application-name-old");
+        given(deployedApplication.getUris()).willReturn(Collections.singletonList(APPLICATION_URL));
+        given(deployedApplication.getState()).willReturn(AppState.STARTED);
+        List<CloudApplication> applications = Collections.singletonList(deployedApplication);
+        given(this.cloudFoundryClient.getApplications()).willReturn(applications);
+        given(this.cloudFoundryClient.getApplication("application-name-old")).willReturn(deployedApplication);
+        given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
+        given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(true);
+        given(this.namingStrategy.isUpgradeRequired(isA(ApplicationDetails.class))).willReturn(true);
+        given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
+        TransportToken token = this.service.login(this.secret, this.credentials);
+        String url = this.service.start(this.secret, this.credentials.getUsername(), token);
+        verify(this.cloudFoundryClient).deleteApplication("application-name-old");
+        verify(this.cloudFoundryClient).uploadApplication(APPLICATION_NAME, this.archive);
+        verify(this.cloudFoundryClient).createApplication(APPLICATION_NAME, CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL),
+            null, false);
+        verify(this.propagation).sendTo(this.cloudFoundryClient, this.secret, APPLICATION_NAME);
+        verify(this.cloudFoundryClient).restartApplication(APPLICATION_NAME);
+        assertThat(url, is(equalTo(APPLICATION_URL)));
+        assertThat(this.transportToken, is(this.transportToken));
+    }
+
+    @Test
     public void shouldThrowInvalidCredentialsOnHttpStatusError() throws Exception {
         given(this.cloudFoundryClient.login()).willThrow(new CloudFoundryException(HttpStatus.FORBIDDEN));
         this.thrown.expect(InvalidLoginCredentialsException.class);

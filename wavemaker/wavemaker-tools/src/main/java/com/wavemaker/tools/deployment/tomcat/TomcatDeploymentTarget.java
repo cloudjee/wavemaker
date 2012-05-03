@@ -139,7 +139,11 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         rtn.setPassword(deploymentInfo.getPassword());
         return rtn;
     }
-
+    
+    public String getUrl(DeploymentInfo deploymentInfo){
+    	return "Not Implemented for Tomcat";
+    	}
+    
     /**
      * {@inheritDoc}
      */

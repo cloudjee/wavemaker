@@ -21,7 +21,13 @@ import com.wavemaker.tools.cloudfoundry.spinup.util.HexString;
  */
 public class UsernameWithRandomApplicationNamingStrategyTest {
 
-    private final UsernameWithRandomApplicationNamingStrategy strategy = new UsernameWithRandomApplicationNamingStrategy("appname");
+    private final UsernameWithRandomApplicationNamingStrategy strategy = new UsernameWithRandomApplicationNamingStrategy() {
+
+        @Override
+        protected String getApplicationName() {
+            return "appname";
+        };
+    };
 
     @Test
     public void shouldGenerateUrlFromUsernameAndRandomNumber() throws Exception {
