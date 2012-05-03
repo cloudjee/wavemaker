@@ -62,7 +62,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	    var type =  this.serviceList.selectedItem.getValue("vendor");
 
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING")+" Testing Service");
-	    this.cloudFoundryService.requestAsync("isServiceBound", ["", "", serviceName, "wavemaker-studio"], 
+	    this.cloudFoundryService.requestAsync("isServiceBound", ["", "", serviceName, "wavemaker-studio-6_5_0_M1"], 
 					    dojo.hitch(this, function(isBound) {
 						if (isBound) {
 						    this.doImport(serviceName, type);
