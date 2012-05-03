@@ -365,9 +365,12 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor setters
 	//===========================================================================
 	canChangeEditorReadonly: function(inEditor, inReadonly, inCanChangeFunc) {
-	    if (wm.isInstanceType(inEditor, wm.AbstractEditor) && inEditor.ignoreParentReadonly ||
-		wm.isInstanceType(inEditor, wm.RelatedEditor)  && inEditor.ignoreParentReadonly && inEditor.editingMode == "editable subform") {
+	    if (wm.isInstanceType(inEditor, wm.AbstractEditor) && inEditor.ignoreParentReadonly) {
 		return false;
+	    }
+	    if (wm.isInstanceType(inEditor, wm.RelatedEditor)  && inEditor.ignoreParentReadonly && inEditor.editingMode == "editable subform") {
+		var type = wm.typeManager.getType(inEditor.dataSet.type);
+		return (!type || !type.liveService); // don't edit subforms that are livetypes, but a composite key is NOT a liveService and should be editable
 	    }
 	    var c = dojo.isFunction(inCanChangeFunc);
 	    return !c || inCanChangeFunc(inEditor, this, inReadonly);
