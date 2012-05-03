@@ -434,7 +434,7 @@ dojo.declare("Studio", wm.Page, {
     setupDefaultContextMenu: function() {
 	var f = function(e) {
 
-	    if (e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
+	    if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
 		dojo.stopEvent(e);		
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
@@ -1893,10 +1893,11 @@ dojo.declare("Studio", wm.Page, {
                 d.addCallback(optionalCallback);
         },
     loadHelp: function(inType, inPropName, onSuccess) {
-	    var version = "6.4" || wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"); // TODO: Get rid of 6.4
-	    var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
-
-	      if (inType == studio.project.projectName) inType = "wm.Application";
+	var version = "6.4" || wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"); // TODO: Get rid of 6.4
+	var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
+	
+	if (inType == studio.project.projectName) inType = "wm.Application";
+	else if (inType == studio.project.pageName) inType = "wm.Page";
 
 	      inType = inType.substring(inType.indexOf(".")+1);
 	

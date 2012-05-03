@@ -17,6 +17,16 @@ Studio.widgets = {
         themesListVar: ["wm.Variable", {type: "StringData"}],
     deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],
     deviceTypeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: "Desktop", dataValue: "desktop"}, {name: "Tablet", dataValue: "tablet"}, {name: "Phone", dataValue: "phone"}]'}],
+
+    "com.wavemaker.editor.completions": ["wm.TypeDefinition", {internal: true}, {}, {
+	"com.wavemaker.editor.completions.name":        ["wm.TypeDefinitionField", {fieldType: "String", fieldName: "name"}],
+	"com.wavemaker.editor.completions.description": ["wm.TypeDefinitionField", {fieldType: "String", fieldName: "description"}],
+	"com.wavemaker.editor.completions.returns":     ["wm.TypeDefinitionField", {fieldType: "String", fieldName: "returns"}],
+	"com.wavemaker.editor.completions.params":      ["wm.TypeDefinitionField", {fieldType: "String", fieldName: "params"}]
+    }],
+
+
+    autoCompletionVariable: ["wm.Variable", {type: "com.wavemaker.editor.completions", isList: true}],
 	studioService: ["wm.JsonRpcService", {service: "studioService", sync: true}, {}],
 	phoneGapService: ["wm.JsonRpcService", {service: "phoneGapService", sync: true}, {}],
 	servicesService: ["wm.JsonRpcService", {service: "servicesService", sync: true}, {}],
@@ -471,7 +481,7 @@ height: "29px", width: "420px",
 						sourceToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						sourceLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 					}],*/
-			sourceTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioTabsInverted"]},  headerHeight: 32, border: "1,0,0,1", borderColor: "#959DAB", width: "100%", height: "100%",clientBorder: "1,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
+			sourceTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  headerHeight: 32, border: "1,0,0,1", borderColor: "#959DAB", width: "100%", height: "100%",clientBorder: "1,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: "Script"}, {onShow: "editArea.focus"}, {
 						scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#000000"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
@@ -488,9 +498,33 @@ height: "29px", width: "420px",
 						    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 						    editAreaFullPath: ["wm.Label", {width: "100%", align: "right", height: "100%"}]	    
 						}],
-						editArea: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty", onChange1: "updateAutoComplete", onShow: "updateAutoComplete", onHide: "hideAutoComplete"}]
+						editAreaPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+						    editArea: ["wm.AceEditor", {width: "100%", height: "100%", minWidth: 20}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty", onChange1: "updateAutoComplete", onShow: "updateAutoComplete", onHide: "hideAutoComplete"}],
+						    editAreaSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],  
+						    autoCompletionDialog: ["wm.Panel", {width: "200px", minWidth: 20, height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+							topPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+							    listPanel: ["wm.Panel", {width: "100px", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+								listPanelLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Completions"}],
+								autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", headerVisible: false, dataFields: "name"}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
+								    binding: ["wm.Binding", {}, {}, {
+									wire: ["wm.Wire", {targetProperty: "dataSet", source: "autoCompletionVariable"}]
+								    }]
+								}]
+							    }],
+							    autoCompletePropPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+								autoCompleteNameLabel: ["wm.Label", {width: "100%", height: "48px", caption: "", singleLine: false}],
+								autoCompleteTypeLabel: ["wm.Label", {width: "100%", height: "48px", caption: "", singleLine: false}],
+								autoCompleteParamsLabel: ["wm.Label", {width: "100%", height: "48px", caption: "", singleLine: false}],
+								autoCompleteReturnsLabel: ["wm.Label", {width: "100%", height: "48px", caption:"", singleLine: false}]
+							    }]
+							}],
+							autoCompletionHtmlLabel: ["wm.Label", {width: "100%", height: "20px", caption: "Description"}],
+							autoCompletionHtml: ["wm.Html", {width: "100%", height: "100%", padding: "4", backgroundColor: "white", html: "Select a term to see description; double click to add it to your code"}]
+						    }]
+						}]
 					    }],
 					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
+						
 						cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
 						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
 						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],

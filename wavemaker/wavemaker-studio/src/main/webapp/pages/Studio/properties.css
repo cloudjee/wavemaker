@@ -3,7 +3,8 @@
     background-color: transparent;
     -webkit-appearance: none;
 }
-#studio_PIContents .wminspector-subgroupLabel.wmlabel .wmSizeNode {
+#studio_PIContents .wminspector-subgroupLabel.wmlabel .wmSizeNode,
+#studio_PIContents .StudioFieldGroupPanel .wmlabel .wmSizeNode {
     font-weight: bold;
     text-decoration: underline;
 }
@@ -75,12 +76,6 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
     font-size: 11px;
 }
 
-.wminspector .StudioFieldGroupPanel {
-    background-color: #1B222D;
-	-moz-border-radius: 4px; 
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-}
 
 .wminspector .wmbutton {
 	-moz-border-radius: 4px; 

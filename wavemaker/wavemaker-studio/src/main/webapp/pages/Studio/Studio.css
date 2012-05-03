@@ -228,6 +228,29 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: black;
 }
 
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers > .wmtablayers-tabbar,
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers {
+    background-color: transparent;
+    background: none;
+}
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers .wmlayer,
+.wminspector .StudioFieldGroupPanel {
+    background-color: #1B222D;
+    -moz-border-radius: 4px; 
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    border-color: #959DAB;
+}
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers .wmlayer {
+    border-radius-topleft: 0px;
+    -webkit-border-top-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+}
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers > .wmtablayers-tabbar > .wmtablayers-selected {
+    background: none;
+    background-color:  #1B222D;
+}
+
 .StudioTabs.NoRightMarginOnTab > .wmtablayers-tabbar > .wmtablayers-tab {
     margin-left: 0px !important;
 }
@@ -247,6 +270,10 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .Studio .StudioToolBar {
 	background-color: #414B5C;
 }
+.Studio .StudioDarkerLayers .StudioToolBar {
+    background-color: transparent;
+}
+
 .Studio .StudioToolBar .wmlabel,
 .Studio .StudioToolBar .wmeditor-caption {
     color: white;
@@ -367,13 +394,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .Studio .Inspector .wmaccordion-header.wmaccordion-collapsed {
 
 }
-.Studio .Inspector .StudioTabs > .wmtablayers-tabbar {
-    background-color: transparent;
-    background: none;
-}
-.Studio .Inspector .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
-    background-color: #2B323D;
-}
+
 /* END 6.5 Retheming Effort */
 
 
@@ -1566,8 +1587,8 @@ background-color: transparent;
     background-color: rgb(230,230,230);
 }
 
-#studio_autoCompletionList .wmlist-item.CompletionListHeader,
-#studio_autoCompletionList .wmlist-item.wmlist-item-over.CompletionListHeader {
+.StudioDarkLayers #studio_autoCompletionList .wmlist-item.CompletionListHeader td,
+.StudioDarkLayers #studio_autoCompletionList .wmlist-item.wmlist-item-over.CompletionListHeader td {
     background-color: #424959;
     color: white;
     cursor: default;
@@ -1663,6 +1684,10 @@ background-color: transparent;
     padding:5px;
     white-space:pre;
     color: white;
+}
+.Studio  .Studio-autoCompletionHtml {
+    background-color: white;
+    color: black;
 }
 .Studio  .Studio-autoCompletionHtml .SynopsisNavButtons {
     padding: 10px;
