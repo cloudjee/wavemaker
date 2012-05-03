@@ -112,7 +112,7 @@ this._inResize = true;
 	    if (window["PhoneGap"]) {
 		height = Math.min(screen.height, window.innerHeight);
 		pn.style.height = height + "px";
-		width = Math.min(screen.width, window.innerWidth || 20000);
+		width = Math.min(screen.width, window.innerWidth || 20000); // this is correct for Android 2.x devices, untested for other platforms
 	    } else if (navigator.userAgent.match(/(iphone|ipad)/i)) {
 
 		if (window.orientation == 90 || window.orientation == -90) {
