@@ -1987,6 +1987,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	this.reflow();
     },
     addClass: function(inClassName) {
+	this.changed();
 	var className =  (typeof inClassName == "string") ? inClassName : "";
 	this.grid.addRow({dataValue: className || ""}, true);
     },
@@ -2088,7 +2089,13 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	    }
 	}
 	for (var i = 0; i < this.dataSet.getCount(); i++) {
-	    this.inspected.addUserClass(this.dataSet.getItem(i).getValue("dataValue"));
+	    var className = this.dataSet.getItem(i).getValue("dataValue");
+	    if (className) {
+		this.inspected.addUserClass(className);
+	    } else {
+		this.dataSet.removeItem(i);
+		i--;
+	    }
 	}
     },
     getDataValue: function() {
