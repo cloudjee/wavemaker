@@ -180,11 +180,6 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
     }
 
     @Override
-    public Object getOriginalResource() {
-        return this.root;
-    }
-
-    @Override
     public void touch(LocalFileSystemKey key) {
         key.getFile().setLastModified(System.currentTimeMillis());
     }

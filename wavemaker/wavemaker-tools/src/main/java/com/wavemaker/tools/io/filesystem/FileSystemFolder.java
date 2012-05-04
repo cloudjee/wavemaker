@@ -86,11 +86,29 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
+    public FileSystemFolder<K> appendFolder(String name) {
+        Assert.hasLength(name, "Name must not be empty");
+        if (name.substring(0, 1).equals("/")) {
+            name = name.substring(1);
+        }
+        return getFolder(name);
+    }
+
+    @Override
     public FileSystemFile<K> getFile(String name) {
         Assert.hasLength(name, "Name must not be empty");
         JailedResourcePath filePath = getPath().get(name);
         K fileKey = getFileSystem().getKey(filePath);
         return new FileSystemFile<K>(filePath, getFileSystem(), fileKey);
+    }
+
+    @Override
+    public FileSystemFile<K> appendFile(String name) {
+        Assert.hasLength(name, "Name must not be empty");
+        if (name.substring(0, 1).equals("/")) {
+            name = name.substring(1);
+        }
+        return getFile(name);
     }
 
     @SuppressWarnings("unchecked")

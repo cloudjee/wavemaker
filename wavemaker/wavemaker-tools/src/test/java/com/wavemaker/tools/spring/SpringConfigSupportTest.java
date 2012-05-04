@@ -51,7 +51,7 @@ public class SpringConfigSupportTest extends WMTestCase {
         //cftempfix
         //File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
         ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
-        Project project = new Project(configFile.getParent(), new LocalStudioFileSystem());
+        Project project = new Project(configFile.getParent());
         Beans beans = SpringConfigSupport.readBeans(configFile);
         List<Object> beansChildren = beans.getImportsAndAliasAndBean();
         assertEquals(3, beansChildren.size());

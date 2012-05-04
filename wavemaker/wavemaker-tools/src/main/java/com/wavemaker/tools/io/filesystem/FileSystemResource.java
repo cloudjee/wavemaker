@@ -20,9 +20,13 @@ import org.springframework.util.ObjectUtils;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceStringFormat;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystemKey;
+import com.wavemaker.common.WMRuntimeException;
 
 import java.io.IOException;
 
@@ -59,7 +63,7 @@ public abstract class FileSystemResource<K> implements Resource {
         return this.key;
     }
 
-    public final JailedResourcePath getPath() {
+    protected final JailedResourcePath getPath() {
         return this.path;
     }
 
@@ -157,12 +161,24 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public Object getOriginalResource() {
-        return this.fileSystem.getOriginalResource();
+        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            return ((LocalFileSystemKey)this.key).getFile();
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override
     public String getCanonicalPath() {
-        return this.fileSystem.getCanonicalPath();
+        try {
+        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+                return ((java.io.File)getOriginalResource()).getCanonicalPath();
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);    
+        }
     }
 
 }

@@ -63,6 +63,7 @@
     </target>
 
     <target name="-check-deploy-uptodate">
+		<echo>************ app.webapproot.dir = ${app.webapproot.dir}</echo>
         <property name="deploy.test.file.name"
                 value="${deploy.name}-deploy-test-file.txt"/>
         <uptodate property="deploy-files-uptodate"

@@ -44,7 +44,7 @@ public abstract class AbstractFileService implements FileService {
 
     @Override
     public String readFile(String path) throws IOException {
-        return readFile(getFileServiceRoot().getFile(path));
+        return readFile(getFileServiceRoot().appendFile(path));
     }
 
     @Override

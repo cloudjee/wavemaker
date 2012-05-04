@@ -153,7 +153,7 @@ public interface Resource {
     /**
      * Returns the cannonical pathname string for the original resource
      *
-     * @return the original resource object
+     * @return the cannonical pathname
      */
     String getCanonicalPath();
 
