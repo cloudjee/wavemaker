@@ -50,6 +50,15 @@ public interface Resource {
     String getName();
 
     /**
+     * Returns the last name of the resource's full pathname.
+     * This is just the last name in the pathname's name sequence.
+     *
+     * @return the name of the resource, for example <tt>"file.txt"</tt>
+     * @throws ResourceDoesNotExistException if this resource no longer exists
+     */
+    String getLastName();
+
+    /**
      * Delete the current resource (and any children). If this resource does not exist then no operation is performed.
      */
     void delete();
@@ -144,7 +153,7 @@ public interface Resource {
     /**
      * Returns the cannonical pathname string for the original resource
      *
-     * @return the original resource object
+     * @return the cannonical pathname
      */
     String getCanonicalPath();
 

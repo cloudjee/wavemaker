@@ -141,11 +141,6 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     }
 
     @Override
-    public Object getOriginalResource() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void touch(MongoFileSystemKey key) {
         getFile(key).put("uploadDate", new Date());
     }

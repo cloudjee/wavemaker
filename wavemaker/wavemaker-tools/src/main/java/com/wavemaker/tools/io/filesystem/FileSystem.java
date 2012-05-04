@@ -134,13 +134,6 @@ public interface FileSystem<K> {
     ResourceOrigin getResourceOrigin();
 
     /**
-     * Returns the original resource object that can be casted to the appropriate rsource origin
-     * 
-     * @return the original resource object
-     */
-    Object getOriginalResource();
-
-    /**
      * Touch the underlying file.
      * 
      * @param key the key to touch
