@@ -44,8 +44,16 @@
 										<tr><td><label for="${_uId}_b">${blueLabel}</label></td><td><input id="${_uId}_b" dojoAttachPoint="Bval" size="1" dojoAttachEvent="onchange: _colorInputChange"></td></tr>
 										</table>
 									</div>
+							<!--  Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+							 WaveMaker: Added ok/cancel buttons-->
+									<div>
+								  <button class="wmbutton OKButton">OK</button>
+								  <button class="wmbutton CancelButton">Cancel</button>
+									  </div>
 								</td>
-								<td>
+							<!--  Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+							 WaveMaker: set display:none because it was not laid out to our satisfaction -->
+								<td style="display:none">
 									<div class="dijitInline dojoxColorPickerHsv" dojoAttachPoint="hsvNode">
 										<table cellpadding="1" cellspacing="1">
 										<tr><td><label for="${_uId}_h">${hueLabel}</label></td><td><input id="${_uId}_h" dojoAttachPoint="Hval"size="1" dojoAttachEvent="onchange: _colorInputChange"> ${degLabel}</td></tr>
