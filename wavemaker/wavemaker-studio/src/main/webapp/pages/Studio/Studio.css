@@ -207,7 +207,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     top: 3px;
 }
-.StudioTabs.StudioDarkLayers {
+.StudioTabs.StudioDarkLayers > .wmlayer {
     background-color: #636F80;
 }
 
