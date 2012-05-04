@@ -42,6 +42,6 @@ wm.Object.extendSchema(wm.gadget.FacebookActivityFeed, {
     font: {group: "widgetName",subgroup:"style", options:["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
     colorscheme: {group: "widgetName", subgroup:"style", options: ["dark","light"]}, 
     ref: {group: "widgetName", subgroup: "data"},
-    site: {group: "widgetName", subgroup: "data"}
+    site: {group: "widgetName", subgroup: "data", bindTarget: 1}
 
 });
