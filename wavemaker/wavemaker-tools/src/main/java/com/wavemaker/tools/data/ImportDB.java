@@ -381,7 +381,11 @@ public class ImportDB extends BaseDataModelSetup {
 
                     // FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
                     OutputStream os = this.fileSystem.getOutputStream(file);
-                    IOUtils.write(content, os, ServerConstants.DEFAULT_ENCODING);
+                    try {
+                        IOUtils.write(content, os, ServerConstants.DEFAULT_ENCODING);
+                    } finally {
+                        os.close();
+                    }
                 }
 
             } catch (IOException ioe) {
