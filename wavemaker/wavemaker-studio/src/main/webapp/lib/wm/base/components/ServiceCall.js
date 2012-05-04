@@ -477,6 +477,7 @@ dojo.declare("wm.ServiceCall", null, {
 				*/
             } else {
 	        var args = inArgs || this.getArgs();
+		
                 //this.replaceAllDateObjects(args);
 		wm.logging && console.debug("request", this.getId(), "operation", optionalOp || this.operation, "args", args);
 		if (djConfig.isDebug)
@@ -725,9 +726,14 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		var data= this.getData(true), args=[], d;
 		// convert to array
 		for (var p in this._dataSchema) {
-			if (data != undefined)
-				d = data[p];
-			args.push(d !== undefined ? d : null);
+		    if (data != undefined) {
+			if (data[p] instanceof Date) {
+			    d = data[p].getTime();
+			} else {
+			    d = data[p];
+			}
+		    }
+		    args.push(d !== undefined ? d : null);
 /* Seung's temporary fix
 			if (d) {
 				args.push(d);

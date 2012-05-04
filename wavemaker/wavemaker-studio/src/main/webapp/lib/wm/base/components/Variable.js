@@ -425,7 +425,10 @@ dojo.declare("wm.Variable", wm.Component, {
 			var data = {};
 			var props = this.listDataProperties();
 			for (var i in props) {
-				var v = this.data[i];
+			    var v = this.data[i];
+			    if (wm.getDataConvertDates && v instanceof Date) {
+				v = v.getTime();
+			    }
 				// we may not always want all related junk
 				if (v !== undefined) {
 				    if (v instanceof wm.Variable) {
