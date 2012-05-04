@@ -153,7 +153,7 @@ public class ProjectManager {
         if (!projectFolder.exists()) {
             throw new WMRuntimeException(MessageResource.PROJECT_DNE, projectName, projectFolder);
         }
-        Project project = new Project(projectFolder, this.fileSystem);
+        Project project = new Project(projectFolder);
         openProject(project, noSession);
     }
 

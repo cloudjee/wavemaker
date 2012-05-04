@@ -57,7 +57,8 @@ public class Project extends AbstractFileService {
 
     private String projectName;
 
-    private Resource projectRoot;
+    private Resource projectRoot = null;
+    private Folder projectRootFolder = null;
 
     private final boolean mavenProject;
 
@@ -73,17 +74,12 @@ public class Project extends AbstractFileService {
         }
     }
 
-    public Project(Folder projectFolder, StudioFileSystem fileSystem) {
+    //cftempfix
+    public Project(Folder projectRootFolder) {
         super();
-        // FIXME implement this
-        throw new UnsupportedOperationException();
-    }
-
-   //cftempfix
-    public Project(Folder projectFolder) {
-        super();
-        // FIXME implement this
-        throw new UnsupportedOperationException();
+        this.projectRootFolder = projectRootFolder;
+        this.projectName = projectRootFolder.getLastName();
+        this.mavenProject = projectRootFolder.getFile(ProjectConstants.POM_XML).exists();
     }
 
     @Deprecated
@@ -93,15 +89,20 @@ public class Project extends AbstractFileService {
 
     public Folder getRootFolder() {
         // FIXME implement properly
-        try {
-            Resource projectRoot = getProjectRoot();
-            if (projectRoot instanceof ResourceAdapter) {
-                return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+        //cftempfix
+        if (this.projectRoot != null) {
+            try {
+                Resource projectRoot = getProjectRoot();
+                if (projectRoot instanceof ResourceAdapter) {
+                    return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+                }
+                LocalFileSystem fileSystem = new LocalFileSystem(projectRoot.getFile());
+                return FileSystemFolder.getRoot(fileSystem);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
-            LocalFileSystem fileSystem = new LocalFileSystem(projectRoot.getFile());
-            return FileSystemFolder.getRoot(fileSystem);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        } else {
+            return this.projectRootFolder;    
         }
     }
 

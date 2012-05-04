@@ -15,6 +15,7 @@
 package com.wavemaker.tools.util;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
@@ -105,7 +106,7 @@ public class DesignTimeUtils {
 
             try {
                 // override configuration
-                setDefaultProjectHome(projectRoot.getParent().toString());
+                setDefaultProjectHome(new File(projectRoot.getCanonicalPath()).getParentFile().getAbsolutePath());
 
                 DesignServiceManager dsm = new DesignServiceManager();
 

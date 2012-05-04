@@ -59,7 +59,7 @@ public abstract class FileSystemResource<K> implements Resource {
         return this.key;
     }
 
-    protected final JailedResourcePath getPath() {
+    public final JailedResourcePath getPath() {
         return this.path;
     }
 

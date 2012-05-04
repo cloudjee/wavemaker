@@ -35,6 +35,8 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * Base Task.
@@ -44,7 +46,7 @@ import com.wavemaker.tools.io.Folder;
  */
 public abstract class CompilerTask extends Task {
 
-    private Folder projectRoot;
+    private File projectRoot;
 
     private Project agProject;
 
@@ -76,12 +78,16 @@ public abstract class CompilerTask extends Task {
     }
 
     public Folder getProjectRoot() {
-        return this.projectRoot;
+        LocalFileSystem fileSystem = new LocalFileSystem(this.projectRoot);
+        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        return folder;
     }
 
-    public void setProjectRoot(Folder projectRoot) {
+    public void setProjectRoot(File projectRoot) {
         this.projectRoot = projectRoot;
-        this.agProject = new Project(projectRoot, new LocalStudioFileSystem());
+        LocalFileSystem fileSystem = new LocalFileSystem(this.projectRoot);
+        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        this.agProject = new Project(folder);
     }
 
     public void setVerbose(boolean verbose) {
@@ -99,7 +105,9 @@ public abstract class CompilerTask extends Task {
     protected synchronized DesignServiceManager getDesignServiceManager() {
         if (this.designServiceManager == null) {
             if (this.projectRoot != null) {
-                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(this.projectRoot);
+                LocalFileSystem fileSystem = new LocalFileSystem(this.projectRoot);
+                Folder folder = FileSystemFolder.getRoot(fileSystem);
+                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(folder);
             }
         }
         return this.designServiceManager;
