@@ -748,6 +748,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	deleteData: function() {
 	    var f = dojo.hitch(this,function() {
 		this.onBeginDelete()
+		this.operation = "delete";
 		return this.doOperation("delete");
 	    });
 
