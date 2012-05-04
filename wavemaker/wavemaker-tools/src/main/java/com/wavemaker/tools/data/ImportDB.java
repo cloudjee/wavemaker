@@ -283,7 +283,6 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void regenerate() {
-
         // File springCfg = new File(this.destdir, DataServiceUtils.getCfgFileName(this.serviceName));
         Resource springCfg = null;
         try {
@@ -292,46 +291,26 @@ public class ImportDB extends BaseDataModelSetup {
         }
 
         DataModelConfiguration cfg = new DataModelConfiguration(springCfg, new DefaultClassLoaderFactory(this.destdir, this.classesdir));
-
         try {
-
             cfg.touchAllEntities();
-
             cfg.save();
-
         } finally {
-
             cfg.dispose();
-
         }
-
     }
 
     // generate pojos and connection properties
     private void generateBaseConfigFiles() {
-
         Properties connectionProperties = getHibernateConnectionProperties();
-
         this.properties.putAll(connectionProperties);
-
         this.jdbcConf.setProperties(this.properties);
-
         this.jdbcConf.setReverseStrategy(this.revengNamingStrategy);
-
         Configuration cfg = this.jdbcConf.getConfiguration();
-
         getParentTask().setConfiguration(cfg);
-
         checkTables(cfg);
-
-        // this.destdir.mkdirs();
-
         writePropertiesFile(cfg);
-
         getJavaExporter().execute();
-
         removeConstructor();
-
         if (this.compile) {
             compile();
         }
@@ -381,7 +360,11 @@ public class ImportDB extends BaseDataModelSetup {
 
                     // FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
                     OutputStream os = this.fileSystem.getOutputStream(file);
-                    IOUtils.write(content, os, ServerConstants.DEFAULT_ENCODING);
+                    try {
+                        IOUtils.write(content, os, ServerConstants.DEFAULT_ENCODING);
+                    } finally {
+                        os.close();
+                    }
                 }
 
             } catch (IOException ioe) {
@@ -392,36 +375,25 @@ public class ImportDB extends BaseDataModelSetup {
 
     // generate .hbm.xml, .ql.xml, .spring.xml files.
     private void generateConfigFiles() {
-
         for (ExporterTask e : getPostCompileExporters()) {
             e.execute();
         }
     }
 
     private void compile() {
-        // if (!this.classesdir.exists()) {
-        // this.classesdir.mkdirs();
-        // }
         this.projectCompiler.compile();
     }
 
     protected void writePropertiesFile(Configuration cfg) {
-
         Properties p = getProperties();
-
         p = DataServiceUtils.addServiceName(p, this.serviceName);
-
         DataServiceUtils.writeProperties(p, this.destdir, this.serviceName);
     }
 
     protected void generateServiceClass(DeprecatedServiceDefinition def) {
-
         GenerationConfiguration genconf = new GenerationConfiguration(def, this.destdir);
-
         DataServiceGenerator generator = new DataServiceGenerator(genconf);
-
         generator.setGenerateMain(this.generateServiceMain);
-
         try {
             generator.generate();
         } catch (GenerationException ex) {
@@ -459,7 +431,6 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private String getDefaultRevengMetaDataDialect() {
-
         if (isMySQL()) {
             return BasicMetaDataDialect.class.getName();
         }
@@ -472,32 +443,23 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkRevengMetaDataDialect() {
-
         if (this.revengMetaDataDialect == null) {
-
             this.revengMetaDataDialect = this.properties.getProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY);
-
             if (this.revengMetaDataDialect == null) {
                 this.revengMetaDataDialect = getDefaultRevengMetaDataDialect();
-
             }
-
         }
 
         if (this.revengMetaDataDialect != null) {
-
             if (DataServiceLoggers.importLogger.isInfoEnabled()) {
                 DataServiceLoggers.importLogger.info("Using metadata dialect: " + this.revengMetaDataDialect);
             }
-
             // these properties are passed to Hibernate Reveng.
             this.properties.setProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY, this.revengMetaDataDialect);
         }
-
     }
 
     private DeprecatedServiceDefinition loadServiceDefinition() {
-        // File f = new File(this.destdir, this.serviceName + DataServiceConstants.SPRING_CFG_EXT);
         Resource f = null;
         try {
             f = this.destdir.createRelative(this.serviceName + DataServiceConstants.SPRING_CFG_EXT);
@@ -521,7 +483,6 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkClassesDir() {
-
         if (this.classesdir == null) {
             String s = this.properties.getProperty(CLASSES_DIR_SYSTEM_PROPERTY);
             if (s != null) {
@@ -535,7 +496,6 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkImportMode() {
-
         if (this.properties.getProperty(IMPORT_DATABASE_SYSTEM_PROPERTY) != null) {
             setImportDatabase(Boolean.getBoolean(IMPORT_DATABASE_SYSTEM_PROPERTY));
         }
@@ -547,7 +507,6 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkServiceClass() {
         if (this.serviceName == null || this.packageName == null) {
-
             String s = this.properties.getProperty(SERVICE_CLASS_SYSTEM_PROPERTY);
             if (s != null) {
                 String p = StringUtils.fromLastOccurrence(s, ".", -1);
@@ -569,13 +528,9 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkRevengFiles() {
-
         String s = this.properties.getProperty(REVENG_SYSTEM_PROPERTY);
-
         if (s != null) {
-
             String[] paths = s.split(",");
-
             for (String path : paths) {
                 File f = new File(path);
                 if (!f.exists() || f.isDirectory()) {
@@ -586,7 +541,6 @@ public class ImportDB extends BaseDataModelSetup {
                 }
                 addRevengFile(f);
             }
-
         }
     }
 
@@ -602,27 +556,21 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkCreateJar() {
-
         String s = this.properties.getProperty(CREATE_JAR_SYSTEM_PROPERTY);
-
         if (s != null) {
             setCreateJar(Boolean.getBoolean(CREATE_JAR_SYSTEM_PROPERTY));
         }
     }
 
     private void checkGenerateServiceMain() {
-
         String s = this.properties.getProperty(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY);
-
         if (s != null) {
             setGenerateServiceMain(Boolean.getBoolean(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY));
         }
     }
 
     private void maybeGenerateRevEng() {
-
         if (!this.valuesFromReveng) {
-
             if (!this.revengFiles.isEmpty()) {
                 throw new ConfigurationException("Please specify a package name in your reveng file");
             }
@@ -715,32 +663,24 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkGenerateHibernateConfig() {
-
         String s = this.properties.getProperty(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY);
-
         if (s != null) {
             setGenerateHibernateCfg(Boolean.getBoolean(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY));
         }
     }
 
     private void checkRegenerate() {
-
         String s = this.properties.getProperty(REGENERATE_SYSTEM_PROPERTY);
-
         if (s != null) {
             setRegenerate(Boolean.getBoolean(REGENERATE_SYSTEM_PROPERTY));
         }
-
     }
 
     private void checkGenerateOldStyleOps() {
-
         String s = this.properties.getProperty(GENERATE_OLD_STYLE_OPRS_PROPERTY);
-
         if (s != null) {
             setUseIndividualCRUDOperations(Boolean.getBoolean(GENERATE_OLD_STYLE_OPRS_PROPERTY));
         }
-
     }
 
     @Override
