@@ -68,11 +68,11 @@ dojo.declare("TypeDefinitionGeneratorDialog", wm.Page, {
          } else if (typeof val == "object") {
              var typedef = new wm.TypeDefinition({owner: studio.application, name: inTypeDef.name + "." + inKey});
              this.moreDefs[typedef.name] = typedef;             
-             var field = new wm.TypeDefinitionField({owner: inTypeDef, name: inKey, fieldName: inKey, fieldType: (inTypeDef == this.typeDef ? this.typeName.getDataValue() : inTypeDef.name) + "." + inKey, isList: isList});
+             var field = new wm.TypeDefinitionField({owner: inTypeDef, name: inKey, fieldName: inKey, fieldType: (inTypeDef == this.typeDef ? this.typeName.getDataValue() : inTypeDef.name) + "." + inKey, isList: Boolean(isList)});
              this.parseObj(val, typedef);
          }          
          if (type)
-             new wm.TypeDefinitionField({owner: inTypeDef, name: inKey, fieldName: inKey, fieldType: type, isList: isList});
+             new wm.TypeDefinitionField({owner: inTypeDef, name: inKey, fieldName: inKey, fieldType: type, isList: Boolean(isList)});
       }));
         inTypeDef.doAddType();
     },
