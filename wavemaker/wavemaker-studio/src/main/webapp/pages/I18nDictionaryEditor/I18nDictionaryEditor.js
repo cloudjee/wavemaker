@@ -80,6 +80,9 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	    }
 	}
     },
+    dictionaryItemClear: function() {
+	this.editTermPanel.removeAllControls();
+    },
     dictionaryItemSelect: function(inSender, inItem) {
 	var name = inSender.selectedItem.getValue("dataValue");
 	this.editTermPanel.removeAllControls();
@@ -157,6 +160,15 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
     },
     cancelClick: function() {
 	this.owner.owner.hide();
+    },
+    addLanguageClick: function() {
+	app.prompt("Enter language code", "fr", dojo.hitch(this, function(inValue) {
+	    if (!this.dictionaryHash[inValue]) {
+		this.dictionaryHash[inValue] = {};
+		this.dictionaryList.push(inValue);
+		this.dictionaryItemSelect(this.dictionaryItemList, this.dictionaryItemList.selectedItem);
+	    }
+	}));
     },
     insertScriptClick: function(inSender) {
 	var name = this.dictionaryItemList.selectedItem.getValue("dataValue");	
