@@ -104,7 +104,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     loadingDialog:    {group: "data", subgroup: "behavior", order: 100, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}},
 
     /* Data group; serverOptions subgroup */
-    firstRow:         {group: "data", subgroup: "serverOptions", order: 15},
+    firstRow:         {group: "data", subgroup: "serverOptions", order: 15, type: "number"},
     maxResults:       {group: "data", subgroup: "serverOptions", order: 17},
     designMaxResults: {group: "data", subgroup: "serverOptions", order: 18},
     downloadFile:     {group: "data", subgroup: "serverOptions", order: 20, advanced: 1},
