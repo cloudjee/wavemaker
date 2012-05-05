@@ -243,7 +243,7 @@ dojo.declare("wm.Layout", wm.Container, {
 	    this.setBounds(this.parent.getContentBounds());
 	},
 	reflow: function() {
-		if (this._cupdating)
+	        if (this._cupdating || this.isDestroyed)
 			return;
 	        this.updateBounds();
 		this.renderBounds();
