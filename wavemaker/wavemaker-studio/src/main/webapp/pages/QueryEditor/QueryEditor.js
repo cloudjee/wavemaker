@@ -560,7 +560,22 @@ dojo.declare("QueryEditor", wm.Page, {
 			this.emptyResultSetLabel.setShowing(true);
 			this.queryOutputList.setShowing(false);
 		} else {
-			this.queryOutputList.renderData(inResult);
+		    var data = [];
+		    // turn array into hash if we got an array instead of a hash
+		    if (dojo.every(inResult, function(aResult) {return dojo.isArray(aResult);})) {
+			dojo.forEach(inResult, function(row) {
+			    var newrow = {};
+			    dojo.forEach(row, function(value, index) {
+				newrow[index] = value;
+			    });
+			    data.push(newrow);
+			});
+		    } else {
+			data = inResult;
+		    }
+			this.queryOutputList.renderData(data);
+		    var newWidth = this.queryOutputList._dataFields.length * 150;
+		    this.queryOutputList.setWidth(newWidth < this.queryOutputListPanel.bounds.w ? "100%" : newWidth + "px");
 		}
 	},
 	_runQueryError: function(inError) {

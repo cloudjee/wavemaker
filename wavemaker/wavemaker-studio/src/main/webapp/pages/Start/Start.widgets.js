@@ -13,7 +13,7 @@
  */
  
 Start.widgets = {
-    layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "center", backgroundColor: "#ffffff", autoScroll: false}, {}, {
+    layoutBox1: ["wm.Layout", {_classes: {domNode:["StudioDarkPanel"]}, height: "100%", width: "100%", horizontalAlign: "center", autoScroll: false}, {}, {
 /*
 		editorToolbar: ["wm.Panel", {height: "29px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 			logoBtmHolder: ["wm.Panel", {height: "100%", width: "221px"}, {}]

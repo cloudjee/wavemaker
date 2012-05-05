@@ -223,6 +223,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .StudioTabs.StudioDarkLayers > div > .wmlayer a,
 .StudioTabs.StudioDarkLayers > div > .wmlayer a:visited,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel.StudioLabel,
+.StudioTabs.StudioDarkLayers > div > .wmlayer .StudioLabel .wmlabel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .StudioEditor .wmeditor-caption {
     color: white;
 }
