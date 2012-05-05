@@ -421,7 +421,9 @@ dojo.declare("Studio", wm.Page, {
 		  }
 		}
 
-	    this.setupDefaultContextMenu();
+	    if (!djConfig.isDebug) {
+		this.setupDefaultContextMenu();
+	    }
 	},
     getDeploymentInfoSuccess: function(inResult) {
 	console.log("DEPLOYMENT DATA:");
