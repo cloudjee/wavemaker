@@ -129,7 +129,7 @@ Studio.extend({
 		// part components
 	    var n = this.newTreeNode(inTree.root, "images/wm/pane.png", this.getDictionaryItem("MODELTREE_NODE_PAGE_HEADING", {className: this.page.declaredClass}));
 		n.owner = this.page;
-
+	    this.setupContextMenu(inTree.root, studio.page);
 	        n.component = this.page;
 	        this.page._studioTreeNode = n;
 
@@ -169,6 +169,7 @@ Studio.extend({
 	appServicesToTree: function(inTree) {
 	    // app components
 	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}))
+	    this.setupContextMenu(inTree.root, studio.application);
 	    n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
@@ -205,6 +206,7 @@ Studio.extend({
 	appComponentsToTree: function(inTree) {
 		// app components
 	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}));
+	    this.setupContextMenu(inTree.root, studio.application);
 	        n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox, wm.Property, wm.Service];
@@ -258,18 +260,23 @@ Studio.extend({
 		    n.tree.setNoDrop(n, true);
 		}
 
-		if (inComponent && inComponent.showContextMenu) {
-		    dojo.connect(n.domNode, "oncontextmenu", inComponent, "showContextMenu");
-		    if (dojo.isFF) {
-			dojo.connect(n.domNode, "onmousedown", this, function(e) {
-			    if (e.button == 2 || e.ctrlKey) inComponent.showContextMenu(e);
-			});
-		    }
+	    	if (inComponent && inComponent.showContextMenu) {
+		    this.setupContextMenu(n,inComponent);
 		}
 
 	    }
 	    return n;
 	},
+    setupContextMenu: function(inNode, inComponent) {
+	if (inComponent) {
+	dojo.connect(inNode.domNode, "oncontextmenu", inComponent, "showContextMenu");
+	if (dojo.isFF) {
+	    dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
+		if (e.button == 2 || e.ctrlKey) inComponent.showContextMenu(e);
+	    });
+	}
+	}
+    },
     onWidgetTreeNodeDrop: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent) {
 	    var movedComponent = inMovedNode.component;
 	    var parentComponent = inNewParentNode.component;
