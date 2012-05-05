@@ -212,7 +212,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
-        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js").replaceAll("\\/wavemaker\\/", "/");
+        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll("\\/wavemaker\\/", "/");
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
