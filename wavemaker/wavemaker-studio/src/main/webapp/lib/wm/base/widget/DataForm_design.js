@@ -48,6 +48,25 @@ wm.FormPanel.extend({
 	    this.type = inType;
 	    this.addEditors();
     },
+    set_autoSizeCaption: function(inValue) {
+	this.autoSizeCaption = inValue;
+	if (inValue) {
+	    var editors = this.getEditorsArray();
+	    dojo.forEach(editors, function(e) {
+		if (e.captionPosition == "left") {
+		    e.captionNode.style.width = "";
+		}
+	    });
+	    this.updateCaptionSizes();
+	} else {
+	    var editors = this.getEditorsArray();
+	    dojo.forEach(editors, function(e) {
+		if (e.captionPosition == "left") {
+		    e.sizeEditor();
+		}
+	    });
+	}
+    },
     /****************
      * METHOD: addEditors (DESIGNTIME)
      * DESCRIPTION: Entry point method for generating all editors needed for the current type
