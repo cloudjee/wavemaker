@@ -61,7 +61,8 @@ Start.widgets = {
 				    layer2: ["wm.Layer", {caption: "Projects", horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {onShow: "projectsTabOnShow"}, {
 					projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true, emptyValue: "emptyString"}, {onchange: "filterProjectList", onEnterKeyPress: "openFirstProject"}],
 						panel8: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							projlist: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right", padding: "0"}, {}, {
+						    projlist: ["wm.Panel", {_classes: {domNode: []}, 
+									    height: "100%", width: "100%", layoutKind: "left-to-right", padding: "0"}, {}, {
 							    existingProjectList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", border: "1", borderColor:"#687585"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
 							}],
 							panel9: ["wm.Panel", {height: "34px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "center"}, {}, {

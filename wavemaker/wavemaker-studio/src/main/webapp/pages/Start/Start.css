@@ -109,3 +109,11 @@
 .Start .Start-existingProjectList.StudioList.wmlist .wmlist-cell {
     border-bottom: solid 1px #687585;
 }
+
+
+.Start .Start-existingProjectList .wmlist-item {
+    background-color:#657282;
+}
+.Start .Start-existingProjectList .wmlist-item.Odd {
+    background-color:#687585;
+}

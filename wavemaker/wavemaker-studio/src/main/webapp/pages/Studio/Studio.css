@@ -220,8 +220,8 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 
 .StudioTabs.StudioDarkLayers > div > .wmlayer a,
 .StudioTabs.StudioDarkLayers > div > .wmlayer a:visited,
-.StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel,
-.StudioTabs.StudioDarkLayers > div > .wmlayer .wmeditor-caption {
+.StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel.StudioLabel,
+.StudioTabs.StudioDarkLayers > div > .wmlayer .StudioEditor .wmeditor-caption {
     color: white;
 }
 
@@ -323,22 +323,42 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 /* End Palette */
 
 /* Start Dialogs */
+
+
 .Studio .studiodialog.Docked .dialogtitlebar {
     background-image:none;
         background-color: #414B5C;
 	color: #FFF;
 	text-align: left;
 	font-size: 100%;
+   -moz-border-radius-topleft: 0px; 
+    -moz-border-radius-topright: 0px; 
+    -webkit-border-top-left-radius: 0px; 
+    -webkit-border-top-right-radius: 0px;
+    border-radius-topleft: 0px; 
+    border-radius-topright: 0px;
+}
+
+.studiodialog {
+    -moz-border-radius-topleft: 8px; 
+    -moz-border-radius-topright: 8px; 
+    -webkit-border-top-left-radius: 8px; 
+    -webkit-border-top-right-radius: 8px;
+    border-radius-topleft: 8px; 
+    border-radius-topright: 8px;
 }
 .studiodialog .dialogtitlebar {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	border-bottom:1px #363b44 solid;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	font-size: 120%;
-	text-align: center;
+    background-color: #414B5C;
+    color: #FFF;
+    font-size: 120%;
+    text-align: center;
+
+    -moz-border-radius-topleft: 4px; 
+    -moz-border-radius-topright: 4px; 
+    -webkit-border-top-left-radius: 4px; 
+    -webkit-border-top-right-radius: 4px;
+    border-radius-topleft: 4px; 
+    border-radius-topright: 4px;
 }
 /* End Dialogs */
 
@@ -1220,13 +1240,12 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 
 
 .wmDialogFooter,  .Studio > .wmdialog  .dialogfooter {
-        background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	border-bottom:1px #363b44 solid;
-	color: #FFF;
-	padding: 4px;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
+    background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
+    padding: 4px;
 }
 
 .wmdialog .wmDialogFooter button, .wmDialogBody button, .Studio > .wmdialog > .dialogfooter button,  .Studio > .wmdialog > .wmdialogcontainer .dialogheader button {
