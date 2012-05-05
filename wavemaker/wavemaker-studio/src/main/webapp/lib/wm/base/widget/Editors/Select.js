@@ -25,7 +25,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     indentField: "",
         placeHolder: "",
         _storeNameField: "_selectMenuName",
-	displayType:"Text",
 	pageSize: 20,
 	allowNone: false,
 	autoComplete: true,
@@ -376,26 +375,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	if (!this.restrictValues)
 	    this.editor.set("displayedValue", inValue);
     },
-	formatData: function(inValue){
-		try
-		{
-			if (this._formatter){
-				return this._formatter.format(inValue);
-			}
-			else if (this.displayType){
-				var ctor = wm.getFormatter(this.displayType);
-				this._formatter = new ctor({name: "format", owner: this});
-				return this._formatter.format(inValue);
-			}
-			else
-				return inValue;
-		}
-		catch(e)
-		{
-			console.info('error while getting data from formatData----- ', e);
-		}
-			
-	},
 
 
 /*

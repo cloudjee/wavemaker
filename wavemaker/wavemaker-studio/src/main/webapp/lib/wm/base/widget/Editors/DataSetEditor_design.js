@@ -14,12 +14,44 @@
 dojo.provide("wm.base.widget.Editors.DataSetEditor_design");
 dojo.require("wm.base.widget.Editors.DataSetEditor");
 
+wm.selectDisplayTypes = [
+      "Text", "Date", "Time", "Number", "Currency"
+];
+
 wm.DataSetEditor.extend({
 	updateNow: "(updateNow)",
     set_formField: function(inFormField) {
 	this.inherited(arguments);
 	if (!this.displayField && !this.displayExpression)
 	    this._setDisplayField();
+    },
+    set_displayField: function(inField) {
+	if (this.dataSet && this.dataSet._dataSchema && this.dataSet._dataSchema[inField]) {
+	    var type = this.dataSet._dataSchema[inField].type;
+	    switch(type.toLowerCase()) {
+	    case "java.util.date":
+	    case "date":
+		this.displayType = "Date";
+		break;
+	    case "java.lang.integer":
+	    case "number":
+		this.displayType = "Number";
+		break;
+	    default:
+		this.displayType = "Text";
+	    }
+	    this._formatter.destroy();
+	    delete this._formatter;
+	}
+	this.setDisplayField(inField);
+    },
+    set_displayType: function(inType) {
+	this.displayType = inType;
+	if (this._formatter) {
+	    this._formatter.destroy();
+	    delete this._formatter;
+	}
+	this.createEditor();
     },
     /* Don't show optionsVar in the dataSet property field */
         get_dataSet: function() {
@@ -45,6 +77,9 @@ wm.DataSetEditor.extend({
 
 	    /* Else we have a dataSet and its a wm.Variable */
 	    else {		    
+		if (inDataSet) {
+		    this.dataType = inDataSet.type;
+		}
 		var oldDataSet = this.dataSet;
 
 		/* Clear the options property if setting a new dataSet */
@@ -137,10 +172,10 @@ wm.Object.extendSchema(wm.DataSetEditor, {
     displayExpression: {group: "editor", subgroup: "dataSet",order: 20, displayExpression: "displayExpression", displayExpressionDataSet: "dataSet"}, /* displayExpressionDataSet is the name of the field that is used as a display expression */
 
     /* Editor group; display subgroup */
-/*    displayType:{group: "editor", subgroup: "display", order: 21, options: wm.selectDisplayTypes},*/
+    displayType:{group: "editor", subgroup: "value", order: 21, options: wm.selectDisplayTypes},
 
     selectedItem: { ignore: 1, bindSource: true, isObject: true, bindSource: true, doc: 1},
-
+    dataType: {hidden:1},
 
     /* Operations group */
     updateNow: {group: "operation", operation: 1},
