@@ -278,10 +278,14 @@ Studio.extend({
 	}
     },
     onWidgetTreeNodeDrop: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent) {
+	if (!inNewParentNode || !inNewParentNode.content) {
+	    this.refreshWidgetsTree();
+	} else {
 	    var movedComponent = inMovedNode.component;
 	    var parentComponent = inNewParentNode.component;
 	    parentComponent.designMoveControl(movedComponent, {i: inIndexInParent});
-	},
+	}
+    },
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked && inWidget.isParentLocked())
