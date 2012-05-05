@@ -70,7 +70,7 @@ wm.Object.extendSchema(wm.Lookup, {
     editorType: {options: ["Lookup", "FilteringLookup"]},
 
     /* Editor group; behavior subgroup */
-    autoDataSet: {group: "editor", subgroup: "behavior", order: 10}, /* both of these could also be dataSet subgroup */
+    autoDataSet: {group: "editor", subgroup: "dataSet", order: 10}, /* both of these could also be dataSet subgroup */
     maxResults: {group: "editor", subgroup: "behavior", order: 100},
 
     /* Ignored group */
@@ -121,7 +121,6 @@ wm.Lookup.extend({
 	    var parentForm = this.getParentForm();
 	    props.autoDataSet.ignoretmp = !Boolean(parentForm);
 		props.dataSet.ignoretmp = parentForm && this.autoDataSet;
-		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 	        props.startUpdate.ignoretmp = !this.autoDataSet;
 
