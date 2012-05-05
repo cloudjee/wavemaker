@@ -39,20 +39,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
     /* themeTypes provides the editor to use when editting somethign with the given name.
      * Note: Don't yet support putting event handlers in here so don't try it without fixing that 
      */
-    themeTypes: {"Family": ["wm.SelectMenu", {options: "Lucida Grande, Lucida Sans, Arial, Verdana,  sans-serif, serif", width: "80px"}],
-                 "Weight": ["wm.SelectMenu", {options: "normal, bold", width: "80px"}],
-                 "TextSize": ["wm.Text",  { width: "60px", regExp: "(\\d*|inherit)"}],
-                 "Color": ["wm.ColorPicker", {width: "80px", regExp: "(\#[0-9a-fA-F]{6}|inherit)", emptyValue: "emptyString", defaultValue: "inherit"}],
-                 "Shadow": ["wm.SelectMenu", {dataField: "dataValue", displayValue: "name", allowNone: true, width: "80px"},{},{
+    themeTypes: {"Family": ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Lucida Grande, Lucida Sans, Arial, Verdana,  sans-serif, serif", width: "80px"}],
+                 "Weight": ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "normal, bold", width: "80px"}],
+                 "TextSize": ["wm.Text",  {_classes: {domNode: ["StudioEditor"]},  width: "60px", regExp: "(\\d*|inherit)"}],
+                 "Color": ["wm.ColorPicker", {_classes: {domNode: ["StudioEditor"]}, width: "80px", regExp: "(\#[0-9a-fA-F]{6}|inherit)", emptyValue: "emptyString", defaultValue: "inherit"}],
+                 "Shadow": ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, dataField: "dataValue", displayValue: "name", allowNone: true, width: "80px"},{},{
                      binding: ["wm.Binding", {},{},{
                          wire: ["wm.Wire", {targetProperty: "dataSet", source: "shadowListVar"}]
                      }]
                  }],
-                 "PanelStylePicker": ["wm.SelectMenu", {options: "Document, MainContent, EmphasizedContent, HeaderContent", width: "120px"}],
-                 "BorderSize": ["wm.Text", {regExp: "\\d+(\\s*,\\s*\\d+){0,3}", width: "80px"}], 
-                 "Radius": ["wm.Number", {minimum: 0, maximum: 24, width: "80px"}],
-                 "Margin": ["wm.Number",  { width: "80px"}],
-                 "Image": ["wm.SelectMenu", {dataField: "dataValue", displayValue: "name", width: "120px"},{},{
+                 "PanelStylePicker": ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Document, MainContent, EmphasizedContent, HeaderContent", width: "120px"}],
+                 "BorderSize": ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, regExp: "\\d+(\\s*,\\s*\\d+){0,3}", width: "80px"}], 
+                 "Radius": ["wm.Number", {_classes: {domNode: ["StudioEditor"]}, minimum: 0, maximum: 24, width: "80px"}],
+                 "Margin": ["wm.Number",  {_classes: {domNode: ["StudioEditor"]},  width: "80px"}],
+                 "Image": ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, dataField: "dataValue", displayValue: "name", width: "120px"},{},{
                      binding: ["wm.Binding", {},{},{
                          wire: ["wm.Wire", {targetProperty: "dataSet", source: "imageListVar"}]
                      }]
@@ -660,7 +660,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       height: "100%",
                       owner: this,
                       parent: container});
-        editors.push(new wm.ColorPicker({name: "borderColor",
+        editors.push(new wm.ColorPicker({_classes: {domNode: ["StudioEditor"]}, 
+					 name: "borderColor",
                                          captionSize: "15px",
                                          caption: "Color",
                                          captionPosition: "bottom",
@@ -672,7 +673,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-        editors.push(new wm.Number({name: "borderRadius",
+        editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]}, 
+				    name: "borderRadius",
                                          captionSize: "15px",
                                          caption: "Radius",
                                          captionPosition: "bottom",
@@ -686,7 +688,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-        editors.push(new wm.Number({name: "borderWidth",
+        editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]}, 
+				    name: "borderWidth",
                                     captionSize: "15px",
                                     caption: "Width",
                                     captionPosition: "bottom",
@@ -713,7 +716,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       height: "100%",
                       owner: this,
                       parent: container});
-        editors.push(new wm.ColorPicker({name: "pageBackgroundColor",
+        editors.push(new wm.ColorPicker({_classes: {domNode: ["StudioEditor"]}, 
+					 name: "pageBackgroundColor",
                                          captionSize: "15px",
                                          caption: "Background",
                                          captionPosition: "bottom",
@@ -725,7 +729,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-        editors.push(new wm.ColorPicker({name: "pageFontColor",
+        editors.push(new wm.ColorPicker({_classes: {domNode: ["StudioEditor"]}, 
+					 name: "pageFontColor",
                                          captionSize: "15px",
                                          caption: "Color",
                                          captionPosition: "bottom",
@@ -737,7 +742,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-        editors.push(new wm.Number({name: "pageFontSize",
+        editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]}, 
+				    name: "pageFontSize",
                                          captionSize: "15px",
                                          caption: "TextSize",
                                          captionPosition: "bottom",
@@ -751,7 +757,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-	editors.push(new wm.SelectMenu({name: "headerFontFamily",
+	editors.push(new wm.SelectMenu({_classes: {domNode: ["StudioEditor"]}, 
+					name: "headerFontFamily",
                                          captionSize: "15px",
                                          caption: "Family",
                                          captionPosition: "bottom",
@@ -777,7 +784,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       height: "100%",
                       owner: this,
                       parent: container});
-        editors.push(new wm.ColorPicker({name: "headerBackgroundColor",
+        editors.push(new wm.ColorPicker({_classes: {domNode: ["StudioEditor"]}, 
+					 name: "headerBackgroundColor",
                                          captionSize: "15px",
                                          caption: "Background",
                                          captionPosition: "bottom",
@@ -803,7 +811,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 						   
 	editors.push(imageSelect);
         var val =  this.getThemeDataValue("Document-ClickablesDefault-Font", "Color","");
-        editors.push(new wm.ColorPicker({name: "headerFontColor",
+        editors.push(new wm.ColorPicker({_classes: {domNode: ["StudioEditor"]}, 
+					 name: "headerFontColor",
                                          captionSize: "15px",
                                          caption: "Color",
                                          captionPosition: "bottom",
@@ -815,7 +824,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          parent: container,
                                          readonly: Boolean(this.currentTheme.match(/^wm_/))}));
 
-        editors.push(new wm.Number({name: "headerFontSize",
+        editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]}, 
+				    name: "headerFontSize",
                                          captionSize: "15px",
                                          caption: "TextSize",
 				         minimum: 6,
@@ -1348,7 +1358,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
     createDialogTitleBarForm: function() {
         new wm.Label({name: "mainPanel1Label", caption: "Dialog Titlebar", width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
 
-	var props = {captionSize: "120px", 
+	var props = {_classes: {domNode: ["StudioEditor"]}, 
+		     captionSize: "120px", 
 		     captionAlign: "left", 
 		     padding: "2,5,2,5",
 		     width: "100%", 
@@ -1571,10 +1582,13 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 
     widgetselect: function(inSender) {
-        var name = this.widgetList.selectedItem.getData().dataValue;
-        var ctor =  dojo.getObject(name);
-        this.showDemoWidget(name, ctor);
-        this.showWidgetEditor(name, ctor);
+	var data = this.widgetList.selectedItem.getData();
+	if (data) {
+            var name = this.widgetList.selectedItem.getData().dataValue;
+            var ctor =  dojo.getObject(name);
+            this.showDemoWidget(name, ctor);
+            this.showWidgetEditor(name, ctor);
+	}
     },
     showWidgetEditor: function(name, ctor) {
         this.widgetEditPanel.removeAllControls();
@@ -1592,7 +1606,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
         var editableProps = ctor.prototype.themeableProps || [];
         if (editableProps.length)
             dojo.forEach(editableProps, dojo.hitch(this, function(p) {
-		var props = {captionSize: "120px", captionAlign: "left",  padding: "2,5,2,5", caption: p, dataValue: this.themePrototype[name][p] || ctor.prototype[p], width: "100%", height: "20px", owner: this, parent: this.widgetEditPanel, name: p, readonly: Boolean(this.currentTheme.match(/^wm_/))};
+		var props = {_classes: {domNode: ["StudioEditor"]}, 
+			     captionSize: "120px", captionAlign: "left",  padding: "2,5,2,5", caption: p, dataValue: this.themePrototype[name][p] || ctor.prototype[p], width: "100%", height: "20px", owner: this, parent: this.widgetEditPanel, name: p, readonly: Boolean(this.currentTheme.match(/^wm_/))};
 		var e;
 		switch(p) {
 		case "borderColor":
@@ -1740,7 +1755,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
     },
 
     addThemeEditor: function(inName, inDisplayName, inValue, inGroupName, parent, showGroupName) {
-        var props = {captionSize: "120px", captionAlign: "left", padding: "2,5,2,5", caption: inDisplayName || (((showGroupName) ? inGroupName + "-" : "") + inName), dataValue: inValue, width: "100%", height: "20px", owner: this, parent: parent, name: inGroupName + "__" + inName, readonly: this.currentTheme.match(/^wm_/)};
+        var props = {_classes: {domNode: ["StudioEditor"]}, 
+		     captionSize: "120px", captionAlign: "left", padding: "2,5,2,5", caption: inDisplayName || (((showGroupName) ? inGroupName + "-" : "") + inName), dataValue: inValue, width: "100%", height: "20px", owner: this, parent: parent, name: inGroupName + "__" + inName, readonly: this.currentTheme.match(/^wm_/)};
         var e;
         var shortname = inName.replace(/^.*\-/, "");
         switch(shortname) {

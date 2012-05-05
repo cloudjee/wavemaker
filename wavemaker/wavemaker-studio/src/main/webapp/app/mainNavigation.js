@@ -209,6 +209,7 @@ Studio.extend({
 		    var parent = inLayer.parent;
 		    inLayer.destroy();
 		    this.updateServicesDirtyTabIndicators();
+		    this.updateServiceTabStyle(inSender);
 		}),
 		null, // onCancel, do nothing
 		!page || !page.getDirty()); // if there is no page being closed or if the page is not dirty, then skip this confirm
