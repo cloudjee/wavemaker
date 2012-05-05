@@ -724,9 +724,12 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
         maxResults: 500,
         ignoreCase: true,
 	init: function() {
-		this.inherited(arguments);
-		if (this.autoDataSet && this.formField)
-		    this.createDataSet();
+	    this.inherited(arguments);
+	    if (this.autoDataSet && this.formField) {
+		this.createDataSet();
+	    } else if (!this.autoDataSet) {
+		this.startUpdate = false;
+	    }
 	},
 	createDataSet: function() {
 	    wm.fire(this.$.liveVariable, "destroy");
