@@ -72,7 +72,8 @@ dojo.declare("wm.FormPanel", wm.Container, {
     width: "100%",
     layoutKind: "top-to-bottom",
     readonly: false,
-
+    verticalAlign: "top",
+    horizontalAlign: "left",
     postInit: function() {
 	this.inherited(arguments);
 	if (this.autoSizeCaption) {
@@ -81,6 +82,16 @@ dojo.declare("wm.FormPanel", wm.Container, {
     },
     updateCaptionSizes: function() {
 	wm.job(this.getRuntimeId() + ".updateCaptionSizes", 10, this, "_updateCaptionSizes");
+    },
+    renderBounds: function() {
+	if (this.inherited(arguments)) {
+	    var editors = this.getEditorsArray();
+	    dojo.forEach(editors, function(e) {
+		e.captionNode.style.maxWidth = "";
+	    });
+
+	    this.updateCaptionSizes();
+	}
     },
     _updateCaptionSizes: function() {
 	if (this._isDestroyed) return;
@@ -95,6 +106,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
 		}
 	    }
 	});
+
 	max += 5; // 5px space before editor for nicer look
 
 	// If Don't let the caption size excede a captionSize=50%
@@ -107,8 +119,8 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	dojo.forEach(editors, dojo.hitch(this,function(e) {
 	    if (e.captionSize != "100%" && e.captionPosition == "left") {
 		e.setCaptionSize(this.captionSize);
-		if (e.captionNode.clientWidth > parseInt(this.captionSize)) {
-		    e.style.maxWidth = (this.captionSize+5) + "px";
+		if (e.captionNode.clientWidth > max) {
+		    e.captionNode.style.maxWidth = max + "px";
 		}
 	    }
 	}));

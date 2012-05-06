@@ -521,6 +521,7 @@
 	     }
 	 }
      },
+/*
      updateCaptionSizes: function() {
 
 
@@ -548,10 +549,13 @@
 	     }));
 	 });
      },
+     */
+/*
      renderBounds: function() {
 	 this.inherited(arguments);
 	 this.updateCaptionSizes();
      },
+     */
      generateButton: function(inComponent,inProp, inLayer) {
 	 var p = new wm.Panel({
 	     parent: inLayer,
@@ -781,8 +785,8 @@
 		   caption: "",
 		   parent: inPanel,
 		   width: "20px",
-		   height: (20 + captionHeight) + "px",
-		   margin: captionHeight + ",0,0,0",
+		   height: "20px",//(20 + captionHeight) + "px",
+		   //margin: captionHeight + ",0,0,0",
 		   onclick: function() {
 		       studio.helpPopup = self.getHelpDialog();
 		       self.beginHelp(inProp.name, inPanel.domNode, inComponent.declaredClass);
@@ -1185,16 +1189,16 @@
      },
 
      onLayerShow: function(inSender, inComponent) {
-		 var l = this.getActiveLayer();
-		 var group = l.propertyGroup;
-
-		 if (l.c$.length == 0) {
-		     if (inComponent.isDestroyed) return;
-		     this.generateEditors(inComponent, group, l);
-		     this.addMoreLink(inComponent,l);
-		     l.reflow();
-		     this.updateCaptionSizes();
-		 }
+	 var l = this.getActiveLayer();
+	 var group = l.propertyGroup;
+	 var form = l.c$[0];
+	 if (form.c$.length == 0) {
+	     if (inComponent.isDestroyed) return;
+	     this.generateEditors(inComponent, group, form);
+	     this.addMoreLink(inComponent,form);
+	     l.reflow();
+	     //this.updateCaptionSizes();
+	 }
      },
 
      generateGroups: function(inComponent) {
@@ -1211,6 +1215,11 @@
 		 this.generateLayer = layer;
 	     //this.generateEditors(inComponent,g.name, layer);
 		 g.layer = layer;
+		 var formPanel = new wm.FormPanel({owner: this,
+						   parent: layer,
+						   width: "100%",
+						   height: "100%",
+						   autoSizeCaption: true});
 /*
 	     if (this._activeLayer == g.name || g.equivalentName) {
 		 this._reselectLayerIndex = this.layers.length-1;		
