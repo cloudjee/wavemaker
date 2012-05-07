@@ -22,12 +22,20 @@ dojo.declare("StudioApplication", wm.Application, {
             pagesListVar: ["wm.Variable", {type: "StringData", isList: true}],
 	    projectListVar: ["wm.Variable", {type: "StringData", isList: true}]
 	},
-/*
-    init: function() {
-	this.inherited(arguments);
 
+    init: function() {
+	dojo["require"]("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
+	this.connect(wm.PageLoader.prototype, "loadController", this, "applyPageFixes");
+	this.inherited(arguments);
     },
-    */
+    applyPageFixes: function(inName) {
+	if (wm.componentFixList[inName]) {
+	    var fixes = wm.componentFixList[inName];
+	    for (var j = 0; j < fixes.length; j++) {
+		fixes[j]();
+	    }
+	}
+    },
     confirm: function() {
         this.inherited(arguments);
 	dojo.addClass(this.confirmDialog.domNode, "studiodialog");
