@@ -1352,7 +1352,7 @@ Studio.extend({
 //		caption = caption.replace(/^.*\/\>\s*/,"");
 //		this.cssLayer.setCaption(caption);
 //	    }
-	    dojo.toggleClass(this.tabs.decorator.btns[this.cssLayer.getIndex()], "StudioDirtyIcon", dirty);
+	    dojo.toggleClass(this.sourceTabs.decorator.btns[this.cssLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1376,7 +1376,7 @@ Studio.extend({
 //		caption = caption.replace(/^.*\/\>\s*/,"");
 //		this.markupLayer.setCaption(caption);
 //	    }
-	    dojo.toggleClass(this.tabs.decorator.btns[this.markupLayer.getIndex()], "StudioDirtyIcon", dirty);
+	    dojo.toggleClass(this.sourceTabs.decorator.btns[this.markupLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
@@ -1400,7 +1400,7 @@ Studio.extend({
 //		caption = caption.replace(/^.*\/\>\s*/,"");
 //		this.appsource.setCaption(caption);
 //	    }
-	    dojo.toggleClass(this.tabs.decorator.btns[this.appsource.getIndex()], "StudioDirtyIcon", dirty);
+	    dojo.toggleClass(this.sourceTabs.decorator.btns[this.appsource.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	}
 });
