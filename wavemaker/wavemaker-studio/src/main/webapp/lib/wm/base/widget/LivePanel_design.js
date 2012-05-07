@@ -480,7 +480,8 @@ wm.LivePanel.extend({
                                                      verticalAlign: "top",
 						     owner: this.owner,
 						     name: this.liveDataName + "GridPanel",
-                                                     minHeight: 180,
+						     height: "100%",
+                                                     minHeight: 220,
 						     mobileFolding: true,
 						     mobileFoldingCaption:wm.capitalize(this.liveDataName) + " List",
 						     mobileFoldingIndex: 0,						     
@@ -532,6 +533,7 @@ wm.LivePanel.extend({
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 		this.liveForm.eventBindings.onSuccess = lvar;
 		fancyPanel2.setFitToContentHeight(true);
+
 	},
 
 
