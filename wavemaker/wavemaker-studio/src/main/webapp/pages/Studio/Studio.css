@@ -347,8 +347,17 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     border-radius-topleft: 8px; 
     border-radius-topright: 8px;
 }
+
+
+
 .studiodialog .dialogtitlebar {
-    background-color: #414B5C;
+    background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
+
+/*    background-color: #414B5C;*/
     color: #FFF;
     font-size: 120%;
     text-align: center;
