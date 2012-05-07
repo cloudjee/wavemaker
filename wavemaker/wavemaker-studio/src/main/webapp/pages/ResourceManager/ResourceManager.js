@@ -193,7 +193,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.uploadButton._serviceVariable._operationInfo = {parameters: wm.typeManager.getType("AnyData").fields};
         this.uploadButton._serviceVariable.input.setType("AnyData");
 
-	this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
+	//this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
 	this.connect(studio, "projectChanged", this, function() {
 	    this.shortcutList.setDataValue("/webapproot/resources");
 	    this.onShortcutSelect(this.shortcutList);
