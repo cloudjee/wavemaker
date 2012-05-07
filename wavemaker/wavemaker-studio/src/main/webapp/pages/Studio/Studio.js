@@ -222,7 +222,20 @@ dojo.declare("Studio", wm.Page, {
 	this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
 	this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
 	this.ribbon.setBestHeight();
-	},
+
+	this.connect(this.webServiceSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.webServiceSubTab));
+	this.connect(this.databaseSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.databaseSubTab));
+	this.connect(this.JavaEditorSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.JavaEditorSubTab));
+    },
+    updateServiceTabStyle: function(inSender) {
+	if (inSender.layers.length <= 1) {
+	    inSender.setClientBorder("0");
+	    inSender.removeUserClass("StudioDarkerLayers")
+	} else {
+	    inSender.setClientBorder("1,0,0,0");
+	    inSender.addUserClass("StudioDarkerLayers")
+	}
+    },
 /*
 	 startPageOnStart: function() {
 		this.startLayer = this.startEditor.parent;

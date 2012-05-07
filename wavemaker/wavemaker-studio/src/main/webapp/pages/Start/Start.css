@@ -16,6 +16,14 @@
 .Start .wmlayer {
     background-color: rgb(99, 111, 128);
 }
+ .Start-panel1, .Start-tabLayers1, .Start-panel5,.Start-layoutBox1 {
+    -moz-border-radius-topleft: 6px; 
+    -moz-border-radius-topright: 6px; 
+    -webkit-border-top-left-radius: 6px; 
+    -webkit-border-top-right-radius: 6px;
+    border-radius-topleft: 6px; 
+    border-radius-topright: 6px;
+}
 
 .Start a, .Start a:visited, .Start a:hover {
     color: white;
@@ -111,8 +119,9 @@
 }
 
 
-.Start .Start-existingProjectList .wmlist-item {
+.Start .Start-existingProjectList .wmlist-item td {
     background-color:#657282;
+    color: white !important;
 }
 .Start .Start-existingProjectList .wmlist-item.Odd {
     background-color:#687585;

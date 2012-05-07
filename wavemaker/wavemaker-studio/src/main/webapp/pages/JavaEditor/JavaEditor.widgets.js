@@ -15,7 +15,7 @@
 JavaEditor.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	layoutBox1: ["wm.Layout", {height: "100%", imageList: "smallToolbarImageList"}, {}, {
-	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0", layoutKind: "left-to-right", height: "29px"}, {}, {
+	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", height: "29px"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", padding: "0,4", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {
 				javaServiceSaveButton: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%",  hint: "Save Java service", border: "0", margin: "0"}, {onclick: "javaServiceSaveButtonClick"}],
 				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
@@ -28,7 +28,7 @@ JavaEditor.widgets = {
 			    toolbarspacer3: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
 			    findBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
 			    formatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatClick"}],
-			    wordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle line wrapping", imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
+			    wordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]},width: "24px", margin: "0", hint: "Toggle line wrapping", imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
 			    pageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 
 			}],

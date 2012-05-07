@@ -13,68 +13,22 @@
  */
 
 
-.QueryEditor-editorToolbar, .QueryEditor-editorToolbar2 {
-/*
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-       */
-	/*border-top:1px #FFFFFF solid;*/
-	border-bottom:1px #363b44 solid;
-	/*padding: 2px;*/
-}
-
-.QueryEditor-logoBtmHolder {
-	/*background: url(images/wmbug_bot.gif) bottom no-repeat;*/
-}
-
 .QueryEditor button {
-/*
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-*/
-	height: 24px;
 	text-align: center;
 }
 
 .QueryEditor button:hover {
 	background-image:url(images/dark_toolbar_btn_sm_on.gif);
 	background-repeat:no-repeat;
-	height: 24px;
 }
 
-.QueryEditor-splitter1 {
-	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	cursor:e-resize;
-	overflow:hidden;
-	width:5px;
-	z-index:9;
-}
 
-.QueryEditor-benchbevel4 {
-	background-color: #959dab;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
-}
-
-.QueryEditor-splitter2 {
-	background:#959dab url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
-	cursor:n-resize;
-	overflow:hidden;
-	height:5px;
-	z-index:9;
-	background-position: center;
-}
 
 .QueryEditor-queryTextArea {
-	padding: 2px;
 	overflow: auto;
 }
 
-
+/*
 .QueryEditor-paramsPanel, .QueryEditor-queryPanel, .QueryEditor-queryPropsPanel, .QueryEditor-queryTestPanel, .QueryEditor-helpPanel {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
@@ -85,13 +39,15 @@
 	border-bottom: solid 1px #363b44;
 	padding: 5px;
 }
-
+*/
+/*
 .QueryEditor-queryInputsList, .QueryEditor-queryOutputList {
 	background-color: #FFF;
 	color: #000;
 	border: solid 1px #000;
 }
-
+*/
+/*
 .QueryEditor-addInputBtn, .QueryEditor-deleteParamBtn, .QueryEditor-runQueryBtn {
 	background: none;
 	border: none;
@@ -100,7 +56,7 @@
 .QueryEditor-toolbarspacer1 {
 	background-image:url(images/toolbarspacer.gif);
 }
-
+*/
 .QueryEditor-joinWarningLabel {
     color: red;
 }

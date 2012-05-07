@@ -207,10 +207,12 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     top: 3px;
 }
+/*
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer .StudioTabs.StudioDarkLayers > div > .wmlayer,
 .StudioTabs.StudioDarkLayers > .wmlayer {
     background-color: #636F80;
 }
-
+*/
 .Studio .StudioDarkPanel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer,
 .StudioWizard.StudioDarkLayers > div > .wmlayer {
@@ -221,6 +223,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .StudioTabs.StudioDarkLayers > div > .wmlayer a,
 .StudioTabs.StudioDarkLayers > div > .wmlayer a:visited,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel.StudioLabel,
+.StudioTabs.StudioDarkLayers > div > .wmlayer .StudioLabel .wmlabel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .StudioEditor .wmeditor-caption {
     color: white;
 }
@@ -232,12 +235,13 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: black;
 }
 
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer,
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > .wmtablayers-tabbar,
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers {
     background-color: transparent;
     background: none;
 }
-.StudioTabs.StudioDarkLayers.StudioDarkerLayers .wmlayer,
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer,
 .wminspector .StudioFieldGroupPanel {
     background-color: #1B222D;
     -moz-border-radius: 4px; 
@@ -271,6 +275,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 
 
 /* Toolbars */
+.Studio .StudioDarkerLayers .StudioTabs .StudioToolBar,
 .Studio .StudioToolBar {
 	background-color: #414B5C;
 }
@@ -1838,3 +1843,6 @@ color: rgb(0,270,0);
     font-family: "Nimbus Sans L", sans-serif;
 }
 
+.Studio .ToggleWordWrap img {
+    background-color: #aaa;
+}

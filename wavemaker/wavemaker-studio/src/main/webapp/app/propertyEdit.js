@@ -1673,11 +1673,11 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 
 	this.tabs = this.createComponents({
 	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
-		basicLayer: ["wm.Layer", {caption: "Basic"}, {
+		basicLayer: ["wm.Layer", {caption: "Basic", padding: "4"}, {
 		}],
-		styleLayer: ["wm.Layer", {caption: "Styles"}, {},{
+		styleLayer: ["wm.Layer", {caption: "Styles", padding: "4"}, {},{
 		}],
-		classLayer: ["wm.Layer", {caption: "Classes"}, {}, {
+		classLayer: ["wm.Layer", {caption: "Classes", padding: "4"}, {}, {
 		    classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
 		}]
 	    }]
@@ -1694,6 +1694,13 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.classListLayer = this.tabs.layers[2];
 	this.classListEditor = this.classListLayer.c$[0];
 	this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
+
+	var form = new wm.FormPanel({owner: this,
+				     parent: this.styleLayer,
+				     width: "100%",
+				     height: "100%",
+				     autoSizeCaption: true});
+
 	var defaultProps = {
 	    captionPosition: "left",
 	    captionAlign: "left",
@@ -1713,8 +1720,9 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    if (styleProp.layerName) {
 		parent = this[styleProp.layerName];
 	    } else {
-		parent = this.styleLayer;
+		parent = form;
 	    }
+
 	    var ctor = dojo.getObject(styleProp.editor);
 	    var props = styleProp.editorProps || {};
 	    props.caption = styleProp.name;
@@ -1729,6 +1737,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    });
 	    this.editors[styleProp.name] = e;
 	}));
+	form.setBestHeight();
 
 	var propsHash = this.inspected.listProperties();
 	var propsArray = [];
@@ -2114,8 +2123,10 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
     height: "80px",
     dataField: "dataValue",
     displayField: "dataValue",
+    forceCaptionPositionTop: true,
     init: function() {
 	this.inherited(arguments);
+	this.parent.setVerticalAlign("top");
 	/* Use studio.application._roles so we know we've got the latest set of roles for THIS project */
 	if (!studio.application._roles) {
 	    studio.securityConfigService.requestSync("getRoles", [], dojo.hitch(this, function(inData) {
@@ -2487,6 +2498,10 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
     displayField: "name",
     forceCaptionPositionTop: true,
+    init: function() {
+	this.inherited(arguments);
+	this.parent.setVerticalAlign("top");
+    },
     setDataValue: function(inValue) {
 	if (wm.isEmpty(inValue)) {
 	    this.inherited(arguments, [["All"]]);

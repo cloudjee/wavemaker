@@ -14,8 +14,8 @@
  
 Services.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
-	layoutBox: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", imageList: "smallToolbarImageList"}, {}, {
-		editorToolbar: ["wm.Panel", {border: "0", layoutKind: "left-to-right", height: "29px"}, {}, {
+	layoutBox: ["wm.Layout", {_classes: {domNode: []}, height: "100%", imageList: "smallToolbarImageList"}, {}, {
+	    editorToolbar: ["wm.Panel", {_classes: {domNode:["StudioToolBar"]}, border: "0", layoutKind: "left-to-right", height: "29px", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", padding: "0,4", layoutKind: "left-to-right", height: "100%", width: "100%"}, {}, {
 				webServiceSaveBtn: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%", hint: "Save Web Service configurations", border: "0", margin: "0", disabled: true}, {onclick: "webServiceSaveBtnClick"}],
 				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
@@ -31,23 +31,23 @@ Services.widgets = {
 				webServicePropsPanel: ["wm.Panel", {border: "0", layoutKind: "left-to-right", height: "154px"}, {}, {
 					webServicePanel: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
 						panel1: ["wm.Panel", {border: "0", layoutKind: "left-to-right", height: "100%"}, {}, {
-							panel2: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", width: "100%", padding: "4"}, {}, {
-								serviceNameInput: ["wm.Editor", {caption: "Service Name", captionSize: "240px", height: "20px", layoutKind: "left-to-right", readonly: true}, {}, {
+							panel2: ["wm.Panel", {border: "0", borderColor: "#000000", width: "100%", padding: "4"}, {}, {
+							    serviceNameInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, caption: "Service Name", captionSize: "240px", height: "20px", layoutKind: "left-to-right", readonly: true}, {}, {
 								    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
-								feedDescInput: ["wm.Editor", {/*singleLine: false, */showing: false, caption: "Description", captionSize: "240px", height: "24px", layoutKind: "left-to-right", displayValue: "Supports all of the popular RSS and Atom formats including RSS 0.90, RSS 0.91 Netscape, RSS 0.91 Userland, RSS 0.92, RSS 0.93, RSS 0.94, RSS 1.0, RSS 2.0, Atom 0.3, and Atom 1.0.", readonly: true}, {}, {
+								feedDescInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, /*singleLine: false, */showing: false, caption: "Description", captionSize: "240px", height: "24px", layoutKind: "left-to-right", displayValue: "Supports all of the popular RSS and Atom formats including RSS 0.90, RSS 0.91 Netscape, RSS 0.91 Userland, RSS 0.92, RSS 0.93, RSS 0.94, RSS 1.0, RSS 2.0, Atom 0.3, and Atom 1.0.", readonly: true}, {}, {
 									editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
-								authUsernameInput: ["wm.Editor", {showing: false, caption: "HTTP Basic Auth Username", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
+								authUsernameInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, showing: false, caption: "HTTP Basic Auth Username", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
 									editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
-								authPasswordInput: ["wm.Editor", {showing: false, caption: "HTTP Basic Auth Password", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
+								authPasswordInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, showing: false, caption: "HTTP Basic Auth Password", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
 								    editor: ["wm._TextEditor", {password: true,changeOnKey: true}, {}]
 								}],
-								wsConnectionTimeoutInput: ["wm.Editor", {showing: false, caption: "Connection Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
+								wsConnectionTimeoutInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, showing: false, caption: "Connection Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
 									editor: ["wm._NumberEditor", {changeOnKey: true}, {}]
 								}],
-								wsRequestTimeoutInput: ["wm.Editor", {showing: false, caption: "Request Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
+								wsRequestTimeoutInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, showing: false, caption: "Request Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
 									editor: ["wm._NumberEditor", {changeOnKey: true}, {}]
 								}]
 							}]

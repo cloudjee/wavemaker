@@ -25,17 +25,17 @@ Security.widgets = {
 			}],
 			logoBtmHolder: ["wm.Panel", {"border":"0","width":"221px"}, {}]
 		    }],
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioTabsInverted"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
 		securityLayer: ["wm.Layer", {caption: "Setup Security"}, {}, {
 		    label1a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Security Configuration","padding":"4"}],
 		    panel1a: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left"}, {}, {
 			secConfigPanel: ["wm.Panel", {"border":"0","height":"70px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
 			    secConfigControls: ["wm.Panel", {"border":"0","width":"638px"}, {}, {
 				panel16: ["wm.Panel", {"border":"0","height":"100%"}, {}, {
-				    secProviderInput: ["wm.SelectMenu", {options: "Demo,Database,LDAP,JOSSO", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
+				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,LDAP,JOSSO", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
 				    panel3: ["wm.Panel", {"border":"0","height":"56px"}, {}, {
-					secEnableInput: ["wm.Checkbox", {"border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
-					showLoginPageInput: ["wm.Checkbox", {"border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
+					secEnableInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
+					showLoginPageInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
 				    }]
 				}]
 			    }]
@@ -48,9 +48,9 @@ Security.widgets = {
 				    demoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Demo","imageList":"smallToolbarImageList"}, {"onShow":"showDemoLayer"}, {
 					panel1: ["wm.Panel", {"border":"0","height":"86px","layoutKind":"left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    panel6: ["wm.Panel", {"border":"0","width":"500px", height: "75px"}, {}, {
-						demoUsernameInput: ["wm.Text", {captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],	
-						demoPasswordInput: ["wm.Text", {captionSize: "150px",width: "100%","border":"0","caption":"Password","emptyValue":"null","padding":"2"}],
-						demoRoleInput: ["wm.SelectMenu", {captionSize: "150px",width: "100%", "border":"0","caption":"Role","display":"Select","emptyValue":"null","padding":"2"}]
+						demoUsernameInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],	
+						demoPasswordInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Password","emptyValue":"null","padding":"2"}],
+						demoRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%", "border":"0","caption":"Role","display":"Select","emptyValue":"null","padding":"2"}]
 					    }],
 					    spacer2: ["wm.Spacer", {"width":"4px"}, {}],
 					    panel8: ["wm.Panel", {"border":"0","width":"40px", height: "100%", verticalAlign: "top"}, {}, {
@@ -67,32 +67,32 @@ Security.widgets = {
 				    }],
 				    databaseLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Database",autoScroll:true, verticalAlign: "top", horizontalAlign: "left"}, {"onShow":"showDBLayer"}, {
 					databasePanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					    dbDataModelInput: ["wm.SelectMenu", {required: true, captionSize: "150px", width: "500px", "border":"0","caption":"Data Model","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick from one of the databases you have imported"}, {"onchange":"dbDataModelInputChange"}],
-					    dbEntityInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Entity","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange":"dbEntityInputChange"}],
-					    dbUsernameInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Username Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the column containing the username data. This will be the user name required for login"}, {"onchange":"setDirty"}],
-					    dbUseridInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"User ID Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the the column contaning the user id data"}, {"onchange":"setDirty"}],
-					    dbPasswordInput: ["wm.SelectMenu", {required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Password Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's password required for login"}, {"onchange":"setDirty"}],
-					    dbRoleInput: ["wm.SelectMenu", {captionSize: "150px", width: "500px", "border":"0","caption":"Role Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange":"setDirty"}]
+					    dbDataModelInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true, captionSize: "150px", width: "500px", "border":"0","caption":"Data Model","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick from one of the databases you have imported"}, {"onchange":"dbDataModelInputChange"}],
+					    dbEntityInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Entity","display":"Select","emptyValue":"null","padding":"2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange":"dbEntityInputChange"}],
+					    dbUsernameInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Username Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the column containing the username data. This will be the user name required for login"}, {"onchange":"setDirty"}],
+					    dbUseridInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true,captionSize: "150px", width: "500px", "border":"0","caption":"User ID Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the the column contaning the user id data"}, {"onchange":"setDirty"}],
+					    dbPasswordInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true,captionSize: "150px", width: "500px", "border":"0","caption":"Password Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's password required for login"}, {"onchange":"setDirty"}],
+					    dbRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Role Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange":"setDirty"}]
 					}],
 					spacer30: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					labelmt: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Multitenant Configuration","padding":"4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
 					tenantPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-					    tenantIdField: ["wm.SelectMenu", {captionSize: "150px", width: "500px", "border":"0","caption":"Tenant ID Field Name","display":"Select","emptyValue":"null","padding":"2",helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange":"setDirty"}],
-					    defTenantId: ["wm.Text", {captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
+					    tenantIdField: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Tenant ID Field Name","display":"Select","emptyValue":"null","padding":"2",helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange":"setDirty"}],
+					    defTenantId: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
 					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					}],
 					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,40,0,40", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    panel14: ["wm.Panel", {"border":"0","height":"24px",width: "100%","layoutKind":"left-to-right"}, {}, {
 						spacer1: ["wm.Spacer", {"width":"202px"}, {}],
-						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
+						dbRoleBySQLCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
 					    }],
 					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5"}, {}, {
-						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter the SQL query that returns the user id and roles based on the user id, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange":"setDirty"}],
+						dbRoleBySQLInput: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter the SQL query that returns the user id and roles based on the user id, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange":"setDirty"}],
 						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px",width: "100%", "layoutKind":"left-to-right"}, {}, {
 						    spacer20: ["wm.Spacer", {"width":"100%"}, {}],
-						    dbTestSQLInput: ["wm.Text", {"border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
+						    dbTestSQLInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
 						    dbTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"dbTestSQLButtonClick"}]
 						}],
 					    	panel18: ["wm.Panel", {padding: "0,0,4,0", "border":"0","height":"100px",width: "100%", "layoutKind":"left-to-right"}, {}, {
@@ -112,10 +112,10 @@ Security.widgets = {
 				    }],
 				    ldapLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"LDAP", autoScroll:true}, {"onShow":"showLDAPLayer"}, {
 					ldapMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					    ldapUrlInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2",helpText: "The URL of the LDAP server to be used as the root node"}, {"onchange":"setDirty"}],
-					    ldapManagerDnInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2",helpText: "Manager account DN, used only for testing conection"}, {"onchange":"setDirty"}],
-					    ldapManagerPasswordInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true,helpText: "Manager account password"}, {"onchange":"setDirty"}],
-					    ldapUserDnPatternInput: ["wm.Text", {width: "500px", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2",helpText: "Replace {0} with username and combine with root node to form user DN"}, {"onchange":"setDirty"}],
+					    ldapUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2",helpText: "The URL of the LDAP server to be used as the root node"}, {"onchange":"setDirty"}],
+					    ldapManagerDnInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2",helpText: "Manager account DN, used only for testing conection"}, {"onchange":"setDirty"}],
+					    ldapManagerPasswordInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2", password: true,helpText: "Manager account password"}, {"onchange":"setDirty"}],
+					    ldapUserDnPatternInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"User DN Pattern","emptyValue":"null","padding":"2",helpText: "Replace {0} with username and combine with root node to form user DN"}, {"onchange":"setDirty"}],
 					    panel5: ["wm.Panel", {"height":"24px", width: "500px", "layoutKind":"left-to-right"}, {}, {
 						ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px", width: "100%"}],
 						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
@@ -123,24 +123,24 @@ Security.widgets = {
 						spacer4: ["wm.Spacer", {"width":"2px"}, {}]
 
 					    }],
-					    ldapSearchRoleCheckbox: ["wm.Checkbox", {width: "500px", captionSize: "150px", "caption":"Search User Role","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}],
-					    ldapRoleProviderInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Select User Role Provider","emptyValue":"null","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}],
+					    ldapSearchRoleCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Search User Role","emptyValue":"null"}, {"onchange":"ldapSearchRoleCheckboxChange"}],
+					    ldapRoleProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Select User Role Provider","emptyValue":"null","display":"Select"}, {"onchange":"ldapRoleProviderInputChange"}],
 					    ldapRoleLdapPanel: ["wm.Panel", {"width":"100%", "height":"100px", horizontalAlign: "left", verticalAlign: "top"},{},{
-						ldapGroupSearchBaseInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Base","emptyValue":"null",helpText: "Base from which group membership is searched"}, {onchange: "setDirty"}],
-						ldapGroupRoleAttributeInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Role Attribute","emptyValue":"null",helpText: "Attribute containg role data in group base"}, {onchange: "setDirty"}],
-						ldapGroupSearchFilterInput: ["wm.Text", {width: "500px", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null",helpText: "Filter used to find user's roles. {0} is replacd with user DN"}, {onchange: "setDirty"}]
+						ldapGroupSearchBaseInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Group Search Base","emptyValue":"null",helpText: "Base from which group membership is searched"}, {onchange: "setDirty"}],
+						ldapGroupRoleAttributeInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Group Role Attribute","emptyValue":"null",helpText: "Attribute containg role data in group base"}, {onchange: "setDirty"}],
+						ldapGroupSearchFilterInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Group Search Filter","emptyValue":"null",helpText: "Filter used to find user's roles. {0} is replacd with user DN"}, {onchange: "setDirty"}]
 					    }],
 					    ldapRoleDBPanel: ["wm.Panel", {"width":"100%", "height":"200px", horizontalAlign: "left", verticalAlign: "top"},{},{
-						ldapRoleDbDataModelInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null",helpText: "The datamodel to be used for roles"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
-						ldapRoleDbEntityInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null",helpText: "The table of the datamodel containing the user info"}, {"onchange":"ldapRoleDbEntityInputChange"}],
-						ldapRoleDbUsernameInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null",helpText: "The table column containing the username, must match LDAP username"}, {onchange: "setDirty"}],
-						ldapRoleDbRoleInput: ["wm.SelectMenu", {width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null",helpText: "The table column containing the user role(s) to be used for access control"}, {onchange: "setDirty"}],
+						ldapRoleDbDataModelInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Data Model","emptyValue":"null",helpText: "The datamodel to be used for roles"}, {"onchange":"ldapRoleDbDataModelInputChange"}],
+						ldapRoleDbEntityInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Entity","emptyValue":"null",helpText: "The table of the datamodel containing the user info"}, {"onchange":"ldapRoleDbEntityInputChange"}],
+						ldapRoleDbUsernameInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Username Field","emptyValue":"null",helpText: "The table column containing the username, must match LDAP username"}, {onchange: "setDirty"}],
+						ldapRoleDbRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "caption":"Role Field","emptyValue":"null",helpText: "The table column containing the user role(s) to be used for access control"}, {onchange: "setDirty"}],
 						ldapRoleBySQLPanel: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_LeftNone","wm_Padding_BottomNone","wm_Padding_4px"]},"height":"150px", width: "100%"}, {}, {
 						    panel26: ["wm.Panel", {"height":"24px","layoutKind":"left-to-right"}, {}, {
-							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
+							ldapRoleBySQLCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
 						    }],
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles based on username, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.name = ?' "}, {onchange: "setDirty"}]
+							ldapRoleBySQLInput: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles based on username, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.name = ?' "}, {onchange: "setDirty"}]
 						    }]
 						}]								
 					    }]	
@@ -154,7 +154,7 @@ Security.widgets = {
 			}]
 		    }]
 		}],
-				rolesLayer: ["wm.Layer", {caption: "Roles"}, {}, {
+		rolesLayer: ["wm.Layer", {caption: "Roles"}, {}, {
 		panelBottom: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"center","layoutKind":"left-to-right","width":"500px"}, {}, {
 			spacer8a: ["wm.Spacer", {"height":"100%","showing":false,"width":"100%"}, {}],
 			spacer8b: ["wm.Spacer", {"height":"100%","width":"57px"}, {}],
@@ -170,7 +170,7 @@ Security.widgets = {
 						    panel9: ["wm.Panel", {"border":"0","height":"38px","layoutKind":"left-to-right"}, {}, {
 							spacer17: ["wm.Spacer", {"width":"96px"}, {}],
 							panel12: ["wm.Panel", {"border":"0","width":"362px"}, {}, {
-							    addRoleInput: ["wm.Text", {"border":"0","caption":"Role","captionSize":"50px","emptyValue":"null","padding":"2"}, {"onchange":"setDirty", onEnterKeyPress: "addRoleButtonClick"}, {
+							    addRoleInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Role","captionSize":"50px","emptyValue":"null","padding":"2"}, {"onchange":"setDirty", onEnterKeyPress: "addRoleButtonClick"}, {
 							    }]
 							}],
 							panel13: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_TopNone","wm_Padding_BottomNone","wm_Padding_24px"]},"border":"0","width":"40px"}, {}, {
@@ -197,8 +197,8 @@ Security.widgets = {
 			    label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"border":"0","caption":"Live Layout Login","height":"33px","padding":"4","width":"96px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			    }],
-			    liveLayoutUser: ["wm.Text", {"border":"0","caption":"User","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
-			    liveLayoutPassword: ["wm.Text", {"border":"0","caption":"Password","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
+			    liveLayoutUser: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"User","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
+			    liveLayoutPassword: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Password","emptyValue":"null","padding":"2"}, {"onchange":"setDirty"}],
 			    spacer9: ["wm.Spacer", {"height":"30px","width":"96px"}, {}],
 			    label2: ["wm.Label", {"border":"0","caption":"The username/password here will be the account used by live layout to log on and access your database and javaservices","height":"93px","padding":"4","singleLine":false,"width":"96px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
@@ -217,7 +217,7 @@ Security.widgets = {
 			    servicesInnerHeader: ["wm.Label", {caption: "", width: "100%", height: "24px"}],
 			    servicesBevel: ["wm.Bevel", {}],
 			    servicesSettingsPanel: ["wm.Panel", {width: "100%", height: "100%",verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom"},{},{
-				selectAccess: ["wm.SelectMenu", {"caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
+				selectAccess: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, "caption":"Who can access","width":"260px", displayField: "name", dataField: "dataValue"}, {onchange: "serviceSettingsChange"}, {
 				    binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"expression":undefined,"source":"varRoleList","targetProperty":"dataSet"}, {}],
 					wire2: ["wm.Wire", {"expression":undefined,"expression":"${serviceList.selectedItem.attributes} || ''","targetProperty":"dataValue"}, {}]
