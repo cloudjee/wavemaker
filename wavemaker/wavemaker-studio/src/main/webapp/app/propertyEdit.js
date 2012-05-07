@@ -955,6 +955,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 					width: "20px",
 					height: "18px",
 					padding: "0",
+					showing: this.inspected instanceof wm.Application==false,
 					onclick: dojo.hitch(this, function() {
 					    var index = this.editors[this.editors.length-1].propertyNumber+1;
 					    this.addEditor(index, "-");
@@ -990,7 +991,24 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
 	dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
 	this.editors = [];
-	this.addEditor(0,this.inspected.getProp(this.propName));
+	var value;
+	if (this.inspected instanceof wm.Application == false) {
+	    value = this.inspected.getProp(this.propName);
+	} else {
+	    studio.generateAppSourceHtml();
+	    var text = studio.appsourceHtml.getHtml();
+	    text = text.replace(/.*?\>/,"").replace(/\<\/pre\>$/,"");
+	    delete window[studio.project.projectName];
+	    try {
+		eval(text);
+		eval(studio.appsourceEditor.getDataValue());
+	    } catch(e) {}
+	    var ctor = dojo.getObject(studio.project.projectName);
+	    value =  (ctor && ctor.prototype[this.propName] && ctor.prototype[this.propName] != wm.Application.prototype[this.propName]) ? this.propName : "";
+	}
+
+
+	this.addEditor(0,value);
 	for (var i = 1; i < 20; i++) {
 	    if (this.inspected.getProp(this.propName + i)) {
 		this.addEditor(i, this.inspected.getProp(this.propName + i));
@@ -1002,7 +1020,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     },
 	addEditor: function(inIndex, inValue) {
 	    var propertyName = this.propName + (inIndex == 0 ? "" : inIndex);
-	this.editors.push(new wm.prop.EventEditor({owner: this,
+	    this.editors.push(new wm.prop.EventEditor({owner: this,
 						   parent: this.panel,
 						   name: "propEdit_" + this.propName + "_" + inIndex,
 						   propName: propertyName,
