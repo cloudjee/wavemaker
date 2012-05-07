@@ -1328,7 +1328,7 @@ Studio.extend({
 //		caption = caption.replace(/^.*\/\>\s*/,"");
 //		this.scriptLayer.setCaption(caption);
 //	    }
-	    dojo.toggleClass(this.tabs.decorator.btns[this.scriptLayer.getIndex()], "StudioDirtyIcon", dirty);
+	    dojo.toggleClass(this.sourceTabs.decorator.btns[this.scriptLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 
