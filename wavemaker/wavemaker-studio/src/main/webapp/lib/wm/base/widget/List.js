@@ -855,7 +855,7 @@ wm.List.extend({
 	    default:
 		if (!this.isDesignLoaded()) {
 		    if (this.owner[col.formatFunc]) {
-			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {}, inItem);
+			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {customStyles:[],customClasses: []}, inItem);
 		    }
 		} else {
 		    value = "<i>runtime only...</i>";
