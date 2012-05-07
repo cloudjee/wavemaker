@@ -75,7 +75,7 @@
             "padding": "0"
 	}, 
 	"wm.Dialog": {
-	    "border": "2", 
+	    "border": "1", 
 	    "margin": "0",
 	    borderColor: "#959DAB",
 	    "titlebarBorder": "0,0,1,0", 
@@ -86,7 +86,7 @@
 	}, 
 	"wm.PageDialog": {
 	    "noBevel": true,
-	    "border": "2", 
+	    "border": "1", 
 	    "margin": "0",
 	    borderColor: "#959DAB",
 	    "titlebarBorder": "0,0,1,0", 
@@ -96,7 +96,7 @@
 	    "titlebarHeight": "23"
 	}, 
 	"wm.DesignableDialog": {
-	    "border": "2", 
+	    "border": "1", 
 	    "margin": "0",
 	    borderColor: "#959DAB",
 	    "titlebarBorder": "0,0,1,0", 
@@ -106,7 +106,7 @@
 	    "titlebarHeight": "23"
 	}, 
 	"wm.GenericDialog": {
-	    "border": "2", 
+	    "border": "1", 
 	    "margin": "0",
 	    borderColor: "#959DAB",
 	    "titlebarBorder": "0,0,1,0", 
