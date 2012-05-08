@@ -46,9 +46,9 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
  */
 public class DefaultSpinupService implements SpinupService {
 
-    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
-
     private final Log logger = LogFactory.getLog(getClass());
+
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     private static final int MAX_NAMING_ATTEMPTS = 5;
 
@@ -258,10 +258,14 @@ public class DefaultSpinupService implements SpinupService {
                 DefaultSpinupService.this.logger.debug("Starting application " + applicationDetails.getName());
             }
             CloudFoundryUtils.restartApplicationAndWaitUntilRunning(this.cloudFoundryClient, applicationDetails.getName());
+            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                DefaultSpinupService.this.logger.debug("Started application " + applicationDetails.getName());
+            }
             return applicationDetails.getUrl();
         }
 
         private ApplicationDetails deployAsNecessary() {
+            DefaultSpinupService.this.logger.debug("Deploying application");
             boolean upgrading = false;
             List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
             for (CloudApplication application : applications) {
@@ -280,20 +284,30 @@ public class DefaultSpinupService implements SpinupService {
                             return applicationDetails;
                         } else {
                             deleteExistingApplication(applicationDetails);
+                            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                                DefaultSpinupService.this.logger.debug("Deleted existing application " + applicationDetails.getName());
+                            }
                         }
                     }
                 }
             }
             addMissingServices();
             ApplicationDetails applicationDetails = createApplicationWithUniqueUrl();
+
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
             }
             uploadApplication(applicationDetails.getName());
+            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                DefaultSpinupService.this.logger.debug("Uploaded application " + applicationDetails.getName());
+            }
+
+            DefaultSpinupService.this.logger.debug("Setting environment variabled");
             CloudApplication application = this.cloudFoundryClient.getApplication(applicationDetails.getName());
             Map<String, String> env = new HashMap<String, String>(application.getEnvAsMap());
             env.put(CLOUD_CONTROLLER_VARIABLE_NAME, getControllerUrl());
             this.cloudFoundryClient.updateApplicationEnv(applicationDetails.getName(), env);
+            DefaultSpinupService.this.logger.debug("Application deployment complete");
             return applicationDetails;
         }
 
@@ -334,6 +348,7 @@ public class DefaultSpinupService implements SpinupService {
         }
 
         private void addMissingServices() {
+            DefaultSpinupService.this.logger.debug("Adding missing services");
             if (DefaultSpinupService.this.services != null) {
                 Map<String, CloudService> servicesByName = getServicesByName();
                 List<CloudService> existingServices = this.cloudFoundryClient.getServices();
@@ -342,6 +357,9 @@ public class DefaultSpinupService implements SpinupService {
                 }
                 for (CloudService cloudService : servicesByName.values()) {
                     this.cloudFoundryClient.createService(cloudService);
+                    if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                        DefaultSpinupService.this.logger.debug("Created service " + cloudService.getName());
+                    }
                 }
             }
         }
