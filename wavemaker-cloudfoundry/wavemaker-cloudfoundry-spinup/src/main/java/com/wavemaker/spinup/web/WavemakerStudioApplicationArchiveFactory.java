@@ -16,6 +16,8 @@ package com.wavemaker.spinup.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipFile;
 
 import javax.servlet.ServletContext;
@@ -23,6 +25,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
+import org.cloudfoundry.client.lib.archive.ApplicationArchive.Entry;
 import org.cloudfoundry.client.lib.archive.ZipApplicationArchive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,9 +43,11 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    private File studioWarFile;
+    File studioWarFile;
 
     private VersionProvider versionProvider;
+
+    private List<ApplicationArchive.Entry> entries;
 
     @Override
     public void setServletContext(ServletContext servletContext) {
@@ -58,6 +63,16 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
             this.studioWarFile = studioResource.getFile();
         } catch (IOException e) {
             throw new IllegalStateException(e);
+        }
+        preCacheEntries();
+    }
+
+    void preCacheEntries() {
+        try {
+            for (Entry entry : getArchive().getEntries()) {
+                entry.getSha1Digest();
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -76,7 +91,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
         this.versionProvider = versionProvider;
     }
 
-    private static class WavemakerStudioApplicationArchive extends ZipApplicationArchive {
+    private class WavemakerStudioApplicationArchive extends ZipApplicationArchive {
 
         private final ZipFile zipFile;
 
@@ -87,6 +102,18 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 
         public void close() throws IOException {
             this.zipFile.close();
+        }
+
+        @Override
+        public Iterable<Entry> getEntries() {
+            // Since we are a singleton and a read-only zip we can aggressively cache entries since they will not change
+            if (WavemakerStudioApplicationArchiveFactory.this.entries == null) {
+                WavemakerStudioApplicationArchiveFactory.this.entries = new ArrayList<ApplicationArchive.Entry>();
+                for (Entry entry : super.getEntries()) {
+                    WavemakerStudioApplicationArchiveFactory.this.entries.add(entry);
+                }
+            }
+            return WavemakerStudioApplicationArchiveFactory.this.entries;
         }
     }
 
