@@ -81,7 +81,7 @@ dojo.declare("dijit._HasDropDown",
 
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Added the conditional around stopEvent */
-		    if (e) {
+		    if (e instanceof Event) {
 			dojo.stopEvent(e);
 		    }
 
@@ -206,7 +206,7 @@ dojo.declare("dijit._HasDropDown",
 		    this.domNode.style.backgroundColor = "black";
 		    this.domNode.style.color = "white";
 		    if (this.owner) {
-			wm.job(this.owner.getRuntimeId() + ".onTouch", app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+			wm.job(this.owner.getRuntimeId() + ".onTouch", app.touchToClickDelay, dojo.hitch(this, "touchEnd", {type: "ontouchend"}));
 		    }
 		}
 	    },
@@ -221,10 +221,10 @@ dojo.declare("dijit._HasDropDown",
 		}
 	    },
 	    touchEnd: function(e) {
-		if (e) dojo.stopEvent(e);
+		if (e instanceof Event) dojo.stopEvent(e);
 		this.domNode.style.backgroundColor = "";
 		this.domNode.style.color = "";
-		this._onDropDownMouseDown(e);
+		this._onDropDownMouseDown(e || {type: "ontouchend"});
 	    },
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Added handling of mobile and touch; END HERE */
