@@ -134,6 +134,7 @@ dependencies = {
 				"wm.base.components.LiveVariable_design",
 				"wm.base.components.NavigationService_design",
 				"wm.base.components.NavigationService",
+				"wm.base.components.NotificationService",
 				"wm.base.components.FunctionService",
 				"wm.base.components.JsonRpcService",
 				"wm.base.components.Security_design",
@@ -299,6 +300,7 @@ dependencies = {
 				"wm.base.design.Drag",
 				"wm.base.design.Wrapper",
 				"wm.base.design.Designer",
+
 
 			    /* Studio application and page classes */
 				"wm.studio.app.StudioApplication",
