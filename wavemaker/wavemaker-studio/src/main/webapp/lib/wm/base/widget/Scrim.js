@@ -13,7 +13,6 @@
  */
 
 dojo.provide("wm.base.widget.Scrim");
-dojo.require("wm.base.widget.LayoutBox");
 
 dojo.declare("wm.Scrim", wm.Widget, {
         _noAnimation: false,
