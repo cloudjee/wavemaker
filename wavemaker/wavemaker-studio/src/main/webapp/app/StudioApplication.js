@@ -40,6 +40,7 @@ dojo.declare("StudioApplication", wm.Application, {
         this.inherited(arguments);
 	dojo.addClass(this.confirmDialog.domNode, "studiodialog");
         this.confirmDialog.$.genericInfoPanel.setBorder("10");
+        this.confirmDialog.$.genericInfoPanel.setBorderColor("#313743");
 	this.confirmDialog.$.button1.addUserClass("StudioButton");
 	this.confirmDialog.$.button2.addUserClass("StudioButton");
         //this.confirmDialog.$.genericInfoPanel.setBorderColor("#424A5A");
@@ -50,6 +51,7 @@ dojo.declare("StudioApplication", wm.Application, {
         if (!hasAlert) {
 	    dojo.addClass(this.alertDialog.domNode, "studiodialog");
             this.alertDialog.$.genericInfoPanel.setBorder("10");
+            this.alertDialog.$.genericInfoPanel.setBorderColor("#313743");
 	    this.alertDialog.$.button1.addUserClass("StudioButton");
             //this.alertDialog.$.genericInfoPanel.setBorderColor("#424A5A");
         }
