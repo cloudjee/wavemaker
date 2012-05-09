@@ -331,21 +331,11 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		    }],
 		    treeControlsPanel: ["wm.Panel", {border: 0, height: "22px", layoutKind: "left-to-right", width: "100%"}, {}, {
 			propListLabel: ["wm.Label", {caption: "Properties", width: "220px", height: "15px", align: "center"}],
-			simpleRb: ["wm.Editor", {display: "RadioButton", displayValue: "simple", caption: "Simple", width: "76px", captionSize: "50px", captionPosition: "right", captionAlign: "left"}, {}, {
-			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector", startChecked: true}, {}]
-			}],
-			advancedRb: ["wm.Editor", {display: "RadioButton", displayValue: "advanced", caption: "Advanced", width: "94px", captionSize: "68px", captionPosition: "right", captionAlign: "left"}, {}, {
-			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
-			}],
-			resourceRb: ["wm.Editor", { display: "RadioButton", displayValue: "resources", caption: "Resources", width: "100px", captionSize: "72px", captionPosition: "right", captionAlign: "left"}, {}, {
-			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
-			}],
-			expressionRb: ["wm.Editor", {display: "RadioButton", displayValue: "expression", caption: "Expression", width: "100px", captionSize: "74px", captionPosition: "right", captionAlign: "left"}, {}, {
-			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
-			}],
-			displayExpressionRb: ["wm.Editor", {display: "RadioButton", displayValue: "displayExpression", caption: "Expression", showing: false, width: "100px", captionSize: "74px", captionPosition: "right", captionAlign: "left"}, {}, {
-			    editor: ["wm._RadioButtonEditor", {radioGroup: "_bindInspector"}, {}]
-			}],
+			simpleRb: ["wm.RadioButton", {radioGroup: "_bindInspector", startChecked: true, checkedValue: "simple", caption: "Simple", width: "76px", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],
+			advancedRb: ["wm.RadioButton", {radioGroup: "_bindInspector",  checkedValue: "advanced", caption: "Advanced", width: "94px", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],
+			resourceRb: ["wm.RadioButton", {radioGroup: "_bindInspector", checkedValue: "resources", caption: "Resources", width: "100px", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],
+			expressionRb: ["wm.RadioButton", {radioGroup: "_bindInspector",checkedValue: "expression", caption: "Expression", width: "100px", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],
+			displayExpressionRb: ["wm.RadioButton", {radioGroup: "_bindInspector", checkedValue: "displayExpression", caption: "Expression", showing: false, width: "100px", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],
 			spacer2: ["wm.Spacer", {height: "100%", width: "40px"}, {}]
 		    }],
 		    bindLeftToRight: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%"},{}, {
@@ -358,9 +348,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			    tree: ["wm.Tree", {border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}]
 			}],
 			expressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
-			    expressionEditor: ["wm.Editor", {display: "TextArea", padding: 0, width: "100%", height: "100px"}, {}, {
-				editor: ["wm._TextAreaEditor", {}, {}]
-			    }],
+			    expressionEditor: ["wm.LargeTextArea", {padding: 0, width: "100%", height: "100px"}],
 			    exprSplitter: ["wm.Splitter", {}],
 			    expressionBuilderPanel: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				expressionButtons: ["wm.Panel", {height: "25px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
@@ -373,9 +361,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			    }]
 			}],
 			displayExpressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
-			    displayExpressionEditor: ["wm.Editor", {display: "TextArea", padding: 0, width: "100%", height: "100px"}, {}, {
-				editor: ["wm._TextAreaEditor", {}, {}]
-			    }],
+			    displayExpressionEditor: ["wm.LargeTextArea", {padding: 0, width: "100%", height: "100px"}],
 			    displayExprSplitter: ["wm.Splitter", {}],
 			    displayExpressionBuilderPanel: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				displayExpressionButtons: ["wm.Panel", {height: "25px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
@@ -732,7 +718,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		this.advancedRb.beginEditUpdate();
 		this.expressionRb.beginEditUpdate();
 		this.resourceRb.beginEditUpdate();
-		inRbEditor.editor.setChecked(true);
+		inRbEditor.setChecked(true);
 		this.simpleRb.endEditUpdate();
 		this.advancedRb.endEditUpdate();
 		this.expressionRb.endEditUpdate();
@@ -1211,13 +1197,13 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
     addValueToExpressionEditor: function(inValue, inEditor) {
 		var 
 			v = inValue,
-			start = inEditor.editor.editor.focusNode.selectionStart,
-			end = inEditor.editor.editor.focusNode.selectionEnd,
+			start = inEditor.editor.focusNode.selectionStart,
+			end = inEditor.editor.focusNode.selectionEnd,
 			e = inEditor.getDataValue() || "";
 	        inEditor.setDataValue(e.slice(0, start) + v + e.slice(end));
 	    try {
 		inEditor.focus();
-		inEditor.editor.editor.focusNode.selectionStart = start + v.length;
+		inEditor.editor.focusNode.selectionStart = start + v.length;
 	    } catch(e) {}
 	},
 	expressionNodeSelected: function(inNode) {
