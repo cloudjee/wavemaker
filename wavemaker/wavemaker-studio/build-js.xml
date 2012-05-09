@@ -71,7 +71,6 @@
 				<property name="compressed.modules" value="${lib.webapproot.studio.dir}/wm/compressed" />
 
 				<!-- check_updtodate -->
-<!--
 				<uptodate property="jsbuild.uptodate">
 					<srcfiles dir="${webapproot.studio.dir}" includes="**/*.js" />
 					<mapper>
@@ -95,7 +94,7 @@
 						</compositemapper>
 					</mapper>
 				</uptodate>
--->
+
 				<!-- do-build -->
 				<touch file="${dojo.build.file}" />
 				<mkdir dir="${dojo.release-temp.dir}" />
@@ -401,7 +400,6 @@
 					<arg value="copyTests=false" />
 					<arg value="action=clean,release" />
 					<arg value="optimize=comments" />
-<!--					<arg value="layerOptimize=shrinksafe.keepLines" /> -->
 					<arg value="layerOptimize=comments" />
 					<arg value="cssOptimize=comments" />
 					<arg value="cssImportIgnore=" />
