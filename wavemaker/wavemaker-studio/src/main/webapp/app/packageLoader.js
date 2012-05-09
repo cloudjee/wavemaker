@@ -24,18 +24,23 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
     if (i.indexOf(".") == -1) // only add classes, not paths
 	wm.packageImages[inClass] = i;
 	try{
-		// trips up build system to have a dojo.require here
-		dojo["require"](m);
+	    /* Removing to improve studio loading performance in cloud */
+	    // trips up build system to have a dojo.require here
+	    //dojo["require"](m);
 	}catch(e){
 		return 'Could not import module "' + m + '".';
 	}
 	var ctor = dojo.getObject(c);
+    /* Removing to improve studio loading performance in cloud 
 	if (!ctor) {
 		return 'Module "' + m + '" is loaded, but function "' + c + '" was not found.';
 	}
         if (!dojo.locale.match(/^en/))
             ctor.prototype.localizedDeclaredClass = n; // save the localized class name in case we need to refer to it later
+
 	var d = inDescription || ctor.description || inClass;
+	    */
+    var d = inDescription || inClass;
 	/*var s = inTab.split(".");
 	var p = "";
 	if (s.length > 1) {
@@ -43,10 +48,11 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
 		p = s;
 	}
 	p = "palette" + p;*/
-        if (!(ctor.prototype instanceof wm.Control) && !(ctor.prototype.declaredClass == "wm.DojoLightbox"))
-		studio.addComponentMenuItem(inTab, n, d, i, c, inProps);
-        else
-	    studio["palette"].addItem(inTab, n, d, i, c, inProps, isBeta);
+    if (inTab == bundlePackage.Non_Visual_Components || inTab == bundlePackage.Services) {
+	studio.addComponentMenuItem(inTab, n, d, i, c, inProps);
+    } else {
+	studio["palette"].addItem(inTab, n, d, i, c, inProps, isBeta);
+    }
 }
 
 installPackages = function(m) {
