@@ -192,7 +192,7 @@ wm.getComponentStructure = function(inType){
 			var relpath = dojo._getModuleSymbols(requireList[i]).join("/") + ".js";
 			var uri = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
 		    while (uri.match(/[^\/]\/\.\.\//)) {
-			uri = uri.replace(/[^\/]*\/\.\.\//,"")
+			uri = uri.replace(/[^\/]*\/\.\.\/+/,"")
 		    }
 			wm.dojoScriptLoader(uri);
 		    if (wm.componentFixList[requireList[i]]) {
