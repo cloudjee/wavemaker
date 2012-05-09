@@ -75,7 +75,7 @@ public class XJCCompiler {
                 generateCode.build(tempOutputDir, tempOutputDir, null);
                 LocalFileSystem fileSystem = new LocalFileSystem(tempOutputDir);
                 Folder folder = FileSystemFolder.getRoot(fileSystem);
-                folder.copyTo(outputDir);
+                folder.copyContentsTo(outputDir);
             } else {
                 generateCode.build((File)outputDir.getOriginalResource(), (File)outputDir.getOriginalResource(), null);
             }

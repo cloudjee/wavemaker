@@ -15,7 +15,6 @@ package com.wavemaker.tools.data;
 
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.ant.ExporterTask;
-import org.springframework.core.io.Resource;
 import net.sf.cglib.proxy.Enhancer;
 import com.wavemaker.tools.io.Folder;
 
@@ -37,27 +36,27 @@ public class CFExporterFactory implements ExporterFactory {
         if (type.equals("config")) {
             enhancer.setSuperclass(HibernateConfigExporterTask.class);
             enhancer.setClassLoader(HibernateConfigExporterTask.class.getClassLoader());
-            proxy = (HibernateConfigExporterTask)enhancer.create(new Class[] {HibernateToolTask.class, Resource.class},
+            proxy = (HibernateConfigExporterTask)enhancer.create(new Class[] {HibernateToolTask.class, Folder.class},
                         new Object[] {parent, this.destDir}) ;
         } else if (type.equals("java")) {
             enhancer.setSuperclass(Hbm2JavaExporterTaskWrapper.class);
             enhancer.setClassLoader(Hbm2JavaExporterTaskWrapper.class.getClassLoader());
-            proxy = (Hbm2JavaExporterTaskWrapper)enhancer.create(new Class[] {HibernateToolTask.class, Resource.class},
+            proxy = (Hbm2JavaExporterTaskWrapper)enhancer.create(new Class[] {HibernateToolTask.class, Folder.class},
                         new Object[] {parent, this.destDir}) ;
         } else if (type.equals("query")) {
             enhancer.setSuperclass(QueryExporterTask.class);
             enhancer.setClassLoader(QueryExporterTask.class.getClassLoader());
-            proxy = (QueryExporterTask)enhancer.create(new Class[] {HibernateToolTask.class, String.class, Resource.class},
+            proxy = (QueryExporterTask)enhancer.create(new Class[] {HibernateToolTask.class, String.class, Folder.class},
                         new Object[] {parent, serviceName, this.destDir}) ;
         } else if (type.equals("mapping")) {
             enhancer.setSuperclass(Hbm2HbmXmlExporterTaskWrapper.class);
             enhancer.setClassLoader(Hbm2HbmXmlExporterTaskWrapper.class.getClassLoader());
-            proxy = (Hbm2HbmXmlExporterTaskWrapper)enhancer.create(new Class[] {HibernateToolTask.class, Resource.class},
+            proxy = (Hbm2HbmXmlExporterTaskWrapper)enhancer.create(new Class[] {HibernateToolTask.class, Folder.class},
                         new Object[] {parent, this.destDir}) ;
         } else if (type.equals("springConfig")) {
             enhancer.setSuperclass(HibernateSpringConfigExporterTask.class);
             enhancer.setClassLoader(HibernateSpringConfigExporterTask.class.getClassLoader());
-            proxy = (HibernateSpringConfigExporterTask)enhancer.create(new Class[] {HibernateToolTask.class, Resource.class,
+            proxy = (HibernateSpringConfigExporterTask)enhancer.create(new Class[] {HibernateToolTask.class, Folder.class,
                         String.class, String.class, String.class, String.class, boolean.class, boolean.class, String.class},
                         new Object[] {parent, this.destDir, serviceName, this.packageName, this.dataPackage,
                         this.className, this.useIndividualCRUDOperations, this.impersonateUser, this.activeDirectoryDomain}) ;

@@ -133,7 +133,7 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
                 this.codeModel.build(tempDir, tempDir, null);
                 LocalFileSystem fileSystem = new LocalFileSystem(tempDir);
                 Folder folder = FileSystemFolder.getRoot(fileSystem);
-                folder.copyTo(outputFolder);
+                folder.copyContentsTo(outputFolder);
             }
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);

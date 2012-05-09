@@ -77,7 +77,7 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
 
         LocalFileSystem fileSystem = new LocalFileSystem(tempDestDir);
         Folder folder = FileSystemFolder.getRoot(fileSystem);
-        folder.copyTo(destDir);
+        folder.copyContentsTo(destDir);
 
         return rtn;
     }

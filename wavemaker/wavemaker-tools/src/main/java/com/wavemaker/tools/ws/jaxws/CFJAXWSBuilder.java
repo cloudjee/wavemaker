@@ -95,7 +95,7 @@ public class CFJAXWSBuilder extends JAXWSBuilder {
     protected void copyToFinalDest() {
         LocalFileSystem fileSystem = new LocalFileSystem(this.tempOutputSrcDir);
         Folder folder = FileSystemFolder.getRoot(fileSystem);
-        folder.copyTo(this.outputSrcDir);
+        folder.copyContentsTo(this.outputSrcDir);
 
         fileSystem = new LocalFileSystem(this.tempOutputClassDir);
         folder = FileSystemFolder.getRoot(fileSystem);

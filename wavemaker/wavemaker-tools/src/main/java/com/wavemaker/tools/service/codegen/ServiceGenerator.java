@@ -277,7 +277,7 @@ public abstract class ServiceGenerator {
                 this.codeModel.build(f, f, null);
                 LocalFileSystem fileSystem = new LocalFileSystem(f);
                 Folder folder = FileSystemFolder.getRoot(fileSystem);
-                folder.copyTo(this.configuration.getOutputDirectory());
+                folder.copyContentsTo(this.configuration.getOutputDirectory());
             } else {
                 File dest = (File)dir.getOriginalResource();
                 this.codeModel.build(dest, dest, null);
