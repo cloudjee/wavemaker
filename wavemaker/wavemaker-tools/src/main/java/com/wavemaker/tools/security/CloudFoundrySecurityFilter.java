@@ -61,7 +61,7 @@ public class CloudFoundrySecurityFilter implements Filter {
     }
 
     private boolean isSecurityEnabled() {
-        return Boolean.valueOf(CloudFoundryUtils.getEnvironmentVariable("check-wavemaker-credentials", "true"));
+        return Boolean.valueOf(CloudFoundryUtils.getEnvironmentVariable("check_wavemaker_credentials", "true"));
     }
 
     private void checkAuthenticationCookie(HttpServletRequest request) throws TransportTokenDigestMismatchException {

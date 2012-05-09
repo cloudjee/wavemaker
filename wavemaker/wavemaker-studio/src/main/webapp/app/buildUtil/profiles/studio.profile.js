@@ -20,20 +20,22 @@ dependencies = {
 			dependencies: [
 			    "dojo._base.declare",
 			    "dojo._base.lang",
-				"dojo._base.array",
-				"dojo._base.event",
-				"dojo._base.connect",
-				"dojo._base.html",
-				"dijit._WidgetBase",
+			    "dojo._base.array",
+			    "dojo._base.event",
+			    "dojo._base.connect",
+			    "dojo._base.html",
+			    "dijit._WidgetBase",
 			    "dojo.i18n",
 			    "dojo.rpc.JsonService",
 			    "dojo.rpc.RpcService",
 			    "dojo.cookie"
 			]
 		},
+	    /* Libraries that studio depends upon; TODO: Fold this into another layer */
 		{
 			name: "studio_base.js",
 			resourceName: "studio_base",
+		    layerDependencies: ["wm_richtext.js"],
 			dependencies: [
 			    "dojo.number",
 			    "dojo.currency",
@@ -44,21 +46,22 @@ dependencies = {
 			    "dojo.date.locale",
 			    "dojo.date",
 			    "dojo.data.util.simpleFetch",
-
-				"wm.studio.app.packageLoader",
+			    "wm.studio.app.packageLoader",
 			    'wm.base.components.componentList',
-				"wm.base.lib.util",
-				"wm.base.lib.date",
-				"wm.base.lib.types",
-				"wm.base.lib.data",
-			        "wm.base.lib.currencyMappings",
-				"wm.base.layout.console",
-				"wm.base.data.expression",
-				"wm.base.data.SimpleStore",
-				"wm.base.drag.capture",
-				"wm.base.drag.drag",
-				"wm.base.drag.layout",
-/* The old datagrid is still used in DataObjectsEditor and LiveViewEditor; let it load on demand*/
+			    'wm.studio.app.componentList',
+			    "wm.base.lib.util",
+			    "wm.base.lib.date",
+			    "wm.base.lib.types",
+			    "wm.base.lib.data",
+			    "wm.base.lib.currencyMappings",
+			    //"wm.base.layout.console",
+			    "wm.base.data.expression",
+			    "wm.base.data.SimpleStore",
+			    "wm.base.drag.capture",
+			    "wm.base.drag.drag",
+			    "wm.base.drag.layout",
+
+/* The old datagrid is still used in DataObjectsEditor and LiveViewEditor; let it load on demand
 				"dojox.grid._grid.scroller",
 				"dojox.grid._grid.edit",
 				"dojox.grid._grid.cell",
@@ -74,7 +77,8 @@ dependencies = {
 				"dojox.grid._grid.rowbar",
 				"dojox.grid._grid.publicEvents",
 				"dojox.grid.VirtualGrid",
-				"dojox.grid.compat.Grid",/**/
+				"dojox.grid.compat.Grid",*/
+
 				"dijit.form.TextBox",
 				"dijit.form._FormWidget",
 				"dijit._Widget",
@@ -90,42 +94,9 @@ dependencies = {
 				"dijit._base.typematic",
 				"dijit._base.wai",
 				"dijit._Templated",
-				"dijit.Tooltip",
-				"dijit.form.ComboBox",
+			        "dijit.Tooltip", 
 
-				"dojo.parser",
-
-				"dijit.form.CheckBox",
-/* load on demand */
-				"dijit.form.Button",
-				"dijit._Container",
-			        "dijit.form.DateTextBox",
-				"dijit._Calendar",
-				"dijit.form._DateTimeTextBox",
-				"dijit.form.TimeTextBox",
-				"dijit._TimePicker",
-				"dijit.form.NumberTextBox",
-				"dijit.form.FilteringSelect",
-				"dijit.form.CurrencyTextBox",
-				"dijit.form.HorizontalSlider",
-				"dijit.form.VerticalSlider",
-				/*	*/
-
-				"dijit.ProgressBar",
-				"dijit.form._Spinner"/*,  Load on demand
-			    ,"dojox.charting.Chart2D",
-				"dojox.charting.Theme",
-				"dojox.charting.widget.Legend"
-				*/
-			]
-		},
-		{
-			name: "studio_wm.js",
-			resourceName: "studio_wm",
-			layerDependencies: [
-				"studio_base.js"
-			],
-			dependencies: [
+			    /* CORE COMPONENTS */
 				"wm.base.Object",
 				"wm.base.Component",
 				"wm.base.Component_design",
@@ -137,10 +108,14 @@ dependencies = {
 				"wm.base.RbacPlugin_design",
 				"wm.base.RbacPlugin",
 				"wm.base.I18nPlugin",
+
+			    /*  COMPONENTS FOLDER */
 				"wm.base.components.Page",
 				"wm.base.components.HtmlLoader",
 				"wm.base.components.CssLoader",
 				"wm.base.components.PageLoader",
+				"wm.base.components.Application",
+			        "wm.base.components.Application_design",
 				"wm.base.components.Property",
 				"wm.base.components.Publisher",
 				"wm.base.components.ImageList",
@@ -159,6 +134,7 @@ dependencies = {
 				"wm.base.components.LiveVariable_design",
 				"wm.base.components.NavigationService_design",
 				"wm.base.components.NavigationService",
+				"wm.base.components.NotificationService",
 				"wm.base.components.FunctionService",
 				"wm.base.components.JsonRpcService",
 				"wm.base.components.Security_design",
@@ -174,48 +150,17 @@ dependencies = {
 				"wm.base.components.JavaService",
 				"wm.base.components.WebService",
 				"wm.base.widget.Formatters",
-				"wm.base.widget.Editors.dijit",
-
-				"wm.base.widget.Editors.Base",
-			    "wm.base.widget.Editors._NumberEditor",
-			    "wm.base.widget.Editors._DateEditor",
-			    "wm.base.widget.Editors._CheckBoxEditor",
-			    "wm.base.widget.Editors._RadioButtonEditor",
-			    "wm.base.widget.Editors._SelectEditor",
+				"wm.base.widget.FormattersMisc",
 
 
-				"wm.base.widget.Editors.AbstractEditor",
-				"wm.base.widget.Editors.AbstractEditor_design",
-				"wm.base.widget.Editors.DataSetEditor_design",
-			        "wm.base.widget.Editors.OneToMany_design",
-				"wm.base.widget.Editors.Text_design",
-				"wm.base.widget.Editors.Text",
-				"wm.base.widget.Editors.Number",
-				"wm.base.widget.Editors.Number_design",
-				"wm.base.widget.Editors.Date",
-				"wm.base.widget.Editors.Date_design",
-				"wm.base.widget.Editors.Checkbox",
-				"wm.base.widget.Editors.Checkbox_design",
-				"wm.base.widget.Editors.Radiobutton",
-				"wm.base.widget.Editors.Select",
-				"wm.base.widget.Editors.Select_design",
 
-				//"wm.base.widget.Box",
-				//"wm.base.widget.Box_design",
+			    /* CORE WIDGETS */
 				"wm.base.widget.Spacer",
 				"wm.base.widget.Spacer_design",
+				"wm.base.widget.Label",
 				"wm.base.widget.Label_design",
+				"wm.base.widget.Picture",
 				"wm.base.widget.Picture_design",
-				"wm.base.widget.layout.Layout",
-				"wm.base.widget.layout.Box",
-				"wm.base.widget.layout.Abs",
-				"wm.base.widget.Container",
-				"wm.base.widget.Container_design",
-				"wm.base.widget.Panel",
-				"wm.base.widget.Panel_design",
-				"wm.base.widget.Template",
-				"wm.base.widget.Layout",
-				"wm.base.widget.Layout_design",
 				"wm.base.widget.Content",
 				"wm.base.widget.Content_design",
 				"wm.base.widget.Html",
@@ -224,161 +169,149 @@ dependencies = {
 				"wm.base.widget.Bevel_design",
 				"wm.base.widget.Splitter",
 				"wm.base.widget.Splitter_design",
+			    
+				"wm.base.widget.Buttons.ToggleButton",
+				"wm.base.widget.Buttons.ToolButton",
+				"wm.base.widget.Buttons.Button",
+				"wm.base.widget.Buttons.Button_design",
+
+			    /* Rendering Classes */
+
+				"wm.base.widget.layout.Layout",
+				"wm.base.widget.layout.Box",
+				"wm.base.widget.layout.Abs",
+
+			    /* CORE CONTAINERS */
+				"wm.base.widget.Container",
+				"wm.base.widget.Container_design",
+				"wm.base.widget.Panel",
+				"wm.base.widget.Panel_design",
+				"wm.base.widget.PageContainer",
+				"wm.base.widget.PageContainer_design",
+				"wm.base.widget.Template",
+				"wm.base.widget.AppRoot",
+				"wm.base.widget.Layout",
+				"wm.base.widget.Layout_design",
 				"wm.base.widget.Layers.Decorator",
 				"wm.base.widget.Layers.TabsDecorator",
 				"wm.base.widget.Layers.TabsDecorator_design",
 				"wm.base.widget.Layers.AccordionDecorator",
 				"wm.base.widget.Layers",
+				"wm.base.widget.AccordionLayers",
 				"wm.base.widget.Layers_design",
-				"wm.base.widget.Buttons.Button_design",
-				"wm.base.widget.Buttons.BusyButton_design", /* Reads in BusyButton.js */
-				"wm.base.widget.Picture",
-				"wm.base.widget.Trees.Tree_design",
-				"wm.base.widget.Trees.Tree",
-			    "wm.base.widget.Trees.PropertyTree",
-			    "wm.base.widget.Trees.ObjectTree",
-			    "wm.base.widget.Trees.DraggableTree",
-			    "wm.base.widget.Trees.DebugTree",
-			    "wm.base.widget.JsonStatus",
-				"wm.base.widget.Label",
-				"wm.base.widget.Label_design",
-				"wm.base.widget.PageContainer",
-				"wm.base.widget.PageContainer_design",
-				"wm.base.widget.Table.builder",
-				"wm.base.widget.VirtualList",
-				"wm.base.widget.List",
-				"wm.base.widget.List_design",
-			/**/	"wm.base.widget.FeedList",
-/* Load on demand*/
-				"wm.base.widget.gadget.Gadget",
-				"wm.base.widget.gadget.Stocks",
-				"wm.base.widget.gadget.Weather",
-				"wm.base.widget.gadget.YouTube",
-				"wm.base.widget.gadget.GoogleMap",
-				"wm.base.widget.gadget.GoogleMap_design",
-				"wm.base.widget.gadget.Facebook",
-				"wm.base.widget.gadget.Facebook_design",
-				"wm.base.widget.TwitterFeed",
-				/**/
-			/*	"wm.base.widget.Detail",
-				"wm.base.widget.Form",*/
-				"wm.base.widget.LiveForm",
-				"wm.base.widget.LiveForm_design",
-				"wm.base.widget.DataForm",
-				"wm.base.widget.DataForm_design",
-				"wm.base.widget.LivePanel",
-				"wm.base.widget.LivePanel_design",
-				"wm.base.widget.RelatedEditor",
-				"wm.base.widget.RelatedEditor_design",
-				"wm.base.widget.EditPanel",
-				"wm.base.widget.EditPanel_design",
-				"wm.base.widget.DataNavigator",
-				"wm.base.widget.DataNavigator_design",
-			/**/	"wm.base.widget.Input",
-				"wm.base.widget.TextArea",
-			    "wm.base.widget.Select",/**/
-				"wm.base.widget.Scrim",
-				"wm.base.widget.Dialogs.Dialog",
-				"wm.base.widget.Dialogs.Toast",
-				"wm.base.widget.Dialogs.WidgetsJsDialog",
-				"wm.base.widget.Dialogs.GenericDialog",
-				"wm.base.widget.Dialogs.PageDialog",
-				"wm.base.widget.Dialogs.DesignableDialog",
-				"wm.base.widget.Dialogs.ColorPickerDialog",
-				"wm.base.widget.Dialogs.RichTextDialog",
-				"wm.base.widget.Dialogs.LoadingDialog",
-				"wm.base.widget.Dialogs.Dialog_design",
-				"wm.base.widget.Editor",
-				"wm.base.widget.FileUpload",
+
+
+
+
+			    /* EDITORS */
+			    "wm.base.widget.Editors.AbstractEditor",
+			    "wm.base.widget.Editors.AbstractEditor_design",
+			    "wm.base.widget.Editors.dijit",
+			    "wm.base.widget.Editors.Text_design",
+			    "wm.base.widget.Editors.Text",
+			    "wm.base.widget.Editors.Number_design",
+			    "wm.base.widget.Editors.Number",
+			    "wm.base.widget.Editors.Checkbox_design",
+			    "wm.base.widget.Editors.Checkbox",
+			    "wm.base.widget.Editors.Radiobutton", /* Needed by bind dialog */
+			    "wm.base.widget.Editors.DataSetEditor",
+			    "wm.base.widget.Editors.DataSetEditor_design",
+			    "wm.base.widget.Editors.Select_design",
+			    "wm.base.widget.Editors.Select",
 			    "wm.base.widget.AceEditor",
-			    /*"wm.base.widget.EditArea",
-				"wm.base.widget.EditArea_design",*/
-				/*"wm.base.widget.Popup",*/
-				"wm.base.widget.IFrame",
-			    "wm.base.widget.IFrame_design",
-				"wm.base.widget.LayoutBox",
-				"wm.base.widget.dijit.Dijit",
-				"wm.base.widget.dijit.Dijit_design",
-				"wm.base.widget.dijit.CheckBox",
-				"wm.base.widget.dijit.Calendar",
-				"wm.base.widget.dijit.Calendar_design",
-				"wm.base.widget.dijit.ProgressBar",
-				"wm.base.widget.dijit.ProgressBar_design",
-				"wm.base.widget.dijit.Grid",
+
+
+
+
 /* Load on demand*/
-				"wm.base.widget.DataGrid",
-				"wm.base.widget.Toolbar",
-				"wm.base.widget.Ticker",
-				"wm.base.widget.Ticker_design",
-				"wm.base.widget.Composite",
-			    //"wm.base.widget.Cards",
-			/*	*/
-				"wm.base.lib.date",
-	        	"wm.base.widget.Formatters",
-	        	"wm.base.widget.Editors.dijit",
-	            "wm.base.widget.Editor",
-	            "wm.base.widget.RelatedEditor",
-	            "wm.base.widget.Editors.Base",
-	            "wm.base.widget.Editors.Text",
-	            "wm.base.widget.Editors.Number",
-	            "wm.base.widget.Editors.Date",
-	            "wm.base.widget.Editors.Checkbox",
-	            "wm.base.widget.Editors.Radiobutton",
-	            "wm.base.widget.Editors.Select",
-	          /**/  "wm.base.widget.Editors.Slider",
-				"wm.base.widget.Editors.RichText",
-/* Load on demand*/
-				"wm.base.widget.DojoLightbox",
-				"wm.base.widget.Dashboard",
-				"wm.base.widget.Dashboard_design",
-			    "dojo.dnd.Selector",
+
+
+/*			    "dojo.dnd.Selector",
 			    "dojo.dnd.Avatar",
 			    "dojo.dnd.Container",
 			    "dojo.dnd.Source",
+			    */
 
-				"wm.base.widget.DojoChart",
-				"wm.base.widget.DojoChart_design",
-				"wm.base.widget.DojoGauge",
-				"wm.base.widget.DojoGauge_design",
-			    "wm.base.widget.DojoFisheye",
-			    "wm.base.widget.DojoFisheye_design",
-			/*	*/
-				"wm.base.widget.DojoGrid",
-				"wm.base.widget.DojoGrid_design",
+
+
+			    /* Required advanced widgets */
+			    "wm.base.widget.IFrame",  /* Required for the start page */
+			    "wm.base.widget.IFrame_design",
+			    "wm.base.widget.Trees.Tree", 
+			    "wm.base.widget.Trees.Tree_design",
+			    "wm.base.widget.Trees.DraggableTree",
+			    "wm.base.widget.JsonStatus",
+			    "wm.base.widget.Editors.RichText",
+
+			    /* LIST LAYER IS REQUIRED */
+			    "wm.base.widget.Table.builder",
+			    "wm.base.widget.VirtualList",
+			    "wm.base.widget.List",
+			    "wm.base.widget.List_design",
+
+
+
+
+
+
+			    /* FormPanel is required by the property panel, so DataForm must be included in the build */
+			    "wm.base.widget.DataForm",
+			    "wm.base.widget.DataForm_design",
+
+			    /* Load this since its not ever going to be in componentList.js */
+				"wm.base.widget.Input",
+
+			    /* REQUIRED Dialogs */
+			    "wm.base.widget.Scrim",
+			    "wm.base.widget.Dialogs.Dialog",
+			    "wm.base.widget.Dialogs.Toast",
+			    "wm.base.widget.Dialogs.WidgetsJsDialog",
+			    "wm.base.widget.Dialogs.GenericDialog",
+			    "wm.base.widget.Dialogs.PageDialog",
+			    "wm.base.widget.Dialogs.DesignableDialog",
+			    "wm.base.widget.Dialogs.LoadingDialog",/* Not required but expected to be very common */
+			    "wm.base.widget.Dialogs.Dialog_design",
+
+			    
+			    /* ProgressBar is required */
+			    "wm.base.widget.dijit.Dijit",
+			    "wm.base.widget.dijit.Dijit_design",			    
+			    "wm.base.widget.dijit.ProgressBar",
+			    "wm.base.widget.dijit.ProgressBar_design",
+
+
+			    /* Drives the menu bar and contextual menus */
 			    "wm.base.widget.DojoMenu",
-			    "wm.base.widget.DojoMenu_design",
-				"wm.base.widget.DojoFileUpload",				
-				"wm.base.widget.DojoFlashFileUpload",				
-				"wm.base.widget.ListViewer",				
-				"wm.base.widget.ListViewer_design"
-				
+			    "wm.base.widget.DojoMenu_design"
 			]
 		},
+
+	    /* Layer with all of studio's custom widgets and classes not needed by user projects */
 		{
 			name: "studio.js",
 			resourceName: "studio",
 			layerDependencies: [
-				"studio_base.js", "studio_wm.js"
+				"studio_base.js"
 			],
 			dependencies: [
+			    /* Design classes */
 				"wm.base.design.Designable",
 				"wm.base.design.Surface",
 				"wm.base.design.Drag",
 				"wm.base.design.Wrapper",
 				"wm.base.design.Designer",
-				"wm.base.components.Application",
-			        "wm.base.components.Application_design",
+
+
+			    /* Studio application and page classes */
 				"wm.studio.app.StudioApplication",
 				"wm.studio.pages.Studio.Studio",
+
+			    /* App folder  */
 				"wm.studio.app.util",
 				"wm.studio.app.mainNavigation",
 				"wm.studio.app.keyconfig",
 				"wm.studio.app.Palette",
 				"wm.studio.app.binding",
-				"wm.studio.app.inspector.Inspector",
-				"wm.studio.app.inspector.BindInspector",
-				"wm.studio.app.inspector.StyleInspector",
-				"wm.studio.app.inspector.SecurityInspector",
 				"wm.studio.app.inspector.ComponentInspector",
 				"wm.studio.app.inspect",
 				"wm.studio.app.sourcer",
@@ -399,8 +332,10 @@ dependencies = {
 				"wm.studio.app.templates.widgetTemplates",
 				"wm.studio.app.dataconstants",
 				"wm.studio.app.datautils",
-				"wm.studio.app.servicesTree",
-			    //"wm.studio.pages.Binder.Binder",
+			    
+
+			    "wm.studio.pages.Start.Start",
+			    "wm.studio.pages.ConfirmSaveDialog.ConfirmSaveDialog",
 				"wm.studio.pages.BindSourceDialog.BindSourceDialog",
 				/* Load on demand
 				"wm.studio.pages.ImportPageDialog.ImportPageDialog",
@@ -425,12 +360,164 @@ dependencies = {
 				"wm.studio.pages.Security.Security",
 				"wm.studio.pages.ServiceDialog.ServiceDialog",
 				"wm.studio.pages.Services.Services",
+			    "wm.studio.pages.HandleRequiredJars.HandleRequiredJars" 
 				*/
-			    "wm.studio.pages.Start.Start",
-			    "wm.studio.pages.HandleRequiredJars.HandleRequiredJars"
+
+
 			]
-		}
+		},
+	    {
+
+		name: "wm_livepanel.js",
+		resourceName: "wm_livepanel",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+				"wm.base.widget.LiveForm",
+				"wm.base.widget.LiveForm_design",
+				"wm.base.widget.LivePanel",
+				"wm.base.widget.LivePanel_design",
+				"wm.base.widget.RelatedEditor",
+				"wm.base.widget.RelatedEditor_design",
+				"wm.base.widget.EditPanel",
+				"wm.base.widget.EditPanel_design",
+				"wm.base.widget.DataNavigator",
+				"wm.base.widget.DataNavigator_design"
+		]
+	    },
+	    {
+		name: "wm_gadget.js",
+		resourceName: "wm_gadget",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.FeedList",
+		    "wm.base.widget.gadget.Gadget",
+		    "wm.base.widget.gadget.Stocks",
+		    "wm.base.widget.gadget.Weather",
+		    "wm.base.widget.gadget.YouTube",
+		    "wm.base.widget.gadget.GoogleMap",
+		    "wm.base.widget.gadget.GoogleMap_design",
+		    "wm.base.widget.gadget.Facebook",
+		    "wm.base.widget.gadget.Facebook_design",
+		    "wm.base.widget.gadget.TwitterGadgets",
+		    "wm.base.widget.gadget.TwitterGadgets_design",
+		    "wm.base.widget.DojoFisheye",
+		    "wm.base.widget.DojoFisheye_design"
+
+		]
+	    },
+	    {
+		name: "wm_richtext.js",
+		resourceName: "wm_editors",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "dijit.Editor",
+		    "dojox.editor.plugins.AutoUrlLink",
+		    "dijit._editor.plugins.AlwaysShowToolbar",
+		    "dijit._editor.plugins.FontChoice",
+		    "dijit._editor.plugins.TextColor",
+		    "dijit._editor.plugins.LinkDialog",
+		    "dojox.editor.plugins.FindReplace"
+		]
+	    },
+	    {
+		name: "wm_editors.js",
+		resourceName: "wm_editors",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.Editors.OneToMany",
+		    "wm.base.widget.Editors.OneToMany_design",
+		    "wm.base.widget.dijit.Calendar",
+		    "wm.base.widget.dijit.Calendar_design",
+		    "wm.base.widget.Editors.Date",
+		    "wm.base.widget.Editors.Date_design",
+		    "wm.base.widget.Editors.Slider"
+		]
+	    },
+	    {
+		name: "wm_misc.js",
+		resourceName: "wm_misc",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.Buttons.BusyButton",
+		    "wm.base.widget.Buttons.BusyButton_design",
+		    "wm.base.widget.DojoLightbox",
+		    "wm.base.widget.ListViewer",				
+		    "wm.base.widget.ListViewer_design"
+		]
+	    },
+	    {
+		name: "wm_dashboard.js",
+		resourceName: "wm_dashboard",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.Dashboard",
+		    "wm.base.widget.Dashboard_design"
+		]
+	    },
+	    {
+		name: "wm_charts.js",
+		resourceName: "wm_charts",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.DojoChart",
+		    "wm.base.widget.DojoChart_design",
+		    "wm.base.widget.DojoGauge",
+		    "wm.base.widget.DojoGauge_design"
+		]
+	    },
+	    {
+		name: "wm_trees.js",
+		resourceName: "wm_trees",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.Trees.PropertyTree",
+		    "wm.base.widget.Trees.ObjectTree",
+		    "wm.base.widget.Trees.DebugTree"
+		]
+	    },
+	    {
+		name: "wm_dojogrid.js",
+		resourceName: "wm_dojogrid",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.DojoGrid",
+		    "wm.base.widget.DojoGrid_design"
+		]
+	    },
+	    {
+		name: "wm_fileupload.js",
+		resourceName: "wm_fileupload",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.DojoFileUpload",				
+		    "wm.base.widget.DojoFlashFileUpload",				
+		]
+	    },
+		{
+			name: "wm_editors_old.js",
+			resourceName: "wm.compressed.wm_editors_old",
+		    layerDependencies: ["studio.js", "studio_base.js", "wm_editors.js"],
+			dependencies: [
+        	   "wm.base.widget.Editors.dijit",
+			    "wm.base.widget.Editors.Base",
+               "wm.base.widget.Editor",
+               "wm.base.widget.Editors._NumberEditor",
+               "wm.base.widget.Editors._DateEditor",
+               "wm.base.widget.Editors._CheckBoxEditor",
+               "wm.base.widget.Editors._RadioButtonEditor",
+               "wm.base.widget.Editors._SelectEditor"
+			]		
+		},
+
+
 	],
+
+
+
+
+
+				
+
 
 	prefixes: [
 		[ "dijit", "../dijit" ],

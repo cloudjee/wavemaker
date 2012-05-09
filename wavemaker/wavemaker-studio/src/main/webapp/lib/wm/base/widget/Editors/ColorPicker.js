@@ -13,7 +13,8 @@
  */
 dojo.provide("wm.base.widget.Editors.ColorPicker");
 dojo.require("wm.base.widget.Editors.Text");
-dojo.require("wm.base.widget.Dialogs.ColorPickerDialog");
+dojo.require("dijit.form.ValidationTextBox");
+dojo.require("dijit._HasDropDown");
 
 dojo.declare("wm.ColorPicker", wm.Text, {
     changeOnKey: true,
@@ -86,7 +87,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	    wm.job(this.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
 		this._inColorChange = false;
 	    });
-	},
+	}
 
 });
 

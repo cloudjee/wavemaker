@@ -556,7 +556,7 @@ wm.isClassInstanceType = function(inClass, type) {
 wm.isInstanceType = function(obj, types){
     if (types && typeof types == "object" && types.length) {
 	for (var i = 0; i < types.length; i++) {
-	    if (obj instanceof types[i]) return true;
+	    if (types[i] && obj instanceof types[i]) return true;
 	}
 	return false;
     } else {

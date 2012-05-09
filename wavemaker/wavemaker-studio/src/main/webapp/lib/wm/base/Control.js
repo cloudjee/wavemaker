@@ -1761,7 +1761,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var r = this.getRoot();
 	r = r && r.root;
 	while (w && w != r) {
-	    if (wm.LiveFormBase && w instanceof wm.LiveFormBase || wm.DataForm && w instanceof wm.DataForm) {
+	    if (wm.isInstanceType(w, [wm.LiveFormBase, wm.DataForm])) {
 			return w;
 		}
 		w = w.parent;

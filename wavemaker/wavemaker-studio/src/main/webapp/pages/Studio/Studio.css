@@ -205,7 +205,6 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 }
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
-    top: 3px;
 }
 /*
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer .StudioTabs.StudioDarkLayers > div > .wmlayer,
@@ -1844,5 +1843,5 @@ color: rgb(0,270,0);
 }
 
 .Studio .ToggleWordWrap img {
-    background-color: #aaa;
+    background-color: #aaa !important;
 }

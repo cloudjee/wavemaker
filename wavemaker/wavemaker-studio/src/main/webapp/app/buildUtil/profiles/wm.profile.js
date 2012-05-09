@@ -375,6 +375,7 @@ dependencies = {
 			    "wm.base.components.PhoneGapService",
 			    "wm.base.components.JsonRpcService",
 			    "wm.base.components.PhoneGapService",
+			    "wm.base.components.Timer",
 
 			    /* Variables/ServiceVariables */
 			    "wm.base.components.Variable",

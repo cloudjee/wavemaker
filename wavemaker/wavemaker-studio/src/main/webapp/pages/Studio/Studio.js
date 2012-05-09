@@ -23,7 +23,7 @@ dojo.require("wm.base.widget.Splitter");
 dojo.require("wm.base.widget.Button");
 dojo.require("wm.base.widget.Picture");
 dojo.require("wm.base.widget.Layers");
-dojo.require("wm.base.widget.LayoutBox");
+dojo.require("wm.base.widget.Layout");
 dojo.require("wm.base.widget.Tree");
 dojo.require("wm.base.design.Designer");
 
@@ -248,6 +248,7 @@ dojo.declare("Studio", wm.Page, {
 	     return this._jarsMissing[inName];
 	 },
          handleMissingJar: function(jar, step1) {
+	     this.jarDownloadDialog.loadPage("HandleRequiredJars");
 	     this.neededJars[jar] = true;
 	     if (!this.project.loadingProject) {
 		 this.jarDownloadDialog.page.html1.setHtml(step1);
@@ -992,11 +993,12 @@ dojo.declare("Studio", wm.Page, {
 		// if the widget is on an inactive layer,
 		// activate all parent layers so it's visible
 		var w = this.selected;
-		if (w instanceof wm.Widget || w instanceof wm.DojoLightbox)
-			while (w) {
-			wm.fire(w, "activate");
-			w = w.parent;
+	    if (wm.isInstanceType(w, [wm.Control,wm.DojoLightbox])) {
+		while (w) {
+		    wm.fire(w, "activate");
+		    w = w.parent;
 		}
+	    }
 	},
 	selectParent: function() {
 		if (this.targetMode) 
@@ -1267,15 +1269,18 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	    switch (newLayer.name) {
 	    case "sourceTab":
+		this.generateAppSourceHtml();
+		break;
+	    }
+	},
+    generateAppSourceHtml: function() {
 		this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
 		var appsrc = this.project.generateApplicationSource();
 		var match = appsrc.split(terminus)
 		               
 		appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
 		this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
-		break;
-	    }
-	},
+    },
 	tabsChange: function(inSender) {
 	    if (!studio.page) return;
 	    

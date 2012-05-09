@@ -144,6 +144,7 @@ wm.loadLibs([
 	"wm.studio.app.propertyEdit",
 	"wm.studio.app.data",
 	"wm.studio.pages.Services.Services",
+	"wm.studio.pages.ConfirmSaveDialog.ConfirmSaveDialog",
 	"wm.studio.pages.GridDesigner.GridDesigner",
 	"wm.studio.pages.ImportWebService.ImportWebService",
 	"wm.studio.pages.ImportFile.ImportFile",
