@@ -31,16 +31,22 @@ wm.DataSetEditor.extend({
 	    switch(type.toLowerCase()) {
 	    case "java.util.date":
 	    case "date":
-		this.displayType = "Date";
+		if (this.displayType != "Time") {
+		    this.displayType = "Date";
+		}
 		break;
 	    case "java.lang.integer":
 	    case "number":
-		this.displayType = "Number";
+		if (this.displayType != "Currency") {
+		    this.displayType = "Number";
+		}
 		break;
 	    default:
 		this.displayType = "Text";
 	    }
-	    this._formatter.destroy();
+	    if (this._formatter) {
+		this._formatter.destroy();
+	    }
 	    delete this._formatter;
 	}
 	this.setDisplayField(inField);

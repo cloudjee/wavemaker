@@ -19,7 +19,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     _multiSelect: false,
     dataSet: null,
     options: "",
-
+    displayType:"Text",
     dataField: "",
     displayField: "",
     displayExpression: "",
@@ -128,28 +128,26 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 		this.selectedItem.setType(this.dataSet instanceof wm.Variable ? this.dataSet.type : "AnyData");
 	},
 	*/
-/*
-	formatData: function(inValue){
-		try
-		{
-			if (this._formatter){
-				return this._formatter.format(inValue);
-			}
-			else if (this.displayType){
-				var ctor = wm.getFormatter(this.displayType);
-				this._formatter = new ctor({name: "format", owner: this});
-				return this._formatter.format(inValue);
-			}
-			else
-				return inValue;
+        formatData: function(inValue){
+	    try
+	    {
+		if (this._formatter){
+		    return this._formatter.format(inValue);
 		}
-		catch(e)
-		{
-			console.info('error while getting data from formatData----- ', e);
+		else if (this.displayType){
+		    var ctor = wm.getFormatter(this.displayType);
+		    this._formatter = new ctor({name: "format", owner: this});
+		    return this._formatter.format(inValue);
 		}
-			
+		else
+		    return inValue;
+	    }
+	    catch(e)
+	    {
+		console.info('error while getting data from formatData----- ', e);
+	    }
+	    
 	},
-	*/
 	isReady: function() {
 		return this.inherited(arguments) && this.hasValues();
 	},
