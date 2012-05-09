@@ -856,7 +856,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	setInitialValue: function() {
 	    this.beginEditUpdate();
 	    try {
-		this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
+		this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", this.constructor) ? this.dataValue : this.displayValue);
 	    } catch(e) {}
 	    this.endEditUpdate();
 	},
