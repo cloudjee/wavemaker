@@ -18,6 +18,7 @@ import org.hibernate.tool.ant.GenericExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.hbm2x.Exporter;
 import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -25,9 +26,9 @@ import org.springframework.core.io.Resource;
 public class QueryExporterTask extends GenericExporterTask {
 
     private final String serviceName;
-    private Resource destDir;
+    private Folder destDir;
 
-    public QueryExporterTask(HibernateToolTask parent, String serviceName, Resource destDir) {
+    public QueryExporterTask(HibernateToolTask parent, String serviceName, Folder destDir) {
         super(parent);
         this.serviceName = serviceName;
         this.destDir = destDir;
@@ -55,11 +56,11 @@ public class QueryExporterTask extends GenericExporterTask {
         return super.parent;
     }
 
-    public void setDestDir(Resource destDir) {
+    public void setDestDir(Folder destDir) {
         this.destDir = destDir;
     }
 
-    public Resource getDestDir() {
+    public Folder getDestDir() {
         return this.destDir;
     }
 }

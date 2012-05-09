@@ -43,6 +43,9 @@ import com.wavemaker.runtime.module.ModuleManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * @author Matt Small
@@ -175,11 +178,11 @@ public class CopyRuntimeJarsTask extends Task {
         FileSet projectJarSet = new FileSet();
         projectJarSet.setProject(getProject());
         try {
-            projectJarSet.setDir(this.wmProject.getProjectRoot().getFile());
+            projectJarSet.setDir((File)this.wmProject.getRootFolder().getOriginalResource());
 
             projectJarSet.createInclude().setName(ProjectConstants.LIB_DIR + "/**/*.jar");
 
-            File includeList = new File(this.wmProject.getWebAppRoot().getFile(), "resources/.includeJars");
+            File includeList = new File((File)this.wmProject.getWebAppRootFolder().getOriginalResource(), "resources/.includeJars");
             if (includeList.exists()) {
 
                 String s = com.wavemaker.common.util.IOUtils.read(includeList);
@@ -216,7 +219,7 @@ public class CopyRuntimeJarsTask extends Task {
                 copyDirs.setProject(getProject());
                 copyDirs.setTaskName("copymodules-dir");
                 copyDirs.setFlatten(false);
-                copyDirs.setTodir(new File(this.wmProject.getWebInfClasses().getFile(), file.getName()));
+                copyDirs.setTodir(new File((File)this.wmProject.getClassOutputFolder().getOriginalResource(), file.getName()));
 
                 FileSet dirsFileSet = new FileSet();
                 dirsFileSet.setDir(file);
@@ -396,6 +399,8 @@ public class CopyRuntimeJarsTask extends Task {
     }
 
     public void setProjectRoot(File projectRoot) {
+        LocalFileSystem fileSystem = new LocalFileSystem(projectRoot);
+        Folder folder = FileSystemFolder.getRoot(fileSystem);
         this.wmProject = new Project(new FileSystemResource(projectRoot), new LocalStudioFileSystem());
     }
 

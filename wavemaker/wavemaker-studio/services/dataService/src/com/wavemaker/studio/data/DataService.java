@@ -272,17 +272,13 @@ public class DataService {
     }
 
     private String rewriteConnectionUrlIfNecessary(String connectionUrl) {
-        try {
-            if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-                ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                    DataServiceConstants.CURRENT_PROJECT_MANAGER);
-                String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFile().getCanonicalPath();
-                return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
-            }
-            return connectionUrl;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
+            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+                DataServiceConstants.CURRENT_PROJECT_MANAGER);
+            String projRoot = projMgr.getCurrentProject().getWebAppRootFolder().getCanonicalPath();
+            return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
         }
+        return connectionUrl;
     }
 
     private void sortColumns(List<ColumnInfo> columns) {
@@ -340,6 +336,21 @@ public class DataService {
             String password = info.getPassword();
             importDatabase(serviceId, packageName, username, password, connectionUrl, tableFilter, schemaFilter, driverClassName, dialectClassName,
                 revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName,
+        String dialectClassName, boolean overrideTable) {
+        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+        if (cfEnv != null) {
+            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
+            String connectionUrl = info.getUrl();
+            String username = info.getUserName();
+            String password = info.getPassword();
+            return this.dataModelMgr.getExportDDL(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+                overrideTable);
         } else {
             throw new UnsupportedOperationException();
         }

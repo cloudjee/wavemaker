@@ -33,10 +33,8 @@ public class DataServiceJavaUpgrade extends BaseDataUpgradeTask {
     protected void upgrade(Service service) {
 
         try {
-            IOUtils.touch(getCfgFile(service.getId()));
+            getCfgFile(service.getId()).touch();
             Thread.sleep(1000);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
         } catch (InterruptedException e) {
             throw new WMRuntimeException(e);
         }

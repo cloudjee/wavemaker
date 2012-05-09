@@ -15,7 +15,7 @@
 package com.wavemaker.tools.data;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+//import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,6 +70,8 @@ import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.ServiceDataObjectGenerator;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Manages a single Hibernate Data Model.
@@ -102,7 +104,9 @@ public class DataModelConfiguration {
     private final String cfgPath;
 
     // cfg file name
-    private final String cfgFile;
+    private final String cfgFileName;
+
+    private final File cfgFile;
 
     // used for loading configuration data that is stored
     // externally
@@ -181,11 +185,12 @@ public class DataModelConfiguration {
 
     private final Collection<String> writtenBackupFiles = new HashSet<String>();
 
-    public DataModelConfiguration(Resource cfgFile, FileService fileService, String serviceId, ExternalDataModelConfig externalConfig,
+    public DataModelConfiguration(File cfgFile, FileService fileService, String serviceId, ExternalDataModelConfig externalConfig,
         ClassLoaderFactory classLoaderFactory) throws IOException {
 
         this.name = serviceId;
-        this.cfgFile = cfgFile.getFilename();
+        this.cfgFile = cfgFile;
+        this.cfgFileName = cfgFile.getName();
         this.cfgPath = DesignServiceManager.getRuntimeRelativeDir(serviceId);
         this.fileService = fileService;
         this.externalConfig = externalConfig;
@@ -207,11 +212,11 @@ public class DataModelConfiguration {
     // this(fileSystem, springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig());
     // }
 
-    public DataModelConfiguration(Resource springConfig) {
+    public DataModelConfiguration(File springConfig) {
         this(springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig());
     }
 
-    public DataModelConfiguration(Resource springConfig, ClassLoaderFactory classLoaderFactory) {
+    public DataModelConfiguration(File springConfig, ClassLoaderFactory classLoaderFactory) {
         this(springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig(), classLoaderFactory);
     }
 
@@ -226,23 +231,23 @@ public class DataModelConfiguration {
     // this(springConfig, externalConfig, new DefaultClassLoaderFactory(fileSystem.getParent(springConfig)));
     // }
 
-    public DataModelConfiguration(Resource springConfig, ExternalDataModelConfig externalConfig) {
+    public DataModelConfiguration(File springConfig, ExternalDataModelConfig externalConfig) {
         this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
         this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        this.name = StringUtils.fromFirstOccurrence(springConfig.getFilename(), ".", -1);
+        this.name = StringUtils.fromFirstOccurrence(springConfig.getName(), ".", -1);
         // this.cfgPath = ".";
         this.cfgPath = "";
-        this.cfgFile = springConfig.getFilename();
-        final Resource baseDir = this.fileSystem.getParent(springConfig);
-        this.classLoaderFactory = new DefaultClassLoaderFactory(this.fileSystem.getParent(springConfig));
+        this.cfgFile = springConfig;
+        this.cfgFileName = springConfig.getName();
+        final Folder baseDir = springConfig.getParent();
+        this.classLoaderFactory = new DefaultClassLoaderFactory(springConfig.getParent());
         this.externalConfig = externalConfig;
-        this.fileSystem = this.fileSystem;
         this.projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
 
-        this.fileService = new AbstractFileService(this.fileSystem) {
+        this.fileService = new AbstractFileService() {
 
             @Override
-            public Resource getFileServiceRoot() {
+            public Folder getFileServiceRoot() {
                 return baseDir;
             }
         };
@@ -252,23 +257,24 @@ public class DataModelConfiguration {
         setup();
     }
 
-    public DataModelConfiguration(Resource springConfig, ExternalDataModelConfig externalConfig, ClassLoaderFactory classLoaderFactory) {
+    public DataModelConfiguration(File springConfig, ExternalDataModelConfig externalConfig, ClassLoaderFactory classLoaderFactory) {
         this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
         this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        this.name = StringUtils.fromFirstOccurrence(springConfig.getFilename(), ".", -1);
+        this.name = StringUtils.fromFirstOccurrence(springConfig.getName(), ".", -1);
         // this.cfgPath = ".";
         this.cfgPath = "";
-        this.cfgFile = springConfig.getFilename();
-        final Resource baseDir = this.fileSystem.getParent(springConfig);
+        this.cfgFile = springConfig;
+        this.cfgFileName = springConfig.getName();
+        final Folder baseDir =springConfig.getParent();
         this.classLoaderFactory = classLoaderFactory;
         this.externalConfig = externalConfig;
         this.fileSystem = this.fileSystem;
         this.projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
 
-        this.fileService = new AbstractFileService(this.fileSystem) {
+        this.fileService = new AbstractFileService() {
 
             @Override
-            public Resource getFileServiceRoot() {
+            public Folder getFileServiceRoot() {
                 return baseDir;
             }
         };
@@ -637,28 +643,21 @@ public class DataModelConfiguration {
         this.entityInfos.put(newEntityName, ei);
 
         String oldPkgName = StringUtils.packageToSrcFilePath(ei.getPackageName()) + "/" + entityName + DataServiceConstants.HBM_EXT;
-        String oldPath = getProjectRoot() + "/" + getRelServicePath(oldPkgName);
-
         String newPkgName = StringUtils.packageToSrcFilePath(ei.getPackageName()) + "/" + newEntityName + DataServiceConstants.HBM_EXT;
-        String newPath = getProjectRoot() + "/" + getRelServicePath(newPkgName);
+        File oldf = getProjectRootFolder().getFile(getRelServicePath(oldPkgName));
+        File newf = getProjectRootFolder().getFile(getRelServicePath(newPkgName));
 
-        File oldf = new File(oldPath);
-        File newf = new File(newPath);
+        oldf.rename(newf.toString());
 
-        oldf.renameTo(newf);
+        String content = newf.getContent().asString();
 
-        try {
-            String content = FileUtils.readFileToString(newf, ServerConstants.DEFAULT_ENCODING);
+        content = content.replace(entityName, newEntityName);
+        //FileUtils.writeStringToFile(newf, content, ServerConstants.DEFAULT_ENCODING);
+        newf.getContent().write(content);
 
-            content = content.replace(entityName, newEntityName);
-            FileUtils.writeStringToFile(newf, content, ServerConstants.DEFAULT_ENCODING);
+        removeMappingFromSpringFile(oldPkgName);
 
-            removeMappingFromSpringFile(oldPkgName);
-
-            addEntityToSpringFile(newPkgName);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+        addEntityToSpringFile(newPkgName);
 
         this.modifiedEntityInfos.add(ei);
 
@@ -681,7 +680,7 @@ public class DataModelConfiguration {
         updateReferences(entityName, newEntityName, ei.getRelatedProperties());
     }
 
-    private String getProjectRoot() {
+    /*private String getProjectRoot() {
         // ProjectManager projMgr = (ProjectManager)
         // RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
         String projRoot;
@@ -692,6 +691,10 @@ public class DataModelConfiguration {
         }
 
         return projRoot;
+    }*/
+
+    private Folder getProjectRootFolder() {
+        return this.projMgr.getCurrentProject().getRootFolder();
     }
 
     public void updateEntity(String entityName, EntityInfo entity) {
@@ -844,18 +847,11 @@ public class DataModelConfiguration {
 
     public synchronized void writeConnectionProperties(Properties props) {
         String connUrl = props.getProperty(DataServiceConstants.DB_URL_KEY);
-        // ProjectManager projMgr = (ProjectManager)
-        // RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-        String projRoot;
-        try {
-            projRoot = this.projMgr.getCurrentProject().getWebAppRoot().getFile().getPath();
-            connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
-            props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
+        String projRoot = ((java.io.File)this.projMgr.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
+        connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
+        props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
 
-            this.springConfiguration.writeProperties(props);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+        this.springConfiguration.writeProperties(props);
     }
 
     public void checkQuery(final String query, final Input[] inputs, final String values) {
@@ -1574,10 +1570,11 @@ public class DataModelConfiguration {
     private void generateWrapperType(DataServiceOperation op, boolean write) {
 
         // make sure we have types with new name
-        String oldPath = StringUtils.packageToSrcFilePath(DataServiceUtils.getOldOutputType(getDataPackage(), op.getName()))
+        //TODO:API
+        /*String oldPath = StringUtils.packageToSrcFilePath(DataServiceUtils.getOldOutputType(getDataPackage(), op.getName()))
             + StringUtils.JAVA_SRC_EXT;
         oldPath = getRelServicePath(oldPath);
-        write = write || !new File(oldPath).exists();
+        write = write || !new File(oldPath).exists();*/
 
         String fqName = DataServiceUtils.getOutputType(getDataPackage(), op.getName());
 

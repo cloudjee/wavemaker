@@ -16,7 +16,7 @@ package com.wavemaker.tools.data;
 
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
-import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * This interface defines methods to return hibernate exporter factory
@@ -41,7 +41,7 @@ public interface ExporterFactory {
      *
      * @param destDir the destination directory
      */
-    public void setDestDir(Resource destDir);
+    public void setDestDir(Folder destDir);
 
     public void setPackageName(String packageName);
 

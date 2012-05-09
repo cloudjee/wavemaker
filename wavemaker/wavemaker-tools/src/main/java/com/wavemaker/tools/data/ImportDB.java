@@ -34,7 +34,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.ant.ExporterTask;
-import org.springframework.core.io.Resource;
+//import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
@@ -49,11 +49,13 @@ import com.wavemaker.tools.data.reveng.BasicMetaDataDialect;
 import com.wavemaker.tools.data.reveng.MetaDataDialect;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
 
 /**
  * Database import.
@@ -97,7 +99,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private boolean valuesFromReveng = false;
 
-    private Resource classesdir = null;
+    private Folder classesdir = null;
 
     private final List<File> revengFiles = new ArrayList<File>();
 
@@ -216,7 +218,7 @@ public class ImportDB extends BaseDataModelSetup {
         this.revengFiles.add(f);
     }
 
-    public void setClassesDir(Resource classesDir) {
+    public void setClassesDir(Folder classesDir) {
         this.classesdir = classesDir;
     }
 
@@ -283,34 +285,50 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void regenerate() {
-        // File springCfg = new File(this.destdir, DataServiceUtils.getCfgFileName(this.serviceName));
-        Resource springCfg = null;
-        try {
-            springCfg = this.destdir.createRelative(DataServiceUtils.getCfgFileName(this.serviceName));
-        } catch (IOException ex) {
-        }
+
+        com.wavemaker.tools.io.File springCfg = this.destdir.getFile(DataServiceUtils.getCfgFileName(this.serviceName));
 
         DataModelConfiguration cfg = new DataModelConfiguration(springCfg, new DefaultClassLoaderFactory(this.destdir, this.classesdir));
+
         try {
+
             cfg.touchAllEntities();
+
             cfg.save();
+
         } finally {
+
             cfg.dispose();
+
         }
+
     }
 
     // generate pojos and connection properties
     private void generateBaseConfigFiles() {
+
         Properties connectionProperties = getHibernateConnectionProperties();
+
         this.properties.putAll(connectionProperties);
+
         this.jdbcConf.setProperties(this.properties);
+
         this.jdbcConf.setReverseStrategy(this.revengNamingStrategy);
+
         Configuration cfg = this.jdbcConf.getConfiguration();
+
         getParentTask().setConfiguration(cfg);
+
         checkTables(cfg);
+
+        // this.destdir.mkdirs();
+
         writePropertiesFile(cfg);
+
         getJavaExporter().execute();
+
         removeConstructor();
+
         if (this.compile) {
             compile();
         }
@@ -318,25 +336,24 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void removeConstructor() {
 
-        ResourceFilter filter = new ResourceFilter() {
+        ResourceIncludeFilter<com.wavemaker.tools.io.File> filter = new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
 
             @Override
-            public boolean accept(Resource resource) {
-                String name = resource.getFilename();
+            public boolean include(com.wavemaker.tools.io.File resource) {
+                String name = resource.getName();
                 int len = name.length();
                 return name.substring(len - 5).equals(".java");
             }
         };
 
-        List<Resource> javafiles = this.fileSystem.listChildren(this.javadir, filter);
+        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.list(filter);
 
         if (javafiles != null) {
             try {
-                for (Resource file : javafiles) {
-                    // String content = FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
-                    String content = IOUtils.toString(file.getInputStream(), ServerConstants.DEFAULT_ENCODING);
+                for (com.wavemaker.tools.io.File file : javafiles) {
+                    String content = IOUtils.toString(file.getContent().asInputStream(), ServerConstants.DEFAULT_ENCODING);
 
-                    String fileName = file.getFilename();
+                    String fileName = file.getName();
                     int len = fileName.length();
                     fileName = fileName.substring(0, len - 5);
                     String regExp = "public\\s+" + fileName + "\\s*\\([^\\)]*\\)\\s*\\{[^\\}]*\\}";
@@ -359,12 +376,9 @@ public class ImportDB extends BaseDataModelSetup {
                     }
 
                     // FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
-                    OutputStream os = this.fileSystem.getOutputStream(file);
-                    try {
-                        IOUtils.write(content, os, ServerConstants.DEFAULT_ENCODING);
-                    } finally {
-                        os.close();
-                    }
+                    OutputStream os = file.getContent().asOutputStream();
+                    IOUtils.write(content, os, ServerConstants.DEFAULT_ENCODING);
+                    os.close();
                 }
 
             } catch (IOException ioe) {
@@ -375,25 +389,36 @@ public class ImportDB extends BaseDataModelSetup {
 
     // generate .hbm.xml, .ql.xml, .spring.xml files.
     private void generateConfigFiles() {
+
         for (ExporterTask e : getPostCompileExporters()) {
             e.execute();
         }
     }
 
     private void compile() {
+        // if (!this.classesdir.exists()) {
+        // this.classesdir.mkdirs();
+        // }
         this.projectCompiler.compile();
     }
 
     protected void writePropertiesFile(Configuration cfg) {
+
         Properties p = getProperties();
+
         p = DataServiceUtils.addServiceName(p, this.serviceName);
+
         DataServiceUtils.writeProperties(p, this.destdir, this.serviceName);
     }
 
     protected void generateServiceClass(DeprecatedServiceDefinition def) {
+
         GenerationConfiguration genconf = new GenerationConfiguration(def, this.destdir);
+
         DataServiceGenerator generator = new DataServiceGenerator(genconf);
+
         generator.setGenerateMain(this.generateServiceMain);
+
         try {
             generator.generate();
         } catch (GenerationException ex) {
@@ -434,17 +459,16 @@ public class ImportDB extends BaseDataModelSetup {
         if (isMySQL()) {
             return BasicMetaDataDialect.class.getName();
         }
-
         if (isHSQLDB() || isSQLServer() || isPostgres()) {
             return MetaDataDialect.class.getName();
         }
-
         return null;
     }
 
     private void checkRevengMetaDataDialect() {
         if (this.revengMetaDataDialect == null) {
             this.revengMetaDataDialect = this.properties.getProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY);
+
             if (this.revengMetaDataDialect == null) {
                 this.revengMetaDataDialect = getDefaultRevengMetaDataDialect();
             }
@@ -460,12 +484,8 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private DeprecatedServiceDefinition loadServiceDefinition() {
-        Resource f = null;
-        try {
-            f = this.destdir.createRelative(this.serviceName + DataServiceConstants.SPRING_CFG_EXT);
-        } catch (IOException ex) {
-
-        }
+        com.wavemaker.tools.io.File f = this.destdir.getFile(this.serviceName + DataServiceConstants.SPRING_CFG_EXT);
+        
         DeprecatedServiceDefinition rtn = null;
         try {
             rtn = SpringService.initialize(f);
@@ -476,7 +496,6 @@ public class ImportDB extends BaseDataModelSetup {
             try {
                 rtn.dispose();
             } catch (RuntimeException ignore) {
-
             }
             throw ex;
         }
@@ -485,17 +504,18 @@ public class ImportDB extends BaseDataModelSetup {
     private void checkClassesDir() {
         if (this.classesdir == null) {
             String s = this.properties.getProperty(CLASSES_DIR_SYSTEM_PROPERTY);
+            Folder projRoot = projectManager.getCurrentProject().getRootFolder();
             if (s != null) {
-                setClassesDir(this.fileSystem.getResourceForURI(s));
+                setClassesDir(projRoot.getFolder(s));
             }
         }
-
         if (this.classesdir == null) {
             this.classesdir = this.destdir;
         }
     }
 
     private void checkImportMode() {
+
         if (this.properties.getProperty(IMPORT_DATABASE_SYSTEM_PROPERTY) != null) {
             setImportDatabase(Boolean.getBoolean(IMPORT_DATABASE_SYSTEM_PROPERTY));
         }
@@ -515,11 +535,9 @@ public class ImportDB extends BaseDataModelSetup {
                 if (this.packageName == null) {
                     setPackage(p);
                 }
-
                 if (this.serviceName == null) {
                     setServiceName(n.toLowerCase());
                 }
-
                 if (this.className == null) {
                     setClassName(n);
                 }
@@ -571,6 +589,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void maybeGenerateRevEng() {
         if (!this.valuesFromReveng) {
+
             if (!this.revengFiles.isEmpty()) {
                 throw new ConfigurationException("Please specify a package name in your reveng file");
             }
@@ -603,7 +622,6 @@ public class ImportDB extends BaseDataModelSetup {
             StringWriter sw = new StringWriter();
 
             try {
-
                 PrintWriter pw = new PrintWriter(sw);
                 r.write(pw, this.dialect);
                 pw.close();
@@ -619,11 +637,9 @@ public class ImportDB extends BaseDataModelSetup {
                     fw.close();
                 } catch (IOException ignore) {
                 }
-
             } catch (IOException ex) {
                 throw new ConfigurationException(ex);
             }
-
             addRevengFile(generatedRevEngFile);
         }
     }
@@ -663,24 +679,32 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void checkGenerateHibernateConfig() {
+
         String s = this.properties.getProperty(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY);
+
         if (s != null) {
             setGenerateHibernateCfg(Boolean.getBoolean(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY));
         }
     }
 
     private void checkRegenerate() {
+
         String s = this.properties.getProperty(REGENERATE_SYSTEM_PROPERTY);
+
         if (s != null) {
             setRegenerate(Boolean.getBoolean(REGENERATE_SYSTEM_PROPERTY));
         }
+
     }
 
     private void checkGenerateOldStyleOps() {
+
         String s = this.properties.getProperty(GENERATE_OLD_STYLE_OPRS_PROPERTY);
+
         if (s != null) {
             setUseIndividualCRUDOperations(Boolean.getBoolean(GENERATE_OLD_STYLE_OPRS_PROPERTY));
         }
+
     }
 
     @Override
@@ -692,7 +716,6 @@ public class ImportDB extends BaseDataModelSetup {
 
         if (this.importDatabase) {
             checkAlternateConnectionProperties();
-
             checkUser(requiredProperties);
             checkPass(requiredProperties);
             checkUrl(requiredProperties);
@@ -726,15 +749,12 @@ public class ImportDB extends BaseDataModelSetup {
             checkRegenerate();
             checkGenerateOldStyleOps();
         }
-
         checkClassesDir();
         checkCreateJar();
         checkGenerateServiceMain();
-
         checkRevengMetaDataDialect();
         checkRevengNamingStrategy();
 
         return true;
     }
-
 }

@@ -27,6 +27,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -44,7 +45,7 @@ public class ServiceClassGenerator {
 
     private final List<ServiceDetail> serviceDetails = new ArrayList<ServiceDetail>();
 
-    private Resource outputDirectory = null;
+    private Folder outputDirectory = null;
 
     private DesignServiceManager serviceManager = null;
 
@@ -52,7 +53,7 @@ public class ServiceClassGenerator {
         this.serviceManager = serviceManager;
     }
 
-    public void setOutputDirectory(Resource outputDirectory) {
+    public void setOutputDirectory(Folder outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 

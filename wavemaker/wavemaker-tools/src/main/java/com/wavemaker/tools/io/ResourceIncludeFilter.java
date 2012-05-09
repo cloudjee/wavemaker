@@ -15,7 +15,7 @@
 package com.wavemaker.tools.io;
 
 /**
- * A filter used to restrict {@link Folder#list(ResourceFilter) listed} resources.
+ * A filter used to restrict {@link Folder#list(ResourceIncludeFilter) listed} resources.
  * 
  * @see Including
  * 

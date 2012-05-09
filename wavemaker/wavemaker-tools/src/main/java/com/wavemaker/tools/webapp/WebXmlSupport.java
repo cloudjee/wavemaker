@@ -30,6 +30,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.webapp.schema.ObjectFactory;
 import com.wavemaker.tools.webapp.schema.WebAppType;
+import com.wavemaker.tools.io.File;
 
 /**
  * @author Matt Small
@@ -73,7 +74,7 @@ public class WebXmlSupport {
     }
 
     @Deprecated
-    public static void writeWebXml(Project project, WebAppType webapp, Resource configFile) throws JAXBException, IOException {
+    public static void writeWebXml(Project project, WebAppType webapp, File configFile) throws JAXBException, IOException {
         writeWebXml(webapp, project.getWriter(configFile));
     }
 

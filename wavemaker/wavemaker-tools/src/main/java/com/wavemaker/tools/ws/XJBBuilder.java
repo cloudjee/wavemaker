@@ -33,6 +33,7 @@ import com.wavemaker.common.util.XMLWriter;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Generates JAXB binding customization files.
@@ -51,8 +52,8 @@ public class XJBBuilder {
         this.wsdl = wsdl;
     }
 
-    public List<File> generate(File baseDir, boolean useDifferentPackage) throws GenerationException {
-        List<File> jaxbBindingFiles = new ArrayList<File>();
+    public List<com.wavemaker.tools.io.File> generate(Folder baseDir, boolean useDifferentPackage) throws GenerationException {
+        List<com.wavemaker.tools.io.File> jaxbBindingFiles = new ArrayList<com.wavemaker.tools.io.File>();
 
         jaxbBindingFiles.add(generateGlobalBindingFile(baseDir));
         jaxbBindingFiles.addAll(generateSchemaBindingFiles(baseDir, useDifferentPackage));
@@ -67,8 +68,8 @@ public class XJBBuilder {
         return jaxbBindingFiles;
     }
 
-    private List<File> generateSchemaBindingFiles(File baseDir, boolean useDifferentPackage) {
-        List<File> jaxbBindingFiles = new ArrayList<File>();
+    private List<com.wavemaker.tools.io.File> generateSchemaBindingFiles(Folder baseDir, boolean useDifferentPackage) {
+        List<com.wavemaker.tools.io.File> jaxbBindingFiles = new ArrayList<com.wavemaker.tools.io.File>();
 
         int schemaCount = 1;
         for (String schemaLocation : this.wsdl.getSchemas().keySet()) {
@@ -78,20 +79,15 @@ public class XJBBuilder {
         return jaxbBindingFiles;
     }
 
-    private File generateSchemaBindingFile(String schemaLocation, int schemaCount, File baseDir, boolean useDifferentPackage) {
-        File bindingFile = new File(CodeGenUtils.getPackageDir(baseDir, this.wsdl.getPackageName()), this.wsdl.getServiceId() + schemaCount
+    private com.wavemaker.tools.io.File generateSchemaBindingFile(String schemaLocation, int schemaCount, Folder baseDir, boolean useDifferentPackage) {
+        com.wavemaker.tools.io.File bindingFile = CodeGenUtils.getPackageFolder(baseDir, this.wsdl.getPackageName()).getFile(this.wsdl.getServiceId() + schemaCount
             + Constants.JAXB_BINDING_FILE_EXT);
 
         if (this.wsdl.isNoOverwriteCustomizationFiles() && bindingFile.exists()) {
             return bindingFile;
         }
 
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(new FileWriter(bindingFile));
-        } catch (IOException ex) {
-            throw new BuildException(ex);
-        }
+        PrintWriter pw = new PrintWriter(bindingFile.getContent().asOutputStream());
 
         XMLWriter xw = XMLUtils.newXMLWriter(pw);
         xw.addVersion();
@@ -130,20 +126,15 @@ public class XJBBuilder {
         return bindingFile;
     }
 
-    private File generateGlobalBindingFile(File baseDir) {
-        File globalBindingFile = new File(CodeGenUtils.getPackageDir(baseDir, this.wsdl.getPackageName()), Constants.JAXB_GLOBAL_BINDING_FILE);
+    private com.wavemaker.tools.io.File generateGlobalBindingFile(Folder baseDir) {
+        com.wavemaker.tools.io.File globalBindingFile = CodeGenUtils.getPackageFolder(baseDir, this.wsdl.getPackageName()).getFile(Constants.JAXB_GLOBAL_BINDING_FILE);
 
         if (this.wsdl.isNoOverwriteCustomizationFiles() && globalBindingFile.exists()) {
             return globalBindingFile;
         }
 
-        PrintWriter pw = null;
-        try {
-            globalBindingFile.getParentFile().mkdirs();
-            pw = new PrintWriter(new FileWriter(globalBindingFile));
-        } catch (IOException ex) {
-            throw new BuildException(ex);
-        }
+        globalBindingFile.getParent().createIfMissing();
+        PrintWriter pw = new PrintWriter(globalBindingFile.getContent().asOutputStream());
 
         XMLWriter xw = XMLUtils.newXMLWriter(pw);
         xw.addVersion();
@@ -189,11 +180,11 @@ public class XJBBuilder {
         return globalBindingFile;
     }
 
-    private File getSoapEncSchemaFile(File baseDir) throws GenerationException {
+    private com.wavemaker.tools.io.File getSoapEncSchemaFile(Folder baseDir) throws GenerationException {
         try {
-            File schemaFile = new File(CodeGenUtils.getPackageDir(baseDir, this.wsdl.getPackageName()), Constants.SOAP_ENCODING_SCHEMA_FILE);
+            com.wavemaker.tools.io.File schemaFile = CodeGenUtils.getPackageFolder(baseDir, this.wsdl.getPackageName()).getFile(Constants.SOAP_ENCODING_SCHEMA_FILE);
             InputStream is = new ClassPathResource(SOAPENC_FILE_CLASSPATH).getInputStream();
-            OutputStream os = new FileOutputStream(schemaFile);
+            OutputStream os = schemaFile.getContent().asOutputStream();
             IOUtils.copy(is, os);
             return schemaFile;
         } catch (IOException e) {

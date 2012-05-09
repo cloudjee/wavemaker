@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
 /**

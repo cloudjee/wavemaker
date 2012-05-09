@@ -18,9 +18,10 @@ import org.hibernate.tool.ant.Hbm2HbmXmlExporterTask;
 import org.hibernate.tool.ant.GenericExporterTask;
 import org.hibernate.tool.hbm2x.Exporter;
 import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
 
 public class HibernateSpringConfigExporterTask extends GenericExporterTask {
-    private Resource destDir;
+    private Folder destDir;
     private String serviceName;
     private String packageName;
     private String dataPackage;
@@ -29,7 +30,7 @@ public class HibernateSpringConfigExporterTask extends GenericExporterTask {
     private boolean impersonateUser;
     private String activeDirectoryDomain;
     
-    public HibernateSpringConfigExporterTask(HibernateToolTask parent, Resource destDir, String serviceName,
+    public HibernateSpringConfigExporterTask(HibernateToolTask parent, Folder destDir, String serviceName,
                          String packageName, String dataPackage, String className, boolean useIndividualCRUDOperations,
                          boolean impersonateUser, String activeDirectoryDomain) {
         super(parent);
@@ -50,7 +51,7 @@ public class HibernateSpringConfigExporterTask extends GenericExporterTask {
             this.impersonateUser, this.activeDirectoryDomain);
     }
 
-    public Resource getDestDir() {
+    public Folder getDestDir() {
         return this.destDir;
     }
 

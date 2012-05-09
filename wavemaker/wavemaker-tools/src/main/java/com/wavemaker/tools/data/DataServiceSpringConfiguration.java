@@ -51,6 +51,7 @@ import com.wavemaker.tools.spring.beans.Prop;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Props;
 import com.wavemaker.tools.spring.beans.Value;
+import com.wavemaker.tools.io.File;
 
 /**
  * Encapsulates access to the Data Model Spring configuration.
@@ -76,16 +77,20 @@ public class DataServiceSpringConfiguration {
 
     private boolean isDirty = false;
 
-    public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFile, String serviceName) {
+    public DataServiceSpringConfiguration(FileService fileService, String rootPath, File configFile, String serviceName) {
+        this(fileService, rootPath, configFile.getName(), serviceName);
+    }
+
+    public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFileName, String serviceName) {
         this.rootPath = rootPath;
-      
-        this.path = StringUtils.appendPaths(this.rootPath, configFile);
+
+        this.path = StringUtils.appendPaths(this.rootPath, configFileName);
 
         this.fileService = fileService;
         this.beans = DataServiceUtils.readBeans(fileService, this.path);
         this.serviceId = serviceName;
         this.propertiesFile = getConnectionPropertiesFileName();
-    }
+    }   
 
     void revert() {
         this.beans = DataServiceUtils.readBeans(this.fileService, this.path);

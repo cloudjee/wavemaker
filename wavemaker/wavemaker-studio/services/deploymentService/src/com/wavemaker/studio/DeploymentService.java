@@ -17,6 +17,7 @@ package com.wavemaker.studio;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -128,21 +129,14 @@ public class DeploymentService {
      * @param resource the resource
      * @return the download response
      */
-    private DownloadResponse getAsDownloadResponse(Resource resource) {
-        try {
-            File localFile = resource.getFile();
-            String filename = localFile.getAbsolutePath();
+    private DownloadResponse getAsDownloadResponse(com.wavemaker.tools.io.File resource) {
             DownloadResponse ret = new DownloadResponse();
-
-            FileInputStream fis = new FileInputStream(localFile);
+            InputStream fis = resource.getContent().asInputStream();
 
             ret.setContents(fis);
             ret.setContentType("application/unknown");
-            ret.setFileName(filename.substring(filename.lastIndexOf(File.separator) + 1));
+            ret.setFileName(resource.getName());
             return ret;
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
     }
 
     /**
@@ -203,9 +197,9 @@ public class DeploymentService {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
             if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
-                File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
+                com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo);
                 if (!f.exists()) {
-                    throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+                    throw new AssertionError("Application archive file doesn't exist at " + f.toString());
                 }
                 if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
                     return SUCCESS;

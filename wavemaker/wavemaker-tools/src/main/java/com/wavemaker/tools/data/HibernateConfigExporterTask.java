@@ -22,6 +22,7 @@ import org.hibernate.tool.ant.Hbm2CfgXmlExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.hbm2x.Exporter;
 import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -29,9 +30,9 @@ import org.springframework.core.io.Resource;
 public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
 
     private String configurationFile = null;
-    private Resource destDir;
+    private Folder destDir;
 
-    public HibernateConfigExporterTask(HibernateToolTask parent, Resource destDir) {
+    public HibernateConfigExporterTask(HibernateToolTask parent, Folder destDir) {
         super(parent);
         this.destDir = destDir;
     }
@@ -68,11 +69,11 @@ public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
         return super.parent;
     }
 
-    public void setDestDir(Resource destDir) {
+    public void setDestDir(Folder destDir) {
         this.destDir = destDir;
     }
 
-    public Resource getDestDir() {
+    public Folder getDestDir() {
         return this.destDir;
     }
 

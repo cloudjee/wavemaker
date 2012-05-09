@@ -53,6 +53,9 @@ import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystem;
 
 /**
  * @author Simon Toens
@@ -139,6 +142,8 @@ public abstract class BaseDataModelSetup {
 
     private static final String REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "revengNamingStrategy";
 
+     protected ProjectManager projectManager;
+
     private final String DEFAULT_FILTER = ".*";
 
     public static String getDriverClassForDBType(String dbtype) {
@@ -220,9 +225,9 @@ public abstract class BaseDataModelSetup {
     // data objects package
     protected String dataPackage = null;
 
-    protected Resource destdir = null;
+    protected Folder destdir = null;
 
-    protected Resource javadir = null;
+    protected Folder javadir = null;
 
     protected Properties properties = new Properties();
 
@@ -240,20 +245,17 @@ public abstract class BaseDataModelSetup {
 
     private final List<File> tmpFiles = new ArrayList<File>();
 
-    public void setDestDir(Resource destdir) {
+    public void setDestDir(Folder destdir) {
         this.destdir = destdir;
-        try {
-            File f = this.destdir.getFile();
+        if (this.destdir.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            File f = (File)this.destdir.getOriginalResource();
             getParentTask().setDestDir(f);
-        } catch(IOException ex) {
-            exporterFactory.setDestDir(destdir);     
-        } catch(UnsupportedOperationException ex) {
-            exporterFactory.setDestDir(destdir);     
+        } else {
+            exporterFactory.setDestDir(destdir);    
         }
-        //getParentTask().setDestDir(destdir);
     }
 
-    public void setJavaDir(Resource javadir) {
+    public void setJavaDir(Folder javadir) {
         this.javadir = javadir;
     }
 
@@ -822,21 +824,15 @@ public abstract class BaseDataModelSetup {
 
     protected void checkDestdir(Collection<String> requiredProperties) {
         if (this.destdir == null) {
+            //On CF, it makes more sense that the property should contain a path relative from the project root
+            //rather than an absolute path.
             String s = this.properties.getProperty(DESTDIR_SYSTEM_PROPERTY);
-            if (s != null) {
-                setDestDir(fileSystem.getResourceForURI(s));
-            }
+            Folder projRoot = projectManager.getCurrentProject().getRootFolder();
+            setDestDir(projRoot.getFolder(s));
         }
 
         if (this.destdir == null) {
             requiredProperties.add(DESTDIR_SYSTEM_PROPERTY);
-        } else {
-            if (this.destdir.exists()) {
-                if (!fileSystem.isDirectory(this.destdir)) {
-                    throw new ConfigurationException(MessageResource.PROPERTY_MUST_BE_DIR, DESTDIR_SYSTEM_PROPERTY,
-                            fileSystem.getPath(this.destdir));
-                }
-            }
         }
     }
 
@@ -987,6 +983,10 @@ public abstract class BaseDataModelSetup {
 
     public void setExporterFactory(ExporterFactory exporterFactory) {
         this.exporterFactory = exporterFactory;
+    }
+
+    protected void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
     }
 
     private void checkProperties(Collection<String> requiredProperties) {

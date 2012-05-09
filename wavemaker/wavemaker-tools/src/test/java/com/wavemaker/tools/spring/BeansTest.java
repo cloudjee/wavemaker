@@ -33,41 +33,28 @@ import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.io.ClassPathFile;
 
 /**
  * @author Frankie Fu
  */
 public class BeansTest extends WMTestCase {
 
-    private FileService fileService;
-
     @Override
     public void setUp() throws Exception {
-        this.fileService = new AbstractFileService(new LocalStudioFileSystem()) {
-
-            @Override
-            public Resource getFileServiceRoot() {
-                try {
-                    return ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/");
-                } catch (IOException e) {
-                    throw new WMRuntimeException(e);
-                }
-            }
-
-        };
     }
 
     public void testGetBeanById() throws Exception {
-        File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), this.fileService);
+        ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
+        Beans beans = SpringConfigSupport.readBeans(configFile);
         Bean bean = beans.getBeanById("book2");
         assertNotNull(bean);
         assertEquals("com.wavemaker.tools.spring.Book", bean.getClazz());
     }
 
     public void testAddBean() throws Exception {
-        File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), this.fileService);
+        ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
+        Beans beans = SpringConfigSupport.readBeans(configFile);
         Bean bean1 = new Bean();
         bean1.setId("book3");
         bean1.setClazz("com.wavemaker.tools.spring.Book");
@@ -79,22 +66,22 @@ public class BeansTest extends WMTestCase {
     }
 
     public void testRemoveBean() throws Exception {
-        File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), this.fileService);
+        ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
+        Beans beans = SpringConfigSupport.readBeans(configFile);
         assertTrue(beans.removeBeanById("book1"));
         assertEquals(2, beans.getImportsAndAliasAndBean().size());
     }
 
     public void testGetBeanList() throws Exception {
-        File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), this.fileService);
+        ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
+        Beans beans = SpringConfigSupport.readBeans(configFile);
         List<Bean> beanList = beans.getBeanList();
         assertEquals(3, beanList.size());
     }
 
     public void testSetBeanList() throws Exception {
-        File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), this.fileService);
+        ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
+        Beans beans = SpringConfigSupport.readBeans(configFile);
         List<Bean> beanList = beans.getBeanList();
         Bean bean = new Bean();
         bean.setId("test");

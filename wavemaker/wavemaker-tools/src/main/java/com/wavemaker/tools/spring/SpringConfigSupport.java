@@ -57,7 +57,7 @@ public class SpringConfigSupport {
     }
 
     @Deprecated
-    public static Beans readBeans(Resource configFile, FileService fileService) throws JAXBException, IOException {
+    public static Beans readBeans(File configFile, FileService fileService) throws JAXBException, IOException {
         Reader reader = fileService.getReader(configFile);
         Beans ret = readBeans(reader);
         reader.close();
@@ -79,7 +79,7 @@ public class SpringConfigSupport {
     }
 
     @Deprecated
-    public static void writeBeans(Beans beans, Resource configFile, FileService fileService) throws JAXBException, IOException {
+    public static void writeBeans(Beans beans, File configFile, FileService fileService) throws JAXBException, IOException {
         Writer writer = fileService.getWriter(configFile);
         writeBeans(beans, writer);
         writer.close();

@@ -153,7 +153,7 @@ public class ProjectManager {
         if (!projectFolder.exists()) {
             throw new WMRuntimeException(MessageResource.PROJECT_DNE, projectName, projectFolder);
         }
-        Project project = new Project(projectFolder, this.fileSystem);
+        Project project = new Project(projectFolder);
         openProject(project, noSession);
     }
 
@@ -269,20 +269,21 @@ public class ProjectManager {
             String serviceStr = "\"service\":\"" + shortSourceName + "\"";
             String dummyStr = "nothingicandoifyouwanttoscrewup";
 
-            Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
+            //Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
+            com.wavemaker.tools.io.File sourceJS = destProject.getWebAppRootFolder().getFile(shortSourceName + ".js");
             if (sourceJS.exists()) {
-                Resource destJS = destProject.getWebAppRoot().createRelative(shortDestName + ".js");
+                com.wavemaker.tools.io.File destJS = destProject.getWebAppRootFolder().getFile(shortDestName + ".js");
                 String sourceJSStr = destProject.readFile(sourceJS);
                 sourceJSStr = sourceJSStr.replace(serviceStr, dummyStr);
                 String destJSStr = sourceJSStr.replace("\"" + shortSourceName + "\"", "\"" + shortDestName + "\"");
                 destJSStr = destJSStr.replace(shortSourceName + ".extend(", shortDestName + ".extend(");
                 destJSStr = destJSStr.replace(dummyStr, serviceStr);
                 destProject.writeFile(destJS, destJSStr);
-                this.fileSystem.deleteFile(sourceJS);
+                sourceJS.delete();
             }
 
             // update the index.html
-            Resource indexHtml = destProject.getWebAppRoot().createRelative(ProjectConstants.INDEX_HTML);
+            com.wavemaker.tools.io.File indexHtml = destProject.getWebAppRootFolder().getFile(ProjectConstants.INDEX_HTML);
             if (indexHtml.exists()) {
                 String indexHtmlStr = destProject.readFile(indexHtml);
                 indexHtmlStr = indexHtmlStr.replace(": " + shortSourceName + "<", ": " + shortDestName + "<");

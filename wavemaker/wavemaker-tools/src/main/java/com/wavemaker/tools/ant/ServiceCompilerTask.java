@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
@@ -37,13 +35,13 @@ import com.wavemaker.tools.service.ServiceFile;
  */
 public class ServiceCompilerTask extends CompilerTask {
 
-    private java.io.File destDir = null;
+    private Folder destDir = null;
 
     public ServiceCompilerTask() {
         super(true);
     }
 
-    public void setDestDir(java.io.File destDir) {
+    public void setDestDir(Folder destDir) {
         this.destDir = destDir;
     }
 
@@ -54,7 +52,7 @@ public class ServiceCompilerTask extends CompilerTask {
     @Override
     protected void doExecute() {
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
-            Resource serviceDir = getDesignServiceManager().getServiceRuntimeDirectory(serviceId);
+            Folder serviceDir = getDesignServiceManager().getServiceRuntimeFolder(serviceId);
             Folder serviceFolder = getDesignServiceManager().getServiceRuntimeFolder(serviceId);
             if (!serviceFolder.exists()) {
                 throw new BuildException("Could not locate service home for " + serviceId);
@@ -63,20 +61,15 @@ public class ServiceCompilerTask extends CompilerTask {
             Resources<File> files = getServiceFiles(serviceFolder);
             List<ServiceFile> serviceFiles = new ArrayList<ServiceFile>();
             for (File file : files) {
-                Resource resource;
-                try {
-                    resource = serviceDir.createRelative(file.getName());
-                    serviceFiles.add(new ServiceFile(file, resource));
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+                File resource = serviceDir.getFile(file.getName());
+                serviceFiles.add(new ServiceFile(file, resource));
             }
             generator.addServiceFiles(serviceFiles, serviceId);
 
             if (this.destDir == null) {
                 generator.setOutputDirectory(serviceDir);
             } else {
-                generator.setOutputDirectory(new FileSystemResource(this.destDir));
+                generator.setOutputDirectory(this.destDir);
             }
 
             generator.setDesignServiceManager(getDesignServiceManager());
@@ -90,13 +83,7 @@ public class ServiceCompilerTask extends CompilerTask {
         super.validate();
 
         if (this.destDir != null) {
-            if (this.destDir.exists()) {
-                if (!this.destDir.isDirectory()) {
-                    throw new BuildException("destdir must be a directory");
-                }
-            } else {
-                this.destDir.mkdirs();
-            }
+            this.destDir.createIfMissing();
         }
     }
 
