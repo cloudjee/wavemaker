@@ -361,8 +361,9 @@ dojo.declare("wm.studio.Project", null, {
     closeAllDialogs: function() {
 	for (var i = wm.dialog.showingList.length-1; i >= 0; i--) {
 	    var d = wm.dialog.showingList[i];
-	    if (d._isDesignLoaded || d.owner && d.owner._isDesignLoaded || d instanceof wm.ContextMenuDialog)
+	    if (d._isDesignLoaded || d.owner && d.owner._isDesignLoaded || wm.isInstanceType(d,wm.ContextMenuDialog) {
 		d.hide();
+	    }
 	}
     },
     openPage: function(inName, unsavedChanges) {
