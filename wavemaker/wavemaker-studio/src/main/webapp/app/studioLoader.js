@@ -35,6 +35,7 @@ c)};define=function(b,c,a){function e(a){if(a.charAt(0)==="."){for(a=b.substring
 dojo.registerModulePath("studio", wm.basePath);
 dojo.registerModulePath("lib", wm.libPath);
 dojo.registerModulePath("wm", wm.libPath + "/wm");
+dojo.registerModulePath("wm.studio", wm.basePath); // this one seems silly, but we use it
 dojo.registerModulePath("common", wm.libPath + "/wm/common");
 dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
 dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));

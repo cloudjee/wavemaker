@@ -74,8 +74,8 @@ loadPackages = function() {
     dojo.require("wm.studio.app.templates.widgetTemplates");
 
     //studio.palette.beginUpdate();
-    loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
-    loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);
+		loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
+		loadData(dojo.moduleUrl("common.packages") + "packages.js", _loadPackages);
 	//console.dir(__packageRegistry);
 	installPackages(__packageRegistry);
 	//studio.palette.endUpdate();
