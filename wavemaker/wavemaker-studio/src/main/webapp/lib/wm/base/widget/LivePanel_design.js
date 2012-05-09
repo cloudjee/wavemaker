@@ -15,6 +15,7 @@
 dojo.provide("wm.base.widget.LivePanel_design");
 dojo.require("wm.base.widget.LivePanel");
 wm.require("wm.DojoGrid");
+wm.require("wm.LiveForm");
 
 wm.LivePanel.extend({
 	afterPaletteDrop: function() {
