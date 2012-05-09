@@ -156,6 +156,7 @@ public class PhoneGapService {
 
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
         phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending(".gz")).delete();
+        phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending("_grid.js")).delete();
         phoneGapLibFolder.getFolder("build/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
         phoneGapLibFolder.getFolder("build").list(Including.fileNames().ending(".js")).delete();
         phoneGapLibFolder.getFolder("images/boolean/").delete();
