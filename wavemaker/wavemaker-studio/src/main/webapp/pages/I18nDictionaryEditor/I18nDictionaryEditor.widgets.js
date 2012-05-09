@@ -18,7 +18,7 @@ I18nDictionaryEditor.widgets = {
 	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
             mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 		dictionaryListPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100px", verticalAlign: "top", horizontalAlign: "left"},{}, {
-		    dictionaryItemList: ["wm.List", {width: "200px", height: "100%", border: "1", borderColor: "black", headerVisible: false},{onselect: "dictionaryItemSelect"}, {
+		    dictionaryItemList: ["wm.List", {width: "200px", height: "100%", border: "1", borderColor: "black", headerVisible: false},{onselect: "dictionaryItemSelect", ondeselect: "dictionaryItemClear"}, {
 			binding: ["wm.Binding", {}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"source":"dictionaryTermListVar","targetProperty":"dataSet"}, {}]
 			}]
@@ -43,6 +43,7 @@ I18nDictionaryEditor.widgets = {
 	    }],
 		     
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
+		addLanguageButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Add Language", width: "120px"}, {onclick: "addLanguageClick"}],
 		cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel"}, {onclick: "cancelClick"}],
 		saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Save"}, {onclick: "saveClick"}]
 	    }]

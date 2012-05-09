@@ -248,6 +248,29 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}));
 	return databases;
     },
+	cfGetUrlbuttonClick: function(inSender){
+		try{
+		this.cfUrlEditor.clear();
+		var data = this.generateCloudFoundryDeploymentStruct();
+		studio.beginWait(this.getDictionaryItem("WAIT_GENERATE"));
+		studio.deploymentService.requestAsync("getDeploymentURL", [data],
+						dojo.hitch(this, function(inResult) {
+						    this.cfGetUrlSuccess(inResult,false);
+						}),
+						dojo.hitch(this, "cfGetUrlFailed"));
+		} catch(e) {
+          console.error('ERROR IN cfGetUrlbuttonClick: ' + e);
+      }
+	  },
+	cfGetUrlSuccess: function(inResult){
+		this.cfUrlEditor.setDataValue(inResult);
+	    studio.endWait();
+	},
+
+	cfGetUrlFailed: function(inResult){
+	    studio.endWait();
+		app.toastError(this.getDictionaryItem("TOAST_GENERATE_FAIL"));
+	},
     saveButtonClick: function(inSender) {
       try {
 	  
@@ -783,24 +806,20 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	var name = inSender.name;
 	var number = name.match(/(\d+)$/);
 	number = number[1];
-/*
-	var result;
-	if (this["databaseTypeEditor" + number].getDataValue() == "HSQLDB") {
-	    result = "jdbc:hsqldb:file:" + this["databaseNameEditor" + number].getDataValue() + ";shutdown=true;ifexists=true";
-	} else {
-	    result = "jdbc:" + this["databaseTypeEditor" + number].getDataValue() + "://" + this["databaseHostEditor" + number].getDataValue() + ":" + this["databasePortEditor" + number].getDataValue() + "/" + this["databaseNameEditor" + number].getDataValue();
-	}
-	    */
+
 	var box = this["databasePanel" + number];
 	var designConnectionUrl = box.dataProperties.connectionUrl;
 	var data = parseConnectionUrl( designConnectionUrl);
 	if (data) {
 	    var extrasField = data[3];
+	    if (designConnectionUrl.toLowerCase().indexOf("hsqldb") != 0) {
+		extrasField = this["databaseNameEditor" + number].getDataValue();
+	    }
 	}
 	var result = buildConnectionUrl(this["databaseTypeEditor" + number].getDataValue(), 
-							this["databaseHostEditor" + number].getDataValue(),
-							this["databasePortEditor" + number].getDataValue(),
-							extrasField
+					this["databaseHostEditor" + number].getDataValue(),
+					this["databasePortEditor" + number].getDataValue(),
+					extrasField
 				 );
 	this["databaseURLEditor" + number].setDataValue(result);
     },

@@ -64,7 +64,9 @@
   * 8. Find all bindable/bindTarget properties that should be readonly and make them readonly
   */
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
+     _allowClickClose: true,
      captionSize: "35%",
+     defaultEditorHeight: "24px",
      mode: "recommended",
      preferredMultiActive: false,
      multiActive: false,
@@ -106,7 +108,22 @@
 	     }
 	     while(this.dataSets.length)
 		 this.dataSets[0].destroy();
+
+	     if (this.isRequiredMode()) {
+		 var allprops = inComponent.listProperties();
+		 var requiredCount = 0;
+		 wm.forEachProperty(allprops, function(p) {
+		     if (p.requiredGroup) {
+			 requiredCount++;
+		     }
+		 });
+		 if (requiredCount <= 1) {
+		     this.toggleAdvancedPropertiesSome();
+		 }
+	     }
+
 	     this.props = this.getProps(inComponent,false);
+
 	     this.editorHash = {};
 	     this.bindEditorHash = {};
 	     this.subcomponents = {};
@@ -278,7 +295,7 @@
 	     if (isBound) {
 		 var wire = inComponent.$.binding.wires[propPath];
 		 newVal = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
-	     } else {
+	     } else if (!e.bindValuesOnly) {
 		 if (inProp.treeBindRoot) {
 		     newVal = inComponent.getValue(propPath);
 		 } else {
@@ -417,7 +434,7 @@
 		 } else if (originalP.isCustomMethod) 
 		     p.group = "custommethods";
 		 else if (!originalP.group) 
-		     p.group = "Properties";
+		     p.group = "properties";
 		 props[i] = p;
 	     }
 	 }));
@@ -451,63 +468,42 @@
 						    owner: this, 
 						    caption:inName, 
 						    width: "100%", 
-						    singleLine: false,
+						    height: this.defaultEditorHeight,
+						    singleLine: true,
 						    //border: "0,0,1,0", 
 						    border: "0",
 						    borderColor: inBigSeparator ? "#959DAB" : "#444444", 
 						    showing: inShowing, 
 						    padding: "0", 
-						    margin: "0"}));
+						    margin: "0,0,0,2"}));
      },
-     generateEditors: function(inComponent, inGroupName, inLayer) {
-	 var groupObj;
-	 if (inGroupName) {
-	     for (var i = 0; i < this.groups.length; i++) {
-		 if (this.groups[i].name == inGroupName) {
-		     groupObj = this.groups[i];
-		     break;
-		 }
-	     }
-	 }
+     generateEditors: function(inComponent, inGroup, inLayer) {
+	 var inGroupName = inGroup.name;
+
 	 var self = this;
-	 if (groupObj) {
-	     wm.forEachProperty(groupObj.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
-		 if (subgroup.props.length) {
-		     this.addSubGroupIndicator((groupObj.displayName || groupObj.name) + " - " + (subgroup.displayName || subgroupName),
+	 if (inGroup) {
+	     //wm.forEachProperty(inGroup.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
+	     var count = 0;
+	     dojo.forEach(inGroup.subgroups, function(subgroup) {
+		 if (subgroup.props.length && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
+		     count++;
+		     this.addSubGroupIndicator(/*(inGroup.displayName || inGroup.name) + " - " + */(subgroup.displayName || subgroup.name),
 					       inLayer,  
 					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}), 
 					       false);
-		     this._generateEditors(inComponent, inLayer, subgroup.props);
 		 }
-	     }));
+		 if (subgroup.props.length || subgroup.subgroups.length) {
+		     this.generateEditors(inComponent, subgroup, inLayer);
+		 }
+	     }, this);
 	     this.processingRequiredGroup = inGroupName == "required";
-	     this._generateEditors(inComponent, inLayer, groupObj.props);
+	     if (inGroup.props) {
+		 this._generateEditors(inComponent, inLayer, inGroup.props);
+	     }
 	     delete this.processingRequiredGroup;
-	 } else {
+	 } else if (inPropList) {
 	     this._generateEditors(inComponent, inLayer, this.props);
 	 }
-	 var hiddenCount = 0;
-     
-	 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {hiddenCount++;}});
-
-	     var l = new wm.Label({name: inLayer.name + "MoreLink",
-				   _classes: {domNode: ["onClickEvent"]},
-				   showing: hiddenCount,
-			   owner: this,
-			   parent: inLayer,
-			   caption: "Show " + hiddenCount + " more",
-			   align: "right",
-			   width: "80px"});	 
-	 l.onclick = dojo.hitch(this, function() {
-		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
-		     w._showAllClicked = true;
-		     w.show();
-		 }});
-		 l.hide();
-		 this.updateCaptionSizes();
-	 });
-	 this.moreLabelList.push(l);
-
 	 inLayer.setShowing(inLayer.c$.length);
      },
 
@@ -524,8 +520,8 @@
 		 var e = this.generateEditor(inComponent,p, inLayer);
 	     }
 	 }
-	 this.updateCaptionSizes();
      },
+/*
      updateCaptionSizes: function() {
 
 
@@ -533,7 +529,7 @@
 	 wm.job("Inspector.resizeEditors", 1, this, function() {
 	     var max = 0;
 	     wm.forEachProperty(this.editorHash, function(e) {
-		 if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%") {
+		 if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%" && e.captionPosition == "left") {
 		     var w = e.captionNode.clientWidth;
 		     if (w > max) {
 			 max = Math.min(w, e.bounds.w - 105); // 105 appears to be about as small as we can go before the editors start to fail
@@ -544,18 +540,22 @@
 	     if (max > this.bounds.w/2) {
 		 max = Math.floor(this.bounds.w/2);
 	     }
-	     wm.forEachProperty(this.editorHash, function(e) {
-		 if (e.setCaptionSize && e.captionSize != "100%") {
-		     e.setCaptionSize(max + "px");
+	     this.captionSize = max + "px";
+	     wm.forEachProperty(this.editorHash, dojo.hitch(this,function(e) {
+		 if (e.setCaptionSize && e.captionSize != "100%" && e.captionPosition == "left") {
+		     e.setCaptionSize(this.captionSize);
 		     e.captionNode.style.maxWidth = (max-5) + "px";
 		 }
-	     });
+	     }));
 	 });
      },
+     */
+/*
      renderBounds: function() {
 	 this.inherited(arguments);
 	 this.updateCaptionSizes();
      },
+     */
      generateButton: function(inComponent,inProp, inLayer) {
 	 var p = new wm.Panel({
 	     parent: inLayer,
@@ -604,7 +604,7 @@
 	     layoutKind: "left-to-right",
 	     width: "100%",
 	     height: "30px", /* This height is ignored; we call setBestHeight after we're done */
-	     verticalAlign: "top",
+	     verticalAlign: "middle",
 	     horizontalAlign: "left"});
 
      },
@@ -720,15 +720,16 @@
 	     this.createHelpButton(inComponent, inProp, panel, e.captionPosition == "top" ? parseInt(e.captionSize) : 0);
 	 }
 	 panel.setBestHeight();
+
 	 return e;
      },
 
      /* When showing a bound value, get a pretty printed version of it */
      getFormattedBoundValue: function(inType, inSource, inExpr) {
 	var inValue = "";
-	if (!inSource && !inExpr)
+	 if (!inSource && !inExpr) {
 	    ;
-	else if (inSource) 
+	 } else if (inSource) 
 	    //inValue = "bind: " + inSource;
 	    inValue = inSource;
 	else if (inExpr === undefined || inExpr === null || inExpr === "" || String(inExpr).match(/^\s*$/))
@@ -784,8 +785,8 @@
 		   caption: "",
 		   parent: inPanel,
 		   width: "20px",
-		   height: (20 + captionHeight) + "px",
-		   margin: captionHeight + ",0,0,0",
+		   height: "20px",//(20 + captionHeight) + "px",
+		   //margin: captionHeight + ",0,0,0",
 		   onclick: function() {
 		       studio.helpPopup = self.getHelpDialog();
 		       self.beginHelp(inProp.name, inPanel.domNode, inComponent.declaredClass);
@@ -1163,18 +1164,49 @@
 	 return result;
      },
 
+     addMoreLink: function(inComponent, inLayer) {
+	 if (this.isRecommendedMode() && !studio.propertySearchBar.getDataValue()) {
+	     var hiddenCount = 0;
+	     dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {hiddenCount++;}});
 
+	     var l = new wm.Label({name: inLayer.name + "MoreLink",
+				   _classes: {domNode: ["onClickEvent"]},
+				   showing: hiddenCount,
+				   owner: this,
+				   parent: inLayer,
+				   caption: "Show " + hiddenCount + " more",
+				   align: "right",
+				   width: "80px"});	 
+	     l.onclick = dojo.hitch(this, function() {
+		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
+		     w._showAllClicked = true;
+		     w.show();
+		 }});
+		 l.hide();
+	     });
+	     this.moreLabelList.push(l);
+	 }
+     },
 
+     onLayerShow: function(inSender, inComponent) {
+	 var l = this.getActiveLayer();
+	 var group = l.propertyGroup;
+	 var form = l.c$[0];
+	 if (form.c$.length == 0) {
+	     if (inComponent.isDestroyed) return;
+	     this.generateEditors(inComponent, group, form);
+	     this.addMoreLink(inComponent,form);
+	     l.reflow();
+	     //this.updateCaptionSizes();
+	 }
+     },
 
      generateGroups: function(inComponent) {
 	 var groups = this.initGroups(this.props);
-	 var layer = this.addLayer("Properties",true);
-	 for (var i = 0; i < groups.length; i++) {
-	     var g = groups[i];
+	 dojo.forEach(groups, function(g) {
 	     if (g.layer) {
 		 var layer = this.addLayer(g.displayName,true);
 		 layer.propertyGroup = g;
-
 	     //layer.header.setMargin("2,0,2,0");
 
 	     //layer.header.setBorder("1");
@@ -1183,35 +1215,35 @@
 		 this.generateLayer = layer;
 	     //this.generateEditors(inComponent,g.name, layer);
 		 g.layer = layer;
+		 var formPanel = new wm.FormPanel({owner: this,
+						   parent: layer,
+						   width: "100%",
+						   height: "100%",
+						   autoSizeCaption: true});
 /*
 	     if (this._activeLayer == g.name || g.equivalentName) {
 		 this._reselectLayerIndex = this.layers.length-1;		
 	     }
 	     */
 	     layer.connect(layer, "onShow", this, function() { 
-		 var l = this.getActiveLayer();
-		 var group = l.propertyGroup;
-
-		 if (l.c$.length == 0) {
-		     if (inComponent.isDestroyed) return;
-		     this.generateEditors(inComponent, group.name, l);
-		     l.reflow();
-		 }
+		 this.onLayerShow(layer, inComponent);
 	     });
 	     }
-	 }
+	 }, this);
      
+/*
      for (var i = 0; i < groups.length; i++) {
 	 var g = groups[i];
 	 if (!g.layer) {
 	     if (!g.noDisplayName && g.subgroups.length == 0) {
 		 this.addSubGroupIndicator(g.displayName || g.name, this.layers[0], true, true);
 	     }
-	     this.generateEditors(inComponent, g.name, this.layers[0]);
+	     this.generateEditors(inComponent, g, this.layers[0]);
 	 }
      }
+     */
 	 for (var i = 0; i < this.layers.length; i++) {
-	     this.layers[i].setPadding("5,4,5,4");
+	     this.layers[i].setPadding("5,0,5,4");
 	     this.layers[i].setMargin("2,0,2,0");
 	     this.layers[i].header.setMargin(i == 0 ? "2" : "0,2,2,2");
 	     this.layers[i].setFitToContentHeight(true);
@@ -1243,14 +1275,8 @@
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
 	     result.equivalentName = wm.propertyGroups[inName].equivalentName;
-	     if (wm.propertyGroups[inName].layer === true) {
-		 result.layer = true;
-	     } else if (wm.propertyGroups[inName].layer === undefined) {
-		 result.layer = false;
-	     } else if (typeof wm.propertyGroups[inName].layer == "function") {
-		 result.layer = this.inspected instanceof wm.propertyGroups[inName].layer;
-	     }
-
+	     result.layer = this.isGroupALayer(wm.propertyGroups[inName]);
+ 
 	     result.noDisplayName =  wm.propertyGroups[inName].noDisplayName;
 	     if (inName == "widgetName") {
 		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Properties"; // TODO: Localize
@@ -1259,6 +1285,18 @@
 	     }
 	 }
 	 return result;
+     },
+     isGroupALayer: function(inGroup) {
+	 if (!inGroup) {
+	     return false;
+	 } else if (inGroup.layer === true) {
+		 return true;
+	     } else if (inGroup.layer === undefined) {
+		 return false;
+	     } else if (typeof inGroup.layer == "function") {
+		 return inGroup.layer(this.inspected, inGroup);
+	     }
+	 return false;
      },
      addToSubgroup: function(groupObj, subgroupName, inPropDef) {
 	 /* Step 1: Find the subgroup */
@@ -1289,9 +1327,10 @@
      },
      buildGroups: function(inProps,showAllProps) {
 
-	     var groups = {"required": this.makeNewGroupObj("required")}; // hash of all of the groups and subgroups and properties in those groups
+	 //var groups = {"required": this.makeNewGroupObj("required")}; // hash of all of the groups and subgroups and properties in those groups
+	 var groups = {"properties": this.makeNewGroupObj("properties")}; // hash of all of the groups and subgroups and properties in those groups
 	     var groupsArray = []; // We'll copy the groups hash into the array before returning it
-	     var defaultGroup = "Properties"; // Name of the default property group if the property has no group
+	     var defaultGroup = wm.propertyGroups.properties; // Name of the default property group if the property has no group
 
 	     dojo.forEach(inProps, dojo.hitch(this, function(inPropDef, index) {
 		 var groupName = (inPropDef && inPropDef.group) || defaultGroup;
@@ -1329,12 +1368,7 @@
 
 	     /* Build the groupsArray; make sure required group is first */
 	     wm.forEachProperty(groups, function(group,i) {
-		 if (i == "required") {
-		     if (groups.required.props.length)
-			 groupsArray.unshift(groups.required);
-		 } else {
 		     groupsArray.push(group);
-		 }
 	     });
 	     return groupsArray;
 	 },
@@ -1363,6 +1397,13 @@
 			 }
 		     }
 		 });
+	     });
+
+	     inGroups = dojo.filter(inGroups, function(g) {
+		 if (!g.layer) {
+		     inGroups[0].subgroups.push(g);
+		 }
+		 return g.layer;
 	     });
 
 	     return inGroups;
@@ -1405,11 +1446,11 @@
 	     for (var i = 0; i < this.layers.length; i++) {
 		 var layer = this.layers[i];
 		 if (layer.c$.length === 0) {
-		     this.generateEditors(this.inspected, layer._groupName, layer);
+		     this.generateEditors(this.inspected, layer.propertyGroup, layer);
 		 }
 	     }
 	 }
-
+	 this.multiActive = true;
 	
 	 var props = this.props;
 	 wm.forEachProperty(this.editorHash, dojo.hitch(this, function(editor,key) {
@@ -1445,6 +1486,8 @@
 	 }));
 
 	 dojo.forEach(this.moreLabelList, function(w) {
+	     w.hide();
+/*
 	     var hiddenCount = 0;
 	     var totalCount = 0;
 	     dojo.forEach(w.parent.c$, function(w) {
@@ -1457,6 +1500,12 @@
 	     if (hiddenCount > 0 && hiddenCount < totalCount) {
 		 w.setCaption( "Show " + hiddenCount + " more");
 	     }
+	     */
+	 });
+
+
+	 dojo.forEach(this.subHeaderLabelList, function(w) {
+	     w.setShowing(!inDisplayValue);
 	 });
 
 
@@ -1464,7 +1513,7 @@
 	     var count = 0;
 	     var layer = this.layers[i];
 	     for (var j = 0; j < layer.c$.length; j++) { 
-		 if (layer.c$[j].showing && dojo.indexOf(this.moreLabelList, layer.c$[j]) == -1) {
+		 if (layer.c$[j].showing) {
 		     var w = layer.c$[j];
 		     if (w instanceof wm.Container) {
 			 var hasShowingWidgets = false;
@@ -1492,11 +1541,7 @@
 
 	     }
 	 }
-
-	 dojo.forEach(this.subHeaderLabelList, function(w) {
-	     w.setShowing(!inDisplayValue);
-	 });
-
+	 this.multiActive = this.preferredMultiActive;
      },
      toggleMultiactive: function() {
 	 this.preferredMultiActive = !this.preferredMultiActive;
@@ -1515,13 +1560,17 @@
 
 	 }	 
      },
+
      toggleRequiredProperties: function(inSender) {
+	 this.toggleAdvancedPropertiesSome();
+/*
 	 studio.propertySearchBar.setDataValue("");
 	 dojo.removeClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown");
 	 dojo.removeClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
 	 dojo.addClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
 	 this.mode = "required";
 	 this.inspect(this.inspected, true);
+	 */
      },
 
      toggleAdvancedPropertiesSome: function(inSender) {
@@ -1573,6 +1622,7 @@
 
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent, inName) {
 	 var editorProps = {
+	     required: inProp.requiredGroup,
 	     maxCaptionWidth: Math.floor(this.bounds.w/2),
 	     propDef: inProp,
 	     owner: inOwner,
@@ -1582,15 +1632,21 @@
 	     name: "propEdit_" + (inName ? inName : inProp.name),
 	     propName: inProp.name,
 	     width: "100%",
-	     height: "28px",
+	     height: this.defaultEditorHeight,
 	     captionSize: this.captionSize,
 	     captionPosition: "left",
 	     captionAlign: "left",
 	     caption: (inProp.shortname || inProp.name),
-	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
+	     _classes: {domNode: []},
 	     dataValue: inValue,
 	     inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
 	 };
+	 if (inProp.isPublished) {
+	     editorProps._classes.domNode.push("isPublishedProp");
+	 }
+	 if (inProp.advanced) {
+	     editorProps._classes.domNode.push("isAdvancedProp");
+	 }
 	 if (inProp.createWire != undefined) {
 	     editorProps.createWire = inProp.createWire;
 	 }
@@ -1601,15 +1657,18 @@
 
 
 
-
 wm.addPropertyGroups = function(propGroups) {
-	dojo.mixin(wm.propertyGroups || (wm.propertyGroups = {}), propGroups);
+    if (!wm.propertyGroups) {
+	wm.propertyGroups = {};
+    }
+    dojo.mixin(wm.propertyGroups , propGroups);
 }
 
 // registry of groups to show in inspector
 wm.addPropertyGroups({
 /* NEW SCHEMA */
-    required: {displayName: "Required", 
+    properties: {displayName: "Properties", 
+		 layer: true,
 	       order: 1,
 	       subgroups: {}},
     common: {//displayName: "Common", 
@@ -1794,7 +1853,7 @@ wm.addPropertyGroups({
 		 }
 		},
     data: {displayName: "Data", 
-	   layer: wm.Control,
+	   layer: function(inComponent) { return inComponent instanceof wm.Control;},
 	   order: 70,
 	   subgroups: {
 	       data: {displayName: "Data",
@@ -1843,7 +1902,7 @@ wm.addPropertyGroups({
 	editData: {displayName: "Editor Data", order: 55},
 
 	Events: {displayName: "General", order: 100},
-	Properties: {displayName: "Other", order: 100},
+    //Properties: {displayName: "Other", order: 100},
 	validation: {displayName: "Validation", order: 150},
 	columns: {displayName: "Columns", order: 999},
 	ungrouped: {displayName: "Other", order: 1000},

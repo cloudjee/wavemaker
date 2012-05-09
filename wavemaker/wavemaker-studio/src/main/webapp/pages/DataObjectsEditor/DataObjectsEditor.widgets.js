@@ -16,8 +16,8 @@ DataObjectsEditor.widgets = {
 	columnListVar: ["wm.Variable", {type: "com.activegrid.tools.data.ColumnInfo"}, {}],
 	relationshipsListVar: ["wm.Variable", {type: "com.activegrid.tools.data.RelatedInfo"}, {}],
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
-	layoutBox: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "1flex", layoutFlex: 1, width: "1flex", imageList: "smallToolbarImageList"}, {}, {
-		editorToolbar: ["wm.Panel", {border: "0", height: "29px", layoutKind: "left-to-right"}, {}, {
+	layoutBox: ["wm.Layout", {height: "1flex", layoutFlex: 1, width: "1flex", imageList: "smallToolbarImageList"}, {}, {
+	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0", height: "29px", layoutKind: "left-to-right", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", layoutFlex: 1, width: "100%", padding: "0,4"}, {}, {
 				saveButton1: ["wm.ToolButton", {imageIndex: 8, title: "Save Entity", width: "24px", height: "100%", border: "", margin: "", hint: "Save Entity"}, {onclick: "saveAll"}],
 				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
@@ -51,25 +51,22 @@ DataObjectsEditor.widgets = {
 							}],
 							entityPanel: ["wm.Panel", {border: "0", height: "180px", layoutKind: "left-to-right", width: "800px"}, {}, {
 								tableDetailPanel: ["wm.Panel", {border: "0", width: "400px"}, {}, {
-								    tableDetailPackageName: ["wm.Text", {changeOnKey: true, caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}],
-								    tableDetailSchemaName: ["wm.Text", {caption: "Schema", height: "26px", layoutKind: "left-to-right",changeOnKey:true, helpText: "The database schema container for this table such as public or dbo. Not used with all DB systems. "}, {onchange: "tableDetailSchemaNameChange"}],
-								    tableDetailCatalogName: ["wm.Text", {caption: "Catalog", height: "26px", layoutKind: "left-to-right",changeOnKey: true, helpText: "The database catalog for this table. Can be the same as database name. Not used with all DB systems. Do not use when deploying to CloudFoundry with MySQL."}, {onchange: "tableDetailCatalogNameChange"}],
+								    tableDetailPackageName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},changeOnKey: true, caption: "Package", height: "26px", layoutKind: "left-to-right", readonly: true}, {onchange: "tableDetailPackageNameChange"}],
+								    tableDetailSchemaName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "Schema", height: "26px", layoutKind: "left-to-right",changeOnKey:true, helpText: "The database schema container for this table such as public or dbo. Not used with all DB systems. "}, {onchange: "tableDetailSchemaNameChange"}],
+								    tableDetailCatalogName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "Catalog", height: "26px", layoutKind: "left-to-right",changeOnKey: true, helpText: "The database catalog for this table. Can be the same as database name. Not used with all DB systems. Do not use when deploying to CloudFoundry with MySQL."}, {onchange: "tableDetailCatalogNameChange"}],
 									spacer1: ["wm.Spacer", {height: "10px", border: ""}, {}],
-								    tableDetailTableName: ["wm.Text", {caption: "Table Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The table name in the database. Must match table name in database."}, {onchange: "tableDetailTableNameChange"}],
-								    tableDetailEntityName: ["wm.Text", {caption: "Entity Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The name of the table in the project datamodel. Can be different from table name in database."}, {onchange: "tableDetailEntityNameChange"}]
+								    tableDetailTableName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "Table Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The table name in the database. Must match table name in database."}, {onchange: "tableDetailTableNameChange"}],
+								    tableDetailEntityName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "Entity Name", height: "26px", layoutKind: "left-to-right", changeOnKey: true, helpText: "The name of the table in the project datamodel. Can be different from table name in database."}, {onchange: "tableDetailEntityNameChange"}]
 								}],
-								tableSettingsPanel: ["wm.Panel", {padding: "5,0,0,0", width: "150px"}, {}, {
-								    dynamicInsertCheckBox: ["wm.Checkbox", {caption: "Dynamic Insert", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicInsertChange"}],
-								    dynamicUpdateCheckBox: ["wm.Checkbox", {caption: "Dynamic Update", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "dynamicUpdateChange"}],
-								    refreshCheckBox: ["wm.Checkbox", {caption: "Refresh Entity", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right"}, {onchange: "refreshChange"}],
+								tableSettingsPanel: ["wm.Panel", {padding: "5,0,0,0", width: "170px"}, {}, {
+								    dynamicInsertCheckBox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]},caption: "Dynamic Insert", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right", helpText: "Dynamic Insert: Don't include null values in insert statements"}, {onchange: "dynamicInsertChange"}],
+								    dynamicUpdateCheckBox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]},caption: "Dynamic Update", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right", helpText: "Dynamic Update: Don't include null values in update statements"}, {onchange: "dynamicUpdateChange"}],
+								    refreshCheckBox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]},caption: "Refresh Entity", display: "CheckBox", displayValue: "0", height: "26px", captionSize: "115px", layoutKind: "left-to-right", helpText: "Refresh Entity: Reload instance from database after insert/update"}, {onchange: "refreshChange"}],
 								}],
-								inlineHelpPanel: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", layoutFlex: 1, width: "1flex"}, {}, {
-									inlineHelpText: ["wm.Label", {_classes: {domNode: ["wm_Padding_6px", "wmGroupBox"]}, border: "", caption: "Dynamic Insert: Don't include null values in insert statements<br/><br/>Dynamic Update: Don't include null values in update statements<br/><br/>Refresh Entity: Reload instance from database after insert/update", padding: "4", layoutFlex: 1, singleLine: false, height: "1flex"}, {}, {
-										format: ["wm.DataFormatter", {}, {}]
-									}]
+								inlineHelpPanel: ["wm.Panel", {border: "0", borderColor: "#000000", layoutFlex: 1, width: "100%"}, {}, {
 								}]
 							}],
-							panel002: ["wm.Panel", {_classes: {domNode: ["wmToolbar"]}, border: "1,0,0,0", borderColor: "#000000", height: "29px", layoutKind: "left-to-right"}, {}, {
+							panel002: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "1,0,0,0", borderColor: "#959DAB", height: "29px", layoutKind: "left-to-right"}, {}, {
 								tableLabel: ["wm.Label", {_classes: {domNode: ["wm_Padding_6px"]}, width: "80px", border: "", caption: "Columns"}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
@@ -106,7 +103,7 @@ DataObjectsEditor.widgets = {
 									format: ["wm.DataFormatter", {}, {}]
 								}]
 							}],
-							panel003: ["wm.Panel", {_classes: {domNode: ["wmToolbar"]}, border: "1,0,0,0", borderColor: "#000000", height: "29px", layoutKind: "left-to-right", imageList: ""}, {}, {
+							panel003: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "1,0,0,0", borderColor: "#000000", height: "29px", layoutKind: "left-to-right", imageList: ""}, {}, {
 								relationshipsLabel: ["wm.Label", {_classes: {domNode: ["wm_Padding_6px"]}, width: "80px", border: "", caption: "Relationships"}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],

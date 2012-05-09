@@ -66,6 +66,7 @@ dojo.declare(
             this.ldapOptions = {};
             this.secEnableInput.setChecked(true);
             this.servicesLayer.setShowing(true);
+            this.rolesLayer.setShowing(true);
             this.showLoginPageInput.setChecked(true);
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
@@ -182,12 +183,14 @@ dojo.declare(
             } else if (inValue == "JOSSO") {
                 this.layers.setLayer("jossoLayer");
                 this.servicesLayer.setShowing(false);
+		this.rolesLayer.setShowing(this.secEnableInput.getChecked());
                 this.secEnableInput.setShowing(true);
                 this.securityCheckboxChange();
             } else {
                 this.layers.setLayer("emptyLayer");
                 this.secEnableInput.setChecked(false);
                 this.servicesLayer.setShowing(false);
+		this.rolesLayer.setShowing(false);
                 this.securityCheckboxChange();
                 this.secEnableInput.setShowing(false);
             }
@@ -200,6 +203,7 @@ dojo.declare(
             if (inResponse) {
                 this.secEnableInput.setChecked(inResponse.enforceSecurity);
                 this.servicesLayer.setShowing(inResponse.enforceSecurity);
+                this.rolesLayer.setShowing(inResponse.enforceSecurity);
                 this.showLoginPageInput.setChecked(inResponse.enforceIndexHtml);
                 var t = inResponse.dataSourceType;
                 this.populatingOptions = true;
@@ -730,6 +734,7 @@ dojo.declare(
         showJossoLayer : function() {
             this.secEnableInput.setChecked(true);
             this.servicesLayer.setShowing(false);
+            this.rolesLayer.setShowing(true);
             this.securityCheckboxChange();
 
             var roles = this.roleList._data;
@@ -752,6 +757,7 @@ dojo.declare(
         securityCheckboxChange : function() {
             var enabled = this.secEnableInput.getChecked();
             this.servicesLayer.setShowing(enabled);
+            this.rolesLayer.setShowing(enabled);
             this.showLoginPageInput.setShowing(enabled);
             this.panel4a.setShowing(enabled);
             this.panelBottom.setShowing(enabled);

@@ -1206,7 +1206,7 @@ Studio.extend({
 		var c = this._cleanPageData;
 		if (!c)
 			return;
-		return this.page && (c.js != this.getScript() || c.widgets != this.getWidgets());
+	    return this.page && (c.js != this.getScript() || c.css != this.cssEditArea.getDataValue() || c.html != studio.getMarkup() || c.widgets != this.getWidgets());
 	},
 
     /* isAppDirty is only called from isProjectDirty */
@@ -1214,7 +1214,7 @@ Studio.extend({
 		var c = this._cleanAppData;
 		if (!c)
 			return;
-		return this.application && (c.script != this.project.generateApplicationSource());
+	    return this.application && (c.script != this.project.generateApplicationSource() || c.css != this.appCssEditArea.getDataValue());
 	},
 
     /* Called when the user tries to close their current project or unload studio itself */
@@ -1328,7 +1328,7 @@ Studio.extend({
 //		caption = caption.replace(/^.*\/\>\s*/,"");
 //		this.scriptLayer.setCaption(caption);
 //	    }
-	    dojo.toggleClass(this.tabs.decorator.btns[this.scriptLayer.getIndex()], "StudioDirtyIcon", dirty);
+	    dojo.toggleClass(this.sourceTabs.decorator.btns[this.scriptLayer.getIndex()], "StudioDirtyIcon", dirty);
 	    return dirty;
 	},
 

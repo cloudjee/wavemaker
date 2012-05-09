@@ -14,9 +14,9 @@
  
 
 ConfirmSaveDialog.widgets = {
-    layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom"}, {}, {
+    layoutBox1: ["wm.Layout", {_classes: {domNode: ["StudioDarkPanel"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", layoutKind: "top-to-bottom"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    html: ["wm.Html", {width: "100%", height: "100%", html: "You have unsaved changes; do you want to save before continuing?", autoSizeHeight: true }],
+	    html: ["wm.Html", {width: "100%", height: "100%", html: "You have unsaved changes; do you want to save before continuing?", autoSizeHeight: true, autoScroll: false }],
 	}],
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", height: "34px", horizontalAlign: "left"}, {}, {
 		dontSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Don't Save","margin":"4","width":"100px"}, {onclick: "dontSaveClick"}],

@@ -33,52 +33,6 @@ source_body = function(inTop) {
 
 toJson = function(v) {
 	return dojo.toJson(v);
-	// Removing old implementation of changing JSON Object to JSON String with the new dojo's implementation.
-	/*
-	console.info("object sent to toJson method: " + dojo.toJson(v));
-	var j = "";
-	switch(true){
-		case (v == undefined):
-			j += "undefined";
-			break;
-		case dojo.isArray(v):
-			var e = elementsToJson(v);
-			//if (e) 
-			//	e = sourcer_nl + sourcer_tab + sourcer_tab + sourcer_tab + e;
-			j += "[" + e + "]";
-			break;
-		case dojo.isObject(v):
-			j += "{" + propsToJson(v) + "}"
-			break;
-		default:
-			j += quote(v);
-			break;
-	}
-	return j;
-	*/
-}
-
-propsToJson = function(p) {
-	var s=[], v;
-	for (var n in p)
-		if (!(n in Object)) {
-			v = p[n];
-			if (v != undefined)
-				s.push(n + ": " + toJson(v));
-		}
-		else
-		{
-			console.info('ignoring: ' + n + 'in ' + Object);
-		}
-	return s.join(", ");
-}
-
-elementsToJson = function(p) {
-	var s=[];
-	for (var i=0, l=p.length; i<l; i++)
-		s.push(toJson(p[i]));
-	return s.join(", ");
-	//return s.join(", " + sourcer_nl + sourcer_tab + sourcer_tab + sourcer_tab);
 }
 
 quote = function(inValue) {

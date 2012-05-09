@@ -485,7 +485,11 @@ Studio.extend({
 
 
 	/* If there is no text, then presume the user wants a "this." */
-	if (!text) text = "this.";
+	this._thisPresumed = false;
+	if (!text) { 
+	    text = "this.";
+	    this._thisPresumed = true;
+	}
 
 	/* Cache our original search text so we can easily append completions to it */
 	this._autoCompletionOriginalText = text;
@@ -751,12 +755,12 @@ Studio.extend({
 		    type = itemDef.type || "";
 		else if (dojo.isObject(this._autoCompletionObject[item.name]))
 		    type = this._autoCompletionObject[item.name].declaredClass || "Object";
-		nameLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}));
-		typeLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}));
-		paramsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}));
-		paramsLabel.setShowing(Boolean(item.params));
-		returnsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}));
-		returnsLabel.setShowing(Boolean(item.returns));
+		this.autoCompleteNameLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}));
+		this.autoCompleteTypeLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}));
+		this.autoCompleteParamsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}));
+		this.autoCompleteParamsLabel.setShowing(Boolean(item.params));
+		this.autoCompleteReturnsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}));
+		this.autoCompleteReturnsLabel.setShowing(Boolean(item.returns));
 		if (item.description != "_")
 		    this.autoCompletionHtml.setHtml(item.description);
 		else {
@@ -776,12 +780,19 @@ Studio.extend({
 	}
 	this.autoCompletionHtml.setHtml("<b>" + this.getDictionaryItem("AUTOCOMPLETION_HTML") + "</b>");
 	//this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
-	this.autoCompletionVariable.setData(showprops);
-	this.autoCompletionList.setDataSet(this.autoCompletionVariable);
+	var showpropsCopy = [];
+	dojo.forEach(showprops, function(p) {
+	    showpropsCopy.push({description: p.description,
+				name: p.name,
+				prototype: p.prototype,
+				"returns": p.returns,
+				params: p.params});
+	});
+	this.autoCompletionVariable.setData(showpropsCopy);
 
 	var count = 0;
 	for (var i = 0; i < showprops.length; i++) {
-	    if (showprops[i].data.name.match(/\<b\>/)) {
+	    if (showprops[i].name.match(/\<b\>/)) {
 		dojo.addClass(this.autoCompletionList.getItem(i).domNode, "CompletionListHeader");
 	    } else {
 		count++;
@@ -790,10 +801,11 @@ Studio.extend({
 	if (count == 0)
 	    this.autoCompletionHtml.setHtml(this.getDictionaryItem("AUTOCOMPLETION_TYPE_NOT_SUPPORTED"));
 
-	this.autoCompletionDialog.setTitle(object && object.declaredClass && object instanceof wm.Page == false ? object.declaredClass : "Completions");
+	//this.autoCompletionDialog.setTitle(object && object.declaredClass && object instanceof wm.Page == false ? object.declaredClass : "Completions");
 	//this.autoCompletionDialog.show();
-	window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
+	//window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
     },
+/*
     hideAutoComplete: function() {
 	if (this.autoCompletionDialog)
 	    this.autoCompletionDialog.hide();
@@ -805,12 +817,43 @@ Studio.extend({
 	this.$.autoCompletionHtmlLabel.setShowing(show);
 	this.$.autoCompletionListPanel.setWidth(show ? "150px" : "100%");
     },
+    */
+    autoCompletionSelect: function(inSender) {
+	var item =  this.autoCompletionList.selectedItem.getData();
+	if (!item) return;
+	var itemDef = this._autoCompletionObject.listProperties()[item.name];
+	var type;
+	if (item.params) {
+	    type = "Method";
+	} else if (itemDef) {
+	    type = itemDef.type || "";
+	} else if (dojo.isObject(this._autoCompletionObject[item.name])) {
+	    type = this._autoCompletionObject[item.name].declaredClass || "Object";
+	}
+
+	this.autoCompleteNameLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}));
+	this.autoCompleteTypeLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}));
+	this.autoCompleteParamsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}));
+	this.autoCompleteParamsLabel.setShowing(Boolean(item.params));
+	this.autoCompleteReturnsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}));
+	this.autoCompleteReturnsLabel.setShowing(Boolean(item.returns));
+	if (item.description != "_")
+	    this.autoCompletionHtml.setHtml(item.description);
+	else {
+	    var property = item.name;
+	    studio.loadHelp(this._autoCompletionObject.declaredClass, property, dojo.hitch(this, function(inResponse) {
+		this.autoCompletionHtml.setHtml(inResponse);			
+	    }));
+	}    
+    },
+
     insertCompletedText: function() {
 		var data = this.autoCompletionList.selectedItem.getData();
 		if (data.description == "__") return;
 		var text = this._autoCompletionOriginalText;
+	if (!this._thisPresumed) {
 		text = text.substring(0,text.length-this._autoCompletionRemainder.length);
-		
+	}
 		var data = this.autoCompletionList.selectedItem.getData();
 		text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
 	if (!text.match(/^(this|app)/)) {

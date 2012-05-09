@@ -65,13 +65,78 @@ dojo.declare("wm.FormPanel", wm.Container, {
     editorHeight: "26px",
     editorWidth: "100%",
     captionSize: "150px",
+    autoSizeCaption: false,
     captionAlign: "right",
     captionPosition: "left",
     height: "250px",
     width: "100%",
     layoutKind: "top-to-bottom",
     readonly: false,
+    verticalAlign: "top",
+    horizontalAlign: "left",
+    postInit: function() {
+	this.inherited(arguments);
+	if (this.autoSizeCaption) {
+	    this.updateCaptionSizes();
+	}
+    },
+    updateCaptionSizes: function() {
+	wm.job(this.getRuntimeId() + ".updateCaptionSizes", 10, this, "_updateCaptionSizes");
+    },
+    renderBounds: function() {
+	if (this.inherited(arguments)) {
+	    var editors = this.getEditorsArray();
+	    dojo.forEach(editors, function(e) {
+		e.captionNode.style.maxWidth = "";
+	    });
 
+	    this.updateCaptionSizes();
+	}
+    },
+    _updateCaptionSizes: function() {
+	if (this._isDestroyed) return;
+	var editors = this.getEditorsArray();
+	var max = 0;
+	dojo.forEach(editors, function(e) {
+	    // test of parent is mostly for property panel, could replace with isAncestoryHidden call but would be a little slower
+	    if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%" && e.captionPosition == "left") {
+		var w = e.captionNode.clientWidth;
+		if (w > max) {
+		    max = Math.min(w, e.bounds.w - 105); // 105 appears to be about as small as we can go before the editors start to get over squished... especially the property panel editors
+		}
+	    }
+	});
+
+	max += 5; // 5px space before editor for nicer look
+
+	// If Don't let the caption size excede a captionSize=50%
+	if (max > this.bounds.w/2) {
+	    max = Math.floor(this.bounds.w/2);
+	}
+	
+	// Update the captionSize and apply it
+	this.captionSize = max + "px";
+	dojo.forEach(editors, dojo.hitch(this,function(e) {
+	    if (e.captionSize != "100%" && e.captionPosition == "left") {
+		e.setCaptionSize(this.captionSize);
+		if (e.captionNode.clientWidth > max) {
+		    e.captionNode.style.maxWidth = max + "px";
+		}
+	    }
+	}));
+    },
+    addWidget: function(inWidget){
+	this.inherited(arguments);
+	if (this.autoSizeCaption && inWidget instanceof wm.AbstractEditor) {
+	    this.updateCaptionSizes();
+	}
+    },
+    removeControl: function(inWidget) {
+	this.inherited(arguments);
+	if (this.autoSizeCaption && inWidget instanceof wm.AbstractEditor) {
+	    this.updateCaptionSizes();
+	}
+    },
     /****************
      * METHOD: getEditorsArray (PUBLIC)
      * DESCRIPTION: Returns an array of all editors inside of this form.

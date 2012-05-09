@@ -403,17 +403,21 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.setBorder("0");
 	this.setMargin("0");
 	if (!parent) {
-	    if (edge == "t" && app.dockTop && !app.dockTop.isAncestorHidden()) {
+	    if (edge == "t" && app.dockTop && !app.dockTop.parent.isAncestorHidden()) {
 		parent = app.dockTop;
-	    } else if (edge == "b" && app.dockBottom && !app.dockBottom.isAncestorHidden()) {
+	    } else if (edge == "b" && app.dockBottom && !app.dockBottom.parent.isAncestorHidden()) {
 		parent = app.dockBottom;
-	    } else if (edge == "l" && app.dockLeft && !app.dockLeft.isAncestorHidden()) {
+	    } else if (edge == "l" && app.dockLeft && !app.dockLeft.parent.isAncestorHidden()) {
 		parent = app.dockLeft;
-	    } else if (edge == "r" && app.dockRight && !app.dockRight.isAncestorHidden()) {
+	    } else if (edge == "r" && app.dockRight && !app.dockRight.parent.isAncestorHidden()) {
 		parent = app.dockRight;
 	    } else {
 		parent = app.appRoot;
 	    }
+	}
+
+	if (!parent.showing) {
+	    parent.setShowing(true);
 	}
 
 	if (parent == app.appRoot) {

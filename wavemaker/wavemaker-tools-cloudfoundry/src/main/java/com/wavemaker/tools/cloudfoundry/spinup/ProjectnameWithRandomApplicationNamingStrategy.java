@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.cloudfoundry.spinup;
 
-
 /**
  * {@link ApplicationNamingStrategy} that generates application URLs based on the logged in used combined with random
  * characters. The application name is fixed.
@@ -23,14 +22,15 @@ package com.wavemaker.tools.cloudfoundry.spinup;
  */
 public class ProjectnameWithRandomApplicationNamingStrategy extends AbstractRandomApplicationNamingStrategy {
 
+    private final String applicationName;
+
     public ProjectnameWithRandomApplicationNamingStrategy(String applicationName) {
-        super(applicationName);
+        this.applicationName = applicationName;
     }
 
-
     @Override
-    protected String getNameRoot(ApplicationNamingStrategyContext context) {
-    	return this.applicationName;
+    protected String getApplicationName() {
+        return this.applicationName;
     }
 
 }

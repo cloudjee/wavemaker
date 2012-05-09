@@ -121,8 +121,15 @@ wm.DojoMenu.extend({
     addNodesToPropList: function(struct, props) {
 	for (var i = 0; i < struct.length; i++) {
 	    if (!struct[i].separator) {
-		if (!struct[i].children || struct[i].children.length == 0)
+		if (!struct[i].children || struct[i].children.length == 0) {
 		    props[this.getEventName(struct[i].defaultLabel || struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
+		    for (var j = 1; j < 20; j++) {
+			if (struct[i]["onClick" + j]) {
+			    props[this.getEventName(struct[i].defaultLabel || struct[i].label) + j] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
+			}
+		    }
+
+		}
 		if (struct[i].children)// test for children; needed on upgraded projects
 		    this.addNodesToPropList(struct[i].children,props);
 	    }
@@ -138,13 +145,15 @@ wm.DojoMenu.extend({
 		return this.getCleanText(name);
 	},
 	updatingEvent: function (prop, inValue){
-	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
+	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop.replace(/\d+$/,"")) : this.getEventObj(prop);
+	    var matches = prop.match(/\d+$/);
+	    var eventNumber = matches ? matches[0] : "";
 	    if (evtObj != null)
-		evtObj.onClick = inValue;
+		evtObj["onClick" + eventNumber]= inValue;
 	    if (studio.languageSelect.getDisplayValue() != "default" && this._original_i18n_fullStructure) {
 		evtObj = this.getEventObjFull(this._original_i18n_fullStructure, prop);
 		if (evtObj != null)
-		    evtObj.onClick = inValue;
+		    evtObj["onClick" + eventNumber] = inValue;
 	    }
 	},
         getEventObjFull: function (struct,prop){
@@ -186,14 +195,18 @@ wm.DojoMenu.extend({
 		this.renderDojoObj();
 	},
 	getProp: function (inProp){
-	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,inProp) : this.getEventObj(inProp);
-		if (evtObj != null)
-			return evtObj.onClick;
-		else
-			return this.inherited(arguments);
+	    var prop = inProp.replace(/\d+$/,"");
+	    var matches = inProp.match(/\d+$/);
+	    var eventNumber = matches ? matches[0] : "";
+	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
+	    if (evtObj != null)
+		return evtObj["onClick" + eventNumber];
+	    else
+		return this.inherited(arguments);
 	},
 	setProp: function(inProp, inValue){
-	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,inProp) : this.getEventObj(inProp);
+	    var prop = inProp.replace(/\d+$/,"");
+	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
 	    if (evtObj != null) 
 			this.updatingEvent(inProp, inValue);
 		else
@@ -218,8 +231,19 @@ wm.DojoMenu.extend({
 	    for (var i = 0; i < children.length; i++)
 	    {
 		var item = children[i];
-		if (item.onClick && item.onClick == originalId)
-		    item.onClick = newId;
+		for (var j = 0; j < 20; j++) {
+		    var onClick = "onClick" + (j || "");
+		    if (item[onClick]) {
+			if (item[onClick] == originalId) {
+			    item[onClick] = newId;
+			} else {
+			    var dotIndex = item[onClick].indexOf(".");
+			    if (dotIndex != -1 && item[onClick].substring(0,dotIndex) == originalId) {
+				item[onClick] = newId + item[onClick].substring(dotIndex);
+			    }
+			}
+		    }
+		}
 		if (item.children)
 		    this.renameComponentEventsMenu(item.children,originalId,newId);
 	    }

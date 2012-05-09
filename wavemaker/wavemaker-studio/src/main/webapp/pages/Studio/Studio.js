@@ -121,11 +121,9 @@ dojo.declare("Studio", wm.Page, {
 			this.explodedClick();
 		}
 	        var multiActiveProperties = this.getUserSetting("multiActive");
-/*
-	        studio.inspector.preferredMultiActive =(multiActiveProperties === undefined || multiActiveProperties);
+	        studio.inspector.preferredMultiActive =  multiActiveProperties;
 	        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
 		this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
-		*/
 
 
 		/*
@@ -224,7 +222,20 @@ dojo.declare("Studio", wm.Page, {
 	this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
 	this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
 	this.ribbon.setBestHeight();
-	},
+
+	this.connect(this.webServiceSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.webServiceSubTab));
+	this.connect(this.databaseSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.databaseSubTab));
+	this.connect(this.JavaEditorSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.JavaEditorSubTab));
+    },
+    updateServiceTabStyle: function(inSender) {
+	if (inSender.layers.length <= 1) {
+	    inSender.setClientBorder("0");
+	    inSender.removeUserClass("StudioDarkerLayers")
+	} else {
+	    inSender.setClientBorder("1,0,0,0");
+	    inSender.addUserClass("StudioDarkerLayers")
+	}
+    },
 /*
 	 startPageOnStart: function() {
 		this.startLayer = this.startEditor.parent;
@@ -423,7 +434,9 @@ dojo.declare("Studio", wm.Page, {
 		  }
 		}
 
-	    this.setupDefaultContextMenu();
+	    if (!djConfig.isDebug) {
+		this.setupDefaultContextMenu();
+	    }
 	},
     getDeploymentInfoSuccess: function(inResult) {
 	console.log("DEPLOYMENT DATA:");
@@ -436,7 +449,7 @@ dojo.declare("Studio", wm.Page, {
     setupDefaultContextMenu: function() {
 	var f = function(e) {
 
-	    if (e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
+	    if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
 		dojo.stopEvent(e);		
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
@@ -865,7 +878,7 @@ dojo.declare("Studio", wm.Page, {
 		    this.inspector.inspect(inspected);
 	    }				
     },
-        inspect: function(inComponent) {
+    inspect: function(inComponent) {
 	    wm.job("studio.inspect", 1, dojo.hitch(this, function() {
 		this._inspect(inComponent);
 	    }));
@@ -882,7 +895,7 @@ dojo.declare("Studio", wm.Page, {
     setInspectedCaption: function(inComponent) {
 	this.PIContents.setTitle(inComponent ? inComponent.name  + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
     },
-	select: function(inComponent) {
+	select: function(inComponent, isNew) {	    
 	        if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
 /*
 		    if (this._lastBindSelect == inComponent) {
@@ -931,6 +944,11 @@ dojo.declare("Studio", wm.Page, {
 			inComponent = inComponent.parent;
 
 	    if (inComponent) {
+		if (isNew && !this.inspector.isRequiredMode()) {
+		    this.inspector.toggleRequiredProperties();
+		} else if (!isNew && this.inspector.isRequiredMode()) {
+		    this.inspector.toggleAdvancedPropertiesSome();
+		}
 		if (this.treeSearch.getDataValue()) {
 		    this.treeSearch.setDataValue("");
 		    this.refreshVisualTree();
@@ -940,6 +958,7 @@ dojo.declare("Studio", wm.Page, {
 		    this.refreshServiceTree();
 		    this.refreshComponentTree();
 		}
+		this.statusBarLabel.setCaption("Editing " + inComponent.declaredClass);
 	    }
 		try {
 			var s = this.selected = inComponent;
@@ -1889,10 +1908,11 @@ dojo.declare("Studio", wm.Page, {
                 d.addCallback(optionalCallback);
         },
     loadHelp: function(inType, inPropName, onSuccess) {
-	    var version = "6.4" || wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"); // TODO: Get rid of 6.4
-	    var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
-
-	      if (inType == studio.project.projectName) inType = "wm.Application";
+	var version = "6.4" || wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"); // TODO: Get rid of 6.4
+	var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
+	
+	if (inType == studio.project.projectName) inType = "wm.Application";
+	else if (inType == studio.project.pageName) inType = "wm.Page";
 
 	      inType = inType.substring(inType.indexOf(".")+1);
 	

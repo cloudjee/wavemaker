@@ -148,7 +148,6 @@ wm.wrapperResizer = new wm.WrapperResizer();
 dojo.declare("wm.DesignWrapper", wm.Designable, {
 	//buffer: 6,
     _isDesignLoaded: false,
-
 	border: 0,
         borderColor: "#F0F0F0",
 	handles: null,
@@ -210,7 +209,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 				this.setScrim(c.scrim);
 		        this.label.innerHTML = c.getId();
 			this.owner = c.owner;
-			this.setShowing(inControl.showing);
+		    this.setShowing(inControl instanceof wm.Layer ? inControl.showing && inControl.isActive() : inControl.showing);
 		}
 		if (n)
 			this.setDesignNode(n);

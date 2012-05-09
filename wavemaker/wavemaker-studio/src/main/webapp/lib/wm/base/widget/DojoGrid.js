@@ -646,12 +646,22 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	addRow: function(inFields, selectOnAdd) {
 	    try {
+		var editCell = null;
+		for (var i = 0; i < this.columns.length; i++) {
+		    if (this.columns[i].fieldType) {
+			editCell = this.columns[i];
+			break;
+		    }
+		}
 		if (this.getRowCount() == 0 && this.variable) {
 		    this.variable.setData([inFields]);
 		    this.renderDojoObj();
 		    if (selectOnAdd) {
 			this.setSelectedRow(0);
 			this.selectionChange(); // needs committing
+			wm.onidle(this, function() {
+			    this.editCell(0, editCell.field);
+			});
 		    }
 		    return;
 		}
@@ -680,16 +690,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    this.setSelectedRow(0);
 		    this.selectionChange(); // needs committing
 
-		    var self = this;
-		    setTimeout(function(){
-			self.dojoObj.scrollToRow(0);
-			for (var i = 0; i < self.columns.length; i++) {
-			    if (self.columns[i].fieldType) {
-				self.editCell(0, self.columns[i].field);
-				break;
-			    }
-			}
-		    },0);
+		    wm.onidle(this, function() {
+			this.dojoObj.scrollToRow(0);
+			this.editCell(0, editCell.field);
+		    });
 		    
 		}
 	    } finally {

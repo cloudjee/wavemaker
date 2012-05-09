@@ -299,8 +299,18 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 		var menuObj = null;
 
-		var onClick = data.onClick;
+	    var onClick = [];
+	    if (data.onClick) {
+		onClick.push(data.onClick);
 		delete data.onClick;
+		for (var i = 1; i < 20; i++) {
+		    if (data["onClick" + i]) {
+			onClick.push(data["onClick" + i]);
+			delete data["onClick" + i];
+		    }
+		}
+	    }
+		
 
 		var idInPage = data.idInPage;
 		delete data.idInPage;
@@ -334,17 +344,22 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    this._dijitHash[data.defaultLabel || data.label] = menuObj;
 		}
 
-		if (!this.isDesignLoaded() && this.eventList[data.label] && this.eventList[data.label] != '') 
-		        menuObj.onClick = dojo.hitch(this.eventList[data.label]);
+	    // Convert from old style use of eventList to new style
+	    if (!this.isDesignLoaded() && this.eventList[data.label] && this.eventList[data.label] != '') {
+		menuObj.onClick = dojo.hitch(this.eventList[data.label]);
+	    }
 
-		    if (onClick) {
-		if (dojo.isString(onClick)) {
-		    //var f = this.owner.getValueById(onClick);// || this.owner[evtObj.onClick];
-		    var f  = this.owner[onClick];
-		    menuObj.onClick = this.owner.makeEvent(f || onClick, onClick, this, "onClick");
-		} else {
-		    menuObj.onClick = dojo.hitch(this.owner, onClick, menuObj, data);
+	    if (onClick.length) {
+		for (var i = 0; i < onClick.length; i++) {
+		    var c = onClick[i];
+		    if (dojo.isString(c)) {
+			var f  = this.owner[c];
+			this._menuConnects.push(dojo.connect(menuObj, "onClick",  this.owner.makeEvent(f || c, c, this, "onClick")));
+		    } else {
+			this._menuConnects.push(dojo.connect(menuObj, "onClick", dojo.hitch(this.owner, c, menuObj, data)));
+		    }
 		}
+
 		this._menuConnects.push(dojo.connect(menuObj, "onClick", this, function(e) {
 		    this.onclick(menuObj.defaultLabel || menuObj.label, menuObj.iconClass, e);
 		}));

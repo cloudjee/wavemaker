@@ -49,7 +49,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		// prevent designer click
 		if (d.isDesignLoaded())
 			dojo.stopEvent(e);
-		d.setProp(inLayer.active && d.multiActive ? "layerInactive" : "layer", inLayer);
+	    d.setProp(inLayer.active && (d.multiActive || d._allowClickClose) ? "layerInactive" : "layer", inLayer);
 	    inLayer.focusFirstEditor();
 	},
 	getNewLayerIndex: function(inLayer) {
@@ -59,7 +59,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 	},
 	deactivateLayer: function(inLayer) {
 		var newIndex = this.getNewLayerIndex(inLayer);
-		if (newIndex != undefined) {
+		if (newIndex != undefined || inLayer.parent.multiActive || inLayer.parent._allowClickClose) {
 			this.setLayerActive(inLayer, false);
 			var d = this.decoree;
 			d.layerIndex = newIndex;

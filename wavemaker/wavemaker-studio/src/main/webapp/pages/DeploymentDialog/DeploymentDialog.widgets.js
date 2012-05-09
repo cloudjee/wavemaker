@@ -123,11 +123,14 @@ DeploymentDialog.widgets = {
 				    cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
 				    cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
+					cfUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%"}, {}, {
 					binding: ["wm.Binding", {}, {}, {
 					    wire: ["wm.Wire", {"expression":"${cfHostEditor.dataValue}.replace(/\:.*$/,\"\") + \"://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\")","source":false,"targetProperty":"dataValue"}, {}]
 					}]
-				    }]
+				    }],
+					cfGetUrlbutton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"hint":"\"Generate a URL using the project name and a random number\"", "caption":"Generate URL","margin":"4,4,4,8", "width": "112px"}, {"onclick":"cfGetUrlbuttonClick"}]
+					}]
 				}],
 				appFileLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    fileDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Generate File","width":"100%"}, {onchange: "deploymentNameChange"}],

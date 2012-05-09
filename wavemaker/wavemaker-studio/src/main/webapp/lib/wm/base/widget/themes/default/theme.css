@@ -173,13 +173,19 @@ th {
 .dj_ie6 .wmtablayers-tab.wmtablayers-selected, .dj_ie7 .wmtablayers-tab.wmtablayers-selected {
         border-bottom-width: 0px !important;
 }
+.wmtablayers-tab {
+	position: relative;
+	top: 1px;
+}
+.dj_webkit .wmtablayers-tab {
+	position: relative;
+	top: 0px;
+}
 .wmtablayers-selected {
 	/*border: 1px solid #939fb6;*/
 	background-image: none;
 	margin: 0px 0px 0px 3px;
 	z-index: 10;
-	position: relative;
-        top: 1px;
 }
 
 
@@ -1359,3 +1365,4 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     outline: none;
 }
 
+.dojoxColorPickerWebSafePreview {display:none;}

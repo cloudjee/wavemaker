@@ -180,12 +180,15 @@ public class PhoneGapService {
             "DojoMenu.js", "AppRoot.js", "PageContainer.js", "Bevel.js", "EditPanel.js", "Panel.js", "BreadcrumbLayers.js", "Button.js", "Editor.js",
             "Picture.js", "Container.js", "FileUpload.js", "Formatters.js", "Scrim.js", "Select.js", "Html.js", "Spacer.js", "ContextMenuDialog.js",
             "Html.js", "Splitter.js", "Input.js", "DataForm.js", "DataGrid.js", "Label.js", "Layers.js", "DojoChart.js", "Tree.js", "LayoutBox.js",
-            "List.js", "DojoGrid.js", "LiveForm.js", "Dialogs", "List", "themes" };
+            "List.js", "DojoGrid.js", "LiveForm.js", "Dialogs", "List" };
         for (String purgedResource : purgedWidgetResources) {
             if (widget.hasExisting(purgedResource)) {
                 widget.getExisting(purgedResource).delete();
             }
         }
+
+	Folder themes = widget.getFolder("themes");
+	themes.list(Including.resourceNames().notMatching("default")).delete();
     }
 
     private void updatePhonegapFiles(String host, int port, FolderLayout layout, String themeName) {

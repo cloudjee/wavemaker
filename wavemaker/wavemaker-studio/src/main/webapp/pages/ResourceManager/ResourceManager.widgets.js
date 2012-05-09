@@ -38,8 +38,8 @@ ResourceManager.widgets = {
 	}]
     }],
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
-	    buttonPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "46px",padding: "2,10,2,10"}, {}, {
-	    resourcesFolderToolBar: ["wm.Panel", { height: "46px", width: "600px", border: "", layoutKind: "left-to-right"}, {}, {
+	buttonPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "46px",padding: "2,10,2,10", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
+		resourcesFolderToolBar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]},  height: "46px", width: "600px", border: "", layoutKind: "left-to-right"}, {}, {
 	      renameFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "150px"},{onclick: "renameItem"}],
 	      deleteFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/f_delete32.png'> Delete", height: "36px", width: "150px"},{onclick: "deleteItem"}],
 	      downloadFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/f_download32.png'> Download", height: "36px", width: "150px"},{onclick: "downloadItem"}],
@@ -70,7 +70,7 @@ ResourceManager.widgets = {
 	    rightPanel: ["wm.Panel", {width: "100%", height: "100%",layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 		readmeHtml: ["wm.Html", {width: "100%", height: "70px"}],
 		splitter2: ["wm.Splitter", {}],
-		editorTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, showing: false, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB"},{onCloseOrDestroy: "editorClosed"}]
+		editorTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, showing: false, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB"},{onCloseOrDestroy: "editorClosed"}]
 		}]
 	    }]
     }]

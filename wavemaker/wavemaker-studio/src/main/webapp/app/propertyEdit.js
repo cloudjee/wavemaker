@@ -417,7 +417,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					   parent: this.editor,
 					   width: "100%",
 					   name: "numberEditor",
-					 minWidth: 40,
+					 minWidth: 30,
 					   padding: "0,1,0,0",
 				    readonly: this.readonly
 					  });
@@ -883,6 +883,7 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 	}
 	if (this.includeLiveViews) {
 	    this.options =this.options.concat(this.getLiveViews());
+	    this.values =this.values.concat(this.getLiveViews());
 	}
 	this.addOptionValues(this.getDataTypes(), true);
     },
@@ -987,6 +988,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     },
     addEditors: function() {
 	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
+	dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
 	this.editors = [];
 	this.addEditor(0,this.inspected.getProp(this.propName));
 	for (var i = 1; i < 20; i++) {
@@ -1006,7 +1008,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 						   propName: propertyName,
 						   propertyNumber: parseInt(inIndex),
 						   width: "100%",
-						   height: "22px",
+						   height: studio.inspector.defaultEditorHeight,
 						   captionSize: inIndex > 0 ? "60px" : "0px",
 						   caption: inIndex > 0 ? "And then" : "",
 						   captionPosition: "left",
@@ -1670,12 +1672,12 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.editors = {};
 
 	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
-		basicLayer: ["wm.Layer", {caption: "Basic"}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
+		basicLayer: ["wm.Layer", {caption: "Basic", padding: "4"}, {
 		}],
-		styleLayer: ["wm.Layer", {caption: "Styles"}, {},{
+		styleLayer: ["wm.Layer", {caption: "Styles", padding: "4"}, {},{
 		}],
-		classLayer: ["wm.Layer", {caption: "Classes"}, {}, {
+		classLayer: ["wm.Layer", {caption: "Classes", padding: "4"}, {}, {
 		    classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
 		}]
 	    }]
@@ -1692,13 +1694,20 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.classListLayer = this.tabs.layers[2];
 	this.classListEditor = this.classListLayer.c$[0];
 	this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
+
+	var form = new wm.FormPanel({owner: this,
+				     parent: this.styleLayer,
+				     width: "100%",
+				     height: "100%",
+				     autoSizeCaption: true});
+
 	var defaultProps = {
 	    captionPosition: "left",
 	    captionAlign: "left",
 	    captionSize: "70px",
 	    singleLine: false,
 	    width: "100%",
-	    height: "28px",
+	    height: studio.inspector.defaultEditorHeight,
 	    allowNone: true,
 	    owner: this,
 	    parent: this,
@@ -1711,8 +1720,9 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    if (styleProp.layerName) {
 		parent = this[styleProp.layerName];
 	    } else {
-		parent = this.styleLayer;
+		parent = form;
 	    }
+
 	    var ctor = dojo.getObject(styleProp.editor);
 	    var props = styleProp.editorProps || {};
 	    props.caption = styleProp.name;
@@ -1727,6 +1737,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    });
 	    this.editors[styleProp.name] = e;
 	}));
+	form.setBestHeight();
 
 	var propsHash = this.inspected.listProperties();
 	var propsArray = [];
@@ -1985,7 +1996,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	this.reflow();
     },
     addClass: function(inClassName) {
-	this.grid.addRow({dataValue: inClassName || ""}, true);
+	this.changed();
+	var className =  (typeof inClassName == "string") ? inClassName : "";
+	this.grid.addRow({dataValue: className || ""}, true);
     },
     editClass: function(className) {
 	studio.editCodeDialog.show();
@@ -2010,6 +2023,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	    code += cssText.substring(startIndex,endIndex) + "\n";
 	    startAndEndList.push({start: startIndex, end: endIndex});
 	}
+	if (!code) {
+	    code = "." + className + " {\n\n}";
+	}
 		    studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
 			var editArea;
 			if (cssText == studio.cssEditArea.getDataValue()) {
@@ -2019,7 +2035,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 			}
 			// if either editor has somehow changed, this edit is invalidated
 			if (editArea) {
-			    if (startAndEndList.length > 1) {
+			    if (startAndEndList.length == 0) {
+				cssText += inCode;
+			    } else if (startAndEndList.length > 1) {
 				/* If there are multiple places showing the selected class, the chance of us doing a good job updating
 				 * the right ones is pretty slim; the user may have added a new rule, removed an old rule, maintaining
 				 * the order just isn't trivial.  So, remove all blocks of code wherever they are so that we can put in
@@ -2080,7 +2098,13 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	    }
 	}
 	for (var i = 0; i < this.dataSet.getCount(); i++) {
-	    this.inspected.addUserClass(this.dataSet.getItem(i).getValue("dataValue"));
+	    var className = this.dataSet.getItem(i).getValue("dataValue");
+	    if (className) {
+		this.inspected.addUserClass(className);
+	    } else {
+		this.dataSet.removeItem(i);
+		i--;
+	    }
 	}
     },
     getDataValue: function() {
@@ -2099,8 +2123,10 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
     height: "80px",
     dataField: "dataValue",
     displayField: "dataValue",
+    forceCaptionPositionTop: true,
     init: function() {
 	this.inherited(arguments);
+	this.parent.setVerticalAlign("top");
 	/* Use studio.application._roles so we know we've got the latest set of roles for THIS project */
 	if (!studio.application._roles) {
 	    studio.securityConfigService.requestSync("getRoles", [], dojo.hitch(this, function(inData) {
@@ -2238,12 +2264,21 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	if (fields) {
 	    this.fieldPanel =  panel = new wm.Panel({owner: this,
 						     parent: this,
+						     _classes: {domNode: ["StudioFieldGroupPanel"]},
 						     name: "FieldGroupInnerPanel_" + propDef.name,
 						     showing: !isBound,
 						     layoutKind: "top-to-bottom",
+						     border: "1",
+						     borderColor: "",
+						     margin: "0,0,0,20",
 						     width: "100%",
 						     height: "100%"});
-
+	    var label = new wm.Label({owner: this,
+				      parent: panel,
+				      name: "fieldGroupLabel",
+				      width: "100%",
+				      caption: (propDef.shortname || propDef.name) + " fields"
+				     });
 	    this._generatedSchema = dojo.toJson(fields);
 	    wm.forEachProperty(fields, dojo.hitch(this,function(fieldDef, fieldName) {
 		var type = fieldDef.type;
@@ -2260,6 +2295,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		    propDef.editorProps.widgetDataSets = true;
 		    propDef.editorProps.matchComponentType = true;
 		}
+		
 		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
 						    propDef, /* Property we are editing within the component */
 						    panel, /* Parent panel */
@@ -2303,10 +2339,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 			matchComponentType: isStructured,
 
 			/* if the user types in a value into a text editor, treat it as a bind expression */
-		        createExpressionWire: !isStructured, 
-
-			/* Indent these editors */
-			margin: "0,0,0,20"
+		        createExpressionWire: !isStructured
 		    },
 
 		    /* When this editor changes, create a wire rather than calling c.setValue(propName,newValue) */
@@ -2339,6 +2372,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	} else {
 	    /* Else call reinspectEditor on each editor */
 	    wm.forEachProperty(this.editors, dojo.hitch(this, function(e,editorName) {
+		// don't know how its losing this value, but it must have this value
+		e.bindValuesOnly = true;
 		studio.inspector.reinspectEditor(editorName === "_ROOT" ? this.inspected || this.inspectedSubcomponent : inspected, /* Component we are editing */
 						 e, /* Editor used to edit this component property */
 						 null, /* Bind editor used to edit this component (wm.PropertyInspector will look this up) */
@@ -2463,6 +2498,10 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
     displayField: "name",
     forceCaptionPositionTop: true,
+    init: function() {
+	this.inherited(arguments);
+	this.parent.setVerticalAlign("top");
+    },
     setDataValue: function(inValue) {
 	if (wm.isEmpty(inValue)) {
 	    this.inherited(arguments, [["All"]]);
@@ -2569,7 +2608,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 	this.editors = {};
 	this.parent.setFitToContentHeight(true);
 	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
 		descLayer: ["wm.Layer", {caption: "Description"}, {},{
 		    descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}]
 		}],

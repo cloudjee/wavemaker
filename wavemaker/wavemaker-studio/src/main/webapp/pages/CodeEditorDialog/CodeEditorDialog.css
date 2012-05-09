@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -11,15 +11,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-.ConfirmSaveDialog-html {
-   text-align: center;
-}
-#studio_confirmSaveDialog {
-    -moz-border-radius-topleft: 0px; 
-    -moz-border-radius-topright: 0px; 
-    -webkit-border-top-left-radius: 0px; 
-    -webkit-border-top-right-radius: 0px;
-    border-radius-topleft: 0px; 
-    border-radius-topright: 0px;
+.EditVariable .wmtree-content {
+    min-width: 80px;
+    display: inline-block;
+    color: white;
 }

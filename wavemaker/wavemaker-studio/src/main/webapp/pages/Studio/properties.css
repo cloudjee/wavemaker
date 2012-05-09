@@ -3,8 +3,10 @@
     background-color: transparent;
     -webkit-appearance: none;
 }
-#studio_PIContents .wminspector-subgroupLabel.wmlabel .wmSizeNode {
-    border-bottom: solid 1px white;
+#studio_PIContents .wminspector-subgroupLabel.wmlabel .wmSizeNode,
+#studio_PIContents .StudioFieldGroupPanel .wmlabel .wmSizeNode {
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 #studio_PIContents .isPublishedProp label,
@@ -13,6 +15,17 @@
     background-repeat: no-repeat;
     background-position: 100% 50%;
 }
+
+#studio_PIContents .Disabled .isAdvancedProp label {
+    font-weight: normal;
+    color: white;
+}
+#studio_PIContents .isAdvancedProp label,
+#studio_PIContents .isAdvancedProp.wmlabel {
+    font-weight: bold;
+    color: #DDDDFF;
+}
+
 #studio_PIContents .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
 display: block;
 background-image: url(../../lib/wm/base/widget/themes/wm_default/images/arrowRightDark.png);
@@ -62,6 +75,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
     font-weight: normal;
     font-size: 11px;
 }
+
 
 .wminspector .wmbutton {
 	-moz-border-radius: 4px; 

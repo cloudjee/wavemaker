@@ -284,6 +284,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		return this.inherited(arguments);
 	},
 	getArgs: function() {
+	    wm.getDataConvertDates = true;
 		var
 			d = this.sourceData.getData(true),
 			t = this.sourceData.type || this.type,
@@ -292,6 +293,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		if (this.operation == "read") {
 			args = args.concat(this._getReadArguments());
 		}
+	    delete wm.getDataConvertDates;
 		return args;
 	},
     getDebugArgs: function() {

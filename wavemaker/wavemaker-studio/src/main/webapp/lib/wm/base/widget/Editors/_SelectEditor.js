@@ -20,9 +20,7 @@ dojo.require("wm.base.widget.Editors.Base");
 //===========================================================================
 // Select Editor
 //===========================================================================
-wm.selectDisplayTypes = [
-      "Text", "Date", "Time", "Number", "Currency"
-];
+
 
 dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 	options: "",

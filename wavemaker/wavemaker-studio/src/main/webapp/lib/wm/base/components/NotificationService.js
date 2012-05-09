@@ -143,7 +143,7 @@ dojo.declare("wm.NotificationService", wm.Service, {
 
 });
 
-wm.services.add({name: "notificationService", ctor: "wm.NotificationService", isClientService: true, clientHide: false});
+wm.services.add({name: "notificationService", ctor: "wm.NotificationService", isClientService: true, clientHide: true});
 
 dojo.declare("wm.NotificationCall", [wm.Component, wm.ServiceCall], {
     service: "notificationService",

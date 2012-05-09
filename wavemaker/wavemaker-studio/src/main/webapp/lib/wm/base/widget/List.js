@@ -747,7 +747,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 		return this.columns[inCol].width;
 	    } else {
 		var c = this._columnWidths;
-		return c && (c[inCol] != undefined) ? c[inCol] : Math.round(100 / this.builder.colCount) + '%';
+		if (!c || c.length == 0 || c.length == 1 && !c[0] || c[inCol] === undefined) {
+		    return Math.round(100 / this.builder.colCount) + '%';
+		} else {
+		    return c[inCol];
+		}
 	    }
 	},
 	getCellStyle: function(inRow, inCol) {
@@ -855,7 +859,7 @@ wm.List.extend({
 	    default:
 		if (!this.isDesignLoaded()) {
 		    if (this.owner[col.formatFunc]) {
-			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {}, inItem);
+			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {customStyles:[],customClasses: []}, inItem);
 		    }
 		} else {
 		    value = "<i>runtime only...</i>";

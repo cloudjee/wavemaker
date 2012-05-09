@@ -213,6 +213,11 @@ public class DeploymentService {
         }
     }
 
+    public String getDeploymentURL(DeploymentInfo deploymentInfo){
+    	String ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).getUrl(deploymentInfo);
+    	return ret;
+    }
+    
     /**
      * Undeploy a previously {@link #deploy(DeploymentInfo) deployed} application
      * 

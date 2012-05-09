@@ -34,20 +34,17 @@ public abstract class AbstractRandomApplicationNamingStrategy implements Applica
 
     private static final Random RANDOM = new SecureRandom();
 
-    protected final String applicationName;
-
-    /**
-     * Create a new {@link AbstractRandomApplicationNamingStrategy} instance.
-     * 
-     * @param applicationName the application name
-     */
-    public AbstractRandomApplicationNamingStrategy(String applicationName) {
-        this.applicationName = applicationName;
-    }
+    protected abstract String getApplicationName();
 
     @Override
     public boolean isMatch(ApplicationDetails applicationDetails) {
-        return this.applicationName.equalsIgnoreCase(applicationDetails.getName());
+        return getApplicationName().equalsIgnoreCase(applicationDetails.getName());
+    }
+
+    @Override
+    public boolean isUpgradeRequired(ApplicationDetails applicationDetails) {
+        // By default we do not support upgrade
+        return false;
     }
 
     @Override
@@ -55,11 +52,11 @@ public abstract class AbstractRandomApplicationNamingStrategy implements Applica
         String url = context.getControllerUrl();
         url = url.replace("https", "http");
         url = url.replace("api.", generateName(context) + ".");
-        return new ApplicationDetails(this.applicationName, url);
+        return new ApplicationDetails(getApplicationName(), url);
     }
 
-    public String generateName(){
-        String name = replaceInvalidChars(this.applicationName);
+    public String generateName() {
+        String name = replaceInvalidChars(getApplicationName());
         String random = generateRandom();
         int maxNameLength = MAX_NAME_LENGTH - random.length();
         if (name.length() > maxNameLength) {
@@ -79,7 +76,15 @@ public abstract class AbstractRandomApplicationNamingStrategy implements Applica
         return (name + random).toLowerCase();
     }
 
-    protected abstract String getNameRoot(ApplicationNamingStrategyContext context);
+    /**
+     * Return the root name used when generating the application name. Defaults to {@link #getApplicationName()}.
+     * 
+     * @param context the context
+     * @return the root name
+     */
+    protected String getNameRoot(ApplicationNamingStrategyContext context) {
+        return getApplicationName();
+    }
 
     private String replaceInvalidChars(String name) {
         StringBuilder s = new StringBuilder(name.length());

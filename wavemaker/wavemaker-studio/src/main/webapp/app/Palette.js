@@ -178,8 +178,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 			    // FIXME: should not refresh entire tree when dropping from palette.
 			    studio.refreshDesignTrees();
 			    //studio.inspector.resetInspector();
-			    studio.select(comp);
-			    studio.inspector.toggleRequiredProperties();
+			    studio.select(comp, true);
 			}
 		}
 	},

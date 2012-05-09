@@ -479,7 +479,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    } else {
 		this.height = this.desktopHeight = this.constructor.prototype.height;
 	    }
-	    if (this.minDesktopHeight != null) {
+	    if (this.minDesktopHeight) {
 		this.minHeight = this.minDesktopHeight;
 	    } else if (this.minHeight) {
 		this.minDesktopHeight = this.minHeight;
@@ -1527,6 +1527,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    var s = Boolean(inShowing);
 	    if (!this.canChangeShowing())
 		return;
+	    // always show widgets at design time whose showing property is bound
+	    if (this._isDesignLoaded && this.$.binding && this.$.binding.wires.showing) {
+		s = true;
+	    }
 	    if (forceChange || this.showing != s) {
 		this.showing = s;
 		this.domNode.style.display = s ? '' : 'none';

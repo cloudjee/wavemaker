@@ -50,11 +50,44 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	    inValue = dojo.toJson(inValue);
 	this.inherited(arguments);
     },
-    doChangeOnKey: function(inEvent) {
+/*    doChangeOnKey: function(inEvent) {
 	this.changed();
 	if (this.editor)
 	    this.editor.onChange(this.dataValue);
-    }
+    },*/
+	onchange: function(inValue) {
+	    if (this._inColorChange) return;
+	    this._inColorChange = true;
+	    if (!this.gradient) {
+		if (inValue) {
+		    this.editorNode.style.backgroundColor = inValue;
+		    var v1 = parseInt(inValue.substr(1,2),16);
+		    var v2 = parseInt(inValue.substr(3,2),16);
+		    var v3 = parseInt(inValue.substr(5,2),16);
+		    
+		    this.editorNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1+v2+v3 < 250) ? "white" : "black";
+		} else {
+		    this.editorNode.style.backgroundColor = "";
+		    this.editorNode.style.color = "";
+		}
+	    } else {
+		console.log(inValue);
+		if (typeof inValue == "string" && inValue.length) {
+		    inValue = dojo.fromJson(inValue);
+		}
+		
+		var style = inValue ? wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "") : "";
+		if (dojo.isIE < 10) {
+		    this.editorNode.style.filter = style;
+		} else {
+		    this.editorNode.style.background = style;
+		}
+	    }
+	    wm.job(this.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
+		this._inColorChange = false;
+	    });
+	},
+
 });
 
 dojo.declare(
@@ -110,38 +143,6 @@ dojo.declare(
 		this.onChange(inValue);
             });
 	},
-	onChange: function(inValue) {
-	    if (this._inColorChange) return;
-	    this._inColorChange = true;
-	    if (!this.owner.gradient) {
-		if (inValue) {
-		    this.domNode.style.backgroundColor = inValue;
-		    var v1 = parseInt(inValue.substr(1,2),16);
-		    var v2 = parseInt(inValue.substr(3,2),16);
-		    var v3 = parseInt(inValue.substr(5,2),16);
-		    
-		    this.domNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1+v2+v3 < 250) ? "white" : "black";
-		} else {
-		    this.domNode.style.backgroundColor = "transparent";
-		    this.domNode.style.color = "black";
-		}
-	    } else {
-		console.log(inValue);
-		if (typeof inValue == "string" && inValue.length) {
-		    inValue = dojo.fromJson(inValue);
-		}
-
-		var style = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
-		if (dojo.isIE < 10) {
-		    this.domNode.style.filter = style;
-		} else {
-		    this.domNode.style.background = style;
-		}
-	    }
-	    wm.job(this.owner.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
-		this._inColorChange = false;
-	    });
-	},
 	openDropDown: function(/*Function*/ callback){
 	    if (!this.dropDown) {
 		this.createDropDown();
@@ -189,6 +190,8 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
 							this.colorPickerControl.domNode);       
 	wm.onidle(this, function() {
 	    this.colorPicker.startup();
+	    this.connect(dojo.query(".OKButton", this.domNode)[0], "onclick", this, "onOKClick");
+	    this.connect(dojo.query(".CancelButton", this.domNode)[0], "onclick", this, "onCancelClick");
 	});
 
             /* Hack because the colorpicker is beta and has problems getting these values correctly.  As the picker always appears in exactly the same place
@@ -235,17 +238,20 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
 	*/
 
     },
-/*
-    onCancel: function() {
+
+    onCancelClick: function() {
+	this.owner.setDataValue(this._initialValue);
+	this.owner.editor.closeDropDown();
     },
-    onOK: function() {
-        this.dismiss();
+    onOKClick: function() {
+	this.owner.editor.closeDropDown();
     },
-    */
+
     reset: function() {
-	if (this.getValue() != this.owner.getDataValue()) {
+	if (this.getValue() != this.owner.getDataValue()) {	    
 	    this.setDijitValue(this.owner.getDataValue());
 	}
+	this._initialValue = this.getValue();
     },
     getValue: function() {
         if (this.colorPicker) {
@@ -361,6 +367,9 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	this.connect(this.direction, "onchange", this, "_onDirectionChange");
 	this.connect(this.colorStop, "onchange", this, "_onChange");
 	this.html = new wm.Html({name: "html", owner: this, parent: this.bottomPanel, width: "100%", height: "100%", border: "1", borderColor: "black"});
+	this.buttonPanel = new wm.Panel({_classes: {domNode: ["dialogfooter"]}, owner: this, parent: this, verticalAlign: "top", horizontalAlign: "right", width: "100%", height: "30px", layoutKind: "left-to-right"});
+	this.okButton = new wm.Button({owner: this, parent: this.buttonPanel, caption: "OK", width: "80px", onclick: dojo.hitch(this, "onOKClick")});
+	this.cancelButton = new wm.Button({owner: this, parent: this.buttonPanel, caption: "Cancel", width: "80px", onclick: dojo.hitch(this, "onCancelClick")});
 	wm.onidle(this, function( ){
 	    this.reflow();
 	    this._cupdating = true;
@@ -368,12 +377,20 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	    this._cupdating = false;
 	});	
     },
+    onOKClick: function() {
+	this.owner.editor.closeDropDown();
+    },
+    onCancelClick: function() {
+	this.owner.setEditorValue(this._initialValue);
+	this.owner.editor.closeDropDown();
+    },
     reset: function() {
 	this._cupdating = true;
 	this.startColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.startColor : "");
 	this.endColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.endColor : "");
 	this.direction.setDataValue(this.owner.dataValue ? this.owner.dataValue.direction : "");
 	this.colorStop.setDataValue(this.owner.dataValue ? (this.direction.getDataValue() == "vertical" ? 100 - this.owner.dataValue.colorStop : this.owner.dataValue.colorStop) : "");
+	this._initialValue = dojo.clone(this.owner.dataValue);
 	this._cupdating = false;
     },
     onExecute: function() {}, // if this doesn't exist, _HasDropDown dismisses dialog onChange
@@ -419,7 +436,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	    this.html.domNode.style.background = result;
 	}
 	if (!this._cupdating) {
-	this.onChange({direction: direction,
+	this.owner.setEditorValue({direction: direction,
 		       startColor: startColor,
 		       endColor: endColor,
 		       colorStop:colorStop});

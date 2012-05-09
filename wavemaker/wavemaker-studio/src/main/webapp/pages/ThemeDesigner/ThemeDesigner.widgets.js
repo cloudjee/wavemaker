@@ -31,7 +31,7 @@ ThemeDesigner.widgets = {
     shadowListVar: ["wm.Variable", {type: "EntryData", json: "[{dataValue: '0px 0px 0px #444444', name: 'No Shadow'}, {dataValue: '1px 0px 1px #444444', name: '1px Right Shadow'}, {dataValue: '0px 1px 1px #444444', name: '1px Bottom Shadow'}, {dataValue: '1px 1px 1px #444444', name: '1px Shadow'},{dataValue: '1px 0px 1px #000000', name: '1px Right Shadow Black'}, {dataValue: '0px 1px 1px #000000', name: '1px Bottom Shadow Black'}, {dataValue: '1px 1px 1px #000000', name: '1px Shadow Black'}, {dataValue: '2px 0px 2px #444444', name: '2px Right Shadow'}, {dataValue: '0px 2px 2px #444444', name: '2px Bottom Shadow'}, {dataValue: '2px 2px 2px #444444', name: '2px Shadow'}, {dataValue: '2px 0px 2px #000000', name: '2px Right Shadow Black'}, {dataValue: '0px 2px 2px #000000', name: '2px Bottom Shadow Black'}, {dataValue: '2px 2px 2px #000000', name: '2px Shadow Black'}, {dataValue: '3px 0px 3px #444444', name: '3px Right Shadow'}, {dataValue: '0px 3px 3px #444444', name: '3px Bottom Shadow'}, {dataValue: '3px 3px 3px #444444', name: '3px Shadow'}, {dataValue: '3px 0px 3px #000000', name: '3px Right Shadow Black'}, {dataValue: '0px 3px 3px #000000', name: '3px Bottom Shadow Black'}, {dataValue: '3px 3px 3px #000000', name: '3px Shadow Black'}, {dataValue: '4px 0px 4px #444444', name: '4px Right Shadow'}, {dataValue: '0px 4px 4px #444444', name: '4px Bottom Shadow'}, {dataValue: '4px 4px 4px #444444', name: '4px Shadow'}, {dataValue: '4px 0px 4px #000000', name: '4px Right Shadow Black'}, {dataValue: '0px 4px 4px #000000', name: '4px Bottom Shadow Black'}, {dataValue: '4px 4px 4px #000000', name: '4px Shadow Black'}, {dataValue: '6px 0px 6px #444444', name: '6px Right Shadow'}, {dataValue: '0px 6px 6px #444444', name: '6px Bottom Shadow'}, {dataValue: '6px 6px 12px #444444', name: '6px Shadow'}, {dataValue: '6px 0px 6px #000000', name: '6px Right Shadow Black'}, {dataValue: '0px 6px 6px #000000', name: '6px Bottom Shadow Black'}, {dataValue: '6px 6px 12px #000000', name: '6px Shadow Black'}]"}],
 	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "left-to-right"}, {}, {	    
             leftColumn: ["wm.Panel", {layoutKind: "top-to-bottom", width: "335px", height: "100%", horizontalAlign: "left", verticalAlign: "top"},{},{
-                themeSelect: ["wm.SelectMenu", {caption: "Select Theme", captionAlign: "right", captionSize: "90px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "dataValue", dataField: "dataValue", headerVisible: false}, {onchange: "themeselectChange"}, {
+                themeSelect: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, caption: "Select Theme", captionAlign: "right", captionSize: "90px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "dataValue", dataField: "dataValue", headerVisible: false}, {onchange: "themeselectChange"}, {
 		    binding: ["wm.Binding", {}, {}, {
 		        wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeListVar"}, {}]
 		    }]
@@ -47,7 +47,7 @@ ThemeDesigner.widgets = {
 		    }],*/
 		    themeGroupListPanel: ["wm.Panel", {height: "100%", width: "190px", layoutKind: "top-to-bottom", border: "0,4,0,0", borderColor: "black"},{}, {
 			themeGroupListLabel: ["wm.Label", {height: "20px", width: "100%", caption: "Categories"}],
-			themeGroupList: ["wm.List", {height: "100%", width: "100%", columns:[{field: "name", width:"100%", show:true},{field: "help", width:"10px", show: true}], headerVisible: false}, {onselect: "themegroupselect"}, {
+			themeGroupList: ["wm.List", {_classes: {domNode: ["StudioList"]}, height: "100%", width: "100%", columns:[{field: "name", width:"100%", show:true},{field: "help", width:"10px", show: true}], headerVisible: false}, {onselect: "themegroupselect"}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeGroupListVar"}, {}]
 			    }]
@@ -55,12 +55,12 @@ ThemeDesigner.widgets = {
 		    }],
 		    themeSubGroupListPanel: ["wm.Panel", {height: "100%", width: "150px", layoutKind: "top-to-bottom", border: "0,4,0,0", borderColor: "black"},{}, {
                         themeSubGroupListLabel: ["wm.Label", {height: "20px", width: "100%", caption: "Style Group"}],
-                        themeSubGroupList: ["wm.List", {height: "100%", width: "100%", columns:[{field: "name", width:"100%", show:true},{field: "help", width:"10px", show: true}], headerVisible: false}, {onselect: "themegroupselect"}, {
+                        themeSubGroupList: ["wm.List", {_classes: {domNode: ["StudioList"]}, height: "100%", width: "100%", columns:[{field: "name", width:"100%", show:true},{field: "help", width:"10px", show: true}], headerVisible: false}, {onselect: "themegroupselect"}, {
 			    binding: ["wm.Binding", {}, {}, {
 		                wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeSubGroupListVar"}, {}]
 			    }]
                         }],
-                        widgetList: ["wm.List", {showing: false, height: "100%", width: "150px", dataFields: "dataValue", headerVisible: false}, {onselect: "widgetselect"}, {
+                        widgetList: ["wm.List", {_classes: {domNode: ["StudioList"]}, showing: false, height: "100%", width: "150px", dataFields: "dataValue", headerVisible: false}, {onselect: "widgetselect"}, {
 			    binding: ["wm.Binding", {}, {}, {
 		                wire: ["wm.Wire", {"targetProperty":"dataSet","source":"widgetListVar"}, {}]
 			    }]
@@ -68,10 +68,10 @@ ThemeDesigner.widgets = {
 		    }]	
                 }],
                 editSplitter: ["wm.Splitter", {}],
-                widgetEditPanel: ["wm.Panel", {_classes: {domNode:["wm-darksnazzy"]},height: "100%", autoScroll: true, width: "100%", layoutKind: "top-to-bottom", padding: "0,0,10,0"}]
+                widgetEditPanel: ["wm.Panel", {_classes: {domNode:[]},height: "100%", autoScroll: true, width: "100%", layoutKind: "top-to-bottom", padding: "0,0,10,0"}]
             }],
 
-	    demoPanelTabLayers: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, height: "100%", width: "100%", clientBorder: "1,0,0,1", clientBorderColor: "#959DAB"},{onchange: "regenerateADemo"},{
+	    demoPanelTabLayers: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]}, height: "100%", width: "100%", clientBorder: "1,0,0,0", clientBorderColor: "#959DAB"},{onchange: "regenerateADemo"},{
 		pageWithTopNavLayer: ["wm.Layer", {caption: "Preview Doc with Toolbar", themeWidgets: "themeGroupWidgets_TopNav"},{},{
 			demoPanel: ["wm.Panel", { height: "100%", width: "100%", layoutKind: "top-to-bottom", margin: "15", padding: "15",  border: "2", borderColor: "#F0F0F0"}]
 		    }],

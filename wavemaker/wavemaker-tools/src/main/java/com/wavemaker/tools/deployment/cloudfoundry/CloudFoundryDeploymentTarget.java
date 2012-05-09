@@ -212,7 +212,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
-        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js").replaceAll("\\/wavemaker\\/", "/");
+        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll("\\/wavemaker\\/", "/");
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
@@ -299,7 +299,11 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         }
     }
 
-    private String getUrl(DeploymentInfo deploymentInfo) {
+    /**
+     * @param deploymentInfo
+     * @return String generated URL
+     */
+    public String getUrl(DeploymentInfo deploymentInfo) {
         String url = deploymentInfo.getTarget();
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
@@ -448,12 +452,13 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
     }
 
-    @Override
-    public String redeploy(DeploymentInfo deploymentInfo) {
-        return null;
-    }
 
     @Override
+	public String redeploy(DeploymentInfo deploymentInfo) {
+	    return null;
+	}
+
+	@Override
     public String start(DeploymentInfo deploymentInfo) {
         return null;
     }
