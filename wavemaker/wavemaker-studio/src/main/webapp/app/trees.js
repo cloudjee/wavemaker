@@ -110,7 +110,7 @@ Studio.extend({
 		var ret = false;
 		for (var i=0; i<types.length; i++) {
 			var m = types[i];
-			if (t instanceof m) {
+			if (m && t instanceof m) {
 				ret = true;
 				break;
 			}
