@@ -623,8 +623,9 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    }
 	    var dataValue = this.dataValue;
 	    this.grid.setDataSet(inDataSet);
-
+	    this._inSetDataValue = true;
 	    this.setEditorValue(dataValue);
+	    delete this._inSetDataValue ;
 	}
     },
     changed: function() {
