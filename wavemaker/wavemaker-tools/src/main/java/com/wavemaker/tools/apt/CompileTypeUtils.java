@@ -103,7 +103,6 @@ public class CompileTypeUtils {
 
             case DECLARED:
                 return typeDefForObject(processingEnv, typeState, (DeclaredType) type);
-
             case ARRAY:
                 return buildTypeDefinition(processingEnv, typeState, ((ArrayType) type).getComponentType());
 
@@ -118,7 +117,7 @@ public class CompileTypeUtils {
                 return typeDefForPrimitive(processingEnv, typeState, type);
 
             default:
-                throw new WMRuntimeException("Cannot convert type " + type.toString() + " to a TypeDefinition.");
+                throw new WMRuntimeException("Cannot convert type " + type.toString() + " of kind " + type.getKind() + " to a TypeDefinition.");
         }
     }
 
@@ -280,23 +279,27 @@ public class CompileTypeUtils {
 
         @Override
         public TypeState visitExecutableAsMethod(ExecutableElement method, TypeState typeState) {
+            try {
+                if (!method.getSimpleName().toString().endsWith("Class")) {
 
-            if (!method.getSimpleName().toString().endsWith("Class")) {
-
-                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(method.getEnclosingElement().asType().toString());
-                if (def != null) {
-                    String propName = getPropertyName(method);
-                    if (!def.getFields().containsKey(propName)) {
-                        if (isGetter(method)) {
-                            def.getFields().put(propName,
-                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getReturnType(), propName));
-                        } else if (isSetter(method)) {
-                            def.getFields().put(
-                                propName,
-                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getParameters().get(0).asType(), propName));
+                    ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(method.getEnclosingElement().asType().toString());
+                    if (def != null) {
+                        String propName = getPropertyName(method);
+                        if (!def.getFields().containsKey(propName)) {
+                            if (isGetter(method)) {
+                                def.getFields().put(propName,
+                                    CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getReturnType(), propName));
+                            } else if (isSetter(method)) {
+                                def.getFields().put(
+                                    propName,
+                                    CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getParameters().get(0).asType(),
+                                        propName));
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                throw new IllegalStateException(e.getMessage() + ":" + method + ":" + typeState, e);
             }
 
             return typeState;

@@ -11,8 +11,8 @@
 	<packaging>war</packaging>
 	<properties>
 		<main.basedir>${basedir}/../..</main.basedir>
+		<tomcat.version>7.0.27</tomcat.version>
 	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -221,6 +221,17 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>Launcher</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
@@ -232,17 +243,62 @@
 						<configuration>
 							<target>
 								<!-- Write Version for Client -->
-								<exec executable="git" outputproperty="version.revision" failifexecutionfails="false">
-									<arg line="rev-parse --verify HEAD"/>
+								<exec executable="git" outputproperty="version.revision"
+									failifexecutionfails="false">
+									<arg line="rev-parse --verify HEAD" />
 								</exec>
-						        <replaceregexp file="${basedir}/src/main/webapp/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />
-								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js" match="wm\.version \= '(.*)';" replace="wm.version = '${project.version}';" />
+								<replaceregexp file="${basedir}/src/main/webapp/app/config.js"
+									match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />
+								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js"
+									match="wm\.version \= '(.*)';" replace="wm.version = '${project.version}';" />
 								<echo file="${basedir}/src/main/webapp/lib/wm/WMVersion.txt">WaveMaker ${project.version} at commit:
 								</echo>
-								<exec executable="git" output="${basedir}/src/main/webapp/lib/wm/WMVersion.txt" append="true" failifexecutionfails="false">
-									<arg line="rev-parse --verify HEAD"/>
+								<exec executable="git"
+									output="${basedir}/src/main/webapp/lib/wm/WMVersion.txt"
+									append="true" failifexecutionfails="false">
+									<arg line="rev-parse --verify HEAD" />
 								</exec>
 							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>tomcat-embedded-main-class-placement</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<tasks>
+								<move
+									todir="${project.build.directory}/${project.artifactId}-${project.version}/">
+									<fileset dir="${project.build.directory}/classes/">
+										<include name="Launcher.class" />
+										<include name="Launcher2.class" />
+									</fileset>
+								</move>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>jar-classpath</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+						<!-- FIXME JDT compiler can go when manager is not used  -->
+							<includeGroupIds>org.apache.tomcat,javax.servlet,org.eclipse.jdt.core.compiler</includeGroupIds>
+							<excludes>org/apache/catalina/ant/**</excludes>
+							<outputDirectory>
+								${project.build.directory}/${project.artifactId}-${project.version}
+							</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -263,7 +319,8 @@
 		<!-- Provided -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Test -->
@@ -272,6 +329,61 @@
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Tomcat Embedded -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jasper</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-logging-juli</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jasper</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jasper-el</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jsp-api</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jdt.core.compiler</groupId>
+			<artifactId>ecj</artifactId>
+			<version>3.5.1</version>
+			<scope>runtime</scope>
+		</dependency> 
 	</dependencies>
 
 	<profiles>
@@ -337,42 +449,42 @@
 			</properties>
 			<build>
 				<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>jslint-maven-plugin</artifactId>
-					<executions>
-						<execution>
-						<goals>
-							<goal>jslint</goal>
-							<goal>test-jslint</goal>
-						 </goals>
-						 <phase>process-resources</phase>
-						</execution>
-					</executions>
-					<configuration>
-					<tolerateEval>
-						true
-					</tolerateEval>
-					<disallowInsecureCharsInRegExp>
-						false
-					</disallowInsecureCharsInRegExp>
-					<disallowUndefinedVariables>
-						false
-					</disallowUndefinedVariables>
-					<assumeConsoleAlertEtc>
-						true
-					</assumeConsoleAlertEtc>
-						<predefinedVars>
-							dojo,
-							studio,
-							Studio,
-							app,
-							loadDataSync,
-							wm,
-							window
-						</predefinedVars>
-					</configuration>
-				</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>jslint-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jslint</goal>
+									<goal>test-jslint</goal>
+								</goals>
+								<phase>process-resources</phase>
+							</execution>
+						</executions>
+						<configuration>
+							<tolerateEval>
+								true
+							</tolerateEval>
+							<disallowInsecureCharsInRegExp>
+								false
+							</disallowInsecureCharsInRegExp>
+							<disallowUndefinedVariables>
+								false
+							</disallowUndefinedVariables>
+							<assumeConsoleAlertEtc>
+								true
+							</assumeConsoleAlertEtc>
+							<predefinedVars>
+								dojo,
+								studio,
+								Studio,
+								app,
+								loadDataSync,
+								wm,
+								window
+							</predefinedVars>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>

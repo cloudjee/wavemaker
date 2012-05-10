@@ -11,6 +11,7 @@
 	<packaging>jar</packaging>
 	<properties>
 		<main.basedir>${basedir}/../..</main.basedir>
+		<tomcat.version>7.0.27</tomcat.version>
 	</properties>
 	<build>
 		<resources>
@@ -133,7 +134,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
-			<artifactId>catalina-ant</artifactId>
+			<artifactId>tomcat-catalina-ant</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -164,6 +165,12 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<version>${tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

@@ -18,7 +18,7 @@
     <servlet>
         <!-- this servlet-name is part of the springapp-servlet.xml filename -->
         <servlet-name>springapp</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <servlet-class>com.wavemaker.tools.servlet.StudioServlet</servlet-class>
 
 
         <init-param>

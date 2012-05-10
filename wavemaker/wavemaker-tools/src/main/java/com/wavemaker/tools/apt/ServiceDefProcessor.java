@@ -96,25 +96,29 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             for (Element e : elements) {
                 if (e instanceof TypeElement) {
                     TypeElement type = (TypeElement) e;
-                    String serviceId = "";
                     try {
-                        JavaFileObject file = getJavaFileManager().getJavaFileForInput(StandardLocation.SOURCE_PATH,
-                            type.getQualifiedName().toString(), JavaFileObject.Kind.SOURCE);
-                        if (file != null && file.toUri().getPath().contains("/src/")) {
-                            String path = file.toUri().getPath();
-                            String servicePath = path.substring(0, path.lastIndexOf("/src/"));
-                            if (servicePath.contains("services/")) {
-                                serviceId = servicePath.substring(servicePath.lastIndexOf("/") + 1);
+                        String serviceId = "";
+                        try {
+                            JavaFileObject file = getJavaFileManager().getJavaFileForInput(StandardLocation.SOURCE_PATH,
+                                type.getQualifiedName().toString(), JavaFileObject.Kind.SOURCE);
+                            if (file != null && file.toUri().getPath().contains("/src/")) {
+                                String path = file.toUri().getPath();
+                                String servicePath = path.substring(0, path.lastIndexOf("/src/"));
+                                if (servicePath.contains("services/")) {
+                                    serviceId = servicePath.substring(servicePath.lastIndexOf("/") + 1);
+                                }
                             }
+                        } catch (IOException ex) {
+                            // File can't be located, so default to using the class name for the serviceId
                         }
-                    } catch (IOException ex) {
-                        // File can't be located, so default to using the class name for the serviceId
-                    }
-                    if (!StringUtils.hasText(serviceId)) {
-                        serviceId = StringUtils.uncapitalize(type.getSimpleName().toString());
-                    }
-                    if (processService(serviceId, type)) {
-                        return true;
+                        if (!StringUtils.hasText(serviceId)) {
+                            serviceId = StringUtils.uncapitalize(type.getSimpleName().toString());
+                        }
+                        if (processService(serviceId, type)) {
+                            return true;
+                        }
+                    } catch (Exception ex) {
+                        throw new IllegalStateException(ex.getMessage() + ":" + type + ":" + annotation, ex);
                     }
                 }
             }
@@ -126,21 +130,25 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             while (props.hasMoreElements()) {
                 String serviceId = props.nextElement().toString();
                 TypeElement type = this.processingEnv.getElementUtils().getTypeElement(this.classPathServices.getProperty(serviceId));
-                for (AnnotationMirror annotationMirror : this.processingEnv.getElementUtils().getAllAnnotationMirrors(type)) {
-                    if (this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), exposeAnn.asType())
-                        || this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), hideAnn.asType())) {
-                        if (processService(serviceId, type)) {
-                            return true;
-                        }
-                        Resource serviceDef = getDesignServiceManager().getServiceDefXml(serviceId);
-                        try {
-                            File file = getProject().getClassOutputFolder().getFile("services/" + serviceId + "/" + serviceDef.getFilename());
-                            file.getContent().write(serviceDef.getInputStream());
-                        } catch (IOException ex) {
-                            this.processingEnv.getMessager().printMessage(Kind.ERROR,
-                                "Could not copy servicedef for runtime service " + serviceId + " to classpath.");
+                try {
+                    for (AnnotationMirror annotationMirror : this.processingEnv.getElementUtils().getAllAnnotationMirrors(type)) {
+                        if (this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), exposeAnn.asType())
+                            || this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), hideAnn.asType())) {
+                            if (processService(serviceId, type)) {
+                                return true;
+                            }
+                            Resource serviceDef = getDesignServiceManager().getServiceDefXml(serviceId);
+                            try {
+                                File file = getProject().getClassOutputFolder().getFile("services/" + serviceId + "/" + serviceDef.getFilename());
+                                file.getContent().write(serviceDef.getInputStream());
+                            } catch (IOException ex) {
+                                this.processingEnv.getMessager().printMessage(Kind.ERROR,
+                                    "Could not copy servicedef for runtime service " + serviceId + " to classpath.");
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    throw new IllegalStateException(e.getMessage() + ":" + type + ":" + serviceId, e);
                 }
             }
         }
