@@ -182,6 +182,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this._render();
 		this.domNode.onboundschange = dojo.hitch(this, "updateHeaderWidth");
 	},
+        postInit: function() {
+	    this.inherited(arguments);
+	    this.connect(this.listNode, "onscroll", this, "_onscroll");
+	},
 	createSelectedItem: function() {
 	         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
 		 this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
@@ -500,6 +504,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.renderHeader();*/
 
 	},
+    maxRenderedRows: 50,
 	renderData: function(inData) {
 	    if (this.selectedItem.type) {
 		var selectedData = this.selectedItem.getData();
@@ -514,9 +519,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	    this.renderHeader();
  
-	    for (var i=0, l=this.getDataItemCount(); i<l; i++){
+	    var totalCount = this.getDataItemCount();
+	    var count = Math.min(this.maxRenderedRows,totalCount);
+	    for (var i = 0; i < count; i++) {
 		this.addItem(this.getItemData(i), i);
 	    }
+	    this._renderedItems = {start: 0,
+				   end: count};
 		dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
 		this.reflow();
 
@@ -541,6 +550,22 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.onRenderData();
 
 	},
+    _onscroll: function() {
+	if ( this.listNode.scrollHeight - this.listNode.scrollTop - this.listNode.clientHeight  < 40) {
+	    var totalCount = this.getDataItemCount();
+	    
+	    if (this._renderedItems.end < totalCount - 1) {
+		var maxSize = this._renderedItems.end + this.maxRenderedRows;
+		var count = Math.min(maxSize,totalCount);
+		for (var i = this._renderedItems.end; i < count; i++) {
+		    this.addItem(this.getItemData(i), i);
+		}
+		dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
+		this._renderedItems = {start: 0,
+				       end: count};
+	    }
+	}
+    },
     onRenderData:function(){},
 	selectItemOnGrid: function(obj, pkList){
 	        if (obj instanceof wm.Variable)
