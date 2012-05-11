@@ -28,10 +28,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-//import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.*;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
@@ -56,8 +53,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 
 /**
  * @author Simon Toens
@@ -258,8 +254,7 @@ public class DataModelManager {
                 packageName = StringUtils.fromLastOccurrence(packageName, DataServiceConstants.DATA_PACKAGE_NAME, -1);
             }
 
-            LocalFileSystem fileSystem = new LocalFileSystem(tmpServiceRoot);
-            tmpServiceRootFolder = FileSystemFolder.getRoot(fileSystem);
+            tmpServiceRootFolder = FileSystemUtils.convertToFileSystemFolder(tmpServiceRoot);
 
             importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
                 driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRootFolder,

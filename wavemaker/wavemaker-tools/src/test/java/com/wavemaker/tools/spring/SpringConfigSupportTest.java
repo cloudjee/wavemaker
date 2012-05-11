@@ -40,6 +40,8 @@ import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ListOrSetType;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.io.ClassPathFile;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 
 /**
  * @author Frankie Fu
@@ -48,10 +50,10 @@ public class SpringConfigSupportTest extends WMTestCase {
 
     public void testReadBeans() throws Exception {
 
-        //cftempfix
-        //File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        ClassPathFile configFile = new ClassPathFile("com/wavemaker/tools/spring/spring-test1.xml");
-        Project project = new Project(configFile.getParent());
+        File file = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
+        com.wavemaker.tools.io.File configFile = FileSystemUtils.convertToFileSystemFile(file);
+        Folder folder = FileSystemUtils.convertToFileSystemFolder(file.getParentFile());
+        Project project = new Project(folder);
         Beans beans = SpringConfigSupport.readBeans(configFile);
         List<Object> beansChildren = beans.getImportsAndAliasAndBean();
         assertEquals(3, beansChildren.size());

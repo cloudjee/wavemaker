@@ -29,6 +29,10 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.ResourceURL;
+import com.wavemaker.tools.io.filesystem.FileSystem;
+
+import java.net.MalformedURLException;
 
 /**
  * 
@@ -49,9 +53,18 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
     public DeprecatedServiceDefinition getServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
         if (f.getName().endsWith(Constants.WSDL_EXT)) {
             try {
-                return WSDLManager.processWSDL(f.toString(), serviceId, null, null);
+                //cftempfix - if the wsdl file is NOT ALWAYS a local file (eg. mongo DB file), we may need to correctly implement
+                //logic for none-local file case.
+                if (f.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+                    java.io.File ff = (java.io.File)f.getOriginalResource();
+                    return WSDLManager.processWSDL(ff.toURL().toString(), serviceId, null, null);
+                } else {                    
+                    return WSDLManager.processWSDL(ResourceURL.get(f).toString(), serviceId, null, null);
+                }
             } catch (WSDLException e) {
                 throw new WMRuntimeException(e);
+            } catch (MalformedURLException e) {
+
             }
         }
         return null;
