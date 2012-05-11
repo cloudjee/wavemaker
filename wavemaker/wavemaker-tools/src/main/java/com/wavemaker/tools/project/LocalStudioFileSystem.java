@@ -91,7 +91,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     public Resource getWaveMakerHome() {
         if (this.testWMHome != null) {
-            return createResource(this.testWMHome.toString() + "/");
+            return createResource(this.testWMHome.getCanonicalPath() + "/");
         }
         return staticGetWaveMakerHome();
     }
