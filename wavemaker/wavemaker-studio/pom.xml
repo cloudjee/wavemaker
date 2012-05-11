@@ -270,7 +270,6 @@
 									todir="${project.build.directory}/${project.artifactId}-${project.version}/">
 									<fileset dir="${project.build.directory}/classes/">
 										<include name="Launcher.class" />
-										<include name="Launcher2.class" />
 									</fileset>
 								</move>
 							</tasks>
