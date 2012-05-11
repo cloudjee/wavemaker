@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.util;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
@@ -23,10 +23,10 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.AbstractStudioFileSystem;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
@@ -34,7 +34,6 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.DesignServiceType;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -125,7 +124,7 @@ public class DesignTimeUtils {
 
                 ProjectManager pm = new ProjectManager();
                 pm.setFileSystem(sf);
-                pm.openProject(projectRoot.getName(), true);
+                pm.openProject(projectRoot.getLastName(), true);
                 dsm.setProjectManager(pm);
 
                 LocalDeploymentManager dep = new LocalDeploymentManager();

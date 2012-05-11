@@ -64,7 +64,7 @@ public class Project extends AbstractFileService {
 
     @Deprecated
     public Project(Resource projectRoot, StudioFileSystem fileSystem) {
-        super();
+        super(fileSystem);
         this.projectRoot = projectRoot;
         this.projectName = projectRoot.getFilename();
         try {
@@ -413,8 +413,12 @@ public class Project extends AbstractFileService {
     }
 
     //TODO: API - remove this method after API conversion is completed
-    private StudioFileSystem getFileSystem() {
-        StudioFileSystem fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        return fileSystem;
+    public StudioFileSystem getFileSystem() {
+        if (this.projectRoot == null) {
+            StudioFileSystem fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
+            return fileSystem;
+        } else {
+            return super.getFileSystem();
+        }
     }
 }

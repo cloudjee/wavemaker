@@ -26,6 +26,7 @@ import java.io.Writer;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * An abstract version of the FileService. Provides default implementations of some methods, as well as a default
@@ -36,6 +37,24 @@ import com.wavemaker.tools.io.Resource;
  */
 @Deprecated
 public abstract class AbstractFileService implements FileService {
+
+    private StudioFileSystem fileSystem;
+
+    protected StudioFileSystem getFileSystem() {
+        return this.fileSystem;
+    }
+
+    //cftempfix
+    public AbstractFileService() {
+    }
+
+    public AbstractFileService(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
 
     @Override
     public String getEncoding() {
