@@ -1,4 +1,5 @@
 import java.awt.Desktop;
+import java.io.File;
 import java.net.URI;
 
 import org.apache.catalina.Context;
@@ -9,25 +10,17 @@ import org.apache.catalina.startup.Tomcat;
 public class Launcher {
 
     public static void main(String[] args) throws Exception {
-        String tc = "/Users/pwebb/tools/apache-tomcat-7.0.26/";
+
+        File warFile = new File(Launcher.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+
         Tomcat tomcat = new Tomcat();
         StandardHost host = (StandardHost) tomcat.getHost();
         host.setUnpackWARs(true);
         tomcat.setPort(8080);
-        tomcat.getHost().setAppBase("/Users/pwebb/projects/wavemaker/code/wavemaker/wavemaker-studio/target");
-        String baseDir = Launcher.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        System.out.println(baseDir);
-        Context webapp = tomcat.addWebapp("/wavemaker", baseDir);
+        tomcat.getHost().setAppBase(warFile.getParent());
+        Context webapp = tomcat.addWebapp("/wavemaker", warFile.toString());
         ((StandardContext) webapp).setUnpackWAR(true);
-
         webapp.setPrivileged(true);
-        tomcat.addUser("manager", "manager");
-        tomcat.addRole("manager", "manager-script");
-        tomcat.addRole("manager", "manager-gui");
-
-        Context managerWebApp = tomcat.addWebapp("/manager", tc + "webapps/manager");
-        managerWebApp.addSecurityRole("manager");
-        managerWebApp.setPrivileged(true);
 
         tomcat.start();
 
