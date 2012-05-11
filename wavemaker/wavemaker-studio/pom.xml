@@ -294,7 +294,7 @@
 						</goals>
 						<configuration>
 						<!-- FIXME JDT compiler can go when manager is not used  -->
-							<includeGroupIds>org.apache.tomcat,javax.servlet,org.eclipse.jdt.core.compiler</includeGroupIds>
+							<includeGroupIds>org.apache.tomcat.embed,org.eclipse.jdt.core.compile</includeGroupIds>
 							<excludes>org/apache/catalina/ant/**</excludes>
 							<outputDirectory>
 								${project.build.directory}/${project.artifactId}-${project.version}
@@ -331,18 +331,6 @@
 		</dependency>
 		<!-- Tomcat Embedded -->
 		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-catalina</artifactId>
-			<version>${tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jasper</artifactId>
-			<version>${tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
 			<version>${tomcat.version}</version>
@@ -361,27 +349,8 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jasper</artifactId>
-			<version>${tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jasper-el</artifactId>
-			<version>${tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jsp-api</artifactId>
-			<version>${tomcat.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
 			<artifactId>ecj</artifactId>
-			<version>3.5.1</version>
 			<scope>runtime</scope>
 		</dependency> 
 	</dependencies>

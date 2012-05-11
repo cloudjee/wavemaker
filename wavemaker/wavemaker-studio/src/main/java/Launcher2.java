@@ -27,7 +27,7 @@ public class Launcher2 {
 
         webapp.setPrivileged(true);
         tomcat.addUser("manager", "manager");
-        tomcat.addRole("manager", "manager");
+        tomcat.addRole("manager", "manager-script");
         tomcat.addRole("manager", "manager-gui");
 
         Context managerWebApp = tomcat.addWebapp("/manager", tc + "webapps/manager");
@@ -35,6 +35,7 @@ public class Launcher2 {
         managerWebApp.setPrivileged(true);
 
         tomcat.start();
+
         Desktop.getDesktop().browse(URI.create("http://localhost:8080/wavemaker/?debug"));
         tomcat.getServer().await();
     }

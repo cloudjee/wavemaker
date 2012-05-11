@@ -7,7 +7,7 @@
     <property name="project.encoding" value="UTF-8"/>
     <property name="tomcat.host" value="localhost"/>
     <property name="tomcat.port" value="8080"/>
-    <property name="tomcat.manager.url" value="http://${tomcat.host}:${tomcat.port}/manager"/>
+    <property name="tomcat.manager.url" value="http://${tomcat.host}:${tomcat.port}/manager/text"/>
     <property name="tomcat.manager.username" value="manager"/>
     <property name="tomcat.manager.password" value="manager"/>
 
@@ -85,6 +85,7 @@
             description="Register this application with Tomcat">
         <echo>tomcat.manager.url=${tomcat.manager.url}</echo>
         <echo>tomcat.port=${tomcat.port}</echo>
+    	<!--
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
             classpathref="studio.classpath"/>
@@ -93,6 +94,7 @@
             password="${tomcat.manager.password}"
             path="/${deploy.name}"
                 failonerror="false" />
+                -->
         <taskdef name="xmltask"
             classname="com.oopsconsultancy.xmltask.ant.XmlTask"
             classpathref="studio.classpath"/>
@@ -105,6 +107,7 @@
                 ]]>
             </insert>
         </xmltask>
+    	<!--
         <taskdef name="deploy"
             classname="org.apache.catalina.ant.DeployTask"
             classpathref="studio.classpath"/>
@@ -113,7 +116,7 @@
             password="${tomcat.manager.password}"
              path="/${deploy.name}"
             config="${tomcat.config.xml}"
-            failonerror="true" />
+            failonerror="true" /> -->
     </target>
 
 	<target name="testrunstart-prep" unless="deploy-uptodate"
@@ -124,6 +127,7 @@
 	<target name="testrunstart-temp" unless="deploy-uptodate"
             description="Register this application with Tomcat">
         <echo>tomcat.port=${tomcat.port}</echo>
+		<!--
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
             classpathref="studio.classpath"/>
@@ -131,7 +135,7 @@
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
             path="/${deploy.name}"
-                failonerror="false" />
+                failonerror="false" /> -->
         <taskdef name="xmltask"
             classname="com.oopsconsultancy.xmltask.ant.XmlTask"
             classpathref="studio.classpath"/>
@@ -144,6 +148,7 @@
                 ]]>
             </insert>
         </xmltask>
+		<!--
         <taskdef name="deploy"
             classname="org.apache.catalina.ant.DeployTask"
             classpathref="studio.classpath"/>
@@ -152,10 +157,11 @@
             password="${tomcat.manager.password}"
              path="/${deploy.name}"
             config="${tomcat.config.xml}"
-            failonerror="true" />
+            failonerror="true" /> -->
     </target>
 
     <target name="undeploy" depends="init">
+    	<!--
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
             classpathref="studio.classpath"/>
@@ -165,6 +171,7 @@
             path="/${deploy.name}"
 			failonerror="false" />
         <delete file="${tomcat.config.xml}" failonerror="false"/>
+        -->
     </target>
 
 	<target name="build"
@@ -228,15 +235,16 @@
 	</target>
 
     <target name="deploy-war">
+        <!--
         <taskdef name="deploy"
             classname="org.apache.catalina.ant.DeployTask"
             classpathref="studio.classpath"/>
-        <deploy url="${tomcat.manager.url}"
+    	<deploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
 	    path="/${deploy.name}"
             war="${war.file.name}"
-            failonerror="true" />
+            failonerror="true" /> -->
     </target>
   
 	<target name="prepare-webapproot" unless="build.inline" depends="init">

@@ -15,6 +15,7 @@
 package org.eclipse.jdt.internal.compiler.tool;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,7 @@ import javax.tools.StandardLocation;
 
 import org.eclipse.jdt.core.compiler.CompilationProgress;
 import org.eclipse.jdt.internal.compiler.batch.FileSystem;
+import org.springframework.util.ReflectionUtils;
 
 import com.wavemaker.tools.compiler.WaveMakerJavaCompiler;
 import com.wavemaker.tools.io.Folder;
@@ -125,7 +127,18 @@ public class EclipseBatchCompiler extends EclipseCompilerImpl {
     }
 
     public void setCompilationUnits(Iterable<? extends JavaFileObject> compilationUnits) {
-        this.compilationUnits = compilationUnits;
+        Field findField = ReflectionUtils.findField(getClass(), "compilationUnits");
+        findField.setAccessible(true);
+        try {
+            findField.set(this, compilationUnits);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // this.compilationUnits = compilationUnits;
     }
 
     public void setProcessors(Processor[] processors) {

@@ -25,8 +25,10 @@ import java.util.Map;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
+import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.log4j.Logger;
@@ -60,8 +62,6 @@ public class LocalDeploymentManager extends AbstractDeploymentManager implements
     private Context context;
 
     private Host host;
-
-    private final boolean ant = true;
 
     // ant properties
     private static final String PROJECT_DIR_PROPERTY = "project.dir";
@@ -156,33 +156,30 @@ public class LocalDeploymentManager extends AbstractDeploymentManager implements
             H.setAttribute("Unloader", new Undeployer());
         }
 
-        if (this.ant) {
-            antExecute(projectDir, deployName, TEST_RUN_START_PREP_OPERATION);
-            antExecute(projectDir, deployName, BUILD_OPERATION);
-        }
+        antExecute(projectDir, deployName, TEST_RUN_START_PREP_OPERATION);
+        antExecute(projectDir, deployName, BUILD_OPERATION);
         compile();
-        if (this.ant) {
-            return antExecute(projectDir, deployName, TEST_RUN_START_TEMP_OPERATION);
-        } else {
-            Tomcat tomcat = new Tomcat();
-            System.out.println(projectDir);
-            tomcat.addWebapp(this.host, "/" + deployName, projectDir + "/webapproot");
-            return deployName;
-            // Context ctx = new StandardContext();
-            // ctx.setName(name);
-            // ctx.setPath(url);
-            // ctx.setDocBase(path);
-            // ctx.addLifecycleListener(new DefaultWebXmlListener());
-            // ContextConfig ctxCfg = new ContextConfig();
-            // ctx.addLifecycleListener(ctxCfg);
-            // // prevent it from looking ( if it finds one - it'll have dup error )
-            // ctxCfg.setDefaultWebXml(noDefaultWebXmlPath());
-            // if (host == null) {
-            // getHost().addChild(ctx);
-            // } else {
-            // host.addChild(ctx);
-            // }
+        antExecute(projectDir, deployName, TEST_RUN_START_TEMP_OPERATION);
+        doUndeploy(deployName);
+        doDeploy(projectDir, deployName);
+        return deployName;
+    }
 
+    private void doDeploy(String projectDir, String deployName) {
+        Tomcat tomcat = new Tomcat();
+        tomcat.addWebapp(this.host, "/" + deployName, projectDir + "/webapproot");
+    }
+
+    private void doUndeploy(String deployName) {
+        Container child = this.host.findChild("/" + deployName);
+        if (child != null) {
+            System.out.println("Undeploying " + deployName);
+            try {
+                child.stop();
+            } catch (LifecycleException e) {
+                e.printStackTrace();
+            }
+            this.host.removeChild(child);
         }
     }
 
@@ -206,9 +203,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager implements
     @Override
     public String compile() {
         try {
-            if (this.ant) {
-                antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
-            }
+            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
             return this.projectCompiler.compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -221,9 +216,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager implements
     @Override
     public String cleanCompile() {
         try {
-            if (this.ant) {
-                antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
-            }
+            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
             return compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -367,6 +360,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager implements
     }
 
     private String undeploy(String projectDir, String deployName) {
+        doUndeploy(deployName);
         return antExecute(projectDir, deployName, UNDEPLOY_OPERATION);
     }
 
