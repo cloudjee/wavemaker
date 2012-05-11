@@ -35,6 +35,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ClassPathFile;
 
@@ -49,11 +50,18 @@ public class WebServiceFactoryTest extends WMTestCase {
     private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
 
     public void testForSOAP() throws MalformedURLException {
-        ClassPathFile wsdl = new ClassPathFile(STOCKQUOTE_WSDL);
+        Resource wsdl = new ClassPathResource(STOCKQUOTE_WSDL);
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
 
-        serviceDefinition = factory.getServiceDefinition(wsdl);
+        com.wavemaker.tools.io.File wsdlFile = null;
+        try {
+            wsdlFile = FileSystemUtils.convertToFileSystemFile(wsdl.getFile());
+        } catch (IOException ex) {
+            fail("Exception occurred while converting resource." + ex.getMessage());
+        }
+
+        serviceDefinition = factory.getServiceDefinition(wsdlFile);
         if (!(serviceDefinition instanceof WSDL)) {
             fail("The service definition should be a WSDL.");
         }
@@ -75,11 +83,17 @@ public class WebServiceFactoryTest extends WMTestCase {
     }
 
     public void testForREST() throws MalformedURLException {
-        ClassPathFile wsdl = new ClassPathFile(YAHOO_STOCKQUOTE_WSDL);
+        Resource wsdl = new ClassPathResource(YAHOO_STOCKQUOTE_WSDL);
+        com.wavemaker.tools.io.File wsdlFile = null;
+        try {
+            wsdlFile = FileSystemUtils.convertToFileSystemFile(wsdl.getFile());
+        } catch (IOException ex) {
+            fail("Exception occurred while converting resource." + ex.getMessage());
+        }
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
         try {
-            serviceDefinition = factory.getServiceDefinition(wsdl);
+            serviceDefinition = factory.getServiceDefinition(wsdlFile);
             if (!(serviceDefinition instanceof WSDL)) {
                 fail("The service definition should be a WSDL.");
             }
