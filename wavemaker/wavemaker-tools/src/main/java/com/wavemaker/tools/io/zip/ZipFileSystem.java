@@ -131,11 +131,6 @@ public class ZipFileSystem implements FileSystem<ZipFileSystemKey> {
         createReadOnlyException();
     }
 
-    @Override
-    public String getCanonicalPath() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * create a new {@link ReadOnlyResourceException} that should be thrown on any write operations.
      * 

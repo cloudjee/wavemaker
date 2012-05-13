@@ -177,13 +177,22 @@ public abstract class FileSystemResource<K> implements Resource {
     @Override
     public String getCanonicalPath() {
         try {
-        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
                 return ((java.io.File)getOriginalResource()).getCanonicalPath();
             } else {
                 throw new UnsupportedOperationException();
             }
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);    
+        }
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            return ((java.io.File)getOriginalResource()).getAbsolutePath();
+        } else {
+            throw new UnsupportedOperationException();
         }
     }
 

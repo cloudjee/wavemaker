@@ -105,7 +105,7 @@ public class DesignTimeUtils {
 
             try {
                 // override configuration
-                setDefaultProjectHome(new File(projectRoot.getCanonicalPath()).getParentFile().getAbsolutePath());
+                setDefaultProjectHome(new File(projectRoot.getAbsolutePath()).getParentFile().getAbsolutePath());
 
                 DesignServiceManager dsm = new DesignServiceManager();
 

@@ -157,4 +157,11 @@ public interface Resource {
      */
     String getCanonicalPath();
 
+    /**
+     * Returns the absolute pathname string for the original resource
+     *
+     * @return the absolute pathname
+     */
+    String getAbsolutePath();
+
 }
