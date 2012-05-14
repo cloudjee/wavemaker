@@ -32,15 +32,13 @@ import java.sql.Statement;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 public class HSQLDBTest {
 

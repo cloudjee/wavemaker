@@ -29,8 +29,8 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
@@ -75,8 +75,9 @@ public class ResourceFileService {
         Hashtable<String, Object> hashtable = new Hashtable<String, Object>();
         hashtable.put("file", resource.getName());
         hashtable.put("type", resource instanceof Folder ? "folder" : "file");
-	if (resource instanceof File)
-	    hashtable.put("modified", ((File)resource).getLastModified());
+        if (resource instanceof File) {
+            hashtable.put("modified", ((File) resource).getLastModified());
+        }
         return hashtable;
     }
 

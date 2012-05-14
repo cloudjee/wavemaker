@@ -28,9 +28,9 @@ import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 
 /**
  * @author Frankie Fu

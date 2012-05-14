@@ -125,7 +125,7 @@ public class ZipFileSystem implements FileSystem<ZipFileSystemKey> {
     public ResourceOrigin getResourceOrigin() {
         throw new UnsupportedOperationException();
     }
-    
+
     @Override
     public void touch(ZipFileSystemKey key) {
         createReadOnlyException();

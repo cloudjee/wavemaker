@@ -16,8 +16,8 @@ package com.wavemaker.runtime;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.context.WebApplicationContext;
@@ -194,7 +194,7 @@ public class RuntimeAccess {
         this.response = response;
     }
 
-     public HttpServletResponse getResponse() {
+    public HttpServletResponse getResponse() {
         return this.response;
     }
 
@@ -203,6 +203,6 @@ public class RuntimeAccess {
     }
 
     public long getStartTime() {
-        return this.startTime;    
+        return this.startTime;
     }
 }

@@ -106,10 +106,9 @@ public interface Folder extends Resource, Iterable<Resource> {
 
     /**
      * Get a child folder of the current folder. This method supports the same naming rules as
-     * {@link #getExisting(String)}. This method differs from getFolder in that it ignores leading slash("/")
-     * in the name if any.
-     * {@link #getExisting(String)}.
-     *
+     * {@link #getExisting(String)}. This method differs from getFolder in that it ignores leading slash("/") in the
+     * name if any. {@link #getExisting(String)}.
+     * 
      * @param name the name of the folder to get
      * @return the {@link Folder}
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a folder
@@ -128,9 +127,9 @@ public interface Folder extends Resource, Iterable<Resource> {
 
     /**
      * Get a child file of the current folder. This method supports the same naming rules as
-     * {@link #getExisting(String)}. This method differs from getFolder in that it ignores leading slash("/")
-     * in the name if any.
-     *
+     * {@link #getExisting(String)}. This method differs from getFolder in that it ignores leading slash("/") in the
+     * name if any.
+     * 
      * @param name the name of the file to get
      * @return the {@link File}
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a file

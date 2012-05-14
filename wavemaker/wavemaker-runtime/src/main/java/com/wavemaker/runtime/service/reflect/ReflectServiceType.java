@@ -22,10 +22,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONState;
-import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
-import com.wavemaker.json.type.FieldDefinition;
-import com.wavemaker.json.type.GenericFieldDefinition;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.ServerUtils;
@@ -86,16 +83,13 @@ public abstract class ReflectServiceType implements ServiceType {
     }
 
     @Override
-    public TypedServiceReturn invokeMethod(
-                ServiceWire serviceWire, String methodName,
-                ParsedServiceArguments args, JSONState jsonState) {
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState) {
         return invokeMethod(serviceWire, methodName, args, jsonState, null);
     }
 
     @Override
-    public TypedServiceReturn invokeMethod(
-                ServiceWire serviceWire, String methodName,
-                ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse) {
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState,
+        ServiceResponse serviceResponse) {
 
         Method method;
         Object serviceObject;

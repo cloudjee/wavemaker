@@ -14,20 +14,20 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -36,9 +36,6 @@ import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * @author Simon Toens
@@ -47,8 +44,6 @@ import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 public class ServiceDeploymentManager {
 
     private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(1);
-
-    private StudioFileSystem fileSystem;
 
     private ProjectManager projectMgr;
 
@@ -71,23 +66,15 @@ public class ServiceDeploymentManager {
         return generateWebapp(getProjectRoot(), properties, false);
     }
 
-    /*public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) {
-        Folder stagingProjectDir = null;
-        try {
-            stagingProjectDir = this.fileSystem.createTempDir();
-            this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>());
-            DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir);
-            prepareForDeployment(mgr, properties);
-            return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
-        } catch (IOException ex) {
-            throw new ConfigurationException(ex);
-        } finally {
-            try {
-                this.fileSystem.deleteFile(stagingProjectDir);
-            } catch (Exception ignore) {
-            }
-        }
-    }*/
+    /*
+     * public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) { Folder
+     * stagingProjectDir = null; try { stagingProjectDir = this.fileSystem.createTempDir();
+     * this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>()); DesignServiceManager mgr
+     * = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir); prepareForDeployment(mgr, properties); return
+     * buildWar(mgr.getProjectManager(), getWarFile(), includeEar); } catch (IOException ex) { throw new
+     * ConfigurationException(ex); } finally { try { this.fileSystem.deleteFile(stagingProjectDir); } catch (Exception
+     * ignore) { } } }
+     */
 
     public com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, boolean includeEar) {
         File stagingProjectDir = null;
@@ -130,7 +117,6 @@ public class ServiceDeploymentManager {
     }
 
     public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
     }
 
     public void setProjectManager(ProjectManager projectMgr) {

@@ -21,7 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.hibernate.tool.ant.Hbm2CfgXmlExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.hbm2x.Exporter;
-import org.springframework.core.io.Resource;
+
 import com.wavemaker.tools.io.Folder;
 
 /**
@@ -30,6 +30,7 @@ import com.wavemaker.tools.io.Folder;
 public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
 
     private String configurationFile = null;
+
     private Folder destDir;
 
     public HibernateConfigExporterTask(HibernateToolTask parent, Folder destDir) {

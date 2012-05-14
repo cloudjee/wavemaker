@@ -21,8 +21,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 
 /**

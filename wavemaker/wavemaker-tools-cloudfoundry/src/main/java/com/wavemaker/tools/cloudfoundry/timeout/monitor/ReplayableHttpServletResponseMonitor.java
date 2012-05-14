@@ -11,8 +11,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.cloudfoundry.timeout.monitor;
 
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * A {@link HttpServletResponseMonitor} that records all monitored evens such that they can be
@@ -22,10 +24,11 @@ package com.wavemaker.tools.cloudfoundry.timeout.monitor;
  */
 public interface ReplayableHttpServletResponseMonitor extends HttpServletResponseMonitor {
 
-	/**
-	 * Returns the replayable response.
-	 * @return the replayable response.
-	 */
-	ReplayableHttpServletResponse getReplayableResponse();
+    /**
+     * Returns the replayable response.
+     * 
+     * @return the replayable response.
+     */
+    ReplayableHttpServletResponse getReplayableResponse();
 
 }

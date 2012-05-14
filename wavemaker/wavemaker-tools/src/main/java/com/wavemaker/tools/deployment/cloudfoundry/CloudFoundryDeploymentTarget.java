@@ -44,11 +44,11 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
+import com.wavemaker.tools.cloudfoundry.spinup.ProjectnameWithRandomApplicationNamingStrategy;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
-import com.wavemaker.tools.cloudfoundry.spinup.ProjectnameWithRandomApplicationNamingStrategy;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -127,7 +127,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             validateWar(webapp);
             ZipFile zipFile = new ZipFile(webapp);
             ApplicationArchive applicationArchive = new ZipApplicationArchive(zipFile);
-            return(doDeploy(applicationArchive, deploymentInfo));
+            return doDeploy(applicationArchive, deploymentInfo);
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
@@ -137,7 +137,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
         applicationArchive = modifyApplicationArchive(applicationArchive);
-        return(doDeploy(applicationArchive, deploymentInfo));
+        return doDeploy(applicationArchive, deploymentInfo);
     }
 
     /**
@@ -212,7 +212,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
-        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll("\\/wavemaker\\/", "/");
+        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll(
+            "\\/wavemaker\\/", "/");
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
@@ -276,23 +277,24 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
-        if(deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty())
-        	deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo));  //testrun
+        if (deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty()) {
+            deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo)); // testrun
+        }
         String url = deploymentInfo.getDeploymentUrl();
-        //URL could already be in use - CF allows for such   
+        // URL could already be in use - CF allows for such
         String appName = deploymentInfo.getApplicationName();
-    	//AppName can not already be in use
+        // AppName can not already be in use
         if (checkExist && appNameInUse(client, appName)) {
-        	try{
-        		client.deleteApplication(appName); //redploy of same app 
-        	}
-        	catch(Exception e){
-        		e.printStackTrace();
-        		throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
-        		}
-        }   
+            try {
+                client.deleteApplication(appName); // redploy of same app
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
+            }
+        }
         try {
-            client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
+            client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING),
+                Collections.singletonList(url), null, true);
             return url;
         } catch (CloudFoundryException e) {
             throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
@@ -303,12 +305,14 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
      * @param deploymentInfo
      * @return String generated URL
      */
+    @Override
     public String getUrl(DeploymentInfo deploymentInfo) {
         String url = deploymentInfo.getTarget();
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
         }
-        ProjectnameWithRandomApplicationNamingStrategy pNameStrat = new ProjectnameWithRandomApplicationNamingStrategy(deploymentInfo.getApplicationName());
+        ProjectnameWithRandomApplicationNamingStrategy pNameStrat = new ProjectnameWithRandomApplicationNamingStrategy(
+            deploymentInfo.getApplicationName());
         return url.replace("api", pNameStrat.generateName());
     }
 
@@ -452,13 +456,12 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
     }
 
+    @Override
+    public String redeploy(DeploymentInfo deploymentInfo) {
+        return null;
+    }
 
     @Override
-	public String redeploy(DeploymentInfo deploymentInfo) {
-	    return null;
-	}
-
-	@Override
     public String start(DeploymentInfo deploymentInfo) {
         return null;
     }

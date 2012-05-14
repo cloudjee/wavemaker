@@ -122,13 +122,14 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         return rtn;
     }
 
-    /* Currently used to tell us that the CloudFoundry version of studio has restarted (due to binding a service to it)
-     * and is now back online.  Before it reboots, this will return the currently open project.  After it reboots, this
+    /*
+     * Currently used to tell us that the CloudFoundry version of studio has restarted (due to binding a service to it)
+     * and is now back online. Before it reboots, this will return the currently open project. After it reboots, this
      * throws an error as there is no open project.
      */
     @ExposeToClient
     public String getOpenProject() throws IOException {
-	return this.projectManager.getCurrentProject().getProjectName();
+        return this.projectManager.getCurrentProject().getProjectName();
     }
 
     /**

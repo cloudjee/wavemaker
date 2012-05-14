@@ -13,8 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
-
 /**
  * Tests for {@link AuthenticationToken}.
  * 
