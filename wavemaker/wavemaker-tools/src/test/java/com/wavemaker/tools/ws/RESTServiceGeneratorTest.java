@@ -27,22 +27,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.core.io.FileSystemResource;
-
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.common.Bootstrap;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Frankie Fu
@@ -64,8 +59,7 @@ public class RESTServiceGeneratorTest extends WMTestCase {
     }
 
     protected Class<?> generate(String wsdlResource) throws Exception {
-        //cftempfix - temporarily passed
-        /*Bootstrap.main(null);
+        Bootstrap.main(null);
         SpringUtils.initSpringConfig();
 
         String resource = ClassLoaderUtils.getResource(wsdlResource);
@@ -78,13 +72,11 @@ public class RESTServiceGeneratorTest extends WMTestCase {
         AntUtils.javac(this.outputDir.getAbsolutePath(), this.outputDir);
         URLClassLoader cl = new URLClassLoader(new URL[] { this.outputDir.toURI().toURL() });
         Class<?> serviceClass = Class.forName(wsdl.getPackageName() + "." + wsdl.getServiceId(), true, cl);
-        return serviceClass;*/
-        return null;
+        return serviceClass;
     }
 
     public void testStockQuote() throws Exception {
-        //cftempfix - temporarily passed
-        /*Class<?> serviceClass = generate(YAHOO_STOCKQUOTE_WSDL);
+        Class<?> serviceClass = generate(YAHOO_STOCKQUOTE_WSDL);
 
         List<Method> methods = ClassUtils.getPublicMethods(serviceClass);
 
@@ -95,6 +87,6 @@ public class RESTServiceGeneratorTest extends WMTestCase {
         }
         if (!someExpectedMethodNames.isEmpty()) {
             fail("Also expected these methods " + someExpectedMethodNames);
-        }*/
+        }
     }
 }
