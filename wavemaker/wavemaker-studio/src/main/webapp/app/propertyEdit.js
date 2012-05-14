@@ -362,7 +362,7 @@ dojo.declare("wm.propEdit.DataSetSelect", wm.propEdit.Select, {
 		var sp = studio.page, r = this.getDataSets([sp, sp.app]);
 		if (this.widgetDataSets)
 			wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-				if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.Editor && w.formField))
+			    if (w !== this && !(wm.isInstanceType(w, wm.LiveFormBase)) && !(wm.isInstanceType(w, wm.Editor) && w.formField))
 					r = r.concat(this.getDataSets([w]));
 			}));
 		return [""].concat(r.sort());
@@ -578,7 +578,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	*/
 	if (this.widgetDataSets)
 	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-		if (!(w instanceof wm.PageContainer) && w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
+		if (!(w instanceof wm.PageContainer) && w !== this && !(wm.isInstanceType(w, wm.LiveFormBase)) && !(wm.isInstanceType(w, wm.AbstractEditor) && w.formField))
 		    r = r.concat(this.getDataSets([w],matchType));
 	    }),true);
 	r = r.sort();
@@ -624,7 +624,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 			    }
 
 			    /* Handle noForms */
-			    if (this.noForms && (wm.LiveFormBase && c.owner instanceof wm.LiveFormBase || wm.LiveFormBase && c.owner instanceof wm.DataForm)) {
+			    if (this.noForms && (wm.LiveFormBase && wm.isInstanceType(c.owner, [wm.LiveFormBase,wm.DataForm]))) {
 				return false;
 			    }
 
@@ -751,7 +751,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	var ds;
 	var type;
 
-	if (f instanceof wm.ServiceInputForm) {
+	if (wm.isInstanceType(f, wm.ServiceInputForm)) {
 	    ds = f.serviceVariable.input;
 	} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
 	    ds = f && f.dataSet;
@@ -772,7 +772,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	    if (this.oneToMany === true || this.oneToMany === false) {
 		var f = this.inspected.getParentForm();
 		var dataSet;
-		if (f instanceof wm.ServiceInputForm) {
+		if (wm.isInstanceType(f, wm.ServiceInputForm)) {
 		    dataSet = f.serviceVariable.input;
 		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
 		    dataSet = f && f.dataSet;
@@ -790,7 +790,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	    if (this.liveTypes != true) {
 		var f = this.inspected.getParentForm();
 		var dataSet;
-		if (f instanceof wm.ServiceInputForm) {
+		if (wm.isInstanceType(f, wm.ServiceInputForm)) {
 		    dataSet = f.serviceVariable.input;
 		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
 		    dataSet = f && f.dataSet;
@@ -844,7 +844,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 	var result = [];
 	if (this.excludeType) {
 	    for (var i = 0; i < components.length; i++) {
-		if (components[i] instanceof this.excludeType == false) {
+		if (wm.isInstanceType(components[i], this.excludeType) == false) {
 		    result.push(components[i]);
 		}
 	    }
@@ -955,6 +955,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 					width: "20px",
 					height: "18px",
 					padding: "0",
+					showing: this.inspected instanceof wm.Application==false,
 					onclick: dojo.hitch(this, function() {
 					    var index = this.editors[this.editors.length-1].propertyNumber+1;
 					    this.addEditor(index, "-");
@@ -990,7 +991,24 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
 	dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
 	this.editors = [];
-	this.addEditor(0,this.inspected.getProp(this.propName));
+	var value;
+	if (this.inspected instanceof wm.Application == false) {
+	    value = this.inspected.getProp(this.propName);
+	} else {
+	    studio.generateAppSourceHtml();
+	    var text = studio.appsourceHtml.getHtml();
+	    text = text.replace(/.*?\>/,"").replace(/\<\/pre\>$/,"");
+	    delete window[studio.project.projectName];
+	    try {
+		eval(text);
+		eval(studio.appsourceEditor.getDataValue());
+	    } catch(e) {}
+	    var ctor = dojo.getObject(studio.project.projectName);
+	    value =  (ctor && ctor.prototype[this.propName] && ctor.prototype[this.propName] != wm.Application.prototype[this.propName]) ? this.propName : "";
+	}
+
+
+	this.addEditor(0,value);
 	for (var i = 1; i < 20; i++) {
 	    if (this.inspected.getProp(this.propName + i)) {
 		this.addEditor(i, this.inspected.getProp(this.propName + i));
@@ -1002,7 +1020,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     },
 	addEditor: function(inIndex, inValue) {
 	    var propertyName = this.propName + (inIndex == 0 ? "" : inIndex);
-	this.editors.push(new wm.prop.EventEditor({owner: this,
+	    this.editors.push(new wm.prop.EventEditor({owner: this,
 						   parent: this.panel,
 						   name: "propEdit_" + this.propName + "_" + inIndex,
 						   propName: propertyName,
@@ -1479,7 +1497,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			if (obj instanceof wm.Dialog){
 			    addToArray.push({defaultLabel: cname + ".show", onClick: dojo.hitch(this, "setEditorValue", rname + ".show")});
 			    addToArray.push({defaultLabel: cname + ".hide", onClick: dojo.hitch(this, "setEditorValue", rname + ".hide")});
-			} else if (obj instanceof wm.LiveForm) {
+			} else if (wm.isInstanceType(obj, wm.LiveForm)) {
 			    var formSubmenu = {label: cname, children: []};
 			    addToArray.push(formSubmenu);
 			    formSubmenu.children.push({label: cname + ".beginDataInsert", onClick: dojo.hitch(this, "setEditorValue", rname + ".beginDataInsert")});
@@ -1487,12 +1505,12 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			    formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
 			    formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
 			    formSubmenu.children.push({label: cname + ".cancelEdit", onClick: dojo.hitch(this, "setEditorValue", rname + ".cancelEdit")});
-			} else if (obj instanceof wm.DataForm) {
+			} else if (wm.isInstanceType(obj, wm.DataForm)) {
 			    var formSubmenu = {label: cname, children: []};
 			    addToArray.push(formSubmenu);
 			    formSubmenu.children.push({label: cname + ".editNewObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editNewObject")});
 			    formSubmenu.children.push({label: cname + ".editCurrentObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editCurrentObject")});
-			    if (obj instanceof wm.DBForm) {
+			    if (wm.isInstanceType(obj, wm.DBForm)) {
 				formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
 				formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
 			    }

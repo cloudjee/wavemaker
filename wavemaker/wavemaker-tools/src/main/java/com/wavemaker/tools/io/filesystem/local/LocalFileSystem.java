@@ -183,13 +183,4 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
     public void touch(LocalFileSystemKey key) {
         key.getFile().setLastModified(System.currentTimeMillis());
     }
-
-    @Override
-    public String getCanonicalPath() {
-        try {
-            return this.root.getCanonicalPath();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
 }

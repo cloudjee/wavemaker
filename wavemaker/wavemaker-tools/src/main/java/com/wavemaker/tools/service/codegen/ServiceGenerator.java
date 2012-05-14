@@ -48,6 +48,10 @@ import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.project.GFSResource;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
  * All service code generators should extend this class. Although all public or protected methods can be overriden or
@@ -209,16 +213,11 @@ public abstract class ServiceGenerator {
             return false;
         }
 
-        Resource f;
-        try {
-            f = this.configuration.getOutputDirectory().createRelative(StringUtils.classNameToSrcFilePath(getClassName()));
-            if (!f.exists()) {
-                return false;
-            }
-            return srcLastModified <= f.lastModified();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
+        com.wavemaker.tools.io.File f = this.configuration.getOutputDirectory().getFile(StringUtils.classNameToSrcFilePath(getClassName()));
+        if (!f.exists()) {
+            return false;
         }
+        return srcLastModified <= f.getLastModified();
     }
 
     protected List<List<ElementType>> getOverloadedVersions(String operationName) {
@@ -272,14 +271,16 @@ public abstract class ServiceGenerator {
         try {
             // TODO - I suspect this will need to be re-written for CF, so let's cheat for now
             //cftempfix
-            Resource dir = this.configuration.getOutputDirectory();
-            if (dir instanceof GFSResource) {
+            Folder dir = this.configuration.getOutputDirectory();
+            if (dir.getResourceOrigin().equals(FileSystem.ResourceOrigin.MONGO_DB)) {
                 File f = IOUtils.createTempDirectory("dataService_directory", null);
                 this.codeModel.build(f, f, null);
-                fileSystem.copyRecursive(f, this.configuration.getOutputDirectory(), null);
+                LocalFileSystem fileSystem = new LocalFileSystem(f);
+                Folder folder = FileSystemFolder.getRoot(fileSystem);
+                folder.copyContentsTo(this.configuration.getOutputDirectory());
             } else {
-                dir.getFile().mkdirs();
-                this.codeModel.build(dir.getFile(), dir.getFile(), null);
+                File dest = (File)dir.getOriginalResource();
+                this.codeModel.build(dest, dest, null);
             }
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);

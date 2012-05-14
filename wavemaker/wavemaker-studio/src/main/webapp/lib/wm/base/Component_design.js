@@ -24,6 +24,7 @@ wm.Object.extendSchema(wm.Component, {
     diagnostics: {group: "diagnostics", editor: "wm.prop.Diagnostics", doNotPublish:1},
     viewDocumentation: {group: "docs", writeonly: true},
     //generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
+    noPositioning: {ignore:1},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},

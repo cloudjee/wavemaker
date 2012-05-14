@@ -192,7 +192,7 @@ wm.getComponentStructure = function(inType){
 			var relpath = dojo._getModuleSymbols(requireList[i]).join("/") + ".js";
 			var uri = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
 		    while (uri.match(/[^\/]\/\.\.\//)) {
-			uri = uri.replace(/[^\/]*\/\.\.\//,"")
+			uri = uri.replace(/[^\/]*\/\.\.\/+/,"")
 		    }
 			wm.dojoScriptLoader(uri);
 		    if (wm.componentFixList[requireList[i]]) {
@@ -207,23 +207,31 @@ wm.getComponentStructure = function(inType){
     }
 }
 
-wm.addFrameworkFix = function(gzipName, inFunc) {
+wm.addFrameworkFix = function(className, inFunc) {
     if (djConfig.isDebug && !wm.studioConfig) {
 	inFunc();
-    } else if (!wm.componentFixList[gzipName]) {
-	wm.componentFixList[gzipName] = [inFunc];
+    } else
+	var ctor = dojo.getObject(className);
+    if (ctor) {
+	inFunc();
+    } else if (!wm.componentFixList[className]) {
+	wm.componentFixList[className] = [inFunc];
     } else {
-	wm.componentFixList[gzipName].push(inFunc);
+	wm.componentFixList[className].push(inFunc);
     }
 }
 
 wm.applyFrameworkFixes = function() {
-    for (var packageName in wm.componentFixList) {
-	var packageFixes = wm.componentFixList[packageName];
-	for (var i = 0; i < packageFixes.length; i++) {
-	    packageFixes[i]();
-	}
-    }
+		for (var className in wm.componentFixList) {
+		    var ctor = dojo.getObject(className);
+		    if (ctor) {
+			var classFixes = wm.componentFixList[className];
+			for (var i = 0; i < classFixes.length; i++) {
+				classFixes[i]();
+			}
+			delete wm.componentFixList[className];
+		    }
+		}
 }
 
 //wm.loadLib("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches"); moved to Application.js

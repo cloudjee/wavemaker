@@ -26,9 +26,9 @@ public final class ServiceFile {
 
     private final File file;
 
-    private final Resource resource;
+    private final File resource;
 
-    public ServiceFile(File file, Resource resource) {
+    public ServiceFile(File file, File resource) {
         this.file = file;
         this.resource = resource;
     }
@@ -38,7 +38,7 @@ public final class ServiceFile {
     }
 
     @Deprecated
-    public Resource asResource() {
+    public File asResource() {
         return this.resource;
     }
 }

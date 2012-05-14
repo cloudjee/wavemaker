@@ -27,10 +27,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 
 /**
  * @author Frankie Fu
@@ -56,7 +56,7 @@ public class WSDLTest extends WMTestCase {
                 bindingFiles.add(bindingFile);
             }
         }
-        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, ConversionUtils.convertToResourceList(bindingFiles));
+        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, FileSystemUtils.convertToFileSystemFileList(bindingFiles));
         return mapper;
     }
 

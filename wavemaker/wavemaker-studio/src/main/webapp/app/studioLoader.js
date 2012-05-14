@@ -23,7 +23,7 @@ b),console.info("Error: "+f.message)}c&&c(e)}--a._inFlightCount==0&&a._postLoad&
 !1;a._postLoad&&a._inFlightCount==0&&b.length&&a._callLoaded()};dojo.unloaded=function(){for(var b=a._unloaders;b.length;)b.pop()()};a._onto=function(b,c,a){if(a){if(a){var e=typeof a=="string"?c[a]:a;b.push(function(){e.call(c)})}}else b.push(c)};dojo.ready=dojo.addOnLoad=function(b,c){a._onto(a._loaders,b,c);a._postLoad&&a._inFlightCount==0&&!a._loadNotifying&&a._callLoaded()};var h=a.config.addOnLoad;if(h)a.addOnLoad[h instanceof Array?"apply":"call"](a,h);dojo._modulesLoaded=function(){a._postLoad||
 (a._inFlightCount>0?console.warn("files still in flight!"):a._callLoaded())};dojo._callLoaded=function(){typeof setTimeout=="object"||a.config.useXDomain&&a.isOpera?setTimeout(a.isAIR?function(){a.loaded()}:a._scopeName+".loaded();",0):a.loaded()};dojo._getModuleSymbols=function(b){for(var b=b.split("."),c=b.length;c>0;c--){var d=b.slice(0,c).join(".");if(c==1&&!a._moduleHasPrefix(d))b[0]="../"+b[0];else{var e=a._getModulePrefix(d);if(e!=d){b.splice(0,c,e);break}}}return b};dojo._global_omit_module_check=
 !1;dojo.loadInit=function(b){b()};dojo._loadModule=dojo.require=function(b,c){var c=a._global_omit_module_check||c,b=b.replace(/i18n\!/,""),d=a._loadedModules[b];if(d)return d;var e=a._getModuleSymbols(b).join("/")+".js";if(!a._loadPath(e,!c?b:null)&&!c)throw Error("Could not load '"+b+"'; last tried '"+e+"'");if(!c&&!a._isXDomain&&(d=a._loadedModules[b],!d))throw Error("symbol '"+b+"' is not defined after loading '"+e+"'");return d};dojo.provide=function(b){b+="";return a._loadedModules[b]=a.getObject(b,
-!0)};dojo.platformRequire=function(b){for(var b=(b.common||[]).concat(b[a._name]||b["default"]||[]),c=0;c<b.length;c++){var d=b[c];d.constructor==Array?a._loadModule.apply(a,d):a._loadModule(d)}};dojo.requireIf=function(b){if(b===!0){for(var c=[],d=1;d<arguments.length;d++)c.push(arguments[d]);a.require.apply(a,c)}};dojo.requireAfterIf=a.requireIf;dojo.registerModulePath=function(b,c){a._modulePrefixes[b]={name:b,value:c}};dojo.requireLocalization=function(){a.require("dojo.i18n");a.i18n._requireLocalization.apply(a.hostenv,
+!0)};dojo.platformRequire=function(b){for(var b=(b.common||[]).concat(b[a._name]||b["default"]||[]),c=0;c<b.length;c++){var d=b[c];d.constructor==Array?a._loadModule.apply(a,d):a._loadModule(d)}};dojo.requireIf=function(b){if(b===!0){for(var c=[],d=1;d<arguments.length;d++)c.push(arguments[d]);a.require.apply(a,c)}};dojo.requireAfterIf=a.requireIf;dojo.registerModulePath=function(b,c){a._modulePrefixes[b]={name:b,value:c}};dojo.requireLocalization=function(){if (!dojo.i18n) a.require("dojo.i18n");a.i18n._requireLocalization.apply(a.hostenv,
 arguments)};var m=/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/,n=/^((([^\[:]+):)?([^@]+)@)?(\[([^\]]+)\]|([^\[:]*))(:([0-9]+))?$/;dojo._Url=function(){for(var b=arguments,c=[b[0]],d=1;d<b.length;d++)if(b[d]){var e=new a._Url(b[d]+""),c=new a._Url(c[0]+"");if(e.path==""&&!e.scheme&&!e.authority&&!e.query){if(e.fragment!=null)c.fragment=e.fragment;e=c}else if(!e.scheme&&(e.scheme=c.scheme,!e.authority&&(e.authority=c.authority,e.path.charAt(0)!="/"))){for(var c=(c.path.substring(0,
 c.path.lastIndexOf("/")+1)+e.path).split("/"),f=0;f<c.length;f++)c[f]=="."?f==c.length-1?c[f]="":(c.splice(f,1),f--):f>0&&!(f==1&&c[0]=="")&&c[f]==".."&&c[f-1]!=".."&&(f==c.length-1?(c.splice(f,1),c[f-1]=""):(c.splice(f-1,2),f-=2));e.path=c.join("/")}c=[];e.scheme&&c.push(e.scheme,":");e.authority&&c.push("//",e.authority);c.push(e.path);e.query&&c.push("?",e.query);e.fragment&&c.push("#",e.fragment)}this.uri=c.join("");b=this.uri.match(m);this.scheme=b[2]||(b[1]?"":null);this.authority=b[4]||(b[3]?
 "":null);this.path=b[5];this.query=b[7]||(b[6]?"":null);this.fragment=b[9]||(b[8]?"":null);if(this.authority!=null)b=this.authority.match(n),this.user=b[3]||null,this.password=b[4]||null,this.host=b[6]||b[7],this.port=b[9]||null};dojo._Url.prototype.toString=function(){return this.uri};dojo.moduleUrl=function(b,c){var d=a._getModuleSymbols(b).join("/");if(!d)return null;d.lastIndexOf("/")!=d.length-1&&(d+="/");var e=d.indexOf(":");if(d.charAt(0)!="/"&&(e==-1||e>d.indexOf("/")))d=a.baseUrl+d;return new a._Url(d,
@@ -35,6 +35,7 @@ c)};define=function(b,c,a){function e(a){if(a.charAt(0)==="."){for(a=b.substring
 dojo.registerModulePath("studio", wm.basePath);
 dojo.registerModulePath("lib", wm.libPath);
 dojo.registerModulePath("wm", wm.libPath + "/wm");
+dojo.registerModulePath("wm.studio", wm.basePath); // this one seems silly, but we use it
 dojo.registerModulePath("common", wm.libPath + "/wm/common");
 dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
 dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
@@ -65,14 +66,15 @@ if (!djConfig.debugBoot) {
         //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 	//
 	wm.loadLibs([
-		"studio.build.studio_base",
-		"studio.build.studio_wm",
-		"studio.build.studio"
+	    "studio.build.studio_base",
+	    "studio.build.studio",
+	    "css.wm.base.widget.themes.default.design",
+	    "css.wm.studio.pages.Studio.properties"
 	]);
+} else {
+    dojo.require("lib.manifest", true);
+    // Load studio code and design extensions
+    dojo.require("studio.app.manifest", true);
 }
-// Load all required runtime libraries.
-// Note: anything not included in build will be loaded.
-dojo.require("lib.manifest", true);
 
-// Load studio code and design extensions
-dojo.require("studio.app.manifest", true);
+

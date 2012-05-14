@@ -45,9 +45,13 @@ import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.jaxws.JAXWSBuilder;
 import com.wavemaker.tools.ws.jaxws.JAXWSPortTypeInfo;
 import com.wavemaker.tools.ws.jaxws.JAXWSServiceInfo;
+import com.wavemaker.tools.ws.jaxws.CFJAXWSBuilder;
 import com.wavemaker.tools.ws.wsdl.SchemaElementType;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.filesystem.FileSystem;
 
 /**
  * This class generates SOAP service stubs.
@@ -68,12 +72,14 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
     public SOAPServiceGenerator(GenerationConfiguration configuration) {
         super(configuration);
 
-        try {
-            this.jaxwsBuilder = new JAXWSBuilder(this.wsdl, configuration.getOutputDirectory().getFile(),
-                configuration.getOutputDirectory().getFile());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
+        Folder outputFolder = configuration.getOutputDirectory();
+
+        if (outputFolder.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            this.jaxwsBuilder = new JAXWSBuilder(this.wsdl, outputFolder, outputFolder);
+        } else {
+            this.jaxwsBuilder = new CFJAXWSBuilder(this.wsdl, outputFolder, outputFolder);
         }
+
         this.serviceInfoList = this.jaxwsBuilder.getServiceInfoList();
     }
 
@@ -82,7 +88,7 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
         super.preGeneration();
 
         // generate JAXB Java files and JAXWS service client Java files
-        this.jaxwsBuilder.generate(ConversionUtils.convertToFileList(this.jaxbBindingFiles));
+        this.jaxwsBuilder.generate(this.jaxbBindingFiles);
     }
 
     @Override
@@ -90,7 +96,7 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
         super.postGeneration();
 
         // delete generated class files
-        for (File file : getPackageDir().listFiles()) {
+        for (Resource file : getPackageDir().list()) {
             if (file.getName().endsWith(".class")) {
                 file.delete();
             }

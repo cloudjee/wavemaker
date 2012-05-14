@@ -113,7 +113,8 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (this._touchEnabled === undefined) {
 		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
 		    if (navigator.userAgent.match(/Android (3|4|5|6|7|8|9)\./) ||
-			navigator.userAgent.match(/(phone|ipad)/i) ||
+			navigator.userAgent.match(/(phone|ipad)/i) &&
+			!navigator.userAgent.match(/(phone|ipad) OS (1|2|3|4)_/i) ||
 			wm.isFakeMobile) {
 			;
 		    } else {

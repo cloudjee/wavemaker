@@ -19,17 +19,25 @@
 package com.wavemaker.tools.ws;
 
 import java.net.MalformedURLException;
+import java.io.File;
+import java.io.IOException;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ClassPathFile;
 
 /**
  * @author Frankie Fu
@@ -46,11 +54,28 @@ public class WebServiceFactoryTest extends WMTestCase {
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
 
-        serviceDefinition = factory.getServiceDefinition(wsdl);
+        com.wavemaker.tools.io.File wsdlFile = null;
+        try {
+            wsdlFile = FileSystemUtils.convertToFileSystemFile(wsdl.getFile());
+        } catch (IOException ex) {
+            fail("Exception occurred while converting resource." + ex.getMessage());
+        }
+
+        serviceDefinition = factory.getServiceDefinition(wsdlFile);
         if (!(serviceDefinition instanceof WSDL)) {
             fail("The service definition should be a WSDL.");
         }
-        GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, new LocalStudioFileSystem().createTempDir());
+
+        File tempDir = null;
+        try {
+            tempDir = (new LocalStudioFileSystem().createTempDir()).getFile();
+        } catch (IOException ex) {
+            fail("Exception occurred during getServiceDefiniton." + ex.getMessage());
+        }
+        LocalFileSystem fileSystem = new LocalFileSystem(tempDir);
+        Folder folder = FileSystemFolder.getRoot(fileSystem);
+
+        GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, folder);
         ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
         if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
             fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting " + serviceGenerator.getClass().getName());
@@ -59,10 +84,16 @@ public class WebServiceFactoryTest extends WMTestCase {
 
     public void testForREST() throws MalformedURLException {
         Resource wsdl = new ClassPathResource(YAHOO_STOCKQUOTE_WSDL);
+        com.wavemaker.tools.io.File wsdlFile = null;
+        try {
+            wsdlFile = FileSystemUtils.convertToFileSystemFile(wsdl.getFile());
+        } catch (IOException ex) {
+            fail("Exception occurred while converting resource." + ex.getMessage());
+        }
         WebServiceFactory factory = new WebServiceFactory();
         DeprecatedServiceDefinition serviceDefinition = null;
         try {
-            serviceDefinition = factory.getServiceDefinition(wsdl);
+            serviceDefinition = factory.getServiceDefinition(wsdlFile);
             if (!(serviceDefinition instanceof WSDL)) {
                 fail("The service definition should be a WSDL.");
             }

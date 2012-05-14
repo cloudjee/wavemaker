@@ -19,9 +19,9 @@ dojo.require("wm.base.widget.EditPanel");
 wm.EditPanel.description = "Controls for editing a form.";
 
 wm.Object.extendSchema(wm.EditPanel, {
-	addControls: { group: "operation", order: 7},
-	removeControls: { group: "operation", order: 8},
-	liveForm: { group: "common", order: 200},
+    addControls: { group: "operation", order: 7, operation: "_addControls"},
+    removeControls: { group: "operation", order: 8, operation: "_removeControls"},
+    liveForm: { group: "widgetName", order: 200, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.LiveForm"}},
 	savePanel: {ignore: 1, writeonly: 1},
 	operationPanel: {ignore: 1, writeonly: 1},
 	formUneditable: {ignore: 1, bindSource: 1},
@@ -159,13 +159,11 @@ wm.EditPanel.extend({
 			sp = this.getValueById(this.savePanel);
 		return ((!op || op.parent == this) && (!sp || sp.parent == this));
 	},
+/*
 	makePropEdit: function(inName, inValue, inDefault) {
 	    var prop = this.schema ? this.schema[inName] : null;
 	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
-			case "addControls":
-			case "removeControls":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
 			case "liveForm":
 				return makeSelectPropEdit(inName, inValue, this.getLiveFormNames(inValue), inDefault);
 		}
@@ -180,4 +178,5 @@ wm.EditPanel.extend({
 		}
 		return this.inherited(arguments);
 	}
+	*/
 });

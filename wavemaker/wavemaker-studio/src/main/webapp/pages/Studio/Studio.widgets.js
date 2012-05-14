@@ -50,7 +50,7 @@ Studio.widgets = {
     confirmSaveDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "ConfirmSaveDialog", deferLoad: false,   width: "400px", height: "120px", hideControls: true, noEscape: true}],
     jarListVariable: ["wm.Variable", {type: "StringData"}, {}],
     addPatchDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "AddPatch",  width: "90%", height: "90%", hideControls: true, modal: false, title: "Load patch for studio", deferLoad: true}],
-    jarDownloadDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "HandleRequiredJars",   width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File"}],
+    jarDownloadDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "HandleRequiredJars",   width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File", deferLoad: true}],
     ImportThirdPartyAPIDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "ImportThirdPartyAPI",   width: "500px", height: "240px", hideControls: true, modal: false, title: "Import Partner Services", deferLoad: true}],
     dictionaryDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "I18nDictionaryEditor",   width: "400px", height: "80%", hideControls: true, modal: false, title: "Dictionary Editor", deferLoad: true, corner: "cr"}],
     editCodeDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "CodeEditorDialog",   width: "800px", height: "400px", hideControls: true, modal: true, title: "Edit Code", deferLoad: true, corner: "cl", positionNear: "PIContents"}],
@@ -316,7 +316,7 @@ height: "29px", width: "420px",
 					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 */
-			left: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, border: "0", width: "100%", minWidth: 50, height: "100%", headerHeight: "32px", clientBorder: "1,1,0,0",clientBorderColor: "#959DAB"}, {onchange: "leftTabsChange"}, {
+			left: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, minWidth: 50, clientBorder: "1,1,0,0"}, {onchange: "leftTabsChange"}, {
 			    mlpal: ["wm.Layer", {_classes: {domNode: ["StudioLeftLayer"]}, caption: "Palette", padding: "3,0,0,0"}, {onShow: "resetPaletteSearch"}, {
 					paletteSearch: ["wm.Text", {_classes: {domNode:["StudioEditor"]},caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
@@ -370,7 +370,7 @@ height: "29px", width: "420px",
 		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px", width:"100%"}],
 		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left", parentIsSplitter:1, height: "100%", width: "4px"}, {}]
 		}],
-		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "NoRightMarginOnTab"]}, conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
+		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "NoRightMarginOnTab"]}, conditionalTabButtons:true, customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "1,1,0,1", layoutKind: "top-to-bottom", borderColor: "#959DAB"}, {}, {
@@ -481,7 +481,7 @@ height: "29px", width: "420px",
 						sourceToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						sourceLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 					}],*/
-			sourceTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  headerHeight: 32, border: "1,0,0,1", borderColor: "#959DAB", width: "100%", height: "100%",clientBorder: "1,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
+			sourceTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  border: "1,0,0,1", clientBorder: "1,0,0,0"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: "Script"}, {onShow: "editArea.focus"}, {
 						scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
@@ -621,16 +621,16 @@ height: "29px", width: "420px",
 					}]
 		}],
 			JavaEditorTab: ["wm.Layer", {caption: "Java", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    JavaEditorSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, border: "1",borderColor: "#959DAB", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    JavaEditorSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, border: "1",conditionalTabButtons:true, customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
 			databaseTab: ["wm.Layer", {caption: "Database", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    databaseSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, border: "1", borderColor: "#959DAB", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    databaseSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, border: "1",conditionalTabButtons:true, customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
 			webServiceTab: ["wm.Layer", {caption: "WebServices", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
-			    webServiceSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","StudioDarkLayers", "StudioDarkerLayers"]}, border: "1", borderColor: "#959DAB",  width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    webServiceSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","StudioDarkLayers", "StudioDarkerLayers"]}, border: "1",conditionalTabButtons:true,  customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
 		    securityTab: ["wm.Layer", {caption: "Security", layoutKind: "top-to-bottom", showing: false, closable: true, border: "1",borderColor: "#959DAB"}, {}, {
-			    securitySubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},  border: "1", borderColor: "#959DAB",  width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+			    securitySubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},  border: "1",conditionalTabButtons:true, customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}]
 
 			}]

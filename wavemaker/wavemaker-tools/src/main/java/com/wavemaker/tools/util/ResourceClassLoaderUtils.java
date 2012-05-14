@@ -21,15 +21,17 @@ import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.concurrent.Callable;
-
-import org.springframework.core.io.Resource;
+import java.util.Arrays;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.tools.project.GFSResource;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceURL;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Resource;
 
 /**
- * Class Loader Utils specifically designed to work with {@link Resource}s. Migrated from {@link ClassLoaderUtils} in
+ * Class Loader Utils specifically designed to work with {@link com.wavemaker.tools.io.Resource}s. Migrated from {@link ClassLoaderUtils} in
  * the common project for dependency reasons.
  */
 public class ResourceClassLoaderUtils {
@@ -39,15 +41,9 @@ public class ResourceClassLoaderUtils {
     }
 
     public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... resources) {
-        if (resources[0] instanceof GFSResource) {
-            return getClassLoaderForCFResources(parent, resources);
-        }
         try {
             final ClassLoader parentF = parent;
-            final URL[] urls = new URL[resources.length];
-            for (int i = 0; i < resources.length; i++) {
-                urls[i] = resources[i].getURI().toURL();
-            }
+            final URL[] urls = ResourceURL.getForResources(Arrays.asList(resources)).toArray(new URL[resources.length]);
 
             URLClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
 
@@ -64,25 +60,12 @@ public class ResourceClassLoaderUtils {
         }
     }
 
-    private static ClassLoader getClassLoaderForCFResources(ClassLoader parent, final Resource[] resources) {
-        final ClassLoader parentF = parent;
-
-        CFClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<CFClassLoader>() {
-
-            @Override
-            public CFClassLoader run() {
-                return new CFClassLoader(resources, parentF);
-            }
-        });
-        return ret;
+    public static void runInClassLoaderContext(Runnable runnable, Folder... folders) {
+        runInClassLoaderContext(asCallable(runnable), getClassLoaderForResources(folders));
     }
 
-    public static void runInClassLoaderContext(Runnable runnable, Resource... resources) {
-        runInClassLoaderContext(asCallable(runnable), getClassLoaderForResources(resources));
-    }
-
-    public static <V> V runInClassLoaderContext(Callable<V> callable, Resource... files) {
-        return runInClassLoaderContext(callable, getClassLoaderForResources(files));
+    public static <V> V runInClassLoaderContext(Callable<V> callable, Folder... folders) {
+        return runInClassLoaderContext(callable, getClassLoaderForResources(folders));
     }
 
     public static void runInClassLoaderContext(Runnable runnable, ClassLoader cl) {

@@ -123,15 +123,63 @@
     background-color: inherit;
     color: white;
 }
+.Start .Start-existingProjectList .wmlist-item td {
+    background-color: transparent;
+}
+
+/*
 .Start .Start-existingProjectList.StudioList.wmlist .wmlist-cell {
     border-bottom: solid 1px #687585;
 }
+*/
 
-
-.Start .Start-existingProjectList .wmlist-item td {
-    background-color:#657282;
+.Start .Start-existingProjectList .wmlist-item {
+/*    background-color:#657282;*/
     color: white !important;
 }
+
 .Start .Start-existingProjectList .wmlist-item.Odd {
-    background-color:#687585;
+/*    background-color:#687585;*/
+}
+.Start .Start-existingProjectList .wmlist-item-over {
+/*    background-color: #414B5C;*/
+}
+
+.Start .Start-existingProjectList .wmlist-item {
+    margin-bottom: 2px;
+    background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
+    border: 1px solid #687585;
+    -webkit-border-radius: 8px;
+}
+.Start .StudioList.wmlist .wmlist-cell {
+    border-bottom: solid 0px transparent;
+}
+
+.Start .Start-existingProjectList .wmlist-item-over.wmlist-item-selected,
+.Start .Start-existingProjectList .wmlist-item-selected {
+    background:none;
+/*    background-color: #798597;*/
+background-color: #414B5C;
+    border-color: #586575;
+
+    background: -webkit-linear-gradient(top, #798597 0%,#414B5C 50%,#414B5C 100%);
+    background: -moz-linear-gradient(top, #798597 0%,#414B5C 50%,#414B5C 100%);
+    background: -o-linear-gradient(top, #798597 0%,#414B5C 50%,#414B5C 100%);
+    background: -ms-linear-gradient(top, #798597 0%,#414B5C 50%,#414B5C 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#414B5C',GradientType=0);
+}
+.Start .Start-existingProjectList .wmlist-item-selected td {
+    color: white;
+}
+
+.Start .Start-existingProjectList .wmlist-item-over {
+    background: -webkit-linear-gradient(top, #8995A7 0%,#737F90 50%,#737F90 100%);
+    background: -moz-linear-gradient(top, #8995A7 0%,#737F90 50%,#737F90 100%);
+    background: -o-linear-gradient(top, #8995A7 0%,#737F90 50%,#737F90 100%);
+    background: -ms-linear-gradient(top, #8995A7 0%,#737F90 50%,#737F90 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8995A7', endColorstr='#737F90',GradientType=0);
 }

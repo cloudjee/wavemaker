@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,10 +23,10 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.AbstractStudioFileSystem;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
@@ -88,7 +89,7 @@ public class DesignTimeUtils {
      * @return DesignServiceManager instance
      */
     public static DesignServiceManager getDesignServiceManager(Project project) {
-        return getDSMForProjectRoot(project.getProjectRoot());
+        return getDSMForProjectRoot(project.getRootFolder());
     }
 
     /**
@@ -97,16 +98,14 @@ public class DesignTimeUtils {
      * 
      * @param projectRoot
      * @return DesignServiceManager instance
-     * @deprecated use getDesignServiceManager when possible
      */
-    @Deprecated
-    public static DesignServiceManager getDSMForProjectRoot(Resource projectRoot) {
+    public static DesignServiceManager getDSMForProjectRoot(Folder projectRoot) {
         try {
             String oldProp = getDefaultProjectHome();
 
             try {
                 // override configuration
-                setDefaultProjectHome(projectRoot.getFile().getParentFile().getAbsolutePath());
+                setDefaultProjectHome(new File(projectRoot.getAbsolutePath()).getParentFile().getAbsolutePath());
 
                 DesignServiceManager dsm = new DesignServiceManager();
 
@@ -121,11 +120,11 @@ public class DesignTimeUtils {
                 }
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                sf.setTestWaveMakerHome(projectRoot.getFile().getParentFile());
+                sf.setTestWaveMakerHome(projectRoot.getParent());
 
                 ProjectManager pm = new ProjectManager();
                 pm.setFileSystem(sf);
-                pm.openProject(projectRoot.getFilename(), true);
+                pm.openProject(projectRoot.getLastName(), true);
                 dsm.setProjectManager(pm);
 
                 LocalDeploymentManager dep = new LocalDeploymentManager();

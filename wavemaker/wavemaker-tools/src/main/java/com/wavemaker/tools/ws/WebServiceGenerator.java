@@ -46,6 +46,7 @@ import com.wavemaker.tools.ws.salesforce.JAXBTypeMapper_SF;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.TypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Base class for all Web Service generators.
@@ -57,7 +58,7 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
 
     protected static final String SERVICE_QNAME_VAR_PROP_NAME = "serviceQNameVar";
 
-    protected List<Resource> jaxbBindingFiles;
+    protected List<com.wavemaker.tools.io.File> jaxbBindingFiles;
 
     protected JFieldVar serviceIdVar;
 
@@ -92,34 +93,30 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
         TypeMapper typeMapper = null;
 
         try {
-            this.jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(this.configuration.getOutputDirectory().getFile(), false));
+            this.jaxbBindingFiles = builder.generate(this.configuration.getOutputDirectory(), false);
 
             typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
         } catch (GenerationException e) {
             try {
                 // it may due to class/interface names collision, try to put
                 // schemas in seperate packages.
-                this.jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(this.configuration.getOutputDirectory().getFile(),
-                    true));
+                this.jaxbBindingFiles = builder.generate(this.configuration.getOutputDirectory(),
+                    true);
                 typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
             } catch (GenerationException ex) {
                 // for some WSDLs, the global binding file causes some issues;
                 // so remove global binding file and try again.
                 removeGlobalBindingFile();
                 typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
-            } catch (IOException ex) {
-                throw new GenerationException(ex);
             }
-        } catch (IOException ex) {
-            throw new GenerationException(ex);
         }
         this.wsdl.setTypeMapper(typeMapper);
     }
 
     private void removeGlobalBindingFile() {
         int index = 0;
-        for (Resource jaxbBindingFile : this.jaxbBindingFiles) {
-            if (jaxbBindingFile.getFilename().equals(Constants.JAXB_GLOBAL_BINDING_FILE)) {
+        for (com.wavemaker.tools.io.File jaxbBindingFile : this.jaxbBindingFiles) {
+            if (jaxbBindingFile.getName().equals(Constants.JAXB_GLOBAL_BINDING_FILE)) {
                 this.jaxbBindingFiles.remove(index);
                 break;
             }
@@ -210,12 +207,8 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
      * 
      * @return The Java package directory for this service.
      */
-    protected File getPackageDir() {
-        try {
-            return CodeGenUtils.getPackageDir(this.configuration.getOutputDirectory().getFile(), this.wsdl.getPackageName());
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+    protected Folder getPackageDir() {
+        return CodeGenUtils.getPackageDir(this.configuration.getOutputDirectory(), this.wsdl.getPackageName());
     }
 
     /**

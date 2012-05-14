@@ -232,6 +232,7 @@
 		 if (e) {		     
 		     this.reinspectEditor(inComponent, e, binde, p);
 		 }
+/*
 		 this.processingRequiredGroup = true;
 		 e = this.editorHash[this.getHashId(inComponent,propFullName)];
 		 if (e && e.isDestroyed) {
@@ -243,6 +244,7 @@
 		     this.reinspectEditor(inComponent, e, binde, p);
 		 }
 		 delete this.processingRequiredGroup;
+		 */
 	     }
 	 } catch(e) {}
 

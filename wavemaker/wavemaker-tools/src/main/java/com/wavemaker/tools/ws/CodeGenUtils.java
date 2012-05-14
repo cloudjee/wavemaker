@@ -17,6 +17,7 @@ package com.wavemaker.tools.ws;
 import java.io.File;
 
 import com.sun.xml.bind.api.impl.NameConverter;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Frankie Fu
@@ -36,16 +37,32 @@ public class CodeGenUtils {
 
     /**
      * Converts the package name to directory path equivalent.
-     * 
+     *
      * @param baseDir The base directory.
      * @param packageName The Java package name.
      * @return The equivalent Directory for the WSDL's package name.
      */
-    public static File getPackageDir(File baseDir, String packageName) {
+    public static Folder getPackageDir(Folder baseDir, String packageName) {
         if (packageName == null) {
             return baseDir;
         } else {
-            return new File(baseDir, packageName.replace('.', File.separatorChar));
+            //return new File(baseDir, packageName.replace('.', File.separatorChar));
+            return baseDir.getFolder(packageName.replace('.', File.separatorChar));
+        }
+    }
+
+     /**
+     * Converts the package name to directory path equivalent.
+     *
+     * @param baseDir The base folder.
+     * @param packageName The Java package name.
+     * @return The equivalent folder for the WSDL's package name.
+     */
+    public static Folder getPackageFolder(Folder baseDir, String packageName) {
+        if (packageName == null) {
+            return baseDir;
+        } else {
+            return baseDir.getFolder(packageName.replace('.', File.separatorChar));
         }
     }
 

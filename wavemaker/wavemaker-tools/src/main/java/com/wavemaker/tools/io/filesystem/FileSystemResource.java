@@ -118,7 +118,13 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public String getLastName() {
-        return this.path.getUnjailedPath().getName();
+        //cftempfix
+        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            java.io.File f = (java.io.File)getOriginalResource();
+            return f.getName();
+        } else {
+            return this.path.getUnjailedPath().getName();
+        }
     }
 
     @Override
@@ -171,13 +177,22 @@ public abstract class FileSystemResource<K> implements Resource {
     @Override
     public String getCanonicalPath() {
         try {
-        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
                 return ((java.io.File)getOriginalResource()).getCanonicalPath();
             } else {
                 throw new UnsupportedOperationException();
             }
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);    
+        }
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            return ((java.io.File)getOriginalResource()).getAbsolutePath();
+        } else {
+            throw new UnsupportedOperationException();
         }
     }
 

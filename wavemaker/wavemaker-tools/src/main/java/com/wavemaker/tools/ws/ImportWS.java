@@ -27,6 +27,7 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Import Web Service.
@@ -36,7 +37,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class ImportWS {
 
-    private Resource destDir;
+    private Folder destDir;
 
     private String packageName;
 
@@ -54,11 +55,11 @@ public class ImportWS {
 
     private String partnerName;
 
-    public Resource getDestdir() {
+    public Folder getDestdir() {
         return this.destDir;
     }
 
-    public void setDestdir(Resource destdir) {
+    public void setDestdir(Folder destdir) {
         this.destDir = destdir;
     }
 

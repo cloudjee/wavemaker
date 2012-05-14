@@ -96,9 +96,9 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 		function(inError) {
 		    d.errback(inError);
 		},
-		{enableHighAccuracy: enableHighAccuracy,
-		 timeout: timeout,
-		 maximumAge: maximumAge});
+		{enableHighAccuracy: enableHighAccuracy || false,
+		 timeout: timeout || 5000,
+		 maximumAge: maximumAge || 1200000});
 	}
 	return d;
     },

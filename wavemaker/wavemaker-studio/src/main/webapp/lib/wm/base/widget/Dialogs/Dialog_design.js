@@ -21,7 +21,6 @@ dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog");
 dojo.require("wm.base.widget.Dialogs.GenericDialog"); 
 dojo.require("wm.base.widget.Dialogs.PageDialog");
 dojo.require("wm.base.widget.Dialogs.Toast");
-dojo.require("wm.base.widget.Dialogs.ColorPickerDialog");
 dojo.require("wm.base.widget.Container_design");
 
 wm.Dialog.extend({
@@ -226,7 +225,6 @@ wm.Dialog.description = "Popup dialog.";
 
 
 
-wm.ColorPickerDialog.cssLoaded = false;
 
 
 

@@ -19,6 +19,8 @@
 package com.wavemaker.tools.webapp;
 
 import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -60,8 +62,8 @@ public class WebXmlSupportTest extends WMTestCase {
         fp.deleteOnExit();
 
         try {
-            WebXmlSupport.writeWebXml(new Project(new FileSystemResource(fp.getParentFile()), new LocalStudioFileSystem()), wat,
-                new FileSystemResource(fp));
+            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(fp));
+            WebXmlSupport.writeWebXml(wat, osw);
             String fpContents = FileUtils.readFileToString(fp);
 
             assertTrue(fpContents.contains("ActiveGrid Studio"));

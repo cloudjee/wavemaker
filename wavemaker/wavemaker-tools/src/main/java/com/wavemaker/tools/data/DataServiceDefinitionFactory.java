@@ -28,6 +28,7 @@ import com.wavemaker.tools.service.ServiceFile;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
+import com.wavemaker.tools.io.File;
 
 public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 
@@ -61,9 +62,9 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
         return null;
     }
 
-    private ServiceDefinition initServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
+    private ServiceDefinition initServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
 
-        if (!f.getFilename().endsWith(".xml")) {
+        if (!f.getName().endsWith(".xml")) {
             return null;
         }
         DataServiceDefinition rtn = null;

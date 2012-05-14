@@ -23,11 +23,9 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
-
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
@@ -40,12 +38,14 @@ import com.wavemaker.tools.project.StudioFileSystem;
 @Deprecated
 public abstract class AbstractFileService implements FileService {
 
-    // FIXME PW filesystem : remove this class
-
     private StudioFileSystem fileSystem;
 
-    protected final StudioFileSystem getFileSystem() {
+    protected StudioFileSystem getFileSystem() {
         return this.fileSystem;
+    }
+
+    //cftempfix
+    public AbstractFileService() {
     }
 
     public AbstractFileService(StudioFileSystem fileSystem) {
@@ -63,59 +63,58 @@ public abstract class AbstractFileService implements FileService {
 
     @Override
     public String readFile(String path) throws IOException {
-        return readFile(getFileServiceRoot().createRelative(path));
+        return readFile(getFileServiceRoot().appendFile(path));
     }
 
     @Override
-    public String readFile(Resource file) throws IOException {
-        return FileCopyUtils.copyToString(getReader(file));
+    public String readFile(File file) throws IOException {
+        return file.getContent().asString();
     }
 
     @Override
     public void writeFile(String path, String data) throws IOException {
-        writeFile(getFileServiceRoot().createRelative(path), data);
+        writeFile(getFileServiceRoot().getFile(path), data);
     }
 
     @Override
-    public void writeFile(Resource file, String data) throws IOException {
-        FileCopyUtils.copy(data, getWriter(file));
+    public void writeFile(File file, String data) throws IOException {
+        file.getContent().write(data);
     }
 
     @Override
-    public boolean deleteFile(String path) throws IOException {
-        return deleteFile(getFileServiceRoot().createRelative(path));
+    public void deleteFile(String path) throws IOException {
+        deleteFile(getFileServiceRoot().getFile(path));
     }
 
     @Override
-    public boolean deleteFile(Resource file) throws IOException {
-        Assert.notNull(this.fileSystem, "StudioFileSystem is required.");
-        return this.fileSystem.deleteFile(file);
+    public void deleteFile(Resource file) throws IOException {
+        file.delete();
     }
 
     @Override
-    public Reader getReader(Resource file) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        return new InputStreamReader(file.getInputStream(), getEncoding());
+    public Reader getReader(File file) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+        return new InputStreamReader(file.getContent().asInputStream(), getEncoding());
+
     }
 
     @Override
     public Reader getReader(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        return getReader(getFileServiceRoot().createRelative(path));
+        return getReader(getFileServiceRoot().getFile(path));
     }
 
     @Override
-    public Writer getWriter(Resource file) throws UnsupportedEncodingException, FileNotFoundException {
-        Assert.notNull(this.fileSystem, "StudioFileSystem is required.");
-        return new OutputStreamWriter(this.fileSystem.getOutputStream(file), getEncoding());
+    public Writer getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
+        return new OutputStreamWriter(file.getContent().asOutputStream(), getEncoding());
     }
 
     @Override
     public Writer getWriter(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        return getWriter(getFileServiceRoot().createRelative(path));
+        return getWriter(getFileServiceRoot().getFile(path));
     }
 
     @Override
     public boolean fileExists(String path) throws IOException {
-        return getFileServiceRoot().createRelative(path).exists();
+        return getFileServiceRoot().getFile(path).exists();
     }
 
     @Override
@@ -124,8 +123,8 @@ public abstract class AbstractFileService implements FileService {
     }
 
     @Override
-    public OutputStream getOutputStream(Resource resource) {
-        return this.fileSystem.getOutputStream(resource);
+    public OutputStream getOutputStream(File resource) {
+        return resource.getContent().asOutputStream();
     }
 
 }

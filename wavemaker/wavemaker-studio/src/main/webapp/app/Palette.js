@@ -149,6 +149,10 @@ dojo.declare("wm.Palette", wm.Tree, {
 	        if (props.name)
 	            props.name = props.name.replace(/\s/g,"");
 		var ctor = dojo.getObject(info.type);
+	    if (!ctor) {
+		wm.require(info.type);
+		 ctor = dojo.getObject(info.type);
+	    }
                 var owner = this.dragger.target.owner;
                 while (owner != studio.page && owner != studio.application)
                     owner = owner.owner;

@@ -1037,7 +1037,7 @@ dojo.declare(
 		this.listSet = wm.ListSet({owner: this.dropDown,
 					parent: c,
 					   _noFilter: this.noFilter,
-					_selectionMode: "radio",
+					selectionMode: "radio",
 					captionAlign: "left",
 					captionPosition: "top",
 					caption: "",//this.owner.caption,
@@ -1047,16 +1047,18 @@ dojo.declare(
 					padding: "0",
 					width: "100%",
 					height: "100%",
-					onchange: dojo.hitch(this, function() {
-					    if (this._cupdating) return;
+					   onchange: dojo.hitch(this, function(inDisplayValue, inDataValue, inSetByCode) {
+					    if (this._cupdating || inSetByCode) return;
 					    var data = this.listSet.grid.selectedItem.getData();
 					    if (data) {
 						var value = this.owner._getDisplayData(data);
 						this.set("value", value);					    
 						data.name = this.listSet.grid.getCell(this.listSet.grid.getSelectedIndex(),"name");
+
 						this.set("item", data);
 						this.displayedValue = value;
 						this.owner.changed();
+
 						this.closeDropDown();
 						this.dropDown.hide();
 					    }
@@ -1120,12 +1122,17 @@ dojo.declare(
 	     */
 	    // TODO: Need to preselect the current value!
 
+	    /* wm.onidle allows the dialog to render before populating the somewhat slow list */
 	    wm.onidle(this, function() {
 		this.listSet.setShowing(true);
 		this.listSet.grid._render();
+		this._cupdating = true;
+		this.listSet.grid._cupdating = true;
 		this.listSet.setDataValue(this.owner.dataValue);
+		this.listSet.grid._cupdating = false;
 		this._cupdating = false;
 	    });
+	    this._opened = true;
 	    return true;
 	}
     });

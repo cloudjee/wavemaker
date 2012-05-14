@@ -24,6 +24,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.FileSystemResource;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.runtime.RuntimeAccess;
 
 
@@ -39,7 +42,7 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
                             MethodProxy methodProxy) throws Throwable {
 
         HibernateToolTask parent = null;
-        Resource destDir = null;
+        Folder destDir = null;
 
         if (!method.getName().equals("execute")) {
             return methodProxy.invokeSuper(object, args);
@@ -67,14 +70,14 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
             destDir = task.getDestDir();
         }
 
-        //File origDestDir = new File(parent.getDestDir().getAbsolutePath());
-
         File tempDestDir = IOUtils.createTempDirectory("dataService_directory", null);
         parent.setDestDir(tempDestDir);
 
         Object rtn = methodProxy.invokeSuper(object, args);
 
-        fileSystem.copyRecursive(tempDestDir, destDir, null);
+        LocalFileSystem fileSystem = new LocalFileSystem(tempDestDir);
+        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        folder.copyContentsTo(destDir);
 
         return rtn;
     }

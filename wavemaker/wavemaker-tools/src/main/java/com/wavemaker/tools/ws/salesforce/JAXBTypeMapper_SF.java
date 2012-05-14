@@ -34,6 +34,7 @@ import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.JAXBTypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
+import com.wavemaker.tools.io.File;
 
 /**
  * JAXB specific type mappings for SalesForce.
@@ -44,14 +45,14 @@ import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
 public class JAXBTypeMapper_SF extends JAXBTypeMapper {
 
     public JAXBTypeMapper_SF(WSDL wsdl) throws GenerationException {
-        super(wsdl, new ArrayList<Resource>());
+        super(wsdl, new ArrayList<File>());
     }
 
-    public JAXBTypeMapper_SF(WSDL wsdl, List<Resource> bindingFiles) throws GenerationException {
+    public JAXBTypeMapper_SF(WSDL wsdl, List<File> bindingFiles) throws GenerationException {
         super(wsdl.getSchemas(), bindingFiles, wsdl.getPackageName(), wsdl.getAuxiliaryClasses(), wsdl.getWebServiceType());
     }
 
-    public JAXBTypeMapper_SF(Map<String, Element> schemas, List<Resource> bindingFiles, String packageName, Set<String> auxiliaryClasses,
+    public JAXBTypeMapper_SF(Map<String, Element> schemas, List<File> bindingFiles, String packageName, Set<String> auxiliaryClasses,
         WebServiceType type) throws GenerationException {
         super(schemas, bindingFiles, packageName, auxiliaryClasses, type);
     }

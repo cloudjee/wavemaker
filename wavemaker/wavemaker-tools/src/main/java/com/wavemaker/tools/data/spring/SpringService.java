@@ -14,14 +14,12 @@
 
 package com.wavemaker.tools.data.spring;
 
-import java.io.File;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.xml.sax.InputSource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceDefinition;
@@ -29,6 +27,7 @@ import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.util.QueryRunner;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
+import com.wavemaker.tools.io.File;
 
 /**
  * @author Simon Toens
@@ -38,35 +37,31 @@ public class SpringService {
     private SpringService() {
     }
 
-    public static DeprecatedServiceDefinition initialize(File cfg) {
-
-        return initialize(new FileSystemResource(cfg));
-
-    }
-
-    public static DeprecatedServiceDefinition initialize(String cfg) {
+    //TODO: API - must be uncommented and converted
+    /*public static DeprecatedServiceDefinition initialize(String cfg) {
 
         return initialize(new ClassPathResource(cfg));
 
-    }
+    }*/
 
-    public static DeprecatedServiceDefinition initialize(Resource r) {
+    public static DeprecatedServiceDefinition initialize(File f) {
 
-        return getDataServiceDefinition(initAppCtx(r));
+        return getDataServiceDefinition(initAppCtx(f));
     }
 
     public static QueryRunner initQueryRunner(File cfg) {
 
-        return initQueryRunner(initAppCtx(new FileSystemResource(cfg)));
+        return initQueryRunner(initAppCtx(cfg));
 
     }
 
-    public static QueryRunner initQueryRunner(String cfg) {
+    //TODO: API - must be uncommented and converted
+    /*public static QueryRunner initQueryRunner(String cfg) {
 
         Resource r = new ClassPathResource(cfg);
 
         return initQueryRunner(initAppCtx(r));
-    }
+    }*/
 
     private static QueryRunner initQueryRunner(GenericApplicationContext ctx) {
 
@@ -105,7 +100,7 @@ public class SpringService {
         return new SpringDataServiceManagerWrapper(mgr, ctx);
     }
 
-    private static GenericApplicationContext initAppCtx(Resource r) {
+    private static GenericApplicationContext initAppCtx(com.wavemaker.tools.io.File r) {
 
         ClassPathResource servicetypes = new ClassPathResource("servicetypes.xml");
 
@@ -116,7 +111,7 @@ public class SpringService {
         xmlReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_NONE);
 
         xmlReader.loadBeanDefinitions(servicetypes);
-        xmlReader.loadBeanDefinitions(r);
+        xmlReader.loadBeanDefinitions(new InputSource(r.getContent().asInputStream()));
 
         ctx.refresh();
 

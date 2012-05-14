@@ -44,6 +44,9 @@ import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -134,7 +137,10 @@ public class ExportDB extends BaseDataModelSetup {
                         ReflectionUtils.rethrowRuntimeException(e);
                     }
                 } else {
-                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
+                    //cftempfix
+                    LocalFileSystem fileSystem = new LocalFileSystem(this.classesDir);
+                    Folder folder = FileSystemFolder.getRoot(fileSystem);
+                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, folder);
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");
@@ -172,7 +178,10 @@ public class ExportDB extends BaseDataModelSetup {
                         ReflectionUtils.rethrowRuntimeException(e);
                     }
                 } else {
-                    update = ResourceClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
+                    //cftempfix
+                    LocalFileSystem fileSystem = new LocalFileSystem(this.classesDir);
+                    Folder folder = FileSystemFolder.getRoot(fileSystem);
+                    update = ResourceClassLoaderUtils.runInClassLoaderContext(t, folder);
                 }
 
                 prepareForExport(this.exportToDatabase);

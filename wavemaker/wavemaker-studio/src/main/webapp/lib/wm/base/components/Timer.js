@@ -95,6 +95,7 @@ dojo.declare("wm.Timer", wm.Component, {
 
 
 wm.Object.extendSchema(wm.Timer, {
+    owner: { group: "common", order: 1, ignore: 1, unwritable: true, options: ["Page", "Application"], doc: 1},
     autoStart: {group: "widgetName", subgroup: "behavior",bindTarget: true},
     delay: {group: "widgetName", subgroup: "behavior",bindTarget: true},
     count: {group: "widgetName", subgroup: "behavior",bindSource: true, ignore: true},

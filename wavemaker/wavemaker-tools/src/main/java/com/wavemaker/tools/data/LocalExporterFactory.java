@@ -18,6 +18,7 @@ import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.Hbm2JavaExporterTask;
 import org.hibernate.tool.ant.Hbm2HbmXmlExporterTask;
 import org.springframework.core.io.Resource;
+import com.wavemaker.tools.io.Folder;
 
 public class LocalExporterFactory implements ExporterFactory {
     private String packageName;
@@ -47,7 +48,7 @@ public class LocalExporterFactory implements ExporterFactory {
     }
 
     @Override
-    public void setDestDir(Resource destDir) {}
+    public void setDestDir(Folder destDir) {}
 
     @Override
     public void setPackageName(String packageName) {
