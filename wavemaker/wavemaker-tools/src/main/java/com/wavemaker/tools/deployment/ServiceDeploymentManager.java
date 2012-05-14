@@ -96,7 +96,7 @@ public class ServiceDeploymentManager {
             stagingProjectDir = IOUtils.createTempDirectory("dplstaging", "dir");
             LocalFileSystem fileSystem = new LocalFileSystem(stagingProjectDir);
             Folder stagingProjectDirFolder = FileSystemFolder.getRoot(fileSystem);
-            projectRoot.copyTo(stagingProjectDirFolder);
+            projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
             prepareForDeployment(mgr, properties);
             return buildWar(getWarFile(), includeEar);
@@ -113,7 +113,7 @@ public class ServiceDeploymentManager {
     public com.wavemaker.tools.io.File getWarFile() {
         Folder projectRoot = getProjectRoot();
         Folder destDir = projectRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
-        String warFileName = projectRoot.getName();
+        String warFileName = projectMgr.getCurrentProject().getProjectName();
         return destDir.getFile(warFileName + ".war");
     }
 
