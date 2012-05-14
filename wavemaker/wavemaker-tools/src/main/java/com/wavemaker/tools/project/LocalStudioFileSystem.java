@@ -53,6 +53,8 @@ import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
     static final String WMHOME_KEY = "wavemakerHome";
+    
+    public static final String DEMO_FOLDER_NAME = "Samples/";
 
     static final String WMHOME_PROP_KEY = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + WMHOME_KEY;
 
@@ -126,12 +128,13 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         }
 
         String location = ConfigurationStore.getPreference(getClass(), DEMOHOME_KEY, null);
+        location = location.endsWith("/") ? location : location + "/";
         Resource demo;
         try {
             if (location != null) {
                 demo = createResource(location);
             } else {
-                demo = getStudioWebAppRoot().createRelative("../Samples");
+                demo = getStudioWebAppRoot().createRelative(DEMO_FOLDER_NAME);
             }
             return demo;
         } catch (IOException ex) {
