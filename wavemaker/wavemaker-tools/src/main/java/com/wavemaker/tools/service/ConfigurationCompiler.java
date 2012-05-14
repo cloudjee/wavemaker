@@ -222,13 +222,13 @@ public class ConfigurationCompiler {
         return getTypesFile(project.getWebAppRootFolder());
     }
 
-    /*@Deprecated
-    public static void generateServices(FileService fileService, File servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
-        // Previously the top service file included imports for service bean spring definitions, since 6.5 all
-        // *.spring.xml files are loaded using classpath scanning so the imports are no londer necessary. For now we
-        // still write an empty file to ensure older projects remain operational.
-        SpringConfigSupport.writeBeans(new Beans(), servicesXml, fileService);
-    }*/
+    /*
+     * @Deprecated public static void generateServices(FileService fileService, File servicesXml, SortedSet<Service>
+     * services) throws JAXBException, IOException { // Previously the top service file included imports for service
+     * bean spring definitions, since 6.5 all // *.spring.xml files are loaded using classpath scanning so the imports
+     * are no londer necessary. For now we // still write an empty file to ensure older projects remain operational.
+     * SpringConfigSupport.writeBeans(new Beans(), servicesXml, fileService); }
+     */
 
     public static void generateServices(File servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
         // Previously the top service file included imports for service bean spring definitions, since 6.5 all
@@ -328,19 +328,14 @@ public class ConfigurationCompiler {
         generateSMDs(currentProject, servicesDir, services);
     }
 
-    //TODO:API - delete this method when it is no longer needed
-    /*@Deprecated
-    public static void generateSMDs(FileService fileService, Resource servicesDir, SortedSet<Service> services) throws IOException,
-        NoSuchMethodException {
-        for (Service service : services) {
-            SMD smd = getSMD(service);
-            Resource smdFile = getSmdFile(servicesDir, service.getId());
-            JSONState js = new JSONState();
-            Writer writer = fileService.getWriter(smdFile);
-            JSONMarshaller.marshal(writer, smd, js, true, true);
-            writer.close();
-        }
-    }*/
+    // TODO:API - delete this method when it is no longer needed
+    /*
+     * @Deprecated public static void generateSMDs(FileService fileService, Resource servicesDir, SortedSet<Service>
+     * services) throws IOException, NoSuchMethodException { for (Service service : services) { SMD smd =
+     * getSMD(service); Resource smdFile = getSmdFile(servicesDir, service.getId()); JSONState js = new JSONState();
+     * Writer writer = fileService.getWriter(smdFile); JSONMarshaller.marshal(writer, smd, js, true, true);
+     * writer.close(); } }
+     */
 
     public static void generateSMDs(FileService fileService, Folder servicesDir, SortedSet<Service> services) throws IOException,
         NoSuchMethodException {
@@ -380,11 +375,11 @@ public class ConfigurationCompiler {
         }
     }
 
-    /*@Deprecated
-    public static void generateManagers(FileService fileService, Resource managersXml, SortedSet<Service> services) throws JAXBException, IOException {
-        Beans beans = getManagers(services);
-        SpringConfigSupport.writeBeans(beans, managersXml, fileService);
-    }*/
+    /*
+     * @Deprecated public static void generateManagers(FileService fileService, Resource managersXml, SortedSet<Service>
+     * services) throws JAXBException, IOException { Beans beans = getManagers(services);
+     * SpringConfigSupport.writeBeans(beans, managersXml, fileService); }
+     */
 
     public static void generateManagers(File managersXml, SortedSet<Service> services) throws JAXBException, IOException {
         Beans beans = getManagers(services);

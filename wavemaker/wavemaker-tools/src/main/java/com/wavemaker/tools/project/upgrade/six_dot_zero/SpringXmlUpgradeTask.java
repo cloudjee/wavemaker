@@ -21,8 +21,8 @@ import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;

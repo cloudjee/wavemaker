@@ -41,8 +41,8 @@ import com.wavemaker.runtime.server.json.JSONUtils;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.Deployments;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
@@ -664,7 +664,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 String s = FileCopyUtils.copyToString(new InputStreamReader(deploymentsResource.getContent().asInputStream()));
                 if (s.length() > 0) {
                     JSON result = JSONUnmarshaller.unmarshal(s);
-                    //cftempfix - deploymentsResource.getDescription()
+                    // cftempfix - deploymentsResource.getDescription()
                     Assert.isTrue(result instanceof JSONObject, deploymentsResource.toString() + " is in an unexpected format.");
                     return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
                 } else {

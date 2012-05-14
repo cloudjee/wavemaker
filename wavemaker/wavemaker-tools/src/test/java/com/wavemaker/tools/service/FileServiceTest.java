@@ -22,16 +22,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
-import com.wavemaker.tools.spring.ComplexReturnBean;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.spring.ComplexReturnBean;
 
 /**
  * @author Matt Small

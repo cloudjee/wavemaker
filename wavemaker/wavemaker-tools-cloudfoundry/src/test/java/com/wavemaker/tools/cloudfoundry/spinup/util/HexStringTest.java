@@ -10,9 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.spinup.util.HexFormatException;
-import com.wavemaker.tools.cloudfoundry.spinup.util.HexString;
-
 /**
  * Tests for {@link HexString}.
  * 

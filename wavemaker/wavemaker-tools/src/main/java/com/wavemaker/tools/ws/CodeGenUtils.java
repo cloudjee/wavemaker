@@ -37,7 +37,7 @@ public class CodeGenUtils {
 
     /**
      * Converts the package name to directory path equivalent.
-     *
+     * 
      * @param baseDir The base directory.
      * @param packageName The Java package name.
      * @return The equivalent Directory for the WSDL's package name.
@@ -46,14 +46,14 @@ public class CodeGenUtils {
         if (packageName == null) {
             return baseDir;
         } else {
-            //return new File(baseDir, packageName.replace('.', File.separatorChar));
+            // return new File(baseDir, packageName.replace('.', File.separatorChar));
             return baseDir.getFolder(packageName.replace('.', File.separatorChar));
         }
     }
 
-     /**
+    /**
      * Converts the package name to directory path equivalent.
-     *
+     * 
      * @param baseDir The base folder.
      * @param packageName The Java package name.
      * @return The equivalent folder for the WSDL's package name.
@@ -62,7 +62,7 @@ public class CodeGenUtils {
         if (packageName == null) {
             return baseDir;
         } else {
-            return baseDir.getFolder(packageName.replace('.', File.separatorChar));
+            return baseDir.getFolder(packageName.replace('.', '/'));
         }
     }
 

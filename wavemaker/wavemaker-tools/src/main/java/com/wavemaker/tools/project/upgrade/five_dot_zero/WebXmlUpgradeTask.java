@@ -40,8 +40,6 @@ public class WebXmlUpgradeTask implements UpgradeTask {
 
     protected static final String WEB_XML_BACKUP = ProjectConstants.WEB_XML + ".4_5_bak";
 
-    private StudioFileSystem filesSystem;
-
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -77,6 +75,5 @@ public class WebXmlUpgradeTask implements UpgradeTask {
     }
 
     public void setFileSystem(StudioFileSystem fileSystem) {
-        this.filesSystem = fileSystem;
     }
 }

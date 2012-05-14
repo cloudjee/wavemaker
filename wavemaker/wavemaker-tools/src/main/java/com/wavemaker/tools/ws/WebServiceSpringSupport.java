@@ -14,22 +14,18 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.FileSystemResource;
-
 import com.wavemaker.runtime.ws.BindingProperties;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.service.DesignServiceManager;
-import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.Property;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * Utility methods for managing web service spring file.
@@ -58,8 +54,7 @@ public class WebServiceSpringSupport {
      * @throws JAXBException
      * @throws IOException
      */
-    public static BindingProperties getBindingProperties(DesignServiceManager designServiceMgr, String serviceId)
-        throws JAXBException, IOException {
+    public static BindingProperties getBindingProperties(DesignServiceManager designServiceMgr, String serviceId) throws JAXBException, IOException {
         Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
         Service service = designServiceMgr.getService(serviceId);
         com.wavemaker.tools.io.File springFile = serviceRuntimeDirectory.getFile(service.getSpringFile());
@@ -102,8 +97,8 @@ public class WebServiceSpringSupport {
      * @throws JAXBException
      * @throws IOException
      */
-    public static void setBindingProperties(DesignServiceManager designServiceMgr, String serviceId,
-        BindingProperties bindingProperties) throws JAXBException, IOException {
+    public static void setBindingProperties(DesignServiceManager designServiceMgr, String serviceId, BindingProperties bindingProperties)
+        throws JAXBException, IOException {
         if (bindingProperties != null) {
             Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
             Service service = designServiceMgr.getService(serviceId);

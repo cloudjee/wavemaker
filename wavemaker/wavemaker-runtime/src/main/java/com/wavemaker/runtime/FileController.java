@@ -97,7 +97,7 @@ public final class FileController extends AbstractController {
             reqPath += ".gz";
         } else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || reqPath.startsWith(WM_BUILD_WM_THEMES_URL)
             || reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || reqPath.equals(WM_BOOT_URL) || reqPath.equals(WM_RUNTIME_LOADER_URL)
-            || reqPath.startsWith(WM_IMAGE_URL) || reqPath.startsWith(WM_STUDIO_BUILD_URL)) { 
+            || reqPath.startsWith(WM_IMAGE_URL) || reqPath.startsWith(WM_STUDIO_BUILD_URL)) {
             addExpiresTag = true;
         } else if (!reqPath.contains(WM_CONFIG_URL)) {
             throw new WMRuntimeException(MessageResource.STUDIO_UNKNOWN_LOCATION, reqPath, request.getRequestURI());
@@ -140,23 +140,23 @@ public final class FileController extends AbstractController {
             if (reqPath.contains(WM_CONFIG_URL)) {
                 String content = IOUtils.toString(is);
                 content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
-                content += "\r\n" + "wm.connectionTimeout = " + serviceResponse.getConnectionTimeout() + ";";
+                content += "\r\n" + "wm.connectionTimeout = " + this.serviceResponse.getConnectionTimeout() + ";";
                 String language = request.getHeader("accept-language");
                 if (language != null && language.length() > 0) {
                     int index = language.indexOf(",");
                     language = index == -1 ? language : language.substring(0, index);
                     content += "\r\n" + "wm.localeString = '" + language + "';";
                 }
-		File bootFile = new File(sendFile.getParent(), "boot.js");
-		if (bootFile.exists()) {
-		    InputStream is2 = new FileInputStream(bootFile);
-		    String bootString = IOUtils.toString(is2);
-		    bootString = bootString.substring(bootString.indexOf("*/") + 2);
-		    content += bootString;
-		    is2.close();
-		} else {
-		    System.out.println("Boot file not found");
-		}
+                File bootFile = new File(sendFile.getParent(), "boot.js");
+                if (bootFile.exists()) {
+                    InputStream is2 = new FileInputStream(bootFile);
+                    String bootString = IOUtils.toString(is2);
+                    bootString = bootString.substring(bootString.indexOf("*/") + 2);
+                    content += bootString;
+                    is2.close();
+                } else {
+                    System.out.println("Boot file not found");
+                }
                 IOUtils.write(content, os);
             } else {
                 IOUtils.copy(is, os);
@@ -207,7 +207,7 @@ public final class FileController extends AbstractController {
     }
 
     public void setServiceResponse(ServiceResponse serviceResponse) {
-        this.serviceResponse = serviceResponse; 
+        this.serviceResponse = serviceResponse;
     }
 
 }

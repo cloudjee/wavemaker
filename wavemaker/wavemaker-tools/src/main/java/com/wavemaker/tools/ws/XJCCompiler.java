@@ -14,22 +14,19 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -45,16 +42,16 @@ import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.sun.tools.xjc.api.SchemaCompiler;
 import com.sun.tools.xjc.api.SpecVersion;
 import com.sun.tools.xjc.api.XJC;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.tools.service.codegen.GenerationException;
-import com.wavemaker.tools.ws.jaxws.SimpleClassNameCollector;
-import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceURL;
 import com.wavemaker.tools.io.filesystem.FileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.service.codegen.GenerationException;
+import com.wavemaker.tools.ws.jaxws.SimpleClassNameCollector;
+import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
 
 /**
  * JAXB binding compiler.
@@ -81,7 +78,7 @@ public class XJCCompiler {
                 Folder folder = FileSystemFolder.getRoot(fileSystem);
                 folder.copyContentsTo(outputDir);
             } else {
-                generateCode.build((File)outputDir.getOriginalResource(), (File)outputDir.getOriginalResource(), null);
+                generateCode.build((File) outputDir.getOriginalResource(), (File) outputDir.getOriginalResource(), null);
             }
         } catch (IOException e) {
             throw new GenerationException(e);
@@ -131,10 +128,11 @@ public class XJCCompiler {
             for (com.wavemaker.tools.io.File file : bindingFiles) {
                 try {
                     InputSource inputSource = new InputSource(file.getContent().asInputStream());
-                    //cftempfix - if binding files are NOT ALWAYS local files (eg. mongo DB file), we may need to correctly implement
-                    //logic for none-local file case.
+                    // cftempfix - if binding files are NOT ALWAYS local files (eg. mongo DB file), we may need to
+                    // correctly implement
+                    // logic for none-local file case.
                     if (file.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-                        File f = (File)file.getOriginalResource();
+                        File f = (File) file.getOriginalResource();
                         inputSource.setSystemId(f.toURI().toString());
                     } else {
                         inputSource.setSystemId(ResourceURL.get(file).toURI().toString());
@@ -143,7 +141,7 @@ public class XJCCompiler {
                 } catch (MalformedURLException e) {
                     throw new GenerationException(e);
                 } catch (URISyntaxException e) {
-                    throw new GenerationException(e);   
+                    throw new GenerationException(e);
                 }
             }
         }

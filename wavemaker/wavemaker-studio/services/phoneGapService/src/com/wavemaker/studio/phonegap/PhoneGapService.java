@@ -22,9 +22,9 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Including.ResourceAttributeFilter;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DownloadableFolder;
 import com.wavemaker.tools.project.Project;
@@ -160,7 +160,7 @@ public class PhoneGapService {
         phoneGapLibFolder.getFolder("build/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
         phoneGapLibFolder.getFolder("build").list(Including.fileNames().ending(".js")).delete();
         phoneGapLibFolder.getFolder("images/boolean/").delete();
-        //phoneGapLibFolder.getFolder("github/touchscroll").delete();
+        // phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
         Folder dojo = phoneGapLibFolder.getFolder("dojo");
         dojo.getFolder("util").delete();
@@ -188,8 +188,8 @@ public class PhoneGapService {
             }
         }
 
-	Folder themes = widget.getFolder("themes");
-	themes.list(Including.resourceNames().notMatching("default")).delete();
+        Folder themes = widget.getFolder("themes");
+        themes.list(Including.resourceNames().notMatching("default")).delete();
     }
 
     private void updatePhonegapFiles(String host, int port, FolderLayout layout, String themeName) {

@@ -15,7 +15,6 @@
 package com.wavemaker.tools.data;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,9 +32,6 @@ import org.hibernate.dialect.OracleDialect;
 import org.hibernate.dialect.PostgreSQLDialect;
 import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.tool.ant.ExporterTask;
-import org.hibernate.tool.ant.GenericExporterTask;
-import org.hibernate.tool.hbm2x.Exporter;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
@@ -43,19 +39,19 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.dialect.MySQLDialect;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.JDBCUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
-import com.wavemaker.tools.compiler.ProjectCompiler;
-import com.wavemaker.tools.project.StudioFileSystem;
-import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * @author Simon Toens
@@ -142,7 +138,7 @@ public abstract class BaseDataModelSetup {
 
     private static final String REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "revengNamingStrategy";
 
-     protected ProjectManager projectManager;
+    protected ProjectManager projectManager;
 
     private final String DEFAULT_FILTER = ".*";
 
@@ -188,7 +184,7 @@ public abstract class BaseDataModelSetup {
                 this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
             }
         } catch (WMRuntimeException ex) {
-        }        
+        }
     }
 
     private final WMHibernateToolTask parentTask = new WMHibernateToolTask();
@@ -248,10 +244,10 @@ public abstract class BaseDataModelSetup {
     public void setDestDir(Folder destdir) {
         this.destdir = destdir;
         if (this.destdir.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-            File f = (File)this.destdir.getOriginalResource();
+            File f = (File) this.destdir.getOriginalResource();
             getParentTask().setDestDir(f);
         } else {
-            exporterFactory.setDestDir(destdir);    
+            this.exporterFactory.setDestDir(destdir);
         }
     }
 
@@ -824,10 +820,10 @@ public abstract class BaseDataModelSetup {
 
     protected void checkDestdir(Collection<String> requiredProperties) {
         if (this.destdir == null) {
-            //On CF, it makes more sense that the property should contain a path relative from the project root
-            //rather than an absolute path.
+            // On CF, it makes more sense that the property should contain a path relative from the project root
+            // rather than an absolute path.
             String s = this.properties.getProperty(DESTDIR_SYSTEM_PROPERTY);
-            Folder projRoot = projectManager.getCurrentProject().getRootFolder();
+            Folder projRoot = this.projectManager.getCurrentProject().getRootFolder();
             setDestDir(projRoot.getFolder(s));
         }
 
@@ -875,14 +871,14 @@ public abstract class BaseDataModelSetup {
 
     protected ExporterTask getConfigurationExporter() {
 
-        exporterFactory.setPackageName(BaseDataModelSetup.this.packageName);
-        exporterFactory.setDataPackage(BaseDataModelSetup.this.dataPackage);
-        exporterFactory.setClassName(BaseDataModelSetup.this.className);
-        exporterFactory.setUseIndividualCRUDOperations(getUseIndividualCRUDOperations());
-        exporterFactory.setImpersonateUser(BaseDataModelSetup.this.impersonateUser);
-        exporterFactory.setActiveDirectoryDomain(BaseDataModelSetup.this.activeDirectoryDomain);
-        
-        return exporterFactory.getExporter("springConfig", getParentTask(), this.serviceName);
+        this.exporterFactory.setPackageName(BaseDataModelSetup.this.packageName);
+        this.exporterFactory.setDataPackage(BaseDataModelSetup.this.dataPackage);
+        this.exporterFactory.setClassName(BaseDataModelSetup.this.className);
+        this.exporterFactory.setUseIndividualCRUDOperations(getUseIndividualCRUDOperations());
+        this.exporterFactory.setImpersonateUser(BaseDataModelSetup.this.impersonateUser);
+        this.exporterFactory.setActiveDirectoryDomain(BaseDataModelSetup.this.activeDirectoryDomain);
+
+        return this.exporterFactory.getExporter("springConfig", getParentTask(), this.serviceName);
     }
 
     protected boolean getUseIndividualCRUDOperations() {

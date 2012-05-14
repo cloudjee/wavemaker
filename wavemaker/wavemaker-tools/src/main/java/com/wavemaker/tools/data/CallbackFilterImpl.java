@@ -11,14 +11,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
-
-
-import net.sf.cglib.proxy.CallbackFilter;
 
 import java.lang.reflect.Method;
 
+import net.sf.cglib.proxy.CallbackFilter;
+
 public class CallbackFilterImpl implements CallbackFilter {
+
     @Override
     public int accept(Method method) {
         return 0;
