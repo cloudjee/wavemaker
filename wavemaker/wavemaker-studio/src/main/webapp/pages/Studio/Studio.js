@@ -2042,5 +2042,6 @@ dojo.declare("wm.studio.DialogButtonPanel", wm.Panel, {
     layoutKind: "left-to-right",
     horizontalAlign: "right",
     verticalAlign: "justified",
-    height: "35px"
+    height: "35px",
+    width: "100%"
 });

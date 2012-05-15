@@ -18,11 +18,11 @@ ConfirmSaveDialog.widgets = {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 	    html: ["wm.Html", {width: "100%", height: "100%", html: "You have unsaved changes; do you want to save before continuing?", autoSizeHeight: true, autoScroll: false }],
 	}],
-            buttonPanel: ["wm.studio.DialogButtonPanel", {},{}, {
+            buttonBar: ["wm.studio.DialogButtonPanel", {},{}, {
 		dontSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Don't Save","width":"100px"}, {onclick: "dontSaveClick"}],
-		spacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
-	        cancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel"}, {onclick: "cancelClick"}],
-	        saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save"}, {onclick: "saveClick"}]
+		spacer1: ["wm.Spacer", {"width":"100%"}, {}],
+	        cancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel", width: "80px"}, {onclick: "cancelClick"}],
+	        saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save", width: "80px"}, {onclick: "saveClick"}]
 	    }]
 	}]
 }
