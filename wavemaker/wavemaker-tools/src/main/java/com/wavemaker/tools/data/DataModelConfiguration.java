@@ -72,6 +72,7 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.exception.ResourceException;
 
 /**
  * Manages a single Hibernate Data Model.
@@ -1606,9 +1607,18 @@ public class DataModelConfiguration {
             String original = null;
             try {
                 original = this.fileService.readFile(path);
-            } catch (FileNotFoundException ex) {
+            //cftempfix - Different exceptions are returned fro local file system and CF file system (ResourceException and
+            //IllegalStateException).  So I am catching Exception right now but this should be fixed when the API is fixed to
+            //return a consistent exception.
+            /*} catch (FileNotFoundException ex) {
                 // if the original file doesn't exist (yet), then
                 // we can't back it up
+                return;
+            } catch (ResourceException ex) {
+                // if the original file doesn't exist (yet), then
+                // we can't back it up
+                return;*/
+            }  catch (Exception ex) {
                 return;
             }
             String backupPath = path + BACKUP_SUFFIX;

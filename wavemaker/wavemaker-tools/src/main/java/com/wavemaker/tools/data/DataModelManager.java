@@ -578,19 +578,16 @@ public class DataModelManager {
 
         DataModelConfiguration mgr = getDataModel(serviceId);
 
-        File serviceDir = null;
-        try {
-            serviceDir = getServicePath(serviceId).getFile();
-        } catch (IOException ex) {
-        }
+        Folder serviceDir = null;
+        serviceDir = getServicePath(serviceId);
 
         List<String> mappingPaths = mgr.getMappings();
         if (mappingPaths == null || mappingPaths.isEmpty()) {
             throw new ConfigurationException("No entities to export");
         }
         String path = mappingPaths.iterator().next();
-        File hbmFiles = new File(serviceDir, new File(path).getParent());
-        File classesDir = (File)this.projectManager.getCurrentProject().getClassOutputFolder().getOriginalResource();
+        Folder hbmFiles = serviceDir.getFile(path).getParent();
+        Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
         ExportDB exporter = new ExportDB();
         exporter.setHbmFilesDir(hbmFiles);
@@ -689,8 +686,8 @@ public class DataModelManager {
         return a;
     }
 
-    public org.springframework.core.io.Resource getServicePath(String serviceId) {
-        return this.serviceManager.getServiceRuntimeDirectory(serviceId);
+    public Folder getServicePath(String serviceId) {
+        return this.serviceManager.getServiceRuntimeFolder(serviceId);
     }
 
     public Folder getServicePathFolder(String serviceId) {

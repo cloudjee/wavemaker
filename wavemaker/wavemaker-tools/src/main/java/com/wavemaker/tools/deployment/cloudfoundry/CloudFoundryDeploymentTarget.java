@@ -81,13 +81,13 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private static final String SERVICE_TYPE = "database";
 
-    private static final String MYSQL_SERVICE_VENDOR = "mysql";
+    public static final String MYSQL_SERVICE_VENDOR = "mysql";
 
-    private static final String MYSQL_SERVICE_VERSION = "5.1";
+    public static final String MYSQL_SERVICE_VERSION = "5.1";
 
-    private static final String POSTGRES_SERVICE_VENDOR = "postgresql";
+    public static final String POSTGRES_SERVICE_VENDOR = "postgresql";
 
-    private static final String POSTGRES_SERVICE_VERSION = "9.0";
+    public static final String POSTGRES_SERVICE_VERSION = "9.0";
 
     private static final String SERVICE_TIER = "free";
 
@@ -369,12 +369,20 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
      * @return
      */
     private CloudService createMySqlService(DeploymentDB db) {
+        return createMySqlService(db.getDbName());
+    }
+
+    /**
+     * @param dbName
+     * @return
+     */
+    public static CloudService createMySqlService(String dbName) {
         CloudService mysql = new CloudService();
         mysql.setType(SERVICE_TYPE);
         mysql.setVendor(MYSQL_SERVICE_VENDOR);
         mysql.setTier(SERVICE_TIER);
         mysql.setVersion(MYSQL_SERVICE_VERSION);
-        mysql.setName(db.getDbName());
+        mysql.setName(dbName);
         return mysql;
     }
 
@@ -383,12 +391,20 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
      * @return
      */
     public static CloudService createPostgresqlService(DeploymentDB db) {
+        return createPostgresqlService(db.getDbName());
+    }
+
+    /**
+     * @param dbName
+     * @return
+     */
+    public static CloudService createPostgresqlService(String dbName) {
         CloudService postgresql = new CloudService();
         postgresql.setType(SERVICE_TYPE);
         postgresql.setVendor(POSTGRES_SERVICE_VENDOR);
         postgresql.setTier(SERVICE_TIER);
         postgresql.setVersion(POSTGRES_SERVICE_VERSION);
-        postgresql.setName(db.getDbName());
+        postgresql.setName(dbName);
         return postgresql;
     }
 
