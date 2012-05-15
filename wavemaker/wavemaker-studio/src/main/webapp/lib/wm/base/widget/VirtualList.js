@@ -17,10 +17,15 @@ dojo.provide("wm.base.widget.VirtualList");
 dojo.declare("wm.VirtualListItem", null, {
 	selected: false,
 	className: 'wmlist-item',
-	constructor: function(inList, inText, inImage) {
+        constructor: function(inList, inText, inImage, inDomNode) {
 		this.list = inList;
+	        this.index = this.list._formatIndex;
 		this.connections = [];
+	    if (inDomNode) {
+		this.domNode = inDomNode;
+	    } else {
 		this.create();
+	    }
 		this.setContent(inText, inImage);
 	},
 	destroy: function() {
@@ -50,37 +55,36 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.connections.push(dojo.connect(this.domNode,'onmouseup', this, "touchEnd"));
 	    } else {
 		this.connections.push(dojo.connect(this.domNode,'ontouchstart', this, "touchStart"));
-		this.connections.push(dojo.connect(this.domNode,'ontouchmove', this, "touchMove"));
-		this.connections.push(dojo.connect(this.domNode,'ontouchend', this, "touchEnd"));
+		//this.connections.push(dojo.connect(this.domNode,'ontouchmove', this, "touchMove"));
+		//this.connections.push(dojo.connect(this.domNode,'ontouchend', this, "touchEnd"));
 	    }
 	},
         touchStart: function(evt) {
-
-	    if (this.list._ontouchstart) return;
+	    if (this.list._touchedItem) return;
 	    if (!this.selected) {
 		this._selectionIndicatorOnly = true;
 		this.select();
 		this.selected = false;
-		this.list._ontouchstart =  this;
+		this.list._touchedItem =  this;
 		wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
 	    }
 
 
 	},
         touchMove: function(evt) {
-    if (this.list._ontouchstart == this) {
-	wm.cancelJob(this.list.getRuntimeId()+"_"+this.index);
-	delete this.list._ontouchstart;
-	if(this._selectionIndicatorOnly){
-	    delete this._selectionIndicatorOnly;
-	    this.deselect();
-	}
-    }
+	    if (this.list._touchedItem == this) {
+		wm.cancelJob(this.list.getRuntimeId()+"_"+this.index);
+		delete this.list._touchedItem;
+		if(this._selectionIndicatorOnly){
+		    delete this._selectionIndicatorOnly;
+		    this.deselect();
+		}
+	    }
 	},
     touchEnd: function(evt) {
 	 wm.cancelJob(this.list.getRuntimeId() + "_" + this.index);
-	if (this.list._ontouchstart == this) {
-	    this.list._ontouchstart = null;
+	if (this.list._touchedItem == this) {
+	    this.list._touchedItem = null;
 	    if (!evt) {
 		evt = {target: this.domNode};
 	    } 
@@ -113,7 +117,6 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.list.ondblclick(e, this);
 	},
 	select: function() {
-	    console.log("SELECT:" + new Date().getTime() + ", " + dojo.indexOf(this.list.items, this));
 	    this.selected = true;
 	    dojo.addClass(this.domNode, this.className +'-selected');
 	},
@@ -148,7 +151,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this.connect(this, "onSelect", this, "onselect"); // changed from onselect to onSelect for grid compatibility
 	    if (this.ondeselect)
 		this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
-	    if (app._touchEnabled) {
+	    /* Sadly, IOS 5 can scroll without the touch scroller, but there are no events nor dom properties we can use during flick scrolling so its a no-go, even if native scrolling works for panels where we don't need special handling of flicking (i.e. dynamic row generation/deletion) */
+
+/*
+	    if (app._touchEnabled || wm.isIOS) {
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll"+ (djConfig.isDebug ? "" : "min"));
 		this._listTouchScroll = new TouchScroll(this.listNode, {elastic:true,owner: this});
 		this.listNode = this._listTouchScroll.scrollers.inner;
@@ -157,7 +163,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this._listTouchScroll.scrollers.outer.style.top = "0px";
 		this.connect(this._listTouchScroll, "setupScroller", this, "postSetupScroller");
 	    }
-
+	    */
 	},
     postSetupScroller: function() {
 	var touchScrollOuter = this._listTouchScroll.scroller ? this._listTouchScroll.scroller.outer : null;
@@ -253,28 +259,34 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		return new wm.VirtualListItem(this, inContent);
 	},
 	addItem: function(inContent, inIndex) {
-		var li = this.createItem(inContent), ln = this.listNode;
-		dojo.setSelectable(li.domNode, false);
+	    var item = this.createItem(inContent);
+	    var parent = this.listNode;
+		dojo.setSelectable(item.domNode, false);
 		if (inIndex!= undefined) {
-			this.items.splice(inIndex, 0, li);
-			li.index = inIndex;
+			this.items.splice(inIndex, 0, item);
+			item.index = inIndex;
 			this.selection.splice(inIndex, 0, false);
 			this.updateItemIndexes(inIndex+1, 1);
-			var sibling = ln.childNodes[inIndex];
-			if (sibling)
-				ln.insertBefore(li.domNode, ln.childNodes[inIndex]);
-			else
-				ln.appendChild(li.domNode);
+
+		    var sibling = parent.childNodes[inIndex];
+	            if (sibling) {
+			parent.insertBefore(item.domNode, parent.childNodes[inIndex]);
+		    } else {
+			parent.appendChild(item.domNode);
+		    }
 		} else {
-			this.items.push(li);
-			li.index = this.items.length-1;
-			ln.appendChild(li.domNode);
+		    this.items.push(item);
+		    item.index = this.items.length-1;
+		    parent.appendChild(item.domNode);
 		}
+	    return item;
 	},
 	removeItem: function(inIndex) {
 		var li = this.getItem(inIndex);
 		if (li) {
+		    if (li.domNode && li.domNode.parentNode) {
 			this.listNode.removeChild(li.domNode);
+		    }
 			this.items.splice(inIndex, 1);
 			this.selection.splice(inIndex, 1);
 			this.updateItemIndexes(inIndex, -1);
@@ -282,8 +294,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		}
 	},
 	updateItemIndexes: function(inStart, inDelta) {
-		for (var i= inStart, l=this.getCount(), li; i<l&&(li=this.items[i]); i++)
-			li.index += inDelta;
+	    for (var i= inStart, l=this.getCount(), li; i<l&&(li=this.items[i]); i++) {
+		li.index += inDelta;
+	    }
 	},
 	removeItems: function(inIndexes) {
 		for (var i=inIndexes.length, index; ((index=inIndexes[i])!= undefined); i--)
@@ -379,7 +392,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	},
 	deselectAll: function(ignoreSelectedItem) {
 		dojo.forEach(this.items, function(i) {
+		    if (i) {
 			i.deselect();
+		    }
 		});
 	        var count = this.selection ? this.selection.length : 0;
 		this.selection = [];

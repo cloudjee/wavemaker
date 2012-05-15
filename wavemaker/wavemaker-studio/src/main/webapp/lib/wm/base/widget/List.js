@@ -12,6 +12,11 @@
  *  limitations under the License.
  */
 
+/* TODO:
+ * 1. When list size changes, recalc list item heights
+ * 2. using clientHeight may fail when there is margin, padding and border!
+ */
+
 dojo.provide("wm.base.widget.List");
 dojo.require("wm.base.widget.VirtualList");
 dojo.require("wm.base.widget.Table.builder");
@@ -20,8 +25,12 @@ dojo.require('wm.base.lib.data');
 // Data; List: a list with a model
 dojo.declare("wm.ListItem", wm.VirtualListItem, {
 	create: function() {
-		this.inherited(arguments);
+	    this.inherited(arguments);
+	    if (!this.domNode.id) {
 		dojo.addClass(this.domNode, 'wmlist-item');
+		this.rowId = this.list.nextRowId++;
+		this.domNode.id = this.list.getRuntimeId() + "_ITEM_" + this.rowId;
+	    }
 	},
 
 	format: function(inData, inIndex) {
@@ -41,7 +50,7 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 	update: function() {
 	    var html = this.format(this.getData(), this.index);
 		this.domNode.innerHTML = html;
-	},
+	},   
 	getColumnFromNode: function(inNode) {
 		if (inNode) {
 			while (inNode.tagName != "TD")
@@ -71,7 +80,9 @@ wm.Object.extendSchema(wm.ListItem, {
     getData: {group: "method", returns: "Object"}
 });
 
-dojo.declare("wm.List", wm.VirtualList, {
+dojo.declare("wm.List", wm.VirtualList, {    
+    renderVisibleRowsOnly: true,
+    nextRowId: 0,
     query: {},
     width:'100%',
     height:'200px',
@@ -88,6 +99,14 @@ dojo.declare("wm.List", wm.VirtualList, {
         classNames: "wmlist",
     columns: "",
     _columnsHash: "",
+    /* TODO: Replace iterating over thousands of items with a hash lookup, also need to return the item index which is what is more often needed */
+    getItemForNode: function(inRowNode) {
+	var index = wm.Array.indexOf(this.items, inRowNode.id.replace(/^.*_/,""), function(item, id) {
+	    return item && item.rowId == id;
+	});
+	if (index == -1) return null;
+	return this.items[index];
+    },
     deleteItem: function(inItem) {
 	var index = this.inherited(arguments);
 	dojo.query(".wmlist-item.Odd",this.domNode).removeClass("Odd");
@@ -172,6 +191,15 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.headerVisible = false;
 	    }
 		this.inherited(arguments);
+
+	    var spacerNodeTop = this.spacerNodeTop = document.createElement('div');
+	    spacerNodeTop.className = "wmlist-spacer";
+	    this.listNode.appendChild(spacerNodeTop);
+
+	    var spacerNodeBottom = this.spacerNodeBottom = document.createElement('div');
+	    spacerNodeBottom.className = "wmlist-spacer";
+	    this.listNode.appendChild(spacerNodeBottom);
+
 		this.createSelectedItem();
 		this.createBuilder();
 		if (!this.columns && this.columnWidths && this.dataFields.split(",").length != this.columnWidths.split(",").length) {
@@ -184,8 +212,68 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
         postInit: function() {
 	    this.inherited(arguments);
-	    this.connect(this.listNode, "onscroll", this, "_onscroll");
+	    if (this.renderVisibleRowsOnly) {
+		this.connect(this.listNode, "onscroll", this, "_onScroll");
+		if (wm.isFakeMobile) {
+		    this.connect(this.domNode,'onmousedown', this, "_ontouchstart");
+		} else if (wm.isMobile) {
+		    this.connect(this.listNode, "ontouchstart", this, "_ontouchstart");
+		    this.connect(this.listNode, "ontouchmove", this, "_ontouchmove");
+		    this.connect(this.listNode, "ontouchend", this, "_ontouchend");
+		}
+	    }
 	},
+    _ontouchstart: function(e) {
+	if (this._touchY && this._touchY.animationId) {
+	    window.clearInterval(this._touchY.animationId);
+	}
+	this._touchY = {y: e.touches ? e.touches[0].clientY : e.y,
+			time: new Date().getTime()};
+	if (wm.isFakeMobile) {
+	    this.connect(this.domNode,'onmousemove', this, "_ontouchmove");
+	    this.connect(this.domNode,'onmouseup', this, "_ontouchend");
+	}
+	//dojo.stopEvent(e);
+    },
+    _ontouchmove: function(e) {
+	if (this._touchedItem) this._touchedItem.touchMove();
+	var y =   e.touches ? e.touches[0].clientY : e.y;
+	var delta = this._touchY.y - y;
+	var time = new Date().getTime();
+	var deltaTime = time - this._touchY.time;
+	var scrollTop = this.listNode.scrollTop;
+	var newScrollTop = scrollTop + delta;
+	if (newScrollTop < 0) {
+	    newScrollTop = 0;
+	} else if (newScrollTop > this.listNode.scrollHeight) {
+	    newScrollTop =  this.listNode.scrollHeight;
+	}
+	this.listNode.scrollTop = newScrollTop;
+	this._touchY = {y: y,
+			velocity: delta / deltaTime,
+			time: new Date().getTime()};
+	dojo.stopEvent(e);
+    },
+    _ontouchend: function(e) { 
+	if (this._touchedItem) this._touchedItem.touchEnd();
+	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
+	    this._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
+	}
+	dojo.stopEvent(e);
+	if (wm.isFakeMobile) {
+	    this.disconnectEvent("onmousemove");
+	    this.disconnectEvent("onmouseup");
+	}
+    },
+    _onAnimateScroll: function() {
+	this._touchY.velocity *= 0.9;
+	if (this._touchY.velocity == Infinity || Math.abs(this._touchY.velocity) < 0.01) {
+	    window.clearInterval(this._touchY.animationId);
+	    delete this._touchY.animationId;
+	    return;
+	}
+	this.listNode.scrollTop += Math.min(this._touchY.velocity * 50, this.listNode.clientHeight); // velocity is px per ms; 50ms is our animation interval
+    },
 	createSelectedItem: function() {
 	         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
 		 this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
@@ -197,8 +285,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.builder.getCellClass = dojo.hitch(this, 'getCellClass');
 
 	},
-	createItem: function(inContent) {
-		return new wm.ListItem(this, inContent);
+        createItem: function(inContent, optionalDomNode) {
+	    return new wm.ListItem(this, inContent, null,optionalDomNode);
 	},
 	getEmptySelection: function() {
 	    return !this.hasSelection();
@@ -419,6 +507,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    _onShowParent: function() {
 		if (this._renderDojoObjSkipped && !this._headerRendered) {
 		    wm.onidle(this, "_render");
+		} else if (this.spacerNodeTop.clientHeight) {
+		    this.listNode.scrollTop = this.spacerNodeTop.clientHeight;
 		}
 	    },
     setShowing: function(inShowing) {
@@ -461,6 +551,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		var max = Math.min(i+interval,this.getDataItemCount());
 		for (;i < max; i++) {
 		  this.addItem(this.getItemData(i), i);
+		    this._formatIndex = null;
 		}
 		if (i < this.getDataItemCount()) {
 		    wm.onidle(this, function() {
@@ -504,8 +595,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.renderHeader();*/
 
 	},
-    maxRenderedRows: 50,
 	renderData: function(inData) {
+	    var maxRows = wm.device == "phone" ? this.maxRenderedRowsPhone : this.maxRenderedRows;
 	    if (this.selectedItem.type) {
 		var selectedData = this.selectedItem.getData();
 	    }
@@ -518,20 +609,27 @@ dojo.declare("wm.List", wm.VirtualList, {
 		return;
 
 	    this.renderHeader();
- 
-	    var totalCount = this.getDataItemCount();
-	    var count = Math.min(this.maxRenderedRows,totalCount);
-	    for (var i = 0; i < count; i++) {
-		this.addItem(this.getItemData(i), i);
-	    }
-	    this._renderedItems = {start: 0,
-				   end: count};
-		dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
-		this.reflow();
 
-		if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
-		    wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+
+	    this.spacerNodeBottom.style.height = "0px";
+	    this.spacerNodeTop.style.height = "0px";
+
+	    this._scrollDirection = "down";
+	    if (this.renderVisibleRowsOnly) {
+		this.scrollDownAddItems(0);
+		this.avgHeight = this.getAverageItemHeight();
+		this.updateBottomSpacerHeight();
+	    } else {
+		var totalCount = this.getDataItemCount();
+		for (var i = 0; i < totalCount; i++) {
+		    this.addItem(this.getItemData(i), i);
 		}
+	    }
+	    this.reflow();
+
+	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
+		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+	    }
 
 		/*
 		  if (this.columns && this.deleteColumn) {
@@ -550,21 +648,442 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.onRenderData();
 
 	},
-    _onscroll: function() {
-	if ( this.listNode.scrollHeight - this.listNode.scrollTop - this.listNode.clientHeight  < 40) {
-	    var totalCount = this.getDataItemCount();
-	    
-	    if (this._renderedItems.end < totalCount - 1) {
-		var maxSize = this._renderedItems.end + this.maxRenderedRows;
-		var count = Math.min(maxSize,totalCount);
-		for (var i = this._renderedItems.end; i < count; i++) {
+	_renderItem: function(i) {
+	    if (this.items[i]) {
+		    if (!this.items[i].domNode.parentNode) {
+			//console.log("REINSERT " + i);
+			var parent = this.listNode;
+			var sibling = this.findNextSiblingNode(i);
+			parent.insertBefore(this.items[i].domNode,sibling);
+			if (this._isScrolling) {
+			    if (this._scrollDirection == "down") {
+				this.updateBottomSpacerHeight();
+			    } else {
+				this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.getAverageItemHeight()) + "px";
+			    }
+			}
+		    }
+		} else {
+		    /* Its a spacer node, destroy the spacer and generate the real item */
+		    var hadSpacer = false;
+		    this._formatIndex = i;
 		    this.addItem(this.getItemData(i), i);
+		    this._formatIndex = null;
+		    if (this._isScrolling) {
+			if (this._scrollDirection == "down") {
+			    this.updateBottomSpacerHeight();
+			} else if (!hadSpacer) {
+			    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].height) + "px";
+			}
+		    }
 		}
-		dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
-		this._renderedItems = {start: 0,
-				       end: count};
+    },
+    getNodeFromItem: function(inItem) {
+	if (inItem) {
+	    return inItem.domNode;
+	} else {
+	    return null;
+	}
+    },
+    findNextSiblingNode: function(inIndex) {
+	var parent = this.listNode;
+	if (inIndex == 0) {
+	    return parent.childNodes[1];
+	} 
+ 	if (this.items[inIndex-1]) {
+	    var node = this.getNodeFromItem(this.items[inIndex-1]);
+	    if (node.parentNode) {
+		    return parent.childNodes[dojo.indexOf(parent.childNodes, node)+1];
 	    }
 	}
+ 	if (this.items[inIndex+1]) {
+	    var node = this.getNodeFromItem(this.items[inIndex+1]);
+		if (node.parentNode) {
+		    return node;
+		}
+	}
+	for (var i = inIndex-2; i >= 0; i--) {
+	    if (this.items[i]) {
+	    var node = this.getNodeFromItem(this.items[i]);
+	    if (node.parentNode) {
+		return parent.childNodes[dojo.indexOf(parent.childNodes, node)+1];
+	    }
+	    }
+	}
+        return parent.childNodes[1];
+    },
+    addItem: function(inContent, inIndex, optionalDomNode) {
+	var item = this.createItem(inContent, optionalDomNode);
+	    var parent = this.listNode;
+	    dojo.setSelectable(item.domNode, false);
+	    if (inIndex!= undefined) {
+		this.items[inIndex] = item;
+		item.index = inIndex;
+		var sibling = this.findNextSiblingNode(inIndex);
+		if (sibling) {
+		    parent.insertBefore(item.domNode, sibling);
+		} else {
+		    parent.insertBefore(item.domNode, this.spacerNodeBottom);
+		}
+	    } else {
+		this.items.push(item);
+		item.index = this.items.length-1;
+		var sibling = (this.items.length == inIndex+1) ? this.spacerNodeBottom : parent.childNodes[inIndex+1]; // +1 to get past the spacerNode
+		parent.insertBefore(item.domNode, sibling);
+	    }
+
+	    return item;
+    },
+    addSpacer: function(inIndex, avgItemHeight) {
+	var spacerNode = document.createElement('div');
+	spacerNode.className = "wmlist-spacer";
+	spacerNode.style.height = avgItemHeight + "px";
+	var sibling = this.listNode.childNodes[inIndex+1]; // +1 to get past the spacerNode
+	this.listNode.insertBefore(spacerNode, sibling);
+	this.items[inIndex] = spacerNode;
+    },
+        addVisibleItems: function(startAddingFrom) {
+	    //console.log("Add Visible Items:" + this._scrollDirection);
+	    var parent = this.listNode;
+	    var totalCount = this.getDataItemCount();
+	    if (totalCount == 0) return;
+
+	    var scrollTop = this.getScrollTop();
+	    var targetHeight = this.getListNodeHeight() + scrollTop; // basically the height of our widget, minus the height of our header
+
+	    var avgItemHeight = this.avgHeight = this.getAverageItemHeight();
+	    if (startAddingFrom === undefined) {
+		/* Skip through our list to the item that our guestimate says should be at scrollTop.
+		   We'll subtract 10 from that both because its a guestimate, and because I want to pregenerate
+		   a few rows in case the user scrolls up
+		*/
+		startAddingFrom = Math.floor(scrollTop/avgItemHeight);
+		startAddingFrom = Math.max(0,startAddingFrom-10);
+		startAddingFrom = Math.min(startAddingFrom, totalCount);
+
+	    }
+	    /* Find any ungenerated items prior to startAddingFrom, and generate a placeholder */
+
+	    if (this._scrollDirection == "down") {
+		for (var i = 0; i < startAddingFrom; i++) {
+
+		    /* TODO: Reuse this single spacer on all of the items siblings */
+		    if (!this.items[i]) {
+			this.addSpacer(i,avgItemHeight);
+			currentHeight += avgItemHeight;
+		    }
+		}
+	    } else {
+		// figure out how many items we've skipped and adjust the topSpacer accordingly
+		var firstItemNode = parent.childNodes[1];
+		var firstItemBeforeAdding = this.getItemForNode(firstItemNode);
+	    }
+
+	    /* Keep adding items/rows until the rows are below the bottom of the list's viewport */
+	    var currentHeight = targetHeight-1; // just force currentHeight < targetHeight
+	    for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
+		this._renderItem(i);
+		if (!this.items[i]) {
+		    this._renderItem(i);
+		}
+		currentHeight = this.items[i].domNode.offsetTop + this.items[i].domNode.clientHeight;
+	    }
+	
+	    
+	    /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling */
+	    var extraTenMax = i + 10;
+	    for (; i < totalCount && i < extraTenMax; i++) {
+		this._renderItem(i);
+	    }
+
+	    this.addOddClasses();
+	},
+    updateTopSpacerHeight: function() {
+	var firstRow = this.listNode.childNodes[1];
+	if (!firstRow) {
+	    this.spacerNodeTop.style.height = "0px";
+	} else {
+	    var item = this.getItemForNode(firstRow);
+	    var indexOfItem = dojo.indexOf(this.items,item);
+	    var preferredHeight = indexOfItem * this.getAverageItemHeight();
+	    this.spacerNodeTop.style.height = preferredHeight + "px";
+	}
+    },
+    updateBottomSpacerHeight: function() {
+	var totalCount = this.getDataItemCount();
+
+	// find the last item that is rendered
+	var rows = this.listNode.childNodes;
+	if (rows <= 2) {
+	    this.spacerNodeBottom.style.height = "0px";
+	    return;
+	}
+	var lastRow = rows[rows.length-2];
+	var lastItem = this.getItemForNode(lastRow);
+	var lastIndex = dojo.indexOf(this.items, lastItem);
+	var unshownCount = totalCount - lastIndex - 1;
+
+	if (unshownCount > 0) {
+	    this.spacerNodeBottom.style.height = (unshownCount * this.avgHeight) + "px";
+	} else {
+	    this.spacerNodeBottom.style.height = "0px";
+	}
+    },
+    getListNodeHeight: function() {
+	if (this._listTouchScroll) {
+	    return this._listTouchScroll.scrollers.outer.clientHeight;
+	} else {
+	    return this.listNode.clientHeight;
+	}
+    },
+    getScrollTop: function() {
+	if (this._listTouchScroll) {
+	    var listNode = this._listTouchScroll.scrollers.outer;
+	    var matches = listNode.style.WebkitTransform.match(/,\s*-?(\d+)/);
+	    if (matches) {
+		return parseInt(matches[1]);
+	    } else {
+		return 0;
+	    }
+	} else {
+	    var listNode = this.listNode;
+	    return listNode.scrollTop;
+	}
+    
+    },
+    updateAverageItemHeight: function() {
+	var h = 0;
+	var count = 0;
+	var rows = this.listNode.childNodes;
+	for (var i = 1; i < rows.length - 2; i++) {
+	    h += rows[i].clientHeight;
+	}
+	if (h > 0) {
+	    this.avgHeight = h/(rows.length-3);
+	}
+	return this.avgHeight;
+
+    },
+    getAverageItemHeight: function() {
+	return this.avgHeight;
+    },
+    _onScroll: function(direction, doCleanup) {
+	try {
+	    // sometimes the last scroll event causes scrollTop to change, triggering a new onScroll event
+	    // and causes infinite loop
+	    if (this._lastScrollTime && ( new Date().getTime() - this._lastScrollTime) < 10) {
+		//app.toastWarning("Too Soon:" + this._lastScrollTime);
+		return;
+	    }
+	    this._isScrolling = true;
+	    var scrollTop = this.getScrollTop();
+
+	    if (this._lastScrollTop === undefined || this._lastScrollTop < scrollTop) {
+		this._scrollDirection = "down";
+		this.scrollDownRemoveItems();
+		this.scrollDownAddItems();
+	    } 
+
+	    /* Else if our spacer has scrolled back into view, render older rows */
+	    else {
+
+		this._scrollDirection = "up";
+		this.scrollUpRemoveItems();
+		this.scrollUpAddItems();
+	    }
+	} catch(e) {}
+	this._lastScrollTop = scrollTop;
+	this._lastScrollTime = new Date().getTime();
+	//app.toastSuccess("ScrollTop UPDATING3: " + scrollTop + "; LAST: " + this._lastScrollTop);
+	this._isScrolling = false;	
+	if (!doCleanup) {
+	    wm.job(this.getRuntimeId() + ".testScrollTop", 1000, this, "_testScrollTop");
+	}
+    },
+    _testScrollTop: function() {
+	this._onScroll(null, true);
+    },
+
+    /* 1. Once we generate an item, that item stays in the items array.  
+       1a. Never destroy its node once generated, switch from showing/hiding it as it scrolls in/out of view
+       1b. Each row knows if it should be shown or not
+       2. List knows if/when an item has been skipped and can insert items into the middle
+       3. List should have some way to narrow down calculations to just those rows that have been scrolled out of view and into view
+          and ignore all other rows
+	  */
+
+    scrollDownAddItems: function(startAddingFrom) {
+	var avgItemHeight = 0;
+	var parent = this.listNode;
+	var totalCount = this.getDataItemCount();
+	if (totalCount == 0) return;	
+
+	var scrollTop = this.getScrollTop();
+	var listNodeHeight = this.getListNodeHeight();
+
+	// Render items until we've passed the height of the scrollTop + the height of the list area
+	var targetHeight = listNodeHeight + scrollTop;
+
+	/* If this isn't our first render call (from renderData() ), then we're scrolling down.  We could be 5px
+	 * down or 5000px down, come up with a guess for where we should start generating rows.
+	 * We'll subtract 10 from that both because its a guestimate, and because I want to pregenerate
+	 * a few rows in case the user scrolls up.
+	*/
+
+	if (startAddingFrom === undefined) {
+	    avgItemHeight = this.getAverageItemHeight();
+	    startAddingFrom = Math.floor(scrollTop/avgItemHeight);
+	    startAddingFrom = Math.max(0,startAddingFrom-10);
+	    startAddingFrom = Math.min(startAddingFrom, totalCount);
+
+	    /* If there are only 2 nodes (top spacer and bottom spacer, and we've already scrolled,
+	     * then the user has fast scrolled and removeRows had to delete ALL rows.
+	     * There are no prior rows to append next to for proper
+	     * positioning.  So make a best guess for a 
+	     * topSpacer height that will allow our new rows to show in the correct place
+	     */
+	    if (parent.childNodes.length == 2) {
+		var topSpacer = avgItemHeight * startAddingFrom;
+		var topSpacerWas = this.spacerNodeTop.clientHeight;
+		var topSpacerChange = topSpacer - topSpacerWas;
+		this.spacerNodeTop.style.height = topSpacer + "px";
+		var bottomSpacer = this.spacerNodeBottom.clientHeight;
+		bottomSpacer = bottomSpacer - topSpacerChange;
+		this.spacerNodeBottom.style.height = bottomSpacer + "px";
+	    }
+	}
+
+	console.log("START AT " + startAddingFrom + "; AVG: " + avgItemHeight + "; scrollTop: " + scrollTop);
+	    /* Keep adding items/rows until the rows are below the bottom of the list's viewport */
+	    var currentHeight = this.spacerNodeTop.clientHeight;
+	    for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
+		this._renderItem(i);
+		// this calculation is correct, but probing the domNode forces the node to render
+		// and slows performance; just use the average estimate for now
+		//currentHeight = this.items[i].domNode.offsetTop + this.items[i].domNode.clientHeight;
+		if (!avgItemHeight) avgItemHeight = this.items[i].domNode.clientHeight || 22;
+		currentHeight += avgItemHeight;
+	    }
+	    
+	    /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling */
+	    var extraTenMax = i + 10;
+	    for (; i < totalCount && i < extraTenMax; i++) {
+		this._renderItem(i);
+	    }
+	this.addOddClasses();
+	console.log("END AT " + i + "; AVG: " + avgItemHeight + "; scrollTop: " + scrollTop);
+	    this.updateAverageItemHeight();
+//	app.toastSuccess("ScrollTop: " + scrollTop + "; generated: " + i);
+	   //this.addOddClasses();
+    },
+    addOddClasses: function() {
+	/* this doesn't need a seperate thread, but no reason to slow the main execution thread for this */
+	wm.job(this.getRuntimeId() + ".addOddClasses", 10, this, function() {
+	    dojo.query(".wmlist-item", this.domNode).forEach(function(node) {
+		var id = parseInt(node.id.replace(/^.*_/,""));
+		dojo.toggleClass(node, "Odd", Boolean(id % 2));
+	    });
+	});
+    },
+    scrollDownRemoveItems: function() {
+
+	var scrollTop = this.getScrollTop();
+
+	var currentHeight = this.spacerNodeTop.clientHeight;
+
+	var avgHeight = this.getAverageItemHeight();
+
+	// if its greater than this height, do not remove it
+	var keepAroundHeight = scrollTop - 10 * avgHeight;
+
+	var currentHeight = this.spacerNodeTop.clientHeight;
+	var rows = this.listNode.childNodes;
+	var rowsToDelete = [];
+	for (var i = 1; i < rows.length - 2; i++) {
+	    var node = rows[i];
+	    var h = node.clientHeight;
+	    if (h + currentHeight < keepAroundHeight) {
+		rowsToDelete.push(node);
+		currentHeight += h;
+	    } else {
+		break;
+	    }
+	}
+
+	this.spacerNodeTop.style.height = currentHeight + "px";
+	console.log("REMOVING " + rowsToDelete.length + " items");
+	dojo.forEach(rowsToDelete, function(node) {
+	    node.parentNode.removeChild(node);
+	});
+    },
+    scrollUpRemoveItems: function() {
+
+	var avgItemHeight = this.avgHeight = this.getAverageItemHeight();
+	var listNode = this._listTouchScroll ? this.listNode.parentNode : this.listNode;
+	var maxHeight = this.getScrollTop() + this.getListNodeHeight() + 10 * avgItemHeight;
+	var rows = this.listNode.childNodes;
+	var spacerHeight = parseInt(this.spacerNodeBottom.style.height) || 0;
+
+	while (rows.length > 2) {
+	    var row = rows[rows.length-2];
+	    var h = row.clientHeight;
+	    if (h + row.offsetTop  > maxHeight) {
+		row.parentNode.removeChild(row);
+		this.spacerNodeBottom.style.height = (this.spacerNodeBottom.clientHeight + h)  + "px";
+		console.log("REMOVING ITEM " + row.id.replace(/^.*_/,""));
+	    } else {
+		break;
+	    }
+	}
+
+	this.updateBottomSpacerHeight();
+    },
+    scrollUpAddItems: function() {
+
+	console.log("Add Visible Items:" + this._scrollDirection);
+	var parent = this.listNode;
+	var totalCount = this.getDataItemCount();
+	if (totalCount == 0) return;
+	
+	var scrollTop = this.getScrollTop();
+	var maxHeight = this.getListNodeHeight() + scrollTop; // basically the height of our widget, minus the height of our header
+	var avgItemHeight = this.getAverageItemHeight();
+	var minHeight = scrollTop - avgItemHeight * 10;
+	
+	/* Skip through our list to the item that our guestimate says should be at scrollTop.
+	   We'll subtract 10 from that both because its a guestimate, and because I want to pregenerate
+		   a few rows in case the user scrolls up
+	*/
+	var startAddingFrom = Math.floor(maxHeight/avgItemHeight);
+	startAddingFrom = Math.min(totalCount-1,startAddingFrom+10);
+
+	/* If there are only 2 nodes (top spacer and bottom spacer, and we've already scrolled,
+	 * then the user has fast scrolled, there are no prior rows to append next to for proper
+	 * positioning, and removeRows has deleted ALL rows.  So make a best guess for a 
+	 * topSpacer height that will allow our new rows to show in the correct place
+	 */
+	var guestimateSpacers =  (scrollTop && parent.childNodes.length == 2);
+	if (guestimateSpacers) {
+	    this.spacerNodeBottom.style.height = avgItemHeight * (totalCount - startAddingFrom) + "px";	    
+	}
+
+	for (var i = startAddingFrom; i >= 0 ; i--) {
+	    this._renderItem(i);
+
+	    if (this.items[i].domNode.offsetTop < minHeight) break;
+
+	    //console.log("NODE " + i);
+	}
+	this.updateAverageItemHeight();
+
+	/* Should have already been 0px, but make minor corrections here */
+	if (scrollTop <= 0) {
+	    this.spacerNodeTop.style.height = "0px";
+	} else if (guestimateSpacers) {
+	    this.spacerNodeTop.style.height = avgItemHeight * i + "px";
+	}
+	this.addOddClasses();
+	//this.addOddClasses();
     },
     onRenderData:function(){},
 	selectItemOnGrid: function(obj, pkList){
@@ -722,7 +1241,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    var dataFields = this._dataFields && this._dataFields[inCol];
 	    var cellData;
 	    var i = this._formatIndex != null ? this._formatIndex : this.getCount();
-
+	    if (this._firstItemIndex !== undefined) {
+		i += this._firstItemIndex;
+	    }
 	    /* If its a header... */
 	    if (inHeader) {
 		cellData = '<div>' + this.getHeading(dataFields);
@@ -749,6 +1270,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    var props = dataFields.split(".");
 		    for (var propIndex = 0; propIndex < props.length; propIndex++) {
 			cellData = cellData[props[propIndex]];
+		    }
+		    if (inCol==0) {
+			this.lastCellData = cellData;
 		    }
 		    cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 		}
