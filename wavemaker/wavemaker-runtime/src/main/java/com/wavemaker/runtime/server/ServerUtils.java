@@ -257,19 +257,13 @@ public class ServerUtils {
         return params;
     }
 
-    public static TypedServiceReturn invokeMethodWithEvents(
-            ServiceEventNotifier serviceEventNotifier, ServiceWire sw,
-            String method, ParsedServiceArguments args, JSONState jsonState,
-            boolean throwExceptions)
-            throws WMException {
+    public static TypedServiceReturn invokeMethodWithEvents(ServiceEventNotifier serviceEventNotifier, ServiceWire sw, String method,
+        ParsedServiceArguments args, JSONState jsonState, boolean throwExceptions) throws WMException {
         return invokeMethodWithEvents(serviceEventNotifier, sw, method, args, jsonState, throwExceptions, null);
     }
 
-    public static TypedServiceReturn invokeMethodWithEvents(
-            ServiceEventNotifier serviceEventNotifier, ServiceWire sw,
-            String method, ParsedServiceArguments args, JSONState jsonState,
-            boolean throwExceptions, ServiceResponse serviceResponse)
-            throws WMException {
+    public static TypedServiceReturn invokeMethodWithEvents(ServiceEventNotifier serviceEventNotifier, ServiceWire sw, String method,
+        ParsedServiceArguments args, JSONState jsonState, boolean throwExceptions, ServiceResponse serviceResponse) throws WMException {
 
         TypedServiceReturn ret = null;
 

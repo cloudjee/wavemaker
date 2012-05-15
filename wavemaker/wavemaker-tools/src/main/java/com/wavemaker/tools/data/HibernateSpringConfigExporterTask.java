@@ -11,28 +11,35 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
-import org.hibernate.tool.ant.HibernateToolTask;
-import org.hibernate.tool.ant.Hbm2HbmXmlExporterTask;
 import org.hibernate.tool.ant.GenericExporterTask;
+import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.hbm2x.Exporter;
-import org.springframework.core.io.Resource;
+
 import com.wavemaker.tools.io.Folder;
 
 public class HibernateSpringConfigExporterTask extends GenericExporterTask {
-    private Folder destDir;
-    private String serviceName;
-    private String packageName;
-    private String dataPackage;
-    private String className;
-    private boolean useIndividualCRUDOperations;
-    private boolean impersonateUser;
-    private String activeDirectoryDomain;
-    
-    public HibernateSpringConfigExporterTask(HibernateToolTask parent, Folder destDir, String serviceName,
-                         String packageName, String dataPackage, String className, boolean useIndividualCRUDOperations,
-                         boolean impersonateUser, String activeDirectoryDomain) {
+
+    private final Folder destDir;
+
+    private final String serviceName;
+
+    private final String packageName;
+
+    private final String dataPackage;
+
+    private final String className;
+
+    private final boolean useIndividualCRUDOperations;
+
+    private final boolean impersonateUser;
+
+    private final String activeDirectoryDomain;
+
+    public HibernateSpringConfigExporterTask(HibernateToolTask parent, Folder destDir, String serviceName, String packageName, String dataPackage,
+        String className, boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain) {
         super(parent);
         this.destDir = destDir;
         this.serviceName = serviceName;
@@ -46,9 +53,8 @@ public class HibernateSpringConfigExporterTask extends GenericExporterTask {
 
     @Override
     public Exporter createExporter() {
-        return new HibernateSpringConfigExporter(this.serviceName, this.packageName,
-            this.dataPackage, this.className, useIndividualCRUDOperations,
-            this.impersonateUser, this.activeDirectoryDomain);
+        return new HibernateSpringConfigExporter(this.serviceName, this.packageName, this.dataPackage, this.className,
+            this.useIndividualCRUDOperations, this.impersonateUser, this.activeDirectoryDomain);
     }
 
     public Folder getDestDir() {

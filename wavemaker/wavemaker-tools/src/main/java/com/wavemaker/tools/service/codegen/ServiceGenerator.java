@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.service.codegen;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.core.io.Resource;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -39,19 +38,17 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
-import com.wavemaker.tools.ws.wsdl.ServiceInfo;
-import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.project.GFSResource;
-import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * All service code generators should extend this class. Although all public or protected methods can be overriden or
@@ -270,7 +267,7 @@ public abstract class ServiceGenerator {
 
         try {
             // TODO - I suspect this will need to be re-written for CF, so let's cheat for now
-            //cftempfix
+            // cftempfix
             Folder dir = this.configuration.getOutputDirectory();
             if (dir.getResourceOrigin().equals(FileSystem.ResourceOrigin.MONGO_DB)) {
                 File f = IOUtils.createTempDirectory("dataService_directory", null);
@@ -279,7 +276,7 @@ public abstract class ServiceGenerator {
                 Folder folder = FileSystemFolder.getRoot(fileSystem);
                 folder.copyContentsTo(this.configuration.getOutputDirectory());
             } else {
-                File dest = (File)dir.getOriginalResource();
+                File dest = (File) dir.getOriginalResource();
                 this.codeModel.build(dest, dest, null);
             }
         } catch (IOException e) {

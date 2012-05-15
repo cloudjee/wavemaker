@@ -14,12 +14,6 @@
 
 package com.wavemaker.tools.data.upgrade;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.springframework.core.io.FileSystemResource;
-
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.util.DataServiceUtils;

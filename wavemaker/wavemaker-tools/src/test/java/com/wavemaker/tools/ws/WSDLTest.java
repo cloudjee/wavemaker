@@ -27,11 +27,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
-import com.wavemaker.tools.io.ClassPathFile;
 
 /**
  * @author Frankie Fu
@@ -47,18 +46,17 @@ public class WSDLTest extends WMTestCase {
     }
 
     public static JAXBTypeMapper buildJAXBTypeMapper(WSDL wsdl, List<String> bindingResources) throws Exception {
-        List<com.wavemaker.tools.io.File> bindingFiles = new ArrayList<com.wavemaker.tools.io.File>();
+        List<File> bindingFiles = new ArrayList<File>();
         if (bindingResources != null) {
             for (String bindingResource : bindingResources) {
                 if (log.isDebugEnabled()) {
                     log.debug("Loading resource " + bindingResource + " for JAXB type mapper.");
                 }
-                //File bindingFile = ResourceUtils.getFile("classpath:" + bindingResource);
-                ClassPathFile bindingFile = new ClassPathFile(bindingResource);
+                File bindingFile = ResourceUtils.getFile("classpath:" + bindingResource);
                 bindingFiles.add(bindingFile);
             }
         }
-        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, bindingFiles);
+        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, FileSystemUtils.convertToFileSystemFileList(bindingFiles));
         return mapper;
     }
 

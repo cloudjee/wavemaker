@@ -19,8 +19,7 @@ import org.springframework.mock.web.MockServletContext;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
@@ -51,9 +50,10 @@ public class ProjectCompilerTest {
         this.studioConfiguration = new LocalStudioFileSystem();
         this.studioConfiguration.setServletContext(this.servletContext);
         Resource wmHome = this.studioConfiguration.createTempDir();
-        //cftempfix
-        LocalFileSystem fileSystem = new LocalFileSystem(this.studioConfiguration.createTempDir().getFile());
-        Folder wmHomeFolder = FileSystemFolder.getRoot(fileSystem);
+        // cftempfix
+        // LocalFileSystem fileSystem = new LocalFileSystem(wmHome.getFile());
+        // Folder wmHomeFolder = FileSystemFolder.getRoot(fileSystem);
+        Folder wmHomeFolder = FileSystemUtils.convertToFileSystemFolder(wmHome.getFile());
         this.studioConfiguration.setTestWaveMakerHome(wmHomeFolder);
         Resource projectDir = wmHome.createRelative("/projects/ProjectCompilerProject/");
         this.studioConfiguration.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());

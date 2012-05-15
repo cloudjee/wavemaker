@@ -21,13 +21,13 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * Import Web Service.

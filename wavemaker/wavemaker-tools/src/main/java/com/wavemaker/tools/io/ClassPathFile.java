@@ -96,6 +96,11 @@ public class ClassPathFile extends AbstractReadOnlyFile {
     }
 
     @Override
+    public String getAbsolutePath() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String getLastName() {
         throw new UnsupportedOperationException();
     }

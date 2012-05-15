@@ -114,7 +114,7 @@ public abstract class ControllerBase extends AbstractController {
 
         ModelAndView ret;
         try {
-            runtimeAccess.setStartTime(System.currentTimeMillis());
+            this.runtimeAccess.setStartTime(System.currentTimeMillis());
             // add logging
             StringBuilder logEntry = new StringBuilder();
             HttpSession session = request.getSession(false);
@@ -148,9 +148,9 @@ public abstract class ControllerBase extends AbstractController {
                 message = t.toString();
             }
 
-            if (serviceResponse != null && !serviceResponse.isPollingRequest() && serviceResponse.getConnectionTimeout() > 0 &&
-                    (System.currentTimeMillis() - runtimeAccess.getStartTime() > (serviceResponse.getConnectionTimeout() * 1000))) {
-                serviceResponse.addError(t);
+            if (this.serviceResponse != null && !this.serviceResponse.isPollingRequest() && this.serviceResponse.getConnectionTimeout() > 0
+                && System.currentTimeMillis() - this.runtimeAccess.getStartTime() > this.serviceResponse.getConnectionTimeout() * 1000) {
+                this.serviceResponse.addError(t);
             }
 
             return handleError(message, t);
@@ -242,16 +242,13 @@ public abstract class ControllerBase extends AbstractController {
         return ret;
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw,
-            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams)
-            throws WMException {
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
         return invokeMethod(sw, method, jsonArgs, mapParams, null);
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs,
-                          Map<String, Object[]> mapParams, ServiceResponse serviceResponse)
-            throws WMException {
-        
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
+        ServiceResponse serviceResponse) throws WMException {
+
         if (jsonArgs != null && mapParams != null) {
             throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
         } else if (sw == null) {
@@ -271,8 +268,7 @@ public abstract class ControllerBase extends AbstractController {
 
         getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
 
-        return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
-                                serviceResponse);
+        return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false, serviceResponse);
     }
 
     @SuppressWarnings("deprecation")

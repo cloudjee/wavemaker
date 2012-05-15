@@ -31,7 +31,6 @@ import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystem;
 import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
-import com.wavemaker.common.WMRuntimeException;
 
 /**
  * {@link FileSystem} implementation backed by standard {@link File java.io.File}s.
@@ -182,14 +181,5 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
     @Override
     public void touch(LocalFileSystemKey key) {
         key.getFile().setLastModified(System.currentTimeMillis());
-    }
-
-    @Override
-    public String getCanonicalPath() {
-        try {
-            return this.root.getCanonicalPath();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
     }
 }

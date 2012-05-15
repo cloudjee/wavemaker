@@ -28,11 +28,12 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-//import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.*;
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.util.ObjectUtils;
+import com.wavemaker.common.util.OneToManyMap;
+import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
@@ -45,6 +46,10 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
@@ -52,12 +57,6 @@ import com.wavemaker.tools.service.ClassLoaderFactory;
 import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
-import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * @author Simon Toens
@@ -91,10 +90,7 @@ public class DataModelManager {
 
     private ProjectCompiler projectCompiler = null;
 
-    private StudioFileSystem fileSystem;
-
     public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
     }
 
     public void setProjectManager(ProjectManager projectManager) {
@@ -258,8 +254,7 @@ public class DataModelManager {
                 packageName = StringUtils.fromLastOccurrence(packageName, DataServiceConstants.DATA_PACKAGE_NAME, -1);
             }
 
-            LocalFileSystem fileSystem = new LocalFileSystem(tmpServiceRoot);
-            tmpServiceRootFolder = FileSystemFolder.getRoot(fileSystem);
+            tmpServiceRootFolder = FileSystemUtils.convertToFileSystemFolder(tmpServiceRoot);
 
             importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
                 driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRootFolder,
@@ -295,8 +290,9 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            //this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
+            // this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
             Resources<com.wavemaker.tools.io.File> resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
+
                 @Override
                 public boolean include(com.wavemaker.tools.io.File resource) {
                     if (resource == null) {
@@ -304,7 +300,7 @@ public class DataModelManager {
                     } else {
                         String name = resource.getName();
                         int len = name.length();
-                        return !(len > 6 && name.substring(len -6).equals(".class"));
+                        return !(len > 6 && name.substring(len - 6).equals(".class"));
                     }
                 }
             });
@@ -314,6 +310,7 @@ public class DataModelManager {
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
             resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
+
                 @Override
                 public boolean include(com.wavemaker.tools.io.File resource) {
                     if (resource == null) {
@@ -321,7 +318,7 @@ public class DataModelManager {
                     } else {
                         String name = resource.getName();
                         int len = name.length();
-                        return (len > 6 && name.substring(len -6).equals(".class"));
+                        return len > 6 && name.substring(len - 6).equals(".class");
                     }
                 }
             });
@@ -595,7 +592,7 @@ public class DataModelManager {
         }
         String path = mappingPaths.iterator().next();
         File hbmFiles = new File(serviceDir, new File(path).getParent());
-        File classesDir = (File)this.projectManager.getCurrentProject().getClassOutputFolder().getOriginalResource();
+        File classesDir = (File) this.projectManager.getCurrentProject().getClassOutputFolder().getOriginalResource();
 
         ExportDB exporter = new ExportDB();
         exporter.setHbmFilesDir(hbmFiles);
@@ -761,13 +758,14 @@ public class DataModelManager {
             ExternalDataModelConfig externalConfig = new DesignExternalDataModelConfig(serviceId, this.serviceManager);
 
             ClassLoaderFactory clf = new ClassLoaderFactory() {
+
                 @Override
                 public ClassLoader getClassLoader() {
                     return DataModelManager.this.serviceManager.getServiceRuntimeClassLoader(serviceId);
                 }
             };
 
-            CompileService cs = new CompileService() {
+            new CompileService() {
 
                 @Override
                 public void compile(boolean clean) {
@@ -839,7 +837,7 @@ public class DataModelManager {
         importer.setActiveDirectoryDomain(activeDirectoryDomain);
         importer.setProjectCompiler(this.projectCompiler);
         importer.setCurrentProjectName(this.projectManager.getCurrentProject().getProjectName());
-        importer.setProjectManager(projectManager);
+        importer.setProjectManager(this.projectManager);
 
         String dataPackage = packageName;
         if (!dataPackage.endsWith("." + DataServiceConstants.DATA_PACKAGE_NAME)) {
@@ -895,7 +893,7 @@ public class DataModelManager {
     }
 
     public String getWebAppRoot() {
-        return ((File)this.projectManager.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
+        return ((File) this.projectManager.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
     }
 
     private String extractHsqlDBFileName(String connectionUrl) {

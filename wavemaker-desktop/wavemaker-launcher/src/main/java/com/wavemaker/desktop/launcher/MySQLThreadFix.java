@@ -21,17 +21,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Force the MySQL driver to create it's timer thread outside of a
- * web application thread to avoid inheriting the web application
- * context classloader, among other things.  This can cause
- * classloader related memory leaks if the web application is
- * reloaded or undeployed.
- *
+ * Force the MySQL driver to create it's timer thread outside of a web application thread to avoid inheriting the web
+ * application context classloader, among other things. This can cause classloader related memory leaks if the web
+ * application is reloaded or undeployed.
+ * 
  */
 public class MySQLThreadFix implements LifecycleListener {
 
     private static Log log = LogFactory.getLog(MySQLThreadFix.class);
 
+    @Override
     public void lifecycleEvent(LifecycleEvent event) {
         if (Lifecycle.INIT_EVENT.equals(event.getType())) {
             try {

@@ -150,8 +150,7 @@ public class JavaService {
         Service service = this.designServiceManager.getService(serviceId);
         String klass = service.getClazz();
 
-        File classFile = this.designServiceManager.getServiceRuntimeFolder(serviceId).getFile(
-            JavaServiceDefinition.getRelPathFromClass(klass));
+        File classFile = this.designServiceManager.getServiceRuntimeFolder(serviceId).getFile(JavaServiceDefinition.getRelPathFromClass(klass));
 
         getProjectManager().getCurrentProject().writeFile(classFile, contents);
 
@@ -173,8 +172,7 @@ public class JavaService {
         Service service = this.designServiceManager.getService(serviceId);
         String klass = service.getClazz();
 
-        File classFile = this.designServiceManager.getServiceRuntimeFolder(serviceId).getFile(
-            JavaServiceDefinition.getRelPathFromClass(klass));
+        File classFile = this.designServiceManager.getServiceRuntimeFolder(serviceId).getFile(JavaServiceDefinition.getRelPathFromClass(klass));
         return getProjectManager().getCurrentProject().readFile(classFile);
     }
 

@@ -14,21 +14,21 @@
 
 package com.wavemaker.tools.ws.jaxws;
 
-import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.service.codegen.GenerationException;
-import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.common.WMRuntimeException;
-import com.sun.tools.ws.ant.WsImport2;
-
-import java.io.IOException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.tools.ant.types.FileSet;
+
+import com.sun.tools.ws.ant.WsImport2;
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.service.codegen.GenerationException;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * Created to pre/post actions for Cloud Foundry
@@ -37,7 +37,7 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class CFJAXWSBuilder extends JAXWSBuilder {
 
-    public CFJAXWSBuilder (WSDL wsdl, Folder outputSrcDir, Folder outputClassDir) {
+    public CFJAXWSBuilder(WSDL wsdl, Folder outputSrcDir, Folder outputClassDir) {
         super(wsdl, outputSrcDir, outputClassDir);
     }
 
@@ -60,8 +60,8 @@ public class CFJAXWSBuilder extends JAXWSBuilder {
 
     @Override
     protected void setConfigBinding(WsImport2 wsImport, com.wavemaker.tools.io.File jaxwsBindingFile,
-                 List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
-        File tmpBindingFile = new File(tempjaxwsDir, jaxwsBindingFile.getName());
+        List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
+        File tmpBindingFile = new File(this.tempjaxwsDir, jaxwsBindingFile.getName());
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(tmpBindingFile);
@@ -77,7 +77,7 @@ public class CFJAXWSBuilder extends JAXWSBuilder {
 
         // set JAXB bindings
         for (com.wavemaker.tools.io.File jaxbBindingFile : jaxbBindingFiles) {
-            tmpBindingFile = new File(tempjaxwsDir, jaxbBindingFile.getName());
+            tmpBindingFile = new File(this.tempjaxwsDir, jaxbBindingFile.getName());
             try {
                 fos = new FileOutputStream(tmpBindingFile);
                 jaxwsBindingFile.getContent().copyTo(fos);

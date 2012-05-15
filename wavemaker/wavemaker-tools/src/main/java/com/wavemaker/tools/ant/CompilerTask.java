@@ -15,28 +15,22 @@
 package com.wavemaker.tools.ant;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.ClassPathFile;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
-import com.wavemaker.tools.io.ClassPathFile;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * Base Task.
