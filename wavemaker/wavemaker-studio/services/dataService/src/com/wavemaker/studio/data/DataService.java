@@ -14,7 +14,6 @@
 
 package com.wavemaker.studio.data;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -366,8 +365,7 @@ public class DataService {
         }
     }
 
-    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName,
-        String dialectClassName, boolean overrideTable) {
+    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
             RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);

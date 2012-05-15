@@ -27,6 +27,8 @@ wm.Object.extendSchema(wm.dijit.ProgressBar, {
     /* Editor group; value subgroup */
     progress: {group: "widgetName", subgroup: "data", order: 1, bindable:1},
     indeterminate:  {group: "widgetName", subgroup: "behavior", order: 2, bindable: 1},
-
+    
+    setProgress: {method:1},
+    getProgress: {method:1},
 	disabled: { ignore: 1 }
 });

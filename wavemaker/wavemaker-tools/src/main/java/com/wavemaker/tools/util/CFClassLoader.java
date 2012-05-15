@@ -26,8 +26,8 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * A ClassLoader that loads a list of resources

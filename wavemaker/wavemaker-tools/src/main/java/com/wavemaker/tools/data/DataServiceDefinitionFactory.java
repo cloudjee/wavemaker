@@ -14,13 +14,12 @@
 
 package com.wavemaker.tools.data;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.data.salesforce.SalesForceDataServiceGenerator;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
@@ -28,7 +27,6 @@ import com.wavemaker.tools.service.ServiceFile;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
-import com.wavemaker.tools.io.File;
 
 public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 

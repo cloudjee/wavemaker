@@ -105,7 +105,7 @@ public class CloudFoundryService {
 
     public boolean isServiceBound(String token, String target, String service, String appName) {
         List<String> services = getServicesForApplication(token, target, appName);
-        return (service != null && services.contains(service));
+        return service != null && services.contains(service);
     }
 
     public List<String> getServicesForApplication(String token, String target, final String appName) {

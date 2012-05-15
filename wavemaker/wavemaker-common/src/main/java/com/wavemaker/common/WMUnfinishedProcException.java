@@ -23,6 +23,7 @@ public class WMUnfinishedProcException extends RuntimeException {
     private final String detailedMessage;
 
     private final Integer msgId;
+
     public WMUnfinishedProcException(String message) {
         this(message, (String) null);
     }
@@ -31,23 +32,21 @@ public class WMUnfinishedProcException extends RuntimeException {
         this(message, detailedMessage, (Throwable) null);
     }
 
-    public WMUnfinishedProcException(String message, String detailedMessage,
-            Throwable cause) {
+    public WMUnfinishedProcException(String message, String detailedMessage, Throwable cause) {
         this(message, detailedMessage, null, cause);
     }
 
-    public WMUnfinishedProcException(String message, String detailedMessage,
-            Integer msgId, Throwable cause) {
+    public WMUnfinishedProcException(String message, String detailedMessage, Integer msgId, Throwable cause) {
         super(message, cause);
         this.detailedMessage = detailedMessage;
         this.msgId = msgId;
     }
 
     public String getDetailedMesage() {
-        return detailedMessage;
+        return this.detailedMessage;
     }
 
     public Integer getMessageId() {
-        return msgId;
+        return this.msgId;
     }
 }

@@ -26,8 +26,8 @@ import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.util.QueryRunner;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
-import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 
 /**
  * @author Simon Toens
@@ -37,12 +37,14 @@ public class SpringService {
     private SpringService() {
     }
 
-    //TODO: API - must be uncommented and converted
-    /*public static DeprecatedServiceDefinition initialize(String cfg) {
-
-        return initialize(new ClassPathResource(cfg));
-
-    }*/
+    // TODO: API - must be uncommented and converted
+    /*
+     * public static DeprecatedServiceDefinition initialize(String cfg) {
+     * 
+     * return initialize(new ClassPathResource(cfg));
+     * 
+     * }
+     */
 
     public static DeprecatedServiceDefinition initialize(File f) {
 
@@ -55,13 +57,14 @@ public class SpringService {
 
     }
 
-    //TODO: API - must be uncommented and converted
-    /*public static QueryRunner initQueryRunner(String cfg) {
-
-        Resource r = new ClassPathResource(cfg);
-
-        return initQueryRunner(initAppCtx(r));
-    }*/
+    // TODO: API - must be uncommented and converted
+    /*
+     * public static QueryRunner initQueryRunner(String cfg) {
+     * 
+     * Resource r = new ClassPathResource(cfg);
+     * 
+     * return initQueryRunner(initAppCtx(r)); }
+     */
 
     private static QueryRunner initQueryRunner(GenericApplicationContext ctx) {
 

@@ -14,11 +14,15 @@
 
 package com.wavemaker.spinup.web;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -45,9 +49,13 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 @SessionAttributes("loginCredentialsBean")
 public class SpinupController {
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     private static final String SHARED_SECRET_ATTRIBUTE_NAME = SpinupController.class.getName() + ".SECRET";
 
     private static final String COOKIE_NAME = "wavemaker_authentication_token";
+
+    private static final int COOKIE_MAX_AGE = (int) TimeUnit.DAYS.toSeconds(30);
 
     private SpinupService spinupService;
 
@@ -95,15 +103,19 @@ public class SpinupController {
 
         try {
             // Login, add the cookie and redirect to start the spinup process
+            this.logger.debug("Starting WaveMaker spinup");
             SharedSecret secret = getSecret(request);
             TransportToken transportToken = this.spinupService.login(secret, credentials);
+            this.logger.debug("Login complete");
             String url = performSpinup(credentials, secret, transportToken, response);
+            this.logger.debug("Perform spinup complete");
             Cookie cookie = new Cookie(COOKIE_NAME, transportToken.encode());
-            cookie.setMaxAge(2592000); // 30 days
+            cookie.setMaxAge(COOKIE_MAX_AGE);
             cookie.setDomain(this.spinupService.getDomain());
             response.addCookie(cookie);
             response.setHeader("X-Ajax-Redirect", url);
             response.setStatus(HttpStatus.NO_CONTENT.value());
+            this.logger.debug("Wavemake spinup complete");
             return null;
         } catch (InvalidLoginCredentialsException e) {
             // On invalid login redirect with a message in flash scope

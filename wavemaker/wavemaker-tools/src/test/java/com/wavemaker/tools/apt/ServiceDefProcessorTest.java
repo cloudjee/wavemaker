@@ -33,9 +33,9 @@ import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.tools.compiler.WaveMakerJavaCompiler;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -57,7 +57,7 @@ public class ServiceDefProcessorTest {
         RuntimeAccess.setRuntimeBean(new RuntimeAccess());
         this.fileSystem = new LocalStudioFileSystem();
         Resource wmHome = this.fileSystem.createTempDir();
-        //cftempfix
+        // cftempfix
         LocalFileSystem fileSystem = new LocalFileSystem(wmHome.getFile());
         Folder wmHomeFolder = FileSystemFolder.getRoot(fileSystem);
         this.fileSystem.setTestWaveMakerHome(wmHomeFolder);

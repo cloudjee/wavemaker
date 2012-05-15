@@ -43,6 +43,7 @@ dojo.declare("StudioApplication", wm.Application, {
         this.confirmDialog.$.genericInfoPanel.setBorderColor("#313743");
 	this.confirmDialog.$.button1.addUserClass("StudioButton");
 	this.confirmDialog.$.button2.addUserClass("StudioButton");
+	this.confirmDialog.$.button1.parent.setHeight("32px");
         //this.confirmDialog.$.genericInfoPanel.setBorderColor("#424A5A");
     },
     alert: function() {      
@@ -53,6 +54,7 @@ dojo.declare("StudioApplication", wm.Application, {
             this.alertDialog.$.genericInfoPanel.setBorder("10");
             this.alertDialog.$.genericInfoPanel.setBorderColor("#313743");
 	    this.alertDialog.$.button1.addUserClass("StudioButton");
+	    this.alertDialog.$.button1.parent.setHeight("32px");
             //this.alertDialog.$.genericInfoPanel.setBorderColor("#424A5A");
         }
     }

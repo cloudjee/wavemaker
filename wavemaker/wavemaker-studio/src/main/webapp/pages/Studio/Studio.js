@@ -2037,3 +2037,10 @@ dojo.declare("Studio", wm.Page, {
 
 // Inherits some properties via wm_studio/Theme.js
 dojo.declare("wm.studio.DialogMainPanel", wm.Panel, {});
+dojo.declare("wm.studio.DialogButtonPanel", wm.Panel, {
+    _classes: {domNode: ["StudioDialogFooter"]},
+    layoutKind: "left-to-right",
+    horizontalAlign: "right",
+    verticalAlign: "justified",
+    height: "35px"
+});

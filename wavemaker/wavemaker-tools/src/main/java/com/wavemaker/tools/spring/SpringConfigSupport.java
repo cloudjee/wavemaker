@@ -24,8 +24,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Beans;

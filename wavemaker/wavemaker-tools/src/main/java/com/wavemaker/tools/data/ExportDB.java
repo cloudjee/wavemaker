@@ -30,7 +30,6 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.ReflectionUtils;
 
 import com.wavemaker.common.MessageResource;
@@ -43,9 +42,7 @@ import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceOperation;

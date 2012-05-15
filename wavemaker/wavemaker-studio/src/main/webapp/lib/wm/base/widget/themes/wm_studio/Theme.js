@@ -26,8 +26,10 @@
 		"borderColor": "#ABB8CF"
 	}, 
 	"wm.Button": {
-		"border": "1", 
-		"borderColor": "#ABB8CF"
+	    "border": "1", 
+	    "borderColor": "#ABB8CF",
+	    "margin": "4",
+	    "height": "32px"
 	}, 
 	"wm.RoundedButton": {
 		"border": "0", 
