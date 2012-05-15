@@ -505,7 +505,7 @@ height: "29px", width: "420px",
 							topPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							    listPanel: ["wm.Panel", {width: "100px", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 								listPanelLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Completions"}],
-								autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", headerVisible: false, dataFields: "name"}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
+								autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", headerVisible: false, dataFields: "name", columns: [{show:true,field:"name",cssClass:"if (${name}.match(/\<b\>/)) {'CompletionListHeader';}" }]}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
 								    binding: ["wm.Binding", {}, {}, {
 									wire: ["wm.Wire", {targetProperty: "dataSet", source: "autoCompletionVariable"}]
 								    }]
