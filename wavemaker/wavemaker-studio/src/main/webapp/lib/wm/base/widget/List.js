@@ -658,6 +658,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 			if (this._isScrolling) {
 			    if (this._scrollDirection == "down") {
 				this.updateBottomSpacerHeight();
+				if (sibling != this.spacerNodeBottom) {
+				    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].domNode.clientHeight) + "px";
+				}
 			    } else {
 				this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.getAverageItemHeight()) + "px";
 			    }
@@ -677,6 +680,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 			}
 		    }
 		}
+
+	    /* Sanity check... */
+	    if (i == 0) {
+		this.spacerNodeTop.style.height = "0px";
+	    } else if (i ==  this.getDataItemCount() - 1) {
+		this.spacerNodeBottom.style.height = "0px";
+	    }
     },
     getNodeFromItem: function(inItem) {
 	if (inItem) {
@@ -882,6 +892,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this._scrollDirection = "down";
 		this.scrollDownRemoveItems();
 		this.scrollDownAddItems();
+		// sometimes events don't come at the right time, so cleanup is needed
+		wm.job(this.getRuntimeId() + ".testScrollTop", 200, this, "scrollDownAddItems");
 	    } 
 
 	    /* Else if our spacer has scrolled back into view, render older rows */
@@ -890,15 +902,14 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this._scrollDirection = "up";
 		this.scrollUpRemoveItems();
 		this.scrollUpAddItems();
+		// sometimes events don't come at the right time, so cleanup is needed
+		wm.job(this.getRuntimeId() + ".testScrollTop", 200, this, "scrollUpAddItems");
 	    }
 	} catch(e) {}
 	this._lastScrollTop = scrollTop;
 	this._lastScrollTime = new Date().getTime();
 	//app.toastSuccess("ScrollTop UPDATING3: " + scrollTop + "; LAST: " + this._lastScrollTop);
 	this._isScrolling = false;	
-	if (!doCleanup) {
-	    wm.job(this.getRuntimeId() + ".testScrollTop", 1000, this, "_testScrollTop");
-	}
     },
     _testScrollTop: function() {
 	this._onScroll(null, true);
@@ -920,6 +931,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	var scrollTop = this.getScrollTop();
 	var listNodeHeight = this.getListNodeHeight();
+	var currentHeight = 0;
 
 	// Render items until we've passed the height of the scrollTop + the height of the list area
 	var targetHeight = listNodeHeight + scrollTop;
@@ -931,10 +943,24 @@ dojo.declare("wm.List", wm.VirtualList, {
 	*/
 
 	if (startAddingFrom === undefined) {
-	    avgItemHeight = this.getAverageItemHeight();
-	    startAddingFrom = Math.floor(scrollTop/avgItemHeight);
+	    /* If there are rows showing, then use them as the basis from which we determine what rows to add */
+	    if (this.listNode.childNodes.length > 2) {
+		var item = this.getItemForNode(this.listNode.childNodes[this.listNode.childNodes.length-2]);
+		var index = dojo.indexOf(this.items, item);
+		startAddingFrom = index + 1;
+		currentHeight = item.domNode.offsetTop + item.domNode.clientHeight;
+	    }
+
+	    /* If there are no rows showing, do a guesstimate based on scrollTop */
+	    else {
+		avgItemHeight = this.getAverageItemHeight();
+		startAddingFrom = Math.floor(scrollTop/avgItemHeight);
+		currentHeight = this.spacerNodeTop.clientHeight;
+	    }
+/*
 	    startAddingFrom = Math.max(0,startAddingFrom-10);
 	    startAddingFrom = Math.min(startAddingFrom, totalCount);
+	    */
 
 	    /* If there are only 2 nodes (top spacer and bottom spacer, and we've already scrolled,
 	     * then the user has fast scrolled and removeRows had to delete ALL rows.
@@ -955,7 +981,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	console.log("START AT " + startAddingFrom + "; AVG: " + avgItemHeight + "; scrollTop: " + scrollTop);
 	    /* Keep adding items/rows until the rows are below the bottom of the list's viewport */
-	    var currentHeight = this.spacerNodeTop.clientHeight;
 	    for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
 		this._renderItem(i);
 		// this calculation is correct, but probing the domNode forces the node to render
@@ -965,11 +990,17 @@ dojo.declare("wm.List", wm.VirtualList, {
 		currentHeight += avgItemHeight;
 	    }
 	    
-	    /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling */
+	// Render one more
+	if (i < totalCount) {
+	    this._renderItem(i);
+	}
+
+	    /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling 
 	    var extraTenMax = i + 10;
 	    for (; i < totalCount && i < extraTenMax; i++) {
 		this._renderItem(i);
 	    }
+*/
 	this.addOddClasses();
 	console.log("END AT " + i + "; AVG: " + avgItemHeight + "; scrollTop: " + scrollTop);
 	    this.updateAverageItemHeight();
@@ -994,12 +1025,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 	var avgHeight = this.getAverageItemHeight();
 
 	// if its greater than this height, do not remove it
-	var keepAroundHeight = scrollTop - 10 * avgHeight;
-
+	var keepAroundHeight = scrollTop - avgHeight;// - 10 * avgHeight;
+	
 	var currentHeight = this.spacerNodeTop.clientHeight;
 	var rows = this.listNode.childNodes;
 	var rowsToDelete = [];
-	for (var i = 1; i < rows.length - 2; i++) {
+	for (var i = 1; i < rows.length - 1; i++) {
 	    var node = rows[i];
 	    var h = node.clientHeight;
 	    if (h + currentHeight < keepAroundHeight) {
@@ -1020,17 +1051,16 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	var avgItemHeight = this.avgHeight = this.getAverageItemHeight();
 	var listNode = this._listTouchScroll ? this.listNode.parentNode : this.listNode;
-	var maxHeight = this.getScrollTop() + this.getListNodeHeight() + 10 * avgItemHeight;
+	var maxHeight = this.getScrollTop() + this.getListNodeHeight() + this.spacerNodeTop.offsetTop;
 	var rows = this.listNode.childNodes;
 	var spacerHeight = parseInt(this.spacerNodeBottom.style.height) || 0;
 
 	while (rows.length > 2) {
 	    var row = rows[rows.length-2];
-	    var h = row.clientHeight;
-	    if (h + row.offsetTop  > maxHeight) {
+	    if (row.offsetTop  > maxHeight) {
 		row.parentNode.removeChild(row);
-		this.spacerNodeBottom.style.height = (this.spacerNodeBottom.clientHeight + h)  + "px";
-		console.log("REMOVING ITEM " + row.id.replace(/^.*_/,""));
+		//this.spacerNodeBottom.style.height = (this.spacerNodeBottom.clientHeight + h)  + "px";
+		//console.log("REMOVING ITEM " + row.id.replace(/^.*_/,""));
 	    } else {
 		break;
 	    }
@@ -1046,16 +1076,22 @@ dojo.declare("wm.List", wm.VirtualList, {
 	if (totalCount == 0) return;
 	
 	var scrollTop = this.getScrollTop();
-	var maxHeight = this.getListNodeHeight() + scrollTop; // basically the height of our widget, minus the height of our header
+	var maxHeight = this.getListNodeHeight() + scrollTop + this.spacerNodeTop.offsetTop; // basically the height of our widget, minus the height of our header
 	var avgItemHeight = this.getAverageItemHeight();
-	var minHeight = scrollTop - avgItemHeight * 10;
+	var minHeight = scrollTop;
 	
 	/* Skip through our list to the item that our guestimate says should be at scrollTop.
 	   We'll subtract 10 from that both because its a guestimate, and because I want to pregenerate
 		   a few rows in case the user scrolls up
 	*/
-	var startAddingFrom = Math.floor(maxHeight/avgItemHeight);
-	startAddingFrom = Math.min(totalCount-1,startAddingFrom+10);
+	var startAddingFrom;
+	if (this.listNode.childNodes.length > 2) {
+	    var item = this.getItemForNode(this.listNode.childNodes[this.listNode.childNodes.length-2]);
+	    var index = dojo.indexOf(this.items, item);
+	    startAddingFrom = index - 1;
+	} else {
+	    startAddingFrom = Math.floor(maxHeight/avgItemHeight);
+	}
 
 	/* If there are only 2 nodes (top spacer and bottom spacer, and we've already scrolled,
 	 * then the user has fast scrolled, there are no prior rows to append next to for proper
@@ -1073,6 +1109,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    if (this.items[i].domNode.offsetTop < minHeight) break;
 
 	    //console.log("NODE " + i);
+	}
+	/* Render one last one to insure no gaps */
+	if (i >= 0) {
+	    this._renderItem(i);
 	}
 	this.updateAverageItemHeight();
 
