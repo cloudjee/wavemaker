@@ -198,14 +198,11 @@ public class DataService {
             revengNamingStrategyClassName, overrideTable);
     }
 
-    public String cfExportDatabase(String token, String target, String appName, String dbName, String dbVendor, String schemaFilter,
-        String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
+    public String cfExportDatabase(String dbName, String schemaFilter, String driverClassName,
+                                   String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
-            if (cloudFoundryService.getService(token, target, dbName) != null) {
-                cloudFoundryService.createService(token, target, appName, dbName, dbVendor);
-            }
             RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, dbName);
             String connectionUrl = info.getUrl();
             String username = info.getUserName();
