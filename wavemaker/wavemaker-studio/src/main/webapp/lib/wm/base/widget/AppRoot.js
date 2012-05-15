@@ -38,7 +38,6 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	     * WARNING: onresize may not be provided to android devices within phonegap applications.
 	     */
 	    this._isOldAndroidBrowser = (navigator.vendor||"").match(/Google/i) && navigator.userAgent.match(/android/i);
-	    this._isIOS = navigator.userAgent.match(/(ipad|iphone)/i);
 	    if (!this._isOldAndroidBrowser && "onorientationchange" in window) {
 		window.addEventListener("orientationchange", dojo.hitch(this, "resize"));
 	    } else {
