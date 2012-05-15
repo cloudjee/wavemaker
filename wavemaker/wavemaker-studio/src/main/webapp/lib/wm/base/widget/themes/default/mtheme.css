@@ -282,7 +282,7 @@ th {
 .wmlist-list {
     height: 100%;
         -webkit-overflow-scrolling: touch;
-	overflow: auto;
+	overflow:auto;
 	/* cheat to hide IE scrollbar */
 	overflow-x: hidden;
 }
@@ -389,19 +389,11 @@ th {
     color: white;
 }
 
-.dialogfooter .wmbutton {
-    border: 2px solid #939fb6;
-    color: black;
 
-}
 .dialogtitlebar button.wmtoolbutton {
     background-color: transparent;
 }
 
-
-.dialogtitlebar .wmbutton:hover, .dialogfooter .wmbutton:hover {
-    background: rgb(240,240,240);
-}
 
 /**/
 
@@ -1169,3 +1161,7 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     outline: none;
 }
 
+.wmmobile div .dijitSliderImageHandleH {
+    height: 30px;
+    width: 20px;
+}
