@@ -1662,8 +1662,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 							break;
 						case 'wm_image_formatter':
 					        case 'Image (WaveMaker)':				    
-					    // spreadsheet shouldn't be given HTML
-							//value = this.imageFormatter(value);	
+					                value = this.imageFormatter(col.formatProps||{}, "","","", value);
 							break;
 						case 'wm_link_formatter':
 					        case 'Link (WaveMaker)':				    
