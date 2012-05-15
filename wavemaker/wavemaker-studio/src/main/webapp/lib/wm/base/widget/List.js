@@ -616,9 +616,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	    this._scrollDirection = "down";
 	    if (this.renderVisibleRowsOnly) {
-		this.scrollDownAddItems(0);
-		this.avgHeight = this.getAverageItemHeight();
-		this.updateBottomSpacerHeight();
+		if (!this.isAncestorHidden()) {
+		    this.scrollDownAddItems(0);
+		    this.avgHeight = this.getAverageItemHeight();
+		    this.updateBottomSpacerHeight();
+		} else {
+		    this._renderDojoObjSkipped = true;
+		}
 	    } else {
 		var totalCount = this.getDataItemCount();
 		for (var i = 0; i < totalCount; i++) {
@@ -650,36 +654,36 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	_renderItem: function(i) {
 	    if (this.items[i]) {
-		    if (!this.items[i].domNode.parentNode) {
-			//console.log("REINSERT " + i);
-			var parent = this.listNode;
-			var sibling = this.findNextSiblingNode(i);
-			parent.insertBefore(this.items[i].domNode,sibling);
-			if (this._isScrolling) {
-			    if (this._scrollDirection == "down") {
-				this.updateBottomSpacerHeight();
-				if (sibling != this.spacerNodeBottom) {
-				    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].domNode.clientHeight) + "px";
-				}
-			    } else {
-				this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.getAverageItemHeight()) + "px";
-			    }
-			}
-		    }
-		} else {
-		    /* Its a spacer node, destroy the spacer and generate the real item */
-		    var hadSpacer = false;
-		    this._formatIndex = i;
-		    this.addItem(this.getItemData(i), i);
-		    this._formatIndex = null;
+		if (!this.items[i].domNode.parentNode) {
+		    //console.log("REINSERT " + i);
+		    var parent = this.listNode;
+		    var sibling = this.findNextSiblingNode(i);
+		    parent.insertBefore(this.items[i].domNode,sibling);
 		    if (this._isScrolling) {
 			if (this._scrollDirection == "down") {
 			    this.updateBottomSpacerHeight();
-			} else if (!hadSpacer) {
-			    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].height) + "px";
+			    if (sibling != this.spacerNodeBottom) {
+				this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].domNode.clientHeight) + "px";
+			    }
+			} else {
+			    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.getAverageItemHeight()) + "px";
 			}
 		    }
 		}
+	    } else {
+		/* Its a spacer node, destroy the spacer and generate the real item */
+		var hadSpacer = false;
+		this._formatIndex = i;
+		this.addItem(this.getItemData(i), i);
+		this._formatIndex = null;
+		if (this._isScrolling) {
+		    if (this._scrollDirection == "down") {
+			this.updateBottomSpacerHeight();
+		    } else if (!hadSpacer) {
+			this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].height) + "px";
+		    }
+		}
+	    }
 
 	    /* Sanity check... */
 	    if (i == 0) {
@@ -934,7 +938,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	var currentHeight = 0;
 
 	// Render items until we've passed the height of the scrollTop + the height of the list area
-	var targetHeight = listNodeHeight + scrollTop;
+	var targetHeight = listNodeHeight + scrollTop + this.spacerNodeTop.offsetTop;
 
 	/* If this isn't our first render call (from renderData() ), then we're scrolling down.  We could be 5px
 	 * down or 5000px down, come up with a guess for where we should start generating rows.
