@@ -81,7 +81,10 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	} else
 	    this.setDataSet(inDataSet);
     },
-
+    clear: function() {
+	this.inherited(arguments);
+	this.selectedItem.clearData();
+    },
     buildTree: function() {
 	this.clear();  // remove all nodes so we can rebuild
 	if (!this.dataSet || !this._treeConfig) return;
