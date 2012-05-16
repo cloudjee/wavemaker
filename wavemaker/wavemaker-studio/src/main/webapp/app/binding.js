@@ -55,8 +55,14 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 		return wm.data.compare(a.owner.name + "." + a.name, b.owner.name + "." + b.name);
 	});
 	dojo.forEach(comps, function(c) {
-		if (c != studio.selected)
-			new wm.BindSourceTreeNode(inParent, {object: c});
+	    if (c != studio.selected) {
+		var targetType = (studio.bindDialog.page.targetProps.propDef.type || "").toLowerCase();
+		if (c instanceof wm.Variable && (wm.defaultTypes[c.type] && c.type != "EntryData" || wm.typeManager.getType(c.type).primitiveType) && (!targetType || targetType == "string" || targetType == "number" || targetType == "date" || targetType == "boolean")) {
+		    new wm.SimpleBindSourceTreeNode(inParent, {object: c, content: c.name, type: c.type, isValidBinding: 1});
+		} else {
+		    new wm.BindSourceTreeNode(inParent, {object: c});
+		}
+	    }
 	});
 }
 
@@ -219,9 +225,12 @@ addResourceBinderNodes = function(inParent, inFile, isRoot, rootPath) {
 wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 	var p;
 	for (var n in inNodeProps.schema) {
-		var property = inNodeProps.schema[n];
-		if (property.simpleBindProp)
-			p = {name: n, property: property};
+	    var property = inNodeProps.schema[n];
+	    if (property.simpleBindProp) {
+		p = {name: n, property: property};
+	    } else if (inNodeProps.object instanceof wm.Variable) {
+		p = {name: n, property: "dataValue"};
+	    }
 	}
 	
 	if (p) {
