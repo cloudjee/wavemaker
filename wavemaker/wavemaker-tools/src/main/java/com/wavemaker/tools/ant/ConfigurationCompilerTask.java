@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.resources.Resources;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -63,9 +64,7 @@ public class ConfigurationCompilerTask extends CompilerTask {
     }
 
     public Folder getDestWebAppRoot() {
-        LocalFileSystem fileSystem = new LocalFileSystem(this.destWebAppRoot);
-        Folder folder = FileSystemFolder.getRoot(fileSystem);
-        return folder;
+        return FileSystemUtils.convertToFileSystemFolder(this.destWebAppRoot);
     }
 
     public void setDestWebAppRoot(java.io.File destWebAppRoot) {

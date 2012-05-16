@@ -26,6 +26,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.StudioFileSystem;
 
@@ -74,8 +75,7 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
 
         Object rtn = methodProxy.invokeSuper(object, args);
 
-        LocalFileSystem fileSystem = new LocalFileSystem(tempDestDir);
-        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDestDir);
         folder.copyContentsTo(destDir);
 
         return rtn;

@@ -45,6 +45,7 @@ import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
@@ -272,8 +273,7 @@ public abstract class ServiceGenerator {
             if (dir.getResourceOrigin().equals(FileSystem.ResourceOrigin.MONGO_DB)) {
                 File f = IOUtils.createTempDirectory("dataService_directory", null);
                 this.codeModel.build(f, f, null);
-                LocalFileSystem fileSystem = new LocalFileSystem(f);
-                Folder folder = FileSystemFolder.getRoot(fileSystem);
+                Folder folder = FileSystemUtils.convertToFileSystemFolder(f);
                 folder.copyContentsTo(this.configuration.getOutputDirectory());
             } else {
                 File dest = (File) dir.getOriginalResource();

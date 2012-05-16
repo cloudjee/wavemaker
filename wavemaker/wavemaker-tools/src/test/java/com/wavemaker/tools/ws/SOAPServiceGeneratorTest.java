@@ -35,6 +35,7 @@ import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.common.Bootstrap;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.util.AntUtils;
@@ -67,8 +68,7 @@ public class SOAPServiceGeneratorTest extends WMTestCase {
         String resource = ClassLoaderUtils.getResource(wsdlResource);
         WSDL wsdl = WSDLManager.processWSDL(resource, null, null, null);
 
-        LocalFileSystem fileSystem = new LocalFileSystem(this.outputDir);
-        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        Folder folder = FileSystemUtils.convertToFileSystemFolder(this.outputDir);
         GenerationConfiguration genConfig = new GenerationConfiguration(wsdl, folder);
         SOAPServiceGenerator generator = new SOAPServiceGenerator(genConfig);
         generator.generate();

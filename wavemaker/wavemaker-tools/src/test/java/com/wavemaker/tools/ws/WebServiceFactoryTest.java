@@ -70,8 +70,7 @@ public class WebServiceFactoryTest extends WMTestCase {
         } catch (IOException ex) {
             fail("Exception occurred during getServiceDefiniton." + ex.getMessage());
         }
-        LocalFileSystem fileSystem = new LocalFileSystem(tempDir);
-        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDir);
 
         GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, folder);
         ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);

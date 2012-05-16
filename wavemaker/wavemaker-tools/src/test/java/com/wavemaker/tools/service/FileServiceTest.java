@@ -26,6 +26,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.spring.ComplexReturnBean;
 
@@ -69,8 +70,7 @@ public class FileServiceTest extends WMTestCase {
 
         @Override
         public Folder getFileServiceRoot() {
-            LocalFileSystem fileSystem = new LocalFileSystem(this.basedir);
-            Folder folder = FileSystemFolder.getRoot(fileSystem);
+            Folder folder = FileSystemUtils.convertToFileSystemFolder(this.basedir);
             return folder;
         }
     }
