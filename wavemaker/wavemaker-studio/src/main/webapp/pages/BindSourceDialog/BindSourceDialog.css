@@ -45,6 +45,11 @@
    overflow: hidden;
 }
 
+.BindSourceDialog .WireExpression:before {
+    content: "expr:";
+}
+
+
 .BindSourceDialog .wmtree-selected .WireExpression,
 .BindSourceDialog .wmtree-selected .WireSource {
     border-color: white;

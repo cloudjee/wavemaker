@@ -1138,6 +1138,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			   return;
 		       }
 		}
+	        this.owner.clearButton.setDisabled(false);
 		return true;
 	},
 	// return info about binding to be made
