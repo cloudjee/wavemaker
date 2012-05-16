@@ -1638,7 +1638,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			    }
 				if (col.expression){
 					value = this.getExpressionValue(col.expression, idx, obj, true);
-				} else if (col.formatFunc){
+				} 
+				if (col.formatFunc){
 					switch(col.formatFunc){
 						case 'wm_date_formatter':
 					        case 'Date (WaveMaker)':				    
@@ -1672,7 +1673,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 						default:
 							if (!this.isDesignLoaded())
-							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {}, obj);
+							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles: [], customClasses: []}, obj);
 							break;
 					}
 				}
@@ -1720,7 +1721,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			    }
 				if (col.expression){
 					value = this.getExpressionValue(col.expression, idx, obj, true);
-				} else if (col.formatFunc){
+				} 
+				if (col.formatFunc){
 				    /* TODO FOR 6.5: Calls to formatters are missing some parameters; at least pass null if no parameter is needed */
 					switch(col.formatFunc){
 						case 'wm_date_formatter':
