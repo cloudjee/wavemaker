@@ -592,6 +592,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.renderHeader();*/
 
 	},
+    renderBounds: function() {
+	var h = parseInt(this.domNode.style.height);
+	if (this.inherited(arguments) && this.renderVisibleRowsOnly) {
+	    if (this._renderDojoObjSkipped) {
+		this._render();
+	    } else {
+		var topItem = this.listNode.childNodes.length > 2 ? this.getItemForNode(this.listNode.childNodes[1]) : null;
+		if (this.bounds.h > h) {
+		    this._onScroll("down");
+		} else {
+		    this._onScroll("up");
+		}
+	    }
+	}
+    },
 	renderData: function(inData) {
 	    var maxRows = wm.device == "phone" ? this.maxRenderedRowsPhone : this.maxRenderedRows;
 	    if (this.selectedItem.type) {
@@ -613,7 +628,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	    this._scrollDirection = "down";
 	    if (this.renderVisibleRowsOnly) {
-		if (!this.isAncestorHidden()) {
+		if (!this.isAncestorHidden() && !this._loading) {
 		    this.scrollDownAddItems(0);
 		    this.avgHeight = this.getAverageItemHeight();
 		    this.updateBottomSpacerHeight();
@@ -890,7 +905,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    this._isScrolling = true;
 	    var scrollTop = this.getScrollTop();
 
-	    if (this._lastScrollTop === undefined || this._lastScrollTop < scrollTop) {
+	    if (direction == "down" || direction != "up" && (this._lastScrollTop === undefined || this._lastScrollTop < scrollTop)) {
 		this._scrollDirection = "down";
 		this.scrollDownRemoveItems();
 		this.scrollDownAddItems();

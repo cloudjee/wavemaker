@@ -211,15 +211,17 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	},
 
     renderBounds: function() {
-	this.inherited(arguments);
-	var hidden = this.isAncestorHidden();
-	if (!this._listTouchScroll && this.headerVisible && !hidden) {
-	    wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));	    
+	var result = this.inherited(arguments);
+	if (result) {
+	    var hidden = this.isAncestorHidden();
+	    if (!this._listTouchScroll && this.headerVisible && !hidden) {
+		wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));	    
+	    }
+	    if (this._listTouchScroll && !hidden) {
+		wm.job(this.getRuntimeId() + ".postTouchRenderBounds", 1, dojo.hitch(this, "postTouchRenderBounds"));
+	    }
 	}
-	if (this._listTouchScroll && !hidden) {
-	    wm.job(this.getRuntimeId() + ".postTouchRenderBounds", 1, dojo.hitch(this, "postTouchRenderBounds"));
-	}
-
+	return result;
     },
     postRenderBounds: function() {
 	if (!this.isAncestorHidden()) {
