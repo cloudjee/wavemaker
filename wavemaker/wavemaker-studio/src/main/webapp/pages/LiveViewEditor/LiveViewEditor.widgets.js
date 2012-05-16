@@ -39,35 +39,21 @@ LiveViewEditor.widgets = {
 		bevel1: ["wm.Bevel", {border: ""}, {}],
 		panel1: ["wm.Panel", {border: "0", height: "100%", width: "100%", layoutKind: "left-to-right"}, {}, {
 			tree1: ["wm.Tree", {height: "100%", width: "100%", border: ""}, {oninitchildren: "tree1Initchildren", oncheckboxclick: "tree1Checkboxclick", onselect: "tree1Select", ondblclick: "tree1DblClick"}],
-			splitter1: ["wm.Splitter", {layout: "right", border: ""}, {}],
-			panel2: ["wm.Panel", {border: "0", width: "398px", height: "100%"}, {}, {
+		    splitter1: ["wm.Splitter", {layout: "right", border: "", showing: false}, {}],
+		    panel2: ["wm.Panel", {border: "0", width: "398px", height: "100%", showing: false}, {}, {
 				fieldLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold"]}, height: "28px", border: "1,0,0,0", borderColor: "#000000", padding: "4", caption: "Field Options"}, {}, {
 					format: ["wm.DataFormatter", {}, {}]
 				}],
 				liveForm1: ["wm.LiveForm", {border: "0", captionSize: "90px", height: "100%", width: "100%", padding: "4"}, {}, {
-					captionEdit: ["wm.Editor", {caption: "Caption", height: "24px", captionSize: "90px", layoutKind: "left-to-right"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._TextEditor", {changeOnKey:true}, {}]
-					}],
-					orderEdit: ["wm.Editor", {caption: "Order", height: "24px", captionSize: "90px", layoutKind: "left-to-right"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._NumberEditor", {changeOnKey:true}, {}]
-					}],
-					typeEdit: ["wm.Editor", {caption: "Type Hint", display: "Select", height: "24px", captionSize: "90px", layoutKind: "left-to-right"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._SelectEditor", {options: "Text,Date,Time,Number,Currency,CheckBox,TextArea,RadioButton,Slider"}, {}]
-					}],
-					autoSizeBox: ["wm.Editor", {caption: "Auto Size", display: "CheckBox", displayValue: true, height: "24px", width: "100%", captionSize: "90px", layoutKind: "left-to-right", emptyValue: "false"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
-					}],
+				    captionEdit: ["wm.Text", {caption: "Caption", height: "24px", captionSize: "90px", width: "150px", changeOnKey:true}, {onchange: "fieldEditorChanged"}],
+				    orderEdit: ["wm.Number", {caption: "Order", height: "24px", width: "150px", captionSize: "90px", changeOnKey:true}, {onchange: "fieldEditorChanged"}],
+				    typeEdit: ["wm.SelectMenu", {caption: "Type Hint", height: "24px", width: "150px", captionSize: "90px", options: "Text,Date,Time,Number,Currency,CheckBox,TextArea,RadioButton,Slider"}, {onchange: "fieldEditorChanged"}],
+					autoSizeBox: ["wm.Checkbox", {caption: "Auto Size", dataType: "boolean", displayValue: true, height: "24px", width: "100%", captionSize: "90px", layoutKind: "left-to-right", emptyValue: "false"}, {onchange: "fieldEditorChanged"}],
 					panel5: ["wm.Panel", {border: "0", height: "24px", width: "100%", layoutKind: "left-to-right"}, {}, {
-						widthEdit: ["wm.Editor", {caption: "Width", display: "Number", captionSize: "90px", layoutKind: "left-to-right", height: "100%"}, {onchange: "fieldEditorChanged"}, {
-							editor: ["wm._NumberEditor", {changeOnKey:true}, {}]
-						}],
-						widthUnitsEdit: ["wm.Editor", {display: "Select", layoutKind: "left-to-right", captionPosition: "right", width: "82px", height: "100%"}, {onchange: "fieldEditorChanged"}, {
-							editor: ["wm._SelectEditor", {options: "px,%"}, {}]
-						}]
+					    widthEdit: ["wm.Number", {changeOnKey:true,caption: "Width", captionSize: "90px", layoutKind: "left-to-right", height: "100%", width: "150px"}, {onchange: "fieldEditorChanged"}],
+					    widthUnitsEdit: ["wm.SelectMenu", {options: "px,%", captionPosition: "right", width: "50px", height: "100%"}, {onchange: "fieldEditorChanged"}]
 					}],
-					requiredBox: ["wm.Editor", {caption: "Required", display: "CheckBox", displayValue: true, height: "24px", width: "100%", captionSize: "90px", layoutKind: "left-to-right", emptyValue: "false"}, {onchange: "fieldEditorChanged"}, {
-						editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
-					}]
+				    requiredBox: ["wm.Checkbox", {caption: "Required", dataType: "boolean", displayValue: true, height: "24px", width: "100%", captionSize: "90px", layoutKind: "left-to-right", emptyValue: "false"}, {onchange: "fieldEditorChanged"}]
 				}]
 			}]
 		}],
