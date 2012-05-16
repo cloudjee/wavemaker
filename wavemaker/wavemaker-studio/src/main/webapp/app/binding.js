@@ -57,7 +57,7 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 	dojo.forEach(comps, function(c) {
 	    if (c != studio.selected) {
 		var targetType = (studio.bindDialog.page.targetProps.propDef.type || "").toLowerCase();
-		if (c instanceof wm.Variable && (wm.defaultTypes[c.type] && c.type != "EntryData" || wm.typeManager.getType(c.type).primitiveType) && (!targetType || targetType == "string" || targetType == "number" || targetType == "date" || targetType == "boolean")) {
+		if (c instanceof wm.Variable && !c.isList && (wm.defaultTypes[c.type] && c.type != "EntryData" || wm.typeManager.getType(c.type).primitiveType) && (!targetType || targetType == "string" || targetType == "number" || targetType == "date" || targetType == "boolean")) {
 		    new wm.SimpleBindSourceTreeNode(inParent, {object: c, content: c.name, type: c.type, isValidBinding: 1});
 		} else {
 		    new wm.BindSourceTreeNode(inParent, {object: c});
