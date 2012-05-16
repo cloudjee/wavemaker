@@ -502,7 +502,7 @@
 	     if (inGroup.props) {
 		 this._generateEditors(inComponent, inLayer, inGroup.props);
 	     }
-	     delete this.processingRequiredGroup;
+	     delete this.processingRequiredGroup; 
 	 } else if (inPropList) {
 	     this._generateEditors(inComponent, inLayer, this.props);
 	 }
@@ -1097,8 +1097,11 @@
 		     bd.show();
 		     bd.page.setContent(altText);
 		 } else {
-		     if (inType == studio.application.declaredClass)
+		     if (inType == studio.application.declaredClass) {
 			 inType = "wm.Application";
+		     } else if (inType == studio.project.pageName) {
+			 inType = "wm.Page";
+		     }
 		     var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
 										      className: inType.replace(/^.*\./,"") + "_" + inPropName});
 
