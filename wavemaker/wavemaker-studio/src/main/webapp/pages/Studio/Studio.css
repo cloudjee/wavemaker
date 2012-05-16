@@ -1371,49 +1371,6 @@ body .StudioButton.wmbutton.toggleButtonUp
 }
 */
 
-body .StudioButton {
-    -moz-border-radius: 4px !important; 
-    -webkit-border-radius: 4px !important;
-    border-radius: 4px !important;
-
-    background: -webkit-gradient(linear, center top, center bottom, from(#9AA8B9), color-stop(36%,#616C7E), to(#616C7E));
-    background: -moz-linear-gradient(top, #9AA8B9 0%,#616C7E 36%,#616C7E 100%);
-    background: -o-linear-gradient(top, #9AA8B9 0%,#616C7E 36%,#616C7E 100%);
-    background: -ms-linear-gradient(top, #9AA8B9 0%,#616C7E 36%,#616C7E 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9AA8B9', endColorstr='#616C7E',GradientType=0);
-    color: #FFF;
-    font-weight:bold;
-    border-color: #555 #333 #333 #555 !important;
-    border: 1px;
-    -moz-box-shadow: 2px 2px 2px #333;
-    -webkit-box-shadow: 2px 2px 2px #333;
-    box-shadow: 2px 2px 2px #333;
-/*
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-*/
-}
-body .StudioButton:hover {
-    background: -webkit-gradient(linear, center top, center bottom, from(#9AA8B9), color-stop(50%,#616C7E), to(#616C7E));
-    background: -moz-linear-gradient(top, #9AA8B9 0%,#616C7E 50%,#616C7E 100%);
-    background: -o-linear-gradient(top, #9AA8B9 0%,#616C7E 50%,#616C7E 100%);
-    background: -ms-linear-gradient(top, #9AA8B9 0%,#616C7E 50%,#616C7E 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#AAB8C9', endColorstr='#616C7E',GradientType=0);
-    -moz-box-shadow: 1px 1px 1px #333;
-    -webkit-box-shadow: 1px 1px 1px #333;
-    box-shadow: 1px 1px 1px #333;
-}
-    
-
-body .StudioButton.wmbutton-disabled,
-body .StudioButton.wmbutton-disabled:hover {
-    cursor: default;
-    color: #e0e0e0;
-    background: none;
-    background-image: none;
-    background-color: #616C7E;
-    opacity: 1;
-}
 
 
 /*

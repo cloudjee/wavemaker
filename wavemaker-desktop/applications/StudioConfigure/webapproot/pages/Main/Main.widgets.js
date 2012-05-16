@@ -1,5 +1,5 @@
 Main.widgets = {
-	downloadAndInstallServiceVar: ["wm.ServiceVariable", {"operation":"DownloadPackages","service":"InstallService"}, {"onError":"downloadAndInstallServiceVarError","onSuccess":"downloadAndInstallServiceVarSuccess"}, {
+    downloadAndInstallServiceVar: ["wm.ServiceVariable", {"operation":"DownloadPackages","service":"InstallService"}, {"onError":"downloadAndInstallServiceVarError","onSuccess":"downloadAndInstallServiceVarSuccess"}, {
 		input: ["wm.ServiceInput", {"type":"DownloadPackagesInputs"}, {}]
 	}],
 	gotoMainLayer: ["wm.NavigationCall", {}, {}, {
@@ -8,6 +8,12 @@ Main.widgets = {
 				wire: ["wm.Wire", {"source":"layer1","targetProperty":"layer"}, {}]
 			}]
 		}]
+	}],
+    loadingDialog1: ["wm.LoadingDialog", { caption: "Downloading and Installing", captionWidth: "200px"}, {}, {
+	    binding: ["wm.Binding", {}, {}, {
+		wire1: ["wm.Wire", {targetProperty: "serviceVariableToTrack", source: "downloadAndInstallServiceVar"}],
+		wire2: ["wm.Wire", {targetProperty: "widgetToCover", source: "licenseHtml"}]
+	    }]
 	}],
 	layoutBox: ["wm.Layout", {"horizontalAlign":"center"}, {}, {
 		panel5: ["wm.Panel", {"_classes":{"domNode":["wm_Attribution_new"]},"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"266px"}, {}],
@@ -22,11 +28,7 @@ Main.widgets = {
 						licenseHtml: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","minHeight":0,"padding":"10"}, {}],
 						panel3: ["wm.Panel", {"height":"48px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 							spacer1: ["wm.Spacer", {"height":"50px","width":"326px"}, {}],
-							downloadButton: ["wm.BusyButton", {"caption":"Download and Install","defaultIconUrl":"lib/dojo/dojo/../../../lib/dojo/dojo/../../../lib/dojo/dojo/../../../lib/dojo/dojo/../../../lib/wm/base/widget/themes/default/images/blank.gif","desktopHeight":"34px","height":"34px","margin":"4","width":"257px"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"expression":undefined,"source":"downloadAndInstallServiceVar","targetProperty":"clickVariable"}, {}]
-								}]
-							}],
+						    downloadButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Download and Install","height":"34px","margin":"4","width":"200px"}, {onclick: "downloadAndInstallServiceVar"}],
 							manualLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontColor_White"]},"align":"right","border":"0","caption":"Proxy Problems?","link":"#","padding":"4","width":"100%"}, {"onclick":"manualLabelClick"}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}]
@@ -43,13 +45,13 @@ Main.widgets = {
 							label3: ["wm.Label", {"border":"0","caption":"Step 1: Download the zip file","height":"100%","padding":"4","width":"100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							downloadZipButton: ["wm.Button", {"caption":"Download","height":"100%","margin":"4","width":"130px"}, {"onclick":"downloadZipButtonClick"}]
+							downloadZipButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Download","height":"100%","margin":"4","width":"130px"}, {"onclick":"downloadZipButtonClick"}]
 						}],
 						panel2: ["wm.Panel", {"height":"40px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 							label4: ["wm.Label", {"border":"0","caption":"Step 2: Upload the zip into studio","height":"100%","padding":"4","width":"100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							dojoFileUpload1: ["wm.DojoFileUpload", {"border":"1","borderColor":"#ABB8CF","height":"100%","margin":"4","operation":"uploadPackage","service":"InstallService","useList":false,"width":"130px"}, {"onError":"dojoFileUpload1Error","onSuccess":"dojoFileUpload1Success"}, {
+							dojoFileUpload1: ["wm.DojoFileUpload", {_classes: {domNode: ["StudioButton"]}, "border":"1","borderColor":"#ABB8CF","height":"100%","margin":"4","operation":"uploadPackage","service":"InstallService","useList":false,"width":"130px"}, {"onError":"dojoFileUpload1Error","onSuccess":"dojoFileUpload1Success"}, {
 								input1: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
 								input2: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
 								input3: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
@@ -64,7 +66,7 @@ Main.widgets = {
 					}],
 					permissionsLayer: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"right","verticalAlign":"top"}, {}, {
 						html1: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","html":"Unable to upload this file; this typically means that your system requires additional permissions to install. You can install these files yourself into studio/WEB-INF/lib.  For instructions go to <a class=\"wm_FontColor_Black\" href=\"#\" onclick=\"window.open('http://dev.wavemaker.com/wiki/bin/ThirdPartyJars')\">Installing Jars</a> on the wiki","minHeight":0,"padding":"10"}, {}],
-						button1: ["wm.Button", {"caption":"Try Again","margin":"4","width":"107px"}, {"onclick":"layer1"}]
+						button1: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Try Again","margin":"4","width":"107px"}, {"onclick":"layer1"}]
 					}]
 				}]
 			}]
