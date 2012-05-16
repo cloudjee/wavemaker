@@ -384,11 +384,12 @@ th {
 }
 
 
+/*
  .dialogtitlebar, .dialogfooter {
     background-color: #555555;	   
     color: white;
 }
-
+*/
 
 .dialogtitlebar button.wmtoolbutton {
     background-color: transparent;
@@ -1164,4 +1165,12 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 .wmmobile div .dijitSliderImageHandleH {
     height: 30px;
     width: 20px;
+}
+
+.MapMarkerTitle {
+    margin: 0px 0px 2px 0px;
+    border-bottom: solid 1px #333;
+}
+.MapMarkerDescription {
+    padding: 5px 0px 2px 0px;
 }

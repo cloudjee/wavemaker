@@ -392,7 +392,7 @@ th {
 	background-color: #EEEEEE;
 }
 
-
+/*
  .dialogtitlebar, .dialogfooter {
     background-color: #555555;	   
     color: white;
@@ -403,6 +403,7 @@ th {
     color: black;
 
 }
+*/
 .dialogtitlebar button.wmtoolbutton {
     background-color: transparent;
 }
@@ -1362,3 +1363,11 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 }
 
 .dojoxColorPickerWebSafePreview {display:none;}
+
+.MapMarkerTitle {
+    margin: 0px 0px 2px 0px;
+    border-bottom: solid 1px #333;
+}
+.MapMarkerDescription {
+    padding: 5px 0px 2px 0px;
+}
