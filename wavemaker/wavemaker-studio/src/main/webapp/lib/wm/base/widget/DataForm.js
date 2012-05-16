@@ -64,7 +64,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
     enableTouchHeight: true,
     editorHeight: "26px",
     editorWidth: "100%",
-    captionSize: "150px",
+    captionSize: "120px",
     autoSizeCaption: false,
     captionAlign: "right",
     captionPosition: "left",
