@@ -22,6 +22,7 @@ wm.Object.extendSchema(wm.VirtualList, {
     /* wm.List group; selection subgroup */
     selectionMode:     {group: "widgetName", subgroup: "selection", order: 40, options: ["single", "multiple", "extended", "none", "checkbox", "radio"], ignoreHint: "You need to use the 'editColumns' dialog to setup columns before this feature becomes available"},
     toggleSelect: {group: "widgetName", subgroup: "selection", order: 41, ignoreHint: "Only available for single selection mode"},
+    selectFirstRow:{group: "widgetName", subgroup: "selection", order: 42},
 
     deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},

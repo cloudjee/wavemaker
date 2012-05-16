@@ -81,6 +81,7 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {    
+    selectFirstRow: false,
     renderVisibleRowsOnly: true,
     nextRowId: 0,
     query: {},
