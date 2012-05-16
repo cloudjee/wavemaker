@@ -32,10 +32,12 @@ dojo.declare("wm.Picture", wm.Control, {
 		//this.connect(this.img, "load", this, "imageLoaded");
 	        this.connect(this.img, "click", this, function(evt) {
 		    dojo.stopEvent(evt);
+		    if (this.disabled) return;
 		    wm.onidle(this,"onclick"); // don't pass evt which after a delay will become undefined in some browsers
 		});
 	        this.connect(this.linkNode, "click", this, function(evt) {
 		    dojo.stopEvent(evt);
+		    if (this.disabled) return;
 		    wm.onidle(this,"onclick"); // don't pass evt which after a delay will become undefined in some browsers
 		});
 		this.setSource(this.source);
