@@ -26,6 +26,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.WSDL;
@@ -93,12 +94,10 @@ public class CFJAXWSBuilder extends JAXWSBuilder {
 
     @Override
     protected void copyToFinalDest() {
-        LocalFileSystem fileSystem = new LocalFileSystem(this.tempOutputSrcDir);
-        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        Folder folder = FileSystemUtils.convertToFileSystemFolder(this.tempOutputSrcDir);
         folder.copyContentsTo(this.outputSrcDir);
 
-        fileSystem = new LocalFileSystem(this.tempOutputClassDir);
-        folder = FileSystemFolder.getRoot(fileSystem);
-        folder.copyTo(this.outputClassDir);
+        folder = FileSystemUtils.convertToFileSystemFolder(this.tempOutputClassDir);
+        folder.copyContentsTo(this.outputClassDir);
     }
 }
