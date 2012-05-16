@@ -492,9 +492,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	renderDataSet: function(inDataSet) {
 
 	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
-		if (this.owner instanceof wm.Page) {
-		    console.log(this.parent);
-		}
 		this._renderDojoObjSkipped = true;
 		return;
 	    } 
@@ -654,8 +651,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	_renderItem: function(i) {
 	    if (this.items[i]) {
-		if (!this.items[i].domNode.parentNode) {
-		    //console.log("REINSERT " + i);
+		/* in IE 8, domNodes removed from body are given a parentNode with no tagName */
+		if (!this.items[i].domNode.parentNode || !this.items[i].domNode.parentNode.tagName) {
 		    var parent = this.listNode;
 		    var sibling = this.findNextSiblingNode(i);
 		    parent.insertBefore(this.items[i].domNode,sibling);
@@ -705,21 +702,22 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    return parent.childNodes[1];
 	} 
  	if (this.items[inIndex-1]) {
-	    var node = this.getNodeFromItem(this.items[inIndex-1]);
-	    if (node.parentNode) {
-		    return parent.childNodes[dojo.indexOf(parent.childNodes, node)+1];
+	    var priorSiblingNode = this.getNodeFromItem(this.items[inIndex-1]);
+	    /* in IE 8, domNodes removed from body are given a parentNode with no tagName */
+	    if (priorSiblingNode.parentNode && priorSiblingNode.parentNode.tagName) {
+		    return parent.childNodes[dojo.indexOf(parent.childNodes, priorSiblingNode)+1];
 	    }
 	}
  	if (this.items[inIndex+1]) {
 	    var node = this.getNodeFromItem(this.items[inIndex+1]);
-		if (node.parentNode) {
+		if (node.parentNode && node.parentNode.tagName) {
 		    return node;
 		}
 	}
 	for (var i = inIndex-2; i >= 0; i--) {
 	    if (this.items[i]) {
 	    var node = this.getNodeFromItem(this.items[i]);
-	    if (node.parentNode) {
+	    if (node.parentNode && node.parentNode.tagName) {
 		return parent.childNodes[dojo.indexOf(parent.childNodes, node)+1];
 	    }
 	    }
@@ -983,7 +981,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    }
 	}
 
-	console.log("START AT " + startAddingFrom + "; AVG: " + avgItemHeight + "; scrollTop: " + scrollTop);
+
 	    /* Keep adding items/rows until the rows are below the bottom of the list's viewport */
 	    for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
 		this._renderItem(i);
@@ -1006,7 +1004,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    }
 */
 	this.addOddClasses();
-	console.log("END AT " + i + "; AVG: " + avgItemHeight + "; scrollTop: " + scrollTop);
 	    this.updateAverageItemHeight();
 //	app.toastSuccess("ScrollTop: " + scrollTop + "; generated: " + i);
 	   //this.addOddClasses();
@@ -1046,7 +1043,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	}
 
 	this.spacerNodeTop.style.height = currentHeight + "px";
-	console.log("REMOVING " + rowsToDelete.length + " items");
 	dojo.forEach(rowsToDelete, function(node) {
 	    node.parentNode.removeChild(node);
 	});
@@ -1074,7 +1070,6 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     scrollUpAddItems: function() {
 
-	console.log("Add Visible Items:" + this._scrollDirection);
 	var parent = this.listNode;
 	var totalCount = this.getDataItemCount();
 	if (totalCount == 0) return;
