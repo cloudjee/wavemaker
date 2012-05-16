@@ -639,9 +639,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		
 		return;
 	    }
-	  this.updateSelectedItem(-1);
-	  var item = this.getRowData(rowIndex);
-	  this.dojoObj.store.deleteItem(item);
+	    this.updateSelectedItem(-1);
+	    var item = this.getRowData(rowIndex);
+	    this.dojoObj.store.deleteItem(item);
+	    if (this.dataSet && this.dataSet.data && this.dataSet.data.list) {
+		var dataSetIndex = dojo.indexOf(this.dataSet.data.list, item._wmVariable[0]);
+		if (dataSetIndex != -1) {
+		    this.dataSet.beginUpdate();
+		    this.dataSet.removeItem(dataSetIndex);
+		    this.dataSet.endUpdate();
+		}
+	    }
 	    this.dojoObj.render();
 	},
 	addRow: function(inFields, selectOnAdd) {
