@@ -13,7 +13,7 @@
  */
  
 Studio.widgets = {
-        loadingDialog: ["wm.LoadingDialog", {}],
+    loadingDialog: ["wm.LoadingDialog", {_classes: {domNode: ["studiodialog"]}}],
         themesListVar: ["wm.Variable", {type: "StringData"}],
     deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],
     deviceTypeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: "Desktop", dataValue: "desktop"}, {name: "Tablet", dataValue: "tablet"}, {name: "Phone", dataValue: "phone"}]'}],
@@ -45,7 +45,7 @@ Studio.widgets = {
     openProjectOptionsDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Open Project...", pageName: "OpenProjectOptions", modal: true, deferLoad: true,    width: "500px", height: "180px", hideControls: true}],
     revertProjectOptionsDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Revert Project...", pageName: "RevertProjectOptions", modal: true, deferLoad: true,width: "500px", height: "200px", hideControls: true}],
     gridDesignerDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Grid Designer", pageName: "GridDesigner", modal: false, deferLoad: true, width: "680px", height: "520px", hideControls: true, noEscape: true, minHeight: "200", noLeftRightDocking: true}],
-    liveViewEditDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "LiveView Editor", pageName: "LiveViewEditor", modal: true, deferLoad: true,    width: "600px", height: "500px", hideControls: true, noEscape: true}],
+    liveViewEditDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "LiveView Editor", pageName: "LiveViewEditor", modal: true, deferLoad: true,    width: "300px", height: "500px", hideControls: true, noEscape: true}],
     editVariableDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Edit JSON", pageName: "EditVariable", modal: false, deferLoad: true,     width: "500px", height: "400px", hideControls: true, noEscape: true}],
     confirmSaveDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "ConfirmSaveDialog", deferLoad: false,   width: "400px", height: "120px", hideControls: true, noEscape: true}],
     jarListVariable: ["wm.Variable", {type: "StringData"}, {}],
@@ -53,7 +53,7 @@ Studio.widgets = {
     jarDownloadDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "HandleRequiredJars",   width: "400px", height: "340px", hideControls: true, modal: false, title: "Import Jar File", deferLoad: true}],
     ImportThirdPartyAPIDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "ImportThirdPartyAPI",   width: "500px", height: "240px", hideControls: true, modal: false, title: "Import Partner Services", deferLoad: true}],
     dictionaryDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "I18nDictionaryEditor",   width: "400px", height: "80%", hideControls: true, modal: false, title: "Dictionary Editor", deferLoad: true, corner: "cr"}],
-    editCodeDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "CodeEditorDialog",   width: "800px", height: "400px", hideControls: true, modal: true, title: "Edit Code", deferLoad: true, corner: "cl", positionNear: "PIContents"}],
+    editCodeDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "CodeEditorDialog",   width: "800px", height: "400px", hideControls: true, modal: false, noEscape: true, title: "Edit Code", deferLoad: true, corner: "cl", positionNear: "PIContents"}],
 
 	//tempData used to show grid on FancyTemplate
 	varTemplateData: ["wm.Variable", {"json":"[{name: \"Vestibulum\", dataValue: \"sodales magna mollis purus iaculis sagittis\"},\n{name: \"Lacinia\", dataValue: \" aliquam mauris nulla, consequat\"},\n{name: \"Consequat\", dataValue: \"rhoncus diam metus id arcu\"},\n{name: \"Elementum\", dataValue: \"quis odio sodales ornare quis eu\"},\n{name: \"Sagittis\", dataValue: \"torquent per conubia nostra, per inceptos\"},\n{name: \"Aliquam\", dataValue: \"molestie auctor tortor ac tincidunt\"},\n{name: \"Nullam\", dataValue: \"in orci eros, vitae convallis neque\"},\n{name: \"Mauris\", dataValue: \"luctus adipiscing ligula urna a nisl\"},\n{name: \"Pellentesque\", dataValue: \" ante lectus, mollis ut suscipit id\"}]","type":"EntryData"}, {}],
