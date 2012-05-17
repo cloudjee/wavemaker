@@ -1395,7 +1395,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	border:none;
 }
 
-.wm-darksnazzy .wmtree {
+.wm-darksnazzy .wmtree, .wm-darksnazzy.wmpicture {
 	background-color: #424a5a;
 }
 
