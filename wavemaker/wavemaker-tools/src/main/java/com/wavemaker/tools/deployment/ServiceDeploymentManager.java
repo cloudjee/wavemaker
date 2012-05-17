@@ -27,6 +27,7 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
@@ -81,8 +82,7 @@ public class ServiceDeploymentManager {
 
         try {
             stagingProjectDir = IOUtils.createTempDirectory("dplstaging", "dir");
-            LocalFileSystem fileSystem = new LocalFileSystem(stagingProjectDir);
-            Folder stagingProjectDirFolder = FileSystemFolder.getRoot(fileSystem);
+            Folder stagingProjectDirFolder = FileSystemUtils.convertToFileSystemFolder(stagingProjectDir);
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
             prepareForDeployment(mgr, properties);

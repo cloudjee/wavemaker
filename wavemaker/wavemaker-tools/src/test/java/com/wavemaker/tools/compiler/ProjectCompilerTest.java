@@ -51,8 +51,6 @@ public class ProjectCompilerTest {
         this.studioConfiguration.setServletContext(this.servletContext);
         Resource wmHome = this.studioConfiguration.createTempDir();
         // cftempfix
-        // LocalFileSystem fileSystem = new LocalFileSystem(wmHome.getFile());
-        // Folder wmHomeFolder = FileSystemFolder.getRoot(fileSystem);
         Folder wmHomeFolder = FileSystemUtils.convertToFileSystemFolder(wmHome.getFile());
         this.studioConfiguration.setTestWaveMakerHome(wmHomeFolder);
         Resource projectDir = wmHome.createRelative("/projects/ProjectCompilerProject/");

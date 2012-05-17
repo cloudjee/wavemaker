@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -190,11 +187,14 @@ public class WebServiceToolsManager {
         // if (!wsdlFile.getCanonicalFile().equals(origWsdlFile.getCanonicalFile())) {
         // IOUtils.copy(origWsdlFile, wsdlFile);
         // }
-        org.apache.commons.io.IOUtils.copy(new FileInputStream(origWsdlFile), wsdlFile.getContent().asOutputStream());
+        OutputStream os = wsdlFile.getContent().asOutputStream();
+        org.apache.commons.io.IOUtils.copy(new FileInputStream(origWsdlFile), os);
+        os.close();
+
         // cftempfix: copy wsdl file to temp directory because we need to pass URI to the rest of the process
-        // java.io.File tempWsdlDir = IOUtils.createTempDirectory("wsdl_directory", null);
-        // java.io.File temlWsdlFile = new java.io.File(tempWsdlDir, origWsdlFile.getName());
-        // IOUtils.copy(origWsdlFile, temlWsdlFile);
+        java.io.File tempWsdlDir = IOUtils.createTempDirectory("wsdl_directory", null);
+        java.io.File temlWsdlFile = new java.io.File(tempWsdlDir, origWsdlFile.getName());
+        IOUtils.copy(origWsdlFile, temlWsdlFile);
 
         // cftempfix
         // also copy xsd file(s) used by the WSDL
@@ -206,17 +206,14 @@ public class WebServiceToolsManager {
                     File xsdFile = packageDir.getFile(origXsdFile.getName());
                     org.apache.commons.io.IOUtils.copy(new FileInputStream(origXsdFile), xsdFile.getContent().asOutputStream());
                     // cftempfix: copy xsd files to temp directory as well
-                    // java.io.File tempXsdFile = new java.io.File(tempWsdlDir, origXsdFile.getName());
-                    // IOUtils.copy(origXsdFile, tempXsdFile);
+                    java.io.File tempXsdFile = new java.io.File(tempWsdlDir, origXsdFile.getName());
+                    IOUtils.copy(origXsdFile, tempXsdFile);
                 }
             }
         }
 
-        try {
-            wsdlUri = ResourceURL.get(wsdlFile).toURI().toString();
-        } catch (URISyntaxException ex) {
-            throw new WSDLException(ex);
-        }
+            //wsdlUri = ResourceURL.get(wsdlFile).toURI().toString();
+        wsdlUri = temlWsdlFile.toURI().toString();
 
         // do the import which would generate service Java files and resource
         // files

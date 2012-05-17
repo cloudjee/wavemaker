@@ -43,6 +43,7 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
@@ -66,8 +67,7 @@ public class ServiceConfigurationProcessorTest {
         this.fileSystem = new LocalStudioFileSystem();
         Resource wmHome = this.fileSystem.createTempDir();
         // cftempfix
-        LocalFileSystem fileSystem = new LocalFileSystem(wmHome.getFile());
-        Folder wmHomeFolder = FileSystemFolder.getRoot(fileSystem);
+        Folder wmHomeFolder = FileSystemUtils.convertToFileSystemFolder(wmHome.getFile());
         this.fileSystem.setTestWaveMakerHome(wmHomeFolder);
         Resource projectDir = wmHome.createRelative("/projects/ServiceDefProcessorProject/");
         this.fileSystem.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());

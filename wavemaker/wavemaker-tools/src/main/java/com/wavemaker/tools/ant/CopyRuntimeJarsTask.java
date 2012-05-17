@@ -398,8 +398,6 @@ public class CopyRuntimeJarsTask extends Task {
     }
 
     public void setProjectRoot(File projectRoot) {
-        LocalFileSystem fileSystem = new LocalFileSystem(projectRoot);
-        FileSystemFolder.getRoot(fileSystem);
         this.wmProject = new Project(new FileSystemResource(projectRoot), new LocalStudioFileSystem());
     }
 

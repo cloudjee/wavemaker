@@ -48,6 +48,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceURL;
 import com.wavemaker.tools.io.filesystem.FileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.jaxws.SimpleClassNameCollector;
@@ -74,8 +75,7 @@ public class XJCCompiler {
             if (outputDir.getResourceOrigin().equals(FileSystem.ResourceOrigin.MONGO_DB)) {
                 File tempOutputDir = IOUtils.createTempDirectory("ws_out_directory", null);
                 generateCode.build(tempOutputDir, tempOutputDir, null);
-                LocalFileSystem fileSystem = new LocalFileSystem(tempOutputDir);
-                Folder folder = FileSystemFolder.getRoot(fileSystem);
+                Folder folder = FileSystemUtils.convertToFileSystemFolder(tempOutputDir);
                 folder.copyContentsTo(outputDir);
             } else {
                 generateCode.build((File) outputDir.getOriginalResource(), (File) outputDir.getOriginalResource(), null);
