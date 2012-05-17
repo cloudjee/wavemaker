@@ -618,14 +618,14 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    if (!this.dataFields)
 		this._setDataFields();
 	    this.updateBuilder();
-	    if (!this._data)
-		return;
 
 	    this.renderHeader();
 
-
 	    this.spacerNodeBottom.style.height = "0px";
 	    this.spacerNodeTop.style.height = "0px";
+
+	    if (!this._data)
+		return;
 
 	    this._scrollDirection = "down";
 	    if (this.renderVisibleRowsOnly) {
