@@ -392,12 +392,34 @@ wm.findUniqueName = function(inName, inNameSpaces) {
 }
 
 wm.getValidJsName = function(inName) {
-	var dc = "_";
-	inName = inName.replace(new RegExp("[- ]", "g"), dc);
-	inName = inName.replace(new RegExp("[^a-zA-Z0-9_]", "g"), "");
-	if (inName.match(new RegExp("^[0-9]")) || !inName)
-		inName = dc + inName;
-	return inName;
+    var dc = "_";
+    inName = inName.replace(new RegExp("[- ]", "g"), dc);
+
+	/*********************************************************
+	 * This used to be     inName = inName.replace(new RegExp("[^a-zA-Z0-9_]", "g"), "");
+	 * however this is unfriendly to valid unicode strings.  Instead
+	 * we now use an algorithm for determining if we have a valid name and if not, trimming 
+	 * characters until we have a valid name
+	 */
+    var isInvalid = true;
+    for (var i = 0; i < inName.length && isInvalid; i++) {
+	try {
+	    var result = eval(inName + " = 5");
+	    if (result == 5) {
+		isInvalid = false;
+	    }
+	} catch(e) {};
+	if (isInvalid) {
+	    inName = inName.substring(0,i) + inName.substring(i,i+1).replace(/[^a-zA-Z0-9]+/g, '') + inName.substring(i+1);
+	}
+    }
+
+/*
+    if (inName.match(new RegExp("^[0-9]")) || !inName)
+	inName = dc + inName;
+	*/
+    if (inName == "_") inName = "";
+    return inName;
 }
 
 wm._modules = [];
