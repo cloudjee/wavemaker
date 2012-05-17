@@ -1846,11 +1846,12 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     generateCssRule: function() {
 	app.prompt("<p>Enter a name for the CSS class you want to create.</p><p>A new CSS class will be created using the style currently specified for this widget.  Classes can be reused to apply the same styles to other widgets, and can be customized to add new styles.", this.inspected.name, dojo.hitch(this, function(inClassName) {
 	    if (!inClassName) return;
-	    var cssText = "." + inClassName + " {\n";
+	    var cssText = wm.prop.ClassListEditor.prototype.getClassRuleName(inClassName) + " {\n";
 	    "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
 
 	    if (this.inspected.styles) {
 		wm.forEachProperty(this.inspected.styles, dojo.hitch(this, function(styleValue, styleName) {
+		    if (!styleValue) return;
 		    if (styleName == "backgroundGradient") {
 			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
 			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
@@ -2013,6 +2014,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 		      caption: "Add a CSS class to this widget to style it"});
 	this.reflow();
     },
+    getClassRuleName: function(inClassName) {
+	return "html.WMApp body ." + inClassName;
+    },
     addClass: function(inClassName) {
 	this.changed();
 	var className =  (typeof inClassName == "string") ? inClassName : "";
@@ -2042,7 +2046,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	    startAndEndList.push({start: startIndex, end: endIndex});
 	}
 	if (!code) {
-	    code = "." + className + " {\n\n}";
+	    code = this.getClassRuleName(className) +  " {\n\n}";
 	}
 		    studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
 			var editArea;
