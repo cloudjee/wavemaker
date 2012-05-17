@@ -353,8 +353,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			propList: ["wm.List", {width: "100%", height: "100%", headerVisible: false, dataFields: "name", width: "147px", border: "0,5,0,1", borderColor: "#5D6678"}],			
 			*/
 		    bindLayers: ["wm.Layers", {border: 0, height: "100%", layoutKind: "top-to-bottom"}, {}, {
-			treeLayer: ["wm.Layer", {border: 0, caption: "tree"}, {}, {
-			    tree: ["wm.Tree", {border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}]
+			treeLayer: ["wm.Layer", {border: 0, caption: "tree", layoutKind: "left-to-right"}, {}, {
+			    tree: ["wm.Tree", {border: 0, padding: 2, height: "100%", width: "100%"}, {}, {}],
+			    previewPanel: ["wm.Panel", {width: "200px", height: "100%", showing: false, layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", padding: "0, 0, 0, 4"}, {}, {
+				previewLabel: ["wm.Label", {width: "100%", caption: "Image Preview"}],
+				previewPicture: ["wm.Picture", {_classes: {domNode: ["wm-darksnazzy"]}, _isDesignLoaded: true, height: "100%", width: "100%", padding: "10,10,0,10"}]
+			    }]
 			}],
 			expressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
 			    expressionEditor: ["wm.LargeTextArea", {padding: 0, width: "100%", height: "100px"}],
@@ -772,6 +776,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	},
 	updateBindSourceUi: function(gv) {
 	  //var gv = this.simpleRb.getValue("groupValue"),
+	    this.previewPanel.setShowing(false);
 	    this.treeControlsPanel.show();
 	    this.searchBar.show();
 	    var t = this.tree;
@@ -1200,6 +1205,14 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		this.validLabel.setShowing(b == 1);
 		this.invalidLabel.setShowing(b == 0);
 		this.warningLabel.setShowing(b == 2);
+
+	    if (this.resourceRb.getChecked() && inNode.data instanceof wm.ImageResourceItem) {
+		this.previewPanel.setShowing(true);
+		this.previewPicture.setSource(inNode.data.getItemPath());
+	    } else {
+		this.previewPanel.setShowing(false);
+	    }
+
 //	    }
 
 	},
