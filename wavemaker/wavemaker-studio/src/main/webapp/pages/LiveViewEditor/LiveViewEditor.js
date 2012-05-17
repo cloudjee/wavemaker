@@ -427,18 +427,17 @@ dojo.declare("LiveViewEditor", wm.Page, {
 //		    this.clientLiveView.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
 //		this.dirty = changed;
 		var layer = this.owner.parent;
-		if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
-		    if (!dirty) {
-			dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
-			studio.updateServicesDirtyTabIndicators();
-		    }
-		} else if (dirty) {
+		if (wm.isInstanceType(layer, wm.Layer) ) {
+		    if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
+			if (!dirty) {
+			    dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+			    studio.updateServicesDirtyTabIndicators();
+			}
+		    } else if (dirty) {
 			dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
 			studio.updateServicesDirtyTabIndicators();
-		}
+		    }
 
-
-		if (this.owner.owner instanceof wm.Dialog == false) {
 		    if (caption != this.owner.parent.caption) {
 			this.owner.parent.setCaption(caption);
 			studio.updateServicesDirtyTabIndicators();
