@@ -1360,25 +1360,30 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 		inParent.hasSchema = true;
 		// sort nodes in schema
 		var props = [];
+	    var hasSelf = false;
 	        for (var n in inSchema) {
-		    if (inSchema[n].pageProperty) {
-			var pagePropertyName = inSchema[n].pageProperty;
-			var page = this.object[pagePropertyName];
-			if (page) {
-			    new wm.ComponentTypeSourceTreeNode(inParent, {page: page, 
-									  content:  this.tree.owner.getDictionaryItem("NON_VISUAL"),
-									  className: "wm.Variable", 
-									  canSelect: false, 
-									  image: "images/wm/variable_16.png"});
-			// widgets
-			    new wm.WidgetContainerSourceTreeNode(inParent, {page: page, 
-									    content: this.tree.owner.getDictionaryItem("VISUAL"),
-									    object: page.root, 
-									    hasSchema: true, 
-									    canSelect: false});			
-			}
+		    if (n == "__self") {
+			hasSelf = true;
 		    } else {
-			props.push({name: n, property: inSchema[n]});
+			if (inSchema[n].pageProperty) {
+			    var pagePropertyName = inSchema[n].pageProperty;
+			    var page = this.object[pagePropertyName];
+			    if (page) {
+				new wm.ComponentTypeSourceTreeNode(inParent, {page: page, 
+									      content:  this.tree.owner.getDictionaryItem("NON_VISUAL"),
+									      className: "wm.Variable", 
+									      canSelect: false, 
+									      image: "images/wm/variable_16.png"});
+				// widgets
+				new wm.WidgetContainerSourceTreeNode(inParent, {page: page, 
+										content: this.tree.owner.getDictionaryItem("VISUAL"),
+										object: page.root, 
+										hasSchema: true, 
+										canSelect: false});			
+			    }
+			} else {
+			    props.push({name: n, property: inSchema[n]});
+			}
 		    }
 		}
 		props.sort(function(a, b) {
@@ -1392,6 +1397,26 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 			nodeProps.content = this.getNodeContent(p.name, nodeProps.schema ? nodeProps.type : "", nodeProps.isList, nodeProps);
 			new wm.TreeNode(inParent, nodeProps);
 		}, this);
+	    if (hasSelf && !wm.isEmpty(inSchema.__self)) {
+		new wm.TreeNode(inParent, {
+		    isProperty: "property",
+		    owner: this,
+		    object: inParent.object,
+		    type: inParent.type,
+		    isInterPageBinding: inParent.isInterPageBinding,
+		    isList: inParent.isList,
+		    objectId: inParent.objectId,
+		    expandBySchemaProp: inParent.expandBySchemaProp,
+		    page: inParent.page,
+		    closed: false,
+		    content: "Data",
+		    schema: inSchema.__self,
+		    image: "images/wm/type.png",
+		    hasChildren: true,
+		    initNodeChildren: dojo.hitch(this, "initNodeChildren")		    
+		});
+
+	    }
 	},
 	initSchemaProps: function(inName, inProp, inParent, inNodeProps) {
 		var n = inName, t = inProp;
@@ -1442,7 +1467,14 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
 		return r.join('');
 	},
 	listDataProperties: function(inComponent) {
-		return dojo.mixin({}, inComponent ? inComponent.listDataProperties(this._bindFlag) : {});
+	    var props;
+	    if (inComponent instanceof wm.Variable && !studio.bindDialog.page.binderSource.simpleRb.getChecked()) {
+		props = dojo.mixin({}, inComponent ? inComponent.listDataProperties(this._bindFlag) : {});
+		props = dojo.mixin({__self: props}, wm.Component.prototype.listDataProperties.call(inComponent, "bindSource"));
+	    } else {
+		props =  dojo.mixin({}, inComponent ? inComponent.listDataProperties(this._bindFlag) : {});
+	    }
+	    return props;
 	},
 	initNodeChildren: function(inNode) {
 		//console.log("BindTreeNode.initNodeChildren");
