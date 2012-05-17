@@ -38,10 +38,16 @@ dojo.declare("wm.WebService", wm.JavaService, {
 		return true;
 	},
 	newWebServiceDialog: function(inSender) {
+/*
 		var d = this.getCreateWebServiceDialog();
 		if (d.page)
 			d.page.reset();
 		d.show();
+		*/
+	    studio.webServiceTab.setShowing(true);
+	    studio.webServiceTab.activate();
+	    var layer = studio.webServiceSubTab.addPageContainerLayer(this.pageName || "ImportWebService", "New Service", true);
+	    layer.setDestroyable(true);
 	},
 	getCreateWebServiceDialog: function() {
 	    var pageName = this.pageName || "";
