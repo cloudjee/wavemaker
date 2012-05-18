@@ -126,6 +126,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
 	    this._columnsHash[column.field] = column;
+	    if (!column.width) column.width = "100%";
 	    if (column.width.match(/\%/)) totalWidth += Number(column.width);
 	}
 	if (!this.isDesignLoaded() && dojo.isIE <= 8) {
