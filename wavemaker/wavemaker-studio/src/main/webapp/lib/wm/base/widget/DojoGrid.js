@@ -1351,6 +1351,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.dsType = this.variable.type;
 	    this.columns = [];
 	    var viewFields = this.getViewFields();
+ 	    var maxColumns = Math.round(this.bounds.w / 80);
 	    dojo.forEach(viewFields, function (f, i) {
 	        var align = 'left';
 	        var width = '100%';
@@ -1363,7 +1364,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	            formatFunc = 'wm_date_formatter';
 	        }
 	        this.columns.push({
-	            show: i < 15,
+	            show: i < maxColumns,
 	            field: f.dataIndex,
 	            title: f.caption,
 	            width: width,
@@ -1383,6 +1384,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     updateColumnData: function () {
 	var defaultSchema = {dataValue: {type: this.variable.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
         var viewFields = this.getViewFields() || defaultSchema;
+	var maxColumns = Math.round(this.bounds.w / 80);
         dojo.forEach(viewFields, function (f, i) {
             // if the column already exists, skip it
             if (dojo.some(this.columns, function (item) {
@@ -1404,7 +1406,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 formatFunc = 'wm_date_formatter';
             }
             this.columns.push({
-                show: i < 10,
+                show: i < maxColumns,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,
