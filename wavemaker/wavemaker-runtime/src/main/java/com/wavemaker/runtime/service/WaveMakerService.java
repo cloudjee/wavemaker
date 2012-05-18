@@ -23,6 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
@@ -89,6 +92,19 @@ public class WaveMakerService {
     		connection.setRequestProperty("Content-Type", "application/json");       
     		connection.setRequestProperty("Content-Language", charset);   			
     		connection.setUseCaches (false);
+    		
+    		HttpServletRequest request = RuntimeAccess.getInstance().getRequest();
+    		Enumeration<String> headerNames = request.getHeaderNames();
+    			while(headerNames.hasMoreElements()) {
+    				String name = (String)headerNames.nextElement();
+    				Enumeration<String> headers = request.getHeaders(name);
+    				if(headers!=null){
+    					while(headers.hasMoreElements()){
+    					String headerValue = (String) headers.nextElement();
+    					connection.setRequestProperty(name, headerValue);
+    					}
+    				}
+    			}
     		
     		//Re-wrap single quotes into double quotes
     		String dquoteParams = params.replace("\'", "\""); 
