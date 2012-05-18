@@ -122,10 +122,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 	this._setSelectionColumn(this.selectionMode); // add in any controllers based on selection mode
 	this._setDeleteColumn(this.deleteColumn); // add in any controllers based on deleteColumn
 	this._columnsHash = {};
+	var totalWidth = 0;
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
 	    this._columnsHash[column.field] = column;
-	}	
+	    if (column.width.match(/\%/)) totalWidth += Number(column.width);
+	}
+	if (!this.isDesignLoaded() && dojo.isIE <= 8) {
+	    for (var i = 0; i < this.columns.length; i++) {
+		var column = this.columns[i];
+		var w = column.width;
+		if (w.match(/\%/)) {
+		    column.width = (w * 100/totalWidth) + "%";
+		}
+	    }
+	}
     },
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
