@@ -40,18 +40,18 @@ ResourceManager.widgets = {
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
 	buttonPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "46px",padding: "2,10,2,10", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 		resourcesFolderToolBar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]},  height: "46px", width: "600px", border: "", layoutKind: "left-to-right"}, {}, {
-	      renameFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "150px"},{onclick: "renameItem"}],
-	      deleteFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/f_delete32.png'> Delete", height: "36px", width: "150px"},{onclick: "deleteItem"}],
-	      downloadFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/f_download32.png'> Download", height: "36px", width: "150px"},{onclick: "downloadItem"}],
-	      addFolderButton: ["wm.Button", {disabled: true, caption: "<img src='images/resourceManagerIcons/f_add32.png'> Add Folder", height: "36px", width: "150px"},{onclick: "addNewFolder"}]
+		    renameFolderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, disabled: true, caption: "<img src='images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "150px"},{onclick: "renameItem"}],
+		    deleteFolderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, disabled: true, caption: "<img src='images/resourceManagerIcons/f_delete32.png'> Delete", height: "36px", width: "150px"},{onclick: "deleteItem"}],
+		    downloadFolderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},disabled: true, caption: "<img src='images/resourceManagerIcons/f_download32.png'> Download", height: "36px", width: "150px"},{onclick: "downloadItem"}],
+		    addFolderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, disabled: true, caption: "<img src='images/resourceManagerIcons/f_add32.png'> Add Folder", height: "36px", width: "150px"},{onclick: "addNewFolder"}]
   	    }],
 	    resourcesFileToolBar: ["wm.Panel", {showing: false, height: "46px", width: "450px", border: "", layoutKind: "left-to-right"}, {}, {
-	      renameFileButton: ["wm.Button", {caption: "<img src='images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "150px"},{onclick: "renameItem"}],
-	      deleteFileButton: ["wm.Button", {caption: "<img src='images/resourceManagerIcons/d_delete32.png'> Delete", height: "36px", width: "150px"},{onclick: "deleteItem"}],
-	      downloadFileButton: ["wm.Button", {caption: "<img src='images/resourceManagerIcons/d_download32.png'> Download", height: "36px", width: "150px"},{onclick: "downloadItem"}]/*,
-	      updateFileButton: ["wm.Button", {caption: "<img src='images/resourceManagerIcons/d_update32.png'> Replace", height: "36px", width: "150px"},{onclick: "updateItem"}]*/
+		renameFileButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "<img src='images/resourceManagerIcons/rename32.png'> Rename", height: "36px", width: "150px"},{onclick: "renameItem"}],
+		deleteFileButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "<img src='images/resourceManagerIcons/d_delete32.png'> Delete", height: "36px", width: "150px"},{onclick: "deleteItem"}],
+		downloadFileButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "<img src='images/resourceManagerIcons/d_download32.png'> Download", height: "36px", width: "150px"},{onclick: "downloadItem"}]/*,
+	      updateFileButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}caption: "<img src='images/resourceManagerIcons/d_update32.png'> Replace", height: "36px", width: "150px"},{onclick: "updateItem"}]*/
   	    }],
-		openAddFileDialogButton: ["wm.Button", {caption: "<img src='images/resourceManagerIcons/d_add32.png'> Add File", height: "36px", width: "150px"}, {onclick: "addFileDialog"}]
+	    openAddFileDialogButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "<img src='images/resourceManagerIcons/d_add32.png'> Add File", height: "36px", width: "150px"}, {onclick: "addFileDialog"}]
             }],
     	mainPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 		leftPanel: ["wm.Panel", {width: "180px", height: "100%",layoutKind: "top-to-bottom"}, {}, {
