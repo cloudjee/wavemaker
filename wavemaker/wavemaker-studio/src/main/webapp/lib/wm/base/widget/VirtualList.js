@@ -228,7 +228,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    var coords = (this.noHeader || !this.headerVisible) ? {h:0} : dojo.marginBox(this.headerNode);
 	    var bodyheight = this.getContentBounds().h - coords.h;
 	    console.log("LIST DOM:" + this.bounds.h + " | " + bodyheight);
-	    this.listNode.style.height = bodyheight + "px";
+	    this.listNode.style.height = Math.max(0,bodyheight) + "px";
 	}
     },
     postTouchRenderBounds: function() {
