@@ -77,7 +77,8 @@ public abstract class CompilerTask extends Task {
     }
 
     public void setProjectRoot(File projectRoot) {
-        Folder folder = FileSystemUtils.convertToFileSystemFolder(this.projectRoot);
+    	this.projectRoot = projectRoot;
+    	Folder folder = FileSystemUtils.convertToFileSystemFolder(projectRoot);
         this.agProject = new Project(folder);
     }
 

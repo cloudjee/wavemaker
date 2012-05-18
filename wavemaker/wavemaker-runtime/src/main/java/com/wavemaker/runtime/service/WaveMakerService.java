@@ -14,9 +14,15 @@
 
 package com.wavemaker.runtime.service;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
@@ -60,6 +66,60 @@ public class WaveMakerService {
         }
         return new DownloadResponse(is, contentType, fileName);
     }
+
+    /*
+     *  Forward a request to a remote service
+     *  @remoteURl - The url to be invoked
+     *  @params - Params to be used
+     *  @return - whatever the service returned - no typing applied
+     *  
+     *  Example of wm java service taking two strings:
+     *  wmService.requestAsync("remoteRESTCall", ["http://localhost:8080/AppScopeReFire/services/test.json", "{'params':['string one','string two'],'method':'test','id':1}"]);
+     */
+    public String remoteRESTCall(String remoteURL, String params){
+    	String charset = "UTF-8";
+    	StringBuffer returnString = new StringBuffer();
+    	try{
+    		URL url  = new URL (remoteURL);
+    		HttpURLConnection connection = (HttpURLConnection) url.openConnection(); 
+    		connection.setDoOutput(true); 
+    		connection.setDoInput(true);  
+    		connection.setRequestMethod("POST"); 
+    		connection.setRequestProperty("Accept-Charset", "application/json");
+    		connection.setRequestProperty("Content-Type", "application/json");       
+    		connection.setRequestProperty("Content-Language", charset);   			
+    		connection.setUseCaches (false);
+    		
+    		//Re-wrap single quotes into double quotes
+    		String dquoteParams = params.replace("\'", "\""); 
+    		URLEncoder.encode(dquoteParams, charset);  		
+    		connection.setRequestProperty("Content-Length", "" + 
+    				Integer.toString(dquoteParams.getBytes().length));
+
+    		//set payload 
+    		DataOutputStream writer = new DataOutputStream (
+    				connection.getOutputStream ());
+    		writer.writeBytes(dquoteParams);
+    		writer.flush ();
+    		writer.close ();
+
+    		InputStream response = connection.getInputStream();
+    		BufferedReader reader = null;
+    		try {
+    			reader = new BufferedReader(new InputStreamReader(response, charset));
+    			for (String line; (line = reader.readLine()) != null;) {
+    				returnString.append(line);
+    			}
+    		} finally {
+    			if (reader != null) try { reader.close(); } catch (Exception e) {}
+    		}
+    		connection.disconnect(); 
+    		return  returnString.toString();
+    	} catch(Exception e) { 
+    		throw new WMRuntimeException(e); 
+    	} 
+    }
+
 
     /**
      * Get the service. If serviceName is not null or "", use the serviceName. If not, use the owning service of
