@@ -1113,17 +1113,32 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    } else /*if (this.canBind(tp, {object: sourceObject, source: s, expression: ex}) 
 		   || this.promptToForceBinding(tp, s, isExpression)) */ {
 		       try {
-			   wm.data.clearBinding(tp.object, tp.targetProperty);
-			   var
+			   //wm.data.clearBinding(tp.object, tp.targetProperty);
+			   //var
 			   info = this._getBindingInfo(tp.object, tp.targetProperty,  s, ex);
 			   wp = info.wireProps;
-			   //
+
+			   var oldValue;
+			   if (tp.object.$.binding && tp.object.$.binding.wires[wp.targetProperty]) {
+			       oldValue = {source: tp.object.$.binding.wires[wp.targetProperty].source,
+					   expression: tp.object.$.binding.wires[wp.targetProperty].expression};
+			   } else {
+			       oldValue = {value: tp.object.getValue(wp.targetProperty) };
+			   }
+			   new wm.SetWireTask(tp.object,
+					      wp.targetProperty, 
+					      oldValue,
+					      wp.source || wp.expression,
+					      wp.expression);
+			   
 			   if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
+			       /* we probably need this._applyBinding stuff
 			       var wire = info.binding.addWire(wp.targetId, wp.targetProperty, wp.source, wp.expression);					
 			       wm.logging && console.log("binding created:", info.targetId, wp.source || wp.expression);
                                this._applyingBinding = true;
 			       studio.inspector.reinspect();
                                this._applyingBinding = false;
+			       */
 			       if (this.propTree.showing && this.propTree.selected) {
 				   var newContent = this.propTree.selected.data.fieldName || this.propTree.selected.data.object.name;
 				   if (wire) {

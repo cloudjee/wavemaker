@@ -56,6 +56,8 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	if (this.editor)
 	    this.editor.onChange(this.dataValue);
     },*/
+    onClose: function() {
+    },
 	onchange: function(inValue) {
 	    if (this._inColorChange) return;
 	    this._inColorChange = true;
@@ -153,6 +155,18 @@ dojo.declare(
 	    }
 	    this.dropDown.setShowing(true);
 	    return dijit._HasDropDown.prototype.openDropDown.call(this, callback);
+	},
+	closeDropDown: function() {
+	    var wasOpen = this._opened;
+	    this.inherited(arguments);
+	    if (wasOpen) {
+		/* Make sure it doesn't immediately reopen */
+		wm.onidle(this, function() {
+		    if (!this._opened) {
+			this.owner.onClose();
+		    }
+		});
+	    }
 	}
     });
 
