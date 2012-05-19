@@ -865,6 +865,8 @@ dojo.declare("wm.Variable", wm.Component, {
 	    else if (a !== b) {
 		if (invert) continue;
 		else return false;
+	    } else if (invert) {
+		return false;
 	    }
 	}
 	return true;
