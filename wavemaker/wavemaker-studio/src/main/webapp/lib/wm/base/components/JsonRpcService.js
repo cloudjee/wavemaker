@@ -87,12 +87,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 
 		if (!url)
 			return;
-
-		//The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
-		//requests deployed application.
-		if (this._designTime) 
-					url = url + "?designTime=true";
-	    
+	    debugger;
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),
@@ -102,10 +97,25 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			sync: this.sync,
 			headers: this.requestHeaders
 		}
+	        if (this._designTime && studio.isCloud()) {
+		    var postData = props.postData;
+		    props.postData = this.createRequest("remoteRESTCall", [props.url.replace(/^.*\//, studio._deployedUrl + "/"), postData]);
+		    //props.postData = dojo.toJson({"params": [props.url.replace(/^.*\//, studio._deployedUrl + "/"), dojo.toJson(postData)], "method": "remoteRESTCall", "id":1});
+		    props.url = "waveMakerService.json";
+		}
+
 	    if (wm.xhrPath) {
 		props.url = wm.xhrPath + props.url;
 	    }
 		var def = dojo.rawXhrPost(props);
+	    if (this._designTime && studio.isCloud()) {
+		var newdef = new dojo.Deferred();
+		def.addCallback(function(inResult) {
+		    debugger;
+		    newdef.callback(dojo.fromJson(inResult.result));
+		});
+		def = newdef; // return the new deferred, which only notifies after we've decoded the data
+	    }
 		deferredRequestHandler = dojo.mixin(deferredRequestHandler, def.ioArgs);
 
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
@@ -235,7 +245,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.error = null;
 
 		var d;
-		if (wm.connectionTimeout > 0) {
+	    this._service._designTime = this._isDesignLoaded;
+		if (wm.connectionTimeout > 0 && !this._isDesignLoaded) {
 			if (inLoop) {
 				this._service.setRequestHeaders({"wm-polling-request" : requestId});
 			} else {
