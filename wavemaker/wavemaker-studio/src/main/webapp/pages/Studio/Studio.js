@@ -665,6 +665,7 @@ dojo.declare("Studio", wm.Page, {
 		this._liveLayoutReady = inReady;
 	},
     deploySuccess: function(inUrl) {
+	if (inUrl) this._deployedUrl = inUrl;
 	var application = this.application || this._application;
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
