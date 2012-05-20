@@ -14,11 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportTokenDigestMismatchException;
-
 /**
  * Tests for {@link SharedSecret}.
  * 

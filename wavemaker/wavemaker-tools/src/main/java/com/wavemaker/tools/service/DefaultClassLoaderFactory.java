@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.service;
 
-import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
 /**
  * @author Simon Toens

@@ -14,7 +14,6 @@
 
 package com.wavemaker.runtime.ws;
 
-
 /**
  * @author ffu
  * @version $Rev: 33719 $ - $Date: 2011-10-18 11:33:27 -0700 (Tue, 18 Oct 2011) $
@@ -70,7 +69,7 @@ public class RESTInputParam {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -78,7 +77,7 @@ public class RESTInputParam {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
@@ -86,18 +85,18 @@ public class RESTInputParam {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(String location) {
         this.location = location;
     }
-    
+
     public InputType toType() {
         InputType inputType = InputType.OTHER;
-        if ("string".equals(type)) {
+        if ("string".equals(this.type)) {
             inputType = InputType.STRING;
-        } else if ("int".equals(type)) {
+        } else if ("int".equals(this.type)) {
             inputType = InputType.INTEGER;
         }
         return inputType;
@@ -105,9 +104,9 @@ public class RESTInputParam {
 
     public InputLocation toLocation() {
         InputLocation inputLocation = InputLocation.OTHER;
-        if ("url".equals(location)) {
+        if ("url".equals(this.location)) {
             inputLocation = InputLocation.URL;
-        } else if ("header".equals(location)) {
+        } else if ("header".equals(this.location)) {
             inputLocation = InputLocation.HEADER;
         }
         return inputLocation;

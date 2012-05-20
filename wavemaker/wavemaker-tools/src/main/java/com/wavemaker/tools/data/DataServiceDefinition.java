@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.StringUtils;
@@ -42,10 +40,9 @@ import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Operation;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.File;
 
 /**
  * @author Simon Toens

@@ -114,6 +114,7 @@ wm.Object.extendSchema(wm.Dialog, {
     onMiscButtonClick: {advanced:1},
 
     /* Ignore group */
+    onHide: {ignore:1},
     wrapInPanel: {ignore:1},
     buttonBarId: {hidden:1},
     containerWidgetId: {hidden:1},
@@ -263,6 +264,7 @@ wm.LoadingDialog.extend({
 	    this.widgetToCover = inWidget;
 	    this.renderBounds();
     },
+    /* Probably not used */
     set_serviceVariableToTrack: function(inWidget) {
 	    this.serviceVariableToTrack = inWidget;
     },
@@ -282,8 +284,8 @@ wm.LoadingDialog.extend({
 
 wm.Object.extendSchema(wm.LoadingDialog, {
     /* Display group; misc subgroup */
-    widgetToCover: {group: "widgetName", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
-    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
+    widgetToCover: {group: "widgetName", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1,editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
+    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", type: "wm.ServiceVariable", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
 
     /* Display group; text subgroup */
     caption:      {group: "widgetName", subgroup: "text", order: 102, bindTarget: 1},

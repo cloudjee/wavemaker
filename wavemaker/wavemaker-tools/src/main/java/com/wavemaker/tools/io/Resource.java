@@ -18,8 +18,6 @@ import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
-import java.io.IOException;
-
 /**
  * Base abstract for {@link File}s and {@link Folder}s that may be stored on a physical disk or using some other
  * mechanism. Subclasses will either implement {@link File} or {@link Folder} (but never both).
@@ -50,9 +48,9 @@ public interface Resource {
     String getName();
 
     /**
-     * Returns the last name of the resource's full pathname.
-     * This is just the last name in the pathname's name sequence.
-     *
+     * Returns the last name of the resource's full pathname. This is just the last name in the pathname's name
+     * sequence.
+     * 
      * @return the name of the resource, for example <tt>"file.txt"</tt>
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
@@ -152,14 +150,14 @@ public interface Resource {
 
     /**
      * Returns the cannonical pathname string for the original resource
-     *
+     * 
      * @return the cannonical pathname
      */
     String getCanonicalPath();
 
     /**
      * Returns the absolute pathname string for the original resource
-     *
+     * 
      * @return the absolute pathname
      */
     String getAbsolutePath();

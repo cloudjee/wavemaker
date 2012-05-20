@@ -13,7 +13,7 @@
  */
 
 
-
+/*
 .ImportFile .wmbutton {
 	background-image:url(images/wmbutton_bg.png);
 	background-repeat:repeat-x;
@@ -24,13 +24,15 @@
 	border-bottom: 1px solid #363b44;
 	cursor: pointer !important;
 }
-.ImportFile form input, .ImportFile form {
-    cursor: pointer !important;
-}
 .ImportFile .wmbutton:hover {
     background-color: silver !important;
 	background-image:url(images/wmbutton_bg.png) !important;
 }
+*/
+.ImportFile form input, .ImportFile form {
+    cursor: pointer !important;
+}
+
 
 .ImportFile .wmeditor .dijitInputInner,
 .ImportFile .wmeditor .dijitPlaceHolder {

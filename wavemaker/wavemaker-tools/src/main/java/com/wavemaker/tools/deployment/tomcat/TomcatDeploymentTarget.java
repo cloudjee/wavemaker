@@ -61,11 +61,11 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException{
+    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
             Resource warFile = project.getProjectRoot().createRelative(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
             TomcatServer tomcat = initTomcat(deploymentInfo);
-            return(verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName())));
+            return verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName()));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
@@ -139,11 +139,12 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         rtn.setPassword(deploymentInfo.getPassword());
         return rtn;
     }
-    
-    public String getUrl(DeploymentInfo deploymentInfo){
-    	return "Not Implemented for Tomcat";
-    	}
-    
+
+    @Override
+    public String getUrl(DeploymentInfo deploymentInfo) {
+        return "Not Implemented for Tomcat";
+    }
+
     /**
      * {@inheritDoc}
      */

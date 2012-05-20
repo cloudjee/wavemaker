@@ -18,22 +18,12 @@
 
 package com.wavemaker.tools.spring;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
-import com.wavemaker.tools.service.AbstractFileService;
-import com.wavemaker.tools.service.FileService;
+import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.io.ClassPathFile;
 
 /**
  * @author Frankie Fu

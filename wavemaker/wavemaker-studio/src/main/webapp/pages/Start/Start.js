@@ -76,8 +76,10 @@ dojo.declare("Start", wm.Page, {
 		    list.push(this.projectList[i]);
 	    }
 		this.existingProjectList.renderData(list);
+/*
 		for (var i = 0; i < list.length; i++) 
 		    this.existingProjectList.items[i].projectName = list[i];	    
+		    */
 	    this._showingList = list;
 	},
 	// Open Existing Project tab
@@ -87,11 +89,11 @@ dojo.declare("Start", wm.Page, {
 		    studio.waitForCallback(this.getDictionaryItem("WAIT_OPENNING_PROJECT", {projectName: p}), dojo.hitch(studio.project, "openProject", p));
 	},
         deleteProject: function(inSender) {
-	    var projname = this.existingProjectList.selected.projectName;
+	    var projname = this.existingProjectList.selected.getData();
 	    if (projname) {
 		app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {projectName: projname}), false,
 			   dojo.hitch(this, function() {
-		               if (studio.project.projectName == projname)
+		               if (studio.project.getData() == projname)
 			           studio.project.closeProject();
 			       studio.project.deleteProject(projname);	       
 
@@ -101,7 +103,7 @@ dojo.declare("Start", wm.Page, {
 	selectProjectInList: function(projectName) {
 	    var items = this.existingProjectList.items;
 	    for (var i = 0; i < items.length; i++) {
-		if (items[i].projectName == projectName) {
+		if (items[i].getData() == projectName) {
 		    this.existingProjectList.selectByIndex(i);
 		    return;
 		}
@@ -127,8 +129,9 @@ dojo.declare("Start", wm.Page, {
 		    return a.localeCompare(b);
 		});
 		this.existingProjectList.renderData(this.projectList);
+
 	    for (var i = 0; i < this.projectList.length; i++) {
-		    this.existingProjectList.items[i].projectName = this.projectList[i];
+		//this.existingProjectList.items[i].getData() = this.projectList[i];
 		data.push({dataValue: this.projectList[i]});
 	    }
 	    app.projectListVar.setData(data);

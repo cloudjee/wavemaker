@@ -28,8 +28,6 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class RuntimeServiceSmdTask implements UpgradeTask {
 
-    private StudioFileSystem fileSystem;
-
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         File runtimeServiceFile = project.getWebAppRootFolder().getFile("services/runtimeService.smd");
@@ -39,6 +37,5 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
     }
 
     public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
     }
 }

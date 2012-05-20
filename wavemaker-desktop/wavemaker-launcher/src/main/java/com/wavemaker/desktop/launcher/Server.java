@@ -26,152 +26,140 @@ import java.util.List;
  * Command line interface to run a server in a console.
  * 
  * @author small
- * @version $Rev$ - $Date: 2008-09-18 14:31:51 -0700 (Thu, 18 Sep 2008)
- *          $
+ * @version $Rev$ - $Date: 2008-09-18 14:31:51 -0700 (Thu, 18 Sep 2008) $
  */
 public class Server {
 
-	private static final String NO_STDOUT_REDIRECT = "--no-stdout-redirect";
-	public static final int DEFAULT_FIRSTPORT = 8000;
-	public static final int DEFAULT_LASTPORT = 9000;
+    private static final String NO_STDOUT_REDIRECT = "--no-stdout-redirect";
 
-	private static void usage() {
-		System.out.println("Server usage: [-h] [" + NO_STDOUT_REDIRECT + "]");
-		System.out.println("\t-h: print usage and exit");
-		System.out.println("\t" + NO_STDOUT_REDIRECT
-				+ ": don't redirect stdout");
-	}
+    public static final int DEFAULT_FIRSTPORT = 8000;
 
-	public static void main(String[] args) throws IOException,
-			URISyntaxException {
+    public static final int DEFAULT_LASTPORT = 9000;
 
-		boolean noStdoutRedirect = false;
+    private static void usage() {
+        System.out.println("Server usage: [-h] [" + NO_STDOUT_REDIRECT + "]");
+        System.out.println("\t-h: print usage and exit");
+        System.out.println("\t" + NO_STDOUT_REDIRECT + ": don't redirect stdout");
+    }
 
-		List<String> argsList = new ArrayList<String>();
-		argsList.add("start");
-		for (String arg : args) {
-			if (arg.equals("-h")) {
-				usage();
-				return;
-			} else if (arg.equals(NO_STDOUT_REDIRECT)) {
-				noStdoutRedirect = true;
-			} else {
-				argsList.add(arg);
-			}
-		}
-		Main.start(argsList.toArray(new String[argsList.size()]),
-				noStdoutRedirect);
-	}
+    public static void main(String[] args) throws IOException, URISyntaxException {
 
-	public static void ValidateConfig(TomcatConfig config)
-			throws InvalidServerConfigurationException {
-		ValidateConfig(config, DEFAULT_FIRSTPORT, DEFAULT_LASTPORT);
-	}
+        boolean noStdoutRedirect = false;
 
-	public static void ValidateConfig(TomcatConfig config, int firstPort,
-			int lastPort) throws InvalidServerConfigurationException {
-		// Validate Server Ports
-		// shutdown port
-		Main.printlnToLog("\tScanning for Shutdown Port:");
-		int shutdownPort = FindOpenPort(config.getShutdownPort(), firstPort,
-				lastPort);
-		if (shutdownPort == -1) {
-			throw new InvalidServerConfigurationException(
-					InvalidServerConfigurationException.Parameter.SHUTDOWN_PORT,
-					"Unable to locate an available port.");
-		}
-		Main.printlnToLog("\tSelected Shutdown Port: " + shutdownPort);
+        List<String> argsList = new ArrayList<String>();
+        argsList.add("start");
+        for (String arg : args) {
+            if (arg.equals("-h")) {
+                usage();
+                return;
+            } else if (arg.equals(NO_STDOUT_REDIRECT)) {
+                noStdoutRedirect = true;
+            } else {
+                argsList.add(arg);
+            }
+        }
+        Main.start(argsList.toArray(new String[argsList.size()]), noStdoutRedirect);
+    }
 
-		// service port
-		Main.printlnToLog("\tScanning for Service Port: ");
-		int servicePort = FindOpenPort(config.getServicePort(), firstPort,
-				lastPort, new int[] { shutdownPort });
-		if (servicePort == -1) {
-			throw new InvalidServerConfigurationException(
-					InvalidServerConfigurationException.Parameter.SERIVCE_PORT,
-					"Unable to locate an available port.");
-		}
-		Main.printlnToLog("\tSelected Service Port: " + servicePort);
+    public static void ValidateConfig(TomcatConfig config) throws InvalidServerConfigurationException {
+        ValidateConfig(config, DEFAULT_FIRSTPORT, DEFAULT_LASTPORT);
+    }
 
-		// Update Config
-		config.setShutdownPort(shutdownPort);
-		config.setServicePort(servicePort);
+    public static void ValidateConfig(TomcatConfig config, int firstPort, int lastPort) throws InvalidServerConfigurationException {
+        // Validate Server Ports
+        // shutdown port
+        Main.printlnToLog("\tScanning for Shutdown Port:");
+        int shutdownPort = FindOpenPort(config.getShutdownPort(), firstPort, lastPort);
+        if (shutdownPort == -1) {
+            throw new InvalidServerConfigurationException(InvalidServerConfigurationException.Parameter.SHUTDOWN_PORT,
+                "Unable to locate an available port.");
+        }
+        Main.printlnToLog("\tSelected Shutdown Port: " + shutdownPort);
 
-		return;
-	}
+        // service port
+        Main.printlnToLog("\tScanning for Service Port: ");
+        int servicePort = FindOpenPort(config.getServicePort(), firstPort, lastPort, new int[] { shutdownPort });
+        if (servicePort == -1) {
+            throw new InvalidServerConfigurationException(InvalidServerConfigurationException.Parameter.SERIVCE_PORT,
+                "Unable to locate an available port.");
+        }
+        Main.printlnToLog("\tSelected Service Port: " + servicePort);
 
-	public static int FindOpenPort(int preferred, int minPort, int maxPort) {
-		return FindOpenPort(preferred, minPort, maxPort, new int[] {});
-	}
+        // Update Config
+        config.setShutdownPort(shutdownPort);
+        config.setServicePort(servicePort);
 
-	public static int FindOpenPort(int preferred, int minPort, int maxPort,
-			int[] exclude) {
-		int result = preferred;
-		int scanCount = 0;
-		boolean isValid = true;
-		ServerSocket test = null;
-		Socket test2 = null;
-		while (scanCount <= 1) {
-			// Avoid Exclusions
-			for (int i = 0; i < exclude.length; i++) {
-				if (result == exclude[i]) {
-					isValid = false;
-				}
-			}
-			// Test Current Port
-			if (isValid) {
-				try {
-					// Test the port for bind access
-					Main.printlnToLog("\t\tTesting port: " + result);
-					test = new ServerSocket(result, 1, InetAddress.getByName("127.0.0.1"));
-					try{test.close();}catch(IOException e){}
-					// Test the port for connect access
-					try
-					{
-						test2 = new Socket("127.0.0.1", result);
-					}
-					catch(IOException e){
-						// Passes both tests
-						Main.printlnToLog("\t\tPort " + result + " is available.");
-						// Return current port
-						break;
-					}
-					finally{
-						if(test2 != null){
-							try
-							{
-								test2.close();
-							}
-							catch(IOException e){}
-							test2 = null;
-						}
-					}
-				} catch (IOException e) {
-				} finally {
-					if (test != null) {
-						try {
-							test.close();
-						} catch (IOException e) {
-						}
-						test = null;
-					}
-				}
-			}
-			// Select Next Port To Test
-			isValid = true;
-			if(result >= maxPort){
-				result = minPort;
-				scanCount++;
-			}
-			else
-			{
-				result++;
-			}
-		}
-		// Check if port found
-		if (scanCount > 1) {
-			result = -1;
-		}
-		return result;
-	}
+        return;
+    }
+
+    public static int FindOpenPort(int preferred, int minPort, int maxPort) {
+        return FindOpenPort(preferred, minPort, maxPort, new int[] {});
+    }
+
+    public static int FindOpenPort(int preferred, int minPort, int maxPort, int[] exclude) {
+        int result = preferred;
+        int scanCount = 0;
+        boolean isValid = true;
+        ServerSocket test = null;
+        Socket test2 = null;
+        while (scanCount <= 1) {
+            // Avoid Exclusions
+            for (int i = 0; i < exclude.length; i++) {
+                if (result == exclude[i]) {
+                    isValid = false;
+                }
+            }
+            // Test Current Port
+            if (isValid) {
+                try {
+                    // Test the port for bind access
+                    Main.printlnToLog("\t\tTesting port: " + result);
+                    test = new ServerSocket(result, 1, InetAddress.getByName("127.0.0.1"));
+                    try {
+                        test.close();
+                    } catch (IOException e) {
+                    }
+                    // Test the port for connect access
+                    try {
+                        test2 = new Socket("127.0.0.1", result);
+                    } catch (IOException e) {
+                        // Passes both tests
+                        Main.printlnToLog("\t\tPort " + result + " is available.");
+                        // Return current port
+                        break;
+                    } finally {
+                        if (test2 != null) {
+                            try {
+                                test2.close();
+                            } catch (IOException e) {
+                            }
+                            test2 = null;
+                        }
+                    }
+                } catch (IOException e) {
+                } finally {
+                    if (test != null) {
+                        try {
+                            test.close();
+                        } catch (IOException e) {
+                        }
+                        test = null;
+                    }
+                }
+            }
+            // Select Next Port To Test
+            isValid = true;
+            if (result >= maxPort) {
+                result = minPort;
+                scanCount++;
+            } else {
+                result++;
+            }
+        }
+        // Check if port found
+        if (scanCount > 1) {
+            result = -1;
+        }
+        return result;
+    }
 }

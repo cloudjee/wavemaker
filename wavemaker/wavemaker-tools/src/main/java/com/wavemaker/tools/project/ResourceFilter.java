@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.IOException;
-
 import org.springframework.core.io.Resource;
 
 public interface ResourceFilter {
@@ -24,19 +22,20 @@ public interface ResourceFilter {
 
         @Override
         public boolean accept(Resource resource) {
-        	return true;
+            return true;
         }
     };
 
     public static final ResourceFilter DEPLOY_FILTER = new ResourceFilter() {
 
-    	@Override
-    	public boolean accept(Resource resource) {
-    		if(resource.getFilename().equals("deployments.js"))
-    			return false;
-    		else
-    			return true;
-    	}
+        @Override
+        public boolean accept(Resource resource) {
+            if (resource.getFilename().equals("deployments.js")) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     };
 
     boolean accept(Resource resource);

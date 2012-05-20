@@ -39,6 +39,7 @@ import com.wavemaker.runtime.data.sqlserver.SqlServerUserImpersonatingDataSource
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Alias;
 import com.wavemaker.tools.spring.beans.Bean;
@@ -51,7 +52,6 @@ import com.wavemaker.tools.spring.beans.Prop;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Props;
 import com.wavemaker.tools.spring.beans.Value;
-import com.wavemaker.tools.io.File;
 
 /**
  * Encapsulates access to the Data Model Spring configuration.
@@ -90,7 +90,7 @@ public class DataServiceSpringConfiguration {
         this.beans = DataServiceUtils.readBeans(fileService, this.path);
         this.serviceId = serviceName;
         this.propertiesFile = getConnectionPropertiesFileName();
-    }   
+    }
 
     void revert() {
         this.beans = DataServiceUtils.readBeans(this.fileService, this.path);

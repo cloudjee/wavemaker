@@ -30,10 +30,6 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
@@ -59,6 +55,7 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.data.RelatedInfo;
 import com.wavemaker.tools.data.SpringCfgGenerator;
 import com.wavemaker.tools.data.parser.HbmConstants;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.GenerationUtils;
@@ -69,7 +66,6 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens
@@ -365,6 +361,7 @@ public class DataServiceUtils {
 
         return rtn;
     }
+
     public static String sanitizeComment(String comment) {
         if (comment == null) {
             return null;

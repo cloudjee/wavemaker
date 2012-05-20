@@ -17,7 +17,7 @@ package com.wavemaker.tools.data;
 import org.hibernate.tool.ant.GenericExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.hbm2x.Exporter;
-import org.springframework.core.io.Resource;
+
 import com.wavemaker.tools.io.Folder;
 
 /**
@@ -26,6 +26,7 @@ import com.wavemaker.tools.io.Folder;
 public class QueryExporterTask extends GenericExporterTask {
 
     private final String serviceName;
+
     private Folder destDir;
 
     public QueryExporterTask(HibernateToolTask parent, String serviceName, Folder destDir) {

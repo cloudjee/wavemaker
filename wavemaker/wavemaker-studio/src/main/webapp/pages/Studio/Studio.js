@@ -665,6 +665,7 @@ dojo.declare("Studio", wm.Page, {
 		this._liveLayoutReady = inReady;
 	},
     deploySuccess: function(inUrl) {
+	if (inUrl) this._deployedUrl = inUrl;
 	var application = this.application || this._application;
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
@@ -2037,3 +2038,11 @@ dojo.declare("Studio", wm.Page, {
 
 // Inherits some properties via wm_studio/Theme.js
 dojo.declare("wm.studio.DialogMainPanel", wm.Panel, {});
+dojo.declare("wm.studio.DialogButtonPanel", wm.Panel, {
+    _classes: {domNode: ["StudioDialogFooter"]},
+    layoutKind: "left-to-right",
+    horizontalAlign: "right",
+    verticalAlign: "justified",
+    height: "35px",
+    width: "100%"
+});

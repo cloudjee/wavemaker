@@ -664,6 +664,9 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	this.selectedItem.setData(item);
 	//this.editor.set("value", String(item.getIndexInOwner()), false);
 	this.editor.set("value", this._getDisplayData(item), false);
+	if (wm.isMobile) {
+	    this.editor.item = item.getData();
+	}
     }
 
 /*

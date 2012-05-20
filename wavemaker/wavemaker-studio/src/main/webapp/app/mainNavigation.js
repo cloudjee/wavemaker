@@ -219,7 +219,7 @@ Studio.extend({
 	var unsavedPages = [];
 	for (var i = 0; i < layers.length; i++) {
 	    var page = layers[i].c$[0].page;
-	    if (page.getDirty())
+	    if (page.getDirty && page.getDirty())
 		unsavedPages.push(page);
 	}
 	if (unsavedPages.length == 0) {

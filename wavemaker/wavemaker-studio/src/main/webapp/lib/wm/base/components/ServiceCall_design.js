@@ -119,8 +119,8 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     /* Special deprecated group.... */
     queue: { group: "deprecated", order: 20,operation: "showQueueDialog"},
 
-    /* Not in properties panel, but selecting this component in the bind dialog should bind to the dataSet */
-    dataSet: { ignore: 1, bindable: 0, bindSource: 1, defaultBindTarget: 1, type: "any"},
+
+    dataSet: { ignore: 1, bindable: 0, bindSource: 0, type: "any"},
 
     /* Ignored group */
     json: {ignore: 1},

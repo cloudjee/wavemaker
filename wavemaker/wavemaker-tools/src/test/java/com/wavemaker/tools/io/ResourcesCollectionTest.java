@@ -41,9 +41,6 @@ public class ResourcesCollectionTest {
     @Mock
     private ResourceOperation<Resource> resourceOperation;
 
-    @Mock
-    private ResourceOperation<File> fileOperation;
-
     @Test
     public void shouldNeedResources() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);

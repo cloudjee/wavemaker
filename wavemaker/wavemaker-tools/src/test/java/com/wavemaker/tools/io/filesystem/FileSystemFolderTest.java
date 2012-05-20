@@ -30,14 +30,13 @@ import org.junit.Test;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
-import com.wavemaker.tools.project.ResourceFilter;
 
 /**
  * Tests for {@link FileSystemFolder}.
@@ -477,6 +476,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.copyTo(destination, new ResourceIncludeFilter<File>() {
+
             @Override
             public boolean include(File resource) {
                 return true;

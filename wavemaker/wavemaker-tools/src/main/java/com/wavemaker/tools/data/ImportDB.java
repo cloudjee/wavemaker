@@ -34,7 +34,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.ant.ExporterTask;
-//import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
@@ -49,13 +48,13 @@ import com.wavemaker.tools.data.reveng.BasicMetaDataDialect;
 import com.wavemaker.tools.data.reveng.MetaDataDialect;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
 
 /**
  * Database import.
@@ -105,8 +104,6 @@ public class ImportDB extends BaseDataModelSetup {
 
     private final WMJDBCConfigurationTask jdbcConf = new WMJDBCConfigurationTask();
 
-    private boolean createJar = false;
-
     private boolean compile = true;
 
     private boolean compileServiceClass = this.compile;
@@ -118,8 +115,6 @@ public class ImportDB extends BaseDataModelSetup {
     private String revengMetaDataDialect = null;
 
     private DeprecatedServiceDefinition serviceDefinition = null;
-
-    private String currentProjectName;
 
     /**
      * Main method ctor.
@@ -203,7 +198,6 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     public void setCreateJar(boolean createJar) {
-        this.createJar = createJar;
     }
 
     public void setImportDatabase(boolean importDatabase) {
@@ -227,7 +221,6 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     public void setCurrentProjectName(String currentProjectName) {
-        this.currentProjectName = currentProjectName;
     }
 
     @Override
@@ -485,7 +478,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private DeprecatedServiceDefinition loadServiceDefinition() {
         com.wavemaker.tools.io.File f = this.destdir.getFile(this.serviceName + DataServiceConstants.SPRING_CFG_EXT);
-        
+
         DeprecatedServiceDefinition rtn = null;
         try {
             rtn = SpringService.initialize(f);
@@ -504,7 +497,7 @@ public class ImportDB extends BaseDataModelSetup {
     private void checkClassesDir() {
         if (this.classesdir == null) {
             String s = this.properties.getProperty(CLASSES_DIR_SYSTEM_PROPERTY);
-            Folder projRoot = projectManager.getCurrentProject().getRootFolder();
+            Folder projRoot = this.projectManager.getCurrentProject().getRootFolder();
             if (s != null) {
                 setClassesDir(projRoot.getFolder(s));
             }

@@ -42,12 +42,9 @@ public class CloudFoundryStudioConfiguration implements StudioConfiguration {
 
     static final String PROJECTS_DIR = GridFSStudioFileSystem.PROJECTS_DIR;
 
-    private final GridFSStudioFileSystem fileSystem;
-
     private RuntimeAccess runtimeAccess;
 
     public CloudFoundryStudioConfiguration(GridFSStudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
     }
 
     @Override

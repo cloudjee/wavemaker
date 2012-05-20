@@ -17,19 +17,6 @@ body.tundra .Main .Main-layoutBox.wmlayout {
 filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#444444', endColorstr='#9EA6B3');
 }
 
-.Main  .wmbutton {
-    background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-cursor: pointer;
-}
-.Main  .wmbutton:hover {
-    background-image:url(images/wmbutton_bg.png);
-}
-	
-}
 body.tundra .Main .wmlayout .Main-loginInputPanel .Main-html1,
 body.tundra .Main .wmlayout .Main-loginInputPanel .Main-html1 a, 
 body.tundra .Main .wmlayout .Main-loginInputPanel .Main-html1 a:visited {

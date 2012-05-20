@@ -502,7 +502,7 @@
 	     if (inGroup.props) {
 		 this._generateEditors(inComponent, inLayer, inGroup.props);
 	     }
-	     delete this.processingRequiredGroup;
+	     delete this.processingRequiredGroup; 
 	 } else if (inPropList) {
 	     this._generateEditors(inComponent, inLayer, this.props);
 	 }
@@ -824,16 +824,23 @@
 	     var parent = e.parent;
 	     var propName = inProp.fullName || inProp.name;
 	     var w = inComponent.$.binding.wires[propName];
-	     if (w) 
-		 inComponent.$.binding.removeWire(w.getWireId());
+	     if (w) {
+		 this.onEditorChange(e, inProp, inComponent, "", "");
+	     }
 	     bindableEditor.hide();
-	     e.clear();
-	     /* Clear causes onchange which causes reinspect which may destroy the editor */
+	     e.show();
+	     e._updating = true;
+	     e.clear(); // don't fire onchange event
+	     e._updating = false;
+/*
+
+	     / * Clear causes onchange which causes reinspect which may destroy the editor * /
 	     if (!e.isDestroyed) {
 		 e.show();
 		 parent.setHeight(e.bounds.h + "px");
 		 this.reinspect();
 	     }
+	     */
 	 });
 
 	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.fullName || inProp.name)] = bindableEditor;
@@ -873,12 +880,13 @@
 	     /* If the editor doesn't have the createWire flag on it, then inputs into the editor should result in 
 	      * simply setting of the property
 	      */
-	     if (!e.createWire) {
-		 /* TODO: PROPINSPECTOR CHANGE: Need to use the UNDOABLE TASK MANAGER */
+	     if (!e.createWire && (!inComponent.$.binding || !inComponent.$.binding.wires[inProp.name])) {
 		 if (e instanceof wm.prop.FieldGroupEditor) {
+		     // this block appears unreachable
 		     inComponent.setValue(inProp.name, inDataValue);
 		 } else {
-		     inComponent.setProp(inProp.name, inDataValue);
+		     //inComponent.setProp(inProp.name, inDataValue);
+		     new wm.SetPropTask(inComponent, inProp.name, inComponent.getProp(inProp.name), inDataValue, false);
 		 }
 	     } 
 
@@ -888,26 +896,16 @@
 		  * we're just binding to inProp.name.  bindTarget is used by wm.prop.FieldGroupEditor.
 		  */
 		 var bindPropName = e.bindTarget || inProp.fullName || inProp.name;
-
-		 /* If there is no data value, then there is no wire; make sure that any wire is removed */
-		 if (!inDataValue) {
-		     inComponent.$.binding.removeWire(bindPropName);
-		     inComponent.setValue(bindPropName, undefined);
-		 } else if (inDataValue) {
-		     /* If an editor uses the createExpressionWire property, then we are creating a binding expression instead
-		      * of binding to a target.  Used by wm.prop.FieldGroupEditor.  Typically we are binding something like
-		      * a dataSet where we get the name/id of a component and we bind to it.
-		      */
-		     if (e.createExpressionWire) {
-			 inDataValue = this.parseExpressionForWire(inDataValue);
-			 inComponent.$.binding.addWire("", bindPropName, "", inDataValue);
-		     } else {
-			 inComponent.$.binding.addWire("", bindPropName, inDataValue);
-		     }
-		 }	  
+		 new wm.SetWireTask(inComponent, 
+				    bindPropName, 
+				    inComponent.$.binding && inComponent.$.binding.wires[bindPropName] ? {source: inComponent.$.binding.wires[bindPropName].source,
+													  expression: inComponent.$.binding.wires[bindPropName].expression,
+													  value: inComponent.getValue(bindPropName)} : {}, 
+				    inDataValue, 
+				    e.createExpressionWire);
 	     }
 	 } catch(e) {}
-	 
+
 	 /************************************************************************************************************
 	  * Adding a wire calls inComponent.setValue(propName, valueOfTheSourceOrExpression);
           * sometimes a widget simply destroys itself and creates a replacement copy; 
@@ -1008,6 +1006,7 @@
 	 }
      },
      */
+     /* Called by propertyEdit's wm.SetWireTask */
      parseExpressionForWire: function(inValue) {
 	 // A bind wire expression must be a string 
 	 if (typeof inValue == "number") {
@@ -1097,8 +1096,11 @@
 		     bd.show();
 		     bd.page.setContent(altText);
 		 } else {
-		     if (inType == studio.application.declaredClass)
+		     if (inType == studio.application.declaredClass) {
 			 inType = "wm.Application";
+		     } else if (inType == studio.project.pageName) {
+			 inType = "wm.Page";
+		     }
 		     var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
 										      className: inType.replace(/^.*\./,"") + "_" + inPropName});
 

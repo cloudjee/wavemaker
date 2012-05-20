@@ -33,15 +33,13 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.server.ServerConstants;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ListOrSetType;
 import com.wavemaker.tools.spring.beans.Property;
-import com.wavemaker.tools.io.ClassPathFile;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 
 /**
  * @author Frankie Fu
@@ -53,7 +51,7 @@ public class SpringConfigSupportTest extends WMTestCase {
         File file = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
         com.wavemaker.tools.io.File configFile = FileSystemUtils.convertToFileSystemFile(file);
         Folder folder = FileSystemUtils.convertToFileSystemFolder(file.getParentFile());
-        Project project = new Project(folder);
+        new Project(folder);
         Beans beans = SpringConfigSupport.readBeans(configFile);
         List<Object> beansChildren = beans.getImportsAndAliasAndBean();
         assertEquals(3, beansChildren.size());

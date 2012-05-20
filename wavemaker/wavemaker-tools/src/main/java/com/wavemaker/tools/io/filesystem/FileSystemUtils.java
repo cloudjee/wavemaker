@@ -18,11 +18,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
- * Helper class for transitioning from using {@link File} to {@link Folder or @link  com.wavemaker.tools.File}
+ * Helper class for transitioning from using {@link File} to {@link Folder or @link com.wavemaker.tools.File}
  * 
  * @author Seung Lee
  */

@@ -14,11 +14,9 @@
 
 package com.wavemaker.tools.data.upgrade;
 
-import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
@@ -26,7 +24,7 @@ import com.wavemaker.runtime.data.spring.SpringDataServiceManager;
 import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -37,7 +35,6 @@ import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
 import com.wavemaker.tools.spring.beans.Entry;
 import com.wavemaker.tools.spring.beans.Map;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * @author Simon Toens

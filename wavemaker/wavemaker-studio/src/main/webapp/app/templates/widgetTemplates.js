@@ -443,20 +443,15 @@ wm.widgetTemplates.toolbarWithGroupBox = {
 				}],
 				panel5: ["wm.Panel", {_classes: {domNode: ["wm_SilverBlueTheme_MainOutsetPanel"]}, width: "100%", height: "262px", border: "0", layoutKind: "left-to-right", horizontalAlign: "center"}, {}, {
 					panel7: ["wm.Panel", {width: "430px", height: "100%", border: "0", verticalAlign: "middle"}, {}, {
-						editor1: ["wm.Editor", {caption: "Foo:", height: "26px", border: "0", width: "100%"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+						editor1: ["wm.Text", {caption: "Foo:", height: "26px", border: "0", width: "100%"}, {}, {
 						}],
-						editor2: ["wm.Editor", {caption: "Bar:", height: "26px", border: "0", width: "100%"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+						editor2: ["wm.Text", {caption: "Bar:", height: "26px", border: "0", width: "100%"}, {}, {
 						}],
-						editor3: ["wm.Editor", {caption: "Foo:", height: "26px", border: "0", width: "100%"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+						editor3: ["wm.Text", {caption: "Foo:", height: "26px", border: "0", width: "100%"}, {}, {
 						}],
-						editor4: ["wm.Editor", {caption: "Bar:", height: "26px", border: "0", width: "100%"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+						editor4: ["wm.Text", {caption: "Bar:", height: "26px", border: "0", width: "100%"}, {}, {
 						}],
-						editor5: ["wm.Editor", {caption: "Foo:", height: "26px", border: "0", width: "100%"}, {}, {
-							editor: ["wm._TextEditor", {}, {}]
+						editor5: ["wm.Text", {caption: "Foo:", height: "26px", border: "0", width: "100%"}, {}, {
 						}],
 						panel8: ["wm.Panel", {width: "100%", height: "36px", border: "0", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 							button3: ["wm.Button", {width: "50px", height: "100%", border: "1"}, {}],
@@ -505,8 +500,7 @@ wm.widgetTemplates.searchListDetail = {
 	height: "100%",
 	_template: {
 		searchBarPanel: ["wm.Panel", {_classes: {domNode: ["toolbar"]}, width: "100%", height: "36px", layoutKind: "left-to-right"}, {}, {
-			searchBox: ["wm.Editor", {width: "219px", margin: "4", padding: "0"}, {}, {
-				editor: ["wm._TextEditor", {}, {}]
+			searchBox: ["wm.Text", {width: "219px", margin: "4", padding: "0"}, {}, {
 			}],
 			searchBtn: ["wm.Button", {width: "55px", height: "100%", caption: "Search"}, {}]
 		}],

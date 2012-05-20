@@ -11,16 +11,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
-import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.ant.Hbm2JavaExporterTask;
-import org.springframework.core.io.Resource;
+import org.hibernate.tool.ant.HibernateToolTask;
+
 import com.wavemaker.tools.io.Folder;
 
 public class Hbm2JavaExporterTaskWrapper extends Hbm2JavaExporterTask {
+
     private Folder destDir;
-    
+
     public Hbm2JavaExporterTaskWrapper(HibernateToolTask parent, Folder destDir) {
         super(parent);
         this.destDir = destDir;

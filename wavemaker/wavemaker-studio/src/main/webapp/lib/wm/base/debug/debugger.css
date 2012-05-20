@@ -70,7 +70,7 @@
 }
 
 #debugDialog div.dojoxGridRow {
-    font-size: 8px;
+    font-size: 10px;
     color: #000000;
     font-weight: normal;
     background-color: #dadada;
@@ -122,7 +122,7 @@
     border-right-color: #888;
 
     font-family: Verdana;
-    font-size: 8px;
+    font-size: 10px;
     color: #000000 !important;
     font-weight: bold;
 }

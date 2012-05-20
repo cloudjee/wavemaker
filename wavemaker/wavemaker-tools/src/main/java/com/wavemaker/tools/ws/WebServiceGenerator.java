@@ -15,13 +15,10 @@
 package com.wavemaker.tools.ws;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-
-import org.springframework.core.io.Resource;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
@@ -35,10 +32,10 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -46,7 +43,6 @@ import com.wavemaker.tools.ws.salesforce.JAXBTypeMapper_SF;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.TypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * Base class for all Web Service generators.
@@ -100,8 +96,7 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
             try {
                 // it may due to class/interface names collision, try to put
                 // schemas in seperate packages.
-                this.jaxbBindingFiles = builder.generate(this.configuration.getOutputDirectory(),
-                    true);
+                this.jaxbBindingFiles = builder.generate(this.configuration.getOutputDirectory(), true);
                 typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
             } catch (GenerationException ex) {
                 // for some WSDLs, the global binding file causes some issues;

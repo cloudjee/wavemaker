@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.data.salesforce;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,24 +34,25 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.DataServiceOperation;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.data.DataServiceGenerator;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.DesignTimeUtils;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
-import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.Folder;
 
 /**
  * DataService class generation.
@@ -126,13 +127,11 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
             Folder outputFolder = this.configuration.getOutputDirectory();
             outputFolder.createIfMissing();
             if (outputFolder.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-                this.codeModel.build((File)outputFolder.getOriginalResource(),
-                        (File)outputFolder.getOriginalResource(), null);
+                this.codeModel.build((File) outputFolder.getOriginalResource(), (File) outputFolder.getOriginalResource(), null);
             } else {
                 File tempDir = IOUtils.createTempDirectory("outputSrc_directory", null);
                 this.codeModel.build(tempDir, tempDir, null);
-                LocalFileSystem fileSystem = new LocalFileSystem(tempDir);
-                Folder folder = FileSystemFolder.getRoot(fileSystem);
+                Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDir);
                 folder.copyContentsTo(outputFolder);
             }
         } catch (IOException e) {

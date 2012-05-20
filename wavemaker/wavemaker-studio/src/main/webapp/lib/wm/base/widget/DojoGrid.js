@@ -639,9 +639,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		
 		return;
 	    }
-	  this.updateSelectedItem(-1);
-	  var item = this.getRowData(rowIndex);
-	  this.dojoObj.store.deleteItem(item);
+	    this.updateSelectedItem(-1);
+	    var item = this.getRowData(rowIndex);
+	    this.dojoObj.store.deleteItem(item);
+	    if (this.dataSet && this.dataSet.data && this.dataSet.data.list) {
+		var dataSetIndex = dojo.indexOf(this.dataSet.data.list, item._wmVariable[0]);
+		if (dataSetIndex != -1) {
+		    this.dataSet.beginUpdate();
+		    this.dataSet.removeItem(dataSetIndex);
+		    this.dataSet.endUpdate();
+		}
+	    }
 	    this.dojoObj.render();
 	},
 	addRow: function(inFields, selectOnAdd) {
@@ -1343,6 +1351,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.dsType = this.variable.type;
 	    this.columns = [];
 	    var viewFields = this.getViewFields();
+ 	    var maxColumns = Math.round(this.bounds.w / 80);
 	    dojo.forEach(viewFields, function (f, i) {
 	        var align = 'left';
 	        var width = '100%';
@@ -1355,7 +1364,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	            formatFunc = 'wm_date_formatter';
 	        }
 	        this.columns.push({
-	            show: i < 15,
+	            show: i < maxColumns,
 	            field: f.dataIndex,
 	            title: f.caption,
 	            width: width,
@@ -1375,6 +1384,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     updateColumnData: function () {
 	var defaultSchema = {dataValue: {type: this.variable.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
         var viewFields = this.getViewFields() || defaultSchema;
+	var maxColumns = Math.round(this.bounds.w / 80);
         dojo.forEach(viewFields, function (f, i) {
             // if the column already exists, skip it
             if (dojo.some(this.columns, function (item) {
@@ -1396,7 +1406,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 formatFunc = 'wm_date_formatter';
             }
             this.columns.push({
-                show: i < 10,
+                show: i < maxColumns,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,
@@ -1638,7 +1648,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			    }
 				if (col.expression){
 					value = this.getExpressionValue(col.expression, idx, obj, true);
-				} else if (col.formatFunc){
+				} 
+				if (col.formatFunc){
 					switch(col.formatFunc){
 						case 'wm_date_formatter':
 					        case 'Date (WaveMaker)':				    
@@ -1662,8 +1673,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 							break;
 						case 'wm_image_formatter':
 					        case 'Image (WaveMaker)':				    
-					    // spreadsheet shouldn't be given HTML
-							//value = this.imageFormatter(value);	
+					                value = this.imageFormatter(col.formatProps||{}, "","","", value);
 							break;
 						case 'wm_link_formatter':
 					        case 'Link (WaveMaker)':				    
@@ -1673,7 +1683,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 						default:
 							if (!this.isDesignLoaded())
-							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {}, obj);
+							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles: [], customClasses: []}, obj);
 							break;
 					}
 				}
@@ -1721,7 +1731,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			    }
 				if (col.expression){
 					value = this.getExpressionValue(col.expression, idx, obj, true);
-				} else if (col.formatFunc){
+				} 
+				if (col.formatFunc){
 				    /* TODO FOR 6.5: Calls to formatters are missing some parameters; at least pass null if no parameter is needed */
 					switch(col.formatFunc){
 						case 'wm_date_formatter':

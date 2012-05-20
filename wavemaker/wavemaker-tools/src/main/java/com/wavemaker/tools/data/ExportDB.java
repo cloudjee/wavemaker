@@ -14,8 +14,7 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.ReflectionUtils;
 
 import com.wavemaker.common.MessageResource;
@@ -44,9 +42,11 @@ import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceOperation;
+import com.wavemaker.tools.io.Resource;
 
 /**
  * @author Simon Toens
@@ -57,7 +57,7 @@ public class ExportDB extends BaseDataModelSetup {
 
     private static final String HBM_FILES_DIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "hbmFilesDir";
 
-    private File hbmFilesDir = null;
+    private Folder hbmFilesDir = null;
 
     private boolean exportToDatabase = false;
 
@@ -69,9 +69,9 @@ public class ExportDB extends BaseDataModelSetup {
 
     private String ddl = null;
 
-    private File classesDir = null;
+    private Folder classesDir = null;
 
-    public void setClassesDir(File classesDir) {
+    public void setClassesDir(Folder classesDir) {
         this.classesDir = classesDir;
     }
 
@@ -87,7 +87,7 @@ public class ExportDB extends BaseDataModelSetup {
         return this.errors;
     }
 
-    public void setHbmFilesDir(File hbmFilesDir) {
+    public void setHbmFilesDir(Folder hbmFilesDir) {
         this.hbmFilesDir = hbmFilesDir;
     }
 
@@ -110,7 +110,15 @@ public class ExportDB extends BaseDataModelSetup {
 
         final Configuration cfg = new Configuration();
 
-        cfg.addDirectory(this.hbmFilesDir);
+        //cfg.addDirectory(this.hbmFilesDir);
+
+        this.hbmFilesDir.performOperationRecursively(new ResourceOperation<com.wavemaker.tools.io.File>() {
+            public void perform(com.wavemaker.tools.io.File file) {
+                if (file.getName().endsWith(".hbm.xml")) {
+                    cfg.addInputStream(file.getContent().asInputStream());
+                }
+            }
+        });
 
         Properties connectionProperties = getHibernateConnectionProperties();
 
@@ -137,10 +145,7 @@ public class ExportDB extends BaseDataModelSetup {
                         ReflectionUtils.rethrowRuntimeException(e);
                     }
                 } else {
-                    //cftempfix
-                    LocalFileSystem fileSystem = new LocalFileSystem(this.classesDir);
-                    Folder folder = FileSystemFolder.getRoot(fileSystem);
-                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, folder);
+                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, this.classesDir);
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");
@@ -178,10 +183,7 @@ public class ExportDB extends BaseDataModelSetup {
                         ReflectionUtils.rethrowRuntimeException(e);
                     }
                 } else {
-                    //cftempfix
-                    LocalFileSystem fileSystem = new LocalFileSystem(this.classesDir);
-                    Folder folder = FileSystemFolder.getRoot(fileSystem);
-                    update = ResourceClassLoaderUtils.runInClassLoaderContext(t, folder);
+                    update = ResourceClassLoaderUtils.runInClassLoaderContext(t, this.classesDir);
                 }
 
                 prepareForExport(this.exportToDatabase);
@@ -319,15 +321,18 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     private void checkHbmFilesDir(Collection<String> requiredProperties) {
-        if (this.hbmFilesDir == null) {
-            String s = this.properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
-            if (s != null) {
-                setHbmFilesDir(new File(s));
+        //cftempfix - For now, we assume that no properties are supposed to be set to represent directories.
+        if (this.hbmFilesDir.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+            if (this.hbmFilesDir == null) {
+                String s = this.properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
+                if (s != null) {
+                    setHbmFilesDir(FileSystemUtils.convertToFileSystemFolder(new File(s)));
+                }
             }
-        }
 
-        if (this.hbmFilesDir == null) {
-            requiredProperties.add(HBM_FILES_DIR_SYSTEM_PROPERTY);
+            if (this.hbmFilesDir == null) {
+                requiredProperties.add(HBM_FILES_DIR_SYSTEM_PROPERTY);
+            }
         }
     }
 
@@ -336,12 +341,14 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     private Tuple.Two<String, String> getMappedSchemaAndCatalog() {
-        for (String s : this.hbmFilesDir.list()) {
-            File f = new File(this.hbmFilesDir, s);
-            if (!f.isDirectory()) {
+        for (Resource s : this.hbmFilesDir.list()) {
+            //File f = new File(this.hbmFilesDir, s);
+            if (s instanceof com.wavemaker.tools.io.File) {
+                com.wavemaker.tools.io.File f = (com.wavemaker.tools.io.File)s;
                 HbmParser p = null;
                 try {
-                    p = new HbmParser(f);
+                    Reader reader = new InputStreamReader(f.getContent().asInputStream());
+                    p = new HbmParser(reader);
                     // rely on the fact that all mapping files have the same
                     // schema and catalog
                     return Tuple.tuple(p.getEntity().getSchemaName(), p.getEntity().getCatalogName());

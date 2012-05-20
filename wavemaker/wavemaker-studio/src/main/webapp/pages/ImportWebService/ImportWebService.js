@@ -114,8 +114,19 @@ dojo.declare("ImportWebService", wm.Page, {
 		}
 	},
 	cancelButtonClick: function(inSender, inEvent) {
-		wm.fire(this.owner, "dismiss", [inEvent]);
+	    this.dismiss(inEvent);
 	},
+        dismiss: function(inEvent) {
+	    wm.fire(this.owner, "dismiss", [inEvent]);
+	    if (this.owner.parent instanceof wm.Layer) {
+		var l = this.owner.parent;
+		var parentLayers = l.parent;
+		l.destroy();
+		if (parentLayers.layers.length == 0) {
+		    parentLayers.parent.hide();
+		}
+	    }
+    },
 	importWSDL: function(inOverwrite) {
 		var w = (inOverwrite == undefined || inOverwrite == null) ? false : inOverwrite;
 		var f, id = this.serviceIdInput.getValue("displayValue");
@@ -157,8 +168,8 @@ dojo.declare("ImportWebService", wm.Page, {
 		}
 	},
 	importCompleted: function(inResponse) {
-		this.serviceId = inResponse;
-		wm.fire(this.owner, "dismiss", ["Import"]);
+	    this.serviceId = inResponse;
+	    this.dismiss("Import");
 	},
 	importWSDLResult: function(inResponse) {
 		studio.endWait();

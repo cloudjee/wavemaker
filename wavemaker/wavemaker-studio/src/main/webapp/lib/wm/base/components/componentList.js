@@ -153,6 +153,7 @@ wm.componentList = {
  * to use when loading a class from the common folder
  */
 wm.require = function(inType, inCommon) {
+    if (dojo.getObject(inType)) return;
     var requireList = wm.componentList[inType];
     if (requireList || inCommon)
 	return wm.getComponentStructure(inType);

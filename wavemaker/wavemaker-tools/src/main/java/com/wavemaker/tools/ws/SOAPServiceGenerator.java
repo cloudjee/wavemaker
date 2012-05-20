@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -36,22 +35,20 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.jaxws.SOAPBindingResolver;
-import com.wavemaker.tools.service.codegen.GenerationConfiguration;
-import com.wavemaker.tools.service.codegen.GenerationException;
-import com.wavemaker.tools.ws.jaxws.JAXWSBuilder;
-import com.wavemaker.tools.ws.jaxws.JAXWSPortTypeInfo;
-import com.wavemaker.tools.ws.jaxws.JAXWSServiceInfo;
-import com.wavemaker.tools.ws.jaxws.CFJAXWSBuilder;
-import com.wavemaker.tools.ws.wsdl.SchemaElementType;
-import com.wavemaker.tools.ws.wsdl.ServiceInfo;
-import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.service.codegen.GenerationConfiguration;
+import com.wavemaker.tools.service.codegen.GenerationException;
+import com.wavemaker.tools.ws.jaxws.CFJAXWSBuilder;
+import com.wavemaker.tools.ws.jaxws.JAXWSBuilder;
+import com.wavemaker.tools.ws.jaxws.JAXWSPortTypeInfo;
+import com.wavemaker.tools.ws.jaxws.JAXWSServiceInfo;
+import com.wavemaker.tools.ws.wsdl.SchemaElementType;
+import com.wavemaker.tools.ws.wsdl.ServiceInfo;
+import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
  * This class generates SOAP service stubs.

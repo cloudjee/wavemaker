@@ -19,16 +19,14 @@
 package com.wavemaker.tools.webapp;
 
 import java.io.File;
-import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
-import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.webapp.schema.DisplayNameType;
 import com.wavemaker.tools.webapp.schema.ServletType;

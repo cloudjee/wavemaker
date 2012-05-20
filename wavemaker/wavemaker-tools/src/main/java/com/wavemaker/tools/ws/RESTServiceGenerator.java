@@ -14,14 +14,12 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.wsdl.Operation;
 
-import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 import com.sun.codemodel.JBlock;
@@ -38,12 +36,12 @@ import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.RESTService;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.io.File;
 
 /**
  * This class generates REST service stubs.
@@ -89,8 +87,8 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         wsdlFilePaths.add(this.wsdl.getURI());
         List<String> jaxbBindingFilePaths = new ArrayList<String>();
         for (File jaxbBindingFile : this.jaxbBindingFiles) {
-                //cftempfix
-            jaxbBindingFilePaths.add(jaxbBindingFile.toString());      
+            // cftempfix
+            jaxbBindingFilePaths.add(jaxbBindingFile.toString());
         }
         S2JJAXBModel model = ((JAXBTypeMapper) this.wsdl.getTypeMapper()).getJAXBModel();
         if (model != null) {

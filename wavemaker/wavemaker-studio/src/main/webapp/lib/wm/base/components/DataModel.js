@@ -273,7 +273,7 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 	}
 	var panel = new wm.LivePanel({owner: inOwner,
 				      parent: inParent,
-				      liveDataName: this.dataModelName.toLowerCase(),
+				      liveDataName: this.entityName.toLowerCase(),
 				      liveSource: type,
 				      name: inOwner.getUniqueName(this.dataModelName + "LivePanel")});
 	panel.afterPaletteDrop();

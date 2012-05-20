@@ -89,8 +89,6 @@ public class MainConsole extends javax.swing.JFrame {
 
     public final static String VAL_SYS_DEF_BROWSER = bundle.getString("SYSTEM_DEFAULT_BROWSER");
 
-    private final String version;
-
     private AppServer appServer;
 
     protected final TomcatConfig tomcatConfig;
@@ -113,7 +111,6 @@ public class MainConsole extends javax.swing.JFrame {
             this.pbStatus.setVisible(true);
         }
 
-        this.version = version;
         // version is obtained from wavemaker-tools\src\main\resources\com\wavemaker\tools\project\version
         setTitle(bundle.getString("MainConsole.title") + " " + version);
 

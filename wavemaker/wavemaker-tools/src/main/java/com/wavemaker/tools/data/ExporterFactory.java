@@ -16,6 +16,7 @@ package com.wavemaker.tools.data;
 
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
+
 import com.wavemaker.tools.io.Folder;
 
 /**
@@ -38,7 +39,7 @@ public interface ExporterFactory {
 
     /**
      * Sets the destination directory for cloud foundry
-     *
+     * 
      * @param destDir the destination directory
      */
     public void setDestDir(Folder destDir);
@@ -46,7 +47,7 @@ public interface ExporterFactory {
     public void setPackageName(String packageName);
 
     public void setDataPackage(String dataPackage);
-    
+
     public void setClassName(String className);
 
     public void setUseIndividualCRUDOperations(boolean useIndividualCRUDOperations);

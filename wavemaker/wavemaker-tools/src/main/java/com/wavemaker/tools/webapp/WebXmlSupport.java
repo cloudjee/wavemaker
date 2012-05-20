@@ -27,10 +27,10 @@ import javax.xml.bind.Unmarshaller;
 
 import org.springframework.core.io.Resource;
 
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.webapp.schema.ObjectFactory;
 import com.wavemaker.tools.webapp.schema.WebAppType;
-import com.wavemaker.tools.io.File;
 
 /**
  * @author Matt Small

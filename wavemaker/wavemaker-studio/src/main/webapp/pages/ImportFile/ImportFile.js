@@ -19,6 +19,7 @@ dojo.declare("ImportFile", wm.Page, {
     i18n: true,
     start: function() {
 	this.filename.editor.set("placeHolder", this.getDictionaryItem("PLACEHOLDER"));
+	dojo.addClass(this.fileUploader.button.domNode, "StudioButton");
     },
     onShow: function() {
 	this.filename.setDataValue("");

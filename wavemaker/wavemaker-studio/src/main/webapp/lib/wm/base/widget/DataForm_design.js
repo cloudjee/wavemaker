@@ -101,6 +101,17 @@ wm.FormPanel.extend({
 	    studio.refreshDesignTrees();
     },
 
+    getOneToManyEditorsArray: function() {
+	return wm.getMatchingFormWidgets(this, function(w) {
+	    return (wm.isInstanceType(w, wm.OneToMany) && w.formField);
+	});
+    },
+    getFormPanelsArray: function() {
+	return wm.getMatchingFormWidgets(this, function(w) {
+	    return (wm.isInstanceType(w, wm.FormPanel) && !wm.isInstanceType(w, wm.DataForm) && w.formField);
+	});
+    },
+
 
     /****************
      * METHOD: makeEditors (DESIGNTIME)
@@ -546,10 +557,57 @@ wm.DataForm.extend({
 	this._currentEditors = this.getEditorsArray();
 	// we don't want updates while making editors
 	this.makeEditors();
+	this.reformatForOneToManyEditors();
 	this.finishAddEditors();
 	this._currentEditors = null;
     },
+    reformatForOneToManyEditors: function() {
+	var eds = this.getOneToManyEditorsArray();
+	if (!eds.length) return;
+	
+	// If there is a FormPanel within this form, then we've already been through this...
+	var panels = this.getFormPanelsArray();
+	if (panels.length) return;
 
+	var panel = new wm.FormPanel({width: "100%",
+				      height: "100%",
+				      parent: this,
+				      owner: this.owner,
+				      name: this.name + "EditorFormPanel",
+				      layoutKind: "top-to-bottom",
+				      captionSize: this.captionSize,
+				      captionPosition: this.captionPosition,
+				      editorHeight: this.editorHeight});
+	var oneToManyPanel = new wm.FormPanel({width: "200px",
+					       height: "100%",
+					       parent: this,
+					       owner: this.owner,
+					       name: this.name + "OneToManyFormPanel",
+					       layoutKind: "top-to-bottom",
+					       captionSize: "20px",
+					       captionPosition: "top",
+					       captionAlign: "left"});
+
+	this.moveControl(panel,0);
+	panel.designWrapper.controlParentChanged();
+	this.moveControl(oneToManyPanel,1);
+	oneToManyPanel.designWrapper.controlParentChanged();
+	for (var i = this.c$.length - 1; i >= 0; i--) {
+	    var widget = this.c$[i];
+	    if (wm.isInstanceType(widget, [ wm.AbstractEditor, wm.DataForm]) && !wm.isInstanceType(widget, wm.OneToMany) ||
+		widget == this.widgets.buttonPanel) {
+		widget.setParent(panel);
+	    } else if (wm.isInstanceType(widget, wm.OneToMany)) {
+		widget.setParent(oneToManyPanel);
+		widget.setHeight("100%");
+		widget.setCaptionPosition("top");
+		widget.setCaptionSize("20px");
+		widget.setCaptionAlign("left");
+	    }
+	    widget.designWrapper.controlParentChanged();
+	}
+	this.setLayoutKind("left-to-right");
+    },
     makeBasicEditor: function(inFieldInfo, inFormField) {
 	var e = this.inherited(arguments);
 	if (e) {
@@ -758,11 +816,17 @@ wm.DataForm.extend({
 	}
 	return e;
     },
+    getFormPanel: function() {
+	for (var i = 0; i < this.c$.length; i++) {
+	    if (this.c$[i] instanceof wm.FormPanel) return this.c$[i];
+	}
+    },
     generateButtons: function() {
+	var parent = this.getFormPanel() || this;
 	var buttonPanel = new wm.Panel({
 	    owner: this.owner,
 	    name: this.owner.getUniqueName(this.name + "ButtonPanel"),
-	    parent: this,
+	    parent: parent,
 	    layoutKind: "left-to-right",
 	    width: "100%",
 	    height: wm.Button.prototype.height,
@@ -997,10 +1061,11 @@ wm.DBForm.extend({
 
     generateButtons: function() {
 	if (this.buttonPanel) this.buttonPanel.destroy();
+	var parent = this.getFormPanel() || this;
 	var buttonPanel = new wm.Panel({
 	    owner: this.owner,
 	    name: this.owner.getUniqueName(this.name + "ButtonPanel"),
-	    parent: this,
+	    parent: parent,
 	    layoutKind: "left-to-right",
 	    width: "100%",
 	    height: wm.Button.prototype.height,

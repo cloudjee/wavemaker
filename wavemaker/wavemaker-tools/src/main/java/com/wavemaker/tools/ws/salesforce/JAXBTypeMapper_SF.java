@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 import com.sun.tools.xjc.model.CClassInfo;
@@ -30,11 +29,11 @@ import com.sun.tools.xjc.model.CTypeInfo;
 import com.sun.tools.xjc.model.Model;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.JAXBTypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
-import com.wavemaker.tools.io.File;
 
 /**
  * JAXB specific type mappings for SalesForce.

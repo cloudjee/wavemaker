@@ -111,10 +111,13 @@ dojo.declare("wm.Application", wm.Component, {
 
 	    /* Determines if use of the touchscroll.js library is needed; latest versions of IOS no longer require it */
 	    if (this._touchEnabled === undefined) {
+		var matches = navigator.userAgent.match(/(iphone|ipad).* OS (\d+)/i);
+		if (matches) {
+		    wm.isIOS = parseInt(matches[2]);
+		}
 		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
 		    if (navigator.userAgent.match(/Android (3|4|5|6|7|8|9)\./) ||
-			navigator.userAgent.match(/(phone|ipad)/i) &&
-			!navigator.userAgent.match(/(phone|ipad) OS (1|2|3|4)_/i) ||
+			wm.isIOS && wm.isIOS > 4 ||
 			wm.isFakeMobile) {
 			;
 		    } else {

@@ -68,7 +68,8 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 
 	this.setImage(this.image);
 	this.setCaption(this.caption);
-	this.setServiceVariableToTrack(this.serviceVariableToTrack);
+	// serviceVariableToTrack is built into widgets.js using bindings, which fire before postInit
+	//this.setServiceVariableToTrack(this.serviceVariableToTrack);
     },
     setServiceVariableToTrack: function(inVar) {
 	if (this._isDesignLoaded) return;

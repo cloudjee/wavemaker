@@ -14,7 +14,8 @@
 
 package com.wavemaker.tools.ws.jaxws;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
@@ -31,17 +31,13 @@ import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.impl.NameConverter;
 import com.wavemaker.common.util.XMLUtils;
 import com.wavemaker.common.util.XMLWriter;
-import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.CodeGenUtils;
 import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 
 /**
  * Generates service client files.
@@ -61,7 +57,9 @@ public class JAXWSBuilder {
     private final List<JAXWSServiceInfo> serviceInfoList = new ArrayList<JAXWSServiceInfo>();
 
     protected File tempOutputSrcDir;
+
     protected File tempOutputClassDir;
+
     protected File tempjaxwsDir;
 
     public JAXWSBuilder(WSDL wsdl, Folder outputSrcDir, Folder outputClassDir) {
@@ -92,7 +90,8 @@ public class JAXWSBuilder {
         generate(jaxwsBindingFile, jaxbBindingFiles);
     }
 
-    private void generate(com.wavemaker.tools.io.File jaxwsBindingFile, List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
+    private void generate(com.wavemaker.tools.io.File jaxwsBindingFile, List<com.wavemaker.tools.io.File> jaxbBindingFiles)
+        throws GenerationException {
         String wsdlUri = this.wsdl.getURI();
 
         WsImport2 wsImport = new WsImport2();
@@ -136,8 +135,8 @@ public class JAXWSBuilder {
      * @return The JAXWS binding customization file.
      */
     private com.wavemaker.tools.io.File generateJAXWSBindingFile() {
-        com.wavemaker.tools.io.File bindingFile = CodeGenUtils.getPackageFolder(this.outputSrcDir, this.wsdl.getPackageName()).getFile(this.wsdl.getServiceId()
-            + Constants.JAXWS_BINDING_FILE_EXT);
+        com.wavemaker.tools.io.File bindingFile = CodeGenUtils.getPackageFolder(this.outputSrcDir, this.wsdl.getPackageName()).getFile(
+            this.wsdl.getServiceId() + Constants.JAXWS_BINDING_FILE_EXT);
         PrintWriter pw = null;
         pw = new PrintWriter(bindingFile.getContent().asOutputStream());
 
@@ -277,26 +276,28 @@ public class JAXWSBuilder {
         return seiClasses;
     }
 
-    protected void createTempOutputDirs() {}
+    protected void createTempOutputDirs() {
+    }
 
     protected void setOutputDir(WsImport2 wsImport) throws GenerationException {
-        wsImport.setSourcedestdir((File)this.outputSrcDir.getOriginalResource());
-        wsImport.setDestdir((File)this.outputClassDir.getOriginalResource());
+        wsImport.setSourcedestdir((File) this.outputSrcDir.getOriginalResource());
+        wsImport.setDestdir((File) this.outputClassDir.getOriginalResource());
     }
 
     protected void setConfigBinding(WsImport2 wsImport, com.wavemaker.tools.io.File jaxwsBindingFile,
-                 List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
+        List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
         FileSet fs = new FileSet();
-        fs.setFile((File)jaxwsBindingFile.getOriginalResource());
+        fs.setFile((File) jaxwsBindingFile.getOriginalResource());
         wsImport.addConfiguredBinding(fs);
 
         // set JAXB bindings
         for (com.wavemaker.tools.io.File jaxbBindingFile : jaxbBindingFiles) {
             fs = new FileSet();
-            fs.setFile((File)jaxbBindingFile.getOriginalResource());
+            fs.setFile((File) jaxbBindingFile.getOriginalResource());
             wsImport.addConfiguredBinding(fs);
         }
     }
 
-    protected void copyToFinalDest() {}
+    protected void copyToFinalDest() {
+    }
 }

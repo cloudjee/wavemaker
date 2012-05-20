@@ -105,7 +105,7 @@ public class CloudFoundryService {
 
     public boolean isServiceBound(String token, String target, String service, String appName) {
         List<String> services = getServicesForApplication(token, target, appName);
-        return (service != null && services.contains(service));
+        return service != null && services.contains(service);
     }
 
     public List<String> getServicesForApplication(String token, String target, final String appName) {
@@ -125,6 +125,25 @@ public class CloudFoundryService {
             @Override
             public void run(CloudFoundryClient client) {
                 CloudService service = CloudFoundryDeploymentTarget.createPostgresqlService(db);
+                client.createService(service);
+                client.bindService(appName, service.getName());
+            }
+        });
+    }
+
+    public void createService(String token, String target, final String appName, final String dbName, final String dbVendor) {
+        execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
+
+            @Override
+            public void run(CloudFoundryClient client) {
+                CloudService service;
+                if (dbVendor.equals(CloudFoundryDeploymentTarget.MYSQL_SERVICE_VENDOR)) {
+                    service = CloudFoundryDeploymentTarget.createMySqlService(dbName);
+                } else if (dbVendor.equals(CloudFoundryDeploymentTarget.POSTGRES_SERVICE_VENDOR)) {
+                    service = CloudFoundryDeploymentTarget.createPostgresqlService(dbName);
+                } else {
+                    throw new WMRuntimeException("Error: Database vendor is not supported, vendor = " + dbVendor);
+                }
                 client.createService(service);
                 client.bindService(appName, service.getName());
             }

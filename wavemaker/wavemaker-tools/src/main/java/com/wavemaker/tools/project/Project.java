@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
@@ -36,7 +37,6 @@ import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
-import com.wavemaker.runtime.RuntimeAccess;
 
 /**
  * Class representing a project. This is intended for internal server-side use only; the client-side interface is
@@ -55,9 +55,10 @@ public class Project extends AbstractFileService {
 
     protected static final String PROPERTY_PROJECT_VERSION_DEFAULT = "0.0";
 
-    private String projectName;
+    private final String projectName;
 
     private Resource projectRoot = null;
+
     private Folder projectRootFolder = null;
 
     private final boolean mavenProject;
@@ -74,7 +75,7 @@ public class Project extends AbstractFileService {
         }
     }
 
-    //cftempfix
+    // cftempfix
     public Project(Folder projectRootFolder) {
         super();
         this.projectRootFolder = projectRootFolder;
@@ -89,7 +90,7 @@ public class Project extends AbstractFileService {
 
     public Folder getRootFolder() {
         // FIXME implement properly
-        //cftempfix
+        // cftempfix
         if (this.projectRoot != null) {
             try {
                 Resource projectRoot = getProjectRoot();
@@ -102,7 +103,7 @@ public class Project extends AbstractFileService {
                 throw new IllegalStateException(e);
             }
         } else {
-            return this.projectRootFolder;    
+            return this.projectRootFolder;
         }
     }
 
@@ -412,10 +413,11 @@ public class Project extends AbstractFileService {
         return clazz.getName() + ProjectConstants.PROP_SEP + key;
     }
 
-    //TODO: API - remove this method after API conversion is completed
+    // TODO: API - remove this method after API conversion is completed
+    @Override
     public StudioFileSystem getFileSystem() {
         if (this.projectRoot == null) {
-            StudioFileSystem fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
+            StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
             return fileSystem;
         } else {
             return super.getFileSystem();

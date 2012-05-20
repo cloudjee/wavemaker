@@ -14,7 +14,6 @@
 
 package com.wavemaker.studio.data;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +46,7 @@ import com.wavemaker.tools.data.QueryInfo;
 import com.wavemaker.tools.data.RelatedInfo;
 import com.wavemaker.tools.data.TestDBConnection;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.studio.CloudFoundryService;
 
 /**
  * @author Simon Toens
@@ -56,9 +56,14 @@ import com.wavemaker.tools.project.ProjectManager;
 public class DataService {
 
     private DataModelManager dataModelMgr = null;
+    private CloudFoundryService cloudFoundryService = null;
 
     public void setDataModelManager(DataModelManager dataModelMgr) {
         this.dataModelMgr = dataModelMgr;
+    }
+
+    public void setCloudFoundryService(CloudFoundryService cloudFoundryService) {
+        this.cloudFoundryService = cloudFoundryService;
     }
 
     public List<String> getDataModelNames() {
@@ -191,6 +196,22 @@ public class DataService {
 
         return this.dataModelMgr.exportDatabase(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             revengNamingStrategyClassName, overrideTable);
+    }
+
+    public String cfExportDatabase(String dbName, String schemaFilter, String driverClassName,
+                                   String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
+
+        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+        if (cfEnv != null) {
+            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, dbName);
+            String connectionUrl = info.getUrl();
+            String username = info.getUserName();
+            String password = info.getPassword();
+            return exportDatabase(dbName, username, password, connectionUrl, schemaFilter, driverClassName, dialectClassName,
+                revengNamingStrategyClassName, overrideTable);
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     public String getExportDDL(String serviceId, String username, String password, String connectionUrl, String schemaFilter, String driverClassName,
@@ -341,8 +362,7 @@ public class DataService {
         }
     }
 
-    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName,
-        String dialectClassName, boolean overrideTable) {
+    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
             RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);

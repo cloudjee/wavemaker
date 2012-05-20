@@ -793,7 +793,7 @@ Studio.extend({
 	var count = 0;
 	for (var i = 0; i < showprops.length; i++) {
 	    if (showprops[i].name.match(/\<b\>/)) {
-		dojo.addClass(this.autoCompletionList.getItem(i).domNode, "CompletionListHeader");
+		//dojo.addClass(this.autoCompletionList.getItem(i).domNode, "CompletionListHeader");
 	    } else {
 		count++;
 	    }

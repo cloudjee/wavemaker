@@ -18,26 +18,24 @@
 
 package com.wavemaker.tools.ws;
 
-import java.net.MalformedURLException;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ClassPathFile;
 
 /**
  * @author Frankie Fu
@@ -68,12 +66,11 @@ public class WebServiceFactoryTest extends WMTestCase {
 
         File tempDir = null;
         try {
-            tempDir = (new LocalStudioFileSystem().createTempDir()).getFile();
+            tempDir = new LocalStudioFileSystem().createTempDir().getFile();
         } catch (IOException ex) {
             fail("Exception occurred during getServiceDefiniton." + ex.getMessage());
         }
-        LocalFileSystem fileSystem = new LocalFileSystem(tempDir);
-        Folder folder = FileSystemFolder.getRoot(fileSystem);
+        Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDir);
 
         GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, folder);
         ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);

@@ -20,19 +20,18 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.concurrent.Callable;
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceURL;
-import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceURL;
 
 /**
- * Class Loader Utils specifically designed to work with {@link com.wavemaker.tools.io.Resource}s. Migrated from {@link ClassLoaderUtils} in
- * the common project for dependency reasons.
+ * Class Loader Utils specifically designed to work with {@link com.wavemaker.tools.io.Resource}s. Migrated from
+ * {@link ClassLoaderUtils} in the common project for dependency reasons.
  */
 public class ResourceClassLoaderUtils {
 

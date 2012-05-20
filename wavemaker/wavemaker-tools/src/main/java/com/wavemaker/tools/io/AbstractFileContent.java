@@ -25,9 +25,9 @@ import java.io.Writer;
 
 import org.springframework.util.FileCopyUtils;
 
-import com.wavemaker.tools.io.exception.ResourceException;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.io.exception.ResourceException;
 
 /**
  * Abstract base class for {@link FileContent}.
@@ -46,7 +46,7 @@ public abstract class AbstractFileContent implements FileContent {
         try {
             return new InputStreamReader(asInputStream(), ServerConstants.DEFAULT_ENCODING);
         } catch (UnsupportedEncodingException ex) {
-            throw new WMRuntimeException(ex);    
+            throw new WMRuntimeException(ex);
         }
     }
 

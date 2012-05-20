@@ -242,19 +242,14 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     /**
      * {@inheritDoc}
      */
-    /*@Override
-    public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
-        Resource buildDir = getFileSystem().createTempDir();
-        try {
-            buildWar(getProjectDir().getFile().getCanonicalPath(), buildDir.getFile().getPath(), warFileLocation, includeEar);
-        } finally {
-            getFileSystem().deleteFile(buildDir);
-        }
-    }*/
+    /*
+     * @Override public void buildWar(String warFileLocation, boolean includeEar) throws IOException { Resource buildDir
+     * = getFileSystem().createTempDir(); try { buildWar(getProjectDir().getFile().getCanonicalPath(),
+     * buildDir.getFile().getPath(), warFileLocation, includeEar); } finally { getFileSystem().deleteFile(buildDir); } }
+     */
 
-    public void buildWar(String warFileName, boolean includeEar)
-        throws IOException
-    {
+    @Override
+    public void buildWar(String warFileName, boolean includeEar) throws IOException {
         File tempDir = IOUtils.createTempDirectory();
         try {
             buildWar(getProjectDir(), tempDir.getAbsolutePath(), warFileName, includeEar);

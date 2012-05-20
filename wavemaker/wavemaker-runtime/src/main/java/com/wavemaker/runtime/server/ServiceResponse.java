@@ -11,29 +11,35 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server;
 
-import com.wavemaker.common.WMUnfinishedProcException;
+import java.lang.reflect.Method;
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.WMUnfinishedProcException;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.runtime.RuntimeAccess;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.lang.reflect.Method;
-
 public class ServiceResponse {
 
     private static final int DEFAULT_CONNECTION_TIMEOUT = 30;
-    private static final int DEFAULT_PROCESSING_CUTOFF = DEFAULT_CONNECTION_TIMEOUT - 5;
+
     private static final String INITIAL_REQUEST = "wm-initial-request";
+
     private static final String POLLING_REQUEST = "wm-polling-request";
+
     private static final String JSON_RESPONSE_STATUS = "wm-json-response-status";
+
     private final Map<String, Tuple.Two<Long, JSONObject>> serviceResponseTable = new Hashtable<String, Tuple.Two<Long, JSONObject>>();
+
     private final Map<String, Thread> threads = new Hashtable<String, Thread>();
 
     private RuntimeAccess runtimeAccess;
+
     private int connectionTimeout;
 
     public ServiceResponse() {
@@ -47,13 +53,13 @@ public class ServiceResponse {
         } else {
             ret = getResponseFromService();
         }
-        
+
         return ret;
     }
 
     public synchronized Object addResponse(long startTime, Object obj) {
         String requestId = this.getRequestId();
-        if (System.currentTimeMillis() - runtimeAccess.getStartTime() > (connectionTimeout - 3) * 1000) {
+        if (System.currentTimeMillis() - this.runtimeAccess.getStartTime() > (this.connectionTimeout - 3) * 1000) {
             this.cleanup();
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("status", "done");
@@ -75,7 +81,7 @@ public class ServiceResponse {
                 Tuple.Two<Long, JSONObject> t = this.serviceResponseTable.get(requestId);
                 if (t != null) {
                     long time = t.v1;
-                    if (System.currentTimeMillis() - time > (connectionTimeout - 3) * 1000 * 2) {
+                    if (System.currentTimeMillis() - time > (this.connectionTimeout - 3) * 1000 * 2) {
                         this.serviceResponseTable.remove(requestId);
                         this.threads.remove(requestId);
                     }
@@ -95,12 +101,12 @@ public class ServiceResponse {
     public Object getResponseFromService() {
 
         JSONObject result = this.getResponseBeforeTimeout();
-        String status = (String)result.get("status");
+        String status = (String) result.get("status");
         if (status.equals("processing")) {
             Thread originalThread = this.getRequestThread();
             if (originalThread == null || !originalThread.isAlive()) {
                 result = this.getResponseTryOnce();
-                status = (String)result.get("status");
+                status = (String) result.get("status");
                 if (status.equals("processing")) {
                     if (originalThread == null) {
                         throw new WMRuntimeException("Error: The original request thread is lost");
@@ -112,10 +118,10 @@ public class ServiceResponse {
         }
 
         if (status.equals("error")) {
-            throw new WMRuntimeException((Exception)result.get("result"));
+            throw new WMRuntimeException((Exception) result.get("result"));
         }
 
-        setJsonResponseStatus((String)result.get("status"));
+        setJsonResponseStatus((String) result.get("status"));
         return result.get("result");
     }
 
@@ -127,7 +133,7 @@ public class ServiceResponse {
         int time = 0;
         JSONObject result;
 
-        while (time < (connectionTimeout - 3)) {
+        while (time < this.connectionTimeout - 3) {
             try {
                 result = getResponse();
                 return result;
@@ -181,7 +187,7 @@ public class ServiceResponse {
     }
 
     public boolean isPollingRequest() {
-        return (this.runtimeAccess.getRequest().getHeader(POLLING_REQUEST) != null);
+        return this.runtimeAccess.getRequest().getHeader(POLLING_REQUEST) != null;
     }
 
     public String getRequestId() {
@@ -192,7 +198,7 @@ public class ServiceResponse {
         }
         if (reqId == null) {
             throw new WMRuntimeException("Service request Id is missing in the request, service = "
-                    + ServerUtils.getServiceName(this.runtimeAccess.getRequest()));
+                + ServerUtils.getServiceName(this.runtimeAccess.getRequest()));
         }
 
         return reqId;

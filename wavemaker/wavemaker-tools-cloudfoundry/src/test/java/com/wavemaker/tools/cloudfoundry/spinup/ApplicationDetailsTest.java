@@ -9,8 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
-
 /**
  * Tests for {@link ApplicationDetails}.
  * 

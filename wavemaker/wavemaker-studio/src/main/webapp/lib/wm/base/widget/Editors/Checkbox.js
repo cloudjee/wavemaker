@@ -197,7 +197,11 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	setEditorValue: function(inValue) {
 	        this._setEditorValueCalled = true;
 		if (this.editor) {
-		    this.editor.set('checked',Boolean(inValue));
+		    var wasChecked = this.getChecked();
+		    this.editor.set('checked',Boolean(inValue), false);
+		    if (wasChecked != Boolean(inValue)) {
+			this.changed();
+		    }
 		}
 	},
 

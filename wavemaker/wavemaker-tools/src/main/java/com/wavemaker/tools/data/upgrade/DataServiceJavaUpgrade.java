@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.data.upgrade;
 
-import java.io.IOException;
-
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.service.definitions.Service;
 
 /**

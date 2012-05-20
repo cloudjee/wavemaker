@@ -32,15 +32,14 @@ import java.sql.Statement;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.FileSystemUtils;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 public class HSQLDBTest {
 
@@ -230,8 +229,7 @@ public class HSQLDBTest {
             importer.setConnectionUrl(url);
             importer.testConnection();
 
-            LocalFileSystem fileSystem = new LocalFileSystem(outputDir);
-            Folder folder = FileSystemFolder.getRoot(fileSystem);
+            Folder folder = FileSystemUtils.convertToFileSystemFolder(outputDir);
             importer.setDestDir(folder);
             importer.setPackage("com.foo.blah");
             importer.setClassName("Service");

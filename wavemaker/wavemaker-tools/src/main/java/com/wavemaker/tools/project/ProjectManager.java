@@ -186,9 +186,9 @@ public class ProjectManager {
             try {
                 applicationProperties.load(propsStream);
                 tenantFieldName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME,
-                        DataServiceConstants.DEFAULT_TENANT_FIELD);
+                    DataServiceConstants.DEFAULT_TENANT_FIELD);
                 defaultTenantID = Integer.parseInt(applicationProperties.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME,
-                        DataServiceConstants.DEFAULT_TENANT_ID + ""));
+                    DataServiceConstants.DEFAULT_TENANT_ID + ""));
                 tenantColumnName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME, "");
             } finally {
                 propsStream.close();
@@ -269,7 +269,7 @@ public class ProjectManager {
             String serviceStr = "\"service\":\"" + shortSourceName + "\"";
             String dummyStr = "nothingicandoifyouwanttoscrewup";
 
-            //Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
+            // Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
             com.wavemaker.tools.io.File sourceJS = destProject.getWebAppRootFolder().getFile(shortSourceName + ".js");
             if (sourceJS.exists()) {
                 com.wavemaker.tools.io.File destJS = destProject.getWebAppRootFolder().getFile(shortDestName + ".js");
