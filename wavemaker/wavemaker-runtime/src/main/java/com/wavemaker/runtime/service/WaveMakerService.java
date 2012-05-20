@@ -70,23 +70,12 @@ public class WaveMakerService {
         return new DownloadResponse(is, contentType, fileName);
     }
 
-    /*
-	 *  Forward a request to a remote service, using POST
-	 *  @remoteURl - The url to be invoked
-	 *  @params - Params to be used
-	 *  Uses method POST and contentType appliation/JSON
-	 *  @return - whatever the service returned - no typing applied
-	 */
-	public String remoteRESTCall(String remoteURL, String params, String method){
-		return remoteRESTCall(remoteURL, params, "POST", "application/json");
-	}
-
 	/*
      *  Forward a request to a remote service
      *  @remoteURl - The url to be invoked
      *  @params - Params to be used
-     *  @method - request method, POST, GET, etc
-     *  @contentType - application/json, etc
+     *  @method - request method, POST, GET, etc, default is POST
+     *  @contentType - default is application/json
      *  @return - whatever the service returned - no typing applied
      *  
      *  Example of wm java service taking two strings:
@@ -149,7 +138,18 @@ public class WaveMakerService {
     	} 
     }
 
+    /*
+	 *  Forward a request to a remote service, using POST
+	 *  @remoteURl - The url to be invoked
+	 *  @params - Params to be used
+	 *  Uses method POST and contentType appliation/JSON
+	 *  @return - whatever the service returned - no typing applied
+	 */
+	public String remoteRESTCall(String remoteURL, String params, String method){
+		return remoteRESTCall(remoteURL, params, "POST", "application/json");
+	}
 
+	
     /**
      * Get the service. If serviceName is not null or "", use the serviceName. If not, use the owning service of
      * typeName.
