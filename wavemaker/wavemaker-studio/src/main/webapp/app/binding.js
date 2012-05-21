@@ -1141,6 +1141,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			       */
 			       if (this.propTree.showing && this.propTree.selected) {
 				   var newContent = this.propTree.selected.data.fieldName || this.propTree.selected.data.object.name;
+				   var wire = tp.object.$.binding.wires[wp.targetProperty];
 				   if (wire) {
 				       if (wire.expression) {
 					   newContent += " <span class='WireExpression'>" + wire.expression + "</span>";
