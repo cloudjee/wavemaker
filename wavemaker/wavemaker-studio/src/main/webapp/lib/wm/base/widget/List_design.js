@@ -58,6 +58,9 @@ wm.Object.extendSchema(wm.List, {
     dataFields:        {group: "widgetName", subgroup: "data", order: 50, advanced:1},
     columnWidths:      {group: "widgetName", subgroup: "layout", order: 51, advanced:1},
 
+    renderVisibleRowsOnly: {group: "widgetName", subgroup: "behavior", type: "boolean", advanced: 1},
+    autoSizeHeight:     {group: "widgetName", subgroup: "layout", type: "boolean", advanced: 1},
+
     /* Display group; layout subgroup */
     headerVisible: {group: "display", subgroup: "layout", order: 1}, /* Or does this go in the style group? or in the widgetName group? */
     
@@ -96,7 +99,16 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
-
+    set_autoSizeHeight: function(inValue) {
+	this.autoSizeHeight = Boolean(inValue);
+	this.renderVisibleRowsOnly = !inValue;
+	this._render();
+    },
+    set_renderVisibleRowsOnly: function(inValue) {
+	this.autoSizeHeight = !inValue;
+	this.renderVisibleRowsOnly = Boolean(inValue);
+	this._render();
+    },
     updateNow: function() {this.update();},
     _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
     },
