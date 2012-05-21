@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean class="com.wavemaker.runtime.service.TypeManager" parent="typeManagerBase" scope="singleton" id="typeManager">
+        <property name="types">
+            <map merge="true">
+                <entry key="SpinUpService">
+                    <list>
+                        <value>java.util.Hashtable&lt;java.lang.String,java.lang.String&gt;</value>
+                        <value>com.wavemaker.spinup.web.SpinupController</value>
+                    </list>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

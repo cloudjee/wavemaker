@@ -1,0 +1,30 @@
+{
+	"methods": [{
+		"name": "getUserId",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
+		"name": "getUserName",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
+		"name": "getUserRoles",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "[java.lang.String]"
+	}, {
+		"name": "isAuthenticated",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "boolean"
+	}, {
+		"name": "logout",
+		"operationType": null,
+		"parameters": null,
+		"returnType": null
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "securityService.json"
+}
