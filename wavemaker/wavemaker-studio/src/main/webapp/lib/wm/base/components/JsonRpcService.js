@@ -87,7 +87,6 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 
 		if (!url)
 			return;
-	    debugger;
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),

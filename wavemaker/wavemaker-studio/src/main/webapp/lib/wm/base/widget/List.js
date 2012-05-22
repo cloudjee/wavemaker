@@ -83,6 +83,7 @@ wm.Object.extendSchema(wm.ListItem, {
 dojo.declare("wm.List", wm.VirtualList, {    
     selectFirstRow: false,
     renderVisibleRowsOnly: true,
+    autoSizeHeight: false,
     nextRowId: 0,
     query: {},
     width:'100%',
@@ -227,6 +228,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    this.inherited(arguments);
 	    if (this.renderVisibleRowsOnly) {
 		this.connect(this.listNode, "onscroll", this, "_onScroll");
+/*
 		if (wm.isFakeMobile) {
 		    this.connect(this.domNode,'onmousedown', this, "_ontouchstart");
 		} else if (wm.isMobile) {
@@ -234,6 +236,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    this.connect(this.listNode, "ontouchmove", this, "_ontouchmove");
 		    this.connect(this.listNode, "ontouchend", this, "_ontouchend");
 		}
+		*/
 	    }
 	},
     _ontouchstart: function(e) {
@@ -242,13 +245,22 @@ dojo.declare("wm.List", wm.VirtualList, {
 	}
 	this._touchY = {y: e.touches ? e.touches[0].clientY : e.y,
 			time: new Date().getTime()};
+/*
 	if (wm.isFakeMobile) {
 	    this.connect(this.domNode,'onmousemove', this, "_ontouchmove");
 	    this.connect(this.domNode,'onmouseup', this, "_ontouchend");
 	}
-	//dojo.stopEvent(e);
+	*/
+
+	/* Block any parent scrolling if this list has room to scroll */
+	if (this.listNode.scrollHeight > this.listNode.clientHeight) {
+	    dojo.stopEvent(e);
+	}
     },
     _ontouchmove: function(e) {
+	/* Do nothing if no room to scroll */
+	if (this.listNode.scrollHeight <= this.listNode.clientHeight) return;
+
 	if (this._touchedItem) this._touchedItem.touchMove();
 	var y =   e.touches ? e.touches[0].clientY : e.y;
 	var delta = this._touchY.y - y;
@@ -268,15 +280,20 @@ dojo.declare("wm.List", wm.VirtualList, {
 	dojo.stopEvent(e);
     },
     _ontouchend: function(e) { 
+	/* Do nothing if no room to scroll */
+	if (this.listNode.scrollHeight <= this.listNode.clientHeight) return;
+
 	if (this._touchedItem) this._touchedItem.touchEnd();
 	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
 	    this._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
 	}
 	dojo.stopEvent(e);
+/*
 	if (wm.isFakeMobile) {
 	    this.disconnectEvent("onmousemove");
 	    this.disconnectEvent("onmouseup");
 	}
+	*/
     },
     _onAnimateScroll: function() {
 	this._touchY.velocity *= 0.9;
@@ -514,6 +531,27 @@ dojo.declare("wm.List", wm.VirtualList, {
 	        d = this.runQuery(d);
 		this.renderData(d);
 	},
+    doAutoSize: function() {},
+    setAutoSizeHeight: function(inValue) {
+	this.autoSize = inValue;
+	this._render();
+    },
+    setBestHeight: function() {
+	if (this.autoSizeHeight) {
+            this._doingAutoSize = true;
+	    var height = 0;
+	    if (this.items.length) {
+		var coords = dojo.coords(this.items[this.items.length-1].domNode);
+		height = coords.h + coords.t;
+	    } else if (this.headerVisible) {
+		var coords = dojo.coords(this.headerNode);
+		height = coords.h + coords.t;
+	    }
+	    height += this.padBorderMargin.b + this.padBorderMargin.t + 2;
+	    this.setHeight(height + "px");
+	    this._doingAutoSize = false;
+	}
+    },
 	    _onShowParent: function() {
 		if (this._renderDojoObjSkipped && !this._headerRendered) {
 		    wm.onidle(this, "_render");
@@ -652,6 +690,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 		var totalCount = this.getDataItemCount();
 		for (var i = 0; i < totalCount; i++) {
 		    this.addItem(this.getItemData(i), i);
+		}
+		if (this.autoSizeHeight) {
+		    if (!this.isAncestorHidden()) {
+			this.setBestHeight();
+		    } else {
+			this._renderDojoObjSkipped = true;
+		    }
 		}
 	    }
 	    this.reflow();

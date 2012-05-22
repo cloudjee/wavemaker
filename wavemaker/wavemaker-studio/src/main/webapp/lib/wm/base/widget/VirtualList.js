@@ -55,8 +55,8 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.connections.push(dojo.connect(this.domNode,'onmouseup', this, "touchEnd"));
 	    } else {
 		this.connections.push(dojo.connect(this.domNode,'ontouchstart', this, "touchStart"));
-		//this.connections.push(dojo.connect(this.domNode,'ontouchmove', this, "touchMove"));
-		//this.connections.push(dojo.connect(this.domNode,'ontouchend', this, "touchEnd"));
+		this.connections.push(dojo.connect(this.domNode,'ontouchmove', this, "touchMove"));
+		this.connections.push(dojo.connect(this.domNode,'ontouchend', this, "touchEnd"));
 	    }
 	},
         touchStart: function(evt) {
@@ -67,6 +67,7 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.selected = false;
 		this.list._touchedItem =  this;
 		wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+		this.list._ontouchstart(evt);
 	    }
 
 
@@ -80,6 +81,8 @@ dojo.declare("wm.VirtualListItem", null, {
 		    this.deselect();
 		}
 	    }
+//	    alert("touchMove");
+	    this.list._ontouchmove(evt);
 	},
     touchEnd: function(evt) {
 	 wm.cancelJob(this.list.getRuntimeId() + "_" + this.index);
@@ -90,6 +93,7 @@ dojo.declare("wm.VirtualListItem", null, {
 	    } 
 	    this.click(evt);
 	}
+	this.list._ontouchend(evt);
     },
 	setContent: function(inContent) {
 	    this.domNode.innerHTML = inContent;
