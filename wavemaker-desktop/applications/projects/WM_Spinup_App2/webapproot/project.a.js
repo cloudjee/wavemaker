@@ -257,6 +257,9 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		}, {
 			"name": "params",
 			"type": "java.lang.String"
+		}, {
+			"name": "method",
+			"type": "java.lang.String"
 		}],
 		"returnType": "java.lang.String"
 	}, {
@@ -428,9 +431,9 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"manageURL": true, 
 	"name": "", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha7", 
+	"projectSubVersion": "Alpha8", 
 	"projectVersion": 1, 
-	"saveCounter": 286, 
+	"saveCounter": 294, 
 	"studioVersion": "6.5.0.M1", 
 	"tabletMain": "", 
 	"theme": "wm_default", 

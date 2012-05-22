@@ -64,52 +64,57 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 			String uploadDirName = servletContext.getRealPath("/resources/studioWars");
 			File uploadDir = new File(uploadDirName);
 			uploadDir.mkdirs();
-			File localStudioWar =  new File(uploadDir, studioFileName); 		
-			byte[] buffer = new byte[5242880];  //5mb
-			
-			String customURL = CloudFoundryUtils.getEnvironmentVariable("studio_war_url", "");
-			if(customURL.isEmpty()){
-				path = "http://community.wavemaker.com/Studio/" + studioFileName; 
+			File localStudioWar =  new File(uploadDir, studioFileName); 	
+
+			//Don't download if already have correct version
+			//TODO clean up old versions
+			if(!localStudioWar.exists()){
+				try{
+					byte[] buffer = new byte[5242880];  //5mb
+
+					String customURL = CloudFoundryUtils.getEnvironmentVariable("studio_war_url", "");
+					if(customURL.isEmpty()){
+						path = "http://community.wavemaker.com/Studio/" + studioFileName; 
+					}
+					else{
+						path = customURL;
+					}
+					if (this.logger.isDebugEnabled()) {
+						this.logger.debug("Using studio resource " + path);
+					}
+					URL url  = new URL(path);
+					url.openConnection();
+					reader = url.openStream();			
+					out = new BufferedOutputStream(new FileOutputStream(localStudioWar));
+					while ((ByteRead = reader.read(buffer)) != -1) {
+						out.write(buffer, 0, ByteRead);
+						ByteWritten += ByteRead;
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new IllegalStateException(e);
+				}
+				catch (Exception e){
+					throw new WMRuntimeException(e);
+				}
+				finally {
+					try {
+						reader.close();
+						out.close();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}}
 			}
-			else{
-				path = customURL;
-			}
-			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Using studio resource " + path);
-			}
-			URL url  = new URL(path);
-			url.openConnection();
-			reader = url.openStream();			
-			out = new BufferedOutputStream(new FileOutputStream(localStudioWar));
-			while ((ByteRead = reader.read(buffer)) != -1) {
-				out.write(buffer, 0, ByteRead);
-				ByteWritten += ByteRead;
-			}
-			
 			this.studioWarFile = localStudioWar; 
-			
-			ServletContextResource studioResource = new ServletContextResource(servletContext, studioWarFile.getPath());
-			Assert.state(studioResource.exists(), "Studio resource '" +  studioWarFile.getPath() + "' does not exist");
-			Assert.state(studioResource.getFile() != null, "Studio resource '" +  studioWarFile.getPath() + "' cannot be accessed as a File");
+
+			Assert.state(studioWarFile.exists(), "Studio resource '" +  studioWarFile.getPath() + "' does not exist");
 			System.out.println("Studio War is " +  studioWarFile.getPath());
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new IllegalStateException(e);
-		}
+		}	
 		catch (Exception e){
 			throw new WMRuntimeException(e);
 		}
-	
-		finally {
-			try {
-				reader.close();
-				out.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}}
-    }
+	}
 
     @Override
     public ApplicationArchive getArchive() throws Exception {

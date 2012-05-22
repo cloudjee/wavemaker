@@ -68,6 +68,9 @@
 		}, {
 			"name": "params",
 			"type": "java.lang.String"
+		}, {
+			"name": "method",
+			"type": "java.lang.String"
 		}],
 		"returnType": "java.lang.String"
 	}, {
