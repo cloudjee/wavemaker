@@ -1228,7 +1228,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var borders = this.border.split(borderSplitter);
 	var paddings = this.padding.split(paddingSplitter);
 	
-	if (app._currentZoomLevel && app._currentZoomLevel > 1 && app._currentZoomLevel < 1.4) {
+
 	    if (margins.length == 1) {
 		margins[1] = margins[2] = margins[3] = margins[0];
 	    } else if (margins.length == 2) {
@@ -1249,8 +1249,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		paddings[2] = paddings[0];
 		paddings[3] = paddings[1];
 	    }
-
-	    /* Chrome only modifies border/margin/padding when the user zooms IF the border/margin/padding is NOT a factor of 10 */
+	/* When the user zooms the browser, border, margin and padding get mucked up, and ruin all of our calculations.
+	 * Use the ratio in _currentZoomLevel to alter padding/margin/border so that they result in the desired number of pixels.
+	 * Widths of 10px are NOT altered.  Calculations break down for zoomLevel > 1.4.  High enough zoom level and browsers
+	 * stop mucking with pixels
+	 */
+	if (app._currentZoomLevel && app._currentZoomLevel > 1 && app._currentZoomLevel < 1.4) {
 	    for (var i = 0; i < margins.length; i++) {
 		if (margins[i] % 10) {
 		    margins[i] *= app._currentZoomLevel;
