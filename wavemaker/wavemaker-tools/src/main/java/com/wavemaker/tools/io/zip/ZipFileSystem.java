@@ -33,12 +33,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ReadOnlyResourceException;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
 
 /**

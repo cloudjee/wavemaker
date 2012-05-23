@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.ResourcePath;
 
 /**

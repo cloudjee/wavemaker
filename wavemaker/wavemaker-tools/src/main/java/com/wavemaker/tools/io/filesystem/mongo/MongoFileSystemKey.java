@@ -14,13 +14,14 @@
 
 package com.wavemaker.tools.io.filesystem.mongo;
 
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
+import com.wavemaker.tools.io.JailedResourcePath;
 
 /**
  * Key used with {@link MongoFileSystem}.
  * 
  * @author Phillip Webb
  */
+@Deprecated
 class MongoFileSystemKey {
 
     private final JailedResourcePath path;

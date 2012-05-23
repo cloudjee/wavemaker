@@ -44,9 +44,7 @@ import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.data.DataServiceGenerator;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -131,7 +129,7 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
             } else {
                 File tempDir = IOUtils.createTempDirectory("outputSrc_directory", null);
                 this.codeModel.build(tempDir, tempDir, null);
-                Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDir);
+                Folder folder = new LocalFolder(tempDir);
                 folder.copyContentsTo(outputFolder);
             }
         } catch (IOException e) {

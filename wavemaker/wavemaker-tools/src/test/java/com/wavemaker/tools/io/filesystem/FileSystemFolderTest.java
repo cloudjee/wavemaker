@@ -31,6 +31,7 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.ResourceStringFormat;

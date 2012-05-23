@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.ResourcePath;
 
 public abstract class AbstractFileSystemResourceTest {

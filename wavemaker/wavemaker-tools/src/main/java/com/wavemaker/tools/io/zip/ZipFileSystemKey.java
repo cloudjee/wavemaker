@@ -16,7 +16,7 @@ package com.wavemaker.tools.io.zip;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
+import com.wavemaker.tools.io.JailedResourcePath;
 
 class ZipFileSystemKey {
 

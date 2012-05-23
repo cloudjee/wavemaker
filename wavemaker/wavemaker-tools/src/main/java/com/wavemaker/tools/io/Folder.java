@@ -113,6 +113,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return the {@link Folder}
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a folder
      */
+    @Deprecated
     Folder appendFolder(String name) throws ResourceTypeMismatchException;
 
     /**
@@ -134,6 +135,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return the {@link File}
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a file
      */
+    @Deprecated
     File appendFile(String name) throws ResourceTypeMismatchException;
 
     /**

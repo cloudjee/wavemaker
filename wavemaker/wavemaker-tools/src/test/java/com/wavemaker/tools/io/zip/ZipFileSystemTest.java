@@ -28,12 +28,12 @@ import org.junit.rules.TemporaryFolder;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ReadOnlyResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Tests for {@link ZipFileSystem}.
@@ -68,8 +68,7 @@ public class ZipFileSystemTest {
         } finally {
             zipOutputStream.close();
         }
-        LocalFileSystem localFileSystem = new LocalFileSystem(this.zipFile.getParentFile());
-        this.zipFileSystem = new ZipFileSystem(FileSystemFolder.getRoot(localFileSystem).getFile(this.zipFile.getName()));
+        this.zipFileSystem = new ZipFileSystem(new LocalFolder(this.zipFile.getParentFile()).getFile(this.zipFile.getName()));
     }
 
     @Test

@@ -29,10 +29,10 @@ import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
 
 /**
@@ -40,6 +40,7 @@ import com.wavemaker.tools.io.filesystem.ResourceType;
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
 
     private static final String PARENT = "parent";

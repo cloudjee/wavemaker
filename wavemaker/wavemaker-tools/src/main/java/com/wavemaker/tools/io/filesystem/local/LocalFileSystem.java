@@ -27,9 +27,9 @@ import java.util.List;
 
 import org.springframework.util.Assert;
 
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
 
 /**
@@ -37,6 +37,7 @@ import com.wavemaker.tools.io.filesystem.ResourceType;
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
 
     private final File root;

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.AbstractResources;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
 
@@ -27,6 +28,7 @@ import com.wavemaker.tools.io.Resources;
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public class FileSystemResources<K> extends AbstractResources<Resource> {
 
     private final FileSystem<K> fileSystem;

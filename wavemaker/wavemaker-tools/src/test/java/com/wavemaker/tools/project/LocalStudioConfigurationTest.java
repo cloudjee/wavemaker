@@ -30,9 +30,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.config.ConfigurationStore;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * @author Matt Small
@@ -111,7 +109,7 @@ public class LocalStudioConfigurationTest extends WMTestCase {
                 assertTrue(!tempProjectsDir.exists());
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                Folder tempFolder = FileSystemUtils.convertToFileSystemFolder(tempDir);
+                Folder tempFolder = new LocalFolder(tempDir);
                 sf.setTestWaveMakerHome(tempFolder);
                 sf.setServletContext(this.servletContext);
 
@@ -170,7 +168,7 @@ public class LocalStudioConfigurationTest extends WMTestCase {
                 assertTrue(!tempProjectsDir.exists());
 
                 LocalStudioFileSystem sc = new LocalStudioFileSystem();
-                Folder tempFolder = FileSystemUtils.convertToFileSystemFolder(tempDir);
+                Folder tempFolder = new LocalFolder(tempDir);
                 sc.setTestWaveMakerHome(tempFolder);
                 sc.setServletContext(this.servletContext);
                 Resource projects = sc.getProjectsDir();
@@ -197,7 +195,7 @@ public class LocalStudioConfigurationTest extends WMTestCase {
                 assertTrue(!tempProjectsDir.exists());
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                Folder tempFolder = FileSystemUtils.convertToFileSystemFolder(tempDir);
+                Folder tempFolder = new LocalFolder(tempDir);
                 sf.setTestWaveMakerHome(tempFolder);
                 sf.setServletContext(this.servletContext);
 

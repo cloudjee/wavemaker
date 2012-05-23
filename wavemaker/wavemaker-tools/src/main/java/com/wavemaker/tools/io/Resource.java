@@ -54,7 +54,8 @@ public interface Resource {
      * @return the name of the resource, for example <tt>"file.txt"</tt>
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    String getLastName();
+    @Deprecated
+    String getLastName(); // FIXME PW remove
 
     /**
      * Delete the current resource (and any children). If this resource does not exist then no operation is performed.
@@ -139,6 +140,7 @@ public interface Resource {
      * 
      * @return the origin of the resource
      */
+    @Deprecated
     ResourceOrigin getResourceOrigin();
 
     /**
@@ -146,6 +148,7 @@ public interface Resource {
      * 
      * @return the original resource object
      */
+    @Deprecated
     Object getOriginalResource();
 
     /**
@@ -153,6 +156,7 @@ public interface Resource {
      * 
      * @return the cannonical pathname
      */
+    @Deprecated
     String getCanonicalPath();
 
     /**
@@ -160,6 +164,7 @@ public interface Resource {
      * 
      * @return the absolute pathname
      */
+    @Deprecated
     String getAbsolutePath();
 
 }

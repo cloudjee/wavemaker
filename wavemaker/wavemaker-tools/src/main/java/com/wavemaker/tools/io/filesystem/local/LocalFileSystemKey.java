@@ -16,13 +16,14 @@ package com.wavemaker.tools.io.filesystem.local;
 
 import java.io.File;
 
-import com.wavemaker.tools.io.filesystem.JailedResourcePath;
+import com.wavemaker.tools.io.JailedResourcePath;
 
 /**
  * Key used with {@link LocalFileSystem}.
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public class LocalFileSystemKey {
 
     private final JailedResourcePath path;

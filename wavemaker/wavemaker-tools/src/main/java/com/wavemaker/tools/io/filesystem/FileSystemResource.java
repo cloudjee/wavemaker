@@ -21,6 +21,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
@@ -36,6 +37,7 @@ import com.wavemaker.tools.io.filesystem.local.LocalFileSystemKey;
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public abstract class FileSystemResource<K> implements Resource {
 
     private final JailedResourcePath path;

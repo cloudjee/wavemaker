@@ -17,6 +17,8 @@ package com.wavemaker.tools.io.filesystem;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.wavemaker.tools.io.JailedResourcePath;
+
 /**
  * Strategy interface used to abstract file system operations from {@link FileSystemFile} and {@link FileSystemFolder}
  * implementations.
@@ -26,6 +28,7 @@ import java.io.OutputStream;
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public interface FileSystem<K> {
 
     public enum ResourceOrigin {

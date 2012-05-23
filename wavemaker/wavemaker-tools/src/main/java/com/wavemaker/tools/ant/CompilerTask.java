@@ -23,9 +23,7 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -73,12 +71,12 @@ public abstract class CompilerTask extends Task {
     }
 
     public Folder getProjectRoot() {
-        return FileSystemUtils.convertToFileSystemFolder(this.projectRoot);
+        return new LocalFolder(this.projectRoot);
     }
 
     public void setProjectRoot(File projectRoot) {
-    	this.projectRoot = projectRoot;
-    	Folder folder = FileSystemUtils.convertToFileSystemFolder(projectRoot);
+        this.projectRoot = projectRoot;
+        Folder folder = new LocalFolder(projectRoot);
         this.agProject = new Project(folder);
     }
 
@@ -97,7 +95,7 @@ public abstract class CompilerTask extends Task {
     protected synchronized DesignServiceManager getDesignServiceManager() {
         if (this.designServiceManager == null) {
             if (this.projectRoot != null) {
-                Folder folder = FileSystemUtils.convertToFileSystemFolder(this.projectRoot);
+                Folder folder = new LocalFolder(this.projectRoot);
                 this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(folder);
             }
         }

@@ -19,6 +19,7 @@ package com.wavemaker.tools.io.filesystem;
  * 
  * @author Phillip Webb
  */
+@Deprecated
 public enum ResourceType {
 
     /**

@@ -19,6 +19,7 @@ import com.wavemaker.tools.io.AbstractFileContent;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
