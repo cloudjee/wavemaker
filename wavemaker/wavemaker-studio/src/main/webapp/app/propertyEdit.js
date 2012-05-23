@@ -817,7 +817,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    wm.prop.EventEditor.eventActions =  {
 		noEvent: {caption: studio.getDictionaryItem("wm.EventEditor.NO_EVENTS")},
 		jsFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT")},
-		jsSharedFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT_SHARED")},
+		//jsSharedFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT_SHARED")},
 		newService: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_SERVICE")},
 		newLiveVar: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_LIVEVAR")},
 		newNavigation: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_NAVIGATION")},
@@ -825,7 +825,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		serviceVariables: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SERVICE"), list: "serviceVariable"},
 		navigations: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NAVIGATION"), list: "navigationCall"},
 		notifications: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NOTIFICATION"), list: "notificationCall"},
-		existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
+		//existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
 		dialogs: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DIALOGS"), list: "dialogs"},
 		layers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_LAYERS"), list: "layers"},
 		mobileFolding: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_MOBILE_FOLDING"), list: "mobileFolding"},
@@ -1034,7 +1034,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	    var navList = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
 	    var notificationList = wm.listComponents([studio.application, studio.page], wm.NotificationCall).sort();
-	    var sharedEventHandlers =  eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
+	    //var sharedEventHandlers =  eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
 	    dialogList = dialogList.concat(lightboxList);
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));
@@ -1059,7 +1059,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var lightboxList = wm.listComponents([inPage], wm.DojoLightbox);
 	    var navList = wm.listComponents([inPage], wm.NavigationCall).sort();
 	    var notificationList = wm.listComponents([inPage], wm.NotificationCall).sort();
-	    var sharedEventHandlers = [];
+	    //var sharedEventHandlers = [];
 	    var dialogList = wm.listComponents([inPage], wm.Dialog);
 	    dialogList = dialogList.concat(lightboxList);
 	    dialogList = dialogList.concat(wm.listComponents([inPage], wm.PopupMenu));
@@ -1108,10 +1108,12 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "service") == -1) return;
 		    componentList = svarList;
 		    break;
+/*
 		case "sharedEventHandlers":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "js") == -1) return;
 		    componentList = sharedEventHandlers;
 		    break;
+		    */
 		case "dialogs":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dialog") == -1) return;
 		    componentList = dialogList;
@@ -1227,9 +1229,11 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    case "jsFunc":
 			if (dojo.indexOf(eventSchema.events, "js") == -1) return;
 			break;
+/*
 		    case "jsSharedFunc":
 			if (dojo.indexOf(eventSchema.events, "sharedjs") == -1) return;
 			break;
+			*/
 		    case "newService":
 			if ( dojo.indexOf(eventSchema.events, "service") == -1) return;
 			break;
@@ -1286,15 +1290,17 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 		                eventEdit(c, p.replace(/\d*$/,""), v, c == studio.application);
 				break;
+/*
 			case "jsSharedFunc":
 				v = c.generateSharedEventName(p);
 		    window.setTimeout(dojo.hitch(this, function() {
 			this.setDisplayValue(v);
 			studio.inspector.reinspect();
 		    }), 50);
-				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
+				try{c.updatingEvent(p,v);}catch (e){/ *do nothing as this might happen if there's a component which does not extends wm.control class* /}
 				eventEdit(c, p, v, c == studio.application);
 				break;
+		*/
 			case "newService":
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
 		    this.setDisplayValue(studio.selected.name);
