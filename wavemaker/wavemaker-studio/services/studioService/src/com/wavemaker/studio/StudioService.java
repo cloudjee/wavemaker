@@ -33,7 +33,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.BuildException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.io.FileSystemResource;
@@ -41,7 +40,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
@@ -155,9 +153,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
     public void deleteProject(String projectName) throws IOException {
         try {
             this.deploymentManager.testRunClean(this.projectManager.getProjectDir(projectName, true).getURI().toString(), projectName);
-        } catch (WMRuntimeException e) {
-            // Swallow and continue to delete project
-        } catch (BuildException e) {
+        } catch (Exception e) {
             // Swallow and continue to delete project
         }
         this.projectManager.deleteProject(projectName);
