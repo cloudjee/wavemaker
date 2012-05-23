@@ -27,7 +27,6 @@ import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystemKey;
 
 /**
  * {@link Resource} implementation backed by a {@link FileSystem}.
@@ -167,11 +166,7 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public Object getOriginalResource() {
-        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-            return ((LocalFileSystemKey) this.key).getFile();
-        } else {
-            throw new UnsupportedOperationException();
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override
