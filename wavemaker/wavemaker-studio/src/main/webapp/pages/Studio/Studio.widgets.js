@@ -73,7 +73,7 @@ Studio.widgets = {
     newProjectDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "492px", height: "430px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: ""}],
     helpDialog: ["wm.GenericDialog", {_classes: {domNode: ["studiodialog"]},   "height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
 
-    progressDialog: ["wm.DesignableDialog", {width: "350px", height: "120px", title: "Saving...", noMinify: true, noMaxify: true, modal: true, noEscape: false}, {}, {
+    progressDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "350px", height: "120px", title: "Saving...", noMinify: true, noMaxify: true, modal: true, noEscape: false}, {}, {
 	progressDialogContainer: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"height":"100%","horizontalAlign":"left","margin":"0","padding":"10","verticalAlign":"top","width":"100%"}, {}, {
 	    saveDialogProgress: ["wm.dijit.ProgressBar", {width: "100%", height: "48px", progress: 0}],
 	    saveDialogLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "30px", align: "center"}]
@@ -460,7 +460,7 @@ height: "29px", width: "420px",
 					propMenuButton: ["wm.ToolButton", {height: "100%", width: "20px", caption: ""}, {onclick: "propertiesMenu"}]
 				    }],
 
-					inspectorToolbar: ["wm.ToggleButtonPanel", {_classes: {domNode: ["StudioToolBar"]},width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "", verticalAlign: "top",border: "0", margin:"3,0,0,0", buttonMargins: "5,0,5,0"},{},{
+					inspectorToolbar: ["wm.ToggleButtonPanel", {_classes: {domNode: ["StudioToolBar"]},width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "center", verticalAlign: "top",border: "0", margin:"3,0,0,0", buttonMargins: "5,0,5,0"},{},{
 					    togglePropertiesRequiredButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "100px", minWidth: 100, caption: "Required", border:"0,1,0,0",clicked:true, showing: false}, {onclick: "inspector.toggleRequiredProperties"}],
 					togglePropertiesRecommendedButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "100px", minWidth: 100, caption: "Recommended", border:"0,1,0,0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
 					togglePropertiesAdvancedButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "40px", caption: "All", border:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
