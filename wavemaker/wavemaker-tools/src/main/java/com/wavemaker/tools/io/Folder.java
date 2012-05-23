@@ -157,7 +157,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * 
      * @return a list of all immediate child resources
      */
-    <T extends Resource> Resources<T> list();
+    Resources<Resource> list();
 
     /**
      * List immediate child resource of this folder, filtering results as necessary. If this resource does not exist
