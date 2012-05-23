@@ -110,7 +110,6 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 	    if (this._designTime && studio.isCloud()) {
 		var newdef = new dojo.Deferred();
 		def.addCallback(function(inResult) {
-		    debugger;
 		    newdef.callback(dojo.fromJson(inResult.result));
 		});
 		def = newdef; // return the new deferred, which only notifies after we've decoded the data
