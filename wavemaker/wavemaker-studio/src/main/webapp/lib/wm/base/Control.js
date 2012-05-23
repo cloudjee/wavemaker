@@ -178,12 +178,14 @@ dojo.declare("wm.Bounds", null, {
     */
     getContentBounds: function() {
 	var sm = this.getScrollMargins();
-	var b = {
-	    l: this.paddingExtents.l,
-	    t: this.paddingExtents.t,
-	    w: Math.floor(this.bounds.w) - this.padBorderMargin.w - sm.w,
-	    h: Math.floor(this.bounds.h) - this.padBorderMargin.h - sm.h
-	};
+
+	    var b = {
+		l: this.paddingExtents.l,
+		t: this.paddingExtents.t,
+		w: Math.floor(this.bounds.w) - this.padBorderMargin.w - sm.w,
+		h: Math.floor(this.bounds.h) - this.padBorderMargin.h - sm.h
+	    };
+
  	if (b.w < 0) b.w = 0;
  	if (b.h < 0) b.h = 0;
 	b.r = b.l + b.w;
@@ -196,12 +198,13 @@ dojo.declare("wm.Bounds", null, {
 	}
 	
 	var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
-	var b = {
-	    l: this.bounds.l,
-	    t: this.bounds.t,
-	    w: this.bounds.w - pbm.w,
-	    h: this.bounds.h - pbm.h
-	};
+	    var b = {
+		l: this.bounds.l,
+		t: this.bounds.t,
+		w: this.bounds.w - pbm.w,
+		h: this.bounds.h - pbm.h
+	    };
+
  	if (b.w < 0) b.w = 0;
  	if (b.h < 0) b.h = 0;
 	b.r = b.l + b.w;
@@ -1211,6 +1214,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var paddingSplitter = this.getCssSplitter(this.padding);
 	var borderSplitter = this.getCssSplitter(this.border);
 
+
 	if (this.margin.indexOf(",") == -1 && this.margin.indexOf(" ") != -1)
 	{
 	    marginSplitter = " ";
@@ -1220,10 +1224,55 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var overflow =   ((!this._touchScroll && (this.autoScroll || this._xscrollX || this._xscrollY)) ? "auto" : "hidden");
 	var stylesObj;
 
+	var margins = this.margin.split(marginSplitter);
+	var borders = this.border.split(borderSplitter);
+	var paddings = this.padding.split(paddingSplitter);
+	
+	if (app._currentZoomLevel && app._currentZoomLevel > 1 && app._currentZoomLevel < 1.4) {
+	    if (margins.length == 1) {
+		margins[1] = margins[2] = margins[3] = margins[0];
+	    } else if (margins.length == 2) {
+		margins[2] = margins[0];
+		margins[3] = margins[1];
+	    }
+
+	    if (borders.length == 1) {
+		borders[1] = borders[2] = borders[3] = borders[0];
+	    } else if (borders.length == 2) {
+		borders[2] = borders[0];
+		borders[3] = borders[1];
+	    }
+
+	    if (paddings.length == 1) {
+		paddings[1] = paddings[2] = paddings[3] = paddings[0];
+	    } else if (paddings.length == 2) {
+		paddings[2] = paddings[0];
+		paddings[3] = paddings[1];
+	    }
+
+	    /* Chrome only modifies border/margin/padding when the user zooms IF the border/margin/padding is NOT a factor of 10 */
+	    for (var i = 0; i < margins.length; i++) {
+		if (margins[i] % 10) {
+		    margins[i] *= app._currentZoomLevel;
+		}
+	    }
+	    for (var i = 0; i < paddings.length; i++) {
+		if (paddings[i] % 10) {
+		    paddings[i] *= app._currentZoomLevel;
+		}
+	    }
+	    for (var i = 0; i < borders.length; i++) {
+		if (borders[i] % 10) {
+		    borders[i] *= app._currentZoomLevel;
+		}
+	    }
+	}
+
+
 	if (this.designBorderState) {
 	    stylesObj = {
-		margin:  (this.margin.split(marginSplitter).join("px ") || 0) + "px",
-		padding: (paddArr.join("px ") || 0) + "px",
+		margin:  (margins.join("px ") || 0) + "px",
+		padding: (paddings.join("px ") || 0) + "px",
 		borderLeftStyle: (this.designBorderState && this.designBorderState.l) ? "dashed" : "solid",
 		borderRightStyle: (this.designBorderState && this.designBorderState.r) ? "dashed" : "solid",
 		borderTopStyle: (this.designBorderState && this.designBorderState.t) ? "dashed" :  "solid",
@@ -1244,16 +1293,17 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 	} else {
 	    stylesObj = {
-		margin:  (String(this.margin).split(marginSplitter).join("px ") || 0) + "px",
-		padding: (paddArr.join("px ") || 0) + "px",
+		margin:  (margins.join("px ") || 0) + "px",
+		padding: (paddings.join("px ") || 0) + "px",
 		borderStyle:  "solid",
-		borderWidth:  (String(this.border).split(borderSplitter).join("px ") || 0) + "px",
+		borderWidth:  (borders.join("px ") || 0) + "px",
 		borderColor:  this.borderColor,
 		backgroundColor: this.backgroundColor,
 		overflowX: this.scrollX ? "auto" : overflow,
 		overflowY: this.scrollY ? "auto" : overflow
 	    }
 	}
+
 	    if (this.styles && !wm.isEmpty(this.styles)) {
 		stylesObj = dojo.mixin(stylesObj,this.styles);
 	    }

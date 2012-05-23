@@ -83,7 +83,6 @@ this._inResize = true;
     },
 	resize: function() {
 	    this._inResize = true;
-
 	    if (!wm.deviceSize) {// set from URL
 		var deviceSize = this.deviceSize;
 		this.updateBounds();
@@ -142,6 +141,12 @@ this._inResize = true;
 	    }
 	    this.setBounds(0, 0, width, height);
 	},
+    forceRerenderComponents: function(wIn) {
+	wm.forEachWidget(wIn, function(w) {
+	    w.invalidCss = true;
+	    w.renderCss();
+	});
+    },
 	reflow: function() {
 	    if (this._cupdating)
 		return;
@@ -149,6 +154,36 @@ this._inResize = true;
 		this.updateBounds();
 	    }
 	    this.renderBounds();
+
+	    // find out what the zoom level is
+	    if (window["getComputedStyle"]) {
+		try {
+		    this.domNode.style.borderRight = "solid 1px transparent";
+		    var actualBorder = Number(window.getComputedStyle(this.domNode).getPropertyValue("border-right-width").replace(/px/,""));
+		    var oldZoomLevel = app._currentZoomLevel;
+		    app._currentZoomLevel = 1/actualBorder;
+		    if (oldZoomLevel && oldZoomLevel != app._currentZoomLevel) {
+			this.forceRerenderComponents(this);
+			var self = this;
+			wm.forEachProperty(app.$, function(c) {
+			    if (c instanceof wm.Dialog) {
+				self.forceRerenderComponents(c);
+			    }
+			});
+			wm.forEachProperty(wm.Page.byName, function(pageList) {
+			    dojo.forEach(pageList, function(page) {
+				wm.forEachProperty(page.$, function(c) {
+				    if (c instanceof wm.Dialog) {
+					self.forceRerenderComponents(c);
+				    }
+				});
+			    });
+			});					
+		    }
+
+		    this.domNode.style.borderRight = "solid 0px transparent";
+		} catch(e) {}
+	    }
 	    this.inherited(arguments);
 /*
 	    if (wm.isMobile) {
