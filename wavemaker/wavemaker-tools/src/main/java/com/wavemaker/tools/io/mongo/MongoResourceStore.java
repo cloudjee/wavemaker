@@ -48,7 +48,12 @@ abstract class MongoResourceStore implements ResourceStore {
     }
 
     protected final GridFSDBFile getGridFSDBFile(JailedResourcePath path, boolean required) {
-        return getFs().findOne(getFilename(path));
+        String filename = getFilename(path);
+        GridFSDBFile file = getFs().findOne(filename);
+        if (file == null && required) {
+            throw new ResourceException("Unable to find mogo entry for " + filename);
+        }
+        return file;
     }
 
     protected GridFSInputFile create(Type type, boolean createEmptyFile) {
@@ -81,6 +86,9 @@ abstract class MongoResourceStore implements ResourceStore {
     @Override
     public Resource getExisting(JailedResourcePath path) {
         Type type = getType(path);
+        if (type == null) {
+            return null;
+        }
         return type == Type.FILE ? getFile(path) : getFolder(path);
     }
 
