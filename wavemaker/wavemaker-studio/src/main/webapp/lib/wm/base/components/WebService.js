@@ -48,6 +48,10 @@ dojo.declare("wm.WebService", wm.JavaService, {
 	    studio.webServiceTab.activate();
 	    var layer = studio.webServiceSubTab.addPageContainerLayer(this.pageName || "ImportWebService", "New Service", true);
 	    layer.setDestroyable(true);
+	    this.connect(layer.c$[0].page, "dismiss", this, function(inWhy, serviceName) {
+			if (inWhy == "Import")
+				this.completeNewWebService(serviceName);
+		});
 	},
 	getCreateWebServiceDialog: function() {
 	    var pageName = this.pageName || "";
@@ -64,16 +68,22 @@ dojo.declare("wm.WebService", wm.JavaService, {
 		    title: this.pageTitle || studio.getDictionaryItem("wm.WebService.IMPORT_TITLE")
 		};
 		var d = wm.WebService["newWebServiceDialog" + pageName] = new wm.PageDialog(props);
+
 		d.onClose = dojo.hitch(this, function(inWhy) {
 			if (inWhy == "Import")
 				this.completeNewWebService();
 		});
+		
+
 		return d;
 	},
-	completeNewWebService: function() {
-		var p = this.getCreateWebServiceDialog().page;
+	completeNewWebService: function(serviceId) {
+/*
+	    var p = this.getCreateWebServiceDialog().page;
 		if (p.serviceId) {
 			var n = p.serviceId;
+			*/
+	                var n = serviceId;
 			var c = new wm.WebService({name: n, serviceId: n});
 			studio.updateServices();
 			studio.application.addServerComponent(c);
@@ -81,7 +91,6 @@ dojo.declare("wm.WebService", wm.JavaService, {
 			studio.select(c);
 		        c.editView();
 			studio.navGotoComponentsTreeClick();
-		}
 	},
 	editView: function() {
 	    var c = studio.navGotoEditor("Services", studio.webServiceTab,  this.getLayerName(), this.getLayerCaption());

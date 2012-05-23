@@ -169,7 +169,7 @@ dojo.declare("ImportWebService", wm.Page, {
 	},
 	importCompleted: function(inResponse) {
 	    this.serviceId = inResponse;
-	    this.dismiss("Import");
+	    this.dismiss("Import", this.serviceId);
 	},
 	importWSDLResult: function(inResponse) {
 		studio.endWait();
