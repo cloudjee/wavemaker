@@ -152,10 +152,12 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    }
 	    var okButton = new wm.Button({owner:  d,
 					  parent: d.buttonBar,
+					  _classes: {domNode: ["StudioButton"]},
 					  width: "100px",
 					  caption: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_OK")});
 	    var cancelButton = new wm.Button({owner:  d,
 					  parent: d.buttonBar,
+					  _classes: {domNode: ["StudioButton"]},
 					  width: "100px",
 					  caption: studio.getDictionaryItem("wm.JavaService.CREATE_SERVICE_CANCEL")});
 	    d.show();
