@@ -29,7 +29,6 @@ import org.springframework.mock.web.MockServletContext;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.config.ConfigurationStore;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
@@ -109,7 +108,7 @@ public class LocalStudioConfigurationTest extends WMTestCase {
                 assertTrue(!tempProjectsDir.exists());
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                Folder tempFolder = new LocalFolder(tempDir);
+                LocalFolder tempFolder = new LocalFolder(tempDir);
                 sf.setTestWaveMakerHome(tempFolder);
                 sf.setServletContext(this.servletContext);
 
@@ -168,7 +167,7 @@ public class LocalStudioConfigurationTest extends WMTestCase {
                 assertTrue(!tempProjectsDir.exists());
 
                 LocalStudioFileSystem sc = new LocalStudioFileSystem();
-                Folder tempFolder = new LocalFolder(tempDir);
+                LocalFolder tempFolder = new LocalFolder(tempDir);
                 sc.setTestWaveMakerHome(tempFolder);
                 sc.setServletContext(this.servletContext);
                 Resource projects = sc.getProjectsDir();
@@ -195,7 +194,7 @@ public class LocalStudioConfigurationTest extends WMTestCase {
                 assertTrue(!tempProjectsDir.exists());
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                Folder tempFolder = new LocalFolder(tempDir);
+                LocalFolder tempFolder = new LocalFolder(tempDir);
                 sf.setTestWaveMakerHome(tempFolder);
                 sf.setServletContext(this.servletContext);
 

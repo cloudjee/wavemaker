@@ -33,6 +33,8 @@ import com.wavemaker.common.util.XMLUtils;
 import com.wavemaker.common.util.XMLWriter;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFile;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.CodeGenUtils;
 import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
@@ -280,20 +282,20 @@ public class JAXWSBuilder {
     }
 
     protected void setOutputDir(WsImport2 wsImport) throws GenerationException {
-        wsImport.setSourcedestdir((File) this.outputSrcDir.getOriginalResource());
-        wsImport.setDestdir((File) this.outputClassDir.getOriginalResource());
+        wsImport.setSourcedestdir(((LocalFolder) this.outputSrcDir).getOriginalResource());
+        wsImport.setDestdir(((LocalFolder) this.outputClassDir).getOriginalResource());
     }
 
     protected void setConfigBinding(WsImport2 wsImport, com.wavemaker.tools.io.File jaxwsBindingFile,
         List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
         FileSet fs = new FileSet();
-        fs.setFile((File) jaxwsBindingFile.getOriginalResource());
+        fs.setFile(((LocalFile) jaxwsBindingFile).getOriginalResource());
         wsImport.addConfiguredBinding(fs);
 
         // set JAXB bindings
         for (com.wavemaker.tools.io.File jaxbBindingFile : jaxbBindingFiles) {
             fs = new FileSet();
-            fs.setFile((File) jaxbBindingFile.getOriginalResource());
+            fs.setFile(((LocalFile) jaxbBindingFile).getOriginalResource());
             wsImport.addConfiguredBinding(fs);
         }
     }

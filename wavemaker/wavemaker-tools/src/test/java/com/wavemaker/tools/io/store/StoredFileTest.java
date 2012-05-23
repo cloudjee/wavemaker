@@ -23,7 +23,6 @@ import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 public class StoredFileTest {
 
@@ -189,31 +188,6 @@ public class StoredFileTest {
         protected FileStore getStore() {
             return this.store;
         }
-
-        @Override
-        public ResourceOrigin getResourceOrigin() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public Object getOriginalResource() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getCanonicalPath() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getAbsolutePath() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
     }
 
 }

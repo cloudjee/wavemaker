@@ -38,6 +38,8 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFile;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Main deployment class.
@@ -133,6 +135,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         }
     }
 
+    @Override
+    protected LocalFolder getProjectDir() {
+        return (LocalFolder) super.getProjectDir();
+    }
+
     private String testRunStart(String projectDir, String deployName) {
 
         // this method for some reason is how we add the listener
@@ -201,7 +208,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         return build();
     }
 
-    private void buildWar(Folder projectDir, String buildDir, String warFile, boolean includeEar) {
+    private void buildWar(LocalFolder projectDir, String buildDir, String warFile, boolean includeEar) {
 
         int len = warFile.length();
         String earFileName = warFile.substring(0, len - 4) + ".ear";
@@ -234,7 +241,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
-        String warFileLocation = warFile.getCanonicalPath();
+        String warFileLocation = ((LocalFile) warFile).getCanonicalPath();
         buildWar(warFileLocation, includeEar);
         return warFile;
     }
@@ -316,7 +323,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String exportProject(String zipFileName) {
         Folder exportDir = getProjectDir().getFolder(EXPORT_DIR_DEFAULT);
-        com.wavemaker.tools.io.File file = exportDir.getFile(zipFileName);
+        LocalFile file = (LocalFile) exportDir.getFile(zipFileName);
         exportProject(getProjectDir().getCanonicalPath(), file.getCanonicalPath());
         return file.getCanonicalPath();
     }

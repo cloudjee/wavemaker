@@ -1,11 +1,11 @@
 
 package com.wavemaker.tools.io.local;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.io.JailedResourcePath;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 import com.wavemaker.tools.io.local.LocalResourceStore.LocalFolderStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.StoredFolder;
@@ -31,27 +31,19 @@ public class LocalFolder extends StoredFolder {
         return this.store;
     }
 
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        return ResourceOrigin.LOCAL_FILE_SYSTEM;
-    }
-
-    @Override
-    public Object getOriginalResource() {
+    public File getOriginalResource() {
         return this.store.getFile();
     }
 
-    @Override
     public String getCanonicalPath() {
         try {
-            return ((java.io.File) getOriginalResource()).getCanonicalPath();
+            return getOriginalResource().getCanonicalPath();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
     }
 
-    @Override
     public String getAbsolutePath() {
-        return ((java.io.File) getOriginalResource()).getAbsolutePath();
+        return getOriginalResource().getAbsolutePath();
     }
 }

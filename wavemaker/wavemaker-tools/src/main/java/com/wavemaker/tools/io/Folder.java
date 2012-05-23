@@ -112,6 +112,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @param name the name of the folder to get
      * @return the {@link Folder}
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a folder
+     * @deprecated callers should use getFolder and remove leading slashes themselves
      */
     @Deprecated
     Folder appendFolder(String name) throws ResourceTypeMismatchException;
@@ -134,6 +135,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @param name the name of the file to get
      * @return the {@link File}
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a file
+     * @deprecated callers should use getFile and remove leading slashes themselves
      */
     @Deprecated
     File appendFile(String name) throws ResourceTypeMismatchException;

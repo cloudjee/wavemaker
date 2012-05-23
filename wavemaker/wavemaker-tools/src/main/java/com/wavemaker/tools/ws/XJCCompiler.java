@@ -46,7 +46,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceURL;
-import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.jaxws.SimpleClassNameCollector;
@@ -70,13 +70,13 @@ public class XJCCompiler {
         }
         try {
             // TODO - Cheating for now, as the com.sun.* stuff will potentially need to be replaced on CF
-            if (outputDir.getResourceOrigin().equals(FileSystem.ResourceOrigin.MONGO_DB)) {
+            if (outputDir instanceof LocalFolder) {
+                generateCode.build(((LocalFolder) outputDir).getOriginalResource(), ((LocalFolder) outputDir).getOriginalResource(), null);
+            } else {
                 File tempOutputDir = IOUtils.createTempDirectory("ws_out_directory", null);
                 generateCode.build(tempOutputDir, tempOutputDir, null);
                 Folder folder = new LocalFolder(tempOutputDir);
                 folder.copyContentsTo(outputDir);
-            } else {
-                generateCode.build((File) outputDir.getOriginalResource(), (File) outputDir.getOriginalResource(), null);
             }
         } catch (IOException e) {
             throw new GenerationException(e);
@@ -129,8 +129,8 @@ public class XJCCompiler {
                     // cftempfix - if binding files are NOT ALWAYS local files (eg. mongo DB file), we may need to
                     // correctly implement
                     // logic for none-local file case.
-                    if (file.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-                        File f = (File) file.getOriginalResource();
+                    if (file instanceof LocalFile) {
+                        File f = ((LocalFile) file).getOriginalResource();
                         inputSource.setSystemId(f.toURI().toString());
                     } else {
                         inputSource.setSystemId(ResourceURL.get(file).toURI().toString());

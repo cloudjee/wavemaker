@@ -67,7 +67,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     /**
      * WaveMaker home override, used for testing. NEVER set this in production.
      */
-    private Folder testWMHome = null;
+    private LocalFolder testWMHome = null;
 
     @Override
     public Folder getCommonFolder() {
@@ -95,7 +95,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         return staticGetWaveMakerHome();
     }
 
-    public void setTestWaveMakerHome(Folder file) {
+    public void setTestWaveMakerHome(LocalFolder file) {
         this.testWMHome = file;
     }
 

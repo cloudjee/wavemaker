@@ -57,7 +57,7 @@ public class ServiceDefProcessorTest {
         this.fileSystem = new LocalStudioFileSystem();
         Resource wmHome = this.fileSystem.createTempDir();
         // cftempfix
-        Folder wmHomeFolder = new LocalFolder(wmHome.getFile());
+        LocalFolder wmHomeFolder = new LocalFolder(wmHome.getFile());
         this.fileSystem.setTestWaveMakerHome(wmHomeFolder);
         Resource projectDir = wmHome.createRelative("/projects/ServiceDefProcessorProject/");
         this.fileSystem.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());

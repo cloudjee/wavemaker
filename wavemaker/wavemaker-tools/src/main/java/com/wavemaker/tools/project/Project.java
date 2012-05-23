@@ -75,10 +75,10 @@ public class Project extends AbstractFileService {
     }
 
     // cftempfix
-    public Project(Folder projectRootFolder) {
+    public Project(Folder projectRootFolder, String projectName) {
         super();
         this.projectRootFolder = projectRootFolder;
-        this.projectName = projectRootFolder.getLastName();
+        this.projectName = projectName;
         this.mavenProject = projectRootFolder.getFile(ProjectConstants.POM_XML).exists();
     }
 

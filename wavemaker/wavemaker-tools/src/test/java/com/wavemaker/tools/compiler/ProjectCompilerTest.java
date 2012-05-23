@@ -51,7 +51,7 @@ public class ProjectCompilerTest {
         this.studioConfiguration.setServletContext(this.servletContext);
         Resource wmHome = this.studioConfiguration.createTempDir();
         // cftempfix
-        Folder wmHomeFolder = new LocalFolder(wmHome.getFile());
+        LocalFolder wmHomeFolder = new LocalFolder(wmHome.getFile());
         this.studioConfiguration.setTestWaveMakerHome(wmHomeFolder);
         Resource projectDir = wmHome.createRelative("/projects/ProjectCompilerProject/");
         this.studioConfiguration.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());

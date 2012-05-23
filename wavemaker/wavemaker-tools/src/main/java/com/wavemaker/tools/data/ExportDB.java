@@ -47,7 +47,6 @@ import com.wavemaker.tools.data.parser.HbmParser;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceOperation;
-import com.wavemaker.tools.io.filesystem.FileSystem;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
@@ -327,7 +326,7 @@ public class ExportDB extends BaseDataModelSetup {
 
     private void checkHbmFilesDir(Collection<String> requiredProperties) {
         // cftempfix - For now, we assume that no properties are supposed to be set to represent directories.
-        if (this.hbmFilesDir.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+        if (this.hbmFilesDir instanceof LocalFolder) {
             if (this.hbmFilesDir == null) {
                 String s = this.properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
                 if (s != null) {

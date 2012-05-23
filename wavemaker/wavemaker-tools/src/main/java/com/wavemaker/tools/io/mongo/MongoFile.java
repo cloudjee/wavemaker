@@ -2,7 +2,6 @@
 package com.wavemaker.tools.io.mongo;
 
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 import com.wavemaker.tools.io.mongo.MongoResourceStore.MongoFileStore;
 import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.StoredFile;
@@ -32,23 +31,4 @@ public class MongoFile extends StoredFile {
         return this.store;
     }
 
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        return ResourceOrigin.MONGO_DB;
-    }
-
-    @Override
-    public Object getOriginalResource() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getCanonicalPath() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getAbsolutePath() {
-        throw new UnsupportedOperationException();
-    }
 }

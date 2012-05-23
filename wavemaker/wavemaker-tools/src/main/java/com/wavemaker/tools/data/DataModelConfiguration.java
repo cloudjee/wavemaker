@@ -57,6 +57,7 @@ import com.wavemaker.tools.data.parser.HbmWriter;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
@@ -839,7 +840,7 @@ public class DataModelConfiguration {
     public synchronized void writeConnectionProperties(Properties props) {
         String connUrl = props.getProperty(DataServiceConstants.DB_URL_KEY);
         if (!WMAppContext.getInstance().isCloudFoundry()) {
-            String projRoot = ((java.io.File) this.projMgr.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
+            String projRoot = ((LocalFolder) this.projMgr.getCurrentProject().getWebAppRootFolder()).getOriginalResource().getPath();
             connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
         }
         props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
@@ -1595,18 +1596,17 @@ public class DataModelConfiguration {
             String original = null;
             try {
                 original = this.fileService.readFile(path);
-            //cftempfix - Different exceptions are returned fro local file system and CF file system (ResourceException and
-            //IllegalStateException).  So I am catching Exception right now but this should be fixed when the API is fixed to
-            //return a consistent exception.
-            /*} catch (FileNotFoundException ex) {
-                // if the original file doesn't exist (yet), then
-                // we can't back it up
-                return;
-            } catch (ResourceException ex) {
-                // if the original file doesn't exist (yet), then
-                // we can't back it up
-                return;*/
-            }  catch (Exception ex) {
+                // cftempfix - Different exceptions are returned fro local file system and CF file system
+                // (ResourceException and
+                // IllegalStateException). So I am catching Exception right now but this should be fixed when the API is
+                // fixed to
+                // return a consistent exception.
+                /*
+                 * } catch (FileNotFoundException ex) { // if the original file doesn't exist (yet), then // we can't
+                 * back it up return; } catch (ResourceException ex) { // if the original file doesn't exist (yet), then
+                 * // we can't back it up return;
+                 */
+            } catch (Exception ex) {
                 return;
             }
             String backupPath = path + BACKUP_SUFFIX;

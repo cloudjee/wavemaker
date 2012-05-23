@@ -61,7 +61,7 @@ public class ConfigurationCompilerTask extends CompilerTask {
         super(true);
     }
 
-    public Folder getDestWebAppRoot() {
+    public LocalFolder getDestWebAppRoot() {
         return new LocalFolder(this.destWebAppRoot);
     }
 
@@ -96,8 +96,8 @@ public class ConfigurationCompilerTask extends CompilerTask {
         }
 
         if (fileService == null) {
-            System.out.println("using " + destination.getCanonicalPath() + " as a default project directory; please set projectRoot");
-            fileService = new Project(destination);
+            System.out.println("using " + destination + " as a default project directory; please set projectRoot");
+            fileService = new Project(destination, "project");
         }
 
         boolean doXmlBuild = false;

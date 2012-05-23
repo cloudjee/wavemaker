@@ -43,7 +43,6 @@ import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 public class StoredFolderTest {
 
@@ -635,31 +634,6 @@ public class StoredFolderTest {
             given(file.getStore().exists()).willReturn(exists);
             return file;
         }
-
-        @Override
-        public ResourceOrigin getResourceOrigin() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public Object getOriginalResource() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getCanonicalPath() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getAbsolutePath() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
     }
 
     private static class MockStoredFile extends StoredFile {
@@ -675,30 +649,5 @@ public class StoredFolderTest {
         protected FileStore getStore() {
             return this.store;
         }
-
-        @Override
-        public ResourceOrigin getResourceOrigin() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public Object getOriginalResource() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getCanonicalPath() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getAbsolutePath() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
     }
 }

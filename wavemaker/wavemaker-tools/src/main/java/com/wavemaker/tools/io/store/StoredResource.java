@@ -77,12 +77,6 @@ public abstract class StoredResource implements Resource {
     }
 
     @Override
-    public String getLastName() {
-        // FIXME delete
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String toString() {
         return toString(ResourceStringFormat.FULL);
     }

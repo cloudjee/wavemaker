@@ -60,8 +60,6 @@ import com.wavemaker.tools.service.definitions.Service;
 
 /**
  * @author Simon Toens
- * 
- * 
  */
 public class DataModelManager {
 
@@ -887,10 +885,6 @@ public class DataModelManager {
 
         return importer;
 
-    }
-
-    public String getWebAppRoot() {
-        return ((File) this.projectManager.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
     }
 
     private String extractHsqlDBFileName(String connectionUrl) {

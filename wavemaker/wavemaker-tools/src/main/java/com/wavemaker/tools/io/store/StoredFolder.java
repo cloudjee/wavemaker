@@ -73,7 +73,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     public Folder appendFolder(String name) throws ResourceTypeMismatchException {
-        throw new UnsupportedOperationException();
+        return getFolder(removeSlashPrefix(name));
     }
 
     @Override
@@ -85,7 +85,14 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     public File appendFile(String name) throws ResourceTypeMismatchException {
-        throw new UnsupportedOperationException();
+        return getFile(removeSlashPrefix(name));
+    }
+
+    private String removeSlashPrefix(String name) {
+        while (name != null && (name.startsWith("/") || name.startsWith("\\"))) {
+            name = name.substring(1);
+        }
+        return name;
     }
 
     @SuppressWarnings("unchecked")

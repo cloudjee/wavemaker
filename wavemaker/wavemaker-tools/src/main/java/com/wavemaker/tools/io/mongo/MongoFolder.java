@@ -6,7 +6,6 @@ import org.springframework.util.Assert;
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
 import com.wavemaker.tools.io.JailedResourcePath;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 import com.wavemaker.tools.io.mongo.MongoResourceStore.MongoFolderStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.StoredFolder;
@@ -31,23 +30,4 @@ public class MongoFolder extends StoredFolder {
         return this.store;
     }
 
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        return ResourceOrigin.MONGO_DB;
-    }
-
-    @Override
-    public Object getOriginalResource() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getCanonicalPath() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getAbsolutePath() {
-        throw new UnsupportedOperationException();
-    }
 }

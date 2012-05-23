@@ -22,7 +22,7 @@ import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.ResourceURL;
-import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
@@ -56,8 +56,8 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
                 // cftempfix - if the wsdl file is NOT ALWAYS a local file (eg. mongo DB file), we may need to correctly
                 // implement
                 // logic for none-local file case.
-                if (f.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-                    java.io.File ff = (java.io.File) f.getOriginalResource();
+                if (f instanceof LocalFile) {
+                    java.io.File ff = ((LocalFile) f).getOriginalResource();
                     return WSDLManager.processWSDL(ff.toURL().toString(), serviceId, null, null);
                 } else {
                     return WSDLManager.processWSDL(ResourceURL.get(f).toString(), serviceId, null, null);

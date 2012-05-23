@@ -14,19 +14,15 @@
 
 package com.wavemaker.tools.io.filesystem;
 
-import java.io.IOException;
-
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 /**
  * {@link Resource} implementation backed by a {@link FileSystem}.
@@ -116,17 +112,6 @@ public abstract class FileSystemResource<K> implements Resource {
     }
 
     @Override
-    public String getLastName() {
-        // cftempfix
-        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-            java.io.File f = (java.io.File) getOriginalResource();
-            return f.getName();
-        } else {
-            return this.path.getUnjailedPath().getName();
-        }
-    }
-
-    @Override
     public String toString() {
         return toString(ResourceStringFormat.FULL);
     }
@@ -157,38 +142,6 @@ public abstract class FileSystemResource<K> implements Resource {
             return false;
         }
         return ObjectUtils.nullSafeEquals(this.path, other.path);
-    }
-
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        return this.fileSystem.getResourceOrigin();
-    }
-
-    @Override
-    public Object getOriginalResource() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getCanonicalPath() {
-        try {
-            if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-                return ((java.io.File) getOriginalResource()).getCanonicalPath();
-            } else {
-                throw new UnsupportedOperationException();
-            }
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public String getAbsolutePath() {
-        if (getResourceOrigin().equals(ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-            return ((java.io.File) getOriginalResource()).getAbsolutePath();
-        } else {
-            throw new UnsupportedOperationException();
-        }
     }
 
 }

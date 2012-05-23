@@ -51,7 +51,6 @@ import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.Deployments;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
@@ -82,7 +81,7 @@ public class LocalDeploymentManagerTest {
         assertTrue(commonDir.exists());
         assertTrue(commonDir.isDirectory());
         this.fileSystem = new LocalStudioFileSystem();
-        Folder homeFolder = new LocalFolder(homeDir);
+        LocalFolder homeFolder = new LocalFolder(homeDir);
         this.fileSystem.setTestWaveMakerHome(homeFolder);
         MockitoAnnotations.initMocks(this);
         this.mgr = new LocalDeploymentManager();

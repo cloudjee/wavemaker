@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 import com.wavemaker.tools.io.local.LocalResourceStore.LocalFileStore;
 import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.StoredFile;
@@ -35,27 +34,19 @@ public class LocalFile extends StoredFile {
         return this.store;
     }
 
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        return ResourceOrigin.LOCAL_FILE_SYSTEM;
-    }
-
-    @Override
-    public Object getOriginalResource() {
+    public java.io.File getOriginalResource() {
         return this.store.getFile();
     }
 
-    @Override
     public String getCanonicalPath() {
         try {
-            return ((java.io.File) getOriginalResource()).getCanonicalPath();
+            return getOriginalResource().getCanonicalPath();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
     }
 
-    @Override
     public String getAbsolutePath() {
-        return ((java.io.File) getOriginalResource()).getAbsolutePath();
+        return getOriginalResource().getAbsolutePath();
     }
 }

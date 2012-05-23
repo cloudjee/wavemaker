@@ -77,7 +77,7 @@ public abstract class CompilerTask extends Task {
     public void setProjectRoot(File projectRoot) {
         this.projectRoot = projectRoot;
         Folder folder = new LocalFolder(projectRoot);
-        this.agProject = new Project(folder);
+        this.agProject = new Project(folder, projectRoot.getName());
     }
 
     public void setVerbose(boolean verbose) {
