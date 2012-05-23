@@ -338,23 +338,30 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 	color: #FFF;
 	text-align: left;
 	font-size: 100%;
+/*
    -moz-border-radius-topleft: 0px; 
     -moz-border-radius-topright: 0px; 
     -webkit-border-top-left-radius: 0px; 
     -webkit-border-top-right-radius: 0px;
     border-radius-topleft: 0px; 
-    border-radius-topright: 0px;
+    border-radius-topright: 0px;*/
 }
 
 .studiodialog {
+/*
     -moz-border-radius-topleft: 10px; 
     -moz-border-radius-topright: 10px; 
     -webkit-border-top-left-radius: 10px; 
     -webkit-border-top-right-radius: 10px;
     border-radius-topleft: 10px; 
     border-radius-topright: 10px;
+*/
+    -webkit-box-shadow: 4px 4px 15px #222;
+    -moz-box-shadow: 4px 4px 15px #222;
+    box-shadow: 4px 4px 15px #222;
 }
 
+/*
 .studiodialog.Docked {
     -moz-border-radius-topleft: 0px; 
     -moz-border-radius-topright: 0px; 
@@ -363,7 +370,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     border-radius-topleft: 0px; 
     border-radius-topright: 0px;
 }
-
+*/
 .studiodialog .dialogtitlebar {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
     background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
@@ -375,14 +382,16 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: #FFF;
     font-size: 120%;
     text-align: center;
-
+/*
     -moz-border-radius-topleft: 8px; 
     -moz-border-radius-topright: 8px; 
     -webkit-border-top-left-radius: 8px; 
     -webkit-border-top-right-radius: 8px;
     border-radius-topleft: 8px; 
     border-radius-topright: 8px;
+*/
 }
+/*
 .studiodialog.Docked .dialogtitlebar {
     -moz-border-radius-topleft: 0px; 
     -moz-border-radius-topright: 0px; 
@@ -391,6 +400,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     border-radius-topleft: 0px; 
     border-radius-topright: 0px;
 }
+*/
 /* End Dialogs */
 
 /* Start Inspector */
