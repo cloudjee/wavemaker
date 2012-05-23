@@ -21,6 +21,7 @@ import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceException;
+import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
@@ -40,7 +41,6 @@ abstract class MongoResourceStore implements ResourceStore {
         Assert.notNull(path, "Path must not be null");
         this.fs = fs;
         this.path = path;
-        // FIXME assert type
     }
 
     protected final GridFS getFs() {
@@ -80,12 +80,23 @@ abstract class MongoResourceStore implements ResourceStore {
 
     @Override
     public Resource getExisting(JailedResourcePath path) {
+        Type type = getType(path);
+        return type == Type.FILE ? getFile(path) : getFolder(path);
+    }
+
+    /**
+     * Return the file type or <tt>null</tt>.
+     * 
+     * @param path the path to test
+     * @return the file type
+     */
+    protected final Type getType(JailedResourcePath path) {
         GridFSDBFile file = getGridFSDBFile(path, false);
         if (file == null) {
             return null;
         }
         Type type = Type.valueOf((String) file.get(RESOURCE_TYPE));
-        return type == Type.FILE ? getFile(path) : getFolder(path);
+        return type;
     }
 
     @Override
@@ -121,6 +132,9 @@ abstract class MongoResourceStore implements ResourceStore {
 
         public MongoFileStore(GridFS fs, JailedResourcePath path) {
             super(fs, path);
+            if (Type.FOLDER.equals(getType(path))) {
+                throw new ResourceTypeMismatchException(path.getUnjailedPath(), false);
+            }
         }
 
         @Override
@@ -166,6 +180,9 @@ abstract class MongoResourceStore implements ResourceStore {
 
         public MongoFolderStore(GridFS fs, JailedResourcePath path) {
             super(fs, path);
+            if (Type.FILE.equals(getType(path))) {
+                throw new ResourceTypeMismatchException(path.getUnjailedPath(), true);
+            }
         }
 
         @Override

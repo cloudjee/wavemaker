@@ -79,8 +79,8 @@ abstract class ZipResourceStore implements ResourceStore {
 
     static class ZipFileStore extends ZipResourceStore implements FileStore {
 
-        public ZipFileStore(Zip zipFileDetails, JailedResourcePath path) {
-            super(zipFileDetails, path);
+        public ZipFileStore(Zip zip, JailedResourcePath path) {
+            super(zip, path);
         }
 
         @Override
@@ -115,8 +115,8 @@ abstract class ZipResourceStore implements ResourceStore {
             this(new Zip(zipFile), new JailedResourcePath());
         }
 
-        public ZipFolderStore(Zip zipFileDetails, JailedResourcePath path) {
-            super(zipFileDetails, path);
+        public ZipFolderStore(Zip zip, JailedResourcePath path) {
+            super(zip, path);
         }
 
         @Override

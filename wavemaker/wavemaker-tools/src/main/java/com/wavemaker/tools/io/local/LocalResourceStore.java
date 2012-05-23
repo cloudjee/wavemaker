@@ -18,6 +18,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.exception.ResourceException;
+import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
@@ -38,7 +39,6 @@ abstract class LocalResourceStore implements ResourceStore {
         this.root = root;
         this.path = path;
         this.file = getFileForPath(path);
-        // FIXME assert type
     }
 
     protected final java.io.File getRoot() {
@@ -107,6 +107,9 @@ abstract class LocalResourceStore implements ResourceStore {
 
         public LocalFileStore(java.io.File root, JailedResourcePath path) {
             super(root, path);
+            if (exists() && !getFile().isFile()) {
+                throw new ResourceTypeMismatchException(path.getUnjailedPath(), false);
+            }
         }
 
         @Override
@@ -164,6 +167,9 @@ abstract class LocalResourceStore implements ResourceStore {
 
         public LocalFolderStore(java.io.File root, JailedResourcePath path) {
             super(root, path);
+            if (exists() && !getFile().isDirectory()) {
+                throw new ResourceTypeMismatchException(path.getUnjailedPath(), true);
+            }
         }
 
         @Override

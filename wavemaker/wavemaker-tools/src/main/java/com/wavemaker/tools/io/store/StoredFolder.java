@@ -28,7 +28,6 @@ import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
-import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
 /**
  * A {@link Folder} that is backed by a {@link FolderStore}. Allows developers to use the simpler {@link FolderStore}
@@ -72,7 +71,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     }
 
     @Override
-    public Folder appendFolder(String name) throws ResourceTypeMismatchException {
+    public Folder appendFolder(String name) {
         return getFolder(removeSlashPrefix(name));
     }
 
@@ -84,7 +83,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     }
 
     @Override
-    public File appendFile(String name) throws ResourceTypeMismatchException {
+    public File appendFile(String name) {
         return getFile(removeSlashPrefix(name));
     }
 

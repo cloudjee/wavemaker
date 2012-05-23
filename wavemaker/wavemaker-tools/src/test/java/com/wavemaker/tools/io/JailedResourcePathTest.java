@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.io.filesystem;
+package com.wavemaker.tools.io;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
