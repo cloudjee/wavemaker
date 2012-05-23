@@ -93,7 +93,7 @@ dojo.declare("Start", wm.Page, {
 	    if (projname) {
 		app.confirm(this.getDictionaryItem("CONFIRM_DELETE", {projectName: projname}), false,
 			   dojo.hitch(this, function() {
-		               if (studio.project.getData() == projname)
+		               if (studio.project.projectName == projname)
 			           studio.project.closeProject();
 			       studio.project.deleteProject(projname);	       
 
