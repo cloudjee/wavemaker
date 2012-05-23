@@ -89,8 +89,8 @@ BannerLinks: ["wm.Label", {"_classes":{"domNode":["a"]},"autoSizeWidth":true,"bo
 BannerSpacer2: ["wm.Spacer", {"height":"1px","width":"12px"}, {}]
 }]
 }],
-panel4: ["wm.Panel", {"fitToContentHeight":true,"height":"403px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"25,25,5,25","styles":{"fontSize":"undefinedpx","color":"","backgroundColor":""},"verticalAlign":"top","width":"100%"}, {}, {
-layers1: ["wm.Layers", {"height":"373px","width":"65%"}, {}, {
+panel4: ["wm.Panel", {"height":"449px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"25,25,5,25","styles":{"fontSize":"undefinedpx","color":"","backgroundColor":""},"verticalAlign":"top","width":"100%"}, {}, {
+layers1: ["wm.Layers", {"height":"406px","width":"65%"}, {}, {
 loginLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
 ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"100%"}, {}, {
 Content1: ["wm.Html", {"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"32px","html":"WaveMaker for Cloud Foundry","margin":"0","minDesktopHeight":15,"styles":{"fontSize":"26px","color":""}}, {}],
