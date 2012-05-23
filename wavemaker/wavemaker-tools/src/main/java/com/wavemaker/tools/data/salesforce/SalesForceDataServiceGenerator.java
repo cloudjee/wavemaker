@@ -124,7 +124,7 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
             Folder outputFolder = this.configuration.getOutputDirectory();
             outputFolder.createIfMissing();
             if (outputFolder instanceof LocalFolder) {
-                File outputFolderFile = ((LocalFolder) outputFolder).getOriginalResource();
+                File outputFolderFile = ((LocalFolder) outputFolder).getLocalFile();
                 this.codeModel.build(outputFolderFile, outputFolderFile, null);
             } else {
                 File tempDir = IOUtils.createTempDirectory("outputSrc_directory", null);

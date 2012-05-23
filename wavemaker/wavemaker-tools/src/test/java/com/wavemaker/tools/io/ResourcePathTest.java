@@ -9,8 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.io.ResourcePath;
-
 /**
  * Tests for {@link ResourcePath}.
  * 

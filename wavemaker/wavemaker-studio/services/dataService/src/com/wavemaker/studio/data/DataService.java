@@ -14,6 +14,7 @@
 
 package com.wavemaker.studio.data;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,14 +59,11 @@ public class DataService {
 
     private DataModelManager dataModelMgr = null;
 
-    private CloudFoundryService cloudFoundryService = null;
-
     public void setDataModelManager(DataModelManager dataModelMgr) {
         this.dataModelMgr = dataModelMgr;
     }
 
     public void setCloudFoundryService(CloudFoundryService cloudFoundryService) {
-        this.cloudFoundryService = cloudFoundryService;
     }
 
     public List<String> getDataModelNames() {
@@ -295,11 +293,15 @@ public class DataService {
     }
 
     private String rewriteConnectionUrlIfNecessary(String connectionUrl) {
-        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = ((LocalFolder) projMgr.getCurrentProject().getWebAppRootFolder()).getCanonicalPath();
-            return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
+        try {
+            if (connectionUrl.contains(DataModelManager.HSQLDB)) {
+                ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+                    DataServiceConstants.CURRENT_PROJECT_MANAGER);
+                String projRoot = ((LocalFolder) projMgr.getCurrentProject().getWebAppRootFolder()).getLocalFile().getCanonicalPath();
+                return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
         }
         return connectionUrl;
     }

@@ -282,20 +282,20 @@ public class JAXWSBuilder {
     }
 
     protected void setOutputDir(WsImport2 wsImport) throws GenerationException {
-        wsImport.setSourcedestdir(((LocalFolder) this.outputSrcDir).getOriginalResource());
-        wsImport.setDestdir(((LocalFolder) this.outputClassDir).getOriginalResource());
+        wsImport.setSourcedestdir(((LocalFolder) this.outputSrcDir).getLocalFile());
+        wsImport.setDestdir(((LocalFolder) this.outputClassDir).getLocalFile());
     }
 
     protected void setConfigBinding(WsImport2 wsImport, com.wavemaker.tools.io.File jaxwsBindingFile,
         List<com.wavemaker.tools.io.File> jaxbBindingFiles) throws GenerationException {
         FileSet fs = new FileSet();
-        fs.setFile(((LocalFile) jaxwsBindingFile).getOriginalResource());
+        fs.setFile(((LocalFile) jaxwsBindingFile).getLocalFile());
         wsImport.addConfiguredBinding(fs);
 
         // set JAXB bindings
         for (com.wavemaker.tools.io.File jaxbBindingFile : jaxbBindingFiles) {
             fs = new FileSet();
-            fs.setFile(((LocalFile) jaxbBindingFile).getOriginalResource());
+            fs.setFile(((LocalFile) jaxbBindingFile).getLocalFile());
             wsImport.addConfiguredBinding(fs);
         }
     }

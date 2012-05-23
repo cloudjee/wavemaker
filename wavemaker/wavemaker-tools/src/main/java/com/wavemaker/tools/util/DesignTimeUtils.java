@@ -106,7 +106,7 @@ public class DesignTimeUtils {
 
             try {
                 // override configuration
-                setDefaultProjectHome(new File(((LocalFolder) projectRoot).getAbsolutePath()).getParentFile().getAbsolutePath());
+                setDefaultProjectHome(new File(((LocalFolder) projectRoot).getLocalFile().getAbsolutePath()).getParentFile().getAbsolutePath());
 
                 DesignServiceManager dsm = new DesignServiceManager();
 
@@ -125,7 +125,7 @@ public class DesignTimeUtils {
 
                 ProjectManager pm = new ProjectManager();
                 pm.setFileSystem(sf);
-                pm.openProject(((LocalFolder) projectRoot).getOriginalResource().getName(), true);
+                pm.openProject(((LocalFolder) projectRoot).getLocalFile().getName(), true);
                 dsm.setProjectManager(pm);
 
                 LocalDeploymentManager dep = new LocalDeploymentManager();

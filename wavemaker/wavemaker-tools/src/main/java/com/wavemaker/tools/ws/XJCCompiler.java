@@ -71,7 +71,7 @@ public class XJCCompiler {
         try {
             // TODO - Cheating for now, as the com.sun.* stuff will potentially need to be replaced on CF
             if (outputDir instanceof LocalFolder) {
-                generateCode.build(((LocalFolder) outputDir).getOriginalResource(), ((LocalFolder) outputDir).getOriginalResource(), null);
+                generateCode.build(((LocalFolder) outputDir).getLocalFile(), ((LocalFolder) outputDir).getLocalFile(), null);
             } else {
                 File tempOutputDir = IOUtils.createTempDirectory("ws_out_directory", null);
                 generateCode.build(tempOutputDir, tempOutputDir, null);
@@ -130,7 +130,7 @@ public class XJCCompiler {
                     // correctly implement
                     // logic for none-local file case.
                     if (file instanceof LocalFile) {
-                        File f = ((LocalFile) file).getOriginalResource();
+                        File f = ((LocalFile) file).getLocalFile();
                         inputSource.setSystemId(f.toURI().toString());
                     } else {
                         inputSource.setSystemId(ResourceURL.get(file).toURI().toString());

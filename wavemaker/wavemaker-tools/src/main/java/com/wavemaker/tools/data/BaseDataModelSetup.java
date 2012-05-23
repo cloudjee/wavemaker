@@ -244,7 +244,7 @@ public abstract class BaseDataModelSetup {
     public void setDestDir(Folder destdir) {
         this.destdir = destdir;
         if (destdir instanceof LocalFolder) {
-            File f = ((LocalFolder) this.destdir).getOriginalResource();
+            File f = ((LocalFolder) this.destdir).getLocalFile();
             getParentTask().setDestDir(f);
         } else {
             this.exporterFactory.setDestDir(destdir);

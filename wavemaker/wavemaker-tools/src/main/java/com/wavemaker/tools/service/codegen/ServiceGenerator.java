@@ -268,7 +268,7 @@ public abstract class ServiceGenerator {
             // cftempfix
             Folder dir = this.configuration.getOutputDirectory();
             if (dir instanceof LocalFolder) {
-                File dest = ((LocalFolder) dir).getOriginalResource();
+                File dest = ((LocalFolder) dir).getLocalFile();
                 this.codeModel.build(dest, dest, null);
             } else {
                 File f = IOUtils.createTempDirectory("dataService_directory", null);

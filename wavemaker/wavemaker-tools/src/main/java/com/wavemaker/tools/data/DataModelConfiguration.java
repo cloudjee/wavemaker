@@ -840,7 +840,7 @@ public class DataModelConfiguration {
     public synchronized void writeConnectionProperties(Properties props) {
         String connUrl = props.getProperty(DataServiceConstants.DB_URL_KEY);
         if (!WMAppContext.getInstance().isCloudFoundry()) {
-            String projRoot = ((LocalFolder) this.projMgr.getCurrentProject().getWebAppRootFolder()).getOriginalResource().getPath();
+            String projRoot = ((LocalFolder) this.projMgr.getCurrentProject().getWebAppRootFolder()).getLocalFile().getPath();
             connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
         }
         props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);

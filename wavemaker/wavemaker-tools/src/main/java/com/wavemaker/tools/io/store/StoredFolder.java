@@ -71,27 +71,10 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     }
 
     @Override
-    public Folder appendFolder(String name) {
-        return getFolder(removeSlashPrefix(name));
-    }
-
-    @Override
     public File getFile(String name) {
         Assert.hasLength(name, "Name must not be empty");
         JailedResourcePath filePath = getPath().get(name);
         return getStore().getFile(filePath);
-    }
-
-    @Override
-    public File appendFile(String name) {
-        return getFile(removeSlashPrefix(name));
-    }
-
-    private String removeSlashPrefix(String name) {
-        while (name != null && (name.startsWith("/") || name.startsWith("\\"))) {
-            name = name.substring(1);
-        }
-        return name;
     }
 
     @SuppressWarnings("unchecked")

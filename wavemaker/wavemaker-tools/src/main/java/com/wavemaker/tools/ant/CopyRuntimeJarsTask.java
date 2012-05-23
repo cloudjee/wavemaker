@@ -176,11 +176,11 @@ public class CopyRuntimeJarsTask extends Task {
         FileSet projectJarSet = new FileSet();
         projectJarSet.setProject(getProject());
         try {
-            projectJarSet.setDir(((LocalFolder) this.wmProject.getRootFolder()).getOriginalResource());
+            projectJarSet.setDir(((LocalFolder) this.wmProject.getRootFolder()).getLocalFile());
 
             projectJarSet.createInclude().setName(ProjectConstants.LIB_DIR + "/**/*.jar");
 
-            File includeList = new File(((LocalFolder) this.wmProject.getWebAppRootFolder()).getOriginalResource(), "resources/.includeJars");
+            File includeList = new File(((LocalFolder) this.wmProject.getWebAppRootFolder()).getLocalFile(), "resources/.includeJars");
             if (includeList.exists()) {
 
                 String s = com.wavemaker.common.util.IOUtils.read(includeList);
@@ -217,7 +217,7 @@ public class CopyRuntimeJarsTask extends Task {
                 copyDirs.setProject(getProject());
                 copyDirs.setTaskName("copymodules-dir");
                 copyDirs.setFlatten(false);
-                copyDirs.setTodir(new File(((LocalFolder) this.wmProject.getClassOutputFolder()).getOriginalResource(), file.getName()));
+                copyDirs.setTodir(new File(((LocalFolder) this.wmProject.getClassOutputFolder()).getLocalFile(), file.getName()));
 
                 FileSet dirsFileSet = new FileSet();
                 dirsFileSet.setDir(file);

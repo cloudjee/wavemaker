@@ -57,7 +57,7 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
                 // implement
                 // logic for none-local file case.
                 if (f instanceof LocalFile) {
-                    java.io.File ff = ((LocalFile) f).getOriginalResource();
+                    java.io.File ff = ((LocalFile) f).getLocalFile();
                     return WSDLManager.processWSDL(ff.toURL().toString(), serviceId, null, null);
                 } else {
                     return WSDLManager.processWSDL(ResourceURL.get(f).toString(), serviceId, null, null);

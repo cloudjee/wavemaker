@@ -16,7 +16,6 @@ package com.wavemaker.tools.io;
 
 import org.springframework.util.Assert;
 
-
 /**
  * A {@link ResourcePath} that is jailed to a specific location.
  * 
