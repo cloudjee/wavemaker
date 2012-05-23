@@ -1844,3 +1844,22 @@ color: rgb(0,270,0);
 .Studio .ToggleWordWrap img {
     background-color: #aaa !important;
 }
+
+.Studio .AceEditorZoomWarning {
+    color: #990000 !important;
+    font-weight: bold !important;
+}
+.Studio .StudioWarningIcon {
+    display: inline-block;
+    background-image: url(lib/images/boolean/Signage/Caution.png) !important;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+.Studio .AppToolTip .StudioWarningIcon {
+    float: left;
+    padding-right: 20px;
+    height: 32px;
+    margin-top: 16px;
+}

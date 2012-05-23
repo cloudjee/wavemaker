@@ -496,6 +496,7 @@ height: "29px", width: "420px",
 						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+						    editAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
 						    editAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]	    
 						}],
 						editAreaPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
@@ -533,6 +534,7 @@ height: "29px", width: "420px",
 						    cssPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
 						    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
+						    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
 						    cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]	    
 						}],
 						cssPageLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "Page CSS", height: "18px", width: "100%", border: 0}, {}, {
@@ -556,6 +558,7 @@ height: "29px", width: "420px",
 							    markupPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showMarkupEditorHelp"}],
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}],
+							markupEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
 							markupEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]
 							}],
 						    markupEditPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}, {
@@ -578,6 +581,7 @@ height: "29px", width: "420px",
 						    appsrcPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showAppScriptEditorHelp"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							/*appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+							appsourceEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
 							appsourceEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%", caption: "webapproot/app.js"}]
 
 						}],

@@ -162,6 +162,7 @@ this._inResize = true;
 		    var actualBorder = Number(window.getComputedStyle(this.domNode).getPropertyValue("border-right-width").replace(/px/,""));
 		    var oldZoomLevel = app._currentZoomLevel;
 		    app._currentZoomLevel = 1/actualBorder;
+		    if (app._currentZoomLevel == 1) app._currentZoomLevel = 0; // causes zoom level to be ignored if we have 1-1 relationship between real px and requested px
 		    if (oldZoomLevel && oldZoomLevel != app._currentZoomLevel) {
 			this.forceRerenderComponents(this);
 			var self = this;
@@ -182,6 +183,7 @@ this._inResize = true;
 		    }
 
 		    this.domNode.style.borderRight = "solid 0px transparent";
+		    dojo.publish("BrowserZoomed");
 		} catch(e) {}
 	    }
 	    this.inherited(arguments);
