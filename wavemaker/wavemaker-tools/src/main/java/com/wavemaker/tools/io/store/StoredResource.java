@@ -11,6 +11,14 @@ import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
+/**
+ * Base for {@link StoredFile} and {@link StoredFolder}.
+ * 
+ * @see StoredFile
+ * @see StoredFolder
+ * 
+ * @author Phillip Webb
+ */
 public abstract class StoredResource implements Resource {
 
     protected abstract ResourceStore getStore();
@@ -19,13 +27,13 @@ public abstract class StoredResource implements Resource {
         return getStore().getPath();
     }
 
-    protected void ensureExists() {
+    protected final void ensureExists() {
         if (!exists()) {
             throw new ResourceDoesNotExistException(this);
         }
     }
 
-    protected void createParentIfMissing() {
+    protected final void createParentIfMissing() {
         if (getParent() != null) {
             getParent(true).createIfMissing();
         }
@@ -42,7 +50,7 @@ public abstract class StoredResource implements Resource {
         if (parentPath == null) {
             return null;
         }
-        return getStore().getParent(parentPath);
+        return getStore().getFolder(parentPath);
     }
 
     @Override

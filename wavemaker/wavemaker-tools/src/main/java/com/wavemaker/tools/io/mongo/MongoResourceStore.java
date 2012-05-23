@@ -40,6 +40,7 @@ abstract class MongoResourceStore implements ResourceStore {
         Assert.notNull(path, "Path must not be null");
         this.fs = fs;
         this.path = path;
+        // FIXME assert type
     }
 
     protected final GridFS getFs() {
@@ -78,9 +79,25 @@ abstract class MongoResourceStore implements ResourceStore {
     }
 
     @Override
-    public Folder getParent(JailedResourcePath path) {
+    public Resource getExisting(JailedResourcePath path) {
+        GridFSDBFile file = getGridFSDBFile(path, false);
+        if (file == null) {
+            return null;
+        }
+        Type type = Type.valueOf((String) file.get(RESOURCE_TYPE));
+        return type == Type.FILE ? getFile(path) : getFolder(path);
+    }
+
+    @Override
+    public Folder getFolder(JailedResourcePath path) {
         MongoFolderStore store = new MongoFolderStore(getFs(), path);
         return new MongoFolder(store);
+    }
+
+    @Override
+    public File getFile(JailedResourcePath path) {
+        MongoFileStore store = new MongoFileStore(getFs(), path);
+        return new MongoFile(store);
     }
 
     @Override
@@ -159,28 +176,6 @@ abstract class MongoResourceStore implements ResourceStore {
         @Override
         public void create() {
             create(Type.FOLDER, true);
-        }
-
-        @Override
-        public Resource getExisting(JailedResourcePath path) {
-            GridFSDBFile file = getGridFSDBFile(path, false);
-            if (file == null) {
-                return null;
-            }
-            Type type = Type.valueOf((String) file.get(RESOURCE_TYPE));
-            return type == Type.FILE ? getFile(path) : getFolder(path);
-        }
-
-        @Override
-        public Folder getFolder(JailedResourcePath path) {
-            MongoFolderStore store = new MongoFolderStore(getFs(), path);
-            return new MongoFolder(store);
-        }
-
-        @Override
-        public File getFile(JailedResourcePath path) {
-            MongoFileStore store = new MongoFileStore(getFs(), path);
-            return new MongoFile(store);
         }
 
         @Override

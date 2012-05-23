@@ -30,6 +30,16 @@ import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
+/**
+ * A {@link Folder} that is backed by a {@link FolderStore}. Allows developers to use the simpler {@link FolderStore}
+ * interface to provide a full {@link Folder} implementation. Subclasses must provide a suitable {@link FolderStore}
+ * implementation via the {@link #getStore()} method.
+ * 
+ * @see FolderStore
+ * @see StoredFile
+ * 
+ * @author Phillip Webb
+ */
 public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override

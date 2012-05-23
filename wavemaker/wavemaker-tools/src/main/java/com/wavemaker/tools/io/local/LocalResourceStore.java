@@ -38,6 +38,7 @@ abstract class LocalResourceStore implements ResourceStore {
         this.root = root;
         this.path = path;
         this.file = getFileForPath(path);
+        // FIXME assert type
     }
 
     protected final java.io.File getRoot() {
@@ -58,9 +59,24 @@ abstract class LocalResourceStore implements ResourceStore {
     }
 
     @Override
-    public Folder getParent(JailedResourcePath path) {
+    public Resource getExisting(JailedResourcePath path) {
+        java.io.File file = getFileForPath(path);
+        if (!file.exists()) {
+            return null;
+        }
+        return file.isDirectory() ? getFolder(path) : getFile(path);
+    }
+
+    @Override
+    public Folder getFolder(JailedResourcePath path) {
         LocalFolderStore store = new LocalFolderStore(getRoot(), path);
         return new LocalFolder(store);
+    }
+
+    @Override
+    public File getFile(JailedResourcePath path) {
+        LocalFileStore store = new LocalFileStore(getRoot(), path);
+        return new LocalFile(store);
     }
 
     @Override
@@ -160,27 +176,6 @@ abstract class LocalResourceStore implements ResourceStore {
             if (!getFile().mkdir()) {
                 throw new ResourceException("Unable to create folder " + getFile());
             }
-        }
-
-        @Override
-        public Resource getExisting(JailedResourcePath path) {
-            java.io.File file = getFileForPath(path);
-            if (!file.exists()) {
-                return null;
-            }
-            return file.isDirectory() ? getFolder(path) : getFile(path);
-        }
-
-        @Override
-        public Folder getFolder(JailedResourcePath path) {
-            LocalFolderStore store = new LocalFolderStore(getRoot(), path);
-            return new LocalFolder(store);
-        }
-
-        @Override
-        public File getFile(JailedResourcePath path) {
-            LocalFileStore store = new LocalFileStore(getRoot(), path);
-            return new LocalFile(store);
         }
 
         @Override

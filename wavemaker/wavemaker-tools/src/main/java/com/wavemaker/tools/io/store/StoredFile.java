@@ -13,6 +13,16 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
+/**
+ * A {@link File} that is backed by a {@link FileStore}. Allows developers to use the simpler {@link FileStore}
+ * interface to provide a full {@link File} implementation. Subclasses must provide a suitable {@link FileStore}
+ * implementation via the {@link #getStore()} method.
+ * 
+ * @see FileStore
+ * @see StoredFolder
+ * 
+ * @author Phillip Webb
+ */
 public abstract class StoredFile extends StoredResource implements File {
 
     private final StoredFileContent content = new StoredFileContent();

@@ -36,8 +36,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourcePath;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.mongo.MongoFileSystem;
+import com.wavemaker.tools.io.mongo.MongoFolder;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by {@link GridFS}.
@@ -65,8 +64,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     public GridFSStudioFileSystem(MongoDbFactory mongoFactory) {
         DB db = mongoFactory.getDb();
-        MongoFileSystem fileSystem = new MongoFileSystem(db, GridFS.DEFAULT_BUCKET);
-        this.rootFolder = FileSystemFolder.getRoot(fileSystem);
+        this.rootFolder = new MongoFolder(db, GridFS.DEFAULT_BUCKET);
         this.delegate = new LocalStudioFileSystem();
         setupBasicStructure();
     }
