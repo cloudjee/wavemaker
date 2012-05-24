@@ -124,6 +124,10 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 	parseResults: function(obj){
 		return obj;
 	},
+    addRequestHeader: function(headerName, headerValue) {
+	if (!this.requestHeaders) requestHeaders = {};
+	this.requestHeaders[headerName] = headerValue;
+    },
 	setRequestHeaders: function(reqHeaders) {
 		this.requestHeaders = reqHeaders;
 	}
@@ -248,10 +252,10 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	    this._service._designTime = this._isDesignLoaded;
 		if (wm.connectionTimeout > 0 && !this._isDesignLoaded) {
 			if (inLoop) {
-				this._service.setRequestHeaders({"wm-polling-request" : requestId});
+			    this._service.addRequestHeader("wm-polling-request", requestId);
 			} else {
-				requestId = dojox.uuid.generateRandomUuid();
-				this._service.setRequestHeaders({"wm-initial-request" : requestId});
+			    requestId = dojox.uuid.generateRandomUuid();
+			    this._service.addRequestHeader("wm-initial-request", requestId);
 			}
 
 			d = this._service.callRemote(inMethod, inArgs || []);
