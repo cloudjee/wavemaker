@@ -1,13 +1,14 @@
 
 package com.wavemaker.tools.io.mongo;
 
+import com.mongodb.gridfs.GridFS;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.mongo.MongoResourceStore.MongoFileStore;
 import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.StoredFile;
 
 /**
- * A {@link File} implementation backed by standard {@link File java.io.File}s.
+ * A {@link File} implementation backed by a mongo {@link GridFS}.
  * 
  * @see MongoFolder
  * 

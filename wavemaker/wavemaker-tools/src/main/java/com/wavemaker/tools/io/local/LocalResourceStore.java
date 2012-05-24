@@ -23,6 +23,11 @@ import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
 
+/**
+ * {@link ResourceStore}s for {@link LocalFile} and {@link LocalFolder}.
+ * 
+ * @author Phillip Webb
+ */
 abstract class LocalResourceStore implements ResourceStore {
 
     private final java.io.File root;
