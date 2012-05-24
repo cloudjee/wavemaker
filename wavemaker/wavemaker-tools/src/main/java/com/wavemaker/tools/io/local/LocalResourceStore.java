@@ -179,7 +179,7 @@ abstract class LocalResourceStore implements ResourceStore {
 
         @Override
         public void create() {
-            if (!getFile().mkdir()) {
+            if (!getFile().mkdirs()) {
                 throw new ResourceException("Unable to create folder " + getFile());
             }
         }
