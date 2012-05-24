@@ -24,6 +24,7 @@ public class SpinUpService extends JavaServiceSuperClass {
        private LoginCredentialsBean loginCredentials;
        private HttpServletRequest request;
        private HttpServletResponse response;
+       private static int counter;
   
     public SpinUpService() {
        super(INFO);
@@ -32,12 +33,16 @@ public class SpinUpService extends JavaServiceSuperClass {
     public Hashtable<String, String> login(String username, String password) {
        Hashtable<String,String> result  = null;
        try {
-          log(INFO, "Processing username = " + username );
+          if(!username.contains("@vmware.com")){
+              log(ERROR, "User: " + username + " NOT allowed");
+              return null;
+          }
+          log(INFO, "Loging in user: = " + username );
           loginCredentials = new LoginCredentialsBean(username, password);
-          request = RuntimeAccess.getInstance ().getRequest();
-          response = RuntimeAccess.getInstance ().getResponse();
+          request = RuntimeAccess.getInstance().getRequest();
+          response = RuntimeAccess.getInstance().getResponse();
           result = spinupController.processLogin(loginCredentials, request, response);
-          log(INFO, "Returning " + result);
+          log(INFO, "Counter now: " + counter++);
        } catch(Exception e) {
           log(ERROR, "Login has failed", e);
           log(ERROR, e.getMessage());

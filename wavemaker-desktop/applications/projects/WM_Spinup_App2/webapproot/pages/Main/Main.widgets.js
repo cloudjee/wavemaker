@@ -11,7 +11,7 @@ Main.widgets = {
 	finishProgressBarTimer: ["wm.Timer", {"delay":50}, {"onTimerFire":"finishProgressBarTimerTimerFire"}],
 	tipsVar: ["wm.Variable", {"isList":true,"json":"[\n\t{\n\t\t\"name\": \"resources/images/Tutorial.png\", \n\t\t\"dataValue\": \"There is a lot of functionality in WaveMaker.  To get started, work through a few  <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/Tutorials' target='_blank'>Tutorials</a>\"\n\t}, \n\t{\n\t\t\"name\": \"resources/images/Variable.png\", \n\t\t\"dataValue\": \"When you see a component called a Variable, think of it as a data store or data model (in the MVC sense of model)\"\n\t}, \n\t{\n\t\t\"name\": \"resources/images/MobileGrid.png\", \n\t\t\"dataValue\": \"the DojoGrid widget can now be used on mobile browsers\"\n\t}, \n\t{\n\t\t\"name\": \"resources/images/Forums.png\", \n\t\t\"dataValue\": \"If you ever need extra help, check the <a href='http://dev.wavemaker.com/forums/' target='_blank'>forums</a> for advice or to hire extra help\"\n\t}, \n\t{\n\t\t\"name\": \"resources/images/ButtonProps.png\", \n\t\t\"dataValue\": \"To learn about basic widgets, drag a button onto your canvas, and try changing its properties, styles and events\"\n\t}\n]","type":"EntryData"}, {}],
 	tipsTimer: ["wm.Timer", {"autoStart":true,"delay":12000}, {"onTimerFire":"tipsTimerTimerFire"}],
-	layoutBox1: ["wm.Layout", {"horizontalAlign":"center","styles":{"color":"#ffffff"},"verticalAlign":"top"}, {}, {
+	layoutBox1: ["wm.Layout", {"horizontalAlign":"center","styles":{"color":"#ffffff"},"verticalAlign":"top"}, {"onEnterKeyPress":"LogInButtonClick"}, {
 		ParentPanel: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","styles":{"fontSize":"14px","color":"#3f3f3f","backgroundColor":"#f8f9f9","fontFamily":"Arial, Tahoma, Verdana, Helvetica, sans serif"},"verticalAlign":"top","width":"960px"}, {}, {
 			BannerPanel: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 				panel1: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#6b83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"top","width":"100%"}, {}, {
@@ -38,7 +38,7 @@ Main.widgets = {
 							}],
 							spacer3: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
 							panel7: ["wm.Panel", {"fitToContentHeight":true,"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-								LogInButton: ["wm.Button", {"border":"0","caption":"Log In","desktopHeight":"48px","height":"48px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#56a8d7","endColor":"#007cc2","colorStop":51},"fontSize":"20px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial"},"width":"150px"}, {"onclick":"LoginServiceVariable","onclick1":"LogInButtonClick1"}],
+								LogInButton: ["wm.Button", {"border":"0","caption":"Log In","desktopHeight":"48px","height":"48px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#56a8d7","endColor":"#007cc2","colorStop":51},"fontSize":"20px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial"},"width":"150px"}, {"onclick":"LogInButtonClick"}],
 								spacer7: ["wm.Spacer", {"height":"10px","width":"10px"}, {}],
 								label4: ["wm.Label", {"border":"0","caption":"Don't have a Cloud Foundry accout?  <a href=\"http://cloudfoundry.com/signup\" target=\"blank\">Sign up</a>","height":"100%","padding":"4","width":"100%"}, {}]
 							}]
@@ -111,7 +111,7 @@ Main.widgets = {
 				}]
 			}],
 			panel3: ["wm.Panel", {"height":"24px","horizontalAlign":"center","styles":{"backgroundGradient":{"direction":"vertical","startColor":"#6d83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"middle","width":"100%"}, {}, {
-				label1: ["wm.Label", {"align":"center","border":"0","caption":"WaveMaker  |  Copyright © 2011-2012 SpringSource, a division of VMware, Inc. All rights reserved.","padding":"4","styles":{"color":"#ffffff","fontSize":"8px"},"width":"100%"}, {}]
+				label1: ["wm.Label", {"align":"center","border":"0","caption":"WaveMaker  |  Copyright © 2011-2012 SpringSource, a division of VMware, Inc. All rights reserved.","padding":"4","styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
 			}]
 		}]
 	}]

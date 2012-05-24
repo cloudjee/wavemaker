@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
-import org.springframework.web.context.support.ServletContextResource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.cloudfoundry.spinup.ApplicationArchiveFactory;

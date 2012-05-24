@@ -27,13 +27,6 @@ dojo.declare("Main", wm.Page, {
       var progress = 100 * elapsed / max;
       this.progressBar1.setProgress(progress);
     },
-  LogInButtonClick1: function(inSender) {
-      this.progressBar1.setProgress(0);
-      this.waitingLayer.activate();
-      this.progressBarTimer.startTimer();
-      this._startTimerTime = new Date().getTime();
-      this._endTimerTime = this._startTimerTime + 1000 * 120;
-    },
   finishProgressBarTimerTimerFire: function(inSender) {
       this.progressBar1.setProgress(this.progressBar1.getProgress() + 4);
       if (this.progressBar1.getProgress() >= 100) {
@@ -68,6 +61,14 @@ dojo.declare("Main", wm.Page, {
 
 						  })}).play();
       
+    },
+  LogInButtonClick: function(inSender) {
+      this.LoginServiceVariable.update();
+      this.progressBar1.setProgress(0);
+      this.waitingLayer.activate();
+      this.progressBarTimer.startTimer();
+      this._startTimerTime = new Date().getTime();
+      this._endTimerTime = this._startTimerTime + 1000 * 120;
     },
   _end: 0
 });
