@@ -29,9 +29,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -54,7 +52,7 @@ public class WebServiceFactoryTest extends WMTestCase {
 
         com.wavemaker.tools.io.File wsdlFile = null;
         try {
-            wsdlFile = FileSystemUtils.convertToFileSystemFile(wsdl.getFile());
+            wsdlFile = new LocalFolder(wsdl.getFile().getParent()).getFile(wsdl.getFile().getName());
         } catch (IOException ex) {
             fail("Exception occurred while converting resource." + ex.getMessage());
         }
@@ -70,7 +68,7 @@ public class WebServiceFactoryTest extends WMTestCase {
         } catch (IOException ex) {
             fail("Exception occurred during getServiceDefiniton." + ex.getMessage());
         }
-        Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDir);
+        Folder folder = new LocalFolder(tempDir);
 
         GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, folder);
         ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
@@ -83,7 +81,8 @@ public class WebServiceFactoryTest extends WMTestCase {
         Resource wsdl = new ClassPathResource(YAHOO_STOCKQUOTE_WSDL);
         com.wavemaker.tools.io.File wsdlFile = null;
         try {
-            wsdlFile = FileSystemUtils.convertToFileSystemFile(wsdl.getFile());
+            wsdlFile = new LocalFolder(wsdl.getFile().getParent()).getFile(wsdl.getFile().getName());
+            ;
         } catch (IOException ex) {
             fail("Exception occurred while converting resource." + ex.getMessage());
         }

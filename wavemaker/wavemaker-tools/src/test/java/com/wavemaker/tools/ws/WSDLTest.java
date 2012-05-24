@@ -28,7 +28,7 @@ import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
 
@@ -56,8 +56,17 @@ public class WSDLTest extends WMTestCase {
                 bindingFiles.add(bindingFile);
             }
         }
-        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, FileSystemUtils.convertToFileSystemFileList(bindingFiles));
+
+        JAXBTypeMapper mapper = new JAXBTypeMapper(wsdl, convertToFileSystemFileList(bindingFiles));
         return mapper;
+    }
+
+    private static List<com.wavemaker.tools.io.File> convertToFileSystemFileList(List<File> files) {
+        List<com.wavemaker.tools.io.File> rtn = new ArrayList<com.wavemaker.tools.io.File>();
+        for (File file : files) {
+            rtn.add(new LocalFolder(file.getParent()).getFile(file.getName()));
+        }
+        return rtn;
     }
 
     public static WSDL getWSDL(String wsdlResource, List<String> bindingResources) throws Exception {

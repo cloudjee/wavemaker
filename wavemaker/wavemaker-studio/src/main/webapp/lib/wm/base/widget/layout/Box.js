@@ -116,14 +116,17 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                 var free = flowEx.free;
 	        for (var i=0, c; c=inContainer.c$[i]; i++) {
 		    if (this.inFlow(c)) {                
-                        var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
-			if (c._percEx[inFlowAxis]) lastPercentSizedWidget = c;
-			roundedSizeOffset -= Math.floor(c._percEx[inFlowAxis] ? size : c.bounds[inFlowAxis]);
-			var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
-			var min = c[minName];
-                        if (size < min) 
-                            size = min;
-                        free -= size;
+			if (c._percEx[inFlowAxis]) {
+                            //var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
+			    var size = flowEx.ratio * c._percEx[inFlowAxis];
+			    lastPercentSizedWidget = c;
+			    roundedSizeOffset -= Math.floor(size);
+			    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
+			    var min = c[minName];
+                            if (size < min) 
+				size = min;
+                            free -= size;
+			}
                     }
                 }
 		switch (inFlowAlign) {

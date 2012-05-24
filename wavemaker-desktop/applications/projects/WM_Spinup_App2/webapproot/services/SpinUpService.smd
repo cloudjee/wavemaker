@@ -1,0 +1,24 @@
+{
+	"methods": [{
+		"name": "login",
+		"operationType": null,
+		"parameters": [{
+			"name": "username",
+			"type": "java.lang.String"
+		}, {
+			"name": "password",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.util.Hashtable<java.lang.String,java.lang.String>"
+	}, {
+		"name": "setSpinupController",
+		"operationType": null,
+		"parameters": [{
+			"name": "spinupController",
+			"type": "com.wavemaker.spinup.web.SpinupController"
+		}],
+		"returnType": null
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "SpinUpService.json"
+}

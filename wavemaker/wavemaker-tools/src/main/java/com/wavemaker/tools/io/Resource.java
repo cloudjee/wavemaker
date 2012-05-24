@@ -16,7 +16,6 @@ package com.wavemaker.tools.io;
 
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 /**
  * Base abstract for {@link File}s and {@link Folder}s that may be stored on a physical disk or using some other
@@ -46,15 +45,6 @@ public interface Resource {
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
     String getName();
-
-    /**
-     * Returns the last name of the resource's full pathname. This is just the last name in the pathname's name
-     * sequence.
-     * 
-     * @return the name of the resource, for example <tt>"file.txt"</tt>
-     * @throws ResourceDoesNotExistException if this resource no longer exists
-     */
-    String getLastName();
 
     /**
      * Delete the current resource (and any children). If this resource does not exist then no operation is performed.
@@ -133,33 +123,5 @@ public interface Resource {
      */
     @Override
     public boolean equals(Object obj);
-
-    /**
-     * Returns an enum value that indicates the origin of the resource (eg. os file system or mongo db)
-     * 
-     * @return the origin of the resource
-     */
-    ResourceOrigin getResourceOrigin();
-
-    /**
-     * Returns the original resource object that can be casted to the appropriate rsource origin
-     * 
-     * @return the original resource object
-     */
-    Object getOriginalResource();
-
-    /**
-     * Returns the cannonical pathname string for the original resource
-     * 
-     * @return the cannonical pathname
-     */
-    String getCanonicalPath();
-
-    /**
-     * Returns the absolute pathname string for the original resource
-     * 
-     * @return the absolute pathname
-     */
-    String getAbsolutePath();
 
 }

@@ -1065,7 +1065,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		var storeData = {'items':[]};
 		var dataList = this.variable.getData() || [];
-
+	    if (!dojo.isArray(dataList) && !wm.isEmpty(dataList)) {
+		dataList = [dataList];
+	    }
 	    // If the user has provided a customSort method, use it
 	    // if its designtime, customSort will be the name of the method rather
 	    // than the actual method, so don't try running it 

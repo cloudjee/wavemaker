@@ -26,8 +26,6 @@ import com.wavemaker.runtime.RuntimeAccess;
 
 public class ServiceResponse {
 
-    private static final int DEFAULT_CONNECTION_TIMEOUT = 30;
-
     private static final String INITIAL_REQUEST = "wm-initial-request";
 
     private static final String POLLING_REQUEST = "wm-polling-request";

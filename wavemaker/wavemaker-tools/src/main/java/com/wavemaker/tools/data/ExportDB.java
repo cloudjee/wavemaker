@@ -14,7 +14,10 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,12 +44,11 @@ import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
-import com.wavemaker.tools.util.ResourceClassLoaderUtils;
-import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceOperation;
+import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
 /**
  * @author Simon Toens
@@ -110,9 +112,11 @@ public class ExportDB extends BaseDataModelSetup {
 
         final Configuration cfg = new Configuration();
 
-        //cfg.addDirectory(this.hbmFilesDir);
+        // cfg.addDirectory(this.hbmFilesDir);
 
         this.hbmFilesDir.performOperationRecursively(new ResourceOperation<com.wavemaker.tools.io.File>() {
+
+            @Override
             public void perform(com.wavemaker.tools.io.File file) {
                 if (file.getName().endsWith(".hbm.xml")) {
                     cfg.addInputStream(file.getContent().asInputStream());
@@ -321,12 +325,12 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     private void checkHbmFilesDir(Collection<String> requiredProperties) {
-        //cftempfix - For now, we assume that no properties are supposed to be set to represent directories.
-        if (this.hbmFilesDir.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+        // cftempfix - For now, we assume that no properties are supposed to be set to represent directories.
+        if (this.hbmFilesDir instanceof LocalFolder) {
             if (this.hbmFilesDir == null) {
                 String s = this.properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
                 if (s != null) {
-                    setHbmFilesDir(FileSystemUtils.convertToFileSystemFolder(new File(s)));
+                    setHbmFilesDir(new LocalFolder(new File(s)));
                 }
             }
 
@@ -342,9 +346,9 @@ public class ExportDB extends BaseDataModelSetup {
 
     private Tuple.Two<String, String> getMappedSchemaAndCatalog() {
         for (Resource s : this.hbmFilesDir.list()) {
-            //File f = new File(this.hbmFilesDir, s);
+            // File f = new File(this.hbmFilesDir, s);
             if (s instanceof com.wavemaker.tools.io.File) {
-                com.wavemaker.tools.io.File f = (com.wavemaker.tools.io.File)s;
+                com.wavemaker.tools.io.File f = (com.wavemaker.tools.io.File) s;
                 HbmParser p = null;
                 try {
                     Reader reader = new InputStreamReader(f.getContent().asInputStream());

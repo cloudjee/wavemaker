@@ -195,7 +195,7 @@ wm.Component.extend({
 	    /* If its a widget that is owned by something, don't write it; widgets are written as part of writing widgets NOT writing this.components.
 	     * Exceptions to this are Dialogs and PopupMenus which are outside the widget heirarchy 
 	     */
-	    else if (c instanceof wm.Control == true && c instanceof wm.Dialog == false  && c instanceof wm.PopupMenu == false) {
+	    else if (c instanceof wm.Control == true && c instanceof wm.Dialog == false  && c instanceof wm.PopupMenu == false || wm.isInstanceType(c, wm.Service)) {
 		return false;
 	    }
 

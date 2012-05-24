@@ -49,7 +49,7 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 
@@ -243,8 +243,8 @@ public abstract class BaseDataModelSetup {
 
     public void setDestDir(Folder destdir) {
         this.destdir = destdir;
-        if (this.destdir.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-            File f = (File) this.destdir.getOriginalResource();
+        if (destdir instanceof LocalFolder) {
+            File f = ((LocalFolder) this.destdir).getLocalFile();
             getParentTask().setDestDir(f);
         } else {
             this.exporterFactory.setDestDir(destdir);

@@ -81,6 +81,7 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {    
+    transparent: false,
     selectFirstRow: false,
     renderVisibleRowsOnly: true,
     autoSizeHeight: false,
@@ -200,6 +201,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 	
     },
 	init: function() {
+	    if (this.transparent) {
+		this.classNames = "wmtransparentlist";
+	    }
 	    this.setSelectionMode(this.selectionMode);
 	    if (this.noHeader) { // another grid property
 		this.headerVisible = false;
@@ -491,7 +495,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.inherited(arguments);
 	},
 	getDataItemCount: function() {
-		return this._data.length;
+	    return this._data ? this._data.length : 0;
 	},
 	//
 	canSetDataSet: function(inDataSet) {

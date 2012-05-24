@@ -56,6 +56,8 @@ dojo.declare("Studio", wm.Page, {
 	// initialization
 	//=========================================================================
     start: function(inBackState, inLocationState) {   
+	this.subscribe("BrowserZoomed", this, "browserZoomed");
+	this.browserZoomed();
 	    wm.applyFrameworkFixes();
 	this.progressDialog.titleButtonPanel.setShowing(true);
 	//this.progressDialog.titleClose.setShowing(true);
@@ -146,8 +148,9 @@ dojo.declare("Studio", wm.Page, {
 		// FIXME: can't we do status updates via dojo.publish?
 	    //setInterval(dojo.hitch(this, "updateStatus"), 2000);
 		//this.preloadImages();
-		if (this.isCloud()) {
-		    this.requestUserName();
+    		if (this.isCloud()) {
+		    this.preferencesItem.domNode.style.display = "none";
+		    this.partnerServicesItem.domNode.style.display = "none";
 		}
 	var reopenProject = this.getUserSetting("reopenProject");
 	if (reopenProject) {
@@ -2032,6 +2035,13 @@ dojo.declare("Studio", wm.Page, {
     },
     showDeviceBarHelp: function() {
 	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/WM65RelNotes#HNewmobilesupport");
+    },
+    browserZoomed: function() {
+	var isZoomed = Boolean(app._currentZoomLevel);
+	this.editAreaZoomWarningLabel.setShowing(isZoomed);
+	this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
+	this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
+	this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
     }
 });
 

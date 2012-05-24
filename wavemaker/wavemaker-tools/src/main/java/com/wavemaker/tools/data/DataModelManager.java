@@ -49,7 +49,7 @@ import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
@@ -60,8 +60,6 @@ import com.wavemaker.tools.service.definitions.Service;
 
 /**
  * @author Simon Toens
- * 
- * 
  */
 public class DataModelManager {
 
@@ -254,7 +252,7 @@ public class DataModelManager {
                 packageName = StringUtils.fromLastOccurrence(packageName, DataServiceConstants.DATA_PACKAGE_NAME, -1);
             }
 
-            tmpServiceRootFolder = FileSystemUtils.convertToFileSystemFolder(tmpServiceRoot);
+            tmpServiceRootFolder = new LocalFolder(tmpServiceRoot);
 
             importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
                 driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRootFolder,
@@ -887,10 +885,6 @@ public class DataModelManager {
 
         return importer;
 
-    }
-
-    public String getWebAppRoot() {
-        return ((File) this.projectManager.getCurrentProject().getWebAppRootFolder().getOriginalResource()).getPath();
     }
 
     private String extractHsqlDBFileName(String connectionUrl) {

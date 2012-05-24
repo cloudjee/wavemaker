@@ -41,7 +41,6 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.util.NoCloseInputStream;
 
@@ -144,16 +143,6 @@ public class ProjectManager {
         }
         Project project = new Project(projectDir, this.fileSystem);
 
-        openProject(project, noSession);
-    }
-
-    // FIXME broken until Project can be fixed
-    public void openProject(Folder projectFolder, boolean noSession) throws IOException {
-        String projectName = projectFolder.getName();
-        if (!projectFolder.exists()) {
-            throw new WMRuntimeException(MessageResource.PROJECT_DNE, projectName, projectFolder);
-        }
-        Project project = new Project(projectFolder);
         openProject(project, noSession);
     }
 

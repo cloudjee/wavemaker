@@ -14,6 +14,7 @@
 
 package com.wavemaker.studio.data;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.studio.CloudFoundryService;
 import com.wavemaker.tools.data.ColumnInfo;
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.data.DataServiceLoggers;
@@ -45,8 +47,8 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.data.QueryInfo;
 import com.wavemaker.tools.data.RelatedInfo;
 import com.wavemaker.tools.data.TestDBConnection;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.studio.CloudFoundryService;
 
 /**
  * @author Simon Toens
@@ -56,14 +58,12 @@ import com.wavemaker.studio.CloudFoundryService;
 public class DataService {
 
     private DataModelManager dataModelMgr = null;
-    private CloudFoundryService cloudFoundryService = null;
 
     public void setDataModelManager(DataModelManager dataModelMgr) {
         this.dataModelMgr = dataModelMgr;
     }
 
     public void setCloudFoundryService(CloudFoundryService cloudFoundryService) {
-        this.cloudFoundryService = cloudFoundryService;
     }
 
     public List<String> getDataModelNames() {
@@ -198,8 +198,8 @@ public class DataService {
             revengNamingStrategyClassName, overrideTable);
     }
 
-    public String cfExportDatabase(String dbName, String schemaFilter, String driverClassName,
-                                   String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
+    public String cfExportDatabase(String dbName, String schemaFilter, String driverClassName, String dialectClassName,
+        String revengNamingStrategyClassName, boolean overrideTable) {
 
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
@@ -293,11 +293,15 @@ public class DataService {
     }
 
     private String rewriteConnectionUrlIfNecessary(String connectionUrl) {
-        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRootFolder().getCanonicalPath();
-            return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
+        try {
+            if (connectionUrl.contains(DataModelManager.HSQLDB)) {
+                ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+                    DataServiceConstants.CURRENT_PROJECT_MANAGER);
+                String projRoot = ((LocalFolder) projMgr.getCurrentProject().getWebAppRootFolder()).getLocalFile().getCanonicalPath();
+                return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
         }
         return connectionUrl;
     }
