@@ -17,6 +17,7 @@ package com.wavemaker.tools.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,12 +85,14 @@ public class ServiceClassGenerator {
                 ServiceGenerator generator = ServiceUtils.getServiceGenerator(cfg);
 
                 Resource serviceRuntimeDirectory = this.serviceManager.getServiceRuntimeDirectory(serviceId);
-                long lastModified;
+                //cftempfix - Uncomment the following lines when Phil implements lastModified for Folder.
+                /*long lastModified;
                 try {
                     lastModified = serviceRuntimeDirectory.lastModified();
                 } catch (IOException ex) {
                     throw new WMRuntimeException(ex);
-                }
+                }*/
+                long lastModified = (new Date()).getTime();
                 if (generator.isUpToDate(lastModified)) {
                     if (this.logger.isInfoEnabled()) {
                         this.logger.info("service " + def.getServiceId() + " is up to date");

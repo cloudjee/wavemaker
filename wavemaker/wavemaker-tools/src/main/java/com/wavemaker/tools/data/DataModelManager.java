@@ -42,6 +42,7 @@ import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
@@ -57,6 +58,7 @@ import com.wavemaker.tools.service.ClassLoaderFactory;
 import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
+import com.wavemaker.tools.ant.ServiceCompilerTask;
 
 /**
  * @author Simon Toens
@@ -577,6 +579,10 @@ public class DataModelManager {
 
         // composite classes must be compiled
         compile();
+        if (WMAppContext.getInstance().getCloudEnvironment() != null) {
+            ServiceCompilerTask task = new ServiceCompilerTask();
+            task.processService(this.serviceManager, serviceId);
+        }
 
         DataModelConfiguration mgr = getDataModel(serviceId);
 

@@ -266,7 +266,7 @@ public class ExportDB extends BaseDataModelSetup {
     protected void customDispose() {
     }
 
-    private String prepareForExport(boolean run) {
+    private String prepareForExport(boolean runA) {
 
         if (!isMySQL() && !isPostgres()) {
             return null;
@@ -280,7 +280,7 @@ public class ExportDB extends BaseDataModelSetup {
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
         String schemaName = t.v1, catalogName = t.v2;
         String urlDBName = getDatabaseNameFromConnectionUrl();
-        String url = this.connectionUrl;
+        String urlA = this.connectionUrl;
 
         if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
             throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
