@@ -23,6 +23,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Provides a virtual files system for use with WaveMaker. Files are exposed using the Spring {@link Resource} interface
@@ -53,10 +54,11 @@ public interface StudioFileSystem {
 
     /**
      * Returns the Studio WebApplication root folder. This allows accessed to resources packaged inside the studio WAR.
+     * NOTE: WaveMaker is always an unpacked war so this method returns a {@link LocalFolder}.
      * 
      * @return the studio web application root folder
      */
-    Folder getStudioWebAppRootFolder();
+    LocalFolder getStudioWebAppRootFolder();
 
     /**
      * Returns the WaveMaker home directory.

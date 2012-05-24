@@ -31,9 +31,7 @@ import org.apache.tools.ant.types.resources.Resources;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.service.ConfigurationCompiler;
@@ -63,8 +61,8 @@ public class ConfigurationCompilerTask extends CompilerTask {
         super(true);
     }
 
-    public Folder getDestWebAppRoot() {
-        return FileSystemUtils.convertToFileSystemFolder(this.destWebAppRoot);
+    public LocalFolder getDestWebAppRoot() {
+        return new LocalFolder(this.destWebAppRoot);
     }
 
     public void setDestWebAppRoot(java.io.File destWebAppRoot) {
@@ -98,8 +96,8 @@ public class ConfigurationCompilerTask extends CompilerTask {
         }
 
         if (fileService == null) {
-            System.out.println("using " + destination.getCanonicalPath() + " as a default project directory; please set projectRoot");
-            fileService = new Project(destination);
+            System.out.println("using " + destination + " as a default project directory; please set projectRoot");
+            fileService = new Project(destination, "project");
         }
 
         boolean doXmlBuild = false;

@@ -105,17 +105,6 @@ public interface Folder extends Resource, Iterable<Resource> {
     Folder getFolder(String name) throws ResourceTypeMismatchException;
 
     /**
-     * Get a child folder of the current folder. This method supports the same naming rules as
-     * {@link #getExisting(String)}. This method differs from getFolder in that it ignores leading slash("/") in the
-     * name if any. {@link #getExisting(String)}.
-     * 
-     * @param name the name of the folder to get
-     * @return the {@link Folder}
-     * @throws ResourceTypeMismatchException if the an existing resource exits that is not a folder
-     */
-    Folder appendFolder(String name) throws ResourceTypeMismatchException;
-
-    /**
      * Get a child file of the current folder. This method supports the same naming rules as
      * {@link #getExisting(String)}.
      * 
@@ -124,17 +113,6 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @throws ResourceTypeMismatchException if the an existing resource exits that is not a file
      */
     File getFile(String name) throws ResourceTypeMismatchException;
-
-    /**
-     * Get a child file of the current folder. This method supports the same naming rules as
-     * {@link #getExisting(String)}. This method differs from getFolder in that it ignores leading slash("/") in the
-     * name if any.
-     * 
-     * @param name the name of the file to get
-     * @return the {@link File}
-     * @throws ResourceTypeMismatchException if the an existing resource exits that is not a file
-     */
-    File appendFile(String name) throws ResourceTypeMismatchException;
 
     /**
      * Get a child file or folder of the current folder. Depending on the <tt>resourceType</tt> {@link #getFile(String)}
@@ -153,7 +131,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * 
      * @return a list of all immediate child resources
      */
-    <T extends Resource> Resources<T> list();
+    Resources<Resource> list();
 
     /**
      * List immediate child resource of this folder, filtering results as necessary. If this resource does not exist

@@ -39,7 +39,7 @@ import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.jaxws.SOAPBindingResolver;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.jaxws.CFJAXWSBuilder;
@@ -71,7 +71,7 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
 
         Folder outputFolder = configuration.getOutputDirectory();
 
-        if (outputFolder.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
+        if (outputFolder instanceof LocalFolder) {
             this.jaxwsBuilder = new JAXWSBuilder(this.wsdl, outputFolder, outputFolder);
         } else {
             this.jaxwsBuilder = new CFJAXWSBuilder(this.wsdl, outputFolder, outputFolder);

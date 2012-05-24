@@ -1007,7 +1007,7 @@
      },
      */
      /* Called by propertyEdit's wm.SetWireTask */
-     parseExpressionForWire: function(inValue) {
+     parseExpressionForWire: function(inValue, skipValidation) {
 	 // A bind wire expression must be a string 
 	 if (typeof inValue == "number") {
 	     return String(inValue);
@@ -1022,11 +1022,15 @@
 	 }
 
 	 // Still here? Must be an expression; lets attempt to validate the expression
+	 if (!skipValidation) {
 	 try {
 	     var tmp = inValue;
 	     tmp = tmp.replace(/\$\{.*?\}/g, "''"); // remove the crazy stuff that we dont want to try evaluating right now (probably ok to evaluate it at design time, but its not needed to see if this will compile)
 	     // if its undefined, then presumably it failed to compile
-	     var tmp2 = eval(tmp);		
+	     var tmp2 = function() {
+		 return eval(tmp);
+	     }.call(this.inspected.owner || this.inspected);
+	     //var tmp2 = eval(tmp);		
 	     /* TODO: In 6.4 we openned the bind dialog so they could edit their bind expression in a larger area */
 	     if (tmp2 === undefined) {
 		 //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
@@ -1042,6 +1046,7 @@
 		app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
 		throw "Invalid Bind Expression";
 	    }
+	 }
 	 return inValue;
      },
      beginHelp: function(inPropName, inNode, inType, altText) {

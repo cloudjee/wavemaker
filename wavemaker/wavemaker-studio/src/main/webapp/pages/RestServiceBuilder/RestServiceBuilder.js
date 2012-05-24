@@ -160,7 +160,9 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	},
 	generateRESTWsdlSettingsSuccess: function(inResponse) {
 		studio.endWait();
-		this.serviceNameInput.setValue("displayValue", inResponse.serviceName);
+	    var serviceName = (inResponse.serviceName || "").replace(/^\d+/,""); // no leading numbers
+	    if (!serviceName) serviceName = "NewService";
+	    this.serviceNameInput.setValue("displayValue", serviceName);
 		this.serviceOpInput.setValue("displayValue", inResponse.operationName);
 		var d = inResponse.inputs;
 	    this.inputFieldListVar.setData(d);

@@ -1,18 +1,5 @@
-/*
- *  Copyright (C) 2012 VMware, Inc. All rights reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 
-package com.wavemaker.tools.io.filesystem;
+package com.wavemaker.tools.io.store;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -24,10 +11,12 @@ import java.util.zip.ZipInputStream;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 
+import com.wavemaker.tools.io.AbstractResources;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FilteredResources;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
@@ -39,76 +28,53 @@ import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
-import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
 /**
- * {@link Folder} implementation backed by a {@link FileSystem}.
+ * A {@link Folder} that is backed by a {@link FolderStore}. Allows developers to use the simpler {@link FolderStore}
+ * interface to provide a full {@link Folder} implementation. Subclasses must provide a suitable {@link FolderStore}
+ * implementation via the {@link #getStore()} method.
+ * 
+ * @see FolderStore
+ * @see StoredFile
  * 
  * @author Phillip Webb
  */
-public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder {
+public abstract class StoredFolder extends StoredResource implements Folder {
 
-    FileSystemFolder(JailedResourcePath path, FileSystem<K> fileSystem, K key) {
-        super(path, fileSystem, key);
-        ResourceType resourceType = getFileSystem().getResourceType(key);
-        ResourceTypeMismatchException.throwOnMismatch(path.getPath(), resourceType, ResourceType.FOLDER);
-    }
+    @Override
+    protected abstract FolderStore getStore();
 
     @Override
     public Resource getExisting(String name) throws ResourceDoesNotExistException {
         Assert.hasLength(name, "Name must not be empty");
         JailedResourcePath resourcePath = getPath().get(name);
-        K resourceKey = getFileSystem().getKey(resourcePath);
-        ResourceType resourceType = getFileSystem().getResourceType(resourceKey);
-        switch (resourceType) {
-            case FILE:
-                return new FileSystemFile<K>(resourcePath, getFileSystem(), resourceKey);
-            case FOLDER:
-                return new FileSystemFolder<K>(resourcePath, getFileSystem(), resourceKey);
+        Resource resource = getStore().getExisting(resourcePath);
+        if (resource == null) {
+            throw new ResourceDoesNotExistException(this, name);
         }
-        throw new ResourceDoesNotExistException(this, name);
+        return resource;
     }
 
     @Override
     public boolean hasExisting(String name) {
         Assert.hasLength(name, "Name must not be empty");
         JailedResourcePath resourcePath = getPath().get(name);
-        K resourceKey = getFileSystem().getKey(resourcePath);
-        return getFileSystem().getResourceType(resourceKey) != ResourceType.DOES_NOT_EXIST;
+        Resource existing = getStore().getExisting(resourcePath);
+        return existing != null;
     }
 
     @Override
-    public FileSystemFolder<K> getFolder(String name) {
+    public Folder getFolder(String name) {
         Assert.hasLength(name, "Name must not be empty");
         JailedResourcePath folderPath = getPath().get(name);
-        K folderKey = getFileSystem().getKey(folderPath);
-        return new FileSystemFolder<K>(folderPath, getFileSystem(), folderKey);
+        return getStore().getFolder(folderPath);
     }
 
     @Override
-    public FileSystemFolder<K> appendFolder(String name) {
-        Assert.hasLength(name, "Name must not be empty");
-        if (name.substring(0, 1).equals("/")) {
-            name = name.substring(1);
-        }
-        return getFolder(name);
-    }
-
-    @Override
-    public FileSystemFile<K> getFile(String name) {
+    public File getFile(String name) {
         Assert.hasLength(name, "Name must not be empty");
         JailedResourcePath filePath = getPath().get(name);
-        K fileKey = getFileSystem().getKey(filePath);
-        return new FileSystemFile<K>(filePath, getFileSystem(), fileKey);
-    }
-
-    @Override
-    public FileSystemFile<K> appendFile(String name) {
-        Assert.hasLength(name, "Name must not be empty");
-        if (name.substring(0, 1).equals("/")) {
-            name = name.substring(1);
-        }
-        return getFile(name);
+        return getStore().getFile(filePath);
     }
 
     @SuppressWarnings("unchecked")
@@ -141,11 +107,11 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         if (!exists()) {
             return ResourcesCollection.emptyResources();
         }
-        Iterable<String> list = getFileSystem().list(getKey());
+        Iterable<String> list = getStore().list();
         if (list == null) {
             return ResourcesCollection.emptyResources();
         }
-        Resources<Resource> resources = new FileSystemResources<K>(getPath(), getFileSystem(), list);
+        Resources<Resource> resources = new ChildResources(list);
         return FilteredResources.apply(resources, includeFilter);
     }
 
@@ -219,8 +185,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public Folder rename(String name) throws ResourceExistsException {
-        K newKey = doRename(name);
-        return new FileSystemFolder<K>(getFileSystem().getPath(newKey), getFileSystem(), newKey);
+        return (Folder) super.rename(name);
     }
 
     @Override
@@ -229,7 +194,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
             for (Resource child : list()) {
                 child.delete();
             }
-            getFileSystem().delete(getKey());
+            getStore().delete();
         }
     }
 
@@ -237,7 +202,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     public void createIfMissing() {
         if (!exists()) {
             createParentIfMissing();
-            getFileSystem().createFolder(getKey());
+            getStore().create();
         }
     }
 
@@ -274,10 +239,9 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
-    public FileSystemFolder<K> jail() {
+    public Folder jail() {
         JailedResourcePath jailedPath = new JailedResourcePath(getPath().getPath(), new ResourcePath());
-        K jailedKey = getFileSystem().getKey(jailedPath);
-        return new FileSystemFolder<K>(jailedPath, getFileSystem(), jailedKey);
+        return getStore().getFolder(jailedPath);
     }
 
     @Override
@@ -285,15 +249,42 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         return super.toString(format) + "/";
     }
 
-    /**
-     * Factory method that can be used to get the root {@link Folder} for a given {@link FileSystem}.
-     * 
-     * @param fileSystem the file system
-     * @return the root folder
-     */
-    public static <K> Folder getRoot(FileSystem<K> fileSystem) {
-        JailedResourcePath path = new JailedResourcePath();
-        K key = fileSystem.getKey(path);
-        return new FileSystemFolder<K>(path, fileSystem, key);
+    protected class ChildResources extends AbstractResources<Resource> {
+
+        private final Iterable<String> list;
+
+        public ChildResources(Iterable<String> list) {
+            Assert.notNull(list, "List must not be null");
+            this.list = list;
+        }
+
+        @Override
+        public Iterator<Resource> iterator() {
+            final Iterator<String> iterator = this.list.iterator();
+            return new Iterator<Resource>() {
+
+                @Override
+                public boolean hasNext() {
+                    return iterator.hasNext();
+                }
+
+                @Override
+                public Resource next() {
+                    String name = iterator.next();
+                    JailedResourcePath path = getPath().get(name);
+                    Resource resource = getStore().getExisting(path);
+                    if (resource == null) {
+                        throw new ResourceDoesNotExistException(StoredFolder.this, name);
+                    }
+                    return resource;
+                }
+
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
     }
+
 }

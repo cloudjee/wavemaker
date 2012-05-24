@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,8 +18,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Tests for {@link ResourceURL}.
@@ -39,9 +37,7 @@ public class ResourceURLTest {
 
     @Before
     public void setup() throws Exception {
-        File tempFolder = this.temporaryFolder.newFolder("fs");
-        LocalFileSystem fileSystem = new LocalFileSystem(tempFolder);
-        this.root = FileSystemFolder.getRoot(fileSystem);
+        this.root = new LocalFolder(this.temporaryFolder.newFolder("fs"));
         this.root.getFile("/jail/a/b/c.txt").getContent().write("c");
         this.root.getFile("/jail/x/y/z.txt").getContent().write("z");
     }

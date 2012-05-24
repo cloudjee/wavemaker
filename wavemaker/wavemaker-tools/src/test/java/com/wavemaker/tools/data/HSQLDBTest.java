@@ -37,9 +37,7 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 public class HSQLDBTest {
 
@@ -229,7 +227,7 @@ public class HSQLDBTest {
             importer.setConnectionUrl(url);
             importer.testConnection();
 
-            Folder folder = FileSystemUtils.convertToFileSystemFolder(outputDir);
+            Folder folder = new LocalFolder(outputDir);
             importer.setDestDir(folder);
             importer.setPackage("com.foo.blah");
             importer.setClassName("Service");

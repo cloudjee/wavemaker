@@ -38,7 +38,7 @@ Studio.extend({
 	saveScriptClick: function() {
 	    var errors = studio.editArea.hasJavascriptErrors();
 	    if (errors)
-		app.alert(errors);
+		app.warnOnce("ignoreJavascriptValidationErrors", errors);
 /*
 	    if (this.scriptPageCompileChkBtn.getChecked()) 
 		this.validateScriptClick();
@@ -49,7 +49,7 @@ Studio.extend({
         saveAppSrcClick: function() {
 	    var errors = studio.appsourceEditor.hasJavascriptErrors();
 	    if (errors)
-		app.alert(errors);
+		app.warnOnce("ignoreJavascriptValidationErrors", errors);
 
 /*
 	    if (this.appsrcPageCompileChkBtn.getChecked()) 

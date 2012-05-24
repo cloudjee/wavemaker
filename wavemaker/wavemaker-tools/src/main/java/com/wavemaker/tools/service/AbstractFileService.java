@@ -63,7 +63,10 @@ public abstract class AbstractFileService implements FileService {
 
     @Override
     public String readFile(String path) throws IOException {
-        return readFile(getFileServiceRoot().appendFile(path));
+        while (path != null && (path.startsWith("/") || path.startsWith("\\"))) {
+            path = path.substring(1);
+        }
+        return readFile(getFileServiceRoot().getFile(path));
     }
 
     @Override

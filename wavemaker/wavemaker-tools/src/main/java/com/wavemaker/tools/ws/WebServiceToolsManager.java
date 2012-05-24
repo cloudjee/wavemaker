@@ -14,10 +14,13 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +72,6 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
-import com.wavemaker.tools.io.ResourceURL;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.DownloadableFile;
 import com.wavemaker.tools.project.ProjectManager;
@@ -212,7 +214,7 @@ public class WebServiceToolsManager {
             }
         }
 
-            //wsdlUri = ResourceURL.get(wsdlFile).toURI().toString();
+        // wsdlUri = ResourceURL.get(wsdlFile).toURI().toString();
         wsdlUri = temlWsdlFile.toURI().toString();
 
         // do the import which would generate service Java files and resource

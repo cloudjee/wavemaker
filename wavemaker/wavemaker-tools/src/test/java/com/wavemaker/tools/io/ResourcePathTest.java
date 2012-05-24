@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.io.filesystem;
+package com.wavemaker.tools.io;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -8,8 +8,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import com.wavemaker.tools.io.ResourcePath;
 
 /**
  * Tests for {@link ResourcePath}.

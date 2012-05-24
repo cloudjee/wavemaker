@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.io.filesystem;
+package com.wavemaker.tools.io.store;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -13,77 +13,43 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.wavemaker.tools.io.AbstractFileContent;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
-/**
- * Tests for {@link FileSystemFile}.
- * 
- * @author Phillip Webb
- */
-public class FileSystemFileTest extends AbstractFileSystemResourceTest {
+public class StoredFileTest {
 
-    private FileSystemFile<Object> file;
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private StoredFile file;
 
     @Before
-    @Override
     public void setup() {
-        super.setup();
-        JailedResourcePath path = new JailedResourcePath().get("file.txt");
-        this.file = new FileSystemFile<Object>(path, this.fileSystem, path);
+        this.file = new MockStoredFile(new JailedResourcePath().get("file.txt"));
     }
 
     @Test
-    public void shouldNeedPath() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Path must not be null");
-        new FileSystemFile<Object>(null, this.fileSystem, new Object());
-    }
-
-    @Test
-    public void shouldNeedFileSystem() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFile<Object>(new JailedResourcePath(), null, new Object());
-    }
-
-    @Test
-    public void shouldNeedKey() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Key must not be null");
-        new FileSystemFile<Object>(new JailedResourcePath(), this.fileSystem, null);
-    }
-
-    @Test
-    public void shouldNotCreateFolderFromFile() throws Exception {
-        JailedResourcePath path = new JailedResourcePath().get("a");
-        given(this.fileSystem.getResourceType(path)).willReturn(ResourceType.FOLDER);
-        this.thrown.expect(ResourceTypeMismatchException.class);
-        this.thrown.expectMessage("Unable to access resource '/a' as file due to existing folder");
-        new FileSystemFile<Object>(path, this.fileSystem, path);
-
-    }
-
-    @Test
-    public void shouldGetSizeFromFileSystem() throws Exception {
+    public void shouldGetSizeFromStore() throws Exception {
         Long size = 100L;
-        given(this.fileSystem.getSize(this.file.getKey())).willReturn(size);
+        given(this.file.getStore().getSize()).willReturn(size);
         assertThat(this.file.getSize(), is(equalTo(size)));
-        verify(this.fileSystem).getSize(this.file.getKey());
+        verify(this.file.getStore()).getSize();
     }
 
     @Test
-    public void shouldGetLastModifiedFromFileSystem() throws Exception {
+    public void shouldGetLastModifiedFromStore() throws Exception {
         Long lastModified = 100L;
-        given(this.fileSystem.getLastModified(this.file.getKey())).willReturn(lastModified);
+        given(this.file.getStore().getLastModified()).willReturn(lastModified);
         assertThat(this.file.getLastModified(), is(equalTo(lastModified)));
-        verify(this.fileSystem).getLastModified(this.file.getKey());
+        verify(this.file.getStore()).getLastModified();
     }
 
     @Test
@@ -99,14 +65,14 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     @Test
     public void shouldGetContentInputStreamFromFileSystem() throws Exception {
         InputStream inputStream = mock(InputStream.class);
-        given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
+        given(this.file.getStore().getInputStream()).willReturn(inputStream);
         assertThat(this.file.getContent().asInputStream(), is(inputStream));
     }
 
     @Test
     public void shouldGetContentOutputStreamFromFileSystem() throws Exception {
         OutputStream outputStream = mock(OutputStream.class);
-        given(this.fileSystem.getOutputStream(this.file.getKey())).willReturn(outputStream);
+        given(this.file.getStore().getOutputStream()).willReturn(outputStream);
         assertThat(this.file.getContent().asOutputStream(), is(outputStream));
     }
 
@@ -117,36 +83,36 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldDelete() throws Exception {
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FILE);
+        given(this.file.getStore().exists()).willReturn(true);
         this.file.delete();
-        verify(this.fileSystem).delete(this.file.getKey());
+        verify(this.file.getStore()).delete();
     }
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.file.getStore().exists()).willReturn(false);
         this.file.delete();
-        verify(this.fileSystem, never()).delete(this.file.getKey());
+        verify(this.file.getStore(), never()).delete();
     }
 
     @Test
     public void shouldCreateIfMissingNewFile() throws Exception {
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.file.getStore().exists()).willReturn(false);
         this.file.createIfMissing();
-        verify(this.fileSystem).createFile(this.file.getKey());
+        verify(this.file.getStore()).create();
     }
 
     @Test
     public void shouldNotCreateIfMissingExistingFile() throws Exception {
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.file.getStore().exists()).willReturn(true);
         this.file.createIfMissing();
-        verify(this.fileSystem, never()).createFile(this.file.getKey());
+        verify(this.file.getStore(), never()).create();
     }
 
     @Test
     public void shouldNotMoveIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.file.getStore().exists()).willReturn(false);
         this.thrown.expect(ResourceDoesNotExistException.class);
         this.file.moveTo(destination);
     }
@@ -159,17 +125,17 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
         InputStream inputStream = mock(InputStream.class);
         given(destination.getFile("file.txt")).willReturn(destinationFile);
         given(destinationFile.getContent()).willReturn(destinationContent);
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FILE);
-        given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
+        given(this.file.getStore().exists()).willReturn(true);
+        given(this.file.getStore().getInputStream()).willReturn(inputStream);
         this.file.moveTo(destination);
         verify(destinationContent).write(inputStream);
-        verify(this.fileSystem).delete(this.file.getKey());
+        verify(this.file.getStore()).delete();
     }
 
     @Test
     public void shouldNotCopyIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.file.getStore().exists()).willReturn(false);
         this.thrown.expect(ResourceDoesNotExistException.class);
         this.file.copyTo(destination);
     }
@@ -182,11 +148,11 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
         InputStream inputStream = mock(InputStream.class);
         given(destination.getFile("file.txt")).willReturn(destinationFile);
         given(destinationFile.getContent()).willReturn(destinationContent);
-        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FILE);
-        given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
+        given(this.file.getStore().exists()).willReturn(true);
+        given(this.file.getStore().getInputStream()).willReturn(inputStream);
         this.file.copyTo(destination);
         verify(destinationContent).write(inputStream);
-        verify(this.fileSystem, never()).delete(this.file.getKey());
+        verify(this.file.getStore(), never()).delete();
     }
 
     @Test
@@ -208,4 +174,20 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldHaveToString() throws Exception {
         assertThat(this.file.toString(), is("/file.txt"));
     }
+
+    private static class MockStoredFile extends StoredFile {
+
+        private final FileStore store;
+
+        public MockStoredFile(JailedResourcePath path) {
+            this.store = mock(FileStore.class);
+            given(this.store.getPath()).willReturn(path);
+        }
+
+        @Override
+        protected FileStore getStore() {
+            return this.store;
+        }
+    }
+
 }

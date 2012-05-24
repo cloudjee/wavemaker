@@ -1129,7 +1129,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 					      wp.targetProperty, 
 					      oldValue,
 					      wp.source || wp.expression,
-					      wp.expression);
+					      wp.expression,
+					     false);
 			   
 			   if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
 			       /* we probably need this._applyBinding stuff

@@ -40,8 +40,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceURL;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.zip.ZipFileSystem;
+import com.wavemaker.tools.io.zip.ZipFolder;
 
 /**
  * A {@link ForwardingJavaFileManager} that manages files contained in {@link com.wavemaker.tools.io.Resource}s.
@@ -260,7 +259,7 @@ public class ResourceJavaFileManager extends ForwardingJavaFileManager<JavaFileM
         }
         File file = (File) resource;
         Assert.isTrue(file.getName().endsWith(".jar") || file.getName().endsWith(".zip"), file + " does not have a jar or zip extension");
-        return FileSystemFolder.getRoot(new ZipFileSystem(file));
+        return new ZipFolder(file);
     }
 
     private String getNameWithoutExtension(String name) {

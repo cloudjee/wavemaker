@@ -43,10 +43,7 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.data.DataServiceGenerator;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystem;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -126,12 +123,13 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
         try {
             Folder outputFolder = this.configuration.getOutputDirectory();
             outputFolder.createIfMissing();
-            if (outputFolder.getResourceOrigin().equals(FileSystem.ResourceOrigin.LOCAL_FILE_SYSTEM)) {
-                this.codeModel.build((File) outputFolder.getOriginalResource(), (File) outputFolder.getOriginalResource(), null);
+            if (outputFolder instanceof LocalFolder) {
+                File outputFolderFile = ((LocalFolder) outputFolder).getLocalFile();
+                this.codeModel.build(outputFolderFile, outputFolderFile, null);
             } else {
                 File tempDir = IOUtils.createTempDirectory("outputSrc_directory", null);
                 this.codeModel.build(tempDir, tempDir, null);
-                Folder folder = FileSystemUtils.convertToFileSystemFolder(tempDir);
+                Folder folder = new LocalFolder(tempDir);
                 folder.copyContentsTo(outputFolder);
             }
         } catch (IOException e) {

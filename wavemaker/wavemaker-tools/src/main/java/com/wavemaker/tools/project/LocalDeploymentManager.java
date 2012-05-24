@@ -38,6 +38,8 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFile;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Main deployment class.
@@ -133,6 +135,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         }
     }
 
+    @Override
+    protected LocalFolder getProjectDir() {
+        return (LocalFolder) super.getProjectDir();
+    }
+
     private String testRunStart(String projectDir, String deployName) {
 
         // this method for some reason is how we add the listener
@@ -153,7 +160,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String testRunStart() {
         String deployName = getDeployName();
-        testRunStart(getProjectDir().getCanonicalPath(), deployName);
+        testRunStart(getCanonicalPath(getProjectDir()), deployName);
         return "/" + deployName;
     }
 
@@ -162,7 +169,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String compile() {
-        antExecute(getProjectDir().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
+        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), COPY_JARS_OPERATION);
         return this.projectCompiler.compile();
     }
 
@@ -171,7 +178,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String cleanCompile() {
-        antExecute(getProjectDir().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
+        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), CLEAN_OPERATION);
         return compile();
     }
 
@@ -180,7 +187,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String build() {
-        antExecute(getProjectDir().getCanonicalPath(), getDeployName(), BUILD_OPERATION);
+        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), BUILD_OPERATION);
         return compile();
     }
 
@@ -189,7 +196,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String generateRuntime() {
-        return antExecute(getProjectDir().getCanonicalPath(), getDeployName(), GEN_RTFILES_OPERATION);
+        return antExecute(getCanonicalPath(getProjectDir()), getDeployName(), GEN_RTFILES_OPERATION);
     }
 
     /**
@@ -197,11 +204,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String cleanBuild() {
-        antExecute(getProjectDir().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
+        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), CLEAN_OPERATION);
         return build();
     }
 
-    private void buildWar(Folder projectDir, String buildDir, String warFile, boolean includeEar) {
+    private void buildWar(LocalFolder projectDir, String buildDir, String warFile, boolean includeEar) {
 
         int len = warFile.length();
         String earFileName = warFile.substring(0, len - 4) + ".ear";
@@ -217,15 +224,15 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
             throw new WMRuntimeException(ex);
         }
 
-        properties.put(PROJECT_DIR_PROPERTY, projectDir.getCanonicalPath());
+        properties.put(PROJECT_DIR_PROPERTY, getCanonicalPath(projectDir));
         properties.put(DEPLOY_NAME_PROPERTY, projectDir.getName());
 
         build();
 
-        antExecute(projectDir.getCanonicalPath(), BUILD_WAR_OPERATION, properties);
+        antExecute(getCanonicalPath(projectDir), BUILD_WAR_OPERATION, properties);
 
         if (includeEar) {
-            antExecute(projectDir.getCanonicalPath(), BUILD_EAR_OPERATION, properties);
+            antExecute(getCanonicalPath(projectDir), BUILD_EAR_OPERATION, properties);
         }
     }
 
@@ -234,7 +241,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
-        String warFileLocation = warFile.getCanonicalPath();
+        String warFileLocation = ((LocalFile) warFile).getLocalFile().getCanonicalPath();
         buildWar(warFileLocation, includeEar);
         return warFile;
     }
@@ -266,7 +273,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(WAR_FILE_NAME_PROPERTY, warFileName);
 
-        return antExecute(getProjectDir().getCanonicalPath(), deployName, DEPLOY_WAR_OPERATION, properties);
+        return antExecute(getCanonicalPath(getProjectDir()), deployName, DEPLOY_WAR_OPERATION, properties);
     }
 
     /**
@@ -282,7 +289,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public void testRunClean() {
-        testRunClean(getProjectDir().getCanonicalPath(), getDeployName());
+        testRunClean(getCanonicalPath(getProjectDir()), getDeployName());
     }
 
     /**
@@ -290,7 +297,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public void undeploy() {
-        undeploy(getProjectDir().getCanonicalPath(), getDeployName());
+        undeploy(getCanonicalPath(getProjectDir()), getDeployName());
     }
 
     private String undeploy(String projectDir, String deployName) {
@@ -315,10 +322,14 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     @Override
     public String exportProject(String zipFileName) {
-        Folder exportDir = getProjectDir().getFolder(EXPORT_DIR_DEFAULT);
-        com.wavemaker.tools.io.File file = exportDir.getFile(zipFileName);
-        exportProject(getProjectDir().getCanonicalPath(), file.getCanonicalPath());
-        return file.getCanonicalPath();
+        try {
+            Folder exportDir = getProjectDir().getFolder(EXPORT_DIR_DEFAULT);
+            LocalFile file = (LocalFile) exportDir.getFile(zipFileName);
+            exportProject(getProjectDir().getLocalFile().getCanonicalPath(), file.getLocalFile().getCanonicalPath());
+            return file.getLocalFile().getCanonicalPath();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
     }
 
     public String antExecute(String projectDir, String targetName, Map<String, String> properties) {
@@ -431,6 +442,14 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     public void setStudioConfiguration(LocalStudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;
+    }
+
+    private String getCanonicalPath(LocalFolder folder) {
+        try {
+            return folder.getLocalFile().getCanonicalPath();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
     }
 
     public static class DeploymentNamespaceMapper extends NamespacePrefixMapper {

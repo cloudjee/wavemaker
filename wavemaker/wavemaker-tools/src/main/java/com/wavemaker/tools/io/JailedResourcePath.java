@@ -12,12 +12,9 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.tools.io.filesystem;
+package com.wavemaker.tools.io;
 
 import org.springframework.util.Assert;
-
-import com.wavemaker.tools.io.ResourcePath;
-import com.wavemaker.tools.io.ResourceStringFormat;
 
 /**
  * A {@link ResourcePath} that is jailed to a specific location.

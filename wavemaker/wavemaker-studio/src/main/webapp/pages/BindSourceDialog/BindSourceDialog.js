@@ -157,7 +157,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
     },
 	bindNodeSelected: function(inSender, inNode) {
 	    if (inNode) {
-		this.binderSource.bindEditor.setValue("dataValue",this.getBindNodeSource(inNode));
+		this.binderSource.bindEditor.setValue("dataValue",inNode.source ? this.getBindNodeSource(inNode) : "");
 	    }
 	},
 	applyButtonClick: function() {

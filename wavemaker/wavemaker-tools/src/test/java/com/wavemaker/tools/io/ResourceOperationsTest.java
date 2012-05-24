@@ -8,8 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Tests for {@link ResourceOperations}.
@@ -23,8 +22,8 @@ public class ResourceOperationsTest {
 
     @Test
     public void shouldCopyKeepingStructure() throws Exception {
-        Folder from = FileSystemFolder.getRoot(new LocalFileSystem(this.temporaryFolder.newFolder("from")));
-        Folder destination = FileSystemFolder.getRoot(new LocalFileSystem(this.temporaryFolder.newFolder("from")));
+        Folder from = new LocalFolder(this.temporaryFolder.newFolder("from"));
+        Folder destination = new LocalFolder(this.temporaryFolder.newFolder("to"));
 
         from.getFile("/a/b/c/d.txt").getContent().write("d");
         from.getFile("/a/b/c/d.bak").getContent().write("~d");

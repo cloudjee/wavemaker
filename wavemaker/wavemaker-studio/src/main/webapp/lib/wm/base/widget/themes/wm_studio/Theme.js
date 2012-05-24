@@ -123,8 +123,8 @@
 	height: "100%",
 	horizontalAlign: "left",
 	verticalAlign: "top",
-	padding: "5,15,5,15",
-	border: "10",
+	padding: "5",
+	border: "5",
 	borderColor: "#313743",
 	backgroundColor: "#848c99"
     },

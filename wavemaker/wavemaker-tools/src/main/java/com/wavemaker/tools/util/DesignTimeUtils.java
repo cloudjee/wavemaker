@@ -27,6 +27,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.AbstractStudioFileSystem;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
@@ -105,7 +106,7 @@ public class DesignTimeUtils {
 
             try {
                 // override configuration
-                setDefaultProjectHome(new File(projectRoot.getAbsolutePath()).getParentFile().getAbsolutePath());
+                setDefaultProjectHome(new File(((LocalFolder) projectRoot).getLocalFile().getAbsolutePath()).getParentFile().getAbsolutePath());
 
                 DesignServiceManager dsm = new DesignServiceManager();
 
@@ -120,11 +121,11 @@ public class DesignTimeUtils {
                 }
 
                 LocalStudioFileSystem sf = new LocalStudioFileSystem();
-                sf.setTestWaveMakerHome(projectRoot.getParent());
+                sf.setTestWaveMakerHome((LocalFolder) projectRoot.getParent());
 
                 ProjectManager pm = new ProjectManager();
                 pm.setFileSystem(sf);
-                pm.openProject(projectRoot.getLastName(), true);
+                pm.openProject(((LocalFolder) projectRoot).getLocalFile().getName(), true);
                 dsm.setProjectManager(pm);
 
                 LocalDeploymentManager dep = new LocalDeploymentManager();
@@ -147,5 +148,4 @@ public class DesignTimeUtils {
             throw new ConfigurationException(ex);
         }
     }
-
 }

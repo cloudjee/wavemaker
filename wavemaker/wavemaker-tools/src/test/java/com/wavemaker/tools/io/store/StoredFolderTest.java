@@ -1,16 +1,15 @@
 
-package com.wavemaker.tools.io.filesystem;
+package com.wavemaker.tools.io.store;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
@@ -19,68 +18,46 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InOrder;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
-/**
- * Tests for {@link FileSystemFolder}.
- * 
- * @author Phillip Webb
- */
-public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
+public class StoredFolderTest {
 
-    private FileSystemFolder<Object> folder;
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private MockStoredFolder folder;
+
+    private final Map<JailedResourcePath, MockStoredFolder> childFolders = new HashMap<JailedResourcePath, MockStoredFolder>();
+
+    private final Map<JailedResourcePath, MockStoredFile> childFiles = new HashMap<JailedResourcePath, MockStoredFile>();
 
     @Before
-    @Override
     public void setup() {
-        super.setup();
-        this.folder = new FileSystemFolder<Object>(new JailedResourcePath(), this.fileSystem, new JailedResourcePath());
-    }
-
-    @Test
-    public void shouldNeedPath() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Path must not be null");
-        new FileSystemFolder<Object>(null, this.fileSystem, new Object());
-    }
-
-    @Test
-    public void shouldNeedFileSystem() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFolder<Object>(new JailedResourcePath(), null, new Object());
-    }
-
-    @Test
-    public void shouldNeedKey() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Key must not be null");
-        new FileSystemFolder<Object>(new JailedResourcePath(), this.fileSystem, null);
-    }
-
-    @Test
-    public void shouldNotCreateFolderFromFile() throws Exception {
-        given(this.fileSystem.getResourceType(new JailedResourcePath().get("a"))).willReturn(ResourceType.FILE);
-        this.thrown.expect(ResourceTypeMismatchException.class);
-        this.thrown.expectMessage("Unable to access resource '/a' as folder due to existing file");
-        this.folder.getFolder("a");
+        this.folder = new MockStoredFolder(new JailedResourcePath());
     }
 
     @Test
@@ -90,27 +67,26 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldDelete() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.folder.getStore().exists()).willReturn(true);
         this.folder.delete();
-        verify(this.fileSystem).delete(this.folder.getKey());
+        verify(this.folder.getStore()).delete();
     }
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.folder.getStore().exists()).willReturn(false);
         this.folder.delete();
-        verify(this.fileSystem, never()).delete(this.folder.getKey());
+        verify(this.folder.getStore(), never()).delete();
     }
 
     @Test
     public void shouldDeleteChildren() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Collections.singleton("a"));
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(this.folder.getStore().list()).willReturn(Collections.singleton("a"));
         this.folder.delete();
-        verify(this.fileSystem).delete(child.getKey());
-        verify(this.fileSystem).delete(this.folder.getKey());
+        verify(child.getStore()).delete();
+        verify(this.folder.getStore()).delete();
     }
 
     @Test
@@ -132,9 +108,9 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldDelegateToFileSystemForExists() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.folder.getStore().exists()).willReturn(true);
         assertThat(this.folder.exists(), is(true));
-        verify(this.fileSystem, times(2)).getResourceType(this.folder.getKey());
+        verify(this.folder.getStore()).exists();
     }
 
     @Test
@@ -174,7 +150,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldGetExistingFile() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.FILE);
+        this.folder.getFile("a");
         Resource child = this.folder.getExisting("a");
         assertThat(child, is(File.class));
         assertThat(child.getName(), is("a"));
@@ -183,7 +159,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldGetExistingFolder() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.FOLDER);
+        this.folder.getFolder("a");
         Resource child = this.folder.getExisting("a");
         assertThat(child, is(Folder.class));
         assertThat(child.getName(), is("a"));
@@ -192,60 +168,54 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldNotGetExistingIfDoesNotExist() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.DOES_NOT_EXIST);
         this.thrown.expect(ResourceDoesNotExistException.class);
         this.thrown.expectMessage("The resource 'a' does not exist in the folder '/'");
         this.folder.getExisting("a");
     }
 
     @Test
-    public void shouldHaveExistingFile() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.FOLDER);
-        boolean actual = this.folder.hasExisting("a");
-        assertThat(actual, is(true));
-    }
-
-    @Test
     public void shouldNotHaveExistingFileIfDoesNotExist() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.DOES_NOT_EXIST);
         boolean actual = this.folder.hasExisting("a");
         assertThat(actual, is(false));
     }
 
     @Test
+    public void shouldHaveExistingFile() throws Exception {
+        this.folder.getFolder("a");
+        boolean actual = this.folder.hasExisting("a");
+        assertThat(actual, is(true));
+    }
+
+    @Test
     public void shouldCreateMissingDirectory() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        MockStoredFolder child = this.folder.getFolder("a");
         child.createIfMissing();
-        verify(this.fileSystem).createFolder(child.getKey());
+        verify(child.getStore()).create();
     }
 
     @Test
     public void shouldNotCreateExistingDirectory() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        MockStoredFolder child = this.folder.getFolder("a", true);
         child.createIfMissing();
-        verify(this.fileSystem, never()).createFolder(child.getKey());
+        verify(child.getStore(), never()).create();
     }
 
     @Test
     public void shouldCreateParent() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        FileSystemFolder<Object> grandChild = child.getFolder("b");
-        given(this.fileSystem.getResourceType(grandChild.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        MockStoredFolder child = this.folder.getFolder("a");
+        MockStoredFolder grandChild = child.getFolder("b");
         grandChild.createIfMissing();
-        verify(this.fileSystem).createFolder(grandChild.getKey());
-        verify(this.fileSystem).createFolder(child.getKey());
+        InOrder inOrder = inOrder(grandChild.getStore(), child.getStore());
+        inOrder.verify(child.getStore()).create();
+        inOrder.verify(grandChild.getStore()).create();
     }
 
     @Test
     public void shouldListResources() throws Exception {
-        JailedResourcePath pathA = new JailedResourcePath().get("a");
-        JailedResourcePath pathB = new JailedResourcePath().get("b");
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
-        given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
+        this.folder.getFolder("a", true);
+        this.folder.getFile("b", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
         Resources<Resource> resources = this.folder.list();
         Iterator<Resource> iterator = resources.iterator();
         Resource resourceA = iterator.next();
@@ -259,11 +229,10 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldListFilteredResources() throws Exception {
-        JailedResourcePath pathA = new JailedResourcePath().get("a");
-        JailedResourcePath pathB = new JailedResourcePath().get("b");
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
-        given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
+        this.folder.getFolder("a", true);
+        this.folder.getFile("b", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
         Resources<File> resources = this.folder.list(Including.files());
         Iterator<File> iterator = resources.iterator();
         File file = iterator.next();
@@ -273,11 +242,10 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldListFilteredResourcesWithAnonymousClass() throws Exception {
-        JailedResourcePath pathA = new JailedResourcePath().get("a");
-        JailedResourcePath pathB = new JailedResourcePath().get("b");
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
-        given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
+        this.folder.getFolder("a", true);
+        this.folder.getFile("b", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
         Resources<File> resources = this.folder.list(new ResourceIncludeFilter<File>() {
 
             @Override
@@ -303,8 +271,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldMoveWithoutChildren() throws Exception {
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        given(this.folder.getStore().exists()).willReturn(true);
         given(destination.getFolder("a")).willReturn(destinationChild);
         child.moveTo(destination);
         verify(destination).getFolder("a");
@@ -314,8 +282,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     @Test
     public void shouldNotMoveIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        MockStoredFolder child = this.folder.getFolder("a", false);
+        given(this.folder.getStore().exists()).willReturn(true);
         this.thrown.expect(ResourceDoesNotExistException.class);
         child.moveTo(destination);
     }
@@ -323,6 +291,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     @Test
     public void shouldNotMoveRoot() throws Exception {
         Folder destination = mock(Folder.class);
+        given(this.folder.getStore().exists()).willReturn(true);
         this.thrown.expect(IllegalStateException.class);
         this.thrown.expectMessage("Unable to move a root folder");
         this.folder.moveTo(destination);
@@ -333,11 +302,9 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
         Folder destinationGrandchild = mock(Folder.class);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        FileSystemFolder<Object> grandchild = child.getFolder("b");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        child.getFolder("b", true);
+        given(child.getStore().list()).willReturn(Collections.singleton("b"));
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.moveTo(destination);
@@ -348,8 +315,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldCopyWithoutChildren() throws Exception {
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        given(this.folder.getStore().exists()).willReturn(true);
         given(destination.getFolder("a")).willReturn(destinationChild);
         child.copyTo(destination);
         verify(destination).getFolder("a");
@@ -359,14 +326,15 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     @Test
     public void shouldNotCopyIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        MockStoredFolder child = this.folder.getFolder("a");
+        given(this.folder.getStore().exists()).willReturn(false);
         this.thrown.expect(ResourceDoesNotExistException.class);
         child.copyTo(destination);
     }
 
     @Test
     public void shouldNotCopyRoot() throws Exception {
+        given(this.folder.getStore().exists()).willReturn(true);
         Folder destination = mock(Folder.class);
         this.thrown.expect(IllegalStateException.class);
         this.thrown.expectMessage("Unable to copy a root folder");
@@ -375,34 +343,28 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldCopyChildren() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        FileSystemFolder<Object> grandchild = child.getFolder("b");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
-
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        child.getFolder("b", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(child.getStore().list()).willReturn(Collections.singleton("b"));
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
         Folder destinationGrandchild = mock(Folder.class);
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
-
         child.copyTo(destination);
         verify(destinationGrandchild).createIfMissing();
     }
 
     @Test
     public void shouldCopyWithFileFilter() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        FileSystemFile<Object> javaFile = child.getFile("a.java");
-        FileSystemFile<Object> classFile = child.getFile("a.class");
-        FileSystemFolder<Object> grandchild = child.getFolder("b");
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        child.getFile("a.java", true);
+        child.getFile("a.class", true);
+        child.getFolder("b", true);
 
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(javaFile.getKey())).willReturn(ResourceType.FILE);
-        given(this.fileSystem.getResourceType(classFile.getKey())).willReturn(ResourceType.FILE);
-        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(child.getKey())).willReturn(Arrays.asList("a.java", "a.class", "b"));
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(child.getStore().list()).willReturn(Arrays.asList("a.java", "a.class", "b"));
 
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
@@ -432,8 +394,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         @SuppressWarnings("unchecked")
         ResourceIncludeFilter<File> filter = mock(ResourceIncludeFilter.class);
         given(filter.include(any(File.class))).willReturn(true);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.folder.getStore().exists()).willReturn(true);
+        MockStoredFolder child = this.folder.getFolder("a", true);
         given(destination.getFolder("a")).willReturn(destinationChild);
         child.copyTo(destination, filter);
         verify(destination).getFolder("a");
@@ -446,8 +408,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         @SuppressWarnings("unchecked")
         ResourceIncludeFilter<File> filter = mock(ResourceIncludeFilter.class);
         given(filter.include(any(File.class))).willReturn(true);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.folder.getStore().exists()).willReturn(true);
+        MockStoredFolder child = this.folder.getFolder("a", false);
         this.thrown.expect(ResourceDoesNotExistException.class);
         child.copyTo(destination, filter);
     }
@@ -457,6 +419,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         Folder destination = mock(Folder.class);
         @SuppressWarnings("unchecked")
         ResourceIncludeFilter<File> filter = mock(ResourceIncludeFilter.class);
+        given(this.folder.getStore().exists()).willReturn(true);
         given(filter.include(any(File.class))).willReturn(true);
         this.thrown.expect(IllegalStateException.class);
         this.thrown.expectMessage("Unable to copy a root folder");
@@ -468,11 +431,10 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
         Folder destinationGrandchild = mock(Folder.class);
-        FileSystemFolder<Object> child = this.folder.getFolder("a");
-        FileSystemFolder<Object> grandchild = child.getFolder("b");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
+        MockStoredFolder child = this.folder.getFolder("a", true);
+        child.getFolder("b", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(child.getStore().list()).willReturn(Collections.singleton("b"));
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.copyTo(destination, new ResourceIncludeFilter<File>() {
@@ -502,13 +464,13 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldAppendPathToToString() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a/b/c");
+        MockStoredFolder child = this.folder.getFolder("a/b/c");
         assertThat(child.toString(), is("/a/b/c/"));
     }
 
     @Test
     public void shouldFormatToString() throws Exception {
-        FileSystemFolder<Object> child = this.folder.getFolder("a").jail().getFolder("b/c");
+        Folder child = this.folder.getFolder("a", true).jail().getFolder("b/c");
         assertThat(child.toString(), is("/b/c/"));
         assertThat(child.toString(ResourceStringFormat.FULL), is("/b/c/"));
         assertThat(child.toString(ResourceStringFormat.UNJAILED), is("/a/b/c/"));
@@ -544,7 +506,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldGetResource() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getPath().get("name"))).willReturn(ResourceType.FILE);
+        this.folder.getFile("name", true);
         this.folder = spy(this.folder);
         this.folder.get("name", Resource.class);
         verify(this.folder).getExisting("name");
@@ -561,16 +523,14 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldUnzip() throws Exception {
         ByteArrayOutputStream outputStreamB = new ByteArrayOutputStream();
         ByteArrayOutputStream outputStreamD = new ByteArrayOutputStream();
-        given(this.fileSystem.getResourceType(any())).willReturn(ResourceType.DOES_NOT_EXIST);
-        given(this.fileSystem.getOutputStream(new JailedResourcePath().get("a/b.txt"))).willReturn(outputStreamB);
-        given(this.fileSystem.getOutputStream(new JailedResourcePath().get("c/d.txt"))).willReturn(outputStreamD);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(this.folder.getFile("a/b.txt").getStore().getOutputStream()).willReturn(outputStreamB);
+        given(this.folder.getFile("c/d.txt").getStore().getOutputStream()).willReturn(outputStreamD);
         InputStream zipStream = getSampleZip();
         this.folder.unzip(zipStream);
-        verify(this.fileSystem, atLeastOnce()).createFolder(new JailedResourcePath().get("a"));
-        verify(this.fileSystem, atLeastOnce()).getResourceType(new JailedResourcePath().get("a/b.txt"));
+        verify(this.folder.getFolder("a").getStore()).create();
+        verify(this.folder.getFolder("c").getStore()).create();
         assertThat(new String(outputStreamB.toByteArray()), is("ab"));
-        verify(this.fileSystem, atLeastOnce()).createFolder(new JailedResourcePath().get("c"));
-        verify(this.fileSystem, atLeastOnce()).getResourceType(new JailedResourcePath().get("c/d.txt"));
         assertThat(new String(outputStreamD.toByteArray()), is("cd"));
     }
 
@@ -596,5 +556,98 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         Folder jailed = this.folder.getFolder("a").jail();
         Folder sub = jailed.getFolder("/b");
         assertThat(sub.toString(), is("/b/"));
+    }
+
+    private class MockStoredFolder extends StoredFolder {
+
+        private final FolderStore store;
+
+        public MockStoredFolder(JailedResourcePath path) {
+            this.store = mock(FolderStore.class);
+            given(this.store.getPath()).willReturn(path);
+            given(this.store.getFolder(any(JailedResourcePath.class))).willAnswer(new Answer<Folder>() {
+
+                @Override
+                public Folder answer(InvocationOnMock invocation) throws Throwable {
+                    JailedResourcePath path = (JailedResourcePath) invocation.getArguments()[0];
+                    MockStoredFolder child = StoredFolderTest.this.childFolders.get(path);
+                    if (child == null) {
+                        child = new MockStoredFolder(path);
+                        StoredFolderTest.this.childFolders.put(path, child);
+                    }
+                    return child;
+                }
+            });
+
+            given(this.store.getFile(any(JailedResourcePath.class))).willAnswer(new Answer<File>() {
+
+                @Override
+                public File answer(InvocationOnMock invocation) throws Throwable {
+                    JailedResourcePath path = (JailedResourcePath) invocation.getArguments()[0];
+                    MockStoredFile child = StoredFolderTest.this.childFiles.get(path);
+                    if (child == null) {
+                        child = new MockStoredFile(path);
+                        StoredFolderTest.this.childFiles.put(path, child);
+                    }
+                    return child;
+                }
+            });
+
+            given(this.store.getExisting(any(JailedResourcePath.class))).willAnswer(new Answer<Resource>() {
+
+                @Override
+                public Resource answer(InvocationOnMock invocation) throws Throwable {
+                    JailedResourcePath path = (JailedResourcePath) invocation.getArguments()[0];
+                    Resource resource = StoredFolderTest.this.childFolders.get(path);
+                    if (resource != null) {
+                        return resource;
+                    }
+                    return StoredFolderTest.this.childFiles.get(path);
+                }
+            });
+
+        }
+
+        @Override
+        protected FolderStore getStore() {
+            return this.store;
+        }
+
+        @Override
+        public MockStoredFolder getFolder(String name) {
+            return (MockStoredFolder) super.getFolder(name);
+        }
+
+        public MockStoredFolder getFolder(String name, boolean exists) {
+            MockStoredFolder folder = getFolder(name);
+            given(folder.getStore().exists()).willReturn(exists);
+            return folder;
+        }
+
+        @Override
+        public MockStoredFile getFile(String name) {
+            return (MockStoredFile) super.getFile(name);
+        }
+
+        public MockStoredFile getFile(String name, boolean exists) {
+            MockStoredFile file = getFile(name);
+            given(file.getStore().exists()).willReturn(exists);
+            return file;
+        }
+    }
+
+    private static class MockStoredFile extends StoredFile {
+
+        private final FileStore store;
+
+        public MockStoredFile(JailedResourcePath path) {
+            this.store = mock(FileStore.class);
+            given(this.store.getPath()).willReturn(path);
+        }
+
+        @Override
+        protected FileStore getStore() {
+            return this.store;
+        }
     }
 }

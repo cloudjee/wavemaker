@@ -16,7 +16,6 @@ package com.wavemaker.tools.io.exception;
 
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
-import com.wavemaker.tools.io.filesystem.ResourceType;
 
 /**
  * Exception thrown when a {@link Resource} is requested as a particular type but an existing resource of another type
@@ -30,10 +29,6 @@ public class ResourceTypeMismatchException extends ResourceException {
 
     private final ResourcePath path;
 
-    private final ResourceType actual;
-
-    private final ResourceType expected;
-
     /**
      * Create a new {@link ResourceTypeMismatchException} instance.
      * 
@@ -41,38 +36,12 @@ public class ResourceTypeMismatchException extends ResourceException {
      * @param actual the actual type
      * @param expected the expected type
      */
-    public ResourceTypeMismatchException(ResourcePath path, ResourceType actual, ResourceType expected) {
-        super("Unable to access resource '" + path + "' as " + expected + " due to existing " + actual);
+    public ResourceTypeMismatchException(ResourcePath path, boolean accessingAsFolder) {
+        super("Unable to access resource '" + path + "' as " + (accessingAsFolder ? "folder" : "file") + " due to existing resource");
         this.path = path;
-        this.actual = actual;
-        this.expected = expected;
     }
 
     public ResourcePath getPath() {
         return this.path;
     }
-
-    public ResourceType getActual() {
-        return this.actual;
-    }
-
-    public ResourceType getExpected() {
-        return this.expected;
-    }
-
-    /**
-     * Throws a new {@link ResourceTypeMismatchException} if the actual type exists but does not match the expected type
-     * 
-     * @param path the path
-     * @param actual the actual type
-     * @param expected the expected type
-     */
-    public static void throwOnMismatch(ResourcePath path, ResourceType actual, ResourceType expected) {
-        if (actual != null && actual != ResourceType.DOES_NOT_EXIST) {
-            if (!(actual == expected)) {
-                throw new ResourceTypeMismatchException(path, actual, expected);
-            }
-        }
-    }
-
 }

@@ -31,9 +31,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Abstract base implementation of {@link StudioFileSystem}.
@@ -61,15 +59,14 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
 
     private ServletContext servletContext;
 
-    private Folder studioWebAppRootFolder;
+    private LocalFolder studioWebAppRootFolder;
 
     @Override
-    public Folder getStudioWebAppRootFolder() {
+    public LocalFolder getStudioWebAppRootFolder() {
         if (this.studioWebAppRootFolder == null) {
             try {
                 File servletPath = new File(WebUtils.getRealPath(this.servletContext, "/"));
-                LocalFileSystem fileSystem = new LocalFileSystem(servletPath);
-                this.studioWebAppRootFolder = FileSystemFolder.getRoot(fileSystem);
+                this.studioWebAppRootFolder = new LocalFolder(servletPath);
             } catch (FileNotFoundException e) {
                 throw new IllegalStateException(e);
             }

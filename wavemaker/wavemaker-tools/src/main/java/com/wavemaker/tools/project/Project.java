@@ -34,8 +34,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.AbstractFileService;
 
 /**
@@ -76,10 +75,10 @@ public class Project extends AbstractFileService {
     }
 
     // cftempfix
-    public Project(Folder projectRootFolder) {
+    public Project(Folder projectRootFolder, String projectName) {
         super();
         this.projectRootFolder = projectRootFolder;
-        this.projectName = projectRootFolder.getLastName();
+        this.projectName = projectName;
         this.mavenProject = projectRootFolder.getFile(ProjectConstants.POM_XML).exists();
     }
 
@@ -97,8 +96,7 @@ public class Project extends AbstractFileService {
                 if (projectRoot instanceof ResourceAdapter) {
                     return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
                 }
-                LocalFileSystem fileSystem = new LocalFileSystem(projectRoot.getFile());
-                return FileSystemFolder.getRoot(fileSystem);
+                return new LocalFolder(projectRoot.getFile());
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }

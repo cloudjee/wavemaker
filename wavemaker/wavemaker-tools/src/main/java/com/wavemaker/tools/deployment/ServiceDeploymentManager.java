@@ -26,9 +26,7 @@ import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.FileSystemUtils;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -82,7 +80,7 @@ public class ServiceDeploymentManager {
 
         try {
             stagingProjectDir = IOUtils.createTempDirectory("dplstaging", "dir");
-            Folder stagingProjectDirFolder = FileSystemUtils.convertToFileSystemFolder(stagingProjectDir);
+            Folder stagingProjectDirFolder = new LocalFolder(stagingProjectDir);
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
             prepareForDeployment(mgr, properties);
@@ -100,7 +98,7 @@ public class ServiceDeploymentManager {
     public com.wavemaker.tools.io.File getWarFile() {
         Folder projectRoot = getProjectRoot();
         Folder destDir = projectRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
-        String warFileName = projectMgr.getCurrentProject().getProjectName();
+        String warFileName = this.projectMgr.getCurrentProject().getProjectName();
         return destDir.getFile(warFileName + ".war");
     }
 
