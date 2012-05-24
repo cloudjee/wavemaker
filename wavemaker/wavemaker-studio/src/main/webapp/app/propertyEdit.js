@@ -212,6 +212,16 @@ dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
     }
 });
 
+wm.getPageList = function(currentPageOK){
+	    var pages = [""].concat(studio.project.getPageList()), current = studio.page.declaredClass;
+	    if (!currentPageOK)
+			return dojo.filter(pages, function(p) {
+				return (p != current);
+			});
+	    else
+			return pages;
+}
+
 dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     newPage: true,
     currentPageOK: false,
