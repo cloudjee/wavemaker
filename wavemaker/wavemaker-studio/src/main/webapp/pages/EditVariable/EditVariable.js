@@ -217,7 +217,7 @@ dojo.declare("EditVariable", wm.Page, {
 	} else {
 	    var data = selected.data;
 	    this.AddButton.setDisabled(!selected.data.isList); // can only add if the node itself is a list
-	    this.DeleteButton.setDisabled(!selected.parent.data.isList && !wm.typeManager.isStructuredType(data.type)); // can only delete if the node's parent is a list, or if its an object
+	    this.DeleteButton.setDisabled(!selected.parent || !selected.parent.data.isList && !wm.typeManager.isStructuredType(data.type)); // can only delete if the node's parent is a list, or if its an object
 	}
 	});
     },
