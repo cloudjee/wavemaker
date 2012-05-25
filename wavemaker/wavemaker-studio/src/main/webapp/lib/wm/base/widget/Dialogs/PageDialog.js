@@ -193,13 +193,6 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
     onPageReady: function() {
             this.hideLoadingIndicator();
     },
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "pageName":
-	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, newPage: true});
-	}
-	return this.inherited(arguments);
-    },
 
     destroy: function() {
 	    //this.pageContainerMixinDestroy();

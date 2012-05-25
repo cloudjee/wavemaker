@@ -665,7 +665,7 @@ public abstract class BaseDataModelSetup {
                     setDBType(s);
                 }
             }
-        } else {
+        } else if (this instanceof ImportDB) {
             String s = getDBTypeFromURL(this.connectionUrl);
             if (s != null) {
                 setDBType(s);
