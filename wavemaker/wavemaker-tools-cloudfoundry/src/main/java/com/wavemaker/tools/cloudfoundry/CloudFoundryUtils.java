@@ -33,7 +33,7 @@ public abstract class CloudFoundryUtils {
 
     static long SLEEP_TIME = TimeUnit.SECONDS.toMillis(1);
 
-    private static final long DEFAULT_TIMEOUT = TimeUnit.MINUTES.toMillis(2);
+    private static final long DEFAULT_TIMEOUT = TimeUnit.MINUTES.toMillis(5);
 
     /**
      * Start the specified application and {@link #waitUntilRunning(CloudFoundryClient, String) wait} until it is fully
