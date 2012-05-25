@@ -79,7 +79,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 						path = customURL;
 					}
 					if (this.logger.isDebugEnabled()) {
-						this.logger.debug("Using studio resource " + path);
+						this.logger.debug("Downloading studio from: " + path);
 					}
 					URL url  = new URL(path);
 					url.openConnection();
@@ -105,11 +105,16 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 						e.printStackTrace();
 					}}
 			}
+			else{
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Using existing studio WAR");	
+			}}
 			this.studioWarFile = localStudioWar; 
 
 			Assert.state(studioWarFile.exists(), "Studio resource '" +  studioWarFile.getPath() + "' does not exist");
-			System.out.println("Studio War is " +  studioWarFile.getPath());
-		}	
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Studio War is " +  studioWarFile.getPath());
+		}}	
 		catch (Exception e){
 			throw new WMRuntimeException(e);
 		}

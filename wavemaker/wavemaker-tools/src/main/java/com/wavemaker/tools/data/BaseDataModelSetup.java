@@ -40,6 +40,7 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.dialect.MySQLDialect;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
@@ -646,21 +647,23 @@ public abstract class BaseDataModelSetup {
     }
 
     protected void checkDBType() {
-        if (this.dbtype == null) {
+        if (WMAppContext.getInstance() == null || !WMAppContext.getInstance().isCloudFoundry()) {
+            if (this.dbtype == null) {
 
-            String s = this.properties.getProperty(DBTYPE_SYSTEM_PROPERTY);
+                String s = this.properties.getProperty(DBTYPE_SYSTEM_PROPERTY);
 
-            if (s == null) {
-                // try to get dbtype from the connection url
-                if (this.connectionUrl != null) {
-                    s = getDBTypeFromURL(this.connectionUrl);
-                } else {
-                    // will cause errror later
+                if (s == null) {
+                    // try to get dbtype from the connection url
+                    if (this.connectionUrl != null) {
+                        s = getDBTypeFromURL(this.connectionUrl);
+                    } else {
+                        // will cause errror later
+                    }
                 }
-            }
 
-            if (s != null) {
-                setDBType(s);
+                if (s != null) {
+                    setDBType(s);
+                }
             }
         }
     }
