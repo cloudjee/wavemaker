@@ -55,7 +55,7 @@ DeploymentDialog.widgets = {
 	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
 		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onDblClick: "onNewDeployOk"}],
-		cloudfoundryRadio: ["wm.RadioButton", {"caption":"CloudFoundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
+		cloudfoundryRadio: ["wm.RadioButton", {"caption":"Cloud Foundry","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}]
 	    }]
 	}],
@@ -64,11 +64,11 @@ DeploymentDialog.widgets = {
 	    okButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "onNewDeployOk"}]
 	}]
     }],
-    cfLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"CloudFoundry Account Info","width":"400px","containerWidgetId":"mainPanel4","buttonBarId":"buttonBar2"}, {}, {
+    cfLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"Cloud Foundry Account Info","width":"400px","containerWidgetId":"mainPanel4","buttonBarId":"buttonBar2"}, {}, {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
-		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your CloudFoundry Account Info","padding":"4","width":"100%"}, {}],
-		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "caption":"CloudFoundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
+		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your Cloud Foundry Account Info","padding":"4","width":"100%"}, {}],
+		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
 		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
 		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}]
 	    }]
@@ -119,9 +119,9 @@ DeploymentDialog.widgets = {
 				    tcPasswordEditor: ["wm.Text", {"border":"0","caption":"Password","captionAlign":"left","captionSize":"140px","displayValue":"","width":"100%", required: true, password: true}, {}]
 				}],
 				cloudFoundryLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-				    cfDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New CloudFoundry Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
+				    cfDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Cloud Foundry Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
-				    cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
+				    cfHostEditor: ["wm.Text", {"border":"0","caption":"Cloud Foundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
 					cfUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%"}, {}, {
