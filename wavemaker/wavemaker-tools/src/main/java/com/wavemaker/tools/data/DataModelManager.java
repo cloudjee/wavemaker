@@ -158,13 +158,14 @@ public class DataModelManager {
         }
     }
 
-    public String getExportDDL(String username, String password, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
+    public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
 
         ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         exporter.setExportToDB(false);
         exporter.setVerbose(false);
+        exporter.setDBType(dbms);
 
         try {
             exporter.run();
@@ -603,6 +604,7 @@ public class DataModelManager {
         exporter.setConnectionUrl(connectionUrl);
         exporter.setVerbose(true);
         exporter.setOverrideTable(overrideTable);
+        exporter.setServiceName(serviceId);
 
         if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
             exporter.setDriverClassName(driverClassName);
