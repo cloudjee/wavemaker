@@ -647,7 +647,7 @@ public abstract class BaseDataModelSetup {
     }
 
     protected void checkDBType() {
-        if (WMAppContext.getInstance() == null || WMAppContext.getInstance().getCloudEnvironment() == null) {
+        if (WMAppContext.getInstance() == null || !WMAppContext.getInstance().isCloudFoundry()) {
             if (this.dbtype == null) {
 
                 String s = this.properties.getProperty(DBTYPE_SYSTEM_PROPERTY);

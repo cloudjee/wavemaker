@@ -285,7 +285,7 @@ public class ExportDB extends BaseDataModelSetup {
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
         String schemaName = t.v1, catalogName = t.v2;
         String urlDBName;
-        if (WMAppContext.getInstance().getCloudEnvironment() != null) {
+        if (WMAppContext.getInstance().isCloudFoundry()) {
             urlDBName = this.serviceName;
         } else {
             urlDBName = getDatabaseNameFromConnectionUrl();

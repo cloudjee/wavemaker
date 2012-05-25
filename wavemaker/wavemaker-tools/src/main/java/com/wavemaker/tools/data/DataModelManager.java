@@ -578,7 +578,7 @@ public class DataModelManager {
 
         // composite classes must be compiled
         compile();
-        if (WMAppContext.getInstance().getCloudEnvironment() != null) {
+        if (WMAppContext.getInstance().isCloudFoundry()) {
             ServiceCompilerTask task = new ServiceCompilerTask();
             task.processService(this.serviceManager, serviceId);
         }
