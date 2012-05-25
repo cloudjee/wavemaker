@@ -90,6 +90,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     public static final String POSTGRES_SERVICE_VERSION = "9.0";
 
     private static final String SERVICE_TIER = "free";
+    
+    private static final String TESTRUN_APP_NAME = "TestRun";
 
     private static final Log log = LogFactory.getLog(CloudFoundryDeploymentTarget.class);
 
@@ -188,6 +190,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             deploymentInfo.setToken(token.toString());
             deploymentInfo.setApplicationName(project.getProjectName());
             deploymentInfo.setTarget(cloudControllerUrl);
+            deploymentInfo.setApplicationName(TESTRUN_APP_NAME);
             return deploymentInfo;
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -238,6 +241,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         try {
             CloudFoundryClient client = getClient(deploymentInfo);
             String url = createApplication(client, deploymentInfo, checkExist);
+            log.info("Preparing: " + url);
             setupServices(client, deploymentInfo);
             uploadAppliation(client, deploymentInfo.getApplicationName(), applicationArchive);
             try {
@@ -277,28 +281,35 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
-        if (deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty()) {
-            deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo)); // testrun
-        }
-        String url = deploymentInfo.getDeploymentUrl();
-        // URL could already be in use - CF allows for such
-        String appName = deploymentInfo.getApplicationName();
-        // AppName can not already be in use
-        if (checkExist && appNameInUse(client, appName)) {
-            try {
-                client.deleteApplication(appName); // redploy of same app
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
-            }
-        }
-        try {
-            client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING),
-                Collections.singletonList(url), null, true);
-            return url;
-        } catch (CloudFoundryException e) {
-            throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
-        }
+    	String appName = deploymentInfo.getApplicationName();
+    	if(appName == TESTRUN_APP_NAME){ 
+    		if(appNameInUse(client, appName)){
+    			deploymentInfo.setDeploymentUrl(client.getApplication(appName).getUris().get(0));
+    		}
+    		else{
+    			deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo)); 
+    		}
+    	}
+    	if (deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty()) {
+    		deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo)); 
+    	}
+    	String url = deploymentInfo.getDeploymentUrl();
+
+    	if (checkExist && appNameInUse(client, appName)) {
+    		try {
+    			client.deleteApplication(appName); 
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
+    		}
+    	}
+    	try {
+    		client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING),
+    				Collections.singletonList(url), null, true);
+    		return url;
+    	} catch (CloudFoundryException e) {
+    		throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
+    	}
     }
 
     /**
@@ -437,7 +448,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
-        log.info("Restarting application " + deploymentInfo.getApplicationName());
+        log.info("Restarting application " + deploymentInfo.getApplicationName() + " as " + deploymentInfo.getDeploymentUrl());
         Timer timer = new Timer();
         timer.start();
         CloudFoundryUtils.restartApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
@@ -445,7 +456,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private void doStart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
-        log.info("Starting application " + deploymentInfo.getApplicationName());
+        log.info("Starting application " + deploymentInfo.getApplicationName() + " as " + deploymentInfo.getDeploymentUrl());
         Timer timer = new Timer();
         timer.start();
         CloudFoundryUtils.startApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
@@ -462,7 +473,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
             return client;
         } catch (MalformedURLException e) {
-            throw new WMRuntimeException("CloudFoundry target URL is invalid", e);
+            throw new WMRuntimeException("CloudFoundry target URL is invalid. Attempted: " + url, e);
         }
     }
 
