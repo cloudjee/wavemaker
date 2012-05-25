@@ -274,7 +274,6 @@ public class MongoResourceStoreTest {
         verify(gridFSInputFile).put("parent", "");
         verify(gridFSInputFile).put("resourceType", "FOLDER");
         verify(outputStream).close();
-
     }
 
     @Test
@@ -294,5 +293,4 @@ public class MongoResourceStoreTest {
         assertThat((String) this.queryCaptor.getValue().get("parent"), is(""));
         assertThat(actual, is(equalTo(expected)));
     }
-    // FIXME PW should not get of wrong type
 }
