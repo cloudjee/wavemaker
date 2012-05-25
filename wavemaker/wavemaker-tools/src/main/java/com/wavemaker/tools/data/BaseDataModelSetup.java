@@ -665,6 +665,11 @@ public abstract class BaseDataModelSetup {
                     setDBType(s);
                 }
             }
+        } else {
+            String s = getDBTypeFromURL(this.connectionUrl);
+            if (s != null) {
+                setDBType(s);
+            }
         }
     }
 
