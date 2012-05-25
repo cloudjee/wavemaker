@@ -28,6 +28,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
+import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 import com.wavemaker.tools.io.local.LocalResourceStore.LocalFileStore;
 import com.wavemaker.tools.io.local.LocalResourceStore.LocalFolderStore;
 
@@ -119,9 +120,23 @@ public class LocalResourceStoreTest {
     }
 
     @Test
+    public void shouldNotGetExistingFileAsFolder() throws Exception {
+        this.thrown.expect(ResourceTypeMismatchException.class);
+        this.thrown.expectMessage("Unable to access resource '/g.txt' as folder due to existing resource");
+        this.store.getFolder(new JailedResourcePath().get("g.txt"));
+    }
+
+    @Test
     public void shouldGetFile() throws Exception {
         File file = this.store.getFile(new JailedResourcePath().get("x"));
         assertThat(file.toString(), is("/x"));
+    }
+
+    @Test
+    public void shouldNotGetExistingFolderAsFile() throws Exception {
+        this.thrown.expect(ResourceTypeMismatchException.class);
+        this.thrown.expectMessage("Unable to access resource '/a' as file due to existing resource");
+        this.store.getFile(new JailedResourcePath().get("a"));
     }
 
     @Test
@@ -219,5 +234,4 @@ public class LocalResourceStoreTest {
         }
         assertThat(actual, is(equalTo(expected)));
     }
-
 }
