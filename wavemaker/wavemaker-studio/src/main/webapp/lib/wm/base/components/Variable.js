@@ -52,6 +52,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		@type Boolean
 	*/
         saveInCookie: false,
+        saveInPhonegap: false,
 	isList: false,
 	_updating: 0,
 	_dataSchema: {},
@@ -69,29 +70,31 @@ dojo.declare("wm.Variable", wm.Component, {
 		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
 	}
     },
-	postInit: function() {
-		this.inherited(arguments);
-	        this._inPostInit = true;
-		// optimization: we should never need bindings on subNards so not creating them
-		if (!this._subNard && !this.$.binding)
-			new wm.Binding({name: "binding", owner: this});
-	        this.setType(this.type, true);
-	        if (this.saveInCookie) {
-		    var textdata = dojo.cookie(this.getRuntimeId());
-		    if (textdata)
-			this.json = textdata;
-		}
-		if (this.json)
-			this.setJson(this.json);
-		else
-			this._clearData();
+    postInit: function() {
+	this.inherited(arguments);
+	this._inPostInit = true;
+	// optimization: we should never need bindings on subNards so not creating them
+	if (!this._subNard && !this.$.binding)
+	    new wm.Binding({name: "binding", owner: this});
+	this.setType(this.type, true);
+	if (window["PhoneGap"] && this.saveInPhonegap) {
+	    var textdata = window.localStorage.getItem(this.getRuntimeId());
+	    if (textdata) this.json = textdata;
+	} else if (this.saveInCookie) {
+	    var textdata = dojo.cookie(this.getRuntimeId());
+	    if (textdata) this.json = textdata;
+	}
+	if (this.json) 
+	    this.setJson(this.json);
+	else
+	    this._clearData();
 
-	    this._inPostInit = false;
+	this._inPostInit = false;
 
-		// need to reinitialize after type is set
-		if (!this._updating && this.$.binding)
-			this.$.binding.refresh();
-	},
+	// need to reinitialize after type is set
+	if (!this._updating && this.$.binding)
+	    this.$.binding.refresh();
+    },
 	//===========================================================================
 	// Type Information
 	//===========================================================================
@@ -235,7 +238,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	clearData: function() {
 		this._clearData();
 	        this.setType(this.type, true);
-	        if (this.type && this.type != this.declaredClass)
+	        if (this.type && this.type != this.declaredClass && !this._initializing)
 		    this.notify();
 	},
 	_clearData: function() {
@@ -273,7 +276,10 @@ dojo.declare("wm.Variable", wm.Component, {
 	*/
 	// NB: input can be a POJSO or a Variable
 	setData: function(inData) {
-	    if (this.saveInCookie) {
+	    /* Don't try setting data to null if we're still initializing components for the page;
+	     * that just clobbers the cookie/permanent memory with data not yet set
+	     */
+	    if (window["PhoneGap"] && this.saveInPhonegap || this.saveInCookie) {
 		var ownerPage = this.getParentPage();
 		if (ownerPage._loadingPage && !inData) return;
 	    }
@@ -290,7 +296,11 @@ dojo.declare("wm.Variable", wm.Component, {
 		this._setObjectData(inData);
 	    this.notify();
 	    this.onSetData();
-	    if (this.saveInCookie) {
+
+	    if (window["PhoneGap"] && this.saveInPhonegap) {
+		var datatext = dojo.toJson(this.getData());
+		window.localStorage.setItem(this.getRuntimeId(), datatext);
+	    } else if (this.saveInCookie) {
 		var datatext = dojo.toJson(this.getData() );
 		dojo.cookie(this.getRuntimeId(), datatext);
 	    }
@@ -787,6 +797,116 @@ dojo.declare("wm.Variable", wm.Component, {
 	v.setData(result);
 	return v;
     },
+/*
+    _queryItem: function(inItem, inSample, inIndex) {
+	var w = "*";
+	var isMatch = true;
+	wm.forEachProperty(inSample, function(value, key) {
+	    var matchStart = true;
+	    var valueA = inItem.getValue(key);
+
+	    var conditions = value;
+	    wm.forEachProperty(conditions, function(valueB, conditionKey) {
+		switch(conditionValue) {
+		case ">": 
+		    if (valueB <= valueA) 
+		case ">=":
+
+		case "<":
+
+
+		case "<=":
+
+		case: "=":
+
+		case "!=":
+
+		case "in":
+		}
+
+	    });
+	    var b = inSample[key];
+
+
+
+	    var stringB = String(b);
+	    if (stringB.charAt(0) == w) {
+		b = b.substring(1);
+		matchStart = false;
+	    } else if (stringB.charAt(0) == ">") {
+		var orEqual = false;
+		if (stringB.charAt(1) == "=") {
+		    orEqual = true;
+		    b = b.substring(2);
+		} else {
+		    b = b.substring(1);
+		}
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		if (orEqual) {
+		    if (a < b) return false;
+		} else {
+		    if (a <= b) return false;
+		}
+		continue;
+	    } else if (stringB.charAt(0) == "<") {
+		var orEqual = false;
+		if (stringB.charAt(1) == "=") {
+		    orEqual = true;
+		    b = b.substring(2);
+		} else {
+		    b = b.substring(1);
+		}
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		if (orEqual) {
+		    if (a > b) return false;
+		} else {
+		    if (a >= b) return false;
+		}
+		continue;
+	    } else if (stringB.charAt(0) == "!") {
+		b = b.substring(1);
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		var invert = true;
+	    }
+	    if (b == w) {
+		if (invert) return false;
+		else continue;
+	    }
+	    if (dojo.isString(a) && dojo.isString(b)) {
+		if (b.charAt(b.length-1) == w)
+		    b = b.slice(0, -1);
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		var matchIndex = a.indexOf(b);
+		if (matchIndex == -1 ||
+		    matchIndex > 0 && matchStart) {
+		    if (!invert) return false;
+		} else if (invert) {
+		    return false;
+		}
+	    }
+	    else if (a !== b) {
+		if (invert) continue;
+		else return false;
+	    } else if (invert) {
+		return false;
+	    }
+	}
+	return true;
+    },
+    */
     _queryItem: function(inItem, inSample, inIndex) {
 	var w = "*";
 
@@ -871,6 +991,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	}
 	return true;
     },
+
 	//===========================================================================
 	// Update Messaging
 	//===========================================================================

@@ -297,7 +297,9 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	},
 	doStartUpdate: function() {
-	    if (this.startUpdate && !this._loading) {
+	    /* Don't fire startUpdate if the component already has data saved from a previous session using the phonegap saveInPhoneGap property,
+	     * unless autoUpdate is also selected */
+	    if (this.startUpdate && !this._loading && (!window["PhoneGap"] || !this.saveInPhoneGap || this.isEmpty() || this.autoUpdate)) {
 		if (djConfig.isDebug) this.log("startUpdate");		
 		this.updateInternal();
 		if (djConfig.isDebug) this.endLog("startUpdate");
@@ -520,7 +522,7 @@ dojo.declare("wm.ServiceCall", null, {
 
 	    if (djConfig.isDebug) this.endLog("serviceCallResponse");
 
-	    if (!this._isDesignLoaded && this._inFlightBacklog.length) {
+	    if (!this._isDesignLoaded && this._inFlightBacklog && this._inFlightBacklog.length) {
 		wm.onidle(this, function() {
 		    var backlog = this._inFlightBacklog.shift();
 		    this.request(backlog.args, backlog.operation, backlog.deferred);
