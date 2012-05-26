@@ -9,7 +9,7 @@ dojo.declare("Main", wm.Page, {
     
   LoginServiceVariableSuccess: function(inSender, inDeprecated) {
       result = inDeprecated;
-      if (!result) return this.LoginServiceVariableError(inSender, "Login Failed");
+      if (!result || result.ERROR) return this.LoginServiceVariableError(inSender, result.ERROR);
       url = result.studio_url;
       token = result.wavemaker_authentication_token;
       cfdomain = result.domain;
@@ -18,8 +18,13 @@ dojo.declare("Main", wm.Page, {
       window.location = url;
     },
   LoginServiceVariableError: function(inSender, inError) {
+      wm.cancelJob("startProgressBar");
+      if(inError == "Not VMW"){inError = "We're in limited preview mode right now.<br>That accout is not authorized.<br>Come back when we start the public beta !";}
+      if(inError == "Login has failed") {inError = "Invalid user account information";}
+      if(!inError){inError = "Login Failed";}
+      this.labelMessage.setCaption(inError);
+      this.layerFail.activate();
       this.loginLayer.activate();
-      app.alert(inError);
     },
   progressBarTimerTimerFire: function(inSender) {
     var max = 1000 * 120;
@@ -57,18 +62,17 @@ dojo.declare("Main", wm.Page, {
             				    properties: {opacity: 1},
 						        duration: 1500
                             }).play();
-
-
 						  })}).play();
-      
     },
   LogInButtonClick: function(inSender) {
       this.LoginServiceVariable.update();
+      wm.job("startProgressBar", 500, dojo.hitch(this, function() {
       this.progressBar1.setProgress(0);
       this.waitingLayer.activate();
       this.progressBarTimer.startTimer();
       this._startTimerTime = new Date().getTime();
       this._endTimerTime = this._startTimerTime + 1000 * 120;
+        }));
     },
   _end: 0
 });
