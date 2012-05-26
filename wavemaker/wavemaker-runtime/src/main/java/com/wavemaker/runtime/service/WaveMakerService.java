@@ -87,64 +87,84 @@ public class WaveMakerService {
      * ["http://localhost:8080/AppScopeReFire/services/test.json",
      * "{'params':['string one','string two'],'method':'test','id':1}"]);
      */
-    public String remoteRESTCall(String remoteURL, String params, String method, String contentType) {
-        String charset = "UTF-8";
-        StringBuffer returnString = new StringBuffer();
-        try {
-            URL url = new URL(remoteURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod(method);
-            connection.setDoInput(true);
-            connection.setRequestProperty("Accept-Charset", "application/json");
-            connection.setRequestProperty("Content-Type", contentType);
-            connection.setRequestProperty("Content-Language", charset);
-            connection.setUseCaches(false);
+    public String remoteRESTCall(String remoteURL, String params, String method, String contentType){
+    	String charset = "UTF-8";
+    	StringBuffer returnString = new StringBuffer();
+    	try{
+		System.out.println("URL: " + remoteURL);
+		if (method.equals("PUT") || method.equals("POST") || params == null || params.equals("")) {
+		} else {
+		    if (remoteURL.indexOf("?") != -1) {
+			remoteURL += "&" + params;
+		    } else {
+			remoteURL += "?" + params;
+		    }
+		}
 
-            HttpServletRequest request = RuntimeAccess.getInstance().getRequest();
-            Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String name = headerNames.nextElement();
-                Enumeration<String> headers = request.getHeaders(name);
-                if (headers != null) {
-                    while (headers.hasMoreElements()) {
-                        String headerValue = headers.nextElement();
-                        connection.setRequestProperty(name, headerValue);
-                    }
-                }
-            }
+    		URL url  = new URL (remoteURL);
+    		HttpURLConnection connection = (HttpURLConnection) url.openConnection(); 
+    		connection.setDoOutput(true); 
+    		connection.setRequestMethod(method);
+		System.out.println("METHOD: " + method);
+    		connection.setDoInput(true);  
+    		connection.setRequestProperty("Accept-Charset", "application/json");
+    		connection.setRequestProperty("Content-Type", contentType);       
+		System.out.println("Content-type: " + contentType);
+    		connection.setRequestProperty("Content-Language", charset);   			
+    		connection.setUseCaches (false);
+    		
+    		HttpServletRequest request = RuntimeAccess.getInstance().getRequest();
+    		Enumeration<String> headerNames = request.getHeaderNames();
+    			while(headerNames.hasMoreElements()) {
+    				String name = (String)headerNames.nextElement();
+    				Enumeration<String> headers = request.getHeaders(name);
+    				if(headers!=null){
+    					while(headers.hasMoreElements()){
+    					String headerValue = (String) headers.nextElement();
+    					connection.setRequestProperty(name, headerValue);
+					System.out.println("HEADER: " + name + ": " + headerValue);
+    					}
+    				}
+    			}
+    		
+    		//Re-wrap single quotes into double quotes
+			String finalParams;
+			if (contentType == "application/json") {
+			    finalParams = params.replace("\'", "\""); 
+			    if (!method.equals("POST") && !method.equals("PUT") && method != null && !method.equals("")) { 
+				URLEncoder.encode(finalParams, charset);  		
+			    }
+			} else {
+			    finalParams = params;
+			}
 
-            // Re-wrap single quotes into double quotes
-            String dquoteParams = params.replace("\'", "\"");
-            URLEncoder.encode(dquoteParams, charset);
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(dquoteParams.getBytes().length));
+    		connection.setRequestProperty("Content-Length", "" + 
+    				Integer.toString(finalParams.getBytes().length));
 
-            // set payload
-            DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-            writer.writeBytes(dquoteParams);
-            writer.flush();
-            writer.close();
+    		//set payload 
+		if (method.equals("POST") || method.equals("PUT") || method == null || method.equals("")) {
+		    DataOutputStream writer = new DataOutputStream (
+								    connection.getOutputStream ());
+		    writer.writeBytes(finalParams);
+		    writer.flush ();
+		    writer.close ();
+		} 
 
-            InputStream response = connection.getInputStream();
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new InputStreamReader(response, charset));
-                for (String line; (line = reader.readLine()) != null;) {
-                    returnString.append(line);
-                }
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (Exception e) {
-                    }
-                }
-            }
-            connection.disconnect();
-            return returnString.toString();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
+    		InputStream response = connection.getInputStream();
+    		BufferedReader reader = null;
+    		try {
+    			reader = new BufferedReader(new InputStreamReader(response, charset));
+    			for (String line; (line = reader.readLine()) != null;) {
+    				returnString.append(line);
+    			}
+    		} finally {
+    			if (reader != null) try { reader.close(); } catch (Exception e) {}
+    		}
+    		connection.disconnect(); 
+    		return  returnString.toString();
+    	} catch(Exception e) { 
+    		throw new WMRuntimeException(e); 
+    	} 
     }
 
     /*

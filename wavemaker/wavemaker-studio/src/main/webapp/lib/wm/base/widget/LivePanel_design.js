@@ -603,6 +603,7 @@ wm.LivePanel.extend({
 			this.dataGrid.columns[0].show = true;
 		    }
 		}
+		this.dataGrid.renderDojoObj();
 	    });
 
 	},

@@ -31,6 +31,8 @@ dojo.declare("wm.Application", wm.Component, {
     main: "Main",
     tabletMain: "",
     phoneMain: "",
+    isSecurityEnabled: false,
+    phoneGapLoginPage: "Login",
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
         projectSubVersion: "Alpha",
@@ -652,9 +654,13 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (!main) {
 		main = this.main;
 	    }
-	        this.pageContainer._initialPageName = main;
+	    this.pageContainer._initialPageName = main;
+	    if (window["PhoneGap"] && this.isSecurityEnabled && this.phoneGapLoginPage) {
+		this.loadPage(this.phoneGapLoginPage);
+	    } else {
 		this.loadPage(main);
-	        this.hideLoadingIndicator();
+	    }
+	    this.hideLoadingIndicator();
 	},
 	start: function() {
 		//this.hideLoadingIndicator();

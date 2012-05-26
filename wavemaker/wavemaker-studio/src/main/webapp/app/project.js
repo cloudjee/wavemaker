@@ -515,6 +515,7 @@ dojo.declare("wm.studio.Project", null, {
 	            studio.setSaveProgressBarMessage("login.html");
 	            studio.incrementSaveProgressBar(1);
 		    this.saveComplete();
+		    this.updatePhonegapFiles();
 		    if (onSave) onSave();
 		    if (isFolded) {
 			studio.page.root.foldUI();
@@ -550,6 +551,10 @@ dojo.declare("wm.studio.Project", null, {
 	    */
 
 	},
+    updatePhonegapFiles: function() {
+	studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
+    },
+
     // finished saving the project files (but not necesarily the service files)
     saveComplete: function() {
 /*
@@ -599,8 +604,18 @@ dojo.declare("wm.studio.Project", null, {
 	     */
 	    var d = studio.studioService.requestAsync("openProject", [this.projectName]);
 
-	    var loadSMDDeferred = new dojo.Deferred();
+
+	    var dSecurityCheck = new dojo.Deferred();
 	    d.addCallback(dojo.hitch(this, function() {
+		var dlocal = studio.securityConfigService.requestAsync("isSecurityEnabled", []);
+		dlocal.addCallback(dojo.hitch(this, function(inResult) {
+		    studio.application.isSecurityEnabled = inResult;
+		    dSecurityCheck.callback();
+		}));
+	    }));
+
+	    var loadSMDDeferred = new dojo.Deferred();
+	    dSecurityCheck.addCallback(dojo.hitch(this, function() {
 	        studio.incrementSaveProgressBar(1);
 		allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
 		allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
@@ -771,6 +786,7 @@ dojo.declare("wm.studio.Project", null, {
 		dlocal.addCallback(function() {d10.callback();});
 	    }));
 
+/*
 	    var d11 = new dojo.Deferred();
 	    d10.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
@@ -781,9 +797,9 @@ dojo.declare("wm.studio.Project", null, {
 		    d11.callback();
 		}
 	    }));
-
+	    */
 	    var d12 = new dojo.Deferred();
-	    d11.addCallback(dojo.hitch(this, function() {
+	    d10.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
 		studio.setCleanApp();
 		callback();

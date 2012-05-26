@@ -178,7 +178,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
 		    b[inFlowAxis] = tmpSize;
 		    
-		    if (wm.isMobile && inFlowAxis == "w" && isNaN(b.w) ){
+		    if (wm.isMobile && isNaN(b.w) ){
 			b.w = parseInt(c.width);
 		    }
 		    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
@@ -194,6 +194,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			    cFitSize = b[inFitAxis] = Math.min(100, c._percEx[inFitAxis]) * fitBound * 0.01;
 		    } else {
                         cFitSize = c.bounds[inFitAxis];
+			if (c.width && parseInt(c.width) > cFitSize) {
+			    cFitSize = parseInt(c.width);
+			}
 			delete b[inFitAxis];
                     }
 
@@ -225,9 +228,6 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 				cFitSize = b.w;
 			}
 		    }
-		    if (wm.isMobile && (b.w > originalB.w || isNaN(b.w) && c.bounds.w > originalB.w)) {
-			b.w = originalB.w;
-		    }
 
 
 		    switch (inFitAlign) {
@@ -238,14 +238,23 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			break;
 		    case "center":
 		    case "middle":
-			b[inFitOrd] = (fitOrd + fitBound - cFitSize) / 2; 
+			if (fitBound > cFitSize) {
+			    b[inFitOrd] = (fitOrd + fitBound - cFitSize) / 2; 
+			} else {
+			    b[inFitOrd] = fitOrd;
+			}
 			if (b[inFitOrd] < 0) b[inFitOrd] = 0;
 			break;
 		    case "bottom":
 		    case "right":
-			b[inFitOrd] = fitOrd + fitBound - cFitSize;  
+			b[inFitOrd] = Math.max(0,fitOrd + fitBound - cFitSize);  
 			break;
 		    }
+
+		    if (wm.isMobile && (b.w > originalB.w || isNaN(b.w) && c.bounds.w > originalB.w)) {
+			b.w = originalB.w;
+		    }
+
 
                     /* Step 7e:  Update the bounds for the control; any bounds that were deleted or set to NaN will be left as is */
  		    c.setBounds(b.l, b.t, b.w, b.h);
