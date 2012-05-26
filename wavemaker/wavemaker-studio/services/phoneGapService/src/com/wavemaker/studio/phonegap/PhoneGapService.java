@@ -139,6 +139,8 @@ public class PhoneGapService {
     }
 
     private void fixupXCodeFilesFollowingSetup() {
+	/* phonegap has fixed this finally?
+
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         File mainViewControllerFile = xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
@@ -152,6 +154,7 @@ public class PhoneGapService {
                 + content.substring(end);
             mainViewControllerFile.getContent().write(content);
         }
+	*/
     }
 
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
@@ -204,8 +207,9 @@ public class PhoneGapService {
         // Delete all pages, resources and project files so we can re-copy updated version of them
         ResourceAttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
         phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
+
         // Copy project files for phonegap
-        projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
+	projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
         // Update index and login HTML files
         String phonegapName = getPhoneGapScript(phoneGapFolder);
