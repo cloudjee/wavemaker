@@ -1,6 +1,7 @@
 
 package com.wavemaker.tools.io.store;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -19,8 +20,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -40,10 +43,16 @@ import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 
+/**
+ * Tests for {@link StoredFolder}.
+ * 
+ * @author Phillip Webb
+ */
 public class StoredFolderTest {
 
     @Rule
@@ -268,6 +277,45 @@ public class StoredFolderTest {
     }
 
     @Test
+    public void shouldIterateUsingList() throws Exception {
+        this.folder.getFolder("a", true);
+        this.folder.getFile("b", true);
+        given(this.folder.getStore().exists()).willReturn(true);
+        given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
+        Iterator<Resource> iterator = this.folder.iterator();
+        Resource resourceA = iterator.next();
+        Resource resourceB = iterator.next();
+        assertThat(iterator.hasNext(), is(false));
+        assertThat(resourceA, is(Folder.class));
+        assertThat(resourceB, is(File.class));
+        assertThat(resourceA.toString(), is("/a/"));
+        assertThat(resourceB.toString(), is("/b"));
+    }
+
+    @Test
+    public void shouldPerformOperationRecursively() throws Exception {
+        MockStoredFolder a = this.folder.getFolder("a");
+        MockStoredFile b = a.getFile("b");
+        MockStoredFolder c = this.folder.getFolder("c");
+        given(this.folder.exists()).willReturn(true);
+        given(a.exists()).willReturn(true);
+        given(b.exists()).willReturn(true);
+        given(c.exists()).willReturn(true);
+        given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "c"));
+        given(a.getStore().list()).willReturn(Arrays.asList("b"));
+
+        final Set<String> seen = new HashSet<String>();
+        this.folder.performOperationRecursively(new ResourceOperation<Resource>() {
+
+            @Override
+            public void perform(Resource resource) {
+                seen.add(resource.toString());
+            }
+        });
+        assertThat(seen, is(equalTo((Set<String>) new HashSet<String>(Arrays.asList("/a/", "/a/b", "/c/")))));
+    }
+
+    @Test
     public void shouldMoveWithoutChildren() throws Exception {
         Folder destination = mock(Folder.class);
         Folder destinationChild = mock(Folder.class);
@@ -449,17 +497,44 @@ public class StoredFolderTest {
 
     @Test
     public void shouldRename() throws Exception {
-        // FIXME
+        MockStoredFolder subFolder = this.folder.getFolder("subfolder");
+        given(subFolder.getStore().exists()).willReturn(true);
+        subFolder.rename("folder.bak");
+        verify(subFolder.getStore()).rename("folder.bak");
+    }
+
+    @Test
+    public void shouldNotRenameRootFolder() throws Exception {
+        given(this.folder.getStore().exists()).willReturn(true);
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Root folders cannot be renamed");
+        this.folder.rename("folder.bak");
     }
 
     @Test
     public void shouldNotRenameIfDoesNotExist() throws Exception {
-        // FIXME
+        MockStoredFolder subFolder = this.folder.getFolder("subfolder");
+        given(subFolder.getStore().exists()).willReturn(false);
+        this.thrown.expect(ResourceDoesNotExistException.class);
+        this.thrown.expectMessage("The resource '/subfolder/' does not exist");
+        subFolder.rename("file.bak");
     }
 
     @Test
-    public void shouldNotRenameIfNameInUse() throws Exception {
-        // FIXME
+    public void shouldNotRenameToEmpty() throws Exception {
+        MockStoredFolder subFolder = this.folder.getFolder("subfolder");
+        given(subFolder.getStore().exists()).willReturn(true);
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Name must not be empty");
+        subFolder.rename("");
+    }
+
+    @Test
+    public void shouldNotRenameWithPathElements() throws Exception {
+        given(this.folder.getStore().exists()).willReturn(true);
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Name must not contain path elements");
+        this.folder.rename("file/bak");
     }
 
     @Test

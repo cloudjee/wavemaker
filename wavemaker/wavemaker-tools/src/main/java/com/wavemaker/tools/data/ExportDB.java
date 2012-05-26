@@ -42,6 +42,7 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.util.JDBCUtils;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
 import com.wavemaker.tools.io.Folder;
@@ -283,7 +284,12 @@ public class ExportDB extends BaseDataModelSetup {
 
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
         String schemaName = t.v1, catalogName = t.v2;
-        String urlDBName = getDatabaseNameFromConnectionUrl();
+        String urlDBName;
+        if (WMAppContext.getInstance().isCloudFoundry()) {
+            urlDBName = this.serviceName;
+        } else {
+            urlDBName = getDatabaseNameFromConnectionUrl();
+        }
         String url = this.connectionUrl;
 
         if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {

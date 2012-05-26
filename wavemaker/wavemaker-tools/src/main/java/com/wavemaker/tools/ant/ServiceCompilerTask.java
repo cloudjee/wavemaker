@@ -25,6 +25,7 @@ import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.ServiceClassGenerator;
 import com.wavemaker.tools.service.ServiceFile;
+import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
  * Generate service classes.
@@ -51,29 +52,33 @@ public class ServiceCompilerTask extends CompilerTask {
     @Override
     protected void doExecute() {
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
-            Folder serviceDir = getDesignServiceManager().getServiceRuntimeFolder(serviceId);
-            Folder serviceFolder = getDesignServiceManager().getServiceRuntimeFolder(serviceId);
-            if (!serviceFolder.exists()) {
-                throw new BuildException("Could not locate service home for " + serviceId);
-            }
-            ServiceClassGenerator generator = new ServiceClassGenerator();
-            Resources<File> files = getServiceFiles(serviceFolder);
-            List<ServiceFile> serviceFiles = new ArrayList<ServiceFile>();
-            for (File file : files) {
-                File resource = serviceDir.getFile(file.getName());
-                serviceFiles.add(new ServiceFile(file, resource));
-            }
-            generator.addServiceFiles(serviceFiles, serviceId);
-
-            if (this.destDir == null) {
-                generator.setOutputDirectory(serviceDir);
-            } else {
-                generator.setOutputDirectory(this.destDir);
-            }
-
-            generator.setDesignServiceManager(getDesignServiceManager());
-            generator.run();
+            processService(getDesignServiceManager(), serviceId);
         }
+    }
+
+    public void processService(DesignServiceManager serviceMgr,  String serviceId) {
+        Folder serviceDir = serviceMgr.getServiceRuntimeFolder(serviceId);
+        Folder serviceFolder = serviceMgr.getServiceRuntimeFolder(serviceId);
+        if (!serviceFolder.exists()) {
+            throw new BuildException("Could not locate service home for " + serviceId);
+        }
+        ServiceClassGenerator generator = new ServiceClassGenerator();
+        Resources<File> files = getServiceFiles(serviceFolder);
+        List<ServiceFile> serviceFiles = new ArrayList<ServiceFile>();
+        for (File file : files) {
+            File resource = serviceDir.getFile(file.getName());
+            serviceFiles.add(new ServiceFile(file, resource));
+        }
+        generator.addServiceFiles(serviceFiles, serviceId);
+
+        if (this.destDir == null) {
+            generator.setOutputDirectory(serviceDir);
+        } else {
+            generator.setOutputDirectory(this.destDir);
+        }
+
+        generator.setDesignServiceManager(serviceMgr);
+        generator.run();
     }
 
     @Override

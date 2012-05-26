@@ -51,8 +51,6 @@ public abstract class CompilerTask extends Task {
 
     private DesignServiceManager designServiceManager = null;
 
-    protected StudioFileSystem fileSystem;
-
     protected CompilerTask() {
         this(false);
     }
@@ -61,7 +59,6 @@ public abstract class CompilerTask extends Task {
         if (init) {
             AntUtils.bootstrap(getClass().getClassLoader());
         }
-        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     // REVIEW 25-Sep-07 stoens@activegrid.com -- We also need to handle

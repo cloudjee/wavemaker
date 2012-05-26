@@ -14,18 +14,15 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
-import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.Project;
@@ -45,9 +42,9 @@ public class ServiceClassGenerator {
 
     private final List<ServiceDetail> serviceDetails = new ArrayList<ServiceDetail>();
 
-    private Folder outputDirectory = null;
+    private Folder outputDirectory;
 
-    private DesignServiceManager serviceManager = null;
+    private DesignServiceManager serviceManager;
 
     public void setDesignServiceManager(DesignServiceManager serviceManager) {
         this.serviceManager = serviceManager;
@@ -69,55 +66,53 @@ public class ServiceClassGenerator {
     }
 
     public void run() {
-        if (this.serviceManager == null) {
-            throw new ConfigurationException("serviceManager cannot be null");
-        }
-
+        Assert.state(this.serviceManager != null, "ServiceManager cannot be null");
         for (ServiceDetail serviceDetail : this.serviceDetails) {
-            String serviceId = serviceDetail.getServiceId();
-            ServiceFile serviceFile = serviceDetail.getServiceFile();
+            run(serviceDetail);
+        }
+    }
 
-            DeprecatedServiceDefinition def = ServiceUtils.getServiceDefinition(serviceFile, serviceId, this.serviceManager);
+    private void run(ServiceDetail serviceDetail) {
+        DeprecatedServiceDefinition serviceDefinition = ServiceUtils.getServiceDefinition(serviceDetail.getServiceFile(),
+            serviceDetail.getServiceId(), this.serviceManager);
+        if (serviceDefinition != null) {
+            run(serviceDetail, serviceDefinition);
+        }
+    }
 
-            if (def != null) {
-                GenerationConfiguration cfg = new GenerationConfiguration(def, this.outputDirectory);
-                ServiceGenerator generator = ServiceUtils.getServiceGenerator(cfg);
-
-                Resource serviceRuntimeDirectory = this.serviceManager.getServiceRuntimeDirectory(serviceId);
-                long lastModified;
-                try {
-                    lastModified = serviceRuntimeDirectory.lastModified();
-                } catch (IOException ex) {
-                    throw new WMRuntimeException(ex);
-                }
-                if (generator.isUpToDate(lastModified)) {
-                    if (this.logger.isInfoEnabled()) {
-                        this.logger.info("service " + def.getServiceId() + " is up to date");
-                    }
-                    continue;
-                } else {
-                    if (this.logger.isInfoEnabled()) {
-                        this.logger.info("service " + def.getServiceId() + " needs to be re-generated");
-                    }
-                }
-
-                try {
-                    Project project = this.serviceManager.getProjectManager().getCurrentProject();
-                    File smdFile = ConfigurationCompiler.getSmdFile(project, serviceId);
-                    String smdContent = smdFile.getContent().asString();
-                    generator.setSmdContent(smdContent);
-                    generator.generate();
-                } catch (GenerationException ex) {
-                    throw new WMRuntimeException(ex);
-                } finally {
-                    try {
-                        def.dispose();
-                    } catch (RuntimeException ex) {
-                        this.logger.warn("Error while cleaning up", ex);
-                    }
-                }
+    private void run(ServiceDetail serviceDetail, DeprecatedServiceDefinition serviceDefinition) {
+        ServiceGenerator generator = ServiceUtils.getServiceGenerator(new GenerationConfiguration(serviceDefinition, this.outputDirectory));
+        if (isUpToDate(serviceDetail, serviceDefinition, generator)) {
+            this.logger.info("service " + serviceDefinition.getServiceId() + " is up to date");
+            return;
+        }
+        this.logger.info("service " + serviceDefinition.getServiceId() + " needs to be re-generated");
+        try {
+            Project project = this.serviceManager.getProjectManager().getCurrentProject();
+            File smdFile = ConfigurationCompiler.getSmdFile(project, serviceDetail.getServiceId());
+            String smdContent = smdFile.getContent().asString();
+            generator.setSmdContent(smdContent);
+            generator.generate();
+        } catch (GenerationException ex) {
+            throw new WMRuntimeException(ex);
+        } finally {
+            try {
+                serviceDefinition.dispose();
+            } catch (RuntimeException ex) {
+                this.logger.warn("Error while cleaning up", ex);
             }
         }
+    }
+
+    private boolean isUpToDate(ServiceDetail serviceDetail, DeprecatedServiceDefinition serviceDefinition, ServiceGenerator generator) {
+        Folder runtimeFolder = this.serviceManager.getServiceRuntimeFolder(serviceDetail.getServiceId());
+        // cftempfix - Uncomment the following lines when Phil implements lastModified for Folder.
+        /*
+         * long lastModified; try { lastModified = runtimeFolder.lastModified(); } catch (IOException ex) { throw new
+         * WMRuntimeException(ex); }
+         */
+        // return generator.isUpToDate(xxx);
+        return false;
     }
 
     private static class ServiceDetail {

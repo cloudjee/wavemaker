@@ -26,6 +26,11 @@ import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
 
+/**
+ * {@link ResourceStore}s for {@link MongoFile} and {@link MonoFolder}.
+ * 
+ * @author Phillip Webb
+ */
 abstract class MongoResourceStore implements ResourceStore {
 
     private static final String PARENT = "parent";
@@ -121,7 +126,11 @@ abstract class MongoResourceStore implements ResourceStore {
 
     @Override
     public Resource rename(String name) {
-        throw new UnsupportedOperationException(); // FIXME
+        GridFSDBFile gridFSDBFile = getGridFSDBFile(getPath(), true);
+        JailedResourcePath renamed = getPath().unjail().getParent().get(name);
+        gridFSDBFile.put("filename", getFilename(renamed));
+        gridFSDBFile.save();
+        return getRenamedResource(renamed);
     }
 
     protected abstract Resource getRenamedResource(JailedResourcePath path);
@@ -180,7 +189,9 @@ abstract class MongoResourceStore implements ResourceStore {
 
         @Override
         public void touch() {
-            getGridFSDBFile(getPath(), true).put("uploadDate", new Date());
+            GridFSDBFile gridFSDBFile = getGridFSDBFile(getPath(), true);
+            gridFSDBFile.put("uploadDate", new Date());
+            gridFSDBFile.save();
         }
     }
 

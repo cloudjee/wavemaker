@@ -31,6 +31,11 @@ public class LocalFile extends StoredFile {
         return this.store;
     }
 
+    /**
+     * Returns access to the underlying local {@link File}.
+     * 
+     * @return the underlying {@link File}
+     */
     public java.io.File getLocalFile() {
         return this.store.getFile();
     }

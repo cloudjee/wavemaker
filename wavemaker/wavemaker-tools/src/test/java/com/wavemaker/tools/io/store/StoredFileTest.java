@@ -24,6 +24,11 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 
+/**
+ * Tests for {@link StoredFile}.
+ * 
+ * @author Phillip Webb
+ */
 public class StoredFileTest {
 
     @Rule
@@ -53,13 +58,18 @@ public class StoredFileTest {
     }
 
     @Test
-    public void shouldTouchNonExistingFile() throws Exception {
-        // FIXME
+    public void shouldThrowOnTouchNonExistingFile() throws Exception {
+        given(this.file.exists()).willReturn(false);
+        this.thrown.expect(ResourceDoesNotExistException.class);
+        this.thrown.expectMessage("The resource '/file.txt' does not exist");
+        this.file.touch();
     }
 
     @Test
-    public void shouldThrowOnTouchExistingFile() throws Exception {
-        // FIXME
+    public void shouldTouchExistingFile() throws Exception {
+        given(this.file.exists()).willReturn(true);
+        this.file.touch();
+        verify(this.file.getStore()).touch();
     }
 
     @Test
@@ -157,17 +167,33 @@ public class StoredFileTest {
 
     @Test
     public void shouldRename() throws Exception {
-        // FIXME
+        given(this.file.getStore().exists()).willReturn(true);
+        this.file.rename("file.bak");
+        verify(this.file.getStore()).rename("file.bak");
     }
 
     @Test
     public void shouldNotRenameIfDoesNotExist() throws Exception {
-        // FIXME
+        given(this.file.getStore().exists()).willReturn(false);
+        this.thrown.expect(ResourceDoesNotExistException.class);
+        this.thrown.expectMessage("The resource '/file.txt' does not exist");
+        this.file.rename("file.bak");
     }
 
     @Test
-    public void shouldNotRenameIfNameInUse() throws Exception {
-        // FIXME
+    public void shouldNotRenameToEmpty() throws Exception {
+        given(this.file.getStore().exists()).willReturn(true);
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Name must not be empty");
+        this.file.rename("");
+    }
+
+    @Test
+    public void shouldNotRenameWithPathElements() throws Exception {
+        given(this.file.getStore().exists()).willReturn(true);
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Name must not contain path elements");
+        this.file.rename("file/bak");
     }
 
     @Test

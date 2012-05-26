@@ -64,7 +64,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     public GridFSStudioFileSystem(MongoDbFactory mongoFactory) {
         DB db = mongoFactory.getDb();
-        this.rootFolder = new MongoFolder(db, GridFS.DEFAULT_BUCKET);
+        this.rootFolder = new MongoFolder(db);
         this.delegate = new LocalStudioFileSystem();
         setupBasicStructure();
     }

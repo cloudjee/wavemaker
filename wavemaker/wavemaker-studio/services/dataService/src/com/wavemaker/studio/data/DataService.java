@@ -217,7 +217,7 @@ public class DataService {
     public String getExportDDL(String serviceId, String username, String password, String connectionUrl, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
 
-        return this.dataModelMgr.getExportDDL(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+        return this.dataModelMgr.getExportDDL(username, password, "", connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             overrideTable);
     }
 
@@ -366,18 +366,11 @@ public class DataService {
         }
     }
 
-    public String cfGetExportDDL(String serviceId, String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
-        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
-        if (cfEnv != null) {
-            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
-            String connectionUrl = info.getUrl();
-            String username = info.getUserName();
-            String password = info.getPassword();
-            return this.dataModelMgr.getExportDDL(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
-                overrideTable);
-        } else {
-            throw new UnsupportedOperationException();
-        }
+    public String cfGetExportDDL(String serviceId, String dbms, String schemaFilter, String driverClassName,
+                                 String dialectClassName, boolean overrideTable) {
+
+        return this.dataModelMgr.getExportDDL("", "", dbms, "", serviceId, schemaFilter, driverClassName, dialectClassName,
+                overrideTable);      
     }
 
     public RdbmsServiceInfo getCFRdbmsServiceInfo(CloudEnvironment cfEnv, String serviceId) throws WMRuntimeException {

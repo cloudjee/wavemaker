@@ -13,6 +13,11 @@ import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
 
+/**
+ * {@link ResourceStore}s for {@link ZipFile} and {@link ZipFolder}.
+ * 
+ * @author Phillip Webb
+ */
 abstract class ZipResourceStore implements ResourceStore {
 
     private final Zip zip;

@@ -37,12 +37,12 @@ public class SpinUpService extends JavaServiceSuperClass {
               log(ERROR, "User: " + username + " NOT allowed");
               return null;
           }
-          log(INFO, "Loging in user: = " + username );
+          log(INFO, "Logging in user: = " + username );
           loginCredentials = new LoginCredentialsBean(username, password);
           request = RuntimeAccess.getInstance().getRequest();
           response = RuntimeAccess.getInstance().getResponse();
           result = spinupController.processLogin(loginCredentials, request, response);
-          log(INFO, "Counter now: " + counter++);
+          log(INFO, "Counter now: " + ++counter);
        } catch(Exception e) {
           log(ERROR, "Login has failed", e);
           log(ERROR, e.getMessage());
