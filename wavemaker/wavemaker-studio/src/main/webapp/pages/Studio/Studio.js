@@ -524,6 +524,16 @@ dojo.declare("Studio", wm.Page, {
 		    this.select(this.page.root);
 		    this.refreshDesignTrees();
 		}
+	    switch(this.currentDeviceType) {
+	    case "tablet":
+		this.designTabletUI();
+		break;
+	    case "phone":
+		this.designPhoneUI();
+		break;
+	    default: 
+		this.designDesktopUI();
+	    }
 		dojo.publish("wm-page-changed");
 		this.pagesChanged();
 	},
