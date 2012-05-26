@@ -608,8 +608,8 @@ dojo.declare("wm.studio.Project", null, {
 	    var dSecurityCheck = new dojo.Deferred();
 	    d.addCallback(dojo.hitch(this, function() {
 		var dlocal = studio.securityConfigService.requestAsync("isSecurityEnabled", []);
-		d.addCallback(dojo.hitch(this, function(inResult) {
-		    studio.application.isSecurityEnabled = true;
+		dlocal.addCallback(dojo.hitch(this, function(inResult) {
+		    studio.application.isSecurityEnabled = inResult;
 		    dSecurityCheck.callback();
 		}));
 	    }));
