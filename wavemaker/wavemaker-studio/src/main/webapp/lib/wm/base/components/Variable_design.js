@@ -39,6 +39,9 @@ wm.Object.extendSchema(wm.Variable, {
     /* Data group; behavior subgroup */
     saveInCookie: {group: "data", subgroup: "behavior", order: 20, advanced:1},
 
+    /* Mobile group */
+    saveInPhonegap: {group: "mobile", order: 1, advanced: 1},
+
     /* Common group */
     owner: {ignore:0},
 

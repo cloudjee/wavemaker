@@ -96,8 +96,7 @@ dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
 	}
 
 	var deferred = wm.login([user,pass],
-				this.useDefaultSuccessHandler ? null : function() {}, // null allows default handler to fire
-				dojo.hitch(this, "onError"));
+				this.useDefaultSuccessHandler ? null : function() {});
 	deferred.addCallbacks(
 	    dojo.hitch(this, function() {
 		this.onResult();

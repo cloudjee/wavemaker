@@ -26,7 +26,8 @@ wm.Object.extendSchema(wm.LogoutVariable, {
         updateNow: {ignore: 1},
         queue: {ignore: 1},
         maxResults: {ignore: 1},
-        designMaxResults: {ignore: 1}
+    designMaxResults: {ignore: 1},
+    downloadFile: {ignore: 1}
   });
 
 
@@ -37,3 +38,23 @@ wm.LogoutVariable.extend({
 	/** @lends wm.LogoutVariable.prototype */
   });
 /**#@- @design */
+
+wm.Object.extendSchema(wm.LoginVariable, {
+    useDefaultSuccessHandler: {group: "widgetName", subgroup: "behavior", type: "boolean"},
+    operation: {ignore: 1},
+    service: {ignore: 1},
+        clearInput: { ignore: 1},
+	onSetData: {ignore: 1},
+	service: {ignore: 1},
+        updateNow: {ignore: 1},
+        queue: {ignore: 1},
+        maxResults: {ignore: 1},
+    designMaxResults: {ignore: 1},
+    saveInPhonegap: {ignore: 1},
+    firstRow: {ignore: 1},
+downloadFile: {ignore: 1},
+
+onPrepareSetData: {ignore: 1},
+onSetData: {ignore: 1}
+    
+});
