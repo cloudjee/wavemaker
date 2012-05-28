@@ -63,9 +63,7 @@ wm.Object.extendSchema(wm.TypeDefinitionField, {
 });
 
 wm.TypeDefinition.extend({
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.setOwner(studio.application);
+    getTypeDefinitionDialog: function() {
 	if (!studio.TypeDefinitionGeneratorDialog) {
 	    studio.TypeDefinitionGeneratorDialog = 
 		new wm.PageDialog({owner: studio,
@@ -79,7 +77,13 @@ wm.TypeDefinition.extend({
 				   modal: false,
 				   hideControls: true});
 	    }
-	    studio.TypeDefinitionGeneratorDialog.show();
+	return studio.TypeDefinitionGeneratorDialog;
+    },
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.setOwner(studio.application);
+	this.getTypeDefinitionDialog();
+	studio.TypeDefinitionGeneratorDialog.show();
 	studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(this);
 	
     },
