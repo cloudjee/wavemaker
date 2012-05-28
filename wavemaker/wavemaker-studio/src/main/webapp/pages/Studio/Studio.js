@@ -894,6 +894,7 @@ dojo.declare("Studio", wm.Page, {
 	    }				
     },
     inspect: function(inComponent) {
+	if (inComponent.noInspector) return;
 	    wm.job("studio.inspect", 1, dojo.hitch(this, function() {
 		this._inspect(inComponent);
 	    }));
