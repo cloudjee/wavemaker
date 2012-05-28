@@ -662,8 +662,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    }
 		}
 		if (this.getRowCount() == 0 && this.variable) {
+		    this.variable.beginUpdate();
 		    this.variable.setData([inFields]);
-		    this.renderDojoObj();
+		    this.variable.endUpdate();
+		    this.variable.getItem(0).data._new = true;
+		    this.variable.notify();
+		    //this.renderDojoObj();
 		    if (selectOnAdd) {
 			this.setSelectedRow(0);
 			this.selectionChange(); // needs committing
@@ -726,7 +730,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	};
 
 	    var obj = {};	
-	var hasVisibleValue = false;
+	var hasVisibleValue = this.deleteColumn || this.selectionMode == "checkbox" || this.selectionMode == "radio"; // if there is a delete column, checkbox or radio selection modes then there a visible element shown in the row
 	var possibleFieldsToFill = [];
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
@@ -984,8 +988,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var inRowIndex = inRow.index;
 		var rowData = this.getRowData(inRowIndex);
 		if (rowData) {
-		    var isNew = this.getRowData(inRowIndex)._wmVariable[0].data._new
-		    if (isNew) {
+		    var isNew = rowData._wmVariable[0].data._new;
+		    if (isNew && this.liveEditing) {
 			inRow.customClasses += " dojoxGridRow-inserting";
 		    }
 		    this.onStyleRow(inRow, rowData);
