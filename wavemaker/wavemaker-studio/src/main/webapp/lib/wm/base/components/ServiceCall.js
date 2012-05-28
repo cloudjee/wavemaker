@@ -100,8 +100,8 @@ dojo.declare("wm.ServiceCall", null, {
 		wm.fire(this._service, "setServiceCall", [this]);
 		this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
 
-		if (this._isDesignLoaded && this.service) {
 /*
+		if (this._isDesignLoaded && this.service) {
 		    if (!this.findSubscription("ServiceTypeChanged-" +  this.service)) {
 			this.subscribe("ServiceTypeChanged-" +  this.service, dojo.hitch(this, function() {
 			    this._service = wm.services.getService(this.service, 	
@@ -110,8 +110,8 @@ dojo.declare("wm.ServiceCall", null, {
 			    this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
 			}));
 		    }
-		    */
 		}      
+		*/
 	    } catch(e) {
 	    } finally {delete this._inSetService;}
 	    
@@ -709,7 +709,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		this.setDataSchema(inSchema);
 		// input bindings may need to reinitialize after gleaning
 		// operation type information (in light of constants)
-		if (this.$.binding)
+		if (this.$.binding && inSchema)
 		{
 			this.$.binding.refresh();
 		}
