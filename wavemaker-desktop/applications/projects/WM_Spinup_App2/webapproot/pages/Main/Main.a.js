@@ -6,7 +6,7 @@ window.open("http://wavemaker.com/downloads/", "self");
 },
 LoginServiceVariableSuccess: function(inSender, inDeprecated) {
 result = inDeprecated;
-if (!result) return this.LoginServiceVariableError(inSender, "Login Failed");
+if (!result || result.ERROR) return this.LoginServiceVariableError(inSender, result.ERROR);
 url = result.studio_url;
 token = result.wavemaker_authentication_token;
 cfdomain = result.domain;
@@ -15,8 +15,13 @@ console.log(dojo.cookie("wavemaker_authentication_token"));
 window.location = url;
 },
 LoginServiceVariableError: function(inSender, inError) {
+wm.cancelJob("startProgressBar");
+if(inError == "Not VMW"){inError = "We're in limited preview mode right now.<br>That accout is not authorized.<br>Come back when we start the public beta !";}
+if(inError == "Login has failed") {inError = "Invalid user account information";}
+if(!inError){inError = "Login Failed";}
+this.labelMessage.setCaption(inError);
+this.layerFail.activate();
 this.loginLayer.activate();
-app.alert(inError);
 },
 progressBarTimerTimerFire: function(inSender) {
 var max = 1000 * 120;
@@ -58,11 +63,13 @@ duration: 1500
 },
 LogInButtonClick: function(inSender) {
 this.LoginServiceVariable.update();
+wm.job("startProgressBar", 500, dojo.hitch(this, function() {
 this.progressBar1.setProgress(0);
 this.waitingLayer.activate();
 this.progressBarTimer.startTimer();
 this._startTimerTime = new Date().getTime();
 this._endTimerTime = this._startTimerTime + 1000 * 120;
+}));
 },
 _end: 0
 });
@@ -91,8 +98,10 @@ BannerSpacer2: ["wm.Spacer", {"height":"1px","width":"12px"}, {}]
 }]
 }],
 panel4: ["wm.Panel", {"height":"449px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"25,25,5,25","styles":{"fontSize":"undefinedpx","color":"","backgroundColor":""},"verticalAlign":"top","width":"100%"}, {}, {
-layers1: ["wm.Layers", {"height":"406px","width":"65%"}, {}, {
+TopLayers: ["wm.Layers", {"height":"406px","width":"65%"}, {}, {
 loginLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+AuthLayers: ["wm.Layers", {}, {}, {
+layerLogin: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
 ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"100%"}, {}, {
 Content1: ["wm.Html", {"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"32px","html":"WaveMaker for Cloud Foundry","margin":"0","minDesktopHeight":15,"styles":{"fontSize":"26px","color":""}}, {}],
 html1: ["wm.Html", {"_classes":{"domNode":["","largerLineHeight",""]},"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"95px","html":"WaveMaker provides a fast, efficient and secure environment to develop and \ndeploy enterprise web and cloud applications. With WaveMaker's visual, drag \nand drop tools, any developer can start building enterprise Java applications \nwith minimal training. WaveMaker creates standard Java applications, boosting \ndeveloper productivity and quality without compromising flexibility. ","margin":"15,0,0,0","minDesktopHeight":15,"styles":{"color":"","fontSize":"undefinedpx"}}, {}],
@@ -110,6 +119,15 @@ panel7: ["wm.Panel", {"fitToContentHeight":true,"height":"48px","horizontalAlign
 LogInButton: ["wm.Button", {"border":"0","caption":"Log In","desktopHeight":"48px","height":"48px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#56a8d7","endColor":"#007cc2","colorStop":51},"fontSize":"20px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial"},"width":"150px"}, {"onclick":"LogInButtonClick"}],
 spacer7: ["wm.Spacer", {"height":"10px","width":"10px"}, {}],
 label4: ["wm.Label", {"border":"0","caption":"Don't have a Cloud Foundry accout?  <a href=\"http://cloudfoundry.com/signup\" target=\"blank\">Sign up</a>","height":"100%","padding":"4","width":"100%"}, {}]
+}]
+}]
+}],
+layerFail: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"center","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"middle"}, {}, {
+labelMessage: ["wm.Label", {"align":"center","autoSizeWidth":true,"border":"0","caption":"&nbsp","height":"60px","padding":"4","singleLine":false,"styles":{"fontWeight":"bold","fontSize":"16px"},"width":"12px"}, {}],
+spacer5: ["wm.Spacer", {"height":"20px","width":"96px"}, {}],
+labelInfo: ["wm.Label", {"align":"center","border":"0","caption":"More Info","link":"http://dev.wavemaker.com/","padding":"4"}, {}],
+spacer4: ["wm.Spacer", {"height":"40px","width":"96px"}, {}],
+button1: ["wm.Button", {"caption":"OK","margin":"4"}, {"onclick":"layerLogin"}]
 }]
 }]
 }],

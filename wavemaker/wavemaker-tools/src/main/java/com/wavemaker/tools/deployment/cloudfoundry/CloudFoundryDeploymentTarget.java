@@ -254,6 +254,9 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             } catch (CloudFoundryException ex) {
                 throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
             }
+            if(!url.startsWith("http://")){
+            	url = "http://" + url;
+            }
             return url;
         } catch (HttpServerErrorException e) {
             throw new DeploymentStatusException("ERROR: Clould not deploy application due to remote exception\n" + e.getMessage() + "\n\n"

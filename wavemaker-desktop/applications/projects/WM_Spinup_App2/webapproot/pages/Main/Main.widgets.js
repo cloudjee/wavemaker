@@ -22,25 +22,36 @@ Main.widgets = {
 				}]
 			}],
 			panel4: ["wm.Panel", {"height":"449px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"25,25,5,25","styles":{"fontSize":"undefinedpx","color":"","backgroundColor":""},"verticalAlign":"top","width":"100%"}, {}, {
-				layers1: ["wm.Layers", {"height":"406px","width":"65%"}, {}, {
+				TopLayers: ["wm.Layers", {"height":"406px","width":"65%"}, {}, {
 					loginLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
-						ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"100%"}, {}, {
-							Content1: ["wm.Html", {"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"32px","html":"WaveMaker for Cloud Foundry","margin":"0","minDesktopHeight":15,"styles":{"fontSize":"26px","color":""}}, {}],
-							html1: ["wm.Html", {"_classes":{"domNode":["","largerLineHeight",""]},"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"95px","html":"WaveMaker provides a fast, efficient and secure environment to develop and \ndeploy enterprise web and cloud applications. With WaveMaker's visual, drag \nand drop tools, any developer can start building enterprise Java applications \nwith minimal training. WaveMaker creates standard Java applications, boosting \ndeveloper productivity and quality without compromising flexibility. ","margin":"15,0,0,0","minDesktopHeight":15,"styles":{"color":"","fontSize":"undefinedpx"}}, {}],
-							spacer2: ["wm.Spacer", {"height":"30px","width":"96px"}, {}],
-							html2: ["wm.Html", {"_classes":{"domNode":["largerLineHeight"]},"autoSizeHeight":true,"border":"0","height":"32px","html":"To begin using WaveMaker, log in using your<br>Cloud Foundry user name and password.","margin":"0,0,0,0","minDesktopHeight":15,"styles":{"fontSize":"undefinedpx"}}, {}],
-							LoginPanel: ["wm.Panel", {"fitToContentHeight":true,"height":"142px","horizontalAlign":"left","margin":"15,0,0,0","verticalAlign":"top","width":"100%"}, {"onEnterKeyPress":"LoginServiceVariable"}, {
-								label2: ["wm.Label", {"autoSizeHeight":true,"border":"0","caption":"Cloud Foundry Username","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
-								UserName: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","height":"32px","minDesktopHeight":96,"padding":"0","showMessages":false,"styles":{"backgroundColor":"","fontSize":"undefinedpx"}}, {}],
-								spacer1: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
-								label3: ["wm.Label", {"autoSizeHeight":true,"border":"0","caption":"Cloud Foundry Password","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
-								Password: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","height":"32px","maxHeight":0,"minDesktopHeight":96,"padding":"0","password":true,"showMessages":false}, {}]
+						AuthLayers: ["wm.Layers", {}, {}, {
+							layerLogin: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+								ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"100%"}, {}, {
+									Content1: ["wm.Html", {"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"32px","html":"WaveMaker for Cloud Foundry","margin":"0","minDesktopHeight":15,"styles":{"fontSize":"26px","color":""}}, {}],
+									html1: ["wm.Html", {"_classes":{"domNode":["","largerLineHeight",""]},"autoScroll":false,"autoSizeHeight":true,"border":"0","height":"95px","html":"WaveMaker provides a fast, efficient and secure environment to develop and \ndeploy enterprise web and cloud applications. With WaveMaker's visual, drag \nand drop tools, any developer can start building enterprise Java applications \nwith minimal training. WaveMaker creates standard Java applications, boosting \ndeveloper productivity and quality without compromising flexibility. ","margin":"15,0,0,0","minDesktopHeight":15,"styles":{"color":"","fontSize":"undefinedpx"}}, {}],
+									spacer2: ["wm.Spacer", {"height":"30px","width":"96px"}, {}],
+									html2: ["wm.Html", {"_classes":{"domNode":["largerLineHeight"]},"autoSizeHeight":true,"border":"0","height":"32px","html":"To begin using WaveMaker, log in using your<br>Cloud Foundry user name and password.","margin":"0,0,0,0","minDesktopHeight":15,"styles":{"fontSize":"undefinedpx"}}, {}],
+									LoginPanel: ["wm.Panel", {"fitToContentHeight":true,"height":"142px","horizontalAlign":"left","margin":"15,0,0,0","verticalAlign":"top","width":"100%"}, {"onEnterKeyPress":"LoginServiceVariable"}, {
+										label2: ["wm.Label", {"autoSizeHeight":true,"border":"0","caption":"Cloud Foundry Username","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
+										UserName: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","height":"32px","minDesktopHeight":96,"padding":"0","showMessages":false,"styles":{"backgroundColor":"","fontSize":"undefinedpx"}}, {}],
+										spacer1: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
+										label3: ["wm.Label", {"autoSizeHeight":true,"border":"0","caption":"Cloud Foundry Password","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
+										Password: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","height":"32px","maxHeight":0,"minDesktopHeight":96,"padding":"0","password":true,"showMessages":false}, {}]
+									}],
+									spacer3: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
+									panel7: ["wm.Panel", {"fitToContentHeight":true,"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+										LogInButton: ["wm.Button", {"border":"0","caption":"Log In","desktopHeight":"48px","height":"48px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#56a8d7","endColor":"#007cc2","colorStop":51},"fontSize":"20px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial"},"width":"150px"}, {"onclick":"LogInButtonClick"}],
+										spacer7: ["wm.Spacer", {"height":"10px","width":"10px"}, {}],
+										label4: ["wm.Label", {"border":"0","caption":"Don't have a Cloud Foundry accout?  <a href=\"http://cloudfoundry.com/signup\" target=\"blank\">Sign up</a>","height":"100%","padding":"4","width":"100%"}, {}]
+									}]
+								}]
 							}],
-							spacer3: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
-							panel7: ["wm.Panel", {"fitToContentHeight":true,"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-								LogInButton: ["wm.Button", {"border":"0","caption":"Log In","desktopHeight":"48px","height":"48px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#56a8d7","endColor":"#007cc2","colorStop":51},"fontSize":"20px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial"},"width":"150px"}, {"onclick":"LogInButtonClick"}],
-								spacer7: ["wm.Spacer", {"height":"10px","width":"10px"}, {}],
-								label4: ["wm.Label", {"border":"0","caption":"Don't have a Cloud Foundry accout?  <a href=\"http://cloudfoundry.com/signup\" target=\"blank\">Sign up</a>","height":"100%","padding":"4","width":"100%"}, {}]
+							layerFail: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"center","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"middle"}, {}, {
+								labelMessage: ["wm.Label", {"align":"center","autoSizeWidth":true,"border":"0","caption":"&nbsp","height":"60px","padding":"4","singleLine":false,"styles":{"fontWeight":"bold","fontSize":"16px"},"width":"12px"}, {}],
+								spacer5: ["wm.Spacer", {"height":"20px","width":"96px"}, {}],
+								labelInfo: ["wm.Label", {"align":"center","border":"0","caption":"More Info","link":"http://dev.wavemaker.com/","padding":"4"}, {}],
+								spacer4: ["wm.Spacer", {"height":"40px","width":"96px"}, {}],
+								button1: ["wm.Button", {"caption":"OK","margin":"4"}, {"onclick":"layerLogin"}]
 							}]
 						}]
 					}],

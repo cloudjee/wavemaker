@@ -31,11 +31,14 @@ public class SpinUpService extends JavaServiceSuperClass {
     }
 
     public Hashtable<String, String> login(String username, String password) {
-       Hashtable<String,String> result  = null;
+       Hashtable<String,String> result  = new Hashtable<String, String>();
+       username = username.toLowerCase();
+       log(INFO, username);
        try {
-          if(!username.contains("@vmware.com")){
+          if(!(username.contains("@vmware.com") || username.contains("@springsource.com") || username.contains("@springsource.org") || username.contains("@emc.com") || username.contains("@rabbitmq.com"))){
               log(ERROR, "User: " + username + " NOT allowed");
-              return null;
+              result.put("ERROR", "Not VMW");
+              return result;
           }
           log(INFO, "Logging in user: = " + username );
           loginCredentials = new LoginCredentialsBean(username, password);
@@ -45,6 +48,7 @@ public class SpinUpService extends JavaServiceSuperClass {
           log(INFO, "Counter now: " + ++counter);
        } catch(Exception e) {
           log(ERROR, "Login has failed", e);
+          result.put("ERROR", "Login has failed");
           log(ERROR, e.getMessage());
        }
        return result;
