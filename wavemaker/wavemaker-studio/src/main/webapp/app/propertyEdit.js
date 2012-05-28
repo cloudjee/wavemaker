@@ -565,6 +565,7 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     useLiterals:false,
     liveTypes: false,
     includeLiveViews: false,
+    addNewOption: false,
     updateOptions: function() {
 	this.inherited(arguments);
 	if (this.useLiterals) {
@@ -573,6 +574,10 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 	} else {
 	    this.options = [""];
 	    this.values = [""];
+	}
+	if (this.addNewOption) {
+	    wm.Array.insertElementAt(this.options, "New Type", 1);
+	    wm.Array.insertElementAt(this.values, "New Type", 1);
 	}
 	if (this.includeLiveViews) {
 	    this.options =this.options.concat(this.getLiveViews());
