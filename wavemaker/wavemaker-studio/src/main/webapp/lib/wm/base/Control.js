@@ -1224,9 +1224,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var overflow =   ((!this._touchScroll && (this.autoScroll || this._xscrollX || this._xscrollY)) ? "auto" : "hidden");
 	var stylesObj;
 
-	var margins = this.margin.split(marginSplitter);
-	var borders = this.border.split(borderSplitter);
-	var paddings = this.padding.split(paddingSplitter);
+	var margins = (this.margin||"").split(marginSplitter);
+	var borders = (this.border||"").split(borderSplitter);
+	var paddings = (this.padding||"").split(paddingSplitter);
 	
 
 	    if (margins.length == 1) {
