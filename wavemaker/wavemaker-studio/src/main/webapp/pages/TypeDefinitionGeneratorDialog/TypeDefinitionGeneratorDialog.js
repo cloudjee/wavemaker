@@ -7,14 +7,16 @@ dojo.declare("TypeDefinitionGeneratorDialog", wm.Page, {
     setTypeDefinition: function(inTypeDef) {
 	this.typeDef = inTypeDef;
     },
-    generateButtonClick: function(inSender) {
-      var text = this.jsonText.getDataValue();
+    /* optionalInText is used by other pages wanting to use this generator as a service */
+    generateButtonClick: function(inSender, optionalInText, optionalInName) {
+      var text = optionalInText || this.jsonText.getDataValue();
       var obj = dojo.fromJson(text);
 	wm.forEachProperty(this.typeDef.$, function(c) { c.destroy();});
 	wm.forEach(this.moreDefs, function(def) {def.destroy();});
       this.moreDefs = {};
-	if (this.typeDef.name != this.typeName.getDataValue()) {
-	    this.typeDef.set_name(studio.application.getUniqueName(this.typeName.getDataValue()));
+	var typeName = optionalInName || this.typeName.getDataValue();
+	if (this.typeDef.name != typeName) {
+	    this.typeDef.name = studio.application.getUniqueName(typeName);
 	}
       this.parseObj(obj, this.typeDef);      
 /*

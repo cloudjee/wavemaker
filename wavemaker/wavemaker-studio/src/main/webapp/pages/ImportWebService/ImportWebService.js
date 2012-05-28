@@ -21,12 +21,13 @@ dojo.declare("ImportWebService", wm.Page, {
 	TYPE_REST_WSDL: "REST (WSDL / WADL)",
         TYPE_REST_BUILDER: null,
 	TYPE_FEED: "Feed",
+    TYPE_JSON: "XHR/JSON",
     //TYPE_SALESFORCE: "SOAP-Salesforce", //xxx
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
 	        this.TYPE_REST_BUILDER = this.getDictionaryItem("REST_BUILDER");
-		this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_FEED/*, this.TYPE_SALESFORCE*/]); //xxx
+	    this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_JSON, this.TYPE_FEED/*, this.TYPE_SALESFORCE*/]); //xxx
 		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
 		this.updateSelect(this.wsdlPathTypeInput, [this.IMPORT_TYPE_URL, this.IMPORT_TYPE_FILE]);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
@@ -91,6 +92,8 @@ dojo.declare("ImportWebService", wm.Page, {
 			this.serviceIdAutoYesRadio.components.editor.setChecked(true);
 			this.serviceIdInput.clear();
 			//this.serviceIdInput.setDisabled(true);
+		} else if (inValue == this.TYPE_JSON) {
+			this.layers.setLayer("jsonBuilderLayer");
 		} else if (inValue == this.TYPE_REST_BUILDER) {
 			this.layers.setLayer("restBuilderLayer");
 		} else if (inValue == this.TYPE_FEED) {
@@ -111,6 +114,8 @@ dojo.declare("ImportWebService", wm.Page, {
 			}
 		} else if (t == this.TYPE_REST_BUILDER) {
 			this.restServiceBuilderPage.page.saveButtonClick();
+		} else if (t == this.TYPE_JSON) {
+		    this.jsonServiceBuilderPage.page.okButtonClick();
 		}
 	},
 	cancelButtonClick: function(inSender, inEvent) {
@@ -124,6 +129,7 @@ dojo.declare("ImportWebService", wm.Page, {
 		l.destroy();
 		if (parentLayers.layers.length == 0) {
 		    parentLayers.parent.hide();
+		    studio.workspace.activate();
 		}
 	    }
     },
