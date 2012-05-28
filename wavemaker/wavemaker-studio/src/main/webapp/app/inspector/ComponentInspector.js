@@ -487,7 +487,7 @@
 	     //wm.forEachProperty(inGroup.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
 	     var count = 0;
 	     dojo.forEach(inGroup.subgroups, function(subgroup) {
-		 if (subgroup.props.length && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
+		 if (subgroup.props.length && (subgroup.props.length > 1 || subgroup.props[0].editor != "wm.prop.FieldGroupEditor") && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
 		     count++;
 		     this.addSubGroupIndicator(/*(inGroup.displayName || inGroup.name) + " - " + */(subgroup.displayName || subgroup.name),
 					       inLayer,  
