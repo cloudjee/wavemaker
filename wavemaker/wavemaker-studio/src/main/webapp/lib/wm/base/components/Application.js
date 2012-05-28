@@ -128,7 +128,7 @@ dojo.declare("wm.Application", wm.Component, {
 		}
 	    }
 
-		this.components = {};
+	    this.$ = this.components = {};
 	        this.createPageContainer();
 
 	    if (!this._isDesignLoaded) {
