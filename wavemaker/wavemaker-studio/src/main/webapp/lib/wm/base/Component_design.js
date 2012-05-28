@@ -254,12 +254,15 @@ wm.Component.extend({
 	//=======================================================
 	// Other...
 	//=======================================================
-	set_name: function(inName) {
+        set_name: function(inName, skipValidNameTest) {
 		var o = this.name, n = inName;
 		if (n == o || !n)
 			return;
 		//
+	    /* skip Used when generating wm.XhrDefintion and wm.TypeDefinition where names like "vmware.com.testService" are not actually valid js names */
+	    if (!skipValidNameTest) {
 		n = wm.getValidJsName(n);
+	    }
 		//
 		// ensure name is unique
 		var un = this.owner.getUniqueName(n);
