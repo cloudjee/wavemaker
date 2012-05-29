@@ -604,7 +604,9 @@ public class DataModelManager {
         exporter.setVerbose(true);
         exporter.setOverrideTable(overrideTable);
         exporter.setServiceName(serviceId);
-        exporter.setDBType(dbType.toLowerCase());
+        if (dbType != null) {
+            exporter.setDBType(dbType.toLowerCase());
+        }
 
         if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
             exporter.setDriverClassName(driverClassName);
