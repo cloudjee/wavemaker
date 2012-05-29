@@ -340,12 +340,14 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this._userSized = true;
 		this.bounds.l = parseInt(this.domNode.style.left);
 		this.bounds.t = parseInt(this.domNode.style.top);		
-		if (!this.insureDialogVisible(true)) {
-		    if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t+this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking ||
-			this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
-			this.setDocked(true);
-		    }
-		} 
+		if (!this._maxified) {
+		    if (!this.insureDialogVisible(true)) {
+			if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t+this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking ||
+			    this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
+			    this.setDocked(true);
+			}
+		    } 
+		}
 		this.setBounds(this.bounds); // recalcualtes right and bottom borders
 
 		/* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
