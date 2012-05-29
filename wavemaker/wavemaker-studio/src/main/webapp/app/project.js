@@ -487,10 +487,14 @@ dojo.declare("wm.studio.Project", null, {
 		    if (!studio.page.root) throw studio.getDictionaryItem("wm.studio.Project.THROW_INVALID_PAGE");
 			studio.page.root.parent = studio.designer;
 		        for (var i in this.pageData.documentation) {
-                            if (i == "wip")
+                            if (i == "wip") {
                                 studio.page.documentation = this.pageData.documentation[i];
-                            else
-			        studio.page.components[i].documentation = this.pageData.documentation[i];
+                            } else {
+				var c = studio.page.components[i];
+				if (c) {
+			            c.documentation = this.pageData.documentation[i];
+				}
+			    }
 			}
 		    this.pageData.widgets = studio.getWidgets();
 		}
