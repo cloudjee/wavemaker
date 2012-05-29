@@ -20,8 +20,8 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * Builder class that can be used to easily construct {@link ResourceIncludeFilter}s. Filters can be built for {@link File}s,
- * {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
+ * Builder class that can be used to easily construct {@link ResourceIncludeFilter}s. Filters can be built for
+ * {@link File}s, {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
  * {@link Resource#toString() paths}. Builders can be chained together to form compound (AND) matches.
  * 
  * @author Phillip Webb

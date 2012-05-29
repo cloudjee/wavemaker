@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.data.salesforce;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -40,6 +42,8 @@ import com.wavemaker.runtime.data.DataServiceOperation;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.tools.data.DataServiceGenerator;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -117,8 +121,17 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
         postGenerateClassBody(serviceCls);
 
         try {
-            this.configuration.getOutputDirectory().getFile().mkdirs();
-            this.codeModel.build(this.configuration.getOutputDirectory().getFile(), this.configuration.getOutputDirectory().getFile(), null);
+            Folder outputFolder = this.configuration.getOutputDirectory();
+            outputFolder.createIfMissing();
+            if (outputFolder instanceof LocalFolder) {
+                File outputFolderFile = ((LocalFolder) outputFolder).getLocalFile();
+                this.codeModel.build(outputFolderFile, outputFolderFile, null);
+            } else {
+                File tempDir = IOUtils.createTempDirectory("outputSrc_directory", null);
+                this.codeModel.build(tempDir, tempDir, null);
+                Folder folder = new LocalFolder(tempDir);
+                folder.copyContentsTo(outputFolder);
+            }
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);
         }

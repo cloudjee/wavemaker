@@ -31,10 +31,16 @@ wm.Object.extendSchema(wm.Variable, {
     editJson: {operation: 1, group:"data", subgroup: "data", order:5},
 
     /* Data group; custom subgroup */
-    dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},
+    dataSet: { bindTarget: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},
+    isEmpty: {ignore: 1, bindSource: 1, type: "boolean"},
+    count: {ignore: 1, bindSource: 1, type: "number"},
+    queriedItems: {ignore: 1, bindSource: 1},
 
     /* Data group; behavior subgroup */
     saveInCookie: {group: "data", subgroup: "behavior", order: 20, advanced:1},
+
+    /* Mobile group */
+    saveInPhonegap: {group: "mobile", order: 1, advanced: 1},
 
     /* Common group */
     owner: {ignore:0},
@@ -59,4 +65,15 @@ wm.Object.extendSchema(wm.Variable, {
     getCount: {method:1, returns: "Number"},
     getData: {method:1, returns: "Any"},
     getItem: {method:1, returns: "wm.Variable"}
+});
+
+
+wm.Variable.extend({
+    listProperties: function() {
+	var props = this.inherited(arguments);
+	props.queriedItems.type = this.type;
+	props.queriedItems.isList = true;
+	props.queriedItems.bindSource = this.isList;
+	return props;
+    }
 });

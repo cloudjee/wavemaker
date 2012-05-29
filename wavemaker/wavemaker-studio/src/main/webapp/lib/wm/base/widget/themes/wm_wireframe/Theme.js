@@ -22,7 +22,8 @@
 	}, 
 	"wm.Button": {
 		"border": "1", 
-		"borderColor": "#444444"
+		"borderColor": "#444444", 
+	        "height": "32px"
 	}, 
 	"wm.Layout": {
 		"border": "0", 

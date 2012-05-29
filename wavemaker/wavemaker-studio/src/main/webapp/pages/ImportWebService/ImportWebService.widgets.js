@@ -18,7 +18,7 @@ ImportWebService.widgets = {
 			panel: ["wm.Panel", {height: "100%", border: "0"}, {}, {
 				typePanel: ["wm.Panel", {height: "30px", border: "0", padding: "4,0,4,0"}, {}, {
 					panel4: ["wm.Panel", {height: "24px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
-						typeInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "240px", width: "470px", layoutKind: "left-to-right", caption: "Select the type of web service to import:", display: "Select"}, {onchange: "typeInputChange"}, {
+						typeInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "300px", width: "470px", layoutKind: "left-to-right", caption: "Select the type of web service to import:", display: "Select"}, {onchange: "typeInputChange"}, {
 							editor: ["wm._SelectEditor", {}, {}]
 						}]
 					}]
@@ -89,6 +89,9 @@ ImportWebService.widgets = {
 					    restBuilderLayer: ["wm.Layer", {caption: "layer2"}, {}, {
 							restServiceBuilderPage: ["wm.PageContainer", {pageName: "RestServiceBuilder", height: "100%", border: "0"}, {}]
 						}],
+					    jsonBuilderLayer: ["wm.Layer", {caption: "layer2"}, {}, {
+						jsonServiceBuilderPage: ["wm.PageContainer", {pageName: "XHRServiceEditor", height: "100%", border: "0"}, {}]
+					    }],
 					    feedLayer: ["wm.Layer", {caption: "layer1", padding: "10"}, {}, {
 							feedGroupLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Feed Service Information", border: "0", height: "24px"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
@@ -106,10 +109,9 @@ ImportWebService.widgets = {
 					}]
 				}]
 			}],
-			footer: ["wm.Panel", {height: "30px", border: "0", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-				importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "96px", caption: "Import", margin: "4"}, {onclick: "importButtonClick"}],
-				spacer6: ["wm.Spacer", {width: "10px"}, {}],
-				cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "96px", caption: "Cancel", margin: "4"}, {onclick: "cancelButtonClick"}]
+			footer: ["wm.studio.DialogButtonPanel", {}, {}, {
+			    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "96px", caption: "Cancel"}, {onclick: "cancelButtonClick"}],
+			    importButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},width: "96px", caption: "Import"}, {onclick: "importButtonClick"}]
 			}]
 		}]
 	}]

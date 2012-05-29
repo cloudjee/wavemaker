@@ -63,7 +63,7 @@ Start.widgets = {
 						panel8: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 						    projlist: ["wm.Panel", {_classes: {domNode: []}, 
 									    height: "100%", width: "100%", layoutKind: "left-to-right", padding: "0"}, {}, {
-							    existingProjectList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", border: "1", borderColor:"#687585"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
+							    existingProjectList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", border: "0,0,1,0", borderColor:"#687585"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
 							}],
 							panel9: ["wm.Panel", {height: "34px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "center"}, {}, {
 							    openProjectBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Open Project", width: "160px", height: "100%"}, {onclick: "openProject"}],

@@ -10,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.spinup.DefaultStartedApplication;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 
 /**

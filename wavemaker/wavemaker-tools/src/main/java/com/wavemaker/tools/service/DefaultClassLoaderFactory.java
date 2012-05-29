@@ -14,8 +14,7 @@
 
 package com.wavemaker.tools.service;
 
-import org.springframework.core.io.Resource;
-
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
 /**
@@ -23,13 +22,13 @@ import com.wavemaker.tools.util.ResourceClassLoaderUtils;
  */
 public class DefaultClassLoaderFactory implements ClassLoaderFactory {
 
-    private final Resource[] paths;
+    private final Folder[] paths;
 
-    public DefaultClassLoaderFactory(Resource path) {
-        this(new Resource[] { path });
+    public DefaultClassLoaderFactory(Folder path) {
+        this(new Folder[] { path });
     }
 
-    public DefaultClassLoaderFactory(Resource... paths) {
+    public DefaultClassLoaderFactory(Folder... paths) {
         this.paths = paths;
     }
 

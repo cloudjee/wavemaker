@@ -8,7 +8,10 @@
 		<property name="dataModelManager">
 			<ref bean="dataModelManager" />
 		</property>
-	</bean>
+        <property name="cloudFoundryService">
+			<ref bean="cloudFoundryService" />
+		</property>
+    </bean>
 
 	<!-- events -->
 	<bean class="com.wavemaker.runtime.service.events.EventWire">

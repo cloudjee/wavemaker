@@ -333,7 +333,8 @@ dojo.declare("wm.AceEditor", wm.Control, {
 
     showHelp: function() {
 	if (!wm.AceEditor.helpDialog) {
-	    var d = wm.AceEditor.helpDialog = new wm.Dialog({owner: app,
+	    var d = wm.AceEditor.helpDialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+							     owner: app,
 							     name: "AceHelpDialog",
 							     title: "Editor Help",
 							     corner: "tl",
@@ -362,7 +363,8 @@ dojo.declare("wm.AceEditor", wm.Control, {
 
     showSearch: function() {
 	if (!this._searchDialog) {
-	    this._searchDialog = new wm.Dialog({owner: this,
+	    this._searchDialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+						owner: this,
 						width: "350px",
 						height: "150px",
 						title: "Search and Replace",
@@ -420,19 +422,22 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					     horizontalAlign: "right",
 					     verticalAlign: "bottom"});
 					     */
-	    this._findButton = new wm.Button({owner: this,
+	    this._findButton = new wm.Button({_classes: {domNode: ["StudioButton"]},
+					      owner: this,
 					      parent: this._searchDialog.buttonBar,
 					      name: "findButton",
 					      caption: "Find",
 					      width: "100px",
 					      onclick: dojo.hitch(this, "onFindClick")});
-	    this._replaceButton = new wm.Button({owner: this,
+	    this._replaceButton = new wm.Button({_classes: {domNode: ["StudioButton"]},
+						 owner: this,
 					      parent: this._searchDialog.buttonBar,
 					      name: "replaceButton",
 					      caption: "Replace",
 						 width: "100px",
 					      onclick: dojo.hitch(this, "onReplaceClick")});
-	    this._replaceAllButton = new wm.Button({owner: this,
+	    this._replaceAllButton = new wm.Button({_classes: {domNode: ["StudioButton"]},
+						    owner: this,
 					      parent: this._searchDialog.buttonBar,
 					      name: "replaceAllButton",
 					      caption: "Replace All",

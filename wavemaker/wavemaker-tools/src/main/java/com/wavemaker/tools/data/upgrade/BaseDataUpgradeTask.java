@@ -14,12 +14,6 @@
 
 package com.wavemaker.tools.data.upgrade;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.springframework.core.io.FileSystemResource;
-
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.util.DataServiceUtils;
@@ -45,17 +39,13 @@ public abstract class BaseDataUpgradeTask implements UpgradeTask {
         return this.mgr;
     }
 
-    protected File getCfgFile(String serviceId) {
-        try {
-            return new File(this.mgr.getServiceRuntimeDirectory(serviceId).getFile(), DataServiceUtils.getCfgFileName(serviceId));
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+    protected com.wavemaker.tools.io.File getCfgFile(String serviceId) {
+        return this.mgr.getServiceRuntimeFolder(serviceId).getFile(DataServiceUtils.getCfgFileName(serviceId));
     }
 
     protected DataModelConfiguration getDataModelConfiguration(Service service) {
         // Todo: cftempfix
-        return new DataModelConfiguration(new FileSystemResource(getCfgFile(service.getId())));
+        return new DataModelConfiguration(getCfgFile(service.getId()));
     }
 
     protected abstract void upgrade(Service service);

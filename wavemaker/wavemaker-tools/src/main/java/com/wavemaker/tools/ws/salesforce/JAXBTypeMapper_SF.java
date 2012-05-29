@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 
 import com.sun.tools.xjc.model.CClassInfo;
@@ -30,6 +29,7 @@ import com.sun.tools.xjc.model.CTypeInfo;
 import com.sun.tools.xjc.model.Model;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.JAXBTypeMapper;
 import com.wavemaker.tools.ws.wsdl.WSDL;
@@ -44,14 +44,14 @@ import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
 public class JAXBTypeMapper_SF extends JAXBTypeMapper {
 
     public JAXBTypeMapper_SF(WSDL wsdl) throws GenerationException {
-        super(wsdl, new ArrayList<Resource>());
+        super(wsdl, new ArrayList<File>());
     }
 
-    public JAXBTypeMapper_SF(WSDL wsdl, List<Resource> bindingFiles) throws GenerationException {
+    public JAXBTypeMapper_SF(WSDL wsdl, List<File> bindingFiles) throws GenerationException {
         super(wsdl.getSchemas(), bindingFiles, wsdl.getPackageName(), wsdl.getAuxiliaryClasses(), wsdl.getWebServiceType());
     }
 
-    public JAXBTypeMapper_SF(Map<String, Element> schemas, List<Resource> bindingFiles, String packageName, Set<String> auxiliaryClasses,
+    public JAXBTypeMapper_SF(Map<String, Element> schemas, List<File> bindingFiles, String packageName, Set<String> auxiliaryClasses,
         WebServiceType type) throws GenerationException {
         super(schemas, bindingFiles, packageName, auxiliaryClasses, type);
     }

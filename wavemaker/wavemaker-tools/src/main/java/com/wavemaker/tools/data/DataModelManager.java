@@ -28,10 +28,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.OneToManyMap;
 import com.wavemaker.common.util.StringUtils;
@@ -44,10 +42,15 @@ import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
@@ -55,11 +58,10 @@ import com.wavemaker.tools.service.ClassLoaderFactory;
 import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
+import com.wavemaker.tools.ant.ServiceCompilerTask;
 
 /**
  * @author Simon Toens
- * 
- * 
  */
 public class DataModelManager {
 
@@ -88,10 +90,7 @@ public class DataModelManager {
 
     private ProjectCompiler projectCompiler = null;
 
-    private StudioFileSystem fileSystem;
-
     public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
     }
 
     public void setProjectManager(ProjectManager projectManager) {
@@ -116,13 +115,9 @@ public class DataModelManager {
 
         this.serviceManager.validateServiceId(serviceId);
 
-        Resource outputDir = getServicePath(serviceId);
-        Resource classesDir;
-        // try {
-        classesDir = this.projectManager.getCurrentProject().getWebInfClasses();
-        // } catch (IOException ex) {
-        // throw new WMRuntimeException(ex);
-        // }
+        Folder outputDir = getServicePathFolder(serviceId);
+        Folder classesDir;
+        classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
         ImportDB importer = null;
 
@@ -163,10 +158,10 @@ public class DataModelManager {
         }
     }
 
-    public String getExportDDL(String username, String password, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
+    public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         exporter.setExportToDB(false);
         exporter.setVerbose(false);
@@ -183,10 +178,10 @@ public class DataModelManager {
         }
     }
 
-    public String exportDatabase(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
+    public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         String rtn = "";
 
@@ -239,14 +234,14 @@ public class DataModelManager {
 
         DataModelConfiguration tmpCfg = null;
         // import into a tmp location first in case something goes wrong
-        Resource tmpServiceRoot = null;
+        File tmpServiceRoot;
+        Folder tmpServiceRootFolder = null;
 
-        // try {
-        // tmpServiceRoot = IOUtils.createTempDirectory();
-        tmpServiceRoot = this.fileSystem.createTempDir();
-        // } catch (IOException ex) {
-        // throw new ConfigurationException(ex);
-        // }
+        try {
+            tmpServiceRoot = IOUtils.createTempDirectory();
+        } catch (IOException ex) {
+            throw new ConfigurationException(ex);
+        }
 
         // keep queries, then add them to new datamodel below
         Collection<QueryInfo> queries = cfg.getQueries();
@@ -259,17 +254,14 @@ public class DataModelManager {
                 packageName = StringUtils.fromLastOccurrence(packageName, DataServiceConstants.DATA_PACKAGE_NAME, -1);
             }
 
-            importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
-                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRoot,
-                tmpServiceRoot);
+            tmpServiceRootFolder = new LocalFolder(tmpServiceRoot);
 
-            Resource tmpCfgFile;
-            // File tmpCfgFile = new File(tmpServiceRoot, serviceId + DataServiceConstants.SPRING_CFG_EXT);
-            try {
-                tmpCfgFile = tmpServiceRoot.createRelative(serviceId + DataServiceConstants.SPRING_CFG_EXT);
-            } catch (IOException ex) {
-                throw new ConfigurationException(ex);
-            }
+            importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
+                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRootFolder,
+                tmpServiceRootFolder);
+
+            com.wavemaker.tools.io.File tmpCfgFile = tmpServiceRootFolder.getFile(serviceId + DataServiceConstants.SPRING_CFG_EXT);
+
             tmpCfg = new DataModelConfiguration(tmpCfgFile);
 
             // see if we can successfully add queries - this will blow
@@ -296,18 +288,42 @@ public class DataModelManager {
             }
 
             // copy imported files into their final service dir home
-            Resource serviceRoot = getServicePath(serviceId);
+            Folder serviceRoot = getServicePathFolder(serviceId);
 
-            // AntUtils.copyDir(tmpServiceRoot, serviceRoot, null, "**/*.class");
-            this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
-            Resource classesDir;
-            // try {
-            classesDir = this.projectManager.getCurrentProject().getWebInfClasses();
-            // } catch (IOException ex) {
-            // throw new WMRuntimeException(ex);
-            // }
-            // AntUtils.copyDir(tmpServiceRoot, classesDir, "**/*.class", null);
-            this.fileSystem.copyRecursive(tmpServiceRoot, classesDir, "**/*.class", null);
+            // this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
+            Resources<com.wavemaker.tools.io.File> resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
+
+                @Override
+                public boolean include(com.wavemaker.tools.io.File resource) {
+                    if (resource == null) {
+                        return false;
+                    } else {
+                        String name = resource.getName();
+                        int len = name.length();
+                        return !(len > 6 && name.substring(len - 6).equals(".class"));
+                    }
+                }
+            });
+
+            resources.copyTo(serviceRoot);
+
+            Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
+
+            resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
+
+                @Override
+                public boolean include(com.wavemaker.tools.io.File resource) {
+                    if (resource == null) {
+                        return false;
+                    } else {
+                        String name = resource.getName();
+                        int len = name.length();
+                        return len > 6 && name.substring(len - 6).equals(".class");
+                    }
+                }
+            });
+
+            resources.copyTo(classesDir);
 
             registerService(serviceId, importer);
 
@@ -334,11 +350,7 @@ public class DataModelManager {
             if (tmpCfg != null) {
                 tmpCfg.dispose();
             }
-            // try {
-            // IOUtils.deleteRecursive(tmpServiceRoot);
-            this.fileSystem.deleteFile(tmpServiceRoot);
-            // } catch (IOException ignore) {
-            // }
+            tmpServiceRootFolder.delete();
         }
 
     }
@@ -369,7 +381,7 @@ public class DataModelManager {
 
         this.serviceManager.validateServiceId(dataModelName);
 
-        Resource destDir = getServicePath(dataModelName);
+        Folder destDir = getServicePathFolder(dataModelName);
 
         String serviceClassPackage = DataServiceUtils.getDefaultPackage(dataModelName);
         String dataPackage = DataServiceUtils.getDefaultDataPackage(dataModelName);
@@ -560,33 +572,28 @@ public class DataModelManager {
         initialize(true);
     }
 
-    private ExportDB getExporter(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
+    private ExportDB getExporter(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
 
         // composite classes must be compiled
         compile();
+        if (WMAppContext.getInstance().isCloudFoundry()) {
+            ServiceCompilerTask task = new ServiceCompilerTask();
+            task.processService(this.serviceManager, serviceId);
+        }
 
         DataModelConfiguration mgr = getDataModel(serviceId);
 
-        File serviceDir = null;
-        try {
-            serviceDir = getServicePath(serviceId).getFile();
-        } catch (IOException ex) {
-        }
+        Folder serviceDir = null;
+        serviceDir = getServicePath(serviceId);
 
         List<String> mappingPaths = mgr.getMappings();
         if (mappingPaths == null || mappingPaths.isEmpty()) {
             throw new ConfigurationException("No entities to export");
         }
         String path = mappingPaths.iterator().next();
-        File hbmFiles = new File(serviceDir, new File(path).getParent());
-
-        File classesDir;
-        try {
-            classesDir = this.projectManager.getCurrentProject().getWebInfClasses().getFile();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        Folder hbmFiles = serviceDir.getFile(path).getParent();
+        Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
         ExportDB exporter = new ExportDB();
         exporter.setHbmFilesDir(hbmFiles);
@@ -596,6 +603,10 @@ public class DataModelManager {
         exporter.setConnectionUrl(connectionUrl);
         exporter.setVerbose(true);
         exporter.setOverrideTable(overrideTable);
+        exporter.setServiceName(serviceId);
+        if (dbType != null) {
+            exporter.setDBType(dbType.toLowerCase());
+        }
 
         if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
             exporter.setDriverClassName(driverClassName);
@@ -685,13 +696,12 @@ public class DataModelManager {
         return a;
     }
 
-    // private File getServicePath(String serviceId) {
-    public Resource getServicePath(String serviceId) {
-        // try {
-        return this.serviceManager.getServiceRuntimeDirectory(serviceId);
-        // } catch (IOException ex) {
-        // throw new WMRuntimeException(ex);
-        // }
+    public Folder getServicePath(String serviceId) {
+        return this.serviceManager.getServiceRuntimeFolder(serviceId);
+    }
+
+    public Folder getServicePathFolder(String serviceId) {
+        return this.serviceManager.getServiceRuntimeFolder(serviceId);
     }
 
     private String getProjectName() {
@@ -744,13 +754,7 @@ public class DataModelManager {
             }
         }
 
-        // File cfg = new File(getServicePath(serviceId), DataServiceUtils.getCfgFileName(serviceId));
-        Resource cfg = null;
-        try {
-            cfg = getServicePath(serviceId).createRelative(DataServiceUtils.getCfgFileName(serviceId));
-        } catch (IOException ex) {
-
-        }
+        com.wavemaker.tools.io.File cfg = getServicePathFolder(serviceId).getFile(DataServiceUtils.getCfgFileName(serviceId));
 
         DataModelConfiguration rtn = null;
 
@@ -766,7 +770,7 @@ public class DataModelManager {
                 }
             };
 
-            CompileService cs = new CompileService() {
+            new CompileService() {
 
                 @Override
                 public void compile(boolean clean) {
@@ -808,7 +812,7 @@ public class DataModelManager {
 
     private ImportDB runImporter(String username, String password, String connectionUrl, String serviceId, String packageName, String tableFilter,
         String schemaFilter, String catalogName, String driverClassName, String dialectClassName, String revengNamingStrategyClassName,
-        boolean impersonateUser, String activeDirectoryDomain, Resource outputDir, Resource classesDir) {
+        boolean impersonateUser, String activeDirectoryDomain, Folder outputDir, Folder classesDir) {
 
         if (ObjectUtils.isNullOrEmpty(packageName)) {
             throw new IllegalArgumentException("package must be set");
@@ -822,7 +826,7 @@ public class DataModelManager {
             packageName = packageName.substring(0, packageName.length() - 1);
         }
 
-        Resource javaDir = getJavaDir(outputDir, packageName);
+        Folder javaDir = getJavaDir(outputDir, packageName);
 
         ImportDB importer = new ImportDB();
         importer.setDestDir(outputDir);
@@ -838,6 +842,7 @@ public class DataModelManager {
         importer.setActiveDirectoryDomain(activeDirectoryDomain);
         importer.setProjectCompiler(this.projectCompiler);
         importer.setCurrentProjectName(this.projectManager.getCurrentProject().getProjectName());
+        importer.setProjectManager(this.projectManager);
 
         String dataPackage = packageName;
         if (!dataPackage.endsWith("." + DataServiceConstants.DATA_PACKAGE_NAME)) {
@@ -892,14 +897,6 @@ public class DataModelManager {
 
     }
 
-    public String getWebAppRoot() {
-        try {
-            return this.projectManager.getCurrentProject().getWebAppRoot().getFile().getPath();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
     private String extractHsqlDBFileName(String connectionUrl) {
         int n = connectionUrl.indexOf("/data") + 6;
         String partialCxn = connectionUrl.substring(n);
@@ -907,15 +904,8 @@ public class DataModelManager {
         return partialCxn.substring(0, k);
     }
 
-    public static Resource getJavaDir(Resource dir, String pathname) {
-        // return new File(dir, pathname.replace(".", "/") + "/data");
-        Resource rtn = null;
-        try {
-            rtn = dir.createRelative(pathname.replace(".", "/") + "/data");
-        } catch (IOException ex) {
-
-        }
-
+    public static Folder getJavaDir(Folder dir, String pathname) {
+        Folder rtn = dir.getFolder(pathname.replace(".", "/") + "/data");
         return rtn;
     }
 

@@ -24,8 +24,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Beans;
@@ -57,7 +55,7 @@ public class SpringConfigSupport {
     }
 
     @Deprecated
-    public static Beans readBeans(Resource configFile, FileService fileService) throws JAXBException, IOException {
+    public static Beans readBeans(File configFile, FileService fileService) throws JAXBException, IOException {
         Reader reader = fileService.getReader(configFile);
         Beans ret = readBeans(reader);
         reader.close();
@@ -79,7 +77,7 @@ public class SpringConfigSupport {
     }
 
     @Deprecated
-    public static void writeBeans(Beans beans, Resource configFile, FileService fileService) throws JAXBException, IOException {
+    public static void writeBeans(Beans beans, File configFile, FileService fileService) throws JAXBException, IOException {
         Writer writer = fileService.getWriter(configFile);
         writeBeans(beans, writer);
         writer.close();

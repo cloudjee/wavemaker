@@ -35,7 +35,6 @@ public class BrowserLauncher {
     private static final String errMsg = "Error attempting to launch web browser";
 
     public static void main(String[] args) {
-        final String b1 = "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
         final String b2 = "C:\\Documents and Settings\\cconover\\Local Settings\\Application Data\\Google\\Chrome\\Application\\chrome.exe";
         openURL("http://localhost:8094/wavemaker/", b2);
     }

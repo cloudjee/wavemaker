@@ -52,6 +52,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		@type Boolean
 	*/
         saveInCookie: false,
+        saveInPhonegap: false,
 	isList: false,
 	_updating: 0,
 	_dataSchema: {},
@@ -69,29 +70,31 @@ dojo.declare("wm.Variable", wm.Component, {
 		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
 	}
     },
-	postInit: function() {
-		this.inherited(arguments);
-	        this._inPostInit = true;
-		// optimization: we should never need bindings on subNards so not creating them
-		if (!this._subNard && !this.$.binding)
-			new wm.Binding({name: "binding", owner: this});
-	        this.setType(this.type, true);
-	        if (this.saveInCookie) {
-		    var textdata = dojo.cookie(this.getRuntimeId());
-		    if (textdata)
-			this.json = textdata;
-		}
-		if (this.json)
-			this.setJson(this.json);
-		else
-			this._clearData();
+    postInit: function() {
+	this.inherited(arguments);
+	this._inPostInit = true;
+	// optimization: we should never need bindings on subNards so not creating them
+	if (!this._subNard && !this.$.binding)
+	    new wm.Binding({name: "binding", owner: this});
+	this.setType(this.type, true);
+	if (window["PhoneGap"] && this.saveInPhonegap) {
+	    var textdata = window.localStorage.getItem(this.getRuntimeId());
+	    if (textdata) this.json = textdata;
+	} else if (this.saveInCookie) {
+	    var textdata = dojo.cookie(this.getRuntimeId());
+	    if (textdata) this.json = textdata;
+	}
+	if (this.json) 
+	    this.setJson(this.json);
+	else
+	    this._clearData();
 
-	    this._inPostInit = false;
+	this._inPostInit = false;
 
-		// need to reinitialize after type is set
-		if (!this._updating && this.$.binding)
-			this.$.binding.refresh();
-	},
+	// need to reinitialize after type is set
+	if (!this._updating && this.$.binding)
+	    this.$.binding.refresh();
+    },
 	//===========================================================================
 	// Type Information
 	//===========================================================================
@@ -235,7 +238,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	clearData: function() {
 		this._clearData();
 	        this.setType(this.type, true);
-	        if (this.type && this.type != this.declaredClass)
+	        if (this.type && this.type != this.declaredClass && !this._initializing)
 		    this.notify();
 	},
 	_clearData: function() {
@@ -273,7 +276,10 @@ dojo.declare("wm.Variable", wm.Component, {
 	*/
 	// NB: input can be a POJSO or a Variable
 	setData: function(inData) {
-	    if (this.saveInCookie) {
+	    /* Don't try setting data to null if we're still initializing components for the page;
+	     * that just clobbers the cookie/permanent memory with data not yet set
+	     */
+	    if (window["PhoneGap"] && this.saveInPhonegap || this.saveInCookie) {
 		var ownerPage = this.getParentPage();
 		if (ownerPage._loadingPage && !inData) return;
 	    }
@@ -290,7 +296,11 @@ dojo.declare("wm.Variable", wm.Component, {
 		this._setObjectData(inData);
 	    this.notify();
 	    this.onSetData();
-	    if (this.saveInCookie) {
+
+	    if (window["PhoneGap"] && this.saveInPhonegap) {
+		var datatext = dojo.toJson(this.getData());
+		window.localStorage.setItem(this.getRuntimeId(), datatext);
+	    } else if (this.saveInCookie) {
 		var datatext = dojo.toJson(this.getData() );
 		dojo.cookie(this.getRuntimeId(), datatext);
 	    }
@@ -299,8 +309,15 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	onSetData: function() {},
 	notify: function() {
-		this.dataOwnerChanged();
-		this.dataChanged();
+	    this.dataOwnerChanged();
+	    this.dataChanged();
+	    this.valueChanged("isEmpty", this.isEmpty());
+	    if (this.isList) {
+		this.valueChanged("count", this.getCount());
+	    }
+	    if (this.queriedItems) {
+		this.setQuery(this._query);
+	    }
 	},
 	_setPrimitiveData: function(inValue) {
 	    if (inValue !== null && typeof inValue == "object") {
@@ -512,6 +529,10 @@ dojo.declare("wm.Variable", wm.Component, {
 	  return 1;
 	},
 
+    /* Used by bindings to isEmpty */
+    getIsEmpty: function() {
+	return this.isEmpty();
+    },
     isEmpty: function() {
 	if (!this.data)
 	    return true;
@@ -584,10 +605,22 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	// note: low level sort that requires a comparator function to be used.
 	sort: function(inComparator) {
-		this._populateItems();
-		var l = this.isList && this.data && this.data.list;
-		l && l.sort(inComparator);
+	    this._populateItems();
+	    var l = this.isList && this.data && this.data.list;
+	    if (l) {
+		if (typeof inComparator == "function") {
+		    l.sort(inComparator);
+		} else {
+		    l.sort(function(a,b) {
+			var v1 = a.getValue(inComparator);
+			var v2 = b.getValue(inComparator);
+			return wm.compareStrings(v1,v2);
+		    });
+		}
+	        this.notify();
+	    }
 	},
+    
 	/**
 		Set the cursor by index. When data forms a list, the cursor indicates the item used in calls to getValue.
 		@param {Number} inCursor The numeric index of the item to use as the Variable's 
@@ -723,6 +756,242 @@ dojo.declare("wm.Variable", wm.Component, {
 		}
 	        return -1;
 	},
+    getQueriedItems: function() {
+	if (!this.queriedItems) {
+	    this.queriedItems = new wm.Variable({isList: true,
+						 type: this.type,
+						 name: "queriedItems"});
+	    this.queriedItems.setOwner(this,true);
+	    // queried items are ALL items until a query has been issued
+	    this.queriedItems.setDataSet(this);
+	}
+	return this.queriedItems;
+    },
+    setQuery: function(query) {
+	this._query = query;
+	if (query) {
+	    return this.query(query,true);
+	} else {
+	    this.getQueriedItems().setDataSet(this);
+	}
+    },
+    query: function(inSample, updateQueriedItems) {
+	    if (!this.isList) return;
+	    var count = this.getCount();
+	    var result = [];
+	    if (inSample instanceof wm.Variable) {
+		inSample = inSample.getData();
+	    }
+	    for (var i = 0; i < count; i++) {
+		var item = this.getItem(i);
+		if (this._queryItem(item, inSample, i)) {
+		    result.push(item);
+		}
+	    }
+	if (updateQueriedItems) {
+	    var v  = this.getQueriedItems();
+	} else {
+	    var v = new wm.Variable({type: this.type, isList: true, name: "QueryResults"});
+	    v.setOwner(this,true);
+	}
+	v.setData(result);
+	return v;
+    },
+/*
+    _queryItem: function(inItem, inSample, inIndex) {
+	var w = "*";
+	var isMatch = true;
+	wm.forEachProperty(inSample, function(value, key) {
+	    var matchStart = true;
+	    var valueA = inItem.getValue(key);
+
+	    var conditions = value;
+	    wm.forEachProperty(conditions, function(valueB, conditionKey) {
+		switch(conditionValue) {
+		case ">": 
+		    if (valueB <= valueA) 
+		case ">=":
+
+		case "<":
+
+
+		case "<=":
+
+		case: "=":
+
+		case "!=":
+
+		case "in":
+		}
+
+	    });
+	    var b = inSample[key];
+
+
+
+	    var stringB = String(b);
+	    if (stringB.charAt(0) == w) {
+		b = b.substring(1);
+		matchStart = false;
+	    } else if (stringB.charAt(0) == ">") {
+		var orEqual = false;
+		if (stringB.charAt(1) == "=") {
+		    orEqual = true;
+		    b = b.substring(2);
+		} else {
+		    b = b.substring(1);
+		}
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		if (orEqual) {
+		    if (a < b) return false;
+		} else {
+		    if (a <= b) return false;
+		}
+		continue;
+	    } else if (stringB.charAt(0) == "<") {
+		var orEqual = false;
+		if (stringB.charAt(1) == "=") {
+		    orEqual = true;
+		    b = b.substring(2);
+		} else {
+		    b = b.substring(1);
+		}
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		if (orEqual) {
+		    if (a > b) return false;
+		} else {
+		    if (a >= b) return false;
+		}
+		continue;
+	    } else if (stringB.charAt(0) == "!") {
+		b = b.substring(1);
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		var invert = true;
+	    }
+	    if (b == w) {
+		if (invert) return false;
+		else continue;
+	    }
+	    if (dojo.isString(a) && dojo.isString(b)) {
+		if (b.charAt(b.length-1) == w)
+		    b = b.slice(0, -1);
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		var matchIndex = a.indexOf(b);
+		if (matchIndex == -1 ||
+		    matchIndex > 0 && matchStart) {
+		    if (!invert) return false;
+		} else if (invert) {
+		    return false;
+		}
+	    }
+	    else if (a !== b) {
+		if (invert) continue;
+		else return false;
+	    } else if (invert) {
+		return false;
+	    }
+	}
+	return true;
+    },
+    */
+    _queryItem: function(inItem, inSample, inIndex) {
+	var w = "*";
+
+	for (var key in inSample) {
+	    var matchStart = true;
+	    var a = inItem.getValue(key);
+	    var b = inSample[key];
+	    var stringB = String(b);
+	    if (stringB.charAt(0) == w) {
+		b = b.substring(1);
+		matchStart = false;
+	    } else if (stringB.charAt(0) == ">") {
+		var orEqual = false;
+		if (stringB.charAt(1) == "=") {
+		    orEqual = true;
+		    b = b.substring(2);
+		} else {
+		    b = b.substring(1);
+		}
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		if (orEqual) {
+		    if (a < b) return false;
+		} else {
+		    if (a <= b) return false;
+		}
+		continue;
+	    } else if (stringB.charAt(0) == "<") {
+		var orEqual = false;
+		if (stringB.charAt(1) == "=") {
+		    orEqual = true;
+		    b = b.substring(2);
+		} else {
+		    b = b.substring(1);
+		}
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		if (orEqual) {
+		    if (a > b) return false;
+		} else {
+		    if (a >= b) return false;
+		}
+		continue;
+	    } else if (stringB.charAt(0) == "!") {
+		b = b.substring(1);
+		if (typeof a == "number") {
+		    b = Number(b);
+		} else if (typeof a == "string") {
+		    b = b.toLowerCase();
+		}
+		var invert = true;
+	    }
+	    if (b == w) {
+		if (invert) return false;
+		else continue;
+	    }
+	    if (dojo.isString(a) && dojo.isString(b)) {
+		if (b.charAt(b.length-1) == w)
+		    b = b.slice(0, -1);
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		var matchIndex = a.indexOf(b);
+		if (matchIndex == -1 ||
+		    matchIndex > 0 && matchStart) {
+		    if (!invert) return false;
+		} else if (invert) {
+		    return false;
+		}
+	    }
+	    else if (a !== b) {
+		if (invert) continue;
+		else return false;
+	    } else if (invert) {
+		return false;
+	    }
+	}
+	return true;
+    },
+
 	//===========================================================================
 	// Update Messaging
 	//===========================================================================
@@ -1021,9 +1290,8 @@ wm.Variable.extend({
 	createVariable: function(inProps, inPropName) {
 		inProps = inProps || {};
 
-	    /* If  we're either in design or debug mode, and the type just doesn't exist, warn the user */
-	    if ((window["studio"] && this.isDesignLoaded() || !window["studio"] && djConfig.isDebug) && inProps.type && !wm.typeManager.getType(inProps.type.replace(/[\[\]]/g,""))) {
-		app.alert(wm.getDictionaryItem("wm.Variable.TYPE_INVALID", {type: inProps.type.replace(/[\[\]]/g,"")}));
+	    if ((window["studio"] && this.isDesignLoaded() || !window["studio"] && djConfig.isDebug) && inProps.type && !this._dataSchema) {
+		app.alert(wm.getDictionaryItem("wm.Variable.TYPE_INVALID", {type: inProps.type.replace(/[\[\]]/g,""), name: this.getRuntimeId()}));
 	    }
 	    if (!inProps.name) {
 		inProps.name = this._uniqueSubnardId;
@@ -1420,7 +1688,7 @@ wm.Variable.extend({
     },
     _end: 0
 });
-}
+
 
 
 
@@ -1455,6 +1723,7 @@ wm.Variable.extend({
 	}
 	return this.query(query, {limit: 1}).matches[0];
     },
+
     query: function(query, options){
 	var results = [];
 
@@ -1544,3 +1813,4 @@ wm.Variable.extend({
     }
     
 });
+}

@@ -18,37 +18,48 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
-import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.catalina.util.Base64;
 
 /**
  * This class is called inside launcher to undeploy current project from tomcat server
- *
+ * 
  * @author slee
  */
-public class TomcatUndeployer {//extends Server {
+public class TomcatUndeployer {// extends Server {
 
     private static final String MANAGER_CHARSET = "utf-8";
 
     // from catalina ant task
-    private static final String URL_ENCODE_CHARSET = "ISO-8859-1"; 
+    private static final String URL_ENCODE_CHARSET = "ISO-8859-1";
 
     private String username = "manager";
 
     private String password = "manager";
 
-    private String managerUri = "manager";
+    private final String managerUri = "manager";
 
     private InetAddress ip = null;
 
     private int port = 8080;
 
-    public TomcatUndeployer() {}
+    public TomcatUndeployer() {
+    }
 
     public String undeploy(String contextRoot, Map<String, String> props) {
-        for (Map.Entry<String, String> mapEntry: props.entrySet()) {
+        for (Map.Entry<String, String> mapEntry : props.entrySet()) {
             String key = mapEntry.getKey();
             String val = mapEntry.getValue();
             if (key.equals("tomcat.host")) {
@@ -64,14 +75,12 @@ public class TomcatUndeployer {//extends Server {
 
         contextRoot = checkContextRoot(contextRoot);
 
-        return this.toString(
-            getResponse(getManagerGetConnection("undeploy?" + 
-                getPathParam(contextRoot))), "");
+        return this.toString(getResponse(getManagerGetConnection("undeploy?" + getPathParam(contextRoot))), "");
     }
 
     private void setHost(String host) {
         try {
-            ip = InetAddress.getByName(host);
+            this.ip = InetAddress.getByName(host);
         } catch (UnknownHostException ex) {
             throw new RuntimeException(ex);
         }
@@ -89,7 +98,7 @@ public class TomcatUndeployer {//extends Server {
     }
 
     private String getManagerUri() {
-        return managerUri;
+        return this.managerUri;
     }
 
     private String getPathParam(String contextRoot) {
@@ -102,8 +111,7 @@ public class TomcatUndeployer {//extends Server {
 
     private HttpURLConnection getManagerGetConnection(String command) {
 
-        HttpURLConnection rtn = 
-            this.getGetConnection(getManagerUri() + "/" + command);
+        HttpURLConnection rtn = this.getGetConnection(getManagerUri() + "/" + command);
 
         return prepareConnection(rtn);
     }
@@ -130,9 +138,8 @@ public class TomcatUndeployer {//extends Server {
         HttpURLConnection rtn = null;
 
         try {
-            String url = "http://" + ip.getHostName() + ":" + port + "/" +
-                uri;
-            rtn = (HttpURLConnection)new URL(url).openConnection();
+            String url = "http://" + this.ip.getHostName() + ":" + this.port + "/" + uri;
+            rtn = (HttpURLConnection) new URL(url).openConnection();
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         } catch (IOException ex) {
@@ -149,10 +156,9 @@ public class TomcatUndeployer {//extends Server {
     private HttpURLConnection prepareConnection(HttpURLConnection con) {
 
         // Copied from Catalina's DeployTask
-        con.setRequestProperty("User-Agent",
-                               "Catalina-Ant-Task/1.0");
+        con.setRequestProperty("User-Agent", "Catalina-Ant-Task/1.0");
 
-        String input = username + ":" + password;
+        String input = this.username + ":" + this.password;
         String output = new String(Base64.encode(input.getBytes()));
         con.setRequestProperty("Authorization", "Basic " + output);
 
@@ -168,15 +174,11 @@ public class TomcatUndeployer {//extends Server {
         return getResponse(con, true);
     }
 
-    private List<String> getResponse(HttpURLConnection con, 
-                                     boolean includeStatus) 
-    {
+    private List<String> getResponse(HttpURLConnection con, boolean includeStatus) {
         List<String> rtn = new ArrayList<String>();
 
         try {
-            BufferedReader br = 
-                new BufferedReader(new InputStreamReader(con.getInputStream(), 
-                                                         MANAGER_CHARSET));
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), MANAGER_CHARSET));
 
             String line = "";
             boolean isFirst = true;
@@ -184,11 +186,11 @@ public class TomcatUndeployer {//extends Server {
             while ((line = br.readLine()) != null) {
                 if (isFirst) {
                     if (!line.startsWith("OK")) {
-                    	if(line.startsWith("FAIL - No context exists")){
-                    	//Context not deployed
-                    	}
-                    	else
-                        throw new RuntimeException(line);
+                        if (line.startsWith("FAIL - No context exists")) {
+                            // Context not deployed
+                        } else {
+                            throw new RuntimeException(line);
+                        }
                     }
                 }
                 if (!isFirst || includeStatus) {

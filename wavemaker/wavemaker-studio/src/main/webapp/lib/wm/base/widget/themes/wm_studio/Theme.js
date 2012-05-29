@@ -26,8 +26,9 @@
 		"borderColor": "#ABB8CF"
 	}, 
 	"wm.Button": {
-		"border": "1", 
-		"borderColor": "#ABB8CF"
+	    "border": "1", 
+	    "borderColor": "#ABB8CF",
+	    "height": "32px"
 	}, 
 	"wm.RoundedButton": {
 		"border": "0", 
@@ -56,13 +57,15 @@
 		"border": "0"
 	}, 
 	"wm.TabLayers": {
-	         headerHeight: "32px",
+	         headerHeight: "31px",
 		"layersType": "Tabs", 
 		"margin": "0", 
 		"border": "0", 
-		"borderColor": "", 
+		"borderColor": "#959DAB", 
 		"clientBorder": "0", 
-		"clientBorderColor": "#FBFBFB"
+	    "clientBorderColor": "#959DAB",
+	    width: "100%",
+	    height: "100%"
 	}, 
 	"wm.WizardLayers": {
 		"margin": "0", 
@@ -120,8 +123,8 @@
 	height: "100%",
 	horizontalAlign: "left",
 	verticalAlign: "top",
-	padding: "5,15,5,15",
-	border: "10",
+	padding: "5",
+	border: "5",
 	borderColor: "#313743",
 	backgroundColor: "#848c99"
     },

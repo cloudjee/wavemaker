@@ -15,18 +15,15 @@
 package com.wavemaker.tools.ant;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.ClassPathFile;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -54,8 +51,6 @@ public abstract class CompilerTask extends Task {
 
     private DesignServiceManager designServiceManager = null;
 
-    protected StudioFileSystem fileSystem;
-
     protected CompilerTask() {
         this(false);
     }
@@ -64,7 +59,6 @@ public abstract class CompilerTask extends Task {
         if (init) {
             AntUtils.bootstrap(getClass().getClassLoader());
         }
-        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     // REVIEW 25-Sep-07 stoens@activegrid.com -- We also need to handle
@@ -73,13 +67,14 @@ public abstract class CompilerTask extends Task {
         this.classpath = s;
     }
 
-    public File getProjectRoot() {
-        return this.projectRoot;
+    public Folder getProjectRoot() {
+        return new LocalFolder(this.projectRoot);
     }
 
     public void setProjectRoot(File projectRoot) {
         this.projectRoot = projectRoot;
-        this.agProject = new Project(new FileSystemResource(projectRoot), new LocalStudioFileSystem());
+        Folder folder = new LocalFolder(projectRoot);
+        this.agProject = new Project(folder, projectRoot.getName());
     }
 
     public void setVerbose(boolean verbose) {
@@ -97,7 +92,8 @@ public abstract class CompilerTask extends Task {
     protected synchronized DesignServiceManager getDesignServiceManager() {
         if (this.designServiceManager == null) {
             if (this.projectRoot != null) {
-                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(this.projectRoot));
+                Folder folder = new LocalFolder(this.projectRoot);
+                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(folder);
             }
         }
         return this.designServiceManager;
@@ -123,7 +119,7 @@ public abstract class CompilerTask extends Task {
         ResourceClassLoaderUtils.runInClassLoaderContext(task, getClassLoader());
     }
 
-    protected abstract void doExecute();
+    public abstract void doExecute();
 
     protected void validate() {
 
@@ -135,10 +131,6 @@ public abstract class CompilerTask extends Task {
 
             if (!this.projectRoot.exists()) {
                 throw new BuildException("projectRoot: " + this.projectRoot + "doesn't exist");
-            }
-
-            if (!this.projectRoot.isDirectory()) {
-                throw new BuildException("projectRoot: " + this.projectRoot + "is not a directory");
             }
         }
     }
@@ -167,13 +159,16 @@ public abstract class CompilerTask extends Task {
                 parent = getClass().getClassLoader();
             }
             String[] paths = this.classpath.split(":");
-            File[] classPathFiles = new File[paths.length];
+            ClassPathFile[] classPathFiles = new ClassPathFile[paths.length];
             for (int i = 0; i < paths.length; i++) {
-                classPathFiles[i] = new File(paths[i]);
+                classPathFiles[i] = new ClassPathFile(paths[i]);
             }
-            List<Resource> classPathResources = ConversionUtils.convertToResourceList(Arrays.asList(classPathFiles));
-            return ResourceClassLoaderUtils.getClassLoaderForResources(parent, classPathResources.toArray(new Resource[classPathFiles.length]));
+            return ResourceClassLoaderUtils.getClassLoaderForResources(parent, classPathFiles);
         }
 
+    }
+
+    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
+        this.designServiceManager = designServiceManager;
     }
 }

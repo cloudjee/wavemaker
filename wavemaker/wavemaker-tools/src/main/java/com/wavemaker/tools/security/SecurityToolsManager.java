@@ -133,7 +133,7 @@ public class SecurityToolsManager {
      */
     private Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
         Project currentProject = this.projectMgr.getCurrentProject();
-        Resource securityXml = getAcegiSpringResource(currentProject);
+        File securityXml = getAcegiSpringFile(currentProject);
         Beans beans = null;
         if (securityXml.exists()) {
             try {
@@ -161,7 +161,7 @@ public class SecurityToolsManager {
      */
     private synchronized void saveAcegiSpringBeans(Beans beans) throws JAXBException, IOException {
         Project currentProject = this.projectMgr.getCurrentProject();
-        Resource securityXml = getAcegiSpringResource(currentProject);
+        File securityXml = getAcegiSpringFile(currentProject);
         SpringConfigSupport.writeBeans(beans, securityXml, currentProject);
     }
 
@@ -323,8 +323,8 @@ public class SecurityToolsManager {
             this.designServiceMgr.getDeploymentManager().generateRuntime();
 
             Project project = this.projectMgr.getCurrentProject();
-            Resource webXml = project.getWebXml();
-            WebAppType wat = WebXmlSupport.readWebXml(webXml);
+            File webXml = project.getWebXmlFile();
+            WebAppType wat = WebXmlSupport.readWebXml(webXml.getContent().asInputStream());
 
             List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
             Iterator<Object> itr = watList.iterator();
@@ -600,8 +600,8 @@ public class SecurityToolsManager {
     }
 
     public void removeJOSSOConfig() throws JAXBException, IOException {
-        Resource webXml = this.projectMgr.getCurrentProject().getWebXml();
-        WebAppType wat = WebXmlSupport.readWebXml(webXml);
+        File webXml = this.projectMgr.getCurrentProject().getWebXmlFile();
+        WebAppType wat = WebXmlSupport.readWebXml(webXml.getContent().asInputStream());
         List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
         Iterator<Object> itr = watList.iterator();
         SecurityConstraintType secCon = null;

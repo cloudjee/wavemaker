@@ -38,7 +38,7 @@ Studio.extend({
 	saveScriptClick: function() {
 	    var errors = studio.editArea.hasJavascriptErrors();
 	    if (errors)
-		app.alert(errors);
+		app.warnOnce("ignoreJavascriptValidationErrors", errors);
 /*
 	    if (this.scriptPageCompileChkBtn.getChecked()) 
 		this.validateScriptClick();
@@ -49,7 +49,7 @@ Studio.extend({
         saveAppSrcClick: function() {
 	    var errors = studio.appsourceEditor.hasJavascriptErrors();
 	    if (errors)
-		app.alert(errors);
+		app.warnOnce("ignoreJavascriptValidationErrors", errors);
 
 /*
 	    if (this.appsrcPageCompileChkBtn.getChecked()) 
@@ -793,7 +793,7 @@ Studio.extend({
 	var count = 0;
 	for (var i = 0; i < showprops.length; i++) {
 	    if (showprops[i].name.match(/\<b\>/)) {
-		dojo.addClass(this.autoCompletionList.getItem(i).domNode, "CompletionListHeader");
+		//dojo.addClass(this.autoCompletionList.getItem(i).domNode, "CompletionListHeader");
 	    } else {
 		count++;
 	    }

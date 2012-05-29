@@ -35,7 +35,17 @@
                     <mergemapper to="${dojo.build.file}"/>
                     <mergemapper to="${build.webapproot.studio.dir}/studio.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/studio_base.js"/>
-                    <mergemapper to="${build.webapproot.studio.dir}/studio_wm.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_livepanel.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_gadget.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_richtext.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_editors.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_editors_old.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_misc.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_dashboard.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_charts.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_trees.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_dojogrid.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_fileupload.js"/>
                     <mergemapper to="${build.lib.webapproot.studio.dir}/lib_build.js"/>               
                 </compositemapper>  
             </mapper>
@@ -68,7 +78,17 @@
 							<mergemapper to="${dojo.build.file}" />
 							<mergemapper to="${build.webapproot.studio.dir}/studio.js" />
 							<mergemapper to="${build.webapproot.studio.dir}/studio_base.js" />
-							<mergemapper to="${build.webapproot.studio.dir}/studio_wm.js" />
+							<mergemapper to="${build.webapproot.studio.dir}/wm_livepanel.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_gadget.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_richtext.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_editors.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_editors_old.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_misc.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_dashboard.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_charts.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_trees.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_dojogrid.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_fileupload.js"/>
 							<mergemapper
 								to="${build.lib.webapproot.studio.dir}/lib_build.js" />
 						</compositemapper>
@@ -393,13 +413,19 @@
 				<mkdir dir="${dojo.release-temp.dir}/build" />
 				<copy todir="${dojo.release-temp.dir}/build">
 					<fileset dir="${dojo.release.dir}/dojo/dojo">
-						<include name="studio_wm.js" />
-					</fileset>
-				</copy>
-				<copy todir="${dojo.release-temp.dir}/build">
-					<fileset dir="${dojo.release.dir}/dojo/dojo">
 						<include name="studio_base.js" />
 						<include name="studio.js" />
+						<include name="wm_livepanel.js"/>
+						<include name="wm_gadget.js"/>
+						<include name="wm_richtext.js"/>
+						<include name="wm_editors.js"/>
+						<include name="wm_editors_old.js"/>
+						<include name="wm_misc.js"/>
+						<include name="wm_dashboard.js"/>
+						<include name="wm_charts.js"/>
+						<include name="wm_trees.js"/>
+						<include name="wm_dojogrid.js"/>
+						<include name="wm_fileupload.js"/>
 						<include name="nls/**" />
 					</fileset>
 					<fileset dir="${dojo.release.dir}/dojo/dijit">
@@ -408,10 +434,29 @@
 				</copy>
 				<gzip src="${dojo.release-temp.dir}/build/studio_base.js"
 					destfile="${dojo.release-temp.dir}/build/studio_base.js.gz" />
-				<gzip src="${dojo.release-temp.dir}/build/studio_base.js"
-					destfile="${dojo.release-temp.dir}/build/studio_base.js.gz" />
-				<gzip src="${dojo.release-temp.dir}/build/studio_wm.js"
-					destfile="${dojo.release-temp.dir}/build/studio_wm.js.gz" />
+				<gzip src="${dojo.release-temp.dir}/build/wm_livepanel.js"
+	 			        destfile="${dojo.release-temp.dir}/build/wm_livepanel.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_gadget.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_gadget.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_richtext.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_richtext.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_editors.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_editors.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_editors_old.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_editors_old.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_misc.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_misc.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_dashboard.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_dashboard.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_charts.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_charts.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_trees.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_trees.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_dojogrid.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_dojogrid.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_fileupload.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_fileupload.js.gz"  />
+
 				<gzip src="${dojo.release-temp.dir}/build/studio.js"
 					destfile="${dojo.release-temp.dir}/build/studio.js.gz" />
 
@@ -434,11 +479,9 @@
 				<copy tofile="${dojo.src.dir}/dijit/themes/tundra/tmobile.css"
 					file="${dojo.release-temp.dir}/wm_build/themes/tundra/tundraMobile.css" />
 				<!-- also deleted as part of clean -->
-
 				<delete dir="${lib.webapproot.studio.dir}/wm/studio" />
 				<delete dir="${dojo.release.dir}" />
 				<delete dir="${dojo.release-temp.dir}" />
-
 				<!-- move dojo build to the source dojo folder -->
 				<!-- <move file="${build.lib.webapproot.studio.dir}/dojo.js" tofile="${dojo.build.file}"/> -->
 				<gzip src="${build.lib.webapproot.studio.dir}/dojo.js"
@@ -567,32 +610,5 @@
         <gzip src="${build.lib.webapproot.studio.dir}/dojo.js" destfile="${dojo.build.file}.gz"/>    	
     </target>
 
-    <target name="jslint">
-        <java classname="org.mozilla.javascript.tools.shell.Main"
-            failonerror="true"
-            outputproperty="jslint.output"
-            fork="true" maxmemory="256m">
-            <classpath>
-                <pathelement location="${rhino.jar}"/>
-            </classpath>
-
-            <arg value="${jslint.js}"/>
-
-            <arg value="${build.webapproot.studio.dir}/studio_wm.js"/>
-        </java>
-
-        <condition property="jslint.success" value="success" else="fail">
-            <not>
-                <contains string="${jslint.output}"
-                    substring="Stopping, unable to continue."/>
-            </not>
-        </condition>
-        <echo>JSLINT OUTPUT -----------------------
-${jslint.output}
-jslint ${jslint.success}
--------------------------------------</echo>
-
-        <echo file="${jslint.statusfile}">${jslint.success}</echo>
-    </target>
 
 </project>

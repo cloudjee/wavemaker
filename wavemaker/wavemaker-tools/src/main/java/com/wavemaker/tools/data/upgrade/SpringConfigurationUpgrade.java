@@ -14,11 +14,9 @@
 
 package com.wavemaker.tools.data.upgrade;
 
-import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
@@ -26,7 +24,7 @@ import com.wavemaker.runtime.data.spring.SpringDataServiceManager;
 import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -60,16 +58,15 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements U
 
         final DesignServiceManager mgr = getDesignServiceManager();
 
-        LocalStudioFileSystem fileSystem = new LocalStudioFileSystem();
-        FileService fileService = new AbstractFileService(fileSystem) {
+        FileService fileService = new AbstractFileService() {
 
             @Override
-            public Resource getFileServiceRoot() {
-                return mgr.getServiceHome(id);
+            public Folder getFileServiceRoot() {
+                return mgr.getServiceFolder(id);
             }
         };
 
-        File cfgFile = getCfgFile(id);
+        com.wavemaker.tools.io.File cfgFile = getCfgFile(id);
 
         Beans beans = DataServiceUtils.readBeans(cfgFile, fileService);
 
@@ -78,7 +75,7 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements U
         upgradeSpringDataServiceManager(beans);
         upgradeTaskManager(beans);
 
-        String path = cfgFile.getParentFile().getName() + "/" + cfgFile.getName();
+        String path = cfgFile.getParent().toString() + "/" + cfgFile.getName();
         DataServiceUtils.writeBeans(beans, fileService, path);
     }
 

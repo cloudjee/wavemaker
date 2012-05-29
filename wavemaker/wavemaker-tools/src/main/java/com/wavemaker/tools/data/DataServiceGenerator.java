@@ -14,7 +14,8 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,6 @@ import java.util.Map;
 import org.apache.log4j.NDC;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.core.io.Resource;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -43,6 +43,7 @@ import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.json.type.TypeDefinition;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.DataServiceInternal;
 import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.DataServiceManagerAccess;
@@ -55,15 +56,14 @@ import com.wavemaker.runtime.service.LiveDataService;
 import com.wavemaker.runtime.service.PagingOptions;
 import com.wavemaker.runtime.service.PropertyOptions;
 import com.wavemaker.runtime.service.TypedServiceReturn;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.codegen.BeanGenerator;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
-import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * DataService class generation.
@@ -417,9 +417,9 @@ public class DataServiceGenerator extends ServiceGenerator {
         String relPath = StringUtils.classNameToSrcFilePath(this.constantsClass.getFullyQualifiedClassName());
         OutputStream os = null;
         try {
-            Resource f = this.configuration.getOutputDirectory().createRelative(relPath);
-            fileSystem.createPath(fileSystem.getParent(f), "");
-            os = fileSystem.getOutputStream(f);
+            com.wavemaker.tools.io.File f = this.configuration.getOutputDirectory().getFile(relPath);
+            f.getParent().createIfMissing();
+            os = f.getContent().asOutputStream();
             this.constantsClass.generate(os);
             os.close();
         } catch (IOException ex) {

@@ -15,15 +15,21 @@
 dojo.provide("wm.studio.app.propertyEdit");
 
 dojo.declare("wm.SetPropTask", null, {
-	constructor: function(inComponent, inPropName, inOldValue, inNewValue) {
-		dojo.mixin(this, { component: inComponent, propName: inPropName, oldValue: inOldValue, newValue: inNewValue});
+        constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsStyle) {
+	    dojo.mixin(this, { component: inComponent, propName: inPropName, oldValue: inOldValue, newValue: inNewValue, isStyle:inIsStyle});
 		this.hint = 'change "' + inPropName + '"';
 		this.redo();
 	},
 	_do: function(inValue) {
+	    if (this.isStyle) {
+		this.component.setStyle(this.propName, inValue);
+	    } else {
 		this.component.setProp(this.propName, inValue);
-		//projectMgr.setDirtyComponents(true);
+	    }
+	    //projectMgr.setDirtyComponents(true);
+	    if (studio.selected == this.component) {
 		wm.onidle(studio.inspector, "reinspect");
+	    }
 	},
 	redo: function() {
 		this._do(this.newValue);
@@ -34,367 +40,44 @@ dojo.declare("wm.SetPropTask", null, {
 	}
 });
 
-dojo.declare("wm.propEdit.Base", null, {
-	constructor: function(inProps) {
-		dojo.mixin(this, inProps);
-		if (!("value" in inProps))
-			this.value = this._getPropValue();
-		if (!("defaultValue" in inProps))
-			this.defaultValue = this._getPropDefaultValue();
+dojo.declare("wm.SetWireTask", null, {
+    constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsExpression, skipValidation) {
+	dojo.mixin(this, { component: inComponent, propName: inPropName, oldValue: inOldValue, newValue: inNewValue, isExpression: inIsExpression, skipValidation: skipValidation});
+		this.hint = 'change "' + inPropName + '"';
+		this.redo();
 	},
-        applyProp: function(propName, value) {
-	    this._setPropValue(value);
-	},
-        setPropEdit: function(propName, value) {
-	    var editor = dijit.byId("studio_propinspect_" + propName);
-	    editor.set("value", value, false);
-	    editor._lastValueReported = value;
-	},
-	_getPropValue: function() {
-		var v = this.component.getProp(this.name);
-		return dojo.isFunction(v) ? ["(", this.name, ")"].join('') : v;
-	},
-	_getPropDefaultValue: function() {
-		return this.component.constructor.prototype[this.name];
-	},
-	_setPropValue: function(inValue) {
-	    if (this.createWire) {
-		if (!inValue) {
-		    this.component.$.binding.removeWire(this.name);
-		} else if (inValue && typeof inValue == "string") {
-		    this.component.$.binding.addWire("", this.name, inValue);
+        _do: function(inValue, type) {
+	    this.component.$.binding.removeWireByProp(this.propName);
+	    if (inValue) {
+		if (type == "expr") {
+		    inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
+		    this.component.$.binding.addWire("", this.propName, "", inValue);
+		} else if (type == "source") {
+		    this.component.$.binding.addWire("", this.propName, inValue);
+		} else {
+		    this.component.setValue(this.propName, this.oldValue.value); // non-bound value such as the caption before we replaced it with a binding
 		}
+	    }
+	    if (studio.selected == this.component) {
+		wm.onidle(studio.inspector, "reinspect");
+	    }
+	},
+	redo: function() {
+	    this._do(this.newValue, this.isExpression ? "expr" : "source");
+		wm.undo.push(this);
+	},
+	undo: function() {
+	    if (this.oldValue.expression) {
+		this._do(this.oldValue.expression, "expr");
+	    } else if (this.oldValue.source || !this.oldValue.value) {
+		this._do(this.oldValue.source, "source");
 	    } else {
-		new wm.SetPropTask(this.component, this.name, this.value, inValue);
+		this._do(this.oldValue.value, "value");
 	    }
 	}
 });
 
-dojo.declare("wm.propEdit.Select", wm.propEdit.Base, {
-	constructor: function(inProps) {
-		this.init();
-	},
-	init: function() {
-		this.options = this.getOptions();
-		this.values =  this.getValues() || this.options;
-	},
-        applyProp: function(propName, value) {
-	    for (var i = 0; i < this.options.length; i++) {
-		if (value == this.options[i]) {
-		    this._setPropValue(this.values[i]);
-		    break;
-		}
-	    }
-	},
-	getValues: function() {
-	    return this.values;
-	},
-	getOptions: function() {
-	    return this.options;
-	},
-	getHtml: function() {
-		return makeSelectPropEdit(this.name, this.value, this.options, this.defaultValue, this.values);
-	},
-        setPropEdit: function(propName, value) {
-	    /* Update the html */
-	    this.options = this.getOptions(); 
-	    this.values = this.getValues();
-	    var html = this.getHtml();
 
-	    /* Filter out garbage from the new html */
-	    html = html.replace(/selected="selected"/,"");
-	    html = html.replace(/^.*?\<option/,"<option");
-	    html = html.replace(/\<\/select.*/,"");
-
-
-	    /* Update the store with the new HTML */
-	    var editor = dijit.byId("studio_propinspect_" + propName);
-	    var store = editor.store.root;
-	    while (store.firstChild) store.removeChild(store.firstChild);
-	    store.innerHTML = html;
-
-	    /* Update the editor value */
-	    editor.set("value", value, false);
-	    editor._lastValueReported = value;
-	}
-});
-
-dojo.declare("wm.propEdit.UnitValue", wm.propEdit.Select, {
-	lexer: /([\d]+)(.*)/,
-	init: function() {
-		this.values = this.values || this.options;
-	},
-	lex: function(inValue) {
-		var parts = (inValue || "").match(this.lexer);
-		return { value: parts && parts[1] || 0, units: parts && parts[2]};
-	},
-	getHtml: function() {
-		var value = wm.splitUnits(this.value);
-		var defaultValue = wm.splitUnits(this.defaultValue);
-		var html = [
-			'<table class="wminspector-property" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border: 0 none;">', 
-		    makeInputPropEdit(this.name + "_1", value.value, defaultValue.value),
-			'</td><td style="width: 1px; border-left: 1px solid gray">&nbsp;</td><td width="44">',
-		    makeSelectPropEdit(this.name + "_2", value.units, this.options, ""/*defaultValue.units*/, this.values),
-			'</td></tr>',
-			//'<tr><td>Hello more lines!</td></tr>',
-			'</table>'
-		];
-		return html.join('');
-	},
-        applyProp: function(propName, value) {
-	    var value = dijit.byId("studio_propinspect_" + propName + "_1").get("value");
-	    var select = dijit.byId("studio_propinspect_" + propName + "_2").get("value");
-	    var su = this.lex(value);
-	    this.inspector._setInspectedProp(this.name, su.value + (su.units || select));
-	},
-        setPropEdit: function(propName, value) {
-	    dijit.byId("studio_propinspect_" + propName + "_1").set("value", parseInt(value), false);
-	    var matches = value.match(/%|px/);
-	    dijit.byId("studio_propinspect_" + propName + "_2").set("value", matches && matches.length ? matches[0] : "px", false);
-	}
-});
-
-dojo.declare("wm.propEdit.PagesSelect", wm.propEdit.Select, {
-	getOptions: function() {
-	    var pagelist = wm.getPageList(this.currentPageOK);
-            if (this.newPage)
-	        pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
-	    return pagelist;
-	}
-});
-
-wm.getPageList = function(currentPageOK){
-	    var pages = [""].concat(studio.project.getPageList()), current = studio.page.declaredClass;
-	    if (!currentPageOK)
-			return dojo.filter(pages, function(p) {
-				return (p != current);
-			});
-	    else
-			return pages;
-}
-
-dojo.declare("wm.propEdit.ImageListSelect", wm.propEdit.Select, {
-	getOptions: function() {
-	    return [""].concat(studio.getImageLists());
-	}
-});
-
-dojo.declare("wm.propEdit.WidgetsSelect", wm.propEdit.Select, {
-	setWidgetType: function(inWidgetType) {
-		this.widgetType = inWidgetType;
-	},
-	getOptions: function() {
-	    var options = [];
-/*
-		var layers = wm.listOfWidgetType(this.widgetType, true), options = [];
-		for (var i=0, l; l = layers[i]; i++) { 
-			options.push(l.name);
-		}
-		*/
-	    var components = wm.listComponents([studio.page, studio.application], this.widgetType);
-		for (var i=0, l; l = components[i]; i++) { 
-		    options.push(l.getId());
-		}
-		return [""].concat(options);
-	}
-});
-
-dojo.declare("wm.propEdit.FieldSelect", wm.propEdit.Select, {
-	getSchemaOptions: function(inSchema) {
-		return [""].concat(wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema));
-	},
-	getOptions: function() {
-		return this.getSchemaOptions(wm.typeManager.getTypeSchema(this.fromType));
-	}
-});
-
-dojo.declare("wm.propEdit.FormFieldSelect", wm.propEdit.FieldSelect, {
-	getOptions: function() {
-	    var f = wm.getParentForm(this.component);
-	    var ds = f && f.dataSet;
-	    if (ds) {
-	    return ds && ds.type ? this.component.getSchemaOptions && this.component.getSchemaOptions(ds._dataSchema) || this.getSchemaOptions(ds._dataSchema) : [""];
-	    } else if (f && f.type) {
-		var type = wm.typeManager.getType(f.type);
-		return type ? this.getSchemaOptions(type.fields) : [""];
-	    } else {
-		return [];
-	    }
-	}
-});
-
-dojo.declare("wm.propEdit.DataFieldSelect", wm.propEdit.Select, {
-	getOptions: function() {
-		var ds = this.dataSource, r = [""];
-		return ds && ds.type ? this.getSchemaOptions(ds._dataSchema) : [""];
-	}
-});
-
-dojo.declare("wm.propEdit.DataTypesSelect", wm.propEdit.Select, {
-	options: [""],
-	values: [""],
-	init: function() {
-		this.inherited(arguments);		
-	},
-    getOptions: function() {
-	this.options = [""];
-	this.addOptionValues(this.getDataTypes(), true);
-	return this.options;
-    },
-	addOptionValues: function(inOptionValues, inSort) {
-	        this.sort = inSort;
-		if (inSort)
-			inOptionValues.sort(function(a, b) { return wm.data.compare(a.option, b.option); });
-		this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
-		this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) { return d.value; }));
-	},
-	getDataTypes: function() {
-		var
-			types = this.liveTypes ? wm.typeManager.getLiveServiceTypes() : wm.typeManager.getPublicTypes(),
-			dt = [];
-		for (var i in types)
-			dt.push({option: wm.getFriendlyTypeName(i), value: i});
-		return dt;
-	}/*,
-
-        setPropEdit: function(propName, value) {
-	    var editor = dijit.byId("studio_propinspect_" + propName);
-	    var store = editor.store.root;
-	    while (store.firstChild) store.removeChild(store.firstChild);
-	    
-	    var types = this.liveTypes ? wm.typeManager.getLiveServiceTypes() : wm.typeManager.getPublicTypes();
-	    var options = [];
-	    for (var i in types) {
-		options.push({option: wm.getFriendlyTypeName(i), value: i});
-	    }
-	    if (this.sort)
-		options.sort(function(a, b) { return wm.data.compare(a.option, b.option); });
-	    for (var i = 0; i < options.length; i++) {
-		var node = document.createElement("option");
-		node.innerHTML = options[i].option;
-		node.value = options[i].value;
-		store.appendChild(node);
-	    }
-
-	    editor.set("value", value, false);
-	    editor._lastValueReported = value;
-	}
-	*/
-});
-
-dojo.declare("wm.propEdit.AllDataTypesSelect", wm.propEdit.DataTypesSelect, {
-	addOptionValues: function(inOptionValues, inSort) {
-		if (inSort)
-			inOptionValues.sort(function(a, b) { 
-                            if (a.option.match(/Literal$/) && b.option.match(/Literal$/))
-                                return wm.data.compare(a.option, b.option); 
-                            else if (a.option.match(/Literal$/))
-                                     return -1;
-                            else if (b.option.match(/Literal$/))
-                                     return -1;
-                            else
-                                return wm.data.compare(a.option, b.option); 
-                        });
-		this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
-		this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) { return d.value; }));
-	},
-    /* Localization TODO: At some point we may want to localize these, but we'd need to localize the entire type system to gain by that */
-	getDataTypes: function() {
-            var list = this.inherited(arguments);
-            var extras = [{option: "String Literal", value: "String"}, {option: "Number Literal", value: "Number"}, {option: "Boolean Literal", value: "Boolean"}, {option: "Date Literal", value: "Date"}];
-            return extras.concat(list);
-	}
-});
-dojo.declare("wm.propEdit.AllDataTypesSelect", wm.propEdit.DataTypesSelect, {
-	addOptionValues: function(inOptionValues, inSort) {
-		if (inSort)
-			inOptionValues.sort(function(a, b) { 
-                            if (a.option.match(/Literal$/) && b.option.match(/Literal$/))
-                                return wm.data.compare(a.option, b.option); 
-                            else if (a.option.match(/Literal$/))
-                                     return -1;
-                            else if (b.option.match(/Literal$/))
-                                     return -1;
-                            else
-                                return wm.data.compare(a.option, b.option); 
-                        });
-		this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
-		this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) { return d.value; }));
-	},
-    /* Localization TODO: At some point we may want to localize these, but we'd need to localize the entire type system to gain by that */
-	getDataTypes: function() {
-            var list = this.inherited(arguments);
-            var extras = [{option: "String Literal", value: "String"}, {option: "Number Literal", value: "Number"}, {option: "Boolean Literal", value: "Boolean"}, {option: "Date Literal", value: "Date"}];
-            return extras.concat(list);
-	}
-});
-
-
-dojo.declare("wm.propEdit.LiveSourcesSelect", wm.propEdit.DataTypesSelect, {
-	liveTypes: true,
-    
-	getOptions: function() {
-	    this.inherited(arguments);
-	    if (!this.skipLiveViews)
-		this.addOptionValues(this.getLiveViews(), true);
-	    return this.options;
-
-	},
-
-	getLiveViews: function() {
-		var
-			views = wm.listComponents([studio.application], wm.LiveView),
-			lv = [];
-		wm.forEach(views, dojo.hitch(this, function(v) {
-			var dt = v.dataType || "", k = dt ? " (" + dt.split('.').pop() + ")" : "";
-			lv.push({
-				option: v.name + k,
-				value: v.getId()
-			});
-		}));
-		return lv;
-	}
-});
-
-dojo.declare("wm.propEdit.DataSetSelect", wm.propEdit.Select, {
-	getOptions: function() {
-		var sp = studio.page, r = this.getDataSets([sp, sp.app]);
-		if (this.widgetDataSets)
-			wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-				if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.Editor && w.formField))
-					r = r.concat(this.getDataSets([w]));
-			}));
-		return [""].concat(r.sort());
-	},
-	getDataSets: function(inOwners) {
-		var all = this.allowAllTypes, list = this.listMatch;
-		return wm.listMatchingComponentIds(inOwners, function(c) {
-			return (c instanceof wm.Variable &&
-				c.name && c.name.indexOf("_") != 0 &&
-				(all || wm.typeManager.isStructuredType(c.type)) &&
-				(list !== undefined ? list == wm.fire(c, "isListBindable") : true)
-			);
-		});
-	}
-});
-
-dojo.declare("wm.propEdit.LiveDataSetSelect", wm.propEdit.DataSetSelect, {
-	getDataSets: function(inOwners) {
-		var all = this.allowAllTypes, list = this.listMatch;
-		return wm.listMatchingComponentIds(inOwners, function(c) {
-		    if (c instanceof wm.Variable &&
-			c.name && c.name.indexOf("_") != 0 &&
-			(all || wm.typeManager.isStructuredType(c.type)) &&
-			(list !== undefined ? list == wm.fire(c, "isListBindable") : true)
-		       ) {
-			var type = wm.typeManager.getType(c.type);
-			return type.liveService;
-		    }
-		    
-		});
-	}
-});
 
 dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
     editorBorder: false,
@@ -529,6 +212,16 @@ dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
     }
 });
 
+wm.getPageList = function(currentPageOK){
+	    var pages = [""].concat(studio.project.getPageList()), current = studio.page.declaredClass;
+	    if (!currentPageOK)
+			return dojo.filter(pages, function(p) {
+				return (p != current);
+			});
+	    else
+			return pages;
+}
+
 dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     newPage: true,
     currentPageOK: false,
@@ -578,7 +271,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	*/
 	if (this.widgetDataSets)
 	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-		if (!(w instanceof wm.PageContainer) && w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
+		if (!(w instanceof wm.PageContainer) && w !== this && !(wm.isInstanceType(w, wm.LiveFormBase)) && !(wm.isInstanceType(w, wm.AbstractEditor) && w.formField))
 		    r = r.concat(this.getDataSets([w],matchType));
 	    }),true);
 	r = r.sort();
@@ -624,7 +317,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 			    }
 
 			    /* Handle noForms */
-			    if (this.noForms && (wm.LiveFormBase && c.owner instanceof wm.LiveFormBase || wm.LiveFormBase && c.owner instanceof wm.DataForm)) {
+			    if (this.noForms && (wm.LiveFormBase && wm.isInstanceType(c.owner, [wm.LiveFormBase,wm.DataForm]))) {
 				return false;
 			    }
 
@@ -751,7 +444,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	var ds;
 	var type;
 
-	if (f instanceof wm.ServiceInputForm) {
+	if (wm.isInstanceType(f, wm.ServiceInputForm)) {
 	    ds = f.serviceVariable.input;
 	} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
 	    ds = f && f.dataSet;
@@ -772,7 +465,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	    if (this.oneToMany === true || this.oneToMany === false) {
 		var f = this.inspected.getParentForm();
 		var dataSet;
-		if (f instanceof wm.ServiceInputForm) {
+		if (wm.isInstanceType(f, wm.ServiceInputForm)) {
 		    dataSet = f.serviceVariable.input;
 		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
 		    dataSet = f && f.dataSet;
@@ -790,7 +483,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	    if (this.liveTypes != true) {
 		var f = this.inspected.getParentForm();
 		var dataSet;
-		if (f instanceof wm.ServiceInputForm) {
+		if (wm.isInstanceType(f, wm.ServiceInputForm)) {
 		    dataSet = f.serviceVariable.input;
 		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
 		    dataSet = f && f.dataSet;
@@ -844,7 +537,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 	var result = [];
 	if (this.excludeType) {
 	    for (var i = 0; i < components.length; i++) {
-		if (components[i] instanceof this.excludeType == false) {
+		if (wm.isInstanceType(components[i], this.excludeType) == false) {
 		    result.push(components[i]);
 		}
 	    }
@@ -872,6 +565,7 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     useLiterals:false,
     liveTypes: false,
     includeLiveViews: false,
+    addNewOption: false,
     updateOptions: function() {
 	this.inherited(arguments);
 	if (this.useLiterals) {
@@ -880,6 +574,10 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 	} else {
 	    this.options = [""];
 	    this.values = [""];
+	}
+	if (this.addNewOption) {
+	    wm.Array.insertElementAt(this.options, "New Type", 1);
+	    wm.Array.insertElementAt(this.values, "New Type", 1);
 	}
 	if (this.includeLiveViews) {
 	    this.options =this.options.concat(this.getLiveViews());
@@ -955,6 +653,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 					width: "20px",
 					height: "18px",
 					padding: "0",
+					showing: this.inspected instanceof wm.Application==false,
 					onclick: dojo.hitch(this, function() {
 					    var index = this.editors[this.editors.length-1].propertyNumber+1;
 					    this.addEditor(index, "-");
@@ -990,7 +689,24 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
 	dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
 	this.editors = [];
-	this.addEditor(0,this.inspected.getProp(this.propName));
+	var value;
+	if (this.inspected instanceof wm.Application == false) {
+	    value = this.inspected.getProp(this.propName);
+	} else {
+	    studio.generateAppSourceHtml();
+	    var text = studio.appsourceHtml.getHtml();
+	    text = text.replace(/.*?\>/,"").replace(/\<\/pre\>$/,"");
+	    delete window[studio.project.projectName];
+	    try {
+		eval(text);
+		eval(studio.appsourceEditor.getDataValue());
+	    } catch(e) {}
+	    var ctor = dojo.getObject(studio.project.projectName);
+	    value =  (ctor && ctor.prototype[this.propName] && ctor.prototype[this.propName] != wm.Application.prototype[this.propName]) ? this.propName : "";
+	}
+
+
+	this.addEditor(0,value);
 	for (var i = 1; i < 20; i++) {
 	    if (this.inspected.getProp(this.propName + i)) {
 		this.addEditor(i, this.inspected.getProp(this.propName + i));
@@ -1002,7 +718,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     },
 	addEditor: function(inIndex, inValue) {
 	    var propertyName = this.propName + (inIndex == 0 ? "" : inIndex);
-	this.editors.push(new wm.prop.EventEditor({owner: this,
+	    this.editors.push(new wm.prop.EventEditor({owner: this,
 						   parent: this.panel,
 						   name: "propEdit_" + this.propName + "_" + inIndex,
 						   propName: propertyName,
@@ -1116,7 +832,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    wm.prop.EventEditor.eventActions =  {
 		noEvent: {caption: studio.getDictionaryItem("wm.EventEditor.NO_EVENTS")},
 		jsFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT")},
-		jsSharedFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT_SHARED")},
+		//jsSharedFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT_SHARED")},
 		newService: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_SERVICE")},
 		newLiveVar: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_LIVEVAR")},
 		newNavigation: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_NAVIGATION")},
@@ -1124,7 +840,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		serviceVariables: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SERVICE"), list: "serviceVariable"},
 		navigations: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NAVIGATION"), list: "navigationCall"},
 		notifications: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NOTIFICATION"), list: "notificationCall"},
-		existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
+		//existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
 		dialogs: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DIALOGS"), list: "dialogs"},
 		layers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_LAYERS"), list: "layers"},
 		mobileFolding: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_MOBILE_FOLDING"), list: "mobileFolding"},
@@ -1333,7 +1049,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	    var navList = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
 	    var notificationList = wm.listComponents([studio.application, studio.page], wm.NotificationCall).sort();
-	    var sharedEventHandlers =  eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
+	    //var sharedEventHandlers =  eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
 	    dialogList = dialogList.concat(lightboxList);
 	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));
@@ -1358,7 +1074,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var lightboxList = wm.listComponents([inPage], wm.DojoLightbox);
 	    var navList = wm.listComponents([inPage], wm.NavigationCall).sort();
 	    var notificationList = wm.listComponents([inPage], wm.NotificationCall).sort();
-	    var sharedEventHandlers = [];
+	    //var sharedEventHandlers = [];
 	    var dialogList = wm.listComponents([inPage], wm.Dialog);
 	    dialogList = dialogList.concat(lightboxList);
 	    dialogList = dialogList.concat(wm.listComponents([inPage], wm.PopupMenu));
@@ -1407,10 +1123,12 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "service") == -1) return;
 		    componentList = svarList;
 		    break;
+/*
 		case "sharedEventHandlers":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "js") == -1) return;
 		    componentList = sharedEventHandlers;
 		    break;
+		    */
 		case "dialogs":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dialog") == -1) return;
 		    componentList = dialogList;
@@ -1479,7 +1197,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			if (obj instanceof wm.Dialog){
 			    addToArray.push({defaultLabel: cname + ".show", onClick: dojo.hitch(this, "setEditorValue", rname + ".show")});
 			    addToArray.push({defaultLabel: cname + ".hide", onClick: dojo.hitch(this, "setEditorValue", rname + ".hide")});
-			} else if (obj instanceof wm.LiveForm) {
+			} else if (wm.isInstanceType(obj, wm.LiveForm)) {
 			    var formSubmenu = {label: cname, children: []};
 			    addToArray.push(formSubmenu);
 			    formSubmenu.children.push({label: cname + ".beginDataInsert", onClick: dojo.hitch(this, "setEditorValue", rname + ".beginDataInsert")});
@@ -1487,12 +1205,12 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			    formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
 			    formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
 			    formSubmenu.children.push({label: cname + ".cancelEdit", onClick: dojo.hitch(this, "setEditorValue", rname + ".cancelEdit")});
-			} else if (obj instanceof wm.DataForm) {
+			} else if (wm.isInstanceType(obj, wm.DataForm)) {
 			    var formSubmenu = {label: cname, children: []};
 			    addToArray.push(formSubmenu);
 			    formSubmenu.children.push({label: cname + ".editNewObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editNewObject")});
 			    formSubmenu.children.push({label: cname + ".editCurrentObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editCurrentObject")});
-			    if (obj instanceof wm.DBForm) {
+			    if (wm.isInstanceType(obj, wm.DBForm)) {
 				formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
 				formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
 			    }
@@ -1526,9 +1244,11 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    case "jsFunc":
 			if (dojo.indexOf(eventSchema.events, "js") == -1) return;
 			break;
+/*
 		    case "jsSharedFunc":
 			if (dojo.indexOf(eventSchema.events, "sharedjs") == -1) return;
 			break;
+			*/
 		    case "newService":
 			if ( dojo.indexOf(eventSchema.events, "service") == -1) return;
 			break;
@@ -1585,15 +1305,17 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 		                eventEdit(c, p.replace(/\d*$/,""), v, c == studio.application);
 				break;
+/*
 			case "jsSharedFunc":
 				v = c.generateSharedEventName(p);
 		    window.setTimeout(dojo.hitch(this, function() {
 			this.setDisplayValue(v);
 			studio.inspector.reinspect();
 		    }), 50);
-				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
+				try{c.updatingEvent(p,v);}catch (e){/ *do nothing as this might happen if there's a component which does not extends wm.control class* /}
 				eventEdit(c, p, v, c == studio.application);
 				break;
+		*/
 			case "newService":
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
 		    this.setDisplayValue(studio.selected.name);
@@ -1728,8 +1450,11 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    props.caption = styleProp.name;
 	    props.name = "style_" + styleProp.name;
 	    var e = new ctor(dojo.mixin(props, defaultProps, {parent: parent}));
-	    e.connect(e,"onchange", this, function(inDisplayValue, inDataValue) {
-		this.changed(e, inDisplayValue, inDataValue);
+	    e.connect(e,"onClose", this, function() {
+		this.changed(e, e.getDisplayValue(), e.getDataValue(), false, e.editor.dropDown._initialValue || "");
+	    });
+	    e.connect(e,"onchange", this, function(inDisplayValue, inDataValue, inSetByCode) {
+		this.changed(e, inDisplayValue, inDataValue, inSetByCode);
 	    });
 	    e.connect(e,"onHelpClick", this, function() {
 		studio.helpPopup = studio.inspector.getHelpDialog();
@@ -1828,11 +1553,12 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     generateCssRule: function() {
 	app.prompt("<p>Enter a name for the CSS class you want to create.</p><p>A new CSS class will be created using the style currently specified for this widget.  Classes can be reused to apply the same styles to other widgets, and can be customized to add new styles.", this.inspected.name, dojo.hitch(this, function(inClassName) {
 	    if (!inClassName) return;
-	    var cssText = "." + inClassName + " {\n";
+	    var cssText = wm.prop.ClassListEditor.prototype.getClassRuleName(inClassName) + " {\n";
 	    "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
 
 	    if (this.inspected.styles) {
 		wm.forEachProperty(this.inspected.styles, dojo.hitch(this, function(styleValue, styleName) {
+		    if (!styleValue) return;
 		    if (styleName == "backgroundGradient") {
 			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
 			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
@@ -1888,7 +1614,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 
     },
     */
-    changed: function(inEditor, inDisplayValue, inDataValue) {
+    changed: function(inEditor, inDisplayValue, inDataValue, inSetByCode, optionalLastDataValue) {
 	var styleName = inEditor.name.replace(/^style_/,"")
 	var styleDef;
 	for (var i = 0; i < this.commonStyles.length; i++) {
@@ -1901,7 +1627,13 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	if (postFix) {
 	    inDataValue += postFix;
 	}
-	this.inspected.setStyle(styleName, inDataValue);
+	//this.inspected.setStyle(styleName, inDataValue);
+	if (!inSetByCode && (!inEditor.editor._opened)) {
+	    /* Color pickers change the value but only trigger this onClose, so the lastValue must come from the colorPicker not from our current state */
+	    new wm.SetPropTask(this.inspected, styleName, optionalLastDataValue !== undefined ? optionalLastDataValue : this.inspected.getStyle(styleName) ||"", inDataValue, true);
+	} else {
+	    this.inspected.setStyle(styleName, inDataValue);
+	}
     },
     _end: 0
 });
@@ -1995,6 +1727,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 		      caption: "Add a CSS class to this widget to style it"});
 	this.reflow();
     },
+    getClassRuleName: function(inClassName) {
+	return "html.WMApp body ." + inClassName;
+    },
     addClass: function(inClassName) {
 	this.changed();
 	var className =  (typeof inClassName == "string") ? inClassName : "";
@@ -2024,7 +1759,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	    startAndEndList.push({start: startIndex, end: endIndex});
 	}
 	if (!code) {
-	    code = "." + className + " {\n\n}";
+	    code = this.getClassRuleName(className) +  " {\n\n}";
 	}
 		    studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
 			var editArea;
@@ -2546,8 +2281,8 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
 	    delete this._inDoChange;
 	    this.inherited(arguments);
 	}
-    },
-    reinspect: function() {return true;}
+    }/*,
+    reinspect: function() {return true;}*/
 });
 
 

@@ -14,13 +14,12 @@
 
 package com.wavemaker.tools.data;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.data.salesforce.SalesForceDataServiceGenerator;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
@@ -61,9 +60,9 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
         return null;
     }
 
-    private ServiceDefinition initServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
+    private ServiceDefinition initServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
 
-        if (!f.getFilename().endsWith(".xml")) {
+        if (!f.getName().endsWith(".xml")) {
             return null;
         }
         DataServiceDefinition rtn = null;

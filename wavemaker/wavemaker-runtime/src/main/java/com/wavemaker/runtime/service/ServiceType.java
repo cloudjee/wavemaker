@@ -72,18 +72,14 @@ public interface ServiceType {
      * @param methodName The method name.
      * @param args The parsed service arguments.
      * @param jsonState The current JSONState object.
-     * @param serviceResponse
-     *            The response object that holds the result af a sevice call in case longResponseTime is true
-     * @return The TypedServiceReturn containing the return value for the
-     *         service, as well as the type information.
+     * @param serviceResponse The response object that holds the result af a sevice call in case longResponseTime is
+     *        true
+     * @return The TypedServiceReturn containing the return value for the service, as well as the type information.
      */
-    public TypedServiceReturn invokeMethod(
-            ServiceWire serviceWire, String methodName,
-            ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse);
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState,
+        ServiceResponse serviceResponse);
 
-    public TypedServiceReturn invokeMethod(
-            ServiceWire serviceWire, String methodName,
-            ParsedServiceArguments args, JSONState jsonState);
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState);
 
     /**
      * An initial setup call. This is called before any method invocations or json translations happen (although it will

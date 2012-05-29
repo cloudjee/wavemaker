@@ -64,7 +64,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
     enableTouchHeight: true,
     editorHeight: "26px",
     editorWidth: "100%",
-    captionSize: "150px",
+    captionSize: "120px",
     autoSizeCaption: false,
     captionAlign: "right",
     captionPosition: "left",
@@ -76,12 +76,12 @@ dojo.declare("wm.FormPanel", wm.Container, {
     horizontalAlign: "left",
     postInit: function() {
 	this.inherited(arguments);
-	if (this.autoSizeCaption) {
-	    this.updateCaptionSizes();
-	}
+	this.updateCaptionSizes();	
     },
     updateCaptionSizes: function() {
-	wm.job(this.getRuntimeId() + ".updateCaptionSizes", 10, this, "_updateCaptionSizes");
+	if (this.autoSizeCaption) {
+	    wm.job(this.getRuntimeId() + ".updateCaptionSizes", 10, this, "_updateCaptionSizes");
+	}
     },
     renderBounds: function() {
 	if (this.inherited(arguments)) {
@@ -127,13 +127,13 @@ dojo.declare("wm.FormPanel", wm.Container, {
     },
     addWidget: function(inWidget){
 	this.inherited(arguments);
-	if (this.autoSizeCaption && inWidget instanceof wm.AbstractEditor) {
+	if (inWidget instanceof wm.AbstractEditor) {
 	    this.updateCaptionSizes();
 	}
     },
     removeControl: function(inWidget) {
 	this.inherited(arguments);
-	if (this.autoSizeCaption && inWidget instanceof wm.AbstractEditor) {
+	if (inWidget instanceof wm.AbstractEditor) {
 	    this.updateCaptionSizes();
 	}
     },

@@ -447,8 +447,7 @@ wm.define("wm.Container", wm.Control, {
 		var w = this.widgets[i];
 		if (p && p.validateVisibleOnly && (!w.showing || wm.Layer && w instanceof wm.Layer && !w.isActive()))
 		    continue;
-		if (wm.isInstanceType(w,wm.Editor) ||
-		    wm.isInstanceType(w,wm.AbstractEditor)) {
+		if (wm.isInstanceType(w,[wm.AbstractEditor, wm.Editor])) {
 		    if (w.getInvalid()) return w;
 		} else if (wm.isInstanceType(w,wm.Container)) {
 		    var tmp = w.getInvalidWidget();
@@ -544,20 +543,19 @@ wm.define("wm.Container", wm.Control, {
 		});
 	},
 	clearData: function() {
-		var clear = function(w) {
-			if (w instanceof wm.Editor || w instanceof wm.AbstractEditor)
-				w.clear();
+	    var clear = function(w) {
+		if (wm.isInstanceType(w, [wm.AbstractEditor, wm.Editor])) {
+		    w.clear();
 		}
-
-		wm.forEachWidget(this,clear);
+	    };
+	    wm.forEachWidget(this,clear);
 	},
 	resetData: function() {
-		var reset = function(w) {
-			if (w instanceof wm.AbstractEditor)
-				w.reset();
-		}
-
-		wm.forEachWidget(this,reset);
+	    var reset = function(w) {
+		if (w instanceof wm.AbstractEditor)
+		    w.reset();
+	    };
+	    wm.forEachWidget(this,reset);
 	},
         clearDirty: function() {
 	    	this.setValue("isDirty", false);
@@ -750,8 +748,7 @@ wm.Container.extend({
         focusFirstEditor: function() {
 	    for (var i = 0; i < this.c$.length; i++) {
 		var w = this.c$[i];
-		if (wm.isInstanceType(w,wm.Editor) ||
-		    wm.isInstanceType(w,wm.AbstractEditor)) {
+		if (wm.isInstanceType(w,[wm.AbstractEditor,wm.Editor])) {
 		    w.focus();
 		    return w;
 		} else if (wm.isInstanceType(w,wm.Container)) {

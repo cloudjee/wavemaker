@@ -40,6 +40,7 @@ import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.module.ModuleManager;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -175,11 +176,11 @@ public class CopyRuntimeJarsTask extends Task {
         FileSet projectJarSet = new FileSet();
         projectJarSet.setProject(getProject());
         try {
-            projectJarSet.setDir(this.wmProject.getProjectRoot().getFile());
+            projectJarSet.setDir(((LocalFolder) this.wmProject.getRootFolder()).getLocalFile());
 
             projectJarSet.createInclude().setName(ProjectConstants.LIB_DIR + "/**/*.jar");
 
-            File includeList = new File(this.wmProject.getWebAppRoot().getFile(), "resources/.includeJars");
+            File includeList = new File(((LocalFolder) this.wmProject.getWebAppRootFolder()).getLocalFile(), "resources/.includeJars");
             if (includeList.exists()) {
 
                 String s = com.wavemaker.common.util.IOUtils.read(includeList);
@@ -216,7 +217,7 @@ public class CopyRuntimeJarsTask extends Task {
                 copyDirs.setProject(getProject());
                 copyDirs.setTaskName("copymodules-dir");
                 copyDirs.setFlatten(false);
-                copyDirs.setTodir(new File(this.wmProject.getWebInfClasses().getFile(), file.getName()));
+                copyDirs.setTodir(new File(((LocalFolder) this.wmProject.getClassOutputFolder()).getLocalFile(), file.getName()));
 
                 FileSet dirsFileSet = new FileSet();
                 dirsFileSet.setDir(file);

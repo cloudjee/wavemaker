@@ -18,6 +18,7 @@ dojo.provide("wm.base.widget.Editors.OneToMany");
 dojo.require("wm.base.widget.Editors.DataSetEditor");
 
 dojo.declare("wm.OneToMany", wm.ListSet, {
+    minHeight: 100,
     relationshipName: "",
     _multiSelect: false,
     showSearchBar: false,

@@ -17,11 +17,11 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.io.File;
 
 public interface DeploymentManager {
 
@@ -72,7 +72,7 @@ public interface DeploymentManager {
      */
     String cleanBuild();
 
-    String buildWar(Resource warFile, boolean includeEar) throws IOException;
+    File buildWar(File warFile, boolean includeEar) throws IOException;
 
     void buildWar(String warFileLocation, boolean includeEar) throws IOException;
 

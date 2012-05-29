@@ -19,8 +19,6 @@ import java.io.InputStream;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
-
 /**
  * Exposes a class-path resource as a read-only {@link File}.
  * 
@@ -78,25 +76,5 @@ public class ClassPathFile extends AbstractReadOnlyFile {
     @Override
     protected InputStream getInputStream() {
         return this.classLoader.getResourceAsStream(this.path.toString().substring(1));
-    }
-
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object getOriginalResource() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getCanonicalPath() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getLastName() {
-        throw new UnsupportedOperationException();
     }
 }

@@ -25,13 +25,19 @@ import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
+import com.wavemaker.tools.ant.ServiceCompilerTask;
+import com.wavemaker.tools.service.DesignServiceManager;
 
 public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     private DeploymentTargetManager deploymentTargetManager;
+    private DesignServiceManager designServiceManager;
 
     @Override
     public String testRunStart() {
+        ServiceCompilerTask task = new ServiceCompilerTask();
+        task.setDesignServiceManager(this.designServiceManager);
+        task.doExecute();
         compile();
         CloudFoundryDeploymentTarget cloudFoundryDeploymentTarget = getCloudFoundryDeploymentTarget();
         return cloudFoundryDeploymentTarget.testRunStart(this.projectManager.getCurrentProject());
@@ -78,7 +84,7 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public String buildWar(Resource warFile, boolean includeEar) throws IOException {
+    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
         throw new UnsupportedOperationException("Haven't implemented this yet.");
     }
 
@@ -124,5 +130,9 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     public void setDeploymentTargetManager(DeploymentTargetManager deploymentTargetManager) {
         this.deploymentTargetManager = deploymentTargetManager;
+    }
+
+    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
+        this.designServiceManager = designServiceManager;
     }
 }

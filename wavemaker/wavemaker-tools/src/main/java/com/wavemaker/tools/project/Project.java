@@ -28,13 +28,13 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.AbstractFileService;
 
 /**
@@ -54,9 +54,11 @@ public class Project extends AbstractFileService {
 
     protected static final String PROPERTY_PROJECT_VERSION_DEFAULT = "0.0";
 
-    private String projectName;
+    private final String projectName;
 
-    private Resource projectRoot;
+    private Resource projectRoot = null;
+
+    private Folder projectRootFolder = null;
 
     private final boolean mavenProject;
 
@@ -72,10 +74,12 @@ public class Project extends AbstractFileService {
         }
     }
 
-    public Project(Folder projectFolder, StudioFileSystem fileSystem) {
-        super(fileSystem);
-        // FIXME implement this
-        throw new UnsupportedOperationException();
+    // cftempfix
+    public Project(Folder projectRootFolder, String projectName) {
+        super();
+        this.projectRootFolder = projectRootFolder;
+        this.projectName = projectName;
+        this.mavenProject = projectRootFolder.getFile(ProjectConstants.POM_XML).exists();
     }
 
     @Deprecated
@@ -85,15 +89,19 @@ public class Project extends AbstractFileService {
 
     public Folder getRootFolder() {
         // FIXME implement properly
-        try {
-            Resource projectRoot = getProjectRoot();
-            if (projectRoot instanceof ResourceAdapter) {
-                return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+        // cftempfix
+        if (this.projectRoot != null) {
+            try {
+                Resource projectRoot = getProjectRoot();
+                if (projectRoot instanceof ResourceAdapter) {
+                    return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+                }
+                return new LocalFolder(projectRoot.getFile());
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
-            LocalFileSystem fileSystem = new LocalFileSystem(projectRoot.getFile());
-            return FileSystemFolder.getRoot(fileSystem);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        } else {
+            return this.projectRootFolder;
         }
     }
 
@@ -271,14 +279,14 @@ public class Project extends AbstractFileService {
      */
     @Deprecated
     public void writeFile(String path, String data, boolean noClobber) throws IOException {
-        Resource file = getProjectRoot().createRelative(path);
+        File file = getRootFolder().getFile(path);
         if (file.exists()) {
             String original = readFile(file);
             if (original.equals(data)) {
                 return;
             }
         } else {
-            file = getFileSystem().createPath(getProjectRoot(), path);
+            file.createIfMissing();
         }
 
         if (noClobber && file.exists()) {
@@ -306,8 +314,8 @@ public class Project extends AbstractFileService {
 
     @Override
     @Deprecated
-    public Resource getFileServiceRoot() {
-        return getProjectRoot();
+    public Folder getFileServiceRoot() {
+        return getRootFolder();
     }
 
     /**
@@ -401,5 +409,16 @@ public class Project extends AbstractFileService {
 
     private String getPropertyName(Class<?> clazz, String key) {
         return clazz.getName() + ProjectConstants.PROP_SEP + key;
+    }
+
+    // TODO: API - remove this method after API conversion is completed
+    @Override
+    public StudioFileSystem getFileSystem() {
+        if (this.projectRoot == null) {
+            StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+            return fileSystem;
+        } else {
+            return super.getFileSystem();
+        }
     }
 }

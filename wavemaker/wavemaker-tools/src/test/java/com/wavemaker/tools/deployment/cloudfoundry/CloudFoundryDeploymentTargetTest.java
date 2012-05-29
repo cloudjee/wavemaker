@@ -199,7 +199,6 @@ public class CloudFoundryDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 

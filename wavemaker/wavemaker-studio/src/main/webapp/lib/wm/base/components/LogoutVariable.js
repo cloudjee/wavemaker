@@ -69,3 +69,46 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
       _end: 0
       });
 
+
+dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
+    useDefaultSuccessHandler: true,
+    service: "securityService",
+    operation: "login",
+    _setOperation: function(inOperation) {
+	this._service._operations.login = {name: "login", 
+				     parameters: {
+					 username: {type: "string"},
+					 password: {type: "string"}
+				     },
+				     returnType: "java.lang.String"};
+	this.inherited(arguments);
+    },	
+    request: function() {
+	var user = this.input.getValue("username");
+	var pass = this.input.getValue("password");
+	if (!user || !pass) {
+	    var d = new dojo.Deferred();
+	    var e = new Error("Username and Password are required");
+	    d.errback(e);
+	    this.onResult();
+	    this.onError(e);
+	    return d;
+	}
+
+	var deferred = wm.login([user,pass],
+				this.useDefaultSuccessHandler ? null : function() {});
+	deferred.addCallbacks(
+	    dojo.hitch(this, function() {
+		this.onResult();
+		this.onSuccess();
+	    }),
+	    dojo.hitch(this, function(e) {
+		this.onResult();
+		this.onError(e);
+	    })
+	);
+	
+	return deferred;
+    }
+
+});

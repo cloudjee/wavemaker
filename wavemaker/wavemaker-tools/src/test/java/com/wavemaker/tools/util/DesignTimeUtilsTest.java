@@ -21,6 +21,8 @@ package com.wavemaker.tools.util;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.infra.WMTestCase;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 
@@ -34,7 +36,9 @@ public class DesignTimeUtilsTest extends WMTestCase {
         Resource tempDir = new LocalStudioFileSystem().createTempDir();
         assertTrue(tempDir.exists());
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(tempDir);
+        Folder tempFolder = new LocalFolder(tempDir.getFile());
+
+        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(tempFolder);
         assertEquals(tempDir.getURI(), dsm.getProjectManager().getCurrentProject().getProjectRoot().getURI());
         assertNotNull(dsm.getDesignServiceTypes());
         assertTrue(dsm.getDesignServiceTypes().size() >= 3);

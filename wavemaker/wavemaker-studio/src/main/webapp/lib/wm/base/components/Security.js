@@ -18,66 +18,72 @@ dojo.require("dojo.cookie");
 wm.disableUserPrincipalCookie = false;
 
 wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties, projectName) {
-	if (properties === undefined || properties == null) {
-		properties = {
-			j_username : args[0],
-			j_password : args[1]
-		};
+    if (properties === undefined || properties == null) {
+	properties = {
+	    j_username : args[0],
+	    j_password : args[1]
+	};
+    }
+
+    properties.acegiAjaxLogin = 'true';
+
+    var deferred = new dojo.Deferred();
+
+    var url = (projectName ? "/" + projectName + "/" : "") + "j_acegi_security_check";
+    if (wm.xhrPath) url = wm.xhrPath + url;
+    var def= dojo.xhrPost({
+	url: url,
+	content : properties,
+	handleAs: "json"});
+
+    var onError = function(inError) {
+	if (loginFailedCallback) {
+	    loginFailedCallback(inError.toString());
 	}
+	deferred.errback(inError);
+    };
 
-	properties.acegiAjaxLogin = 'true';
+    def.addErrback(onError);
 
-	var def= dojo.xhrPost({
-		url: (projectName ? '/' + projectName + '/' : '') + 'j_acegi_security_check',
-		content : properties,
-		handleAs: "json",
-	    error: function(response) {
-				if (loginFailedCallback) {
-				    loginFailedCallback(response.toString());
-				} else {
-				    app.alert(response.toString());
-				}
-	    },
-		load: function(response, ioArgs) {
-			if (response.url) {
-                            var pathname = location.protocol + "//" + location.host + location.pathname + location.search; // sometimes using search helps and sometimes it breaks this test; still working out what is going on
-				if (dojo.cookie.isSupported() && !wm.disableUserPrincipalCookie) {
-					var p = {username: properties.j_username, roles: wm.getUserRoles(true)};
-					wm.setUserPrincipal(p);
-				} else {
-				    wm.roles = wm.getUserRoles(true);
-				}
-			    dojo.publish("wmRbacUpdate");
-				if (loginSuccessCallback) {
-					loginSuccessCallback(response.url);
-				} else {
-				    if (window.studio) {
-					// studio.application is set to null on projectClose; studio.project seems to retain value
-					if (studio.application && studio.page && studio.project) {
-					    if (studio.studioService.requestSync("openProject", [studio.project.projectName]));
-					    studio.navGotoDesignerClick();
-					} else 
-					    studio.startLayer.activate();
-                                        // Typically this tests to see if we're on login.html and being directed to index.html
-				    } else if (pathname != response.url) {
-					location.href = response.url;
+    var onSuccess = function(inUrl) {
 
-                                        // If the page name is login, but app.main is not login, then we're on the real project,
-                                        // not the special project used for logging in.  If we're on the real project, a wm page nav is all that is needed
-				    } else if (app._page.name == "login" && app.main != "login") {
-                                        app.loadPage(app.main);
-                                    }
-				}
-			} else if (response.error) {
+	/* Fire any custom onSuccess handlers BEFORE we do a navigation that will unload the developer's components */
+	deferred.callback(inUrl);
 
-				if (loginFailedCallback) {
-					loginFailedCallback(response.error);
-				} else {
-					console.error(response.error);
-				}
-			}
-		}
-	});
+            var pathname = location.protocol + "//" + location.host + location.pathname + location.search; // sometimes using search helps and sometimes it breaks this test; still working out what is going on
+	    if (dojo.cookie.isSupported() && !wm.disableUserPrincipalCookie) {
+		var p = {username: properties.j_username, roles: wm.getUserRoles(true)};
+		wm.setUserPrincipal(p);
+	    } else {
+		wm.roles = wm.getUserRoles(true);
+	    }
+	    dojo.publish("wmRbacUpdate");
+			
+	    if (loginSuccessCallback) {
+		loginSuccessCallback(inUrl);
+	    } else if (window["PhoneGap"]) {
+		app.loadPage(app.pageContainer._initialPageName); // this is where tabletMain/phoneMain/main pageName are stored for now
+
+                // Typically this tests to see if we're on login.html and being directed to index.html
+	    } else if (pathname != inUrl) {
+		location.href = inUrl
+				    
+                // If the page name is login, but app.main is not login, then we're on the real project,
+                // not the special project used for logging in.  If we're on the real project, a wm page nav is all that is needed
+	    } else if (app._page.name == "login" && app.main != "login") {
+                app.loadPage(app.main);
+            }
+    };
+
+    def.addCallback(function(response, ioArgs) {
+	if (response.url) {
+	    onSuccess(response.url);
+	} else if (response.error) {
+	    onError(new Error(response.error));
+	}
+    });
+
+    return deferred;
 }
 
 wm.getUserPrincipal = function() {

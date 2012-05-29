@@ -13,7 +13,7 @@
  */
  
 dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
-
+dojo.require("wm.studio.app.servicesTree");
 dojo.declare("JavaEditor", wm.Page, {
         i18n: true,
 	start: function() {

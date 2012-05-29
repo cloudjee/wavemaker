@@ -1,6 +1,7 @@
 /**
  * 
  */
+
 package com.wavemaker.desktop.launcher;
 
 import java.beans.PropertyChangeEvent;
@@ -43,173 +44,166 @@ import org.xml.sax.SAXException;
  */
 public class TomcatConfig {
 
-	/** Variables */
-	// Constants
-	public static final String PROPERTY_SHUTDOWN_PORT = "ShutdownPort";
-	public static final String PROPERTY_SERVICE_PORT = "ServicePort";
+    /** Variables */
+    // Constants
+    public static final String PROPERTY_SHUTDOWN_PORT = "ShutdownPort";
 
-	// Members
-	protected Document source;
-	protected Node serviceConnectorNode;
-	protected Node servicePortNode;
-	protected Node shutdownPortNode;
-	//event Handling
-	protected ArrayList<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
-	
+    public static final String PROPERTY_SERVICE_PORT = "ServicePort";
 
-	/** Construction\Destruction */
-	protected TomcatConfig(FileInputStream source)
-	{
-		this.parseSourceXML(source);
-	}
+    // Members
+    protected Document source;
 
-	/** Static Methods */
-	public static TomcatConfig GetDefaultConfig()
-	{
-		TomcatConfig result = null;
-		try {
-			File serverXML = Main.getTomcatServerXML();
-			if(serverXML != null){
-			FileInputStream source = new FileInputStream(serverXML);
-			result = new TomcatConfig(source);
-			source.close();
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-		    e.printStackTrace();
-		}
-		return result;
-	}
+    protected Node serviceConnectorNode;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		TomcatConfig tc = GetDefaultConfig();
-		System.out.println("Service Port: " + tc.getServicePort());
-		System.out.println("Shutdown Port: " + tc.getShutdownPort());
-		tc.setServicePort(9999);
-		tc.setShutdownPort(5555);
-		System.out.println("Service Port: " + tc.getServicePort());
-		System.out.println("Shutdown Port: " + tc.getShutdownPort());
-		System.out.println("Service Encoding: " + tc.getServiceAttribute("URIEncoding"));
-	}
+    protected Node servicePortNode;
 
-	/** Instance Methods */
-	public void addPropertyChangeListener(PropertyChangeListener listener)
-	{
-		this.listeners.add(listener);
-	}
+    protected Node shutdownPortNode;
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
-	{
-		this.listeners.remove(listener);
-	}
+    // event Handling
+    protected ArrayList<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
 
-	protected void notifyListeners(String propertyName, Object oldValue, Object newValue)
-	{
-		for(PropertyChangeListener listener : this.listeners)
-		{
-			listener.propertyChange(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
-		}
-	}
+    /** Construction\Destruction */
+    protected TomcatConfig(FileInputStream source) {
+        this.parseSourceXML(source);
+    }
 
-	public String getServiceAttribute(String attribute)
-	{
-		String result = null;
-		NamedNodeMap map = this.serviceConnectorNode.getAttributes();
-		Node target = map.getNamedItem(attribute);
-		if(target != null){
-			result = target.getNodeValue();
-		}
-		return result;
-	}
+    /** Static Methods */
+    public static TomcatConfig GetDefaultConfig() {
+        TomcatConfig result = null;
+        try {
+            File serverXML = Main.getTomcatServerXML();
+            if (serverXML != null) {
+                FileInputStream source = new FileInputStream(serverXML);
+                result = new TomcatConfig(source);
+                source.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
-	/**
-	 * @return the servicePort
-	 */
-	public int getServicePort() {
-		return Integer.parseInt(this.servicePortNode.getNodeValue());
-	}
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        TomcatConfig tc = GetDefaultConfig();
+        System.out.println("Service Port: " + tc.getServicePort());
+        System.out.println("Shutdown Port: " + tc.getShutdownPort());
+        tc.setServicePort(9999);
+        tc.setShutdownPort(5555);
+        System.out.println("Service Port: " + tc.getServicePort());
+        System.out.println("Shutdown Port: " + tc.getShutdownPort());
+        System.out.println("Service Encoding: " + tc.getServiceAttribute("URIEncoding"));
+    }
 
-	/**
-	 * @return the shutdownPort
-	 */
-	public int getShutdownPort() {
-		return Integer.parseInt(this.shutdownPortNode.getNodeValue());
-	}
+    /** Instance Methods */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.add(listener);
+    }
 
-	
-	protected void parseSourceXML(InputStream source)
-	{
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			this.source = builder.parse(source);
-			XPathFactory pathFactory = XPathFactory.newInstance();
-			XPath path = pathFactory.newXPath();
-			this.serviceConnectorNode = (Node)path.evaluate("/Server/Service[@name='Catalina']/Connector", this.source, XPathConstants.NODE);
-			this.shutdownPortNode = (Node)path.evaluate("/Server/@port", this.source, XPathConstants.NODE);
-			this.servicePortNode = (Node)path.evaluate("/Server/Service[@name='Catalina']/Connector/@port", this.source, XPathConstants.NODE);
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
-		}
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.listeners.remove(listener);
+    }
 
-	/**
-	 * @param servicePort the servicePort to set
-	 */
-	public void setServicePort(int newValue) {
-		Integer oldValue = new Integer(this.getServicePort());
-		this.servicePortNode.setNodeValue(Integer.toString(newValue));
-		this.notifyListeners(PROPERTY_SERVICE_PORT, oldValue, newValue);
-	}
+    protected void notifyListeners(String propertyName, Object oldValue, Object newValue) {
+        for (PropertyChangeListener listener : this.listeners) {
+            listener.propertyChange(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
+        }
+    }
 
-	/**
-	 * @param shutdownPort the shutdownPort to set
-	 */
-	public void setShutdownPort(int newValue) {
-		Integer oldValue = new Integer(this.getShutdownPort());
-		this.shutdownPortNode.setNodeValue(Integer.toString(newValue));
-		this.notifyListeners(PROPERTY_SHUTDOWN_PORT, oldValue, newValue);
-	}
+    public String getServiceAttribute(String attribute) {
+        String result = null;
+        NamedNodeMap map = this.serviceConnectorNode.getAttributes();
+        Node target = map.getNamedItem(attribute);
+        if (target != null) {
+            result = target.getNodeValue();
+        }
+        return result;
+    }
 
-	public void setServiceAttribute(String attribute, String newValue)
-	{
-		NamedNodeMap map = this.serviceConnectorNode.getAttributes();
-		Node target = map.getNamedItem(attribute);
-		if(target != null){
-			String oldValue = target.getNodeValue();
-			target.setNodeValue(newValue);
-			this.notifyListeners(attribute, oldValue, newValue);
-		}
-	}
+    /**
+     * @return the servicePort
+     */
+    public int getServicePort() {
+        return Integer.parseInt(this.servicePortNode.getNodeValue());
+    }
 
-	public void serialize(OutputStream os)
-	{
+    /**
+     * @return the shutdownPort
+     */
+    public int getShutdownPort() {
+        return Integer.parseInt(this.shutdownPortNode.getNodeValue());
+    }
+
+    protected void parseSourceXML(InputStream source) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            this.source = builder.parse(source);
+            XPathFactory pathFactory = XPathFactory.newInstance();
+            XPath path = pathFactory.newXPath();
+            this.serviceConnectorNode = (Node) path.evaluate("/Server/Service[@name='Catalina']/Connector", this.source, XPathConstants.NODE);
+            this.shutdownPortNode = (Node) path.evaluate("/Server/@port", this.source, XPathConstants.NODE);
+            this.servicePortNode = (Node) path.evaluate("/Server/Service[@name='Catalina']/Connector/@port", this.source, XPathConstants.NODE);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param servicePort the servicePort to set
+     */
+    public void setServicePort(int newValue) {
+        Integer oldValue = new Integer(this.getServicePort());
+        this.servicePortNode.setNodeValue(Integer.toString(newValue));
+        this.notifyListeners(PROPERTY_SERVICE_PORT, oldValue, newValue);
+    }
+
+    /**
+     * @param shutdownPort the shutdownPort to set
+     */
+    public void setShutdownPort(int newValue) {
+        Integer oldValue = new Integer(this.getShutdownPort());
+        this.shutdownPortNode.setNodeValue(Integer.toString(newValue));
+        this.notifyListeners(PROPERTY_SHUTDOWN_PORT, oldValue, newValue);
+    }
+
+    public void setServiceAttribute(String attribute, String newValue) {
+        NamedNodeMap map = this.serviceConnectorNode.getAttributes();
+        Node target = map.getNamedItem(attribute);
+        if (target != null) {
+            String oldValue = target.getNodeValue();
+            target.setNodeValue(newValue);
+            this.notifyListeners(attribute, oldValue, newValue);
+        }
+    }
+
+    public void serialize(OutputStream os) {
         try {
             // Prepare the DOM document for writing
             Source source = new DOMSource(this.source);
-    
+
             // Prepare the output stream
             Result result = new StreamResult(os);
-    
+
             // Write the DOM document to the file
             Transformer xformer = TransformerFactory.newInstance().newTransformer();
             xformer.transform(source, result);
         } catch (TransformerConfigurationException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         } catch (TransformerException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
-	}
+    }
 }

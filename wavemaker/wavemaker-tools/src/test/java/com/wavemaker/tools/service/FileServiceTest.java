@@ -22,12 +22,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.spring.ComplexReturnBean;
 
 /**
@@ -39,7 +37,6 @@ public class FileServiceTest extends WMTestCase {
 
         File f = IOUtils.createTempDirectory("testDirFor_" + this.getName(), ".tmp");
         SampleFileService fs = new SampleFileService(f, "UTF-8");
-        fs.setFileSystem(new LocalStudioFileSystem());
         fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
 
         File expectedFile = new File(f, "foo.txt");
@@ -59,7 +56,7 @@ public class FileServiceTest extends WMTestCase {
         private final File basedir;
 
         public SampleFileService(File basedir, String encoding) {
-            super(new LocalStudioFileSystem());
+            super();
             this.encoding = encoding;
             this.basedir = basedir;
         }
@@ -70,8 +67,9 @@ public class FileServiceTest extends WMTestCase {
         }
 
         @Override
-        public Resource getFileServiceRoot() {
-            return new FileSystemResource(this.basedir.getPath() + "/");
+        public Folder getFileServiceRoot() {
+            Folder folder = new LocalFolder(this.basedir);
+            return folder;
         }
     }
 }

@@ -14,9 +14,11 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,7 +42,12 @@ import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.sun.tools.xjc.api.SchemaCompiler;
 import com.sun.tools.xjc.api.SpecVersion;
 import com.sun.tools.xjc.api.XJC;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceURL;
+import com.wavemaker.tools.io.local.LocalFile;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.jaxws.SimpleClassNameCollector;
 import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
@@ -56,7 +62,7 @@ public class XJCCompiler {
 
     private static Log log = LogFactory.getLog(XJCCompiler.class);
 
-    public static void generate(S2JJAXBModel model, Resource outputDir) throws GenerationException {
+    public static void generate(S2JJAXBModel model, Folder outputDir) throws GenerationException {
         JAXBCompilerErrorListener listener = new JAXBCompilerErrorListener();
         JCodeModel generateCode = model.generateCode(null, listener);
         if (listener.hasError) {
@@ -64,7 +70,14 @@ public class XJCCompiler {
         }
         try {
             // TODO - Cheating for now, as the com.sun.* stuff will potentially need to be replaced on CF
-            generateCode.build(outputDir.getFile(), outputDir.getFile(), null);
+            if (outputDir instanceof LocalFolder) {
+                generateCode.build(((LocalFolder) outputDir).getLocalFile(), ((LocalFolder) outputDir).getLocalFile(), null);
+            } else {
+                File tempOutputDir = IOUtils.createTempDirectory("ws_out_directory", null);
+                generateCode.build(tempOutputDir, tempOutputDir, null);
+                Folder folder = new LocalFolder(tempOutputDir);
+                folder.copyContentsTo(outputDir);
+            }
         } catch (IOException e) {
             throw new GenerationException(e);
         }
@@ -74,7 +87,7 @@ public class XJCCompiler {
     }
 
     @SuppressWarnings("deprecation")
-    public static S2JJAXBModel createSchemaModel(Map<String, Element> schemas, List<Resource> bindingFiles, String packageName,
+    public static S2JJAXBModel createSchemaModel(Map<String, Element> schemas, List<com.wavemaker.tools.io.File> bindingFiles, String packageName,
         Set<String> auxiliaryClasses, WebServiceType type) throws GenerationException {
         if (schemas == null || schemas.isEmpty()) {
             return null;
@@ -110,14 +123,22 @@ public class XJCCompiler {
         }
 
         if (bindingFiles != null) {
-            for (Resource file : bindingFiles) {
+            for (com.wavemaker.tools.io.File file : bindingFiles) {
                 try {
-                    InputSource inputSource = new InputSource(file.getInputStream());
-                    inputSource.setSystemId(file.getURI().toString());
+                    InputSource inputSource = new InputSource(file.getContent().asInputStream());
+                    // cftempfix - if binding files are NOT ALWAYS local files (eg. mongo DB file), we may need to
+                    // correctly implement
+                    // logic for none-local file case.
+                    if (file instanceof LocalFile) {
+                        File f = ((LocalFile) file).getLocalFile();
+                        inputSource.setSystemId(f.toURI().toString());
+                    } else {
+                        inputSource.setSystemId(ResourceURL.get(file).toURI().toString());
+                    }
                     sc.parseSchema(inputSource);
-                } catch (FileNotFoundException e) {
+                } catch (MalformedURLException e) {
                     throw new GenerationException(e);
-                } catch (IOException e) {
+                } catch (URISyntaxException e) {
                     throw new GenerationException(e);
                 }
             }

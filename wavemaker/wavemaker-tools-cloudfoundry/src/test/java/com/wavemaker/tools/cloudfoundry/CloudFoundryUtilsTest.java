@@ -17,8 +17,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
-
 /**
  * Tests for {@link CloudFoundryUtils}.
  * 

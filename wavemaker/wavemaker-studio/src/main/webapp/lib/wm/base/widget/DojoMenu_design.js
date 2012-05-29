@@ -213,7 +213,22 @@ wm.DojoMenu.extend({
 			this.inherited(arguments);
 	},
 	getCleanText: function(text) {
-		return text.replace(/[^a-zA-Z0-9]+/g, '_');
+	    text = text.replace(/\s+/g,"_");
+	    text = text.replace(/\-/g,"_");
+	    var isInvalid = true;
+	    for (var i = 0; i < text.length && isInvalid; i++) {
+		try {
+		    var result = eval(text + " = 5");
+		    if (result == 5) {
+			isInvalid = false;
+		    }
+		} catch(e) {};
+		if (isInvalid) {
+		    text = text.substring(0,i) + text.substring(i,i+1).replace(/[^a-zA-Z0-9]+/g, '_') + text.substring(i+1);
+		}
+	    }
+	    return text;
+	    //return text.replace(/[^a-zA-Z0-9]+/g, '_');
 	},
 	getEventName: function(label){
 		return 'on' + this.getCleanText(label) + 'Click';	

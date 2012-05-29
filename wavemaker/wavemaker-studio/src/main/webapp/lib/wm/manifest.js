@@ -80,6 +80,7 @@ wm.loadLibs([
 	"wm.base.components.ServiceQueue",
 	"wm.base.components.ServiceVariable",
 	"wm.base.components.PhoneGapService",
+	"wm.base.components.XhrService",
 	"wm.base.components.Timer",
     /*"wm.base.components.SalesForceMonitorVariable",*/
 	"wm.base.components.LiveView",

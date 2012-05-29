@@ -30,10 +30,6 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
@@ -59,6 +55,7 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.data.RelatedInfo;
 import com.wavemaker.tools.data.SpringCfgGenerator;
 import com.wavemaker.tools.data.parser.HbmConstants;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.GenerationUtils;
@@ -291,23 +288,18 @@ public class DataServiceUtils {
         }
     }
 
-    public static void writeProperties(Properties p, Resource destdir, String serviceName) {
+    public static void writeProperties(Properties p, Folder destdir, String serviceName) {
         StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
         writeProperties(p, destdir, serviceName, fileSystem);
     }
 
-    public static void writeProperties(Properties p, Resource destdir, String serviceName, StudioFileSystem fileSystem) {
-        Resource f = null;
-        try {
-            f = destdir.createRelative(serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
-        } catch (IOException ex) {
-
-        }
+    public static void writeProperties(Properties p, Folder destdir, String serviceName, StudioFileSystem fileSystem) {
+        com.wavemaker.tools.io.File f = null;
+        f = destdir.getFile(serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
 
         OutputStream fos = null;
         try {
-            // fos = new FileOutputStream(f);
-            fos = fileSystem.getOutputStream(f);
+            fos = f.getContent().asOutputStream();
             writeProperties(p, fos, serviceName);
             // } catch (IOException ex) {
             // throw new DataServiceRuntimeException(ex);
@@ -344,29 +336,20 @@ public class DataServiceUtils {
         return addPrefix(prefix, p);
     }
 
-    public static Resource createEmptyDataModel(StudioFileSystem fileSystem, Resource destDir, String serviceId, String packageName) {
+    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName) {
         return createEmptyDataModel(destDir, serviceId, packageName, packageName);
     }
 
-    public static Resource createEmptyDataModel(Resource destDir, String serviceId, String packageName, String dataPackage) {
+    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName, String dataPackage) {
 
-        // File rtn = new File(destDir, getCfgFileName(serviceId));
-        Resource rtn;
-        try {
-            rtn = destDir.createRelative(getCfgFileName(serviceId));
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        com.wavemaker.tools.io.File rtn = destDir.getFile(getCfgFileName(serviceId));
 
         SpringCfgGenerator g = new SpringCfgGenerator();
         try {
-            g.setDestDir(fileSystem.getParent(rtn));
+            g.setDestDir(rtn.getParent());
             g.setPackage(packageName);
             g.setDataPackage(dataPackage);
             g.setServiceName(serviceId);
-
             // write some parsable values into
             // connection properties
             g.setDefaultDBType();
@@ -476,9 +459,9 @@ public class DataServiceUtils {
         }
     }
 
-    public static Beans readBeans(File springConfig, FileService fileService) {
+    public static Beans readBeans(com.wavemaker.tools.io.File springConfig, FileService fileService) {
         try {
-            return SpringConfigSupport.readBeans(new FileSystemResource(springConfig), fileService);
+            return SpringConfigSupport.readBeans(springConfig, fileService);
         } catch (JAXBException ex) {
             throw new ConfigurationException(ex);
         } catch (IOException ex) {

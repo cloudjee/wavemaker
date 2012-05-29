@@ -38,8 +38,7 @@ import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.config.ConfigurationStore;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by a local files system.
@@ -54,6 +53,8 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
     static final String WMHOME_KEY = "wavemakerHome";
 
+    public static final String DEMO_FOLDER_NAME = "Samples/";
+
     static final String WMHOME_PROP_KEY = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + WMHOME_KEY;
 
     private static final String WAVEMAKER_HOME = "WaveMaker/";
@@ -66,13 +67,12 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     /**
      * WaveMaker home override, used for testing. NEVER set this in production.
      */
-    private File testWMHome = null;
+    private LocalFolder testWMHome = null;
 
     @Override
     public Folder getCommonFolder() {
         try {
-            LocalFileSystem fileSystem = new LocalFileSystem(getCommonDir().getFile());
-            return FileSystemFolder.getRoot(fileSystem);
+            return new LocalFolder(getCommonDir().getFile());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -81,8 +81,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     public Folder getWaveMakerHomeFolder() {
         try {
-            LocalFileSystem fileSystem = new LocalFileSystem(getWaveMakerHome().getFile());
-            return FileSystemFolder.getRoot(fileSystem);
+            return new LocalFolder(getWaveMakerHome().getFile());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -90,13 +89,17 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getWaveMakerHome() {
-        if (this.testWMHome != null) {
-            return createResource(this.testWMHome.toString() + "/");
+        try {
+            if (this.testWMHome != null) {
+                return createResource(this.testWMHome.getLocalFile().getCanonicalPath() + "/");
+            }
+            return staticGetWaveMakerHome();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
         }
-        return staticGetWaveMakerHome();
     }
 
-    public void setTestWaveMakerHome(File file) {
+    public void setTestWaveMakerHome(LocalFolder file) {
         this.testWMHome = file;
     }
 
@@ -126,12 +129,13 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         }
 
         String location = ConfigurationStore.getPreference(getClass(), DEMOHOME_KEY, null);
+        location = location.endsWith("/") ? location : location + "/";
         Resource demo;
         try {
             if (location != null) {
                 demo = createResource(location);
             } else {
-                demo = getStudioWebAppRoot().createRelative("../Samples");
+                demo = getStudioWebAppRoot().createRelative(DEMO_FOLDER_NAME);
             }
             return demo;
         } catch (IOException ex) {

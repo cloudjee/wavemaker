@@ -50,7 +50,7 @@ wm.Object.extendSchema(wm.Text, {
     tooltipDisplayTime: {group: "editor text", subgroup: "dojo tooltips", order: 30, advanced: 1},
     
     /* Value display sugroup */
-    password: {group: "editor", subgroup: "display", order: 5, doc: 1},
+    password: {group: "editor", subgroup: "behavior", order: 5, doc: 1},
 
     /* EVENTS GROUP */
     changeOnKey: {ignore: 0},

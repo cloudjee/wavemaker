@@ -100,8 +100,8 @@ dojo.declare("wm.ServiceCall", null, {
 		wm.fire(this._service, "setServiceCall", [this]);
 		this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
 
-		if (this._isDesignLoaded && this.service) {
 /*
+		if (this._isDesignLoaded && this.service) {
 		    if (!this.findSubscription("ServiceTypeChanged-" +  this.service)) {
 			this.subscribe("ServiceTypeChanged-" +  this.service, dojo.hitch(this, function() {
 			    this._service = wm.services.getService(this.service, 	
@@ -110,8 +110,8 @@ dojo.declare("wm.ServiceCall", null, {
 			    this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
 			}));
 		    }
-		    */
 		}      
+		*/
 	    } catch(e) {
 	    } finally {delete this._inSetService;}
 	    
@@ -297,7 +297,9 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	},
 	doStartUpdate: function() {
-	    if (this.startUpdate && !this._loading) {
+	    /* Don't fire startUpdate if the component already has data saved from a previous session using the phonegap saveInPhoneGap property,
+	     * unless autoUpdate is also selected */
+	    if (this.startUpdate && !this._loading && (!window["PhoneGap"] || !this.saveInPhoneGap || this.isEmpty() || this.autoUpdate)) {
 		if (djConfig.isDebug) this.log("startUpdate");		
 		this.updateInternal();
 		if (djConfig.isDebug) this.endLog("startUpdate");
@@ -520,7 +522,7 @@ dojo.declare("wm.ServiceCall", null, {
 
 	    if (djConfig.isDebug) this.endLog("serviceCallResponse");
 
-	    if (!this._isDesignLoaded && this._inFlightBacklog.length) {
+	    if (!this._isDesignLoaded && this._inFlightBacklog && this._inFlightBacklog.length) {
 		wm.onidle(this, function() {
 		    var backlog = this._inFlightBacklog.shift();
 		    this.request(backlog.args, backlog.operation, backlog.deferred);
@@ -707,7 +709,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		this.setDataSchema(inSchema);
 		// input bindings may need to reinitialize after gleaning
 		// operation type information (in light of constants)
-		if (this.$.binding)
+		if (this.$.binding && inSchema)
 		{
 			this.$.binding.refresh();
 		}

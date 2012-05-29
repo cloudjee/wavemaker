@@ -24,6 +24,7 @@ wm.Object.extendSchema(wm.Component, {
     diagnostics: {group: "diagnostics", editor: "wm.prop.Diagnostics", doNotPublish:1},
     viewDocumentation: {group: "docs", writeonly: true},
     //generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
+    noPositioning: {ignore:1},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
@@ -194,7 +195,7 @@ wm.Component.extend({
 	    /* If its a widget that is owned by something, don't write it; widgets are written as part of writing widgets NOT writing this.components.
 	     * Exceptions to this are Dialogs and PopupMenus which are outside the widget heirarchy 
 	     */
-	    else if (c instanceof wm.Control == true && c instanceof wm.Dialog == false  && c instanceof wm.PopupMenu == false) {
+	    else if (c instanceof wm.Control == true && c instanceof wm.Dialog == false  && c instanceof wm.PopupMenu == false || wm.isInstanceType(c, wm.Service)) {
 		return false;
 	    }
 
@@ -253,12 +254,15 @@ wm.Component.extend({
 	//=======================================================
 	// Other...
 	//=======================================================
-	set_name: function(inName) {
+        set_name: function(inName, skipValidNameTest) {
 		var o = this.name, n = inName;
 		if (n == o || !n)
 			return;
 		//
+	    /* skip Used when generating wm.XhrDefintion and wm.TypeDefinition where names like "vmware.com.testService" are not actually valid js names */
+	    if (!skipValidNameTest) {
 		n = wm.getValidJsName(n);
+	    }
 		//
 		// ensure name is unique
 		var un = this.owner.getUniqueName(n);

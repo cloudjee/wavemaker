@@ -278,6 +278,7 @@ dependencies = {
 			    "wm.base.components.NotificationService",
 			    //"wm.base.components.FunctionService",
 			    "wm.base.components.PhoneGapService",
+			    "wm.base.components.XhrService",
 			    "wm.base.components.JsonRpcService",
 
 			    /* Variables/ServiceVariables */
@@ -373,8 +374,10 @@ dependencies = {
 			    "wm.base.components.ServiceCall",
 			    //"wm.base.components.FunctionService",
 			    "wm.base.components.PhoneGapService",
+			    "wm.base.components.XhrService",
 			    "wm.base.components.JsonRpcService",
 			    "wm.base.components.PhoneGapService",
+			    "wm.base.components.Timer",
 
 			    /* Variables/ServiceVariables */
 			    "wm.base.components.Variable",

@@ -802,7 +802,7 @@ wm.Object.extendSchema(wm.DojoFileUpload, {
     buttonWidth: {group: "layout", order: 50},
     buttonHeight: {group: "layout", order: 51},
 
-    input: { ignore: 1 , writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Data"}},
+    input:    {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
     variable: {bindSource: true, ignore: true},
     horizontalAlign: {ignore: true},
     verticalAlign: {ignore: true},

@@ -81,18 +81,20 @@ dojo.declare("dijit._HasDropDown",
 
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Added the conditional around stopEvent */
-		    if (e) {
+		    if (e instanceof Event) {
 			dojo.stopEvent(e);
 		    }
 
 			this._docHandler = this.connect(dojo.doc, "onmouseup", "_onDropDownMouseUp");
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
-		     * WaveMaker: This was misfiring on the ipad, and seems like you always want to open it */
+		     * WaveMaker: This was misfiring on the ipad, and seems like you always want to open it 
 		    if (e.type.match(/touch/i)) {
 			this._opened = false;
+		    }*/
+		    console.log(e.type);
+		    if (!e.type.ontouchend && !e.type.mouseup && this._opened || !this._opened) {
+			this.toggleDropDown();
 		    }
-
-		    this.toggleDropDown();
 		},
 
 		_onDropDownMouseUp: function(/*Event?*/ e){
@@ -181,23 +183,24 @@ dojo.declare("dijit._HasDropDown",
 		postCreate: function(){
 			// summary:
 			//		set up nodes and connect our mouse and keypress events
-
 			this.inherited(arguments);
 		    if (!wm || !wm.isMobile) {
 			this.connect(this._buttonNode, "onmousedown", "_onDropDownMouseDown");
 			this.connect(this._buttonNode, "onclick", "_onDropDownClick");
-		    } else if (wm && wm.isFakeMobile) {
+		    } 
+
+		    /* Frigging IOS 4 doesn't seem to capture onmousedown on these nodes!*/
+		    else if (wm && wm.isFakeMobile || navigator.userAgent.match(/(phone|ipad) OS (1|2|3|4)_/i)) {
 			this.connect(this._buttonNode, "onmousedown", "touchStart");
 			this.connect(this._buttonNode, "onmousemove", "touchMove");
 			this.connect(this._buttonNode, "onmouseup", "touchEnd");
 		    } else {
-			this.connect(this._buttonNode, "ontouchstart", "touchStart");
-			this.connect(this._buttonNode, "ontouchmove", "touchMove");
-			this.connect(this._buttonNode, "ontouchend", "touchEnd");
+			    this.connect(this._buttonNode, "ontouchstart", "touchStart");
+			    this.connect(this._buttonNode, "ontouchmove", "touchMove");
+			    this.connect(this._buttonNode, "ontouchend", "touchEnd");
 		    }
-		    
-			this.connect(this.focusNode, "onkeypress", "_onKey");
-			this.connect(this.focusNode, "onkeyup", "_onKeyUp");
+		    this.connect(this.focusNode, "onkeypress", "_onKey");
+		    this.connect(this.focusNode, "onkeyup", "_onKeyUp");
 		},
 	    touchStart: function(e) {
 		dojo.stopEvent(e); 
@@ -206,7 +209,7 @@ dojo.declare("dijit._HasDropDown",
 		    this.domNode.style.backgroundColor = "black";
 		    this.domNode.style.color = "white";
 		    if (this.owner) {
-			wm.job(this.owner.getRuntimeId() + ".onTouch", app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+			wm.job(this.owner.getRuntimeId() + ".onTouch", app.touchToClickDelay, dojo.hitch(this, "touchEnd", {type: "ontouchend"}));
 		    }
 		}
 	    },
@@ -221,13 +224,13 @@ dojo.declare("dijit._HasDropDown",
 		}
 	    },
 	    touchEnd: function(e) {
-		if (e) dojo.stopEvent(e);
+		if (e instanceof Event) dojo.stopEvent(e);
 		this.domNode.style.backgroundColor = "";
 		this.domNode.style.color = "";
-		this._onDropDownMouseDown(e);
+		this._onDropDownMouseDown(e || {type: "ontouchend"});
 	    },
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
-		     * WaveMaker: Added handling of mobile and touch; END HERE */
+		     * WaveMaker: END OF SECTION: Added handling of mobile and touch */
 
 		destroy: function(){
 			if(this.dropDown){
@@ -292,7 +295,6 @@ dojo.declare("dijit._HasDropDown",
 			// But if focus is inside of the drop down then reset focus to me, because IE doesn't like
 			// it when you display:none a node with focus.
 			var focusMe = dijit._curFocus && this.dropDown && dojo.isDescendant(dijit._curFocus, this.dropDown.domNode);
-
 			this.closeDropDown(focusMe);
 
 			this.inherited(arguments);

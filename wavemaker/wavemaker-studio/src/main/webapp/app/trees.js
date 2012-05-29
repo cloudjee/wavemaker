@@ -110,7 +110,7 @@ Studio.extend({
 		var ret = false;
 		for (var i=0; i<types.length; i++) {
 			var m = types[i];
-			if (t instanceof m) {
+			if (m && t instanceof m) {
 				ret = true;
 				break;
 			}
@@ -174,7 +174,14 @@ Studio.extend({
 	    //this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
 	    if (this.application) {
-		this.svrComps = this.application.getServerComponents();
+		var svrComps = this.svrComps = dojo.mixin({},this.application.getServerComponents());
+		wm.forEachProperty(this.application.components, function(c, name) {
+		    if (c instanceof wm.XhrDefinition || c instanceof wm.TypeDefinition) {
+			svrComps[name] = c;
+		    }
+		});
+			
+		var components = dojo.mixin({}, this.application.components, this.svrComps);
                 var svrComps = this.getTreeComponents(this.svrComps, this._searchText ? [] : this.excTypes);
 		if (this._searchText) {
 		    for (var comp in this.application.components) {
@@ -209,7 +216,7 @@ Studio.extend({
 	    this.setupContextMenu(inTree.root, studio.application);
 	        n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
-	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox, wm.Property, wm.Service];
+	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox, wm.Property, wm.Service, wm.XhrDefinition, wm.TypeDefinition];
 		if (this.application) {
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
 		    		    

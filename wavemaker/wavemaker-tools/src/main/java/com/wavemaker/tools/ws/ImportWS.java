@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -36,7 +37,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class ImportWS {
 
-    private Resource destDir;
+    private Folder destDir;
 
     private String packageName;
 
@@ -54,11 +55,11 @@ public class ImportWS {
 
     private String partnerName;
 
-    public Resource getDestdir() {
+    public Folder getDestdir() {
         return this.destDir;
     }
 
-    public void setDestdir(Resource destdir) {
+    public void setDestdir(Folder destdir) {
         this.destDir = destdir;
     }
 

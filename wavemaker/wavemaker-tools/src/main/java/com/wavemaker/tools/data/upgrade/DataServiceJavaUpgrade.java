@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.data.upgrade;
 
-import java.io.IOException;
-
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.service.definitions.Service;
 
 /**
@@ -33,10 +30,8 @@ public class DataServiceJavaUpgrade extends BaseDataUpgradeTask {
     protected void upgrade(Service service) {
 
         try {
-            IOUtils.touch(getCfgFile(service.getId()));
+            getCfgFile(service.getId()).touch();
             Thread.sleep(1000);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
         } catch (InterruptedException e) {
             throw new WMRuntimeException(e);
         }

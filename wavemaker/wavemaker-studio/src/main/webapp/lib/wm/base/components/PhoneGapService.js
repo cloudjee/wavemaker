@@ -54,7 +54,13 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 		returnType: "StringData"
 	    },
 	    capture_picture: {
-		parameters: {}, // TODO Support the limit property so we can return multiple images
+		parameters: {
+		    quality: {type: "number"},
+		    sourceType: {type: "string"},
+		    allowEdit: {type: "boolean"},
+		    targetWidth: {type: "number"},
+		    targetHeight: {type: "number"}
+		}, 
 		returnType: "StringData"
 	    },
 	    geolocation_getCurrentPosition: {
@@ -96,13 +102,13 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 		function(inError) {
 		    d.errback(inError);
 		},
-		{enableHighAccuracy: enableHighAccuracy,
-		 timeout: timeout,
-		 maximumAge: maximumAge});
+		{enableHighAccuracy: enableHighAccuracy || false,
+		 timeout: timeout || 5000,
+		 maximumAge: maximumAge || 1200000});
 	}
 	return d;
     },
-    capture_audio: function(times) {
+    capture_audio: function() {
 	var d = new dojo.Deferred();
 	if (window["PhoneGap"]) {
 	    navigator.device.capture.captureAudio(
@@ -119,6 +125,32 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	}
 	return d;
     },
+    capture_picture: function(quality, sourceType, allowEdit, targetWidth, targetHeight) {
+	if (!quality) quality = 50;
+	if (!sourceType) sourceType = Camera.PictureSourceType.CAMERA;
+	if (allowEdit === undefined) allowEdit = false;
+	if (!targetWidth) targetWidth = 400; /* this may seem small, but it needs to fit into javascript memory; designer can increase it. */
+	if (!targetHeight) targetHeight = 400;
+
+	var d = new dojo.Deferred();
+	if (window["PhoneGap"]) {
+	    navigator.camera.getPicture(
+		dojo.hitch(this, function(imageData) {
+		    d.callback({dataValue: imageData});
+		}),
+		dojo.hitch(this, function(inError) {
+		    this.handleCaptureError(inError.code, d);
+		}),
+		{ quality: quality,
+		  sourceType: sourceType,
+		  allowEdit: allowEdit,
+		  targetWidth: targetWidth,
+		  targetHeight: targetHeight,
+		  destinationType: Camera.DestinationType.DATA_URL });
+	}
+	return d;
+    },
+/* this version uses the PhoneGap device capture API, which does not constrain the size of the picture, and causes out of memory errors on android
     capture_picture: function(times) {
 	var d = new dojo.Deferred();
 	if (window["PhoneGap"]) {
@@ -136,6 +168,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	}
 	return d;
     },
+    */
     handleCaptureError: function(inErrorCode, d) {
 	switch(inErrorCode) {
 	case 20:
@@ -154,7 +187,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	    d.errback("CAPTURE_NO_MEDIA_FILES");
 	    break;
 	default:
-	    d.errback(inError.code);
+	    d.errback(inErrorCode);
 	}
     },
     readDataUrl: function(file, deferred) {

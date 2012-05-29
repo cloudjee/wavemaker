@@ -32,8 +32,9 @@ wm.listOfWidgetType = function(inType, inIgnoreBuiltin, ignoreDialogs) {
 	var root = owners[i] instanceof wm.Page ? owners[i].root : owners[i];
 	if (root) {
 		wm.forEachWidget(root, function(w) {
-			if (w instanceof inType && !(w.owner instanceof wm.Composite))
-				list.push(w);
+		    if (wm.isInstanceType(w, inType) && !(wm.isInstanceType(w.owner, wm.Composite))) {
+			list.push(w);
+		    }
 		}, inIgnoreBuiltin);
 		list.sort(function(a, b) {
 			return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
@@ -110,7 +111,7 @@ wm.listComponents = function(inOwners, inClass, inStrict) {
 			if (inStrict)
 				return (inClass.prototype.declaredClass == inComp.declaredClass);
 			else
-				return inComp instanceof inClass;
+			    return wm.isInstanceType(inComp, inClass);
 		}
 	};
 	return wm.listMatchingComponents(inOwners, isRequestedType);

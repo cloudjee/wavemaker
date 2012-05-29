@@ -31,6 +31,8 @@ dojo.declare("wm.Application", wm.Component, {
     main: "Main",
     tabletMain: "",
     phoneMain: "",
+    isSecurityEnabled: false,
+    phoneGapLoginPage: "Login",
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
         projectSubVersion: "Alpha",
@@ -111,9 +113,13 @@ dojo.declare("wm.Application", wm.Component, {
 
 	    /* Determines if use of the touchscroll.js library is needed; latest versions of IOS no longer require it */
 	    if (this._touchEnabled === undefined) {
+		var matches = navigator.userAgent.match(/(iphone|ipad).* OS (\d+)/i);
+		if (matches) {
+		    wm.isIOS = parseInt(matches[2]);
+		}
 		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
 		    if (navigator.userAgent.match(/Android (3|4|5|6|7|8|9)\./) ||
-			navigator.userAgent.match(/(phone|ipad)/i) ||
+			wm.isIOS && wm.isIOS > 4 ||
 			wm.isFakeMobile) {
 			;
 		    } else {
@@ -122,7 +128,7 @@ dojo.declare("wm.Application", wm.Component, {
 		}
 	    }
 
-		this.components = {};
+	    this.$ = this.components = {};
 	        this.createPageContainer();
 
 	    if (!this._isDesignLoaded) {
@@ -648,9 +654,13 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (!main) {
 		main = this.main;
 	    }
-	        this.pageContainer._initialPageName = main;
+	    this.pageContainer._initialPageName = main;
+	    if (window["PhoneGap"] && this.isSecurityEnabled && this.phoneGapLoginPage) {
+		this.loadPage(this.phoneGapLoginPage);
+	    } else {
 		this.loadPage(main);
-	        this.hideLoadingIndicator();
+	    }
+	    this.hideLoadingIndicator();
 	},
 	start: function() {
 		//this.hideLoadingIndicator();

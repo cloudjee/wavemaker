@@ -41,7 +41,6 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.util.NoCloseInputStream;
 
@@ -147,16 +146,6 @@ public class ProjectManager {
         openProject(project, noSession);
     }
 
-    // FIXME broken until Project can be fixed
-    public void openProject(Folder projectFolder, boolean noSession) throws IOException {
-        String projectName = projectFolder.getName();
-        if (!projectFolder.exists()) {
-            throw new WMRuntimeException(MessageResource.PROJECT_DNE, projectName, projectFolder);
-        }
-        Project project = new Project(projectFolder, this.fileSystem);
-        openProject(project, noSession);
-    }
-
     private void openProject(Project project, boolean noSession) throws IOException {
         closeProject();
         if (getProjectEventNotifier() != null) {
@@ -186,9 +175,9 @@ public class ProjectManager {
             try {
                 applicationProperties.load(propsStream);
                 tenantFieldName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME,
-                        DataServiceConstants.DEFAULT_TENANT_FIELD);
+                    DataServiceConstants.DEFAULT_TENANT_FIELD);
                 defaultTenantID = Integer.parseInt(applicationProperties.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME,
-                        DataServiceConstants.DEFAULT_TENANT_ID + ""));
+                    DataServiceConstants.DEFAULT_TENANT_ID + ""));
                 tenantColumnName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME, "");
             } finally {
                 propsStream.close();
@@ -269,20 +258,21 @@ public class ProjectManager {
             String serviceStr = "\"service\":\"" + shortSourceName + "\"";
             String dummyStr = "nothingicandoifyouwanttoscrewup";
 
-            Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
+            // Resource sourceJS = destProject.getWebAppRoot().createRelative(shortSourceName + ".js");
+            com.wavemaker.tools.io.File sourceJS = destProject.getWebAppRootFolder().getFile(shortSourceName + ".js");
             if (sourceJS.exists()) {
-                Resource destJS = destProject.getWebAppRoot().createRelative(shortDestName + ".js");
+                com.wavemaker.tools.io.File destJS = destProject.getWebAppRootFolder().getFile(shortDestName + ".js");
                 String sourceJSStr = destProject.readFile(sourceJS);
                 sourceJSStr = sourceJSStr.replace(serviceStr, dummyStr);
                 String destJSStr = sourceJSStr.replace("\"" + shortSourceName + "\"", "\"" + shortDestName + "\"");
                 destJSStr = destJSStr.replace(shortSourceName + ".extend(", shortDestName + ".extend(");
                 destJSStr = destJSStr.replace(dummyStr, serviceStr);
                 destProject.writeFile(destJS, destJSStr);
-                this.fileSystem.deleteFile(sourceJS);
+                sourceJS.delete();
             }
 
             // update the index.html
-            Resource indexHtml = destProject.getWebAppRoot().createRelative(ProjectConstants.INDEX_HTML);
+            com.wavemaker.tools.io.File indexHtml = destProject.getWebAppRootFolder().getFile(ProjectConstants.INDEX_HTML);
             if (indexHtml.exists()) {
                 String indexHtmlStr = destProject.readFile(indexHtml);
                 indexHtmlStr = indexHtmlStr.replace(": " + shortSourceName + "<", ": " + shortDestName + "<");

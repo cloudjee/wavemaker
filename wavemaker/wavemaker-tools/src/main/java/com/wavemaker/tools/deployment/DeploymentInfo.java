@@ -49,7 +49,7 @@ public class DeploymentInfo {
 
     private String deploymentUrl;
 
-	private ArchiveType archiveType = ArchiveType.WAR;
+    private ArchiveType archiveType = ArchiveType.WAR;
 
     public String getDeploymentId() {
         return this.deploymentId;
@@ -148,12 +148,12 @@ public class DeploymentInfo {
     }
 
     public String getDeploymentUrl() {
-    	return deploymentUrl;
-	}
+        return this.deploymentUrl;
+    }
 
-	public void setDeploymentUrl(String deploymentUrl) {
-		this.deploymentUrl = deploymentUrl;
-	}
+    public void setDeploymentUrl(String deploymentUrl) {
+        this.deploymentUrl = deploymentUrl;
+    }
 
     @Override
     public int hashCode() {

@@ -463,7 +463,7 @@ public abstract class StringUtils {
 
     public static String appendPaths(String rootPath, String childPath) {
         String path;
-        if (rootPath.length() == 0 || !rootPath.substring(rootPath.length()-1).equals("/")) {
+        if (rootPath.length() == 0 || !rootPath.substring(rootPath.length() - 1).equals("/")) {
             if (childPath != null && childPath.length() > 0 && childPath.substring(0, 1).equals("/")) {
                 path = rootPath + childPath;
             } else {
@@ -476,7 +476,7 @@ public abstract class StringUtils {
                 path = rootPath + childPath;
             }
         }
-        
+
         return path;
     }
 

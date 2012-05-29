@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean class="com.wavemaker.spinup.wmclient.SpinUpService" scope="singleton" lazy-init="true" id="SpinUpService">
+		<property name="spinupController" ref="SpinupController"/>
+	</bean>
+    <bean class="com.wavemaker.runtime.service.reflect.ReflectServiceWire" scope="singleton" lazy-init="false">
+        <property name="serviceId" value="SpinUpService"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+	<bean name="wavemakerMongoService" class="org.cloudfoundry.client.lib.CloudService">
+		<property name="name" value="wavemaker"/>
+		<property name="type" value="database"/>
+		<property name="vendor" value="mongodb"/>
+		<property name="version" value="1.8"/>
+		<property name="tier" value="free"/>
+	</bean>
+
+	<bean name="spinupService" class="com.wavemaker.tools.cloudfoundry.spinup.DefaultSpinupService" autowire="byType">
+		<property name="serviceNames">
+			<list>
+				<value>wavemaker</value>
+			</list>
+		</property>
+		<property name="services">
+			<list>
+				<ref bean="wavemakerMongoService"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation" />
+
+</beans>

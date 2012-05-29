@@ -14,14 +14,15 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
+import java.net.MalformedURLException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.ws.util.Constants;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.ResourceURL;
+import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
@@ -40,7 +41,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 
-    public DeprecatedServiceDefinition getServiceDefinition(Resource f) {
+    public DeprecatedServiceDefinition getServiceDefinition(File f) {
         return getServiceDefinition(f, null, null);
     }
 
@@ -49,14 +50,22 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
         return getServiceDefinition(serviceFile.asResource(), serviceId, serviceMgr);
     }
 
-    public DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
-        if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
+    public DeprecatedServiceDefinition getServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
+        if (f.getName().endsWith(Constants.WSDL_EXT)) {
             try {
-                return WSDLManager.processWSDL(f.getURL().toString(), serviceId, null, null);
+                // cftempfix - if the wsdl file is NOT ALWAYS a local file (eg. mongo DB file), we may need to correctly
+                // implement
+                // logic for none-local file case.
+                if (f instanceof LocalFile) {
+                    java.io.File ff = ((LocalFile) f).getLocalFile();
+                    return WSDLManager.processWSDL(ff.toURL().toString(), serviceId, null, null);
+                } else {
+                    return WSDLManager.processWSDL(ResourceURL.get(f).toString(), serviceId, null, null);
+                }
             } catch (WSDLException e) {
                 throw new WMRuntimeException(e);
-            } catch (IOException e) {
-                throw new WMRuntimeException(e);
+            } catch (MalformedURLException e) {
+
             }
         }
         return null;

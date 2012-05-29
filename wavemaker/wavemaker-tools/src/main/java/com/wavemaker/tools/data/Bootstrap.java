@@ -14,8 +14,8 @@
 
 package com.wavemaker.tools.data;
 
-import com.wavemaker.tools.service.ServiceFactoryManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.service.ServiceFactoryManager;
 
 /**
  * Registers factories for the data subsystem.

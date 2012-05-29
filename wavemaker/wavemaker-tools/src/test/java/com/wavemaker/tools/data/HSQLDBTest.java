@@ -32,12 +32,12 @@ import java.sql.Statement;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 public class HSQLDBTest {
 
@@ -227,14 +227,15 @@ public class HSQLDBTest {
             importer.setConnectionUrl(url);
             importer.testConnection();
 
-            importer.setDestDir(new FileSystemResource(outputDir));
+            Folder folder = new LocalFolder(outputDir);
+            importer.setDestDir(folder);
             importer.setPackage("com.foo.blah");
             importer.setClassName("Service");
             importer.setTableFilter("COUNTRY");
             importer.setGenerateServiceClass(true);
             importer.setCompileServiceClass(true);
 
-            Resource javaDir = DataModelManager.getJavaDir(new FileSystemResource(outputDir), "com.foo.blah");
+            Folder javaDir = DataModelManager.getJavaDir(folder, "com.foo.blah");
             importer.setJavaDir(javaDir);
 
             importer.run();

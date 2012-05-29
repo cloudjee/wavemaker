@@ -23,7 +23,7 @@ dojo.require("wm.base.widget.Splitter");
 dojo.require("wm.base.widget.Button");
 dojo.require("wm.base.widget.Picture");
 dojo.require("wm.base.widget.Layers");
-dojo.require("wm.base.widget.LayoutBox");
+dojo.require("wm.base.widget.Layout");
 dojo.require("wm.base.widget.Tree");
 dojo.require("wm.base.design.Designer");
 
@@ -56,6 +56,8 @@ dojo.declare("Studio", wm.Page, {
 	// initialization
 	//=========================================================================
     start: function(inBackState, inLocationState) {   
+	this.subscribe("BrowserZoomed", this, "browserZoomed");
+	this.browserZoomed();
 	    wm.applyFrameworkFixes();
 	this.progressDialog.titleButtonPanel.setShowing(true);
 	//this.progressDialog.titleClose.setShowing(true);
@@ -146,8 +148,9 @@ dojo.declare("Studio", wm.Page, {
 		// FIXME: can't we do status updates via dojo.publish?
 	    //setInterval(dojo.hitch(this, "updateStatus"), 2000);
 		//this.preloadImages();
-		if (this.isCloud()) {
-		    this.requestUserName();
+    		if (this.isCloud()) {
+		    this.preferencesItem.domNode.style.display = "none";
+		    this.partnerServicesItem.domNode.style.display = "none";
 		}
 	var reopenProject = this.getUserSetting("reopenProject");
 	if (reopenProject) {
@@ -248,6 +251,7 @@ dojo.declare("Studio", wm.Page, {
 	     return this._jarsMissing[inName];
 	 },
          handleMissingJar: function(jar, step1) {
+	     this.jarDownloadDialog.loadPage("HandleRequiredJars");
 	     this.neededJars[jar] = true;
 	     if (!this.project.loadingProject) {
 		 this.jarDownloadDialog.page.html1.setHtml(step1);
@@ -520,6 +524,16 @@ dojo.declare("Studio", wm.Page, {
 		    this.select(this.page.root);
 		    this.refreshDesignTrees();
 		}
+	    switch(this.currentDeviceType) {
+	    case "tablet":
+		this.designTabletUI();
+		break;
+	    case "phone":
+		this.designPhoneUI();
+		break;
+	    default: 
+		this.designDesktopUI();
+	    }
 		dojo.publish("wm-page-changed");
 		this.pagesChanged();
 	},
@@ -664,6 +678,7 @@ dojo.declare("Studio", wm.Page, {
 		this._liveLayoutReady = inReady;
 	},
     deploySuccess: function(inUrl) {
+	if (inUrl) this._deployedUrl = inUrl;
 	var application = this.application || this._application;
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
@@ -879,6 +894,7 @@ dojo.declare("Studio", wm.Page, {
 	    }				
     },
     inspect: function(inComponent) {
+	if (inComponent.noInspector) return;
 	    wm.job("studio.inspect", 1, dojo.hitch(this, function() {
 		this._inspect(inComponent);
 	    }));
@@ -992,11 +1008,12 @@ dojo.declare("Studio", wm.Page, {
 		// if the widget is on an inactive layer,
 		// activate all parent layers so it's visible
 		var w = this.selected;
-		if (w instanceof wm.Widget || w instanceof wm.DojoLightbox)
-			while (w) {
-			wm.fire(w, "activate");
-			w = w.parent;
+	    if (wm.isInstanceType(w, [wm.Control,wm.DojoLightbox])) {
+		while (w) {
+		    wm.fire(w, "activate");
+		    w = w.parent;
 		}
+	    }
 	},
 	selectParent: function() {
 		if (this.targetMode) 
@@ -1267,15 +1284,18 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	    switch (newLayer.name) {
 	    case "sourceTab":
+		this.generateAppSourceHtml();
+		break;
+	    }
+	},
+    generateAppSourceHtml: function() {
 		this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
 		var appsrc = this.project.generateApplicationSource();
 		var match = appsrc.split(terminus)
 		               
 		appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
 		this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
-		break;
-	    }
-	},
+    },
 	tabsChange: function(inSender) {
 	    if (!studio.page) return;
 	    
@@ -2026,9 +2046,24 @@ dojo.declare("Studio", wm.Page, {
     },
     showDeviceBarHelp: function() {
 	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/WM65RelNotes#HNewmobilesupport");
+    },
+    browserZoomed: function() {
+	var isZoomed = Boolean(app._currentZoomLevel);
+	this.editAreaZoomWarningLabel.setShowing(isZoomed);
+	this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
+	this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
+	this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
     }
 });
 
 
 // Inherits some properties via wm_studio/Theme.js
 dojo.declare("wm.studio.DialogMainPanel", wm.Panel, {});
+dojo.declare("wm.studio.DialogButtonPanel", wm.Panel, {
+    _classes: {domNode: ["StudioDialogFooter"]},
+    layoutKind: "left-to-right",
+    horizontalAlign: "right",
+    verticalAlign: "justified",
+    height: "35px",
+    width: "100%"
+});

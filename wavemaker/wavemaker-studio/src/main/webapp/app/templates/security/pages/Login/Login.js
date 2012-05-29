@@ -14,28 +14,45 @@
 
 
 dojo.declare("Login", wm.Page, {
-	start: function() {
-		this.connect(this.domNode, "keydown", this, "keydown");
-		this.usernameInput.setDataValue(dojo.cookie("user") || "");
-		this.usernameInput.focus();
-                if (this.wmTitle)
-                    this.wmTitle.setCaption(app.name || app.declaredClass);
-	},
-	keydown: function(e) {
-		if (e.keyCode == dojo.keys.ENTER) {
-			this.loginButton.domNode.focus();
-		}
-	},
-	loginButtonClick: function(inSender) {
-	        dojo.cookie("user", this.usernameInput.getDataValue(), {expires: 365});
-		this.loginErrorMsg.setCaption("");
-		wm.login(
-			[this.usernameInput.getDataValue(), this.passwordInput.getDataValue()], 
-			null, dojo.hitch(this, "loginFailed"));
-	},
-	loginFailed: function(inResponse) {
-		this.loginErrorMsg.setCaption("Invalid username or password.");
-		this.usernameInput.focus();
-	},
-	_end: 0
+    start: function() {
+        if (window["PhoneGap"]) {
+            this.restorePhonegapCredentials();
+        } else {
+            this.usernameInput.setDataValue(dojo.cookie("user") || "");
+            this.usernameInput.focus();
+        }
+        if (this.wmTitle) this.wmTitle.setCaption(app.name || app.declaredClass);
+        this.loadingDialog.setMargin(parseInt(this.loadingDialog.widgetToCover.margin) + parseInt(this.loadingDialog.widgetToCover.border));
+    },
+    loginButtonClick: function(inSender) {
+        this.loginErrorMsg.setCaption("");
+        dojo.cookie("user", this.usernameInput.getDataValue(), {
+            expires: 365
+        });
+    },
+    
+    onLoginSuccess: function() {
+        if (window["PhoneGap"]) {
+            this.phonegapCredentialStorage.setData({
+                name: this.usernameInput.getDataValue(),
+                dataValue: this.passwordInput.getDataValue()
+            });
+        }
+    },
+    loginFailed: function(inResponse) {
+        this.loginErrorMsg.setCaption("Invalid username or password.");
+        this.usernameInput.focus();
+    },
+    restorePhonegapCredentials: function() {        
+        var username = this.phonegapCredentialStorage.getValue("name");
+        var password = this.phonegapCredentialStorage.getValue("dataValue");
+        if (username || password) {
+            this.usernameInput.setDataValue(username);
+            this.passwordInput.setDataValue(password);
+            if (username && password) {
+                this.loginVariable1.update();
+            }
+        }
+    },
+  _end: 0
 });

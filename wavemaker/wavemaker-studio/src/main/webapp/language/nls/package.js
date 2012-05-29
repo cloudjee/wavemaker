@@ -166,6 +166,7 @@
 	"NavigationCall" : "NavigationCall",
 	"NotificationCall" : "NotificationCall",
 	"LogoutVariable" : "LogoutVariable",
+	"LoginVariable" : "LoginVariable",
 	"Timer" : "Timer",
 	"TypeDefinition" : "TypeDefinition",
 	"Composite_Publisher" : "Composite Publisher",

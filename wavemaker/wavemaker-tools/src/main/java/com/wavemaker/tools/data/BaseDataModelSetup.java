@@ -15,7 +15,6 @@
 package com.wavemaker.tools.data;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,9 +32,6 @@ import org.hibernate.dialect.OracleDialect;
 import org.hibernate.dialect.PostgreSQLDialect;
 import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.tool.ant.ExporterTask;
-import org.hibernate.tool.ant.GenericExporterTask;
-import org.hibernate.tool.hbm2x.Exporter;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
@@ -43,15 +39,19 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.dialect.MySQLDialect;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.JDBCUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
-import com.wavemaker.tools.compiler.ProjectCompiler;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
@@ -139,6 +139,8 @@ public abstract class BaseDataModelSetup {
 
     private static final String REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "revengNamingStrategy";
 
+    protected ProjectManager projectManager;
+
     private final String DEFAULT_FILTER = ".*";
 
     public static String getDriverClassForDBType(String dbtype) {
@@ -183,7 +185,7 @@ public abstract class BaseDataModelSetup {
                 this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
             }
         } catch (WMRuntimeException ex) {
-        }        
+        }
     }
 
     private final WMHibernateToolTask parentTask = new WMHibernateToolTask();
@@ -220,9 +222,9 @@ public abstract class BaseDataModelSetup {
     // data objects package
     protected String dataPackage = null;
 
-    protected Resource destdir = null;
+    protected Folder destdir = null;
 
-    protected Resource javadir = null;
+    protected Folder javadir = null;
 
     protected Properties properties = new Properties();
 
@@ -240,20 +242,17 @@ public abstract class BaseDataModelSetup {
 
     private final List<File> tmpFiles = new ArrayList<File>();
 
-    public void setDestDir(Resource destdir) {
+    public void setDestDir(Folder destdir) {
         this.destdir = destdir;
-        try {
-            File f = this.destdir.getFile();
+        if (destdir instanceof LocalFolder) {
+            File f = ((LocalFolder) this.destdir).getLocalFile();
             getParentTask().setDestDir(f);
-        } catch(IOException ex) {
-            exporterFactory.setDestDir(destdir);     
-        } catch(UnsupportedOperationException ex) {
-            exporterFactory.setDestDir(destdir);     
+        } else {
+            this.exporterFactory.setDestDir(destdir);
         }
-        //getParentTask().setDestDir(destdir);
     }
 
-    public void setJavaDir(Resource javadir) {
+    public void setJavaDir(Folder javadir) {
         this.javadir = javadir;
     }
 
@@ -648,19 +647,26 @@ public abstract class BaseDataModelSetup {
     }
 
     protected void checkDBType() {
-        if (this.dbtype == null) {
+        if (WMAppContext.getInstance() == null || !WMAppContext.getInstance().isCloudFoundry()) {
+            if (this.dbtype == null) {
 
-            String s = this.properties.getProperty(DBTYPE_SYSTEM_PROPERTY);
+                String s = this.properties.getProperty(DBTYPE_SYSTEM_PROPERTY);
 
-            if (s == null) {
-                // try to get dbtype from the connection url
-                if (this.connectionUrl != null) {
-                    s = getDBTypeFromURL(this.connectionUrl);
-                } else {
-                    // will cause errror later
+                if (s == null) {
+                    // try to get dbtype from the connection url
+                    if (this.connectionUrl != null) {
+                        s = getDBTypeFromURL(this.connectionUrl);
+                    } else {
+                        // will cause errror later
+                    }
+                }
+
+                if (s != null) {
+                    setDBType(s);
                 }
             }
-
+        } else if (this instanceof ImportDB) {
+            String s = getDBTypeFromURL(this.connectionUrl);
             if (s != null) {
                 setDBType(s);
             }
@@ -822,21 +828,15 @@ public abstract class BaseDataModelSetup {
 
     protected void checkDestdir(Collection<String> requiredProperties) {
         if (this.destdir == null) {
+            // On CF, it makes more sense that the property should contain a path relative from the project root
+            // rather than an absolute path.
             String s = this.properties.getProperty(DESTDIR_SYSTEM_PROPERTY);
-            if (s != null) {
-                setDestDir(fileSystem.getResourceForURI(s));
-            }
+            Folder projRoot = this.projectManager.getCurrentProject().getRootFolder();
+            setDestDir(projRoot.getFolder(s));
         }
 
         if (this.destdir == null) {
             requiredProperties.add(DESTDIR_SYSTEM_PROPERTY);
-        } else {
-            if (this.destdir.exists()) {
-                if (!fileSystem.isDirectory(this.destdir)) {
-                    throw new ConfigurationException(MessageResource.PROPERTY_MUST_BE_DIR, DESTDIR_SYSTEM_PROPERTY,
-                            fileSystem.getPath(this.destdir));
-                }
-            }
         }
     }
 
@@ -879,14 +879,14 @@ public abstract class BaseDataModelSetup {
 
     protected ExporterTask getConfigurationExporter() {
 
-        exporterFactory.setPackageName(BaseDataModelSetup.this.packageName);
-        exporterFactory.setDataPackage(BaseDataModelSetup.this.dataPackage);
-        exporterFactory.setClassName(BaseDataModelSetup.this.className);
-        exporterFactory.setUseIndividualCRUDOperations(getUseIndividualCRUDOperations());
-        exporterFactory.setImpersonateUser(BaseDataModelSetup.this.impersonateUser);
-        exporterFactory.setActiveDirectoryDomain(BaseDataModelSetup.this.activeDirectoryDomain);
-        
-        return exporterFactory.getExporter("springConfig", getParentTask(), this.serviceName);
+        this.exporterFactory.setPackageName(BaseDataModelSetup.this.packageName);
+        this.exporterFactory.setDataPackage(BaseDataModelSetup.this.dataPackage);
+        this.exporterFactory.setClassName(BaseDataModelSetup.this.className);
+        this.exporterFactory.setUseIndividualCRUDOperations(getUseIndividualCRUDOperations());
+        this.exporterFactory.setImpersonateUser(BaseDataModelSetup.this.impersonateUser);
+        this.exporterFactory.setActiveDirectoryDomain(BaseDataModelSetup.this.activeDirectoryDomain);
+
+        return this.exporterFactory.getExporter("springConfig", getParentTask(), this.serviceName);
     }
 
     protected boolean getUseIndividualCRUDOperations() {
@@ -989,8 +989,12 @@ public abstract class BaseDataModelSetup {
         this.exporterFactory = exporterFactory;
     }
 
+    protected void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
+
     private void checkProperties(Collection<String> requiredProperties) {
-        if (!requiredProperties.isEmpty()) {
+        if (!requiredProperties.isEmpty() && !WMAppContext.getInstance().isCloudFoundry()) {
             throw new ConfigurationException(MessageResource.MISSING_SYS_PROPERTIES.getMessage(ObjectUtils.toString(requiredProperties, ", ")));
         }
     }

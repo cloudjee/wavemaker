@@ -215,14 +215,16 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     },
     generateMarkers: function() {
         
-	    var data = this.dataSet.getData();
-	
+	var data = this.dataSet.getData();
+	if (data) {
 	    for (var i = 0; i < data.length; i++) {
 		data[i]._index = i+1; // one based indexing for end users
 		this.generateMarker(data[i]);
 	    }
-	if (this._dataToGeocode.length)
-	    this.geocodeNext();
+	    if (this._dataToGeocode.length) {
+		this.geocodeNext();
+	    }
+	}
     },
     generateMarker: function(d) {
 		var lat = d[this.latitudeField];

@@ -39,6 +39,7 @@ import com.wavemaker.runtime.data.sqlserver.SqlServerUserImpersonatingDataSource
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Alias;
 import com.wavemaker.tools.spring.beans.Bean;
@@ -76,10 +77,14 @@ public class DataServiceSpringConfiguration {
 
     private boolean isDirty = false;
 
-    public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFile, String serviceName) {
+    public DataServiceSpringConfiguration(FileService fileService, String rootPath, File configFile, String serviceName) {
+        this(fileService, rootPath, configFile.getName(), serviceName);
+    }
+
+    public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFileName, String serviceName) {
         this.rootPath = rootPath;
-      
-        this.path = StringUtils.appendPaths(this.rootPath, configFile);
+
+        this.path = StringUtils.appendPaths(this.rootPath, configFileName);
 
         this.fileService = fileService;
         this.beans = DataServiceUtils.readBeans(fileService, this.path);

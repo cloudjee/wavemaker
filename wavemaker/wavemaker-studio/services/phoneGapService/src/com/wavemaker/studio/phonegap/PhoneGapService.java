@@ -22,9 +22,9 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Including.ResourceAttributeFilter;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DownloadableFolder;
 import com.wavemaker.tools.project.Project;
@@ -139,6 +139,8 @@ public class PhoneGapService {
     }
 
     private void fixupXCodeFilesFollowingSetup() {
+	/* phonegap has fixed this finally?
+
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         File mainViewControllerFile = xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
@@ -152,14 +154,16 @@ public class PhoneGapService {
                 + content.substring(end);
             mainViewControllerFile.getContent().write(content);
         }
+	*/
     }
 
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
         phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending(".gz")).delete();
+        phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending("_grid.js")).delete();
         phoneGapLibFolder.getFolder("build/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
         phoneGapLibFolder.getFolder("build").list(Including.fileNames().ending(".js")).delete();
         phoneGapLibFolder.getFolder("images/boolean/").delete();
-        //phoneGapLibFolder.getFolder("github/touchscroll").delete();
+        // phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
         Folder dojo = phoneGapLibFolder.getFolder("dojo");
         dojo.getFolder("util").delete();
@@ -187,8 +191,8 @@ public class PhoneGapService {
             }
         }
 
-	Folder themes = widget.getFolder("themes");
-	themes.list(Including.resourceNames().notMatching("default")).delete();
+        Folder themes = widget.getFolder("themes");
+        themes.list(Including.resourceNames().notMatching("default")).delete();
     }
 
     private void updatePhonegapFiles(String host, int port, FolderLayout layout, String themeName) {
@@ -203,8 +207,9 @@ public class PhoneGapService {
         // Delete all pages, resources and project files so we can re-copy updated version of them
         ResourceAttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
         phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
+
         // Copy project files for phonegap
-        projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
+	projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
         // Update index and login HTML files
         String phonegapName = getPhoneGapScript(phoneGapFolder);

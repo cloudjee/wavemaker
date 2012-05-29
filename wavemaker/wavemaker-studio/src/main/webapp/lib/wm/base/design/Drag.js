@@ -39,12 +39,12 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
     */
 	beginDrag: function(inEvent, inInfo) {
 		this.info = inInfo || this.info;
-	    if (this.info && this.info.control && (this.info.control instanceof wm.AbstractEditor || this.info.control instanceof wm.EditPanel)){
-		    var parentForm = wm.getParentForm(this.info.control);
-		    this.info.parentForm = parentForm instanceof wm.LiveFormBase ? parentForm : null;	
-		}
+	    if (this.info && this.info.control && (wm.isInstanceType(this.info.control,  [wm.AbstractEditor, wm.EditPanel]))) {
+		var parentForm = this.info.control.getParentForm();
+		this.info.parentForm = wm.isInstanceType(parentForm, wm.LiveFormBase) ? parentForm : null;	
+	    }
 		
-		this.mousedown(inEvent);
+	    this.mousedown(inEvent);
 	},
 	initNodes: function() {
 		this.inherited(arguments);
@@ -254,7 +254,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	canBeTarget: function(inWidget) {
 		var parentOK = true;
 		if (this.info.parentForm){
-			var targetParentForm = inWidget instanceof wm.LiveFormBase ? inWidget : wm.getParentForm(inWidget);
+		    var targetParentForm = wm.isInstanceType(inWidget, wm.LiveFormBase) ? inWidget : inWidget.getParentForm();
 	    if (!targetParentForm || targetParentForm.getId() != this.info.parentForm.getId()){
         parentOK = false;
 			}
@@ -282,14 +282,24 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	getDesignableDialog: function() {
 	    for (var i = wm.dialog.showingList.length-1; i >= 0; i--) {
 		var d = wm.dialog.showingList[i];
-		if ((d.owner == studio.wip || d.owner == studio.application) && d instanceof wm.DesignableDialog)
+		if ((d.owner == studio.wip || d.owner == studio.application) && wm.isInstanceType(d, wm.DesignableDialog))
 		    return d;
 	    }
 	    return;
 	},
 	isDesignable: function() {
-		var c = this.info.control || (dojo.getObject(this.info.type)).prototype;
-	    return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity;
+	    var c = this.info.control;
+	    if (!c) {
+		var ctor = dojo.getObject(this.info.type);
+		if (ctor) {
+			c = ctor.prototype;
+		}
+	    }
+	    if (c) {
+		return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity;
+	    } else {
+		return !this.info.props.noPositioning;
+	    }
 	}
 });
 

@@ -14,22 +14,17 @@
 
 package com.wavemaker.studio;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.json.JSONObject;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
-import com.wavemaker.runtime.server.ServiceResponse;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentInfo;
@@ -55,8 +50,6 @@ public class DeploymentService {
     private DeploymentTargetManager deploymentTargetManager;
 
     private ServiceDeploymentManager serviceDeploymentManager;
-
-    private ServiceResponse serviceResponse = null;
 
     public String getRequestId() {
         UUID uuid = UUID.randomUUID();
@@ -128,21 +121,14 @@ public class DeploymentService {
      * @param resource the resource
      * @return the download response
      */
-    private DownloadResponse getAsDownloadResponse(Resource resource) {
-        try {
-            File localFile = resource.getFile();
-            String filename = localFile.getAbsolutePath();
-            DownloadResponse ret = new DownloadResponse();
+    private DownloadResponse getAsDownloadResponse(com.wavemaker.tools.io.File resource) {
+        DownloadResponse ret = new DownloadResponse();
+        InputStream fis = resource.getContent().asInputStream();
 
-            FileInputStream fis = new FileInputStream(localFile);
-
-            ret.setContents(fis);
-            ret.setContentType("application/unknown");
-            ret.setFileName(filename.substring(filename.lastIndexOf(File.separator) + 1));
-            return ret;
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+        ret.setContents(fis);
+        ret.setContentType("application/unknown");
+        ret.setFileName(resource.getName());
+        return ret;
     }
 
     /**
@@ -203,9 +189,9 @@ public class DeploymentService {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
             if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
-                File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
+                com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo);
                 if (!f.exists()) {
-                    throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+                    throw new AssertionError("Application archive file doesn't exist at " + f.toString());
                 }
                 if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
                     return SUCCESS;
@@ -219,11 +205,11 @@ public class DeploymentService {
         }
     }
 
-    public String getDeploymentURL(DeploymentInfo deploymentInfo){
-    	String ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).getUrl(deploymentInfo);
-    	return ret;
+    public String getDeploymentURL(DeploymentInfo deploymentInfo) {
+        String ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).getUrl(deploymentInfo);
+        return ret;
     }
-    
+
     /**
      * Undeploy a previously {@link #deploy(DeploymentInfo) deployed} application
      * 

@@ -14,7 +14,9 @@
 
 package com.wavemaker.tools.ws;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -46,7 +48,6 @@ import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaObjectTable;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -98,12 +99,9 @@ public class WebServiceToolsManager {
 
     private static final String XML_SCHEMA_TEXT_SEPERATOR = "\n--- schema end ---\n";
 
-    private final ProjectManager projectMgr;
-
     private final DesignServiceManager designServiceMgr;
 
     public WebServiceToolsManager(ProjectManager projectMgr, DesignServiceManager designServiceMgr) {
-        this.projectMgr = projectMgr;
         this.designServiceMgr = designServiceMgr;
     }
 
@@ -174,46 +172,57 @@ public class WebServiceToolsManager {
         }
 
         // create service runtime folder
-        java.io.File runtimeDir = this.designServiceMgr.getServiceRuntimeDirectory(origWsdl.getServiceId()).getFile();
-        if (!runtimeDir.exists()) {
-            runtimeDir.mkdirs();
-        }
+        Folder runtimeDir = this.designServiceMgr.getServiceRuntimeFolder(origWsdl.getServiceId());
+        runtimeDir.createIfMissing();
 
         // create package folder under service runtime folder. This is the
         // place where we put the wsdl file and the service spring file.
-        java.io.File packageDir = CodeGenUtils.getPackageDir(runtimeDir, origWsdl.getPackageName());
-        if (!packageDir.exists()) {
-            packageDir.mkdirs();
-        }
+        Folder packageDir = CodeGenUtils.getPackageDir(runtimeDir, origWsdl.getPackageName());
+        packageDir.createIfMissing();
 
-        java.io.File wsdlFile;
+        File wsdlFile;
         String wsdlUri = null;
 
         // copy user-specified WSDL file to the package folder
-        wsdlFile = new java.io.File(packageDir, origWsdlFile.getName());
-        // wsdlUri = wsdlFile.toURI().toString();
-        if (!wsdlFile.getCanonicalFile().equals(origWsdlFile.getCanonicalFile())) {
-            IOUtils.copy(origWsdlFile, wsdlFile);
-        }
+        wsdlFile = packageDir.getFile(origWsdlFile.getName());
+        // cftempfix
+        // if (!wsdlFile.getCanonicalFile().equals(origWsdlFile.getCanonicalFile())) {
+        // IOUtils.copy(origWsdlFile, wsdlFile);
+        // }
+        OutputStream os = wsdlFile.getContent().asOutputStream();
+        org.apache.commons.io.IOUtils.copy(new FileInputStream(origWsdlFile), os);
+        os.close();
+
+        // cftempfix: copy wsdl file to temp directory because we need to pass URI to the rest of the process
+        java.io.File tempWsdlDir = IOUtils.createTempDirectory("wsdl_directory", null);
+        java.io.File temlWsdlFile = new java.io.File(tempWsdlDir, origWsdlFile.getName());
+        IOUtils.copy(origWsdlFile, temlWsdlFile);
+
+        // cftempfix
         // also copy xsd file(s) used by the WSDL
         Map<String, Element> schemas = origWsdl.getSchemas();
         if (schemas != null) {
             for (String systemId : schemas.keySet()) {
-                java.io.File xsdFile = getLocalXsdFileFromSystemId(systemId);
-                if (xsdFile != null && xsdFile.exists()) {
-                    IOUtils.copy(xsdFile, new java.io.File(packageDir, xsdFile.getName()));
+                java.io.File origXsdFile = getLocalXsdFileFromSystemId(systemId);
+                if (origXsdFile != null && origXsdFile.exists()) {
+                    File xsdFile = packageDir.getFile(origXsdFile.getName());
+                    org.apache.commons.io.IOUtils.copy(new FileInputStream(origXsdFile), xsdFile.getContent().asOutputStream());
+                    // cftempfix: copy xsd files to temp directory as well
+                    java.io.File tempXsdFile = new java.io.File(tempWsdlDir, origXsdFile.getName());
+                    IOUtils.copy(origXsdFile, tempXsdFile);
                 }
             }
         }
 
-        wsdlUri = wsdlFile.toURI().toString();
+        // wsdlUri = ResourceURL.get(wsdlFile).toURI().toString();
+        wsdlUri = temlWsdlFile.toURI().toString();
 
         // do the import which would generate service Java files and resource
         // files
         ImportWS importWS = new ImportWS();
         importWS.setWsdlUri(wsdlUri);
         importWS.setServiceId(serviceId);
-        importWS.setDestdir(new FileSystemResource(runtimeDir));
+        importWS.setDestdir(runtimeDir);
         importWS.setPartnerName(partnerName);
         WSDL wsdl = importWS.generateServiceClass(serviceAlias, operationName_list, inputs_list);
         wsdl.setPartnerName(partnerName);
@@ -856,11 +865,11 @@ public class WebServiceToolsManager {
     }
 
     public BindingProperties getBindingProperties(String serviceId) throws JAXBException, IOException {
-        return WebServiceSpringSupport.getBindingProperties(this.projectMgr.getCurrentProject(), this.designServiceMgr, serviceId);
+        return WebServiceSpringSupport.getBindingProperties(this.designServiceMgr, serviceId);
     }
 
     public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws JAXBException, IOException {
-        WebServiceSpringSupport.setBindingProperties(this.projectMgr.getCurrentProject(), this.designServiceMgr, serviceId, bindingProperties);
+        WebServiceSpringSupport.setBindingProperties(this.designServiceMgr, serviceId, bindingProperties);
     }
 
     // If the service name happens to be the same as one of the operation names,

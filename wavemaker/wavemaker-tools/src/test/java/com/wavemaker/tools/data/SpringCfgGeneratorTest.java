@@ -21,15 +21,16 @@ package com.wavemaker.tools.data;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
 
 /**
  * @author Simon Toens
@@ -42,7 +43,8 @@ public class SpringCfgGeneratorTest extends WMTestCase {
         try {
             SpringUtils.initSpringConfig();
             SpringCfgGenerator g = new SpringCfgGenerator();
-            g.setDestDir(new FileSystemResource(f));
+            Folder folder = new LocalFolder(f);
+            g.setDestDir(folder);
             g.setClassName("Foo");
             g.setPackage("com.blah");
             g.setFileSystem(new LocalStudioFileSystem());

@@ -92,9 +92,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	// If I name it getMinHeight, then it will be used to show the "minHeight" property in the designer; this func is meant to use EITHER a user supplied value OR a best calculation, and that calculation varies at runtime based on various factors, so we do NOT want to write this calculation as a property to widgets.js
 	getMinHeightProp: function() {	
 		if (this.minHeight) return this.minHeight;
-		if (this.captionPosition == "left" || this.captionPosition == "right" || !this.caption) return 24;
+		if (this.captionPosition == "left" || this.captionPosition == "right" || !this.caption) return 20;
 		else if (this.captionSize.match(/\%/)) return 40;
-		else return 24 + parseInt(this.captionSize);
+		else return 20 + parseInt(this.captionSize);
 	},
 	getMinWidthProp: function() {
 		if (this.minWidth) return this.minWidth;
@@ -856,7 +856,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	setInitialValue: function() {
 	    this.beginEditUpdate();
 	    try {
-		this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
+		this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", this.constructor) ? this.dataValue : this.displayValue);
 	    } catch(e) {}
 	    this.endEditUpdate();
 	},

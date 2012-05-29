@@ -36,8 +36,6 @@ import javax.swing.JOptionPane;
  */
 public class PrjDirUpgradeDialog extends javax.swing.JFrame {
 
-    private boolean normalClose = false;
-
     protected String version;
 
     protected File projectsDir;
@@ -300,7 +298,6 @@ public class PrjDirUpgradeDialog extends javax.swing.JFrame {
         }
 
         if (success) {
-            this.normalClose = true;
             dispose();
         }
     }// GEN-LAST:event_btnOkActionPerformed

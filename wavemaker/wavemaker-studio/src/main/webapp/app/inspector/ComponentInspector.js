@@ -232,6 +232,7 @@
 		 if (e) {		     
 		     this.reinspectEditor(inComponent, e, binde, p);
 		 }
+/*
 		 this.processingRequiredGroup = true;
 		 e = this.editorHash[this.getHashId(inComponent,propFullName)];
 		 if (e && e.isDestroyed) {
@@ -243,6 +244,7 @@
 		     this.reinspectEditor(inComponent, e, binde, p);
 		 }
 		 delete this.processingRequiredGroup;
+		 */
 	     }
 	 } catch(e) {}
 
@@ -485,7 +487,7 @@
 	     //wm.forEachProperty(inGroup.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
 	     var count = 0;
 	     dojo.forEach(inGroup.subgroups, function(subgroup) {
-		 if (subgroup.props.length && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
+		 if (subgroup.props.length && (subgroup.props.length > 1 || subgroup.props[0].editor != "wm.prop.FieldGroupEditor") && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
 		     count++;
 		     this.addSubGroupIndicator(/*(inGroup.displayName || inGroup.name) + " - " + */(subgroup.displayName || subgroup.name),
 					       inLayer,  
@@ -500,7 +502,7 @@
 	     if (inGroup.props) {
 		 this._generateEditors(inComponent, inLayer, inGroup.props);
 	     }
-	     delete this.processingRequiredGroup;
+	     delete this.processingRequiredGroup; 
 	 } else if (inPropList) {
 	     this._generateEditors(inComponent, inLayer, this.props);
 	 }
@@ -822,16 +824,23 @@
 	     var parent = e.parent;
 	     var propName = inProp.fullName || inProp.name;
 	     var w = inComponent.$.binding.wires[propName];
-	     if (w) 
-		 inComponent.$.binding.removeWire(w.getWireId());
+	     if (w) {
+		 this.onEditorChange(e, inProp, inComponent, "", "");
+	     }
 	     bindableEditor.hide();
-	     e.clear();
-	     /* Clear causes onchange which causes reinspect which may destroy the editor */
+	     e.show();
+	     e._updating = true;
+	     e.clear(); // don't fire onchange event
+	     e._updating = false;
+/*
+
+	     / * Clear causes onchange which causes reinspect which may destroy the editor * /
 	     if (!e.isDestroyed) {
 		 e.show();
 		 parent.setHeight(e.bounds.h + "px");
 		 this.reinspect();
 	     }
+	     */
 	 });
 
 	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.fullName || inProp.name)] = bindableEditor;
@@ -871,12 +880,13 @@
 	     /* If the editor doesn't have the createWire flag on it, then inputs into the editor should result in 
 	      * simply setting of the property
 	      */
-	     if (!e.createWire) {
-		 /* TODO: PROPINSPECTOR CHANGE: Need to use the UNDOABLE TASK MANAGER */
+	     if (!e.createWire && (!inComponent.$.binding || !inComponent.$.binding.wires[inProp.name])) {
 		 if (e instanceof wm.prop.FieldGroupEditor) {
+		     // this block appears unreachable
 		     inComponent.setValue(inProp.name, inDataValue);
 		 } else {
-		     inComponent.setProp(inProp.name, inDataValue);
+		     //inComponent.setProp(inProp.name, inDataValue);
+		     new wm.SetPropTask(inComponent, inProp.name, inComponent.getProp(inProp.name), inDataValue, false);
 		 }
 	     } 
 
@@ -886,26 +896,16 @@
 		  * we're just binding to inProp.name.  bindTarget is used by wm.prop.FieldGroupEditor.
 		  */
 		 var bindPropName = e.bindTarget || inProp.fullName || inProp.name;
-
-		 /* If there is no data value, then there is no wire; make sure that any wire is removed */
-		 if (!inDataValue) {
-		     inComponent.$.binding.removeWire(bindPropName);
-		     inComponent.setValue(bindPropName, undefined);
-		 } else if (inDataValue) {
-		     /* If an editor uses the createExpressionWire property, then we are creating a binding expression instead
-		      * of binding to a target.  Used by wm.prop.FieldGroupEditor.  Typically we are binding something like
-		      * a dataSet where we get the name/id of a component and we bind to it.
-		      */
-		     if (e.createExpressionWire) {
-			 inDataValue = this.parseExpressionForWire(inDataValue);
-			 inComponent.$.binding.addWire("", bindPropName, "", inDataValue);
-		     } else {
-			 inComponent.$.binding.addWire("", bindPropName, inDataValue);
-		     }
-		 }	  
+		 new wm.SetWireTask(inComponent, 
+				    bindPropName, 
+				    inComponent.$.binding && inComponent.$.binding.wires[bindPropName] ? {source: inComponent.$.binding.wires[bindPropName].source,
+													  expression: inComponent.$.binding.wires[bindPropName].expression,
+													  value: inComponent.getValue(bindPropName)} : {}, 
+				    inDataValue, 
+				    e.createExpressionWire);
 	     }
 	 } catch(e) {}
-	 
+
 	 /************************************************************************************************************
 	  * Adding a wire calls inComponent.setValue(propName, valueOfTheSourceOrExpression);
           * sometimes a widget simply destroys itself and creates a replacement copy; 
@@ -1006,7 +1006,8 @@
 	 }
      },
      */
-     parseExpressionForWire: function(inValue) {
+     /* Called by propertyEdit's wm.SetWireTask */
+     parseExpressionForWire: function(inValue, skipValidation) {
 	 // A bind wire expression must be a string 
 	 if (typeof inValue == "number") {
 	     return String(inValue);
@@ -1021,11 +1022,15 @@
 	 }
 
 	 // Still here? Must be an expression; lets attempt to validate the expression
+	 if (!skipValidation) {
 	 try {
 	     var tmp = inValue;
 	     tmp = tmp.replace(/\$\{.*?\}/g, "''"); // remove the crazy stuff that we dont want to try evaluating right now (probably ok to evaluate it at design time, but its not needed to see if this will compile)
 	     // if its undefined, then presumably it failed to compile
-	     var tmp2 = eval(tmp);		
+	     var tmp2 = function() {
+		 return eval(tmp);
+	     }.call(this.inspected.owner || this.inspected);
+	     //var tmp2 = eval(tmp);		
 	     /* TODO: In 6.4 we openned the bind dialog so they could edit their bind expression in a larger area */
 	     if (tmp2 === undefined) {
 		 //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
@@ -1041,6 +1046,7 @@
 		app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
 		throw "Invalid Bind Expression";
 	    }
+	 }
 	 return inValue;
      },
      beginHelp: function(inPropName, inNode, inType, altText) {
@@ -1095,8 +1101,11 @@
 		     bd.show();
 		     bd.page.setContent(altText);
 		 } else {
-		     if (inType == studio.application.declaredClass)
+		     if (inType == studio.application.declaredClass) {
 			 inType = "wm.Application";
+		     } else if (inType == studio.project.pageName) {
+			 inType = "wm.Page";
+		     }
 		     var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
 										      className: inType.replace(/^.*\./,"") + "_" + inPropName});
 

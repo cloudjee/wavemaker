@@ -287,7 +287,7 @@ public class ResourceManager {
         }
     }
 
-    public static void ReplaceTextInProjectFile(Project project, Resource file, String findText, String replaceText) {
+    public static void ReplaceTextInProjectFile(Project project, com.wavemaker.tools.io.File file, String findText, String replaceText) {
         try {
             String newText = project.readFile(file);
             newText = newText.replaceAll(findText, replaceText);

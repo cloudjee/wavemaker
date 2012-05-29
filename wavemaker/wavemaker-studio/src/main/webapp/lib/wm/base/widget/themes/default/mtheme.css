@@ -282,7 +282,7 @@ th {
 .wmlist-list {
     height: 100%;
         -webkit-overflow-scrolling: touch;
-	overflow: auto;
+	overflow:auto;
 	/* cheat to hide IE scrollbar */
 	overflow-x: hidden;
 }
@@ -293,7 +293,7 @@ th {
 	border-bottom: 1px solid #939fb6;
 }
 
-.wmlist-header, .wmlist-header table {
+.wmlist-header table {
 	height: 1.5em;
 }
 
@@ -384,24 +384,17 @@ th {
 }
 
 
+/*
  .dialogtitlebar, .dialogfooter {
     background-color: #555555;	   
     color: white;
 }
+*/
 
-.dialogfooter .wmbutton {
-    border: 2px solid #939fb6;
-    color: black;
-
-}
 .dialogtitlebar button.wmtoolbutton {
     background-color: transparent;
 }
 
-
-.dialogtitlebar .wmbutton:hover, .dialogfooter .wmbutton:hover {
-    background: rgb(240,240,240);
-}
 
 /**/
 
@@ -1169,3 +1162,15 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     outline: none;
 }
 
+.wmmobile div .dijitSliderImageHandleH {
+    height: 30px;
+    width: 20px;
+}
+
+.MapMarkerTitle {
+    margin: 0px 0px 2px 0px;
+    border-bottom: solid 1px #333;
+}
+.MapMarkerDescription {
+    padding: 5px 0px 2px 0px;
+}

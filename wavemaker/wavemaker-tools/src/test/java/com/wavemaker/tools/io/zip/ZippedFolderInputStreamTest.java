@@ -19,8 +19,7 @@ import org.junit.rules.TemporaryFolder;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.FileSystemFolder;
-import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Tests for {@link ZippedFolderInputStream}.
@@ -37,9 +36,7 @@ public class ZippedFolderInputStreamTest {
     @Test
     public void shouldCreateZipFile() throws Exception {
         File root = this.temporaryFolder.newFolder("ziptest");
-        System.out.println(root);
-        LocalFileSystem fileSystem = new LocalFileSystem(root);
-        Folder rootFolder = FileSystemFolder.getRoot(fileSystem);
+        Folder rootFolder = new LocalFolder(root);
         rootFolder.getFolder("y/a").getFile("aa.txt").getContent().write("aa test");
         rootFolder.getFolder("y/a").getFile("ab.txt").getContent().write("ab test");
         rootFolder.getFolder("y/b").getFile("ba.txt").getContent().write("ba test");
