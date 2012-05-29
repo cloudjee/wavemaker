@@ -128,7 +128,18 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
     },
 	setRequestHeaders: function(reqHeaders) {
 		this.requestHeaders = reqHeaders;
-	}
+	},
+
+    /* Override parent method which passes data.message and therefore loses the fact that its actually an instance of Error */
+errorCallback: function(/* dojo.Deferred */ deferredRequestHandler){
+		// summary:
+		//		create callback that calls the Deferres errback method
+		//	deferredRequestHandler: Deferred
+		//		The deferred object handling a request.
+		return function(data){
+			deferredRequestHandler.errback(data);
+		};
+	},
 });
 
 dojo.declare("wm.JsonRpcService", wm.Service, {
