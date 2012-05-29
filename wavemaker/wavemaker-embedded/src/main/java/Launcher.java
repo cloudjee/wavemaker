@@ -9,9 +9,8 @@ import org.apache.catalina.startup.Tomcat;
 
 public class Launcher {
 
-    public static void main(String[] args) throws Exception {
-
-        File warFile = new File(Launcher.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+    public void launch() throws Exception {
+        File warFile = new File("/Users/pwebb/projects/wavemaker/code/wavemaker/wavemaker-studio/target/wavemaker-studio-6.5.0.M1.war");
 
         Tomcat tomcat = new Tomcat();
         StandardHost host = (StandardHost) tomcat.getHost();
@@ -26,5 +25,14 @@ public class Launcher {
 
         Desktop.getDesktop().browse(URI.create("http://localhost:8080/wavemaker/?debug"));
         tomcat.getServer().await();
+    }
+
+    public static void main(String[] args) {
+        try {
+            System.out.println("Direct Launch");
+            new Launcher().launch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
