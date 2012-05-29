@@ -39,6 +39,18 @@ import com.wavemaker.tools.project.StudioFileSystem;
 
 public class WebAppAssembler implements InitializingBean {
 
+    public static final ResourceFilter DEPLOY_FILTER = new ResourceFilter() {
+
+        @Override
+        public boolean accept(Resource resource) {
+            if (resource.getFilename().equals("deployments.js")) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    };
+
     private StudioFileSystem fileSystem;
 
     private Future<Set<ApplicationArchiveEntry>> studioApplicationArchiveEnties;
@@ -102,7 +114,7 @@ public class WebAppAssembler implements InitializingBean {
 
     private void collectEntries(Set<ApplicationArchiveEntry> entries, String basePath, Resource root, ResourceFilter filter, String newPath)
         throws IOException {
-        filter = filter == null ? ResourceFilter.DEPLOY_FILTER : filter;
+        filter = filter == null ? DEPLOY_FILTER : filter;
         List<Resource> children = this.fileSystem.listChildren(root, filter);
         for (Resource child : children) {
             String name = newPath + this.fileSystem.getPath(child).replace(basePath, "");
