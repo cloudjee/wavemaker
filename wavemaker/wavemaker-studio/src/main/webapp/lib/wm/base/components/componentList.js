@@ -146,6 +146,7 @@ wm.componentList = {
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	'wm.ListViewer':['wm.base.widget.ListViewer'],
         'wm.PhoneGapService': ['wm.base.components.PhoneGapService'],
+        'wm.XhrService': ['wm.base.components.XhrService'],
 	'wm.LogoutVariable':['wm.base.components.LogoutVariable']
 }
 
