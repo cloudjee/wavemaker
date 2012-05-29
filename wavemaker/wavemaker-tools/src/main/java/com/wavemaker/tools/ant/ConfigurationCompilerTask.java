@@ -81,7 +81,7 @@ public class ConfigurationCompilerTask extends CompilerTask {
     }
 
     @Override
-    protected void doExecute() throws BuildException {
+    public void doExecute() throws BuildException {
 
         Folder destination;
         FileService fileService = null;

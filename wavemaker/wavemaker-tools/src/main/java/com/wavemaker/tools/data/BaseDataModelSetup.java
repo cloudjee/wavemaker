@@ -994,7 +994,7 @@ public abstract class BaseDataModelSetup {
     }
 
     private void checkProperties(Collection<String> requiredProperties) {
-        if (!requiredProperties.isEmpty()) {
+        if (!requiredProperties.isEmpty() && !WMAppContext.getInstance().isCloudFoundry()) {
             throw new ConfigurationException(MessageResource.MISSING_SYS_PROPERTIES.getMessage(ObjectUtils.toString(requiredProperties, ", ")));
         }
     }
