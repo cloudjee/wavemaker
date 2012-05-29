@@ -56,8 +56,8 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 	});
 	dojo.forEach(comps, function(c) {
 	    if (c != studio.selected) {
-		var targetType = (studio.bindDialog.page.targetProps.propDef.type || "").toLowerCase();
-		if (c instanceof wm.Variable && !c.isList && (wm.defaultTypes[c.type] && c.type != "EntryData" || wm.typeManager.getType(c.type).primitiveType) && (!targetType || targetType == "string" || targetType == "number" || targetType == "date" || targetType == "boolean")) {
+		var targetType = (studio.bindDialog.page.targetProps.propDef ? studio.bindDialog.page.targetProps.propDef.type || "" : "").toLowerCase();		
+		if (c instanceof wm.Variable && c.type && !c.isList && (wm.defaultTypes[c.type] && c.type != "EntryData" || wm.typeManager.getType(c.type).primitiveType) && (!targetType || targetType == "string" || targetType == "number" || targetType == "date" || targetType == "boolean")) {
 		    new wm.SimpleBindSourceTreeNode(inParent, {object: c, content: c.name, type: c.type, isValidBinding: 1});
 		} else {
 		    new wm.BindSourceTreeNode(inParent, {object: c});
@@ -228,7 +228,7 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
 	    var property = inNodeProps.schema[n];
 	    if (property.simpleBindProp) {
 		p = {name: n, property: property};
-	    } else if (inNodeProps.object instanceof wm.Variable) {
+	    } else if (inNodeProps.object instanceof wm.Variable && inNodeProps.object.type && wm.typeManager.getType(inNodeProps.object.type) && wm.typeManager.getType(inNodeProps.object.type).primitiveType) {
 		p = {name: n, property: "dataValue"};
 	    }
 	}

@@ -1290,9 +1290,8 @@ wm.Variable.extend({
 	createVariable: function(inProps, inPropName) {
 		inProps = inProps || {};
 
-	    /* If  we're either in design or debug mode, and the type just doesn't exist, warn the user */
-	    if ((window["studio"] && this.isDesignLoaded() || !window["studio"] && djConfig.isDebug) && inProps.type && !wm.typeManager.getType(inProps.type.replace(/[\[\]]/g,""))) {
-		app.alert(wm.getDictionaryItem("wm.Variable.TYPE_INVALID", {type: inProps.type.replace(/[\[\]]/g,"")}));
+	    if ((window["studio"] && this.isDesignLoaded() || !window["studio"] && djConfig.isDebug) && inProps.type && !this._dataSchema) {
+		app.alert(wm.getDictionaryItem("wm.Variable.TYPE_INVALID", {type: inProps.type.replace(/[\[\]]/g,""), name: this.getRuntimeId()}));
 	    }
 	    if (!inProps.name) {
 		inProps.name = this._uniqueSubnardId;
