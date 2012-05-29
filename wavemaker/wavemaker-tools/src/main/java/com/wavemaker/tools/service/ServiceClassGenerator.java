@@ -25,6 +25,8 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -106,13 +108,8 @@ public class ServiceClassGenerator {
 
     private boolean isUpToDate(ServiceDetail serviceDetail, DeprecatedServiceDefinition serviceDefinition, ServiceGenerator generator) {
         Folder runtimeFolder = this.serviceManager.getServiceRuntimeFolder(serviceDetail.getServiceId());
-        // cftempfix - Uncomment the following lines when Phil implements lastModified for Folder.
-        /*
-         * long lastModified; try { lastModified = runtimeFolder.lastModified(); } catch (IOException ex) { throw new
-         * WMRuntimeException(ex); }
-         */
-        // return generator.isUpToDate(xxx);
-        return false;
+        long lastModified = runtimeFolder.list().performOperation(new LatestLastModified()).getValue();
+        return generator.isUpToDate(lastModified);
     }
 
     private static class ServiceDetail {
@@ -134,5 +131,28 @@ public class ServiceClassGenerator {
         public String getServiceId() {
             return this.serviceId;
         }
+    }
+
+    /**
+     * {@link ResourceOperation} to get the latest last modified value.
+     */
+    private static class LatestLastModified implements ResourceOperation<Resource> {
+
+        private long value;
+
+        @Override
+        public void perform(Resource resource) {
+            if (resource instanceof File) {
+                long lastModified = ((File) resource).getLastModified();
+                if (lastModified > this.value) {
+                    this.value = lastModified;
+                }
+            }
+        }
+
+        public long getValue() {
+            return this.value;
+        }
+
     }
 }
