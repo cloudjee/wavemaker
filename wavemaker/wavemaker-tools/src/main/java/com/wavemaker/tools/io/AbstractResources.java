@@ -57,10 +57,11 @@ public abstract class AbstractResources<T extends Resource> implements Resources
     }
 
     @Override
-    public void performOperation(ResourceOperation<T> operation) {
+    public <OPERATION extends ResourceOperation<T>> OPERATION performOperation(OPERATION operation) {
         for (T resource : this) {
             operation.perform(resource);
         }
+        return operation;
     }
 
     @Override
