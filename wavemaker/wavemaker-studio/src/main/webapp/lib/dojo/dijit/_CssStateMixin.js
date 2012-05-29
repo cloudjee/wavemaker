@@ -179,8 +179,16 @@ dojo.declare("dijit._CssStateMixin", [], {
 		for(var c in classHash){
 			newClasses.push(c);
 		}
-		tn.className = newClasses.join(" ");
 
+    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: Added test before setting because this class change causes editors (in chrome) to scroll back to position 0 each class change, so only change
+     * when required. 
+     */
+	    var newClass = newClasses.join(" ");
+	    if (tn.className != newClass) {
+	        tn.className = newClass;
+	    }
+/* End changes */
 		this._stateClasses = newStateClasses;
 	},
 
