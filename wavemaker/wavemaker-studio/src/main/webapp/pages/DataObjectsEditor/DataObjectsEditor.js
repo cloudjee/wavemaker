@@ -40,27 +40,6 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.connect(this.relationshipsList.dijit, "onApplyCellEdit", this, "setDirty");
 	    this.connect(this.columnList.dijit, "onApplyCellEdit", this, "setDirty");
 
-	    this.connect(this.owner.parent, "onShow", this, function() {
-		wm.onidle(this, function() {
-		if (this.dataObject && this.dataObject.name) {
-		    var components = studio.application.getServerComponents();
-		    var componentIndex = wm.Array.indexOf(components, this.dataObject.name, function(c,name) {return c.name == name;});
-		    var node = components[componentIndex]._studioTreeNode;
-		    if (this.dataObject.table) {
-			var kids = node.kids;
-			for (var i = 0; i < kids.length; i++) {
-			    if (kids[i].component.entityName == this.dataObject.table) {
-				kids[i].tree.deselect();
-				kids[i].tree.addToSelection(kids[i]);
-				return;
-			    }
-			}
-			node.tree.deselect();
-			node.tree.addToSelection(node);
-		    }
-		}
-		});
-	    });
 
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
@@ -78,6 +57,30 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    }
 
 	},
+    onShow: function() {
+		    //if (this.dataObject && this.dataObject.name) {
+		    var components = studio.application.getServerComponents();
+		    var componentIndex = wm.Array.indexOf(components, this.dataObject.name, function(c,name) {return c.name == name;});
+		    if (this.dataObject.table && componentIndex >= 0) {
+			var node = components[componentIndex]._studioTreeNode;
+
+			var kids = node.kids;
+			for (var i = 0; i < kids.length; i++) {
+			    if (kids[i].component.entityName == this.dataObject.table) {
+				kids[i].tree.deselect();
+				kids[i].tree.addToSelection(kids[i]);
+				return;
+			    }
+			}
+			node.tree.deselect();
+			node.tree.addToSelection(node);
+		    } else if (this.dataModel && this.dataModel._studioTreeNode) {
+			studio.tree.select(this.dataModel._studioTreeNode);
+		    }
+		//}
+    },
+
+
 	update: function() {
 		this.setSchemas();
 		this.clearDetailDisplay();

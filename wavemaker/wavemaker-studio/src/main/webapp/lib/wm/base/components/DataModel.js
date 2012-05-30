@@ -114,7 +114,6 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		return d;
 	},
 	completeNewDataModel: function() {
-	    
 		var p = this.getCreateDataModelDialog().page;
 		if (this._dataModelName || p.dataModelName) {
 			var n = this._dataModelName || p.dataModelName;
@@ -134,16 +133,20 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 				break;
 			    }
 		    }
-			studio.refreshServiceTree();
+		    studio.refreshServiceTree();	    
 
 		    // If designing a data model
 		    if (this._dataModelName) {
-			studio.select(c);
+			//studio.select(c);
+			studio.navGotoComponentsTreeClick();
+			studio.tree.select(c._studioTreeNode);
+/*
 			c.editView();
 			studio.navGotoComponentsTreeClick();
  			wm.fire(studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page, "newDataModelResult");
  			var page = studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page;
 			page.objectPages.setLayer(page.DEFAULT_PAGE);
+			*/
 		    } 
 
 		    // else we're importing a datamodel
