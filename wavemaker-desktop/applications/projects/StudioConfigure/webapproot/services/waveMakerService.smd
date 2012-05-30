@@ -60,6 +60,20 @@
 		"parameters": null,
 		"returnType": "com.wavemaker.runtime.service.TypeManager"
 	}, {
+		"name": "remoteRESTCall",
+		"operationType": null,
+		"parameters": [{
+			"name": "remoteURL",
+			"type": "java.lang.String"
+		}, {
+			"name": "params",
+			"type": "java.lang.String"
+		}, {
+			"name": "method",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.String"
+	}, {
 		"name": "setInternalRuntime",
 		"operationType": null,
 		"parameters": [{
