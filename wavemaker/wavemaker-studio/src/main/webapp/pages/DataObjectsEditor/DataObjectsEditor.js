@@ -14,7 +14,7 @@
  
 
 dojo.provide("wm.studio.pages.DataObjectsEditor.DataObjectsEditor");
-
+wm.require("wm.DataGrid");
 dojo.declare("DataObjectsEditor", wm.Page, {
         i18n: true,
 	PK_ATTR: "isPk",
@@ -175,24 +175,29 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    }
 	    studio.importDBDialog.show();
 	},
+    getConnectionsDialog: function() {
+	var d = this.dbConnectDialog;
+	if (d) {
+	    d.page.setup();
+	} else {
+	    this.dbConnectDialog = d = new wm.PageDialog({
+		_classes: {domNode: ["studiodialog"]},
+		owner: app,
+		pageName: "DBConnectionSettings", 
+		hideControls: true,
+		width:720,
+		height:510,
+		title: this.getDictionaryItem("CONNECTIONS_DIALOG_TITLE")
+	    });
+	    this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
+	}
+	return d;
+
+    },
 	dbSettingsButtonClick: function() {
 		//studio.dbConnectionsClick();
-		var d = this.dbConnectDialog;
-		if (d) {
-			d.page.setup();
-		} else {
-			this.dbConnectDialog = d = new wm.PageDialog({
-			    _classes: {domNode: ["studiodialog"]},
-				owner: app,
-				pageName: "DBConnectionSettings", 
-				hideControls: true,
-				width:720,
-			    height:510,
-			    title: this.getDictionaryItem("CONNECTIONS_DIALOG_TITLE")
-			});
-			this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
-		}
-		d.show();
+	    var d = this.getConnectionsDialog();
+	    d.show();
 	    d.page.setSelectedModel(this.currentDataModelName);
 	    d.page.modelIsDirty = this.dirty;
 	    d.page.openner = this;
@@ -804,6 +809,15 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	saveAll: function(inSender) {
 	    studio.saveAll(this); // calls this.save
 	},
+/*
+        exportClick: function(inSender) {
+	    var d = this.getConnectionsDialog();
+	    d.page.setSelectedModel(this.currentDataModelName);
+	    d.page.modelIsDirty = this.dirty;
+	    d.page.openner = this;
+	    d.page.exportBtnClick2();
+	},
+	*/
 	getEntityNameFromTableName: function(tableName) {
 		return tableName.slice(0, 1).toUpperCase() + tableName.slice(1);
 	},
