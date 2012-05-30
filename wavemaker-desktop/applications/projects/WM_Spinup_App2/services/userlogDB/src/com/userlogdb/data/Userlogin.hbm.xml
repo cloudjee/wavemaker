@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 29, 2012 10:15:23 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.userlogdb.data.Userlogin" table="userlogin">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="username" type="string">
+            <column name="username" not-null="true" />
+        </property>
+        <property name="login" type="timestamp">
+            <column name="login" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
