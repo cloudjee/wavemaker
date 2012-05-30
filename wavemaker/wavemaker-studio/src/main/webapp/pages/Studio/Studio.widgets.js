@@ -80,7 +80,7 @@ Studio.widgets = {
     }]
     }],
 	layout: ["wm.Layout", {height: "100%"}, {}, {
-	    dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80", _noAnimation: true}, {}],
+	    dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80", _noAnimation: true, noEscape: false}, {}],
 		
 	    navigationBar: ["wm.Panel", {_classes: {domNode: ["StudioMenuBar"]}, width: "100%", height: "28px", border: "0", layoutKind: "left-to-right"}, {}, {
 			navBtnHolder: ["wm.Panel", {width: "100%", border: "0", layoutKind: "left-to-right", imageList: "navImageList", horizontalAlign: "left"}, {}, {
