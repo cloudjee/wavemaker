@@ -161,11 +161,10 @@ public class DataModelManager {
     public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         exporter.setExportToDB(false);
         exporter.setVerbose(false);
-        exporter.setDBType(dbms);
 
         try {
             exporter.run();
@@ -179,10 +178,10 @@ public class DataModelManager {
         }
     }
 
-    public String exportDatabase(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
+    public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         String rtn = "";
 
@@ -573,7 +572,7 @@ public class DataModelManager {
         initialize(true);
     }
 
-    private ExportDB getExporter(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
+    private ExportDB getExporter(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
 
         // composite classes must be compiled
@@ -605,6 +604,9 @@ public class DataModelManager {
         exporter.setVerbose(true);
         exporter.setOverrideTable(overrideTable);
         exporter.setServiceName(serviceId);
+        if (dbType != null) {
+            exporter.setDBType(dbType.toLowerCase());
+        }
 
         if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
             exporter.setDriverClassName(driverClassName);

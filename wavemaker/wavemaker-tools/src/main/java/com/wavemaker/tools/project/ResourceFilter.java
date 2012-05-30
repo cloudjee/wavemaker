@@ -26,17 +26,5 @@ public interface ResourceFilter {
         }
     };
 
-    public static final ResourceFilter DEPLOY_FILTER = new ResourceFilter() {
-
-        @Override
-        public boolean accept(Resource resource) {
-            if (resource.getFilename().equals("deployments.js")) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    };
-
     boolean accept(Resource resource);
 }

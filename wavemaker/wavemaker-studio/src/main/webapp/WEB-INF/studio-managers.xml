@@ -576,6 +576,7 @@
             <property name="fileSystem" ref="fileSystem" />
             <property name="projectCompiler" ref="projectCompiler"/>
             <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
+			<property name="designServiceManager" ref="designServiceManager"/>
         </bean>
         
         <bean id="waveMakerSecurityFilter" class="com.wavemaker.tools.security.LocalSecurityFilter"/>
@@ -604,6 +605,7 @@
             <property name="fileSystem" ref="fileSystem" />
             <property name="projectCompiler" ref="projectCompiler"/>
             <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
+			<property name="designServiceManager" ref="designServiceManager"/>
         </bean>
         
         <bean id="waveMakerSecurityFilter" class="com.wavemaker.tools.security.CloudFoundrySecurityFilter"/>

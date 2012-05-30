@@ -194,11 +194,11 @@ public class DataService {
     public String exportDatabase(String serviceId, String username, String password, String connectionUrl, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
-        return this.dataModelMgr.exportDatabase(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+        return this.dataModelMgr.exportDatabase(username, password, null, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             revengNamingStrategyClassName, overrideTable);
     }
 
-    public String cfExportDatabase(String dbName, String schemaFilter, String driverClassName, String dialectClassName,
+    public String cfExportDatabase(String dbName, String dbms, String schemaFilter, String driverClassName, String dialectClassName,
         String revengNamingStrategyClassName, boolean overrideTable) {
 
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
@@ -207,8 +207,8 @@ public class DataService {
             String connectionUrl = info.getUrl();
             String username = info.getUserName();
             String password = info.getPassword();
-            return exportDatabase(dbName, username, password, connectionUrl, schemaFilter, driverClassName, dialectClassName,
-                revengNamingStrategyClassName, overrideTable);
+            return this.dataModelMgr.exportDatabase(username, password, dbms, connectionUrl, dbName, schemaFilter, driverClassName, dialectClassName,
+            revengNamingStrategyClassName, overrideTable);
         } else {
             throw new UnsupportedOperationException();
         }
