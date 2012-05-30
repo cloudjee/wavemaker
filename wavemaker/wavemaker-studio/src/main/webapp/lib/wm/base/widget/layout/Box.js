@@ -118,16 +118,19 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    if (this.inFlow(c)) {                
 			if (c._percEx[inFlowAxis]) {
                             //var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
-			    var size = flowEx.ratio * c._percEx[inFlowAxis];
+			    var unroundedSize = flowEx.ratio * c._percEx[inFlowAxis];
+			    var size = Math.round(unroundedSize);
 			    lastPercentSizedWidget = c;
-			    roundedSizeOffset -= Math.floor(size);
+			    roundedSizeOffset -= size;
 			    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
 			    var min = c[minName];
                             if (size < min) 
 				size = min;
                             free -= size;
+			} else {
+			    roundedSizeOffset -= c.bounds.w;
 			}
-                    }
+		    }
                 }
 		switch (inFlowAlign) {
 		case "bottom":
@@ -165,7 +168,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      * If its % sized: bounds.w or bounds.h is now the %size * our ratio multiplier that builds in amount of free space and normalizes % to total of 100%
                      *                 for all children.  
                      */
-		    var tmpSize = c._percEx[inFlowAxis] ? Math.floor(flowEx.ratio * c._percEx[inFlowAxis]) : NaN;
+		    var tmpSize = c._percEx[inFlowAxis] ? Math.round(flowEx.ratio * c._percEx[inFlowAxis]) : NaN;
 
 		    /* For the first percent size widget found, adjust its size to compensate for any rounding errors, else a panels widgets may be 1px off
 		     * in stretching the full width, and that pixel may look rather odd 
@@ -258,6 +261,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
                     /* Step 7e:  Update the bounds for the control; any bounds that were deleted or set to NaN will be left as is */
  		    c.setBounds(b.l, b.t, b.w, b.h);
+		    if (inContainer.name == "workspaceInner") {
+			console.log(c.name + "  L: " +c.bounds.l + ", W: " + c.bounds.w);
+		    }
                     c._renderEngineBoundsSet = true;
 
                     /* Step 7f: If the widget has a flow method (typically means its a wm.Container), call flow on it */
@@ -273,6 +279,10 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    wm.flowees++;
 		}
             }
+
+		    if (inContainer.name == "workspaceInner") {
+			console.log("DONE AT " + b.l + " OF " + inContainer.getContentBounds().w);
+		    }
 
 	    if (inContainer._touchScroll && (!wm.ListViewer || inContainer instanceof wm.ListViewer == false)) {
 		var touchScrollChanged = false;
