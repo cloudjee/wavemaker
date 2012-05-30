@@ -21,7 +21,7 @@ dojo.declare("Main", wm.Page, {
       this._endTimerTime = this._startTimerTime + 1000 * 120;
     },
   LoginError: function(inSender, inError) {
-      if(!inError){inError = "The user name or password your entered is incorrect.";}
+      if(!inError){inError = "The user name or password you entered is incorrect.";}
       this.labelError.setCaption(inError);
       this.labelError.setShowing(true);
       this.spacer9.setShowing(true);

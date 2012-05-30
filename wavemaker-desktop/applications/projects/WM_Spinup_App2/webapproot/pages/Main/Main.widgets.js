@@ -20,7 +20,7 @@ Main.widgets = {
 				panel1: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#6b83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"top","width":"100%"}, {}, {
 					Logo: ["wm.Picture", {"border":"0","height":"85px","margin":"0","padding":"12","source":"resources/images/logos/banner.png","width":"277px"}, {}],
 					BannerSpacer1: ["wm.Spacer", {"height":"1px","width":"100%"}, {}],
-					BannerLinks: ["wm.Label", {"_classes":{"domNode":["a"]},"autoSizeWidth":true,"border":"0","caption":"<a href=\"http://wavemaker.cloudfoundry.com\">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;FAQ&nbsp;&nbsp;|&nbsp;&nbsp;Help","height":"100%","padding":"4","styles":{"color":"#ffffff","textDecoration":"none","whiteSpace":"nowrap"},"width":"143px"}, {}],
+					BannerLinks: ["wm.Label", {"_classes":{"domNode":["a"]},"autoSizeWidth":true,"border":"0","caption":"<a href=\"http://wavemaker.cloudfoundry.com\">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;FAQ&nbsp;&nbsp;|&nbsp;&nbsp;Help","height":"100%","padding":"4","styles":{"color":"#ffffff","textDecoration":"none","whiteSpace":"nowrap"},"width":"139px"}, {}],
 					BannerSpacer2: ["wm.Spacer", {"height":"1px","width":"12px"}, {}]
 				}]
 			}],
