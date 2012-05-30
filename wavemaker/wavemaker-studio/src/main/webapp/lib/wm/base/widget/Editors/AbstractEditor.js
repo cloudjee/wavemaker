@@ -373,8 +373,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			    labelWidth -= helpIconSize + helpIconMargin;
 			}
 		    }
-                    if (this._editorPaddingLeft) editorWidth -= this._editorPaddingLeft;
-                    if (this._editorPaddingRight) editorWidth -= this._editorPaddingRight;
+                    if (this._editorPaddingLeft && labelWidth) editorWidth -= this._editorPaddingLeft;
+                    if (this._editorPaddingRight && labelWidth) editorWidth -= this._editorPaddingRight;
 		    var s = this.captionNode.style;
 		    var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
 		    labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
