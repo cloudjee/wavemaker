@@ -73,7 +73,7 @@ public class SpinUpService extends JavaServiceSuperClass {
           }
        } catch(Exception e) {
           log(ERROR, "Login has failed" + e.getMessage());
-          return("The user name or password your entered is incorrect.");
+          return("The user name or password you entered is incorrect.");
        }
 	}
 	
