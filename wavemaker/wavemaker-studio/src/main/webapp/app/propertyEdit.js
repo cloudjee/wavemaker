@@ -1491,6 +1491,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    verticalAlign: "bottom"
 	});
 	var b = new wm.Button({
+	    _classes: {domNode: ["StudioButton"]},
 	     owner: this,
 	     parent: p,
 	     width: "100%",
@@ -1933,12 +1934,29 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
 
 
 dojo.declare("wm.prop.FieldGroupEditor", wm.Container, { 
+    height: "300px",
     indent: 0,
     noBindColumn: true, // wm.PropertyInspector tests for this to decide if this editor needs a bind column
     noHelpButton: true, // wm.PropertyInspector tests for this to decide if this editor needs a help button/column
     inspected: null,    // Component being inspected
+    padding: "0",
     postInit: function() {
 	this.inherited(arguments);
+
+	this.tabs = this.createComponents({
+	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
+		bindLayer: ["wm.Layer", {caption: "Bindings", padding: "4", autoScroll: true}, {},{
+		}],
+		fieldLayer: ["wm.Layer", {caption: "Fields", padding: "4", autoScroll: true}, {},{
+		    fieldsLabel: ["wm.Label", {_classes: {domNode: ["BindDescriptionHeader"]}, width: "100%", caption: wm.capitalize(this.propDef.name) + " Fields"}],
+		    fieldForm: ["wm.FormPanel", {width: "100%", height: "100%", autoSizeCaption: true}]
+		}]
+	    }]
+	}, this)[0];
+	this.bindLayer = this.tabs.layers[0];
+	this.fieldLayer =this.tabs.layers[1];
+	this.fieldForm = this.fieldLayer.c$[1];
+
 	if (this.propDef.putWiresInSubcomponent) {
 	    this.inspectedSubcomponent = this.inspected.getValue(this.propDef.putWiresInSubcomponent);
 	}
@@ -1978,14 +1996,33 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	/* Don't edit this.inspectedSubcomponent if it exists; if there is anything bound to the whole object, its binding is in
 	 * this.inspected, not in the subcomponent
 	 */
-	var e= studio.inspector.generateEditor(this.inspected, propDef, this,null,this.propDef.name);
+	var e= studio.inspector.generateEditor(this.inspected, propDef, this.bindLayer,null,this.propDef.name);
+	this.editors._ROOT = e;
+
+	this.bindDescWidget = new wm.Html({owner: this, parent: this.bindLayer, width: "100%", height: "100%", margin: "5, 0, 0, 0"});
+	this.updateBindDescription();
+	this.generateSubEditors();
+    },
+    generateSubEditors: function() {
+	var propDef = dojo.clone(this.propDef);	
+	if (!propDef.editorProps) {
+	    propDef.editorProps = {};
+	}
+
 	delete propDef.editorProps.disabled;
 	delete propDef.editorProps.hideBindColumn;
+	propDef.editorProps.matchComponentType = true;
+	propDef.editorProps.widgetDataSets = true;
+	if (this.propDef.putWiresInSubcomponent) {
+	    propDef.editorProps.disabled = true;
+	    propDef.editorProps.alwaysDisabled = true;
+	    propDef.editorProps.hideBindColumn = true;
+	}
 
-	 var isBound = studio.inspector.isPropBound(this.inspected, propDef); 
+
+	var isBound = studio.inspector.isPropBound(this.inspected, propDef); 
 	
 	
-	this.editors._ROOT = e;
 	this.indent++;
 	
 	var inspected = this.inspectedSubcomponent || this.inspected;
@@ -1997,6 +2034,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    fields  = inspected.getValue(this.propDef.name)._dataSchema;
 	}
 	if (fields) {
+			  
+/*
 	    this.fieldPanel =  panel = new wm.Panel({owner: this,
 						     parent: this,
 						     _classes: {domNode: ["StudioFieldGroupPanel"]},
@@ -2014,6 +2053,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 				      width: "100%",
 				      caption: (propDef.shortname || propDef.name) + " fields"
 				     });
+				     */
 	    this._generatedSchema = dojo.toJson(fields);
 	    wm.forEachProperty(fields, dojo.hitch(this,function(fieldDef, fieldName) {
 		var type = fieldDef.type;
@@ -2033,16 +2073,21 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		
 		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
 						    propDef, /* Property we are editing within the component */
-						    panel, /* Parent panel */
+						    this.fieldForm, /* Parent panel */
 						    null, /* ignore */
 						    this.propDef.name /* Append this to the editor name to avoid naming colisions */
 						   );
 		this.editors[inspected.getId() + "." + fieldName] = e;
 	    }));
-	    this.fieldPanel.setBestHeight();
+	    //this.fieldPanel.setBestHeight();
 	}
-	this.setBestHeight();
+	//this.setBestHeight();
 	this.reflow();
+    },
+    showAllEditors: function() {
+	wm.forEachProperty(this.editors, function(e) {
+	    e.parent.setShowing(true);
+	});
     },
     getPropDef: function(sourcePropDef, fieldName, fullName, type, isStructured) {
 	var propDef = dojo.mixin({}, sourcePropDef, {
@@ -2083,27 +2128,49 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		});
 	return propDef;
     },
+    updateBindDescription: function() {
+	var propDef = this.propDef;
+	var bindText = "<dl>";
+	if (this.inspected.$.binding) {
+	    wm.forEachProperty(this.inspected.$.binding.wires, dojo.hitch(this, function(wire, target) {
+		if (target.indexOf(propDef.name + ".") == 0) {
+		    bindText += "<dt>" + target.replace(/^.*?\./,"") + "</dt><dd>" + (wire.expression ? "expr: " + wire.expression : wire.source) + "</dd>";
+		}
+	    }));
+	}
+
+	if (bindText != "<dl>") {
+	    bindText += "</dl>";
+	    this.bindDescWidget.setHtml("<div class='BindDescriptionHeader'>Your bindings</div>" + bindText);
+	}
+    },
     reinspect: function() {
+	this.updateBindDescription();
 	var inspected = this.inspectedSubcomponent || this.inspected;
 	 var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
 	if (!isBound && this.fieldPanel && !this.fieldPanel.showing) {
 	    this.fieldPanel.show();
-	    this.fieldPanel.setBestHeight();
-	    this.setBestHeight();
-	    this.parent.setBestHeight();
+	    //this.fieldPanel.setBestHeight();
+	    //this.setBestHeight();
+	    //this.parent.setBestHeight();
 	} else if (isBound && this.fieldPanel && this.fieldPanel.showing) {
-	    this.fieldPanel.hide();
-	    this.setBestHeight();
-	    this.parent.setBestHeight();
+	    //this.fieldPanel.hide();
+	    //this.setBestHeight();
+	    //this.parent.setBestHeight();
 	}
 
 	/* If the type we are editing has been changed to a different type, or its been edited so that the fields are different, regenerate
 	 * all editors
 	 */
 	if (this._generatedSchema != dojo.toJson(inspected._dataSchema)) {
-	    this.removeAllControls();
-	    this.generateEditors(inspected);
-	    this.parent.setBestHeight();
+	    for (var e in this.editors) {
+		if (e != "_ROOT" && this.editors[e] instanceof wm.AbstractEditor) {
+		    this.editors[e].parent.destroy();
+		    delete this.editors[e];
+		}
+	    }
+	    this.generateSubEditors(inspected);
+	    //this.parent.setBestHeight();
 	} else {
 	    /* Else call reinspectEditor on each editor */
 	    wm.forEachProperty(this.editors, dojo.hitch(this, function(e,editorName) {

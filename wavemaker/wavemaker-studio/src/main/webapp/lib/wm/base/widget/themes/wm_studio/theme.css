@@ -101,12 +101,12 @@ body .StudioButton {
     -moz-border-radius: 4px !important; 
     -webkit-border-radius: 4px !important;
     border-radius: 4px !important;
-
-    background: -webkit-gradient(linear, center top, center bottom, from(#A7B5C7), color-stop(36%,#515C6E), to(#515C6E));
-    background: -moz-linear-gradient(top, #A7B5C7 0%,#515C6E 36%,#515C6E 100%);
-    background: -o-linear-gradient(top, #A7B5C7 0%,#515C6E 36%,#515C6E 100%);
-    background: -ms-linear-gradient(top, #A7B5C7 0%,#515C6E 36%,#515C6E 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#A7B5C7', endColorstr='#515C6E',GradientType=0);
+    cursor: pointer;
+    background: -webkit-gradient(linear, center top, center bottom, from(#97A5B7), color-stop(90%,#515C6E), to(#515C6E));
+    background: -moz-linear-gradient(top, #97A5B7 0%,#515C6E 90%,#515C6E 100%);
+    background: -o-linear-gradient(top, #97A5B7 0%,#515C6E 90%,#515C6E 100%);
+    background: -ms-linear-gradient(top, #97A5B7 0%,#515C6E 90%,#515C6E 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#97A5B7', endColorstr='#515C6E',GradientType=0);
     color: #FFF;
     font-weight:bold;
     border-color: #323332 !important; 
@@ -120,11 +120,11 @@ body .StudioButton {
 */
 }
 body .StudioButton:hover {
-    background: -webkit-gradient(linear, center top, center bottom, from(#9AA8B9), color-stop(50%,#616C7E), to(#616C7E));
-    background: -moz-linear-gradient(top, #9AA8B9 0%,#616C7E 50%,#616C7E 100%);
-    background: -o-linear-gradient(top, #9AA8B9 0%,#616C7E 50%,#616C7E 100%);
-    background: -ms-linear-gradient(top, #9AA8B9 0%,#616C7E 50%,#616C7E 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#AAB8C9', endColorstr='#616C7E',GradientType=0);
+    background: -webkit-gradient(linear, center top, center bottom, from(#97A5B7), color-stop(70%,#515C6E), to(#515C6E));
+    background: -moz-linear-gradient(top, #97A5B7 0%,#515C6E 70%,#515C6E 100%);
+    background: -o-linear-gradient(top, #97A5B7 0%,#515C6E 70%,#515C6E 100%);
+    background: -ms-linear-gradient(top, #97A5B7 0%,#515C6E 70%,#515C6E 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#AAB8C9', endColorstr='#515C6E',GradientType=0);
     -moz-box-shadow: 1px 1px 1px #333;
     -webkit-box-shadow: 1px 1px 1px #333;
     box-shadow: 1px 1px 1px #333;
@@ -137,6 +137,13 @@ body .StudioButton.wmbutton-disabled:hover {
     color: #e0e0e0;
     background: none;
     background-image: none;
-    background-color: #616C7E;
+    background-color: #515C6E;
     opacity: 1;
+}
+body .StudioButton:active:hover,
+body .StudioButton:active {
+    -moz-box-shadow: 0px 0px 0px #333;
+    -webkit-box-shadow: 0px 0px 0px #333;
+    box-shadow: 0px 0px 0px #333;
+
 }

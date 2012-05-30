@@ -568,7 +568,7 @@
 	     verticalAlign: "top",
 	     horizontalAlign: "left"
 	 });
-	 var s = new wm.Spacer({width: this.captionSize,
+	 var s = new wm.Spacer({width: "100%",//this.captionSize,
 				parent: p,
 				owner: this				
 			       });
@@ -576,10 +576,10 @@
 	     owner: this,
 	     parent: p,
 	     name: "wminspector-" + inLayer.name + "-" + inProp.name,
-	     width: this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
-	     height: "30px",
+	     width: "150px",//this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
+	     //height: "30px",
 	     caption: (inProp.shortname || inProp.name),
-	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
+	     _classes: {domNode: ["StudioButton", inProp.isPublished ? "isPublishedProp":""]},
 	     margin: "4,2,4,2",
 	     propDef: inProp,
 	     showing: !inProp.ignoretmp || this.isAdvancedMode(),
@@ -1190,6 +1190,9 @@
 		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
 		     w._showAllClicked = true;
 		     w.show();
+		     if (w instanceof wm.Panel && w.c$.length && w.c$[0].showAllEditors) {
+			 w.c$[0].showAllEditors();
+		     }
 		 }});
 		 l.hide();
 	     });
@@ -1862,7 +1865,7 @@ wm.addPropertyGroups({
 		 }
 		},
     data: {displayName: "Data", 
-	   layer: function(inComponent) { return inComponent instanceof wm.Control;},
+	   layer: false,//function(inComponent) { return inComponent instanceof wm.Control;},
 	   order: 70,
 	   subgroups: {
 	       data: {displayName: "Data",
@@ -1877,6 +1880,10 @@ wm.addPropertyGroups({
 			  order: 30}
 	   }
 	  },
+
+    /* Used by variable/servicevar/livevar/form/etc... */
+    dataSet: {displayName: "Data",
+	      layer: true},
 	/* Confirmed */
     style: {displayName: "Style", order: 80, layer: true},
     /* Confirmed */

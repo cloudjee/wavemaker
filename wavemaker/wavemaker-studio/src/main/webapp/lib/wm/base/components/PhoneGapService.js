@@ -451,6 +451,6 @@ wm.Object.extendSchema(wm.PhoneGapCall,{
 	updateNow: { ignore: 1},
     queue: {ignore:1},
     clearInput: { group: "operation", operation:1, order: 30},
-    input: {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.FieldGroupEditor"}
+    input: {group: "dataSet", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.FieldGroupEditor"}
 });
 

@@ -77,6 +77,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 }
 
 
+/*
 .wminspector .wmbutton {
 	-moz-border-radius: 4px; 
 	-webkit-border-radius: 4px;
@@ -92,7 +93,13 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');
 }
-
+*/
+.wminspector .wmbutton.StudioButton,
+.wminspector .wmbutton.StudioButton:hover {
+    -moz-box-shadow: 0px 0px 0px #333;
+    -webkit-box-shadow: 0px 0px 0px #333;
+    box-shadow: 0px 0px 0px #333;
+}
 .wminspector .wmPlusToolButton {
     font-size: 16px;
     font-weight: bold;
@@ -445,3 +452,26 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 	background-color: #fff; 
 }
 */
+
+
+
+#studio_PIContents dt {
+    font-weight: bold;
+}
+
+#studio_PIContents dt::first-letter {
+    font-size: 1.2em;
+}
+
+#studio_PIContents dd {
+    margin: 5px 0px 10px 20px;
+}
+
+#studio_PIContents .BindDescriptionHeader {
+    text-align: center;
+    font-weight: bold;
+}
+
+#studio_PIContents .wmhtml .wmSizeNode {
+    width: 100%;
+}
