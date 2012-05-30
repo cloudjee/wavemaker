@@ -2,6 +2,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.security.SecurityClassLoad;
 import org.apache.catalina.startup.ClassLoaderFactory;
 import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.apache.catalina.startup.ClassLoaderFactory.RepositoryType;
@@ -10,9 +11,10 @@ public class Bootstrap {
 
     public void launch() throws Exception {
         List<Repository> repositories = new ArrayList<Repository>();
-        repositories.add(new Repository("/Users/pwebb/projects/wavemaker/code/wavemaker/wavemaker-embedded/target/dependency/compile",
-            RepositoryType.DIR));
+        repositories.add(new Repository("c:/projects/wavemaker/wavemaker/wavemaker-embedded/target/dependency/compile", RepositoryType.DIR));
         ClassLoader classLoader = ClassLoaderFactory.createClassLoader(repositories, null);
+        Thread.currentThread().setContextClassLoader(classLoader);
+        SecurityClassLoad.securityClassLoad(classLoader);
         Class<?> launcherClass = classLoader.loadClass("Launcher");
         Object launcher = launcherClass.newInstance();
         Method launchMethod = launcher.getClass().getMethod("launch");

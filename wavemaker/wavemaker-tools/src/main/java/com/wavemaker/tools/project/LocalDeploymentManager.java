@@ -30,7 +30,9 @@ import org.apache.catalina.Context;
 import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
-import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.ContextConfig;
+import org.apache.catalina.startup.Tomcat.DefaultWebXmlListener;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
@@ -44,10 +46,10 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.servlet.TomcatWrapperRefreshEvent;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.servlet.TomcatWrapperRefreshEvent;
 
 /**
  * Main deployment class.
@@ -172,8 +174,17 @@ public class LocalDeploymentManager extends AbstractDeploymentManager implements
     }
 
     private void doDeploy(String projectDir, String deployName) {
-        Tomcat tomcat = new Tomcat();
-        tomcat.addWebapp(this.host, "/" + deployName, projectDir + "/webapproot");
+        String url = "/" + deployName;
+        StandardContext ctx = new StandardContext();
+        ctx.setName(url);
+        ctx.setPath(url);
+        ctx.setDocBase(projectDir + "/webapproot");
+        ctx.addLifecycleListener(new DefaultWebXmlListener());
+        ContextConfig ctxCfg = new ContextConfig();
+        ctx.addLifecycleListener(ctxCfg);
+        ctx.setAntiJARLocking(true);
+        ctx.setAntiResourceLocking(true);
+        this.host.addChild(ctx);
     }
 
     private void doUndeploy(String deployName) {
