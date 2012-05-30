@@ -380,7 +380,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
   		    if (labelWidthWithSpacing < 0) labelWidthWithSpacing = 0;		    
 		    var form = wm.FormPanel && this.isAncestorInstanceOf(wm.FormPanel);
-		    if (!this.maxCaptionWidth && (!form || !form.autoSizeCaption)) {
+		    if (!this.maxCaptionWidth && (!form || !form.autoSizeCaption || form.autoSizeCaption && this._isMaxEditor === false)) {
 			s.width =  labelWidthWithSpacing + "px";
 		    } else {
 			s.display = "inline-block";
