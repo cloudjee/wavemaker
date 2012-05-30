@@ -102,6 +102,17 @@
 	 try {
 	     this.inspected = inComponent;
 	     this.layerIndex = -1;
+	     if (this.layers.length) {
+		var l = this.getActiveLayer();
+		 var captionSize = this.captionSize;
+		 wm.forEachWidget(l, function(w) {
+		     if (w instanceof wm.FormPanel) {
+			 captionSize = w.captionSize;
+			 return false; // causes forEachWidget to exit
+		     }
+		 });
+		 this.captionSize = captionSize;
+	     }
 	     while (this.layers.length) {
 		 this.layers[0].active = false;
 		 this.layers[0].destroy();
