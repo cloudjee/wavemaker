@@ -135,6 +135,7 @@ dependencies = {
 				"wm.base.components.NavigationService_design",
 				"wm.base.components.NavigationService",
 				"wm.base.components.NotificationService",
+			        "wm.base.components.XhrService",
 				"wm.base.components.PhoneGapService",
 				"wm.base.components.FunctionService",
 				"wm.base.components.JsonRpcService",
