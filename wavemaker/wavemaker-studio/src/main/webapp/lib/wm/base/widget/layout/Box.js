@@ -261,9 +261,6 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
                     /* Step 7e:  Update the bounds for the control; any bounds that were deleted or set to NaN will be left as is */
  		    c.setBounds(b.l, b.t, b.w, b.h);
-		    if (inContainer.name == "workspaceInner") {
-			console.log(c.name + "  L: " +c.bounds.l + ", W: " + c.bounds.w);
-		    }
                     c._renderEngineBoundsSet = true;
 
                     /* Step 7f: If the widget has a flow method (typically means its a wm.Container), call flow on it */
@@ -280,9 +277,6 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		}
             }
 
-		    if (inContainer.name == "workspaceInner") {
-			console.log("DONE AT " + b.l + " OF " + inContainer.getContentBounds().w);
-		    }
 
 	    if (inContainer._touchScroll && (!wm.ListViewer || inContainer instanceof wm.ListViewer == false)) {
 		var touchScrollChanged = false;
