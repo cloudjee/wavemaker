@@ -1531,7 +1531,7 @@ public class DataModelConfiguration {
                 if (!op.isQuery() || !op.requiresResultWrapper() || this.modifiedQueryNames.contains(op.getQueryName())) {
                     continue;
                 }
-                generateWrapperType(op, false);
+                generateWrapperType(op, true);
             }
 
             // unnecessary - just keep a Collection of the fq name around
@@ -1559,7 +1559,7 @@ public class DataModelConfiguration {
     private void generateWrapperType(DataServiceOperation op, boolean write) {
 
         // make sure we have types with new name
-        // TODO:API
+        // cftempfix
         /*
          * String oldPath = StringUtils.packageToSrcFilePath(DataServiceUtils.getOldOutputType(getDataPackage(),
          * op.getName())) + StringUtils.JAVA_SRC_EXT; oldPath = getRelServicePath(oldPath); write = write || !new

@@ -3,24 +3,24 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"disableDirtyEditorTracking": false, 
 	"eventDelay": 0, 
 	"i18n": false, 
+	"isSecurityEnabled": false, 
 	"main": "Main", 
 	"manageHistory": true, 
 	"manageURL": true, 
 	"name": "", 
+	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
 	"projectSubVersion": 139, 
 	"projectVersion": 1, 
-	"saveCounter": 8, 
-	"studioVersion": "6.5.0DevBuild", 
+	"saveCounter": 11, 
+	"studioVersion": "6.5.0.M1", 
 	"tabletMain": "", 
 	"theme": "wm_studio", 
 	"toastPosition": "br", 
 	"touchToClickDelay": 500, 
 	"touchToRightClickDelay": 1500,
 	"widgets": {
-		silkIconList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}], 
-		InstallService: ["wm.JsonRpcService", {"service":"InstallService"}, {}], 
-		navigationService: ["wm.NavigationService", {"service":"navigationService"}, {}]
+		silkIconList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}]
 	},
 	_end: 0
 });
