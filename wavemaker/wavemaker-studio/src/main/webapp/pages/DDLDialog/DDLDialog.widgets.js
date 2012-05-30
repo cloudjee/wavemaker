@@ -17,13 +17,12 @@ DDLDialog.widgets = {
 		label1: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center", "wm_Padding_4px"]}, height: "48px", border: "0"}, {}, {
 			format: ["wm.DataFormatter", {}, {}]
 		}],
-		panel4: ["wm.Panel", {width: "100%", height: "100%", borderColor: ""}, {}, {
-		    ddlEditor: ["wm.LargeTextArea", {caption: "", readonly: true, height: "100%", readOnly: true, border: "0", width: "100%", borderColor: "", scrollY: true, formatter: "formatEditor"}, {}]
-		}],
-		footer: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, height: "26px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-			okButton: ["wm.Button", {caption: "OK", width: "96px", border: "0"}, {onclick: "onOk"}],
-			spacer4: ["wm.Spacer", {width: "10px"}, {}],
-			cancelButton: ["wm.Button", {caption: "Cancel", width: "96px", border: "0"}, {onclick: "onCancel"}]
+            mainPanel: ["wm.studio.DialogMainPanel", {padding: "0"},{}, {
+		ddlEditor: ["wm.LargeTextArea", {caption: "", readonly: true, height: "100%", readOnly: true, border: "0", width: "100%", borderColor: "", padding: "0", formatter: "formatEditor", emptyValue: "emptyString"}, {}]
+	    }],
+		footer: ["wm.Panel", {_classes: {domNode: ["wmDialogFooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+		    okButton: ["wm.Button", {_classes: {domNode:["StudioButton"]}, caption: "OK", width: "100px"}, {onclick: "onOk"}],
+			cancelButton: ["wm.Button", {_classes: {domNode:["StudioButton"]}, caption: "Cancel", width: "100px"}, {onclick: "onCancel"}]
 		}]
 	}]
 }

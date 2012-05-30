@@ -21,9 +21,24 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	ip: null,
 
 	start: function() {
-		this.msgDialog = new wm.PageDialog(
-			{owner: app, pageName: "DDLDialog", 
-			hideControls: true});
+	    if (studio.isCloud()) {
+		this.testConnectionBtn.hide();
+		this.saveBtn.hide();
+		this.conUserInput.setParent(this.hiddenEditorsPanel);
+		this.conPasswordInput.setParent(this.hiddenEditorsPanel);
+		this.conHostInput.setParent(this.hiddenEditorsPanel);
+		this.conPortInput.setParent(this.hiddenEditorsPanel);
+		this.conExtra2Input.setParent(this.hiddenEditorsPanel);
+		this.conConnectionUrlInput.setParent(this.hiddenEditorsPanel);
+		this.conDriverClassInput.setParent(this.hiddenEditorsPanel);
+		this.conDialectInput.setParent(this.hiddenEditorsPanel);
+	    }
+
+		this.msgDialog = new wm.PageDialog({ owner: app, 
+						     title: "Confirm Schema Changes",
+						     pageName: "DDLDialog", 
+						     _classes: {domNode: ["studiodialog"]},
+						     hideControls: true});
 		this.msgDialog.connect(this.msgDialog, 
 			"onPageReady", this, "_updateDDL");
 		this.msgDialogLoaded = true;
@@ -96,8 +111,39 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		f();
 	    }
 	},
+/*
         exportBtnClick2: function() {
 			studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
+			studio.dataService.requestAsync(LOAD_DDL_OP, 
+							[
+							    "MyTestDatabase",
+							    "root",
+							    "",
+							    "jdbc:mysql://localhost:3306/MyTestDatabase",
+							    "*",
+							    "",
+							    "",
+							    this.overrideFlagInput.getChecked()
+							],
+							dojo.hitch(this, "_getDDLResult"), 
+							dojo.hitch(this, "_getDDLError"));
+	},
+	*/
+        exportBtnClick2: function() {
+	    studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
+	    if (studio.isCloud()) {
+			studio.dataService.requestAsync("cfGetExportDDL", 
+							[
+							    this._getSelectedDataModelName(),
+							    this.conDBdropdown.getDataValue().toLowerCase(),
+							    this.conSchemaPatternInput.getDataValue(),
+							    this.conDriverClassInput.getDataValue(),							    
+							    this.conDialectInput.getDataValue(),
+							    this.overrideFlagInput.getChecked()
+							],
+							dojo.hitch(this, "_getDDLResult"), 
+							dojo.hitch(this, "_getDDLError"));
+	    } else {
 			studio.dataService.requestAsync(LOAD_DDL_OP, 
 							[
 							    this._getSelectedDataModelName(),
@@ -111,7 +157,9 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 							],
 							dojo.hitch(this, "_getDDLResult"), 
 							dojo.hitch(this, "_getDDLError"));
+	    }
 	},
+
 	saveBtnClick: function(inSender) {
 		var input = 
 			{username:this.conUserInput.getDataValue(),
@@ -180,6 +228,9 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 							 
 		this._updateConConnectionUrl();
 		this.conUsernameChanged();
+	    if (studio.isCloud()) {
+		this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+	    }
 	},
 	onConHostKeyPress: function(inSender) {
 		setTimeout(dojo.hitch(this, "conHostChanged", inSender), 0);
@@ -238,7 +289,114 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	conRevengChanged: function() {
 	},
 	onDDLOkClicked: function() {
-	        studio.beginWait(this.getDictionaryItem("WAIT_DDL_OK"));
+	    studio.beginWait(this.getDictionaryItem("WAIT_DDL_OK"));
+	    if (studio.isCloud()) {
+		this.beginCFExport();
+	    } else {
+		this.executeExport();
+	    }
+	},
+    beginCFExport: function() {
+	/* Step 1: find out if the service exists */
+	var d = this.cfService.requestAsync("getService", ["","", this._getSelectedDataModelName()], 
+					      dojo.hitch(this, function(inService) {
+						  if (inService) {
+						      this.executeCFExportCheckIsBound();
+						  } else {
+						      this.executeCFExportCreateService();
+						  }
+					      }),
+					    dojo.hitch(this, function(inError) {
+						  this.executeCFExportCreateService();
+					    })
+					     );
+    },
+    /* Step 2: Create the service if it doesn't exist, this will cause a bind and force us to wait for studio to restart */
+    executeCFExportCreateService: function() {
+	var d = this.cfService.requestAsync("createService", ["","",  "wavemaker-studio-6_5_0_M1", this._getSelectedDataModelName(), this.conDBdropdown.getDataValue().toLowerCase()]);
+	d.addCallbacks(dojo.hitch(this, "waitForStudioToRestart"),
+		       function(inError) {
+			   app.toastError(inError);
+			   studio.endWait();
+		       });
+    },
+
+    /* Step 3: Check if the service is bound; if it is executeCFExport else bind the service */
+    executeCFExportCheckIsBound: function() {
+	var serviceName = this._getSelectedDataModelName();
+	this.cfService.requestAsync("isServiceBound", ["", "", serviceName, "wavemaker-studio-6_5_0_M1"], 
+					    dojo.hitch(this, function(isBound) {
+						if (isBound) {
+						    this.executeCFExport();
+						} else {
+						    this.doBind(serviceName);
+						}
+					    }),
+					      function(inError) {
+						  app.toastError(inError);
+						  studio.endWait();
+					      });
+    },
+	/* Step 4: Bind the service and then wait for studio to restart */
+    doBind: function(serviceName) {
+	//studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING") + " Binding Service");
+	// this will restart the studio server
+	this.cfService.requestAsync("bindService", ["", "", serviceName, "wavemaker-studio-6_5_0_M1"],
+					      dojo.hitch(this, function() {
+						    this.waitForStudioToRestart(serviceName);
+					      }),
+						function(inError) {
+						    app.alert(inError);
+						    studio.endWait();
+						}
+					       );
+    },
+    waitForStudioToRestart: function(serviceName) {
+	window.setTimeout(dojo.hitch(this, function() {
+	    this.waitForStudioToRestart2(serviceName);
+	}), 5000);
+    },
+    waitForStudioToRestart2: function(serviceName) {
+	var timeout = wm.connectionTimeout;
+	wm.connectionTimeout = 0; // turn off longpolling which screws up during a studio reboot
+	studio.studioService.requestAsync("getOpenProject", [], 
+					  dojo.hitch(this, function(inResult) {
+					      wm.connectionTimeout = timeout;
+					      // if a project is still open, the server hasn't yet restarted
+					      this.waitForStudioToRestart(serviceName);
+					  }),
+					  dojo.hitch(this, function(inError) {
+					      wm.connectionTimeout = timeout;
+					      // server has restarted, and is now responding
+					      if (inError.message.match(/No open project/i)) {
+						  this.waitForStudioToRestart3(serviceName);
+					      } else {
+						  // threw an error, the server has definitely restarted, but isn't yet online
+						  this.waitForStudioToRestart(serviceName);
+					      }
+					  })
+					 );
+    },
+    waitForStudioToRestart3: function(serviceName) {
+	studio.studioService.requestAsync("openProject", [studio.project.projectName], dojo.hitch(this, function() {
+	    this.executeCFExport();
+	}));
+    },
+
+    executeCFExport: function() {
+		studio.dataService.requestAsync("cfExportDatabase", [
+				this._getSelectedDataModelName(),
+		                this.conDBdropdown.getDataValue().toLowerCase(),
+				this.conSchemaPatternInput.getDataValue(),
+				this.conDriverClassInput.getDataValue(),
+				this.conDialectInput.getDataValue(),
+				this.conRevengNamingStrategyInput.getDataValue(),
+				this.overrideFlagInput.getChecked()
+			],
+			dojo.hitch(this, "_exportResult"), 
+			dojo.hitch(this, "_exportError"));
+	},
+    executeExport: function() {
 		studio.dataService.requestAsync(EXPORT_DB_OP, [
 				this._getSelectedDataModelName(),
 				this.conUserInput.getDataValue(),
@@ -253,6 +411,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			dojo.hitch(this, "_exportResult"), 
 			dojo.hitch(this, "_exportError"));
 	},
+
 	onDDLCancelClicked: function() {
 	},
 
@@ -383,7 +542,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conPortInput.setDataValue(l[2]);
 			}
 			if (l[3] == null) {
+			    if (studio.isCloud()) {
+				this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+			    } else {
 				this.conExtraInput.setDataValue("");
+			    }
 			} else {
 				this.conExtraInput.setDataValue(l[3]);
 			}

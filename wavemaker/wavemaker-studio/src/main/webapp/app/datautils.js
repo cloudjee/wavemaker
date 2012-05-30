@@ -396,7 +396,11 @@ getAnnotatedNode = function(inNode, inAnno) {
 }
 
 initDBTypeDropdown = function(inDropdown) {
+    if (studio.isCloud()) {
+        var l = [MYSQL_DB_TYPE, POSTGRESQL_DB_TYPE];
+    } else {
         var l = [HSQL_DB_TYPE, MYSQL_DB_TYPE, POSTGRESQL_DB_TYPE, ORACLE_DB_TYPE, DB2_DB_TYPE, SQL_SERVER_DB_TYPE];
+    }
 /*
 	if (studio) {
 		if (studio.isModuleEnabled("jdbc-driver", "wm.oracle"))
@@ -408,13 +412,15 @@ initDBTypeDropdown = function(inDropdown) {
 	}
 	*/
 	l.sort();
+    if (!studio.isCloud()) {
 	l = [OTHER_DB_TYPE].concat(l);
+    }
     if (inDropdown instanceof wm.SelectMenu)
 	inDropdown.setOptions(l.join());
     else
 	inDropdown.editor.setOptions(l.join());
     if (studio.isCloud())
-	inDropdown.setDisplayValue("HSQLDB");
+	inDropdown.setDisplayValue(POSTGRESQL_DB_TYPE);
     else
 	inDropdown.setDisplayValue(DEFAULT_DB_TYPE);
 }
