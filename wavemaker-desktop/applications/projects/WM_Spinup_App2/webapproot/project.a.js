@@ -320,6 +320,43 @@ wm.types = {
 			"internal": true,
 			"primitiveType": "String"
 		},
+		"com.userlogdb.data.Userlogin": {
+			"fields": {
+				"id": {
+					"exclude": ["insert"],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Integer"
+				},
+				"login": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.util.Date"
+				},
+				"username": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": true,
+			"service": "userlogDB"
+		},
 		"com.wavemaker.spinup.web.SpinupController": {
 			"fields": {
 			},
@@ -431,9 +468,9 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"manageURL": true, 
 	"name": "", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha8", 
+	"projectSubVersion": "Alpha19", 
 	"projectVersion": 1, 
-	"saveCounter": 307, 
+	"saveCounter": 397, 
 	"studioVersion": "6.5.0.M1", 
 	"tabletMain": "", 
 	"theme": "wm_default", 
@@ -461,5 +498,18 @@ font-size: 1.1em;\
 font-size: 16px;\
 font-style: normal;\
 background-color: #ffffff;\
+}\
+html.WMApp body .labelError {\
+font-size: 16px;\
+font-weight: bold;\
+border-radius-topleft: 4px !important;\
+border-radius-bottomleft: 4px !important;\
+-webkit-border-top-left-radius: 4px !important;\
+-webkit-border-bottom-left-radius: 4px !important;\
+}\
+rder-radius-topleft: 4px !important;\
+border-radius-bottomleft: 4px !important;\
+-webkit-border-top-left-radius: 4px !important;\
+-webkit-border-bottom-left-radius: 4px !important;\
 }\
 ';
