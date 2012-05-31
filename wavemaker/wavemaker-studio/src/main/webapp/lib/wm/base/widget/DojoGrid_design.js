@@ -89,7 +89,7 @@ wm.DojoGrid.extend({
 	    this.columns = inColumns;
 	    if (this.dojoObj) {
 		this.dojoObj.attr('structure', this.getStructure());
-		this.dojoObj.render();
+		//this.dojoObj.render(); called by setting structure
 	    }
 	},
 	_onResizeColumn: function(idx, inDrag, delta){
