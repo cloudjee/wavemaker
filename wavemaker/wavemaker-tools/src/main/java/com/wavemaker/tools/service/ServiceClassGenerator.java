@@ -108,7 +108,7 @@ public class ServiceClassGenerator {
 
     private boolean isUpToDate(ServiceDetail serviceDetail, DeprecatedServiceDefinition serviceDefinition, ServiceGenerator generator) {
         Folder runtimeFolder = this.serviceManager.getServiceRuntimeFolder(serviceDetail.getServiceId());
-        long lastModified = runtimeFolder.list().performOperation(new LatestLastModified()).getValue();
+        long lastModified = runtimeFolder.performOperationRecursively(new LatestLastModified()).getValue();
         return generator.isUpToDate(lastModified);
     }
 
