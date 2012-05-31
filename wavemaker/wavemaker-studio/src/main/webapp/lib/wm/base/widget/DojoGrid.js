@@ -1151,6 +1151,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    });
 
 	    dojo.forEach(this.columns, function(col){
+		if (col.mobileColumn) return; // wm.List handles this column
+
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
 		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
 		    var width = col.width;
