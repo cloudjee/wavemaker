@@ -812,29 +812,20 @@ dojo.declare("wm.studio.Project", null, {
 				       
 	},
     getPhonegapBuild: function() {
-	var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
-	d.addCallback(dojo.hitch(this, function(inHost) {
-	    app.prompt("Enter the network name or IP address of the server that this application will connect to. Add a port number to the address if needed (e.g. host.mydomain.com:8080)", inHost, dojo.hitch(this, function(inValue) {
-		var serverName, portNumb;
-		inValue = inValue.replace(/^http.?\:\/\//,"");
-		var results = inValue.split(/\:/);
-		serverName = results[0];
-		portNumb = results[1] || 80;
-		studio.beginWait("Generating");
-		var d = studio.phoneGapService.requestAsync("generateBuild", [serverName,portNumb,studio.application.theme]);
-		d.addCallbacks(
-		    dojo.hitch(this, function() {		
-			app.alert("After the zip file has downloaded, login at https://build.phonegap.com and upload the zip file");
-			studio.downloadInIFrame("services/phoneGapService.download?method=downloadBuild");
-			studio.endWait();
-		    }),
-		    dojo.hitch(this, function(inError) {
-			studio.endWait();
-			app.toastError(inError);
-		    }));
-
-	    }));
-	}));
+	if (!studio.phoneGapConfigDialog) {
+	var dialog = studio.phoneGapConfigDialog = 
+		new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
+				   owner: studio,
+				   width: "600px",
+				   height: "780px",
+				   title: "Phonegap Build Config",
+				   pageName: "PhoneGapConfig",
+				   hideControls: true,
+				   modal: true});
+	} else {
+	    var dialog = studio.phoneGapConfigDialog;
+	}
+	dialog.show();
     },
     // Right now, the documentation files are our only place for storing project meta data... stuff that should be widget level properties,
     // but which should not show up at runtime.  So we need a quick way to change them and save them
