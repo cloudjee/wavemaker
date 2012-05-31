@@ -1645,7 +1645,6 @@
 
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent, inName) {
 	 var editorProps = {
-	     required: inProp.requiredGroup,
 	     maxCaptionWidth: Math.floor(this.bounds.w/2),
 	     propDef: inProp,
 	     owner: inOwner,
@@ -1659,7 +1658,7 @@
 	     captionSize: this.captionSize,
 	     captionPosition: "left",
 	     captionAlign: "left",
-	     caption: (inProp.shortname || inProp.name),
+	     caption: (inProp.shortname || inProp.name)   + (inProp.requiredGroup ? '&nbsp;<span class="wmeditor-required">*</span>' : ""),
 	     _classes: {domNode: []},
 	     dataValue: inValue,
 	     inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
