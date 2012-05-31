@@ -485,12 +485,10 @@ th {
 .tundra .dijitTextBoxDisabled,
 .tundra .dijitComboBoxDisabled,
 .tundra .Disabled .wmeditor-caption {
-/*
-	background:#E4E4E4 url(images/buttonDisabled.png) repeat-x scroll center top !important;
-	border-color:#D5D5D5;
-	color: Black;
-*/
 	opacity:0.5;
+}
+.tundra .dijitTextBoxDisabled input {
+    color: black !important;
 }
 
 /**/
