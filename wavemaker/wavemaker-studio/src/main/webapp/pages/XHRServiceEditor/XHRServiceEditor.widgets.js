@@ -23,7 +23,7 @@ XHRServiceEditor.widgets = {
     inputsVar: ["wm.Variable", {"isList":true,"type":"inputsType"}, {}],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"},{}, {
         mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:true},{}, {
-	    fancyPanel1: ["wm.FancyPanel", {"height":"190px","title":"Service Settings", border: "1"}, {}, {
+	    fancyPanel1: ["wm.FancyPanel", {"height":"190px","title":"Service Settings"}, {}, {
 		formPanel1: ["wm.FormPanel", {"desktopHeight":"157px","height":"157px","type":"wm.FormPanel"}, {}, {
 		    serviceName: ["wm.Text", {"caption":"Service Name","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Any component name is a valid name.  To control grouping of your XHR Services, you can also use dot notation: \"vmware.com.Login\"","required":true,"width":"100%"}, {}],
 		    serviceUrl: ["wm.Text", {"caption":"URL","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Do not include any parameters in the url such as ?arg1=value1","required":true,"width":"100%"}, {}],
@@ -32,7 +32,7 @@ XHRServiceEditor.widgets = {
 		    useProxyCheckbox: ["wm.Checkbox", {"caption":"useProxy","displayValue":true,"startChecked":true}, {}]
 		}]
 	    }],
-	    fancyPanel2: ["wm.FancyPanel", {"height":"250px","title":"Fixed Headers", border: "1"}, {}, {
+	    fancyPanel2: ["wm.FancyPanel", {"height":"250px","title":"Fixed Headers"}, {}, {
 		fixedHeadersGridPanel: ["wm.Panel", {"height":"200px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    fixedHeadersGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Header Name","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false},{"show":true,"field":"dataValue","title":"Header Value","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false}],"deleteColumn":true,"localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
     binding: ["wm.Binding", {}, {}, {
@@ -42,7 +42,7 @@ XHRServiceEditor.widgets = {
 		    addHeaderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Add Header","desktopHeight":"58px","height":"58px","margin":"4"}, {"onclick":"fixedHeadersGrid.addEmptyRow"}]
 		}]
 	    }],
-	    fancyPanel3: ["wm.FancyPanel", {"height":"250px","title":"Inputs", border: "1"}, {}, {
+	    fancyPanel3: ["wm.FancyPanel", {"height":"250px","title":"Inputs"}, {}, {
 		inputsGridPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    inputsGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Input Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false, "fieldType": "dojox.grid.cells._Widget"},
 							    {"show":true,"field":"type","title":"Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Select","mobileColumn":false},
@@ -55,7 +55,7 @@ XHRServiceEditor.widgets = {
 		    addInput: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Add Input","desktopHeight":"58px","height":"58px","margin":"4"}, {"onclick":"addInputRow"}]
 		}]
 	    }],
-	    fancyPanel4: ["wm.FancyPanel", {"height":"350px","title":"Return Type", border: "1"}, {}, {
+	    fancyPanel4: ["wm.FancyPanel", {"height":"350px","title":"Return Type"}, {}, {
 		serviceResponseType: ["wm.prop.DataTypeSelect", {useLiterals: true, addNewOption: true, "caption":"Return Type","captionAlign":"left","dataField":"dataValue","dataValue":"","displayField":"dataValue","displayValue":"","width":"293px"}, {}],
 		returnedJSONEditor: ["wm.LargeTextArea", {"caption":"Enter sample JSON response","dataValue":undefined,"displayValue":"","height":"100%","width":"100%"}, {}, {
 		    binding: ["wm.Binding", {}, {}, {

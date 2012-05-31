@@ -556,7 +556,11 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     },
     liveFormChanged: function() {
 	dojo.forEach(this.getEditorsArray(), function(e) {
-	    if (e.changed) e.changed();
+	    if (e.changed) {
+		e._inSetDataValue = true;
+		e.changed();
+		e._inSetDataValue = false;
+	    }
 	    if (e.clearDirty) e.clearDirty();
 	});
     },
