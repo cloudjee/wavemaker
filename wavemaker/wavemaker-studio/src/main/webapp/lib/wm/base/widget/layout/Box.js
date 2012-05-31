@@ -197,7 +197,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			    cFitSize = b[inFitAxis] = Math.min(100, c._percEx[inFitAxis]) * fitBound * 0.01;
 		    } else {
                         cFitSize = c.bounds[inFitAxis];
-			if (c.width && parseInt(c.width) > cFitSize) {
+			if (inFitAxis == "w" && c.width && parseInt(c.width) > cFitSize) {
 			    cFitSize = parseInt(c.width);
 			}
 			delete b[inFitAxis];
