@@ -54,7 +54,8 @@
 	}, 
 	"wm.FancyPanel": {
 		"margin": "2", 
-		"border": "0"
+	    "border": "0",
+	    "innerBorder": "1"
 	}, 
 	"wm.TabLayers": {
 	         headerHeight: "31px",
