@@ -905,45 +905,27 @@ public abstract class BaseDataModelSetup {
     }
 
     public boolean isMySQL() {
-        if (this.dbtype == null) {
-            return false;
-        }
-        return this.dbtype == MYSQL_DB_TYPE;
+        return (this.dbtype != null && this.dbtype.equals(MYSQL_DB_TYPE));
     }
 
     public boolean isSQLServer() {
-        if (this.dbtype == null) {
-            return false;
-        }
-        return this.dbtype == SQL_SERVER_DB_TYPE;
+        return (this.dbtype != null && this.dbtype.equals(SQL_SERVER_DB_TYPE));
     }
 
     public boolean isOracle() {
-        if (this.dbtype == null) {
-            return false;
-        }
-        return this.dbtype == ORACLE_DB_TYPE;
+        return (this.dbtype != null && this.dbtype.equals(ORACLE_DB_TYPE));
     }
 
     public boolean isHSQLDB() {
-        if (this.dbtype == null) {
-            return false;
-        }
-        return this.dbtype == HSQL_DB_TYPE;
+        return (this.dbtype != null && this.dbtype.equals(HSQL_DB_TYPE));
     }
 
     public boolean isDB2() {
-        if (this.dbtype == null) {
-            return false;
-        }
-        return this.dbtype == DB2_DB_TYPE;
+        return (this.dbtype != null && this.dbtype.equals(DB2_DB_TYPE));
     }
 
     public boolean isPostgres() {
-        if (this.dbtype == null) {
-            return false;
-        }
-        return this.dbtype == POSTGRESQL_DB_TYPE;
+        return (this.dbtype != null && this.dbtype.equals(POSTGRESQL_DB_TYPE));
     }
 
     public void testConnection() {
@@ -952,14 +934,14 @@ public abstract class BaseDataModelSetup {
         initConnection(requiredProperties, false);
         checkProperties(requiredProperties);
 
-        if (this.dbtype == HSQL_DB_TYPE) {
+        if (this.dbtype.equals(HSQL_DB_TYPE)) {
             JDBCUtils.testHSQLConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
 
-        } else if (this.dbtype == MYSQL_DB_TYPE) {
+        } else if (this.dbtype.equals(MYSQL_DB_TYPE)) {
             JDBCUtils.testMySQLConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
-        } else if (this.dbtype == ORACLE_DB_TYPE) {
+        } else if (this.dbtype.equals(ORACLE_DB_TYPE)) {
             JDBCUtils.testOracleConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
-        } else if (this.dbtype == SQL_SERVER_DB_TYPE) {
+        } else if (this.dbtype.equals(SQL_SERVER_DB_TYPE)) {
             JDBCUtils.testSQLServerConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
         } else {
             if (DataServiceLoggers.importLogger.isInfoEnabled()) {
