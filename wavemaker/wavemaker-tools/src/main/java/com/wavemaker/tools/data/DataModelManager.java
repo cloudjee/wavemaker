@@ -350,7 +350,9 @@ public class DataModelManager {
             if (tmpCfg != null) {
                 tmpCfg.dispose();
             }
-            tmpServiceRootFolder.delete();
+            //cftempfix - uncomment this line after solving the poroblem - Eclipse compiler locks the output
+            //files
+            //tmpServiceRootFolder.delete();
         }
 
     }
