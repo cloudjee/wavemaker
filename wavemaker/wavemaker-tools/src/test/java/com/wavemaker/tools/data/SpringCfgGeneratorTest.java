@@ -47,7 +47,6 @@ public class SpringCfgGeneratorTest extends WMTestCase {
             g.setDestDir(folder);
             g.setClassName("Foo");
             g.setPackage("com.blah");
-            g.setFileSystem(new LocalStudioFileSystem());
             g.setExporterFactory(new LocalExporterFactory());
             g.run();
 

@@ -47,10 +47,13 @@ wm.listOfWidgetType = function(inType, inIgnoreBuiltin, ignoreDialogs) {
 
 // produce a name ordered list of widgets of a given set of classes
 wm.listOfWidgetTypes = function(inTypes) {
+/*
 	var list = [];
-	dojo.forEach(inTypes, function(t) {
+    dojo.forEach(inTypes, function(t) {
 		list = list.concat(wm.listOfWidgetType(t));
 	});
+	*/
+    var list = wm.listOfWidgetType(inTypes); // change made possible by adding support in isInstanceType for a class or array of classes
 	return list;
 };
 
