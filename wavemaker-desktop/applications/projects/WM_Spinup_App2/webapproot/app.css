@@ -10,23 +10,29 @@
 font-size: 16px;
 font-style: normal;
 background-color: #ffffff;
-
 }
-
-
 
 
 html.WMApp body .labelError {
-font-size: 16px;
+/* font-size: 16px; */
 font-weight: bold;
-border-radius-topleft: 4px !important;
-border-radius-bottomleft: 4px !important;
--webkit-border-top-left-radius: 4px !important;
--webkit-border-bottom-left-radius: 4px !important;
+-moz-border-radius: 4px !important;
+-webkit-border-radius: 4px !important;
+border-radius: 4px !important;
 }
-rder-radius-topleft: 4px !important;
-border-radius-bottomleft: 4px !important;
--webkit-border-top-left-radius: 4px !important;
--webkit-border-bottom-left-radius: 4px !important;
+
+html.WMApp body .Main-downloadWMPanel {
+font-weight: normal;
+-moz-border-radius: 4px !important;
+-webkit-border-radius: 4px !important;
+border-radius: 4px !important;
 }
+
+html.WMApp body .Main-NavBannerPanel {
+font-weight: normal;
+-moz-border-radius: 4px !important;
+-webkit-border-radius: 4px !important;
+border-radius: 4px !important;
+}
+
 

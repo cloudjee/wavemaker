@@ -22,10 +22,10 @@ dojo.declare("Main", wm.Page, {
     },
   LoginError: function(inSender, inError) {
       if(!inError){inError = "The user name or password you entered is incorrect.";}
-      this.labelError.setCaption(inError);
-      this.labelError.setShowing(true);
-      this.spacer9.setShowing(true);
-      this.spacer8.setShowing(true);
+      this.labelWarning.setCaption(inError);
+      this.labelWarning.setShowing(true);
+      this.error_warning_spacer_1.setShowing(true);
+      this.error_warning_spacer_2.setShowing(true);
       this.loginLayer.activate();
     },
   progressBarTimerTimerFire: function(inSender) {
@@ -80,8 +80,9 @@ dojo.declare("Main", wm.Page, {
     },
   LogInButtonClick: function(inSender) {
       this.labelError.setShowing(false);
-      this.spacer9.setShowing(false);
-      this.spacer8.setShowing(false);
+      this.labelWarning.setShowing(false);
+      this.error_warning_spacer_1.setShowing(false);
+      this.error_warning_spacer_2.setShowing(false);
       this.LoginServiceVariable.update();
     },
   _end: 0
