@@ -27,8 +27,11 @@
         <property name="designServiceManager">
             <ref bean="designServiceManager" />
         </property>
-		<property name="fileSystem">
-            <ref bean="fileSystem" />
+		<property name="exporterFactory">
+            <ref bean="exporterFactory" />
+        </property>
+		<property name="localExporterFactory">
+            <ref bean="localExporterFactory" />
         </property>
     </bean>
 
@@ -515,6 +518,10 @@
             </bean>
         </property>
     </bean>
+
+	<bean id="localExporterFactory" class="com.wavemaker.tools.data.LocalExporterFactory"
+		scope="singleton" lazy-init="true">
+	</bean>
 
 	<bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
 

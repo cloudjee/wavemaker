@@ -176,16 +176,6 @@ public abstract class BaseDataModelSetup {
 
     public BaseDataModelSetup(Project project) {
         this.project = project;
-        RuntimeAccess runtimeAccess;
-        try {
-            runtimeAccess = RuntimeAccess.getInstance();
-            if (runtimeAccess != null) {
-                this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
-                this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-                this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
-            }
-        } catch (WMRuntimeException ex) {
-        }
     }
 
     private final WMHibernateToolTask parentTask = new WMHibernateToolTask();
@@ -237,8 +227,6 @@ public abstract class BaseDataModelSetup {
     protected ProjectCompiler projectCompiler;
 
     protected ExporterFactory exporterFactory;
-
-    protected StudioFileSystem fileSystem;
 
     private final List<File> tmpFiles = new ArrayList<File>();
 
@@ -979,10 +967,6 @@ public abstract class BaseDataModelSetup {
             }
             JDBCUtils.getConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
         }
-    }
-
-    public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
     }
 
     public void setExporterFactory(ExporterFactory exporterFactory) {

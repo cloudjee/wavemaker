@@ -47,13 +47,7 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
-import com.wavemaker.tools.data.BeanInfo;
-import com.wavemaker.tools.data.ColumnInfo;
-import com.wavemaker.tools.data.DataModelConfiguration;
-import com.wavemaker.tools.data.EntityInfo;
-import com.wavemaker.tools.data.PropertyInfo;
-import com.wavemaker.tools.data.RelatedInfo;
-import com.wavemaker.tools.data.SpringCfgGenerator;
+import com.wavemaker.tools.data.*;
 import com.wavemaker.tools.data.parser.HbmConstants;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.StudioFileSystem;
@@ -289,11 +283,6 @@ public class DataServiceUtils {
     }
 
     public static void writeProperties(Properties p, Folder destdir, String serviceName) {
-        StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        writeProperties(p, destdir, serviceName, fileSystem);
-    }
-
-    public static void writeProperties(Properties p, Folder destdir, String serviceName, StudioFileSystem fileSystem) {
         com.wavemaker.tools.io.File f = null;
         f = destdir.getFile(serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
 
@@ -336,11 +325,8 @@ public class DataServiceUtils {
         return addPrefix(prefix, p);
     }
 
-    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName) {
-        return createEmptyDataModel(destDir, serviceId, packageName, packageName);
-    }
-
-    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName, String dataPackage) {
+    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName,
+                                                                   String dataPackage, ExporterFactory exporterFactory) {
 
         com.wavemaker.tools.io.File rtn = destDir.getFile(getCfgFileName(serviceId));
 
@@ -350,6 +336,7 @@ public class DataServiceUtils {
             g.setPackage(packageName);
             g.setDataPackage(dataPackage);
             g.setServiceName(serviceId);
+            g.setExporterFactory(exporterFactory);
             // write some parsable values into
             // connection properties
             g.setDefaultDBType();
