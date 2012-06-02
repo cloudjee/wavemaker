@@ -53,12 +53,12 @@ public class SpinUpService extends JavaServiceSuperClass {
 		try {
 		  if(!username.contains("@")){		  
             log(ERROR, "User: " + username + " NOT email");
-			return("Please enter the email address for your Cloud Foundry account.");
+			return("Enter a valid email address for your Cloud Foundry account.");
 		  }
           if(!(username.contains("@vmware.com") || username.contains("@springsource.com") || username.contains("@springsource.org") || username.contains("@emc.com") || username.contains(
 "@rabbitmq.com"))){
               log(ERROR, "User: " + username + " NOT allowed at this time");
-              return("WaveMaker is currently in a limited preview mode.<br>Check back with us soon and join our public beta !");
+              return("WaveMaker for Cloud Foundry is currently in a limited preview mode. Check back with us soon to join our public beta.");
           }
           log(INFO, "Logging in user: = " + username );
           loginCredentials = new LoginCredentialsBean(username, password);
@@ -69,7 +69,7 @@ public class SpinUpService extends JavaServiceSuperClass {
 		  return("SUCCESS " + username + " logged in");
           }
           else{
-             return("Unable able to authenticate. Problem getting token and/or secret !");
+             return("Unable able to authenticate. Problem getting token and/or secret.");
           }
        } catch(Exception e) {
           log(ERROR, "Login has failed" + e.getMessage());

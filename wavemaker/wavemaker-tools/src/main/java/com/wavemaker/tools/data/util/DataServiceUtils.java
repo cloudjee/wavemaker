@@ -332,11 +332,11 @@ public class DataServiceUtils {
 
         SpringCfgGenerator g = new SpringCfgGenerator();
         try {
+            g.setExporterFactory(exporterFactory);
             g.setDestDir(rtn.getParent());
             g.setPackage(packageName);
             g.setDataPackage(dataPackage);
-            g.setServiceName(serviceId);
-            g.setExporterFactory(exporterFactory);
+            g.setServiceName(serviceId);           
             // write some parsable values into
             // connection properties
             g.setDefaultDBType();
