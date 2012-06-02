@@ -100,7 +100,7 @@ tipsTimer: ["wm.Timer", {"autoStart":true,"delay":12000}, {"onTimerFire":"tipsTi
 LaunchStudioserviceVariable: ["wm.ServiceVariable", {"operation":"launchStudio","service":"SpinUpService"}, {"onError":"LaunchStudioserviceVariableError","onSuccess":"LaunchStudioserviceVariableSuccess"}, {
 input: ["wm.ServiceInput", {"type":"launchStudioInputs"}, {}]
 }],
-layoutBox1: ["wm.Layout", {"horizontalAlign":"center","styles":{"color":"#ffffff"},"verticalAlign":"top"}, {"onEnterKeyPress":"LogInButtonClick"}, {
+layoutBox1: ["wm.Layout", {"horizontalAlign":"center","styles":{"color":"#ffffff"},"verticalAlign":"top","width":"1379px"}, {"onEnterKeyPress":"LogInButtonClick"}, {
 ParentPanel: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","styles":{"fontSize":"14px","color":"#3f3f3f","backgroundColor":"#f8f9f9","fontFamily":"Arial, Tahoma, Verdana, Helvetica, sans serif"},"verticalAlign":"top","width":"960px"}, {}, {
 BannerPanel: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 panel1: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#6b83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"top","width":"100%"}, {}, {
@@ -111,9 +111,9 @@ BannerSpacer2: ["wm.Spacer", {"height":"1px","width":"12px"}, {}]
 }]
 }],
 panel4: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"25,25,5,25","minDesktopHeight":485,"minHeight":485,"styles":{"fontSize":"undefinedpx","color":"","backgroundColor":""},"verticalAlign":"top","width":"100%"}, {}, {
-TopLayers: ["wm.Layers", {"width":"65%"}, {}, {
-loginLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
-ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"100%"}, {}, {
+TopLayers: ["wm.Layers", {}, {}, {
+loginLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"65%"}, {}, {
 Content1: ["wm.Html", {"autoScroll":false,"border":"0","height":"32px","html":"WaveMaker for Cloud Foundry","margin":"0","minDesktopHeight":15,"styles":{"fontSize":"26px","color":""}}, {}],
 html1: ["wm.Html", {"_classes":{"domNode":["","largerLineHeight",""]},"autoScroll":false,"border":"0","height":"95px","html":"WaveMaker provides a fast, efficient and secure environment to develop and \ndeploy enterprise web and cloud applications. With WaveMaker's visual, drag \nand drop tools, any developer can start building enterprise Java applications \nwith minimal training. WaveMaker creates standard Java applications, boosting \ndeveloper productivity and quality without compromising flexibility. ","margin":"15,0,0,0","minDesktopHeight":15,"styles":{"color":"","fontSize":"undefinedpx"}}, {}],
 spacer2: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
@@ -139,11 +139,23 @@ wire: ["wm.Wire", {"expression":undefined,"source":"LoginPanel.invalid","targetP
 spacer7: ["wm.Spacer", {"height":"10px","width":"10px"}, {}],
 label4: ["wm.Label", {"border":"0","caption":"Don't have a Cloud Foundry accout?  <a href=\"http://cloudfoundry.com/signup\" target=\"blank\">Sign up</a>","height":"100%","padding":"4","width":"100%"}, {}]
 }]
+}],
+ContentPanel2: ["wm.Panel", {"borderColor":"#fbfbfb","height":"100%","horizontalAlign":"left","styles":{"backgroundColor":""},"verticalAlign":"top","width":"35%"}, {}, {
+panel2: ["wm.Panel", {"height":"100%","horizontalAlign":"right","margin":"0","verticalAlign":"top","width":"100%"}, {}, {
+spacer4: ["wm.Spacer", {"height":"209px","width":"150px"}, {}],
+downloadWMPanel: ["wm.Panel", {"border":"2","borderColor":"#bcbdbd","fitToContentHeight":true,"height":"186px","horizontalAlign":"left","margin":"0","padding":"15,15,15,15","styles":{"backgroundColor":""},"verticalAlign":"top","width":"300px"}, {}, {
+html4: ["wm.Html", {"autoScroll":false,"border":"0","borderColor":"#e1d6d6","height":"96px","html":"Want to use WaveMaker on your \ndesktop?\n<br><br>\nDownload the latest version of \nWaveMaker to run on your Windows, \nMac, or Linux computer.","margin":"0","minDesktopHeight":15}, {}],
+spacer6: ["wm.Spacer", {"height":"20px","width":"96px"}, {}],
+panel6: ["wm.Panel", {"height":"36px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+DownloadButton1: ["wm.Button", {"border":"0","borderColor":"#999999","caption":"Download WaveMaker","desktopHeight":"36px","height":"36px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#ffffff","endColor":"#dbdbdb","colorStop":50},"fontSize":"14px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial","color":"#007cd3"},"width":"190px"}, {"onclick":"DownloadButton1Click"}]
+}]
+}]
+}]
 }]
 }],
 waitingLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
-progressBar1: ["wm.dijit.ProgressBar", {"height":"48px","progress":1,"width":"100%"}, {}],
-html3: ["wm.Html", {"_classes":{"domNode":["largerLineHeight"]},"border":"0","height":"64px","html":"Setting up your server, this may take a couple of minutes.","margin":"0,0,40,0","minDesktopHeight":15,"styles":{"fontSize":"undefinedpx"}}, {}],
+progressBar1: ["wm.dijit.ProgressBar", {"height":"48px","padding":"0,20,0,20","progress":1,"width":"100%"}, {}],
+html3: ["wm.Html", {"_classes":{"domNode":["largerLineHeight"]},"border":"0","height":"64px","html":"Setting up your server, this may take a couple of minutes.","margin":"0,20,40,20","minDesktopHeight":15,"styles":{"fontSize":"undefinedpx"}}, {}],
 label5: ["wm.Label", {"_classes":{"domNode":["subheading"]},"border":"0","caption":"Tips:","padding":"4","width":"100%"}, {}],
 tipsHtmlPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 tipsHtml: ["wm.Html", {"_classes":{"domNode":["tips"]},"border":"0","height":"100%","margin":"20","minDesktopHeight":15,"styles":{"fontSize":"undefinedpx"}}, {}, {
@@ -151,22 +163,10 @@ binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"tipsVar.dataValue","targetProperty":"html"}, {}]
 }]
 }],
-tipsPic: ["wm.Picture", {"aspect":"h","border":"0","height":"100%","width":"211px"}, {}, {
+tipsPic: ["wm.Picture", {"border":"0","height":"100%","margin":"20,0,20,0","width":"300px"}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"tipsVar.name","targetProperty":"source"}, {}]
 }]
-}]
-}]
-}]
-}],
-ContentPanel2: ["wm.Panel", {"borderColor":"#fbfbfb","height":"100%","horizontalAlign":"left","styles":{"backgroundColor":""},"verticalAlign":"top","width":"35%"}, {}, {
-panel2: ["wm.Panel", {"height":"100%","horizontalAlign":"right","margin":"0","verticalAlign":"top","width":"100%"}, {}, {
-spacer4: ["wm.Spacer", {"height":"209px","width":"150px"}, {}],
-downloadWMPanel: ["wm.Panel", {"border":"2","borderColor":"#bcbdbd","fitToContentHeight":true,"height":"186px","horizontalAlign":"left","margin":"0","padding":"15,15,15,15","verticalAlign":"top","width":"300px"}, {}, {
-html4: ["wm.Html", {"autoScroll":false,"border":"0","borderColor":"#e1d6d6","height":"96px","html":"Want to use WaveMaker on your \ndesktop?\n<br><br>\nDownload the latest version of \nWaveMaker to run on your Windows, \nMac, or Linux computer.","margin":"0","minDesktopHeight":15}, {}],
-spacer6: ["wm.Spacer", {"height":"20px","width":"96px"}, {}],
-panel6: ["wm.Panel", {"height":"36px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-DownloadButton1: ["wm.Button", {"border":"0","borderColor":"#999999","caption":"Download WaveMaker","desktopHeight":"36px","height":"36px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#ffffff","endColor":"#dbdbdb","colorStop":50},"fontSize":"14px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial","color":"#007cd3"},"width":"190px"}, {"onclick":"DownloadButton1Click"}]
 }]
 }]
 }]
@@ -209,7 +209,7 @@ explore5: ["wm.Label", {"border":"0","caption":"<div style=\"color:white;\">Wiki
 }]
 }],
 FooterPanel: ["wm.Panel", {"height":"26px","horizontalAlign":"center","styles":{"backgroundGradient":{"direction":"vertical","startColor":"#6d83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"middle","width":"100%"}, {}, {
-label1: ["wm.Label", {"align":"center","autoSizeHeight":true,"border":"0","caption":"WaveMaker  |  Copyright © 2011-2012 SpringSource, a division of VMware, Inc. All rights reserved.","height":"23px","padding":"4","singleLine":false,"styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
+label1: ["wm.Label", {"align":"center","border":"0","caption":"WaveMaker  |  Copyright © 2011-2012 SpringSource, a division of VMware, Inc. All rights reserved.","height":"23px","padding":"4","singleLine":false,"styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
 }]
 }]
 }]

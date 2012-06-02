@@ -12,7 +12,7 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"phoneMain": "", 
 	"projectSubVersion": "Alpha19", 
 	"projectVersion": 1, 
-	"saveCounter": 469, 
+	"saveCounter": 479, 
 	"studioVersion": "6.5.0.M2", 
 	"tabletMain": "", 
 	"theme": "wm_default", 

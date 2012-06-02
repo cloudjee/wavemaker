@@ -435,7 +435,7 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"phoneMain": "", 
 	"projectSubVersion": "Alpha19", 
 	"projectVersion": 1, 
-	"saveCounter": 469, 
+	"saveCounter": 479, 
 	"studioVersion": "6.5.0.M2", 
 	"tabletMain": "", 
 	"theme": "wm_default", 
@@ -473,14 +473,14 @@ border-radius: 4px !important;\
 }\
 html.WMApp body .Main-downloadWMPanel {\
 font-weight: normal;\
--moz-border-radius: 4px !important;\
--webkit-border-radius: 4px !important;\
-border-radius: 4px !important;\
+-moz-border-radius: 8px !important;\
+-webkit-border-radius: 8px !important;\
+border-radius: 8px !important;\
 }\
 html.WMApp body .Main-NavBannerPanel {\
 font-weight: normal;\
--moz-border-radius: 4px !important;\
--webkit-border-radius: 4px !important;\
-border-radius: 4px !important;\
+-moz-border-radius: 8px !important;\
+-webkit-border-radius: 8px !important;\
+border-radius: 8px !important;\
 }\
 ';
