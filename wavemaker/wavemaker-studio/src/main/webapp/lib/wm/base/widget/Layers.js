@@ -31,7 +31,7 @@ dojo.declare("wm.Layer", wm.Container, {
 		//console.info('layer destroy called');
 	    this._isLayerDestroying = true;
 	    var parent = this.parent;
-	    if (parent && parent instanceof wm.Layer) 
+	    if (parent && parent instanceof wm.Layers) 
 		parent.setCaptionMapLayer(this.caption, null);	    
 	    this.inherited(arguments);
 	    if (parent && parent.conditionalTabButtons && !parent.decorator.tabsControl.isDestroyed)
@@ -661,6 +661,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	_onShowParent: function() {
 		this._fireLayerOnShow();
 	},
+    /* This method destroyes the client, not just the layers; and as best I can tell, should never be used */
 	clear: function() {
 		wm.forEach(this.widgets, function(w) {
 			w.destroy();
