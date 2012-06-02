@@ -2130,10 +2130,11 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     },
     updateBindDescription: function() {
 	var propDef = this.propDef;
+	var inspected = this.inspectedSubcomponent || this.inspected;
 	var bindText = "<dl>";
-	if (this.inspected.$.binding) {
-	    wm.forEachProperty(this.inspected.$.binding.wires, dojo.hitch(this, function(wire, target) {
-		if (target.indexOf(propDef.name + ".") == 0) {
+	if (inspected.$.binding) {
+	    wm.forEachProperty(inspected.$.binding.wires, dojo.hitch(this, function(wire, target) {
+		if (target.indexOf(propDef.name + ".") == 0 || this.inspectedSubcomponent) {
 		    bindText += "<dt>" + target.replace(/^.*?\./,"") + "</dt><dd>" + (wire.expression ? "expr: " + wire.expression : wire.source) + "</dd>";
 		}
 	    }));
