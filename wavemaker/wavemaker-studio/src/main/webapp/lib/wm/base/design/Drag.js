@@ -215,12 +215,11 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    */
 		var h = inHit, dn = inWidget.domNode, w, b, o;
 		var sl = dn.scrollLeft, st = dn.scrollTop;
-		var ws = inWidget.widgets;
+	        var ws = inWidget.getOrderedWidgets();
 		var m = inMargin || 0;
-		for (var i in ws) {
-			w = ws[i];
-                    //console.log("_test: " + w.toString());
-
+	    
+	    for (var i = 0; i < ws.length; i++) {
+		var w = ws[i];
 			if (w != this.info.control && w.container && !w.getLock()) {
 			    b = kit._getMarginBox(w.domNode);
 				if (w.domNode.parentNode != inWidget.domNode){
@@ -245,7 +244,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
                                     return result;
 				}
 			}
-		}
+	    }
 		// FIXME: sort out _noCreate
 		var t = inWidget._noCreate ? inWidget.parent : inWidget;
             //console.log("CANBETARGET " + t.toString() + ": " + this.canBeTarget(t));
