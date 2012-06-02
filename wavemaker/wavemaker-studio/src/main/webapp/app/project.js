@@ -824,6 +824,7 @@ dojo.declare("wm.studio.Project", null, {
 				   modal: true});
 	} else {
 	    var dialog = studio.phoneGapConfigDialog;
+	    dialog.page.reset();
 	}
 	dialog.show();
     },

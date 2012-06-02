@@ -31,9 +31,12 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    this.inherited(arguments);
 	    if (!this.wrapperContainer) {
 	    this.wrapperContainer = new wm.Panel({owner: this.decoree, 
+						  name: "wizardWrapper",
 						  width: "100%", 
 						  height: "100%", 
-						  layoutKind: "top-to-bottom"});
+						  layoutKind: "top-to-bottom",
+						  flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
+
 	    if (this.decoree.client)
 		this.setupWrapperContainer();
 	    }

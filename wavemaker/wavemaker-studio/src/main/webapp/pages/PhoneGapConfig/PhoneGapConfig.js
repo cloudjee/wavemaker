@@ -34,44 +34,109 @@ dojo.declare("PhoneGapConfig", wm.Page, {
 	this.reset();
     },
     reset: function() {
-	this.appName.setDataValue(studio.project.projectName);
-	this.appId.setDataValue("com.mycompany." + studio.project.projectName.toLowerCase());
-	this.appVersion.setDataValue(studio.application.getFullVersionNumber());
+	this.requiredLayer.activate();
+	var jsonData = studio.project.loadProjectData("phonegapconfig.json");
+	try {
+	    this.jsonData = dojo.fromJson(jsonData);
+	} catch(e) {
+	}
+	if (!this.jsonData) this.jsonData = {xhrpaths: []};
+
+	this.jsonData.appName = this.jsonData.appName || studio.project.projectName;
+	this.jsonData.appId   =	this.jsonData.appId || "com.mycompany." + studio.project.projectName.toLowerCase();
+	this.jsonData.appVersion  = studio.application.getFullVersionNumber();
+
 	var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
 	d.addCallback(dojo.hitch(this, function(inHost) {
-	    alert(inHost);
-	    var oldCaption = "Enter the network name or IP address of the server that this application will connect to. Add a port number to the address if needed (e.g. host.mydomain.com:8080)";
+	    var localhost = "http://" + inHost + ":" + location.port + "/" + studio.project.projectName;
+	    if (dojo.indexOf(this.jsonData.xhrpaths, localhost) == -1) wm.Array.insertElementAt(this.jsonData.xhrpaths, localhost,0);
+		
+	    var cfHost = "http://" + studio.project.projectName + ".cloudfoundry.com";
+	    if (dojo.indexOf(this.jsonData.xhrpaths, cfHost) == -1) this.jsonData.xhrpaths.push(cfHost);
 
+	    this.xhrPath.setOptions(dojo.clone(this.jsonData.xhrpaths));
+
+	    this.jsonData.xhrPath = this.jsonData.xhrPath || localhost;
+
+	    wm.forEachProperty(this.jsonData, dojo.hitch(this, function(value, key) {
+		if (this[key] instanceof wm.AbstractEditor) {
+		    this[key].setDataValue(value);
+		}
+	    }));
+	    if (this.jsonData.iconList && this.jsonData.iconList.length) {
+		this.iconListVar.setData(this.jsonData.iconList);
+	    }
+	    if (this.jsonData.splashList && this.jsonData.splashList.length) {
+		this.splashListVar.setData(this.jsonData.splashList);
+	    }
 	}));
+    },
+    xhrPathChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+
     },
     cancelClick: function() {
 	this.owner.owner.hide();
     },
     okClick: function(inSender) {
-	alert("What about wm.xhrPath?");
-
 	var images = "";
-	if (this.appIconUrl.getDataValue()) {
-	    images += '<icon src="' + this.appIconUrl.getDataValue() + '" width="' + this.appIconWidth.getDataValue() + '" height="' + this.appIconHeight.getDataValue() + '"/>';
+	var iconList = this.iconListVar.getData();
+	this.jsonData.iconList = [];
+	for (var i = 0; i < iconList.length; i++) {
+	    if (iconList[i].src) {
+		images += dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+	    }
+
+//'<icon src="' + iconList[i].src + '" width="' + iconList[i].width + '" height="' + iconList[i].height + '"/>\n';
+	    this.jsonData.iconList.push(iconList[i]);
 	}
-	if (this.appSplashUrl.getDataValue()) {
-	    images += '<gap:splash src="' + this.appSplashUrl.getDataValue() + '" width="' + this.appSplashWidth.getDataValue() + '" height="' + this.appSplashHeight.getDataValue() + '"/>';
+	this.jsonData.splashList = [];
+	var splashList = this.splashListVar.getData();
+	for (var i = 0; i < splashList.length; i++) {
+	    if (splashList[i].src) {
+		images += dojo.string.substitute(splashList[i].template, splashList[i]) + "\n";
+	    }
+
+	    //images += '<gap:splash src="' + splashList[i].src + '" width="' + splashList[i].width + '" height="' + splashList[i].height + '"/>\n';
+	    this.jsonData.splashList.push(splashList[i]);
 	}
 
 	var preferencesSet = this.permisionsSet.getDataValue();
+	this.jsonData.features = dojo.clone(preferencesSet);
 	var preferences = "";
 	if (preferencesSet && preferencesSet.length) {
 	    preferences = "<feature name=\"" + preferencesSet.join('"/>\n<feature name="') + '"/>';
 	}
-	if (this.access1.getDataValue()) {
-	    preferences += '<access origin="' + this.access1.getDataValue() + '" subdomains="' + String(this.accessSubDomains1.getChecked()) + '" />';
+
+
+/*
+  // this.jsonData.???
+	var domainList = this.domainsVar.getData();
+	if (domainList.length) {
+	    for (var i = 0; i < domainList.length; i++) {
+		preferences += '<access origin="' + domainList[i].name + '" subdomains="' + Boolean(domainList[i].dataValue) + '" />';
+	    }
+	} else {
+	    app.toastWarning("You have no domains set in your permissions; your application will not be able to access ANY server");
 	}
-	if (this.access2.getDataValue()) {
-	    preferences += '<access origin="' + this.access2.getDataValue() + '" subdomains="' + String(this.accessSubDomains2.getChecked()) + '" />';
+	*/
+
+	this.jsonData.appId = this.appId.getDataValue();
+	this.jsonData.appVersion =  this.appVersion.getDataValue();
+	this.jsonData.appName = this.appName.getDataValue();
+	this.jsonData.appDescription = this.appDescription.getDataValue();
+	this.jsonData.appAuthorUrl = this.appAuthorUrl.getDataValue();
+	this.jsonData.appAuthorEmail = this.appAuthorEmail.getDataValue();
+	this.jsonData.appAuthorName = this.appAuthorName.getDataValue();
+	this.jsonData.appOrientation = this.appOrientation.getDataValue();
+	this.jsonData.appFullscreen = this.appFullscreen.getDataValue();
+	this.jsonData.iosPrerenderedIcon = this.iosPrerenderedIcon.getDataValue();
+	this.jsonData.iosStatusBarStyle = this.iosStatusBarStyle.getDataValue();
+
+	var xhrPath = this.xhrPath.getDataValue();
+	if (dojo.indexOf(this.jsonData.xhrpaths, xhrPath) == -1) {
+	     wm.Array.insertElementAt(this.jsonData.xhrpaths, xhrPath,0);
 	}
-	if (this.access3.getDataValue()) {
-	    preferences += '<access origin="' + this.access3.getDataValue() + '" subdomains="' + String(this.accessSubDomains3.getChecked()) + '" />';
-	}
+	studio.studioService.requestAsync("writeWebFile", ["phonegapconfig.json", dojo.toJson(this.jsonData,true), false]);
 
 	var xmlfile = dojo.string.substitute(this.template, 
 					     {
@@ -89,14 +154,9 @@ dojo.declare("PhoneGapConfig", wm.Page, {
 						 prerenderedIcon: this.iosPrerenderedIcon.getChecked(),
 						 iosStatusBarStyle: this.iosStatusBarStyle.getDataValue()
 					     });
-	app.alert(xmlfile);return;
-		var serverName, portNumb;
-		inValue = inValue.replace(/^http.?\:\/\//,"");
-		var results = inValue.split(/\:/);
-		serverName = results[0];
-		portNumb = results[1] || 80;
+
 		studio.beginWait("Generating");
-		var d = studio.phoneGapService.requestAsync("generateBuild", [serverName,portNumb,studio.application.theme]);
+	        var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath,studio.application.theme, xmlfile]);
 		d.addCallbacks(
 		    dojo.hitch(this, function() {		
 			app.alert("After the zip file has downloaded, login at https://build.phonegap.com and upload the zip file");

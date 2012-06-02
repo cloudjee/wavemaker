@@ -376,29 +376,29 @@ height: "29px", width: "420px",
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "1,1,0,1", layoutKind: "top-to-bottom", borderColor: "#959DAB"}, {}, {
 				ribbon: ["wm.Panel", {height: "30px", width: "100%", border: "0", layoutKind: "top-to-bottom", padding: "0"}, {}, {
 				    ribbonInner: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "30px", width: "100%", border: "0", layoutKind: "left-to-right", padding: "0"}, {}, {
-						studioToolbarButtons: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "left-to-right", imageList: "canvasToolbarImageList16"}, {}, {
+					studioToolbarButtons: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "left-to-right", imageList: "canvasToolbarImageList16", padding: "0,0,0,4", verticalAlign: "middle"}, {}, {
 							/*pagePopupBtn: ["wm.PopupButton", {width: "32px", caption: "<img src=\"images/dropArrow.png\"/>", popupWidth: "150", imageIndex: 14, imageList: "smallToolbarImageList"}, {}, {
 								pageBtnItem4: ["wm.Item", {caption: "New Page...", imageIndex: 5}, {onclick: "newPageClick"}],
 								pageBtnItem16: ["wm.Item", {caption: "Save", imageIndex: 8}, {onclick: "saveProjectClick"}],
 								pageBtnItem6: ["wm.Item", {caption: "Save As...", imageIndex: 7}, {onclick: "savePageAsClick"}],
 								pageBtnItem9: ["wm.Item", {caption: "Set As Home Page", imageIndex: 2}, {onclick: "makeHomeClick"}]
 							}],*/
-						    pageSaveBtn: ["wm.ToolButton", {width: "28px", margin: "0,0,0,4", imageIndex: 1, hint: "Save"}, {onclick: "saveProjectClick"}],
+					    pageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", imageIndex: 1, hint: "Save"}, {onclick: "saveProjectClick"}],
 							toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-							cutBtn: ["wm.ToolButton", {width: "24px", imageIndex: 2, hint: "Cut"}, {onclick: "cutClick"}],
-							copyBtn: ["wm.ToolButton", {width: "24px", imageIndex: 3, hint: "Copy"}, {onclick: "copyClick"}],
-							pasteBtn: ["wm.ToolButton", {width: "24px", imageIndex: 4, hint: "Paste"}, {onclick: "pasteClick"}],
-							deleteBtn: ["wm.ToolButton", {width: "24px", imageIndex: 5, hint: "Delete"}, {onclick: "deleteClick"}],
-							undoBtn: ["wm.ToolButton", {width: "24px", imageIndex: 6, hint: "Undo", disabled: true}, {onclick: "undoClick"}],
-							toolbarspacer2: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
+					    cutBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", imageIndex: 2, hint: "Cut"}, {onclick: "cutClick"}],
+					    copyBtn: ["wm.ToolButton", {width: "24px", height: "16px",margin: "0,4,0,4",  imageIndex: 3, hint: "Copy"}, {onclick: "copyClick"}],
+					    pasteBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", imageIndex: 4, hint: "Paste"}, {onclick: "pasteClick"}],
+					    deleteBtn: ["wm.ToolButton", {width: "24px", height: "16px",  margin: "0,4,0,4", imageIndex: 5, hint: "Delete"}, {onclick: "deleteClick"}],
+					    undoBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4" , imageIndex: 6, hint: "Undo", disabled: true}, {onclick: "undoClick"}],
+							toolbarspacer2: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,4,0,4,5"}, {}],
 							/*liveLayoutBtn: ["wm.ToolButton", {width: "24px", imageIndex: 7, hint: "Live Layout"}, {onclick: "refreshLiveData"}],*/
-						    outlineBtn: ["wm.ToolButton", {width: "24px", imageIndex: 8, hint: "Toggle Outlined View"}, {onclick: "outlinedClick"}],
-						    pageSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Open Page", margin:"4,0,4,20", width: "50%", maxWidth: "250", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue"},{onchange: "pageSelectChanged"},{
+					    outlineBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4" ,imageIndex: 8, hint: "Toggle Outlined View"}, {onclick: "outlinedClick"}],
+						    pageSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Open Page", margin:"0,0,0,20", width: "50%", maxWidth: "250", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue"},{onchange: "pageSelectChanged"},{
 							binding: ["wm.Binding",{},{}, {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
-						    languageSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
+						    languageSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Language", margin:"0,0,0,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }],
 						    deviceDesignToggle: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/phone.png", captionUp: "", captionDown: "", clicked: true, width: "25px", height: "100%", "hint": "Multi-device design"}, {onclick: "devicesToggleClick"}]
 
@@ -483,17 +483,17 @@ height: "29px", width: "420px",
 					}],*/
 			sourceTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  border: "1,0,0,1", clientBorder: "1,0,0,0"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: "Script"}, {onShow: "editArea.focus"}, {
-						scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
-						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
-						    scriptPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
-						    scriptPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Import JS Library", imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
-						    scriptPageRefreshBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
-						    scriptPageFormatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
-						    scriptPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
-						    /*scriptPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],*/
-						    scriptPageCompletionsBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
-						    scriptPageDictionaryBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Edit Localization Dictionary", imageIndex: 53, imageList: "silkIconImageList"}, {onclick: "editDictionary"}],
-						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
+						scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
+						    scriptPageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px",  margin: "0,4,0,4", hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
+						    scriptPageFindBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
+						    scriptPageImportBtn: ["wm.ToolButton", {width: "24px", height: "16px",  margin: "0,4,0,4", hint: "Import JS Library", imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
+						    scriptPageRefreshBtn: ["wm.ToolButton", {width: "24px", height: "16px",  margin: "0,4,0,4", hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
+						    scriptPageFormatBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
+						    scriptPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", height: "16px",  margin: "0,4,0,4", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
+						    /*scriptPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0,4,0,4", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],*/
+						    scriptPageCompletionsBtn: ["wm.ToolButton", {width: "24px", height: "16px",  margin: "0,4,0,4", hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
+						    scriptPageDictionaryBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Edit Localization Dictionary", imageIndex: 53, imageList: "silkIconImageList"}, {onclick: "editDictionary"}],
+						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 						    editAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
@@ -526,12 +526,12 @@ height: "29px", width: "420px",
 					    }],
 					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
 						
-						cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
-						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
-						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
-						    cssPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importCssLibrary"}],
-						    cssPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
-						    cssPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
+						cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
+						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
+						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
+						    cssPageImportBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importCssLibrary"}],
+						    cssPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", height: "16px", margin: "0,4,0,4", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
+						    cssPageHelpBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
 						    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
 						    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
@@ -551,11 +551,11 @@ height: "29px", width: "420px",
 						}]
                                             }],
 						markupLayer: ["wm.Layer", {caption: "Markup"}, {onShow: "markupEditArea.focus"}, {
-						    markupRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
-							    markupPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveMarkupClick"}],
-							    markupPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findMarkupClick"}],
-							    markupPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapMarkupClick"}],
-							    markupPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showMarkupEditorHelp"}],
+						    markupRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
+							markupPageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Save", imageIndex: 8}, {onclick: "saveMarkupClick"}],
+							markupPageFindBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findMarkupClick"}],
+							markupPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", height: "16px", margin: "0,4,0,4", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapMarkupClick"}],
+							markupPageHelpBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Help", imageIndex: 26}, {onclick: "showMarkupEditorHelp"}],
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}],
 							markupEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
@@ -571,14 +571,14 @@ height: "29px", width: "420px",
 						}],
 
 					    appsource: ["wm.Layer", {caption: "App Script", autoScroll:true}, {onShow: "appsourceEditor.focus"}, {
-						    appsrcRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
-							appsrcPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveAppSrcClick"}],
-							appsrcPageFindBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppScriptClick"}],
-							appsrcPageImportBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Import JS Resource", imageIndex: 25}, {onclick: "importAppJavascriptLibrary"}],
-						    appsrcPageFormatBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatAppScriptClick"}],
-						    appsrcPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapAppScriptClick"}],
-							/*appsrcPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28,iconWidth: "20px", iconHeight: "20px"}, {onclick: "validateAppScriptClick"}],*/
-						    appsrcPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showAppScriptEditorHelp"}],
+						    appsrcRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
+							appsrcPageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Save", imageIndex: 8}, {onclick: "saveAppSrcClick"}],
+							appsrcPageFindBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppScriptClick"}],
+							appsrcPageImportBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Import JS Resource", imageIndex: 25}, {onclick: "importAppJavascriptLibrary"}],
+							appsrcPageFormatBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatAppScriptClick"}],
+							appsrcPageWordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]}, width: "24px", height: "16px", margin: "0,4,0,4", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapAppScriptClick"}],
+							/*appsrcPageCompileBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Validation", imageIndex: 28,iconWidth: "20px", iconHeight: "20px"}, {onclick: "validateAppScriptClick"}],*/
+							appsrcPageHelpBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Help", imageIndex: 26}, {onclick: "showAppScriptEditorHelp"}],
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 							/*appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 							appsourceEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
@@ -592,20 +592,20 @@ height: "29px", width: "420px",
 						        appsourceHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}],
 					    }],
                                             themeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Themes", width: "100%", height: "100%"}, {}, {
-						themesRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
-						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
-						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "New Theme...", imageIndex: 25}, {onclick: "addNewThemeClick"}],
-						    themesPageCopyBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}],
-						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
-						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Revert Theme", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
+						themesRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
+						    themesPageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
+						    themesPageAddBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "New Theme...", imageIndex: 25}, {onclick: "addNewThemeClick"}],
+						    themesPageCopyBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}],
+						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
+						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Revert Theme", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
 						}],
                                                 themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
                                                                                   pageName: "ThemeDesigner"}]
                                             }],
 
 					    appDocs: ["wm.Layer", {caption: "Documentation"}, {}, {
-						appdocsRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
-							appdocsPrintBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Print", imageIndex: 4}, {onclick: "printAppDocsClick"}]
+						appdocsRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
+						    appdocsPrintBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Print", imageIndex: 4}, {onclick: "printAppDocsClick"}]
 						}],
 
 						        appDocViewer: ["wm.Html", {width: "100%", height: "100%"}]
