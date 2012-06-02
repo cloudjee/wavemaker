@@ -99,6 +99,17 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
+    set_dataSet: function(inDataSet) {
+	var typeWas = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
+	this.setDataSet(inDataSet);
+	var typeIs = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
+
+	/* Setup some default columns */
+	if (typeIs && typeIs != typeWas) {
+	    this.updateColumnData();
+	    this.renderDojoObj();
+	}
+    },
     set_autoSizeHeight: function(inValue) {
 	this.autoSizeHeight = Boolean(inValue);
 	this.renderVisibleRowsOnly = !inValue;
