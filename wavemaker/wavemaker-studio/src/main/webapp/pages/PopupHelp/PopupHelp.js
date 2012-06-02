@@ -55,7 +55,7 @@ dojo.declare("PopupHelp", wm.Page, {
 	       var popuphelp = this;
 	     this.deleteExtraButtons();
                dojo.query(".SynopsisNavButtons a").forEach(function(synopsislink) {
-		     var newButton = new wm.Button({parent: popuphelp.buttonPanel, owner: popuphelp, caption: synopsislink.innerHTML, width: "100px"});
+		   var newButton = new wm.Button({_classes: {domNode: ["StudioButton"]}, parent: popuphelp.buttonPanel, owner: popuphelp, caption: synopsislink.innerHTML, width: "100px"});
 		     dojo.connect(newButton, "onclick", null, function() {
 			   window.open(dojo.attr(synopsislink,"href"));
 		     });
