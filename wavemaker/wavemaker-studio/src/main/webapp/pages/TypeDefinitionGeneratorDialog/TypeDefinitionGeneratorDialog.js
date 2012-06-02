@@ -8,7 +8,7 @@ dojo.declare("TypeDefinitionGeneratorDialog", wm.Page, {
 	this.typeDef = inTypeDef;
     },
     /* optionalInText is used by other pages wanting to use this generator as a service */
-    generateButtonClick: function(inSender, optionalInText, optionalInName) {
+    generateButtonClick: function(inSender, e, inSender2, optionalInText, optionalInName) {
       var text = optionalInText || this.jsonText.getDataValue();
       var obj = dojo.fromJson(text);
 	wm.forEachProperty(this.typeDef.$, function(c) { c.destroy();});
