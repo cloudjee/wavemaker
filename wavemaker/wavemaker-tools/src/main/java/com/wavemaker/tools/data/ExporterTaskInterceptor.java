@@ -30,12 +30,6 @@ import com.wavemaker.tools.project.StudioFileSystem;
 
 public class ExporterTaskInterceptor implements MethodInterceptor {
 
-    private final StudioFileSystem fileSystem;
-
-    public ExporterTaskInterceptor() {
-        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-    }
-
     @Override
     public Object intercept(Object object, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
 

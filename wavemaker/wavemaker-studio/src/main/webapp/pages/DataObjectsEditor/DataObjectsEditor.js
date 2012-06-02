@@ -14,7 +14,7 @@
  
 
 dojo.provide("wm.studio.pages.DataObjectsEditor.DataObjectsEditor");
-
+wm.require("wm.DataGrid");
 dojo.declare("DataObjectsEditor", wm.Page, {
         i18n: true,
 	PK_ATTR: "isPk",
@@ -40,27 +40,6 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    this.connect(this.relationshipsList.dijit, "onApplyCellEdit", this, "setDirty");
 	    this.connect(this.columnList.dijit, "onApplyCellEdit", this, "setDirty");
 
-	    this.connect(this.owner.parent, "onShow", this, function() {
-		wm.onidle(this, function() {
-		if (this.dataObject && this.dataObject.name) {
-		    var components = studio.application.getServerComponents();
-		    var componentIndex = wm.Array.indexOf(components, this.dataObject.name, function(c,name) {return c.name == name;});
-		    var node = components[componentIndex]._studioTreeNode;
-		    if (this.dataObject.table) {
-			var kids = node.kids;
-			for (var i = 0; i < kids.length; i++) {
-			    if (kids[i].component.entityName == this.dataObject.table) {
-				kids[i].tree.deselect();
-				kids[i].tree.addToSelection(kids[i]);
-				return;
-			    }
-			}
-			node.tree.deselect();
-			node.tree.addToSelection(node);
-		    }
-		}
-		});
-	    });
 
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
@@ -78,6 +57,30 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    }
 
 	},
+    onShow: function() {
+		    //if (this.dataObject && this.dataObject.name) {
+		    var components = studio.application.getServerComponents();
+		    var componentIndex = wm.Array.indexOf(components, this.dataObject.name, function(c,name) {return c.name == name;});
+		    if (this.dataObject.table && componentIndex >= 0) {
+			var node = components[componentIndex]._studioTreeNode;
+
+			var kids = node.kids;
+			for (var i = 0; i < kids.length; i++) {
+			    if (kids[i].component.entityName == this.dataObject.table) {
+				kids[i].tree.deselect();
+				kids[i].tree.addToSelection(kids[i]);
+				return;
+			    }
+			}
+			node.tree.deselect();
+			node.tree.addToSelection(node);
+		    } else if (this.dataModel && this.dataModel._studioTreeNode) {
+			studio.tree.select(this.dataModel._studioTreeNode);
+		    }
+		//}
+    },
+
+
 	update: function() {
 		this.setSchemas();
 		this.clearDetailDisplay();
@@ -175,24 +178,29 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	    }
 	    studio.importDBDialog.show();
 	},
+    getConnectionsDialog: function() {
+	var d = this.dbConnectDialog;
+	if (d) {
+	    d.page.setup();
+	} else {
+	    this.dbConnectDialog = d = new wm.PageDialog({
+		_classes: {domNode: ["studiodialog"]},
+		owner: app,
+		pageName: "DBConnectionSettings", 
+		hideControls: true,
+		width:720,
+		height:510,
+		title: this.getDictionaryItem("CONNECTIONS_DIALOG_TITLE")
+	    });
+	    this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
+	}
+	return d;
+
+    },
 	dbSettingsButtonClick: function() {
 		//studio.dbConnectionsClick();
-		var d = this.dbConnectDialog;
-		if (d) {
-			d.page.setup();
-		} else {
-			this.dbConnectDialog = d = new wm.PageDialog({
-			    _classes: {domNode: ["studiodialog"]},
-				owner: app,
-				pageName: "DBConnectionSettings", 
-				hideControls: true,
-				width:720,
-			    height:510,
-			    title: this.getDictionaryItem("CONNECTIONS_DIALOG_TITLE")
-			});
-			this.connect(d, "onPageReady", dojo.hitch(d.page, "setup"));
-		}
-		d.show();
+	    var d = this.getConnectionsDialog();
+	    d.show();
 	    d.page.setSelectedModel(this.currentDataModelName);
 	    d.page.modelIsDirty = this.dirty;
 	    d.page.openner = this;
@@ -804,6 +812,15 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 	saveAll: function(inSender) {
 	    studio.saveAll(this); // calls this.save
 	},
+/*
+        exportClick: function(inSender) {
+	    var d = this.getConnectionsDialog();
+	    d.page.setSelectedModel(this.currentDataModelName);
+	    d.page.modelIsDirty = this.dirty;
+	    d.page.openner = this;
+	    d.page.exportBtnClick2();
+	},
+	*/
 	getEntityNameFromTableName: function(tableName) {
 		return tableName.slice(0, 1).toUpperCase() + tableName.slice(1);
 	},

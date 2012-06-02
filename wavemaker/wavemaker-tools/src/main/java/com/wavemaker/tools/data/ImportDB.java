@@ -389,10 +389,8 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void compile() {
-        // if (!this.classesdir.exists()) {
-        // this.classesdir.mkdirs();
-        // }
-        this.projectCompiler.compile();
+        com.wavemaker.tools.project.Project project = this.projectManager.getCurrentProject();
+        this.projectCompiler.compile(destdir, classesdir, this.projectCompiler.getClasspath(project));
     }
 
     protected void writePropertiesFile(Configuration cfg) {

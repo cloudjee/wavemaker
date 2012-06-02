@@ -146,8 +146,9 @@ public interface Folder extends Resource, Iterable<Resource> {
      * Perform the specified operation on all children in folder, recursively processing all nested folders.
      * 
      * @param operation the operation to perform
+     * @return the performed operation
      */
-    <T extends Resource> void performOperationRecursively(ResourceOperation<T> operation);
+    <T extends Resource, OPERATION extends ResourceOperation<T>> OPERATION performOperationRecursively(OPERATION operation);
 
     /**
      * Unzip the specified zip file into the current folder.

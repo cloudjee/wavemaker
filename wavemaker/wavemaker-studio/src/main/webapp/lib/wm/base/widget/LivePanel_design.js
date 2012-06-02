@@ -25,8 +25,8 @@ wm.LivePanel.extend({
 								       owner: studio,
 								       name: "LivePanelTypeChooserDialog",
 								       pageName: "NewLivePanelDialog",
-								       width: "415px",
-								       height: "400px",
+								       width: "371px",
+								       height: "375px",
 								       modal: true,
 								       hideControls: true,
 								       title: studio.getDictionaryItem("wm.LivePanel.CHOOSER_TITLE")});

@@ -117,7 +117,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Resource> void performOperationRecursively(ResourceOperation<T> operation) {
+    public <T extends Resource, OPERATION extends ResourceOperation<T>> OPERATION performOperationRecursively(OPERATION operation) {
         Class<?> supportedType = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
         for (Resource child : list()) {
             if (supportedType.isInstance(child)) {
@@ -127,6 +127,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
                 ((Folder) child).performOperationRecursively(operation);
             }
         }
+        return operation;
     }
 
     @Override

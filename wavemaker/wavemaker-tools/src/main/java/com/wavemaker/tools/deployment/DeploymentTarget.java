@@ -30,7 +30,6 @@ public interface DeploymentTarget {
     void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException;
 
     // FIXME deprecate validateDeployment
-
     /**
      * Deploy a project.
      * 
@@ -49,33 +48,6 @@ public interface DeploymentTarget {
      * @return status message
      */
     void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException;
-
-    /**
-     * Redeploy an already deployed app.
-     * 
-     * @param deploymentInfo
-     * 
-     * @return status message
-     */
-    String redeploy(DeploymentInfo deploymentInfo);
-
-    /**
-     * start a deployed app.
-     * 
-     * @param deploymentInfo
-     * 
-     * @return status message
-     */
-    String start(DeploymentInfo deploymentInfo);
-
-    /**
-     * stop a deployed app.
-     * 
-     * @param deploymentInfo
-     * 
-     * @return status message
-     */
-    String stop(DeploymentInfo deploymentInfo);
 
     /**
      * Generate a deployment URL for this app.

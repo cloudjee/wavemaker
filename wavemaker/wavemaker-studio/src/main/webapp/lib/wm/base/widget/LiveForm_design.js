@@ -23,7 +23,7 @@ wm.Object.extendSchema(wm.LiveFormBase, {
     dataSet: {readonly: 1, group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect", editorProps: {listMatch: false, widgetDataSets: true}},
 
     /* Editor group */
-    dataOutput: {readonly:1, group: "widgetName", subgroup: "data", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor", advanced:1},
+    dataOutput: {readonly:1, group: "dataSet", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor", advanced:1},
 
     /* Editor group; behavior subgroup */
     readonly: { group: "widgetName", subgroup: "behavior", order: 6},

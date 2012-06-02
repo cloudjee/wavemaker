@@ -90,8 +90,9 @@ public class DataModelManager {
 
     private ProjectCompiler projectCompiler = null;
 
-    public void setFileSystem(StudioFileSystem fileSystem) {
-    }
+    private ExporterFactory exporterFactory = null;
+
+    private ExporterFactory localExporterFactory = null;
 
     public void setProjectManager(ProjectManager projectManager) {
         this.projectManager = projectManager;
@@ -103,6 +104,14 @@ public class DataModelManager {
 
     public void setProjectCompiler(ProjectCompiler projectCompiler) {
         this.projectCompiler = projectCompiler;
+    }
+
+    public void setExporterFactory(ExporterFactory exporterFactory) {
+        this.exporterFactory = exporterFactory;
+    }
+
+    public void setLocalExporterFactory(ExporterFactory localExporterFactory) {
+        this.localExporterFactory = localExporterFactory;
     }
 
     public void prepareForDeployment(DeploymentInfo deployment) {
@@ -124,7 +133,8 @@ public class DataModelManager {
         try {
 
             importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
-                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir, classesDir);
+                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir,
+                classesDir, false);
 
             registerService(serviceId, importer);
 
@@ -161,11 +171,10 @@ public class DataModelManager {
     public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         exporter.setExportToDB(false);
         exporter.setVerbose(false);
-        exporter.setDBType(dbms);
 
         try {
             exporter.run();
@@ -179,10 +188,10 @@ public class DataModelManager {
         }
     }
 
-    public String exportDatabase(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
+    public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         String rtn = "";
 
@@ -259,7 +268,7 @@ public class DataModelManager {
 
             importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
                 driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, tmpServiceRootFolder,
-                tmpServiceRootFolder);
+                tmpServiceRootFolder, true);
 
             com.wavemaker.tools.io.File tmpCfgFile = tmpServiceRootFolder.getFile(serviceId + DataServiceConstants.SPRING_CFG_EXT);
 
@@ -280,7 +289,6 @@ public class DataModelManager {
             cfg.dispose();
 
             try {
-                // serviceManager.deleteService(serviceId);
                 this.serviceManager.deleteServiceSmd(serviceId);
             } catch (IOException ex) {
                 throw new ConfigurationException(ex);
@@ -291,7 +299,6 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            // this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
             Resources<com.wavemaker.tools.io.File> resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
 
                 @Override
@@ -351,7 +358,9 @@ public class DataModelManager {
             if (tmpCfg != null) {
                 tmpCfg.dispose();
             }
-            tmpServiceRootFolder.delete();
+            //cftempfix - uncomment this line after solving the poroblem - Eclipse compiler locks the output
+            //files
+            //tmpServiceRootFolder.delete();
         }
 
     }
@@ -387,7 +396,7 @@ public class DataModelManager {
         String serviceClassPackage = DataServiceUtils.getDefaultPackage(dataModelName);
         String dataPackage = DataServiceUtils.getDefaultDataPackage(dataModelName);
 
-        DataServiceUtils.createEmptyDataModel(destDir, dataModelName, serviceClassPackage, dataPackage);
+        DataServiceUtils.createEmptyDataModel(destDir, dataModelName, serviceClassPackage, dataPackage, this.exporterFactory);
 
         DataModelConfiguration cfg = initialize(dataModelName, true);
 
@@ -573,7 +582,7 @@ public class DataModelManager {
         initialize(true);
     }
 
-    private ExportDB getExporter(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
+    private ExportDB getExporter(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
 
         // composite classes must be compiled
@@ -605,6 +614,9 @@ public class DataModelManager {
         exporter.setVerbose(true);
         exporter.setOverrideTable(overrideTable);
         exporter.setServiceName(serviceId);
+        if (dbType != null) {
+            exporter.setDBType(dbType.toLowerCase());
+        }
 
         if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
             exporter.setDriverClassName(driverClassName);
@@ -810,7 +822,7 @@ public class DataModelManager {
 
     private ImportDB runImporter(String username, String password, String connectionUrl, String serviceId, String packageName, String tableFilter,
         String schemaFilter, String catalogName, String driverClassName, String dialectClassName, String revengNamingStrategyClassName,
-        boolean impersonateUser, String activeDirectoryDomain, Folder outputDir, Folder classesDir) {
+        boolean impersonateUser, String activeDirectoryDomain, Folder outputDir, Folder classesDir, boolean reImport) {
 
         if (ObjectUtils.isNullOrEmpty(packageName)) {
             throw new IllegalArgumentException("package must be set");
@@ -826,8 +838,7 @@ public class DataModelManager {
 
         Folder javaDir = getJavaDir(outputDir, packageName);
 
-        ImportDB importer = new ImportDB();
-        importer.setDestDir(outputDir);
+        ImportDB importer = new ImportDB();        
         importer.setUsername(username);
         importer.setPassword(password);
         importer.setClassesDir(classesDir);
@@ -841,6 +852,12 @@ public class DataModelManager {
         importer.setProjectCompiler(this.projectCompiler);
         importer.setCurrentProjectName(this.projectManager.getCurrentProject().getProjectName());
         importer.setProjectManager(this.projectManager);
+        if (reImport) {
+            importer.setExporterFactory(localExporterFactory);
+        } else {
+            importer.setExporterFactory(exporterFactory);
+        }
+        importer.setDestDir(outputDir);
 
         String dataPackage = packageName;
         if (!dataPackage.endsWith("." + DataServiceConstants.DATA_PACKAGE_NAME)) {

@@ -1,29 +1,31 @@
 dojo.declare("Main", wm.Page, {
-    start: function() {
-            
+    start: function() {            
     },
 
     DownloadButton1Click: function(inSender) {
       window.open("http://wavemaker.com/downloads/", "self"); 
     },
-    
-  LoginServiceVariableSuccess: function(inSender, inDeprecated) {
-      result = inDeprecated;
-      if (!result || result.ERROR) return this.LoginServiceVariableError(inSender, result.ERROR);
-      url = result.studio_url;
-      token = result.wavemaker_authentication_token;
-      cfdomain = result.domain;
-      dojo.cookie("wavemaker_authentication_token", token, {expires: 30, domain: cfdomain});
-      console.log(dojo.cookie("wavemaker_authentication_token"));
-      window.location = url;
+  LoginServiceVariableResult: function(inSender, inDeprecated) {
+     var successString = 'SUCCESS';
+     inSender.getData().dataValue.substring(0,successString.length) === successString ? this.LoginSuccess() : this.LoginError(inSender, inDeprecated);
+    //  this.progressBarTimer.stopTimer();
+    //  this._progressBarStopAt = this.progressBar1.getProgress();
+    //  this.finishProgressBarTimer.startTimer();
+    },    
+  LoginSuccess: function(inSender, inDeprecated) {
+      this.LaunchStudioserviceVariable.update();
+      this.progressBar1.setProgress(0);
+      this.waitingLayer.activate();
+      this.progressBarTimer.startTimer();
+      this._startTimerTime = new Date().getTime();
+      this._endTimerTime = this._startTimerTime + 1000 * 120;
     },
-  LoginServiceVariableError: function(inSender, inError) {
-      wm.cancelJob("startProgressBar");
-      if(inError == "Not VMW"){inError = "We're in limited preview mode right now.<br>That accout is not authorized.<br>Come back when we start the public beta !";}
-      if(inError == "Login has failed") {inError = "Invalid user account information";}
-      if(!inError){inError = "Login Failed";}
-      this.labelMessage.setCaption(inError);
-      this.layerFail.activate();
+  LoginError: function(inSender, inError) {
+      if(!inError){inError = "The user name or password you entered is incorrect.";}
+      this.labelWarning.setCaption(inError);
+      this.labelWarning.setShowing(true);
+      this.error_warning_spacer_1.setShowing(true);
+      this.error_warning_spacer_2.setShowing(true);
       this.loginLayer.activate();
     },
   progressBarTimerTimerFire: function(inSender) {
@@ -37,11 +39,6 @@ dojo.declare("Main", wm.Page, {
       if (this.progressBar1.getProgress() >= 100) {
           this.finishProgressBarTimer.stopTimer();
       }
-    },
-  LoginServiceVariableResult: function(inSender, inDeprecated) {            
-      this.progressBarTimer.stopTimer();
-      this._progressBarStopAt = this.progressBar1.getProgress();
-      this.finishProgressBarTimer.startTimer();
     },
   getRandomTip: function() {
       var rand = Math.floor(Math.random() * 100);
@@ -64,15 +61,29 @@ dojo.declare("Main", wm.Page, {
                             }).play();
 						  })}).play();
     },
+
+  LaunchStudioserviceVariableError: function(inSender, inError) {
+      this.labelError.setCaption(inError);
+      this.loginLayer.activate();      
+    },
+  LaunchStudioserviceVariableSuccess: function(inSender, inDeprecated) {
+        result = inDeprecated;
+      if (!result || result.ERROR) return this.LoginServiceVariableError(inSender, result.ERROR);
+      url = result.studio_url;
+      token = result.wavemaker_authentication_token;
+      cfdomain = result.domain;
+      dojo.cookie("wavemaker_authentication_token", token, {expires: 30, domain: cfdomain});
+      console.log(dojo.cookie("wavemaker_authentication_token"));
+      window.location = url;
+
+
+    },
   LogInButtonClick: function(inSender) {
+      this.labelError.setShowing(false);
+      this.labelWarning.setShowing(false);
+      this.error_warning_spacer_1.setShowing(false);
+      this.error_warning_spacer_2.setShowing(false);
       this.LoginServiceVariable.update();
-      wm.job("startProgressBar", 500, dojo.hitch(this, function() {
-      this.progressBar1.setProgress(0);
-      this.waitingLayer.activate();
-      this.progressBarTimer.startTimer();
-      this._startTimerTime = new Date().getTime();
-      this._endTimerTime = this._startTimerTime + 1000 * 120;
-        }));
     },
   _end: 0
 });

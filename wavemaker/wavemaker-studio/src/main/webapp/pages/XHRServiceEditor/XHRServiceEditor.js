@@ -122,7 +122,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
           wm.TypeDefinition.prototype.getTypeDefinitionDialog();
           studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(typeDef);
 	  debugger;
-          studio.TypeDefinitionGeneratorDialog.page.generateButtonClick(null, jsonText, typeDef.name);
+          studio.TypeDefinitionGeneratorDialog.page.generateButtonClick(null, null, null, jsonText, typeDef.name);
       }
        if (this.editService) {
 	   this.inherited(arguments);

@@ -102,6 +102,17 @@
 	 try {
 	     this.inspected = inComponent;
 	     this.layerIndex = -1;
+	     if (this.layers.length) {
+		var l = this.getActiveLayer();
+		 var captionSize = this.captionSize;
+		 wm.forEachWidget(l, function(w) {
+		     if (w instanceof wm.FormPanel) {
+			 captionSize = w.captionSize;
+			 return false; // causes forEachWidget to exit
+		     }
+		 });
+		 this.captionSize = captionSize;
+	     }
 	     while (this.layers.length) {
 		 this.layers[0].active = false;
 		 this.layers[0].destroy();
@@ -568,7 +579,7 @@
 	     verticalAlign: "top",
 	     horizontalAlign: "left"
 	 });
-	 var s = new wm.Spacer({width: this.captionSize,
+	 var s = new wm.Spacer({width: "100%",//this.captionSize,
 				parent: p,
 				owner: this				
 			       });
@@ -576,10 +587,10 @@
 	     owner: this,
 	     parent: p,
 	     name: "wminspector-" + inLayer.name + "-" + inProp.name,
-	     width: this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
-	     height: "30px",
+	     width: "150px",//this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
+	     //height: "30px",
 	     caption: (inProp.shortname || inProp.name),
-	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
+	     _classes: {domNode: ["StudioButton", inProp.isPublished ? "isPublishedProp":""]},
 	     margin: "4,2,4,2",
 	     propDef: inProp,
 	     showing: !inProp.ignoretmp || this.isAdvancedMode(),
@@ -1190,6 +1201,9 @@
 		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
 		     w._showAllClicked = true;
 		     w.show();
+		     if (w instanceof wm.Panel && w.c$.length && w.c$[0].showAllEditors) {
+			 w.c$[0].showAllEditors();
+		     }
 		 }});
 		 l.hide();
 	     });
@@ -1631,7 +1645,6 @@
 
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent, inName) {
 	 var editorProps = {
-	     required: inProp.requiredGroup,
 	     maxCaptionWidth: Math.floor(this.bounds.w/2),
 	     propDef: inProp,
 	     owner: inOwner,
@@ -1645,7 +1658,7 @@
 	     captionSize: this.captionSize,
 	     captionPosition: "left",
 	     captionAlign: "left",
-	     caption: (inProp.shortname || inProp.name),
+	     caption: (inProp.shortname || inProp.name)   + (inProp.requiredGroup ? '&nbsp;<span class="wmeditor-required">*</span>' : ""),
 	     _classes: {domNode: []},
 	     dataValue: inValue,
 	     inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
@@ -1862,7 +1875,7 @@ wm.addPropertyGroups({
 		 }
 		},
     data: {displayName: "Data", 
-	   layer: function(inComponent) { return inComponent instanceof wm.Control;},
+	   layer: false,//function(inComponent) { return inComponent instanceof wm.Control;},
 	   order: 70,
 	   subgroups: {
 	       data: {displayName: "Data",
@@ -1877,6 +1890,10 @@ wm.addPropertyGroups({
 			  order: 30}
 	   }
 	  },
+
+    /* Used by variable/servicevar/livevar/form/etc... */
+    dataSet: {displayName: "Data",
+	      layer: true},
 	/* Confirmed */
     style: {displayName: "Style", order: 80, layer: true},
     /* Confirmed */

@@ -86,24 +86,6 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         throw new DeploymentStatusException(output);
     }
 
-    @Override
-    public String redeploy(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.redeploy(deploymentInfo.getApplicationName());
-    }
-
-    @Override
-    public String start(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.start(deploymentInfo.getApplicationName());
-    }
-
-    @Override
-    public String stop(DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.stop(deploymentInfo.getApplicationName());
-    }
-
     @Deprecated
     public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);

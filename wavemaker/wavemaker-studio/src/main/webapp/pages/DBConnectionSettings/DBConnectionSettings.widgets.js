@@ -13,6 +13,7 @@
  */
  
 DBConnectionSettings.widgets = {
+    cfService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", border: "0",  width: "100%", autoScroll: false}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 	    connectionSettingsPanel: ["wm.Panel", {height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
@@ -39,6 +40,9 @@ DBConnectionSettings.widgets = {
 					    overrideFlagInput: ["wm.Checkbox", {captionSize: "150px", caption: "Overwrite database", width: "100%", dataType: "boolean", displayValue: true, emptyValue: "false", helpText: "If you are using the \"Export\" button and this is checked, then the database already exists, all tables and data will be dropped and deleted. A new database will be created whether or not there is an existing database."}, {onchange: "overrideFlagInputChanged"}]
 					}]
 	    }]
+	}],
+	hiddenEditorsPanel: ["wm.Panel", {showing: false}, {
+
 	}],
 	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, border: "0", height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 				    testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", autoSize: false, width: "130px", margin: "4"}, {onclick: "testConnectionBtnClick"}],

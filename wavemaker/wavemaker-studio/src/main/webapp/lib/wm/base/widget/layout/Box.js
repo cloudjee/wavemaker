@@ -118,16 +118,19 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    if (this.inFlow(c)) {                
 			if (c._percEx[inFlowAxis]) {
                             //var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
-			    var size = flowEx.ratio * c._percEx[inFlowAxis];
+			    var unroundedSize = flowEx.ratio * c._percEx[inFlowAxis];
+			    var size = Math.round(unroundedSize);
 			    lastPercentSizedWidget = c;
-			    roundedSizeOffset -= Math.floor(size);
+			    roundedSizeOffset -= size;
 			    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
 			    var min = c[minName];
                             if (size < min) 
 				size = min;
                             free -= size;
+			} else {
+			    roundedSizeOffset -= c.bounds.w;
 			}
-                    }
+		    }
                 }
 		switch (inFlowAlign) {
 		case "bottom":
@@ -165,7 +168,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      * If its % sized: bounds.w or bounds.h is now the %size * our ratio multiplier that builds in amount of free space and normalizes % to total of 100%
                      *                 for all children.  
                      */
-		    var tmpSize = c._percEx[inFlowAxis] ? Math.floor(flowEx.ratio * c._percEx[inFlowAxis]) : NaN;
+		    var tmpSize = c._percEx[inFlowAxis] ? Math.round(flowEx.ratio * c._percEx[inFlowAxis]) : NaN;
 
 		    /* For the first percent size widget found, adjust its size to compensate for any rounding errors, else a panels widgets may be 1px off
 		     * in stretching the full width, and that pixel may look rather odd 
@@ -194,7 +197,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			    cFitSize = b[inFitAxis] = Math.min(100, c._percEx[inFitAxis]) * fitBound * 0.01;
 		    } else {
                         cFitSize = c.bounds[inFitAxis];
-			if (c.width && parseInt(c.width) > cFitSize) {
+			if (inFitAxis == "w" && c.width && parseInt(c.width) > cFitSize) {
 			    cFitSize = parseInt(c.width);
 			}
 			delete b[inFitAxis];
@@ -273,6 +276,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    wm.flowees++;
 		}
             }
+
 
 	    if (inContainer._touchScroll && (!wm.ListViewer || inContainer instanceof wm.ListViewer == false)) {
 		var touchScrollChanged = false;

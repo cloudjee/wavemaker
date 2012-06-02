@@ -603,6 +603,20 @@ dojo.declare("wm.Variable", wm.Component, {
 		for (var i=0, c = this.getCount(); i<c; i++)
 			this.getItem(i);
 	},
+        forEach: function(inCallback) {
+	    var count = this.getCount();
+	    for (var i = 0; i < count; i++) {
+		inCallback(this.getItem(i));
+	    }
+	},
+        map: function(inCallback) {
+	    var result = [];
+	    var count = this.getCount();
+	    for (var i = 0; i < count; i++) {
+		result.push(inCallback(this.getItem(i)));
+	    }
+	    return result;
+	},
 	// note: low level sort that requires a comparator function to be used.
 	sort: function(inComparator) {
 	    this._populateItems();

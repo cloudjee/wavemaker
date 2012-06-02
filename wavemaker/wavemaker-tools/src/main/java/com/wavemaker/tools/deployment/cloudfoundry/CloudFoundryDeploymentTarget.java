@@ -90,7 +90,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     public static final String POSTGRES_SERVICE_VERSION = "9.0";
 
     private static final String SERVICE_TIER = "free";
-    
+
     private static final String TESTRUN_APP_NAME = "TestRun";
 
     private static final Log log = LogFactory.getLog(CloudFoundryDeploymentTarget.class);
@@ -254,8 +254,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             } catch (CloudFoundryException ex) {
                 throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
             }
-            if(!url.startsWith("http://")){
-            	url = "http://" + url;
+            if (!url.startsWith("http://")) {
+                url = "http://" + url;
             }
             return url;
         } catch (HttpServerErrorException e) {
@@ -284,35 +284,34 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
-    	String appName = deploymentInfo.getApplicationName();
-    	if(appName == TESTRUN_APP_NAME){ 
-    		if(appNameInUse(client, appName)){
-    			deploymentInfo.setDeploymentUrl(client.getApplication(appName).getUris().get(0));
-    		}
-    		else{
-    			deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo)); 
-    		}
-    	}
-    	if (deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty()) {
-    		deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo)); 
-    	}
-    	String url = deploymentInfo.getDeploymentUrl();
+        String appName = deploymentInfo.getApplicationName();
+        if (appName == TESTRUN_APP_NAME) {
+            if (appNameInUse(client, appName)) {
+                deploymentInfo.setDeploymentUrl(client.getApplication(appName).getUris().get(0));
+            } else {
+                deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo));
+            }
+        }
+        if (deploymentInfo.getDeploymentUrl() == null || deploymentInfo.getDeploymentUrl().isEmpty()) {
+            deploymentInfo.setDeploymentUrl(getUrl(deploymentInfo));
+        }
+        String url = deploymentInfo.getDeploymentUrl();
 
-    	if (checkExist && appNameInUse(client, appName)) {
-    		try {
-    			client.deleteApplication(appName); 
-    		} catch (Exception e) {
-    			e.printStackTrace();
-    			throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
-    		}
-    	}
-    	try {
-    		client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING),
-    				Collections.singletonList(url), null, true);
-    		return url;
-    	} catch (CloudFoundryException e) {
-    		throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
-    	}
+        if (checkExist && appNameInUse(client, appName)) {
+            try {
+                client.deleteApplication(appName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new DeploymentStatusException("ERROR: Unable to delete existing application by same name. Choose another name");
+            }
+        }
+        try {
+            client.createApplication(appName, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING),
+                Collections.singletonList(url), null, true);
+            return url;
+        } catch (CloudFoundryException e) {
+            throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
+        }
     }
 
     /**
@@ -485,20 +484,4 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         Assert.isTrue(war.exists(), "war does not exist");
         Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
     }
-
-    @Override
-    public String redeploy(DeploymentInfo deploymentInfo) {
-        return null;
-    }
-
-    @Override
-    public String start(DeploymentInfo deploymentInfo) {
-        return null;
-    }
-
-    @Override
-    public String stop(DeploymentInfo deploymentInfo) {
-        return null;
-    }
-
 }

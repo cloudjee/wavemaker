@@ -38,6 +38,9 @@ public class SpinupController {
     private static final String COOKIE_NAME = "wavemaker_authentication_token";
     private static final String STUDIO_URL = "studio_url";
 	private static final String DOMAIN = "domain";
+	   private static final String  TOKEN = "token";
+	private static final String SECRET = "secret";
+
 
     private SpinupService spinupService;
 
@@ -51,22 +54,17 @@ public class SpinupController {
      * @param response the HTTP response
      * @return the response (either a redirect to the form or a redirect to the spinup process)
      */
-    public Hashtable<String, String> processLogin(LoginCredentialsBean credentials, HttpServletRequest request,
-        HttpServletResponse response) throws InvalidLoginCredentialsException {
-			Hashtable<String, String> responseHash = new Hashtable<String, String>();
-            SharedSecret secret = getSecret(request);
+    public Hashtable<String, Object> processLogin(LoginCredentialsBean credentials,HttpServletRequest request) throws InvalidLoginCredentialsException {
+			Hashtable<String, Object> responseHash = new Hashtable<String, Object>();  
+			SharedSecret secret = getSecret(request);
             TransportToken transportToken = this.spinupService.login(secret, credentials);
-            String url = performSpinup(credentials, secret, transportToken, response);
-			System.out.println("Studio started deployed to " + url);
-			
-			responseHash.put(STUDIO_URL, url);
-			responseHash.put(COOKIE_NAME, transportToken.encode());
-			responseHash.put(DOMAIN, this.spinupService.getDomain()); 
-			
+			responseHash.put(TOKEN, transportToken);
+			responseHash.put(SECRET, secret);
 			return responseHash;
     }
 
-    private String performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response) {
+    public Hashtable<String, String> performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response) {
+		Hashtable<String, String> responseHash = new Hashtable<String, String>();  
         String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken);
         // Give CloudFoundry some time to start
         try {
@@ -74,7 +72,12 @@ public class SpinupController {
         } catch (InterruptedException e) {
         }
         //url = url + "?debug"; 
-        return url;
+		System.out.println("Studio started deployed to " + url);
+	
+		responseHash.put(STUDIO_URL, url);
+		responseHash.put(COOKIE_NAME, transportToken.encode());
+		responseHash.put(DOMAIN, this.spinupService.getDomain()); 
+        return responseHash;
     }
 
     private SharedSecret getSecret(HttpServletRequest request) {

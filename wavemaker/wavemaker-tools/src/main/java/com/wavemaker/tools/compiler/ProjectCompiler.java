@@ -118,6 +118,33 @@ public class ProjectCompiler {
         }
     }
 
+    public String compile(Folder srcdir, Folder destdir, Iterable<Resource> classpath) {
+        try {
+            JavaCompiler compiler = new WaveMakerJavaCompiler();
+            StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
+            standardFileManager.setLocation(StandardLocation.CLASS_PATH, getStandardClassPath());
+            ResourceJavaFileManager projectFileManager = new ResourceJavaFileManager(standardFileManager);
+            ArrayList<Folder> sources = new ArrayList<Folder>();
+            sources.add(srcdir);
+            projectFileManager.setLocation(StandardLocation.SOURCE_PATH, sources);
+            ArrayList<Folder> destinations = new ArrayList<Folder>();
+            destinations.add(srcdir);
+            projectFileManager.setLocation(StandardLocation.CLASS_OUTPUT, destinations);
+            projectFileManager.setLocation(StandardLocation.CLASS_PATH, classpath);
+            Iterable<JavaFileObject> compilationUnits = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
+                true);
+            StringWriter compilerOutput = new StringWriter();
+            CompilationTask compilationTask = compiler.getTask(compilerOutput, projectFileManager, null, getCompilerOptions(), null,
+                compilationUnits);
+            if (!compilationTask.call()) {
+                throw new WMRuntimeException("Compile failed with output:\n\n" + compilerOutput.toString());
+            }
+            return compilerOutput.toString();
+        } catch (IOException e) {
+            throw new WMRuntimeException("Unable to compile " + srcdir.getName(), e);
+        }
+    }
+
     /**
      * Copy all non java resources.
      * 
@@ -159,7 +186,7 @@ public class ProjectCompiler {
         return Collections.singleton(new java.io.File(catalinaBase + "/lib/servlet-api.jar"));
     }
 
-    private Iterable<Resource> getClasspath(Project project) {
+    public Iterable<Resource> getClasspath(Project project) {
         List<Resource> classpath = new ArrayList<Resource>();
         addAll(classpath, project.getRootFolder().getFolder("lib").list(JAR_FILE_FILTER));
         addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list(JAR_FILE_FILTER));
@@ -184,6 +211,15 @@ public class ProjectCompiler {
         options.add("-encoding");
         options.add("utf8");
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
+        options.add("-g");
+        options.add("-warn:-serial");
+        return options;
+    }
+
+    private Iterable<String> getCompilerOptions() {
+        List<String> options = new ArrayList<String>();
+        options.add("-encoding");
+        options.add("utf8");
         options.add("-g");
         options.add("-warn:-serial");
         return options;

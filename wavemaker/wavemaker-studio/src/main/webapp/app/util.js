@@ -47,10 +47,13 @@ wm.listOfWidgetType = function(inType, inIgnoreBuiltin, ignoreDialogs) {
 
 // produce a name ordered list of widgets of a given set of classes
 wm.listOfWidgetTypes = function(inTypes) {
+/*
 	var list = [];
-	dojo.forEach(inTypes, function(t) {
+    dojo.forEach(inTypes, function(t) {
 		list = list.concat(wm.listOfWidgetType(t));
 	});
+	*/
+    var list = wm.listOfWidgetType(inTypes); // change made possible by adding support in isInstanceType for a class or array of classes
 	return list;
 };
 
@@ -131,8 +134,8 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
 	var w = window.open(inUrl, inWindowName, inWindowOptions);
         if (dojo.isChrome) {
-	    wm.job(inWindowName, 3000, function() {
-		if (w.closed) return;
+	    wm.job(inWindowName, 1, function() {
+		if (w.closed) wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
 		if (w.document && w.document.body && w.outerWidth == 0)
 		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
 	    });

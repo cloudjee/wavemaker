@@ -1,5 +1,10 @@
 {
 	"methods": [{
+		"name": "launchStudio",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.util.Hashtable<java.lang.String,java.lang.String>"
+	}, {
 		"name": "login",
 		"operationType": null,
 		"parameters": [{
@@ -9,7 +14,15 @@
 			"name": "password",
 			"type": "java.lang.String"
 		}],
-		"returnType": "java.util.Hashtable<java.lang.String,java.lang.String>"
+		"returnType": "java.lang.String"
+	}, {
+		"name": "recordUserLog",
+		"operationType": null,
+		"parameters": [{
+			"name": "userName",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
 	}, {
 		"name": "setSpinupController",
 		"operationType": null,

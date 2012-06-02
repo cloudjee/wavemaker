@@ -426,15 +426,17 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"disableDirtyEditorTracking": false, 
 	"eventDelay": 0, 
 	"i18n": false, 
+	"isSecurityEnabled": false, 
 	"main": "Main", 
 	"manageHistory": true, 
 	"manageURL": true, 
 	"name": "", 
+	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha8", 
+	"projectSubVersion": "Alpha19", 
 	"projectVersion": 1, 
-	"saveCounter": 307, 
-	"studioVersion": "6.5.0.M1", 
+	"saveCounter": 479, 
+	"studioVersion": "6.5.0.M2", 
 	"tabletMain": "", 
 	"theme": "wm_default", 
 	"toastPosition": "br", 
@@ -461,5 +463,24 @@ font-size: 1.1em;\
 font-size: 16px;\
 font-style: normal;\
 background-color: #ffffff;\
+}\
+html.WMApp body .labelError {\
+/* font-size: 16px; */\
+font-weight: bold;\
+-moz-border-radius: 4px !important;\
+-webkit-border-radius: 4px !important;\
+border-radius: 4px !important;\
+}\
+html.WMApp body .Main-downloadWMPanel {\
+font-weight: normal;\
+-moz-border-radius: 8px !important;\
+-webkit-border-radius: 8px !important;\
+border-radius: 8px !important;\
+}\
+html.WMApp body .Main-NavBannerPanel {\
+font-weight: normal;\
+-moz-border-radius: 8px !important;\
+-webkit-border-radius: 8px !important;\
+border-radius: 8px !important;\
 }\
 ';

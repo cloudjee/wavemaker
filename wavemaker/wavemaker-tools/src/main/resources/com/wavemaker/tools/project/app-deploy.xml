@@ -100,8 +100,8 @@
         <xmltask dest="${tomcat.config.xml}" outputter="simple">
             <insert path="/">
                 <![CDATA[
-                    <Context docBase="${build.app.webapproot.dir}" privileged="true"
-                             antiResourceLocking="false" antiJARLocking="true">
+                    <Context docBase="${build.app.webapproot.dir}" 
+            	          antiResourceLocking="true" antiJARLocking="true">
                     </Context>
                 ]]>
             </insert>
@@ -139,9 +139,9 @@
         <xmltask dest="${tomcat.config.xml}" outputter="simple">
             <insert path="/">
                 <![CDATA[
-                    <Context docBase="${build.app.webapproot.dir}" privileged="true"
-                             antiResourceLocking="false" antiJARLocking="true">
-                    </Context>
+                <Context docBase="${build.app.webapproot.dir}" 
+        	          antiResourceLocking="true" antiJARLocking="true">
+                </Context>
                 ]]>
             </insert>
         </xmltask>

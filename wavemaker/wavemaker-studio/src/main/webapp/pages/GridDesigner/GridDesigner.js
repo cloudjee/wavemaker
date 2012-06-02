@@ -14,6 +14,12 @@
 dojo.declare("GridDesigner", wm.Page, {
     start: function() {
 	wm.typeManager.types.gridDefinitionType.fields.field.include = ["update"];
+	this._editors = [];
+	wm.forEachWidget(this.root, dojo.hitch(this, function(w) {
+	    if (w instanceof wm.AbstractEditor) {
+		this._editors.push(w);
+	    }
+	}));
     },
 	updateFormatterList: function(){
 	    this.fullFormattersVar.setData(this.formattersVar);
@@ -34,6 +40,8 @@ dojo.declare("GridDesigner", wm.Page, {
     },
     setGrid: function(inGrid) {
 	this.currentGrid = inGrid;
+	this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
+
 	this.currentDataSet = inGrid.dataSet;
 	this.initialColumns = inGrid.columns
 
@@ -186,6 +194,9 @@ dojo.declare("GridDesigner", wm.Page, {
 	}), 10);
 
     },
+    onColumnSelect: function(inSender) {
+
+    },
     changeItem: function(inName, inValue, optionalRowIndex) {
 	if (this.columnsVar.isEmpty()) return;
 	var row = (optionalRowIndex === undefined) ? this.grid.getSelectedIndex() : optionalRowIndex;
@@ -240,113 +251,154 @@ dojo.declare("GridDesigner", wm.Page, {
 	}
 	this.currentGrid.set_columns(columns);
     },
-    onTitleChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("title", inDataValue);
-    },
-    onWidthChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("width", this.widthSizeEditor.getDataValue() + (this.widthTypeEditor.getDataValue() || "%"));
-    },
-    onAlignChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("align", inDataValue);
-    },
-    onFormatChange: function(inSender, inDisplayValue, inDataValue) {
-	var isCustom = false;
-	if (inDataValue == "- Add Formatter") {
-	    inDataValue = wm.getValidJsName(this.currentGrid.name + wm.getValidJsName(wm.capitalize(this.grid.selectedItem.getValue("field"))) + 'Format');
-	    isCustom = true;
+    onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("title", inDataValue);
 	}
-	if (this.changeItem("formatFunc", inDataValue)) {
-	    var row = this.grid.getSelectedIndex();
-	    var item = this.columnsVar.getItem(row);
-	    var formatProps = item.getValue("formatProps");
-	    formatProps.beginUpdate();
-	    item.getValue("formatProps").clearData();
-	    formatProps.endUpdate();
+    },
+    onWidthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+		var displayValue = this.widthSizeEditor.getDisplayValue();
+		var w;
+		if (displayValue.indexOf("p") != -1 ||
+			displayValue.indexOf("%") != -1) {
+			w = displayValue;
+			this.widthSizeEditor.setDataValue(parseInt(displayValue));
+			this.widthTypeEditor.setDataValue(displayValue.indexOf("p") != -1 ? "px" : "%");
+		} else {
+			w = displayValue + (this.widthTypeEditor.getDataValue() || "%");
+		}
+	    this.changeItem("width", w);
 	}
-	switch(inDataValue) {
-	case "wm_currency_formatter":
-	    this.currencyLayer.activate();
-	    break;
-	case "wm_number_formatter":
-	    this.numberLayer.activate();
-	    break;
-	case "wm_image_formatter":
-	    this.imageLayer.activate();
-	    break;
+    },
+    onAlignChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("align", inDataValue);
+	}
+    },
+    onFormatChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    var isCustom = false;
+	    if (inDataValue == "- Add Formatter") {
+		inDataValue = wm.getValidJsName(this.currentGrid.name + wm.getValidJsName(wm.capitalize(this.grid.selectedItem.getValue("field"))) + 'Format');
+		isCustom = true;
+	    }
+	    if (this.changeItem("formatFunc", inDataValue)) {
+		var row = this.grid.getSelectedIndex();
+		var item = this.columnsVar.getItem(row);
+		var formatProps = item.getValue("formatProps");
+		formatProps.beginUpdate();
+		formatProps.clearData();
+		formatProps.endUpdate();
+		formatProps = this.form.dataSet.getValue("formatProps");
+		formatProps.beginUpdate();
+		formatProps.clearData();
+		formatProps.endUpdate();
+		this.formatSubForm.setDataSet(formatProps);
+	    }
+	    switch(inDataValue) {
+	    case "wm_currency_formatter":
+		this.currencyLayer.activate();
+		break;
+	    case "wm_number_formatter":
+		this.numberLayer.activate();
+		break;
+	    case "wm_image_formatter":
+		this.imageLayer.activate();
+		break;
 
-	case "wm_button_formatter":
-	    this.buttonLayer.activate();
-	    break;
-	case "wm_link_formatter":
-	    this.linkLayer.activate();
-	    break;
+	    case "wm_button_formatter":
+		this.buttonLayer.activate();
+		break;
+	    case "wm_link_formatter":
+		this.linkLayer.activate();
+		break;
 
-	case "wm_date_formatter":
-	    this.dateLayer.activate();
-	    if (!this.dateFormatLength.getDataValue())
-		this.dateFormatLength.setDataValue("short");
-	    break;
-	default:
-	    this.formatBlankLayer.activate();
-	    if (isCustom) {
-		eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
-		this.owner.owner.hide();
+	    case "wm_date_formatter":
+		this.dateLayer.activate();
+		if (!this.dateFormatLength.getDataValue())
+		    this.dateFormatLength.setDataValue("short");
+		break;
+	    default:
+		this.formatBlankLayer.activate();
+		if (isCustom) {
+		    eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
+		    this.owner.owner.hide();
+		}
 	    }
 	}
     },
-    onEditFieldChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this.changeItem("fieldType", inDataValue)) {
-	    var row = this.grid.getSelectedIndex();
-	    var item = this.columnsVar.getItem(row);
+    onEditFieldChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    if (this.changeItem("fieldType", inDataValue)) {
+		var row = this.grid.getSelectedIndex();
+		var item = this.columnsVar.getItem(row);
 
-	    var editorProps = item.getValue("editorProps");
-	    editorProps.beginUpdate();
+		var editorProps = item.getValue("editorProps");
+		editorProps.beginUpdate();
+		editorProps.clearData();
+		editorProps.endUpdate();
+		editorProps = this.form.dataSet.getValue("editorProps");
+		editorProps.beginUpdate();
+		editorProps.clearData();
+		editorProps.endUpdate();
 
-	    var constraints = item.getValue("constraints");
-	    constraints.beginUpdate();
+		var constraints = item.getValue("constraints");
+		constraints.beginUpdate();
+		constraints.clearData();
+		constraints.endUpdate();
+		constraints = this.form.dataSet.getValue("constraints");
+		constraints.beginUpdate();
+		constraints.clearData();
+		constraints.endUpdate();
+		this.editorSelectLayerSubForm.setDataSet(editorProps);
+		this.editorComboBoxLayerSubForm.setDataSet(editorProps);
+		this.editorNumberLayerSubForm.setDataSet(constraints);
+		this.editorDateLayerSubForm.setDataSet(constraints);
+		this.editorTextLayerSubForm.setDataSet(editorProps);
+	    }
+	    switch(inDataValue) {
+	    case "dojox.grid.cells._Widget":
+		this.editorTextLayer.activate();
+		break;
+	    case "dojox.grid.cells.NumberTextBox":
+		this.editorNumberLayer.activate();
+		break;
+	    case "dojox.grid.cells.DateTextBox":
+		this.editorDateLayer.activate();
+		break;
+	    case "dojox.grid.cells.TimeTextBox":
+		this.editorTimeLayer.activate();
+		break;
+	    case "dojox.grid.cells.Checkbox":
+		this.editorCheckboxLayer.activate();
+		break;
+	    case "dojox.grid.cells.ComboBox":
+		this.editorComboBoxLayer.activate();
+		break;
+	    case "dojox.grid.cells.Select":
+		this.editorSelectLayer.activate();
+		break;
 
-	    item.getValue("editorProps").clearData();
-	    item.getValue("constraints").clearData();
-
-	    editorProps.endUpdate();
-	    constraints.endUpdate();
+	    default:
+		this.editorPropBlankLayer.activate();
+	    }
 	}
-	switch(inDataValue) {
-	case "dojox.grid.cells._Widget":
-	    this.editorTextLayer.activate();
-	    break;
-	case "dojox.grid.cells.NumberTextBox":
-	    this.editorNumberLayer.activate();
-	    break;
-	case "dojox.grid.cells.DateTextBox":
-	    this.editorDateLayer.activate();
-	    break;
-	case "dojox.grid.cells.TimeTextBox":
-	    this.editorTimeLayer.activate();
-	    break;
-	case "dojox.grid.cells.Checkbox":
-	    this.editorCheckboxLayer.activate();
-	    break;
-	case "dojox.grid.cells.ComboBox":
-	    this.editorComboBoxLayer.activate();
-	    break;
-	case "dojox.grid.cells.Select":
-	    this.editorSelectLayer.activate();
-	    break;
-
-	default:
-	    this.editorPropBlankLayer.activate();
+    },
+    onDisplayExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("expression", inDataValue);
 	}
-
     },
-    onDisplayExprChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("expression", inDataValue);
+    onBackExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("backgroundColor", inDataValue);
+	}
     },
-    onBackExprChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("backgroundColor", inDataValue);
-    },
-    onColorExprChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("textColor", inDataValue);
+    onColorExprChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("textColor", inDataValue);
+	}
     },
     onCancelClick: function() {
 	this.currentGrid.set_columns(this.initialColumns);
@@ -361,100 +413,154 @@ dojo.declare("GridDesigner", wm.Page, {
 
 
     /* Currency Formatter Changes */
-    onCurrencyTypeChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.currency", inDataValue);
+    onCurrencyTypeChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.currency", inDataValue);
+	}
     },
-    onCurrencyDijitsChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.dijits", inDataValue);
+    onCurrencyDijitsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.dijits", inDataValue);
+	}
     },
-    onCurrencyRoundChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.round", inDataValue);
+    onCurrencyRoundChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.round", inDataValue);
+	}
     },
-    onDateLengthChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.formatLength", inDataValue);
+    onDateLengthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.formatLength", inDataValue);
+	}
     },
-    onDatePatternChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.datePattern", inDataValue);
+    onDatePatternChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.datePattern", inDataValue);
+	}
     },
-    onTimePatternChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.timePattern", inDataValue);
+    onTimePatternChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.timePattern", inDataValue);
+	}
     },
-    onUseLocalTimeChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.useLocalTime", inDataValue);
+    onUseLocalTimeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.useLocalTime", inDataValue);
+	}
     },
-    onDateTimeChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.dateType", inDataValue);
+    onDateTimeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.dateType", inDataValue);
+	}
     },
 
-    onNumberTypeChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.numberType", inDataValue);
-    },
-    onNumberDijitsChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.dijits", inDataValue);
-    },
-    onNumberRoundChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.round", inDataValue);
-    },
-    onLinkPrefixChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.prefix", inDataValue);
-    },
-    onLinkPostfixChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.postfix", inDataValue);
-    },
-    onTargetChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.target", inDataValue);
-    },
-    onImageWidthChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.width", inDataValue);
-    },
-    onImageHeightChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.height", inDataValue);
-    },
-    onButtonClassChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("formatProps.buttonclass", inDataValue);
-    },
-    onRegexChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("editorProps.regExp", inDataValue);
-    },
-    onRequiredChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("editorProps.required", inDataValue);
-    },
-    onInvalidChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("editorProps.invalidMessage", inDataValue);
-    },
-    onOptionsChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("editorProps.options", inDataValue);
-    },
-    onDataSetChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("editorProps.selectDataSet", inDataValue);
-	var c = studio.page.getValueById(inDataValue);
-	var options = [];
-	if (c)
-	    var type = wm.typeManager.getType(c.type);
-	if (type) {
-	    var fields = type.fields;
+    onNumberTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.numberType", inDataValue);
 	}
-	if (fields) {
-	    for (var fieldName in fields) {
-		var fieldDef = fields[fieldName];
-		if (!wm.typeManager.isStructuredType(fieldDef.type))
-		    options.push(fieldName);
+    },
+    onNumberDijitsChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.dijits", inDataValue);
+	}
+    },
+    onNumberRoundChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.round", inDataValue);
+	}
+    },
+    onLinkPrefixChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.prefix", inDataValue);
+	}
+    },
+    onLinkPostfixChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.postfix", inDataValue);
+	}
+    },
+    onTargetChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.target", inDataValue);
+	}
+    },
+    onImageWidthChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.width", inDataValue);
+	}
+    },
+    onImageHeightChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.height", inDataValue);
+	}
+    },
+    onButtonClassChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("formatProps.buttonclass", inDataValue);
+	}
+    },
+    onRegexChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("editorProps.regExp", inDataValue);
+	}
+    },
+    onRequiredChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("editorProps.required", inDataValue);
+	}
+    },
+    onInvalidChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("editorProps.invalidMessage", inDataValue);
+	}
+    },
+    onOptionsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("editorProps.options", inDataValue);
+	}
+    },
+    onDataSetChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("editorProps.selectDataSet", inDataValue);
+	    var c = studio.page.getValueById(inDataValue);
+	    var options = [];
+	    if (c)
+		var type = wm.typeManager.getType(c.type);
+	    if (type) {
+		var fields = type.fields;
 	    }
+	    if (fields) {
+		for (var fieldName in fields) {
+		    var fieldDef = fields[fieldName];
+		    if (!wm.typeManager.isStructuredType(fieldDef.type))
+			options.push(fieldName);
+		}
+	    }
+	    this.comboBoxDisplayFieldEditor.setOptions(options.join(","));
 	}
-	this.comboBoxDisplayFieldEditor.setOptions(options.join(","));
     },
-    onDisplayFieldChange:function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("editorProps.displayField", inDataValue);
+    onDisplayFieldChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("editorProps.displayField", inDataValue);
+	}
     },
-    onMaximumChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("constraints.max", inDataValue);
+    onMaximumChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("constraints.max", inDataValue);
+	}
     },
-    onMinimumChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("constraints.min", inDataValue);
+    onMinimumChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("constraints.min", inDataValue);
+	}
     },
-    onCustomCssClassChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("cssClass", inDataValue);
+    onCustomCssClassChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("cssClass", inDataValue);
+	}
     },
-
+    onRenderData: function() {
+	this.grid.dojoObj.canSort = function() {return false;}
+    },
   _end: 0
 });

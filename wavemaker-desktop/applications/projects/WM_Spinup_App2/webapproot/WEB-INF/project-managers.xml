@@ -9,6 +9,11 @@
                         <value>com.wavemaker.spinup.web.SpinupController</value>
                     </list>
                 </entry>
+                <entry key="userlogDB">
+                    <list>
+                        <value>com.userlogdb.data.Userlogin</value>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

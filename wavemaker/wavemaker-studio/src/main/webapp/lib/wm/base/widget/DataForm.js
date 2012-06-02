@@ -66,6 +66,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
     editorWidth: "100%",
     captionSize: "120px",
     autoSizeCaption: false,
+    _minEditorSizeForAutoSize: 60,
     captionAlign: "right",
     captionPosition: "left",
     height: "250px",
@@ -97,15 +98,17 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	if (this._isDestroyed) return;
 	var editors = this.getEditorsArray();
 	var max = 0;
+	var maxEditor;
 	dojo.forEach(editors, function(e) {
 	    // test of parent is mostly for property panel, could replace with isAncestoryHidden call but would be a little slower
 	    if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%" && e.captionPosition == "left") {
-		var w = e.captionNode.clientWidth;
+		var w = Math.min(e.captionNode.clientWidth, e.bounds.w - this._minEditorSizeForAutoSize);
 		if (w > max) {
-		    max = Math.min(w, e.bounds.w - 105); // 105 appears to be about as small as we can go before the editors start to get over squished... especially the property panel editors
+		    max = w; 
+		    maxEditor = e;
 		}
 	    }
-	});
+	},this);
 
 	max += 5; // 5px space before editor for nicer look
 
@@ -120,8 +123,9 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	    if (e.captionSize != "100%" && e.captionPosition == "left") {
 		e.setCaptionSize(this.captionSize);
 		if (e.captionNode.clientWidth > max) {
-		    e.captionNode.style.maxWidth = max + "px";
+		    e.captionNode.style.maxWidth = max + "px";		    
 		}
+		e._isMaxEditor = (e == maxEditor);
 	    }
 	}));
     },
@@ -552,7 +556,11 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     },
     liveFormChanged: function() {
 	dojo.forEach(this.getEditorsArray(), function(e) {
-	    if (e.changed) e.changed();
+	    if (e.changed) {
+		e._inSetDataValue = true;
+		e.changed();
+		e._inSetDataValue = false;
+	    }
 	    if (e.clearDirty) e.clearDirty();
 	});
     },

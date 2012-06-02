@@ -26,8 +26,8 @@ wm.Object.extendSchema(wm.LiveVariable, {
     editView: {group: "data", subgroup: "type", requiredGroup: 1, operation:1, shortname: "Edit View", ignoreHint: "Set the type property before you can edit the view"},
 
     /* Data group; custom subgroup */
-    sourceData: {group: "data", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
-    filter:     {group: "data", readonly: 1, order: 5, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
+    sourceData: {group: "dataSet", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
+    filter:     {group: "dataSet", readonly: 1, order: 5, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
 
     /* Data group; server options subgroup */
     matchMode: {group: "data", subgroup: "serverOptions", order: 10, options: ["start", "end", "anywhere", "exact"]},

@@ -243,7 +243,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     editorType: {group: "editor", subgroup: "behavior", order: 501, options: ["Text", "LargeTextArea", "RichText", "Currency", "Number", "Slider", "RangeSlider"]},
     
     /* Validation subgroup */
-    required: {group: "editor", subgroup: "validation", order: 1},    
+    required: {group: "editor", subgroup: "validation", order: 1, type: "boolean"},    
 
     /* Value subgroup */
     formField: {group: "editor", subgroup: "dataSet", order: 20, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "formField is only available when the editor is in a form", requiredGroup: 1},

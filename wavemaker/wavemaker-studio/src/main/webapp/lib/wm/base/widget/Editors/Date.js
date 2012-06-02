@@ -278,6 +278,7 @@ dojo.declare("wm.DateTime", wm.Date, {
 				       use24Time: this.use24Time,
 				       onchange: dojo.hitch(this, "changed")
 				      });
+	if (this._disabled) this.setDisabled(this.disabled);
 	return this.containerWidget;
     },
     flow: function() {
@@ -291,10 +292,10 @@ dojo.declare("wm.DateTime", wm.Date, {
 
     setDisabled: function(inValue) {
 	wm.Control.prototype.setDisabled.call(this, inValue);
-	if (this.dateEditor)
-	    this.dateEditor.setDisabled(inValue);
-	if (this.timeEditor)
-	    this.timeEditor.setDisabled(inValue);
+	if (this.containerWidget) {
+	    this.containerWidget._parentDisabled = this._disabled;
+	    this.containerWidget.setDisabled(inValue);
+	}
     },
     focus: function(inValue) {
 	if (!this.editor) return;

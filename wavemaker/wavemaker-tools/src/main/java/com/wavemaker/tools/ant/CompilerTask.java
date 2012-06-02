@@ -119,7 +119,7 @@ public abstract class CompilerTask extends Task {
         ResourceClassLoaderUtils.runInClassLoaderContext(task, getClassLoader());
     }
 
-    protected abstract void doExecute();
+    public abstract void doExecute();
 
     protected void validate() {
 
@@ -166,5 +166,9 @@ public abstract class CompilerTask extends Task {
             return ResourceClassLoaderUtils.getClassLoaderForResources(parent, classPathFiles);
         }
 
+    }
+
+    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
+        this.designServiceManager = designServiceManager;
     }
 }

@@ -31,7 +31,7 @@ wm.Object.extendSchema(wm.Variable, {
     editJson: {operation: 1, group:"data", subgroup: "data", order:5},
 
     /* Data group; custom subgroup */
-    dataSet: { bindTarget: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},
+    dataSet: { bindTarget: 1, group: "dataSet", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},
     isEmpty: {ignore: 1, bindSource: 1, type: "boolean"},
     count: {ignore: 1, bindSource: 1, type: "number"},
     queriedItems: {ignore: 1, bindSource: 1},
@@ -62,6 +62,10 @@ wm.Object.extendSchema(wm.Variable, {
     removeItem: {method:1},
     clearData: {method:1},
     sort: {method:1},
+    query: {method:1},
+    setQuery: {method:1},
+    forEach: {method:1},
+    map: {method:1},
     getCount: {method:1, returns: "Number"},
     getData: {method:1, returns: "Any"},
     getItem: {method:1, returns: "wm.Variable"}

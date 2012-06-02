@@ -50,7 +50,7 @@ public class ServiceCompilerTask extends CompilerTask {
     }
 
     @Override
-    protected void doExecute() {
+    public void doExecute() {
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
             processService(getDesignServiceManager(), serviceId);
         }

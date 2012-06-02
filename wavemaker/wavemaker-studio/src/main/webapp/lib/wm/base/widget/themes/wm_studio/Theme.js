@@ -27,7 +27,7 @@
 	}, 
 	"wm.Button": {
 	    "border": "1", 
-	    "borderColor": "#ABB8CF",
+	    "borderColor": "#323332",
 	    "height": "32px"
 	}, 
 	"wm.RoundedButton": {
@@ -54,7 +54,8 @@
 	}, 
 	"wm.FancyPanel": {
 		"margin": "2", 
-		"border": "0"
+	    "border": "0",
+	    "innerBorder": "1"
 	}, 
 	"wm.TabLayers": {
 	         headerHeight: "31px",

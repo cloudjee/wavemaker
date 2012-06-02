@@ -129,7 +129,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         }
 
         String location = ConfigurationStore.getPreference(getClass(), DEMOHOME_KEY, null);
-        location = location.endsWith("/") ? location : location + "/";
+        location = location == null || location.endsWith("/") ? location : location + "/";
         Resource demo;
         try {
             if (location != null) {

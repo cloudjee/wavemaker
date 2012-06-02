@@ -34,6 +34,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
@@ -103,35 +104,35 @@ public class CloudFoundryService {
         });
     }
 
-    public boolean isServiceBound(String token, String target, String service, String appName) {
-        List<String> services = getServicesForApplication(token, target, appName);
+    public boolean isServiceBound(String token, String target, String service, String applicationName) {
+        List<String> services = getServicesForApplication(token, target, applicationName);
         return service != null && services.contains(service);
     }
 
-    public List<String> getServicesForApplication(String token, String target, final String appName) {
+    public List<String> getServicesForApplication(String token, String target, final String applicationName) {
         return execute(token, target, "Failed to retrieve CloudFoundry service.", new CloudFoundryCallable<List<String>>() {
 
             @Override
             public List<String> call(CloudFoundryClient client) {
-                CloudApplication app = client.getApplication(appName);
+                CloudApplication app = client.getApplication(getApplicationName(applicationName));
                 return app.getServices();
             }
         });
     }
 
-    public void createService(String token, String target, final DeploymentDB db, final String appName) {
+    public void createService(String token, String target, final DeploymentDB db, final String applicationName) {
         execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
 
             @Override
             public void run(CloudFoundryClient client) {
                 CloudService service = CloudFoundryDeploymentTarget.createPostgresqlService(db);
                 client.createService(service);
-                client.bindService(appName, service.getName());
+                client.bindService(getApplicationName(applicationName), service.getName());
             }
         });
     }
 
-    public void createService(String token, String target, final String appName, final String dbName, final String dbVendor) {
+    public void createService(String token, String target, final String applicationName, final String dbName, final String dbVendor) {
         execute(token, target, "Failed to create service in CloudFoundry.", new CloudFoundryRunnable() {
 
             @Override
@@ -145,7 +146,7 @@ public class CloudFoundryService {
                     throw new WMRuntimeException("Error: Database vendor is not supported, vendor = " + dbVendor);
                 }
                 client.createService(service);
-                client.bindService(appName, service.getName());
+                client.bindService(getApplicationName(applicationName), service.getName());
             }
         });
     }
@@ -160,12 +161,12 @@ public class CloudFoundryService {
         });
     }
 
-    public void bindService(String token, String target, final String service, final String appName) {
+    public void bindService(String token, String target, final String service, final String applicationName) {
         execute(token, target, "Failed to bind service in CloudFoundry.", new CloudFoundryRunnable() {
 
             @Override
             public void run(CloudFoundryClient client) {
-                client.bindService(appName, service);
+                client.bindService(getApplicationName(applicationName), service);
             }
         });
     }
@@ -213,6 +214,13 @@ public class CloudFoundryService {
         Assert.state(sharedSecret != null, "Unable to access security shared secret");
         AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
         return authenticationToken.toString();
+    }
+
+    private String getApplicationName(String applicationName) {
+        if (StringUtils.hasLength(applicationName)) {
+            return applicationName;
+        }
+        return WMAppContext.getInstance().getCloudEnvironment().getInstanceInfo().getName();
     }
 
     private static interface CloudFoundryCallable<V> {

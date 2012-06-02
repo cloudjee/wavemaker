@@ -1,4 +1,4 @@
-
+	
 package com.wavemaker.spinup.web;
 
 import java.io.IOException;
@@ -24,6 +24,6 @@ public class VersionProvider {
         }
 		*/ 
 		//FIXME
-		return "6.5.0.M1";
+		return "6.5.0.M2";
     }
 }
