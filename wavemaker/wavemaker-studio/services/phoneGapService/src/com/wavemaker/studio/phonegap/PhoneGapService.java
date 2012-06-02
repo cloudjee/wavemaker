@@ -65,12 +65,13 @@ public class PhoneGapService {
      * @param themeName the theme name
      */
     @ExposeToClient
-    public void generateBuild(String serverName, int portNumb, String themeName) {
+	public void generateBuild(String xhrPath, String themeName, String configxml) {
         Project currentProject = this.projectManager.getCurrentProject();
         currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
         getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
         setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
-        updatePhonegapFiles(serverName, portNumb, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName);
+        updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName);
+        getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(configxml);
     }
 
     /**
@@ -103,9 +104,10 @@ public class PhoneGapService {
     @ExposeToClient
     public void updatePhonegapFiles(int portNumb, String themeName) {
         String serverUrl = SystemUtils.getIP();
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
         for (FolderLayout layout : FolderLayout.values()) {
             if (layout != FolderLayout.PHONEGAP_BUILD_SERVICE) {
-                updatePhonegapFiles(serverUrl, portNumb, layout, themeName);
+                updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themeName);
             }
         }
         fixupXCodeFilesFollowingUpdate();
@@ -195,14 +197,13 @@ public class PhoneGapService {
         themes.list(Including.resourceNames().notMatching("default")).delete();
     }
 
-    private void updatePhonegapFiles(String host, int port, FolderLayout layout, String themeName) {
+    private void updatePhonegapFiles(String url, FolderLayout layout, String themeName) {
         Folder phoneGapFolder = getPhoneGapFolder(layout);
         if (!phoneGapFolder.exists()) {
             return;
         }
 
         Folder projectFolder = this.projectManager.getCurrentProject().getRootFolder();
-        String url = "http://" + host + ":" + port + "/" + this.projectManager.getCurrentProject().getProjectName();
 
         // Delete all pages, resources and project files so we can re-copy updated version of them
         ResourceAttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
