@@ -163,7 +163,9 @@ wm.Control.extend({
 	this.setSizeProp("height", this.height, height);
     },
     resetDesignHeight: function() {
+	this._doingAutoSize = true;
 	this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight || this.height: this.desktopHeight || this.height);
+	this._doingAutoSize = false;
 	this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
     },
 	// Begin design border
