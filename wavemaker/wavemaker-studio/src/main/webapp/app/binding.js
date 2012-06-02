@@ -105,7 +105,7 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
 			p.targetType,
 			p.targetProps);
 			if (b) {
-			    if (w instanceof wm.SelectMenu == false && (w instanceof wm.Editor || w instanceof wm.AbstractEditor) && !isBindable)
+			    if (w instanceof wm.SelectMenu == false && wm.isInstanceType(w, [wm.Editor, wm.AbstractEditor]) && !isBindable)
 				return;
 			}
 		    new wm.SimpleBindSourceTreeNode(inParent, {object: w, content: props.name, type: props.type, isValidBinding: isBindable});
