@@ -299,10 +299,10 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            Resources<com.wavemaker.tools.io.File> resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
+            tmpServiceRootFolder.copyContentsTo(serviceRoot, new ResourceIncludeFilter<com.wavemaker.tools.io.Resource>() {
 
                 @Override
-                public boolean include(com.wavemaker.tools.io.File resource) {
+                public boolean include(com.wavemaker.tools.io.Resource resource) {
                     if (resource == null) {
                         return false;
                     } else {
@@ -313,25 +313,21 @@ public class DataModelManager {
                 }
             });
 
-            resources.copyTo(serviceRoot);
-
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-            resources = tmpServiceRootFolder.list(new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
+            tmpServiceRootFolder.copyContentsTo(classesDir, new ResourceIncludeFilter<com.wavemaker.tools.io.Resource>() {
 
                 @Override
-                public boolean include(com.wavemaker.tools.io.File resource) {
+                public boolean include(com.wavemaker.tools.io.Resource resource) {
                     if (resource == null) {
                         return false;
                     } else {
                         String name = resource.getName();
                         int len = name.length();
-                        return len > 6 && name.substring(len - 6).equals(".class");
+                        return (len > 6 && name.substring(len - 6).equals(".class"));
                     }
                 }
             });
-
-            resources.copyTo(classesDir);
 
             registerService(serviceId, importer);
 
