@@ -38,7 +38,7 @@ public class SpinupController {
     private static final String COOKIE_NAME = "wavemaker_authentication_token";
     private static final String STUDIO_URL = "studio_url";
 	private static final String DOMAIN = "domain";
-	   private static final String  TOKEN = "token";
+	private static final String  TOKEN = "token";
 	private static final String SECRET = "secret";
 
 
@@ -71,9 +71,6 @@ public class SpinupController {
             Thread.sleep(500);
         } catch (InterruptedException e) {
         }
-        //url = url + "?debug"; 
-		System.out.println("Studio started deployed to " + url);
-	
 		responseHash.put(STUDIO_URL, url);
 		responseHash.put(COOKIE_NAME, transportToken.encode());
 		responseHash.put(DOMAIN, this.spinupService.getDomain()); 

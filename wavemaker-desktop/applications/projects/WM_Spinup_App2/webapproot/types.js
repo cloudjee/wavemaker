@@ -56,6 +56,23 @@ wm.types = {
 			"liveService": false,
 			"service": "SpinUpService"
 		},
+		"com.wavemaker.spinup.web.WavemakerStudioApplicationArchiveFactory": {
+			"fields": {
+				"archive": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "org.cloudfoundry.client.lib.archive.ApplicationArchive"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "SpinUpService"
+		},
 		"double": {
 			"internal": true,
 			"primitiveType": "Number"

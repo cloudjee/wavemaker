@@ -14,13 +14,21 @@ Main.widgets = {
 	LaunchStudioserviceVariable: ["wm.ServiceVariable", {"operation":"launchStudio","service":"SpinUpService"}, {"onError":"LaunchStudioserviceVariableError","onSuccess":"LaunchStudioserviceVariableSuccess"}, {
 		input: ["wm.ServiceInput", {"type":"launchStudioInputs"}, {}]
 	}],
+	navigationCall1: ["wm.NavigationCall", {"operation":"gotoPageContainerPage"}, {}, {
+		input: ["wm.ServiceInput", {"type":"gotoPageContainerPageInputs"}, {}, {
+			binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"expression":"\"AdminPage\"","targetProperty":"pageName"}, {}],
+				wire1: ["wm.Wire", {"expression":undefined,"source":"adminPC","targetProperty":"pageContainer"}, {}]
+			}]
+		}]
+	}],
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"center","styles":{"color":"#ffffff"},"verticalAlign":"top","width":"1379px"}, {"onEnterKeyPress":"LogInButtonClick"}, {
 		ParentPanel: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","styles":{"fontSize":"14px","color":"#3f3f3f","backgroundColor":"#f8f9f9","fontFamily":"Arial, Tahoma, Verdana, Helvetica, sans serif"},"verticalAlign":"top","width":"960px"}, {}, {
 			BannerPanel: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 				panel1: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#6b83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"top","width":"100%"}, {}, {
 					Logo: ["wm.Picture", {"border":"0","height":"85px","margin":"0","padding":"12","source":"resources/images/logos/banner.png","width":"277px"}, {}],
 					BannerSpacer1: ["wm.Spacer", {"height":"1px","width":"100%"}, {}],
-					BannerLinks: ["wm.Label", {"_classes":{"domNode":["a"]},"autoSizeWidth":true,"border":"0","caption":"<a href=\"http://wavemaker.cloudfoundry.com\">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;FAQ&nbsp;&nbsp;|&nbsp;&nbsp;Help","height":"100%","padding":"4","styles":{"color":"#ffffff","textDecoration":"none","whiteSpace":"nowrap"},"width":"142px"}, {}],
+					BannerLinks: ["wm.Label", {"_classes":{"domNode":["a"]},"autoSizeWidth":true,"border":"0","caption":"<a href=\"http://wavemaker.cloudfoundry.com\">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;FAQ&nbsp;&nbsp;|&nbsp;&nbsp;Help","height":"100%","padding":"4","styles":{"color":"#ffffff","textDecoration":"none","whiteSpace":"nowrap"},"width":"139px"}, {}],
 					BannerSpacer2: ["wm.Spacer", {"height":"1px","width":"12px"}, {}]
 				}]
 			}],
@@ -83,6 +91,10 @@ Main.widgets = {
 								}]
 							}]
 						}]
+					}],
+					adminLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+						adminLoginButton: ["wm.Button", {"caption":"Login","margin":"4"}, {"onclick":"navigationCall1"}],
+						adminPC: ["wm.PageContainer", {"border":"0","deferLoad":true,"height":"50%"}, {}]
 					}]
 				}]
 			}],

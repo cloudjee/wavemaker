@@ -5,6 +5,7 @@ import com.userlogdb.data.Userlogin;
 
 import java.util.Hashtable;
 import java.util.Date;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.wavemaker.spinup.web.SpinupController;
 import com.wavemaker.spinup.web.LoginCredentialsBean;
+import com.wavemaker.spinup.web.WavemakerStudioApplicationArchiveFactory;
 
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
@@ -28,6 +30,7 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 public class SpinUpService extends JavaServiceSuperClass {
    
        private SpinupController spinupController;
+       private WavemakerStudioApplicationArchiveFactory wmApplicationArchiveFactory;
        private LoginCredentialsBean loginCredentials;
        private HttpServletRequest request;
        private HttpServletResponse response;
@@ -35,6 +38,7 @@ public class SpinUpService extends JavaServiceSuperClass {
        private UserlogDB DBsvc = null;
        private SharedSecret secret;
        private TransportToken transportToken;
+       private long randKey;
   
     public SpinUpService() {
        super(INFO);
@@ -60,7 +64,7 @@ public class SpinUpService extends JavaServiceSuperClass {
               log(ERROR, "User: " + username + " NOT allowed at this time");
               return("WaveMaker for Cloud Foundry is currently in a limited preview mode. Check back with us soon to join our public beta.");
           }
-          log(INFO, "Logging in user: = " + username );
+          log(DEBUG, "Logging in user: = " + username );
           loginCredentials = new LoginCredentialsBean(username, password);
           Hashtable<String, Object> loginResult = spinupController.processLogin(loginCredentials, RuntimeAccess.getInstance().getRequest());
           secret = (SharedSecret)loginResult.get("secret");
@@ -80,11 +84,12 @@ public class SpinUpService extends JavaServiceSuperClass {
     public Hashtable<String, String> launchStudio() {
        Hashtable<String,String> result  = new Hashtable<String, String>();
        try {
+          log(DEBUG, "performing spinup for: " + loginCredentials.getUsername()); 
           result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse());
           recordUserLog(loginCredentials.getUsername());
           log(INFO, "Counter now: " + ++counter);          
        } catch(Exception e) {
-          log(ERROR, "Login has failed", e);
+          log(ERROR, "Studio Launch has failed", e);
           result.put("ERROR", "Unable to deploy studio. " +  e.getMessage());
           log(ERROR, e.getMessage());
        }
@@ -106,10 +111,27 @@ public class SpinUpService extends JavaServiceSuperClass {
         }
     }
     
+    public void createKey(){
+         Random rand = new Random(); 
+         this.randKey = rand.nextLong();
+         log(INFO, "Key is now: " + this.randKey);
+    }
+    
+    public void checkForUpdate(long key){
+        if(new Long(randKey).equals(new Long(key))){
+            this.wmApplicationArchiveFactory.checkForUpdate();
+        }
+    }
+    
     @Autowired
     @Required
     public void setSpinupController(SpinupController spinupController) {
         this.spinupController = spinupController;
+    }
+
+    @Autowired
+    public void setWavemakerStudioApplicationArchiveFactory(WavemakerStudioApplicationArchiveFactory wmApplicationArchiveFactory){
+        this.wmApplicationArchiveFactory = wmApplicationArchiveFactory;   
     }
 
 }

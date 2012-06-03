@@ -49,31 +49,35 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 
 	private File studioWarFile;
 
-	private VersionProvider versionProvider;
+	private WavemakerApplicationNamingStrategy namingStrategy;
+	
+	private ServletContext servletContext;
 
 	@Override
 	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		downloadStudioWar(servletContext, false);
+	}
+	
+	private void downloadStudioWar(ServletContext servletContext, boolean replaceExisting){
 		InputStream reader = null;
 		OutputStream out = null;
 		String path = null;
-		int ByteRead,ByteWritten=0;
-		try {			
-			String version = this.versionProvider.getVersion(servletContext);
-			String studioFileName = "wavemaker-studio-" + version + ".war";
-			String uploadDirName = servletContext.getRealPath("/resources/studioWars");
-			File uploadDir = new File(uploadDirName);
-			uploadDir.mkdirs();
-			File localStudioWar =  new File(uploadDir, studioFileName); 	
+		int ByteRead = 0;
+		int ByteWritten= 0;
+		try {
+			String uploadDirName = servletContext.getRealPath(SpinupConstants.STUDIOD_UPLOAD_DIR);
+			File uploadPath = new File(uploadDirName);
+			uploadPath.mkdirs();
+			File localStudioWar =  new File(uploadPath, SpinupConstants.STUDIO_FILE); 	
 
-			//Don't download if already have correct version
-			//TODO clean up old versions
-			if(!localStudioWar.exists()){
+			if(!localStudioWar.exists() || replaceExisting){
 				try{
 					byte[] buffer = new byte[5242880];  //5mb
 
 					String customURL = CloudFoundryUtils.getEnvironmentVariable("studio_war_url", "");
 					if(customURL.isEmpty()){
-						path = "http://community.wavemaker.com/Studio/" + studioFileName; 
+						path = SpinupConstants.STUDIO_URL + SpinupConstants.STUDIO_FILE; 
 					}
 					else{
 						path = customURL;
@@ -89,6 +93,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 						out.write(buffer, 0, ByteRead);
 						ByteWritten += ByteRead;
 					}
+					this.namingStrategy.getCurrentVersion(this.servletContext);
 				} catch (IOException e) {
 					e.printStackTrace();
 					throw new IllegalStateException(e);
@@ -120,6 +125,10 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 		}
 	}
 
+    public void checkForUpdate(){
+	    	downloadStudioWar(this.servletContext, true);    	    	
+	    }
+    
     @Override
     public ApplicationArchive getArchive() throws Exception {
         return new WavemakerStudioApplicationArchive(new ZipFile(this.studioWarFile));
@@ -131,11 +140,11 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
     }
 
     @Autowired
-    public void setVersionProvider(VersionProvider versionProvider) {
-        this.versionProvider = versionProvider;
+    public void setNamingStrategy(WavemakerApplicationNamingStrategy namingStrategy) {
+        this.namingStrategy = namingStrategy;
     }
 
-    private static class WavemakerStudioApplicationArchive extends ZipApplicationArchive {
+      private static class WavemakerStudioApplicationArchive extends ZipApplicationArchive {
 
         private final ZipFile zipFile;
 
