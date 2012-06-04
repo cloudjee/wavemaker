@@ -281,7 +281,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	     */
 	    if (window["PhoneGap"] && this.saveInPhonegap || this.saveInCookie) {
 		var ownerPage = this.getParentPage();
-		if (ownerPage._loadingPage && !inData) return;
+		if (ownerPage && ownerPage._loadingPage && !inData) return;
 	    }
 
 	    if (inData instanceof wm.Variable)
