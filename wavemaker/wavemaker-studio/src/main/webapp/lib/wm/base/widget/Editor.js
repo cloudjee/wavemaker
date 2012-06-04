@@ -36,17 +36,6 @@ wm.getDataSet = function(inWidget) {
 		return w.dataSet;
 }
 
-wm.getEditorType = function(inPrimitive) {
-	var t = wm.typeManager.getPrimitiveType(inPrimitive) || inPrimitive;
-	var map = {
-		Boolean: "CheckBox"
-	};
-	if (t in map)
-		t = map[t];
-	return dojo.indexOf(wm.editors, t) != -1 ? t : "Text";
-};
-
-
 wm.createFieldEditor = function(inParent, inFieldInfo, inProps, inEvents, inClass) {
 	var props = dojo.mixin({}, wm.getFieldEditorProps(inFieldInfo), inProps);
 	var name = wm.getValidJsName(props.name || "editor1");

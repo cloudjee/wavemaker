@@ -186,3 +186,13 @@ wm.makeLoginHtml =  function(fileTemplate, inProjectName) {
     }
     return t;
 }
+
+wm.getEditorType = function(inPrimitive) {
+	var t = wm.typeManager.getPrimitiveType(inPrimitive) || inPrimitive;
+	var map = {
+		Boolean: "CheckBox"
+	};
+	if (t in map)
+		t = map[t];
+	return dojo.indexOf(wm.editors, t) != -1 ? t : "Text";
+};
