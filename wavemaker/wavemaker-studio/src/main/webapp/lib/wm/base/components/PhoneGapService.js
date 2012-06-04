@@ -128,7 +128,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
     capture_picture: function(quality, sourceType, allowEdit, targetWidth, targetHeight) {
 	if (!quality) quality = 50;
 	if (!sourceType) sourceType = Camera.PictureSourceType.CAMERA;
-	if (allowEdit === undefined) allowEdit = false;
+	if (allowEdit == undefined || allowEdit == null) allowEdit = true;
 	if (!targetWidth) targetWidth = 400; /* this may seem small, but it needs to fit into javascript memory; designer can increase it. */
 	if (!targetHeight) targetHeight = 400;
 
@@ -146,7 +146,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 		  allowEdit: allowEdit,
 		  targetWidth: targetWidth,
 		  targetHeight: targetHeight,
-		  destinationType: Camera.DestinationType.DATA_URL });
+		  destinationType: Camera.DestinationType.DATA_URI });
 	}
 	return d;
     },
