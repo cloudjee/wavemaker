@@ -345,6 +345,19 @@ th {
     height: 100%;
 }
 
+.wmlist.MobileListStyle .wmlist-item {
+    margin: 5px;
+}
+.wmlist.MobileListStyle .wmlist-item {
+    border: solid 1px black;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+.wmlist.MobileListStyle .wmlist-item td {
+   border: 0px;
+}
+
 .wmdetail-item {
 	padding: 0;
 }

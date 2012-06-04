@@ -810,6 +810,11 @@ background-color: #eeeeee;
 color: #000000;
 background-color: #dddddd;
 }
+.wm_default .MobileListStyle div.wmlist-item,
+.wm_default .MobileListStyle div.wmlist-item.Odd {
+background-color: #333333 !important;
+color: #ffffff;
+}
 .wm_default td.dojoxGrid-cell,
 .wm_default td.dojoxGridCell {
 border-left-width: 0px;

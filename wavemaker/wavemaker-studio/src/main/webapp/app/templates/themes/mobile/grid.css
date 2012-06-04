@@ -100,3 +100,10 @@
 }
 
 
+
+.wm_template .MobileListStyle div.wmlist-item,
+.wm_template .MobileListStyle div.wmlist-item.Odd {
+	background-color: #333333 !important; /* Document-ClickablesDefault-Background_Color */
+
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+}

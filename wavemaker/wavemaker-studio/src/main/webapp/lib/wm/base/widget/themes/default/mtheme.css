@@ -335,6 +335,20 @@ th {
 }
 
 
+.wmlist.MobileListStyle .wmlist-item {
+    margin: 5px;
+}
+.wmlist.MobileListStyle .wmlist-item {
+    border: solid 1px black;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+.wmlist.MobileListStyle .wmlist-item td {
+   border: 0px;
+}
+
+
 /**/
 
 .wmdetail-item {
@@ -1016,9 +1030,16 @@ line-height:32px;
 border-bottom: solid 1px #999;
 }
  
+.wmmobile .wmlist-item {
+    min-height: 32px;
+}
+.wmmobile .MobileListStyle .wmlist-item {
+    padding: 10px 5px;
+    min-height: 12px;
+}
+
 .wmmobile .wmlist-content, .wmmobile .dojoxGridRow {
 font-size: 14px;
-min-height: 32px;
 }
 
 .wmlayout .wmtogglebuttonpanel .wmbutton {

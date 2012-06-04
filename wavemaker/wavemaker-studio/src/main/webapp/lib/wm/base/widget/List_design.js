@@ -99,6 +99,10 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
+    set_styleAsGrid: function(inValue) {
+	this.styleAsGrid = Boolean(inValue);
+	this[this.styleAsGrid ? "removeUserClass" : "addUserClass"]("MobileListStyle");
+    },
     set_dataSet: function(inDataSet) {
 	var typeWas = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
 	this.setDataSet(inDataSet);

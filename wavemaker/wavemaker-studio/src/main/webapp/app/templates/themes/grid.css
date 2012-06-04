@@ -35,6 +35,7 @@
     background-color: #444444; /* Tables-EvenRows-Background_Color */
 }
 
+
 /* Grid/List Odd rows: uses Tables-OddRows */
 .wm_template div.dojoxGrid-row.dojoxGrid-row-odd,
 .wm_template div.dojoxGridRow.dojoxGridRowOdd,
@@ -45,6 +46,14 @@
     /* Tables-OddRows-Background */
     background-color: #444444; /* Tables-OddRows-Background_Color */
 }
+
+.wm_template .MobileListStyle div.wmlist-item,
+.wm_template .MobileListStyle div.wmlist-item.Odd {
+	background-color: #333333 !important; /* Document-ClickablesDefault-Background_Color */
+
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+}
+
 
   /**************************************************************************************************
    * TYPE:        Grid cell borders

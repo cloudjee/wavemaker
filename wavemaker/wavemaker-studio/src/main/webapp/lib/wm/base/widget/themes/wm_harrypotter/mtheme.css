@@ -534,6 +534,11 @@ background-position: left top;
 background-repeat: repeat-x;
 }
 }
+.wm_harrypotter .MobileListStyle div.wmlist-item,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd {
+background-color: #b30000 !important;
+color: #ffffff;
+}
 .wm_harrypotter .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
 background-image: url(images/arrowRightDark.png) !important;
 background-position: 0% 50% !important;

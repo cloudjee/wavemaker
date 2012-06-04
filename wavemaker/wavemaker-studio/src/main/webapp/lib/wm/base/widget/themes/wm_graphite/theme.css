@@ -810,6 +810,11 @@ background-color: #dddddd;
 color: #000000;
 background-color: #eeeeee;
 }
+.wm_graphite .MobileListStyle div.wmlist-item,
+.wm_graphite .MobileListStyle div.wmlist-item.Odd {
+background-color: #444444 !important;
+color: #FFFFFF;
+}
 .wm_graphite td.dojoxGrid-cell,
 .wm_graphite td.dojoxGridCell {
 border-left-width: 0px;

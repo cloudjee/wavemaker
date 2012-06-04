@@ -534,6 +534,11 @@ background-position: left top;
 background-repeat: repeat-x;
 }
 }
+.wm_graphite .MobileListStyle div.wmlist-item,
+.wm_graphite .MobileListStyle div.wmlist-item.Odd {
+background-color: #444444 !important;
+color: #FFFFFF;
+}
 .wm_graphite .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
 background-image: url(images/arrowRightLight.png) !important;
 background-position: 0% 50% !important;

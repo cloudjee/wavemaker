@@ -81,7 +81,7 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {    
-    transparent: false,
+    styleAsGrid: true,
     selectFirstRow: false,
     renderVisibleRowsOnly: true,
     autoSizeHeight: false,
@@ -201,9 +201,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	
     },
 	init: function() {
-	    if (this.transparent) {
-		this.classNames = "wmtransparentlist";
-	    }
 	    this.setSelectionMode(this.selectionMode);
 	    if (this.noHeader) { // another grid property
 		this.headerVisible = false;
