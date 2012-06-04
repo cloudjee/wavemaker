@@ -320,8 +320,62 @@ wm.types = {
 			"internal": true,
 			"primitiveType": "String"
 		},
+		"com.userlogdb.data.Userlogin": {
+			"fields": {
+				"id": {
+					"exclude": ["insert"],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Integer"
+				},
+				"login": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.util.Date"
+				},
+				"username": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": true,
+			"service": "userlogDB"
+		},
 		"com.wavemaker.spinup.web.SpinupController": {
 			"fields": {
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "SpinUpService"
+		},
+		"com.wavemaker.spinup.web.WavemakerStudioApplicationArchiveFactory": {
+			"fields": {
+				"archive": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "org.cloudfoundry.client.lib.archive.ApplicationArchive"
+				}
 			},
 			"internal": false,
 			"liveService": false,
@@ -433,9 +487,9 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha19", 
+	"projectSubVersion": "Alpha26", 
 	"projectVersion": 1, 
-	"saveCounter": 479, 
+	"saveCounter": 503, 
 	"studioVersion": "6.5.0.M2", 
 	"tabletMain": "", 
 	"theme": "wm_default", 

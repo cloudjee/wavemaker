@@ -162,6 +162,11 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     }
 
     @Override
+    public Resources<Resource> copyContentsTo(Folder folder, ResourceIncludeFilter<Resource> includeFilter) {
+        return list(includeFilter).copyTo(folder);
+    }
+
+    @Override
     public Folder moveTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be empty");
         ensureExists();

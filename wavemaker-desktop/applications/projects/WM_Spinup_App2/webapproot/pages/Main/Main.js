@@ -67,8 +67,8 @@ dojo.declare("Main", wm.Page, {
       this.loginLayer.activate();      
     },
   LaunchStudioserviceVariableSuccess: function(inSender, inDeprecated) {
-        result = inDeprecated;
-      if (!result || result.ERROR) return this.LoginServiceVariableError(inSender, result.ERROR);
+      result = inDeprecated;
+      if (!result || result.ERROR) return this.LaunchStudioserviceVariableError(inSender, result.ERROR);
       url = result.studio_url;
       token = result.wavemaker_authentication_token;
       cfdomain = result.domain;

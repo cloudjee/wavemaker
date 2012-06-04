@@ -23,14 +23,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
 import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
-//import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategy;
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategy;
 import com.wavemaker.tools.cloudfoundry.spinup.UsernameWithRandomApplicationNamingStrategy;
 
 /**
  * {@link ApplicationNamingStrategy} for WaveMaker.
  */
 @Component
-public class WavemakeApplicationNamingStrategy extends UsernameWithRandomApplicationNamingStrategy implements ServletContextAware {
+public class WavemakerApplicationNamingStrategy extends UsernameWithRandomApplicationNamingStrategy implements ServletContextAware {
 
     private static final String APPLICATION_NAME = "wavemaker-studio";
 
@@ -40,6 +40,9 @@ public class WavemakeApplicationNamingStrategy extends UsernameWithRandomApplica
 
     @Override
     public void setServletContext(ServletContext servletContext) {
+    }
+    
+    public void getCurrentVersion(ServletContext servletContext){
         try {
             this.version = this.versionProvider.getVersion(servletContext);
             this.version = this.version.replace(".", "_");

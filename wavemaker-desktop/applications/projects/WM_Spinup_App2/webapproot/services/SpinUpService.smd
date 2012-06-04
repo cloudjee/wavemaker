@@ -1,5 +1,18 @@
 {
 	"methods": [{
+		"name": "checkForUpdate",
+		"operationType": null,
+		"parameters": [{
+			"name": "key",
+			"type": "long"
+		}],
+		"returnType": null
+	}, {
+		"name": "createKey",
+		"operationType": null,
+		"parameters": null,
+		"returnType": null
+	}, {
 		"name": "launchStudio",
 		"operationType": null,
 		"parameters": null,
@@ -29,6 +42,14 @@
 		"parameters": [{
 			"name": "spinupController",
 			"type": "com.wavemaker.spinup.web.SpinupController"
+		}],
+		"returnType": null
+	}, {
+		"name": "setWavemakerStudioApplicationArchiveFactory",
+		"operationType": null,
+		"parameters": [{
+			"name": "wmApplicationArchiveFactory",
+			"type": "com.wavemaker.spinup.web.WavemakerStudioApplicationArchiveFactory"
 		}],
 		"returnType": null
 	}],
