@@ -100,7 +100,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 	        if (this._requestHeaders) delete this._requestHeaders; // these headers are for this request only
 	        if (this._designTime && studio.isCloud()) {
 		    var postData = props.postData;
-		    props.postData = this.createRequest("remoteRESTCall", [props.url.replace(/^.*\//, studio._deployedUrl + "/", "POST"), postData]);
+		    props.postData = this.createRequest("remoteRESTCall", [props.url.replace(/^.*\//, studio._deployedUrl + "/"), postData, "POST", "application/json"]);
 		    //props.postData = dojo.toJson({"params": [props.url.replace(/^.*\//, studio._deployedUrl + "/"), dojo.toJson(postData)], "method": "remoteRESTCall", "id":1});
 		    props.url = "waveMakerService.json";
 		}
