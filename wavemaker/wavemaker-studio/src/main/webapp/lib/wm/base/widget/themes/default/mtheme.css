@@ -337,6 +337,8 @@ th {
 
 .wmlist.MobileListStyle .wmlist-item {
     margin: 5px;
+    padding: 10px 5px;
+    min-height: 12px;
 }
 .wmlist.MobileListStyle .wmlist-item {
     border: solid 1px black;
@@ -347,7 +349,6 @@ th {
 .wmlist.MobileListStyle .wmlist-item td {
    border: 0px;
 }
-
 
 /**/
 
@@ -1032,10 +1033,6 @@ border-bottom: solid 1px #999;
  
 .wmmobile .wmlist-item {
     min-height: 32px;
-}
-.wmmobile .MobileListStyle .wmlist-item {
-    padding: 10px 5px;
-    min-height: 12px;
 }
 
 .wmmobile .wmlist-content, .wmmobile .dojoxGridRow {
