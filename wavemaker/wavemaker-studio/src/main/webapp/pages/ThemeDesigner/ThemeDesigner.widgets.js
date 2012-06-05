@@ -21,7 +21,7 @@ ThemeDesigner.widgets = {
         field4: ["wm.TypeDefinitionField", {type: "String", fieldName: "description"}],
         field5: ["wm.TypeDefinitionField", {type: "any", fieldName: "sourceData"}]
     }],
-    genericDialog: ["wm.GenericDialog", {}],
+    genericDialog: ["wm.GenericDialog", {_classes: {domNode: ["studiodialog"]}}],
     imageListVar: ["wm.Variable", {type: "EntryData"}],
     themeListVar: ["wm.Variable", {type: "StringData"}],
     widgetListVar: ["wm.Variable", {type: "StringData"}],
