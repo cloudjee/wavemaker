@@ -942,7 +942,8 @@ dojo.declare("wm.Application", wm.Component, {
 						corner: "tr",
 						_fixPosition: true,
 						useContainerWidget: true,
-						margin: "0,0,4,4",
+						//margin: "0,0,4,4",
+						margin: "0",
 						border: "1",
 						padding: "4"});
 	    this.toolTipDialog.containerWidget.destroy();
