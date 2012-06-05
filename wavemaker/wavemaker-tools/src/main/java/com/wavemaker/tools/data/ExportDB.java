@@ -289,28 +289,32 @@ public class ExportDB extends BaseDataModelSetup {
         if (run) {
             String urlDBName;
             if (WMAppContext.getInstance().isCloudFoundry()) {
-                urlDBName = this.serviceName;
+                url = this.connectionUrl;
             } else {
-                urlDBName = getDatabaseNameFromConnectionUrl();
-            }
-            url = this.connectionUrl;
-
-            if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
-                throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
-            }
-
-            if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
-                url = this.connectionUrl.substring(0, this.connectionUrl.indexOf(urlDBName));
-                if (isPostgres()) {
-                    url += "postgres";
+                if (WMAppContext.getInstance().isCloudFoundry()) {
+                    urlDBName = this.serviceName;
+                } else {
+                    urlDBName = getDatabaseNameFromConnectionUrl();
                 }
-                if (ObjectUtils.isNullOrEmpty(catalogName)) {
-                    catalogName = urlDBName;
-                } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
-                    throw new ConfigurationException(MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
+                url = this.connectionUrl;
+
+                if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
+                    throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
                 }
-            } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
-                throw new ConfigurationException(MessageResource.CATALOG_SHOULD_BE_SET);
+
+                if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
+                    url = this.connectionUrl.substring(0, this.connectionUrl.indexOf(urlDBName));
+                    if (isPostgres()) {
+                        url += "postgres";
+                    }
+                    if (ObjectUtils.isNullOrEmpty(catalogName)) {
+                        catalogName = urlDBName;
+                    } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
+                        throw new ConfigurationException(MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
+                    }
+                } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
+                    throw new ConfigurationException(MessageResource.CATALOG_SHOULD_BE_SET);
+                }
             }
         }
 

@@ -141,7 +141,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
     },
     _importResult: function() {
 	    studio.endWait();
-	    studio.updateServices();
+	    studio.updateFullServiceList();
 	    this.owner.owner.hide();
     },
 

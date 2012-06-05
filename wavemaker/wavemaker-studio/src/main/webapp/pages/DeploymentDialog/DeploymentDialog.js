@@ -1208,7 +1208,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     cfLoginOkClick: function() {
 	studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
-	this.cloudFoundryService.requestSync(
+	this.cloudFoundryService.requestAsync(
 	    "login",
 	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : this.loginDialogTargetEditor.getDataValue()],
 	    dojo.hitch(this, function(inData) {

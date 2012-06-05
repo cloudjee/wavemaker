@@ -37,9 +37,6 @@
 
     <path id="studio.classpath">
         <pathelement location="${studio.webapproot.dir}/WEB-INF/classes"/>
-        <fileset dir="${project.dir}">
-            <include name="lib/*.jar"/>
-        </fileset>
         <fileset dir="${studio.webapproot.dir}/WEB-INF">
             <include name="lib/*.jar"/>
         </fileset>

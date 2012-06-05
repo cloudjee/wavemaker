@@ -247,7 +247,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	_importResult: function() {
 		studio.endWait();
 		this.dataModelName = this.serviceNameInput.getDataValue();
-		studio.updateServices();
+	        studio.updateFullServiceList();
 /*
 	        var layers = studio.databaseSubTab.layers;
 	    for (var i = 0; i < layers.length; i++) {
