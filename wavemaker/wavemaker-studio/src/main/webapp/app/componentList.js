@@ -54,6 +54,7 @@ wm.componentList = {
     "wm.ObjectTree": ["studio.build.wm_trees"],
     "wm.DebugTree": ["studio.build.wm_trees"],
     "wm.DojoGrid": ["studio.build.wm_dojogrid"],
+    "wm.DataGrid": ["studio.build.wm_datagrid"],
     "wm.DojoFileUpload": ["studio.build.wm_fileupload"],
     "wm.DojoFlashFileUpload": ["studio.build.wm_fileupload"],
 

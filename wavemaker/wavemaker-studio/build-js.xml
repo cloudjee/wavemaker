@@ -45,6 +45,7 @@
                     <mergemapper to="${build.webapproot.studio.dir}/wm_charts.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/wm_trees.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/wm_dojogrid.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_datagrid.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/wm_fileupload.js"/>
                     <mergemapper to="${build.lib.webapproot.studio.dir}/lib_build.js"/>               
                 </compositemapper>  
@@ -88,6 +89,7 @@
 							<mergemapper to="${build.webapproot.studio.dir}/wm_charts.js"/>
 							<mergemapper to="${build.webapproot.studio.dir}/wm_trees.js"/>
 							<mergemapper to="${build.webapproot.studio.dir}/wm_dojogrid.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_datagrid.js"/>
 							<mergemapper to="${build.webapproot.studio.dir}/wm_fileupload.js"/>
 							<mergemapper
 								to="${build.lib.webapproot.studio.dir}/lib_build.js" />
@@ -425,6 +427,7 @@
 						<include name="wm_charts.js"/>
 						<include name="wm_trees.js"/>
 						<include name="wm_dojogrid.js"/>
+						<include name="wm_datagrid.js"/>
 						<include name="wm_fileupload.js"/>
 						<include name="nls/**" />
 					</fileset>
@@ -454,6 +457,8 @@
 				      destfile="${dojo.release-temp.dir}/build/wm_trees.js.gz"  />
 				<gzip src="${dojo.release-temp.dir}/build/wm_dojogrid.js"
 				      destfile="${dojo.release-temp.dir}/build/wm_dojogrid.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_datagrid.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_datagrid.js.gz"  />
 				<gzip src="${dojo.release-temp.dir}/build/wm_fileupload.js"
 				      destfile="${dojo.release-temp.dir}/build/wm_fileupload.js.gz"  />
 

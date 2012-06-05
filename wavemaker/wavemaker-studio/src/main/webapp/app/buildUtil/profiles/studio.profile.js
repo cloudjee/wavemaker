@@ -61,23 +61,8 @@ dependencies = {
 			    "wm.base.drag.drag",
 			    "wm.base.drag.layout",
 
-/* The old datagrid is still used in DataObjectsEditor and LiveViewEditor; let it load on demand
-				"dojox.grid._grid.scroller",
-				"dojox.grid._grid.edit",
-				"dojox.grid._grid.cell",
-				"dojox.grid._grid.builder",
-				"dojox.grid._grid.layout",
-				"dojox.grid._grid.view",
-				"dojox.grid._grid.drag",
-				"dojox.grid._grid.lib",
-				"dojox.grid._grid.views",
-				"dojox.grid._grid.rows",
-				"dojox.grid._grid.focus",
-				"dojox.grid._grid.selection",
-				"dojox.grid._grid.rowbar",
-				"dojox.grid._grid.publicEvents",
-				"dojox.grid.VirtualGrid",
-				"dojox.grid.compat.Grid",*/
+
+/* The old datagrid is still used in DataObjectsEditor and LiveViewEditor; let it load on demand*/
 
 				"dijit.form.TextBox",
 				"dijit.form._FormWidget",
@@ -484,6 +469,30 @@ dependencies = {
 		dependencies: [
 		    "wm.base.widget.DojoGrid",
 		    "wm.base.widget.DojoGrid_design"
+		]
+	    },
+	    {
+		name: "wm_datagrid.js",
+		resourceName: "wm_datagrid",
+		layerDependencies: ["studio.js", "studio_base.js"],
+		dependencies: [
+		    "wm.base.widget.DataGrid",
+				"dojox.grid._grid.scroller",
+				"dojox.grid._grid.edit",
+				"dojox.grid._grid.cell",
+				"dojox.grid._grid.builder",
+				"dojox.grid._grid.layout",
+				"dojox.grid._grid.view",
+				"dojox.grid._grid.drag",
+				"dojox.grid._grid.lib",
+				"dojox.grid._grid.views",
+				"dojox.grid._grid.rows",
+				"dojox.grid._grid.focus",
+				"dojox.grid._grid.selection",
+				"dojox.grid._grid.rowbar",
+				"dojox.grid._grid.publicEvents",
+				"dojox.grid.VirtualGrid",
+				"dojox.grid.compat.Grid"
 		]
 	    },
 	    {

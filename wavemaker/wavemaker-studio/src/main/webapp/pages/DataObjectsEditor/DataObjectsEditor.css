@@ -12,6 +12,11 @@
  *  limitations under the License.
  */
 
+@import "/wavemaker/lib/dojo/dojox/grid/compat/_grid/Grid.css";
+@import "/wavemaker/lib/dojo/dojox/grid/compat/_grid/tundraGrid.css";
+.DataObjectsEditor td {
+color: black;
+}
 
 /*
 .DataObjectsEditor-editorToolbar {
