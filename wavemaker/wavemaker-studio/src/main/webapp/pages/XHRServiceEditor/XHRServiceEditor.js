@@ -145,11 +145,15 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 	this.dismiss();
     },
     dismiss: function() {
-       var tabs = this.owner.parent.parent;
-	this.owner.parent.destroy();
-	if (tabs.layers.length == 0) {
-	    tabs.parent.hide();
-	    studio.workspace.activate();
+	if (wm.isInstanceType(this.owner.owner, ImportWebService)) {
+	    this.owner.owner.dismiss();
+	} else {
+	    var tabs = this.owner.parent.parent;
+	    this.owner.parent.destroy();
+	    if (tabs.layers.length == 0) {
+		tabs.parent.hide();
+		studio.workspace.activate();
+	    }
 	}
     },
     _end: 0
