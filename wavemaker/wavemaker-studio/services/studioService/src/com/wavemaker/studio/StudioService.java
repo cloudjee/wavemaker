@@ -49,6 +49,7 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -152,7 +153,10 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
     @ExposeToClient
     public void deleteProject(String projectName) throws IOException {
         try {
-            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(projectName, true).getURI().toString(), projectName);
+            Project project = this.projectManager.getProject(projectName, true);
+            if (project != null) {
+                this.deploymentManager.testRunClean(project);
+            }
         } catch (Exception e) {
             // Swallow and continue to delete project
         }

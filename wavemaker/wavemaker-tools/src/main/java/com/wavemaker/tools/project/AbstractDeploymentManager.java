@@ -85,18 +85,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         this.projectCompiler = projectCompiler;
     }
 
-    protected Folder getProjectDir() {
-        Project currentProject = this.projectManager.getCurrentProject();
-        if (currentProject == null) {
-            throw new WMRuntimeException("Current project must be set");
-        }
-        return currentProject.getRootFolder();
-    }
-
-    protected String getDeployName() {
-        return this.projectManager.getCurrentProject().getProjectName();
-    }
-
     /**
      * {@inheritDoc}
      */
