@@ -133,6 +133,8 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 
        c.initType();
        dojo.publish("wmtypes-changed");
+       studio.refreshServiceTree();
+       app.toastSuccess("You can access the new service using a wm.ServiceVariable, set the service to \"xhrService\" and the operation to \"" + c.name + "\"");
        this.dismiss();
    },
     addInputRow: function() {
