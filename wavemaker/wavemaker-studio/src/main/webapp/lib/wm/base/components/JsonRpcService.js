@@ -87,6 +87,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 
 		if (!url)
 			return;
+	        var requestHeaders = this._requestHeaders || this.requestHeaders;
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),
@@ -94,11 +95,12 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			timeout: this.timeout, 
 			handleAs: "json",
 			sync: this.sync,
-			headers: this.requestHeaders
+			headers: requestHeaders
 		}
+	        if (this._requestHeaders) delete this._requestHeaders; // these headers are for this request only
 	        if (this._designTime && studio.isCloud()) {
 		    var postData = props.postData;
-		    props.postData = this.createRequest("remoteRESTCall", [props.url.replace(/^.*\//, studio._deployedUrl + "/"), postData]);
+		    props.postData = this.createRequest("remoteRESTCall", [props.url.replace(/^.*\//, studio._deployedUrl + "/", "POST"), postData]);
 		    //props.postData = dojo.toJson({"params": [props.url.replace(/^.*\//, studio._deployedUrl + "/"), dojo.toJson(postData)], "method": "remoteRESTCall", "id":1});
 		    props.url = "waveMakerService.json";
 		}
@@ -123,11 +125,16 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		return obj;
 	},
     addRequestHeader: function(headerName, headerValue) {
-	if (!this.requestHeaders) requestHeaders = {};
-	this.requestHeaders[headerName] = headerValue;
+	if (!this.requestHeaders) this.requestHeaders = {};
+
+	/* Temporary request header object */
+	if (!this._requestHeaders) {
+	    this._requestHeaders = dojo.clone(this.requestHeaders);
+	}
+	this._requestHeaders[headerName] = headerValue;
     },
 	setRequestHeaders: function(reqHeaders) {
-		this.requestHeaders = reqHeaders;
+	    this._requestHeaders = reqHeaders;
 	},
 
     /* Override parent method which passes data.message and therefore loses the fact that its actually an instance of Error */
@@ -184,6 +191,10 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	var rand = this.owner && this.isDesignLoaded() && studio.application ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
     var cachedName = this.url || n + ".smd";
 	var url = this.url || (n && (this.getServiceRoot() + n + ".smd"));
+/* Don't do this; xhrpath is used in phonegap apps; all smd files reside locally on device
+	if(wm.xhrPath){
+	    url=wm.xhrPath+url;
+	}*/
 	this._service = null;
 	if (url) {
 	    try{
