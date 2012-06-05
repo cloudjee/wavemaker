@@ -21,16 +21,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
-import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     private DeploymentTargetManager deploymentTargetManager;
+
     private DesignServiceManager designServiceManager;
 
     @Override
@@ -104,8 +105,7 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public void testRunClean(String projectDir, String deployName) {
-        Project project = this.projectManager.getProject(projectDir, true);
+    public void testRunClean(Project project) {
         CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
         target.undeploy(project);
     }

@@ -42,10 +42,9 @@ public interface DeploymentManager {
     /**
      * Clean build artifacts
      * 
-     * @param projectDir The name of the project.
-     * @param deployName The deployment target.
+     * @param project the project
      */
-    void testRunClean(String projectDir, String deployName);
+    void testRunClean(Project project);
 
     /**
      * Compile java src.

@@ -135,9 +135,16 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         }
     }
 
-    @Override
-    protected LocalFolder getProjectDir() {
-        return (LocalFolder) super.getProjectDir();
+    private LocalFolder getProjectDir(com.wavemaker.tools.project.Project project) {
+        return (LocalFolder) project.getRootFolder();
+    }
+
+    private LocalFolder getProjectDir() {
+        com.wavemaker.tools.project.Project currentProject = getProjectManager().getCurrentProject();
+        if (currentProject == null) {
+            throw new WMRuntimeException("Current project must be set");
+        }
+        return getProjectDir(currentProject);
     }
 
     private String testRunStart(String projectDir, String deployName) {
@@ -280,16 +287,13 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public void testRunClean(String projectDir, String deployName) {
-        antExecute(projectDir, deployName, TEST_RUN_CLEAN_OPERATION);
+    public void testRunClean() {
+        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), TEST_RUN_CLEAN_OPERATION);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void testRunClean() {
-        testRunClean(getCanonicalPath(getProjectDir()), getDeployName());
+    public void testRunClean(com.wavemaker.tools.project.Project project) {
+        antExecute(getCanonicalPath(getProjectDir(project)), getDeployName(project), TEST_RUN_CLEAN_OPERATION);
     }
 
     /**
@@ -450,6 +454,14 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
+    }
+
+    private String getDeployName() {
+        return getDeployName(this.projectManager.getCurrentProject());
+    }
+
+    private String getDeployName(com.wavemaker.tools.project.Project project) {
+        return project.getProjectName();
     }
 
     public static class DeploymentNamespaceMapper extends NamespacePrefixMapper {
