@@ -90,16 +90,6 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
-    }
-
-    @Override
-    public String deployWar(String warFileName, String deployName) {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
-    }
-
-    @Override
     public void testRunClean() {
         undeploy();
     }
@@ -117,11 +107,6 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
         target.undeploy(project);
     }
 
-    @Override
-    public String exportProject(String zipFileName) {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
-    }
-
     private CloudFoundryDeploymentTarget getCloudFoundryDeploymentTarget() {
         DeploymentTarget deploymentTarget = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
         Assert.isInstanceOf(CloudFoundryDeploymentTarget.class, deploymentTarget);
@@ -135,4 +120,5 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     public void setDesignServiceManager(DesignServiceManager designServiceManager) {
         this.designServiceManager = designServiceManager;
     }
+
 }
