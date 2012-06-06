@@ -270,7 +270,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 
 		var d;
 	    this._service._designTime = this._isDesignLoaded;
-		if (wm.connectionTimeout > 0 && !this._isDesignLoaded) {
+		if (wm.connectionTimeout > 0 ) {
 			if (inLoop) {
 			    this._service.addRequestHeader("wm-polling-request", requestId);
 			} else {
