@@ -21,16 +21,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
-import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     private DeploymentTargetManager deploymentTargetManager;
+
     private DesignServiceManager designServiceManager;
 
     @Override
@@ -89,23 +90,12 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
-    }
-
-    @Override
-    public String deployWar(String warFileName, String deployName) {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
-    }
-
-    @Override
     public void testRunClean() {
         undeploy();
     }
 
     @Override
-    public void testRunClean(String projectDir, String deployName) {
-        Project project = this.projectManager.getProject(projectDir, true);
+    public void testRunClean(Project project) {
         CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
         target.undeploy(project);
     }
@@ -115,11 +105,6 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
         Project project = this.projectManager.getCurrentProject();
         CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
         target.undeploy(project);
-    }
-
-    @Override
-    public String exportProject(String zipFileName) {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
     }
 
     private CloudFoundryDeploymentTarget getCloudFoundryDeploymentTarget() {
@@ -135,4 +120,5 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     public void setDesignServiceManager(DesignServiceManager designServiceManager) {
         this.designServiceManager = designServiceManager;
     }
+
 }

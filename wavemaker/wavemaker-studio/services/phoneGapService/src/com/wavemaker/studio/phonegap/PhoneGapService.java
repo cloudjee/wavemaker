@@ -23,7 +23,7 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
-import com.wavemaker.tools.io.Including.ResourceAttributeFilter;
+import com.wavemaker.tools.io.Including.AttributeFilter;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DownloadableFolder;
@@ -65,7 +65,7 @@ public class PhoneGapService {
      * @param themeName the theme name
      */
     @ExposeToClient
-	public void generateBuild(String xhrPath, String themeName, String configxml) {
+    public void generateBuild(String xhrPath, String themeName, String configxml) {
         Project currentProject = this.projectManager.getCurrentProject();
         currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
         getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
@@ -141,22 +141,19 @@ public class PhoneGapService {
     }
 
     private void fixupXCodeFilesFollowingSetup() {
-	/* phonegap has fixed this finally?
-
-        Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
-        String projectName = this.projectManager.getCurrentProject().getProjectName();
-        File mainViewControllerFile = xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
-
-        if (mainViewControllerFile.exists()) {
-            String content = mainViewControllerFile.getContent().asString();
-            int start = content.indexOf("(BOOL)shouldAutorotateToInterfaceOrientation");
-            int end = content.indexOf("}", start) + 1;
-            content = content.substring(0, start)
-                + "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
-                + content.substring(end);
-            mainViewControllerFile.getContent().write(content);
-        }
-	*/
+        /*
+         * phonegap has fixed this finally?
+         * 
+         * Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE); String projectName =
+         * this.projectManager.getCurrentProject().getProjectName(); File mainViewControllerFile =
+         * xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
+         * 
+         * if (mainViewControllerFile.exists()) { String content = mainViewControllerFile.getContent().asString(); int
+         * start = content.indexOf("(BOOL)shouldAutorotateToInterfaceOrientation"); int end = content.indexOf("}",
+         * start) + 1; content = content.substring(0, start) +
+         * "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
+         * + content.substring(end); mainViewControllerFile.getContent().write(content); }
+         */
     }
 
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
@@ -206,11 +203,11 @@ public class PhoneGapService {
         Folder projectFolder = this.projectManager.getCurrentProject().getRootFolder();
 
         // Delete all pages, resources and project files so we can re-copy updated version of them
-        ResourceAttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
+        AttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
         phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
 
         // Copy project files for phonegap
-	projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
+        projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
         // Update index and login HTML files
         String phonegapName = getPhoneGapScript(phoneGapFolder);
