@@ -27,6 +27,11 @@ import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.zip.ZipResourceStore.ZipFileStore;
 import com.wavemaker.tools.io.zip.ZipResourceStore.ZipFolderStore;
 
+/**
+ * Internal class used by {@link ZipResourceStore} to manage Zip files
+ * 
+ * @author Phillip Webb
+ */
 class Zip {
 
     private final File zipFile;

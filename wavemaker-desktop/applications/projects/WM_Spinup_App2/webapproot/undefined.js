@@ -10,7 +10,7 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha28", 
+	"projectSubVersion": "Alpha29", 
 	"projectVersion": 1, 
 	"saveCounter": 519, 
 	"studioVersion": "6.5.0.M2", 

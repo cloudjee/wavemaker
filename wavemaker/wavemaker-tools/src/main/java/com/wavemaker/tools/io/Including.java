@@ -24,6 +24,8 @@ import org.springframework.util.Assert;
  * {@link File}s, {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
  * {@link Resource#toString() paths}. Builders can be chained together to form compound (AND) matches.
  * 
+ * @see ResourceIncludeFilter
+ * 
  * @author Phillip Webb
  */
 public abstract class Including {
@@ -39,9 +41,9 @@ public abstract class Including {
         }
     };
 
-    private static final ResourceIncludeFilter<File> FILE_FILTER = new ResourceTypeFilter<File>(File.class);
+    private static final ResourceIncludeFilter<File> FILE_FILTER = new FileTypeFilter();
 
-    private static final ResourceIncludeFilter<Folder> FOLDER_FILTER = new ResourceTypeFilter<Folder>(Folder.class);
+    private static final ResourceIncludeFilter<Folder> FOLDER_FILTER = new FolderTypeFilter();
 
     /**
      * Filter that only accepts {@link File}s.
@@ -71,7 +73,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Folder> folderNames() {
+    public static AttributeFilter<Folder> folderNames() {
         return getFor(Folder.class, ResourceAttribute.NAME_IGNORING_CASE);
     }
 
@@ -80,7 +82,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Folder> caseSensitiveFolderNames() {
+    public static AttributeFilter<Folder> caseSensitiveFolderNames() {
         return getFor(Folder.class, ResourceAttribute.NAME);
     }
 
@@ -89,7 +91,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Folder> folderPaths() {
+    public static AttributeFilter<Folder> folderPaths() {
         return getFor(Folder.class, ResourceAttribute.PATH_IGNORING_CASE);
     }
 
@@ -98,7 +100,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Folder> caseSensitiveFolderPaths() {
+    public static AttributeFilter<Folder> caseSensitiveFolderPaths() {
         return getFor(Folder.class, ResourceAttribute.PATH);
     }
 
@@ -107,7 +109,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<File> fileNames() {
+    public static AttributeFilter<File> fileNames() {
         return getFor(File.class, ResourceAttribute.NAME_IGNORING_CASE);
     }
 
@@ -116,7 +118,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<File> caseSensitiveFileNames() {
+    public static AttributeFilter<File> caseSensitiveFileNames() {
         return getFor(File.class, ResourceAttribute.NAME);
     }
 
@@ -125,7 +127,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<File> filePaths() {
+    public static AttributeFilter<File> filePaths() {
         return getFor(File.class, ResourceAttribute.PATH_IGNORING_CASE);
     }
 
@@ -134,7 +136,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<File> caseSensitiveFilePaths() {
+    public static AttributeFilter<File> caseSensitiveFilePaths() {
         return getFor(File.class, ResourceAttribute.PATH);
     }
 
@@ -143,7 +145,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Resource> resourceNames() {
+    public static AttributeFilter<Resource> resourceNames() {
         return getFor(Resource.class, ResourceAttribute.NAME_IGNORING_CASE);
     }
 
@@ -152,7 +154,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Resource> caseSensitiveResourceNames() {
+    public static AttributeFilter<Resource> caseSensitiveResourceNames() {
         return getFor(Resource.class, ResourceAttribute.NAME);
     }
 
@@ -161,7 +163,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Resource> resourcePaths() {
+    public static AttributeFilter<Resource> resourcePaths() {
         return getFor(Resource.class, ResourceAttribute.PATH_IGNORING_CASE);
     }
 
@@ -170,7 +172,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceAttributeFilter<Resource> caseSensitiveResourcePaths() {
+    public static AttributeFilter<Resource> caseSensitiveResourcePaths() {
         return getFor(Resource.class, ResourceAttribute.PATH);
     }
 
@@ -181,10 +183,18 @@ public abstract class Including {
      * @param attribute the attribute
      * @return the filter
      */
-    public static <T extends Resource> ResourceAttributeFilter<T> getFor(Class<T> resourceType, ResourceAttribute attribute) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static <T extends Resource> AttributeFilter<T> getFor(Class<T> resourceType, ResourceAttribute attribute) {
         Assert.notNull(resourceType, "ResourceType must not be null");
         Assert.notNull(attribute, "Attribute must not be null");
-        return new ResourceAttributeFilter<T>(attribute, null, new ResourceTypeFilter<T>(resourceType));
+        ResourceTypeFilter resourceTypeFilter = new ResourceTypeFilter<T>(resourceType);
+        if (File.class.equals(resourceType)) {
+            return (AttributeFilter<T>) new FileAttributeFilter(attribute, null, resourceTypeFilter);
+        }
+        if (Folder.class.equals(resourceType)) {
+            return (AttributeFilter<T>) new FolderAttributeFilter(attribute, null, resourceTypeFilter);
+        }
+        return (AttributeFilter<T>) new ResourceAttributeFilter2(attribute, null, resourceTypeFilter);
     }
 
     /**
@@ -291,18 +301,22 @@ public abstract class Including {
     /**
      * The {@link ResourceIncludeFilter} and builder used to further restrict filtering.
      */
-    public static class ResourceAttributeFilter<T extends Resource> implements ResourceIncludeFilter<T> {
+    public static abstract class AttributeFilter<T extends Resource> implements ResourceIncludeFilter<T> {
 
         private final ResourceAttribute attribute;
 
-        private final ResourceAttributeFilter<T> parent;
+        private final AttributeFilter<T> parent;
 
         private final ResourceIncludeFilter<T> filter;
 
-        public ResourceAttributeFilter(ResourceAttribute attribute, ResourceAttributeFilter<T> parent, ResourceIncludeFilter<T> filter) {
+        public AttributeFilter(ResourceAttribute attribute, AttributeFilter<T> parent, ResourceIncludeFilter<T> filter) {
             this.attribute = attribute;
             this.parent = parent;
             this.filter = filter;
+        }
+
+        protected final ResourceAttribute getAttribute() {
+            return this.attribute;
         }
 
         /**
@@ -311,7 +325,7 @@ public abstract class Including {
          * @param prefix the prefix to filter against. If multiple values are specified any may match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> starting(CharSequence... prefix) {
+        public AttributeFilter<T> starting(CharSequence... prefix) {
             return newResourceAttributeFilter(stringFilter(StringOperation.STARTS, prefix));
         }
 
@@ -321,7 +335,7 @@ public abstract class Including {
          * @param prefix the prefix to filter against. If multiple values are specified all must match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> notStarting(CharSequence... prefix) {
+        public AttributeFilter<T> notStarting(CharSequence... prefix) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.STARTS, prefix)));
         }
 
@@ -332,7 +346,7 @@ public abstract class Including {
          * @return the filter
          */
 
-        public ResourceAttributeFilter<T> ending(CharSequence... postfix) {
+        public AttributeFilter<T> ending(CharSequence... postfix) {
             return newResourceAttributeFilter(stringFilter(StringOperation.ENDS, postfix));
         }
 
@@ -342,7 +356,7 @@ public abstract class Including {
          * @param postfix the postfix to filter against. If multiple values are specified all must match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> notEnding(CharSequence... postfix) {
+        public AttributeFilter<T> notEnding(CharSequence... postfix) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.ENDS, postfix)));
         }
 
@@ -352,7 +366,7 @@ public abstract class Including {
          * @param content the contents to filter against. If multiple values are specified any may match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> containing(CharSequence... content) {
+        public AttributeFilter<T> containing(CharSequence... content) {
             return newResourceAttributeFilter(stringFilter(StringOperation.CONTAINS, content));
         }
 
@@ -362,7 +376,7 @@ public abstract class Including {
          * @param content the contents to filter against. If multiple values are specified all must match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> notContaining(CharSequence... content) {
+        public AttributeFilter<T> notContaining(CharSequence... content) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.CONTAINS, content)));
         }
 
@@ -372,7 +386,7 @@ public abstract class Including {
          * @param value the values to match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> matching(CharSequence... value) {
+        public AttributeFilter<T> matching(CharSequence... value) {
             return newResourceAttributeFilter(stringFilter(StringOperation.MATCHES, value));
         }
 
@@ -382,7 +396,7 @@ public abstract class Including {
          * @param value the value to match
          * @return the filter
          */
-        public ResourceAttributeFilter<T> notMatching(CharSequence... value) {
+        public AttributeFilter<T> notMatching(CharSequence... value) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.MATCHES, value)));
         }
 
@@ -398,9 +412,7 @@ public abstract class Including {
             return new InvertFilter<T>(filter);
         }
 
-        private ResourceAttributeFilter<T> newResourceAttributeFilter(ResourceIncludeFilter<T> filter) {
-            return new ResourceAttributeFilter<T>(this.attribute, this, filter);
-        }
+        protected abstract AttributeFilter<T> newResourceAttributeFilter(ResourceIncludeFilter<T> filter);
 
         @Override
         public boolean include(T resource) {
@@ -408,6 +420,42 @@ public abstract class Including {
                 return false;
             }
             return this.filter.include(resource);
+        }
+    }
+
+    public static class FileAttributeFilter extends AttributeFilter<File> implements ResourceIncludeFilter<File> {
+
+        public FileAttributeFilter(ResourceAttribute attribute, AttributeFilter<File> parent, ResourceIncludeFilter<File> filter) {
+            super(attribute, parent, filter);
+        }
+
+        @Override
+        protected AttributeFilter<File> newResourceAttributeFilter(ResourceIncludeFilter<File> filter) {
+            return new FileAttributeFilter(getAttribute(), this, filter);
+        }
+    }
+
+    public static class FolderAttributeFilter extends AttributeFilter<Folder> implements ResourceIncludeFilter<Folder> {
+
+        public FolderAttributeFilter(ResourceAttribute attribute, AttributeFilter<Folder> parent, ResourceIncludeFilter<Folder> filter) {
+            super(attribute, parent, filter);
+        }
+
+        @Override
+        protected AttributeFilter<Folder> newResourceAttributeFilter(ResourceIncludeFilter<Folder> filter) {
+            return new FolderAttributeFilter(getAttribute(), this, filter);
+        }
+    }
+
+    public static class ResourceAttributeFilter2 extends AttributeFilter<Resource> implements ResourceIncludeFilter<Resource> {
+
+        public ResourceAttributeFilter2(ResourceAttribute attribute, AttributeFilter<Resource> parent, ResourceIncludeFilter<Resource> filter) {
+            super(attribute, parent, filter);
+        }
+
+        @Override
+        protected AttributeFilter<Resource> newResourceAttributeFilter(ResourceIncludeFilter<Resource> filter) {
+            return new ResourceAttributeFilter2(getAttribute(), this, filter);
         }
     }
 
@@ -422,6 +470,20 @@ public abstract class Including {
         @Override
         public boolean include(T resource) {
             return this.resourceType.isInstance(resource);
+        }
+    }
+
+    private static class FileTypeFilter extends ResourceTypeFilter<File> {
+
+        public FileTypeFilter() {
+            super(File.class);
+        }
+    }
+
+    private static class FolderTypeFilter extends ResourceTypeFilter<Folder> {
+
+        public FolderTypeFilter() {
+            super(Folder.class);
         }
     }
 

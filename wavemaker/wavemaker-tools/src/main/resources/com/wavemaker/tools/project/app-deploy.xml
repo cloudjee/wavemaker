@@ -489,22 +489,4 @@
 
     <target name="clean" depends="init, -clean-inline, -clean-full-build">
     </target>
-
-    <target name="export-project"
-            description="Zip project">
-        <copy todir="${zip.folder.name}/${project.new.name}">
-	  <fileset dir="${project.dir}" >
-            <include name="**"/>
-            <exclude name="**/.svn/**/*.*" />
-            <exclude name="export/**"/>
-            <exclude name="dist/**"/>
-            <exclude name="webapproot/WEB-INF/classes/**"/>
-            <exclude name="webapproot/WEB-INF/lib/**"/>
-            <exclude name="*.xml"/>
-	  </fileset>
-        </copy>
-
-        <zip destfile="${zip.file.name}" basedir="${zip.folder.name}" />
-	<delete dir="${zip.folder.name}" />
-    </target>
 </project>

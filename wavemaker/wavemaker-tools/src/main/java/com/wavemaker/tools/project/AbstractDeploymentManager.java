@@ -44,6 +44,9 @@ import com.wavemaker.tools.deployment.Deployments;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
 
@@ -83,18 +86,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     public void setProjectCompiler(ProjectCompiler projectCompiler) {
         this.projectCompiler = projectCompiler;
-    }
-
-    protected Folder getProjectDir() {
-        Project currentProject = this.projectManager.getCurrentProject();
-        if (currentProject == null) {
-            throw new WMRuntimeException("Current project must be set");
-        }
-        return currentProject.getRootFolder();
-    }
-
-    protected String getDeployName() {
-        return this.projectManager.getCurrentProject().getProjectName();
     }
 
     /**
@@ -676,4 +667,37 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         }
     }
 
+    @Override
+    public String exportProject(String zipFileName) {
+        Project project = getProjectManager().getCurrentProject();
+        Folder exportFolder = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT);
+        ZippedFolderInputStream inputStream = new ZippedFolderInputStream(project.getRootFolder(), new ExportIncludeFilter());
+        File exportFile = exportFolder.getFile(zipFileName);
+        exportFile.getContent().write(inputStream);
+        return exportFile.toString().substring(1);
+    }
+
+    private static class ExportIncludeFilter implements ResourceIncludeFilter<Resource> {
+
+        private static final ResourceIncludeFilter<Folder> PATHS = Including.folderPaths().notStarting("/export", "/dist",
+            "/webapproot/WEB-INF/classes", "/webapproot/WEB-INF/lib");
+
+        @Override
+        public boolean include(Resource resource) {
+            if (resource instanceof Folder) {
+                Folder folder = (Folder) resource;
+                if (!PATHS.include(folder)) {
+                    return false;
+                }
+            }
+            if (resource instanceof File) {
+                File file = (File) resource;
+                if (file.getParent().getParent() == null && file.getName().toLowerCase().endsWith(".xml")) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
 }

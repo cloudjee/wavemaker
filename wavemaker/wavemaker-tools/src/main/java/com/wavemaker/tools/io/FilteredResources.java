@@ -16,7 +16,6 @@ package com.wavemaker.tools.io;
 
 import java.util.Iterator;
 
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 
 /**
@@ -30,16 +29,13 @@ public class FilteredResources<S extends Resource, T extends Resource> extends A
 
     private final Resources<S> resources;
 
-    private final Class<?> filterType;
-
-    private final ResourceIncludeFilter<T> filter;
+    private final GenericResourceIncludeFilter<T> filter;
 
     private FilteredResources(Resources<S> resources, ResourceIncludeFilter<T> filter) {
         Assert.notNull(resources, "Resources must not be null");
         Assert.notNull(filter, "Filter must not be null");
         this.resources = resources;
-        this.filterType = GenericTypeResolver.resolveTypeArgument(filter.getClass(), ResourceIncludeFilter.class);
-        this.filter = filter;
+        this.filter = GenericResourceIncludeFilter.filterNonMatchingGeneric(filter);
     }
 
     @Override
@@ -49,10 +45,7 @@ public class FilteredResources<S extends Resource, T extends Resource> extends A
 
             @Override
             protected boolean isElementFiltered(S element) {
-                if (!FilteredResources.this.filterType.isInstance(element)) {
-                    return true;
-                }
-                return !FilteredResources.this.filter.include((T) element);
+                return !FilteredResources.this.filter.include(element);
             }
         };
         return (Iterator<T>) filteredIterator;

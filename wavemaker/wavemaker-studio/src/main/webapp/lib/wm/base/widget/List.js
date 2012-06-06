@@ -553,6 +553,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    this._doingAutoSize = false;
 	}
     },
+    selectByIndex: function(inIndex) {
+	if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5) {
+	    var renderHiddenGridWas = this._renderHiddenGrid;
+	    this._renderHiddenGrid = true;
+	    if (this.renderVisibleRowsOnly) {
+		this.renderVisibleRowsOnly = false;
+		this._render();
+		this.renderVisibleRowsOnly = true;
+	    } else {
+		this._render();
+	    }
+	    this._renderHiddenGrid = renderHiddenGridWas;
+	}
+	this.inherited(arguments);
+    },
 	    _onShowParent: function() {
 		if (this._renderDojoObjSkipped && !this._headerRendered) {
 		    wm.onidle(this, "_render");

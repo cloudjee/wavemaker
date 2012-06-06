@@ -37,9 +37,9 @@ DeploymentDialog.widgets = {
 					      }],
 					      */
     deploymentListVar: ["wm.Variable", {type: "EntryData", isList:true}],
-    confirmSaveDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"mainPanel2","buttonBarId":"buttonBar4"}, {}, {
-        mainPanel2: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
-	    confirmSaveDialogHtml1: ["wm.Html", {"border":"0","height":"100%","width":"100%", html: "You have unsaved changes that will be lost; continue?"}, {}]
+    confirmSaveDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "border":"1","height":"120px","title":"Save Changes","width":"400px","containerWidgetId":"mainPanel2","buttonBarId":"buttonBar4"}, {}, {
+        mainPanel2: ["wm.studio.DialogMainPanel", {autoScroll:false},{}, {
+	    confirmSaveDialogHtml1: ["wm.Html", {"border":"0","height":"100%","width":"100%", html: "You have unsaved changes that will be lost; continue?", autoScroll:false}, {}]
 	}],
 	buttonBar4: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		saveDialogDontSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Don't Save","margin":"4","width":"100px"}, {}],
@@ -102,8 +102,8 @@ DeploymentDialog.widgets = {
 		}],
 		editLayer: ["wm.Layer", {}, {}, {
 		    editPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", borderColor: "#525A6A", border: "2,0,2,0"}, {}, {
-			settingsPanel: ["wm.FancyPanel", {"borderColor":"black","fitToContentHeight":false,"height":"180px","innerBorder":"1","labelHeight":"24","margin":"10,10,10,0","title":"Settings"}, {}, {
-			    settingLayers: ["wm.Layers", {margin: "5,50,5,50", height: "100%", width: "100%"}, {}, {
+			settingsPanel: ["wm.FancyPanel", {"borderColor":"black","fitToContentHeight":true,"height":"180px","innerBorder":"1","labelHeight":"24","margin":"10,10,10,0","title":"Settings"}, {}, {
+			    settingLayers: ["wm.Layers", {margin: "5,50,5,50", height: "100%", width: "100%", fitToContentHeight: true}, {}, {
 				tomcatLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    tcDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Tomcat Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    tcDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%", required: true}, {}],
