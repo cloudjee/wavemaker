@@ -120,15 +120,26 @@ Studio.extend({
 	exportClick: function(inSender) {
 	    studio.beginWait("Building ZIP File...");
 	    studio.deploymentService.requestAsync("exportProject", [studio.project.projectName + "." + studio.application.getFullVersionNumber() + ".zip"], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
-	    	},			  
+	},			  
 	exportClickCallback: function(inResponse) {
 	    studio.endWait("Building ZIP File...");
-	    if (!studio.isCloud()) {
-		app.alert(this.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", {inResponse: inResponse}));
-		app.alertDialog.setWidth("600px");
-	    } else {
-		this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
-	    }
+	    app.alert(this.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", {inResponse: inResponse}));
+	    app.alertDialog.setWidth("600px");
+	    var b = new wm.Button({owner: this,
+				   _classes: {domNode: ["StudioButton"]},
+				   parent: app.alertDialog.buttonBar,
+				   caption: this.getDictionaryItem("ALERT_DOWNLOAD_BUTTON_CAPTION"),
+				   width: "140px"});
+	    b.parent.moveControl(b,0);
+	    app.alertDialog.buttonBar.reflow();
+	    b.connect(b, "onclick", this, function() {
+		app.alertDialog.hide();
+		this.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=" + inResponse);
+	    });
+	    app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
+		b.destroy();
+	    });
+	    //this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 
 	    studio.application.incSubversionNumber();
 	    var src = studio.project.generateApplicationSource();

@@ -2239,8 +2239,12 @@ Studio.extend({
     },
 
     revertProjectClick: function(inSender) {
-	//studio.project.openProject1(studio.project.projectName, studio.project.pageName, new dojo.Deferred());
-	studio.revertProjectOptionsDialog.show();
+	app.confirm(this.getDictionaryItem("CONFIRM_REVERT_PROJECT"),
+		    false,
+		    function() {
+			studio.project.openProject1(studio.project.projectName, studio.project.pageName, new dojo.Deferred());
+		    });
+	//studio.revertProjectOptionsDialog.show();
     }
 });
 

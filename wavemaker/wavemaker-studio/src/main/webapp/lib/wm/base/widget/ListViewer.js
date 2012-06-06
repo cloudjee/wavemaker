@@ -71,7 +71,11 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	    this.itemNumber.setData({dataValue: index+1});
 	    var widgetsJson = dojo.clone(this.owner._widgetsJson);
 	    this.fixWireIds(widgetsJson);
-	    this.createComponents(widgetsJson, this);
+	var root = this.createComponents(widgetsJson, this)[0];
+	root._updating = true;
+	root.setWidth("100%");
+	root.setHeight("100%");
+	root._updating = false;
 	    //this.destroyWires(this);
 
 	this.invalidCss = true;

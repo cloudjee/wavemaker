@@ -19,6 +19,7 @@ dojo.require("wm.base.widget.Container_design");
 
 // design only
 wm.ListViewer.extend({
+/*
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
 			case "dataSet":
@@ -26,7 +27,7 @@ wm.ListViewer.extend({
 		}
 		return this.inherited(arguments);
 	},
-/*
+
 	set_dataSet: function(inDataSet) {
 		// support setting dataSet via id from designer
 		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
