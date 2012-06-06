@@ -22,7 +22,6 @@ import java.util.Map;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 
 /**
@@ -77,15 +76,13 @@ public class Deployments {
         List<DeploymentInfo> deployments = forProject(projectName);
         if (!StringUtils.hasText(deployment.getDeploymentId())) {
             deployment.setDeploymentId(projectName + deployments.size());
-            deployments.add(deployment);
-        } else {
-            DeploymentInfo existing = forId(projectName, deployment.getDeploymentId());
-            if (existing != null) {
-                deployments.set(deployments.indexOf(existing), deployment);
-            } else {
-                throw new WMRuntimeException("/common/deployments.js is in an unexpected state.");
-            }
         }
+
+        DeploymentInfo existing = forId(projectName, deployment.getDeploymentId());
+        if (existing != null) {
+            deployments.remove(existing);
+        }
+        deployments.add(deployment);
     }
 
     /**
@@ -99,7 +96,6 @@ public class Deployments {
                 return deployments.remove(i);
             }
         }
-        throw new WMRuntimeException("/common/deployments.js is in an unexpected state.");
-
+        return null;
     }
 }
