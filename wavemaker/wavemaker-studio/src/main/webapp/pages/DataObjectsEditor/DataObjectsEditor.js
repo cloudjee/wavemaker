@@ -56,6 +56,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		});
 	    }
 
+	    if (studio._runRequested) {
+		this.toolbarBtnHolder.setDisabled(true);
+	    }
+	    this.subscribe("testRunStateChange", this, function() {
+		this.toolbarBtnHolder.setDisabled(studio._runRequested);
+	    });
+
 	},
     onShow: function() {
 		    //if (this.dataObject && this.dataObject.name) {

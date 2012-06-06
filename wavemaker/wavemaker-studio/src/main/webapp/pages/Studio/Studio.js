@@ -61,7 +61,9 @@ dojo.declare("Studio", wm.Page, {
 	    wm.applyFrameworkFixes();
 	this.progressDialog.titleButtonPanel.setShowing(true);
 	//this.progressDialog.titleClose.setShowing(true);
-
+	this.connect(this.navigationMenu, "renderDojoObj", this, function() {
+	    this.disableMenuBar(!studio.application);
+	});
 	    studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
 		wm.studioConfig.environment = inResult;
 	    });
@@ -443,8 +445,6 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	},
     getDeploymentInfoSuccess: function(inResult) {
-	console.log("DEPLOYMENT DATA:");
-	console.log(inResult);
 	this._deploymentData = inResult;
 	this.updateDeploymentsMenu();
 	if (this.deploymentDialog.page)
@@ -699,6 +699,15 @@ dojo.declare("Studio", wm.Page, {
 	    break;
 	}
 	this._runRequested = false;
+	this.updateStateWhileDeploying(true);
+    },
+    updateStateWhileDeploying: function(isDeployed) {
+	/* Only if there is an app open */
+	if (studio.application) {
+	    dojo.publish("testRunStateChange");
+	    //this.servicesPopupBtn.set('disabled', !isDeployed); // see also menu.js disableMenuBar
+	    this.disableMenuBar(false);
+	}
     },
     deployError: function(result) {
 	var application = this.application || this._application;
@@ -728,6 +737,7 @@ dojo.declare("Studio", wm.Page, {
 	    d.addErrback(dojo.hitch(this, "deployError"));
             if (!noWait)
 		this.waitForDeferred(d, inMsg);
+	    this.updateStateWhileDeploying(false);
 	},
 
 	//=========================================================================
