@@ -4,14 +4,14 @@
 		"operationType": null,
 		"parameters": [{
 			"name": "key",
-			"type": "long"
+			"type": "int"
 		}],
 		"returnType": null
 	}, {
 		"name": "createKey",
 		"operationType": null,
 		"parameters": null,
-		"returnType": null
+		"returnType": "java.lang.String"
 	}, {
 		"name": "launchStudio",
 		"operationType": null,
