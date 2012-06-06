@@ -73,17 +73,13 @@ public interface DeploymentManager {
 
     File buildWar(File warFile, boolean includeEar) throws IOException;
 
-    void buildWar(String warFileLocation, boolean includeEar) throws IOException;
-
-    String deployWar(String warFileName, String deployName);
-
     void undeploy();
 
     /**
      * Export the current project to a zip file with the given name.
      * 
      * @param zipFileName the name of the file, excluding any path.
-     * @return the full path of the exported file to be displayed to the user
+     * @return the full path of the zip file (relative to the project)
      */
     String exportProject(String zipFileName);
 

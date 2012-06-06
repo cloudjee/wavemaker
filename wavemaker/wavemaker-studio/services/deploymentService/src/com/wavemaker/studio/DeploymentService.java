@@ -103,19 +103,6 @@ public class DeploymentService {
     }
 
     /**
-     * Dowload the current project as a ZIP file.
-     * 
-     * @return the download response
-     */
-    public DownloadResponse downloadProjectZip() {
-        // FIXME Download of a response has been broken since 6.5. This export functionality had been changed to include
-        // a version number but the download always tried to export the file without an extension. We need to re-think
-        // the concept of export in the cloud world. Perhaps export should just stream a response, rather than saving
-        // it inside the projects folder.
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Adapter method that can be used to convert a {@link Resource} to a {@link DownloadResponse}.
      * 
      * @param resource the resource
