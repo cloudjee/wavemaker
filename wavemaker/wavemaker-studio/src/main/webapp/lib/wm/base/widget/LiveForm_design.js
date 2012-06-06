@@ -243,7 +243,7 @@ wm.LiveFormBase.extend({
 /*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
 		    e = this.createEditor(f, props, {}, wm.getEditorClassName(f.displayType));
 		    if (e) {
-			if (e instanceof wm.Number || e instanceof wm.Date || e instanceof wm.DateTime)
+			if (wm.isInstanceType(e, [wm.Number, wm.Date, wm.DateTime]))
 			    e.emptyValue = "zero";
 			else if (e instanceof wm.Text)
 			    e.emptyValue = "emptyString";
@@ -289,11 +289,14 @@ wm.LiveFormBase.extend({
 		    var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
 	        if (relatedTypeDef && !relatedTypeDef.liveService) {
 		    props.editingMode = "editable subform";
+			wm.require("wm.RelatedEditor");
 		    return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
 		} else if (relatedTypeDef && fieldDef && !fieldDef.isList) {
 		    props.name = wm.makeNameForProp(inFormField, "Lookup")
 		    return wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
 		} else {
+					wm.require("wm.RelatedEditor");
+
 		    return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
 		}
 	},
@@ -372,8 +375,8 @@ wm.LiveFormBase.extend({
 	addEditorToForm: function(inEditor) {
 		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
 		if (ff) {
-                    if (e instanceof wm.RelatedEditor)
-			var f = this.addEditorToView(e, ff);
+            if (wm.isInstanceType(e, wm.RelatedEditor))
+				var f = this.addEditorToView(e, ff);
 		    if (f)
 			wm.updateFieldEditorProps(e, f)
 		}
@@ -387,7 +390,7 @@ wm.LiveFormBase.extend({
 			lv = this.findLiveVariable(),
 			v = lv && lv.liveView;
 		if (v) {
-			if (inEditor instanceof wm.Editor)
+			if (wm.isInstanceType(inEditor, wm.Editor))
 				return v.addField(ff);
 			else {
 				v.addRelated(ff);
@@ -447,11 +450,11 @@ wm.LiveFormBase.extend({
 	// FIXME: remove knowledge of editor type
 	_getInputBindInfo: function(inEditor) {
 		// FIXME: testing
-		if (inEditor instanceof wm.Editor)
+		if (wm.isInstanceType(inEditor,wm.Editor))
 			return;
 		var
 			f = inEditor.formField,
-			targetProperty = inEditor instanceof wm.Editor ? "dataValue" : (inEditor instanceof wm.RelatedEditor ? "dataSet" : null),
+			targetProperty = wm.isInstanceType(inEditor, wm.Editor) ? "dataValue" : (wm.isInstanceType(inEditor, wm.RelatedEditor) ? "dataSet" : null),
 			ds = this.dataSet,
 			source = ds ? (ds.getId() + (f ? "." + f : "")) : "";
 		if (source)
@@ -459,12 +462,12 @@ wm.LiveFormBase.extend({
 	},
 	_getOutputBindInfo: function(inEditor) {
 		// FIXME: testing
-		if (inEditor instanceof wm.Editor)
+		if (wm.isInstanceType(inEditor, wm.Editor))
 			return;
 		var
 			f = inEditor.formField,
 			targetProperty = "dataOutput" + (f ? "." + f : ""),
-			p = inEditor instanceof wm.Editor ? "dataValue" : (inEditor instanceof wm.RelatedEditor ? "dataOutput" : null),
+			p = wm.isInstanceType(inEditor, wm.Editor) ? "dataValue" : (wm.isInstanceType(inEditor, wm.RelatedEditor) ? "dataOutput" : null),
 			source = inEditor.getId() + (p ? "." + p : "");
 		return f !== undefined && p ? {targetProperty: targetProperty, source: source} : false;
 	},
