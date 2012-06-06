@@ -28,7 +28,7 @@ public class CloudFoundrySecurityFilterTest {
 
     private static final String COOKIE_NAME = "wavemaker_authentication_token";
 
-    private static final String SPINUP_URL = "http://wavemaker.cloudfoundry.com";
+    private static final String SPINUP_URL = "http://launchWaveMaker.cloudfoundry.com";
 
     private final CloudFoundrySecurityFilter filter = new CloudFoundrySecurityFilter();
 
