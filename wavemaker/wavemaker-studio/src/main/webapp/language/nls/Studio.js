@@ -234,7 +234,8 @@
     
     WAIT_BUILDING_WAR: "Building WAR file. It may take several minutes. Please wait.",
     ALERT_LIVE_LAYOUT_SECURITY_WARNING: "In order for Live Layout to work, project security needs to be disabled.<br/>Please uncheck the 'Enable Security' check box in the Security Editor to disable security.<br/>To disable Live Layout, launch Studio in 'nolive' mode.",
-    ALERT_BUILDING_ZIP_SUCCESS: "Successfully exported project to zip file at <ul><li>${inResponse}</li></ul>To import this project unzip it into the projects directory of another studio.",
+    ALERT_BUILDING_ZIP_SUCCESS: "Successfully exported project to zip file into your Project Folder at <ul><li>${inResponse}</li></ul>To import this project unzip it into the projects directory of another studio.",
+    ALERT_DOWNLOAD_BUTTON_CAPTION: "Download Now",
     ALERT_BUILDING_ZIP_FAILED: "Error occurred while building ZIP FILE!<br/>${error}",
     ALERT_BUILDING_WAR_SUCCESS: "Successfully generated WAR file: <ul><li>${inResponse}</li></ul>",
     ALERT_BUILDING_WAR_FAILED: "Error occurred while building WAR FILE!<br/>${error}",
@@ -325,6 +326,7 @@
     "wm.studio.Project.TOAST_COPY_PROJECT_SUCCESS": "${oldName} saved as ${newName}; you are still editting ${oldName}",
     "wm.studio.Project.ALERT_DELETE_PAGE_FAILED": "Page ${pageName} could not be deleted: ${error}",
     "CONFIRM_CLOSE_PROJECT": "Before closing ${projectName}, do you want to save your changes?",
+    "CONFIRM_REVERT_PROJECT": "Are you sure you want to revert to last saved project?",
     WAIT_CREATING_PAGE: "Creating page: ${pageName}",
     CONFIRM_NEW_PAGE: "Before adding a new page, do you want to save your changes?",
     CONFIRM_OPEN_PAGE : "Before opening ${newPage}, do you want to save ${oldPage}?",
