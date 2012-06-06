@@ -70,7 +70,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 			File uploadPath = new File(uploadDirName);
 			uploadPath.mkdirs();
 			File localStudioWar =  new File(uploadPath, SpinupConstants.STUDIO_FILE); 	
-
+			//Block deployments here
 			if(!localStudioWar.exists() || replaceExisting){
 				try{
 					byte[] buffer = new byte[5242880];  //5mb
@@ -82,8 +82,8 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 					else{
 						path = customURL;
 					}
-					if (this.logger.isDebugEnabled()) {
-						this.logger.debug("Downloading studio from: " + path);
+					if (this.logger.isInfoEnabled()) {
+						this.logger.info("Downloading studio from: " + path);
 					}
 					URL url  = new URL(path);
 					url.openConnection();
@@ -111,8 +111,8 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 					}}
 			}
 			else{
-				if (this.logger.isDebugEnabled()) {
-					this.logger.debug("Using existing studio WAR");	
+				if (this.logger.isInfoEnabled()) {
+					this.logger.info("Using existing studio WAR");	
 			}}
 			this.studioWarFile = localStudioWar; 
 
