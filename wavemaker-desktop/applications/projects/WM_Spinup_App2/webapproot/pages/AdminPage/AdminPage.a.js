@@ -9,14 +9,18 @@ svarGetKey: ["wm.ServiceVariable", {"operation":"createKey","service":"SpinUpSer
 input: ["wm.ServiceInput", {"type":"createKeyInputs"}, {}]
 }],
 svarUpdate: ["wm.ServiceVariable", {"operation":"checkForUpdate","service":"SpinUpService"}, {}, {
-input: ["wm.ServiceInput", {"type":"checkForUpdateInputs"}, {}]
+input: ["wm.ServiceInput", {"type":"checkForUpdateInputs"}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"KeyEditor.dataValue","targetProperty":"key"}, {}]
+}]
+}]
 }],
 layoutBox1: ["wm.Layout", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
 panel1: ["wm.Panel", {"height":"40px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 keyGenButton: ["wm.Button", {"caption":"GenKey","margin":"4"}, {"onclick":"svarGetKey"}],
 updateButton: ["wm.Button", {"caption":"Update","margin":"4"}, {"onclick":"svarUpdate"}]
 }],
-KeyEditor: ["wm.Number", {"caption":"Key","dataValue":undefined,"displayValue":""}, {}]
+KeyEditor: ["wm.Number", {"caption":"Key","captionSize":"50px","dataValue":undefined,"displayValue":"","maximum":NaN}, {}]
 }]
 };
 

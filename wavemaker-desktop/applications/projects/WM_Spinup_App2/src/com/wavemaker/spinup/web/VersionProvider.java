@@ -39,8 +39,8 @@ public class VersionProvider {
 				break;
 			}
 		}
-		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("Studio version is: " + this.studioVersion);	
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Studio version is: " + this.studioVersion);	
 		}
 		return this.studioVersion;
 

@@ -8,7 +8,7 @@
         <property name="serviceType" ref="JavaService"/>
     </bean>
 	<bean name="wavemakerMongoService" class="org.cloudfoundry.client.lib.CloudService">
-		<property name="name" value="wavemaker"/>
+		<property name="name" value="wavemaker_project_store"/>
 		<property name="type" value="database"/>
 		<property name="vendor" value="mongodb"/>
 		<property name="version" value="1.8"/>
