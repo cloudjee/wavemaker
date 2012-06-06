@@ -111,9 +111,13 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		var def = dojo.rawXhrPost(props);
 	    if (this._designTime && studio.isCloud()) {
 		var newdef = new dojo.Deferred();
-		def.addCallback(function(inResult) {
-		    newdef.callback(dojo.fromJson(inResult.result));
-		});
+		def.addCallbacks(
+		    function(inResult) {
+			newdef.callback(dojo.fromJson(inResult.result));
+		    },
+		    function(inError) {
+			newdef.errback(inError);
+		    });
 		def = newdef; // return the new deferred, which only notifies after we've decoded the data
 	    }
 		deferredRequestHandler = dojo.mixin(deferredRequestHandler, def.ioArgs);
