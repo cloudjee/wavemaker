@@ -267,7 +267,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     private Boolean appNameInUse(CloudFoundryClient client, String appName) {
         try {
             if (client.getApplication(appName) != null) {
-                log.info("ApplicatonName: " + appName + " is already in use");
+                log.info("ApplicationName: " + appName + " is already in use");
                 return true;
             } else {
                 log.info("ApplicatonName with name: " + appName + "was NOT found");
