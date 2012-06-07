@@ -40,7 +40,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 	this.serviceListVar.setData(inResult);
     },
         selectedServiceChange: function(inSender) {
-	    var serviceName = this.serviceList.selectedItem.getValue("name");
+	    var serviceName = this._serviceName = this.serviceList.selectedItem.getValue("name");
 	    var type =  this.serviceList.selectedItem.getValue("vendor");
 	    this.packageInput.setDataValue(DEFAULT_PACKAGE_ROOT + serviceName);
 	    setupWidgetsForDatabaseType(type, 
@@ -140,9 +140,10 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 				       );
     },
     _importResult: function() {
-	    studio.endWait();
-	    studio.updateFullServiceList();
-	    this.owner.owner.hide();
+	studio.endWait();
+	this.dataModelName = this._serviceName;
+	studio.updateServices();
+	this.owner.owner.dismiss("Import");
     },
 
   _end: 0

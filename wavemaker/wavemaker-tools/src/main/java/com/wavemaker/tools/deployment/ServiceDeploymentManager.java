@@ -61,7 +61,7 @@ public class ServiceDeploymentManager {
         return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
     }
 
-    public com.wavemaker.tools.io.File generateWebapp(Map<String, String> properties) {
+    private com.wavemaker.tools.io.File generateWebapp(Map<String, String> properties) {
         return generateWebapp(getProjectRoot(), properties, false);
     }
 
@@ -75,7 +75,7 @@ public class ServiceDeploymentManager {
      * ignore) { } } }
      */
 
-    public com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, boolean includeEar) {
+    private com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, boolean includeEar) {
         File stagingProjectDir = null;
 
         try {

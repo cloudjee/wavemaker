@@ -172,9 +172,11 @@ public class DeploymentService {
      */
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
         try {
+
             if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
+
             if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
                 com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo);
                 if (!f.exists()) {
@@ -184,8 +186,10 @@ public class DeploymentService {
                     return SUCCESS;
                 }
             }
+
             String ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
                 this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
+
             return ret;
         } catch (DeploymentStatusException e) {
             return e.getStatusMessage();

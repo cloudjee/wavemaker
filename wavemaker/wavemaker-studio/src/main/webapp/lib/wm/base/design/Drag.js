@@ -187,9 +187,12 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		    inHit.t -= d.bounds.t;
 		    t = (this.designable ? this._findTarget(inHit, d, 0) : d.containerWidget);
 		}
-	    } else if (this.targetInRoot(inHit)) {
-		t = (this.designable ? this._findTarget(inHit, this.root, 0) : this.root);
-	    } 
+	    } else {
+		inHit.l -= studio.designer.marginExtents.l;
+		if (this.targetInRoot(inHit)) {
+		    t = (this.designable ? this._findTarget(inHit, this.root, 0) : this.root);
+		} 
+	    }
 	    if (!t) {
 		kit._setMarginBox(this.markNode, 0, 0, 0, 0);
 	    }
@@ -222,6 +225,26 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		var w = ws[i];
 			if (w != this.info.control && w.container && !w.getLock()) {
 			    b = kit._getMarginBox(w.domNode);
+			    if (this.isWidgetInBox(w, inWidget, b, h, sl, st,m)) {
+				var result = this._findTarget(h, w, m+1);//(w.marginExtents.l && w.marginExtents.t && w.marginExtents.r && w.marginExtents.b) ? m : m+1);
+                                //console.log("RESULT " + w.toString() + ": " + result);
+				if (result) return result;
+                                //return result;
+			    }
+			}
+	    }
+		// FIXME: sort out _noCreate
+		var t = inWidget._noCreate ? inWidget.parent : inWidget;
+	    if (this.canBeTarget(t)) {
+		return t;
+	    } else if (inWidget.containerWidget && this.canBeTarget(inWidget.containerWidget) && this.isWidgetInBox(inWidget.containerWidget, inWidget, kit._getMarginBox(inWidget.containerWidget.domNode),h,sl,st,m)) {
+		return inWidget.containerWidget;
+	    } else {
+		return null;
+	    }
+	},
+    isWidgetInBox: function(w, inWidget, b, h,sl,st,m) {
+	var o;
 				if (w.domNode.parentNode != inWidget.domNode){
 					// offset from target rect to hit frame
 					o = wm.calcOffset(w.domNode.parentNode, inWidget.domNode);
@@ -239,17 +262,10 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 				if (h.l-b.l>m && b.r-h.l>m && h.t-b.t>m && b.b-h.t>m) {
 				    h.l -= b.l + w.marginExtents.l + w.borderExtents.l; 
 				    h.t -= b.t + w.marginExtents.t + w.borderExtents.t;
-				    var result = this._findTarget(h, w, m+1);//(w.marginExtents.l && w.marginExtents.t && w.marginExtents.r && w.marginExtents.b) ? m : m+1);
-                                    //console.log("RESULT " + w.toString() + ": " + result);
-                                    return result;
+				    return true;
 				}
-			}
-	    }
-		// FIXME: sort out _noCreate
-		var t = inWidget._noCreate ? inWidget.parent : inWidget;
-            //console.log("CANBETARGET " + t.toString() + ": " + this.canBeTarget(t));
-		return this.canBeTarget(t) ? t : null;
-	},
+	return false;
+    },
 	canBeTarget: function(inWidget) {
 		var parentOK = true;
 		if (this.info.parentForm){
