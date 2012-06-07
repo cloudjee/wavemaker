@@ -68,6 +68,8 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     protected ProjectCompiler projectCompiler;
 
+    protected StudioConfiguration studioConfiguration;
+
     protected final StudioFileSystem getFileSystem() {
         return this.fileSystem;
     }
@@ -86,6 +88,14 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     public void setProjectCompiler(ProjectCompiler projectCompiler) {
         this.projectCompiler = projectCompiler;
+    }
+
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
+
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
     }
 
     /**

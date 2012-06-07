@@ -52,4 +52,12 @@ public interface StudioConfiguration {
      */
     void setCurrentUpgradeKey(double key);
 
+    String getTomcatHost();
+
+    int getTomcatPort();
+
+    String getTomcatManagerUsername();
+
+    String getTomcatManagerPassword();
+
 }
