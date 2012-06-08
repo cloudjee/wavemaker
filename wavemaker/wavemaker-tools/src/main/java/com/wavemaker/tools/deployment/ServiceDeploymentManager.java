@@ -61,20 +61,6 @@ public class ServiceDeploymentManager {
         return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
     }
 
-    private com.wavemaker.tools.io.File generateWebapp(Map<String, String> properties) {
-        return generateWebapp(getProjectRoot(), properties, false);
-    }
-
-    /*
-     * public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) { Folder
-     * stagingProjectDir = null; try { stagingProjectDir = this.fileSystem.createTempDir();
-     * this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>()); DesignServiceManager mgr
-     * = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir); prepareForDeployment(mgr, properties); return
-     * buildWar(mgr.getProjectManager(), getWarFile(), includeEar); } catch (IOException ex) { throw new
-     * ConfigurationException(ex); } finally { try { this.fileSystem.deleteFile(stagingProjectDir); } catch (Exception
-     * ignore) { } } }
-     */
-
     private com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, boolean includeEar) {
         File stagingProjectDir = null;
 
