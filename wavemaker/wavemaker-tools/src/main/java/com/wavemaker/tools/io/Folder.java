@@ -19,13 +19,11 @@ import java.io.InputStream;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
-import com.wavemaker.tools.project.ResourceFilter;
 
 /**
  * A folder {@link Resource} that may be stored on a physical disk or using some other mechanism.
  * 
  * @see File
- * @see MutableFolder
  * 
  * @author Phillip Webb
  */
@@ -72,7 +70,7 @@ public interface Folder extends Resource, Iterable<Resource> {
     /**
      * Convenience methods to move the contents of the folder, filtering results as necessary.
      * {@link Resources#copyTo(Folder) copyTo(folder)}.
-     *
+     * 
      * @param folder the folder to copy the resource to
      * @param includeFilter a filter used to include results (must not be <tt>null</tt>).
      * @return a resource collection containing the new destination resources

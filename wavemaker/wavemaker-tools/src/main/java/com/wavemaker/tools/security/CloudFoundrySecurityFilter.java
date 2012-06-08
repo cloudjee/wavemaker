@@ -74,7 +74,7 @@ public class CloudFoundrySecurityFilter implements Filter {
 
     private void redirectToSpinup(HttpServletResponse response) throws IOException {
         String controllerUrl = CloudFoundryUtils.getControllerUrl();
-        String spinupUrl = controllerUrl.replace("api.", "launchWaveMaker."); // FIXME correct API
+        String spinupUrl = controllerUrl.replace("api.", "WaveMaker."); 
         response.sendRedirect(spinupUrl);
     }
 

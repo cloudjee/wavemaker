@@ -107,4 +107,10 @@ public interface DeploymentManager {
     String saveDeploymentInfo(DeploymentInfo deploymentInfo);
 
     List<DeploymentInfo> getDeploymentInfo();
+
+    void setStudioConfiguration(StudioConfiguration studioConfiguration);
+
+    void setProjectManager(ProjectManager projectManager);
+
+    void setFileSystem(StudioFileSystem fileSystem);
 }

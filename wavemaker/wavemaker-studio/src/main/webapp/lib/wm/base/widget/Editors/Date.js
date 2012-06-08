@@ -554,17 +554,15 @@ dojo.declare(
 								      h:h});
 		    this.dropDown.setWidth(w + "px");
 		    this.dropDown.setHeight(h + "px");
-		    this.dropDown.reflow();
 		} else if (wm.isMobile) {
 		    this.dropDown.setHeight("350px");
 		    this.dropDown.setWidth("253px");
 		} else {
 		    //this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
 		    this.dropDown.setHeight("240px");
-		    this.dropDown.setWidth("250px");
+		    this.dropDown.setWidth("260px");
 		}		   
 
-		this.dropDown.reflow();
 		if (!noReposition) {
 		    var editorPos = dojo.coords(this.owner.editor.domNode);
 		    var position = {h:  this.dropDown.bounds.h,
@@ -600,6 +598,7 @@ dojo.declare(
 		wm.onidle(this.dropDown, "showContents");
 		return result;
 	    } finally {
+		this.dropDown.reflow();
 		this._openningDropDown = false;
 	    }
 	}
@@ -612,7 +611,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
     border: "1",
     borderColor: "#333",    
     height: "452px",
-    width: "210px",
+    width: "220px", // appears to be ignored; see this.dropDown.setWidth() call above
     padding: "0",
     margin: "0",
     classNames: "wmdialog MainContent",
@@ -756,10 +755,10 @@ dojo.declare("wm.TimePicker", wm.Container, {
 					      parent: this.mainPanel,
 					      name: "ampm",
 					      height: "90px", // optimal size for iphone in landscape mode
-					      width: "50px",
+					      width: "60px",
 					      layoutKind: "top-to-bottom",
 					      verticalAlign: "middle",
-					      margin: "0",
+					      margin: "0,7,0,3",
 					      onChange: onchange});
 	this.amButton = new wm.Button({owner: this,
 				       parent: this.ampm,

@@ -81,6 +81,9 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
 
     @Override
     public Resource getStudioWebAppRoot() {
+        if (this.servletContext == null) {
+            this.servletContext = RuntimeAccess.getInstance().getRequest().getSession().getServletContext();
+        }
         return new ServletContextResource(this.servletContext, "/");
     }
 
