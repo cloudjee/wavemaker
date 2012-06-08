@@ -22,14 +22,20 @@ import java.util.List;
 import java.util.Map;
 
 import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.project.*;
+import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
+import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.LocalDeploymentManager;
+import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.ProjectConstants;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
@@ -92,7 +98,7 @@ public class ServiceDeploymentManager {
         Folder projectRoot = getProjectRoot();
         Folder destDir;
         destDir = projectRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
-        String earFileName = projectRoot.getName();
+        String earFileName = this.projectMgr.getCurrentProject().getProjectName();
         return destDir.getFile(earFileName + ".ear");
     }
 
@@ -120,15 +126,15 @@ public class ServiceDeploymentManager {
         return this.projectMgr.getCurrentProject().getRootFolder();
     }
 
-    private com.wavemaker.tools.io.File buildWar(ProjectManager projectMgr, com.wavemaker.tools.io.File warFile,
-                                                 boolean includeEar) throws IOException {
+    private com.wavemaker.tools.io.File buildWar(ProjectManager projectMgr, com.wavemaker.tools.io.File warFile, boolean includeEar)
+        throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
         DeploymentManager deploymentMgr;
         if (WMAppContext.getInstance().isCloudFoundry()) {
             deploymentMgr = new CloudFoundryDeploymentManager();
         } else {
-            deploymentMgr = new LocalDeploymentManager();   
+            deploymentMgr = new LocalDeploymentManager();
         }
         deploymentMgr.setProjectManager(projectMgr);
         deploymentMgr.setStudioConfiguration(this.studioConfiguration);
