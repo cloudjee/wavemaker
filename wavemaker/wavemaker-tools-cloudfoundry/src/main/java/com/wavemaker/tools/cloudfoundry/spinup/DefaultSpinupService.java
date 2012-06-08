@@ -284,8 +284,8 @@ public class DefaultSpinupService implements SpinupService {
                             return applicationDetails;
                         } else {
                             deleteExistingApplication(applicationDetails);
-                            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                                DefaultSpinupService.this.logger.debug("Deleted existing application " + applicationDetails.getName());
+                            if (DefaultSpinupService.this.logger.isInfoEnabled()) {
+                                DefaultSpinupService.this.logger.info("Deleted existing application " + applicationDetails.getName());
                             }
                         }
                     }

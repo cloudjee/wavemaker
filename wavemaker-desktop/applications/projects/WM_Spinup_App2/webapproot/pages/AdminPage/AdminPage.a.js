@@ -20,7 +20,7 @@ panel1: ["wm.Panel", {"height":"40px","horizontalAlign":"left","layoutKind":"lef
 keyGenButton: ["wm.Button", {"caption":"GenKey","margin":"4"}, {"onclick":"svarGetKey"}],
 updateButton: ["wm.Button", {"caption":"Update","margin":"4"}, {"onclick":"svarUpdate"}]
 }],
-KeyEditor: ["wm.Number", {"caption":"Key","captionSize":"50px","dataValue":undefined,"displayValue":"","maximum":NaN}, {}]
+KeyEditor: ["wm.Number", {"caption":"Key","captionSize":"50px","dataValue":0,"displayValue":"","emptyValue":"zero","maximum":NaN}, {}]
 }]
 };
 
