@@ -27,6 +27,7 @@ import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
@@ -177,7 +178,8 @@ public class DeploymentService {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
 
-            if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+            //if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+            if (!WMAppContext.getInstance().isCloudFoundry()) {
                 com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo);
                 if (!f.exists()) {
                     throw new AssertionError("Application archive file doesn't exist at " + f.toString());
