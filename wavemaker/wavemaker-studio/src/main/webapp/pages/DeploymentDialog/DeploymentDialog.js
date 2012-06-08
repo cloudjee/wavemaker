@@ -500,16 +500,35 @@ dojo.declare("DeploymentDialog", wm.Page, {
 									  version: studio.application.getFullVersionNumber()}));
 		break;
 	    case this.FILE_DEPLOY:
-		app.toastSuccess(this.getDictionaryItem("TOAST_FILE_GENERATION_SUCCESS"));
-		if (this._deployData.archiveType == "WAR") {
-		    studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
-		} else {
-		    studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
-		}
 		app.alert(this.getDictionaryItem("ALERT_FILE_DEPLOY_SUCCESS", 
 						 {
-						     version: studio.application.getFullVersionNumber()
+						     version: studio.application.getFullVersionNumber(),
+						     projectName: studio.project.projectName
 						 }));
+		app.alertDialog.setWidth("600px");
+		var b = new wm.Button({owner: this,
+				       _classes: {domNode: ["StudioButton"]},
+				       parent: app.alertDialog.buttonBar,
+				       caption: studio.getDictionaryItem("ALERT_DOWNLOAD_BUTTON_CAPTION"),
+				       width: "140px"});
+		b.parent.moveControl(b,0);
+		app.alertDialog.buttonBar.reflow();
+		b.connect(b, "onclick", this, function() {
+		    debugger;
+		    app.alertDialog.hide();
+		    if (this._deployData.archiveType == "WAR") {
+			studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");
+		    } else {
+			studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectEar");
+		    }
+		});
+		app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
+		    b.destroy();
+		});
+
+
+
+
 		break;
 	    }
 	    studio.application.incSubversionNumber();
