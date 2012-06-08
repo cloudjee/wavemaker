@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import com.wavemaker.spinup.web.SpinupController;
 import com.wavemaker.spinup.web.LoginCredentialsBean;
@@ -119,6 +120,7 @@ public class SpinUpService extends JavaServiceSuperClass {
     }
     
     public void checkForUpdate(int key){
+        Assert.notNull(key, "Update key can not be null");
         if(new Long(randKey).equals(new Long(key))){
             this.wmApplicationArchiveFactory.checkForUpdate();
         }
