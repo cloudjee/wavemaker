@@ -16,6 +16,7 @@ package com.wavemaker.studio;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.common.util.IOUtils;
 
 /**
  * Deployment Service used by WaveMaker to manage and deploy projects to various deployment targets.
@@ -172,6 +174,7 @@ public class DeploymentService {
      * @throws IOException
      */
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
+        File tempWebAppRoot = null;
         try {
 
             if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
@@ -180,7 +183,8 @@ public class DeploymentService {
 
             //if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
             if (!WMAppContext.getInstance().isCloudFoundry()) {
-                com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo);
+                tempWebAppRoot = IOUtils.createTempDirectory();
+                com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo, tempWebAppRoot);
                 if (!f.exists()) {
                     throw new AssertionError("Application archive file doesn't exist at " + f.toString());
                 }
@@ -190,11 +194,15 @@ public class DeploymentService {
             }
 
             String ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
-                this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
+                this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo, tempWebAppRoot);
 
             return ret;
         } catch (DeploymentStatusException e) {
             return e.getStatusMessage();
+        } finally {
+            if (tempWebAppRoot != null) {
+                IOUtils.deleteRecursive(tempWebAppRoot);
+            }
         }
     }
 

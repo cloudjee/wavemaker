@@ -260,22 +260,55 @@ public abstract class IOUtils {
         }
     }
 
+    public static void copy(File source, File destination, String includedPattern, String excludedPattern) throws IOException {
+        List<String> includedPatterns = null, excludedPatterns = null;
+        if (includedPattern != null) {
+            includedPatterns = new ArrayList<String>();
+            includedPatterns.add(includedPattern);
+        }
+        if (excludedPattern != null) {
+            excludedPatterns = new ArrayList<String>();
+            excludedPatterns.add(includedPattern);
+        }
+
+        copy(source, destination, includedPatterns, excludedPatterns);
+    }
+
     /**
      * Copy from: file to file, directory to directory, file to directory.
      * 
      * @param source File object representing a file or directory to copy from.
      * @param destination File object representing the target; can only represent a file if the source is a file.
-     * @param includedPattern the ant-style path pattern to be included
-     * @param excludedPattern the ant-style path pattern to be excluded
+     * @param includedPatterns the ant-style path pattern to be included.  Null means that all resources are included.
+     * @param excludedPatterns the ant-style path pattern to be excluded. Null means that no resources are excluded.
      * @throws IOException
      */
-    public static void copy(File source, File destination, String includedPattern, String excludedPattern) throws IOException {
+    public static void copy(File source, File destination, List<String> includedPatterns, List<String> excludedPatterns) throws IOException {
 
         if (!source.exists()) {
             throw new IOException("Can't copy from non-existent file: " + source.getAbsolutePath());
         } else {
             PathMatcher matcher = new AntPathMatcher();
-            if (!matcher.match(includedPattern, source.getName()) || matcher.match(excludedPattern, source.getName())) {
+
+            boolean skip = false;
+            if (includedPatterns != null) {
+                for (String pattern : includedPatterns) {
+                    if (matcher.match(pattern, source.getName())) {
+                        break;
+                    }
+                }
+            }
+
+            if (excludedPatterns != null) {
+                for (String pattern : excludedPatterns) {
+                    if (matcher.match(pattern, source.getName())) {
+                        skip = true;
+                        break;
+                    }
+                }
+            }
+
+            if (skip) {
                 return;
             }
         }
@@ -297,7 +330,7 @@ public abstract class IOUtils {
             });
 
             for (int i = 0; i < files.length; i++) {
-                copy(files[i], new File(destination, files[i].getName()), includedPattern, excludedPattern);
+                copy(files[i], new File(destination, files[i].getName()), includedPatterns, excludedPatterns);
             }
         } else if (source.isFile()) {
             if (destination.isDirectory()) {

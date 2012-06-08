@@ -39,6 +39,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.WebUtils;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -136,8 +137,13 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
+    public String deploy(Project project, DeploymentInfo deploymentInfo, java.io.File tempWebAppRoot) throws DeploymentStatusException {
+        ApplicationArchive applicationArchive;
+        if (tempWebAppRoot == null) {
+            applicationArchive = this.webAppAssembler.assemble(project);    
+        } else {
+            applicationArchive = this.webAppAssembler.assemble(project.getProjectName(), new FileSystemResource(tempWebAppRoot));
+        }
         applicationArchive = modifyApplicationArchive(applicationArchive);
         return doDeploy(applicationArchive, deploymentInfo);
     }

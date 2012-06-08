@@ -242,20 +242,59 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource copyRecursive(Resource root, Resource target, final String includedPattern, final String excludedPattern) {
+        List<String> includedPatterns = null, excludedPatterns = null;
+        if (includedPattern != null) {
+            includedPatterns = new ArrayList<String>();
+            includedPatterns.add(includedPattern);
+        }
+        if (excludedPattern != null) {
+            excludedPatterns = new ArrayList<String>();
+            excludedPatterns.add(includedPattern);
+        }
+
+        return copyRecursive(root, target, includedPatterns, excludedPatterns);
+    }
+
+    @Override
+    public Resource copyRecursive(Resource root, Resource target, final List<String> includedPatterns, final List<String> excludedPatterns) {
         try {
             if (isDirectory(root)) {
                 List<Resource> children = this.listChildren(root, new ResourceFilter() {
 
                     @Override
                     public boolean accept(Resource resource) {
-                        PathMatcher matcher = new AntPathMatcher();
-                        return !matcher.match(excludedPattern, resource.getFilename()) && matcher.match(includedPattern, resource.getFilename());
+                        boolean accept = true;
+                        if (excludedPatterns != null) {
+                            for (String pattern : excludedPatterns) {
+                                PathMatcher matcher = new AntPathMatcher();
+                                if (matcher.match(pattern, resource.getFilename())) {
+                                    accept = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!accept) {
+                            return accept;
+                        }
+
+                        if (includedPatterns != null) {
+                            for (String pattern : includedPatterns) {
+                                PathMatcher matcher = new AntPathMatcher();
+                                if (matcher.match(pattern, resource.getFilename())) {
+                                    break;
+                                }
+                            }
+                            accept = false;
+                        }
+
+                        return accept;
                     }
                 });
 
                 for (Resource child : children) {
                     if (isDirectory(child)) {
-                        copyRecursive(child, target.createRelative(child.getFilename() + "/"), includedPattern, excludedPattern);
+                        copyRecursive(child, target.createRelative(child.getFilename() + "/"), includedPatterns, excludedPatterns);
                     } else {
                         FileCopyUtils.copy(child.getInputStream(), getOutputStream(target.createRelative(child.getFilename())));
                     }

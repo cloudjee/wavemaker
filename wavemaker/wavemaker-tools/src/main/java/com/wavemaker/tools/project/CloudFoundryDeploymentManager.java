@@ -85,7 +85,8 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
+    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
+                                                boolean includeEar) throws IOException {
         throw new UnsupportedOperationException("Haven't implemented this yet.");
     }
 

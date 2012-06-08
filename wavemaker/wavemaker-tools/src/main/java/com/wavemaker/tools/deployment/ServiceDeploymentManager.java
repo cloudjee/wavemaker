@@ -53,16 +53,12 @@ public class ServiceDeploymentManager {
         this.serviceDeployments.add(new DataModelDeploymentConfiguration());
     }
 
-    public com.wavemaker.tools.io.File generateWebapp(DeploymentInfo info) {
+    public com.wavemaker.tools.io.File generateWebapp(DeploymentInfo info, java.io.File tempWebAppRoot) {
         Map<String, String> allDbProps = new HashMap<String, String>();
         for (DeploymentDB db : info.getDatabases()) {
             allDbProps.putAll(db.asProperties());
         }
-        return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
-    }
-
-    private com.wavemaker.tools.io.File generateWebapp(Map<String, String> properties) {
-        return generateWebapp(getProjectRoot(), properties, false);
+        return generateWebapp(getProjectRoot(), allDbProps, tempWebAppRoot, info.getArchiveType().equals(ArchiveType.EAR));
     }
 
     /*
@@ -75,7 +71,8 @@ public class ServiceDeploymentManager {
      * ignore) { } } }
      */
 
-    private com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, boolean includeEar) {
+    private com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties,
+                                                       java.io.File tempWebAppRoot, boolean includeEar) {
         File stagingProjectDir = null;
 
         try {
@@ -84,7 +81,7 @@ public class ServiceDeploymentManager {
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
             prepareForDeployment(mgr, properties);
-            return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
+            return buildWar(mgr.getProjectManager(), getWarFile(), tempWebAppRoot, includeEar);
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
         } finally {
@@ -135,7 +132,7 @@ public class ServiceDeploymentManager {
     }
 
     private com.wavemaker.tools.io.File buildWar(ProjectManager projectMgr, com.wavemaker.tools.io.File warFile,
-                                                 boolean includeEar) throws IOException {
+                                                 java.io.File tempWebAppRoot, boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
         DeploymentManager deploymentMgr;
@@ -147,7 +144,7 @@ public class ServiceDeploymentManager {
         deploymentMgr.setProjectManager(projectMgr);
         deploymentMgr.setStudioConfiguration(this.studioConfiguration);
         deploymentMgr.setFileSystem(this.fileSystem);
-        com.wavemaker.tools.io.File war = deploymentMgr.buildWar(warFile, includeEar);
+        com.wavemaker.tools.io.File war = deploymentMgr.buildWar(warFile, tempWebAppRoot, includeEar);
         return war;
     }
 

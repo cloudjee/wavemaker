@@ -35,9 +35,10 @@ public interface DeploymentTarget {
      * 
      * @param project Project to deploy
      * @param deploymentInfo
+     * @param tempWebAppRoot the temporary appication root directory . Used when the target is Cloud Foundry.
      * @return status message
      */
-    String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException;
+    String deploy(Project project, DeploymentInfo deploymentInfo, java.io.File tempWebAppRoot) throws DeploymentStatusException;
 
     /**
      * Undeploy an app.

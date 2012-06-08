@@ -228,6 +228,18 @@ public interface StudioFileSystem {
     Resource copyRecursive(Resource root, Resource target, String includedPattern, String excludedPattern);
 
     /**
+     * Recursively copy files and directories from the given root to a target location.
+     *
+     * @param root the root to copy
+     * @param target the target destination
+     * @param includedPatterns the list of ant-style path pattern to be included
+     * @param excludedPatterns the list of ant-style path pattern to be excluded
+     * @return the target resource
+     */
+    @Deprecated
+    Resource copyRecursive(Resource root, Resource target, List<String> includedPatterns, List<String> excludedPatterns);
+
+    /**
      * Recursively copy files and directories from the given root in the conventional file system to a target location.
      * 
      * @param root the root to copy
@@ -278,4 +290,15 @@ public interface StudioFileSystem {
      */
     @Deprecated
     Resource getParent(Resource resource);
+
+    /**
+     * Replaces string pattern in the target resource
+     *
+     * @param resource the current resource
+     * @param oldPattern the old pattern
+     * @param newPattern the new pattern
+     * @return the parent resource
+     */
+    @Deprecated
+    Resource repacePattern(Resource resource, String oldPattern, String newPattern) throws IOException;
 }

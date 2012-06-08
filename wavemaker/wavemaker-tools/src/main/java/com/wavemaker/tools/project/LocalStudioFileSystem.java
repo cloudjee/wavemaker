@@ -306,6 +306,16 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
+    public Resource copyRecursive(Resource root, Resource target, List<String> includedPatterns, List<String> excludedPatterns) {
+        try {
+            IOUtils.copy(root.getFile(), target.getFile(), includedPatterns, excludedPatterns);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        return target;
+    }
+
+    @Override
     public Resource copyRecursive(File root, Resource target, List<String> exclusions) {
         throw new UnsupportedOperationException();
     }

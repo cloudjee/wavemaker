@@ -61,7 +61,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    public String deploy(Project project, DeploymentInfo deploymentInfo, java.io.File tempWebAppRoot) throws DeploymentStatusException {
         try {
             Resource warFile = project.getProjectRoot().createRelative(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
             TomcatServer tomcat = initTomcat(deploymentInfo);

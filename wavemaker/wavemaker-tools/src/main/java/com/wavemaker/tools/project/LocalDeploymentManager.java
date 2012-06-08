@@ -69,7 +69,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     private static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
 
-    private static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
+    public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
 
     private static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
 
@@ -232,19 +232,15 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
+    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
+                                                boolean includeEar) throws IOException {
         String warFileLocation = ((LocalFile) warFile).getLocalFile().getCanonicalPath();
-        buildWar(warFileLocation, includeEar);
+        buildWar(warFileLocation, tempWebAppRoot, includeEar);
         return warFile;
     }
 
-    private void buildWar(String warFileName, boolean includeEar) throws IOException {
-        File tempDir = IOUtils.createTempDirectory();
-        try {
-            buildWar(getProjectDir(), tempDir.getAbsolutePath(), warFileName, includeEar);
-        } finally {
-            IOUtils.deleteRecursive(tempDir);
-        }
+    private void buildWar(String warFileName, java.io.File tempWebAppRoot, boolean includeEar) throws IOException {
+        buildWar(getProjectDir(), tempWebAppRoot.getAbsolutePath(), warFileName, includeEar);
     }
 
     /**

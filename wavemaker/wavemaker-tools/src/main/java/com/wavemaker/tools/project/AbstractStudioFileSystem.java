@@ -14,9 +14,7 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -31,6 +29,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
@@ -110,6 +109,19 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    @Override
+    public Resource repacePattern(Resource resource, String oldPattern, String newPattern) throws IOException {
+        InputStream is = resource.getInputStream();
+        String content = org.apache.commons.io.IOUtils.toString(is, ServerConstants.DEFAULT_ENCODING);
+        content = content.replaceAll(oldPattern, newPattern);
+        is.close();
+        OutputStream os = getOutputStream(resource);
+        os.write(content.getBytes(ServerConstants.DEFAULT_ENCODING));
+        os.close();
+
+        return resource;
     }
 
     private boolean isRuntime() {

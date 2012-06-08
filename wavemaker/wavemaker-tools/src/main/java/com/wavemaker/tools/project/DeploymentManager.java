@@ -71,7 +71,9 @@ public interface DeploymentManager {
      */
     String cleanBuild();
 
-    File buildWar(File warFile, boolean includeEar) throws IOException;
+    //File buildWar(File warFile, boolean includeEar) throws IOException;
+
+    File buildWar(File warFile, java.io.File tempWebAppRoot, boolean includeEar) throws IOException;
 
     void undeploy();
 

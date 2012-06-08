@@ -16,10 +16,7 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,6 +33,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.project.LocalDeploymentManager;
 
 public class WebAppAssembler implements InitializingBean {
 
@@ -65,12 +63,54 @@ public class WebAppAssembler implements InitializingBean {
         this.studioApplicationArchiveEnties = executor.submit(new StudioApplicationArchiveEntriesCollector());
     }
 
+    public void prepareForAssemble(Project project, Resource webAppRoot) throws IOException {
+        Resource studioWebAppRoot = fileSystem.getStudioWebAppRoot();
+        List<String> excludePatterns = new ArrayList<String>();
+        excludePatterns.add("wm/" + LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**");
+        excludePatterns.add("dojo/util/**");
+        excludePatterns.add("dojo/**/tests/**");
+        fileSystem.copyRecursive(studioWebAppRoot.createRelative("/lib/"), webAppRoot.createRelative("/lib/"), null, excludePatterns);
+
+        Resource wavemakerHome = fileSystem.getWaveMakerHome();
+        String includePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**";
+        String excludePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**/deployments.js";
+        fileSystem.copyRecursive(wavemakerHome, studioWebAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
+
+        List<Resource> resources = fileSystem.listAllChildren(webAppRoot, new ResourceFilter() {
+            @Override
+            public boolean accept(Resource resource) {
+                String name = resource.getFilename().toLowerCase();
+                return name.endsWith(".html");
+            }
+        });
+        for (Resource resource : resources) {
+            fileSystem.repacePattern(resource, "/wavemaker/app/", "");
+            fileSystem.repacePattern(resource, "/wavemaker/", "");
+        }
+
+        resources = fileSystem.listAllChildren(webAppRoot, new ResourceFilter() {
+            @Override
+            public boolean accept(Resource resource) {
+                String name = resource.getFilename().toLowerCase();
+                return name.equals("config.js");
+            }
+        });
+        for (Resource resource : resources) {
+            fileSystem.repacePattern(resource, "../wavemaker/", "");
+            fileSystem.repacePattern(resource, "/wavemaker/", "");
+        }
+    }
+
     public ApplicationArchive assemble(Project project) {
+        return assemble(project.getProjectName(), project.getWebAppRoot());
+    }
+
+    public ApplicationArchive assemble(String projectName, Resource webAppRoot) {
         try {
-            final String filename = project.getProjectName();
+            final String filename = projectName;
             final Set<ApplicationArchiveEntry> entries = new LinkedHashSet<ApplicationArchiveEntry>();
-            String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
-            collectEntries(entries, projectBasePath, project.getWebAppRoot());
+            String projectBasePath = this.fileSystem.getPath(webAppRoot);
+            collectEntries(entries, projectBasePath, webAppRoot);
             entries.addAll(this.studioApplicationArchiveEnties.get());
             ensureAtLeastOneDirectoryEntry(entries);
             return new ApplicationArchive() {
