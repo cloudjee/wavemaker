@@ -34,6 +34,7 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.OneToManyMap;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
@@ -42,23 +43,20 @@ import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
-import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceIncludeFilter;
-import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.ClassLoaderFactory;
 import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.ant.ServiceCompilerTask;
 
 /**
  * @author Simon Toens
@@ -133,8 +131,8 @@ public class DataModelManager {
         try {
 
             importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
-                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir,
-                classesDir, false);
+                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir, classesDir,
+                false);
 
             registerService(serviceId, importer);
 
@@ -168,10 +166,11 @@ public class DataModelManager {
         }
     }
 
-    public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
-        String dialectClassName, boolean overrideTable) {
+    public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter,
+        String driverClassName, String dialectClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+            overrideTable);
 
         exporter.setExportToDB(false);
         exporter.setVerbose(false);
@@ -191,7 +190,8 @@ public class DataModelManager {
     public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
-        ExportDB exporter = getExporter(username, password, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
+        ExportDB exporter = getExporter(username, password, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+            overrideTable);
 
         String rtn = "";
 
@@ -324,7 +324,7 @@ public class DataModelManager {
                     } else {
                         String name = resource.getName();
                         int len = name.length();
-                        return (len > 6 && name.substring(len - 6).equals(".class"));
+                        return len > 6 && name.substring(len - 6).equals(".class");
                     }
                 }
             });
@@ -354,9 +354,9 @@ public class DataModelManager {
             if (tmpCfg != null) {
                 tmpCfg.dispose();
             }
-            //cftempfix - uncomment this line after solving the poroblem - Eclipse compiler locks the output
-            //files
-            //tmpServiceRootFolder.delete();
+            // cftempfix - uncomment this line after solving the poroblem - Eclipse compiler locks the output
+            // files
+            // tmpServiceRootFolder.delete();
         }
 
     }
@@ -834,7 +834,7 @@ public class DataModelManager {
 
         Folder javaDir = getJavaDir(outputDir, packageName);
 
-        ImportDB importer = new ImportDB();        
+        ImportDB importer = new ImportDB();
         importer.setUsername(username);
         importer.setPassword(password);
         importer.setClassesDir(classesDir);
@@ -849,9 +849,9 @@ public class DataModelManager {
         importer.setCurrentProjectName(this.projectManager.getCurrentProject().getProjectName());
         importer.setProjectManager(this.projectManager);
         if (reImport) {
-            importer.setExporterFactory(localExporterFactory);
+            importer.setExporterFactory(this.localExporterFactory);
         } else {
-            importer.setExporterFactory(exporterFactory);
+            importer.setExporterFactory(this.exporterFactory);
         }
         importer.setDestDir(outputDir);
 

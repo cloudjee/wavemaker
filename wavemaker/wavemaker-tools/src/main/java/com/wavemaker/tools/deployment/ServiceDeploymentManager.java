@@ -139,7 +139,7 @@ public class ServiceDeploymentManager {
         if (WMAppContext.getInstance().isCloudFoundry()) {
             deploymentMgr = new CloudFoundryDeploymentManager();
         } else {
-            deploymentMgr = new LocalDeploymentManager();   
+            deploymentMgr = new LocalDeploymentManager();
         }
         deploymentMgr.setProjectManager(projectMgr);
         deploymentMgr.setStudioConfiguration(this.studioConfiguration);
