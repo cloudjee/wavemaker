@@ -344,8 +344,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		var r;
 	    this.inflight = false;
 		var callInvoke = false;
-		var processStatus = deferred.xhr.getResponseHeader("wm-json-response-status");
 		if (inLoop) {
+		        var processStatus = deferred.xhr.getResponseHeader("wm-json-response-status");
 			if (processStatus == "processing") {
 				callInvoke = true;
 			} else if (processStatus == "error") {
