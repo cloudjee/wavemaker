@@ -23,15 +23,13 @@ import java.util.Map;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceType;
+import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.ProjectConstants;
-import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.project.*;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
@@ -46,7 +44,9 @@ public class ServiceDeploymentManager {
 
     private ProjectManager projectMgr;
 
-    private DeploymentManager deploymentManager;
+    private StudioFileSystem fileSystem;
+
+    private StudioConfiguration studioConfiguration;
 
     public ServiceDeploymentManager() {
         // hack: these should be managed by Spring
@@ -70,7 +70,7 @@ public class ServiceDeploymentManager {
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
             prepareForDeployment(mgr, properties);
-            return buildWar(getWarFile(), includeEar);
+            return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
         } finally {
@@ -100,9 +100,6 @@ public class ServiceDeploymentManager {
         this.serviceDeployments = serviceDeployments;
     }
 
-    public void setFileSystem(StudioFileSystem fileSystem) {
-    }
-
     public void setProjectManager(ProjectManager projectMgr) {
         this.projectMgr = projectMgr;
     }
@@ -111,18 +108,32 @@ public class ServiceDeploymentManager {
         return this.projectMgr;
     }
 
-    public void setDeploymentManager(DeploymentManager deploymentManager) {
-        this.deploymentManager = deploymentManager;
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
+
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     private Folder getProjectRoot() {
         return this.projectMgr.getCurrentProject().getRootFolder();
     }
 
-    private com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, boolean includeEar) throws IOException {
+    private com.wavemaker.tools.io.File buildWar(ProjectManager projectMgr, com.wavemaker.tools.io.File warFile,
+                                                 boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
-        com.wavemaker.tools.io.File war = this.deploymentManager.buildWar(warFile, includeEar);
+        DeploymentManager deploymentMgr;
+        if (WMAppContext.getInstance().isCloudFoundry()) {
+            deploymentMgr = new CloudFoundryDeploymentManager();
+        } else {
+            deploymentMgr = new LocalDeploymentManager();   
+        }
+        deploymentMgr.setProjectManager(projectMgr);
+        deploymentMgr.setStudioConfiguration(this.studioConfiguration);
+        deploymentMgr.setFileSystem(this.fileSystem);
+        com.wavemaker.tools.io.File war = deploymentMgr.buildWar(warFile, includeEar);
         return war;
     }
 

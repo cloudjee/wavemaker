@@ -514,7 +514,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    }
 	    studio.application.incSubversionNumber();
 	    var src = studio.project.generateApplicationSource();
-	    studio.project.saveProjectData(this.projectName + ".js", src);
+	    studio.project.saveProjectData(studio.project.projectName + ".js", src);
 
 	    return;
 	} else if (inResult.match(/^ERROR\:.*Not enough memory/)) {

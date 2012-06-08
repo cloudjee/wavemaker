@@ -50,8 +50,6 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     static Logger logger = Logger.getLogger(LocalDeploymentManager.class);
 
-    private LocalStudioConfiguration studioConfiguration;
-
     // ant properties
     private static final String PROJECT_DIR_PROPERTY = "project.dir";
 
@@ -221,7 +219,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         properties.put(PROJECT_DIR_PROPERTY, getCanonicalPath(projectDir));
         properties.put(DEPLOY_NAME_PROPERTY, projectDir.getName());
 
-        build();
+        //build();
 
         antExecute(getCanonicalPath(projectDir), BUILD_WAR_OPERATION, properties);
 
@@ -376,14 +374,6 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         ant.init();
         helper.parse(ant, this.getClass().getResource(BUILD_RESOURCE_NAME));
         return ant;
-    }
-
-    private LocalStudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(LocalStudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
     }
 
     private String getCanonicalPath(LocalFolder folder) {

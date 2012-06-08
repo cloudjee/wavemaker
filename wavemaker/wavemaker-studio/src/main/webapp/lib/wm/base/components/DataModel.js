@@ -86,6 +86,11 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	} else {
 	    var d = studio.importCFDBDialog;
 	}
+	d.onClose = dojo.hitch(this, function(inWhy) {
+	    if (inWhy == "Import" || inWhy == "New")
+		this.completeNewDataModel();
+	});
+
 	return d;
     },
 	getCreateDataModelDialog: function() {
@@ -114,7 +119,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		return d;
 	},
 	completeNewDataModel: function() {
-		var p = this.getCreateDataModelDialog().page;
+	    var p = studio.isCloud() ? studio.importCFDBDialog.page : studio.importDBDialog.page;
 		if (this._dataModelName || p.dataModelName) {
 			var n = this._dataModelName || p.dataModelName;
 			var c = new wm.DataModel({name: n, dataModelName: n});

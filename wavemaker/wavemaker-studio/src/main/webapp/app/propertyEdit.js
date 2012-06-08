@@ -58,8 +58,13 @@ dojo.declare("wm.SetWireTask", null, {
 		    this.component.setValue(this.propName, this.oldValue.value); // non-bound value such as the caption before we replaced it with a binding
 		}
 	    }
-	    if (studio.selected == this.component) {
-		wm.onidle(studio.inspector, "reinspect");
+
+	    var c = this.component;
+	    while (c.owner && !wm.isInstanceType(c.owner, [wm.Page, wm.Application]) && c != studio.selected) {
+		c = c.owner;
+	    }
+	    if (studio.selected == c) {
+		studio.inspector.reinspect();
 	    }
 	},
 	redo: function() {

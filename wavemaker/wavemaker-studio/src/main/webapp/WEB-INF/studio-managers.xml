@@ -67,12 +67,12 @@
 		<property name="projectManager">
 			<ref bean="projectManager" />
 		</property>
+		<property name="studioConfiguration">
+            <ref bean="studioConfiguration"/>
+        </property>
 		<property name="fileSystem">
-			<ref bean="fileSystem" />
-		</property>
-		<property name="deploymentManager">
-			<ref bean="deploymentManager" />
-		</property>
+            <ref bean="fileSystem"/>
+        </property>
 	</bean>
 
     <bean id="tomcatDeploymentTarget"

@@ -111,4 +111,24 @@ public class CloudFoundryStudioConfiguration implements StudioConfiguration {
     public void setCurrentUpgradeKey(double key) {
         // Studio upgrades are not supported on CF
     }
+
+    @Override
+    public String getTomcatHost() {
+        throw new UnsupportedOperationException();   
+    }
+
+    @Override
+    public int getTomcatPort() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getTomcatManagerUsername() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getTomcatManagerPassword() {
+        throw new UnsupportedOperationException();
+    }
 }
