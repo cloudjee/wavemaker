@@ -631,6 +631,15 @@ public class StoredFolderTest {
         Folder jailed = this.folder.getFolder("a").jail();
         Folder sub = jailed.getFolder("/b");
         assertThat(sub.toString(), is("/b/"));
+        assertThat(sub.toString(ResourceStringFormat.UNJAILED), is("/a/b/"));
+    }
+
+    @Test
+    public void shouldDoubleJail() throws Exception {
+        Folder jailed = this.folder.getFolder("a").jail().jail();
+        Folder sub = jailed.getFolder("/b");
+        assertThat(sub.toString(), is("/b/"));
+        assertThat(sub.toString(ResourceStringFormat.UNJAILED), is("/a/b/"));
     }
 
     private class MockStoredFolder extends StoredFolder {
