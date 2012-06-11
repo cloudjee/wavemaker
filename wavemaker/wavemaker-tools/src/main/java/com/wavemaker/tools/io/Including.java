@@ -194,7 +194,7 @@ public abstract class Including {
         if (Folder.class.equals(resourceType)) {
             return (AttributeFilter<T>) new FolderAttributeFilter(attribute, null, resourceTypeFilter);
         }
-        return (AttributeFilter<T>) new ResourceAttributeFilter2(attribute, null, resourceTypeFilter);
+        return (AttributeFilter<T>) new ResourceAttributeFilter(attribute, null, resourceTypeFilter);
     }
 
     /**
@@ -447,15 +447,15 @@ public abstract class Including {
         }
     }
 
-    public static class ResourceAttributeFilter2 extends AttributeFilter<Resource> implements ResourceIncludeFilter<Resource> {
+    public static class ResourceAttributeFilter extends AttributeFilter<Resource> implements ResourceIncludeFilter<Resource> {
 
-        public ResourceAttributeFilter2(ResourceAttribute attribute, AttributeFilter<Resource> parent, ResourceIncludeFilter<Resource> filter) {
+        public ResourceAttributeFilter(ResourceAttribute attribute, AttributeFilter<Resource> parent, ResourceIncludeFilter<Resource> filter) {
             super(attribute, parent, filter);
         }
 
         @Override
         protected AttributeFilter<Resource> newResourceAttributeFilter(ResourceIncludeFilter<Resource> filter) {
-            return new ResourceAttributeFilter2(getAttribute(), this, filter);
+            return new ResourceAttributeFilter(getAttribute(), this, filter);
         }
     }
 

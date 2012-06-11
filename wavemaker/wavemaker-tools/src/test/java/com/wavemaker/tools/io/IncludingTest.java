@@ -13,7 +13,7 @@ import org.junit.Test;
  * 
  * @author Phillip Webb
  */
-public class ResourceFilteringTest {
+public class IncludingTest {
 
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -296,6 +296,5 @@ public class ResourceFilteringTest {
         given(resource.getName()).willReturn(name);
         given(resource.toString()).willReturn(path);
         return resource;
-
     }
 }

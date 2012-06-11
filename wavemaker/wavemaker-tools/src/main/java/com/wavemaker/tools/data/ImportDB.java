@@ -49,7 +49,7 @@ import com.wavemaker.tools.data.reveng.MetaDataDialect;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -329,17 +329,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void removeConstructor() {
 
-        ResourceIncludeFilter<com.wavemaker.tools.io.File> filter = new ResourceIncludeFilter<com.wavemaker.tools.io.File>() {
-
-            @Override
-            public boolean include(com.wavemaker.tools.io.File resource) {
-                String name = resource.getName();
-                int len = name.length();
-                return name.substring(len - 5).equals(".java");
-            }
-        };
-
-        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.list(filter);
+        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.list(Including.fileNames().ending(".java"));
 
         if (javafiles != null) {
             try {
@@ -390,7 +380,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void compile() {
         com.wavemaker.tools.project.Project project = this.projectManager.getCurrentProject();
-        this.projectCompiler.compile(destdir, classesdir, this.projectCompiler.getClasspath(project));
+        this.projectCompiler.compile(this.destdir, this.classesdir, this.projectCompiler.getClasspath(project));
     }
 
     protected void writePropertiesFile(Configuration cfg) {
