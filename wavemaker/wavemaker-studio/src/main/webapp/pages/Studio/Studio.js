@@ -711,6 +711,7 @@ dojo.declare("Studio", wm.Page, {
     },
     deployError: function(result) {
 	var application = this.application || this._application;
+	if (!application) return;
 	console.log("DEPLOY ERROR: " + result);
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "";

@@ -601,7 +601,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var c = wm.studioConfig;
 	    
 	    var allProjectJS = "";
-
+	    var projectName = this.projectName || stu
 
 	    /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or 
 	     * losing a cookie by opening studio in another tab
@@ -1054,9 +1054,10 @@ dojo.declare("wm.studio.Project", null, {
 		wm.fire(studio._deployer, "cancel");
 		this.pageChanging();
 		this.projectChanging();
-		studio.studioService.requestSync("closeProject");
+		studio.studioService.requestAsync("closeProject");
 		this.pageList = [];
 		this.projectName = this.pageName = "";
+	    studio.application = studio.page = null;
 		this.pageChanged();
 		this.projectChanged(inProjectName);
 	},
