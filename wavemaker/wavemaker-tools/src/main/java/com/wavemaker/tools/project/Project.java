@@ -77,7 +77,7 @@ public class Project extends AbstractFileService {
     // cftempfix
     public Project(Folder projectRootFolder, String projectName) {
         super();
-        this.projectRootFolder = projectRootFolder;
+        this.projectRootFolder = projectRootFolder.jail();
         this.projectName = projectName;
         this.mavenProject = projectRootFolder.getFile(ProjectConstants.POM_XML).exists();
     }
@@ -94,9 +94,9 @@ public class Project extends AbstractFileService {
             try {
                 Resource projectRoot = getProjectRoot();
                 if (projectRoot instanceof ResourceAdapter) {
-                    return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+                    return ((Folder) ((ResourceAdapter) projectRoot).getExistingResource(true)).jail();
                 }
-                return new LocalFolder(projectRoot.getFile());
+                return new LocalFolder(projectRoot.getFile()).jail();
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
