@@ -111,19 +111,6 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         }
     }
 
-    @Override
-    public Resource repacePattern(Resource resource, String oldPattern, String newPattern) throws IOException {
-        InputStream is = resource.getInputStream();
-        String content = org.apache.commons.io.IOUtils.toString(is, ServerConstants.DEFAULT_ENCODING);
-        content = content.replaceAll(oldPattern, newPattern);
-        is.close();
-        OutputStream os = getOutputStream(resource);
-        os.write(content.getBytes(ServerConstants.DEFAULT_ENCODING));
-        os.close();
-
-        return resource;
-    }
-
     private boolean isRuntime() {
         try {
             if (RuntimeAccess.getInstance() != null && RuntimeAccess.getInstance().getRequest() != null) {
