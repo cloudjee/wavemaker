@@ -1086,7 +1086,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    if (connection.dbtype.toLowerCase() != "mysql" && connection.dbtype.toLowerCase() != "postgresql")
 		app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {name: connection.dbtype}));
 	    this["databaseLayers" + (i+1)].setLayerIndex(2);
-	    this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(connection.db);
+	    if (studio.isCloud()) {
+		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(dataModel.dataModelName);
+	    } else {
+		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(connection.db);
+	    }
 	    this["databaseCloudFoundryType" + (i+1)].setDataValue(connection.dbtype);
 	    this["databaseConnectionEditor" + (i+1)].hide();
 	}));
@@ -1331,6 +1335,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     manageCloudFoundryButtonClick: function() {
 	var data = this.deploymentList.selectedItem.getValue("dataValue");
+	var selectName;
+	if (data) {
+	    selectName = data.target;
+	} else if (this._deployData) {
+	    selectName = this._deployData.target;
+	}
 	this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {	    
 	    if (data) {
 		for (var i = 0; i < this.cachedCloudFoundryDeploymentList.length; i++) {
@@ -1341,7 +1351,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		    }
 		}
 	    }
-	}), data.target);
+	}), selectName);
     },
     cloudFoundryApplicationNameChanged: function() {
 
