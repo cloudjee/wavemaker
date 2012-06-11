@@ -28,6 +28,7 @@ import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -136,23 +137,14 @@ public abstract class ControllerBase extends AbstractController {
             getServletEventNotifier().executeEndRequest();
         } catch (Throwable t) {
             this.logger.error(t.getMessage(), t);
-
-            String message;
-            while (t.getCause() != null) {
-                t = t.getCause();
-            }
-
-            if (t.getMessage() != null && t.getMessage().length() > 0) {
-                message = t.getMessage();
-            } else {
+            String message = t.getMessage();
+            if (!StringUtils.hasLength(message)) {
                 message = t.toString();
             }
-
             if (this.serviceResponse != null && !this.serviceResponse.isPollingRequest() && this.serviceResponse.getConnectionTimeout() > 0
                 && System.currentTimeMillis() - this.runtimeAccess.getStartTime() > this.serviceResponse.getConnectionTimeout() * 1000) {
                 this.serviceResponse.addError(t);
             }
-
             return handleError(message, t);
         } finally {
             RuntimeAccess.setRuntimeBean(null);
