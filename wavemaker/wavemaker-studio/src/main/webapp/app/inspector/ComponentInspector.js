@@ -215,8 +215,9 @@
 	 var inComponent = inSubComponent || this.inspected;
 	 if (inComponent.isDestroyed) {
 	     if (studio.page && studio.page.root) {
-		 return this.inspect(studio.page.root);
+		 this.inspect(studio.page.root);
 	     }
+	     return;
 	 }
 
 	 this.propComponentList = this.gatherPropComponents(inComponent);
