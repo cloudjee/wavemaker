@@ -290,15 +290,4 @@ public interface StudioFileSystem {
      */
     @Deprecated
     Resource getParent(Resource resource);
-
-    /**
-     * Replaces string pattern in the target resource
-     *
-     * @param resource the current resource
-     * @param oldPattern the old pattern
-     * @param newPattern the new pattern
-     * @return the parent resource
-     */
-    @Deprecated
-    Resource repacePattern(Resource resource, String oldPattern, String newPattern) throws IOException;
 }

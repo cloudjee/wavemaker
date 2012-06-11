@@ -142,6 +142,11 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         if (tempWebAppRoot == null) {
             applicationArchive = this.webAppAssembler.assemble(project);    
         } else {
+            try {
+                this.webAppAssembler.prepareForAssemble(project, new FileSystemResource(tempWebAppRoot));
+            } catch(IOException ex) {
+                throw new DeploymentStatusException(ex.getMessage());
+            }
             applicationArchive = this.webAppAssembler.assemble(project.getProjectName(), new FileSystemResource(tempWebAppRoot));
         }
         applicationArchive = modifyApplicationArchive(applicationArchive);

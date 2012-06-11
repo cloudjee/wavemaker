@@ -75,30 +75,6 @@ public class WebAppAssembler implements InitializingBean {
         String includePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**";
         String excludePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**/deployments.js";
         fileSystem.copyRecursive(wavemakerHome, studioWebAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
-
-        List<Resource> resources = fileSystem.listAllChildren(webAppRoot, new ResourceFilter() {
-            @Override
-            public boolean accept(Resource resource) {
-                String name = resource.getFilename().toLowerCase();
-                return name.endsWith(".html");
-            }
-        });
-        for (Resource resource : resources) {
-            fileSystem.repacePattern(resource, "/wavemaker/app/", "");
-            fileSystem.repacePattern(resource, "/wavemaker/", "");
-        }
-
-        resources = fileSystem.listAllChildren(webAppRoot, new ResourceFilter() {
-            @Override
-            public boolean accept(Resource resource) {
-                String name = resource.getFilename().toLowerCase();
-                return name.equals("config.js");
-            }
-        });
-        for (Resource resource : resources) {
-            fileSystem.repacePattern(resource, "../wavemaker/", "");
-            fileSystem.repacePattern(resource, "/wavemaker/", "");
-        }
     }
 
     public ApplicationArchive assemble(Project project) {
