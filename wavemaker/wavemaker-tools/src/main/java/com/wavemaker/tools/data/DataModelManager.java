@@ -49,7 +49,7 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
@@ -299,35 +299,11 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            tmpServiceRootFolder.copyContentsTo(serviceRoot, new ResourceIncludeFilter<com.wavemaker.tools.io.Resource>() {
-
-                @Override
-                public boolean include(com.wavemaker.tools.io.Resource resource) {
-                    if (resource == null) {
-                        return false;
-                    } else {
-                        String name = resource.getName();
-                        int len = name.length();
-                        return !(len > 6 && name.substring(len - 6).equals(".class"));
-                    }
-                }
-            });
+            tmpServiceRootFolder.copyContentsTo(serviceRoot, Including.resourceNames().notEnding(".class"));
 
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-            tmpServiceRootFolder.copyContentsTo(classesDir, new ResourceIncludeFilter<com.wavemaker.tools.io.Resource>() {
-
-                @Override
-                public boolean include(com.wavemaker.tools.io.Resource resource) {
-                    if (resource == null) {
-                        return false;
-                    } else {
-                        String name = resource.getName();
-                        int len = name.length();
-                        return len > 6 && name.substring(len - 6).equals(".class");
-                    }
-                }
-            });
+            tmpServiceRootFolder.copyContentsTo(classesDir, Including.resourceNames().ending(".class"));
 
             registerService(serviceId, importer);
 

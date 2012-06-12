@@ -61,13 +61,7 @@ public class ProjectCompiler {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    private static final ResourceIncludeFilter<File> JAR_FILE_FILTER = new ResourceIncludeFilter<File>() {
-
-        @Override
-        public boolean include(File resource) {
-            return resource.getName().toLowerCase().endsWith(".jar");
-        }
-    };
+    private static final ResourceIncludeFilter<File> JAR_FILE_FILTER = Including.fileNames().ending(".jar");
 
     private static final List<String> RUNTIME_SERVICE_NAMES;
 
@@ -134,8 +128,7 @@ public class ProjectCompiler {
             Iterable<JavaFileObject> compilationUnits = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
                 true);
             StringWriter compilerOutput = new StringWriter();
-            CompilationTask compilationTask = compiler.getTask(compilerOutput, projectFileManager, null, getCompilerOptions(), null,
-                compilationUnits);
+            CompilationTask compilationTask = compiler.getTask(compilerOutput, projectFileManager, null, getCompilerOptions(), null, compilationUnits);
             if (!compilationTask.call()) {
                 throw new WMRuntimeException("Compile failed with output:\n\n" + compilerOutput.toString());
             }

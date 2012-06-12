@@ -246,7 +246,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     public Folder jail() {
-        JailedResourcePath jailedPath = new JailedResourcePath(getPath().getPath(), new ResourcePath());
+        JailedResourcePath jailedPath = new JailedResourcePath(getPath().getUnjailedPath(), new ResourcePath());
         return getStore().getFolder(jailedPath);
     }
 
