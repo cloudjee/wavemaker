@@ -37,7 +37,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
     placeHolder: {group: "editor text", subgroup: "help"}, 
 
     /* DISPLAY GROUP; visual subgroup */
-    hasDownArrow: {group: "editor",subgroup: "layout", order: 26},
+    hasDownArrow: {group: "editor",subgroup: "layout", order: 26, advanced:1},
 
     /* Events group */
     onEnterKeyPress: {ignore: 0},
@@ -57,6 +57,8 @@ wm.Object.extendSchema(wm.SelectMenu, {
     /* Ignored group */
     changeOnKey: { ignore: 1 },
     changeOnEnter: { ignore: 1 },
+    indentField: {hidden: 1}, // users can use it but its not designed to be meaningful for them
+
 
     /* Methods group */
     setRestrictValues: {method:1},
@@ -74,7 +76,6 @@ wm.Object.extendSchema(wm.Lookup, {
     maxResults: {group: "editor", subgroup: "behavior", order: 100},
 
     /* Ignored group */
-    indentField: {hidden: 1}, // users can use it but its not designed to be meaningful for them
     relationshipName: {hidden:1},
     ignoreCase: {ignore: 1},
     options: {ignore: 1},
