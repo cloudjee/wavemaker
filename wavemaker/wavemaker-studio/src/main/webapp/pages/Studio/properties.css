@@ -131,10 +131,8 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 }
 
 /* Reset editor is used for showing bound properties */
-.wminspector .wmeditor.wmreseteditor .dijitTextBox {
-     -moz-border-radius: 0px; 
-     -webkit-border-radius: 0px;
-     border-radius: 0px;     
+.Studio .wminspector .wmeditor.wmreseteditor .dijitTextBox input {
+    color: white !important;
 }
 
 .wminspector .wmrichtext .dijitEditor {
