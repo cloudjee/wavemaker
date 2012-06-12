@@ -823,7 +823,7 @@
 	     dojo.mixin(editorProps, 
 			{ captionSize: (e.captionSize == "100%") ? "80px" : e.captionSize, // 100% for checkbox; need more than 16px to show bind value
 			  disabled: true,
-			  _classes: {domNode: ["wminspector-boundvalue",inProp.isPublished ? "isPublishedProp":""]},
+			  _classes: {domNode: ["wminspector-boundvalue","StudioEditor",inProp.isPublished ? "isPublishedProp":""]},
 			  hint: inProp.ignoretmp && inProp.ignoreHint ?  this.ignoreHintPrefix + inProp.ignoreHint : "", // a bound editor of an ignored property
 			  resetButton: true,
 			  showing: isBound,
@@ -1660,7 +1660,7 @@
 	     captionPosition: "left",
 	     captionAlign: "left",
 	     caption: (inProp.shortname || inProp.name)   + (inProp.requiredGroup ? '&nbsp;<span class="wmeditor-required">*</span>' : ""),
-	     _classes: {domNode: []},
+	     _classes: {domNode: ["StudioEditor"]},
 	     dataValue: inValue,
 	     inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
 	 };
@@ -1769,6 +1769,8 @@ wm.addPropertyGroups({
 				  order: 40},
 		     style:   {displayName: "Style",
 				  order: 45},
+		     display:   {displayName: "Display",
+				  order: 48},
 
 		     /* Confirmed */
 		     editing:    {displayName: "Editing",
