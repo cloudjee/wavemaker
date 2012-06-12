@@ -368,6 +368,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 	},
 	onLongResponseTimeError: function(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, deferred, inError) {
+	        if (!deferred.xhr) return; // happens with livelayout requests from studio
 		if (deferred.xhr.status == 504 || deferred.xhr.status == 502) {			
 			this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred, requestId);
 		} else {
