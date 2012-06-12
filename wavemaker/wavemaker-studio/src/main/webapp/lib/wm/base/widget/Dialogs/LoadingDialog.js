@@ -150,6 +150,14 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	    this._getWidgetToCover();
 	    if (this.widgetToCover) {
 		var node = this.widgetToCover.domNode;
+		var computedStyle = window.getComputedStyle(this.domNode);
+		var roundedStyle = computedStyle.getPropertyValue("border-radius") || computedStyle.getPropertyValue("-webkit-border-radius") || computedStyle.getPropertyValue("-moz-border-radius");
+		this.domNode.style.borderRadius = roundedStyle;
+		if (dojo.isWebKit) {
+		    this.domNode.style.WebkitBorderRadius = roundedStyle;
+		} else if (dojo.isFF) {
+		    this.domNode.style.MozBorderRadius = roundedStyle;
+		}
 		var zindex = node.style.zIndex || 0;
 		while (node.parentNode && node.parentNode.tagName != "BODY") {
 		    node = node.parentNode;
@@ -176,6 +184,12 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	    if (this.domNode.parentNode != parentNode)
 		parentNode.appendChild(this.domNode);
 	    var b = dojo.clone(this.widgetToCover.bounds);
+		b.l -= this.widgetToCover.borderExtents.l;
+		b.r += this.widgetToCover.borderExtents.r;
+		b.w = b.r-b.l;
+		b.t -= this.widgetToCover.borderExtents.t;
+		b.b += this.widgetToCover.borderExtents.b;
+		b.h = b.b-b.t;
 	    this.setBounds(b);
 	    wm.Control.prototype.renderBounds.call(this);
 	    } catch(e) {}
