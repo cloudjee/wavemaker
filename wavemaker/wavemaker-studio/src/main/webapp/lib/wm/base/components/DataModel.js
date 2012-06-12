@@ -119,8 +119,9 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 		return d;
 	},
 	completeNewDataModel: function() {
-	    var p = studio.isCloud() ? studio.importCFDBDialog.page : studio.importDBDialog.page;
-		if (this._dataModelName || p.dataModelName) {
+	    var p = studio.isCloud() ? studio.importCFDBDialog : studio.importDBDialog;
+	    if (p) p = p.page;
+	    if (this._dataModelName || p && p.dataModelName) {
 			var n = this._dataModelName || p.dataModelName;
 			var c = new wm.DataModel({name: n, dataModelName: n});
 			studio.application.addServerComponent(c);
