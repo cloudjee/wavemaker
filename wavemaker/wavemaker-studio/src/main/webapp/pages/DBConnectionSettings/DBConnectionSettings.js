@@ -357,16 +357,12 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	}), 5000);
     },
     waitForStudioToRestart2: function(serviceName) {
-	var timeout = wm.connectionTimeout;
-	wm.connectionTimeout = 0; // turn off longpolling which screws up during a studio reboot
 	studio.studioService.requestAsync("getOpenProject", [], 
 					  dojo.hitch(this, function(inResult) {
-					      wm.connectionTimeout = timeout;
 					      // if a project is still open, the server hasn't yet restarted
 					      this.waitForStudioToRestart(serviceName);
 					  }),
 					  dojo.hitch(this, function(inError) {
-					      wm.connectionTimeout = timeout;
 					      // server has restarted, and is now responding
 					      if (inError.message.match(/No open project/i)) {
 						  this.waitForStudioToRestart3(serviceName);
