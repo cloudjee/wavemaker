@@ -105,13 +105,17 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     },
     setLatitude: function(inVal) {
 	this.latitude = inVal;
-	if (this._map)
-	    this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
+	wm.onidle(this, function() {
+	    if (this._map)
+		this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
+	});
     },
     setLongitude: function(inVal) {
 	this.longitude = inVal;
-	if (this._map)
-	    this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
+	wm.onidle(this, function() {
+	    if (this._map)
+		this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
+	});
     },
     fitToMarkers: function() {
 	var minLat = 10000000;
