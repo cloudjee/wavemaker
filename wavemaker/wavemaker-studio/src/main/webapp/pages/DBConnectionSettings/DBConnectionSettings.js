@@ -313,7 +313,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     /* Step 2: Create the service if it doesn't exist, this will cause a bind and force us to wait for studio to restart */
     executeCFExportCreateService: function() {
-	var d = this.cfService.requestAsync("createService", ["","",  "wavemaker-studio-6_5_0_M2", this._getSelectedDataModelName(), this.conDBdropdown.getDataValue().toLowerCase()]);
+	var d = this.cfService.requestAsync("createService", ["","",  "", this._getSelectedDataModelName(), this.conDBdropdown.getDataValue().toLowerCase()]);
 	d.addCallbacks(dojo.hitch(this, "waitForStudioToRestart"),
 		       function(inError) {
 			   app.toastError(inError);
@@ -324,7 +324,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     /* Step 3: Check if the service is bound; if it is executeCFExport else bind the service */
     executeCFExportCheckIsBound: function() {
 	var serviceName = this._getSelectedDataModelName();
-	this.cfService.requestAsync("isServiceBound", ["", "", serviceName, "wavemaker-studio-6_5_0_M2"], 
+	this.cfService.requestAsync("isServiceBound", ["", "", serviceName, ""], 
 					    dojo.hitch(this, function(isBound) {
 						if (isBound) {
 						    this.executeCFExport();
@@ -341,7 +341,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     doBind: function(serviceName) {
 	//studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING") + " Binding Service");
 	// this will restart the studio server
-	this.cfService.requestAsync("bindService", ["", "", serviceName, "wavemaker-studio-6_5_0_M2"],
+	this.cfService.requestAsync("bindService", ["", "", serviceName, ""],
 					      dojo.hitch(this, function() {
 						    this.waitForStudioToRestart(serviceName);
 					      }),
