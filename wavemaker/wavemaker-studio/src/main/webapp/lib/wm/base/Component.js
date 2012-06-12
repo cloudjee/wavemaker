@@ -93,7 +93,7 @@ dojo.declare("wm.Component", wm.Object, {
         if (this == app._page || this == app || window["studio"] && (this == studio.application || this == studio.page))
             return false;
 
-        if (this instanceof inClass) return this;
+        if (wm.isInstanceType(this, inClass)) return this;
 
         if (this.parent)
             return this.parent.isAncestorInstanceOf(inClass)
@@ -123,8 +123,9 @@ dojo.declare("wm.Component", wm.Object, {
 		}
 		this._designee = this;
 		this.isDestroyed = false;
+/* no applicationDestroyed is no longer called
 	    if (!inProps || !inProps._temporaryComponent) // don't add pointers to this object if its temporary; temporary components may not have destroy called on them properly
-		this._subscriptions.push(dojo.subscribe('applicationDestroyed', this, 'destroy'));
+		this._subscriptions.push(dojo.subscribe('applicationDestroyed', this, 'destroy')); */
 	},
 	postscript: function(inProps) {
 		this.create(inProps);
@@ -158,6 +159,11 @@ dojo.declare("wm.Component", wm.Object, {
 		all resources.
 	*/
 	destroy: function() {
+/*
+	    if (wm.destroyStatusNode) {
+		wm.destroyStatusNode.innerHtml = dojo._windowUnloaders.length;
+	    }
+	    */
 		if (this.isDestroyed)
 			return;
 		try
