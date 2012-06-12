@@ -63,7 +63,7 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 		    if (c instanceof wm.Variable && c.type && !c.isList) {
 			if (wm.defaultTypes[c.type] && c.type != "EntryData") {
 			    isSimpleBind = true;
-			} else if (wm.typeManager.getType(c.type).primitiveType && (dojo.indexOf(knownPrimitives,targetType) != -1 || targetType.indexOf("java.lang.") == 0)) {
+			} else if (wm.typeManager.getType(c.type) && wm.typeManager.getType(c.type).primitiveType && (dojo.indexOf(knownPrimitives,targetType) != -1 || targetType.indexOf("java.lang.") == 0)) {
 			    isSimpleBind = true;
 			}
 		    }
