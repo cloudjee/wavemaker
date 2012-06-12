@@ -80,7 +80,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				dmn, 
 				this.conUserInput.getDataValue(),
 				this.conPasswordInput.getDataValue(),
-				this.conConnectionUrlInput.getDataValue(),
+		    /* If running in cloudfoundry, we want the internal cloud foundry database name, not our service name */
+		                this.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(),
 				this.conTablePatternInput.getDataValue(),
 				this.conSchemaPatternInput.getDataValue(),
 				this.conDriverClassInput.getDataValue(),
@@ -221,7 +222,6 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 					    this.activeDirectoryDomain
 						//this.overrideFlagInput
 						);
-
 		this.conDriverClassInput.setDataValue("");
 		this.conDialectInput.setDataValue("");
 		this.conRevengNamingStrategyInput.setDataValue("");
@@ -492,6 +492,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			return;
 		}
 
+		this._originalConnectionString = inData.connectionUrl;
 		var l = parseConnectionUrl(inData.connectionUrl, inData);
 
 		if (l == null) {
@@ -504,7 +505,6 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			this.conExtraInput.setShowing(false);
 			this.conExtra2Input.setCaption("");
 			this.conExtra2Input.setShowing(false);
-			
 		} else {
 
 		        this.conDBdropdown.beginEditUpdate(); // don't allow onchange events
@@ -563,8 +563,15 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		    if (inData.activeDirectoryDomain) {
 			this.activeDirectoryDomain.setDataValue(inData.activeDirectoryDomain);
 		    }
+
+		    if (studio.isCloud()) {
+			this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+		    }
+
 		}
 		
+
+
 		this.conUserInput.setDataValue(inData.username);
 		this.conPasswordInput.setDataValue(inData.password);
 		if(l){
