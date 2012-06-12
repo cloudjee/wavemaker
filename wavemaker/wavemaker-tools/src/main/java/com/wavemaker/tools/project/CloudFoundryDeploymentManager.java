@@ -20,6 +20,8 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.cloudfoundry.client.lib.CloudFoundryException;
 
 import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.deployment.DeploymentTarget;
@@ -92,7 +94,13 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     @Override
     public void testRunClean() {
-        undeploy();
+        try {
+            undeploy();
+        } catch (CloudFoundryException ex) {
+            if (HttpStatus.NOT_FOUND != ex.getStatusCode()) {
+                throw ex;
+            }
+        }
     }
 
     @Override
