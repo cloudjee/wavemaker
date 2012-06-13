@@ -136,6 +136,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			studio.dataService.requestAsync("cfGetExportDDL", 
 							[
 							    this._getSelectedDataModelName(),
+							    this.conExtraInput.getDataValue(),
 							    this.conDBdropdown.getDataValue().toLowerCase(),
 							    this.conSchemaPatternInput.getDataValue(),
 							    this.conDriverClassInput.getDataValue(),							    
@@ -298,7 +299,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
     beginCFExport: function() {
 	/* Step 1: find out if the service exists */
-	var d = this.cfService.requestAsync("getService", ["","", this._getSelectedDataModelName()], 
+	var d = this.cfService.requestAsync("getService", ["","", this.conExtraInput.getDataValue()], 
 					      dojo.hitch(this, function(inService) {
 						  if (inService) {
 						      this.executeCFExportCheckIsBound();
@@ -313,7 +314,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     /* Step 2: Create the service if it doesn't exist, this will cause a bind and force us to wait for studio to restart */
     executeCFExportCreateService: function() {
-	var d = this.cfService.requestAsync("createService", ["","",  "", this._getSelectedDataModelName(), this.conDBdropdown.getDataValue().toLowerCase()]);
+	var d = this.cfService.requestAsync("createService", ["","",  "", this.conExtraInput.getDataValue(), this.conDBdropdown.getDataValue().toLowerCase()]);
 	d.addCallbacks(dojo.hitch(this, "waitForStudioToRestart"),
 		       function(inError) {
 			   app.toastError(inError);
@@ -323,7 +324,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 
     /* Step 3: Check if the service is bound; if it is executeCFExport else bind the service */
     executeCFExportCheckIsBound: function() {
-	var serviceName = this._getSelectedDataModelName();
+	var serviceName = this.conExtraInput.getDataValue();
 	this.cfService.requestAsync("isServiceBound", ["", "", serviceName, ""], 
 					    dojo.hitch(this, function(isBound) {
 						if (isBound) {
@@ -381,7 +382,9 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 
     executeCFExport: function() {
 		studio.dataService.requestAsync("cfExportDatabase", [
-				this._getSelectedDataModelName(),
+		    this._getSelectedDataModelName(),
+		                this.conExtraInput.getDataValue(),
+		    
 		                this.conDBdropdown.getDataValue().toLowerCase(),
 				this.conSchemaPatternInput.getDataValue(),
 				this.conDriverClassInput.getDataValue(),
