@@ -376,7 +376,7 @@ public class DataService {
                 connectionUrl = info.getUrl();
                 username = info.getUserName();
                 password = info.getPassword();
-            } catch (NullPointerException npe) {
+            } catch (WMRuntimeException ex) {
             }
         }
 
