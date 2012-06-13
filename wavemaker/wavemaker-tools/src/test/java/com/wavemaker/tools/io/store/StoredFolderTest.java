@@ -1,7 +1,6 @@
 
 package com.wavemaker.tools.io.store;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -20,10 +19,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -37,13 +34,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.FileContent;
-import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
@@ -242,7 +236,13 @@ public class StoredFolderTest {
         this.folder.getFile("b", true);
         given(this.folder.getStore().exists()).willReturn(true);
         given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
-        Resources<Resource> resources = this.folder.list().include(FilterOn.files());
+        Resources<Resource> resources = this.folder.list().include(new ResourceFilter() {
+
+            @Override
+            public boolean match(Resource resource) {
+                return resource instanceof File;
+            }
+        });
         Iterator<Resource> iterator = resources.iterator();
         Resource file = iterator.next();
         assertThat(iterator.hasNext(), is(false));
@@ -255,14 +255,14 @@ public class StoredFolderTest {
         this.folder.getFile("b", true);
         given(this.folder.getStore().exists()).willReturn(true);
         given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
-        Resources<Resource> resources = this.folder.list().include(new ResourceFilter() {
+        Resources<File> resources = this.folder.list().files().include(new ResourceFilter() {
 
             @Override
             public boolean match(Resource resource) {
                 return true;
             }
         });
-        Iterator<Resource> iterator = resources.iterator();
+        Iterator<File> iterator = resources.iterator();
         Resource file = iterator.next();
         assertThat(iterator.hasNext(), is(false));
         assertThat(file.toString(), is("/b"));
@@ -270,10 +270,10 @@ public class StoredFolderTest {
     }
 
     @Test
-    public void shouldNeedListResourcesFilter() throws Exception {
+    public void shouldNeedListResourcesFilters() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Filter must not be null");
-        this.folder.list().include(null);
+        this.thrown.expectMessage("Filters must not be null");
+        this.folder.list().include((ResourceFilter[]) null);
     }
 
     @Test
@@ -290,29 +290,6 @@ public class StoredFolderTest {
         assertThat(resourceB, is(File.class));
         assertThat(resourceA.toString(), is("/a/"));
         assertThat(resourceB.toString(), is("/b"));
-    }
-
-    @Test
-    public void shouldPerformOperationRecursively() throws Exception {
-        MockStoredFolder a = this.folder.getFolder("a");
-        MockStoredFile b = a.getFile("b");
-        MockStoredFolder c = this.folder.getFolder("c");
-        given(this.folder.exists()).willReturn(true);
-        given(a.exists()).willReturn(true);
-        given(b.exists()).willReturn(true);
-        given(c.exists()).willReturn(true);
-        given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "c"));
-        given(a.getStore().list()).willReturn(Arrays.asList("b"));
-
-        final Set<String> seen = new HashSet<String>();
-        this.folder.performOperationRecursively(new ResourceOperation<Resource>() {
-
-            @Override
-            public void perform(Resource resource) {
-                seen.add(resource.toString());
-            }
-        });
-        assertThat(seen, is(equalTo((Set<String>) new HashSet<String>(Arrays.asList("/a/", "/a/b", "/c/")))));
     }
 
     @Test
@@ -401,97 +378,6 @@ public class StoredFolderTest {
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.copyTo(destination);
-        verify(destinationGrandchild).createIfMissing();
-    }
-
-    @Test
-    public void shouldCopyWithFileFilter() throws Exception {
-        MockStoredFolder child = this.folder.getFolder("a", true);
-        child.getFile("a.java", true);
-        child.getFile("a.class", true);
-        child.getFolder("b", true);
-
-        given(this.folder.getStore().exists()).willReturn(true);
-        given(child.getStore().list()).willReturn(Arrays.asList("a.java", "a.class", "b"));
-
-        Folder destination = mock(Folder.class);
-        Folder destinationChild = mock(Folder.class);
-        File destinationJavaFile = mock(File.class);
-        FileContent destinationJavaFileContent = mock(FileContent.class);
-        File destinationClassFile = mock(File.class);
-        FileContent destinationClassFileContent = mock(FileContent.class);
-        Folder destinationGrandchild = mock(Folder.class);
-
-        given(destination.getFolder("a")).willReturn(destinationChild);
-        given(destinationChild.getFile("a.java")).willReturn(destinationJavaFile);
-        given(destinationJavaFile.getContent()).willReturn(destinationJavaFileContent);
-        given(destinationChild.getFile("a.class")).willReturn(destinationClassFile);
-        given(destinationClassFile.getContent()).willReturn(destinationClassFileContent);
-        given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
-
-        child.copyTo(destination, FilterOn.fileNames().notEnding(".class"));
-        verify(destinationGrandchild).createIfMissing();
-        verify(destinationJavaFileContent).write(any(InputStream.class));
-        verify(destinationClassFileContent, never()).write(any(InputStream.class));
-    }
-
-    @Test
-    public void shouldFilteredCopyWithoutChildren() throws Exception {
-        Folder destination = mock(Folder.class);
-        Folder destinationChild = mock(Folder.class);
-        @SuppressWarnings("unchecked")
-        ResourceFilter filter = mock(ResourceFilter.class);
-        given(filter.match(any(File.class))).willReturn(true);
-        given(this.folder.getStore().exists()).willReturn(true);
-        MockStoredFolder child = this.folder.getFolder("a", true);
-        given(destination.getFolder("a")).willReturn(destinationChild);
-        child.copyTo(destination, filter);
-        verify(destination).getFolder("a");
-        verify(destinationChild).createIfMissing();
-    }
-
-    @Test
-    public void shouldNotFilteredCopyIfDoesNotExist() throws Exception {
-        Folder destination = mock(Folder.class);
-        @SuppressWarnings("unchecked")
-        ResourceFilter filter = mock(ResourceFilter.class);
-        given(filter.match(any(File.class))).willReturn(true);
-        given(this.folder.getStore().exists()).willReturn(true);
-        MockStoredFolder child = this.folder.getFolder("a", false);
-        this.thrown.expect(ResourceDoesNotExistException.class);
-        child.copyTo(destination, filter);
-    }
-
-    @Test
-    public void shouldNotFilteredCopyRoot() throws Exception {
-        Folder destination = mock(Folder.class);
-        @SuppressWarnings("unchecked")
-        ResourceFilter filter = mock(ResourceFilter.class);
-        given(this.folder.getStore().exists()).willReturn(true);
-        given(filter.match(any(File.class))).willReturn(true);
-        this.thrown.expect(IllegalStateException.class);
-        this.thrown.expectMessage("Unable to copy a root folder");
-        this.folder.copyTo(destination, filter);
-    }
-
-    @Test
-    public void shouldFilteredCopyChildren() throws Exception {
-        Folder destination = mock(Folder.class);
-        Folder destinationChild = mock(Folder.class);
-        Folder destinationGrandchild = mock(Folder.class);
-        MockStoredFolder child = this.folder.getFolder("a", true);
-        child.getFolder("b", true);
-        given(this.folder.getStore().exists()).willReturn(true);
-        given(child.getStore().list()).willReturn(Collections.singleton("b"));
-        given(destination.getFolder("a")).willReturn(destinationChild);
-        given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
-        child.copyTo(destination, new ResourceFilter() {
-
-            @Override
-            public boolean match(Resource resource) {
-                return true;
-            }
-        });
         verify(destinationGrandchild).createIfMissing();
     }
 
@@ -641,6 +527,10 @@ public class StoredFolderTest {
         assertThat(sub.toString(), is("/b/"));
         assertThat(sub.toString(ResourceStringFormat.UNJAILED), is("/a/b/"));
     }
+
+    // FIXME test find
+
+    // FIXME test find and copy?
 
     private class MockStoredFolder extends StoredFolder {
 

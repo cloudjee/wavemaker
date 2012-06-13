@@ -3,11 +3,13 @@ package com.wavemaker.tools.io;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 import java.util.Iterator;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for {@link FilteredResources}.
@@ -16,75 +18,56 @@ import org.junit.Test;
  */
 public class FilteredResourcesTest {
 
-    @Test
-    public void shouldIncludeFile() throws Exception {
-        Resource file = mock(File.class);
-        Resources<Resource> resources = new ResourcesCollection<Resource>(file);
-        assertThat(resources.include(FilterOn.files()).iterator().next(), is(file));
-        assertThat(resources.include(FilterOn.folders()).iterator().hasNext(), is(false));
+    @Mock
+    private Folder source;
+
+    @Mock
+    private File fileA;
+
+    @Mock
+    private File fileB;
+
+    @Mock
+    private File fileC;
+
+    @Mock
+    private File fileD;
+
+    private Resources<File> resources;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        this.resources = new ResourcesCollection<File>(this.source, this.fileA, this.fileB, this.fileC, this.fileD);
     }
 
     @Test
-    public void shouldIncludeFolder() throws Exception {
-        Resource folder = mock(Folder.class);
-        Resources<Resource> resources = new ResourcesCollection<Resource>(folder);
-        assertThat(resources.include(FilterOn.files()).iterator().hasNext(), is(false));
-        assertThat(resources.include(FilterOn.folders()).iterator().next(), is(folder));
+    public void shoulNotFilterAnyIncluded() throws Exception {
+        Resources<File> actual = FilteredResources.include(this.resources, filterOn(this.fileA), filterOn(this.fileC));
+        assertMatches(actual, this.fileA, this.fileC);
     }
 
     @Test
-    public void shouldIncludeBasedOnCallback() throws Exception {
-        final File file1 = mock(File.class);
-        final Folder folder1 = mock(Folder.class);
-        final File file2 = mock(File.class);
-        final Folder folder2 = mock(Folder.class);
-        Resources<Resource> resources = new ResourcesCollection<Resource>(file1, folder1, file2, folder2);
-        Iterator<Resource> filtered = resources.include(new ResourceFilter() {
+    public void shouldFilterEveryExcluded() throws Exception {
+        Resources<File> actual = FilteredResources.exclude(this.resources, filterOn(this.fileA), filterOn(this.fileC));
+        assertMatches(actual, this.fileB, this.fileD);
+    }
+
+    private void assertMatches(Resources<File> actual, File... expected) {
+        Iterator<File> iterator = actual.iterator();
+        for (File file : expected) {
+            assertThat(iterator.next(), is(file));
+        }
+        assertThat(iterator.hasNext(), is(false));
+    }
+
+    private ResourceFilter filterOn(final Resource on) {
+        return new ResourceFilter() {
 
             @Override
             public boolean match(Resource resource) {
-                return resource == file1 || resource == folder1;
+                return resource == on;
             }
-        }).iterator();
-        assertThat(filtered.next(), is((Resource) file1));
-        assertThat(filtered.next(), is((Resource) folder1));
-        assertThat(filtered.hasNext(), is(false));
+        };
     }
-
-    // FIXME excludes
-    // @Test
-    // public void shouldExcludeFile() throws Exception {
-    // Resource file = mock(File.class);
-    // Resources<Resource> resources = new ResourcesCollection<Resource>(file);
-    // assertThat(resources.exclude(FilterOn.files()).iterator().hasNext(), is(false));
-    // assertThat(resources.exclude(FilterOn.folders()).iterator().next(), is(file));
-    // }
-    //
-    // @Test
-    // public void shouldExcludeFolder() throws Exception {
-    // Resource folder = mock(Folder.class);
-    // Resources<Resource> resources = new ResourcesCollection<Resource>(folder);
-    // assertThat(resources.exclude(FilterOn.files()).iterator().hasNext(), is(false));
-    // assertThat(resources.exclude(FilterOn.folders()).iterator().next(), is(folder));
-    // }
-    //
-    // @Test
-    // public void shouldExcludeBasedOnCallback() throws Exception {
-    // final File file1 = mock(File.class);
-    // final Folder folder1 = mock(Folder.class);
-    // final File file2 = mock(File.class);
-    // final Folder folder2 = mock(Folder.class);
-    // Resources<Resource> resources = new ResourcesCollection<Resource>(file1, folder1, file2, folder2);
-    // Iterator<Resource> filtered = resources.exclude(new ResourceFilter() {
-    //
-    // @Override
-    // public boolean match(Resource resource) {
-    // return resource == file1 || resource == folder1;
-    // }
-    // }).iterator();
-    // assertThat(filtered.next(), is((Resource) file1));
-    // assertThat(filtered.next(), is((Resource) folder1));
-    // assertThat(filtered.hasNext(), is(false));
-    // }
-
 }

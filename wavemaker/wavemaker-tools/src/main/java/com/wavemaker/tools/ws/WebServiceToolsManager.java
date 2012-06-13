@@ -699,7 +699,7 @@ public class WebServiceToolsManager {
             String packagePath = clazz.replace('.', '/');
             packagePath = packagePath.substring(0, packagePath.lastIndexOf('/'));
             Folder packageDir = serviceRuntimeDirectory.getFolder(packagePath);
-            Iterator<File> wsdlFiles = packageDir.listFiles().include(FilterOn.resourceNames().ending(Constants.WSDL_EXT)).iterator();
+            Iterator<File> wsdlFiles = packageDir.list().files().include(FilterOn.names().ending(Constants.WSDL_EXT)).iterator();
             if (wsdlFiles.hasNext()) {
                 return wsdlFiles.next();
             }

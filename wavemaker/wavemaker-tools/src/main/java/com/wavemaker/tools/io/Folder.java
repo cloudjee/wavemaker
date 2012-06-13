@@ -45,19 +45,6 @@ public interface Folder extends Resource, Iterable<Resource> {
     @Override
     Folder copyTo(Folder folder);
 
-    // FIXME delete
-    /**
-     * Recursively copy this resource to the specified folder, filtering resources. Any duplicate {@link File}s will be
-     * replaced (existing {@link Folder} resources will be merged). If the resource does not exist a
-     * {@link ResourceDoesNotExistException} is thrown.
-     * 
-     * @param folder the folder to copy the resource to
-     * @param fileIncludeFilter a filter used to restrict the files that are copied (must not be <tt>null</tt>).
-     * @return a new resource (the current resource will no longer {@link #exists() exist}
-     * @throws ResourceDoesNotExistException if this resource no longer exists
-     */
-    Folder copyTo(Folder folder, ResourceFilter fileIncludeFilter);
-
     /**
      * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
      * {@link Resources#copyTo(Folder) copyTo(folder)}.
@@ -133,17 +120,8 @@ public interface Folder extends Resource, Iterable<Resource> {
      */
     Resources<Resource> list();
 
-    Resources<File> listFiles();
-
-    Resources<Folder> listFolders();
-
-    /**
-     * Perform the specified operation on all children in folder, recursively processing all nested folders.
-     * 
-     * @param operation the operation to perform
-     * @return the performed operation
-     */
-    <T extends Resource, OPERATION extends ResourceOperation<T>> OPERATION performOperationRecursively(OPERATION operation);
+    // FIXME DC
+    Resources<Resource> find();
 
     /**
      * Unzip the specified zip file into the current folder.

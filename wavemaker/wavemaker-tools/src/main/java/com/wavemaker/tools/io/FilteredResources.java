@@ -15,7 +15,6 @@
 package com.wavemaker.tools.io;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.util.Assert;
 
@@ -32,23 +31,28 @@ public class FilteredResources<T extends Resource> extends AbstractResources<T> 
         INCLUDE, EXCLUDE
     }
 
-    private final Resources<T> source;
+    private final Resources<T> resources;
 
     private final Type type;
 
-    private final List<ResourceFilter> filters;
+    private final ResourceFilter[] filters;
 
-    private FilteredResources(Resources<T> source, Type type, List<ResourceFilter> filters) {
-        Assert.notNull(source, "Source must not be null");
+    private FilteredResources(Resources<T> resources, Type type, ResourceFilter... filters) {
+        Assert.notNull(resources, "Resources must not be null");
         Assert.notNull(filters, "Filters must not be null");
-        this.source = source;
+        this.resources = resources;
         this.filters = filters;
         this.type = type;
     }
 
     @Override
+    public Folder getSource() {
+        return this.resources.getSource();
+    }
+
+    @Override
     public Iterator<T> iterator() {
-        FilteredIterator<T> filteredIterator = new FilteredIterator<T>(this.source.iterator()) {
+        FilteredIterator<T> filteredIterator = new FilteredIterator<T>(this.resources.iterator()) {
 
             @Override
             protected boolean isElementFiltered(T element) {
@@ -66,6 +70,14 @@ public class FilteredResources<T extends Resource> extends AbstractResources<T> 
 
         };
         return filteredIterator;
+    }
+
+    public static <T extends Resource> Resources<T> include(Resources<T> resources, ResourceFilter... filters) {
+        return new FilteredResources<T>(resources, Type.INCLUDE, filters);
+    }
+
+    public static <T extends Resource> Resources<T> exclude(Resources<T> resources, ResourceFilter... filters) {
+        return new FilteredResources<T>(resources, Type.EXCLUDE, filters);
     }
 
 }

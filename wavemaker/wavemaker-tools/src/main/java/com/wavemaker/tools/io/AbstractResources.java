@@ -28,6 +28,40 @@ import org.springframework.util.Assert;
 public abstract class AbstractResources<T extends Resource> implements Resources<T> {
 
     @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Resources<File> files() {
+        return (Resources) include(new ResourceFilter() {
+
+            @Override
+            public boolean match(Resource resource) {
+                return resource instanceof File;
+            }
+        });
+    }
+
+    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Resources<Folder> folders() {
+        return (Resources) include(new ResourceFilter() {
+
+            @Override
+            public boolean match(Resource resource) {
+                return resource instanceof Folder;
+            }
+        });
+    }
+
+    @Override
+    public Resources<T> include(ResourceFilter... filters) {
+        return FilteredResources.include(this, filters);
+    }
+
+    @Override
+    public Resources<T> exclude(ResourceFilter... filters) {
+        return FilteredResources.exclude(this, filters);
+    }
+
+    @Override
     public void delete() {
         for (T resource : this) {
             resource.delete();
@@ -40,9 +74,9 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         Assert.notNull(folder, "Folder must not be null");
         List<T> movedResources = new ArrayList<T>();
         for (T resource : this) {
-            movedResources.add((T) resource.moveTo(folder));
+            movedResources.add((T) resource.moveTo(calculateDestination(resource, folder)));
         }
-        return new ResourcesCollection<T>(movedResources);
+        return new ResourcesCollection<T>(folder, movedResources);
     }
 
     @Override
@@ -51,9 +85,18 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         Assert.notNull(folder, "Folder must not be null");
         List<T> copiedResources = new ArrayList<T>();
         for (T resource : this) {
-            copiedResources.add((T) resource.copyTo(folder));
+            copiedResources.add((T) resource.copyTo(calculateDestination(resource, folder)));
         }
-        return new ResourcesCollection<T>(copiedResources);
+        return new ResourcesCollection<T>(folder, copiedResources);
+    }
+
+    private Folder calculateDestination(T resource, Folder folder) {
+        Folder parent = resource.getParent();
+        if (parent == null) {
+            return folder;
+        }
+        String name = parent.toString().substring(getSource().toString().length());
+        return name.length() == 0 ? folder : folder.getFolder(name);
     }
 
     @Override
@@ -73,16 +116,6 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         return Collections.unmodifiableList(all);
     }
 
-    @Override
-    public Resources<T> include(ResourceFilter... filters) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Resources<T> exclude(ResourceFilter... filters) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    // FIXME test source
+    // FIXME test copy / move relative to
 }

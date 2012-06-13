@@ -46,7 +46,7 @@ public class ServiceCompilerTask extends CompilerTask {
     }
 
     private Resources<com.wavemaker.tools.io.File> getServiceFiles(Folder folder) {
-        return folder.listFiles().include(FilterOn.resourceNames().notEnding(".properties"));
+        return folder.list().files().include(FilterOn.names().notEnding(".properties"));
     }
 
     @Override

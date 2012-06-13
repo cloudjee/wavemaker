@@ -40,9 +40,9 @@ import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.Tuple;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.util.JDBCUtils;
-import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
 import com.wavemaker.tools.io.Folder;
@@ -115,7 +115,7 @@ public class ExportDB extends BaseDataModelSetup {
 
         // cfg.addDirectory(this.hbmFilesDir);
 
-        this.hbmFilesDir.performOperationRecursively(new ResourceOperation<com.wavemaker.tools.io.File>() {
+        this.hbmFilesDir.find().files().performOperation(new ResourceOperation<com.wavemaker.tools.io.File>() {
 
             @Override
             public void perform(com.wavemaker.tools.io.File file) {

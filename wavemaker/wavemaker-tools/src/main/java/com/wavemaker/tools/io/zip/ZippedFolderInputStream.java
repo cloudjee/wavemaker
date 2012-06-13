@@ -26,7 +26,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
@@ -39,13 +38,23 @@ import com.wavemaker.tools.io.ResourcePath;
  */
 public class ZippedFolderInputStream extends FilterInputStream {
 
+    // FIXME revisit filtereing
+
+    private static final ResourceFilter NO_FILTER = new ResourceFilter() {
+
+        @Override
+        public boolean match(Resource resource) {
+            return true;
+        }
+    };
+
     /**
      * Create a new {@link ZippedFolderInputStream} instance.
      * 
      * @param folder the folder to zip
      */
     public ZippedFolderInputStream(Folder folder) {
-        this(folder, null, FilterOn.files());
+        this(folder, null, NO_FILTER);
     }
 
     /**
@@ -55,7 +64,7 @@ public class ZippedFolderInputStream extends FilterInputStream {
      * @param entryPrefix an optional entry prefix. This allows a entries to be nested within a folder if required
      */
     public ZippedFolderInputStream(Folder folder, String entryPrefix) {
-        this(folder, entryPrefix, FilterOn.files());
+        this(folder, entryPrefix, NO_FILTER);
     }
 
     /**

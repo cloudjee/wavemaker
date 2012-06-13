@@ -33,6 +33,9 @@ public class ResourcesCollectionTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Mock
+    private Folder source;
+
+    @Mock
     private Folder folder;
 
     @Mock
@@ -45,19 +48,19 @@ public class ResourcesCollectionTest {
     public void shouldNeedResources() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Resources must not be null");
-        new ResourcesCollection<Resource>((Collection<Resource>) null);
+        new ResourcesCollection<Resource>(this.source, (Collection<Resource>) null);
     }
 
     @Test
     public void shouldNeedResourcesArray() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Resources must not be null");
-        new ResourcesCollection<Resource>((Resource[]) null);
+        new ResourcesCollection<Resource>(this.source, (Resource[]) null);
     }
 
     @Test
     public void shouldIterateCollection() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(Arrays.asList(this.folder, this.file));
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, Arrays.asList(this.folder, this.file));
         Iterator<Resource> iterator = collection.iterator();
         assertThat(iterator.next(), is((Resource) this.folder));
         assertThat(iterator.next(), is((Resource) this.file));
@@ -66,7 +69,7 @@ public class ResourcesCollectionTest {
 
     @Test
     public void shouldIterateArray() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, this.folder, this.file);
         Iterator<Resource> iterator = collection.iterator();
         assertThat(iterator.next(), is((Resource) this.folder));
         assertThat(iterator.next(), is((Resource) this.file));
@@ -75,7 +78,7 @@ public class ResourcesCollectionTest {
 
     @Test
     public void shouldDeleteAgainstItems() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, this.folder, this.file);
         collection.delete();
         InOrder ordered = inOrder(this.folder, this.file);
         ordered.verify(this.folder).delete();
@@ -84,7 +87,7 @@ public class ResourcesCollectionTest {
 
     @Test
     public void shouldMoveToAgainstItems() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, this.folder, this.file);
         Folder destination = mock(Folder.class);
         collection.moveTo(destination);
         InOrder ordered = inOrder(this.folder, this.file);
@@ -94,7 +97,7 @@ public class ResourcesCollectionTest {
 
     @Test
     public void shouldCopyToAgainstItems() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, this.folder, this.file);
         Folder destination = mock(Folder.class);
         collection.copyTo(destination);
         InOrder ordered = inOrder(this.folder, this.file);
@@ -104,7 +107,7 @@ public class ResourcesCollectionTest {
 
     @Test
     public void shouldPerformOperationAgainstResourceItems() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, this.folder, this.file);
         collection.performOperation(this.resourceOperation);
         verify(this.resourceOperation).perform(this.folder);
         verify(this.resourceOperation).perform(this.file);
@@ -113,10 +116,34 @@ public class ResourcesCollectionTest {
 
     @Test
     public void shouldFetchAll() throws Exception {
-        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.source, this.folder, this.file);
         List<Resource> list = collection.fetchAll();
         assertThat(list.size(), is(2));
         assertThat(list.get(0), is((Resource) this.folder));
         assertThat(list.get(1), is((Resource) this.file));
+    }
+
+    @Test
+    public void shouldSupportFiltering() throws Exception {
+        File a = mock(File.class);
+        File b = mock(File.class);
+        File c = mock(File.class);
+        File d = mock(File.class);
+        File e = mock(File.class);
+        ResourcesCollection<File> collection = new ResourcesCollection<File>(this.source, a, b, c, d, e);
+        Iterator<File> actual = collection.include(filterOn(a), filterOn(c), filterOn(e)).exclude(filterOn(c)).iterator();
+        assertThat(actual.next(), is(a));
+        assertThat(actual.next(), is(e));
+        assertThat(actual.hasNext(), is(false));
+    }
+
+    private ResourceFilter filterOn(final Resource on) {
+        return new ResourceFilter() {
+
+            @Override
+            public boolean match(Resource resource) {
+                return resource == on;
+            }
+        };
     }
 }

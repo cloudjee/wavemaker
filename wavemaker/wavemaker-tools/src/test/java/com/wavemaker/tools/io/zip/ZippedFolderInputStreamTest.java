@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.springframework.util.FileCopyUtils;
 
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
@@ -50,7 +50,7 @@ public class ZippedFolderInputStreamTest {
     @Test
     public void shouldCreateFilteredZipFile() throws Exception {
         Folder rootFolder = createLayout();
-        ZippedFolderInputStream inputStream = new ZippedFolderInputStream(rootFolder.getFolder("y"), "x", FilterOn.fileNames().notStarting("ab"));
+        ZippedFolderInputStream inputStream = new ZippedFolderInputStream(rootFolder.getFolder("y"), "x", FilterOn.names().notStarting("ab"));
         List<String> entryNames = getEntryNames(inputStream);
         assertThat(entryNames.size(), is(4));
         assertTrue(entryNames.contains("x/a/"));

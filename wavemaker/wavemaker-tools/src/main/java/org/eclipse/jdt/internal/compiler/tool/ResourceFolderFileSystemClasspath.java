@@ -44,7 +44,7 @@ import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
  */
 public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
 
-    private static final AttributeFilter CLASS_OR_JAVA_FILES = FilterOn.resourceNames().ending(".class", ".java");
+    private static final AttributeFilter CLASS_OR_JAVA_FILES = FilterOn.names().ending(".class", ".java");
 
     private static final char FILE_SEPARATOR = java.io.File.separatorChar;
 
@@ -76,7 +76,7 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
         if (!isPackage(qualifiedPackageName) || !this.folder.exists()) {
             return null;
         }
-        Resources<File> list = this.folder.listFiles().include(CLASS_OR_JAVA_FILES);
+        Resources<File> list = this.folder.list().files().include(CLASS_OR_JAVA_FILES);
         List<char[][]> foundTypeNames = new ArrayList<char[][]>();
         for (File file : list) {
             char[][] packageName = CharOperation.splitOn(java.io.File.separatorChar, qualifiedPackageName.toCharArray());

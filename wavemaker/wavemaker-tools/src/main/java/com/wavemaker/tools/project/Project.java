@@ -32,7 +32,6 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.service.AbstractFileService;
 
@@ -162,20 +161,20 @@ public class Project extends AbstractFileService {
      * 
      * @return the service source folder
      */
-    public Resources<Folder> getSourceFolders() {
+    public List<Folder> getSourceFolders() {
         List<Folder> sourceFolders = new ArrayList<Folder>();
         Folder mainSourceFolder = getRootFolder().getFolder(this.mavenProject ? ProjectConstants.MAVEN_SRC_DIR : ProjectConstants.SRC_DIR);
         if (mainSourceFolder.exists()) {
             sourceFolders.add(mainSourceFolder);
         }
-        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").listFolders();
+        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list().folders();
         for (Folder serviceFolder : serviceFolders) {
             Folder serviceSourceFolder = serviceFolder.getFolder("src");
             if (serviceSourceFolder.exists()) {
                 sourceFolders.add(serviceSourceFolder);
             }
         }
-        return new ResourcesCollection<Folder>(Collections.unmodifiableList(sourceFolders));
+        return Collections.unmodifiableList(sourceFolders);
     }
 
     @Deprecated

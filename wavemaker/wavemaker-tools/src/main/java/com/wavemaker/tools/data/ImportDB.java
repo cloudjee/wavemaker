@@ -329,7 +329,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void removeConstructor() {
 
-        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.listFiles().include(FilterOn.resourceNames().ending(".java"));
+        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.list().files().include(FilterOn.names().ending(".java"));
 
         if (javafiles != null) {
             try {

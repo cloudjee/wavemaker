@@ -372,13 +372,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
         // Add common themes
         Folder commonThemes = this.fileSystem.getCommonFolder().getFolder(THEMES_DIR);
-        for (Folder theme : commonThemes.listFolders().include(FilterOn.nonHiddenResources())) {
+        for (Folder theme : commonThemes.list().folders().include(FilterOn.nonHidden())) {
             themes.add(theme.getName());
         }
 
         // Add studio themes
         Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
-        for (Folder theme : widgetThemes.listFolders().include(FilterOn.resourceNames().starting("wm_"))) {
+        for (Folder theme : widgetThemes.list().folders().include(FilterOn.names().starting("wm_"))) {
             themes.add(theme.getName());
         }
 
@@ -692,7 +692,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     private static class ExportIncludeFilter implements ResourceFilter {
 
-        private static final ResourceFilter PATHS = FilterOn.resourcePaths().notStarting("/export", "/dist", "/webapproot/WEB-INF/classes",
+        private static final ResourceFilter PATHS = FilterOn.paths().notStarting("/export", "/dist", "/webapproot/WEB-INF/classes",
             "/webapproot/WEB-INF/lib");
 
         @Override

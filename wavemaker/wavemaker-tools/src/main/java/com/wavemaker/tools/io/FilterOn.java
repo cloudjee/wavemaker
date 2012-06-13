@@ -30,117 +30,13 @@ import org.springframework.util.Assert;
  */
 public abstract class FilterOn {
 
-    // FIXME simplyify by removing file/folder variants
-
-    // FIXME delete ALL, FILE_FILTER and FOLDER_FILTER
-
     /**
-     * No Filtering.
-     */
-    public static final ResourceFilter ALL = new ResourceFilter() {
-
-        @Override
-        public boolean match(Resource resource) {
-            return true;
-        }
-    };
-
-    private static final ResourceFilter FILE_FILTER = new FileTypeFilter();
-
-    private static final ResourceFilter FOLDER_FILTER = new FolderTypeFilter();
-
-    /**
-     * Filter that only accepts {@link File}s.
+     * Start filtering based on {@link Resource} {@link Folder#getName() names}. NOTE: matching is case insensitive.
      * 
      * @return the filter
      */
-    public static ResourceFilter files() {
-        return FILE_FILTER;
-    }
-
-    /**
-     * Filter that only accepts {@link Folder}s.
-     * 
-     * @return the filter
-     */
-    public static ResourceFilter folders() {
-        return FOLDER_FILTER;
-    }
-
-    public static ResourceFilter all() {
-        return ALL;
-    }
-
-    /**
-     * Start filtering based on {@link Folder} {@link Folder#getName() names}. NOTE: matching is case insensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter folderNames() {
-        return getFor(Folder.class, ResourceAttribute.NAME_IGNORING_CASE);
-    }
-
-    /**
-     * Start filtering based on {@link Folder} {@link Folder#getName() names}. NOTE: matching is case sensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter caseSensitiveFolderNames() {
-        return getFor(Folder.class, ResourceAttribute.NAME);
-    }
-
-    /**
-     * Start filtering based on {@link Folder} {@link Folder#toString() paths}. NOTE: matching is case insensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter folderPaths() {
-        return getFor(Folder.class, ResourceAttribute.PATH_IGNORING_CASE);
-    }
-
-    /**
-     * Start filtering based on {@link Folder} {@link Folder#toString() paths}. NOTE: matching is case sensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter caseSensitiveFolderPaths() {
-        return getFor(Folder.class, ResourceAttribute.PATH);
-    }
-
-    /**
-     * Start filtering based on {@link File} {@link Folder#getName() names}. NOTE: matching is case insensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter fileNames() {
-        return getFor(File.class, ResourceAttribute.NAME_IGNORING_CASE);
-    }
-
-    /**
-     * Start filtering based on {@link File} {@link Folder#getName() names}. NOTE: matching is case sensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter caseSensitiveFileNames() {
-        return getFor(File.class, ResourceAttribute.NAME);
-    }
-
-    /**
-     * Start filtering based on {@link File} {@link Folder#toString() paths}. NOTE: matching is case insensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter filePaths() {
-        return getFor(File.class, ResourceAttribute.PATH_IGNORING_CASE);
-    }
-
-    /**
-     * Start filtering based on {@link File} {@link Folder#toString() paths}. NOTE: matching is case sensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter caseSensitiveFilePaths() {
-        return getFor(File.class, ResourceAttribute.PATH);
+    public static AttributeFilter names() {
+        return getFor(ResourceAttribute.NAME_IGNORING_CASE);
     }
 
     /**
@@ -148,17 +44,8 @@ public abstract class FilterOn {
      * 
      * @return the filter
      */
-    public static AttributeFilter resourceNames() {
-        return getFor(Resource.class, ResourceAttribute.NAME_IGNORING_CASE);
-    }
-
-    /**
-     * Start filtering based on {@link Resource} {@link Folder#getName() names}. NOTE: matching is case insensitive.
-     * 
-     * @return the filter
-     */
-    public static AttributeFilter caseSensitiveResourceNames() {
-        return getFor(Resource.class, ResourceAttribute.NAME);
+    public static AttributeFilter caseSensitiveNames() {
+        return getFor(ResourceAttribute.NAME);
     }
 
     /**
@@ -166,8 +53,8 @@ public abstract class FilterOn {
      * 
      * @return the filter
      */
-    public static AttributeFilter resourcePaths() {
-        return getFor(Resource.class, ResourceAttribute.PATH_IGNORING_CASE);
+    public static AttributeFilter paths() {
+        return getFor(ResourceAttribute.PATH_IGNORING_CASE);
     }
 
     /**
@@ -175,8 +62,8 @@ public abstract class FilterOn {
      * 
      * @return the filter
      */
-    public static AttributeFilter caseSensitiveResourcePaths() {
-        return getFor(Resource.class, ResourceAttribute.PATH);
+    public static AttributeFilter caseSensitivePaths() {
+        return getFor(ResourceAttribute.PATH);
     }
 
     /**
@@ -186,17 +73,9 @@ public abstract class FilterOn {
      * @param attribute the attribute
      * @return the filter
      */
-    public static AttributeFilter getFor(Class<? extends Resource> resourceType, ResourceAttribute attribute) {
-        Assert.notNull(resourceType, "ResourceType must not be null");
+    public static AttributeFilter getFor(ResourceAttribute attribute) {
         Assert.notNull(attribute, "Attribute must not be null");
-        ResourceTypeFilter resourceTypeFilter = new ResourceTypeFilter(resourceType);
-        if (File.class.equals(resourceType)) {
-            return new FileAttributeFilter(attribute, null, resourceTypeFilter);
-        }
-        if (Folder.class.equals(resourceType)) {
-            return new FolderAttributeFilter(attribute, null, resourceTypeFilter);
-        }
-        return new ResourceAttributeFilter(attribute, null, resourceTypeFilter);
+        return new AttributeFilter(attribute);
     }
 
     /**
@@ -204,8 +83,8 @@ public abstract class FilterOn {
      * 
      * @return the filter
      */
-    public static ResourceFilter hiddenResources() {
-        return resourceNames().starting(".");
+    public static ResourceFilter hidden() {
+        return names().starting(".");
     }
 
     /**
@@ -213,44 +92,8 @@ public abstract class FilterOn {
      * 
      * @return the filter
      */
-    public static ResourceFilter nonHiddenResources() {
-        return resourceNames().notStarting(".");
-    }
-
-    /**
-     * Filter all hidden folders (ie folder names starting '.')
-     * 
-     * @return the filter
-     */
-    public static ResourceFilter hiddenFolders() {
-        return folderNames().starting(".");
-    }
-
-    /**
-     * Filter all non-hidden folders (ie folder names not starting '.');
-     * 
-     * @return the filter
-     */
-    public static ResourceFilter nonHiddenFolders() {
-        return folderNames().notStarting(".");
-    }
-
-    /**
-     * Filter all hidden files (ie file names starting '.')
-     * 
-     * @return the filter
-     */
-    public static ResourceFilter hiddenFiles() {
-        return fileNames().starting(".");
-    }
-
-    /**
-     * Filter all non-hidden files (ie file names not starting '.');
-     * 
-     * @return the filter
-     */
-    public static ResourceFilter nonHiddenFiles() {
-        return fileNames().notStarting(".");
+    public static ResourceFilter nonHidden() {
+        return names().notStarting(".");
     }
 
     /**
@@ -303,22 +146,22 @@ public abstract class FilterOn {
     /**
      * The {@link ResourceFilter} and builder used to further restrict filtering.
      */
-    public static abstract class AttributeFilter implements ResourceFilter {
+    public static class AttributeFilter implements ResourceFilter {
 
         private final ResourceAttribute attribute;
 
-        private final AttributeFilter parent;
+        private AttributeFilter parent;
 
-        private final ResourceFilter filter;
+        private ResourceFilter filter;
 
-        public AttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
+        public AttributeFilter(ResourceAttribute attribute) {
             this.attribute = attribute;
-            this.parent = parent;
-            this.filter = filter;
         }
 
-        protected final ResourceAttribute getAttribute() {
-            return this.attribute;
+        public AttributeFilter(AttributeFilter parent, ResourceFilter filter) {
+            this.parent = parent;
+            this.attribute = parent.attribute;
+            this.filter = filter;
         }
 
         /**
@@ -328,7 +171,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter starting(CharSequence... prefix) {
-            return newResourceAttributeFilter(stringFilter(StringOperation.STARTS, prefix));
+            return new AttributeFilter(this, stringFilter(StringOperation.STARTS, prefix));
         }
 
         /**
@@ -338,7 +181,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter notStarting(CharSequence... prefix) {
-            return newResourceAttributeFilter(not(stringFilter(StringOperation.STARTS, prefix)));
+            return new AttributeFilter(this, not(stringFilter(StringOperation.STARTS, prefix)));
         }
 
         /**
@@ -349,7 +192,7 @@ public abstract class FilterOn {
          */
 
         public AttributeFilter ending(CharSequence... postfix) {
-            return newResourceAttributeFilter(stringFilter(StringOperation.ENDS, postfix));
+            return new AttributeFilter(this, stringFilter(StringOperation.ENDS, postfix));
         }
 
         /**
@@ -359,7 +202,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter notEnding(CharSequence... postfix) {
-            return newResourceAttributeFilter(not(stringFilter(StringOperation.ENDS, postfix)));
+            return new AttributeFilter(this, not(stringFilter(StringOperation.ENDS, postfix)));
         }
 
         /**
@@ -369,7 +212,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter containing(CharSequence... content) {
-            return newResourceAttributeFilter(stringFilter(StringOperation.CONTAINS, content));
+            return new AttributeFilter(this, stringFilter(StringOperation.CONTAINS, content));
         }
 
         /**
@@ -379,7 +222,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter notContaining(CharSequence... content) {
-            return newResourceAttributeFilter(not(stringFilter(StringOperation.CONTAINS, content)));
+            return new AttributeFilter(this, not(stringFilter(StringOperation.CONTAINS, content)));
         }
 
         /**
@@ -389,7 +232,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter matching(CharSequence... value) {
-            return newResourceAttributeFilter(stringFilter(StringOperation.MATCHES, value));
+            return new AttributeFilter(this, stringFilter(StringOperation.MATCHES, value));
         }
 
         /**
@@ -399,7 +242,7 @@ public abstract class FilterOn {
          * @return the filter
          */
         public AttributeFilter notMatching(CharSequence... value) {
-            return newResourceAttributeFilter(not(stringFilter(StringOperation.MATCHES, value)));
+            return new AttributeFilter(this, not(stringFilter(StringOperation.MATCHES, value)));
         }
 
         private ResourceFilter stringFilter(StringOperation operation, CharSequence... values) {
@@ -414,78 +257,12 @@ public abstract class FilterOn {
             return new InvertFilter(filter);
         }
 
-        protected abstract AttributeFilter newResourceAttributeFilter(ResourceFilter filter);
-
         @Override
         public boolean match(Resource resource) {
             if (this.parent != null && !this.parent.match(resource)) {
                 return false;
             }
-            return this.filter.match(resource);
-        }
-    }
-
-    public static class FileAttributeFilter extends AttributeFilter implements ResourceFilter {
-
-        public FileAttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
-            super(attribute, parent, filter);
-        }
-
-        @Override
-        protected AttributeFilter newResourceAttributeFilter(ResourceFilter filter) {
-            return new FileAttributeFilter(getAttribute(), this, filter);
-        }
-    }
-
-    public static class FolderAttributeFilter extends AttributeFilter implements ResourceFilter {
-
-        public FolderAttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
-            super(attribute, parent, filter);
-        }
-
-        @Override
-        protected AttributeFilter newResourceAttributeFilter(ResourceFilter filter) {
-            return new FolderAttributeFilter(getAttribute(), this, filter);
-        }
-    }
-
-    public static class ResourceAttributeFilter extends AttributeFilter implements ResourceFilter {
-
-        public ResourceAttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
-            super(attribute, parent, filter);
-        }
-
-        @Override
-        protected AttributeFilter newResourceAttributeFilter(ResourceFilter filter) {
-            return new ResourceAttributeFilter(getAttribute(), this, filter);
-        }
-    }
-
-    private static class ResourceTypeFilter implements ResourceFilter {
-
-        private final Class<? extends Resource> resourceType;
-
-        public ResourceTypeFilter(Class<? extends Resource> resourceType) {
-            this.resourceType = resourceType;
-        }
-
-        @Override
-        public boolean match(Resource resource) {
-            return this.resourceType.isInstance(resource);
-        }
-    }
-
-    private static class FileTypeFilter extends ResourceTypeFilter {
-
-        public FileTypeFilter() {
-            super(File.class);
-        }
-    }
-
-    private static class FolderTypeFilter extends ResourceTypeFilter {
-
-        public FolderTypeFilter() {
-            super(Folder.class);
+            return this.filter == null || this.filter.match(resource);
         }
     }
 

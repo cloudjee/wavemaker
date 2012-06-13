@@ -25,6 +25,18 @@ import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
  */
 public interface Resources<T extends Resource> extends Iterable<T> {
 
+    // FIXME DC
+
+    Folder getSource();
+
+    Resources<File> files();
+
+    Resources<Folder> folders();
+
+    Resources<T> include(ResourceFilter... filters);
+
+    Resources<T> exclude(ResourceFilter... filters);
+
     /**
      * Delete the current resource (and any children). If this resource does not exist then no operation is performed.
      */
@@ -41,7 +53,7 @@ public interface Resources<T extends Resource> extends Iterable<T> {
     Resources<T> moveTo(Folder folder);
 
     /**
-     * Recursively copy this resource to the specified folder.Any duplicate {@link File}s will be replaced (existing
+     * Recursively copy this resource to the specified folder. Any duplicate {@link File}s will be replaced (existing
      * {@link Folder} resources will be merged). If the resource does not exist no operation is performed.
      * 
      * @param folder the folder to copy the resource to
@@ -65,10 +77,4 @@ public interface Resources<T extends Resource> extends Iterable<T> {
      * @return a {@link List} of all {@link Resource}s in this collection.
      */
     List<T> fetchAll();
-
-    // FIXME DC
-    Resources<T> include(ResourceFilter... filters);
-
-    // FIXME DC
-    Resources<T> exclude(ResourceFilter... filters);
 }
