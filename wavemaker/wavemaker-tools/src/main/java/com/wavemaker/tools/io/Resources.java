@@ -65,4 +65,6 @@ public interface Resources<T extends Resource> extends Iterable<T> {
      * @return a {@link List} of all {@link Resource}s in this collection.
      */
     List<T> fetchAll();
+
+    <F extends T> Resources<F> include(ResourceIncludeFilter<F> filter);
 }

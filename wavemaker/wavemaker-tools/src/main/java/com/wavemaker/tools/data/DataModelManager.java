@@ -299,11 +299,11 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            tmpServiceRootFolder.copyContentsTo(serviceRoot, Including.resourceNames().notEnding(".class"));
+            tmpServiceRootFolder.list().include(Including.resourceNames().notEnding(".class")).copyTo(serviceRoot);
 
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-            tmpServiceRootFolder.copyContentsTo(classesDir, Including.resourceNames().ending(".class"));
+            tmpServiceRootFolder.list().include(Including.resourceNames().ending(".class")).copyTo(classesDir);
 
             registerService(serviceId, importer);
 

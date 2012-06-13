@@ -242,7 +242,7 @@ public class StoredFolderTest {
         this.folder.getFile("b", true);
         given(this.folder.getStore().exists()).willReturn(true);
         given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
-        Resources<File> resources = this.folder.list(Including.files());
+        Resources<File> resources = this.folder.list().include(Including.files());
         Iterator<File> iterator = resources.iterator();
         File file = iterator.next();
         assertThat(iterator.hasNext(), is(false));
@@ -255,7 +255,7 @@ public class StoredFolderTest {
         this.folder.getFile("b", true);
         given(this.folder.getStore().exists()).willReturn(true);
         given(this.folder.getStore().list()).willReturn(Arrays.asList("a", "b"));
-        Resources<File> resources = this.folder.list(new ResourceIncludeFilter<File>() {
+        Resources<File> resources = this.folder.list().include(new ResourceIncludeFilter<File>() {
 
             @Override
             public boolean include(File resource) {
@@ -273,7 +273,7 @@ public class StoredFolderTest {
     public void shouldNeedListResourcesFilter() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Filter must not be null");
-        this.folder.list(null);
+        this.folder.list().include(null);
     }
 
     @Test

@@ -76,7 +76,7 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
         if (!isPackage(qualifiedPackageName) || !this.folder.exists()) {
             return null;
         }
-        Resources<File> list = this.folder.list(CLASS_OR_JAVA_FILES);
+        Resources<File> list = this.folder.list().include(CLASS_OR_JAVA_FILES);
         List<char[][]> foundTypeNames = new ArrayList<char[][]>();
         for (File file : list) {
             char[][] packageName = CharOperation.splitOn(java.io.File.separatorChar, qualifiedPackageName.toCharArray());

@@ -169,7 +169,7 @@ public class Project extends AbstractFileService {
         if (mainSourceFolder.exists()) {
             sourceFolders.add(mainSourceFolder);
         }
-        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list(Including.folders());
+        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list().include(Including.folders());
         for (Folder serviceFolder : serviceFolders) {
             Folder serviceSourceFolder = serviceFolder.getFolder("src");
             if (serviceSourceFolder.exists()) {

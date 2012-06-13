@@ -46,7 +46,7 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Folder svc = project.getRootFolder().getFolder("services");
-        Resources<Folder> mdls = svc.list(Including.folders());
+        Resources<Folder> mdls = svc.list().include(Including.folders());
         for (Folder mdl : mdls) {
             Folder mdlsrc = mdl.getFolder("src");
             processSingleMdl(mdlsrc);

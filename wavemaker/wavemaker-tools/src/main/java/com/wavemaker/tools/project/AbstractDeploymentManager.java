@@ -74,10 +74,12 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return this.fileSystem;
     }
 
+    @Override
     public void setFileSystem(StudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 
+    @Override
     public void setProjectManager(ProjectManager projectManager) {
         this.projectManager = projectManager;
     }
@@ -90,6 +92,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         this.projectCompiler = projectCompiler;
     }
 
+    @Override
     public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;
     }
@@ -369,13 +372,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
         // Add common themes
         Folder commonThemes = this.fileSystem.getCommonFolder().getFolder(THEMES_DIR);
-        for (Folder theme : commonThemes.list(Including.nonHiddenFolders())) {
+        for (Folder theme : commonThemes.list().include(Including.nonHiddenFolders())) {
             themes.add(theme.getName());
         }
 
         // Add studio themes
         Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
-        for (Folder theme : widgetThemes.list(Including.folderNames().starting("wm_"))) {
+        for (Folder theme : widgetThemes.list().include(Including.folderNames().starting("wm_"))) {
             themes.add(theme.getName());
         }
 

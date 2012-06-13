@@ -665,7 +665,7 @@ public class DesignServiceManager {
      */
     public SortedSet<String> getServiceIds() {
         SortedSet<String> serviceIds = new TreeSet<String>();
-        Resources<Folder> childFolders = getServicesFolder().list(Including.folders());
+        Resources<Folder> childFolders = getServicesFolder().list().include(Including.folders());
         for (Folder child : childFolders) {
             String serviceId = child.getName();
             File serviceDefXmlFile = getServiceDefXmlFile(serviceId);

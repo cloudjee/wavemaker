@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
 /**
  * Implementation of of {@link Resources} that dynamically filters items based on a {@link ResourceIncludeFilter}.
  * 
- * @see #apply(Resources, ResourceIncludeFilter)
+ * @see #include(Resources, ResourceIncludeFilter)
  * 
  * @author Phillip Webb
  */
@@ -58,7 +58,7 @@ public class FilteredResources<S extends Resource, T extends Resource> extends A
      * @param filter the filter to apply
      * @return filtered resources.
      */
-    public static <S extends Resource, T extends Resource> Resources<T> apply(Resources<S> resources, ResourceIncludeFilter<T> filter) {
+    public static <S extends Resource, T extends Resource> Resources<T> include(Resources<S> resources, ResourceIncludeFilter<T> filter) {
         return new FilteredResources<S, T>(resources, filter);
     }
 }

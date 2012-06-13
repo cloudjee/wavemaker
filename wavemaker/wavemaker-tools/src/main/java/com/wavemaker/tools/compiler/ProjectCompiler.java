@@ -181,8 +181,8 @@ public class ProjectCompiler {
 
     public Iterable<Resource> getClasspath(Project project) {
         List<Resource> classpath = new ArrayList<Resource>();
-        addAll(classpath, project.getRootFolder().getFolder("lib").list(JAR_FILE_FILTER));
-        addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list(JAR_FILE_FILTER));
+        addAll(classpath, project.getRootFolder().getFolder("lib").list().include(JAR_FILE_FILTER));
+        addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list().include(JAR_FILE_FILTER));
         return classpath;
     }
 

@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.AbstractResources;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.FilteredResources;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.JailedResourcePath;
@@ -98,12 +97,6 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     public Resources<Resource> list() {
-        return list(Including.all());
-    }
-
-    @Override
-    public <T extends Resource> Resources<T> list(ResourceIncludeFilter<T> includeFilter) {
-        Assert.notNull(includeFilter, "Filter must not be null");
         if (!exists()) {
             return ResourcesCollection.emptyResources();
         }
@@ -111,8 +104,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
         if (list == null) {
             return ResourcesCollection.emptyResources();
         }
-        Resources<Resource> resources = new ChildResources(list);
-        return FilteredResources.apply(resources, includeFilter);
+        return new ChildResources(list);
     }
 
     @Override
@@ -159,11 +151,6 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     @Override
     public Resources<Resource> copyContentsTo(Folder folder) {
         return list().copyTo(folder);
-    }
-
-    @Override
-    public Resources<Resource> copyContentsTo(Folder folder, ResourceIncludeFilter<Resource> includeFilter) {
-        return list(includeFilter).copyTo(folder);
     }
 
     @Override

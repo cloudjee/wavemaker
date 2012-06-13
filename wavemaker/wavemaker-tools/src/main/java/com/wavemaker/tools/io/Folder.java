@@ -67,17 +67,6 @@ public interface Folder extends Resource, Iterable<Resource> {
      */
     Resources<Resource> copyContentsTo(Folder folder);
 
-    /**
-     * Convenience methods to move the contents of the folder, filtering results as necessary.
-     * {@link Resources#copyTo(Folder) copyTo(folder)}.
-     * 
-     * @param folder the folder to copy the resource to
-     * @param includeFilter a filter used to include results (must not be <tt>null</tt>).
-     * @return a resource collection containing the new destination resources
-     * @see Resources#copyTo(Folder)
-     */
-    Resources<Resource> copyContentsTo(Folder folder, ResourceIncludeFilter<Resource> includeFilter);
-
     @Override
     Folder rename(String name) throws ResourceExistsException;
 
@@ -142,15 +131,6 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return a list of all immediate child resources
      */
     Resources<Resource> list();
-
-    /**
-     * List immediate child resource of this folder, filtering results as necessary. If this resource does not exist
-     * empty resources are returned.
-     * 
-     * @param includeFilter a filter used to include results (must not be <tt>null</tt>).
-     * @return a list of immediate child resources that match the filter
-     */
-    <T extends Resource> Resources<T> list(ResourceIncludeFilter<T> includeFilter);
 
     /**
      * Perform the specified operation on all children in folder, recursively processing all nested folders.

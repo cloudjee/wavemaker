@@ -23,9 +23,9 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceClassGenerator;
 import com.wavemaker.tools.service.ServiceFile;
-import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
  * Generate service classes.
@@ -46,7 +46,7 @@ public class ServiceCompilerTask extends CompilerTask {
     }
 
     private Resources<com.wavemaker.tools.io.File> getServiceFiles(Folder folder) {
-        return folder.list(Including.fileNames().notEnding(".properties"));
+        return folder.list().include(Including.fileNames().notEnding(".properties"));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ServiceCompilerTask extends CompilerTask {
         }
     }
 
-    public void processService(DesignServiceManager serviceMgr,  String serviceId) {
+    public void processService(DesignServiceManager serviceMgr, String serviceId) {
         Folder serviceDir = serviceMgr.getServiceRuntimeFolder(serviceId);
         Folder serviceFolder = serviceMgr.getServiceRuntimeFolder(serviceId);
         if (!serviceFolder.exists()) {

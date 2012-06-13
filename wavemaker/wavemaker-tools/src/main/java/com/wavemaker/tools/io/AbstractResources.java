@@ -72,4 +72,9 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         }
         return Collections.unmodifiableList(all);
     }
+
+    @Override
+    public <F extends T> Resources<F> include(ResourceIncludeFilter<F> filter) {
+        return FilteredResources.include(this, filter);
+    }
 }
