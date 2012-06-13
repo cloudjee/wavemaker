@@ -60,6 +60,10 @@ public class ExportDB extends BaseDataModelSetup {
 
     private static final String HBM_FILES_DIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "hbmFilesDir";
 
+    private static final String NO_SUITABLE_DRIVER = "No suitable driver found";
+
+    private static final String UNKNOWN_DATABASE = "Unknown database";
+
     private Folder hbmFilesDir = null;
 
     private boolean exportToDatabase = false;
@@ -216,6 +220,13 @@ public class ExportDB extends BaseDataModelSetup {
             throw new DataServiceRuntimeException(ex);
         } catch (SQLException qex) {
             throw new DataServiceRuntimeException(qex);
+        } catch (RuntimeException rex) {
+            if (rex.getCause().getMessage().contains(NO_SUITABLE_DRIVER) && WMAppContext.getInstance().isCloudFoundry()) {
+                String msg = rex.getMessage() + " - " + UNKNOWN_DATABASE;
+                throw new DataServiceRuntimeException(msg);
+            } else {
+                throw new DataServiceRuntimeException(rex);
+            }
         } finally {
             try {
                 ddlFile.delete();

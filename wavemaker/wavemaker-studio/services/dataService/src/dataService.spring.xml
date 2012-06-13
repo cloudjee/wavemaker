@@ -14,14 +14,14 @@
     </bean>
 
 	<!-- events -->
-	<bean class="com.wavemaker.runtime.service.events.EventWire">
+	<bean lazy-init="true" class="com.wavemaker.runtime.service.events.EventWire">
 		<property name="serviceWire" ref="dataServiceServiceWire" />
 		<property name="eventListener">
 			<bean class="com.wavemaker.tools.data.DesignDataServiceEventListener" />
 		</property>
 	</bean>
 
-	<bean class="com.wavemaker.runtime.service.events.EventWire">
+	<bean lazy-init="true" class="com.wavemaker.runtime.service.events.EventWire">
 		<property name="eventListener">
 			<bean class="com.wavemaker.studio.data.DataServiceProjectEventListener">
 				<property name="dataModelManager">

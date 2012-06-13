@@ -368,8 +368,19 @@ public class DataService {
 
     public String cfGetExportDDL(String serviceId, String dbms, String schemaFilter, String driverClassName,
                                  String dialectClassName, boolean overrideTable) {
+        String username = "", password = "", connectionUrl = "";
+        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+        if (cfEnv != null) {
+            try {
+                RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
+                connectionUrl = info.getUrl();
+                username = info.getUserName();
+                password = info.getPassword();
+            } catch (WMRuntimeException ex) {
+            }
+        }
 
-        return this.dataModelMgr.getExportDDL("", "", dbms, "", serviceId, schemaFilter, driverClassName, dialectClassName,
+        return this.dataModelMgr.getExportDDL(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
                 overrideTable);      
     }
 
