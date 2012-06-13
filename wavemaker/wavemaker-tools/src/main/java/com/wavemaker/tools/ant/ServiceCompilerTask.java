@@ -20,8 +20,8 @@ import java.util.List;
 import org.apache.tools.ant.BuildException;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceClassGenerator;
@@ -46,7 +46,7 @@ public class ServiceCompilerTask extends CompilerTask {
     }
 
     private Resources<com.wavemaker.tools.io.File> getServiceFiles(Folder folder) {
-        return folder.list().include(Including.fileNames().notEnding(".properties"));
+        return folder.listFiles().include(FilterOn.resourceNames().notEnding(".properties"));
     }
 
     @Override

@@ -25,14 +25,14 @@ public abstract class ResourceOperations {
 
     /**
      * Copy all files, keeping the same folder structure relative to the source. See
-     * {@link #copyFilesKeepingSameFolderStructure(Folder, ResourceIncludeFilter)} for details.
+     * {@link #copyFilesKeepingSameFolderStructure(Folder, ResourceFilter)} for details.
      * 
      * @param source the source folder
      * @param destination the destination folder
      * @return the operation
      */
     public static ResourceOperation<File> copyFilesKeepingSameFolderStructure(Folder source, Folder destination) {
-        return copyFilesKeepingSameFolderStructure(source, destination, Including.<File> all());
+        return copyFilesKeepingSameFolderStructure(source, destination, FilterOn.all());
     }
 
     /**
@@ -44,7 +44,7 @@ public abstract class ResourceOperations {
      * @return the operation
      */
     public static ResourceOperation<File> copyFilesKeepingSameFolderStructure(final Folder source, final Folder destination,
-        final ResourceIncludeFilter<File> fileIncludeFilter) {
+        final ResourceFilter fileIncludeFilter) {
         Assert.notNull(source, "Source must not be null");
         Assert.notNull(destination, "Destination must not be null");
         Assert.notNull(fileIncludeFilter, "Filter must not be null");
@@ -53,7 +53,7 @@ public abstract class ResourceOperations {
 
             @Override
             public void perform(File resource) {
-                if (fileIncludeFilter.include(resource)) {
+                if (fileIncludeFilter.match(resource)) {
                     Assert.state(resource.toString().startsWith(sourcePath), "The file " + resource + " is not contained in the source folder "
                         + sourcePath);
                     String relativeLocation = resource.toString().substring(sourcePath.length());

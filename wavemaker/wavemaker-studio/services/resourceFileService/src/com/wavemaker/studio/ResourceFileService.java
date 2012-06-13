@@ -29,7 +29,7 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.Resources;
@@ -63,7 +63,7 @@ public class ResourceFileService {
     }
 
     private List<Hashtable<String, Object>> listChildren(Folder folder) {
-        Resources<Resource> list = folder.list().include(Including.nonHiddenResources());
+        Resources<Resource> list = folder.list().include(FilterOn.nonHiddenResources());
         List<Hashtable<String, Object>> children = new ArrayList<Hashtable<String, Object>>();
         for (Resource child : list) {
             children.add(asHashTable(child));

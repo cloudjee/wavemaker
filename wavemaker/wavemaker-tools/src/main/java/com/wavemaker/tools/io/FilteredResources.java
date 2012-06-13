@@ -15,50 +15,57 @@
 package com.wavemaker.tools.io;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.util.Assert;
 
 /**
- * Implementation of of {@link Resources} that dynamically filters items based on a {@link ResourceIncludeFilter}.
+ * Implementation of of {@link Resources} that dynamically filters items based on a {@link ResourceFilter}.
  * 
  * @see #include(Resources, ResourceIncludeFilter)
  * 
  * @author Phillip Webb
  */
-public class FilteredResources<S extends Resource, T extends Resource> extends AbstractResources<T> {
+public class FilteredResources<T extends Resource> extends AbstractResources<T> {
 
-    private final Resources<S> resources;
+    private static enum Type {
+        INCLUDE, EXCLUDE
+    }
 
-    private final GenericResourceIncludeFilter<T> filter;
+    private final Resources<T> source;
 
-    private FilteredResources(Resources<S> resources, ResourceIncludeFilter<T> filter) {
-        Assert.notNull(resources, "Resources must not be null");
-        Assert.notNull(filter, "Filter must not be null");
-        this.resources = resources;
-        this.filter = GenericResourceIncludeFilter.filterNonMatchingGeneric(filter);
+    private final Type type;
+
+    private final List<ResourceFilter> filters;
+
+    private FilteredResources(Resources<T> source, Type type, List<ResourceFilter> filters) {
+        Assert.notNull(source, "Source must not be null");
+        Assert.notNull(filters, "Filters must not be null");
+        this.source = source;
+        this.filters = filters;
+        this.type = type;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Iterator<T> iterator() {
-        FilteredIterator<S> filteredIterator = new FilteredIterator<S>(this.resources.iterator()) {
+        FilteredIterator<T> filteredIterator = new FilteredIterator<T>(this.source.iterator()) {
 
             @Override
-            protected boolean isElementFiltered(S element) {
-                return !FilteredResources.this.filter.include(element);
+            protected boolean isElementFiltered(T element) {
+                return FilteredResources.this.type == Type.INCLUDE ? !isMatch(element) : isMatch(element);
             }
+
+            private boolean isMatch(T element) {
+                for (ResourceFilter filter : FilteredResources.this.filters) {
+                    if (filter.match(element)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         };
-        return (Iterator<T>) filteredIterator;
+        return filteredIterator;
     }
 
-    /**
-     * Apply the given {@link ResourceIncludeFilter} to the specified {@link Resources}.
-     * 
-     * @param resources the resources to filter
-     * @param filter the filter to apply
-     * @return filtered resources.
-     */
-    public static <S extends Resource, T extends Resource> Resources<T> include(Resources<S> resources, ResourceIncludeFilter<T> filter) {
-        return new FilteredResources<S, T>(resources, filter);
-    }
 }

@@ -31,7 +31,6 @@ import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.local.LocalFolder;
@@ -169,7 +168,7 @@ public class Project extends AbstractFileService {
         if (mainSourceFolder.exists()) {
             sourceFolders.add(mainSourceFolder);
         }
-        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list().include(Including.folders());
+        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").listFolders();
         for (Folder serviceFolder : serviceFolders) {
             Folder serviceSourceFolder = serviceFolder.getFolder("src");
             if (serviceSourceFolder.exists()) {

@@ -42,10 +42,10 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.Deployments;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
@@ -372,13 +372,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
         // Add common themes
         Folder commonThemes = this.fileSystem.getCommonFolder().getFolder(THEMES_DIR);
-        for (Folder theme : commonThemes.list().include(Including.nonHiddenFolders())) {
+        for (Folder theme : commonThemes.listFolders().include(FilterOn.nonHiddenResources())) {
             themes.add(theme.getName());
         }
 
         // Add studio themes
         Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
-        for (Folder theme : widgetThemes.list().include(Including.folderNames().starting("wm_"))) {
+        for (Folder theme : widgetThemes.listFolders().include(FilterOn.resourceNames().starting("wm_"))) {
             themes.add(theme.getName());
         }
 
@@ -690,16 +690,16 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return exportFile.toString().substring(1);
     }
 
-    private static class ExportIncludeFilter implements ResourceIncludeFilter<Resource> {
+    private static class ExportIncludeFilter implements ResourceFilter {
 
-        private static final ResourceIncludeFilter<Folder> PATHS = Including.folderPaths().notStarting("/export", "/dist",
-            "/webapproot/WEB-INF/classes", "/webapproot/WEB-INF/lib");
+        private static final ResourceFilter PATHS = FilterOn.resourcePaths().notStarting("/export", "/dist", "/webapproot/WEB-INF/classes",
+            "/webapproot/WEB-INF/lib");
 
         @Override
-        public boolean include(Resource resource) {
+        public boolean match(Resource resource) {
             if (resource instanceof Folder) {
                 Folder folder = (Folder) resource;
-                if (!PATHS.include(folder)) {
+                if (!PATHS.match(folder)) {
                     return false;
                 }
             }

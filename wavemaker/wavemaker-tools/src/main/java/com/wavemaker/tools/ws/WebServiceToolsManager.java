@@ -70,8 +70,8 @@ import com.wavemaker.runtime.ws.WebServiceException;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.DownloadableFile;
 import com.wavemaker.tools.project.ProjectManager;
@@ -699,7 +699,7 @@ public class WebServiceToolsManager {
             String packagePath = clazz.replace('.', '/');
             packagePath = packagePath.substring(0, packagePath.lastIndexOf('/'));
             Folder packageDir = serviceRuntimeDirectory.getFolder(packagePath);
-            Iterator<File> wsdlFiles = packageDir.list().include(Including.fileNames().ending(Constants.WSDL_EXT)).iterator();
+            Iterator<File> wsdlFiles = packageDir.listFiles().include(FilterOn.resourceNames().ending(Constants.WSDL_EXT)).iterator();
             if (wsdlFiles.hasNext()) {
                 return wsdlFiles.next();
             }

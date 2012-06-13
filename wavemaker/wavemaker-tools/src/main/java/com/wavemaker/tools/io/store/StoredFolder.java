@@ -13,12 +13,12 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.AbstractResources;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceStringFormat;
@@ -108,6 +108,18 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     }
 
     @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Resources<File> listFiles() {
+        return (Resources) list().include(FilterOn.files());
+    }
+
+    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Resources<Folder> listFolders() {
+        return (Resources) list().include(FilterOn.folders());
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends Resource, OPERATION extends ResourceOperation<T>> OPERATION performOperationRecursively(OPERATION operation) {
         Class<?> supportedType = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
@@ -124,11 +136,11 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     public Folder copyTo(Folder folder) {
-        return copyTo(folder, Including.<File> all());
+        return copyTo(folder, FilterOn.all());
     }
 
     @Override
-    public Folder copyTo(Folder folder, ResourceIncludeFilter<File> fileIncludeFilter) {
+    public Folder copyTo(Folder folder, ResourceFilter fileIncludeFilter) {
         Assert.notNull(folder, "Folder must not be empty");
         Assert.notNull(fileIncludeFilter, "FileFilter must not be null");
         ensureExists();
@@ -140,7 +152,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
                 childFolder.copyTo(destination, fileIncludeFilter);
             } else {
                 File childFile = (File) child;
-                if (fileIncludeFilter.include(childFile)) {
+                if (fileIncludeFilter.match(childFile)) {
                     child.copyTo(destination);
                 }
             }

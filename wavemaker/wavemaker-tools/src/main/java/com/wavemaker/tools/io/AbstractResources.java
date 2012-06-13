@@ -74,7 +74,15 @@ public abstract class AbstractResources<T extends Resource> implements Resources
     }
 
     @Override
-    public <F extends T> Resources<F> include(ResourceIncludeFilter<F> filter) {
-        return FilteredResources.include(this, filter);
+    public Resources<T> include(ResourceFilter... filters) {
+        // TODO Auto-generated method stub
+        return null;
     }
+
+    @Override
+    public Resources<T> exclude(ResourceFilter... filters) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

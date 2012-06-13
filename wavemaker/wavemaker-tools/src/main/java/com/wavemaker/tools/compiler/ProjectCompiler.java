@@ -39,10 +39,10 @@ import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
 import com.wavemaker.tools.apt.ServiceDefProcessor;
 import com.wavemaker.tools.apt.ServiceProcessorConstants;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.ResourceOperations;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.project.Project;
@@ -61,7 +61,7 @@ public class ProjectCompiler {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    private static final ResourceIncludeFilter<File> JAR_FILE_FILTER = Including.fileNames().ending(".jar");
+    private static final ResourceFilter JAR_FILE_FILTER = FilterOn.resourceNames().ending(".jar");
 
     private static final List<String> RUNTIME_SERVICE_NAMES;
 
@@ -146,7 +146,7 @@ public class ProjectCompiler {
     private void copyResources(final Project project) {
         for (Folder sourceFolder : project.getSourceFolders()) {
             sourceFolder.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder,
-                project.getClassOutputFolder(), Including.fileNames().notEnding(".java")));
+                project.getClassOutputFolder(), FilterOn.fileNames().notEnding(".java")));
         }
     }
 
@@ -181,8 +181,8 @@ public class ProjectCompiler {
 
     public Iterable<Resource> getClasspath(Project project) {
         List<Resource> classpath = new ArrayList<Resource>();
-        addAll(classpath, project.getRootFolder().getFolder("lib").list().include(JAR_FILE_FILTER));
-        addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list().include(JAR_FILE_FILTER));
+        addAll(classpath, project.getRootFolder().getFolder("lib").listFiles().include(JAR_FILE_FILTER));
+        addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").listFiles().include(JAR_FILE_FILTER));
         return classpath;
     }
 

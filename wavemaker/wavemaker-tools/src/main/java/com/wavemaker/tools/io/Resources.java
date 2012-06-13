@@ -66,5 +66,9 @@ public interface Resources<T extends Resource> extends Iterable<T> {
      */
     List<T> fetchAll();
 
-    <F extends T> Resources<F> include(ResourceIncludeFilter<F> filter);
+    // FIXME DC
+    Resources<T> include(ResourceFilter... filters);
+
+    // FIXME DC
+    Resources<T> exclude(ResourceFilter... filters);
 }

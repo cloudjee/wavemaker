@@ -26,11 +26,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.GenericResourceIncludeFilter;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.ResourcePath;
 
 /**
@@ -46,7 +45,7 @@ public class ZippedFolderInputStream extends FilterInputStream {
      * @param folder the folder to zip
      */
     public ZippedFolderInputStream(Folder folder) {
-        this(folder, null, Including.files());
+        this(folder, null, FilterOn.files());
     }
 
     /**
@@ -56,7 +55,7 @@ public class ZippedFolderInputStream extends FilterInputStream {
      * @param entryPrefix an optional entry prefix. This allows a entries to be nested within a folder if required
      */
     public ZippedFolderInputStream(Folder folder, String entryPrefix) {
-        this(folder, entryPrefix, Including.files());
+        this(folder, entryPrefix, FilterOn.files());
     }
 
     /**
@@ -65,7 +64,7 @@ public class ZippedFolderInputStream extends FilterInputStream {
      * @param folder the folder to zip
      * @param filter a filter used to limit entries
      */
-    public ZippedFolderInputStream(Folder folder, ResourceIncludeFilter<?> filter) {
+    public ZippedFolderInputStream(Folder folder, ResourceFilter filter) {
         this(folder, null, filter);
     }
 
@@ -76,7 +75,7 @@ public class ZippedFolderInputStream extends FilterInputStream {
      * @param entryPrefix an optional entry prefix. This allows a entries to be nested within a folder if required
      * @param filter a filter used to limit entries
      */
-    public ZippedFolderInputStream(Folder folder, String entryPrefix, ResourceIncludeFilter<?> filter) {
+    public ZippedFolderInputStream(Folder folder, String entryPrefix, ResourceFilter filter) {
         super(null);
         Assert.notNull(folder, "Folder must not be null");
         Assert.notNull(filter, "Filter must not be null");
@@ -86,13 +85,13 @@ public class ZippedFolderInputStream extends FilterInputStream {
         }
         List<DynamicZipInputStream.Entry> entries = new ArrayList<DynamicZipInputStream.Entry>();
         for (Resource child : folder) {
-            addToEntries(resourcePath, entries, child, GenericResourceIncludeFilter.includeNonMatchingGeneric(filter));
+            addToEntries(resourcePath, entries, child, filter);
         }
         this.in = new DynamicZipInputStream(entries);
     }
 
-    private void addToEntries(ResourcePath parent, List<Entry> entries, Resource resource, ResourceIncludeFilter<Resource> filter) {
-        if (filter.include(resource)) {
+    private void addToEntries(ResourcePath parent, List<Entry> entries, Resource resource, ResourceFilter filter) {
+        if (filter.match(resource)) {
             entries.add(new ResourceEntry(parent, resource));
             if (resource instanceof Folder) {
                 for (Resource child : (Folder) resource) {

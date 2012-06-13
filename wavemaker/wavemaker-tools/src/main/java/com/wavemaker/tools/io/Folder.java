@@ -45,6 +45,7 @@ public interface Folder extends Resource, Iterable<Resource> {
     @Override
     Folder copyTo(Folder folder);
 
+    // FIXME delete
     /**
      * Recursively copy this resource to the specified folder, filtering resources. Any duplicate {@link File}s will be
      * replaced (existing {@link Folder} resources will be merged). If the resource does not exist a
@@ -55,7 +56,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return a new resource (the current resource will no longer {@link #exists() exist}
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    Folder copyTo(Folder folder, ResourceIncludeFilter<File> fileIncludeFilter);
+    Folder copyTo(Folder folder, ResourceFilter fileIncludeFilter);
 
     /**
      * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
@@ -131,6 +132,10 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return a list of all immediate child resources
      */
     Resources<Resource> list();
+
+    Resources<File> listFiles();
+
+    Resources<Folder> listFolders();
 
     /**
      * Perform the specified operation on all children in folder, recursively processing all nested folders.

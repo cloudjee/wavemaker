@@ -20,37 +20,41 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * Builder class that can be used to easily construct {@link ResourceIncludeFilter}s. Filters can be built for
- * {@link File}s, {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
+ * Builder class that can be used to easily construct {@link ResourceFilter}s. Filters can be built for {@link File}s,
+ * {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
  * {@link Resource#toString() paths}. Builders can be chained together to form compound (AND) matches.
  * 
- * @see ResourceIncludeFilter
+ * @see ResourceFilter
  * 
  * @author Phillip Webb
  */
-public abstract class Including {
+public abstract class FilterOn {
+
+    // FIXME simplyify by removing file/folder variants
+
+    // FIXME delete ALL, FILE_FILTER and FOLDER_FILTER
 
     /**
      * No Filtering.
      */
-    public static final ResourceIncludeFilter<Resource> ALL = new ResourceIncludeFilter<Resource>() {
+    public static final ResourceFilter ALL = new ResourceFilter() {
 
         @Override
-        public boolean include(Resource resource) {
+        public boolean match(Resource resource) {
             return true;
         }
     };
 
-    private static final ResourceIncludeFilter<File> FILE_FILTER = new FileTypeFilter();
+    private static final ResourceFilter FILE_FILTER = new FileTypeFilter();
 
-    private static final ResourceIncludeFilter<Folder> FOLDER_FILTER = new FolderTypeFilter();
+    private static final ResourceFilter FOLDER_FILTER = new FolderTypeFilter();
 
     /**
      * Filter that only accepts {@link File}s.
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<File> files() {
+    public static ResourceFilter files() {
         return FILE_FILTER;
     }
 
@@ -59,13 +63,12 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<Folder> folders() {
+    public static ResourceFilter folders() {
         return FOLDER_FILTER;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Resource> ResourceIncludeFilter<T> all() {
-        return (ResourceIncludeFilter<T>) ALL;
+    public static ResourceFilter all() {
+        return ALL;
     }
 
     /**
@@ -73,7 +76,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Folder> folderNames() {
+    public static AttributeFilter folderNames() {
         return getFor(Folder.class, ResourceAttribute.NAME_IGNORING_CASE);
     }
 
@@ -82,7 +85,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Folder> caseSensitiveFolderNames() {
+    public static AttributeFilter caseSensitiveFolderNames() {
         return getFor(Folder.class, ResourceAttribute.NAME);
     }
 
@@ -91,7 +94,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Folder> folderPaths() {
+    public static AttributeFilter folderPaths() {
         return getFor(Folder.class, ResourceAttribute.PATH_IGNORING_CASE);
     }
 
@@ -100,7 +103,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Folder> caseSensitiveFolderPaths() {
+    public static AttributeFilter caseSensitiveFolderPaths() {
         return getFor(Folder.class, ResourceAttribute.PATH);
     }
 
@@ -109,7 +112,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<File> fileNames() {
+    public static AttributeFilter fileNames() {
         return getFor(File.class, ResourceAttribute.NAME_IGNORING_CASE);
     }
 
@@ -118,7 +121,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<File> caseSensitiveFileNames() {
+    public static AttributeFilter caseSensitiveFileNames() {
         return getFor(File.class, ResourceAttribute.NAME);
     }
 
@@ -127,7 +130,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<File> filePaths() {
+    public static AttributeFilter filePaths() {
         return getFor(File.class, ResourceAttribute.PATH_IGNORING_CASE);
     }
 
@@ -136,7 +139,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<File> caseSensitiveFilePaths() {
+    public static AttributeFilter caseSensitiveFilePaths() {
         return getFor(File.class, ResourceAttribute.PATH);
     }
 
@@ -145,7 +148,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Resource> resourceNames() {
+    public static AttributeFilter resourceNames() {
         return getFor(Resource.class, ResourceAttribute.NAME_IGNORING_CASE);
     }
 
@@ -154,7 +157,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Resource> caseSensitiveResourceNames() {
+    public static AttributeFilter caseSensitiveResourceNames() {
         return getFor(Resource.class, ResourceAttribute.NAME);
     }
 
@@ -163,7 +166,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Resource> resourcePaths() {
+    public static AttributeFilter resourcePaths() {
         return getFor(Resource.class, ResourceAttribute.PATH_IGNORING_CASE);
     }
 
@@ -172,7 +175,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static AttributeFilter<Resource> caseSensitiveResourcePaths() {
+    public static AttributeFilter caseSensitiveResourcePaths() {
         return getFor(Resource.class, ResourceAttribute.PATH);
     }
 
@@ -183,18 +186,17 @@ public abstract class Including {
      * @param attribute the attribute
      * @return the filter
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <T extends Resource> AttributeFilter<T> getFor(Class<T> resourceType, ResourceAttribute attribute) {
+    public static AttributeFilter getFor(Class<? extends Resource> resourceType, ResourceAttribute attribute) {
         Assert.notNull(resourceType, "ResourceType must not be null");
         Assert.notNull(attribute, "Attribute must not be null");
-        ResourceTypeFilter resourceTypeFilter = new ResourceTypeFilter<T>(resourceType);
+        ResourceTypeFilter resourceTypeFilter = new ResourceTypeFilter(resourceType);
         if (File.class.equals(resourceType)) {
-            return (AttributeFilter<T>) new FileAttributeFilter(attribute, null, resourceTypeFilter);
+            return new FileAttributeFilter(attribute, null, resourceTypeFilter);
         }
         if (Folder.class.equals(resourceType)) {
-            return (AttributeFilter<T>) new FolderAttributeFilter(attribute, null, resourceTypeFilter);
+            return new FolderAttributeFilter(attribute, null, resourceTypeFilter);
         }
-        return (AttributeFilter<T>) new ResourceAttributeFilter(attribute, null, resourceTypeFilter);
+        return new ResourceAttributeFilter(attribute, null, resourceTypeFilter);
     }
 
     /**
@@ -202,7 +204,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<Resource> hiddenResources() {
+    public static ResourceFilter hiddenResources() {
         return resourceNames().starting(".");
     }
 
@@ -211,7 +213,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<Resource> nonHiddenResources() {
+    public static ResourceFilter nonHiddenResources() {
         return resourceNames().notStarting(".");
     }
 
@@ -220,7 +222,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<Folder> hiddenFolders() {
+    public static ResourceFilter hiddenFolders() {
         return folderNames().starting(".");
     }
 
@@ -229,7 +231,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<Folder> nonHiddenFolders() {
+    public static ResourceFilter nonHiddenFolders() {
         return folderNames().notStarting(".");
     }
 
@@ -238,7 +240,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<File> hiddenFiles() {
+    public static ResourceFilter hiddenFiles() {
         return fileNames().starting(".");
     }
 
@@ -247,7 +249,7 @@ public abstract class Including {
      * 
      * @return the filter
      */
-    public static ResourceIncludeFilter<File> nonHiddenFiles() {
+    public static ResourceFilter nonHiddenFiles() {
         return fileNames().notStarting(".");
     }
 
@@ -299,17 +301,17 @@ public abstract class Including {
     }
 
     /**
-     * The {@link ResourceIncludeFilter} and builder used to further restrict filtering.
+     * The {@link ResourceFilter} and builder used to further restrict filtering.
      */
-    public static abstract class AttributeFilter<T extends Resource> implements ResourceIncludeFilter<T> {
+    public static abstract class AttributeFilter implements ResourceFilter {
 
         private final ResourceAttribute attribute;
 
-        private final AttributeFilter<T> parent;
+        private final AttributeFilter parent;
 
-        private final ResourceIncludeFilter<T> filter;
+        private final ResourceFilter filter;
 
-        public AttributeFilter(ResourceAttribute attribute, AttributeFilter<T> parent, ResourceIncludeFilter<T> filter) {
+        public AttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
             this.attribute = attribute;
             this.parent = parent;
             this.filter = filter;
@@ -325,7 +327,7 @@ public abstract class Including {
          * @param prefix the prefix to filter against. If multiple values are specified any may match
          * @return the filter
          */
-        public AttributeFilter<T> starting(CharSequence... prefix) {
+        public AttributeFilter starting(CharSequence... prefix) {
             return newResourceAttributeFilter(stringFilter(StringOperation.STARTS, prefix));
         }
 
@@ -335,7 +337,7 @@ public abstract class Including {
          * @param prefix the prefix to filter against. If multiple values are specified all must match
          * @return the filter
          */
-        public AttributeFilter<T> notStarting(CharSequence... prefix) {
+        public AttributeFilter notStarting(CharSequence... prefix) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.STARTS, prefix)));
         }
 
@@ -346,7 +348,7 @@ public abstract class Including {
          * @return the filter
          */
 
-        public AttributeFilter<T> ending(CharSequence... postfix) {
+        public AttributeFilter ending(CharSequence... postfix) {
             return newResourceAttributeFilter(stringFilter(StringOperation.ENDS, postfix));
         }
 
@@ -356,7 +358,7 @@ public abstract class Including {
          * @param postfix the postfix to filter against. If multiple values are specified all must match
          * @return the filter
          */
-        public AttributeFilter<T> notEnding(CharSequence... postfix) {
+        public AttributeFilter notEnding(CharSequence... postfix) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.ENDS, postfix)));
         }
 
@@ -366,7 +368,7 @@ public abstract class Including {
          * @param content the contents to filter against. If multiple values are specified any may match
          * @return the filter
          */
-        public AttributeFilter<T> containing(CharSequence... content) {
+        public AttributeFilter containing(CharSequence... content) {
             return newResourceAttributeFilter(stringFilter(StringOperation.CONTAINS, content));
         }
 
@@ -376,7 +378,7 @@ public abstract class Including {
          * @param content the contents to filter against. If multiple values are specified all must match
          * @return the filter
          */
-        public AttributeFilter<T> notContaining(CharSequence... content) {
+        public AttributeFilter notContaining(CharSequence... content) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.CONTAINS, content)));
         }
 
@@ -386,7 +388,7 @@ public abstract class Including {
          * @param value the values to match
          * @return the filter
          */
-        public AttributeFilter<T> matching(CharSequence... value) {
+        public AttributeFilter matching(CharSequence... value) {
             return newResourceAttributeFilter(stringFilter(StringOperation.MATCHES, value));
         }
 
@@ -396,109 +398,109 @@ public abstract class Including {
          * @param value the value to match
          * @return the filter
          */
-        public AttributeFilter<T> notMatching(CharSequence... value) {
+        public AttributeFilter notMatching(CharSequence... value) {
             return newResourceAttributeFilter(not(stringFilter(StringOperation.MATCHES, value)));
         }
 
-        private ResourceIncludeFilter<T> stringFilter(StringOperation operation, CharSequence... values) {
-            CompoundFilter<T> filter = new CompoundFilter<T>();
+        private ResourceFilter stringFilter(StringOperation operation, CharSequence... values) {
+            CompoundFilter filter = new CompoundFilter();
             for (CharSequence value : values) {
-                filter.add(new StringFilter<T>(this.attribute, operation, value));
+                filter.add(new StringFilter(this.attribute, operation, value));
             }
             return filter;
         }
 
-        private ResourceIncludeFilter<T> not(ResourceIncludeFilter<T> filter) {
-            return new InvertFilter<T>(filter);
+        private ResourceFilter not(ResourceFilter filter) {
+            return new InvertFilter(filter);
         }
 
-        protected abstract AttributeFilter<T> newResourceAttributeFilter(ResourceIncludeFilter<T> filter);
+        protected abstract AttributeFilter newResourceAttributeFilter(ResourceFilter filter);
 
         @Override
-        public boolean include(T resource) {
-            if (this.parent != null && !this.parent.include(resource)) {
+        public boolean match(Resource resource) {
+            if (this.parent != null && !this.parent.match(resource)) {
                 return false;
             }
-            return this.filter.include(resource);
+            return this.filter.match(resource);
         }
     }
 
-    public static class FileAttributeFilter extends AttributeFilter<File> implements ResourceIncludeFilter<File> {
+    public static class FileAttributeFilter extends AttributeFilter implements ResourceFilter {
 
-        public FileAttributeFilter(ResourceAttribute attribute, AttributeFilter<File> parent, ResourceIncludeFilter<File> filter) {
+        public FileAttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
             super(attribute, parent, filter);
         }
 
         @Override
-        protected AttributeFilter<File> newResourceAttributeFilter(ResourceIncludeFilter<File> filter) {
+        protected AttributeFilter newResourceAttributeFilter(ResourceFilter filter) {
             return new FileAttributeFilter(getAttribute(), this, filter);
         }
     }
 
-    public static class FolderAttributeFilter extends AttributeFilter<Folder> implements ResourceIncludeFilter<Folder> {
+    public static class FolderAttributeFilter extends AttributeFilter implements ResourceFilter {
 
-        public FolderAttributeFilter(ResourceAttribute attribute, AttributeFilter<Folder> parent, ResourceIncludeFilter<Folder> filter) {
+        public FolderAttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
             super(attribute, parent, filter);
         }
 
         @Override
-        protected AttributeFilter<Folder> newResourceAttributeFilter(ResourceIncludeFilter<Folder> filter) {
+        protected AttributeFilter newResourceAttributeFilter(ResourceFilter filter) {
             return new FolderAttributeFilter(getAttribute(), this, filter);
         }
     }
 
-    public static class ResourceAttributeFilter extends AttributeFilter<Resource> implements ResourceIncludeFilter<Resource> {
+    public static class ResourceAttributeFilter extends AttributeFilter implements ResourceFilter {
 
-        public ResourceAttributeFilter(ResourceAttribute attribute, AttributeFilter<Resource> parent, ResourceIncludeFilter<Resource> filter) {
+        public ResourceAttributeFilter(ResourceAttribute attribute, AttributeFilter parent, ResourceFilter filter) {
             super(attribute, parent, filter);
         }
 
         @Override
-        protected AttributeFilter<Resource> newResourceAttributeFilter(ResourceIncludeFilter<Resource> filter) {
+        protected AttributeFilter newResourceAttributeFilter(ResourceFilter filter) {
             return new ResourceAttributeFilter(getAttribute(), this, filter);
         }
     }
 
-    private static class ResourceTypeFilter<T extends Resource> implements ResourceIncludeFilter<T> {
+    private static class ResourceTypeFilter implements ResourceFilter {
 
-        private final Class<T> resourceType;
+        private final Class<? extends Resource> resourceType;
 
-        public ResourceTypeFilter(Class<T> resourceType) {
+        public ResourceTypeFilter(Class<? extends Resource> resourceType) {
             this.resourceType = resourceType;
         }
 
         @Override
-        public boolean include(T resource) {
+        public boolean match(Resource resource) {
             return this.resourceType.isInstance(resource);
         }
     }
 
-    private static class FileTypeFilter extends ResourceTypeFilter<File> {
+    private static class FileTypeFilter extends ResourceTypeFilter {
 
         public FileTypeFilter() {
             super(File.class);
         }
     }
 
-    private static class FolderTypeFilter extends ResourceTypeFilter<Folder> {
+    private static class FolderTypeFilter extends ResourceTypeFilter {
 
         public FolderTypeFilter() {
             super(Folder.class);
         }
     }
 
-    private static class CompoundFilter<T extends Resource> implements ResourceIncludeFilter<T> {
+    private static class CompoundFilter implements ResourceFilter {
 
-        private final List<ResourceIncludeFilter<T>> filters = new ArrayList<ResourceIncludeFilter<T>>();
+        private final List<ResourceFilter> filters = new ArrayList<ResourceFilter>();
 
-        public void add(ResourceIncludeFilter<T> filter) {
+        public void add(ResourceFilter filter) {
             this.filters.add(filter);
         }
 
         @Override
-        public boolean include(T resource) {
-            for (ResourceIncludeFilter<T> filter : this.filters) {
-                if (filter.include(resource)) {
+        public boolean match(Resource resource) {
+            for (ResourceFilter filter : this.filters) {
+                if (filter.match(resource)) {
                     return true;
                 }
             }
@@ -506,17 +508,17 @@ public abstract class Including {
         }
     }
 
-    private static class InvertFilter<T extends Resource> implements ResourceIncludeFilter<T> {
+    private static class InvertFilter implements ResourceFilter {
 
-        private final ResourceIncludeFilter<T> filter;
+        private final ResourceFilter filter;
 
-        public InvertFilter(ResourceIncludeFilter<T> filter) {
+        public InvertFilter(ResourceFilter filter) {
             this.filter = filter;
         }
 
         @Override
-        public boolean include(T resource) {
-            return !this.filter.include(resource);
+        public boolean match(Resource resource) {
+            return !this.filter.match(resource);
         }
     }
 
@@ -524,7 +526,7 @@ public abstract class Including {
         STARTS, ENDS, CONTAINS, MATCHES
     }
 
-    private static class StringFilter<T extends Resource> implements ResourceIncludeFilter<T> {
+    private static class StringFilter implements ResourceFilter {
 
         private final ResourceAttribute attribute;
 
@@ -539,7 +541,7 @@ public abstract class Including {
         }
 
         @Override
-        public boolean include(T resource) {
+        public boolean match(Resource resource) {
             String attributeString = this.attribute.get(resource);
             String matchString = this.value.toString();
             if (this.attribute.isIgnoreCase()) {

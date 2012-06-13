@@ -49,7 +49,7 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
@@ -299,11 +299,11 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            tmpServiceRootFolder.list().include(Including.resourceNames().notEnding(".class")).copyTo(serviceRoot);
+            tmpServiceRootFolder.list().include(FilterOn.resourceNames().notEnding(".class")).copyTo(serviceRoot);
 
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-            tmpServiceRootFolder.list().include(Including.resourceNames().ending(".class")).copyTo(classesDir);
+            tmpServiceRootFolder.list().include(FilterOn.resourceNames().ending(".class")).copyTo(classesDir);
 
             registerService(serviceId, importer);
 
