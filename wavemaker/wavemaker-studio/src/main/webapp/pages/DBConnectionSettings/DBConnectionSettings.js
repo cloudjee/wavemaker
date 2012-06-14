@@ -81,7 +81,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conUserInput.getDataValue(),
 				this.conPasswordInput.getDataValue(),
 		    /* If running in cloudfoundry, we want the internal cloud foundry database name, not our service name */
-		                this.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(),
+		                studio.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(),
 				this.conTablePatternInput.getDataValue(),
 				this.conSchemaPatternInput.getDataValue(),
 				this.conDriverClassInput.getDataValue(),
