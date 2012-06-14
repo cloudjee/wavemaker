@@ -302,11 +302,7 @@ public class ExportDB extends BaseDataModelSetup {
             if (WMAppContext.getInstance().isCloudFoundry()) {
                 url = this.connectionUrl;
             } else {
-                if (WMAppContext.getInstance().isCloudFoundry()) {
-                    urlDBName = this.serviceName;
-                } else {
-                    urlDBName = getDatabaseNameFromConnectionUrl();
-                }
+                urlDBName = getDatabaseNameFromConnectionUrl();
                 url = this.connectionUrl;
 
                 if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
