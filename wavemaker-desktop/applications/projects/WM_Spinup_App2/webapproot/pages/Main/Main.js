@@ -72,11 +72,10 @@ dojo.declare("Main", wm.Page, {
       url = result.studio_url;
       token = result.wavemaker_authentication_token;
       cfdomain = result.domain;
-      dojo.cookie("wavemaker_authentication_token", token, {expires: 30, domain: cfdomain});
-      console.log(dojo.cookie("wavemaker_authentication_token"));
+      var cookie_expire = new Date();  
+      cookie_expire.setTime(cookie_expire.getTime() + 30000);
+      dojo.cookie("wavemaker_authentication_token", token, {expires: cookie_expire.toGMTString(), domain: cfdomain});
       window.location = url;
-
-
     },
   LogInButtonClick: function(inSender) {
       this.labelError.setShowing(false);

@@ -70,8 +70,9 @@ if (!result || result.ERROR) return this.LaunchStudioserviceVariableError(inSend
 url = result.studio_url;
 token = result.wavemaker_authentication_token;
 cfdomain = result.domain;
-dojo.cookie("wavemaker_authentication_token", token, {expires: 30, domain: cfdomain});
-console.log(dojo.cookie("wavemaker_authentication_token"));
+var cookie_expire = new Date();
+cookie_expire.setTime(cookie_expire.getTime() + 30000);
+dojo.cookie("wavemaker_authentication_token", token, {expires: cookie_expire.toGMTString(), domain: cfdomain});
 window.location = url;
 },
 LogInButtonClick: function(inSender) {
@@ -123,7 +124,7 @@ TopLayers: ["wm.Layers", {}, {}, {
 loginLayer: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
 ContentPanel1: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","margin":"0","styles":{"backgroundColor":"","color":"","fontFamily":"Arial, Tahoma, Helvetica,Verdana,Sans Serif","fontSize":"undefinedpx"},"verticalAlign":"top","width":"65%"}, {}, {
 Content1: ["wm.Html", {"autoScroll":false,"border":"0","height":"32px","html":"WaveMaker for Cloud Foundry","margin":"0","minDesktopHeight":15,"styles":{"fontSize":"26px","color":""}}, {}],
-html1: ["wm.Html", {"_classes":{"domNode":["","largerLineHeight",""]},"autoScroll":false,"border":"0","height":"95px","html":"WaveMaker provides a fast, efficient and secure environment to develop and \ndeploy enterprise web and cloud applications. With WaveMaker's visual, drag \nand drop tools, any developer can start building enterprise Java applications \nwith minimal training. WaveMaker creates standard Java applications, boosting \ndeveloper productivity and quality without compromising flexibility. ","margin":"15,0,0,0","minDesktopHeight":15,"styles":{"color":"","fontSize":"undefinedpx"}}, {}],
+html1: ["wm.Html", {"_classes":{"domNode":["","largerLineHeight",""]},"autoScroll":false,"border":"0","height":"98px","html":"WaveMaker provides a fast, efficient and secure environment to develop and \ndeploy enterprise web and cloud applications. With WaveMaker's visual, drag \nand drop tools, any developer can start building enterprise Java applications \nwith minimal training. WaveMaker creates standard Java applications, boosting \ndeveloper productivity and quality without compromising flexibility. ","margin":"14,0,0,0","minDesktopHeight":15,"styles":{"color":"","fontSize":"undefinedpx"}}, {}],
 spacer2: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
 html2: ["wm.Html", {"_classes":{"domNode":["largerLineHeight"]},"autoScroll":false,"border":"0","height":"36px","html":"To begin using WaveMaker, sign in using your Cloud Foundry user name and password.","margin":"0,0,0,0","minDesktopHeight":15,"padding":"0,0,0,0","styles":{"fontSize":"undefinedpx"},"width":"65%"}, {}],
 error_warning_spacer_1: ["wm.Spacer", {"height":"16px","showing":false,"width":"96px"}, {}],
@@ -151,10 +152,10 @@ label4: ["wm.Label", {"border":"0","caption":"Don't have a Cloud Foundry accout?
 ContentPanel2: ["wm.Panel", {"borderColor":"#fbfbfb","height":"100%","horizontalAlign":"left","styles":{"backgroundColor":""},"verticalAlign":"top","width":"35%"}, {}, {
 panel2: ["wm.Panel", {"height":"100%","horizontalAlign":"right","margin":"0","verticalAlign":"top","width":"100%"}, {}, {
 spacer4: ["wm.Spacer", {"height":"209px","width":"150px"}, {}],
-downloadWMPanel: ["wm.Panel", {"border":"2","borderColor":"#bcbdbd","fitToContentHeight":true,"height":"186px","horizontalAlign":"left","margin":"0","padding":"15,15,15,15","styles":{"backgroundColor":""},"verticalAlign":"top","width":"300px"}, {}, {
-html4: ["wm.Html", {"autoScroll":false,"border":"0","borderColor":"#e1d6d6","height":"96px","html":"Want to use WaveMaker on your \ndesktop?\n<br><br>\nDownload the latest version of \nWaveMaker to run on your Windows, \nMac, or Linux computer.","margin":"0","minDesktopHeight":15}, {}],
-spacer6: ["wm.Spacer", {"height":"20px","width":"96px"}, {}],
-panel6: ["wm.Panel", {"height":"36px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+downloadWMPanel: ["wm.Panel", {"border":"2","borderColor":"#bcbdbd","fitToContentHeight":true,"height":"192px","horizontalAlign":"left","margin":"0","padding":"15,15,15,15","styles":{"backgroundColor":""},"verticalAlign":"top","width":"300px"}, {}, {
+html4: ["wm.Html", {"autoScroll":false,"border":"0","borderColor":"#e1d6d6","height":"100px","html":"Want to use WaveMaker on your \ndesktop?\n<br><br>\nDownload the latest version of \nWaveMaker to run on your Windows, \nMac, or Linux computer.","margin":"0","minDesktopHeight":15}, {}],
+spacer6: ["wm.Spacer", {"height":"18px","width":"96px"}, {}],
+panel6: ["wm.Panel", {"height":"40px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 DownloadButton1: ["wm.Button", {"border":"0","borderColor":"#999999","caption":"Download WaveMaker","desktopHeight":"36px","height":"36px","margin":"4","styles":{"backgroundColor":"#ffffff","backgroundGradient":{"direction":"vertical","startColor":"#ffffff","endColor":"#dbdbdb","colorStop":50},"fontSize":"14px","fontStyle":"normal","fontWeight":"normal","fontFamily":"Arial","color":"#007cd3"},"width":"190px"}, {"onclick":"DownloadButton1Click"}]
 }]
 }]

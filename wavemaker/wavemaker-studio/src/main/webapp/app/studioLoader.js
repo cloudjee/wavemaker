@@ -12,6 +12,9 @@
  *  limitations under the License.
  */
  
+dojo.require("dojo.cookie");
+var authToken = dojo.cookie("wavemaker_authentication_token");
+dojo.cookie("wavemaker_authentication_token", authToken, {expires: 30});
 
 /* dojo 1.6 upgrade: When running without ?debug, define method fails to get declared as they assume EVERYTHING you need is preloaded.
  * since we don't know everything the user may need, we do not prebuild everything in;  the following is closure compressed version of

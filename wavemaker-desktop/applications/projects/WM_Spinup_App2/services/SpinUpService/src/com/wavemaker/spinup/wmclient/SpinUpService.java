@@ -60,7 +60,7 @@ public class SpinUpService extends JavaServiceSuperClass {
             log(ERROR, "User: " + username + " NOT email");
 			return("Enter a valid email address for your Cloud Foundry account.");
 		  }
-          if(!(username.contains("@vmware.com") || username.contains("@wavemaker.com") || username.contains("@springsource.com") || username.contains("@springsource.org") || username.contains("@emc.com") || username.contains(
+          if(!(username.contains("@vmware.com") || username.contains("@wavemaker.com") || username.contains("@springsource.com") || username.contains("@springsource.org") || username.contains("@emc.com") || username.contains("@rbcon.com") || username.contains(
 "@rabbitmq.com"))){
               log(ERROR, "User: " + username + " NOT allowed at this time");
               return("WaveMaker for Cloud Foundry is currently in a limited preview mode. Check back with us soon to join our public beta.");
@@ -116,7 +116,7 @@ public class SpinUpService extends JavaServiceSuperClass {
          Random rand = new Random(); 
          this.randKey = rand.nextInt(2147483646);
          log(INFO, "Key is now: " + this.randKey);
-         return ("Get key from logs");
+         return ("OK. Now get the key from logs");
     }
     
     public void checkForUpdate(int key){
