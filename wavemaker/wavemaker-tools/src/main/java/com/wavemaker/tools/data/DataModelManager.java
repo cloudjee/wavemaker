@@ -28,6 +28,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
@@ -586,7 +588,7 @@ public class DataModelManager {
         exporter.setVerbose(true);
         exporter.setOverrideTable(overrideTable);
         exporter.setServiceName(serviceId);
-        if (dbType != null) {
+        if (hasText(dbType)) {
             exporter.setDBType(dbType.toLowerCase());
         }
 
