@@ -198,7 +198,7 @@ public class DataService {
             revengNamingStrategyClassName, overrideTable);
     }
 
-    public String cfExportDatabase(String dbName, String dbms, String schemaFilter, String driverClassName, String dialectClassName,
+    public String cfExportDatabase(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName, String dialectClassName,
         String revengNamingStrategyClassName, boolean overrideTable) {
 
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
@@ -366,7 +366,7 @@ public class DataService {
         }
     }
 
-    public String cfGetExportDDL(String serviceId, String dbms, String schemaFilter, String driverClassName,
+    public String cfGetExportDDL(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName,
                                  String dialectClassName, boolean overrideTable) {
         String username = "", password = "", connectionUrl = "";
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
