@@ -168,13 +168,26 @@ public class PhoneGapService {
         dojo.getFolder("util").delete();
         dojo.getFolder("dojox").delete();
         dojo.getFolder("dojo").list(Including.fileNames().notMatching("dojo_build.js")).delete();
+	dojo.getFolder("dojo/_base").delete();
+	dojo.getFolder("dojo/_firebug").delete();
+	dojo.getFolder("dojo/cldr").delete();
+	dojo.getFolder("dojo/date").delete();
+	dojo.getFolder("dojo/dnd").delete();
+	dojo.getFolder("dojo/fx").delete();
+	dojo.getFolder("dojo/io").delete();
+	dojo.getFolder("dojo/lib").delete();
+	dojo.getFolder("dojo/nls").delete();
+	dojo.getFolder("dojo/resources").delete();
+	dojo.getFolder("dojo/rpc").delete();
+	dojo.getFolder("dojo/store").delete();
+	dojo.getFolder("dojo/tests").delete();
         dojo.getFolder("dijit").list(Including.resourceNames().notMatching("themes")).delete();
         dojo.getFolder("dijit/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
         Folder wm = phoneGapLibFolder.getFolder("wm");
         wm.getFolder("compressed").delete();
         wm.getFolder("etc").delete();
         Folder base = wm.getFolder("base");
-        base.list(Including.resourceNames().matching("deprecated", "components", "design", "drag", "styles", "templates", "debug")).delete();
+        base.list(Including.resourceNames().matching("deprecated", "components", "design", "drag", "styles", "templates")).delete();
         base.list(Including.resourceNames().ending(".js")).delete();
         Folder widget = base.getFolder("widget");
         widget.getFolder("Editors").delete(); // all editors are in a build layer
