@@ -84,7 +84,6 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		if (method == "runQuery" && parameters[0] == SALESFORCE_SERVICE) {
 			url = wm.services.getService(SALESFORCE_SERVICE)._service.serviceUrl;
 		}
-
 		if (!url)
 			return;
 	        var requestHeaders = this._requestHeaders || this.requestHeaders;
@@ -97,6 +96,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			sync: this.sync,
 			headers: requestHeaders
 		}
+
 	        if (this._requestHeaders) delete this._requestHeaders; // these headers are for this request only
 	        if (this._designTime && studio.isCloud()) {
 		    var postData = props.postData;
@@ -213,7 +213,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 							serviceType: cachedStruct.serviceType,
 						    serviceUrl: url.replace(/\.smd/,".json")});
 		} else {
-		    this._service = new wm.JsonRpc(url + "?rand=" + rand);
+		    var randomParam = window["PhoneGap"] ? "" : "?rand=" + rand
+		    this._service = new wm.JsonRpc(url + randomParam);
 		}
 		wm.JsonRpcService.smdCache[url] = this._service;
 		    //The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
