@@ -118,7 +118,11 @@ dojo.declare("wm.Application", wm.Component, {
 		    wm.isIOS = parseInt(matches[2]);
 		}
 		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
-		    if (navigator.userAgent.match(/Android (3|4|5|6|7|8|9)\./) ||
+		    var matches = navigator.userAgent.match(/Android (2|3|4|5|6|7|8|9)\./);
+		    if (matches) {
+			wm.isAndroid = Number(matches[1]);
+		    }
+		    if (wm.isAndroid > 2 ||
 			wm.isIOS && wm.isIOS > 4 ||
 			wm.isFakeMobile) {
 			;
