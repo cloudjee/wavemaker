@@ -144,6 +144,8 @@ dojo.declare("wm.Dialog", wm.Container, {
         dialogScrim: null,
 	modal: true,
     showTitleButtonsWhenDocked:false,
+    noLeftRightDocking: true,
+    noTopBottomDocking: true,
     constructor: function() {
 	wm.Dialog.resizer = wm.Dialog.resizer || new wm.DialogResize();
     },
@@ -168,6 +170,27 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 	postInit: function() {
 		this.inherited(arguments);
+
+	    this._animEnabled = true;
+	    if (dojo.isIE <= 8 || wm.isAndroid <= 3) this._animEnabled = false;
+
+	    if (this._animEnabled) {
+		if (!dojo.isIE <= 8) {
+		    var transitionEnd;
+		    if (dojo.isWebKit) {
+			transitionEnd = 'webkitAnimationEnd';
+		    } else if (dojo.isMoz) {
+			transitionEnd = 'animationend'; // lowercase requried
+		    } else if (dojo.isOpera) {
+			transitionEnd = 'oAnimationEnd';
+		    } else if (dojo.isIE) {
+			transitionEnd = 'MSAnimationEnd';
+		    } else {
+			transitionEnd = "animationEnd";
+		    }
+		    this.domNode.addEventListener( transitionEnd, dojo.hitch(this, "animEnd"), false);
+		}
+	    }
 
 		dojo.addClass(this.domNode, "wmdialog");
 /*
@@ -535,6 +558,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	reflowParent: function() {
 	    if (this.docked && this.parent) {
 		this.parent.reflow();
+	    } else {
+		this.renderBounds();
+		this.reflow();
 	    }
 	},
 
@@ -832,6 +858,98 @@ dojo.declare("wm.Dialog", wm.Container, {
 	setContent: function(inContent) {
 		this.containerNode.innerHTML = inContent;
 	},
+    animEnd: function() {
+	if (this.showing) {
+	    //this.domNode.style.opacity = 1; // needed for IE 9 beta
+	} else {
+	    if (this.docked) this.setDocked(false);
+	    this.domNode.style.display = "none";
+	}
+    },
+        setShowing: function(inShowing, forceChange, skipOnClose) {
+
+
+	    /* Manage some global states; showingList and zIndexes */
+	    wm.Array.removeElement(wm.dialog.showingList, this);
+	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
+		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
+		wm.dialog.showingList.push(this);
+	        this.domNode.style.zIndex = zindex;
+		if (this.modal) {
+		    this.dialogScrim.domNode.style.zIndex = zindex-1;
+		}
+            }
+
+
+	    /* Unminify */
+	    if (inShowing && this._minified) {
+		this.unminify(null, true);
+		delete this.showing; // stupid hack to fix bug in Safari Version 4.0.4 (6531.21.10)
+	    }
+
+
+	    /* Deal with the dialog's scrim alternate (this may not be needed anymore) */
+	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
+
+
+	    /* Deal with the dialog's scrim */
+	    if (inShowing != this.showing && this.modal && !this._isDesignLoaded) {
+		this.dialogScrim.setShowing(inShowing);
+	    }
+
+	    var wasShowing = this.showing;
+	    var showingChanging = Boolean(this.showing) != Boolean(inShowing);
+	    if (showingChanging && this._animEnabled) {
+		dojo.removeClass(this.domNode, ["fadeInAnim", "fadeOutAnim"]);
+	    }
+
+	    // set it to showing so that rendering can happen; but set it to almost hidden BEFORE display is set to block
+	    if (inShowing && showingChanging) {
+		if (this._animEnabled) {
+		    this.domNode.opacity = 0.01;
+		}
+		this.inherited(arguments);
+		if (this._animEnabled) {
+		    dojo.addClass(this.domNode, "fadeInAnim");
+		} else {
+		    this.animEnd();
+		}
+
+		// individual dialogs may override this to focus on something more specific, but at a minimum, I want focus somewhere on/in the dialog when it shows
+		if (this.modal && !this._noAutoFocus) {
+                    this.domNode.tabIndex = -1;
+                    this.domNode.focus(); 
+		}
+		this.onShow();
+	    } else if (!inShowing && showingChanging) {
+		this.showing = Boolean(inShowing);
+		this.callOnHideParent();
+		if (this._animEnabled) {
+		    dojo.addClass(this.domNode, "fadeOutAnim");
+		} else {
+		    this.animEnd();
+		}
+		this.showing = false;
+		if (!skipOnClose && !this._minified) this.onClose("");
+	    }
+
+
+
+	    if (this.designWrapper)
+		this.designWrapper.setShowing(inShowing);
+
+
+
+	    // add to history whether we show or hide so that the URL updates
+	    if (!this._initializing && !this._isDesignLoaded &&  showingChanging && this.manageHistory) {
+		app.addHistory({id: this.getRuntimeId(),
+				options: {},
+				title: "Hide " + this.title});
+	    }
+
+	},
+
+/*
         setShowing: function(inShowing, forceChange, skipOnClose) {
 	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime; 
 
@@ -872,9 +990,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    delete this.showing; // stupid hack to fix bug in Safari Version 4.0.4 (6531.21.10)
 		    this.showing = true;
 		    this.flow();
-		}/* else
-			// FIXME: hide any tooltips that may be showing
-			wm.hideToolTip(true);*/
+		}
 	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
 
 	    if (this.designWrapper)
@@ -964,7 +1080,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 
 	},
-
+	*/
 /*
 	setContentWidth: function(inWidth) {
 		this.contentWidth = inWidth;

@@ -13,6 +13,17 @@
  *  limitations under the License.
  */
 
+@import url("anim.css");
+
+.PhoneGap * {
+  -webkit-touch-callout: none; /* Disable menus for links the user touches and holds */
+  -webkit-text-size-adjust:none;    
+}
+/*
+.PhoneGap * {
+ -webkit-user-select: none; / * Messes with gestures * /
+}
+*/
 
 body, html {
 	height: 100%;
@@ -947,6 +958,17 @@ body .wmmobile button.wmtablayers-tab {
 	right: 8px;
     -webkit-transform: rotate(315deg);
 }
+.mblArrowContainer {
+    width: 20px;
+    height: 20px;    
+}
+.mblArrowContainer .mblRightArrow {
+    position: static;
+    top: 0px;
+    left: 0px;
+    width: 12px;
+    height: 16px;
+}
 /*
 .wmmobile .dijitCalendarMonthContainer .dijitCalendarMonthLabel,
 .wmmobile .dijitCalendarYearContainer td,
@@ -1189,3 +1211,7 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 .MapMarkerDescription {
     padding: 5px 0px 2px 0px;
 }
+
+
+
+

@@ -65,15 +65,13 @@ dojo.declare("wm.LayersDecorator", null, {
 	    inLayer.active = inActive;
 
 	    var page = inLayer.getParentPage();
-	    if (!(dojo.isIE <= 8) && !this.decoree._cupdating && page && !page._loadingPage && !window["studio"] && this.decoree.transition && this.decoree.transition != "none") {
-		if (!inActive) {
-		    /* FADE OUT */
-		    this["anim" + wm.capitalize(this.decoree.transition)](inLayer, false);
-		} else {
-		    this["anim" + wm.capitalize(this.decoree.transition)](inLayer, true);
-		}
-	    } else {			    
+	    if (dojo.isIE <= 8 || wm.isAndroid <= 3 || /* Browsers not supported for animation */
+		this.decoree._cupdating || !page  || page._loadingPage || window["studio"] || /* No animation during widget creation/pageloading */
+		!this.decoree.transition || this.decoree.transition === "none") /* Or developer says no animation */
+	    { 
 		inLayer.domNode.style.display = inActive ? '' : 'none';
+	    } else {
+		this.anim(inLayer, inActive);
 	    }
 /*
 	    if (inActive) {
@@ -83,9 +81,9 @@ dojo.declare("wm.LayersDecorator", null, {
 		// design only code: need to show / hide designwrapper
 		wm.fire(inLayer, 'domNodeShowingChanged', [inActive]);
 	},
-        animSlide: function(inLayer, inShowing) {
+        anim: function(inLayer, inShowing) {
+/*
 	    if (inShowing) {
-
 		// Need to render it so it will slide correctly; needs to be non-hidden (but set opacity as low as it will go so its not visible either)
 		inLayer.domNode.style.opacity = "0.1"; 
 		inLayer.domNode.style.display = "";
@@ -112,7 +110,46 @@ dojo.declare("wm.LayersDecorator", null, {
 		}
 	    });
 	    anim.play();
+	    */
 
+	    if (!inLayer._transitionEndSub) {
+		if (!dojo.isIE <= 8) {
+		    var transitionEnd;
+		    if (dojo.isWebKit) {
+			transitionEnd = 'webkitAnimationEnd';
+		    } else if (dojo.isMoz) {
+			transitionEnd = 'animationend'; // lowercase requried
+		    } else if (dojo.isOpera) {
+			transitionEnd = 'oAnimationEnd';
+		    } else if (dojo.isIE) {
+			transitionEnd = 'MSAnimationEnd';
+		    } else {
+			transitionEnd = "animationEnd";
+		    }
+		    inLayer.domNode.addEventListener( 
+			transitionEnd,
+			function( event ) { 
+			    if (!inLayer.isActive()) {
+				inLayer.domNode.style.display = "none";
+				inLayer.domNode.style.opacity = 1;
+				console.log(inLayer.toString() + " DISPLAY NONE");
+			    }
+			}, false );
+		    inLayer._transitionEndSub = true;
+		}
+	    }
+	    var transition =this.decoree.transition;
+	    dojo.removeClass(inLayer.domNode, [transition + "OutLeftAnim",transition + "OutRightAnim",transition + "InLeftAnim",transition + "InRightAnim"]);
+	    if (!inShowing) {
+		var direction = inLayer._transitionNext ? "Left" : "Right"
+		dojo.addClass(inLayer.domNode, transition + "Out" + (direction) + "Anim");
+	    } else {
+		var direction = inLayer._transitionNext ? "Left" : "Right";
+		//inLayer.domNode.style.left = (direction == "Left") ? "100%" : "-100%"; // not needed for native android 4x browser, nor chrome on tablet
+
+		inLayer.domNode.style.display = "";
+		dojo.addClass(inLayer.domNode, transition + "In" + (direction) + "Anim");
+	    }
     },
     animFade: function(inLayer, inShowing) {
 	    if (inShowing) {

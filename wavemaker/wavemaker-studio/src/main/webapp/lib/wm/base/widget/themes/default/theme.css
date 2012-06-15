@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
@@ -13,6 +12,7 @@
  *  limitations under the License.
  */
 
+@import url("anim.css");
 
 body, html {
 	height: 100%;
@@ -892,7 +892,7 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 }
 
 html body.tundra .dijitMenuItem {
-font-family: "Nimbus Sans L", sans-serif;
+ofont-family: "Nimbus Sans L", sans-serif;
 }
 
 .tundra .dojoMenu .dijitMenu,
@@ -1382,3 +1382,65 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 .MapMarkerDescription {
     padding: 5px 0px 2px 0px;
 }
+
+
+.mblArrow {
+	position: absolute;
+
+	width: 15px;
+	height: 16px;
+	font-size: 1px;
+	border-width: 5px 5px 0px 0px;
+	border-style: solid;
+	border-color: #808080;
+}
+.mblRightArrow {
+	top: 8px;
+	right: 8px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.mblLeftArrow {
+	top: 8px;
+	right: 2px;
+    -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+    -o-transform: rotate(225deg);
+    transform: rotate(225deg);
+}
+.mblDownArrow {
+	top: 2px;
+	right: 8px;
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+.mblUpArrow {
+	top: 12px;
+	right: 8px;
+    -webkit-transform: rotate(315deg);
+    -moz-transform: rotate(315deg);
+    -ms-transform: rotate(315deg);
+    -o-transform: rotate(315deg);
+    transform: rotate(315deg);
+}
+
+.mblArrowContainer {
+    width: 16px;
+    height: 16px;
+}
+.mblArrowContainer .mblRightArrow {
+    position: static;
+    top: 0px;
+    left: 0px;
+    width: 10px;
+    height: 10px;
+}
+
+
