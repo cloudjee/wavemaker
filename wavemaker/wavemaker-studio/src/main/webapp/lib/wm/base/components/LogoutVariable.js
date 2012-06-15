@@ -34,7 +34,7 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
       logoutNavCall: null,
       init: function() {
 	  this.inherited(arguments);
-          if (!this.clearDataOnLogout) {
+          if (!this.clearDataOnLogout  || window["PhoneGap"]) {
               this.logoutNavCall = new wm.NavigationCall({
 	          name: "logoutNavCall",
 	          owner: this,
@@ -44,7 +44,11 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
           }
     },
       onSuccess: function(inData) {
-          if (!this.clearDataOnLogout) {
+	  if (window["PhoneGap"]) {
+	      window.localStorage.clear(); // remove any stored information, especially their login information
+	  }
+
+          if (!this.clearDataOnLogout || window["PhoneGap"]) {
               this.logoutNavCall.update();
           } else {
 	      window.location.reload();
