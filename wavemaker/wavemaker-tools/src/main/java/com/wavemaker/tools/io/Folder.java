@@ -120,7 +120,12 @@ public interface Folder extends Resource, Iterable<Resource> {
      */
     Resources<Resource> list();
 
-    // FIXME DC
+    /**
+     * Recursively find all immediate and nested children of this folder. If this resource does not exist empty
+     * resources are returned.
+     * 
+     * @return a list of all nested children
+     */
     Resources<Resource> find();
 
     /**
