@@ -245,7 +245,7 @@ public class ZipArchiveTest {
         given(this.folder.getStore().exists()).willReturn(true);
         given(this.folder.getFile("a/b.txt").getStore().getOutputStream()).willReturn(outputStreamB);
         given(this.folder.getFile("c/d.txt").getStore().getOutputStream()).willReturn(outputStreamD);
-        InputStream zipStream = getSampleZip();
+        InputStream zipStream = createSampleZip();
         ZipArchive.unpack(zipStream, this.folder);
         verify(this.folder.getFolder("a").getStore()).create();
         verify(this.folder.getFolder("c").getStore()).create();
@@ -253,7 +253,44 @@ public class ZipArchiveTest {
         assertThat(new String(outputStreamD.toByteArray()), is("cd"));
     }
 
-    private InputStream getSampleZip() throws IOException {
+    @Test
+    public void shouldCreateZipFileWithPrefix() throws Exception {
+        Folder rootFolder = createSampleLayout();
+        InputStream inputStream = ZipArchive.compress(rootFolder.getFolder("y"), "x");
+        List<String> entryNames = getEntryNames(inputStream);
+        assertThat(entryNames.size(), is(5));
+        assertTrue(entryNames.contains("x/a/"));
+        assertTrue(entryNames.contains("x/a/aa.txt"));
+        assertTrue(entryNames.contains("x/a/ab.txt"));
+        assertTrue(entryNames.contains("x/b/"));
+        assertTrue(entryNames.contains("x/b/ba.txt"));
+    }
+
+    @Test
+    public void shouldCreateZipFileWithoutPrefix() throws Exception {
+        Folder rootFolder = createSampleLayout();
+        InputStream inputStream = ZipArchive.compress(rootFolder.getFolder("y"));
+        List<String> entryNames = getEntryNames(inputStream);
+        assertThat(entryNames.size(), is(5));
+        assertTrue(entryNames.contains("a/aa.txt"));
+        assertTrue(entryNames.contains("a/ab.txt"));
+        assertTrue(entryNames.contains("b/"));
+        assertTrue(entryNames.contains("b/ba.txt"));
+    }
+
+    @Test
+    public void shouldCreateFilteredZipFile() throws Exception {
+        Folder rootFolder = createSampleLayout();
+        InputStream inputStream = new ZipResourcesStream(rootFolder.getFolder("y").find().include(FilterOn.names().notStarting("ab")), "x");
+        List<String> entryNames = getEntryNames(inputStream);
+        assertThat(entryNames.size(), is(4));
+        assertTrue(entryNames.contains("x/a/"));
+        assertTrue(entryNames.contains("x/a/aa.txt"));
+        assertTrue(entryNames.contains("x/b/"));
+        assertTrue(entryNames.contains("x/b/ba.txt"));
+    }
+
+    private InputStream createSampleZip() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         zipOutputStream.putNextEntry(new ZipEntry("a/"));
@@ -270,44 +307,7 @@ public class ZipArchiveTest {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
-    @Test
-    public void shouldCreateZipFileWithPrefix() throws Exception {
-        Folder rootFolder = createLayout();
-        InputStream inputStream = ZipArchive.compress(rootFolder.getFolder("y"), "x");
-        List<String> entryNames = getEntryNames(inputStream);
-        assertThat(entryNames.size(), is(5));
-        assertTrue(entryNames.contains("x/a/"));
-        assertTrue(entryNames.contains("x/a/aa.txt"));
-        assertTrue(entryNames.contains("x/a/ab.txt"));
-        assertTrue(entryNames.contains("x/b/"));
-        assertTrue(entryNames.contains("x/b/ba.txt"));
-    }
-
-    @Test
-    public void shouldCreateZipFileWithoutPrefix() throws Exception {
-        Folder rootFolder = createLayout();
-        InputStream inputStream = ZipArchive.compress(rootFolder.getFolder("y"));
-        List<String> entryNames = getEntryNames(inputStream);
-        assertThat(entryNames.size(), is(5));
-        assertTrue(entryNames.contains("a/aa.txt"));
-        assertTrue(entryNames.contains("a/ab.txt"));
-        assertTrue(entryNames.contains("b/"));
-        assertTrue(entryNames.contains("b/ba.txt"));
-    }
-
-    @Test
-    public void shouldCreateFilteredZipFile() throws Exception {
-        Folder rootFolder = createLayout();
-        InputStream inputStream = new ZippedFolderInputStream(rootFolder.getFolder("y").find().include(FilterOn.names().notStarting("ab")), "x");
-        List<String> entryNames = getEntryNames(inputStream);
-        assertThat(entryNames.size(), is(4));
-        assertTrue(entryNames.contains("x/a/"));
-        assertTrue(entryNames.contains("x/a/aa.txt"));
-        assertTrue(entryNames.contains("x/b/"));
-        assertTrue(entryNames.contains("x/b/ba.txt"));
-    }
-
-    private Folder createLayout() {
+    private Folder createSampleLayout() {
         Folder rootFolder = new LocalFolder(this.temporaryFolder.newFolder("ziptest"));
         rootFolder.getFolder("y/a").getFile("aa.txt").getContent().write("aa test");
         rootFolder.getFolder("y/a").getFile("ab.txt").getContent().write("ab test");
