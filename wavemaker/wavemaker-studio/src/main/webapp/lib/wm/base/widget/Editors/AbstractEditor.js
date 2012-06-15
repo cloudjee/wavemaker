@@ -194,7 +194,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    if (this.editor) {
 		if (this.editor instanceof wm.Control) {
 		    dojo[this._disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
-		} else {
+		} else if (!wm.isInstanceType(this.editor, Node)) {
 		    if (this._disabled != this.editor.get("disabled")) {
 			this.editor.set("disabled", Boolean(this._disabled));
 			dojo[this._disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
