@@ -100,7 +100,23 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	    }
 	    delete this._cachedBorder;
 	    delete this._touchTarget;
-	    this.click(evt, false);
+
+	    /* Force inputs to fire onchange events and update bound service var inputs if they have focus.
+	    * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
+	    * triggering its dijit's onBlur, and delivering new values.
+	    */
+	    if (document.activeElement.tagName == "INPUT") {
+		var id = document.activeElement.id;
+		var d = dijit.byId(id);
+		if (d) d._onBlur();
+		else document.activeElement.blur();
+		wm.onidle(this, function() {
+		    this.click(evt, false);
+		});
+	    } else {
+		this.click(evt, false);
+	    }
+
 	}
     },    
     click: function(inEvent, useDelay) {
