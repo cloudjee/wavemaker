@@ -170,8 +170,14 @@ public class DataModelManager {
 
     public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
+        return getExportDDL(username, password, null, dbms, connectionUrl, serviceId, schemaFilter,
+        driverClassName, dialectClassName, overrideTable);
+    }
 
-        ExportDB exporter = getExporter(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+    public String getExportDDL(String username, String password, String dbName, String dbms, String connectionUrl, String serviceId, String schemaFilter,
+        String driverClassName, String dialectClassName, boolean overrideTable) {
+
+        ExportDB exporter = getExporter(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             overrideTable);
 
         exporter.setExportToDB(false);
@@ -191,8 +197,14 @@ public class DataModelManager {
 
     public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
+        return exportDatabase(username, password, null, dbType, connectionUrl, serviceId, schemaFilter,
+        driverClassName, dialectClassName, revengNamingStrategyClassName, overrideTable);
+    }
 
-        ExportDB exporter = getExporter(username, password, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+    public String exportDatabase(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId, String schemaFilter,
+        String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
+
+        ExportDB exporter = getExporter(username, password, dbName, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             overrideTable);
 
         String rtn = "";
@@ -556,7 +568,7 @@ public class DataModelManager {
         initialize(true);
     }
 
-    private ExportDB getExporter(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
+    private ExportDB getExporter(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
 
         // composite classes must be compiled
@@ -591,6 +603,7 @@ public class DataModelManager {
         if (hasText(dbType)) {
             exporter.setDBType(dbType.toLowerCase());
         }
+        exporter.setDBNamee(dbName);
 
         if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
             exporter.setDriverClassName(driverClassName);

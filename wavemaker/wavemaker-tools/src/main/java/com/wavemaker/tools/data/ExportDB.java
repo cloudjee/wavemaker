@@ -296,36 +296,35 @@ public class ExportDB extends BaseDataModelSetup {
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
         String schemaName = t.v1, catalogName = t.v2;
 
-        String url = null;
-        if (run) {
-            String urlDBName;
-            if (WMAppContext.getInstance().isCloudFoundry()) {
-                url = this.connectionUrl;
-            } else {
-                urlDBName = getDatabaseNameFromConnectionUrl();
-                url = this.connectionUrl;
+        String url;
+        String urlDBName;
+        if (WMAppContext.getInstance().isCloudFoundry()) {
+            url = this.connectionUrl;
+            catalogName = this.dbName;
+        } else {
+            urlDBName = getDatabaseNameFromConnectionUrl();
+            url = this.connectionUrl;
 
-                if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
-                    throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
-                }
+            if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
+                throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
+            }
 
-                if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
-                    url = this.connectionUrl.substring(0, this.connectionUrl.indexOf(urlDBName));
-                    if (isPostgres()) {
-                        url += "postgres";
-                    }
-                    if (ObjectUtils.isNullOrEmpty(catalogName)) {
-                        catalogName = urlDBName;
-                    } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
-                        throw new ConfigurationException(MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
-                    }
-                } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
-                    throw new ConfigurationException(MessageResource.CATALOG_SHOULD_BE_SET);
+            if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
+                url = this.connectionUrl.substring(0, this.connectionUrl.indexOf(urlDBName));
+                if (isPostgres()) {
+                    url += "postgres";
                 }
+                if (ObjectUtils.isNullOrEmpty(catalogName)) {
+                    catalogName = urlDBName;
+                } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
+                    throw new ConfigurationException(MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
+                }
+            } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
+                throw new ConfigurationException(MessageResource.CATALOG_SHOULD_BE_SET);
             }
         }
 
-        String ddl = null;
+        String ddl;
         if (isMySQL()) {
             ddl = "create database if not exists ";
         } else {
