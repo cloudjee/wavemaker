@@ -61,12 +61,20 @@ dojo.declare("wm.VirtualListItem", null, {
 	},
         touchStart: function(evt) {
 	    if (this.list._touchedItem) return;
-	    if (!this.selected) {
-		this._selectionIndicatorOnly = true;
-		this.select();
-		this.selected = false;
+	    if (!this.selected || this.list._selectionMode == "multiple") {
+		if (this.selected) {
+		    this._deselectionIndicatorOnly = true;
+		    this.deselect();
+		    this.selected = true;
+		} else {
+		    this._selectionIndicatorOnly = true;
+		    this.select();
+		    this.selected = false;
+		}
 		this.list._touchedItem =  this;
-		wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+		wm.job(this.list.getRuntimeId() + "_" + this.index + ".touchStart", app.touchToClickDelay, dojo.hitch(this, function() {
+		    this.touchEnd(evt,true);
+		}));
 		this.list._ontouchstart(evt);
 	    }
 
@@ -74,18 +82,24 @@ dojo.declare("wm.VirtualListItem", null, {
 	},
         touchMove: function(evt) {
 	    if (this.list._touchedItem == this) {
-		wm.cancelJob(this.list.getRuntimeId()+"_"+this.index);
+		wm.cancelJob(this.list.getRuntimeId()+"_"+this.index + ".touchStart");
 		delete this.list._touchedItem;
-		if(this._selectionIndicatorOnly){
+		if (this._selectionIndicatorOnly){
 		    delete this._selectionIndicatorOnly;
 		    this.deselect();
+		} else if (this._deselectionIndicatorOnly){
+		    delete this._deselectionIndicatorOnly;
+		    this.select();
 		}
 	    }
 //	    alert("touchMove");
+
 	    this.list._ontouchmove(evt);
 	},
-    touchEnd: function(evt) {
-	 wm.cancelJob(this.list.getRuntimeId() + "_" + this.index);
+    touchEnd: function(evt, delayed) {
+	delete this._selectionIndicatorOnly;
+	delete this._deselectionIndicatorOnly;
+	wm.cancelJob(this.list.getRuntimeId() + "_" + this.index + ".touchStart");
 	if (this.list._touchedItem == this) {
 	    this.list._touchedItem = null;
 	    if (!evt) {
@@ -93,7 +107,7 @@ dojo.declare("wm.VirtualListItem", null, {
 	    } 
 	    this.click(evt);
 	}
-	this.list._ontouchend(evt);
+	this.list._ontouchend(evt, delayed);
     },
 	setContent: function(inContent) {
 	    this.domNode.innerHTML = inContent;
@@ -499,9 +513,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		}
 	},
 	selectByIndex: function(inIndex) {
-		var i = this.getItem(inIndex);
-		if (i)
-			this.select(i);
+	    var i = this.getItem(inIndex);
+	    if (i) {
+		this.select(i);
+	    }
 	},
 	getSelectedIndex: function() {
 	    if (this._selectionMode == "multiple")
