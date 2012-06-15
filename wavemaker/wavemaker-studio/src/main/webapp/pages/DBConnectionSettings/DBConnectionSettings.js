@@ -231,6 +231,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		this.conUsernameChanged();
 	    if (studio.isCloud()) {
 		this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+	    } else if (!this.conExtraInput.getDataValue() && inValue && (inValue.toLowerCase() == "mysql" || inValue.toLowerCase() == "postgres" || inValue.toLowerCase() == "hsqldb")) {
+		this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
 	    }
 	},
 	onConHostKeyPress: function(inSender) {
@@ -544,7 +546,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			    if (studio.isCloud()) {
 				this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
 			    } else {
-				this.conExtraInput.setDataValue("");
+				this.conExtraInput.setDataValue("");				
 			    }
 			} else {
 				this.conExtraInput.setDataValue(l[3]);
@@ -563,20 +565,26 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 			this.activeDirectoryDomain.setDataValue(inData.activeDirectoryDomain);
 		    }
 
-		    if (studio.isCloud()) {
+		    if (studio.isCloud() || !this.conExtraInput.getDataValue() && (this.conDBdropdown.getDataValue().toLowerCase() == "mysql" || this.conDBdropdown.getDataValue().toLowerCase() == "postgres"  || this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb")) {
 			this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
 		    }
 
 		}
+	    
 		
 
 
 		this.conUserInput.setDataValue(inData.username);
 		this.conPasswordInput.setDataValue(inData.password);
-		if(l){
-		this.conConnectionUrlInput.setDataValue(buildInitialCxnUrl(l[0], l[3], inData.connectionUrl, this.overrideFlagInput.getChecked()));
+		if(l) {
+		    if (this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb"){
+			this.conConnectionUrlInput.setDataValue(buildInitialCxnUrl(l[0], l[3], inData.connectionUrl, this.overrideFlagInput.getChecked()));
+		    } else {
+			this._updateConConnectionUrl();
+		    }
+		} else {
+		    this.conConnectionUrlInput.setDataValue(inData.connectionUrl);
 		}
-	  else {this.conConnectionUrlInput.setDataValue(inData.connectionUrl);}
 		this.conTablePatternInput.setDataValue(inData.tableFilter);
 		this.conSchemaPatternInput.setDataValue(inData.schemaFilter);
 		this.conDriverClassInput.setDataValue(inData.driverClassName);
