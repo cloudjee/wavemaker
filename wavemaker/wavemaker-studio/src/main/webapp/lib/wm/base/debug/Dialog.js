@@ -27,6 +27,7 @@ dojo.require("wm.base.debug.BindPanel");
 dojo.require("wm.base.debug.DataPanel");
 dojo.require("wm.base.debug.RequestPanel");
 dojo.require("wm.base.debug.EventDetailsPanel");
+dojo.require("wm.base.debug.ConsolePanel");
 
 dojo.declare("wm.debug.Dialog", wm.Dialog, {
     manageHistory: false,
@@ -76,6 +77,9 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 		}],
 		widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings",padding:"0",margin:"0"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
 		    widgetPanel: ["wm.debug.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
+		}],
+		consoleLayer:  ["wm.Layer", {caption: "Console",padding:"0",margin:"0"}, {onShow: "consolePanel.activate", onDeactivate: "consolePanel.deactivate"}, {
+		    consolePanel: ["wm.debug.ConsolePanel", {width: "100%", height: "100%", autoScroll:false}]
 		}]
 	    }]
 	});
