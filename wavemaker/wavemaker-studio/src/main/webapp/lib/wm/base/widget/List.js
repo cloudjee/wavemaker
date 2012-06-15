@@ -82,6 +82,7 @@ wm.Object.extendSchema(wm.ListItem, {
 
 dojo.declare("wm.List", wm.VirtualList, {    
     styleAsGrid: true,
+    rightNavArrow: false,
     selectFirstRow: false,
     renderVisibleRowsOnly: true,
     autoSizeHeight: false,
@@ -123,6 +124,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	this.columns = inColumns;
 	this._setSelectionColumn(this.selectionMode); // add in any controllers based on selection mode
 	this._setDeleteColumn(this.deleteColumn); // add in any controllers based on deleteColumn
+	this._setRightArrowColumn(this.rightNavArrow);
 	this._columnsHash = {};
 	var totalWidth = 0;
 	for (var i = 0; i < this.columns.length; i++) {
@@ -159,6 +161,18 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    }
 	    this._render();
 	},
+    _setRightArrowColumn: function(inShow) {
+	if (this.columns) {
+	    for (var i = this.columns.length-1; i >= 0; i--) {
+		if (this.columns[i].controller == "rightarrow") {
+		    wm.Array.removeElementAt(this.columns, i);
+		}
+	    }
+	    if (inShow) {
+		this.columns.push({show: true, controller: "rightarrow", width: "20px", title: "-", field:"_rightArrow"});
+	    }
+	}
+    },
         _setSelectionColumn: function() {
 	    if (this.columns) {
 		var found = false;
@@ -275,12 +289,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    newScrollTop =  this.listNode.scrollHeight;
 	}
 	this.listNode.scrollTop = newScrollTop;
+	//this._onScroll(); // needed for android 3&4 browser
 	this._touchY = {y: y,
 			velocity: delta / deltaTime,
 			time: new Date().getTime()};
 	dojo.stopEvent(e);
     },
-    _ontouchend: function(e) { 
+    _ontouchend: function(e, delayed) { 
 	/* Do nothing if no room to scroll */
 	if (this.listNode.scrollHeight <= this.listNode.clientHeight) return;
 
@@ -288,7 +303,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
 	    this._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
 	}
-	dojo.stopEvent(e);
+	if (!delayed) {
+	    dojo.stopEvent(e);
+	}
 /*
 	if (wm.isFakeMobile) {
 	    this.disconnectEvent("onmousemove");
@@ -304,6 +321,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    return;
 	}
 	this.listNode.scrollTop += Math.min(this._touchY.velocity * 50, this.listNode.clientHeight); // velocity is px per ms; 50ms is our animation interval
+	//this._onScroll(); // needed for android 3&4 browser
     },
 	createSelectedItem: function() {
 	         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
@@ -522,7 +540,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	//
 	renderDataSet: function(inDataSet) {
 
-	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
+	    if (this.isAncestorHidden() && !this._renderHiddenGrid && !this._isDesignLoaded) {
 		this._renderDojoObjSkipped = true;
 		return;
 	    } 
@@ -694,7 +712,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		return;
 
 	    this._scrollDirection = "down";
-	    if (this.renderVisibleRowsOnly) {
+	    if (this.renderVisibleRowsOnly  && !this._isDesignLoaded) {
 		if (!this.isAncestorHidden() && !this._loading) {
 		    this.scrollDownAddItems(0);
 		    this.avgHeight = this.getAverageItemHeight();
@@ -708,7 +726,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    this.addItem(this.getItemData(i), i);
 		}
 		if (this.autoSizeHeight) {
-		    if (!this.isAncestorHidden()) {
+		    if (!this.isAncestorHidden() || this._isDesignLoaded) {
 			this.setBestHeight();
 		    } else {
 			this._renderDojoObjSkipped = true;
@@ -969,6 +987,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	return this.avgHeight;
     },
     _onScroll: function(direction, doCleanup) {
+	console.log("onScroll");
 	try {
 	    // sometimes the last scroll event causes scrollTop to change, triggering a new onScroll event
 	    // and causes infinite loop
@@ -980,6 +999,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    var scrollTop = this.getScrollTop();
 
 	    if (direction == "down" || direction != "up" && (this._lastScrollTop === undefined || this._lastScrollTop < scrollTop)) {
+		console.log("SCROLL DOWN");
 		this._scrollDirection = "down";
 		this.scrollDownRemoveItems();
 		this.scrollDownAddItems();
@@ -989,7 +1009,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	    /* Else if our spacer has scrolled back into view, render older rows */
 	    else {
-
+		console.log("SCROLL UP");
 		this._scrollDirection = "up";
 		this.scrollUpRemoveItems();
 		this.scrollUpAddItems();
@@ -1072,7 +1092,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 
 	    /* Keep adding items/rows until the rows are below the bottom of the list's viewport */
+	console.log("StartAddingFrom: " + startAddingFrom);
 	    for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
+		console.log("ADD: " + i);
 		this._renderItem(i);
 		// this calculation is correct, but probing the domNode forces the node to render
 		// and slows performance; just use the average estimate for now
@@ -1190,8 +1212,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 	if (guestimateSpacers) {
 	    this.spacerNodeBottom.style.height = avgItemHeight * (totalCount - startAddingFrom) + "px";	    
 	}
-
+	console.log("Start Adding from: " + startAddingFrom);
 	for (var i = startAddingFrom; i >= 0 ; i--) {
+	    console.log("Adding: " + i);
 	    this._renderItem(i);
 
 	    if (this.items[i].domNode.offsetTop < minHeight) break;
@@ -1389,6 +1412,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 		if (columnDef.controller) {
 		    if (columnDef.controller == "deleteColumn") {
 			cellData = "<div wmcontroller='true' class='wmDeleteColumn'><div wmcontroller='true' class='wmDeleteColumnImage'/></div>";
+		    } else if (columnDef.controller == "rightarrow") {
+			cellData = "<div class='mblArrowContainer'><div class='mblRightArrow mblArrow' /></div>";
 		    } else {
 			cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
 		    }

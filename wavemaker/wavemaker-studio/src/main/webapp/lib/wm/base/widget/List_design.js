@@ -103,6 +103,11 @@ wm.List.extend({
 	this.styleAsGrid = Boolean(inValue);
 	this[this.styleAsGrid ? "removeUserClass" : "addUserClass"]("MobileListStyle");
     },
+    set_rightNavArrow: function(inValue) {
+	this.rightNavArrow = inValue;
+	this.setColumns(this.columns);
+	this.renderDojoObj();
+    },
     set_dataSet: function(inDataSet) {
 	var typeWas = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
 	this.setDataSet(inDataSet);
