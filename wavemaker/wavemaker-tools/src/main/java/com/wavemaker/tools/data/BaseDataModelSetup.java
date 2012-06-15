@@ -206,6 +206,8 @@ public abstract class BaseDataModelSetup {
 
     protected String revengNamingStrategy = null;
 
+    protected String dbName = null;
+
     // service class package
     protected String packageName = null;
 
@@ -361,6 +363,10 @@ public abstract class BaseDataModelSetup {
 
     public void setDialect(String dialect) {
         this.dialect = dialect;
+    }
+
+    public void setDBNamee(String dbName) {
+        this.dbName = dbName;
     }
 
     public void setDBType(String dbtype) {

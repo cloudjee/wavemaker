@@ -207,7 +207,7 @@ public class DataService {
             String connectionUrl = info.getUrl();
             String username = info.getUserName();
             String password = info.getPassword();
-            return this.dataModelMgr.exportDatabase(username, password, dbms, connectionUrl, dbName, schemaFilter, driverClassName, dialectClassName,
+            return this.dataModelMgr.exportDatabase(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             revengNamingStrategyClassName, overrideTable);
         } else {
             throw new UnsupportedOperationException();
@@ -372,7 +372,7 @@ public class DataService {
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
             try {
-                RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
+                RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, dbName);
                 connectionUrl = info.getUrl();
                 username = info.getUserName();
                 password = info.getPassword();
@@ -380,7 +380,7 @@ public class DataService {
             }
         }
 
-        return this.dataModelMgr.getExportDDL(username, password, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+        return this.dataModelMgr.getExportDDL(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
                 overrideTable);      
     }
 
