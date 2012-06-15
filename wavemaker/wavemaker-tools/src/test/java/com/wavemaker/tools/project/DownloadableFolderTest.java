@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.notNull;
 
 import java.util.Collections;
 
@@ -15,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
 
 /**
  * Tests for {@link DownloadableFolder}.
@@ -38,7 +38,7 @@ public class DownloadableFolderTest {
 
     @Test
     public void shouldReturnZipContents() throws Exception {
-        assertThat(this.downloadable.getContents(), is(ZippedFolderInputStream.class));
+        assertThat(this.downloadable.getContents(), is(notNull()));
     }
 
     @Test

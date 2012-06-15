@@ -15,6 +15,7 @@
 package com.wavemaker.tools.project;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -46,7 +47,8 @@ import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.zip.ZipArchive;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
 
@@ -683,9 +685,10 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     @Override
     public String exportProject(String zipFileName) {
         Project project = getProjectManager().getCurrentProject();
-        Folder exportFolder = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT);
-        ZippedFolderInputStream inputStream = new ZippedFolderInputStream(project.getRootFolder(), new ExportIncludeFilter());
-        File exportFile = exportFolder.getFile(zipFileName);
+        Resources<?> export = project.getRootFolder().find();
+        export = export.include(new ExportIncludeFilter());
+        InputStream inputStream = ZipArchive.compress(export);
+        File exportFile = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT).getFile(zipFileName);
         exportFile.getContent().write(inputStream);
         return exportFile.toString().substring(1);
     }

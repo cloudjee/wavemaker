@@ -21,7 +21,6 @@ import com.wavemaker.tools.io.AbstractFileContent;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 
 /**
@@ -38,7 +37,7 @@ public class StoredFileTest {
 
     @Before
     public void setup() {
-        this.file = new MockStoredFile(new JailedResourcePath().get("file.txt"));
+        this.file = new MockStoredFolder().getFile("file.txt");
     }
 
     @Test
@@ -199,21 +198,6 @@ public class StoredFileTest {
     @Test
     public void shouldHaveToString() throws Exception {
         assertThat(this.file.toString(), is("/file.txt"));
-    }
-
-    private static class MockStoredFile extends StoredFile {
-
-        private final FileStore store;
-
-        public MockStoredFile(JailedResourcePath path) {
-            this.store = mock(FileStore.class);
-            given(this.store.getPath()).willReturn(path);
-        }
-
-        @Override
-        protected FileStore getStore() {
-            return this.store;
-        }
     }
 
 }

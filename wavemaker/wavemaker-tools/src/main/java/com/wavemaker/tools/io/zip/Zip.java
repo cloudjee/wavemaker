@@ -24,6 +24,10 @@ import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceException;
+import com.wavemaker.tools.io.store.FileStore;
+import com.wavemaker.tools.io.store.FolderStore;
+import com.wavemaker.tools.io.store.StoredFile;
+import com.wavemaker.tools.io.store.StoredFolder;
 import com.wavemaker.tools.io.zip.ZipResourceStore.ZipFileStore;
 import com.wavemaker.tools.io.zip.ZipResourceStore.ZipFolderStore;
 
@@ -55,13 +59,25 @@ class Zip {
     }
 
     public Folder getFolder(JailedResourcePath path) {
-        ZipFolderStore store = new ZipFolderStore(this, path);
-        return new ZipFolder(store);
+        final ZipFolderStore store = new ZipFolderStore(this, path);
+        return new StoredFolder() {
+
+            @Override
+            protected FolderStore getStore() {
+                return store;
+            }
+        };
     }
 
     public File getFile(JailedResourcePath path) {
-        ZipFileStore store = new ZipFileStore(this, path);
-        return new ZipFile(store);
+        final ZipFileStore store = new ZipFileStore(this, path);
+        return new StoredFile() {
+
+            @Override
+            protected FileStore getStore() {
+                return store;
+            }
+        };
     }
 
     public boolean exists(JailedResourcePath path) {

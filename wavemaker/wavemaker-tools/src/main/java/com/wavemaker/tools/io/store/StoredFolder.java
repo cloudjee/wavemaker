@@ -1,13 +1,8 @@
 
 package com.wavemaker.tools.io.store;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.springframework.util.Assert;
 
@@ -15,14 +10,12 @@ import com.wavemaker.tools.io.AbstractResources;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
-import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
 /**
@@ -168,38 +161,6 @@ public abstract class StoredFolder extends StoredResource implements Folder {
         if (!exists()) {
             createParentIfMissing();
             getStore().create();
-        }
-    }
-
-    @Override
-    public void unzip(File file) {
-        Assert.notNull(file, "File must not be null");
-        unzip(file.getContent().asInputStream());
-    }
-
-    @Override
-    public void unzip(InputStream inputStream) {
-        Assert.notNull(inputStream, "InputStream must not be null");
-        createIfMissing();
-        ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream));
-        try {
-            InputStream noCloseZip = new NoCloseInputStream(zip);
-            ZipEntry entry = zip.getNextEntry();
-            while (entry != null) {
-                if (entry.isDirectory()) {
-                    getFolder(entry.getName()).createIfMissing();
-                } else {
-                    getFile(entry.getName()).getContent().write(noCloseZip);
-                }
-                entry = zip.getNextEntry();
-            }
-        } catch (IOException e) {
-            throw new ResourceException(e);
-        } finally {
-            try {
-                zip.close();
-            } catch (IOException e) {
-            }
         }
     }
 

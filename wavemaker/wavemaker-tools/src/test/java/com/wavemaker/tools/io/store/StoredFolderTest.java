@@ -5,37 +5,24 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.ResourceStringFormat;
@@ -54,13 +41,9 @@ public class StoredFolderTest {
 
     private MockStoredFolder folder;
 
-    private final Map<JailedResourcePath, MockStoredFolder> childFolders = new HashMap<JailedResourcePath, MockStoredFolder>();
-
-    private final Map<JailedResourcePath, MockStoredFile> childFiles = new HashMap<JailedResourcePath, MockStoredFile>();
-
     @Before
     public void setup() {
-        this.folder = new MockStoredFolder(new JailedResourcePath());
+        this.folder = new MockStoredFolder();
     }
 
     @Test
@@ -474,45 +457,6 @@ public class StoredFolderTest {
     }
 
     @Test
-    public void shouldNeedUnzipInputStream() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("InputStream must not be null");
-        this.folder.unzip((InputStream) null);
-    }
-
-    @Test
-    public void shouldUnzip() throws Exception {
-        ByteArrayOutputStream outputStreamB = new ByteArrayOutputStream();
-        ByteArrayOutputStream outputStreamD = new ByteArrayOutputStream();
-        given(this.folder.getStore().exists()).willReturn(true);
-        given(this.folder.getFile("a/b.txt").getStore().getOutputStream()).willReturn(outputStreamB);
-        given(this.folder.getFile("c/d.txt").getStore().getOutputStream()).willReturn(outputStreamD);
-        InputStream zipStream = getSampleZip();
-        this.folder.unzip(zipStream);
-        verify(this.folder.getFolder("a").getStore()).create();
-        verify(this.folder.getFolder("c").getStore()).create();
-        assertThat(new String(outputStreamB.toByteArray()), is("ab"));
-        assertThat(new String(outputStreamD.toByteArray()), is("cd"));
-    }
-
-    private InputStream getSampleZip() throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-        zipOutputStream.putNextEntry(new ZipEntry("a/"));
-        zipOutputStream.closeEntry();
-        zipOutputStream.putNextEntry(new ZipEntry("a/b.txt"));
-        IOUtils.write("ab", zipOutputStream);
-        zipOutputStream.closeEntry();
-        zipOutputStream.putNextEntry(new ZipEntry("c/"));
-        zipOutputStream.closeEntry();
-        zipOutputStream.putNextEntry(new ZipEntry("c/d.txt"));
-        IOUtils.write("cd", zipOutputStream);
-        zipOutputStream.closeEntry();
-        zipOutputStream.close();
-        return new ByteArrayInputStream(outputStream.toByteArray());
-    }
-
-    @Test
     public void shouldJail() throws Exception {
         Folder jailed = this.folder.getFolder("a").jail();
         Folder sub = jailed.getFolder("/b");
@@ -532,96 +476,4 @@ public class StoredFolderTest {
 
     // FIXME test find and copy?
 
-    private class MockStoredFolder extends StoredFolder {
-
-        private final FolderStore store;
-
-        public MockStoredFolder(JailedResourcePath path) {
-            this.store = mock(FolderStore.class);
-            given(this.store.getPath()).willReturn(path);
-            given(this.store.getFolder(any(JailedResourcePath.class))).willAnswer(new Answer<Folder>() {
-
-                @Override
-                public Folder answer(InvocationOnMock invocation) throws Throwable {
-                    JailedResourcePath path = (JailedResourcePath) invocation.getArguments()[0];
-                    MockStoredFolder child = StoredFolderTest.this.childFolders.get(path);
-                    if (child == null) {
-                        child = new MockStoredFolder(path);
-                        StoredFolderTest.this.childFolders.put(path, child);
-                    }
-                    return child;
-                }
-            });
-
-            given(this.store.getFile(any(JailedResourcePath.class))).willAnswer(new Answer<File>() {
-
-                @Override
-                public File answer(InvocationOnMock invocation) throws Throwable {
-                    JailedResourcePath path = (JailedResourcePath) invocation.getArguments()[0];
-                    MockStoredFile child = StoredFolderTest.this.childFiles.get(path);
-                    if (child == null) {
-                        child = new MockStoredFile(path);
-                        StoredFolderTest.this.childFiles.put(path, child);
-                    }
-                    return child;
-                }
-            });
-
-            given(this.store.getExisting(any(JailedResourcePath.class))).willAnswer(new Answer<Resource>() {
-
-                @Override
-                public Resource answer(InvocationOnMock invocation) throws Throwable {
-                    JailedResourcePath path = (JailedResourcePath) invocation.getArguments()[0];
-                    Resource resource = StoredFolderTest.this.childFolders.get(path);
-                    if (resource != null) {
-                        return resource;
-                    }
-                    return StoredFolderTest.this.childFiles.get(path);
-                }
-            });
-
-        }
-
-        @Override
-        protected FolderStore getStore() {
-            return this.store;
-        }
-
-        @Override
-        public MockStoredFolder getFolder(String name) {
-            return (MockStoredFolder) super.getFolder(name);
-        }
-
-        public MockStoredFolder getFolder(String name, boolean exists) {
-            MockStoredFolder folder = getFolder(name);
-            given(folder.getStore().exists()).willReturn(exists);
-            return folder;
-        }
-
-        @Override
-        public MockStoredFile getFile(String name) {
-            return (MockStoredFile) super.getFile(name);
-        }
-
-        public MockStoredFile getFile(String name, boolean exists) {
-            MockStoredFile file = getFile(name);
-            given(file.getStore().exists()).willReturn(exists);
-            return file;
-        }
-    }
-
-    private static class MockStoredFile extends StoredFile {
-
-        private final FileStore store;
-
-        public MockStoredFile(JailedResourcePath path) {
-            this.store = mock(FileStore.class);
-            given(this.store.getPath()).willReturn(path);
-        }
-
-        @Override
-        protected FileStore getStore() {
-            return this.store;
-        }
-    }
 }

@@ -14,7 +14,7 @@ import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
 
 /**
- * {@link ResourceStore}s for {@link ZipFile} and {@link ZipFolder}.
+ * {@link ResourceStore}s for {@link ZipFile} and {@link ZipArchive}.
  * 
  * @author Phillip Webb
  */

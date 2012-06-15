@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.io;
 
-import java.io.InputStream;
-
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
@@ -127,22 +125,6 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return a list of all nested children
      */
     Resources<Resource> find();
-
-    /**
-     * Unzip the specified zip file into the current folder.
-     * 
-     * @param file the file to unzip (this must reference a zip file)
-     * @see #unzip(InputStream)
-     */
-    void unzip(File file);
-
-    /**
-     * Unzip the specified input stream into the current folder.
-     * 
-     * @param inputStream the input stream to unzip (this must contain zip contents)
-     * @see #unzip(File)
-     */
-    void unzip(InputStream inputStream);
 
     /**
      * Return a new folder that is jailed at the current location. A jailed folder acts as a root folder at the current
