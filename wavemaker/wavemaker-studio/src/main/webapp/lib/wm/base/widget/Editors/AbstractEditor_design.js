@@ -228,7 +228,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
 
     /* Help subgroup */
     //helpText: {group: "display", subgroup: "help", order: 10},
-    helpText: {group: "editor text", subgroup: "help", order: 10},
+    helpText: {group: "editor", subgroup: "help", order: 10},
 
     /* Layout subgroup */
     //minEditorWidth: {group: "display", subgroup: "layout", order: 500, ignoreHint: "minEditorWidth is only relevant for percent sized editors with captionPosition of left or right", advanced: 1},

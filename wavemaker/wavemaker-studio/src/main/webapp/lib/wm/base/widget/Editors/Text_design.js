@@ -32,7 +32,7 @@ wm.Object.extendSchema(wm.ResizableEditor, {
 wm.Object.extendSchema(wm.Text, {
     /* DISPLAY GROUP */
     //placeHolder: {group: "display", subgroup: "help"}, 
-    placeHolder: {group: "editor text", subgroup: "help"}, 
+    placeHolder: {group: "editor", subgroup: "help"}, 
 
     /* EDITOR GROUP */
     /* Behavior subgroup */
