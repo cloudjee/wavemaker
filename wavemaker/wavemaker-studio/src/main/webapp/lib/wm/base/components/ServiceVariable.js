@@ -96,8 +96,8 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 	    if (this.loadingDialog instanceof wm.LoadingDialog == false) {
 		this.loadingDialog = new wm.LoadingDialog({owner: this,
 							   name: "loadingDialog",
-							   widgetToCover: this.loadingDialog,
-							   serviceVariableToTrack: this});
+							   widgetToCover: this.loadingDialog});
+		this.loadingDialog.setServiceVariableToTrack(this);
 	    }
 	}
 	return this.inherited(arguments);

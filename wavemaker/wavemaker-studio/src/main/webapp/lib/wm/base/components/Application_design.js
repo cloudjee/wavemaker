@@ -168,6 +168,8 @@ wm.Application.extend({
 
 
 wm.Object.extendSchema(wm.Application, {
+    onSessionExpiration: {events: ["js", "disableNoEvent"]},
+    onPageChanged: {events: ["js", "disableNoEvent"]},
     page: {ignore:1},
     deviceSize: {ignore: 1, bindSource:1},
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 

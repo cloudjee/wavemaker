@@ -423,7 +423,6 @@ dependencies = {
 			    "wm.base.widget.Label",
 			    "wm.base.widget.Spacer",
 			    "wm.base.widget.Container",
-			    //"lib.github.touchscroll.touchscrollmin",
 			    "wm.base.widget.Panel",
 			    "wm.base.widget.Layout",
 			    "wm.base.widget.Bevel",

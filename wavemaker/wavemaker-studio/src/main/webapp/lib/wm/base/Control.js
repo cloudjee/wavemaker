@@ -801,8 +801,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     addWidget: function(inWidget){
 	this.widgets[inWidget.name] = inWidget;
 	var p = this.containerNode || this.domNode;
-	if (this._touchScroll && p.childNodes[1] && p.childNodes[1].firstChild)
-	    p = p.childNodes[1].firstChild;
   	if (inWidget.domNode.parentNode != p) {
 	    p.appendChild(inWidget.domNode);
 	}
@@ -822,8 +820,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	    
 	    var p = this.containerNode || this.parentNode || this.parent.domNode;
-	    if (this._touchScroll && p.childNodes[1] && p.childNodes[1].firstChild)
-		p = p.childNodes[1].firstChild;
   	    if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body) 
 		p.appendChild(this.domNode);
 	} catch (e) {
@@ -1221,7 +1217,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}	
 
 	var paddArr = this.padding.split(paddingSplitter);
-	var overflow =   ((!this._touchScroll && (this.autoScroll || this._xscrollX || this._xscrollY)) ? "auto" : "hidden");
+	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) ? "auto" : "hidden");
 	var stylesObj;
 
 	var margins = (this.margin||"").split(marginSplitter);
@@ -1407,10 +1403,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (this.dom) {
 		var b = this.getStyleBounds();
 		isChanged = this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
-		if (this._touchScroll) {
-		    this._touchScroll.scrollers.outer.style.width = b.w + "px";
-		    this._touchScroll.scrollers.outer.style.height = b.h + "px";
-		}
 	    }
 	    // bc
 	    if (this.designWrapper) {
@@ -1561,7 +1553,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	    // BC: wm.Layout
 	    else if (this.parentNode && this.domNode) {
-		var node = (this.parentNode._touchScroll && this.parentNode.childNodes[1] && this.parentNode.childNodes[1].firstChild) ? this.parentNode.childNodes[1].firstChild : this.parentNode;
+		var node = this.parentNode;
 		node.appendChild(this.domNode);
 	    }
 	},

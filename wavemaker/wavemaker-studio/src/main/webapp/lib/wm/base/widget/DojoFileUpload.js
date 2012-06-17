@@ -809,7 +809,6 @@ wm.Object.extendSchema(wm.DojoFileUpload, {
     autoScroll: {ignore: true},
     scrollX: {ignore: true},
     scrollY: {ignore: true},
-    touchScrolling: {ignore: true},
     imageList: {ignore: true},
     lock:  {ignore: true},
     freeze:  {ignore: true},

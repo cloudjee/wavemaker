@@ -64,11 +64,17 @@ wm.define("wm.Container", wm.Control, {
 		app.dockBottom = this;
 	    }
 	    if (this.autoScroll && app._touchEnabled && !wm.disableTouchScroll) {
+		var node = this.domNode;
+		this.connect(node, "ontouchstart", this, "_ontouchstart");
+		this.connect(node, "ontouchmove", this, "_ontouchmove");
+		this.connect(node, "ontouchend", this, "_ontouchend");		
+/*
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "min"));
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";
 		this._touchScroll.scrollers.outer.style.top = "0px";
+		*/
 	    }
 
 
@@ -77,6 +83,113 @@ wm.define("wm.Container", wm.Control, {
 	    this.domNode.box = this.box = "";
 	    this._needsFitToContent = this.fitToContent = this.fitToContentWidth || this.fitToContentHeight;
 	},
+    _ontouchstart: function(e) {
+	if (!this._xscrollY) return; // if there is no scrolling, exit and let the event bubble up to the parent
+
+	var node = this.domNode;
+	var targetNode = e.target;
+	console.log("START:" + targetNode.tagName + "|" + targetNode.id + " | " + targetNode.parentNode.id);
+	if (targetNode.tagName == "INPUT" || targetNode.tagName == "BUTTON" || targetNode.tagName == "TEXTAREA") {
+	    targetNode.focus();
+	    return;
+	}
+	//if (node.scrollTop + node.clientHeight >= node.scrollHeight) return ; // if there's no more room to move down, let the event bubble up to the parent
+	dojo.stopEvent(e);  
+	if (app._touchY && app._touchY.animationId) {
+	    window.clearInterval(app._touchY.animationId);
+	}
+	var touch = e.touches ? e.touches[0] : null;
+	if (!touch) return;
+	var yhash = {};
+	app._touchY = {y: touch.screenY,
+			targetNode: touch.target,
+			targetWidget: this,
+			time: new Date().getTime()};
+    },
+    _ontouchmove: function(e) {
+	var touch = e.touches ? e.touches[0] : null;
+	if (!touch || !app._touchY) return;
+	if (touch.target != app._touchY.targetNode) return;
+	console.log("CONTAINER: " + touch.pageY + " / " + touch.clientY + " / " + touch.screenY + touch.target.id);
+	var node = this.domNode;
+
+	/* Let the event bubble up if no room to scroll */
+	if (node.scrollHeight <= node.clientHeight) return;
+
+	var y =   touch.screenY;
+	var initialScrollTop = node.scrollTop;
+
+	var lastY = app._touchY.y;
+
+	if (y == lastY) {
+	    dojo.stopEvent(e);
+	    //console.log("Y == Y");
+	    return;
+	}
+
+	// If Y is decreasing, then the user is trying to increase scrollTop, but we're already scrolled to the bottom, let the parent container handle it
+	if (y < lastY && node.clientHeight + node.scrollTop >= node.scrollHeight ||
+
+	    // If Y is Increasing, then the user is trying to decrease scrollTop, but we're already scrolled to the top, let the parent container handle it
+	    y > lastY && node.scrollTop <= 0)  {
+	    console.log("Skipping...");
+/*
+	    app._touchY.y = y;
+	    app._touchY.velocity = 0;
+	    app._touchY.time = new Date().getTime();
+	    */
+	    return; 
+	}
+
+	var delta = lastY - y;
+
+	var time = new Date().getTime();
+	var deltaTime = time - app._touchY.time;
+	var scrollTop = node.scrollTop;
+	var newScrollTop = scrollTop + delta;
+	if (newScrollTop < 0) {
+	    newScrollTop = 0;
+	} else if (newScrollTop > node.scrollHeight) {
+	    newScrollTop =  node.scrollHeight;
+	}
+	node.scrollTop = newScrollTop;
+	console.log("Y: " + y + ", lastY: " + lastY + "; DELTA: " + delta + ", scrollTop: " + newScrollTop + ", NAME: " + this.name);
+	var deltaScrollTop =  initialScrollTop - node.scrollTop;
+	app._touchY.y = y;
+	app._touchY.velocity =  delta / deltaTime;
+	app._touchY.time = new Date().getTime();	
+/*
+	app._touchY = {y: y, // last y position changes as a result of scrolling
+			targetNode: touch.target,
+			velocity: delta / deltaTime,
+			time: new Date().getTime()};
+			*/
+	dojo.stopEvent(e);
+
+    },
+    _ontouchend: function(e) {
+	var node = this.domNode;
+
+	if (node.scrollHeight <= node.clientHeight) return; // if there is no scrolling, exit and let the event bubble up to the parent
+
+	if (app._touchY.velocity != Infinity && Math.abs(app._touchY.velocity) > 0.15) {
+	    app._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
+	} else {
+	    delete app._touchY;
+	}
+	dojo.stopEvent(e);
+    },
+    _onAnimateScroll: function() {
+	var node = this.domNode;
+	app._touchY.velocity *= 0.9;
+	if (app._touchY.velocity == Infinity || Math.abs(app._touchY.velocity) < 0.01) {
+	    window.clearInterval(app._touchY.animationId);
+	    delete app._touchY;
+	    return;
+	}
+	node.scrollTop += Math.min(app._touchY.velocity * 50, node.clientHeight); // velocity is px per ms; 50ms is our animation interval
+    },
+
 	postInit: function() {
 		if (this.isDesignLoaded())
 			this.setLock(this.lock);

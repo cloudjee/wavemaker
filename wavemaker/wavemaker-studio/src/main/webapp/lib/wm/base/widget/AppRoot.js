@@ -44,6 +44,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		this.subscribe("window-resize", this, "resize");
 	    }
 	},
+
     getRuntimeId: function() {return "approot";},
 
     /* Assumes that wavemaker app is the only thing on the page; some of these calculations fail if there is other html outside of the wavemakerNode */

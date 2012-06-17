@@ -309,8 +309,8 @@ dojo.declare("wm.ServiceCall", null, {
 	doAutoUpdate: function() {
 	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) {
 		if (djConfig.isDebug && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");		    		
-
-		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "updateInternal"));
+		/* wait 20ms so that UI events can finish firing and so other inputs have time to be set */
+		wm.job(this.getRuntimeId() + ".doAutoUpdate", wm.isMobile ? 20 : 1, dojo.hitch(this, "updateInternal"));
 
 		if (djConfig.isDebug) this.endLog("autoUpdateOnStart");
 	    }

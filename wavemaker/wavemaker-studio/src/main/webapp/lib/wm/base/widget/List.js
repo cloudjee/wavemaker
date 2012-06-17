@@ -273,10 +273,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 	}
     },
     _ontouchmove: function(e) {
+	console.log("touchMove A");
 	/* Do nothing if no room to scroll */
 	if (this.listNode.scrollHeight <= this.listNode.clientHeight) return;
 
 	if (this._touchedItem) this._touchedItem.touchMove();
+	console.log("touchMove B");
 	var y =   e.touches ? e.touches[0].clientY : e.y;
 	var delta = this._touchY.y - y;
 	var time = new Date().getTime();
@@ -288,6 +290,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	} else if (newScrollTop > this.listNode.scrollHeight) {
 	    newScrollTop =  this.listNode.scrollHeight;
 	}
+	if (newScrollTop < 10) console.log("A:" + newScrollTop);
 	this.listNode.scrollTop = newScrollTop;
 	//this._onScroll(); // needed for android 3&4 browser
 	this._touchY = {y: y,
@@ -298,9 +301,10 @@ dojo.declare("wm.List", wm.VirtualList, {
     _ontouchend: function(e, delayed) { 
 	/* Do nothing if no room to scroll */
 	if (this.listNode.scrollHeight <= this.listNode.clientHeight) return;
-
+	console.log("touchEnd A");
 	if (this._touchedItem) this._touchedItem.touchEnd();
 	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
+	    console.log("touchEnd B");
 	    this._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
 	}
 	if (!delayed) {
@@ -321,7 +325,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    return;
 	}
 	this.listNode.scrollTop += Math.min(this._touchY.velocity * 50, this.listNode.clientHeight); // velocity is px per ms; 50ms is our animation interval
-	//this._onScroll(); // needed for android 3&4 browser
+	this.listNode.scrollTop += Math.round(Math.min(this._touchY.velocity * 50, this.listNode.clientHeight)); // velocity is px per ms; 50ms is our animation interval
     },
 	createSelectedItem: function() {
 	         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
@@ -590,6 +594,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		if (this._renderDojoObjSkipped && !this._headerRendered) {
 		    wm.onidle(this, "_render");
 		} else if (this.spacerNodeTop.clientHeight) {
+		    alert("HEY");
 		    this.listNode.scrollTop = this.spacerNodeTop.clientHeight;
 		}
 	    },

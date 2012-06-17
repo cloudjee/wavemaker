@@ -26,10 +26,11 @@ dojo.declare("TypeDefinitionGeneratorDialog", wm.Page, {
                                  dojo.toJson(this.variable1.getData(),true) +"</pre>");
 				 */
 	studio.componentModel.activate();
-	studio.refreshComponentTree();
+	studio.refreshServiceTree("");
 	this.typeDef._studioTreeNode.setOpen(true);
 	wm.forEachProperty(this.moreDefs, function(typeDef) {typeDef._studioTreeNode.setOpen(true);});
 	studio.select(this.typeDef);
+	app.toastSuccess("Type generated");
     },
     closeButtonClick: function() {
 	this.owner.owner.hide();
