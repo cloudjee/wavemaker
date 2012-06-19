@@ -16,7 +16,6 @@ package com.wavemaker.tools.io;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
@@ -28,38 +27,27 @@ import org.springframework.util.Assert;
  */
 public class ResourcesCollection<T extends Resource> extends AbstractResources<T> {
 
-    /**
-     * Empty implementation.
-     */
-    @SuppressWarnings("rawtypes")
-    private static final Resources<?> EMPTY_RESOURCES = new AbstractResources() {
-
-        @Override
-        public Iterator iterator() {
-            return Collections.EMPTY_SET.iterator();
-        }
-    };
-
-    /**
-     * Returns an empty {@link Resources} instance.
-     * 
-     * @return empty {@link Resources}
-     */
-    @SuppressWarnings("unchecked")
-    public static final <T extends Resource> Resources<T> emptyResources() {
-        return (Resources<T>) EMPTY_RESOURCES;
-    }
+    private final Folder source;
 
     private final Collection<T> resources;
 
-    public ResourcesCollection(Collection<T> resources) {
+    public ResourcesCollection(Folder source, Collection<T> resources) {
+        Assert.notNull(source, "Source must not be null");
         Assert.notNull(resources, "Resources must not be null");
+        this.source = source;
         this.resources = resources;
     }
 
-    public ResourcesCollection(T... resources) {
+    public ResourcesCollection(Folder source, T... resources) {
+        Assert.notNull(source, "Source must not be null");
         Assert.notNull(resources, "Resources must not be null");
+        this.source = source;
         this.resources = Arrays.asList(resources);
+    }
+
+    @Override
+    public Folder getSource() {
+        return this.source;
     }
 
     @Override

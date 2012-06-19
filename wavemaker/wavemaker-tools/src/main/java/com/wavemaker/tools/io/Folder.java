@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.io;
 
-import java.io.InputStream;
-
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
@@ -46,18 +44,6 @@ public interface Folder extends Resource, Iterable<Resource> {
     Folder copyTo(Folder folder);
 
     /**
-     * Recursively copy this resource to the specified folder, filtering resources. Any duplicate {@link File}s will be
-     * replaced (existing {@link Folder} resources will be merged). If the resource does not exist a
-     * {@link ResourceDoesNotExistException} is thrown.
-     * 
-     * @param folder the folder to copy the resource to
-     * @param fileIncludeFilter a filter used to restrict the files that are copied (must not be <tt>null</tt>).
-     * @return a new resource (the current resource will no longer {@link #exists() exist}
-     * @throws ResourceDoesNotExistException if this resource no longer exists
-     */
-    Folder copyTo(Folder folder, ResourceIncludeFilter<File> fileIncludeFilter);
-
-    /**
      * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
      * {@link Resources#copyTo(Folder) copyTo(folder)}.
      * 
@@ -66,17 +52,6 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @see Resources#copyTo(Folder)
      */
     Resources<Resource> copyContentsTo(Folder folder);
-
-    /**
-     * Convenience methods to move the contents of the folder, filtering results as necessary.
-     * {@link Resources#copyTo(Folder) copyTo(folder)}.
-     * 
-     * @param folder the folder to copy the resource to
-     * @param includeFilter a filter used to include results (must not be <tt>null</tt>).
-     * @return a resource collection containing the new destination resources
-     * @see Resources#copyTo(Folder)
-     */
-    Resources<Resource> copyContentsTo(Folder folder, ResourceIncludeFilter<Resource> includeFilter);
 
     @Override
     Folder rename(String name) throws ResourceExistsException;
@@ -144,37 +119,12 @@ public interface Folder extends Resource, Iterable<Resource> {
     Resources<Resource> list();
 
     /**
-     * List immediate child resource of this folder, filtering results as necessary. If this resource does not exist
-     * empty resources are returned.
+     * Recursively find all immediate and nested children of this folder. If this resource does not exist empty
+     * resources are returned.
      * 
-     * @param includeFilter a filter used to include results (must not be <tt>null</tt>).
-     * @return a list of immediate child resources that match the filter
+     * @return a list of all nested children
      */
-    <T extends Resource> Resources<T> list(ResourceIncludeFilter<T> includeFilter);
-
-    /**
-     * Perform the specified operation on all children in folder, recursively processing all nested folders.
-     * 
-     * @param operation the operation to perform
-     * @return the performed operation
-     */
-    <T extends Resource, OPERATION extends ResourceOperation<T>> OPERATION performOperationRecursively(OPERATION operation);
-
-    /**
-     * Unzip the specified zip file into the current folder.
-     * 
-     * @param file the file to unzip (this must reference a zip file)
-     * @see #unzip(InputStream)
-     */
-    void unzip(File file);
-
-    /**
-     * Unzip the specified input stream into the current folder.
-     * 
-     * @param inputStream the input stream to unzip (this must contain zip contents)
-     * @see #unzip(File)
-     */
-    void unzip(InputStream inputStream);
+    Resources<Resource> find();
 
     /**
      * Return a new folder that is jailed at the current location. A jailed folder acts as a root folder at the current

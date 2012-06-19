@@ -1,32 +1,21 @@
 
 package com.wavemaker.tools.io.store;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.AbstractResources;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.FilteredResources;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.JailedResourcePath;
-import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceIncludeFilter;
-import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
 /**
@@ -98,60 +87,28 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     @Override
     public Resources<Resource> list() {
-        return list(Including.all());
-    }
-
-    @Override
-    public <T extends Resource> Resources<T> list(ResourceIncludeFilter<T> includeFilter) {
-        Assert.notNull(includeFilter, "Filter must not be null");
         if (!exists()) {
-            return ResourcesCollection.emptyResources();
+            return new ResourcesCollection<Resource>(this);
         }
-        Iterable<String> list = getStore().list();
-        if (list == null) {
-            return ResourcesCollection.emptyResources();
-        }
-        Resources<Resource> resources = new ChildResources(list);
-        return FilteredResources.apply(resources, includeFilter);
+        return new ChildResources(new ChildResourceIterator(this));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Resource, OPERATION extends ResourceOperation<T>> OPERATION performOperationRecursively(OPERATION operation) {
-        Class<?> supportedType = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
-        for (Resource child : list()) {
-            if (supportedType.isInstance(child)) {
-                operation.perform((T) child);
-            }
-            if (child instanceof Folder) {
-                ((Folder) child).performOperationRecursively(operation);
-            }
+    public Resources<Resource> find() {
+        if (!exists()) {
+            return new ResourcesCollection<Resource>(this);
         }
-        return operation;
+        return new ChildResources(new RecursiveChildResourceIterator(this));
     }
 
     @Override
     public Folder copyTo(Folder folder) {
-        return copyTo(folder, Including.<File> all());
-    }
-
-    @Override
-    public Folder copyTo(Folder folder, ResourceIncludeFilter<File> fileIncludeFilter) {
         Assert.notNull(folder, "Folder must not be empty");
-        Assert.notNull(fileIncludeFilter, "FileFilter must not be null");
         ensureExists();
         Assert.state(getPath().getParent() != null, "Unable to copy a root folder");
         Folder destination = createDestinationFolder(folder);
         for (Resource child : list()) {
-            if (child instanceof Folder) {
-                Folder childFolder = (Folder) child;
-                childFolder.copyTo(destination, fileIncludeFilter);
-            } else {
-                File childFile = (File) child;
-                if (fileIncludeFilter.include(childFile)) {
-                    child.copyTo(destination);
-                }
-            }
+            child.copyTo(destination);
         }
         return destination;
     }
@@ -159,11 +116,6 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     @Override
     public Resources<Resource> copyContentsTo(Folder folder) {
         return list().copyTo(folder);
-    }
-
-    @Override
-    public Resources<Resource> copyContentsTo(Folder folder, ResourceIncludeFilter<Resource> includeFilter) {
-        return list(includeFilter).copyTo(folder);
     }
 
     @Override
@@ -213,38 +165,6 @@ public abstract class StoredFolder extends StoredResource implements Folder {
     }
 
     @Override
-    public void unzip(File file) {
-        Assert.notNull(file, "File must not be null");
-        unzip(file.getContent().asInputStream());
-    }
-
-    @Override
-    public void unzip(InputStream inputStream) {
-        Assert.notNull(inputStream, "InputStream must not be null");
-        createIfMissing();
-        ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream));
-        try {
-            InputStream noCloseZip = new NoCloseInputStream(zip);
-            ZipEntry entry = zip.getNextEntry();
-            while (entry != null) {
-                if (entry.isDirectory()) {
-                    getFolder(entry.getName()).createIfMissing();
-                } else {
-                    getFile(entry.getName()).getContent().write(noCloseZip);
-                }
-                entry = zip.getNextEntry();
-            }
-        } catch (IOException e) {
-            throw new ResourceException(e);
-        } finally {
-            try {
-                zip.close();
-            } catch (IOException e) {
-            }
-        }
-    }
-
-    @Override
     public Folder jail() {
         JailedResourcePath jailedPath = new JailedResourcePath(getPath().getUnjailedPath(), new ResourcePath());
         return getStore().getFolder(jailedPath);
@@ -255,42 +175,95 @@ public abstract class StoredFolder extends StoredResource implements Folder {
         return super.toString(format) + "/";
     }
 
-    protected class ChildResources extends AbstractResources<Resource> {
+    private static class ChildResourceIterator implements Iterator<Resource> {
 
-        private final Iterable<String> list;
+        private final StoredFolder folder;
 
-        public ChildResources(Iterable<String> list) {
-            Assert.notNull(list, "List must not be null");
-            this.list = list;
+        private final Iterator<String> childNames;
+
+        public ChildResourceIterator(StoredFolder folder) {
+            this.folder = folder;
+            Iterable<String> list = folder.getStore().list();
+            this.childNames = list == null ? Collections.<String> emptyList().iterator() : list.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.childNames.hasNext();
+        }
+
+        @Override
+        public Resource next() {
+            String name = this.childNames.next();
+            JailedResourcePath path = this.folder.getStore().getPath().get(name);
+            Resource resource = this.folder.getStore().getExisting(path);
+            if (resource == null) {
+                throw new ResourceDoesNotExistException(this.folder, name);
+            }
+            return resource;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class RecursiveChildResourceIterator implements Iterator<Resource> {
+
+        private final Iterator<Resource> iterator;
+
+        private Iterator<Resource> current;
+
+        public RecursiveChildResourceIterator(StoredFolder folder) {
+            this.iterator = new ChildResourceIterator(folder);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.current != null && this.current.hasNext() || this.iterator.hasNext();
+        }
+
+        @Override
+        public Resource next() {
+            if (this.current != null && this.current.hasNext()) {
+                return this.current.next();
+            }
+            Resource next = this.iterator.next();
+            if (next instanceof StoredFolder) {
+                StoredFolder folder = (StoredFolder) next;
+                this.current = new RecursiveChildResourceIterator(folder);
+            } else {
+                this.current = Collections.singleton(next).iterator();
+            }
+            return next;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class ChildResources extends AbstractResources<Resource> {
+
+        private final Iterator<Resource> iterator;
+
+        public ChildResources(Iterator<Resource> iterator) {
+            Assert.notNull(iterator, "Iterator must not be null");
+            this.iterator = iterator;
+        }
+
+        @Override
+        public Folder getSource() {
+            return StoredFolder.this;
         }
 
         @Override
         public Iterator<Resource> iterator() {
-            final Iterator<String> iterator = this.list.iterator();
-            return new Iterator<Resource>() {
-
-                @Override
-                public boolean hasNext() {
-                    return iterator.hasNext();
-                }
-
-                @Override
-                public Resource next() {
-                    String name = iterator.next();
-                    JailedResourcePath path = getPath().get(name);
-                    Resource resource = getStore().getExisting(path);
-                    if (resource == null) {
-                        throw new ResourceDoesNotExistException(StoredFolder.this, name);
-                    }
-                    return resource;
-                }
-
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
+            return this.iterator;
         }
+
     }
 
 }

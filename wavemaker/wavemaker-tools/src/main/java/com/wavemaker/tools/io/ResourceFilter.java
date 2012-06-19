@@ -15,13 +15,15 @@
 package com.wavemaker.tools.io;
 
 /**
- * A filter used to restrict {@link Folder#list(ResourceIncludeFilter) listed} resources.
+ * A filter used to restrict {@link Resource}s.
  * 
- * @see Including
+ * @see FilterOn
+ * @see Resources#include(ResourceIncludeFilter)
+ * @see Resources#exclude(ResourceIncludeFilter)
  * 
  * @author Phillip Webb
  */
-public interface ResourceIncludeFilter<R extends Resource> {
+public interface ResourceFilter {
 
-    boolean include(R resource);
+    boolean match(Resource resource);
 }
