@@ -35,32 +35,7 @@ wm.getMatchingFormWidgets = function(inForm, inMatch) {
 		return match;
 };
 
-wm.getParentForm = function(inWidget) {
-	var w = inWidget.parent;
-	var r = inWidget.getRoot();
-	r = r && r.root;
-	while (w && w != r) {
-	        if (wm.isInstanceType(w, wm.LiveFormBase)) {
-			return w;
-		}
-		w = w.parent;
-	}
-}
 
-wm.getFormLiveView = function(inForm) {
-	var lv = inForm && inForm.findLiveVariable();
-	return lv && lv.liveView;
-}
-
-wm.getFormField = function(inWidget) {
-	var a = [], w = inWidget;
-        while (w && !(wm.isInstanceType(w, wm.LiveForm))) {
-		if (w.formField)
-			a.unshift(w.formField);
-		w = wm.getParentForm(w);
-	}
-	return a.join('.');
-}
 
 /**
 	Base class for {@link wm.LiveForm}.
