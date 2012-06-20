@@ -13,14 +13,18 @@
  */
 
 dojo.provide("wm.base.widget.VirtualList");
+dojo.require("wm.base.Control");
 
-dojo.declare("wm.VirtualListItem", null, {
+dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 	selected: false,
 	className: 'wmlist-item',
+    getRuntimeId: function() {
+	return this.list.getRuntimeId() + "." + this.index;
+    },
         constructor: function(inList, inText, inImage, inDomNode) {
 		this.list = inList;
 	        this.index = this.list._formatIndex;
-		this.connections = [];
+		this._connections = [];
 	    if (inDomNode) {
 		this.domNode = inDomNode;
 	    } else {
@@ -28,8 +32,14 @@ dojo.declare("wm.VirtualListItem", null, {
 	    }
 		this.setContent(inText, inImage);
 	},
+	connect: function() {
+	    wm.Component.prototype.connect.apply(this, arguments);
+	},
+        disconnectEvent: function() {
+	    wm.Component.prototype.disconnectEvent.apply(this, arguments);
+	},
 	destroy: function() {
-		dojo.forEach(this.connections, function(inConnect) { dojo.disconnect(inConnect) });
+		dojo.forEach(this._connections, function(inConnect) { dojo.disconnect(inConnect) });
 	},
 	create: function() {
 		var n = this.domNode = document.createElement('div');
@@ -37,79 +47,54 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.makeConnections();
 	},
 	makeConnections: function() {
-		this.connections = [
-		    dojo.connect(this.domNode, 'mouseover', this, 'mouseover'),
-		    dojo.connect(this.domNode, 'mouseout', this, 'mouseout')
-		];
 	    if (!wm.isMobile) {
-		this.connections.push(dojo.connect(this.domNode,'click', this, function(evt) {
+		this.connect(this.domNode, 'mouseover', this, 'mouseover'),
+		this.connect(this.domNode, 'mouseout', this, 'mouseout')
+
+		this.connect(this.domNode,'click', this, function(evt) {
 		    wm.onidle(this,'click',{target: evt.target});
-		}));
-		this.connections.push(
-		    dojo.connect(this.domNode, 'dblclick', this, function(evt) {
-			wm.onidle(this, 'dblclick',{target: evt.target});
-		    }));
-	    } else if (false && wm.isFakeMobile) {
-		this.connections.push(dojo.connect(this.domNode,'onmousedown', this, "touchStart"));
-		this.connections.push(dojo.connect(this.domNode,'onmousemove', this, "touchMove"));
-		this.connections.push(dojo.connect(this.domNode,'onmouseup', this, "touchEnd"));
+		});
+		this.connect(this.domNode, 'dblclick', this, function(evt) {
+		    wm.onidle(this, 'dblclick',{target: evt.target});
+		});
 	    } else {
-		this.connections.push(dojo.connect(this.domNode,'ontouchstart', this, "touchStart"));
-		this.connections.push(dojo.connect(this.domNode,'ontouchmove', this, "touchMove"));
-		this.connections.push(dojo.connect(this.domNode,'ontouchend', this, "touchEnd"));
+		this.connect(this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
 	    }
 	},
-        touchStart: function(evt) {
-	    if (this.list._touchedItem) return;
-	    if (!this.selected || this.list._selectionMode == "multiple") {
 
-		if (evt.touches && evt.touches[0]) {
-		    this._touchPos = {x: evt.touches[0].clientX,
-				      y: evt.touches[0].clientY};
-		}
-
-		if (this.selected) {
-		    this._deselectionIndicatorOnly = true;
-		    this.deselect();
-		    this.selected = true;
-		} else {
-		    this._selectionIndicatorOnly = true;
-		    this.select();
-		    this.selected = false;
-		}
-		this.list._touchedItem =  this;
-		wm.job(this.list.getRuntimeId() + "_" + this.index + ".touchStart", app.touchToClickDelay, dojo.hitch(this, function() {
-		    this.touchEnd(evt,true);
-		}));
-		this.list._ontouchstart(evt);
+    onTouchStart: function(evt) {
+	if (!this.selected || this.list._selectionMode == "multiple") {
+	    if (this.selected) {
+		this._deselectionIndicatorOnly = true;
+		this.deselect();
+		this.selected = true;
+	    } else {
+		this._selectionIndicatorOnly = true;
+		this.select();
+		this.selected = false;
 	    }
+	    this.list._touchedItem =  this;
+	}
 
-
-	},
-        touchMove: function(evt) {
-	    if (this.list._touchedItem == this) {
-		if (evt.touches && evt.touches[0]) {
-		    var touchPos = {x: evt.touches[0].clientX,
-				    y: evt.touches[0].clientY};
-		}
-		if (!touchPos || this._touchPos && (touchPos.x - this._touchPos.x + touchPos.y - this._touchPos.y > 5)) {
-		    wm.cancelJob(this.list.getRuntimeId()+"_"+this.index + ".touchStart");
-		    delete this.list._touchedItem;
-		    if (this._selectionIndicatorOnly){
-			delete this._selectionIndicatorOnly;
-			this.deselect();
-		    } else if (this._deselectionIndicatorOnly){
-			delete this._deselectionIndicatorOnly;
-			this.select();
-		    }
-		}
+	this.list._ontouchstart(evt);
+    },
+    /* _onTouchMove only calls onTouchMove if we've moved at least 5px */
+    onTouchMove: function(evt, yPos, yChangeFromInitial, yChangeFromLast) {
+	if (this.list._touchedItem == this) {
+	    delete this.list._touchedItem;
+	    if (this._selectionIndicatorOnly){
+		delete this._selectionIndicatorOnly;
+		this.deselect();
+	    } else if (this._deselectionIndicatorOnly){
+		delete this._deselectionIndicatorOnly;
+		this.select();
 	    }
-	    this.list._ontouchmove(evt);
-	},
-    touchEnd: function(evt, delayed) {
+	}
+	this.list._ontouchmove(evt, yPos, yChangeFromInitial, yChangeFromLast);
+    },
+    onTouchEnd: function(evt, isMoved) {
 	delete this._selectionIndicatorOnly;
 	delete this._deselectionIndicatorOnly;
-	wm.cancelJob(this.list.getRuntimeId() + "_" + this.index + ".touchStart");
 	if (this.list._touchedItem == this) {
 	    this.list._touchedItem = null;
 	    if (!evt) {
@@ -117,7 +102,13 @@ dojo.declare("wm.VirtualListItem", null, {
 	    } 
 	    this.click(evt);
 	}
-	this.list._ontouchend(evt, delayed);
+	this.list._ontouchend(evt);
+    },
+    onLongTouch: function(posX, posY) {
+	delete this._selectionIndicatorOnly;
+	delete this._deselectionIndicatorOnly;
+	this.list._touchedItem = null;
+	this.longClick();
     },
 	setContent: function(inContent) {
 	    this.domNode.innerHTML = inContent;
@@ -140,6 +131,9 @@ dojo.declare("wm.VirtualListItem", null, {
 	},
 	click: function(e) {
 		this.list.onclick(e, this);
+	},
+        longClick: function() {
+		this.list.onLongClick(this);
 	},
 	dblclick: function(e) {
 		this.list.ondblclick(e, this);
@@ -173,7 +167,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this.createHeaderNode();
 		this.createListNode();
 		this.domNode.appendChild(this.headerNode);
-		this.domNode.appendChild(this.listNode);
+		this.domNode.appendChild(this.listNodeWrapper || this.listNode);
 		this.setHeaderVisible(this.headerVisible);
 	    if (this.onselect)
 		this.connect(this, "onSelect", this, "onselect"); // changed from onselect to onSelect for grid compatibility
@@ -228,10 +222,17 @@ dojo.declare("wm.VirtualList", wm.Control, {
 
 	// rendering
 	createListNode: function() {
-		this.listNode = document.createElement('div');
-		this.listNode.flex = 1;
-		dojo.addClass(this.listNode, "wmlist-list");
+	    if (wm.isMobile) {
+		this.listNodeWrapper = document.createElement('div');
+		dojo.addClass(this.listNodeWrapper, "wmlist-wrapper");
+	    }
 
+	    this.listNode = document.createElement('div');
+	    this.listNode.flex = 1;
+	    dojo.addClass(this.listNode, "wmlist-list");
+	    if (wm.isMobile) {
+		this.listNodeWrapper.appendChild(this.listNode);
+	    }
 	},
 	createHeaderNode: function() {
 		this.headerNode = document.createElement('div');
@@ -242,11 +243,8 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	var result = this.inherited(arguments);
 	if (result) {
 	    var hidden = this.isAncestorHidden();
-	    if (!this._listTouchScroll && this.headerVisible && !hidden) {
+	    if (this.headerVisible && !hidden) {
 		wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));	    
-	    }
-	    if (this._listTouchScroll && !hidden) {
-		wm.job(this.getRuntimeId() + ".postTouchRenderBounds", 1, dojo.hitch(this, "postTouchRenderBounds"));
 	    }
 	}
 	return result;
@@ -255,29 +253,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	if (!this.isAncestorHidden()) {
 	    var coords = (this.noHeader || !this.headerVisible) ? {h:0} : dojo.marginBox(this.headerNode);
 	    var bodyheight = this.getContentBounds().h - coords.h;
-	    console.log("LIST DOM:" + this.bounds.h + " | " + bodyheight);
-	    this.listNode.style.height = Math.max(0,bodyheight) + "px";
+	    (this.listNodeWrapper || this.listNode).style.height = Math.max(0,bodyheight) + "px";
 	}
     },
-    postTouchRenderBounds: function() {
-	var coords = dojo.marginBox(this.headerNode);
-	var bodyheight = this.getContentBounds().h - coords.h;
-	this._listTouchScroll.scrollers.outer.parentNode.height = bodyheight + "px";
 
-	var b = this.getContentBounds();
-	var s = this._listTouchScroll.scrollers.outer.style;
-	var changed = s.width != (b.w + "px") || s.height != (b.h - coords.h) + "px";
-	if (changed) {
-	    this._listTouchScroll.scrollers.outer.parentNode.style.width = this.listNode.style.width = s.width = b.w + "px";
-	    s.height = (b.h - coords.h) + "px";
-	}
-	this._listTouchScroll.scrollers.outer.style.top = "0px";//coords.h + "px";
-	if (this.updateHeaderWidth)
-	    this.updateHeaderWidth();
-	if (changed) {
-	    this._listTouchScroll.setupScroller();
-	}
-    },
 	clear: function(noEvents) {
 		this._setHeaderVisible(false);
 		while (this.getCount())
@@ -546,6 +525,8 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	// events
 	_oncanmouseover: function(inEvent, inItem, inMouseOverInfo) {
 	},
+    onLongClick: function(inItem) {
+    },
 	onclick: function(inEvent, inItem) {
 	    
 	    var target = inEvent.target;

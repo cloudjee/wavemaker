@@ -124,12 +124,23 @@ dojo.declare("wm.Application", wm.Component, {
 		if (matches) {
 		    wm.isAndroid = Number(matches[1]);
 		}
-		if (wm.isAndroid > 2 ||
-		    wm.isIOS && wm.isIOS > 4 ||
-		    wm.isFakeMobile) {
-		    ;
-		} else {
-		    this._touchEnabled = true;
+
+		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
+		    var matches = navigator.userAgent.match(/Android (2|3|4|5|6|7|8|9)\./);
+		    if (matches) {
+			wm.isAndroid = Number(matches[1]);
+		    }
+		    if (wm.isAndroid && navigator.userAgent.match(/ CrMo\//)) {
+			wm.isAndroid = "chrome";
+		    }
+		    if (wm.isAndroid > 2 ||
+			wm.isAndroid == "chrome" || 
+			wm.isIOS && wm.isIOS > 4 ||
+			wm.isFakeMobile) {
+			;
+		    } else {
+			this._touchEnabled = true;
+		    }
 		}
 	    }
 
