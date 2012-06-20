@@ -44,8 +44,7 @@ wm.Object.extendSchema(wm.DataNavigator, {
     layoutKind: {ignore: 1},
     autoScroll: {ignore: true},
     scrollX: {ignore: true},
-    scrollY: {ignore: true},
-    touchScrolling: {ignore: true}
+    scrollY: {ignore: true}
 });
 
 wm.DataNavigator.extend({

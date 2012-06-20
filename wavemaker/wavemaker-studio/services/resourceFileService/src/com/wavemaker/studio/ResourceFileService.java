@@ -28,12 +28,13 @@ import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
+import com.wavemaker.tools.io.zip.ZipArchive;
 import com.wavemaker.tools.project.DownloadableFile;
 import com.wavemaker.tools.project.DownloadableFolder;
 import com.wavemaker.tools.project.ProjectManager;
@@ -63,7 +64,7 @@ public class ResourceFileService {
     }
 
     private List<Hashtable<String, Object>> listChildren(Folder folder) {
-        Resources<Resource> list = folder.list(Including.nonHiddenResources());
+        Resources<Resource> list = folder.list().include(FilterOn.nonHidden());
         List<Hashtable<String, Object>> children = new ArrayList<Hashtable<String, Object>>();
         for (Resource child : list) {
             children.add(asHashTable(child));
@@ -275,7 +276,7 @@ public class ResourceFileService {
             unpackName = generateUniqueNumberedFileName(zipFile.getParent(), unpackName);
         }
         Folder unpackFolder = zipFile.getParent().getFolder(unpackName);
-        unpackFolder.unzip(zipFile);
+        ZipArchive.unpack(zipFile, unpackFolder);
         zipFile.delete();
         return unpackFolder.exists();
     }

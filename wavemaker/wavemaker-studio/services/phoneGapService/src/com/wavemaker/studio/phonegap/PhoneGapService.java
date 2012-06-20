@@ -21,9 +21,9 @@ import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.FilterOn.AttributeFilter;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
-import com.wavemaker.tools.io.Including.AttributeFilter;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DownloadableFolder;
@@ -157,41 +157,41 @@ public class PhoneGapService {
     }
 
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
-        phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending(".gz")).delete();
-        phoneGapLibFolder.getFolder("build/Gzipped").list(Including.fileNames().ending("_grid.js")).delete();
-        phoneGapLibFolder.getFolder("build/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
-        phoneGapLibFolder.getFolder("build").list(Including.fileNames().ending(".js")).delete();
+        phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending(".gz")).delete();
+        phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending("_grid.js")).delete();
+        phoneGapLibFolder.getFolder("build/themes").list().include(FilterOn.names().notEnding(".css").notMatching("tundra")).delete();
+        phoneGapLibFolder.getFolder("build").list().files().include(FilterOn.names().ending(".js")).delete();
         phoneGapLibFolder.getFolder("images/boolean/").delete();
         // phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
         Folder dojo = phoneGapLibFolder.getFolder("dojo");
         dojo.getFolder("util").delete();
         dojo.getFolder("dojox").delete();
-        dojo.getFolder("dojo").list(Including.fileNames().notMatching("dojo_build.js")).delete();
-	dojo.getFolder("dojo/_base").delete();
-	dojo.getFolder("dojo/_firebug").delete();
-	dojo.getFolder("dojo/cldr").delete();
-	dojo.getFolder("dojo/date").delete();
-	dojo.getFolder("dojo/dnd").delete();
-	dojo.getFolder("dojo/fx").delete();
-	dojo.getFolder("dojo/io").delete();
-	dojo.getFolder("dojo/lib").delete();
-	dojo.getFolder("dojo/nls").delete();
-	dojo.getFolder("dojo/resources").delete();
-	dojo.getFolder("dojo/rpc").delete();
-	dojo.getFolder("dojo/store").delete();
-	dojo.getFolder("dojo/tests").delete();
-        dojo.getFolder("dijit").list(Including.resourceNames().notMatching("themes")).delete();
-        dojo.getFolder("dijit/themes").list(Including.resourceNames().notEnding(".css").notMatching("tundra")).delete();
+        dojo.getFolder("dojo").list().files().include(FilterOn.names().notMatching("dojo_build.js")).delete();
+        dojo.getFolder("dojo/_base").delete();
+        dojo.getFolder("dojo/_firebug").delete();
+        dojo.getFolder("dojo/cldr").delete();
+        dojo.getFolder("dojo/date").delete();
+        dojo.getFolder("dojo/dnd").delete();
+        dojo.getFolder("dojo/fx").delete();
+        dojo.getFolder("dojo/io").delete();
+        dojo.getFolder("dojo/lib").delete();
+        dojo.getFolder("dojo/nls").delete();
+        dojo.getFolder("dojo/resources").delete();
+        dojo.getFolder("dojo/rpc").delete();
+        dojo.getFolder("dojo/store").delete();
+        dojo.getFolder("dojo/tests").delete();
+        dojo.getFolder("dijit").list().include(FilterOn.names().notMatching("themes")).delete();
+        dojo.getFolder("dijit/themes").list().include(FilterOn.names().notEnding(".css").notMatching("tundra")).delete();
         Folder wm = phoneGapLibFolder.getFolder("wm");
         wm.getFolder("compressed").delete();
         wm.getFolder("etc").delete();
         Folder base = wm.getFolder("base");
-        base.list(Including.resourceNames().matching("deprecated", "components", "design", "drag", "styles", "templates")).delete();
-        base.list(Including.resourceNames().ending(".js")).delete();
+        base.list().include(FilterOn.names().matching("deprecated", "components", "design", "drag", "styles", "templates", "debug")).delete();
+        base.list().include(FilterOn.names().ending(".js")).delete();
         Folder widget = base.getFolder("widget");
         widget.getFolder("Editors").delete(); // all editors are in a build layer
-        widget.list(Including.fileNames().ending("_design.js")).delete();
+        widget.list().files().include(FilterOn.names().ending("_design.js")).delete();
         String[] purgedWidgetResources = { "Buttons/Button_design.js", "Trees/Tree_design.js", "Dialogs/Dialog_design.js", "AccordionLayers.js",
             "DojoMenu.js", "AppRoot.js", "PageContainer.js", "Bevel.js", "EditPanel.js", "Panel.js", "BreadcrumbLayers.js", "Button.js", "Editor.js",
             "Picture.js", "Container.js", "FileUpload.js", "Formatters.js", "Scrim.js", "Select.js", "Html.js", "Spacer.js", "ContextMenuDialog.js",
@@ -204,7 +204,7 @@ public class PhoneGapService {
         }
 
         Folder themes = widget.getFolder("themes");
-        themes.list(Including.resourceNames().notMatching("default")).delete();
+        themes.list().include(FilterOn.names().notMatching("default")).delete();
     }
 
     private void updatePhonegapFiles(String url, FolderLayout layout, String themeName) {
@@ -216,11 +216,11 @@ public class PhoneGapService {
         Folder projectFolder = this.projectManager.getCurrentProject().getRootFolder();
 
         // Delete all pages, resources and project files so we can re-copy updated version of them
-        AttributeFilter<Resource> skippedResources = Including.resourceNames().notMatching("config.js", "lib");
-        phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
+        AttributeFilter skippedResources = FilterOn.names().notMatching("config.js", "lib");
+        phoneGapFolder.list().include(skippedResources.notStarting("cordova")).delete();
 
         // Copy project files for phonegap
-        projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
+        projectFolder.getFolder("webapproot").list().include(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
         // Update index and login HTML files
         String phonegapName = getPhoneGapScript(phoneGapFolder);
@@ -237,7 +237,7 @@ public class PhoneGapService {
     }
 
     private String getPhoneGapScript(Folder phoneGapFolder) {
-        Resources<Resource> files = phoneGapFolder.list(Including.resourceNames().starting("cordova-").ending(".js"));
+        Resources<Resource> files = phoneGapFolder.list().include(FilterOn.names().starting("cordova-").ending(".js"));
         for (Resource resource : files) {
             return resource.getName();
         }

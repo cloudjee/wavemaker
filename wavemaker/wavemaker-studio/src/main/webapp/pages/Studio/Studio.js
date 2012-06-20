@@ -608,6 +608,7 @@ dojo.declare("Studio", wm.Page, {
 	        studio.refreshServiceTree(); 
 	},
 	typesChanged: function(inData) {
+	    if (this._inRestoreCleanApp) return;
 	    if (inData && inData.types) {
 		wm.typeManager.setTypes(inData.types);
 	    }
@@ -1595,7 +1596,7 @@ dojo.declare("Studio", wm.Page, {
 	    app.warnOnce("mobileBetaWarn", "Please note that design for tablet and phone is in beta.  We encourage users to send feedback and suggestions on the forums.  But we do not gaurentee that this functionality is complete, and we may in the future choose to follow a different strategy and use different tools.");
 	}
     },
-    deviceSizeSelectChanged: function(inSender) {
+    deviceSizeSelectChanged: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
 	if (!this.panel2.docked)
 	    this.panel2.setDocked(true);
 	if (!this.PIContents.docked)
@@ -1632,7 +1633,9 @@ dojo.declare("Studio", wm.Page, {
 	    this.PIPanel.setWidth(PIWidth + "px");
 	    */
 	}
-	dojo.publish("deviceSizeRecalc");
+	if (!inSetByCode) {
+	    dojo.publish("deviceSizeRecalc");
+	}
     },
 /*
     deviceTypeSelectChanged: function(inSender) {

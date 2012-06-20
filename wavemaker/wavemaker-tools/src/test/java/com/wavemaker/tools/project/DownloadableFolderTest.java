@@ -2,20 +2,17 @@
 package com.wavemaker.tools.project;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-
-import java.util.Collections;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.rules.TemporaryFolder;
 
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 /**
  * Tests for {@link DownloadableFolder}.
@@ -24,21 +21,22 @@ import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
  */
 public class DownloadableFolderTest {
 
-    @Mock
-    private Folder folder;
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private DownloadableFolder downloadable;
 
+    private Folder folder;
+
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        given(this.folder.iterator()).willReturn(Collections.<Resource> emptySet().iterator());
+        this.folder = new LocalFolder(this.temporaryFolder.getRoot()).getFolder("name");
         this.downloadable = new DownloadableFolder(this.folder, "defaultName");
     }
 
     @Test
     public void shouldReturnZipContents() throws Exception {
-        assertThat(this.downloadable.getContents(), is(ZippedFolderInputStream.class));
+        assertThat(this.downloadable.getContents(), is(not(nullValue())));
     }
 
     @Test
@@ -53,13 +51,12 @@ public class DownloadableFolderTest {
 
     @Test
     public void shouldUseFolderName() throws Exception {
-        given(this.folder.getName()).willReturn("name");
         assertThat(this.downloadable.getFileName(), is("name.zip"));
     }
 
     @Test
     public void shouldUseDefaultNameIfNoFolderName() throws Exception {
-        given(this.folder.getName()).willReturn("");
+        this.downloadable = new DownloadableFolder(this.folder.getParent(), "defaultName");
         assertThat(this.downloadable.getFileName(), is("defaultName.zip"));
     }
 }

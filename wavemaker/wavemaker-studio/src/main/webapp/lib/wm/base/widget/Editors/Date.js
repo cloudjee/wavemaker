@@ -48,7 +48,7 @@ dojo.declare("wm.Date", wm.Text, {
 			constraints: constraints,
 			required: this.required,
 		        openOnClick: this.openOnClick,
-			value: this.convertValue(this.displayValue)
+		    value: this.convertValue(this.displayValue)
 		}, inProps || {});
 		
 /*
@@ -58,7 +58,12 @@ dojo.declare("wm.Date", wm.Text, {
 		return prop;
 	},
 	_createEditor: function(inNode, inProps) {
-		return new wm.form.DateTextBox(this.getEditorProps(inNode, inProps));
+	    var e = new wm.form.DateTextBox(this.getEditorProps(inNode, inProps));
+	    if (wm.isMobile) {
+		dojo.query("input",e.domNode).forEach(function(node) {node.readonly = true;})
+		dojo.attr(e.focusNode, "readonly", true);
+	    }
+	    return e;
 	},
 	convertValue: function(inValue) {
 	    return wm.convertValueToDate(inValue, {selector: this.dateMode.toLowerCase(), formatLength: this.formatLength, timePattern: this.use24Time ? "HH:mm" : "hh:mm a"});
@@ -192,11 +197,16 @@ dojo.declare("wm.Time", wm.Date, {
 		return wm.convertValueToDate(inValue, {selector: "time"});
 	},
 	_createEditor: function(inNode, inProps) {
+	    var e;
 	    if (this.useWMDropDown) {
-		return new wm.form.TimeTextBox(this.getEditorProps(inNode, inProps));
+		e = new wm.form.TimeTextBox(this.getEditorProps(inNode, inProps));
 	    } else {
-		return new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
+		e = new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
 	    }
+	    if (wm.isMobile) {
+		dojo.query("input",e.domNode).forEach(function(node) {node.readonly = true;})
+	    }
+	    return e;
 	},
 	getEditorValue: function() {
 	    var d = wm.Text.prototype.getEditorValue.call(this);
@@ -778,11 +788,11 @@ dojo.declare("wm.TimePicker", wm.Container, {
 					 showing: wm.isMobile,
 				   name: "dateTimePickerButtonPanel",
 				   layoutKind: "left-to-right",
-				   horizontalAlign: "left",
+				   horizontalAlign: "right",
 				   verticalAlign: "bottom",
 				   width: "100%",
-					 mobileHeight:  wm.Button.prototype.mobileHeight,
-					 height: "32px"});
+					 mobileHeight:  "45px",
+					 desktopHeight: "32px"});
 
 
 						   

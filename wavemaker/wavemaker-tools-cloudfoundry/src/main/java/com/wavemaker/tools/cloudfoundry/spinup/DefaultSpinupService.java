@@ -71,10 +71,14 @@ public class DefaultSpinupService implements SpinupService {
     private SharedSecretPropagation propagation = new SharedSecretPropagation();
 
     @Override
-    public String getDomain() {
-        String domain = getControllerUrl().toLowerCase();
-        domain = stripPrefix(domain, "http://");
-        domain = stripPrefix(domain, "http://");
+    public String getDomain(){
+    	return getDomain(getControllerUrl().toLowerCase());
+    }
+    
+    @Override
+    public String getDomain(String url) {
+        String domain = stripPrefix(url, "http://");
+        domain = stripPrefix(domain, "https://");
         domain = stripPrefix(domain, "api.");
         domain = "." + domain;
         return domain;
@@ -97,12 +101,12 @@ public class DefaultSpinupService implements SpinupService {
     }
 
     @Override
-    public String start(SharedSecret secret, String username, TransportToken transportToken) {
+    public String start(SharedSecret secret, String username, TransportToken transportToken, boolean overwriteExisting) throws CloudFoundryException {
         Assert.notNull(secret, "Secret must not be null");
         Assert.notNull(transportToken, "TransportToken must not be null");
         AuthenticationToken authenticationToken = secret.decrypt(transportToken);
         CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(authenticationToken);
-        return new ApplicationStarter(cloudFoundryClient, username, secret).start();
+        return new ApplicationStarter(cloudFoundryClient, username, secret).start(overwriteExisting);
     }
 
     protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
@@ -251,8 +255,8 @@ public class DefaultSpinupService implements SpinupService {
             this.secret = secret;
         }
 
-        public String start() {
-            ApplicationDetails applicationDetails = deployAsNecessary();
+        public String start(boolean overwriteExisting) throws CloudFoundryException{
+            ApplicationDetails applicationDetails = deployAsNecessary(overwriteExisting);
             DefaultSpinupService.this.propagation.sendTo(this.cloudFoundryClient, this.secret, applicationDetails.getName());
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Starting application " + applicationDetails.getName());
@@ -263,8 +267,8 @@ public class DefaultSpinupService implements SpinupService {
             }
             return applicationDetails.getUrl();
         }
-
-        private ApplicationDetails deployAsNecessary() {
+       
+        private ApplicationDetails deployAsNecessary(boolean overwriteExisting) {
             DefaultSpinupService.this.logger.debug("Deploying application");
             boolean upgrading = false;
             List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
@@ -276,7 +280,7 @@ public class DefaultSpinupService implements SpinupService {
                     ApplicationDetails applicationDetails = new ApplicationDetails(application.getName(), uri);
                     if (DefaultSpinupService.this.namingStrategy.isMatch(applicationDetails)) {
                         upgrading = DefaultSpinupService.this.namingStrategy.isUpgradeRequired(applicationDetails);
-                        if (!upgrading) {
+                        if (!upgrading && !overwriteExisting) {
                             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                                 DefaultSpinupService.this.logger.debug("Skipping deployment of already installed up to date application "
                                     + applicationDetails.getName());

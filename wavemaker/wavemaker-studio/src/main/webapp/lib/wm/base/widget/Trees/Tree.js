@@ -201,9 +201,9 @@ dojo.declare("wm.TreeNode", null, {
 		var hasChildren = !this._childrenRendered && (this.hasChildren || this._hasChildren || (this._data.children && this._data.children.length));
 		// img src
 
-	    if (this.tree._touchScroll)
+/*	    if (this.tree._touchScroll)
 		var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.touchimages.closed : this.touchimages.open);
-	    else
+	    else*/
 		var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.images.closed : this.images.open);
 	    var s = this.imageRoot + img;
 
@@ -480,9 +480,9 @@ dojo.declare("wm.TreeTextNode", wm.TreeNode, {
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
 	render: function(inContent) {
-	    if (this.tree._touchScroll) 
+/*	    if (this.tree._touchScroll) 
 		 this.domNode = this.tree._touchScroll.scrollers.inner;
-	    else
+	    else*/
 		this.domNode = this.tree.domNode;
 	},
 	addParent: function(inTree) {
@@ -504,15 +504,16 @@ dojo.declare("wm.Tree", wm.Box, {
 	init: function() {
 		this.inherited(arguments);
 
+/*
 	    if (app._touchEnabled) {
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
-		this._touchScroll = new TouchScroll(this.domNode, {/*elastic:true, */owner: this});
+		this._touchScroll = new TouchScroll(this.domNode, {/ *elastic:true, * /owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";
 		this._touchScroll.scrollers.outer.style.top = "0px";
 		this.setConnectors(false);
 	    }
-
+    */
 		dojo.addClass(this.domNode, "wmtree");
 		this.setConnectors(this.connectors);
 		this._nodeId = 0;
@@ -541,9 +542,10 @@ dojo.declare("wm.Tree", wm.Box, {
 		this._data = {};
 		this._nodeId = 0;
 		this.selected = null;
+/*
 	        if (this._touchScroll)
 		    this._touchScroll.scrollers.inner.innerHTML = "";
-	        else
+	        else*/
 		    this.domNode.innerHTML = "";
 		this.nodes = [];
 		this.root.destroy();

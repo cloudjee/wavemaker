@@ -167,6 +167,8 @@ wm.Component.extend({
 				} catch(e) {}
 			    } else if (dojo.isArray(value) && (!value.length || value[0] instanceof wm.Component || value[0] instanceof Node)) {
 				;
+			    } else if (p[n] === "" & value == "0" && (n == "border" || n == "margin" || n == "padding")) {
+				// sometimes values switch between 0 and "", but these should be treated as equivalent
 			    } else {
 				out[n] = value;
 			    }

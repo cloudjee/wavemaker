@@ -36,7 +36,7 @@ wm.Object.extendSchema(wm.Container, {
 
     /* Display group; scrolling subgroup */
     autoScroll: {writeonly: 0},
-    touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true, ignore:1}, // now just uses autoScroll
+/*    touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true, ignore:1}, // now just uses autoScroll*/
 
     /* Style group */
     //themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},

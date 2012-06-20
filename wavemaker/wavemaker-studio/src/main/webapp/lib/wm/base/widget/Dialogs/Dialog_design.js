@@ -134,7 +134,6 @@ wm.Object.extendSchema(wm.Dialog, {
     autoScroll: {ignore: 1},
     scrollX: {ignore: 1},
     scrollY: {ignore: 1},
-    touchScrolling: {ignore: 1},
     layoutKind: {ignore: 1},
     horizontalAlign: {ignore: 1},
     verticalAlign: {ignore: 1},

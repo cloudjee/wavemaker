@@ -278,6 +278,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             }
 
 
+/*
 	    if (inContainer._touchScroll && (!wm.ListViewer || inContainer instanceof wm.ListViewer == false)) {
 		var touchScrollChanged = false;
 		if (inFlowAxis == "h") {
@@ -299,6 +300,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		if (touchScrollChanged)
 		    inContainer._touchScroll.setupScroller();
 	    }
+	    */
 
 		/* Start of Frankie's new code
 		if (inContainer.autoScroll && reflowTest) {
@@ -403,9 +405,10 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             var scrollY = (needsScrollY) ? "auto" : "hidden";
             inContainer._xscrollY = (scrollY=="auto");
         }
-	if (inContainer._touchScroll) {
+	/*if (inContainer._touchScroll) {
 	    ;
-	} else if (inContainer.domNode.style.overflowY != scrollY) {
+	} else*/
+	if (inContainer.domNode.style.overflowY != scrollY) {
 	    inContainer.domNode.style.overflowY = scrollY;
             inContainer.domNode.scrollTop = 0;
         }
@@ -421,9 +424,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             var scrollX = (needsScrollX) ? "auto" : "hidden";
         }
         inContainer._xscrollX = (scrollX=="auto");
-	if (inContainer._touchScroll) {
+	/*if (inContainer._touchScroll) {
 	    ;
-	} else if (inContainer.domNode.style.overflowX != scrollX) {
+	} else*/ if (inContainer.domNode.style.overflowX != scrollX) {
 	    inContainer.domNode.style.overflowX = scrollX;
             inContainer.domNode.scrollLeft = 0;
         }

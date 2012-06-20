@@ -58,7 +58,7 @@ dojo.declare("wm.LayersDecorator", null, {
 	    }
 	},
 	setLayerActive: function(inLayer, inActive) {
-	    if (inLayer.active == inActive)
+	    if (inLayer.active == inActive && inLayer.domNode.style.display != "none")
 		return;
 
 	    inLayer.inFlow = inActive;

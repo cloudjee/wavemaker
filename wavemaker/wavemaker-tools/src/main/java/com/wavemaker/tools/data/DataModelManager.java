@@ -43,6 +43,7 @@ import com.wavemaker.runtime.data.DataServiceInternal;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
 import com.wavemaker.tools.ant.ServiceCompilerTask;
@@ -51,7 +52,7 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
@@ -204,6 +205,10 @@ public class DataModelManager {
     public String exportDatabase(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
+        if (connectionUrl.contains(HSQLDB)) {
+            connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
+        }
+
         ExportDB exporter = getExporter(username, password, dbName, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             overrideTable);
 
@@ -313,11 +318,11 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Folder serviceRoot = getServicePathFolder(serviceId);
 
-            tmpServiceRootFolder.copyContentsTo(serviceRoot, Including.resourceNames().notEnding(".class"));
+            tmpServiceRootFolder.list().include(FilterOn.names().notEnding(".class")).copyTo(serviceRoot);
 
             Folder classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-            tmpServiceRootFolder.copyContentsTo(classesDir, Including.resourceNames().ending(".class"));
+            tmpServiceRootFolder.list().include(FilterOn.names().ending(".class")).copyTo(classesDir);
 
             registerService(serviceId, importer);
 
@@ -897,6 +902,21 @@ public class DataModelManager {
 
         return importer;
 
+    }
+
+    public String getWebAppRoot()
+    {
+    	return ((LocalFolder)this.projectManager.getCurrentProject().getWebAppRootFolder()).getLocalFile().getPath();
+    }
+
+    private String reWriteCxnUrlForHsqlDB(String connectionUrl)
+    {
+    	//File webAppRoot = projectManager.getCurrentProject().getWebAppRoot();
+
+    	//return JDBCUtils.reWriteConnectionUrl(webAppRoot.getPath() + "/" + HSQL_SAMPLE_DB_SUB_DIR,
+    	//    connectionUrl);
+
+        return JDBCUtils.reWriteConnectionUrl(connectionUrl, getWebAppRoot());
     }
 
     private String extractHsqlDBFileName(String connectionUrl) {

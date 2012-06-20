@@ -758,6 +758,12 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 	    this.c$[0].setHeight(inHeight);
 	},
 	*/
+    postInit: function() {
+	this.inherited(arguments);
+	if (this.conditionalTabButtons) {
+	    this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
+	}
+    },
     addLayer: function(inCaption, doNotSelect) {
 	    var result = this.inherited(arguments);
 	    if (!this._cupdating && !this.owner._loadingPage)

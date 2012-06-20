@@ -30,9 +30,9 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.FilterOn.AttributeFilter;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
-import com.wavemaker.tools.io.Including.AttributeFilter;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 
@@ -44,7 +44,7 @@ import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
  */
 public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
 
-    private static final AttributeFilter<File> CLASS_OR_JAVA_FILES = Including.fileNames().ending(".class", ".java");
+    private static final AttributeFilter CLASS_OR_JAVA_FILES = FilterOn.names().ending(".class", ".java");
 
     private static final char FILE_SEPARATOR = java.io.File.separatorChar;
 
@@ -76,7 +76,7 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
         if (!isPackage(qualifiedPackageName) || !this.folder.exists()) {
             return null;
         }
-        Resources<File> list = this.folder.list(CLASS_OR_JAVA_FILES);
+        Resources<File> list = this.folder.list().files().include(CLASS_OR_JAVA_FILES);
         List<char[][]> foundTypeNames = new ArrayList<char[][]>();
         for (File file : list) {
             char[][] packageName = CharOperation.splitOn(java.io.File.separatorChar, qualifiedPackageName.toCharArray());

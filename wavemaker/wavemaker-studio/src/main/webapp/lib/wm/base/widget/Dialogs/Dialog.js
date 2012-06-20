@@ -29,7 +29,7 @@ wm.dialog.getNextZIndex = function(isDesignLoaded, optionalThis) {
 
     for (var i = 0; i < wm.dialog.showingList.length; i++) {
 	if (!isDesignLoaded || isDesignLoaded && wm.dialog.showingList[i]._isDesignLoaded) {
-	    if (wm.dialog.showingList[i] instanceof wm.Toast == false) {
+	    if (wm.dialog.showingList[i] instanceof wm.Toast == false && !wm.dialog.showingList[i].docked) {
 		if (!optionalThis || wm.dialog.showingList[i] != this)
 		    index = Math.max(index, wm.dialog.showingList[i].domNode.style.zIndex);
 	    }
@@ -198,8 +198,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.setContentHeight(this.contentHeight);
 		*/
 		this.domNode.style.position = "absolute";
-	    this.domNode.style.zIndex = wm.dialog.getNextZIndex(this._isDesignLoaded);
-
+	    if (!this.docked) {
+		this.domNode.style.zIndex = wm.dialog.getNextZIndex(this._isDesignLoaded);
+	    }
             if (this.designWrapper)
                 this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
 	    if (!this.docked) 
@@ -975,12 +976,14 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 		// global flag for easily finding the most recently shown dialog
 	        wm.Array.removeElement(wm.dialog.showingList, this);
+
 	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
 		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
 		wm.dialog.showingList.push(this);
 	        this.domNode.style.zIndex = zindex;
-	    if (this.modal)
-		this.dialogScrim.domNode.style.zIndex = zindex-1;
+		if (this.modal) {
+		    this.dialogScrim.domNode.style.zIndex = zindex-1;
+		}
             }
 
 		if (inShowing) {

@@ -3,11 +3,13 @@ package com.wavemaker.tools.io;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 import java.util.Iterator;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for {@link FilteredResources}.
@@ -16,38 +18,56 @@ import org.junit.Test;
  */
 public class FilteredResourcesTest {
 
-    @Test
-    public void shouldFilterBasedOnFileGeneric() throws Exception {
-        File file = mock(File.class);
-        Resources<File> resources = new ResourcesCollection<File>(file);
-        assertThat(FilteredResources.apply(resources, Including.files()).iterator().next(), is(file));
-        assertThat(FilteredResources.apply(resources, Including.folders()).iterator().hasNext(), is(false));
+    @Mock
+    private Folder source;
+
+    @Mock
+    private File fileA;
+
+    @Mock
+    private File fileB;
+
+    @Mock
+    private File fileC;
+
+    @Mock
+    private File fileD;
+
+    private Resources<File> resources;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        this.resources = new ResourcesCollection<File>(this.source, this.fileA, this.fileB, this.fileC, this.fileD);
     }
 
     @Test
-    public void shouldFilterBasedOnFolderGeneric() throws Exception {
-        Folder folder = mock(Folder.class);
-        Resources<Folder> resources = new ResourcesCollection<Folder>(folder);
-        assertThat(FilteredResources.apply(resources, Including.files()).iterator().hasNext(), is(false));
-        assertThat(FilteredResources.apply(resources, Including.folders()).iterator().next(), is(folder));
+    public void shoulNotFilterAnyIncluded() throws Exception {
+        Resources<File> actual = FilteredResources.include(this.resources, filterOn(this.fileA), filterOn(this.fileC));
+        assertMatches(actual, this.fileA, this.fileC);
     }
 
     @Test
-    public void shouldFilterBasedOnCallback() throws Exception {
-        final File file1 = mock(File.class);
-        final Folder folder1 = mock(Folder.class);
-        final File file2 = mock(File.class);
-        final Folder folder2 = mock(Folder.class);
-        Resources<Resource> resources = new ResourcesCollection<Resource>(file1, folder1, file2, folder2);
-        Iterator<Resource> filtered = FilteredResources.apply(resources, new ResourceIncludeFilter<Resource>() {
+    public void shouldFilterEveryExcluded() throws Exception {
+        Resources<File> actual = FilteredResources.exclude(this.resources, filterOn(this.fileA), filterOn(this.fileC));
+        assertMatches(actual, this.fileB, this.fileD);
+    }
+
+    private void assertMatches(Resources<File> actual, File... expected) {
+        Iterator<File> iterator = actual.iterator();
+        for (File file : expected) {
+            assertThat(iterator.next(), is(file));
+        }
+        assertThat(iterator.hasNext(), is(false));
+    }
+
+    private ResourceFilter filterOn(final Resource on) {
+        return new ResourceFilter() {
 
             @Override
-            public boolean include(Resource resource) {
-                return resource == file1 || resource == folder1;
+            public boolean match(Resource resource) {
+                return resource == on;
             }
-        }).iterator();
-        assertThat(filtered.next(), is((Resource) file1));
-        assertThat(filtered.next(), is((Resource) folder1));
-        assertThat(filtered.hasNext(), is(false));
+        };
     }
 }

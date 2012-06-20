@@ -49,7 +49,7 @@ dojo.declare("wm.VirtualListItem", null, {
 		    dojo.connect(this.domNode, 'dblclick', this, function(evt) {
 			wm.onidle(this, 'dblclick',{target: evt.target});
 		    }));
-	    } else if (wm.isFakeMobile) {
+	    } else if (false && wm.isFakeMobile) {
 		this.connections.push(dojo.connect(this.domNode,'onmousedown', this, "touchStart"));
 		this.connections.push(dojo.connect(this.domNode,'onmousemove', this, "touchMove"));
 		this.connections.push(dojo.connect(this.domNode,'onmouseup', this, "touchEnd"));
@@ -62,6 +62,12 @@ dojo.declare("wm.VirtualListItem", null, {
         touchStart: function(evt) {
 	    if (this.list._touchedItem) return;
 	    if (!this.selected || this.list._selectionMode == "multiple") {
+
+		if (evt.touches && evt.touches[0]) {
+		    this._touchPos = {x: evt.touches[0].clientX,
+				      y: evt.touches[0].clientY};
+		}
+
 		if (this.selected) {
 		    this._deselectionIndicatorOnly = true;
 		    this.deselect();
@@ -82,18 +88,22 @@ dojo.declare("wm.VirtualListItem", null, {
 	},
         touchMove: function(evt) {
 	    if (this.list._touchedItem == this) {
-		wm.cancelJob(this.list.getRuntimeId()+"_"+this.index + ".touchStart");
-		delete this.list._touchedItem;
-		if (this._selectionIndicatorOnly){
-		    delete this._selectionIndicatorOnly;
-		    this.deselect();
-		} else if (this._deselectionIndicatorOnly){
-		    delete this._deselectionIndicatorOnly;
-		    this.select();
+		if (evt.touches && evt.touches[0]) {
+		    var touchPos = {x: evt.touches[0].clientX,
+				    y: evt.touches[0].clientY};
+		}
+		if (!touchPos || this._touchPos && (touchPos.x - this._touchPos.x + touchPos.y - this._touchPos.y > 5)) {
+		    wm.cancelJob(this.list.getRuntimeId()+"_"+this.index + ".touchStart");
+		    delete this.list._touchedItem;
+		    if (this._selectionIndicatorOnly){
+			delete this._selectionIndicatorOnly;
+			this.deselect();
+		    } else if (this._deselectionIndicatorOnly){
+			delete this._deselectionIndicatorOnly;
+			this.select();
+		    }
 		}
 	    }
-//	    alert("touchMove");
-
 	    this.list._ontouchmove(evt);
 	},
     touchEnd: function(evt, delayed) {

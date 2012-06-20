@@ -26,6 +26,45 @@ import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 public interface Resources<T extends Resource> extends Iterable<T> {
 
     /**
+     * Returns the source of the resources. Items in this collection will be {@link #moveTo(Folder) moved} or
+     * {@link #copyTo(Folder) copied} relative to the source. For example, if this object contains the files
+     * '/a/b/c.txt' and '/d/e/f.txt' and the source is '/d' copy to '/x/ will result in '/x/b/c.txt' and 'x/e/f.txt'.
+     * 
+     * @return the source for the resources
+     */
+    Folder getSource();
+
+    /**
+     * Return a new {@link Resources} instance containing only {@link File}s from this collection.
+     * 
+     * @return the files
+     */
+    Resources<File> files();
+
+    /**
+     * Return a new {@link Resources} instance containing only {@link Folders}s from this collection.
+     * 
+     * @return the folders
+     */
+    Resources<Folder> folders();
+
+    /**
+     * Return a new {@link Resources} instance containing items that match any of the specified filters.
+     * 
+     * @param filters the include filters
+     * @return filtered {@link Resources}
+     */
+    Resources<T> include(ResourceFilter... filters);
+
+    /**
+     * Return a new {@link Resources} instance removing items that match any of the specified filters.
+     * 
+     * @param filters the exclude filters
+     * @return filtered {@link Resources}
+     */
+    Resources<T> exclude(ResourceFilter... filters);
+
+    /**
      * Delete the current resource (and any children). If this resource does not exist then no operation is performed.
      */
     void delete();
@@ -41,7 +80,7 @@ public interface Resources<T extends Resource> extends Iterable<T> {
     Resources<T> moveTo(Folder folder);
 
     /**
-     * Recursively copy this resource to the specified folder.Any duplicate {@link File}s will be replaced (existing
+     * Recursively copy this resource to the specified folder. Any duplicate {@link File}s will be replaced (existing
      * {@link Folder} resources will be merged). If the resource does not exist no operation is performed.
      * 
      * @param folder the folder to copy the resource to

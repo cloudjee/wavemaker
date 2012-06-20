@@ -46,8 +46,13 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    dojo.attr(b,"id", this.decoree.domNode.id + "_decorator_button" + this.btns.length);
 	    dojo.attr(b,"type", "button");
 	    dojo.attr(b,"type", "button");
-	        //b.style.outline = "none";
-		b.style.display = inLayer.showing ? "" : "none";
+/*
+	    if (!this.decoree.verticalButtons && inLayer.borderExtents.t > 1) {
+		b.style.top = (inLayer.borderExtents.t - 1) + "px";
+		}
+		*/
+	    //b.style.outline = "none";
+	    b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
 	    
 	    if (!wm.isMobile) {

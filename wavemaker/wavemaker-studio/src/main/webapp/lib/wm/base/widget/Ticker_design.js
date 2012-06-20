@@ -25,7 +25,6 @@ wm.Object.extendSchema(wm.Ticker, {
     fitToContentHeight: {ignore: 1},
     fitToContentWidth: {ignore: 1},
     scrollY: {ignore: true, writeonly: 1},
-    touchScrolling: {ignore: true, writeonly: 1},
     scrollX: {ignore: true, writeonly: 1},
     lock: {ignore: 1},
     freeze: {ignore: 1},
