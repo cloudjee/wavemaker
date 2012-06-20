@@ -17,6 +17,7 @@ package com.wavemaker.tools.io;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 
 /**
@@ -29,6 +30,8 @@ import org.springframework.util.Assert;
  * @author Phillip Webb
  */
 public abstract class FilterOn {
+
+    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
     /**
      * Start filtering based on {@link Resource} {@link Folder#getName() names}. NOTE: matching is case insensitive.
@@ -94,6 +97,23 @@ public abstract class FilterOn {
      */
     public static ResourceFilter nonHidden() {
         return names().notStarting(".");
+    }
+
+    /**
+     * Returns an resource filter based on ant patterns.
+     * 
+     * @param pattern the ant pattern
+     * @return a ant pattern based resource filter
+     */
+    public static ResourceFilter antPattern(String pattern) {
+        final String loweCasePattern = pattern.toLowerCase();
+        return new ResourceFilter() {
+
+            @Override
+            public boolean match(Resource resource) {
+                return ANT_PATH_MATCHER.match(loweCasePattern, resource.toString());
+            }
+        };
     }
 
     /**
