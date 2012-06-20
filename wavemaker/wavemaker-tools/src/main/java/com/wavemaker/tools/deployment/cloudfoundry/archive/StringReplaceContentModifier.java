@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive.Entry;
+import com.wavemaker.tools.io.File;
 
 /**
  * Simple {@link ContentModifier} that can perform regular expression replacements given entries.
@@ -45,12 +46,34 @@ public class StringReplaceContentModifier implements ContentModifier {
     }
 
     @Override
+    public boolean canModify(File file) {
+        for (String entryName : this.entryNames) {
+            if (entryName.equals(file.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public InputStream modify(InputStream inputStream) throws IOException {
         String content = IOUtils.toString(inputStream);
         for (RegexReplacement regexReplacement : this.regexReplacements) {
             content = regexReplacement.apply(content);
         }
         return new ByteArrayInputStream(content.getBytes());
+    }
+
+    @Override
+    public File modify(File file) {
+        String content = file.getContent().asString();
+        for (RegexReplacement regexReplacement : this.regexReplacements) {
+            content = regexReplacement.apply(content);
+        }
+
+        file.getContent().write(content);
+
+        return file;
     }
 
     public StringReplaceContentModifier forEntryName(String... entryNames) {

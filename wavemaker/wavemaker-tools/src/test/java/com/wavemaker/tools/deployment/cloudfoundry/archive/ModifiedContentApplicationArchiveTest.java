@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentMatcher;
 import org.springframework.util.FileCopyUtils;
+import com.wavemaker.tools.io.File;
 
 /**
  * Tests for {@link ModifiedContentApplicationArchive}.
@@ -169,6 +170,14 @@ public class ModifiedContentApplicationArchiveTest {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        public boolean canModify(File file) {
+            return false;
+        }
+
+        public File modify(File file) {
+            return null;
         }
     }
 }
