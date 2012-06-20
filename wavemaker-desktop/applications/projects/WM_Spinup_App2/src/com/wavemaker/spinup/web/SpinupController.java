@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.cloudfoundry.client.lib.CloudFoundryException;
+
 import com.wavemaker.tools.cloudfoundry.spinup.InvalidLoginCredentialsException;
 import com.wavemaker.tools.cloudfoundry.spinup.SpinupService;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
@@ -63,9 +65,9 @@ public class SpinupController {
 			return responseHash;
     }
 
-    public Hashtable<String, String> performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response) {
+    public Hashtable<String, String> performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response, boolean overwriteExisting) throws CloudFoundryException {
 		Hashtable<String, String> responseHash = new Hashtable<String, String>();  
-        String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken);
+        String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken, overwriteExisting);
         // Give CloudFoundry some time to start
         try {
             Thread.sleep(500);

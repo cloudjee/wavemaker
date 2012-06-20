@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
+import com.wavemaker.tools.io.zip.ZipArchive;
 
 /**
  * Adapter class that presents a {@link Folder} as a {@link Downloadable}. The contents of the folder are zipped.
@@ -42,7 +42,7 @@ public class DownloadableFolder implements Downloadable {
 
     @Override
     public InputStream getContents() {
-        return new ZippedFolderInputStream(this.folder, getName());
+        return ZipArchive.compress(this.folder, getName());
     }
 
     @Override

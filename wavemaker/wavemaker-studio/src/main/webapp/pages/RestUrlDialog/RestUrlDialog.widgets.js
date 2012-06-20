@@ -36,7 +36,7 @@ RestUrlDialog.widgets = {
 					wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
 				    }]
 				}],
-				requestTextArea: ["wm.LargeTextArea", {captionAlign: "right", caption: "Sample POST Data", captionSize: "80px", captionPosition: "left", width: "100%", height: "100%"}, {}, {
+				requestTextArea: ["wm.LargeTextArea", {captionAlign: "right", caption: "Sample POST Data", captionSize: "80px", captionPosition: "left", width: "100%", height: "100%","emptyValue":"null"}, {}, {
 				    binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"targetProperty":"disabled","expression":"${methodInput.dataValue} == 'GET'"}, {}]
 				    }]

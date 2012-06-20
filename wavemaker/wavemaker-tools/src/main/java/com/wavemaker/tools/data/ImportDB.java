@@ -48,8 +48,8 @@ import com.wavemaker.tools.data.reveng.BasicMetaDataDialect;
 import com.wavemaker.tools.data.reveng.MetaDataDialect;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.Including;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -329,7 +329,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void removeConstructor() {
 
-        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.list(Including.fileNames().ending(".java"));
+        Resources<com.wavemaker.tools.io.File> javafiles = this.javadir.list().files().include(FilterOn.names().ending(".java"));
 
         if (javafiles != null) {
             try {

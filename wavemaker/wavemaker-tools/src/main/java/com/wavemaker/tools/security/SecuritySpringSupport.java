@@ -258,6 +258,7 @@ public class SecuritySpringSupport {
             urlMap.put("/*.upload", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
             urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
             urlMap.put("/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
+            urlMap.put("/*/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
         }
         value = generateObjectDefinitionSource(enforceSecurity, urlMap);
         newContent.add(value);
