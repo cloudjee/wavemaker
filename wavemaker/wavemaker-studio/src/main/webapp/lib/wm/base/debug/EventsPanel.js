@@ -200,9 +200,11 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 		this.consoleEvent("info",arguments);
 		});
 		*/
-	    this.connect(console, "log", dojo.hitch(this, "consoleEvent", "log"));
-	    this.connect(console, "warn", dojo.hitch(this, "consoleEvent", "warn"));
-	    this.connect(console, "error", dojo.hitch(this, "consoleEvent", "error"));
+	    if (!window["studio"]) {
+		this.connect(console, "log", dojo.hitch(this, "consoleEvent", "log"));
+		this.connect(console, "warn", dojo.hitch(this, "consoleEvent", "warn"));
+		this.connect(console, "error", dojo.hitch(this, "consoleEvent", "error"));
+	    }
 	} catch(e) {}
     },
 	XClick: function() {

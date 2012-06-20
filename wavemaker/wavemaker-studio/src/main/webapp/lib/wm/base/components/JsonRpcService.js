@@ -192,7 +192,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	// JsonRpcService has a few properties that make collapsing the number of them non-trivial (e.g. sync, timeout)
     initService: function() {
 	var n = this.service || this.name;
-	var rand = this.owner && this.isDesignLoaded() && studio.application ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+	var rand = this.owner && this.isDesignLoaded() && studio.application ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : new Date().getTime());
     var cachedName = this.url || n + ".smd";
 	var url = this.url || (n && (this.getServiceRoot() + n + ".smd"));
 /* Don't do this; xhrpath is used in phonegap apps; all smd files reside locally on device
@@ -204,7 +204,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	    try{
 		/* SMD files change at design time, never use a cached SMD file at design time */
 		if (window["studio"]) {
-		    this._service = new wm.JsonRpc(url + "?rand=" + Math.floor(Math.random() * new Date().getTime()));
+		    this._service = new wm.JsonRpc(url + "?rand=" + rand);
 		} else if (wm.JsonRpcService.smdCache[url]) {
 		    this._service = wm.JsonRpcService.smdCache[url];
 		} else if (wm.JsonRpcService.smdCache[cachedName]) {

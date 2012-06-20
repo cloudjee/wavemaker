@@ -125,7 +125,7 @@ public class SpinupController {
     }
 
     private String performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response) {
-        String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken);
+        String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken, false);
         // Give CloudFoundry some time to start
         try {
             Thread.sleep(500);
