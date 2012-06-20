@@ -608,6 +608,7 @@ dojo.declare("Studio", wm.Page, {
 	        studio.refreshServiceTree(); 
 	},
 	typesChanged: function(inData) {
+	    if (this._inRestoreCleanApp) return;
 	    if (inData && inData.types) {
 		wm.typeManager.setTypes(inData.types);
 	    }

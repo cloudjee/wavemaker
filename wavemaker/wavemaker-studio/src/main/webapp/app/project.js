@@ -1192,6 +1192,8 @@ Studio.extend({
 						      css: this.getAppCss()} : {};
 	},
     restoreCleanApp: function() {
+	try {
+	    this._inRestoreCleanApp = true;
 	var d = this._cleanAppData;
 	if (!d) return;
 	this.setAppScript(d.js);
@@ -1211,6 +1213,9 @@ Studio.extend({
 	}
 	this.application.createComponents(restoreComponents, this.application);
 	this.updateProjectDirty();
+	} finally {
+	    this._inRestoreCleanApp = false;
+	}
     },
 
     /* isPageDirty tells us when its safe to leave a page/change pages and when the user should
