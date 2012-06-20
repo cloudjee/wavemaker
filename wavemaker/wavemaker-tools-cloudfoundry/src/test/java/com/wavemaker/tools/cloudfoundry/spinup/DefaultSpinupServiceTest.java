@@ -116,7 +116,7 @@ public class DefaultSpinupServiceTest {
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
         TransportToken token = this.service.login(this.secret, this.credentials);
-        String url = this.service.start(this.secret, this.credentials.getUsername(), token);
+        String url = this.service.start(this.secret, this.credentials.getUsername(), token, false);
         verify(this.cloudFoundryClient).uploadApplication(APPLICATION_NAME, this.archive);
         verify(this.cloudFoundryClient).createApplication(APPLICATION_NAME, CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL),
             null, false);
@@ -137,7 +137,7 @@ public class DefaultSpinupServiceTest {
         given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(deployedApplication);
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(true);
         TransportToken token = this.service.login(this.secret, this.credentials);
-        String url = this.service.start(this.secret, this.credentials.getUsername(), token);
+        String url = this.service.start(this.secret, this.credentials.getUsername(), token, false);
         verify(this.cloudFoundryClient).login();
         verify(this.cloudFoundryClient).getApplications();
         verify(this.propagation).sendTo(this.cloudFoundryClient, this.secret, APPLICATION_NAME);
@@ -160,7 +160,7 @@ public class DefaultSpinupServiceTest {
         given(this.namingStrategy.isUpgradeRequired(isA(ApplicationDetails.class))).willReturn(true);
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         TransportToken token = this.service.login(this.secret, this.credentials);
-        String url = this.service.start(this.secret, this.credentials.getUsername(), token);
+        String url = this.service.start(this.secret, this.credentials.getUsername(), token, false);
         verify(this.cloudFoundryClient).deleteApplication("application-name-old");
         verify(this.cloudFoundryClient).uploadApplication(APPLICATION_NAME, this.archive);
         verify(this.cloudFoundryClient).createApplication(APPLICATION_NAME, CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL),
@@ -186,7 +186,7 @@ public class DefaultSpinupServiceTest {
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).willNothing().given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
             CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, false);
         TransportToken token = this.service.login(this.secret, this.credentials);
-        this.service.start(this.secret, this.credentials.getUsername(), token);
+        this.service.start(this.secret, this.credentials.getUsername(), token, false);
         verify(this.namingStrategy, times(2)).newApplicationDetails(isA(ApplicationNamingStrategyContext.class));
     }
 
@@ -199,7 +199,7 @@ public class DefaultSpinupServiceTest {
             CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, false);
         try {
             TransportToken token = this.service.login(this.secret, this.credentials);
-            this.service.start(this.secret, this.credentials.getUsername(), token);
+            this.service.start(this.secret, this.credentials.getUsername(), token, false);
             fail("Did not throw");
         } catch (CloudFoundryException e) {
             assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
@@ -224,7 +224,7 @@ public class DefaultSpinupServiceTest {
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
 
-        this.service.start(this.secret, this.credentials.getUsername(), this.transportToken);
+        this.service.start(this.secret, this.credentials.getUsername(), this.transportToken, false);
         verify(this.cloudFoundryClient).createService(cloudService);
     }
 
@@ -240,7 +240,7 @@ public class DefaultSpinupServiceTest {
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
 
-        this.service.start(this.secret, this.credentials.getUsername(), this.transportToken);
+        this.service.start(this.secret, this.credentials.getUsername(), this.transportToken, false);
         verify(this.cloudFoundryClient, never()).createService(cloudService);
     }
 

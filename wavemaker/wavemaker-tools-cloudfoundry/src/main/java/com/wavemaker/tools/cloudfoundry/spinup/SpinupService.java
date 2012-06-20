@@ -36,6 +36,15 @@ public interface SpinupService {
      * @return the domain
      */
     String getDomain();
+    
+    
+    /**
+     * Returns the domain for the given url
+     * @param url 
+     * @return the domain of the given url
+     */
+    
+    String getDomain(String url);
 
     /**
      * Login the user to cloud foundry and return a transport token for storage. This method should return quick enough
@@ -55,8 +64,9 @@ public interface SpinupService {
      * @param secret the shared secret
      * @param username the username of the person performing the operation
      * @param transportToken the transport token used for authentication
+     * @parm overwriteExisting true to replace existing studio
      * @return the URL of the started application
      */
-    String start(SharedSecret secret, String username, TransportToken transportToken);
+    String start(SharedSecret secret, String username, TransportToken transportToken, boolean overwriteExisting);
 
 }
