@@ -464,6 +464,10 @@ public class SecurityConfigService {
                 List<String> jsonEntry = urlMap.remove("/*.json");
                 urlMap.put("/*.json", jsonEntry);
             }
+            if (urlMap.get("/*/*.json") != null) {
+                List<String> jsonEntry = urlMap.remove("/*.json");
+                urlMap.put("/*/*.json", jsonEntry);
+            }
         }
         getSecToolsMgr().setSecurityFilterODS(urlMap);
     }
