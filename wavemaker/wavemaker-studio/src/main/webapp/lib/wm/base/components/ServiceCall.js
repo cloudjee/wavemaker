@@ -728,12 +728,14 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		var data= this.getData(true), args=[], d;
 		// convert to array
 		for (var p in this._dataSchema) {
-		    if (data != undefined) {
+		    if (data) {
 			if (data[p] instanceof Date) {
 			    d = data[p].getTime();
 			} else {
 			    d = data[p];
 			}
+		    } else {
+			d = undefined;
 		    }
 		    args.push(d !== undefined ? d : null);
 /* Seung's temporary fix
