@@ -108,7 +108,7 @@ dojo.declare("wm.Service", wm.Component, {
 
 wm.services = {
 	byName: {},
-        //_services: {},
+	_services: {},
 	add: function(inService){
 		return wm.services.byName[inService.name] = inService;
 	},
@@ -145,7 +145,11 @@ wm.services = {
         getService: function(inName, hideFromClient) {
 		var s;
 		if (inName) {
-		    s = this.byName[inName] || this._createService(inName, hideFromClient);
+		    if (this._services[inName]) {
+			s = this._services[inName];
+		    } else {
+			s = this._services[inName] = this._createService(inName, hideFromClient);
+		    }
 			if (!s._service)
 				s.initService();
 		}
@@ -165,7 +169,7 @@ wm.services = {
 		return service;
 	},
 	_destroyService: function(inService) {
-		wm.fire(this.byName[inService.name], "destroy");
+		wm.fire(this._services[inService.name], "destroy");
 	}
 };
 wm.Object.extendSchema(wm.Service, {
