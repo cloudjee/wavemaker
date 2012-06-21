@@ -838,6 +838,8 @@ wm.DataForm.extend({
 					  name: studio.page.getUniqueName(this.name + "ExampleCancelButton"),
 					  parent: buttonPanel,
 					  showing: true,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					  width: "180px",
 					  caption: "cancelEdit()"});
 	cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
@@ -845,6 +847,8 @@ wm.DataForm.extend({
 	var newButton = new wm.Button({owner: this.owner,
 				       name: studio.page.getUniqueName(this.name + "ExampleNewButton"),
 				       parent: buttonPanel,
+				       mobileHeight: wm.Button.prototype.mobileHeight,
+				       desktopHeight: wm.Button.prototype.height,
 				       width: "180px",
 				       caption: "editNewObject()"});
 	newButton.eventBindings.onclick = this.name + ".editNewObject";
@@ -852,6 +856,8 @@ wm.DataForm.extend({
 	var updateButton = new wm.Button({owner: this.owner,
 					  name: studio.page.getUniqueName(this.name + "ExampleUpdateButton"),
 					  parent: buttonPanel,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					  width: "180px",
 					  caption: "editCurrentObject()"});
 	updateButton.eventBindings.onclick = this.name + ".editCurrentObject";
@@ -968,6 +974,8 @@ wm.DBForm.extend({
 	var cancelButton = new wm.Button({owner: this.owner,
 					  name: studio.page.getUniqueName(this.name + "CancelButton"),
 					  parent: buttonPanel,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					  showing: this.readonlyManager ? false : true,
 					  caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")});
 	cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
@@ -985,6 +993,8 @@ wm.DBForm.extend({
 	var newButton = new wm.Button({owner: this.owner,
 				       name: studio.page.getUniqueName(this.name + "NewButton"),
 				       parent: buttonPanel,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 				       caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
 	newButton.eventBindings.onclick = this.name + ".editNewObject";
 	this.$.binding.addWire(null, "newButton", newButton.getId(), "");
@@ -999,6 +1009,8 @@ wm.DBForm.extend({
 	var editButton = new wm.Button({owner: this.owner,
 					  name: studio.page.getUniqueName(this.name + "EditButton"),
 					  parent: buttonPanel,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					  caption: studio.getDictionaryItem("wm.ServiceForm.UPDATE_CAPTION")});
 	editButton.eventBindings.onclick = this.name + ".editCurrentObject";
 	editButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
@@ -1014,6 +1026,8 @@ wm.DBForm.extend({
 	var deleteButton = new wm.Button({owner: this.owner,
 					  name: studio.page.getUniqueName(this.name + "DeleteButton"),
 					  parent: buttonPanel,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					  caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
 	deleteButton.eventBindings.onclick = this.name + ".deleteData";
 	deleteButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
@@ -1030,6 +1044,8 @@ wm.DBForm.extend({
 					name: studio.page.getUniqueName(this.name + "SaveButton"),
 					parent: buttonPanel,
 					showing: this.readonlyManager ? false : true,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")});
 	saveButton.eventBindings.onclick = this.name + ".saveData";
 	saveButton.$.binding.addWire(null, "disabled", "", "\${" + this.name + ".invalid} || !\${" + this.name + ".isDirty}");
@@ -1047,6 +1063,8 @@ wm.DBForm.extend({
 					name: studio.page.getUniqueName(this.name + "ResetButton"),
 					parent: buttonPanel,
 					showing: this.readonlyManager ? false : true,
+					  mobileHeight: wm.Button.prototype.mobileHeight,
+					  desktopHeight: wm.Button.prototype.height,
 					 caption: studio.getDictionaryItem("wm.DBForm.RESET_CAPTION")});
 	resetButton.eventBindings.onclick = this.name + ".resetData";
 	resetButton.$.binding.addWire(null, "disabled", "", "!\${" + this.name + ".isDirty}");
