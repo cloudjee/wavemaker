@@ -159,11 +159,6 @@ dojo.declare("wm.Component", wm.Object, {
 		all resources.
 	*/
 	destroy: function() {
-/*
-	    if (wm.destroyStatusNode) {
-		wm.destroyStatusNode.innerHtml = dojo._windowUnloaders.length;
-	    }
-	    */
 		if (this.isDestroyed)
 			return;
 		try
