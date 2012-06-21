@@ -142,7 +142,7 @@ dojo.declare("wm.Application", wm.Component, {
 		    }
 		}
 	    }
-
+	    this._touchEnabled = true;
 
 	    this.$ = this.components = {};
 	        this.createPageContainer();
@@ -1246,7 +1246,7 @@ dojo.declare("wm.Application", wm.Component, {
 		/* Using state.title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
 
 		if (window.history.pushState)
-		    window.history.pushState(null, "" /*state.title*/, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
+		    window.history.pushState(null, "" /*state.title*/, wm.isEmpty(currentState) ? "#" : "#" + dojo.toJson(currentState));
 
 		/* No longer updating the title; this is great for populating the back history, but as we don't support jumping around the back history,
 		 * more misleading than helpful.
