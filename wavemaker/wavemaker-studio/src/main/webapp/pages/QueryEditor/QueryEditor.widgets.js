@@ -29,13 +29,13 @@ QueryEditor.widgets = {
 			    panel1: ["wm.Panel", {border: "0", height: "100%", width: "100%", minWidth: "400", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				    panelTopLayout: ["wm.Panel", {height: "100px", width: "100%", layoutKind: "left-to-right"}, {}, {
 					    queryPropsPanel: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", height: "100%", width: "400px", padding: "4", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-						    queryDataModelInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]}, layoutKind: "left-to-right", caption: "Data Model", display: "Select", width: "100%", height: "24px", disabled: true,emptyValue: "emptyString"}, {onchange: "queryDataModelInputChange"}, {
+						queryDataModelInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, layoutKind: "left-to-right", caption: "Data Model", display: "Select", width: "100%", height: "24px", disabled: true,emptyValue: "emptyString"}, {onchange: "queryDataModelInputChange"}, {
 							    editor: ["wm._SelectEditor", {}, {}]
 							}],
-						queryNameInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]},layoutKind: "left-to-right", caption: "Name", width: "100%", height: "24px",emptyValue: "emptyString"}, {onchange: "queryNameChanged"}, {
+						queryNameInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]},layoutKind: "left-to-right", caption: "Name", width: "100%", height: "24px",emptyValue: "emptyString"}, {onchange: "queryNameChanged"}, {
 							    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 							}],
-						    queryCommentInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]},layoutKind: "left-to-right", caption: "Comment", width: "100%", height: "24px",emptyValue: "emptyString"}, {onchange: "queryCommentChanged"}, {
+						    queryCommentInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]},layoutKind: "left-to-right", caption: "Comment", width: "100%", height: "24px",emptyValue: "emptyString"}, {onchange: "queryCommentChanged"}, {
 							    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 							}]
 						}],
@@ -87,7 +87,7 @@ QueryEditor.widgets = {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }]
 								}],
-								bindTypeInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]},layoutKind: "left-to-right", caption: "Type", display: "Select", padding: "", captionSize: "50px", width: "150px", height: "20px"}, {onchange: "parameterPropEdit"}, {
+						    bindTypeInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]},layoutKind: "left-to-right", caption: "Type", display: "Select", padding: "", captionSize: "50px", width: "150px", height: "20px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }],
@@ -113,7 +113,7 @@ QueryEditor.widgets = {
 					    testLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Test Query", border: "0", height: "26px", width: "100px"}, {}, {
 					        format: ["wm.DataFormatter", {}, {}]
 					    }],
-					    maxResultsInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]},layoutKind: "left-to-right", caption: "Max Results:", captionSize: "140px", width: "200px", displayValue: "10", emptyValue: "null"}, {}, {
+				    maxResultsInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]},layoutKind: "left-to-right", caption: "Max Results:", captionSize: "140px", width: "200px", displayValue: "10", emptyValue: "null"}, {}, {
 						editor: ["wm._NumberEditor", {}, {}]
 					    }],
 					    spacer15: ["wm.Spacer", {width: "30px"}, {}],

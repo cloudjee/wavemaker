@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
+import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -45,7 +46,7 @@ public class SharedSecretPropagation {
      * @param secret the secret to send
      * @param applicationName the application to send the secret to
      */
-    public void sendTo(CloudFoundryClient client, SharedSecret secret, String applicationName) {
+    public void sendTo(CloudFoundryClient client, SharedSecret secret, String applicationName) throws CloudFoundryException {
         Assert.notNull(client, "Client must not be null");
         Assert.notNull(applicationName, "ApplicationName must not be null");
         CloudApplication application = client.getApplication(applicationName);
@@ -59,7 +60,7 @@ public class SharedSecretPropagation {
      * @param secret the secret to send
      * @param application the application to send the secret to
      */
-    public void sendTo(CloudFoundryClient client, SharedSecret secret, CloudApplication application) {
+    public void sendTo(CloudFoundryClient client, SharedSecret secret, CloudApplication application) throws CloudFoundryException {
         Assert.notNull(client, "Client must not be null");
         Assert.notNull(application, "Application must not be null");
         if (this.logger.isDebugEnabled()) {

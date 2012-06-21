@@ -145,8 +145,9 @@ wm.services = {
         getService: function(inName, hideFromClient) {
 		var s;
 		if (inName) {
-		    s = this._services[inName];
-		    if (!s) {
+		    if (this._services[inName]) {
+			s = this._services[inName]; 
+		    } else {
 			s = this._services[inName] = this._createService(inName, hideFromClient);
 		    }
 		    if (!s._service) {

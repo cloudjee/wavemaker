@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
  * @param <E> the element type
  * @author Phillip Webb
  */
-abstract class FilteredIterator<E> implements Iterator<E> {
+public abstract class FilteredIterator<E> implements Iterator<E> {
 
     private final Iterator<E> sourceIterator;
 

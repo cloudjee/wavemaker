@@ -92,6 +92,12 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	      this._onRequestConnect = this.connect(this.serviceVariableToTrack, "request", this, "show");
 	  }
     },
+    show: function() {
+	this._getWidgetToCover();
+	if (this.widgetToCover && !this.widgetToCover.isAncestorHidden()) {
+	    this.inherited(arguments);
+	}
+    },
     setImage: function(inUrl) {
 	var image = this.image = inUrl;
 	if (!image) {

@@ -295,11 +295,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	this._touchY = {
 	    velocity: -yChangeFromLast / deltaTime,
 	    time: new Date().getTime()};
+
 	dojo.stopEvent(e);
     },
-    _ontouchend: function(e) { 
+    _ontouchend: function(e, delayed) { 
 	/* Do nothing if no room to scroll */
 	if (this.listNode.scrollHeight <= this.listNodeWrapper.clientHeight) return;
+
 	if (this._touchedItem) this._touchedItem.touchEnd();
 	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
 	    console.log("touchEnd B");
@@ -318,7 +320,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    delete this._touchY.animationId;
 	    return;
 	}
-
 
 	this.setScrollTop(this._scrollTop + inc);
 	this._onScroll();
@@ -613,7 +614,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 		if (this._renderDojoObjSkipped && !this._headerRendered) {
 		    wm.onidle(this, "_render");
 		} else if (this.spacerNodeTop.clientHeight) {
-
 		    this._scrollTop = 0;
 		    this._onScroll();
 		}

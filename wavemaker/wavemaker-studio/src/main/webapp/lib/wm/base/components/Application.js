@@ -111,7 +111,6 @@ dojo.declare("wm.Application", wm.Component, {
 		this.dialogAnimationTime = 0;
 	    }
 
-
 	    /* Determines if we need to implement our own touchscrolling due to limitations in the mobile browser's touch scrolling of divs.
 	     * IOS 4 and and older need this.  Native android browsers for 2.x devices need this.
 	     */
