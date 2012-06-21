@@ -493,6 +493,16 @@
                         <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_dot_zero.ProjSvcsUpgradeTask" />
                     </list>
                 </entry>
+                <entry key="0.50">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M3.SecurityUpgradeTask" />
+                    </list>
+                </entry>
+                <entry key="0.51">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M3.ProjSvcsUpgradeTask" />
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="deploymentManager">
