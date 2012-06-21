@@ -303,6 +303,14 @@ if(typeof window != 'undefined'){
 		d._windowUnloaders = [];
 		
 		d.windowUnloaded = function(){
+		    if (djConfig.isDebug) {
+			var div = document.createElement("div");
+			document.body.appendChild(div);
+			div.style.cssText = "position:absolute;left:10px;top:10px;width:150px;height:20px;background-color:black;color:white;"
+			div.id = "WindowUnloadStatusDiv";
+			wm.destroyStatusNode = div;
+		    }
+
 			// summary:
 			//		signal fired by impending window destruction. You may use
 			//		dojo.addOnWindowUnload() to register a listener for this
