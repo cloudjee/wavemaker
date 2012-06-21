@@ -417,7 +417,7 @@ wm.define("wm.Container", wm.Control, {
 		}
 	},
     adjustFlowForMobile: function() {
-	if (this.autoScroll || this.fitToContentHeight  || studio.currentDeviceType == "desktop") return;
+	if (this.autoScroll || this.fitToContentHeight  || studio.currentDeviceType == "desktop" || this._percEx.h) return;
 	var max = 0;
 	if (this.layoutKind == "left-to-right") {
 	    max = this.bounds.h;
