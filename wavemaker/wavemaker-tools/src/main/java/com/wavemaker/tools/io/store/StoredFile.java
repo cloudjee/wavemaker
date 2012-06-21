@@ -78,7 +78,7 @@ public abstract class StoredFile extends StoredResource implements File {
         Assert.notNull(folder, "Folder must not be null");
         ensureExists();
         File destination = folder.getFile(getName().toString());
-        destination.getContent().write(getContent().asInputStream());
+        destination.getContent().write(this);
         return destination;
     }
 
@@ -89,6 +89,17 @@ public abstract class StoredFile extends StoredResource implements File {
             getStore().create();
         }
     }
+
+    /**
+     * Called to write the contents of another file to this file. This method is can optionally be implemented by
+     * subclasses to implement custom file copy strategies.
+     * 
+     * @param file the file being written to this one
+     * @return if the write operation has been handled. Return <tt>false</tt> for standard stream based writes.
+     */
+    protected boolean write(File file) {
+        return false;
+    };
 
     private class StoredFileContent extends AbstractFileContent {
 
@@ -103,6 +114,13 @@ public abstract class StoredFile extends StoredResource implements File {
             createParentIfMissing();
             return getStore().getOutputStream();
         }
-    };
 
+        @Override
+        public void write(File file) {
+            createParentIfMissing();
+            if (!StoredFile.this.write(file)) {
+                super.write(file);
+            }
+        }
+    }
 }

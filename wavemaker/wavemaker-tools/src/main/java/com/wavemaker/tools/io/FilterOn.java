@@ -105,13 +105,21 @@ public abstract class FilterOn {
      * @param pattern the ant pattern
      * @return a ant pattern based resource filter
      */
-    public static ResourceFilter antPattern(String pattern) {
-        final String loweCasePattern = pattern.toLowerCase();
+    public static ResourceFilter antPattern(String... pattern) {
+        final String[] lowerCasePattern = new String[pattern.length];
+        for (int i = 0; i < pattern.length; i++) {
+            lowerCasePattern[i] = pattern[i].toLowerCase();
+        }
         return new ResourceFilter() {
 
             @Override
             public boolean match(Resource resource) {
-                return ANT_PATH_MATCHER.match(loweCasePattern, resource.toString());
+                for (String pattern : lowerCasePattern) {
+                    if (ANT_PATH_MATCHER.match(pattern, resource.toString())) {
+                        return true;
+                    }
+                }
+                return false;
             }
         };
     }
