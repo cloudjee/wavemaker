@@ -70,6 +70,9 @@ dojo.declare("wm.LayersDecorator", null, {
 		!this.decoree.transition || this.decoree.transition === "none") /* Or developer says no animation */
 	    { 
 		inLayer.domNode.style.display = inActive ? '' : 'none';
+		if (inActive) {
+		    inLayer.reflow();
+		}
 	    } else {
 		this.anim(inLayer, inActive);
 	    }
@@ -103,7 +106,6 @@ dojo.declare("wm.LayersDecorator", null, {
 		duration: 350
 	    });
 	    dojo.connect(anim,"onEnd", function(){
-		console.log("animation ended");
 		if (!inShowing) {
 		    inLayer.domNode.style.display = "none";
 		    inLayer.domNode.style.left = 0;
@@ -132,7 +134,6 @@ dojo.declare("wm.LayersDecorator", null, {
 			    if (!inLayer.isActive()) {
 				inLayer.domNode.style.display = "none";
 				inLayer.domNode.style.opacity = 1;
-				console.log(inLayer.toString() + " DISPLAY NONE");
 			    }
 			}, false );
 		    inLayer._transitionEndSub = true;
@@ -165,7 +166,6 @@ dojo.declare("wm.LayersDecorator", null, {
 		duration: 350
 	    });
 	    dojo.connect(anim,"onEnd", function(){
-		console.log("animation ended");
 		if (!inShowing) {
 		    inLayer.domNode.style.display = "none";
 		    inLayer.domNode.style.opacity = 1;
