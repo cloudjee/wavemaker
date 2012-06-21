@@ -1,17 +1,20 @@
 /*
- *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2009-2010 WaveMaker Software, Inc.
+ *
+ *  This file is part of the WaveMaker Client Runtime.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 /*
 
 Add custom widgets to projects made with WaveMaker Studio
@@ -23,7 +26,12 @@ For project specific widgets, add the wm.loadLibs call to the project javascript
 
 */
 
+
 // Example:
 wm.loadLibs([ 
 	"wm.packages.example.myButton"	
 ]);
+dojo.require("common.packages.dijit.InlineEditor");
+dojo.require("common.packages.jquery.signaturepad");
+dojo.require("common.packages.jquery.chosen");
+dojo.require("common.packages.test.TestProjectComposite");

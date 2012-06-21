@@ -142,7 +142,7 @@ dojo.declare("wm.Application", wm.Component, {
 		    }
 		}
 	    }
-
+	    this._touchEnabled = true;
 
 	    this.$ = this.components = {};
 	        this.createPageContainer();
