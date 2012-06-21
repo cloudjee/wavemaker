@@ -128,6 +128,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
     capture_picture: function(quality, sourceType, allowEdit, targetWidth, targetHeight) {
 	if (!quality) quality = 50;
 	if (!sourceType) sourceType = Camera.PictureSourceType.CAMERA;
+	else sourceType = Camera.PictureSourceType[sourceType.toUpperCase()];
 	if (allowEdit == undefined || allowEdit == null) allowEdit = true;
 	if (!targetWidth) targetWidth = 400; /* this may seem small, but it needs to fit into javascript memory; designer can increase it. */
 	if (!targetHeight) targetHeight = 400;
@@ -451,6 +452,6 @@ wm.Object.extendSchema(wm.PhoneGapCall,{
 	updateNow: { ignore: 1},
     queue: {ignore:1},
     clearInput: { group: "operation", operation:1, order: 30},
-    input: {group: "dataSet", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.FieldGroupEditor"}
+    input: {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.NavigationGroupEditor"}
 });
 

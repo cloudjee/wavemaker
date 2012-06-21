@@ -1940,6 +1940,8 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
 
 
 dojo.declare("wm.prop.FieldGroupEditor", wm.Container, { 
+    showMainInput: true,
+    multiLayer: true,
     height: "300px",
     indent: 0,
     noBindColumn: true, // wm.PropertyInspector tests for this to decide if this editor needs a bind column
@@ -1948,20 +1950,34 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     padding: "0",
     postInit: function() {
 	this.inherited(arguments);
-
-	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
-		bindLayer: ["wm.Layer", {caption: "Bindings", padding: "4", autoScroll: true}, {},{
-		}],
-		fieldLayer: ["wm.Layer", {caption: "Fields", padding: "4", autoScroll: true}, {},{
-		    fieldsLabel: ["wm.Label", {_classes: {domNode: ["BindDescriptionHeader"]}, width: "100%", caption: wm.capitalize(this.propDef.name) + " Fields"}],
-		    fieldForm: ["wm.FormPanel", {width: "100%", height: "100%", autoSizeCaption: true}]
+	if (this.multiLayer) {
+	    this.tabs = this.createComponents({
+		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
+		    bindLayer: ["wm.Layer", {caption: "Bindings", padding: "4", autoScroll: true}, {},{
+		    }],
+		    fieldLayer: ["wm.Layer", {caption: "Fields", padding: "4", autoScroll: true}, {},{
+			fieldsLabel: ["wm.Label", {_classes: {domNode: ["BindDescriptionHeader"]}, width: "100%", caption: wm.capitalize(this.propDef.name) + " Fields"}],
+			fieldForm: ["wm.FormPanel", {width: "100%", height: "100%", autoSizeCaption: true}]
+		    }]
 		}]
-	    }]
-	}, this)[0];
-	this.bindLayer = this.tabs.layers[0];
-	this.fieldLayer =this.tabs.layers[1];
-	this.fieldForm = this.fieldLayer.c$[1];
+	    }, this)[0];
+	    this.bindLayer = this.tabs.layers[0];
+	    this.fieldLayer =this.tabs.layers[1];
+	    this.fieldForm = this.fieldLayer.c$[1];
+	} else {
+	    studio.inspector.addSubGroupIndicator("Inputs", this, true, false);
+/*
+	    this.fieldsLabel = new wm.Label({_classes: {domNode: ["BindDescriptionHeader"]}, 
+					     owner: this,
+					     parent: this,
+					     width: "100%",
+					     caption: wm.capitalize(this.propDef.name) + " Fields"});*/
+	    this.fieldForm = new wm.FormPanel({owner: this,
+					       parent: this,
+					       width: "100%",
+					       height: "100%",
+					       autoSizeCaption: true});
+	}
 
 	if (this.propDef.putWiresInSubcomponent) {
 	    this.inspectedSubcomponent = this.inspected.getValue(this.propDef.putWiresInSubcomponent);
@@ -2002,11 +2018,15 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	/* Don't edit this.inspectedSubcomponent if it exists; if there is anything bound to the whole object, its binding is in
 	 * this.inspected, not in the subcomponent
 	 */
-	var e= studio.inspector.generateEditor(this.inspected, propDef, this.bindLayer,null,this.propDef.name);
-	this.editors._ROOT = e;
+	if (this.showMainInput) {
+	    var e= studio.inspector.generateEditor(this.inspected, propDef, this.bindLayer || this.fieldForm,null,this.propDef.name);
+	    this.editors._ROOT = e;
+	}
 
-	this.bindDescWidget = new wm.Html({owner: this, parent: this.bindLayer, width: "100%", height: "100%", margin: "5, 0, 0, 0"});
-	this.updateBindDescription();
+	if (this.bindLayer) {
+	    this.bindDescWidget = new wm.Html({owner: this, parent: this.bindLayer, width: "100%", height: "100%", margin: "5, 0, 0, 0"});
+	    this.updateBindDescription();
+	}
 	this.generateSubEditors();
     },
     generateSubEditors: function() {
@@ -2087,7 +2107,11 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    }));
 	    //this.fieldPanel.setBestHeight();
 	}
-	//this.setBestHeight();
+	if (!this.multiLayer) {
+	    this.fieldForm.setBestHeight();
+	    this.setBestHeight();
+	    this.parent.setBestHeight();
+	}
 	this.reflow();
     },
     showAllEditors: function() {
@@ -2135,6 +2159,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	return propDef;
     },
     updateBindDescription: function() {
+	if (!this.bindDescWidget) return;
 	var propDef = this.propDef;
 	var inspected = this.inspectedSubcomponent || this.inspected;
 	var bindText = "<dl>";
@@ -2155,6 +2180,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	this.updateBindDescription();
 	var inspected = this.inspectedSubcomponent || this.inspected;
 	 var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
+
+	/* TODO: fieldPanel does not appear to exist anymore */
 	if (!isBound && this.fieldPanel && !this.fieldPanel.showing) {
 	    this.fieldPanel.show();
 	    //this.fieldPanel.setBestHeight();
@@ -2210,6 +2237,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 
 
 dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, { 
+    showMainInput: false,
+    multiLayer: false,
     getPropDef: function(sourcePropDef, fieldName, fullName, type, isStructured) {
 	var propDef = this.inherited(arguments);
 	switch(fieldName) {
@@ -2247,6 +2276,13 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
 	    propDef.editor = "";
 	    propDef.options = ["", "top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"];
 	    break;
+	case "sourceType":
+	    propDef.editor = "";
+	    propDef.options = ["PhotoLibrary", "Camera", "SavedPhotoAlbum"]
+	    break;
+	default:
+	    propDef.editor = "";
+	    delete propDef.options;
 	} 
 
 	return propDef;
