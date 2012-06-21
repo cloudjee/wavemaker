@@ -65,10 +65,10 @@ wm.EditPanel.extend({
 		var
 			n = this.getId(),
 			sb = this.owner.loadComponent("saveButton1", p, this.editPanelStyle, 
-						      {caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")}, 
+						      {caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION"), height: "100%"}, 
 						      {onclick: n + ".saveData"});
 		this.owner.loadComponent("cancelButton1", p, this.editPanelStyle, 
-					 {caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")}, 
+					 {caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION"), height: "100%"}, 
 					 {onclick: n + ".cancelEdit"});
 		sb.$.binding.addWire("", "disabled", n + ".formInvalid");
 		this.reflow();
@@ -81,13 +81,13 @@ wm.EditPanel.extend({
 		//
 		var n = this.getId();
 		this.owner.loadComponent("newButton1", p, this.editPanelStyle, 
-					 {caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")}, 
+					 {caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION"), height: "100%"}, 
 					 {onclick: n + ".beginDataInsert"});
 	        var u = this.owner.loadComponent("updateButton1", p, this.editPanelStyle, 
-						 {caption: studio.getDictionaryItem("wm.EditPanel.UPDATE_CAPTION")}, 
+						 {caption: studio.getDictionaryItem("wm.EditPanel.UPDATE_CAPTION"), height: "100%"}, 
 						 {onclick: n + ".beginDataUpdate"});
 		var d = this.owner.loadComponent("deleteButton1", p, this.editPanelStyle, 
-						 {caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")}, 
+						 {caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION"), height: "100%"}, 
 						 {onclick: n + ".deleteData"});
 		this.reflow();
 		//
