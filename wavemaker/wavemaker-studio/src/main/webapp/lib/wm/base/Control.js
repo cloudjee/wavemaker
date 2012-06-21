@@ -473,6 +473,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 	this.initDomNode();
 	this.inherited(arguments);
+
 	var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
 	if (!isMobile || !this.enableTouchHeight) {
 	    if (this.desktopHeight != null) {
@@ -557,6 +558,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	// margins and everything else.
 	this.render(1);
 
+
+	if (this._onTouchStart) {
+	    this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+	}
 
 	if (!this.$.binding && this.isDesignLoaded())
 	    new wm.Binding({name: "binding", owner: this});
@@ -1729,6 +1734,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     onMouseOut: function(event){
     },
 
+
     toHtml: function() {return "";},
     customToHtml: function(inWidth) {return "";},
     print: function() {
@@ -1865,6 +1871,104 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
   //fluidSize: {group: "layout"},
   });
 */
+
+dojo.declare("wm.TouchMixin", null, {
+    addTouchListener: function() {
+	this.connect(this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+	if (!wm.isFakeMobile) {
+	    this.connect(this.domNode,"touchmove", this, "_onTouchMove");
+	    this.connect(this.domNode,"touchend", this, "_onTouchEnd");
+	}
+	this.subscribe("wmTouchMove", dojo.hitch(this, function() {
+	    wm.cancelJob(this.getRuntimeId() + ".longClick");
+	}));
+    },
+    _onTouchStart: function(e){
+	this._touchMoved = false;
+	var target;
+	if(e.targetTouches){
+	    if (e.targetTouches.length) {
+		this._touchStartY = e.targetTouches[0].clientY;
+		this._touchStartX = e.targetTouches[0].clientX;
+		target = e.targetTouches[0].target;
+	    }
+	} else if ("clientY" in e) {
+	    this._touchStartY = e.clientY;
+	    this._touchStartX = e.clientX;
+	    target = e.target;
+	    this.connect(document.body, "mousemove", this, "_onTouchMove");
+	    this.connect(document.body, "mouseup", this, "_onTouchEnd");
+	} else {
+	    delete this._touchStartY;
+	    delete this._touchStartX;
+	}
+	if ("_touchStartY" in this) {
+	    this._touchLastY = this._touchStartY;
+	    this._touchLastX = this._touchStartX;
+	    /* Return any value to declare this touch event ignored */
+	    if (this.onTouchStart(e, target)) {
+		this.disconnectEvent("mousemove");
+		this.disconnectEvent("mouseup");
+	    } else {
+		wm.job(this.getRuntimeId() + ".longClick", 1000, this, "_onLongTouch");
+	    }
+	}
+    },
+    _onLongTouch:function() {
+	this.onLongTouch(this._touchStartX, this._touchStartY);
+	this._onTouchEnd(null, true);
+    },
+    onTouchStart: function(event) {},
+    _onTouchMove: function(e){
+	console.log("MOVE " + this.name);
+	e.preventDefault();
+	var dyInitial, dyLatest;
+	if(e.targetTouches){
+	    if(e.targetTouches.length != 1){ return false; }
+	    dyInitial = e.targetTouches[0].clientY - this._touchStartY;
+	    dyLatest  = e.targetTouches[0].clientY - this._touchLastY;
+	    this._touchLastY = e.targetTouches[0].clientY;
+	    this._touchLastX = e.targetTouches[0].clientX;
+	}else{
+	    dyInitial = e.clientY - this._touchStartY;
+	    dyLatest  = e.clientY - this._touchLastY;
+	    this._touchLastY = e.clientY;
+	    this._touchLastX = e.clientX;
+	}
+	var pos = this._touchStartY + dyInitial;
+
+
+
+
+	/* If the finger has moved more than 5 pixels, its not an accidental move; TODO: Handle the fact that some widgets will care about left-right moves */
+	console.log("Touch Move: " + this.getRuntimeId());
+	if (Math.abs(dyInitial) > 5 || this._touchMoved) {
+	    this._touchMoved = true;
+	    wm.cancelJob(this.getRuntimeId() + ".longClick");
+	    this.onTouchMove(e, pos, dyInitial, dyLatest);
+	}
+    },
+    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast) {},
+    _onTouchEnd: function(e, noEvents){
+	wm.cancelJob(this.getRuntimeId() + ".longClick");
+	this.disconnectEvent("mousemove");
+	this.disconnectEvent("mouseup");
+	if (!noEvents) {
+	    this.onTouchEnd(e, this._touchMoved);
+	    if (!this._touchMoved) {
+		this.onTouch(this._touchStartX, this._touchStartY);
+	    }
+	}
+    },
+    onTouchEnd: function(event,isMove) {},
+    onTouch: function(posX, posY) {},
+    onLongTouch: function(posX, posY) {}
+});
+if (wm.isMobile) {
+    dojo.declare("wm.TouchMixinOptional", wm.TouchMixin,{});
+} else {
+    dojo.declare("wm.TouchMixinOptional", null,{});
+}
 
 wm.Widget = wm.Control;
 dojo.declare("wm.Box", wm.Widget, {}); // mostly obsolete
