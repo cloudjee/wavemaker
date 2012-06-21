@@ -87,7 +87,7 @@ QueryEditor.widgets = {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }]
 								}],
-								bindTypeInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]},layoutKind: "left-to-right", caption: "Type", display: "Select", padding: "", captionSize: "50px", width: "150px", height: "20px"}, {onchange: "parameterPropEdit"}, {
+						    bindTypeInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]},layoutKind: "left-to-right", caption: "Type", display: "Select", padding: "", captionSize: "50px", width: "150px", height: "20px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }],
