@@ -290,12 +290,18 @@ th {
 .wmlist {
 }
 
-.wmlist-list {
+.wmlist-wrapper {
+    overflow: hidden;
     height: 100%;
-        -webkit-overflow-scrolling: touch;
-	overflow:auto;
+}
+
+.wmlist-list {
+    /*-webkit-overflow-scrolling: touch;  // unbelievable; no reliable onScroll events; no control of scrollTop on android 3/4 browsers
+	overflow:auto;*/
+        overflow: hidden;
 	/* cheat to hide IE scrollbar */
 	overflow-x: hidden;
+	position: relative; /* simplifies position calculations */
 }
 
 .wmlist-header {
@@ -965,8 +971,8 @@ body .wmmobile button.wmtablayers-tab {
 .mblArrowContainer .mblRightArrow {
     position: static;
     top: 0px;
-    left: 0px;
-    width: 12px;
+    right: 0px;
+    width: 16px;
     height: 16px;
 }
 /*
