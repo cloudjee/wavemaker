@@ -172,7 +172,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.inherited(arguments);
 
 	    this._animEnabled = true;
-	    if (dojo.isIE <= 8 || wm.isAndroid <= 3) this._animEnabled = false;
+	    if (dojo.isIE <= 8 || wm.isAndroid <= 3 || this._noAnimation) this._animEnabled = false;
 
 	    if (this._animEnabled) {
 		if (!dojo.isIE <= 8) {
