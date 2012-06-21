@@ -46,6 +46,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	this.initialColumns = inGrid.columns
 
 	var columns = dojo.clone(inGrid.columns);
+	columns = dojo.filter(columns, function(col) {return !col.controller;});
 	var mobileIndex = -1;
 	for (var i = 0; i < columns.length; i++) {
 	    if (!columns[i].mobileColumn) {
@@ -53,19 +54,25 @@ dojo.declare("GridDesigner", wm.Page, {
 	    } else
 		mobileIndex = i;
 	}
+	var updateGrid = false;
 	if (mobileIndex == -1) {
-	    columns.push({show: true,
+	    updateGrid = true;
+	    columns.push({show: false, // does NOT show on desktop
 			  field: "MOBILE COLUMN",
 			  title: "-",
 			  width: "100%",
 			  align: "left",
 			  expression: "",
-			  mobileColumn: true});
+			  mobileColumn: true}); // DOES show on phone
 	    mobileIndex = columns.length-1;
 	}
 	this.columnsVar.setData(columns);
 	this.mobileColumn = this.columnsVar.getItem(mobileIndex);
-	this.regenerateMobileColumn();
+	if (updateGrid) {
+	    this.updateGrid();
+	} else {
+	    this.regenerateMobileColumn();
+	}
 	this.updateFormatterList();
 	this.updateDataSets();
     },
@@ -274,6 +281,11 @@ dojo.declare("GridDesigner", wm.Page, {
     onAlignChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
 	if (!inSetByCode) {
 	    this.changeItem("align", inDataValue);
+	}
+    },
+    onMobileColumnChange:  function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	if (!inSetByCode) {
+	    this.changeItem("mobileColumn", inSender.getChecked());
 	}
     },
     onFormatChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {

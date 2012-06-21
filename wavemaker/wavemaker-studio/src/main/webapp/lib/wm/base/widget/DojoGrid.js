@@ -15,6 +15,7 @@
 dojo.provide("wm.base.widget.DojoGrid");
 
 dojo.declare("wm.DojoGrid", wm.Control, {
+    _regenerateOnDeviceChange: 1,
     manageHistory: true,
     deleteConfirm: "Are you sure you want to delete this?",
     deleteColumn: false,
@@ -734,7 +735,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	var possibleFieldsToFill = [];
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
-	    if (column.mobileColumn) continue;
 	    var columnid = column.field||column.id;
 
 	    var parts = columnid.split(".");
@@ -1123,6 +1123,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	getStructure: function(){
 		var structure = [];
 	    var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+	    var isMobileStyle = isMobile || (this._isDesignLoaded ? studio.currentDeviceType == "tablet" : wm.device == "tablet");
 	    if (this.deleteColumn) {
 		structure.push({hidden: false,
 				name: "-",
@@ -1134,7 +1135,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    var useMobileColumn = false;
 	    if (isMobile) {
 		for (var i = 0; i < this.columns.length; i++) {
-		    if (this.columns[i].mobileColumn && this.columns[i].show) {
+		    if (this.columns[i].mobileColumn) {
 			useMobileColumn = true;
 			break;
 		    }
@@ -1144,17 +1145,16 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    /* IE 9 requires that widths be normalized */
 	    var totalPercentWidth = 0;
 	    dojo.forEach(this.columns, function(col){
-		var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
+		var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
 		if (show && col.width.indexOf("%") != -1) {
 		    totalPercentWidth += parseInt(col.width);
 		}
 	    });
 
 	    dojo.forEach(this.columns, function(col){
-		if (col.mobileColumn) return; // wm.List handles this column
 
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
-		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
+		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
 		    var width = col.width;
 		if (show && width.indexOf("%") != -1)
 		    width = Math.floor((100*parseInt(width) / totalPercentWidth)) + "%";
@@ -1275,9 +1275,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		
 	    structure = [structure];
 	    if (this.selectionMode == "checkbox")
-		structure.unshift({type: "dojox.grid._CheckBoxSelector"});
+		structure.unshift({type: "dojox.grid._CheckBoxSelector", width: isMobileStyle ? "40px" : "20px"});
 	    else if (this.selectionMode == "radio")
-		structure.unshift({type: "dojox.grid._RadioSelector"});
+		structure.unshift({type: "dojox.grid._RadioSelector", width: isMobileStyle ? "40px" : "20px"});
 
 	    return structure; 
 	},
@@ -1430,7 +1430,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    if (col.mobileColumn) hasMobileColumn = true;
 
             // we don't update custom fields
-            if (col.isCustomField || col.mobileColumn) {
+            if (col.isCustomField || col.field == "MOBILE COLUMN") {
                 newcolumns.push(col);
                 return;
             }
@@ -1450,7 +1450,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		mobileColumn: true,
 		align: "left",
 		field: "MOBILE COLUMN",
-		show: true,
+		show: false,
 		title: "-",
 		width: "100%",
 		// Grid designer is needed to generate a the full expression, this at least will do something interesting
@@ -1630,7 +1630,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     toHtml: function() {
 	var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
 		dojo.forEach(this.columns, function(col, idx){
-			if (!col.show || col.mobileColumn)
+			if (!col.show)
 				return;
 		    html += "<th style='" + (col.width.match(/px/) ? col.width : "") + "'>" + col.title + "</th>";
 		}, this);
@@ -1639,7 +1639,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var dataList = this.variable.getData();
 	dojo.forEach(dataList, function(obj, rowId){
 			dojo.forEach(this.columns, function(col, idx){
-				if (!col.show || col.mobileColumn)
+				if (!col.show)
 					return;
 			    try {
 				var value = obj[col.field || col.id];

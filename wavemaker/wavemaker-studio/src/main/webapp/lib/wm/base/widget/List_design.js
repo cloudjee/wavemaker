@@ -197,7 +197,7 @@ wm.List.extend({
         var newcolumns = [];
         dojo.forEach(this.columns, dojo.hitch(this, function (col) {
             // we don't update custom fields
-            if (col.isCustomField) {
+            if (col.isCustomField || col.field == "MOBILE COLUMN") {
                 newcolumns.push(col);
                 return;
             }
