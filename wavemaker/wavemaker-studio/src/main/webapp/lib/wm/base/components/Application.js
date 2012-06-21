@@ -400,7 +400,9 @@ dojo.declare("wm.Application", wm.Component, {
     },
     loadThemePrototypeForClass: function(ctor, optionalWidget) {
         if (!this.theme || !ctor) return;
-	
+	if ((window["StudioApplication"]) && !wm.defaultPrototypeValues) {
+	    wm.defaultPrototypeValues = {};
+	}
         var declaredClass = ctor.prototype.declaredClass;
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
         if (!wm.Application.themePrototypeData[declaredClass] || wm.Application.themePrototypeData[declaredClass] != this.theme) {
@@ -413,12 +415,20 @@ dojo.declare("wm.Application", wm.Component, {
                 var oldCtorData = oldThemeData[declaredClass];
                 if (oldCtorData) 
                     for (var j in oldCtorData) {
-                        delete p[j]; // deleting it lets its parent class prototype value come through (only tested in chrome...)
+			if (wm.defaultPrototypeValues && wm.defaultPrototypeValues[declaredClass] && j in wm.defaultPrototypeValues[declaredClass]) {
+			    p[j] = wm.defaultPrototypeValues[declaredClass][j];
+			    delete wm.defaultPrototypeValues[declaredClass][j];
+			} else {
+                            delete p[j]; // deleting it lets its parent class prototype value come through (only tested in chrome...)
+			}
                         // however, for purposes of reflection/property inspection, if there is no parent class value coming through, lets give it some value.  TODO: Check its type and assign it something based on the property's type.
                         if (p[j] === undefined) 
                             p[j] = "";
 			//if (optionalWidget) optionalWidget[j] = "";
                     }
+		if (wm.defaultPrototypeValues && wm.defaultPrototypeValues[declaredClass]) {
+		    delete wm.defaultPrototypeValues[declaredClass];
+		}
             }
 
             // make all changes need for this theme for this class
@@ -426,7 +436,13 @@ dojo.declare("wm.Application", wm.Component, {
             var ctorData = themeData[ctor.prototype.declaredClass];
             if (ctorData) {
 	        for (var j in ctorData) {
-                    ctor.prototype[j] = ctorData[j];
+			if (wm.defaultPrototypeValues && !wm.defaultPrototypeValues[declaredClass]) {
+			    wm.defaultPrototypeValues[declaredClass] = {};
+			}
+			if (wm.defaultPrototypeValues) {
+			    wm.defaultPrototypeValues[declaredClass][j] = ctor.prototype[j];
+			}
+			ctor.prototype[j] = ctorData[j];
 		    if (optionalWidget && oldCtorData && optionalWidget[j] === oldCtorData[j]) {
 			optionalWidget[j] = ctorData[j];
 		    }
