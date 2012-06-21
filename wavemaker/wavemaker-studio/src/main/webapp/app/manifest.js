@@ -75,7 +75,6 @@ wm.loadLibs([
 	"wm.base.widget.Dialogs.RichTextDialog",
 	"wm.base.widget.Trees.Tree_design",
         "wm.base.widget.DojoGauge_design",
-	"wm.base.widget.Trees.DebugTree",
 	"wm.base.widget.JsonStatus",
 	"wm.base.widget.Label_design",
 	"wm.base.widget.ListViewer_design",

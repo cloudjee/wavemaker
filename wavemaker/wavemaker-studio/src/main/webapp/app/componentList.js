@@ -52,7 +52,6 @@ wm.componentList = {
     "wm.Gauge": ["studio.build.wm_charts"],
     "wm.PropertyTree": ["studio.build.wm_trees"],
     "wm.ObjectTree": ["studio.build.wm_trees"],
-    "wm.DebugTree": ["studio.build.wm_trees"],
     "wm.DojoGrid": ["studio.build.wm_dojogrid"],
     "wm.DataGrid": ["studio.build.wm_datagrid"],
     "wm.DojoFileUpload": ["studio.build.wm_fileupload"],
