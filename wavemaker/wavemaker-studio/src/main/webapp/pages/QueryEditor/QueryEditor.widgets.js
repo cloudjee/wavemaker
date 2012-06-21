@@ -113,7 +113,7 @@ QueryEditor.widgets = {
 					    testLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Test Query", border: "0", height: "26px", width: "100px"}, {}, {
 					        format: ["wm.DataFormatter", {}, {}]
 					    }],
-					    maxResultsInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel"]},layoutKind: "left-to-right", caption: "Max Results:", captionSize: "140px", width: "200px", displayValue: "10", emptyValue: "null"}, {}, {
+				    maxResultsInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]},layoutKind: "left-to-right", caption: "Max Results:", captionSize: "140px", width: "200px", displayValue: "10", emptyValue: "null"}, {}, {
 						editor: ["wm._NumberEditor", {}, {}]
 					    }],
 					    spacer15: ["wm.Spacer", {width: "30px"}, {}],
