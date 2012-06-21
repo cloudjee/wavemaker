@@ -96,6 +96,7 @@ wm.define("wm.Container", wm.Control, {
 
 	var node = this.domNode;
 	var targetNode = e.touches ? e.touches[0].target : e.target;
+
 	if (targetNode.tagName == "INPUT" || targetNode.tagName == "TEXTAREA") {
 	    targetNode.focus();
 	    return;
