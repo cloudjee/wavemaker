@@ -264,22 +264,28 @@ dojo.declare("wm.List", wm.VirtualList, {
 	this._touchY = {
 			time: new Date().getTime()};
 
-	/* Block any parent scrolling if this list has room to scroll 
+	/* Block any parent scrolling if this list has room to scroll */
 	if (this.listNode.clientHeight > this.listNodeWrapper.clientHeight) {
 	    dojo.stopEvent(e);
 	}
-*/
     },
     _ontouchmove: function(e, yPos, yChangeFromInitial, yChangeFromLast) {
-
 	/* Do nothing if no room to scroll */
 	if (this.listNode.clientHeight <= this.listNodeWrapper.clientHeight ||
 	    yChangeFromLast > 0 && this.getScrollTop() == 0 ||
 	    yChangeFromLast < 0 && this.getScrollTop() >= this.listNodeWrapper.scrollHeight) {
-	    console.log("No Move");
+/*
+	    var parent = this.parent;
+	    if (parent._conditionalTouchStart) {
+		parent._conditionalTouchStart(e);
+		if (this._touchedItem) {
+		    this._touchedItem._onTouchEnd(null, true);
+		}
+	    }
+	    */
 	    return;
 	}
-	console.log("yChangeFromLast: " + yChangeFromLast + "; scrollHeight: " + this.listNodeWrapper.scrollHeight + "; scrollTop: " + this.getScrollTop());
+
 	var time = new Date().getTime();
 	var deltaTime = time - this._touchY.time;
 	var scrollTop = this._scrollTop;
@@ -290,13 +296,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    newScrollTop =  this.listNode.scrollHeight;
 	}
 
-	console.log("setScrollTop:" + newScrollTop);
 	this.setScrollTop(newScrollTop);
 	this._touchY = {
 	    velocity: -yChangeFromLast / deltaTime,
 	    time: new Date().getTime()};
 
 	dojo.stopEvent(e);
+	dojo.publish("wmTouchMove", [this]); // call this any time we stop the event from propagating up
     },
     _ontouchend: function(e, delayed) { 
 	/* Do nothing if no room to scroll */
@@ -304,7 +310,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	if (this._touchedItem) this._touchedItem.touchEnd();
 	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
-	    console.log("touchEnd B");
 	    this._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
 	}
     },
@@ -315,7 +320,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	if (!cancelScroll) {
 	    var inc = Math.min(this._touchY.velocity * 50, this.getListNodeHeight());
 	}
-	if (cancelScroll || !inc) {
+	if (cancelScroll || !inc || Math.abs(inc) <= 1) {
 	    window.clearInterval(this._touchY.animationId);
 	    delete this._touchY.animationId;
 	    return;

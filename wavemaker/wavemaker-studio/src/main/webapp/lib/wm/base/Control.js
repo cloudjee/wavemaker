@@ -1920,7 +1920,6 @@ dojo.declare("wm.TouchMixin", null, {
     },
     onTouchStart: function(event) {},
     _onTouchMove: function(e){
-	console.log("MOVE " + this.name);
 	e.preventDefault();
 	var dyInitial, dyLatest;
 	if(e.targetTouches){
@@ -1941,7 +1940,6 @@ dojo.declare("wm.TouchMixin", null, {
 
 
 	/* If the finger has moved more than 5 pixels, its not an accidental move; TODO: Handle the fact that some widgets will care about left-right moves */
-	console.log("Touch Move: " + this.getRuntimeId());
 	if (Math.abs(dyInitial) > 5 || this._touchMoved) {
 	    this._touchMoved = true;
 	    wm.cancelJob(this.getRuntimeId() + ".longClick");

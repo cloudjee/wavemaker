@@ -65,9 +65,12 @@ wm.define("wm.Container", wm.Control, {
 	    }
 	    if (this.autoScroll && app._touchEnabled && !wm.disableTouchScroll) {
 		var node = this.domNode;
-		this.connect(node, "ontouchstart", this, "_ontouchstart");
-		this.connect(node, "ontouchmove", this, "_ontouchmove");
-		this.connect(node, "ontouchend", this, "_ontouchend");		
+		this.connect(node, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_ontouchstart");
+		if (!wm.isFakeMobile) {
+		    this.connect(node, "touchmove", this, "_ontouchmove");
+		    this.connect(node, "touchend",  this, "_ontouchend");
+		}
+
 /*
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "min"));
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
@@ -83,44 +86,44 @@ wm.define("wm.Container", wm.Control, {
 	    this.domNode.box = this.box = "";
 	    this._needsFitToContent = this.fitToContent = this.fitToContentWidth || this.fitToContentHeight;
 	},
+
     _ontouchstart: function(e) {
+	if (app._touchY && app._touchY.animationId) {
+	    window.clearInterval(app._touchY.animationId);
+	    delete app._touchY.animationId;
+	}
 	if (!this._xscrollY) return; // if there is no scrolling, exit and let the event bubble up to the parent
 
 	var node = this.domNode;
-	var targetNode = e.target;
-	console.log("START:" + targetNode.tagName + "|" + targetNode.id + " | " + targetNode.parentNode.id);
-	if (targetNode.tagName == "INPUT" || targetNode.tagName == "BUTTON" || targetNode.tagName == "TEXTAREA") {
+	var targetNode = e.touches ? e.touches[0].target : e.target;
+	if (targetNode.tagName == "INPUT" || targetNode.tagName == "TEXTAREA") {
 	    targetNode.focus();
 	    return;
 	}
 	//if (node.scrollTop + node.clientHeight >= node.scrollHeight) return ; // if there's no more room to move down, let the event bubble up to the parent
 	dojo.stopEvent(e);  
-	if (app._touchY && app._touchY.animationId) {
-	    window.clearInterval(app._touchY.animationId);
-	}
-	var touch = e.touches ? e.touches[0] : null;
-	if (!touch) return;
-	var yhash = {};
-	app._touchY = {y: touch.screenY,
-			targetNode: touch.target,
+	var y = e.touches && e.touches.length ? e.touches[0].screenY : e.screenY;
+
+	app._touchY = {y: y,
+		       targetNode: targetNode,
 			targetWidget: this,
 			time: new Date().getTime()};
+	this.connect(node, wm.isFakeMobile ? "mousemove" : "touchmove", this, "_ontouchmove");
+	this.connect(node, wm.isFakeMobile ? "mouseup" : "touchend", this, "_ontouchend");		
     },
     _ontouchmove: function(e) {
-	var touch = e.touches ? e.touches[0] : null;
-	if (!touch || !app._touchY) return;
-	if (touch.target != app._touchY.targetNode) return;
-	console.log("CONTAINER: " + touch.pageY + " / " + touch.clientY + " / " + touch.screenY + touch.target.id);
+	    dojo.publish("wmTouchMove", [this]); // call this any time we stop the event from propagating up
+	var y = e.touches && e.touches.length ? e.touches[0].screenY : e.screenY;
+	var touchTarget = e.touches && e.touches.length ? e.touches[0].target : e.target;
+	if (touchTarget != app._touchY.targetNode) return;
 	var node = this.domNode;
 
 	/* Let the event bubble up if no room to scroll */
 	if (node.scrollHeight <= node.clientHeight) return;
 
-	var y =   touch.screenY;
 	var initialScrollTop = node.scrollTop;
 
 	var lastY = app._touchY.y;
-
 	if (y == lastY) {
 	    dojo.stopEvent(e);
 	    //console.log("Y == Y");
@@ -132,7 +135,6 @@ wm.define("wm.Container", wm.Control, {
 
 	    // If Y is Increasing, then the user is trying to decrease scrollTop, but we're already scrolled to the top, let the parent container handle it
 	    y > lastY && node.scrollTop <= 0)  {
-	    console.log("Skipping...");
 /*
 	    app._touchY.y = y;
 	    app._touchY.velocity = 0;
@@ -153,7 +155,7 @@ wm.define("wm.Container", wm.Control, {
 	    newScrollTop =  node.scrollHeight;
 	}
 	node.scrollTop = newScrollTop;
-	console.log("Y: " + y + ", lastY: " + lastY + "; DELTA: " + delta + ", scrollTop: " + newScrollTop + ", NAME: " + this.name);
+	//console.log("Y: " + y + ", lastY: " + lastY + "; DELTA: " + delta + ", scrollTop: " + newScrollTop + ", NAME: " + this.name);
 	var deltaScrollTop =  initialScrollTop - node.scrollTop;
 	app._touchY.y = y;
 	app._touchY.velocity =  delta / deltaTime;
@@ -173,18 +175,27 @@ wm.define("wm.Container", wm.Control, {
 	if (node.scrollHeight <= node.clientHeight) return; // if there is no scrolling, exit and let the event bubble up to the parent
 
 	if (app._touchY.velocity != Infinity && Math.abs(app._touchY.velocity) > 0.15) {
+	    if (app._touchY.animationId) {
+		window.clearInterval(app._touchY.animationId);
+	    }
 	    app._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
 	} else {
-	    delete app._touchY;
+	    //delete app._touchY;
 	}
-	dojo.stopEvent(e);
+	//dojo.stopEvent(e);
+	this.disconnectEvent("mousemove");
+	this.disconnectEvent("mouseup");
     },
     _onAnimateScroll: function() {
 	var node = this.domNode;
 	app._touchY.velocity *= 0.9;
-	if (app._touchY.velocity == Infinity || Math.abs(app._touchY.velocity) < 0.01) {
+	var top = node.scrollTop;
+	var newTop = node.scrollTop + Math.min(app._touchY.velocity * 50, node.clientHeight); // velocity is px per ms; 50ms is our animation interval
+	node.scrollTop = newTop;
+	if (app._touchY.velocity == Infinity || Math.abs(top - newTop) <= 1) {
 	    window.clearInterval(app._touchY.animationId);
-	    delete app._touchY;
+	    //console.log("Delete touchY in Animate: " + this.name);
+	    //delete app._touchY;
 	    return;
 	}
 	node.scrollTop += Math.min(app._touchY.velocity * 50, node.clientHeight); // velocity is px per ms; 50ms is our animation interval

@@ -25,12 +25,17 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 		this.list = inList;
 	        this.index = this.list._formatIndex;
 		this._connections = [];
+		this._subscriptions = [];
+	        this._debugSubscriptions = [];
 	    if (inDomNode) {
 		this.domNode = inDomNode;
 	    } else {
 		this.create();
 	    }
 		this.setContent(inText, inImage);
+	},
+        subscribe: function() {
+	    wm.Component.prototype.subscribe.apply(this, arguments);
 	},
 	connect: function() {
 	    wm.Component.prototype.connect.apply(this, arguments);
@@ -40,6 +45,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 	},
 	destroy: function() {
 		dojo.forEach(this._connections, function(inConnect) { dojo.disconnect(inConnect) });
+		dojo.forEach(this._subscriptions, function(inSub) { dojo.unsubscribe(inSub) });
 	},
 	create: function() {
 		var n = this.domNode = document.createElement('div');
@@ -57,8 +63,8 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 		this.connect(this.domNode, 'dblclick', this, function(evt) {
 		    wm.onidle(this, 'dblclick',{target: evt.target});
 		});
-	    } else {
-		this.connect(this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+	    } else if (!this.list.autoSizeHeight) {
+		this.addTouchListener();
 	    }
 	},
 
@@ -102,7 +108,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 	    } 
 	    this.click(evt);
 	}
-	this.list._ontouchend(evt, delayed);
+	this.list._ontouchend(evt);
     },
     onLongTouch: function(posX, posY) {
 	delete this._selectionIndicatorOnly;
