@@ -1072,6 +1072,7 @@ dojo.declare(
             // this._urlMap contains non displayed entries
 
             sendData.push("/*.json:" + starAttributes);
+			sendData.push("/*/*.json:" + starAttributes);
             sendData.push("/*.upload:" + starAttributes);
             sendData.push("/*.download:" + starAttributes);
 
