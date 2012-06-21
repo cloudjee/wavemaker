@@ -1686,7 +1686,7 @@ dojo.declare("Studio", wm.Page, {
 
 	    });
 	}
-	this.deviceSizeSelect.setDataValue("600");
+	this.deviceSizeSelect.setDataValue("750");
 	this.reinspect(); // some properties may change like height/minHeight
     },
     designPhoneUIClick: function(inSender) {
@@ -1711,7 +1711,7 @@ dojo.declare("Studio", wm.Page, {
 		w.resetDesignHeight();
 	    });
 	}
-	this.deviceSizeSelect.setDataValue("300");
+	this.deviceSizeSelect.setDataValue("450");
 	this.reinspect(); // some properties may change like height/minHeight
     },
     designMobileFoldingClick: function(inSender) {
