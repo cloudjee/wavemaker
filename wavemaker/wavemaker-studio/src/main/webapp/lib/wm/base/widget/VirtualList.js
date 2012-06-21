@@ -102,7 +102,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 	    } 
 	    this.click(evt);
 	}
-	this.list._ontouchend(evt);
+	this.list._ontouchend(evt, delayed);
     },
     onLongTouch: function(posX, posY) {
 	delete this._selectionIndicatorOnly;
