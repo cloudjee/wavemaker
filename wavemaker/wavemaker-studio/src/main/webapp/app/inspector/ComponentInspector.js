@@ -1845,6 +1845,10 @@ wm.addPropertyGroups({
 			    order: 2}
 		 }
 		},
+    /* Confirmed */
+    history: {displayName: "History/URL",
+	      layer: true,
+	      order: 60},
 	/* Confirmed */
     mobile: {displayName: "Mobile",
 	     layer: true,

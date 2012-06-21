@@ -19,8 +19,8 @@ dojo.require('wm.base.Component');
 // Design Schema
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
-    manageHistory: {group: "common", ignore:1, advanced:1},
-    manageURL: {group: "common", ignore:1, advanced:1},
+    manageHistory: {group: "history", ignore:1, advanced:1},
+    manageURL: {group: "history", ignore:1, advanced:1},
     diagnostics: {group: "diagnostics", editor: "wm.prop.Diagnostics", doNotPublish:1},
     viewDocumentation: {group: "docs", writeonly: true},
     //generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
