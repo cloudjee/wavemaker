@@ -34,6 +34,12 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.LocalDeploymentManager;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentBaseFolder;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 public class WebAppAssembler implements InitializingBean {
 
@@ -75,6 +81,14 @@ public class WebAppAssembler implements InitializingBean {
         String includePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**";
         String excludePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**/deployments.js";
         fileSystem.copyRecursive(wavemakerHome, studioWebAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
+
+        this.modifyApplicationBaseFolder(new LocalFolder(webAppRoot.getFile())).modify();
+    }
+
+    private ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {
+        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll(
+            "\\/wavemaker\\/", "/");
+        return new ModifiedContentBaseFolder(webAppRoot, modifier);
     }
 
     public ApplicationArchive assemble(Project project) {

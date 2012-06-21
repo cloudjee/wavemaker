@@ -108,7 +108,7 @@ dojo.declare("wm.Service", wm.Component, {
 
 wm.services = {
 	byName: {},
-	_services: {},
+        _services: {},
 	add: function(inService){
 		return wm.services.byName[inService.name] = inService;
 	},
@@ -146,12 +146,13 @@ wm.services = {
 		var s;
 		if (inName) {
 		    if (this._services[inName]) {
-			s = this._services[inName];
+			s = this._services[inName]; 
 		    } else {
 			s = this._services[inName] = this._createService(inName, hideFromClient);
 		    }
-			if (!s._service)
-				s.initService();
+		    if (!s._service) {
+			s.initService();
+		    }
 		}
 		return s;
 	},
@@ -164,7 +165,8 @@ wm.services = {
 		var ctor = dojo.getObject(s.ctor || defaultCtor);
 		// FIXME: we don't want to be streamed so don't include owner
 		// otoh without owner, we don't know how to resolve paths at designTime
-	   var service = new ctor({name: inName, service: inName, owner: dojo.getObject("studio.wip.app") || app});
+	   var owner = window["studio"] ? studio.application || studio._application : app;
+	   var service = new ctor({name: inName, service: inName, owner: owner});
 	   //service.owner = dojo.getObject("studio.wip.app") || app;
 		return service;
 	},

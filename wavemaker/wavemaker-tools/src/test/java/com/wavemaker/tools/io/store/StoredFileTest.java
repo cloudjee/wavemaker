@@ -154,13 +154,11 @@ public class StoredFileTest {
         Folder destination = mock(Folder.class);
         File destinationFile = mock(File.class);
         FileContent destinationContent = mock(FileContent.class);
-        InputStream inputStream = mock(InputStream.class);
         given(destination.getFile("file.txt")).willReturn(destinationFile);
         given(destinationFile.getContent()).willReturn(destinationContent);
         given(this.file.getStore().exists()).willReturn(true);
-        given(this.file.getStore().getInputStream()).willReturn(inputStream);
         this.file.copyTo(destination);
-        verify(destinationContent).write(inputStream);
+        verify(destinationContent).write(this.file);
         verify(this.file.getStore(), never()).delete();
     }
 

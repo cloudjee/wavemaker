@@ -13,7 +13,7 @@ import org.junit.Test;
  * 
  * @author Phillip Webb
  */
-public class IncludingTest {
+public class FilterOnTest {
 
     @Test
     public void shouldSupportCompoundFilters() throws Exception {
@@ -43,12 +43,25 @@ public class IncludingTest {
         assertThat(filter.match(folderWithName("nothidden")), is(true));
     }
 
+    @Test
+    public void shouldFilterOnPattern() throws Exception {
+        ResourceFilter filter = FilterOn.antPattern("/dojo/**/tests/**");
+        assertThat(filter.match(folderWithPath("/dojo/folder/tests/file.js")), is(true));
+        assertThat(filter.match(folderWithPath("/dojo/some/folder/tests/file.js")), is(true));
+        assertThat(filter.match(folderWithPath("/dojo/some/folder/tests/another/file.js")), is(true));
+    }
+
     private File fileWithName(String name) {
         return resourceWithName(File.class, name, null);
     }
 
     private Folder folderWithName(String name) {
         return resourceWithName(Folder.class, name, null);
+    }
+
+    private Folder folderWithPath(String path) {
+        String name = new ResourcePath().get(path).getName();
+        return resourceWithName(Folder.class, name, path);
     }
 
     private <T extends Resource> T resourceWithName(Class<T> resourceType, String name, String path) {
