@@ -159,8 +159,15 @@ public class PhoneGapService {
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
         phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending(".gz")).delete();
         phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending("_grid.js")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_data_grid")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_colorpicker")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_dashboard")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_dojo_grid")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_editors_old")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().folders().delete();
         phoneGapLibFolder.getFolder("build/themes").list().include(FilterOn.names().notEnding(".css").notMatching("tundra")).delete();
         phoneGapLibFolder.getFolder("build").list().files().include(FilterOn.names().ending(".js")).delete();
+
         phoneGapLibFolder.getFolder("images/boolean/").delete();
         // phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
@@ -191,6 +198,8 @@ public class PhoneGapService {
         base.list().include(FilterOn.names().ending(".js")).delete();
         Folder widget = base.getFolder("widget");
         widget.getFolder("Editors").delete(); // all editors are in a build layer
+	widget.getFolder("themes/default/images/omg").delete();
+	
         widget.list().files().include(FilterOn.names().ending("_design.js")).delete();
         String[] purgedWidgetResources = { "Buttons/Button_design.js", "Trees/Tree_design.js", "Dialogs/Dialog_design.js", "AccordionLayers.js",
             "DojoMenu.js", "AppRoot.js", "PageContainer.js", "Bevel.js", "EditPanel.js", "Panel.js", "BreadcrumbLayers.js", "Button.js", "Editor.js",
