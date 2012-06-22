@@ -503,22 +503,13 @@ height: "29px", width: "420px",
 						    editArea: ["wm.AceEditor", {width: "100%", height: "100%", minWidth: 20}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty", onChange1: "updateAutoComplete", onShow: "updateAutoComplete", onHide: "hideAutoComplete"}],
 						    editAreaSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],  
 						    autoCompletionDialog: ["wm.Panel", {width: "200px", minWidth: 20, height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5"}, {}, {
-							topPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							    listPanel: ["wm.Panel", {width: "100px", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-								listPanelLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Completions"}],
-								autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, renderVisibleRowsOnly: false, width: "100%", height: "100%", headerVisible: false, dataFields: "name", columns: [{show:true,field:"name",cssClass:"if (${name}.match(/\<b\>/)) {'CompletionListHeader';}" }]}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
-								    binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {targetProperty: "dataSet", source: "autoCompletionVariable"}]
-								    }]
-								}]
-							    }],
-							    autoCompletePropPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-								autoCompleteNameLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "48px", caption: "", singleLine: false}],
-								autoCompleteTypeLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "48px", caption: "", singleLine: false}],
-								autoCompleteParamsLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "48px", caption: "", singleLine: false}],
-								autoCompleteReturnsLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "48px", caption:"", singleLine: false}]
+							listPanelLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Completions"}],
+							autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, renderVisibleRowsOnly: false, width: "100%", height: "100%", headerVisible: false, dataFields: "name", columns: [{show:true,field:"name",cssClass:"if (${name}.match(/\<b\>/)) {'CompletionListHeader';}" }]}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
+							    binding: ["wm.Binding", {}, {}, {
+								wire: ["wm.Wire", {targetProperty: "dataSet", source: "autoCompletionVariable"}]
 							    }]
 							}],
+							autoCompleteDetails: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true}],
 							autoCompletionHtmlLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Description"}],
 							autoCompletionHtml: ["wm.Html", {width: "100%", height: "100%", padding: "4", backgroundColor: "white", html: "Select a term to see description; double click to add it to your code"}]
 						    }]

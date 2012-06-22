@@ -755,12 +755,16 @@ Studio.extend({
 		    type = itemDef.type || "";
 		else if (dojo.isObject(this._autoCompletionObject[item.name]))
 		    type = this._autoCompletionObject[item.name].declaredClass || "Object";
-		this.autoCompleteNameLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}));
-		this.autoCompleteTypeLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}));
-		this.autoCompleteParamsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}));
-		this.autoCompleteParamsLabel.setShowing(Boolean(item.params));
-		this.autoCompleteReturnsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}));
-		this.autoCompleteReturnsLabel.setShowing(Boolean(item.returns));
+		var html = "";
+		html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}) + "</p>";
+		html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}) + "</p>";
+		if (item.params) {
+		    html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}) + "</p>";
+		}
+		if (item.returns) {
+		    html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}) + "</p>";
+		}
+		this.autoCompleteDetails.setHtml(html);
 		if (item.description != "_")
 		    this.autoCompletionHtml.setHtml(item.description);
 		else {
@@ -830,13 +834,16 @@ Studio.extend({
 	} else if (dojo.isObject(this._autoCompletionObject[item.name])) {
 	    type = this._autoCompletionObject[item.name].declaredClass || "Object";
 	}
-
-	this.autoCompleteNameLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}));
-	this.autoCompleteTypeLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}));
-	this.autoCompleteParamsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}));
-	this.autoCompleteParamsLabel.setShowing(Boolean(item.params));
-	this.autoCompleteReturnsLabel.setCaption(this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}));
-	this.autoCompleteReturnsLabel.setShowing(Boolean(item.returns));
+	var html = "";
+	html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_NAME", {name: item.name||""}) + "</p>";
+	html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_TYPE", {type: type||""}) + "</p>";
+	if (item.params) {
+	    html += "<p>" + this.getDictionaryItem("AUTOCOMPLETION_LABEL_PARAMS", {params: item.params || ""}) + "</p>";
+	}
+	if (item.returns) {
+	    html += this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: item.returns || ""}) + "</p>";
+	}
+	this.autoCompleteDetails.setHtml(html);
 	if (item.description != "_")
 	    this.autoCompletionHtml.setHtml(item.description);
 	else {
