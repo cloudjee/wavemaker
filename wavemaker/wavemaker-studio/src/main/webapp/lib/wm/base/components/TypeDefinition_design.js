@@ -122,7 +122,7 @@ wm.TypeDefinition.extend({
     removeComponent: function(inComponent) {
 	if (this.$[inComponent.name]) {
 	    this.inherited(arguments);
-	    if (!this._isDestroyed) {
+	    if (!this.isDestroyed && !this._isDestroying || studio.application && studio.application._isDestroying) {
 		delete this.fields;
 		this.getCollection();
 		this.doAddType();

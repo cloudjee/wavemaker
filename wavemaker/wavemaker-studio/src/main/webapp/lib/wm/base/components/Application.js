@@ -500,6 +500,7 @@ dojo.declare("wm.Application", wm.Component, {
 		//this.getRuntimeService();
 	},
 	destroy: function() {
+	    this._isDestroying = true;
 		wm.fire(this.scrim, "destroy");
 		wm.fire(this._runtimeService, "destroy");
 		this.inherited(arguments);

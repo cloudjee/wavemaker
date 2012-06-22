@@ -23,7 +23,8 @@ dojo.declare("wm.TypeDefinitionField", wm.Component, {
 
     toTypeObj: function() {
         return {type: this.fieldType, isObject: this.isObject, isList: this.isList};
-    }
+    },
+    
 });
 
 dojo.declare("wm.TypeDefinition", wm.Component, {
@@ -38,8 +39,9 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
     doRemoveType: function() {
 	if (!this.internal)
             wm.typeManager.removeType(this.name);
-	if (this._isDesignLoaded)
+	if (this._isDesignLoaded && studio.application && !studio.application._isDestroying) {
 	    studio.typesChanged();
+	}
     },
     doAddType: function() {
         this.fieldsAsTypes = {};
@@ -48,7 +50,7 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
         }
         wm.typeManager.addType(this.name, {internal: this.internal, fields: this.fieldsAsTypes});        
         //dojo.publish("TypeChange-" + this.name);
-	if (this._isDesignLoaded) {
+	if (this._isDesignLoaded && studio.application && !studio.application._isDestroying) {
 	    studio.typesChanged();
 	    studio.refreshComponentTree();
 	}
