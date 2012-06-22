@@ -36,7 +36,7 @@ wm.defaultEmptyValue = function(inType){
 
 dojo.declare("wm.AbstractEditor", wm.Control, {
     _captionTagName: "div", // we should use "label", but using label causes the editor to receive events from the label node.  This means accidentlly clicking on a label
-    // such as while touch scrolling can cause an editor to focus, its popup to popup and all manner of unintended consequences.
+    //  while touch scrolling can cause an editor to focus, its popup to popup and all manner of unintended consequences.
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
     classNames: "wmeditor",
 
@@ -249,12 +249,13 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.destroyEditor();
 		var n = document.createElement('div');
 		this.domNode.appendChild(n);
-	    this.startTimerWithName("CreateDijit", this.declaredClass);
+	        this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
 	        dojo.attr(this.captionNode, "for", this.editor.id);
-	if (this.editor instanceof wm.Control == false && this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
-	    dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
-	}
+	        if (this.editor instanceof wm.Control == false && this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
+		    /* TODO: add a nice ontouchstart effect, and use wm.TouchMixin to determine when/if to open the popup */
+		    dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
+		}
 /*
             if (this.editor._onChangeHandle) {
                 window.clearTimeout(this.editor._onChangeHandle);
@@ -581,7 +582,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.addEditorConnect(this.editor, "onChange", this, "changed");
 		this.addEditorConnect(this.editor, "onBlur", this, "blurred");
 		this.addEditorConnect(this.editor, "_onFocus", this, "focused");
-		this.addEditorConnect(this.editor.domNode, "onkeypress", this, "keypressed");
+		this.addEditorConnect(this.editor.focusNode || this.editor.domNode || this.editor, "onkeypress", this, "keypressed");
 
 /*
 		this.addEditorConnect(this.editor.domNode, "onkeypress", this, "keypressed");
@@ -598,7 +599,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		delete this._isValid;
 	},
 	keypressed: function(inEvent){
-	    if (inEvent.charCode || inEvent.keyCode == dojo.keys.BACKSPACE || inEvent.keyCode == dojo.keys.DELETE || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
+	    /* Generally speaking, there aren't modifier keys in mobile devices (though I expect that to change); and I wasn't getting any charCode OR keyCode from some
+	     * mobile browsers (chrome for android)
+	     */
+	    if (wm.isMobile || inEvent.charCode || inEvent.keyCode == dojo.keys.BACKSPACE || inEvent.keyCode == dojo.keys.DELETE || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
 		this.validate();
 	        this.dokeypress(inEvent);
 	    }
