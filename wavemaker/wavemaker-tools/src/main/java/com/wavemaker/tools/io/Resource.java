@@ -104,7 +104,7 @@ public interface Resource {
      * @see #toString(ResourceStringFormat)
      */
     @Override
-    public String toString();
+    String toString();
 
     /**
      * Returns the name of the resource in the specified format.
@@ -112,7 +112,7 @@ public interface Resource {
      * @param format the format used for the name
      * @return the name
      */
-    public String toString(ResourceStringFormat format);
+    String toString(ResourceStringFormat format);
 
     /**
      * Determines if this resource is equal to another object. Any resources that have the same type, path and are
@@ -122,6 +122,8 @@ public interface Resource {
      * @return <tt>true</tt> if the resource is equal to the specified object.
      */
     @Override
-    public boolean equals(Object obj);
+    boolean equals(Object obj);
+
+    <R extends Resource, O extends ResourceOperation<R>> O performOperation(O operation);
 
 }

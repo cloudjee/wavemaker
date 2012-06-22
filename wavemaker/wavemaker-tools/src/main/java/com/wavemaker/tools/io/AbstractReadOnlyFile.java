@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.springframework.core.GenericTypeResolver;
+import org.springframework.util.Assert;
+
 import com.wavemaker.tools.io.exception.ReadOnlyResourceException;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceException;
@@ -119,6 +122,15 @@ public abstract class AbstractReadOnlyFile implements File {
     @Override
     public FileContent getContent() {
         return this.content;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R extends Resource, O extends ResourceOperation<R>> O performOperation(O operation) {
+        Class<?> typeArgument = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
+        Assert.isInstanceOf(typeArgument, this);
+        operation.perform((R) this);
+        return operation;
     }
 
     @Override
