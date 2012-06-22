@@ -75,6 +75,7 @@ dojo.declare("dijit._HasDropDown",
 		_stopClickEvents: true,
 
 		_onDropDownMouseDown: function(/*Event*/ e){
+
 			// summary:
 			//		Callback when the user mousedown's on the arrow icon
 			if(this.disabled || this.readOnly){ return; }
@@ -208,26 +209,22 @@ dojo.declare("dijit._HasDropDown",
 		    this._isTouched = true;
 		    this.domNode.style.backgroundColor = "black";
 		    this.domNode.style.color = "white";
-		    if (this.owner) {
-			wm.job(this.owner.getRuntimeId() + ".onTouch", app.touchToClickDelay, dojo.hitch(this, "touchEnd", {type: "ontouchend"}));
-		    }
 		}
 	    },
 	    touchMove: function(e) {
 		if (this._isTouched) {
 		    delete this._isTouched;
-		    if (this.owner) {
-			wm.cancelJob(this.owner.getRuntimeId() + ".onTouch");
-		    }
 		    this.domNode.style.backgroundColor = "";
 		    this.domNode.style.color = "";
 		}
 	    },
 	    touchEnd: function(e) {
-		if (e instanceof Event) dojo.stopEvent(e);
-		this.domNode.style.backgroundColor = "";
-		this.domNode.style.color = "";
-		this._onDropDownMouseDown(e || {type: "ontouchend"});
+		if (this._isTouched) {
+		    if (e instanceof Event) dojo.stopEvent(e);
+		    this.domNode.style.backgroundColor = "";
+		    this.domNode.style.color = "";
+		    this._onDropDownMouseDown(e || {type: "ontouchend"});
+		}
 	    },
 		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: END OF SECTION: Added handling of mobile and touch */
