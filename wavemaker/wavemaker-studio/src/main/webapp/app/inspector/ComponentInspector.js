@@ -1603,7 +1603,9 @@
 	 dojo.addClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
 	 dojo.removeClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
 	 this.mode = "recommended";
-	 this.inspect(this.inspected, true);
+	 if (this.inspected) {
+	     this.inspect(this.inspected, true);
+	 }
      },
      toggleAdvancedPropertiesAll: function(inSender) {
 	 studio.propertySearchBar.setDataValue("");
@@ -1611,7 +1613,9 @@
 	 dojo.removeClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown");
 	 dojo.removeClass(studio.togglePropertiesRequiredButton.domNode, "toggleButtonDown");
 	 this.mode = "advanced";
-	 this.inspect(this.inspected, true);
+	 if (this.inspected) {
+	     this.inspect(this.inspected, true);
+	 }
      },
      isAdvancedMode: function() {
 	 return this.mode == "advanced"; 
