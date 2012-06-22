@@ -95,7 +95,7 @@ public interface Resources<T extends Resource> extends Iterable<T> {
      * @param operation the operation to perform
      * @return the operation that was performed
      */
-    <OPERATION extends ResourceOperation<T>> OPERATION performOperation(OPERATION operation);
+    <O extends ResourceOperation<T>> O performOperation(O operation);
 
     /**
      * Fetch all {@link Resource}s from this collection and return the result as a {@link List}. This will trigger

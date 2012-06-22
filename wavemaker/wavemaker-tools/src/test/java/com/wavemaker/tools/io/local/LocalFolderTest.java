@@ -57,6 +57,15 @@ public class LocalFolderTest {
     }
 
     @Test
+    public void shouldFindSingle() throws Exception {
+        List<Resource> all = this.root.getFolder("a/b").find().fetchAll();
+        Set<String> actual = getNames(all);
+        Set<String> expected = new HashSet<String>();
+        expected.add("/a/b/c.txt");
+        assertThat(actual, is(expected));
+    }
+
+    @Test
     public void shouldFindFiles() throws Exception {
         List<File> all = this.root.find().files().fetchAll();
         Set<String> actual = getNames(all);

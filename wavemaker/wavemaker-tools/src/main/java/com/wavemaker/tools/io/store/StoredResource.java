@@ -1,12 +1,14 @@
 
 package com.wavemaker.tools.io.store;
 
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
@@ -65,6 +67,15 @@ public abstract class StoredResource implements Resource {
         ensureExists();
         Assert.state(getPath().getPath().getParent() != null, "Root folders cannot be renamed");
         return getStore().rename(name);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R extends Resource, O extends ResourceOperation<R>> O performOperation(O operation) {
+        Class<?> typeArgument = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
+        Assert.isInstanceOf(typeArgument, this);
+        operation.perform((R) this);
+        return operation;
     }
 
     @Override

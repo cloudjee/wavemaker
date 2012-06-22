@@ -1,6 +1,7 @@
 
 package com.wavemaker.tools.io.local;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -137,7 +138,7 @@ abstract class LocalResourceStore implements ResourceStore {
         @Override
         public InputStream getInputStream() {
             try {
-                return new FileInputStream(getFile());
+                return new BufferedInputStream(new FileInputStream(getFile()));
             } catch (FileNotFoundException e) {
                 throw new ResourceException(e);
             }
