@@ -158,9 +158,12 @@ dojo.declare("wm.Wire", wm.Component, {
 	     * doing nasty stuff like calling set_dataSet(null) which actually clears the binding
 	     * instead of transmitting binding data
 	     */
+	    try {
 	    if (this._isDesignLoaded && this.source && this.source.indexOf("[") == 0 && this.getValueById(this.source) === null)
 		return;
 	    this._sourceValueChanged(this.source ? this.getValueById(this.source) : "");
+	    } catch(e) {}
+
 		//wm.logging && console.groupEnd();
 	},
 	disconnectWire: function() {
