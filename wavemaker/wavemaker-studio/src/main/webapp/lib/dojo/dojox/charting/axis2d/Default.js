@@ -549,6 +549,9 @@ dojo.require("dojox.lang.utils");
 					}
 				}
 
+			    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			     * WaveMaker: Added return statement because all the thrown errors got really annoying */
+			        if (!t) return;
 				dojo.forEach(t.major, function(tick){
 					var offset = f(tick.value), elem,
 						x = start.x + axisVector.x * offset,
