@@ -113,6 +113,7 @@ wm.define("wm.Container", wm.Control, {
 	this.connect(node, wm.isFakeMobile ? "mouseup" : "touchend", this, "_ontouchend");		
     },
     _ontouchmove: function(e) {
+	if (!app._touchY) return;
 	    dojo.publish("wmTouchMove", [this]); // call this any time we stop the event from propagating up
 	var y = e.touches && e.touches.length ? e.touches[0].screenY : e.screenY;
 	var touchTarget = e.touches && e.touches.length ? e.touches[0].target : e.target;
