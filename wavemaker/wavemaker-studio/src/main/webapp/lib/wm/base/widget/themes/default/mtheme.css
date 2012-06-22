@@ -57,6 +57,12 @@ button, body {
 
 .wmbutton {
         cursor: pointer;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
 }
 
 .wmbutton.wmbutton-disabled, .wmbutton-disabled {
@@ -165,13 +171,22 @@ th {
 	cursor: pointer;
 	height: 20px;
 	margin: 0px 0px 0px 3px;
-    overflow:hidden;
-}
-
-.wmtablayers-tab {
+	overflow:hidden;
 	position: relative;
 	top: 1px;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
 }
+
+.wmtablayers-tab:focus:not(.wmtablayers-selected),
+.wmtablayers-tab:active:not(.wmtablayers-selected) {
+    background-color: white !important;
+}
+
 .dj_webkit .wmtablayers-tab {
 	position: relative;
 	top: 0px;
@@ -816,9 +831,13 @@ float: none;
 	-webkit-border-radius: 0px !important; 
 	border-radius: 0px !important; 
 }
-.wmdatetimedialog .wmDialog-calendar .dijitCalendarContainer {
-    border: 0px;
-    
+.dijitCalendarContainer td, 
+.dijitCalendarContainer th {
+    width: 14.28%;
+}
+.dijitPopup .dijitCalendarContainer {
+    width:500px;
+    height:500px;
 }
 .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
         height: 50% !important;
@@ -1221,3 +1240,17 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 
 
 
+.SelectCloseButton {
+    font-size: 20px;
+    background-color: white;
+    color: black;
+}
+.SelectCloseButton:focus,
+.SelectCloseButton:active {
+    background-color: #ccc;
+}
+
+.dijitArrowButton .dijitArrowButtonInner {
+height: 100%;
+display: inline-block;
+}
