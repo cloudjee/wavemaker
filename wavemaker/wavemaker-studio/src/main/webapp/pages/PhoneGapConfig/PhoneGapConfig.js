@@ -44,7 +44,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
 
 	this.jsonData.appName = this.jsonData.appName || studio.project.projectName;
 	this.jsonData.appId   =	this.jsonData.appId || "com.mycompany." + studio.project.projectName.toLowerCase();
-	this.jsonData.appVersion  = studio.application.getFullVersionNumber();
+	this.jsonData.appVersion  = studio.application.getFullVersionNumber().replace(/[^0-9\.]/g,""); // windows only accepts numbers and "."
 
 	var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
 	d.addCallback(dojo.hitch(this, function(inHost) {
