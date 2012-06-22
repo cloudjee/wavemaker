@@ -16,7 +16,7 @@
 dojo.provide("wm.base.widget.Buttons.ToolButton");
 dojo.require("wm.base.Control");
 
-dojo.declare("wm.ToolButton", wm.Control, {
+dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
         enableTouchHeight: true,
         mobileHeight: "40px", 
 	width: "80px", 
@@ -49,6 +49,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 
 	init: function() {
 	    this.inherited(arguments);
+
 	    if (!wm.isMobile) {
 		/* IE 8 loses the event after our setTimeout; to access data about the event, we have to copy it and pass on the copy.
 		 * Users should not see this pseudoevent and most definitely should not try to call stopEvent on this event
@@ -59,48 +60,16 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		this.connect(this.btnNode, "onclick", this, function(evt) {
 		    this.click(evt,true);
 		});
-	    } else if (wm.isFakeMobile) {
-		this.connect(this.btnNode, "onmousedown", this, "touchStart");
-		this.connect(this.btnNode, "onmousemove", this, "touchMove");
-		this.connect(this.btnNode, "onmouseup", this, "touchEnd");
 	    } else {
-		this.connect(this.btnNode, "ontouchstart", this, "touchStart");
-		this.connect(this.btnNode, "ontouchmove", this, "touchMove");
-		this.connect(this.btnNode, "ontouchend", this, "touchEnd");
+		this.addTouchListener();
 	    }
 
 	    //this.setHint(this.title || this.hint);
 	    this.imageListChanged();
 
 	},
-    touchStart: function(inEvent) {
-	if (!this._cachedBorder) {
-	    this._cachedBorder = this.border;
-	    this._touchTarget = inEvent.target;
-	    this.setBorder("3");
-	    wm.job(this.getRuntimeId() + "." + ".touch", app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
-	}	
-    },
-    touchMove: function(inEvent) {
-	if (this._cachedBorder) {
-	    wm.cancelJob(this.getRuntimeId() + "." + ".touch");
-	    this.setBorder(this._cachedBorder);
-	    delete this._cachedBorder;
-	    delete this._touchTarget;
-	}
-    },
-    touchEnd: function(evt) {
-	wm.cancelJob(this.getRuntimeId() + "." + ".touch");
-	if (this._cachedBorder) {
-	    this.setBorder(this._cachedBorder);
-	    if (!evt) {
-		evt = {target: this._touchTarget};
-	    } else if (!evt.target) {
-		evt.target = this._touchTarget;
-	    }
-	    delete this._cachedBorder;
-	    delete this._touchTarget;
-
+    onTouchEnd: function(evt, isMove) {
+	if (isMove) return;
 	    /* Force inputs to fire onchange events and update bound service var inputs if they have focus.
 	    * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
 	    * triggering its dijit's onBlur, and delivering new values.
@@ -110,15 +79,9 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		var d = dijit.byId(id);
 		if (d) d._onBlur();
 		else document.activeElement.blur();
-		wm.onidle(this, function() {
-		    this.click(evt, false);
-		});
-	    } else {
-		this.click(evt, false);
 	    }
-
-	}
-    },    
+	this.click(evt, true);
+    },
     click: function(inEvent, useDelay) {
 	if (!this.disabled) {
 	    if (!this.clicked) {
@@ -127,7 +90,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	    if (!useDelay) {
 		this.onclick(inEvent,this);
 	    } else {
-		var pseudoEvt = inEvent ? {clientX: inEvent.clientX,
+		var pseudoEvt = dojo.isIE && inEvent ? {clientX: inEvent.clientX,
 					   clientY: inEvent.clientY,
 					   offsetX: inEvent.offsetX,
 					   offsetY: inEvent.offsetY,
@@ -139,7 +102,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 					   y: inEvent.y,
 					   target: inEvent.target,
 					   currentTarget: inEvent.currentTarget,
-					   "type": inEvent.type} : {};
+					   "type": inEvent.type} : inEvent || {};
 		wm.onidle(this, function() {
 		    if (!this._isDestroyed) {
 			this.onclick(pseudoEvt, this);
