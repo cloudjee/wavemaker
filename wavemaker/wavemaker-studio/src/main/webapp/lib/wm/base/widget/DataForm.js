@@ -629,6 +629,15 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    var wires = this.$.binding.findWires(function(wire) {return (wire.targetProperty == "dataOutput" || wire.targetProperty.indexOf("dataOutput.") == 0);});
 	    dojo.forEach(wires, function(wire) { wire.refreshValue();});
 	}
+
+	/* Convert any isList elements into non lists if the type should not be a list;
+	 * useful for when binding dataOutput to a LiveVariable which always gives us a List */
+	wm.forEachProperty(this.dataOutput._dataSchema, dojo.hitch(this, function(fieldDef, fieldName) {
+	    var value = this.dataOutput.getValue(fieldName);
+	    if (value instanceof wm.Variable && value.isList && !fieldDef.isList) {
+		this.dataOutput.setValue(fieldName, value.getItem(0));
+	    }
+	}));
         return this.dataOutput;
     },
 
@@ -973,10 +982,10 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    this._loadingDialog = new wm.LoadingDialog({owner: this, name: "_loadingDialog", caption: "Saving..."});
 	    this._loadingDialog.widgetToCover = this;
 	    this._loadingDialog.setServiceVariableToTrack(this.serviceVariable);
-	    this._loadingDialog.domNode.style.opacity = "0.3";
+	    /*this._loadingDialog.domNode.style.opacity = "0.3";
 	    if (dojo.isIE < 9) {
 	    	    this._loadingDialog.domNode.style.filter = 'Alpha(Opacity="0.3")';
-	    }
+	    }*/
 	}
     },
 
@@ -1388,6 +1397,9 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		}
 		inItem.endUpdate();
 		inItem.notify();
+		if (inItem.owner == this) {
+		    this.setDataSet(inItem); // repopulate the editors
+		}
 		var d = this.dataSet.getData();
 	    } catch(e) {}
 
