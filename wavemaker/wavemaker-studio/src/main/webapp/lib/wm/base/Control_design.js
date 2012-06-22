@@ -542,6 +542,10 @@ wm.Object.extendSchema(wm.Control, {
     mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
     mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
     
+    onTouchStart: {ignore:1},
+    onTouchMove: {ignore:1},
+    onTouchEnd: {ignore:1},
+    onLongTouch: {advanced:1},
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },
 	parentNode: { ignore: 1 },
