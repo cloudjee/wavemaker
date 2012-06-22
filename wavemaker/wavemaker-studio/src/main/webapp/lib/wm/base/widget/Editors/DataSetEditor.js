@@ -601,6 +601,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.grid.setColumns([{show: true,
 				   width: "100%",
 				   isCustomField: Boolean(this.displayExpression),
+				   mobileColumn: true,
 				   field: this.displayExpression ? "_name" : this.displayField,
 				   expression: this.displayExpression}]);
 	    this.grid.renderDojoObj();
@@ -719,6 +720,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	this.grid.setColumns([{show: true,
 			       width: "100%",
 			       isCustomField: Boolean(this.displayExpression),
+			       mobileColumn: true,
 			       field: this.displayExpression ? "_name" : this.displayField,
 			       expression: this.displayExpression}]);
 	if (this.dataSet) {
