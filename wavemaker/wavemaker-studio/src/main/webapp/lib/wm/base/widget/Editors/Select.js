@@ -1073,11 +1073,12 @@ dojo.declare(
 						      border: "1",
 						      borderColor: "#222",
 						      _classes: {domNode: ["SelectCloseButton"]},
-						      width: "60px",
+						      width: "30px",
 						      height: "100%",
 						      margin: "4",
+						      padding: "0 4 0 4",
 						      parent: this.dropDown.titleBar,
-						      caption: "Cancel",
+						      caption: "X",
 						      onclick: dojo.hitch(this, function() {
 							  this.closeDropDown();
 							  this.dropDown.hide();
