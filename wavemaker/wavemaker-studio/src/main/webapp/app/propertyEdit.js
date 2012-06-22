@@ -1288,9 +1288,11 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    this.inspected.setProp(this.propName, value);
 	    if (this.inspected == studio.selected) 
 		studio.inspector.reinspect();
-	    else
-		studio.layers.setLayerIndex(0);
 
+	    else {
+		studio.inspector.setLayerIndex(0);
+		studio.inspector.updateCurrentLayersList();
+	    }
 	}
 	wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
     },
