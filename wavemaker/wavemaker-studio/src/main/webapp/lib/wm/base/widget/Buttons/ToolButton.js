@@ -234,7 +234,9 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 			this.btnNode.style.padding = "0px";
 		} else {
 			this.btnNode.innerHTML = this.caption;
+		    if (this.btnNode != this.domNode) {
 			this.btnNode.style.padding = "";
+		    }
 		}
     },
     renderBounds: function() {
