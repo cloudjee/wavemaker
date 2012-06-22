@@ -41,8 +41,12 @@ import com.wavemaker.tools.common.ConfigurationException;
  * It uses the manager webapp to deploy,undeploy and list deployed apps.
  * 
  * @author Simon Toens
+ * @deprecated use TomcatManager
  */
+@Deprecated
 public class TomcatServer extends Server {
+
+    // FIXME delete
 
     private static final String MANAGER_CHARSET = "utf-8";
 

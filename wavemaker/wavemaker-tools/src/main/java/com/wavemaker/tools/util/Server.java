@@ -30,7 +30,10 @@ import com.wavemaker.tools.common.ConfigurationException;
  * 
  * @author Simon Toens
  */
+@Deprecated
 public class Server {
+
+    // FIXME delete
 
     private InetAddress ip = null;
 
