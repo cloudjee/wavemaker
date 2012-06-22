@@ -1920,33 +1920,37 @@ dojo.declare("wm.TouchMixin", null, {
     },
     onTouchStart: function(event) {},
     _onTouchMove: function(e){
-	e.preventDefault();
-	var dyInitial, dyLatest;
+//	e.preventDefault(); // commented out so that touching a button and then moving will count as scrolling
+	var dyInitial, dyLatest, dxInitial, dxLatest;
 	if(e.targetTouches){
 	    if(e.targetTouches.length != 1){ return false; }
 	    dyInitial = e.targetTouches[0].clientY - this._touchStartY;
 	    dyLatest  = e.targetTouches[0].clientY - this._touchLastY;
+	    dxInitial = e.targetTouches[0].clientX - this._touchStartX;
+	    dxLatest  = e.targetTouches[0].clientX - this._touchLastX;
 	    this._touchLastY = e.targetTouches[0].clientY;
 	    this._touchLastX = e.targetTouches[0].clientX;
 	}else{
 	    dyInitial = e.clientY - this._touchStartY;
 	    dyLatest  = e.clientY - this._touchLastY;
+	    dxInitial = e.clientX - this._touchStartX;
+	    dxLatest  = e.clientX - this._touchLastX;
 	    this._touchLastY = e.clientY;
 	    this._touchLastX = e.clientX;
 	}
-	var pos = this._touchStartY + dyInitial;
+	var posY = this._touchStartY + dyInitial;
+	var posX = this._touchStartX + dxInitial;
 
 
 
-
-	/* If the finger has moved more than 5 pixels, its not an accidental move; TODO: Handle the fact that some widgets will care about left-right moves */
-	if (Math.abs(dyInitial) > 5 || this._touchMoved) {
+	/* If the finger has moved more than 5 pixels, its not an accidental move; */
+	if (Math.abs(dyInitial) > 5 || Math.abs(dxInitial) > 5 || this._touchMoved) {
 	    this._touchMoved = true;
 	    wm.cancelJob(this.getRuntimeId() + ".longClick");
-	    this.onTouchMove(e, pos, dyInitial, dyLatest);
+	    this.onTouchMove(e, posY, dyInitial, dyLatest, posX, dxInitial, dxLatest);
 	}
     },
-    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast) {},
+    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast, ) {},
     _onTouchEnd: function(e, noEvents){
 	wm.cancelJob(this.getRuntimeId() + ".longClick");
 	this.disconnectEvent("mousemove");
@@ -1965,7 +1969,9 @@ dojo.declare("wm.TouchMixin", null, {
 if (wm.isMobile) {
     dojo.declare("wm.TouchMixinOptional", wm.TouchMixin,{});
 } else {
-    dojo.declare("wm.TouchMixinOptional", null,{});
+    dojo.declare("wm.TouchMixinOptional", null,{
+	onLongTouch: function(posX, posY) {}
+    });
 }
 
 wm.Widget = wm.Control;
