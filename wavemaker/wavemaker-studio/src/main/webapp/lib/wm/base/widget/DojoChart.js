@@ -152,6 +152,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		}
             } catch(e) {}
 	    wm.onidle(this, function() {
+		if (this.isDestroyed) return;
 		var newLegendNode = dojo.query(".dojoxLegendNode", this.domNode)[0];
 		if (newLegendNode) {
 		    var s = newLegendNode.style;
