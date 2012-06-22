@@ -378,7 +378,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     setDeleteColumn: function(inDelete) {
 	this.deleteColumn = inDelete;
 	if (!this.columns) {
-	    this.convertToColumns();
+	    this.convertToColumns();	    
 	} else {
 	    this.setColumns(this.columns);
 	}
@@ -404,7 +404,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	_setDataFields: function(inDataFields) {
 	    if (!this.columns && this.dataSet) {
-		this.convertToColumns();
+		if (this._isDesignLoaded) {
+		    this.updateColumnData();
+		} else {
+		    this.convertToColumns();
+		}
 	    }
 	    if (this.columns) {
 		this._dataFields = [];

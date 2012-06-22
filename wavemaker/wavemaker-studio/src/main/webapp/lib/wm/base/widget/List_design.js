@@ -99,6 +99,10 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.set_styleAsGrid(this.styleAsGrid);
+    },
     set_styleAsGrid: function(inValue) {
 	this.styleAsGrid = Boolean(inValue);
 	this[this.styleAsGrid ? "removeUserClass" : "addUserClass"]("MobileListStyle");
@@ -176,7 +180,7 @@ wm.List.extend({
             var width = '100%';
             var formatFunc = '';
             if (f.displayType == 'Number') {
-                align = 'right';
+                align = this.styleAsGrid ? 'right' : 'left';
                 width = '80px';
             } else if (f.displayType == 'Date') {
                 width = '80px';
