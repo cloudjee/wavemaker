@@ -1873,11 +1873,26 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 */
 
 dojo.declare("wm.TouchMixin", null, {
-    addTouchListener: function() {
-	this.connect(this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+    addTouchListener: function(optionalNode) {
+	if (!this._subscriptions) {
+	    this._subscriptions = [];
+	    this._connections = [];
+	    this._debugSubscriptions = [];
+	    this.subscribe = function() {
+		wm.Component.prototype.subscribe.apply(this, arguments);
+	    };
+	    this.connect =  function() {
+		wm.Component.prototype.connect.apply(this, arguments);
+	    };
+            this.disconnectEvent = function() {
+		wm.Component.prototype.disconnectEvent.apply(this, arguments);
+	    };
+	    // also needs a getRuntimeId method
+	}
+	this.connect(optionalNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
 	if (!wm.isFakeMobile) {
-	    this.connect(this.domNode,"touchmove", this, "_onTouchMove");
-	    this.connect(this.domNode,"touchend", this, "_onTouchEnd");
+	    this.connect(optionalNode || this.domNode,"touchmove", this, "_onTouchMove");
+	    this.connect(optionalNode || this.domNode,"touchend", this, "_onTouchEnd");
 	}
 	this.subscribe("wmTouchMove", dojo.hitch(this, function() {
 	    wm.cancelJob(this.getRuntimeId() + ".longClick");
