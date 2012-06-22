@@ -1950,7 +1950,7 @@ dojo.declare("wm.TouchMixin", null, {
 	    this.onTouchMove(e, posY, dyInitial, dyLatest, posX, dxInitial, dxLatest);
 	}
     },
-    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast, ) {},
+    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {},
     _onTouchEnd: function(e, noEvents){
 	wm.cancelJob(this.getRuntimeId() + ".longClick");
 	this.disconnectEvent("mousemove");
