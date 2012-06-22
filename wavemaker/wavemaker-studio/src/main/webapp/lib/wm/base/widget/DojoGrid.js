@@ -114,6 +114,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
         setSelectedRow: function(rowIndex, isSelected, onSuccess) {
 	    if (!this.dataSet) return;
+	    /* Can't select the row unless the grid is rendered */
+	    if (!this.dojoObj && !this._renderHiddenGrid) {
+		this._renderHiddenGrid = true;
+		this.renderDojoObj();
+		this._renderHiddenGrid = false;
+	    }
 	    if (this._setRowTimeout) {
 		window.clearTimeout(this._setRowTimeout);
 		delete this._setRowTimeout;
