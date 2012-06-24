@@ -425,9 +425,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    }
 		}
 		this._useMobileColumn = useMobileColumn;
+/*
 		if (useMobileColumn && !this._isDesignLoaded) {
 		    this.headerVisible = false;
 		}
+		*/
 		for (var i = 0; i < this.columns.length; i++) {
 		    var c = this.columns[i];
 		    var show = useMobileColumn && c.mobileColumn || !useMobileColumn && c.show || c.controller;
@@ -1371,6 +1373,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
 		    var b = query[key];
 		    var matchStart = true;
+
                     if (dojo.isString(b)) {
 			b = b.replace(/\\([^\\])/g,"$1");
 			if (b.charAt(0) == w) {
@@ -1378,8 +1381,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 			    matchStart = false;
 			}
 		    }
+
 		    if (b == w)
 			continue;
+
 		    if (dojo.isString(a) && dojo.isString(b)) {
 			if (b.charAt(b.length-1) == w)
 			    b = b.slice(0, -1);
@@ -1391,12 +1396,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 			    isMatch = false;
 			    break;
 			}
-			    
 		    }
 		    else if (a !== b) {
 			isMatch = false;
 			break;
 		    }
+
 		}
 	return isMatch;
     },

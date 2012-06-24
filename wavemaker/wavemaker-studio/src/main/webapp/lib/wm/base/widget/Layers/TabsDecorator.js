@@ -15,7 +15,7 @@
 dojo.provide("wm.base.widget.Layers.TabsDecorator");
 dojo.require("wm.base.widget.Layers.Decorator");
 
-dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
+dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	decorationClass: "wmtablayers",
         decoratorPadding: "7, 0, 0, 0",
 	undecorate: function() {
@@ -54,9 +54,13 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    //b.style.outline = "none";
 	    b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
-	    
 	    if (!wm.isMobile) {
 		this.decoree.connect(b, "onclick", dojo.hitch(this, "onTabClick",inLayer));
+	    } else {
+		this.addTouchListener(b);
+	    }
+
+/*
 	    } else if (wm.isFakeMobile) {
 		this.decoree.connect(b,'onmousedown', dojo.hitch(this, "touchTabStart", inLayer));
 		this.decoree.connect(b,'onmousemove', dojo.hitch(this, "touchTabMove",  inLayer));
@@ -66,7 +70,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		this.decoree.connect(b,'ontouchmove', dojo.hitch(this, "touchTabMove",  inLayer));
 		this.decoree.connect(b,'ontouchend',  dojo.hitch(this, "touchTabEnd",   inLayer));
 	    }
-
+	    */
 	    var tabstyleName = (this.decoree.verticalButtons) ? "-verticaltab" : "-tab";
 	    b.className=this.decorationClass + tabstyleName +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
 	    if (!inCaption) b.style.display = "none";
@@ -102,6 +106,30 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    pseudoEvent.target.style.borderWidth = "";
 	});
     },
+    onTouchStart: function(event) {
+	var target = event.target;
+	while (target.tagName != "BUTTON" && target.tagName != "BODY") {
+	    target = target.parentNode;
+	}
+	var index = dojo.indexOf(this.btns, target);
+
+	if (index >= 0) {
+	    this._touchedLayer = this.decoree.layers[index];
+	}
+
+    },
+    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {},
+    onTouchEnd: function(event,isMove) {
+	if (!isMove) {
+	    this.tabClicked(this._touchedLayer, event);
+	}
+	delete this._touchedLayer;
+    },
+    getRuntimeId: function() {
+	return this.decoree.getRuntimeId() + ".decorator";
+    },
+
+/*
     touchTabStart: function(inLayer,evt) {
 	if (!inLayer._touchStarted) {
 	    inLayer._touchStarted = true;
@@ -126,7 +154,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    delete inLayer._touchTarget;
 	}
     },
-
+    */
 
 	 onTabDrop: function(dndSource,nodes,copy,dndTarget,event) {
 	     if (dojo.dnd.manager().target != this.dndObj) return;

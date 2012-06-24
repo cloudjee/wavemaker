@@ -60,8 +60,10 @@ dojo.declare("wm.Date", wm.Text, {
 	_createEditor: function(inNode, inProps) {
 	    var e = new wm.form.DateTextBox(this.getEditorProps(inNode, inProps));
 	    if (wm.isMobile) {
-		dojo.query("input",e.domNode).forEach(function(node) {node.readonly = true;})
-		dojo.attr(e.focusNode, "readonly", true);
+		var self = this;
+		dojo.query("input",e.domNode).forEach(function(node) {
+		    dojo.attr(node,"readonly", true);
+		})
 	    }
 	    return e;
 	},
@@ -204,7 +206,11 @@ dojo.declare("wm.Time", wm.Date, {
 		e = new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
 	    }
 	    if (wm.isMobile) {
-		dojo.query("input",e.domNode).forEach(function(node) {node.readonly = true;})
+		var self = this;
+		dojo.query("input",e.domNode).forEach(function(node) {
+		    dojo.attr(node,"readonly", true);
+		})
+		
 	    }
 	    return e;
 	},
@@ -494,6 +500,8 @@ dojo.declare("wm.DateTime", wm.Date, {
 
 /* Overrides dojo's dijit to provide a popup that sizes itself for phones, and adds a close button */
 dojo.declare("wm.form.DateTextBox", dijit.form.DateTextBox, {
+    autoWidth: !Boolean(wm.isMobile),
+    forceWidth: false,
     openDropDown: function(/*Function*/ callback){
 	this.inherited(arguments);
 	if (wm.device == "phone") {
@@ -675,7 +683,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 				  parent: this.mainPanel,
 				  selectionMode: wm.isMobile ? "radio" : "single",
 				  name:"hours",
-				  columns: [{"show":true,"title":"Hour","width":"100%","align":"left","field": "dataValue"}],
+				  columns: [{"show":true,"title":"Hour","width":"100%","align":"left","field": "dataValue", mobileColumn:1}],
 				  _pkList: ["dataValue"],
 				  height: "100%",
 				  padding: "2",					
@@ -694,7 +702,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 				    parent: this.mainPanel,
 				    selectionMode: wm.isMobile ? "radio" : "single",
 				    name:"minutes",
-				  columns: [{"show":true,"title":"Minute","width":"100%","align":"left","field": "dataValue"}],
+				  columns: [{"show":true,"title":"Minute","width":"100%","align":"left","field": "dataValue", mobileColumn:1}],
 				  _pkList: ["dataValue"],
 				  height: "100%",
 				  padding: "2",					
