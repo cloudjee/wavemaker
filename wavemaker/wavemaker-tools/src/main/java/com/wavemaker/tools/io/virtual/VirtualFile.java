@@ -31,7 +31,7 @@ public class VirtualFile extends StoredFile {
 
     @Override
     protected boolean write(File file) {
-        this.store.setSource(file);
+        this.store.write(file);
         return true;
     }
 

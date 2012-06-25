@@ -5,12 +5,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.util.Assert;
@@ -20,8 +18,6 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.JailedResourcePath;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
-import com.wavemaker.tools.io.exception.ResourceException;
-import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
@@ -33,19 +29,27 @@ import com.wavemaker.tools.io.store.ResourceStore;
  */
 abstract class VirtualResourceStore implements ResourceStore {
 
-    private final VirtualResources resources;
+    private final RootFolderData root;
 
     private final JailedResourcePath path;
 
-    public VirtualResourceStore(VirtualResources resources, JailedResourcePath path) {
-        Assert.notNull(resources, "Resources must not be null");
-        Assert.notNull(path, "Path must not be null");
-        this.resources = resources;
+    public VirtualResourceStore(RootFolderData root, JailedResourcePath path) {
+        this.root = root;
         this.path = path;
     }
 
-    protected final VirtualResources getResources() {
-        return this.resources;
+    /**
+     * @return the root for this store
+     */
+    protected final RootFolderData getRoot() {
+        return this.root;
+    }
+
+    /**
+     * @return the data for this store or <tt>null</tt>
+     */
+    protected Data getData() {
+        return this.root.get(this.path.getUnjailedPath());
     }
 
     @Override
@@ -55,54 +59,307 @@ abstract class VirtualResourceStore implements ResourceStore {
 
     @Override
     public Resource getExisting(JailedResourcePath path) {
-        VirtualResourceStore store = this.resources.get(path);
-        if (store == null) {
+        Data data = this.root.get(path.getUnjailedPath());
+        if (data == null) {
             return null;
         }
-        if (store instanceof VirtualFileStore) {
-            return new VirtualFile((VirtualFileStore) store);
-        }
-        if (store instanceof VirtualFolderStore) {
-            return new VirtualFolder((VirtualFolderStore) store);
-        }
-        throw new IllegalStateException("Unknown store type " + store);
+        return data instanceof FolderData ? getFolder(path) : getFile(path);
     }
 
     @Override
     public Folder getFolder(JailedResourcePath path) {
-        VirtualResourceStore store = this.resources.get(path);
-        if (store == null) {
-            store = new VirtualFolderStore(this.resources, path);
-        }
-        if (!(store instanceof VirtualFolderStore)) {
-            throw new ResourceTypeMismatchException(path.getUnjailedPath(), true);
-        }
-        return new VirtualFolder((VirtualFolderStore) store);
+        VirtualFolderStore store = new VirtualFolderStore(this.root, path);
+        return new VirtualFolder(store);
     }
 
     @Override
     public File getFile(JailedResourcePath path) {
-        VirtualResourceStore store = this.resources.get(path);
-        if (store == null) {
-            store = new VirtualFileStore(this.resources, path);
-        }
-        if (!(store instanceof VirtualFileStore)) {
-            throw new ResourceTypeMismatchException(path.getUnjailedPath(), false);
-        }
-        return new VirtualFile((VirtualFileStore) store);
+        VirtualFileStore store = new VirtualFileStore(this.root, path);
+        return new VirtualFile(store);
     }
 
     @Override
+    public Resource rename(String name) {
+        Data data = getData();
+        Assert.state(data != null, "Unable to rename missing resource " + getPath().getUnjailedPath());
+        JailedResourcePath destPath = getPath().getParent().get(name);
+        data.setName(name);
+        return getRenamedResource(destPath);
+    }
+
+    protected abstract Resource getRenamedResource(JailedResourcePath path);
+
+    @Override
     public boolean exists() {
-        return this.resources.get(getPath()) != null;
+        Data data = getData();
+        return data == null ? false : data.exists();
     }
 
     @Override
     public void delete() {
-        this.resources.remove(getPath());
+        Data data = getData();
+        if (data != null) {
+            data.delete();
+        }
     }
 
+    /**
+     * {@link FileStore} for {@link VirtualFile}s.
+     */
     static class VirtualFileStore extends VirtualResourceStore implements FileStore {
+
+        public VirtualFileStore(RootFolderData root, JailedResourcePath path) {
+            super(root, path);
+        }
+
+        @Override
+        protected FileData getData() {
+            return (FileData) super.getData();
+        }
+
+        @Override
+        protected Resource getRenamedResource(JailedResourcePath path) {
+            VirtualFileStore store = new VirtualFileStore(getRoot(), path);
+            return new VirtualFile(store);
+        }
+
+        @Override
+        public void create() {
+            getRoot().createFile(getPath().getUnjailedPath());
+        }
+
+        @Override
+        public InputStream getInputStream() {
+            FileData data = getData();
+            Assert.state(data != null, "Unable to read from missing resource " + getPath().getUnjailedPath());
+            return data.getInputStream();
+        }
+
+        @Override
+        public OutputStream getOutputStream() {
+            FileData data = getOrCreateFileData();
+            return data.getOutputStream();
+        }
+
+        public void write(File file) {
+            FileData data = getOrCreateFileData();
+            data.write(file);
+        }
+
+        private FileData getOrCreateFileData() {
+            FileData data = getData();
+            if (data == null) {
+                create();
+                data = getData();
+            }
+            return data;
+        }
+
+        @Override
+        public long getSize() {
+            FileData data = getData();
+            if (data == null) {
+                return 0L;
+            }
+            return data.getSize();
+        }
+
+        @Override
+        public long getLastModified() {
+            FileData data = getData();
+            if (data == null) {
+                return -1L;
+            }
+            return data.getLastModified();
+        }
+
+        @Override
+        public void touch() {
+            FileData data = getData();
+            if (data == null) {
+            }
+            data.touch();
+        }
+    }
+
+    /**
+     * {@link FolderStore} for {@link VirtualFolder}s.
+     */
+    static class VirtualFolderStore extends VirtualResourceStore implements FolderStore {
+
+        public VirtualFolderStore(RootFolderData root, JailedResourcePath path) {
+            super(root, path);
+        }
+
+        public VirtualFolderStore() {
+            super(new RootFolderData(null, null), new JailedResourcePath());
+        }
+
+        @Override
+        protected FolderData getData() {
+            return (FolderData) super.getData();
+        }
+
+        @Override
+        protected Resource getRenamedResource(JailedResourcePath path) {
+            VirtualFolderStore store = new VirtualFolderStore(getRoot(), path);
+            return new VirtualFolder(store);
+        }
+
+        @Override
+        public void create() {
+            getRoot().getOrCreateFolder(getPath().getUnjailedPath());
+        }
+
+        @Override
+        public Iterable<String> list() {
+            FolderData data = getData();
+            if (data == null) {
+                return Collections.emptyList();
+            }
+            return data.list();
+        }
+    }
+
+    /**
+     * The actual data for virtual resources. References to {@link Data} should be obtained anew as required, never
+     * cache or keep reference to data objects (with the exception of the {@link RootFolderData root}.
+     */
+    private static abstract class Data {
+
+        private final FolderData parent;
+
+        private String name;
+
+        public Data(FolderData parent, String name) {
+            this.parent = parent;
+            this.name = name;
+            if (parent != null) {
+                parent.getChildren().add(this);
+            }
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean exists() {
+            return true;
+        }
+
+        public void delete() {
+            this.parent.getChildren().remove(this);
+        }
+    }
+
+    private static class FolderData extends Data {
+
+        private final List<Data> children = new ArrayList<Data>();
+
+        public FolderData(FolderData parent, String name) {
+            super(parent, name);
+        }
+
+        protected List<Data> getChildren() {
+            return this.children;
+        }
+
+        public Iterable<String> list() {
+            return new Iterable<String>() {
+
+                @Override
+                public Iterator<String> iterator() {
+                    final Iterator<Data> iterator = getChildren().iterator();
+
+                    return new Iterator<String>() {
+
+                        @Override
+                        public boolean hasNext() {
+                            return iterator.hasNext();
+                        }
+
+                        @Override
+                        public String next() {
+                            return iterator.next().getName();
+                        }
+
+                        @Override
+                        public void remove() {
+                            throw new UnsupportedOperationException();
+                        }
+                    };
+                }
+            };
+        }
+
+    }
+
+    private static class RootFolderData extends FolderData {
+
+        private boolean exists;
+
+        public RootFolderData(FolderData parent, String name) {
+            super(parent, name);
+        }
+
+        @Override
+        public boolean exists() {
+            return this.exists;
+        }
+
+        @Override
+        public void setName(String name) {
+            throw new UnsupportedOperationException("Unable to set name of root folder");
+        }
+
+        @Override
+        public void delete() {
+            getChildren().clear();
+            this.exists = false;
+        }
+
+        public Data get(ResourcePath path) {
+            if (path.isRootPath()) {
+                return this;
+            }
+            Data parent = get(path.getParent());
+            if (parent != null && parent instanceof FolderData) {
+                for (Data child : ((FolderData) parent).getChildren()) {
+                    if (path.getName().equals(child.getName())) {
+                        return child;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public FolderData getOrCreateFolder(ResourcePath path) {
+            if (path.isRootPath()) {
+                this.exists = true;
+                return this;
+            }
+            Data existing = get(path);
+            if (existing == null) {
+                return new FolderData(getOrCreateFolder(path.getParent()), path.getName());
+            }
+            return (FolderData) existing;
+        }
+
+        public FileData createFile(ResourcePath path) {
+            Assert.state(!path.isRootPath(), "File path must not be root");
+            Data existing = get(path);
+            if (existing == null) {
+                return new FileData(getOrCreateFolder(path.getParent()), path.getName());
+            }
+            return (FileData) existing;
+        }
+    }
+
+    private static class FileData extends Data {
 
         private File source;
 
@@ -110,47 +367,18 @@ abstract class VirtualResourceStore implements ResourceStore {
 
         private long lastModified = -1;
 
-        public VirtualFileStore(VirtualResources resources, JailedResourcePath path) {
-            super(resources, path);
+        public FileData(FolderData parent, String name) {
+            super(parent, name);
         }
 
-        public void setSource(File source) {
-            this.bytes = null;
-            this.source = source;
-            this.lastModified = source.getLastModified();
-            getResources().add(this, true);
+        public long getLastModified() {
+            return this.lastModified;
         }
 
-        @Override
-        public void create() {
-            getResources().add(this, false);
+        public void touch() {
+            this.lastModified = System.currentTimeMillis();
         }
 
-        @Override
-        public InputStream getInputStream() {
-            if (this.source != null) {
-                return this.source.getContent().asInputStream();
-            }
-            Assert.state(this.bytes != null, "File does not exist");
-            return new ByteArrayInputStream(this.bytes);
-        }
-
-        @Override
-        public OutputStream getOutputStream() {
-            return new ByteArrayOutputStream() {
-
-                @Override
-                public void close() throws IOException {
-                    super.close();
-                    VirtualFileStore.this.source = null;
-                    VirtualFileStore.this.bytes = toByteArray();
-                    VirtualFileStore.this.lastModified = System.currentTimeMillis();
-                    getResources().add(VirtualFileStore.this, true);
-                }
-            };
-        }
-
-        @Override
         public long getSize() {
             if (this.source != null) {
                 return this.source.getSize();
@@ -158,140 +386,32 @@ abstract class VirtualResourceStore implements ResourceStore {
             return this.bytes == null ? 0L : this.bytes.length;
         }
 
-        @Override
-        public long getLastModified() {
-            return this.lastModified;
+        public void write(File source) {
+            this.bytes = null;
+            this.source = source;
+            this.lastModified = this.source.getLastModified();
         }
 
-        @Override
-        public void touch() {
-            VirtualFileStore.this.lastModified = System.currentTimeMillis();
-        }
-
-        @Override
-        public Resource rename(String name) {
-            JailedResourcePath renamed = getPath().getParent().get(name);
-            VirtualFileStore newStore = new VirtualFileStore(getResources(), renamed);
-            getResources().move(getPath(), renamed, newStore);
-            return new VirtualFile(newStore);
-        }
-    }
-
-    static class VirtualFolderStore extends VirtualResourceStore implements FolderStore {
-
-        public VirtualFolderStore(VirtualResources resources, JailedResourcePath path) {
-            super(resources, path);
-        }
-
-        public VirtualFolderStore() {
-            super(new VirtualResources(), new JailedResourcePath());
-        }
-
-        @Override
-        public void create() {
-            getResources().add(this, false);
-        }
-
-        @Override
-        public Iterable<String> list() {
-            return new Iterable<String>() {
+        public OutputStream getOutputStream() {
+            return new ByteArrayOutputStream() {
 
                 @Override
-                public Iterator<String> iterator() {
-                    final Iterator<VirtualResourceStore> children = getResources().listChildrenOf(getPath()).iterator();
-                    return new Iterator<String>() {
-
-                        @Override
-                        public void remove() {
-                            throw new UnsupportedOperationException();
-                        }
-
-                        @Override
-                        public boolean hasNext() {
-                            return children.hasNext();
-                        }
-
-                        @Override
-                        public String next() {
-                            return children.next().getPath().getUnjailedPath().getName();
-                        }
-
-                    };
+                public void close() throws IOException {
+                    super.close();
+                    FileData.this.source = null;
+                    FileData.this.bytes = toByteArray();
+                    FileData.this.lastModified = System.currentTimeMillis();
                 }
             };
         }
 
-        @Override
-        public Resource rename(String name) {
-            JailedResourcePath renamed = getPath().getParent().get(name);
-            VirtualFolderStore newStore = new VirtualFolderStore(getResources(), renamed);
-            getResources().move(getPath(), renamed, newStore);
-            return new VirtualFolder(newStore);
+        public InputStream getInputStream() {
+            if (this.source != null) {
+                return this.source.getContent().asInputStream();
+            }
+            Assert.state(this.bytes != null, "File does not exist");
+            return new ByteArrayInputStream(this.bytes);
         }
     }
 
-    /**
-     * Data structure used to store the actual resources.
-     */
-    static class VirtualResources {
-
-        /**
-         * Mapping between a {@link ResourcePath} and the {@link VirtualResourceStore} for that location.
-         */
-        private final Map<ResourcePath, VirtualResourceStore> pathToStore = new HashMap<ResourcePath, VirtualResourceStore>();
-
-        /**
-         * Mapping between a {@link ResourcePath} and the children of that location.
-         */
-        private final Map<ResourcePath, List<VirtualResourceStore>> childrenOf = new HashMap<ResourcePath, List<VirtualResourceStore>>();
-
-        public VirtualResourceStore get(JailedResourcePath path) {
-            return this.pathToStore.get(path.getUnjailedPath());
-        }
-
-        public void move(JailedResourcePath source, JailedResourcePath destination, VirtualResourceStore newStore) {
-            ResourcePath sourceKey = source.getUnjailedPath();
-            ResourcePath destinationKey = destination.getUnjailedPath();
-            this.pathToStore.remove(sourceKey);
-            List<VirtualResourceStore> children = this.childrenOf.remove(sourceKey);
-            this.pathToStore.put(destinationKey, newStore);
-            this.childrenOf.put(destinationKey, children);
-        }
-
-        public List<VirtualResourceStore> listChildrenOf(JailedResourcePath path) {
-            List<VirtualResourceStore> children = this.childrenOf.get(path.getUnjailedPath());
-            return children == null ? Collections.<VirtualResourceStore> emptyList() : children;
-        }
-
-        public void add(VirtualResourceStore store, boolean overwrite) {
-            ResourcePath key = store.getPath().getUnjailedPath();
-            boolean alreadyContained = this.pathToStore.containsKey(key);
-            if (alreadyContained && !overwrite) {
-                throw new ResourceException("A resource already exists with the path " + key);
-            }
-            this.pathToStore.put(key, store);
-            if (!alreadyContained) {
-                ResourcePath parent = store.getPath().getUnjailedPath().getParent();
-                List<VirtualResourceStore> children = this.childrenOf.get(parent);
-                if (children == null) {
-                    children = new LinkedList<VirtualResourceStore>();
-                    this.childrenOf.put(parent, children);
-                }
-                children.add(store);
-            }
-        }
-
-        public void remove(JailedResourcePath path) {
-            this.pathToStore.remove(path.getUnjailedPath());
-            List<VirtualResourceStore> list = this.childrenOf.get(path.getParent().getUnjailedPath());
-            if (list != null) {
-                Iterator<VirtualResourceStore> iterator = list.iterator();
-                while (iterator.hasNext()) {
-                    if (iterator.next().getPath().getUnjailedPath().equals(path.getUnjailedPath())) {
-                        iterator.remove();
-                    }
-                }
-            }
-        }
-    }
 }
