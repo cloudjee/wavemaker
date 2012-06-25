@@ -57,9 +57,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 		parameters: {
 		    quality: {type: "number"},
 		    sourceType: {type: "string"},
-		    allowEdit: {type: "boolean"},
-		    targetWidth: {type: "number"},
-		    targetHeight: {type: "number"}
+		    allowEdit: {type: "boolean"}
 		}, 
 		returnType: "StringData"
 	    },
@@ -125,29 +123,23 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	}
 	return d;
     },
-    capture_picture: function(quality, sourceType, allowEdit, targetWidth, targetHeight) {
-	if (!quality) quality = 50;
-	if (!sourceType) sourceType = Camera.PictureSourceType.CAMERA;
-	else sourceType = Camera.PictureSourceType[sourceType.toUpperCase()];
-	if (allowEdit == undefined || allowEdit == null) allowEdit = true;
-	if (!targetWidth) targetWidth = 400; /* this may seem small, but it needs to fit into javascript memory; designer can increase it. */
-	if (!targetHeight) targetHeight = 400;
+    capture_picture: function(quality, sourceType, allowEdit) {
+	var params = {destinationType: Camera.DestinationType.DATA_URL };
 
+	if (!sourceType) params.sourceType = Camera.PictureSourceType.CAMERA;
+	else params.sourceType = Camera.PictureSourceType[sourceType.toUpperCase()];
+	params.allowEdit = Boolean(allowEdit);
+	if (quality !== undefined && quality !== null) params.quality = quality;
+	
 	var d = new dojo.Deferred();
 	if (window["PhoneGap"]) {
 	    navigator.camera.getPicture(
 		dojo.hitch(this, function(imageData) {
-		    d.callback({dataValue: imageData});
+		    d.callback({dataValue: "data:image/jpeg;base64," + imageData});
 		}),
 		dojo.hitch(this, function(inError) {
 		    this.handleCaptureError(inError.code, d);
-		}),
-		{ quality: quality,
-		  sourceType: sourceType,
-		  allowEdit: allowEdit,
-		  targetWidth: targetWidth,
-		  targetHeight: targetHeight,
-		  destinationType: Camera.DestinationType.DATA_URI });
+		}),params);
 	}
 	return d;
     },
