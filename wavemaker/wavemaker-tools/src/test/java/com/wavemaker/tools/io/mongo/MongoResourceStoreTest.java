@@ -104,7 +104,9 @@ public class MongoResourceStoreTest {
 
     @Test
     public void shouldNeedGridFS() throws Exception {
-
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("FS must not be null");
+        new MongoFolderStore(null, new JailedResourcePath());
     }
 
     @Test
