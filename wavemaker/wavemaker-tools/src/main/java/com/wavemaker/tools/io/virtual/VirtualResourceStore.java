@@ -26,6 +26,11 @@ import com.wavemaker.tools.io.store.FileStore;
 import com.wavemaker.tools.io.store.FolderStore;
 import com.wavemaker.tools.io.store.ResourceStore;
 
+/**
+ * {@link ResourceStore} for {@link VirtualFolder}s and {@link VirtualFile}s.
+ * 
+ * @author Phillip Webb
+ */
 abstract class VirtualResourceStore implements ResourceStore {
 
     private final VirtualResources resources;
@@ -85,11 +90,6 @@ abstract class VirtualResourceStore implements ResourceStore {
             throw new ResourceTypeMismatchException(path.getUnjailedPath(), false);
         }
         return new VirtualFile((VirtualFileStore) store);
-    }
-
-    @Override
-    public Resource rename(String name) {
-        throw new UnsupportedOperationException(); // FIXME
     }
 
     @Override
@@ -167,6 +167,14 @@ abstract class VirtualResourceStore implements ResourceStore {
         public void touch() {
             VirtualFileStore.this.lastModified = System.currentTimeMillis();
         }
+
+        @Override
+        public Resource rename(String name) {
+            JailedResourcePath renamed = getPath().getParent().get(name);
+            VirtualFileStore newStore = new VirtualFileStore(getResources(), renamed);
+            getResources().move(getPath(), renamed, newStore);
+            return new VirtualFile(newStore);
+        }
     }
 
     static class VirtualFolderStore extends VirtualResourceStore implements FolderStore {
@@ -212,16 +220,42 @@ abstract class VirtualResourceStore implements ResourceStore {
                 }
             };
         }
+
+        @Override
+        public Resource rename(String name) {
+            JailedResourcePath renamed = getPath().getParent().get(name);
+            VirtualFolderStore newStore = new VirtualFolderStore(getResources(), renamed);
+            getResources().move(getPath(), renamed, newStore);
+            return new VirtualFolder(newStore);
+        }
     }
 
-    private static class VirtualResources {
+    /**
+     * Data structure used to store the actual resources.
+     */
+    static class VirtualResources {
 
+        /**
+         * Mapping between a {@link ResourcePath} and the {@link VirtualResourceStore} for that location.
+         */
         private final Map<ResourcePath, VirtualResourceStore> pathToStore = new HashMap<ResourcePath, VirtualResourceStore>();
 
+        /**
+         * Mapping between a {@link ResourcePath} and the children of that location.
+         */
         private final Map<ResourcePath, List<VirtualResourceStore>> childrenOf = new HashMap<ResourcePath, List<VirtualResourceStore>>();
 
         public VirtualResourceStore get(JailedResourcePath path) {
             return this.pathToStore.get(path.getUnjailedPath());
+        }
+
+        public void move(JailedResourcePath source, JailedResourcePath destination, VirtualResourceStore newStore) {
+            ResourcePath sourceKey = source.getUnjailedPath();
+            ResourcePath destinationKey = destination.getUnjailedPath();
+            this.pathToStore.remove(sourceKey);
+            List<VirtualResourceStore> children = this.childrenOf.remove(sourceKey);
+            this.pathToStore.put(destinationKey, newStore);
+            this.childrenOf.put(destinationKey, children);
         }
 
         public List<VirtualResourceStore> listChildrenOf(JailedResourcePath path) {
