@@ -181,8 +181,6 @@ wm.define("wm.Container", wm.Control, {
 		window.clearInterval(app._touchY.animationId);
 	    }
 	    app._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
-	} else {
-	    //delete app._touchY;
 	}
 	//dojo.stopEvent(e);
 	this.disconnectEvent("mousemove");
