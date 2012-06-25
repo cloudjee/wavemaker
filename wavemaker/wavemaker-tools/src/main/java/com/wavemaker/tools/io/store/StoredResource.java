@@ -66,6 +66,9 @@ public abstract class StoredResource implements Resource {
         Assert.isTrue(!name.contains("/"), "Name must not contain path elements");
         ensureExists();
         Assert.state(getPath().getPath().getParent() != null, "Root folders cannot be renamed");
+        if (getParent().getParent().hasExisting(name)) {
+            throw new ResourceExistsException("Unable to rename " + toString() + " to " + name + " due to an existing resource");
+        }
         return getStore().rename(name);
     }
 
