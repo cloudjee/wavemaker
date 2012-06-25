@@ -15,7 +15,6 @@
 package com.wavemaker.tools.deployment;
 
 /**
- * 
  * @author Jeremy Grelle
  */
 public enum DeploymentType {

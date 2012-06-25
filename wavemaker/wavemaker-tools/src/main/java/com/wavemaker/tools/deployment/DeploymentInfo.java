@@ -21,7 +21,6 @@ import java.util.List;
  * Describes a deployment.
  * 
  * @author Jeremy Grelle
- * 
  */
 public class DeploymentInfo {
 

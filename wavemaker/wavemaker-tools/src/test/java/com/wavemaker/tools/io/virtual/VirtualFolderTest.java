@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.wavemaker.tools.deployment2.TomcatManager;
+import com.wavemaker.tools.deployment.tomcat.TomcatManager;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;

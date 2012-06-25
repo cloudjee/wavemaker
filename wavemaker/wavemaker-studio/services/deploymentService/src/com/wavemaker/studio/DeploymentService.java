@@ -14,28 +14,34 @@
 
 package com.wavemaker.studio;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentStatusException;
-import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
+import com.wavemaker.tools.packager.DeploymentPackageContext;
+import com.wavemaker.tools.packager.PackagedApplication;
+import com.wavemaker.tools.packager.PackagerContext;
+import com.wavemaker.tools.packager.Packagers;
+import com.wavemaker.tools.packager.jee.WarPackagedApplication;
 import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.ProjectManager;
 
 /**
  * Deployment Service used by WaveMaker to manage and deploy projects to various deployment targets.
@@ -53,6 +59,10 @@ public class DeploymentService {
     private DeploymentTargetManager deploymentTargetManager;
 
     private ServiceDeploymentManager serviceDeploymentManager;
+
+    private Packagers packagers;
+
+    private ProjectManager projectManager;
 
     public String getRequestId() {
         UUID uuid = UUID.randomUUID();
@@ -174,6 +184,20 @@ public class DeploymentService {
      * @throws IOException
      */
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
+
+        Project project = this.projectManager.getCurrentProject();
+
+        Class<? extends PackagedApplication> packageType = WarPackagedApplication.class;
+        if (deploymentInfo.getArchiveType() != null) {
+            packageType = deploymentInfo.getArchiveType().getPackageType();
+        }
+        PackagerContext context = new DeploymentPackageContext(deploymentInfo);
+        PackagedApplication packagedApplication = this.packagers.createPackagedApplication(project, packageType, context);
+
+        DeploymentType deploymentType = deploymentInfo.getDeploymentType();
+        if (DeploymentType.FILE == deploymentType) {
+        }
+
         File tempWebAppRoot = null;
         try {
 
@@ -181,7 +205,7 @@ public class DeploymentService {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
 
-            //if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+            // if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
             if (!WMAppContext.getInstance().isCloudFoundry()) {
                 tempWebAppRoot = IOUtils.createTempDirectory();
                 com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo, tempWebAppRoot);

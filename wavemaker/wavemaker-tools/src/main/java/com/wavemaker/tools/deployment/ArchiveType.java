@@ -14,10 +14,32 @@
 
 package com.wavemaker.tools.deployment;
 
+import com.wavemaker.tools.packager.PackagedApplication;
+import com.wavemaker.tools.packager.jee.EarPackagedApplication;
+import com.wavemaker.tools.packager.jee.WarPackagedApplication;
+
 /**
- * 
  * @author Jeremy Grelle
  */
 public enum ArchiveType {
-    WAR, EAR
+
+    /**
+     * War file
+     */
+    WAR(WarPackagedApplication.class),
+
+    /**
+     * Ear file
+     */
+    EAR(EarPackagedApplication.class);
+
+    private Class<? extends PackagedApplication> packageType;
+
+    private ArchiveType(Class<? extends PackagedApplication> packageType) {
+        this.packageType = packageType;
+    }
+
+    public Class<? extends PackagedApplication> getPackageType() {
+        return this.packageType;
+    }
 }
