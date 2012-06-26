@@ -248,6 +248,11 @@
         <mkdir dir="${build.app.webapproot.dir}/WEB-INF/classes"/>
         <mkdir dir="${build.app.webapproot.dir}/WEB-INF/lib"/>
         <mkdir dir="${build.app.webapproot.dir}/services"/>
+        <copy todir="${build.app.webapproot.dir}">
+            <fileset dir="${app.webapproot.dir}">
+                <include name="WEB-INF/classes/*.spring.xml" />
+            </fileset>
+        </copy>
     </target>
 
     <target name="copy-jars"
