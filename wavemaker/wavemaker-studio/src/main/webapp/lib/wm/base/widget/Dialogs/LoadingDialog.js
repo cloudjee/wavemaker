@@ -156,7 +156,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	    this._getWidgetToCover();
 	    if (this.widgetToCover) {
 		var node = this.widgetToCover.domNode;
-		var computedStyle = window.getComputedStyle(this.domNode);
+		var computedStyle = window.getComputedStyle(node);
 		var roundedStyle = computedStyle.getPropertyValue("border-radius") || computedStyle.getPropertyValue("-webkit-border-radius") || computedStyle.getPropertyValue("-moz-border-radius");
 		this.domNode.style.borderRadius = roundedStyle;
 		if (dojo.isWebKit) {
