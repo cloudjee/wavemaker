@@ -1815,7 +1815,7 @@ wm.addPropertyGroups({
     /* Confirmed */
     editor: {displayName: "Editor", 
 	     equivalentName: "widgetName",
-	     order: 60,
+	     order: 44,
 	     subgroups: {
 		 value: {displayName: "Values",
 			 order: 1},

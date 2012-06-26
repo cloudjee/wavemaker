@@ -51,8 +51,8 @@ wm.Object.extendSchema(wm.SelectMenu, {
 
 
     /* Editor group; behavior subgroup */
-    autoComplete: {group: "editor", order: 25, subgroup: "behavior"},
-    pageSize: { order: 100, group: "editor", subgroup: "behavior"},
+    autoComplete: {group: "widgetName", order: 25, subgroup: "behavior"},
+    pageSize: { order: 100, group: "widgetName", subgroup: "behavior"},
 
     /* Ignored group */
     changeOnKey: { ignore: 1 },
@@ -73,7 +73,7 @@ wm.Object.extendSchema(wm.Lookup, {
 
     /* Editor group; behavior subgroup */
     autoDataSet: {group: "editor", subgroup: "dataSet", order: 10}, /* both of these could also be dataSet subgroup */
-    maxResults: {group: "editor", subgroup: "behavior", order: 100},
+    maxResults: {group: "widgetName", subgroup: "behavior", order: 100},
 
     /* Ignored group */
     relationshipName: {hidden:1},

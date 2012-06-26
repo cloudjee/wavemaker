@@ -35,10 +35,10 @@ wm.Object.extendSchema(wm.Text, {
     placeHolder: {group: "editor", subgroup: "help"}, 
 
     /* EDITOR GROUP */
-    /* Behavior subgroup */
-    maxChars: {group: "editor", subgroup: "behavior", order: 6},
-    resetButton: {group: "editor", subgroup: "behavior", advanced:1},
-    selectOnClick: {group: "editor", subgroup: "behavior", order: 10, advanced:1},
+    /* WidgetName subgroup */
+    maxChars: {group: "widgetName", subgroup: "behavior", order: 6},
+    resetButton: {group: "widgetName", subgroup: "behavior", advanced:1},
+    selectOnClick: {group: "widgetName", subgroup: "behavior", order: 10, advanced:1},
 
     /* Validation subgroup */
     regExp: {group: "editor", subgroup: "validation", order: 10, advanced: 1},
@@ -50,7 +50,7 @@ wm.Object.extendSchema(wm.Text, {
     tooltipDisplayTime: {group: "editor text", subgroup: "dojo tooltips", order: 30, advanced: 1},
     
     /* Value display sugroup */
-    password: {group: "editor", subgroup: "behavior", order: 5, doc: 1},
+    password: {group: "widgetName", subgroup: "behavior", order: 5, doc: 1},
 
     /* EVENTS GROUP */
     changeOnKey: {ignore: 0},

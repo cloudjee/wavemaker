@@ -238,9 +238,9 @@ wm.Object.extendSchema(wm.AbstractEditor, {
 
     /* EDITOR GROUP */
     /* Behavior subgroup */
-    readonly: {group: "editor", subgroup: "behavior", order: 1, type: "boolean"},
-    ignoreParentReadonly: {group: "editor", subgroup: "behavior", order: 2, ignoreHint: "ignoreParentReadonly is only relevant if the editor is in a form", advanced:1},
-    editorType: {group: "editor", subgroup: "behavior", order: 501, options: ["Text", "LargeTextArea", "RichText", "Currency", "Number", "Slider", "RangeSlider"]},
+    readonly: {group: "widgetName", subgroup: "behavior", order: 1, type: "boolean"},
+    ignoreParentReadonly: {group: "widgetName", subgroup: "behavior", order: 2, ignoreHint: "ignoreParentReadonly is only relevant if the editor is in a form", advanced:1},
+    editorType: {group: "widgetName", subgroup: "behavior", order: 501, options: ["Text", "LargeTextArea", "RichText", "Currency", "Number", "Slider", "RangeSlider"]},
     
     /* Validation subgroup */
     required: {group: "editor", subgroup: "validation", order: 1, type: "boolean"},    
