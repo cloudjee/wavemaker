@@ -269,7 +269,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     /* Method group */
     setColumnComboBoxOptions: {method:1},
     select: {method:1},
-    selectByQuery: {method:1}
+    selectByQuery: {method:1},
     deselectAll: {method:1},
     getSelectedIndex:{method:1, returns: "Number"},
     getRow: {method:1, returns: "Object"},
