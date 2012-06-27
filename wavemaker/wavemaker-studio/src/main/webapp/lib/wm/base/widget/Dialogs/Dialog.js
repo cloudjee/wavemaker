@@ -172,24 +172,20 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.inherited(arguments);
 
 	    this._animEnabled = true;
-	    if (dojo.isIE <= 8 || wm.isAndroid <= 3 || this._noAnimation) this._animEnabled = false;
+	    if (dojo.isIE <= 9 || wm.isAndroid <= 3 || this._noAnimation) this._animEnabled = false;
 
 	    if (this._animEnabled) {
-		if (!dojo.isIE <= 8) {
 		    var transitionEnd;
 		    if (dojo.isWebKit) {
 			transitionEnd = 'webkitAnimationEnd';
-		    } else if (dojo.isMoz) {
-			transitionEnd = 'animationend'; // lowercase requried
-		    } else if (dojo.isOpera) {
-			transitionEnd = 'oAnimationEnd';
 		    } else if (dojo.isIE) {
-			transitionEnd = 'MSAnimationEnd';
+			transitionEnd = 'MSAnimationEnd'; // lowercase requried
+		    } else if (dojo.isOpera) {
+			transitionEnd = 'oanimationend';
 		    } else {
-			transitionEnd = "animationEnd";
+			transitionEnd = "animationend";
 		    }
 		    this.domNode.addEventListener( transitionEnd, dojo.hitch(this, "animEnd"), false);
-		}
 	    }
 
 		dojo.addClass(this.domNode, "wmdialog");

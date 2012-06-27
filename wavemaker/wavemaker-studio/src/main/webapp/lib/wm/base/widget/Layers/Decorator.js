@@ -65,7 +65,7 @@ dojo.declare("wm.LayersDecorator", null, {
 	    inLayer.active = inActive;
 
 	    var page = inLayer.getParentPage();
-	    if (dojo.isIE <= 8 || wm.isAndroid <= 3 || /* Browsers not supported for animation */
+	    if (dojo.isIE <= 9 || wm.isAndroid <= 3 || /* Browsers not supported for animation */
 		this.decoree._cupdating || !page  || page._loadingPage || window["studio"] || /* No animation during widget creation/pageloading */
 		!this.decoree.transition || this.decoree.transition === "none") /* Or developer says no animation */
 	    { 
@@ -115,18 +115,16 @@ dojo.declare("wm.LayersDecorator", null, {
 	    */
 
 	    if (!inLayer._transitionEndSub) {
-		if (!dojo.isIE <= 8) {
+		if (!dojo.isIE || dojo.isIE >= 10) {
 		    var transitionEnd;
 		    if (dojo.isWebKit) {
 			transitionEnd = 'webkitAnimationEnd';
-		    } else if (dojo.isMoz) {
-			transitionEnd = 'animationend'; // lowercase requried
 		    } else if (dojo.isOpera) {
-			transitionEnd = 'oAnimationEnd';
+			transitionEnd = 'oanimationend';
 		    } else if (dojo.isIE) {
 			transitionEnd = 'MSAnimationEnd';
 		    } else {
-			transitionEnd = "animationEnd";
+			transitionEnd = "animationend";
 		    }
 		    inLayer.domNode.addEventListener( 
 			transitionEnd,
