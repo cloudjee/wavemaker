@@ -606,7 +606,7 @@ dojo.declare("wm.Variable", wm.Component, {
         forEach: function(inCallback) {
 	    var count = this.getCount();
 	    for (var i = 0; i < count; i++) {
-		inCallback(this.getItem(i));
+		inCallback(this.getItem(i), i);
 	    }
 	},
         map: function(inCallback) {
