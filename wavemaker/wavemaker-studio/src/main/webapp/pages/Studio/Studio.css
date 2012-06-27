@@ -182,12 +182,10 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 }
 
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
-	-moz-border-radius-topleft: 8px; 
-	-moz-border-radius-topright: 8px; 
 	-webkit-border-top-left-radius: 8px; 
 	-webkit-border-top-right-radius: 8px;
-	border-radius-topleft: 8px; 
-	border-radius-topright: 8px;
+	border-top-right-radius: 8px;
+	border-top-left-radius: 8px;
 	border: 1px solid #959DAB;
 	border-bottom: 0px solid transparent;
 	background-color: #414B5C;
@@ -246,15 +244,13 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer,
 .wminspector .StudioFieldGroupPanel {
     background-color: #1B222D;
-    -moz-bordero-radius: 4px; 
     -webkit-border-radius: 4px;
     border-radius: 4px;
     border-color: #959DAB;
 }
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers .wmlayer {
-    border-radius-topleft: 0px;
     -webkit-border-top-left-radius: 0px;
-    -moz-border-radius-topleft: 0px;
+    border-top-left-radius: 0px;
 }
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > .wmtablayers-tabbar > .wmtablayers-selected {
     background: none;
@@ -306,7 +302,6 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     background-image: none;
     font-weight: normal;
     color: #eee;
-    -moz-border-radius: 0px !important; 
     -webkit-border-radius: 0px !important;
     border-radius: 0px !important;
 }
@@ -341,39 +336,15 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 	color: #FFF;
 	text-align: left;
 	font-size: 100%;
-/*
-   -moz-border-radius-topleft: 0px; 
-    -moz-border-radius-topright: 0px; 
-    -webkit-border-top-left-radius: 0px; 
-    -webkit-border-top-right-radius: 0px;
-    border-radius-topleft: 0px; 
-    border-radius-topright: 0px;*/
 }
 
 .studiodialog {
-/*
-    -moz-border-radius-topleft: 10px; 
-    -moz-border-radius-topright: 10px; 
-    -webkit-border-top-left-radius: 10px; 
-    -webkit-border-top-right-radius: 10px;
-    border-radius-topleft: 10px; 
-    border-radius-topright: 10px;
-*/
     -webkit-box-shadow: 4px 4px 15px #222;
     -moz-box-shadow: 4px 4px 15px #222;
     box-shadow: 4px 4px 15px #222;
 }
 
-/*
-.studiodialog.Docked {
-    -moz-border-radius-topleft: 0px; 
-    -moz-border-radius-topright: 0px; 
-    -webkit-border-top-left-radius: 0px; 
-    -webkit-border-top-right-radius: 0px;
-    border-radius-topleft: 0px; 
-    border-radius-topright: 0px;
-}
-*/
+
 .studiodialog .dialogtitlebar {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
     background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
@@ -381,62 +352,33 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
 
-/*    background-color: #414B5C;*/
     color: #FFF;
     font-size: 120%;
     text-align: center;
-/*
-    -moz-border-radius-topleft: 8px; 
-    -moz-border-radius-topright: 8px; 
-    -webkit-border-top-left-radius: 8px; 
-    -webkit-border-top-right-radius: 8px;
-    border-radius-topleft: 8px; 
-    border-radius-topright: 8px;
-*/
 }
-/*
-.studiodialog.Docked .dialogtitlebar {
-    -moz-border-radius-topleft: 0px; 
-    -moz-border-radius-topright: 0px; 
-    -webkit-border-top-left-radius: 0px; 
-    -webkit-border-top-right-radius: 0px;
-    border-radius-topleft: 0px; 
-    border-radius-topright: 0px;
-}
-*/
+
 /* End Dialogs */
 
 /* Start Inspector */
 .Studio .Inspector {
     background-color: #2B323D;
     color: white;
-    -moz-border-radius: 8px; 
     -webkit-border-radius: 8px; 
     border-radius: 8px;
 }
 .Studio .Inspector .wmeditor .dijitTextBox {
-    -moz-border-radius: 4px; 
     -webkit-border-radius: 4px; 
     border-radius: 4px;
 }
 .Studio .Inspector .wmeditor .dijitArrowButton {
     height: 100% !important;
-    -moz-border-radius-bottomright: 4px;
-    -moz-border-radius-topright: 4px;
     -webkit-border-bottom-right-radius: 4px;
     -webkit-border-top-right-radius: 4px;
-    border-radius-bottomright: 4px;
-    border-radius-topright: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 
-/*
-.Studio .Inspector > .wmlayer {
-    -moz-border-radius: 4px; 
-    -webkit-border-radius: 4px; 
-    border-radius: 4px;
-}
-*/
 .Studio .Inspector .wmlabel,
 .Studio .Inspector .wmeditor-caption {
     font-weight: normal;
@@ -449,7 +391,6 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     /*border-color: #9FACC1 #333 #333 #9FACC1;*/
     border-color: #a6b2c5 #5b6575 #5b6575 #7b8697;
 
-	-moz-border-radius: 4px; 
 	-webkit-border-radius: 4px; 
 	border-radius: 4px; 
 	background: -webkit-linear-gradient(top, #798597 0%,#636f80 50%,#636f80 100%);
