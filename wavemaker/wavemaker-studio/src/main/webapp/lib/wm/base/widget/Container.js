@@ -205,6 +205,11 @@ wm.define("wm.Container", wm.Control, {
 		if (this.isDesignLoaded())
 			this.setLock(this.lock);
 		this.inherited(arguments);
+	    if (this.disabled) {
+		wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
+		    w.setParentDisabled(this._disabled);
+		}));
+	    }
 	},
         /* Called from Component.makeEvents or by end user*/
         connectOnEnterKey: function() {

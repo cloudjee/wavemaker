@@ -92,7 +92,9 @@ wm.Object.extendSchema(wm.List, {
     setColumnWidths: {method:1},
     //getDataItemCount: {method:1, returns: "Number"},
     setDataSet: {method:1},
-    getItemData: {method:1, returns: "Object"}   
+    getItemData: {method:1, returns: "Object"}   ,
+    select: {method:1},
+    selectByQuery: {method:1}
 
 });
 

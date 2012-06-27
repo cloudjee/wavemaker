@@ -587,7 +587,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
     doAutoSize: function() {},
     setAutoSizeHeight: function(inValue) {
-	this.autoSize = inValue;
+	this.autoSizeHeight = inValue;
 	this._render();
     },
     setBestHeight: function() {
@@ -596,10 +596,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    var height = 0;
 	    if (this.items.length) {
 		var coords = dojo.coords(this.items[this.items.length-1].domNode);
-		height = coords.h + coords.t;
-	    } else if (this.headerVisible) {
+		height += coords.h + coords.t;
+	    } 
+	    
+	    if (this.headerVisible) {
 		var coords = dojo.coords(this.headerNode);
-		height = coords.h + coords.t;
+		height += coords.h + coords.t;
 	    }
 	    height += this.padBorderMargin.b + this.padBorderMargin.t + 2;
 	    this.setHeight(height + "px");
@@ -1426,7 +1428,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
     _getColumnDef: function(inCol) {
 	var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
-	var hasMobileColumn = dojo.some(this.columns, function(c) {return c.mobileColumn;});
+	var hasMobileColumn = dojo.some(this.columns, function(c) {return c.mobileColumn && !c.controller;});
 	var count = -1;
 	for (var i = 0; i < this.columns.length; i++) {
 	    if (isMobile && this.columns[i].mobileColumn || (!hasMobileColumn || !isMobile) && this.columns[i].show) count++;
@@ -1705,6 +1707,29 @@ wm.List.extend({
 	    this.inherited(arguments);
 	}
     },
+    /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
+    selectByQuery: function(inQuery) {
+	if (!this.dataSet) return;
+
+	/* Step 1: Find all matching items from the dataset */
+	var items = this.dataSet.query(inQuery);
+	
+	/* Step 2: We need all items to exist; generate all items */
+	if (this.renderVisibleRowsOnly) {
+	    this.renderVisibleRowsOnly = false;
+	    this._render();
+	    this.renderVisibleRowsOnly = true;
+	}
+
+	/* Step 3: Find and select all rows associated with those items */
+	this.deselectAll();
+	var count = items.getCount();
+	for (var i = 0; i < count; i++) {
+	    var item = items.data.list[i];
+	    this.addToSelection(this.items[dojo.indexOf(this.dataSet.data.list, item)]);
+	    if (this._selectionMode == "single") break;
+	}
+    },
     getRow: function(inRow) {
 	return this._data[inRow];
     },
@@ -1871,6 +1896,7 @@ wm.List.extend({
     getDataSet: function() {return this.dataSet;},
     setSortIndex: function(){console.warn("setSortIndex not implemented for wm.List");},
     setSortField: function(){console.warn("setSortField not implemented for wm.List");},
+    /* WARNING: This uses dojo store's query syntax, not wm.Variable query syntax */
     setQuery: function(inQuery) {
 	this.query = inQuery;
 	this.renderDataSet(this.dataSet);

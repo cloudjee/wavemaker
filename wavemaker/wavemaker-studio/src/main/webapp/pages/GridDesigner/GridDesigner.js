@@ -50,9 +50,13 @@ dojo.declare("GridDesigner", wm.Page, {
 	var mobileIndex = -1;
 	for (var i = 0; i < columns.length; i++) {
 	    if (!columns[i].mobileColumn) {
+		if (columns[i].field == "MOBILE COLUMN") {
+		    mobileIndex = 10000;
+		}
 		columns[i].mobileColumn = false;
-	    } else
+	    } else {
 		mobileIndex = i;
+	    }
 	}
 	var updateGrid = false;
 	if (mobileIndex == -1) {

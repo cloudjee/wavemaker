@@ -1121,11 +1121,38 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  if (a<b) return -1;
 	  return 0;
 	},		
+
+    /* WARNING: This uses dojo store's query syntax, not wm.Variable query syntax */
 	setQuery: function(q){
 		this.query = q;
 		if (this.dojoObj)
 			this.dojoObj.setQuery(q);
 	},
+
+    /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
+    selectByQuery: function(inQuery) {
+	if (!this.dojoObj || !this.dataSet) return;
+
+	/* Step 1: Find all matching items from the dataset */
+	var items = this.dataSet.query(inQuery);
+
+	/* Step 2: Find and select all rows associated with those items */
+	this.dojoObj.store.fetch({sort: main.dojoGrid1.dojoObj.getSortProps(),
+				  query: main.dojoGrid1.dojoObj.query, 
+				  queryOptions: main.dojoGrid1.dojoObj.queryOptions, 
+				  onComplete: dojo.hitch(this, function(inItems) {
+				      this.deselectAll();
+				      for(var i = 0; i < inItems.length; i++) {
+					  if (dojo.indexOf(items.data.list, inItems[i]._wmVariable[0]) != -1) {
+					      main.dojoGrid1.dojoObj.selection.addToSelection(i);
+					      if (this._selectionMode == "single") {
+						  break;
+					      }
+					  }
+				      }
+				  })
+				 });
+    },
 	getStructure: function(){
 		var structure = [];
 	    var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";

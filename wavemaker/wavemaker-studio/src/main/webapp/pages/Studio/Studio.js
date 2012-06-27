@@ -1657,10 +1657,8 @@ dojo.declare("Studio", wm.Page, {
 	    var self = this;
 	    wm.forEachWidget(studio.page.root, function(w) {
 		if (w._regenerateOnDeviceChange) {
-		    var tmp = w._studioTreeNode;
 		    w = self.regenerateOnDeviceChange(w);
-		    w._studioTreeNode = tmp;
-		    tmp.component = w;
+		    self.refreshVisualTree();
 		}
 		w.resetDesignHeight();
 	    });
@@ -1682,10 +1680,8 @@ dojo.declare("Studio", wm.Page, {
 	    var self = this;
 	    wm.forEachWidget(studio.page.root, function(w) {
 		if (w._regenerateOnDeviceChange) {
-		    var tmp = w._studioTreeNode;
 		    w = self.regenerateOnDeviceChange(w);
-		    w._studioTreeNode = tmp;
-		    tmp.component = w;
+		    self.refreshVisualTree();
 		}
 		w.resetDesignHeight();
 
@@ -1711,10 +1707,8 @@ dojo.declare("Studio", wm.Page, {
 	    var self = this;
 	    wm.forEachWidget(studio.page.root, function(w) {
 		if (w._regenerateOnDeviceChange) {
-		    var tmp = w._studioTreeNode;
 		    w = self.regenerateOnDeviceChange(w);
-		    w._studioTreeNode = tmp;
-		    tmp.component = w;
+		    self.refreshVisualTree();
 		}
 		w.resetDesignHeight();
 	    });
