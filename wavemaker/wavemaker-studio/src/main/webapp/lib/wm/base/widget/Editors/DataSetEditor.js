@@ -443,7 +443,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 
 });
 
-dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
+dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], {
     singleLine: false,
     _multiSelect: true,
     _focused: false,
@@ -451,6 +451,9 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
     mobileHeight: "150px",
     editors: null,
     _dijitClass: "dijit.form.CheckBox",
+    postInit: function() {
+	this.inherited(arguments);
+    },
     setDataSet: function(inDataSet) {
 	this.inherited(arguments);
 	this.createEditor();
@@ -478,7 +481,12 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 		var item = this.dataSet.getItem(i);
 		var id = this.getRuntimeId().replace(/\./g,"__") + "__" + i;
 		//if (i) html += "<br/>";
-		html += "<div class='wmCheckboxSetItem'><input id='" + id +"' name='" + this.getRuntimeId().replace(".","_") + "' dojoType='" + this._dijitClass + "' value='" + i + "'><label for='" + id + "'>" + this._getDisplayData(item) + "</label></div>";
+		html += "<div class='wmCheckboxSetItem'><input id='" + id +"' name='" + this.getRuntimeId().replace(".","_") + "' dojoType='" + this._dijitClass + "' value='" + i + "'>";
+		if (wm.isMobile) {
+		    html += "<label>" + this._getDisplayData(item) + "</label></div>"; // let the touchmanager decide whether to check or uncheck; using the for= tells dojo to do it
+		} else {
+		    html += "<label for='" + id + "'>" + this._getDisplayData(item) + "</label></div>";
+		}
 	    }
 	    this.editor.innerHTML = html;
 	    this.dijits = dojo.parser.parse(this.editor);
@@ -489,9 +497,6 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 		    a.innerHTML = "X"
 		    a.id = this.getRuntimeId() + "_x_" + i;
 		    e.domNode.appendChild(a);
-		    dojo.connect(a, "onclick", this, function(event) {
-			e.set("checked", !e.checked);
-		    });
 		}));
 	    }
 
@@ -503,7 +508,40 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 		dijit.domNode.style.lineHeight = "normal";
 	    });
 	}
+	this._scrollNode = this.editor;
 	return this.editor;
+    },
+    _getTouchNode: function(event) {
+	var node = event.touches ? event.touches[0].target : event.target;
+	while (node && node != this.domNode && !dojo.hasClass(node, "wmCheckboxSetItem")) {
+	    node = node.parentNode;
+	}
+	if (!node || node == this.domNode) return;
+	return node;
+    },
+    onTouchStart: function(event) {
+	this.inherited(arguments);
+	var node = this._touchCheckboxNode = this._getTouchNode(event);
+	if (node && dojo.hasClass(node, "wmCheckboxSetItem")) {
+	    dojo.addClass(node.firstChild, "dijitCheckBoxActive");
+	}
+    },
+    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {
+	this.inherited(arguments);
+	if (this._touchCheckboxNode && (Math.abs(yChangeFromInitial) > 5 || Math.abs(xChangeFromInitial) > 5)) {
+	    dojo.removeClass(this._touchCheckboxNode.firstChild, "dijitCheckBoxActive");
+	    delete this._touchCheckboxNode;
+	}
+    },	
+    onTouchEnd: function(event,isMove) {
+	this.inherited(arguments);
+	if (!isMove && this._touchCheckboxNode && this.dijits) {
+	    dojo.removeClass(this._touchCheckboxNode.firstChild, "dijitCheckBoxActive");
+	    var index = dojo.indexOf(dojo.query(".wmCheckboxSetItem", this.domNode), this._touchCheckboxNode);
+	    if (index != -1) {
+		this.dijits[index].set("checked", !this.dijits[index].get("checked"));
+	    }
+	}
     },
     _onEditorFocused: function() {
 	if (!this._focused) {
