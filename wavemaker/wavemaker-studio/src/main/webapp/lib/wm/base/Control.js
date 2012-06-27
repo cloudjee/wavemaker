@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
+/*global dojo, wm */
 dojo.provide("wm.base.Control");
 dojo.provide("wm.base.Widget");
 wm.splitUnits = function(inUnitValue) {
@@ -123,7 +123,7 @@ dojo.declare("wm.Bounds", null, {
 	inBorder = String(inBorder);
 	inBorder = (inBorder && inBorder.match(/\d/)) ? inBorder : "0";
 	if (inBorder !== this.border) {
-	    this.border = inBorder
+	    this.border = inBorder;
 	    this.borderExtents = this._parseExtents(inBorder);
 	    this.padBorderMarginChanged();
 	    this.invalidCss = true;
@@ -496,7 +496,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this.desktopHeight = this.height || this.mobileHeight;
 	    }
 	    if (this.desktopHeight && typeof this.desktopHeight == "string" && this.desktopHeight.match(/\%/)) {
-		this.height = this.desktopHeight;
+		this.height = this.mobileHeight = this.desktopHeight;
 	    } else if (this.mobileHeight) {
 		this.height = this.mobileHeight;
 	    } else if (this.height) {
@@ -559,8 +559,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.render(1);
 
 
-	if (this._onTouchStart) {
-	    this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+	if (this.addTouchListener && wm.isMobile) {
+	    //this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+	    this.addTouchListener(this._touchNode || this.domNode);
 	}
 
 	if (!this.$.binding && this.isDesignLoaded())
@@ -1959,9 +1960,11 @@ dojo.declare("wm.TouchMixin", null, {
 
 
 	/* If the finger has moved more than 5 pixels, its not an accidental move; */
-	if (Math.abs(dyInitial) > 5 || Math.abs(dxInitial) > 5 || this._touchMoved) {
+	if (!this._touchMoved && (Math.abs(dyInitial) > 5 || Math.abs(dxInitial) > 5)) {
 	    this._touchMoved = true;
 	    wm.cancelJob(this.getRuntimeId() + ".longClick");
+	}
+	if (this._touchMoved) {
 	    this.onTouchMove(e, posY, dyInitial, dyLatest, posX, dxInitial, dxLatest);
 	}
     },
@@ -1981,13 +1984,63 @@ dojo.declare("wm.TouchMixin", null, {
     onTouch: function(posX, posY) {},
     onLongTouch: function(posX, posY) {}
 });
+
+dojo.declare("wm.TouchScrollMixin", wm.TouchMixin, {
+    onTouchStart: function(event) {
+	this._touchTime = new Date().getTime();
+	if (this._touchAnimationId) {
+	    window.clearInterval(this._touchAnimationId);
+	}
+    },
+	onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {
+	    var node = this._scrollNode || this.domNode;
+	    node.scrollTop -= yChangeFromLast;
+	    var newTime = new Date().getTime();	    
+	    if (this._touchTime != newTime) {
+		this._touchVelocity = yChangeFromLast / (this._touchTime - newTime);
+		this._touchTime = newTime;
+	    }
+	    dojo.stopEvent(event);
+	},    
+    onTouchEnd: function(event,isMove) {
+
+	if (isMove) {
+	    if (this._touchVelocity != Infinity && Math.abs(this._touchVelocity) > 0.15) {
+		if (this._touchAnimationId) {
+		    window.clearInterval(this._touchAnimationId);
+		}
+		this._touchAnimationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
+	    }
+	}
+    },
+    _onAnimateScroll: function() {
+	var node = this._scrollNode || this.domNode;
+	this._touchVelocity *= 0.9;
+	var top = node.scrollTop;
+	node.scrollTop = node.scrollTop + this._touchVelocity * 50;
+	var newTop = node.scrollTop;
+	var diff = Math.abs(newTop - top);
+	if (diff <= 1) {
+	    window.clearInterval(this._touchAnimationId);
+	}
+    }
+
+});
+
+
 if (wm.isMobile) {
     dojo.declare("wm.TouchMixinOptional", wm.TouchMixin,{});
+
 } else {
     dojo.declare("wm.TouchMixinOptional", null,{
 	onLongTouch: function(posX, posY) {}
     });
 }
 
+if (wm.isIOS <= 4 || wm.isAndroid <= 2 || wm.isFakeMobile) {
+    dojo.declare("wm.TouchScrollMixinOptional", wm.TouchScrollMixin, {});
+} else {
+    dojo.declare("wm.TouchScrollMixinOptional", null, {});
+}
 wm.Widget = wm.Control;
 dojo.declare("wm.Box", wm.Widget, {}); // mostly obsolete

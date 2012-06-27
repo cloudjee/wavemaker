@@ -588,3 +588,6 @@ wm.Object.extendSchema(wm.Control, {
     
     
 });
+
+wm.Object.extendSchema(wm.TouchScrollMixin, {});
+wm.Object.extendSchema(wm.TouchMixin, {});
