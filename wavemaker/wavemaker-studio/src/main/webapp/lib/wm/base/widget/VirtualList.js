@@ -63,7 +63,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 		this.connect(this.domNode, 'dblclick', this, function(evt) {
 		    wm.onidle(this, 'dblclick',{target: evt.target});
 		});
-	    } else if (!this.list.autoSizeHeight) {
+	    } else {
 		this.addTouchListener();
 	    }
 	},

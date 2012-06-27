@@ -168,7 +168,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
     /* Editor group; behavior subgroup */
     editorType: {options: ["ListSet", "SelectMenu", "RadioSet", "CheckboxSet"]},
-    startUpdate: { group: "editor", subgroup: "behavior", order: 5, advanced: 1},
+    startUpdate: { group: "widgetName", subgroup: "behavior", order: 5, advanced: 1},
 
     /* Editor group; dataSet subgroup */
     dataSet: { group: "editor", subgroup: "dataSet", order: 4, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSets: true}, requiredGroup:1},
@@ -201,9 +201,9 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
 
 wm.Object.extendSchema(wm.ListSet, {
-    selectionMode: {group: "editor", subgroup: "behavior", order: 101, options: ["single", "multiple", "checkbox", "radio"]},
-    showSearchBar: {group: "editor", subgroup: "behavior", order: 100}, 
-    deleteColumn:      {group: "editor", subgroup: "behavior",  order: 10, advanced:1},
+    selectionMode: {group: "widgetName", subgroup: "behavior", order: 101, options: ["single", "multiple", "checkbox", "radio"]},
+    showSearchBar: {group: "widgetName", subgroup: "behavior", order: 100}, 
+    deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "editor", subgroup: "confirmation", order: 10, advanced:1},
     readonly: {ignore:1},
     searchBar: {ignore: 1},

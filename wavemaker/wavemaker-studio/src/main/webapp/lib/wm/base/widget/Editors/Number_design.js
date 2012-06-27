@@ -39,7 +39,7 @@ wm.Object.extendSchema(wm.Number, {
     rangeMessage: {  group: "editor text", subgroup: "dojo tooltips", order: 5, advanced:1},
 
     /* Editor group; behavior subgroup */
-    spinnerButtons: {group: "editor", subgroup: "behavior", order: 6, type: "boolean"},
+    spinnerButtons: {group: "widgetName", subgroup: "behavior", order: 6, type: "boolean"},
 
     /* Ignored group */
     resetButton: {ignore: 1},
@@ -72,7 +72,7 @@ wm.Object.extendSchema(wm.Slider, {
     maximum: { group: "editor", subgroup: "value", order: 61, bindTarget: true},
 
 
-    dynamicSlider: {group: "editor", subgroup: "behavior", order: 1},
+    dynamicSlider: {group: "widgetName", subgroup: "behavior", order: 1},
 
     /* Display group; visual subgroup */
     showButtons: {  group: "editor", subgroup: "layout", order: 5},
