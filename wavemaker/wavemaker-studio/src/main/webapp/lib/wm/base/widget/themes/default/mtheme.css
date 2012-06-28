@@ -976,21 +976,29 @@ body .wmmobile button.wmtablayers-tab {
 	top: 8px;
 	right: 8px;
     -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 .mblLeftArrow {
 	top: 8px;
 	right: 2px;
     -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    transform: rotate(225deg);
 }
 .mblDownArrow {
 	top: 2px;
 	right: 8px;
     -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    transform: rotate(135deg);
 }
 .mblUpArrow {
 	top: 12px;
 	right: 8px;
     -webkit-transform: rotate(315deg);
+    -moz-transform: rotate(315deg);
+    transform: rotate(315deg);
 }
 .mblArrowContainer {
     width: 20px;
