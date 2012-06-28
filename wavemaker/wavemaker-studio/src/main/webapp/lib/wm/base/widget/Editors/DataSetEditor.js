@@ -760,6 +760,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 			       isCustomField: Boolean(this.displayExpression),
 			       mobileColumn: true,
 			       field: this.displayExpression ? "_name" : this.displayField,
+			       formatFunc:  this.displayType ? "wm_" + this.displayType.toLowerCase() + "_formatter" : "",
 			       expression: this.displayExpression}]);
 	if (this.dataSet) {
 	    this.grid.setDataSet(this.dataSet);
