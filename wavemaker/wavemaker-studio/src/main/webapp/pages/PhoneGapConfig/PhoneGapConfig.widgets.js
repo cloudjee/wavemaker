@@ -76,9 +76,9 @@ PhoneGapConfig.widgets = {
 					}]
 				}],
 				graphicsLayer: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Graphics","horizontalAlign":"left","margin":"0","padding":"10","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
-					label1: ["wm.Label", {"border":"0","caption":"The icons you provide will be used to represent your application on the device's home screen and application list. PNG files only.","height":"50px","padding":"10,4,0,4","width":"100%"}, {}],
+				    label1: ["wm.Label", {"border":"0","caption":"The icons you provide will be used to represent your application on the device's home screen and application list. PNG files only.","height":"50px","padding":"2,4,0,4","width":"100%", singleLine: false}, {}],
 					iconGridPanel: ["wm.Panel", {"height":"147px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-					    iconGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"src","title":"Path to Icons","width":"150px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","mobileColumn":false},{"show":true,"field":"width","title":"Width (px)","width":"60px","align":"right","formatFunc":"","fieldType":"dojox.grid.cells.NumberTextBox","mobileColumn":false},{"show":true,"field":"height","title":"Height (px)","width":"70px","align":"right","formatFunc":"","fieldType":"dojox.grid.cells.NumberTextBox","mobileColumn":false}],"deleteColumn":false,"height":"147px","localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+					    iconGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"sample","title":"-","width":"80px","align":"left","formatFunc":"wm_image_formatter", "expression":"${src} ? '/wavemaker/projects/' + studio.project.projectName + '/' + ${src} : ''","mobileColumn":false},{"show":true,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"src","title":"Path to Icons","width":"150px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","mobileColumn":false},{"show":true,"field":"width","title":"Width (px)","width":"60px","align":"right","formatFunc":"","fieldType":"dojox.grid.cells.NumberTextBox","mobileColumn":false},{"show":true,"field":"height","title":"Height (px)","width":"70px","align":"right","formatFunc":"","fieldType":"dojox.grid.cells.NumberTextBox","mobileColumn":false}],"deleteColumn":false,"height":"147px","localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
 							binding: ["wm.Binding", {}, {}, {
 								wire: ["wm.Wire", {"expression":undefined,"source":"iconListVar","targetProperty":"dataSet"}, {}]
 							}]
@@ -94,12 +94,15 @@ PhoneGapConfig.widgets = {
 							binding: ["wm.Binding", {}, {}, {
 								wire: ["wm.Wire", {"expression":undefined,"source":"splashListVar","targetProperty":"dataSet"}, {}]
 							}]
-						}]/*,
-						panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"120px"}, {}, {
-							addSplashButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Add Splash","margin":"4","width":"100%"}, {"onclick":"splashGrid.addEmptyRow"}],
-							iconHelpLink1: ["wm.Label", {"align":"center","border":"0","caption":"Help","link":"https://build.phonegap.com/docs/config-xml","padding":"4","width":"100%"}, {}]
-						}]*/
+						}]
+					}],
+				    samplePicture: ["wm.Picture", {width: "1px", height: "1px", border:"1",borderColor: "#333"}, {}, {
+					binding: ["wm.Binding", {}, {}, {
+					    wire: ["wm.Wire", {"expression":undefined,"source":"splashGrid.selectedItem.src","targetProperty":"source"}, {}],
+					    wire1: ["wm.Wire", {"expression":undefined,"expression":"${splashGrid.selectedItem.width}+'px'","targetProperty":"width"}, {}],
+					    wire2: ["wm.Wire", {"expression":undefined,"expression":"${splashGrid.selectedItem.height}+'px'","targetProperty":"height"}, {}]
 					}]
+				    }]
 				}],
 				permissionsLayer: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Permissions","horizontalAlign":"left","margin":"0","padding":"10","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
 				    features: ["wm.CheckboxSet", {_classes: {domNode: ["StudioEditor"]}, "caption":undefined,"captionSize":"120px","dataField":"dataValue","dataValue":["http://api.phonegap.com/1.0/network","http://api.phonegap.com/1.0/notification","http://api.phonegap.com/1.0/geolocation","http://api.phonegap.com/1.0/camera","http://api.phonegap.com/1.0/contacts"],"desktopHeight":"180px","displayField":"dataValue","displayValue":"http://api.phonegap.com/1.0/network, http://api.phonegap.com/1.0/notification, http://api.phonegap.com/1.0/geolocation, http://api.phonegap.com/1.0/camera, http://api.phonegap.com/1.0/contacts, http://api.phonegap.com/1.0/file","editorBorder":false,"height":"180px","mobileHeight":"100%","options":"http://api.phonegap.com/1.0/network,http://api.phonegap.com/1.0/notification,http://api.phonegap.com/1.0/geolocation,http://api.phonegap.com/1.0/camera,http://api.phonegap.com/1.0/contacts,http://api.phonegap.com/1.0/file,http://api.phonegap.com/1.0/media,http://api.phonegap.com/1.0/battery","width":"100%"}, {onchange: "onPermissionsChange"}],

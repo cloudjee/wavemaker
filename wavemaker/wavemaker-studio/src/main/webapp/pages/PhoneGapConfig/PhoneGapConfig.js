@@ -31,6 +31,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
     \${preferences}\n \
 </widget>',
     start: function() {
+	this.samplePicture._isDesignLoaded = true;
 	this.reset();
     },
     reset: function() {
