@@ -1945,7 +1945,7 @@ dojo.declare("Studio", wm.Page, {
                 d.addCallback(optionalCallback);
         },
     loadHelp: function(inType, inPropName, onSuccess) {
-	var version = "6.4" || wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"); // TODO: Get rid of 6.4
+	var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
 	var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
 	
 	if (inType == studio.project.projectName) inType = "wm.Application";
