@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
@@ -101,6 +102,29 @@ abstract class VirtualResourceStore implements ResourceStore {
         if (data != null) {
             data.delete();
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return getPath().getUnjailedPath().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        VirtualResourceStore other = (VirtualResourceStore) obj;
+        boolean rtn = true;
+        rtn &= ObjectUtils.nullSafeEquals(getRoot(), other.getRoot());
+        rtn &= ObjectUtils.nullSafeEquals(getPath().getUnjailedPath(), other.getPath().getUnjailedPath());
+        return rtn;
     }
 
     /**

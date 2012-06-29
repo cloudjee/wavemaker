@@ -559,7 +559,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.render(1);
 
 
-	if (this.addTouchListener && wm.isMobile) {
+	if (this.addTouchListener && wm.isMobile && !window["studio"]) {
 	    //this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
 	    this.addTouchListener(this._touchNode || this.domNode);
 	}

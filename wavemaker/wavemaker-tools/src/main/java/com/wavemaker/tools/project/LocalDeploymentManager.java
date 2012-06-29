@@ -71,7 +71,10 @@ public class LocalDeploymentManager extends StageDeploymentManager {
 
     private static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
 
+    // What is this for ?
     public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
+    
+    public static final String COMMON_DIR_NAME_PROPERTY = "common";
 
     private static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
 

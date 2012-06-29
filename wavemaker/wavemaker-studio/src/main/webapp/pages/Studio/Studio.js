@@ -1735,10 +1735,11 @@ dojo.declare("Studio", wm.Page, {
     },
     regenerateOnDeviceChange: function(w) {
 	var json = "{" + w.write("") + "}";
+	var owner = w.owner;
 	var parent = w.parent;
 	var index = w.getIndexInParent();
 	w.destroy();
-	w = parent.createComponents(dojo.fromJson(json), parent.owner)[0];
+	w = parent.createComponents(dojo.fromJson(json), owner)[0];
 	w.setIndexInParent(index);
 	return w;
     },

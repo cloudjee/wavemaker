@@ -1,7 +1,9 @@
 
 package com.wavemaker.tools.io.local;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.HashSet;
@@ -95,5 +97,33 @@ public class LocalFolderTest {
             allNames.add(resource.toString());
         }
         return allNames;
+    }
+
+    @Test
+    public void shouldUseUnderlyingResourceForEqualsAndHashCode() throws Exception {
+        Folder folder1 = new LocalFolder(this.temp.getRoot()).getFolder("folder");
+        folder1.createIfMissing();
+        Folder folder2 = new LocalFolder(new java.io.File(this.temp.getRoot(), "folder"));
+        Folder folder3 = new LocalFolder(this.temp.getRoot()).getFolder("xfolder");
+        File file1 = folder1.getFile("file");
+        File file2 = folder2.getFile("file");
+        File file3 = folder3.getFile("file");
+        file1.createIfMissing();
+        file2.createIfMissing();
+        file3.createIfMissing();
+
+        assertThat(folder1, is(equalTo(folder1)));
+        assertThat(folder1, is(equalTo(folder2)));
+        assertThat(folder1, is(not(equalTo(folder3))));
+        assertThat(file1, is(equalTo(file1)));
+        assertThat(file1, is(equalTo(file2)));
+        assertThat(file1, is(not(equalTo(file3))));
+
+        assertThat(folder1.hashCode(), is(equalTo(folder1.hashCode())));
+        assertThat(folder1.hashCode(), is(equalTo(folder2.hashCode())));
+        assertThat(folder1.hashCode(), is(not(equalTo(folder3.hashCode()))));
+        assertThat(file1.hashCode(), is(equalTo(file1.hashCode())));
+        assertThat(file1.hashCode(), is(equalTo(file2.hashCode())));
+        assertThat(file1.hashCode(), is(not(equalTo(file3.hashCode()))));
     }
 }
