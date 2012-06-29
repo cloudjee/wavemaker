@@ -1463,7 +1463,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    if (col.mobileColumn) hasMobileColumn = true;
 
             // we don't update custom fields
-            if (col.isCustomField || col.field == "MOBILE COLUMN") {
+            if (col.isCustomField || col.field == "PHONE COLUMN") {
                 newcolumns.push(col);
                 return;
             }
@@ -1482,7 +1482,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    newcolumns.push({
 		mobileColumn: true,
 		align: "left",
-		field: "MOBILE COLUMN",
+		field: "PHONE COLUMN",
 		show: false,
 		title: "-",
 		width: "100%",

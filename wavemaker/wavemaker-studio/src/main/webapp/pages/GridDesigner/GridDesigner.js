@@ -50,7 +50,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	var mobileIndex = -1;
 	for (var i = 0; i < columns.length; i++) {
 	    if (!columns[i].mobileColumn) {
-		if (columns[i].field == "MOBILE COLUMN") {
+		if (columns[i].field == "PHONE COLUMN") {
 		    mobileIndex = 10000;
 		}
 		columns[i].mobileColumn = false;
@@ -62,7 +62,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	if (mobileIndex == -1) {
 	    updateGrid = true;
 	    columns.push({show: false, // does NOT show on desktop
-			  field: "MOBILE COLUMN",
+			  field: "PHONE COLUMN",
 			  title: "-",
 			  width: "100%",
 			  align: "left",
