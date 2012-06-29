@@ -18,6 +18,7 @@ import java.util.zip.ZipInputStream;
 import org.apache.tools.ant.taskdefs.Zip;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
@@ -105,6 +106,26 @@ abstract class ZipResourceStore implements ResourceStore {
     @Override
     public void create() {
         throw createReadOnlyException();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.zipFile.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ZipResourceStore other = (ZipResourceStore) obj;
+        return ObjectUtils.nullSafeEquals(this.zipFile, other.zipFile);
     }
 
     /**
@@ -283,6 +304,26 @@ abstract class ZipResourceStore implements ResourceStore {
             for (MissingZipFileDetailsEntry missingEntry : missingEntries) {
                 this.entries.put(missingEntry.getPath(), missingEntry);
             }
+        }
+
+        @Override
+        public int hashCode() {
+            return this.zipFile.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            ZipFile other = (ZipFile) obj;
+            return ObjectUtils.nullSafeEquals(this.zipFile, other.zipFile);
         }
 
         /**
