@@ -114,33 +114,13 @@ dojo.declare("wm.Application", wm.Component, {
 	    /* Determines if we need to implement our own touchscrolling due to limitations in the mobile browser's touch scrolling of divs.
 	     * IOS 4 and and older need this.  Native android browsers for 2.x devices need this.
 	     */
-	    var matches = navigator.userAgent.match(/(iphone|ipad).* OS (\d+)/i);
-	    if (matches) {
-		wm.isIOS = parseInt(matches[2]);
-	    }
-	    if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
-		var matches = navigator.userAgent.match(/Android (2|3|4|5|6|7|8|9)\./);
-		if (matches) {
-		    wm.isAndroid = Number(matches[1]);
-		}
-
-		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
-		    var matches = navigator.userAgent.match(/Android (2|3|4|5|6|7|8|9)\./);
-		    if (matches) {
-			wm.isAndroid = Number(matches[1]);
-		    }
-		    if (wm.isAndroid && navigator.userAgent.match(/ CrMo\//)) {
-			wm.isAndroid = "chrome";
-		    }
-		    if (wm.isAndroid > 2 ||
-			wm.isAndroid == "chrome" || 
-			wm.isIOS && wm.isIOS > 4 ||
-			wm.isFakeMobile) {
-			;
-		    } else {
-			this._touchEnabled = true;
-		    }
-		}
+	    if (wm.isAndroid > 2 ||
+		wm.isAndroid == "chrome" || 
+		wm.isIOS && wm.isIOS > 4 ||
+		wm.isFakeMobile) {
+		;
+	    } else {
+		this._touchEnabled = true;
 	    }
 
 	    this.$ = this.components = {};

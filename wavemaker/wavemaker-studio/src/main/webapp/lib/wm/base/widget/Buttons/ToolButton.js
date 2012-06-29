@@ -60,16 +60,24 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 		this.connect(this.btnNode, "onclick", this, function(evt) {
 		    this.click(evt,true);
 		});
+/* addTouchListener called by Control.js
 	    } else {
-		this.addTouchListener();
+		this.addTouchListener();*/
 	    }
 
 	    //this.setHint(this.title || this.hint);
 	    this.imageListChanged();
 
 	},
+    onTouchStart: function(evt, isMove) {
+	dojo.addClass(this.btnNode, "Active");
+    },
+    onTouchMove: function() {
+	dojo.removeClass(this.btnNode, "Active");
+    },
     onTouchEnd: function(evt, isMove) {
 	if (isMove) return;
+	dojo.removeClass(this.btnNode, "Active");
 	    /* Force inputs to fire onchange events and update bound service var inputs if they have focus.
 	    * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
 	    * triggering its dijit's onBlur, and delivering new values.

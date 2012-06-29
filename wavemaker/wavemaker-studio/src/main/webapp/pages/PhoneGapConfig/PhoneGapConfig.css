@@ -11,8 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-.EditVariable .wmtree-content {
-    min-width: 80px;
-    display: inline-block;
-    color: white;
+.PhoneGapConfig .dojoxGrid td {
+    color: black;
 }
+

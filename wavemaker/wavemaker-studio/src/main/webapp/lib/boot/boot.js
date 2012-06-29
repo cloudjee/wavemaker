@@ -44,6 +44,20 @@ if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     }
 }
 
+var matches = navigator.userAgent.match(/(iphone|ipad).* OS (\d+)/i);
+if (matches) {
+    wm.isIOS = parseInt(matches[2]);
+} else {
+    var matches = navigator.userAgent.match(/Android (2|3|4|5|6|7|8|9)\./);
+    if (matches) {
+	wm.isAndroid = Number(matches[1]);
+    }
+    if (wm.isAndroid && navigator.userAgent.match(/ CrMo\//)) {
+	wm.isAndroid = "chrome";
+    }
+}
+
+
 if (location.search.match(/(\?|\&)wmdevicesize=(\d+)/)) {
     wm.deviceSize = location.search.match(/(\?|\&)wmdevicesize=(\d+)/)[2];
 }

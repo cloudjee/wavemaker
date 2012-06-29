@@ -31,6 +31,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
     \${preferences}\n \
 </widget>',
     start: function() {
+	this.samplePicture._isDesignLoaded = true;
 	this.reset();
     },
     reset: function() {
@@ -100,7 +101,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
 	    this.jsonData.splashList.push(splashList[i]);
 	}
 
-	var preferencesSet = this.permisionsSet.getDataValue();
+	var preferencesSet = this.features.getDataValue();
 	this.jsonData.features = dojo.clone(preferencesSet);
 	var preferences = "";
 	if (preferencesSet && preferencesSet.length) {
@@ -169,6 +170,28 @@ dojo.declare("PhoneGapConfig", wm.Page, {
 			app.toastError(inError);
 		    }));
 
+    },
+    onPermissionsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+	var hadFile, hadCamera;
+	if (this._lastPermissions) {
+	    hadFile = dojo.indexOf(this._lastPermissions, "http://api.phonegap.com/1.0/file") != -1;
+	    hadCamera = dojo.indexOf(this._lastPermissions, "http://api.phonegap.com/1.0/camera") != -1;
+	} else {
+	    hadCamera = hadFile = true;
+	}
+
+	var nowFile, nowCamera;
+	if (!inSetByCode) {
+	    nowFile = dojo.indexOf(inDataValue, "http://api.phonegap.com/1.0/file");
+	    nowCamera = dojo.indexOf(inDataValue, "http://api.phonegap.com/1.0/camera");
+	    if (nowFile == -1 && nowCamera != -1 && hadFile) {
+		wm.Array.removeElementAt(inDataValue, nowCamera);
+	    } else if (nowFile == -1 && !hadFile && !hadCamera && nowCamera != -1) {
+		inDataValue.push( "http://api.phonegap.com/1.0/file");
+	    }
+	    inSender.setDataValue(inDataValue);
+	}
+	this._lastPermissions = inDataValue;
     },
     _end: 0
 });

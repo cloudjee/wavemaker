@@ -55,7 +55,7 @@ button, body {
 	vertical-align: middle;
 }
 
-.wmbutton {
+.wmbutton, .wmeditor .wmCheckboxSet {
         cursor: pointer;
 -webkit-touch-callout: none;
 -webkit-user-select: none;
@@ -908,15 +908,24 @@ body .AppToolTip {
     overflow-y: auto;
     border-style: solid;
 }
-.wmeditor .wmCheckboxSetItem {
-    line-height: normal;
+.wmmobile .wmeditor .wmCheckboxSetItem {
+    line-height: 32px;
     padding: 2px 5px 2px 5px;
+    white-space: nowrap;
 }
 .wmeditor .wmCheckboxSetItem .dijitReset {
-    float: left;
+    display: inline-block;
+}
+.wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive {
+    background-color: #00A;
+
+}
+.wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive:not(.dijitChecked) {
+    color: #00A;
 }
 .wmeditor .wmCheckboxSetItem label {
-    display: block;
+    display: inline-block;
+    margin-left: 5px;
 }
 
 .wmSizeNode {
@@ -967,21 +976,29 @@ body .wmmobile button.wmtablayers-tab {
 	top: 8px;
 	right: 8px;
     -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 .mblLeftArrow {
 	top: 8px;
 	right: 2px;
     -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    transform: rotate(225deg);
 }
 .mblDownArrow {
 	top: 2px;
 	right: 8px;
     -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    transform: rotate(135deg);
 }
 .mblUpArrow {
 	top: 12px;
 	right: 8px;
     -webkit-transform: rotate(315deg);
+    -moz-transform: rotate(315deg);
+    transform: rotate(315deg);
 }
 .mblArrowContainer {
     width: 20px;
@@ -1025,7 +1042,7 @@ body .wmmobile button.wmtablayers-tab {
 
 .tundra.wmmobile .wmCheckboxSetItem .dijitCheckBox .wmcheckbox_x,
 .tundra .wmmobile .wmCheckboxSetItem .dijitCheckBox .wmcheckbox_x {
-   top: -4px;
+   top: -2px;
 }
 
 .tundra.wmmobile .dijitCheckBox, 

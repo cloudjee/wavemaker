@@ -200,6 +200,9 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 });
 
 
+wm.Object.extendSchema(wm.CheckboxSet, {
+});
+
 wm.Object.extendSchema(wm.ListSet, {
     selectionMode: {group: "widgetName", subgroup: "behavior", order: 101, options: ["single", "multiple", "checkbox", "radio"]},
     showSearchBar: {group: "widgetName", subgroup: "behavior", order: 100}, 

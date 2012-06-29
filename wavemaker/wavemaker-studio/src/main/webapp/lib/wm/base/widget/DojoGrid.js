@@ -343,10 +343,18 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    if (newdata[prop] instanceof Date)
 			newdata[prop] = newdata[prop].getTime();
 		}*/
-		if (selectedIndex < this.getRowCount())
-		    this.selectedItem.setDataSet(this.getRowData(selectedIndex)._wmVariable[0]);
-		else 
+		if (selectedIndex < this.getRowCount()) {
+		    var rowData = this.getRowData(selectedIndex);
+		    if (rowData) {
+			this.selectedItem.setDataSet(rowData._wmVariable[0]);
+		    } else {
+			this._storeFetch(dojo.hitch(this, function(inItems) {
+			    this.selectedItem.setDataSet(inItems[0]._wmVariable[0]);
+			}));
+		    }
+		} else {
 		    this.selectedItem.setDataSet(null);
+		}
 	    }
 	    this.setValue("emptySelection", !this.hasSelection());
 	    this.setValue("isRowSelected", this.hasSelection());
@@ -1137,10 +1145,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	var items = this.dataSet.query(inQuery);
 
 	/* Step 2: Find and select all rows associated with those items */
-	this.dojoObj.store.fetch({sort: main.dojoGrid1.dojoObj.getSortProps(),
-				  query: main.dojoGrid1.dojoObj.query, 
-				  queryOptions: main.dojoGrid1.dojoObj.queryOptions, 
-				  onComplete: dojo.hitch(this, function(inItems) {
+	this._storeFetch(dojo.hitch(this, function(inItems) {
 				      this.deselectAll();
 				      for(var i = 0; i < inItems.length; i++) {
 					  if (dojo.indexOf(items.data.list, inItems[i]._wmVariable[0]) != -1) {
@@ -1150,8 +1155,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					      }
 					  }
 				      }
-				  })
-				 });
+	}));
+    },
+    _storeFetch: function(onComplete) {
+	this.dojoObj.store.fetch({sort: main.dojoGrid1.dojoObj.getSortProps(),
+				  query: main.dojoGrid1.dojoObj.query, 
+				  queryOptions: main.dojoGrid1.dojoObj.queryOptions, 
+				  onComplete: onComplete});
     },
 	getStructure: function(){
 		var structure = [];
