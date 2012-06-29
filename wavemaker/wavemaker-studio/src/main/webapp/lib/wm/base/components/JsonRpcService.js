@@ -400,6 +400,12 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	    try {
 		if (!inError || message.match(/No ServiceWire found/) && !djConfig.isDebug)
 		    return;
+		/* If a headless app sends a request, it may not have wm.connectionTimeout set; this error detects that and fixes it */
+		if (message.indexOf("Invalid Long Polling Request:") == 0) {
+		    var matches = message.match(/Timeout for this server is: (\d+)/);
+		    wm.connectionTimeout = matches ? Number(matches[1]) : 30;
+		    return;
+		}
 
 		if (console.groupCollapsed)
 	            console.groupCollapsed("Service Call Failed: " + this.name + "." + this.debugLastMethod);
