@@ -86,13 +86,16 @@ wm.Object.extendSchema(wm.List, {
     /* Hidden/ignored group */
     columns: {hidden:1},
     disabled: { ignore: 1 },
+    nextRowId: {ignore:1},
+    avgHeight: {ignore:1},
+    isRowSelected: {ignore:1},
 
     /* Methods group */
     getEmptySelection: {method:1, returns: "Boolean"},
     setColumnWidths: {method:1},
     //getDataItemCount: {method:1, returns: "Number"},
     setDataSet: {method:1},
-    getItemData: {method:1, returns: "Object"}   ,
+    getItemData: {method:1, returns: "Object"},
     select: {method:1},
     selectByQuery: {method:1}
 
@@ -203,7 +206,7 @@ wm.List.extend({
         var newcolumns = [];
         dojo.forEach(this.columns, dojo.hitch(this, function (col) {
             // we don't update custom fields
-            if (col.isCustomField || col.field == "MOBILE COLUMN") {
+            if (col.isCustomField || col.field == "PHONE COLUMN") {
                 newcolumns.push(col);
                 return;
             }

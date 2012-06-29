@@ -18,21 +18,29 @@ dojo.require("wm.base.widget.Panel");
 dojo.declare("wm.Template", wm.Panel, {
 	layoutKind: "top-to-bottom",
 	init: function() {
-		this.readTemplate();
+	    this.readTemplate();
+	    if (!this.isDestroyed) {
 		this.inherited(arguments);
+	    }
 	},
+    postInit: function() {
+	    if (!this.isDestroyed) {
+		this.inherited(arguments);
+	    }
+    },
 	readTemplate: function() {
 		if (this._template) {
 			if (dojo.isObject(this._template))
 				this._template = dojo.toJson(this._template);
-			this.readComponents(this._template);
+		    var components = this.readComponents(this._template);
 		    if (this.destroyTemplate) {
 			var index = this.getIndexInParent();
-			for (var i = this.c$.length-1; i >= 0; i--) {
-			    var c = this.c$[i];
-			    c.setParent(this.parent);
-			    c.setIndexInParent(index);
-			}
+			wm.forEachProperty(components, dojo.hitch(this, function(c, inName) {
+			    if (c instanceof wm.Control && c instanceof wm.Dialog == false) {
+				c.setParent(this.parent);
+				c.setIndexInParent(index);
+			    }
+			}));
 			this.destroy();
 		    } else {
 			/* Replace this with a panel so we don't need to include it in the build layers,

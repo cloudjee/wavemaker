@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.deploy.tomcat;
+package com.wavemaker.tools.deployment.tomcat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.wavemaker.tools.io.File;
 
 /**
- * Calls a remote Tomcat manager to manipulate deployed application.
+ * Calls a remote Tomcat manager to manipulate deployed applications.
  * 
  * @author Phillip Webb
  */
@@ -95,11 +95,15 @@ public class TomcatManager {
     public String deploy(String context, InputStream inputStream) {
         Assert.notNull(inputStream, "InputStream must not be null");
         try {
-            this.restTemplate.getForObject(getUrl(context, Command.UNDEPLOY), Void.class);
+            undeploy(context);
         } catch (Exception e) {
         }
         this.restTemplate.put(getUrl(context, Command.DEPLOY), inputStream);
         return newUriBuilder().path(context).build().toUriString();
+    }
+
+    public void undeploy(String context) {
+        this.restTemplate.getForObject(getUrl(context, Command.UNDEPLOY), Void.class);
     }
 
     private String getUrl(String application, Command command) {
