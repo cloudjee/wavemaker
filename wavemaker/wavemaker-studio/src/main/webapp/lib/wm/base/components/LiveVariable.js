@@ -337,6 +337,10 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	},
 	processResult: function(inResult) {
 	        this.dataSetCount = this._service.fullResult ? this._service.fullResult.dataSetSize : 0;
+	    if (this._appendData) {
+		inResult = this.data.list.concat(inResult);
+		delete this._appendData;
+	    }
 		this.inherited(arguments);
 	        if (this.operation != "read") {
 		    dojo.publish(this.type + "-server-changed", [this]);
