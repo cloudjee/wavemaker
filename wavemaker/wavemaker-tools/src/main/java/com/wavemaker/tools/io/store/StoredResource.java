@@ -95,7 +95,7 @@ public abstract class StoredResource implements Resource {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return getStore().hashCode();
     }
 
     @Override
@@ -110,6 +110,6 @@ public abstract class StoredResource implements Resource {
             return false;
         }
         StoredResource other = (StoredResource) obj;
-        return ObjectUtils.nullSafeEquals(getPath(), other.getPath());
+        return ObjectUtils.nullSafeEquals(getStore(), other.getStore());
     }
 }
