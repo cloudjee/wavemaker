@@ -297,13 +297,6 @@ dojo.declare("wm.Variable", wm.Component, {
 	    this.notify();
 	    this.onSetData();
 
-	    if (window["PhoneGap"] && this.saveInPhonegap) {
-		var datatext = dojo.toJson(this.getData());
-		window.localStorage.setItem(this.getRuntimeId(), datatext);
-	    } else if (this.saveInCookie) {
-		var datatext = dojo.toJson(this.getData() );
-		dojo.cookie(this.getRuntimeId(), datatext);
-	    }
 	},
 	onPrepareSetData: function(inData) {
 	},
@@ -318,6 +311,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	    if (this.queriedItems) {
 		this.setQuery(this._query);
 	    }
+	    this.updatePermanentMemory();
 	},
 	_setPrimitiveData: function(inValue) {
 	    if (inValue !== null && typeof inValue == "object") {
@@ -1098,14 +1092,30 @@ dojo.declare("wm.Variable", wm.Component, {
 			wm.fire(this.owner, "dataChanged");
 		wm.logging && console.groupEnd();
 	},
+    updatePermanentMemory: function() {
+	/* Don't update permanent memory with values set while loading the page; these
+	 * are unlikely to be provided as a result of dynamic user or service based calls
+	 */
+	var ownerPage = this.getParentPage();
+	if (ownerPage && ownerPage._loadingPage) return;
+
+	    if (window["PhoneGap"] && this.saveInPhonegap) {
+		var datatext = dojo.toJson(this.getData());
+		window.localStorage.setItem(this.getRuntimeId(), datatext);
+	    } else if (this.saveInCookie) {
+		var datatext = dojo.toJson(this.getData() );
+		dojo.cookie(this.getRuntimeId(), datatext);
+	    }
+    },
 	// id-based notification
 	dataValueChanged: function(inProp, inValue) {
 		if (!this._updating && this.owner) {
 			// Can't simply call valueChanged; see note below.
 			wm.Component.prototype.valueChanged.call(this, inProp, inValue);
 			this.dataChanged();
+		    this.updatePermanentMemory();
 		}
-	},
+	},    
 	// id-based notification
 	valueChanged: function(inProp, inValue) {
 	    if (!this.type || this.type == this.declaredClass) return; // if it doesn't yet have any type information, then nobody wants to listen to changes to this component

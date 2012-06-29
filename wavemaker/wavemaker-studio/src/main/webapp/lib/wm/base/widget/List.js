@@ -273,7 +273,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	/* Do nothing if no room to scroll */
 	if (this.listNode.clientHeight <= this.listNodeWrapper.clientHeight ||
 	    yChangeFromLast > 0 && this.getScrollTop() == 0 ||
-	    yChangeFromLast < 0 && this.getScrollTop() >= this.listNodeWrapper.scrollHeight) {
+	    yChangeFromLast < 0 && this.getScrollTop() >= Math.max(this.listNode.scrollHeight,this.listNodeWrapper.scrollHeight)) {
 /*
 	    var parent = this.parent;
 	    if (parent._conditionalTouchStart) {
@@ -308,17 +308,24 @@ dojo.declare("wm.List", wm.VirtualList, {
 	/* Do nothing if no room to scroll */
 	if (this.listNode.scrollHeight <= this.listNodeWrapper.clientHeight) return;
 
-	if (this._touchedItem) this._touchedItem.touchEnd();
+	if (this._touchedItem) this._touchedItem.onTouchEnd();
 	if (this._touchY.velocity != Infinity && Math.abs(this._touchY.velocity) > 0.01) {
+	    if (this._touchY.animationId) {
+		window.clearInterval(this._touchY.animationId);
+	    }
 	    this._touchY.animationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
 	}
     },
 
     _onAnimateScroll: function() {
 	this._touchY.velocity *= 0.9;
-	var cancelScroll = (this._touchY.velocity == Infinity || Math.abs(this._touchY.velocity) < 0.01);
+	var maxScrollTop = this.spacerNodeBottom.offsetTop - this.listNodeWrapper.clientHeight;
+	var cancelScroll = (this._touchY.velocity == Infinity || Math.abs(this._touchY.velocity) < 0.01 || this.getScrollTop() > maxScrollTop);
 	if (!cancelScroll) {
 	    var inc = Math.min(this._touchY.velocity * 50, this.getListNodeHeight());
+	    if (this._scrollTop + inc > maxScrollTop) {
+		inc = maxScrollTop - this._scrollTop;
+	    }
 	}
 	if (cancelScroll || !inc || Math.abs(inc) <= 1) {
 	    window.clearInterval(this._touchY.animationId);
@@ -559,10 +566,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 		else
 			this.dataSet = inDataSet;
 		var t = (inDataSet||0).type || "AnyData";
-		this.setSelectedItemType(t);
-		this.dataSetToSelectedItem(inDataSet);
-		this.onsetdata(this.dataSet);
-		this.renderDataSet(this.dataSet);
+
+		if (this._paging === "inc") {
+		    if (this.loadingNode && this.loadingNode.parentNode) {
+			this.listNode.removeChild(this.loadingNode);
+		    }
+		    this._data = inDataSet.getData();
+		    this.scrollDownAddItems();
+		    delete this._paging;
+		} else {
+		    this.setSelectedItemType(t);
+		    this.dataSetToSelectedItem(inDataSet);
+		    this.onsetdata(this.dataSet);
+		    this.renderDataSet(this.dataSet);
+		}
+
 	    } catch(e){alert(e.toString());}
 	},
 	setSelectedItemType: function(inType) {
@@ -1038,7 +1056,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.scrollDownRemoveItems();
 		this.scrollDownAddItems();
 		// sometimes events don't come at the right time, so cleanup is needed
-		wm.job(this.getRuntimeId() + ".testScrollTop", 200, this, "scrollDownAddItems");// TODO: REMOVE THIS?
+		//wm.job(this.getRuntimeId() + ".testScrollTop", 200, this, "scrollDownAddItems");// TODO: REMOVE THIS?
 	    } 
 
 	    /* Else if our spacer has scrolled back into view, render older rows */
@@ -1070,6 +1088,12 @@ dojo.declare("wm.List", wm.VirtualList, {
           and ignore all other rows
 	  */
 
+    getLastItemNode: function() {
+	for (var i = this.listNode.childNodes.length-1; i>= 0; i--) {
+	    if (this.listNode.childNodes[i].id) return this.listNode.childNodes[i];
+	}
+    },
+
     scrollDownAddItems: function(startAddingFrom) {
 	var avgItemHeight = 0;
 	var parent = this.listNode;
@@ -1093,8 +1117,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	if (startAddingFrom === undefined) {
 	    /* If there are rows showing, then use them as the basis from which we determine what rows to add */
-	    if (this.listNode.childNodes.length > 2) {
-		var item = this.getItemForNode(this.listNode.childNodes[this.listNode.childNodes.length-2]);
+	    var lastItem = this.getLastItemNode();
+
+	    if (lastItem) {
+		var item = this.getItemForNode(lastItem);
 		var index = dojo.indexOf(this.items, item);
 		startAddingFrom = index + 1;
 		currentHeight = item.domNode.offsetTop + item.domNode.clientHeight;
@@ -1130,7 +1156,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 
 	    /* Keep adding items/rows until the rows are below the bottom of the list's viewport */
+	var addingItems = false;
 	    for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
+		addingItems = true;
+		console.log("SCROLL DOWN I: " + i + ", current: " + currentHeight + "; target: " + targetHeight);
 		this._renderItem(i);
 		// this calculation is correct, but probing the domNode forces the node to render
 		// and slows performance; just use the average estimate for now
@@ -1138,10 +1167,31 @@ dojo.declare("wm.List", wm.VirtualList, {
 		if (!avgItemHeight) avgItemHeight = this.items[i].domNode.clientHeight || 22;
 		currentHeight += avgItemHeight;
 	    }
-	    
+
 	// Render one more
 	if (i < totalCount) {
-	    this._renderItem(i);
+	    if (addingItems) {
+		this._renderItem(i);
+	    }
+	} else if (!this._paging) {
+	    if (this.dataSet instanceof wm.LiveVariable && this.dataSet.getPage() < this.dataSet.getTotalPages() - 1) {
+		this.dataSet._appendData = true;
+		/* Uncomment this to test paging with real service call delays */
+		//wm.job("DELAY", 5000, this, function() {  
+		this.dataSet.setNextPage();
+		//});
+		this._paging = "inc";
+	    } else if (this.onScrollToBottom()) {
+		if (this.dataSet._requester) {
+		    this._paging = "inc";
+		}
+	    }
+	    if (this._paging) {
+		var parent = this.listNode;
+		var node = this.loadingNode || dojo.create("div", {className: "wmlist-item wmlist-loading", innerHTML: "Loading..."});
+		parent.insertBefore(node, this.spacerNodeBottom);
+		this.loadingNode = node;
+	    }
 	}
 
 	    /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling 
@@ -1155,6 +1205,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 //	app.toastSuccess("ScrollTop: " + scrollTop + "; generated: " + i);
 	   //this.addOddClasses();
     },
+    onScrollToBottom: function() {}, // Use this to fire your service variable or append new data to your dataSet
     addOddClasses: function() {
 	/* this doesn't need a seperate thread, but no reason to slow the main execution thread for this */
 	wm.job(this.getRuntimeId() + ".addOddClasses", 10, this, function() {
@@ -1229,7 +1280,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	*/
 	var startAddingFrom;
 	if (this.listNode.childNodes.length > 2) {
-	    var item = this.getItemForNode(this.listNode.childNodes[this.listNode.childNodes.length-2]);
+	    var item = this.getItemForNode(this.getLastItemNode());
 	    var index = dojo.indexOf(this.items, item);
 	    startAddingFrom = index - 1;
 	} else {
@@ -1472,9 +1523,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    for (var propIndex = 0; propIndex < props.length; propIndex++) {
 			cellData = cellData[props[propIndex]];
 		    }
+/*
 		    if (inCol==0) {
 			this.lastCellData = cellData;
 		    }
+		    */
 		    cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 		}
 	    }
