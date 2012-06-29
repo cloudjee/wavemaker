@@ -206,8 +206,9 @@ public class ServiceResponse {
             reqId = this.runtimeAccess.getRequest().getHeader(INITIAL_REQUEST);
         }
         if (reqId == null) {
-            throw new WMRuntimeException("Service request Id is missing in the request, service = "
-                + ServerUtils.getServiceName(this.runtimeAccess.getRequest()));
+            throw new WMRuntimeException("Invalid Long Polling Request: Service requests to this server require the header " + POLLING_REQUEST + " or " + INITIAL_REQUEST + ". Timeout for this server is: "
+                + getConnectionTimeout());
+            
         }
 
         return reqId;
