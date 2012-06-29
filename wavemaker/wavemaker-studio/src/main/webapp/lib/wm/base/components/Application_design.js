@@ -187,7 +187,6 @@ wm.Object.extendSchema(wm.Application, {
     currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
     saveCounter: {writeonly: true},
     //IERoundedCorners: {ignore: true},
-    dialogAnimationTime: {group: "widgetName", subgroup: "behavior", type: "number", order: 200},
     disableDirtyEditorTracking: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 250},
     manageURL: {ignore:0},
     manageHistory: {ignore:0},
