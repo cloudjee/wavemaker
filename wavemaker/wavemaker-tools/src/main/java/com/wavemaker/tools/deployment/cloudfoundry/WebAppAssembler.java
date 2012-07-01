@@ -78,14 +78,14 @@ public class WebAppAssembler implements InitializingBean {
         fileSystem.copyRecursive(studioWebAppRoot.createRelative("/lib/"), webAppRoot.createRelative("/lib/"), null, excludePatterns);
 
         Resource wavemakerHome = fileSystem.getWaveMakerHome();
-        String includePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**";
-        String excludePattern = LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**/deployments.js";
-        fileSystem.copyRecursive(wavemakerHome, studioWebAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
+        String includePattern = LocalDeploymentManager.COMMON_DIR_NAME_PROPERTY + "/**";
+        String excludePattern = LocalDeploymentManager.COMMON_DIR_NAME_PROPERTY + "/**/deployments.js";
+        fileSystem.copyRecursive(wavemakerHome, webAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
 
         this.modifyApplicationBaseFolder(new LocalFolder(webAppRoot.getFile())).modify();
     }
 
-    private ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {
+    public static ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {
         ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll(
             "\\/wavemaker\\/", "/");
         return new ModifiedContentBaseFolder(webAppRoot, modifier);

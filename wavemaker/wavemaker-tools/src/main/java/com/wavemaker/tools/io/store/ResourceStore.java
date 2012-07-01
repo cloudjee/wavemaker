@@ -72,4 +72,21 @@ public interface ResourceStore {
      */
     void create();
 
+    /**
+     * Implementations must provide a suitable hashcode based on the underlying resource.
+     * 
+     * @return the hash code
+     */
+    @Override
+    public int hashCode();
+
+    /**
+     * Implementations must provide a suitable equals based on the underlying resource.
+     * 
+     * @param obj the object to compare
+     * @return <tt>true</tt> if the items are equal
+     */
+    @Override
+    public boolean equals(Object obj);
+
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
@@ -143,6 +144,30 @@ abstract class MongoResourceStore implements ResourceStore {
     @Override
     public void delete() {
         getFs().remove(getFilename(getPath()));
+    }
+
+    @Override
+    public int hashCode() {
+        return getPath().getUnjailedPath().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MongoResourceStore other = (MongoResourceStore) obj;
+        boolean rtn = true;
+        rtn &= ObjectUtils.nullSafeEquals(getPath().getUnjailedPath(), other.getPath().getUnjailedPath());
+        rtn &= ObjectUtils.nullSafeEquals(getFs().getDB(), other.getFs().getDB());
+        rtn &= ObjectUtils.nullSafeEquals(getFs().getBucketName(), other.getFs().getBucketName());
+        return rtn;
     }
 
     static class MongoFileStore extends MongoResourceStore implements FileStore {

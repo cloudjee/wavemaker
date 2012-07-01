@@ -1470,7 +1470,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         var newcolumns = [];
 	var hasMobileColumn = false;
         dojo.forEach(this.columns, dojo.hitch(this, function (col) {
-	    if (col.mobileColumn) hasMobileColumn = true;
+	    if (col.mobileColumn || col.field == "PHONE COLUMN") hasMobileColumn = true;
 
             // we don't update custom fields
             if (col.isCustomField || col.field == "PHONE COLUMN") {

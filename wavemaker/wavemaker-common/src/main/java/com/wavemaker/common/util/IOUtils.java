@@ -268,7 +268,7 @@ public abstract class IOUtils {
         }
         if (excludedPattern != null) {
             excludedPatterns = new ArrayList<String>();
-            excludedPatterns.add(includedPattern);
+            excludedPatterns.add(excludedPattern);
         }
 
         copy(source, destination, includedPatterns, excludedPatterns);

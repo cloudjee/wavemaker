@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
@@ -107,6 +108,26 @@ abstract class LocalResourceStore implements ResourceStore {
         if (!this.file.delete()) {
             throw new ResourceException("Unable to delete " + this.file);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return getFile().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        LocalResourceStore other = (LocalResourceStore) obj;
+        return ObjectUtils.nullSafeEquals(getFile(), other.getFile());
     }
 
     static class LocalFileStore extends LocalResourceStore implements FileStore {

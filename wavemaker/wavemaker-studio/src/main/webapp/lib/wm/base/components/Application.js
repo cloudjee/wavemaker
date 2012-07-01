@@ -38,7 +38,6 @@ dojo.declare("wm.Application", wm.Component, {
         projectSubVersion: "Alpha",
         projectVersion: 1,
         studioVersion: "",
-        dialogAnimationTime: 350,
         theme: "wm_notheme",
         toastPosition: "br",
         _lastTheme: "",
@@ -105,24 +104,19 @@ dojo.declare("wm.Application", wm.Component, {
 		this._cssLoader.setCss(this._css);
 	    }
 
-	    if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
-
-	    if (wm.isMobile) {
-		this.dialogAnimationTime = 0;
-	    }
-
 	    /* Determines if we need to implement our own touchscrolling due to limitations in the mobile browser's touch scrolling of divs.
 	     * IOS 4 and and older need this.  Native android browsers for 2.x devices need this.
 	     */
-	    if (wm.isAndroid > 2 ||
-		wm.isAndroid == "chrome" || 
-		wm.isIOS && wm.isIOS > 4 ||
-		wm.isFakeMobile) {
-		;
-	    } else {
-		this._touchEnabled = true;
+	    if (wm.isMobile) {
+		if (wm.isAndroid > 2 ||
+		    wm.isAndroid == "chrome" || 
+		    wm.isIOS && wm.isIOS > 4 ||
+		    wm.isFakeMobile) {
+		    ;
+		} else {
+		    this._touchEnabled = true;
+		}
 	    }
-
 	    this.$ = this.components = {};
 	        this.createPageContainer();
 
