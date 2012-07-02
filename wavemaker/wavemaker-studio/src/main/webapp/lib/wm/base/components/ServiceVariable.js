@@ -45,7 +45,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 	/* WARNING: This is a bit sloppy; there is no gaurentee that the inputs have not changed between the last call and the response firing
 	 * this error handler.
 	 */
-	if (inError && inError.message && message.indexOf("Invalid Long Polling Request:") == 0) {
+	if (inError && inError.message && inError.message.indexOf("Invalid Long Polling Request:") == 0) {
 	    this.request(); // connectionTimeout updated by JsonRpcService; we just have to refire the failed call
 	    return;
 	}
