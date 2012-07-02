@@ -41,6 +41,16 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 	    if (this.service == "securityService" && this.operation == "logout") wm.logoutSuccess();
 	    this.inherited(arguments);
 	},
+    processError: function(inError) {
+	/* WARNING: This is a bit sloppy; there is no gaurentee that the inputs have not changed between the last call and the response firing
+	 * this error handler.
+	 */
+	if (inError && inError.message && inError.message.indexOf("Invalid Long Polling Request:") == 0) {
+	    this.request(); // connectionTimeout updated by JsonRpcService; we just have to refire the failed call
+	    return;
+	}
+	this.inherited(arguments);
+    },
     setType: function() {
 	if (this.input) 
 	    var oldInputType = this.input.type + "|" + dojo.toJson(this.input._dataSchema);

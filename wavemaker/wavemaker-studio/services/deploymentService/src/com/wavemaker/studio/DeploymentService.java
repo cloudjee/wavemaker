@@ -181,8 +181,8 @@ public class DeploymentService {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
 
-            //if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
-            if (!WMAppContext.getInstance().isCloudFoundry()) {
+            if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+            //if (!WMAppContext.getInstance().isCloudFoundry()) {
                 tempWebAppRoot = IOUtils.createTempDirectory();
                 com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo, tempWebAppRoot);
                 if (!f.exists()) {

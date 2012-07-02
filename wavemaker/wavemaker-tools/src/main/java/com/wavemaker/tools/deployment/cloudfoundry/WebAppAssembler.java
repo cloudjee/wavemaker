@@ -85,7 +85,7 @@ public class WebAppAssembler implements InitializingBean {
         this.modifyApplicationBaseFolder(new LocalFolder(webAppRoot.getFile())).modify();
     }
 
-    private ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {
+    public static ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {
         ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll(
             "\\/wavemaker\\/", "/");
         return new ModifiedContentBaseFolder(webAppRoot, modifier);

@@ -48,6 +48,8 @@ public class ServiceDeploymentManager {
 
     private StudioConfiguration studioConfiguration;
 
+    private DeploymentManager deploymentManager;
+
     public ServiceDeploymentManager() {
         // hack: these should be managed by Spring
         this.serviceDeployments.add(new DataModelDeploymentConfiguration());
@@ -127,6 +129,10 @@ public class ServiceDeploymentManager {
         this.fileSystem = fileSystem;
     }
 
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
+
     private Folder getProjectRoot() {
         return this.projectMgr.getCurrentProject().getRootFolder();
     }
@@ -134,17 +140,11 @@ public class ServiceDeploymentManager {
     private com.wavemaker.tools.io.File buildWar(ProjectManager projectMgr, com.wavemaker.tools.io.File warFile,
                                                  java.io.File tempWebAppRoot, boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
-        // would be super nice to refactor this
-        DeploymentManager deploymentMgr;
-        if (WMAppContext.getInstance().isCloudFoundry()) {
-            deploymentMgr = new CloudFoundryDeploymentManager();
-        } else {
-            deploymentMgr = new LocalDeploymentManager();
-        }
-        deploymentMgr.setProjectManager(projectMgr);
-        deploymentMgr.setStudioConfiguration(this.studioConfiguration);
-        deploymentMgr.setFileSystem(this.fileSystem);
-        com.wavemaker.tools.io.File war = deploymentMgr.buildWar(warFile, tempWebAppRoot, includeEar);
+        // would be super nice to refactor this      
+        this.deploymentManager.setProjectManager(projectMgr);
+        this.deploymentManager.setStudioConfiguration(this.studioConfiguration);
+        this.deploymentManager.setFileSystem(this.fileSystem);
+        com.wavemaker.tools.io.File war = this.deploymentManager.buildWar(warFile, tempWebAppRoot, includeEar);
         return war;
     }
 
