@@ -63,7 +63,8 @@ dojo.declare("Main", wm.Page, {
     },
 
   LaunchStudioserviceVariableError: function(inSender, inError) {
-      this.labelError.setCaption(inError);
+      this.labelError.setShowing(true);
+      this.labelError.setCaption(inError.length > 0 ? inError : "Unable to deploy Studio to your account");
       this.loginLayer.activate();      
     },
   LaunchStudioserviceVariableSuccess: function(inSender, inDeprecated) {

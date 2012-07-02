@@ -28,7 +28,7 @@ if (location.search.indexOf("dojo.locale=") != -1) {
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.5.0.M2';
+wm.version = '6.5.0.M3';
 
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     wm.device = location.search.match(/(\?|\&)wmmobile=([^&]*)/)[2] || "desktop";
@@ -43,6 +43,20 @@ if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
 	wm.device =  (window.screen && (window.screen.width > 450 && window.screen.height > 450)) ? "tablet" : "phone";
     }
 }
+
+var matches = navigator.userAgent.match(/(iphone|ipad).* OS (\d+)/i);
+if (matches) {
+    wm.isIOS = parseInt(matches[2]);
+} else {
+    var matches = navigator.userAgent.match(/Android (2|3|4|5|6|7|8|9)\./);
+    if (matches) {
+	wm.isAndroid = Number(matches[1]);
+    }
+    if (wm.isAndroid && navigator.userAgent.match(/ CrMo\//)) {
+	wm.isAndroid = "chrome";
+    }
+}
+
 
 if (location.search.match(/(\?|\&)wmdevicesize=(\d+)/)) {
     wm.deviceSize = location.search.match(/(\?|\&)wmdevicesize=(\d+)/)[2];

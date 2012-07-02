@@ -93,20 +93,20 @@ public class DefaultSpinupService implements SpinupService {
 
     @Override
     public TransportToken login(SharedSecret secret, LoginCredentials credentials) throws InvalidLoginCredentialsException {
-        Assert.notNull(secret, "Secret must not be null");
-        Assert.notNull(credentials, "Credentials must not be null");
-        CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(credentials);
-        AuthenticationToken authenticationToken = new AuthenticationToken(login(cloudFoundryClient));
-        return secret.encrypt(authenticationToken);
+    	Assert.notNull(secret, "Secret must not be null");
+    	Assert.notNull(credentials, "Credentials must not be null");
+    	CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(credentials);
+    	AuthenticationToken authenticationToken = new AuthenticationToken(login(cloudFoundryClient));
+    	return secret.encrypt(authenticationToken);
     }
 
     @Override
     public String start(SharedSecret secret, String username, TransportToken transportToken, boolean overwriteExisting) throws CloudFoundryException {
-        Assert.notNull(secret, "Secret must not be null");
-        Assert.notNull(transportToken, "TransportToken must not be null");
-        AuthenticationToken authenticationToken = secret.decrypt(transportToken);
-        CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(authenticationToken);
-        return new ApplicationStarter(cloudFoundryClient, username, secret).start(overwriteExisting);
+    	Assert.notNull(secret, "Secret must not be null");
+    	Assert.notNull(transportToken, "TransportToken must not be null");
+    	AuthenticationToken authenticationToken = secret.decrypt(transportToken);
+    	CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(authenticationToken);
+    	return new ApplicationStarter(cloudFoundryClient, username, secret).start(overwriteExisting);
     }
 
     protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
