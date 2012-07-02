@@ -75,6 +75,9 @@ public interface DeploymentManager {
 
     File buildWar(File warFile, java.io.File tempWebAppRoot, boolean includeEar) throws IOException;
 
+    File buildWar(File warFile, java.io.File tempWebAppRoot, boolean includeEar, ProjectManager origProjectManager)
+            throws IOException;
+
     void undeploy();
 
     /**

@@ -32,35 +32,36 @@ import org.springframework.core.io.Resource;
 
 public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
-    private static final String PROJECT_DIR_PROPERTY = "project.dir";
+    protected static final String PROJECT_DIR_PROPERTY = "project.dir";
 
-    private static final String ORIG_PROJ_DIR_PROPERTY = "orig.proj.dir";
+    protected static final String ORIG_PROJ_DIR_PROPERTY = "orig.proj.dir";
 
-    private static final String PROJECT_NAME_PROPERTY = "project.name";
+    protected static final String PROJECT_NAME_PROPERTY = "project.name";
 
-    private static final String PROJECT_ENCODING_PROPERTY = "project.encoding";
+    protected static final String PROJECT_ENCODING_PROPERTY = "project.encoding";
 
-    private static final String TOMCAT_HOST_PROPERTY = "tomcat.host";
+    protected static final String TOMCAT_HOST_PROPERTY = "tomcat.host";
 
-    private static final String TOMCAT_PORT_PROPERTY = "tomcat.port";
+    protected static final String TOMCAT_PORT_PROPERTY = "tomcat.port";
 
-    private static final String DEPLOY_NAME_PROPERTY = "deploy.name";
+    protected static final String DEPLOY_NAME_PROPERTY = "deploy.name";
 
-    private static final String STUDIO_WEBAPPROOT_PROPERTY = "studio.webapproot.dir";
+    protected static final String STUDIO_WEBAPPROOT_PROPERTY = "studio.webapproot.dir";
 
-    private static final String WAR_FILE_NAME_PROPERTY = "war.file.name";
+    protected static final String WAR_FILE_NAME_PROPERTY = "war.file.name";
 
-    private static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
+    protected static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
 
     public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
 
-    private static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
+    protected static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
 
-    private static final String WAVEMAKER_HOME = "wavemaker.home";
+    protected static final String WAVEMAKER_HOME = "wavemaker.home";
 
-    private boolean appXmlExists = false;
+    protected boolean appXmlExists = false;
 
-    public void buildWar(LocalFolder projectDir, LocalFolder buildDir, LocalFile warFile, boolean includeEar,
+    protected void buildWar(LocalFolder projectDir, LocalFolder buildDir, File warFile, boolean includeEar,
+                            ProjectManager origProjMgr,
                          StudioFileSystem fileSystem) throws WMRuntimeException {  //projectDir: dplstaging  //buildDir: fileutils
         String warFileName = warFile.getName();
         LocalFolder archiveFolder = (LocalFolder)warFile.getParent();
@@ -73,9 +74,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         properties.put(EAR_FILE_NAME_PROPERTY, earFile);
         properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
 
-        java.io.File projDir = warFile.getLocalFile().getParentFile().getParentFile();
-        Folder projFolder = new LocalFolder(projDir);
-        properties.put(ORIG_PROJ_DIR_PROPERTY, projDir);
+        Folder projFolder = origProjMgr.getCurrentProject().getRootFolder();
+        properties.put(ORIG_PROJ_DIR_PROPERTY, projFolder);
         File appXml = projFolder.getFile("webapproot/WEB-INF/application.xml");
         this.appXmlExists = appXml.exists();
 
@@ -92,14 +92,14 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
         properties = addMoreProperties(projectDir, null, properties);
 
-        buildWar(properties);
+        LocalFile warF = buildWar(properties);
 
         if (includeEar) {
-            buildEar(properties);
+            assembleEar(properties, warF);
         }
     }
 
-    public void buildWar(Map<String, Object> properties) {
+    public LocalFile buildWar(Map<String, Object> properties) {
 
         build(properties);
         
@@ -107,6 +107,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder studioWebAppRoot = (LocalFolder)properties.get(STUDIO_WEBAPPROOT_PROPERTY);
         String customWmDir = (String)properties.get(CUSTOM_WM_DIR_NAME_PROPERTY);
+        //TODO:ant - following excluded filter does not seem to work.  maybe a bug in FilterOn for ant style?
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("/dojo/util/**", "/dojo/**/tests/**", "/wm/" + customWmDir + "/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
 
@@ -139,19 +140,16 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
             }
         }*/
 
-        War warTask = new War();
-        warTask.setBasedir(buildAppWebAppRoot.getLocalFile());
-        warTask.setDestFile(((LocalFile)properties.get(WAR_FILE_NAME_PROPERTY)).getLocalFile());
-        warTask.setExcludes("**/application.xml, **/*.documentation.json");
-        org.apache.tools.ant.Project ant = new Project();
-        warTask.setProject(ant);
-        warTask.execute();
+        return assembleWar(properties);
     }
 
-    public void buildEar(Map<String, Object> properties) {
+    public LocalFile assembleWar(Map<String, Object> properties) {
+        return null;
+    }
+
+    public void assembleEar(Map<String, Object> properties, LocalFile warFile) {
         Ear ear = new Ear();
         FileSet fs = new FileSet();
-        LocalFile warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
         fs.setFile(warFile.getLocalFile());
         LocalFile earFile = (LocalFile)properties.get(EAR_FILE_NAME_PROPERTY);
         ear.setDestFile(earFile.getLocalFile());
