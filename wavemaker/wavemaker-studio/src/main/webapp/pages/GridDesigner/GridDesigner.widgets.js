@@ -68,11 +68,59 @@
 	    layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 	        mainPanel: ["wm.studio.DialogMainPanel", {layoutKind: "left-to-right"},{}, {
 		    panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"185px"}, {}, {
-			grid: ["wm.DojoGrid", {"columns":[{"show":true,"id":"show","title":"Show","width":"40px","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool"},{"show":true,"id":"field","title":"Field","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":""}],selectFirstRow: true, "height":"100%","localizationStructure":{},"margin":"4", border: "1", borderColor: "#959DAB"}, {onCellEdited: "onCellEdited", onSelect: "onColumnSelect", onRenderData: "onRenderData"}, {
-			    binding: ["wm.Binding", {}, {}, {
-				wire: ["wm.Wire", {"expression":undefined,"source":"columnsVar","targetProperty":"dataSet"}, {}]
-			    }]
-			}],
+			grid: ["wm.DojoGrid",
+{
+	"columns": [{
+		"show": true,
+		"id": "show",
+		"title": "Show",
+		"width": "30px",
+		"displayType": "Text",
+		"noDelete": true,
+		"align": "left",
+		"formatFunc": "",
+		"fieldType": "dojox.grid.cells.Bool"
+	}, {
+		"show": true,
+		"id": "mobileColumn",
+		"title": "Show Phone",
+		"width": "30px",
+		"displayType": "Text",
+		"noDelete": true,
+		"align": "left",
+		"formatFunc": "",
+		"fieldType": "dojox.grid.cells.Bool"
+	}, {
+		"show": true,
+		"id": "field",
+		"title": "Field",
+		"width": "100%",
+		"displayType": "Text",
+		"noDelete": true,
+		"align": "left",
+		"formatFunc": ""
+	}],
+	selectFirstRow: true,
+	"height": "100%",
+	"localizationStructure": {},
+	"margin": "4",
+	border: "1",
+	borderColor: "#959DAB"
+}, {
+	onCellEdited: "onCellEdited",
+	onSelect: "onColumnSelect",
+	onRenderData: "onRenderData"
+}, {
+	binding: ["wm.Binding",
+	{}, {}, {
+		wire: ["wm.Wire",
+		{
+			"expression": undefined,
+			"source": "columnsVar",
+			"targetProperty": "dataSet"
+		}, {}]
+	}]
+}],
 			panel4: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			    addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","margin":"4","width":"100%"}, {"onclick":"addButtonClick"}],
 			    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","margin":"4","width":"100%"}, {"onclick":"deleteButtonClick"}],
@@ -114,7 +162,6 @@
 				    }]
 				}],
 				alignmentEditor: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Alignment","captionAlign":"left","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"Horizontal alignment for cells in this column","options":"left, right, center","width":"100%", formField: "align"}, {onchange: "onAlignChange"}],
-				mobileColumnEditor: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Show on Phone","captionAlign":"left","displayValue":"","helpText":"Typically, you'll want all of your content in a single cell; by default the column named 'MOBILE COLUMN' is setup for you.  However, if you want cells on the left or right of the main mobile column (i.e. a picture to the left, a button to the right, etc...) you can check this to enable the column to show up on phones.  Use the 'Show' checkbox in the column list to control only whether the column is shown on larger devices; show can be false and this column will still display on phones if this is checked.","width":"100%", formField: "mobileColumn"}, {onchange: "onMobileColumnChange"}],
 				formattersPanels: ["wm.Panel", {title: "Formatters", width: "100%", height: "100%", margin: "10,0,10,0", padding: "0", fitToContentHeight: true, border: "1",borderColor: "#959DAB", layoutKind: "top-to-bottom"}, {}, {
 				    formatEditor: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, restrictValues: false, "caption":"Format","captionAlign":"left","helpText":"Leave alone to just show the raw data for this column.  Specify a formatter to customize how its displayed.  Create a custom formatter and write code to control how its displayed","width":"100%", dataField: "dataValue", displayField: "name", formField: "formatFunc"}, {onchange: "onFormatChange"}, {
 					binding: ["wm.Binding", {}, {}, {
