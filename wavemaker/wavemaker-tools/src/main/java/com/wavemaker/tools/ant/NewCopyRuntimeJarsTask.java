@@ -199,8 +199,7 @@ public class NewCopyRuntimeJarsTask extends Task {
         // Copy all new or out of date jars to the target directory
 
         Resources<com.wavemaker.tools.io.File> sourceRuntimeFileSet = null;
-        //if (!this.todir.equals(this.from)) { //TODO:ant - use this loine when the bug with "equals" is fixed
-        if (!this.todir.getLocalFile().getAbsolutePath().equals(this.from.getLocalFile().getAbsolutePath())) {
+        if (!this.todir.equals(this.from)) {
             sourceRuntimeFileSet = this.from.find().include(runtimeJarFilter).files();
         }
 

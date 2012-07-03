@@ -25,7 +25,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.javaservice.JavaServiceSuperClass;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 
-
+import org.cloudfoundry.client.lib.CloudFoundryException;
 
 @ExposeToClient
 public class SpinUpService extends JavaServiceSuperClass {
@@ -86,10 +86,22 @@ public class SpinUpService extends JavaServiceSuperClass {
        Hashtable<String,String> result  = new Hashtable<String, String>();
        try {
           log(DEBUG, "performing spinup for: " + loginCredentials.getUsername()); 
-          result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse());
+          result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse(), false); 
           recordUserLog(loginCredentials.getUsername());
           log(INFO, "Counter now: " + ++counter);          
-       } catch(Exception e) {
+       } 
+       catch(CloudFoundryException cfe) {
+          log(ERROR, "Failed to Launch Studio " + cfe.getMessage() + " " + cfe.toString());  
+          String msg = cfe.toString();
+          if(msg.contains("Not enough memory capacity")){
+            String allowed = msg.substring(msg.indexOf("(")+1, msg.indexOf(")"));
+            result.put("ERROR", "Insufficent memory to deploy studio to your account.<BR> " + allowed + "<BR>512M is required to start Studio");
+          }
+          else{
+              result.put("ERROR", "Unable to deploy studio to your account.<BR> " + "Cause: " + cfe.toString());
+          }   
+       }       
+       catch(Exception e) {
           log(ERROR, "Studio Launch has failed", e);
           result.put("ERROR", "Unable to deploy studio. " +  e.getMessage());
           log(ERROR, e.getMessage());

@@ -48,6 +48,7 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.zip.ZipArchive;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
@@ -64,7 +65,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     private static final String DEPLOYMENTS_FILE = "/deployments.js";
 
-    private StudioFileSystem fileSystem;
+    protected StudioFileSystem fileSystem;
 
     protected ProjectManager projectManager;
 
@@ -691,6 +692,18 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         File exportFile = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT).getFile(zipFileName);
         exportFile.getContent().write(inputStream);
         return exportFile.toString().substring(1);
+    }
+
+    protected LocalFolder getProjectDir(com.wavemaker.tools.project.Project project) {
+        return (LocalFolder) project.getRootFolder();
+    }
+
+    protected LocalFolder getProjectDir() {
+        com.wavemaker.tools.project.Project currentProject = getProjectManager().getCurrentProject();
+        if (currentProject == null) {
+            throw new WMRuntimeException("Current project must be set");
+        }
+        return getProjectDir(currentProject);
     }
 
     private static class ExportIncludeFilter implements ResourceFilter {
