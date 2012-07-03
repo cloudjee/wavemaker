@@ -287,7 +287,7 @@ Studio.extend({
 	this.deploymentDialog.page.showCloudFoundryAppListDialog();
     },
     deploymentHelp: function() {
-	window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+	window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "Deploying");
     },
     _end: 0
 });
