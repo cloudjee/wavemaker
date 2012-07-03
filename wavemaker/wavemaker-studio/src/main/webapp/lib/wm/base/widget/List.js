@@ -890,8 +890,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 	}
         return parent.childNodes[1];
     },
+    onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},
+
     addItem: function(inContent, inIndex, optionalDomNode) {
-	var item = this.createItem(inContent, optionalDomNode);
+		var item = this.createItem(inContent, optionalDomNode);		
+	
 	    var parent = this.listNode;
 	    dojo.setSelectable(item.domNode, false);
 	    if (inIndex!= undefined) {
@@ -909,7 +912,19 @@ dojo.declare("wm.List", wm.VirtualList, {
 		var sibling = (this.items.length == inIndex+1) ? this.spacerNodeBottom : parent.childNodes[inIndex+1]; // +1 to get past the spacerNode
 		parent.insertBefore(item.domNode, sibling);
 	    }
-
+try {
+		var rowData = item.getData();
+		if (rowData) {		
+			var styleObj = {customClasses: "", customStyles: ""}    ;
+		    this.onStyleRow(styleObj, rowData);
+		    if (styleObj.customClasses) {
+		    	dojo.addClass(item.domNode, styleObj.customClasses);
+		    }
+		    if (styleObj.customStyles) {
+		    	item.domNode.style.cssText = styleObj.customStyles;
+		    }
+		}
+	    } catch(e) {}
 	    return item;
     },
     addSpacer: function(inIndex, avgItemHeight) {
