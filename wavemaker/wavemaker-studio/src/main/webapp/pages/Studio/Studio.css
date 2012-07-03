@@ -228,6 +228,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 
 
 /* td needed for editable grids such as classes and PhoneGap config page to work */
+div .StudioGrid td,
 .StudioDarkPanel > div .StudioGrid td,
 .StudioDarkLayers > div .StudioGrid td,
 .StudioDarkPanel > div  .StudioEditor input,
