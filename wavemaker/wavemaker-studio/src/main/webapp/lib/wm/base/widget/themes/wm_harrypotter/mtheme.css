@@ -75,6 +75,7 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_harrypotter   .wmbutton.Active,
 .wm_harrypotter   .wmbutton:active,
 .wm_harrypotter   .wmbutton.Focused,
 .wm_harrypotter   .wmbutton:focus {
@@ -538,6 +539,18 @@ background-repeat: repeat-x;
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd {
 background-color: #b30000 !important;
 color: #ffffff;
+}
+.wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+background-color: #fe9603 !important;
+color: #232323;
+}
+.wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+background-color: #161616 !important;
+color: #fdd949;
 }
 .wm_harrypotter .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
 background-image: url(images/arrowRightDark.png) !important;

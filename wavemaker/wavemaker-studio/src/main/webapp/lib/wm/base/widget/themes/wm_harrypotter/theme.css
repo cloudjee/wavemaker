@@ -107,6 +107,8 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_harrypotter   .wmbutton.Active,
+.wm_harrypotter   .wmbutton:active,
 .wm_harrypotter   .wmbutton:hover,
 .wm_harrypotter   .wmbutton:focus,
 .wm_harrypotter   .wmroundedbutton:hover,
@@ -815,6 +817,18 @@ background-color: #282828;
 background-color: #b30000 !important;
 color: #ffffff;
 }
+.wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+background-color: #fe9603 !important;
+color: #232323;
+}
+.wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+background-color: #161616 !important;
+color: #fdd949;
+}
 .wm_harrypotter td.dojoxGrid-cell,
 .wm_harrypotter td.dojoxGridCell {
 border-left-width: 0px;
@@ -843,6 +857,7 @@ border-right-width: 0px;
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
+.wm_harrypotter .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
 .wm_harrypotter .wmlist-item.wmlist-item-selected,
 .wm_harrypotter .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_harrypotter .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -853,7 +868,7 @@ color: #fdd949;
 .dj_ie6 .wm_harrypotter .wmlist-item.wmlist-item-over,
 .wm_harrypotter div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_harrypotter .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-.wm_harrypotter .dojoxGridRowOver,
+.wm_harrypotter div.dojoxGridRow.dojoxGridRowOver,
 .wm_harrypotter .dojoxGridRowOdd.dojoxGridRowOver,
 .wm_harrypotter #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
 .wm_harrypotter .dojoxGridRowOver td.dojoxGridCell

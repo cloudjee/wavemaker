@@ -107,6 +107,8 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_default   .wmbutton.Active,
+.wm_default   .wmbutton:active,
 .wm_default   .wmbutton:hover,
 .wm_default   .wmbutton:focus,
 .wm_default   .wmroundedbutton:hover,
@@ -121,8 +123,6 @@ background-repeat: repeat-x;
 box-shadow: 1px 1px 1px #444444;
 }
 }
-
-
 @media screen {
 .wm_default .MainContent  .wmbutton,
 .wm_default .MainContent  .wmtogglebutton,
@@ -817,6 +817,18 @@ background-color: #dddddd;
 background-color: #333333 !important;
 color: #ffffff;
 }
+.wm_default .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_default .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+background-color: #0e1601 !important;
+color: #FFFFFF;
+}
+.wm_default .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_default .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_default .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_default .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+background-color: #a0c0e0 !important;
+color: #000000;
+}
 .wm_default td.dojoxGrid-cell,
 .wm_default td.dojoxGridCell {
 border-left-width: 0px;
@@ -845,6 +857,7 @@ border-right-width: 0px;
 .wm_default div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_default div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_default div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
+.wm_default .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
 .wm_default .wmlist-item.wmlist-item-selected,
 .wm_default .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_default .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -855,7 +868,7 @@ color: #000000;
 .dj_ie6 .wm_default .wmlist-item.wmlist-item-over,
 .wm_default div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_default .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-.wm_default .dojoxGridRowOver,
+.wm_default div.dojoxGridRow.dojoxGridRowOver,
 .wm_default .dojoxGridRowOdd.dojoxGridRowOver,
 .wm_default #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
 .wm_default .dojoxGridRowOver td.dojoxGridCell

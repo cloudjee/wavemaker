@@ -118,7 +118,8 @@
     .wm_template div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
     .wm_template div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
-    .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
+    .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,    
+    .wm_template .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
     .wm_template .wmlist-item.wmlist-item-selected,
     .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -134,7 +135,7 @@
     .dj_ie6 .wm_template .wmlist-item.wmlist-item-over,
     .wm_template div.dojoxGrid-row.dojoxGrid-row-over, 
     .wm_template .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .dojoxGridRowOver, 
+    .wm_template div.dojoxGridRow.dojoxGridRowOver, 
     .wm_template .dojoxGridRowOdd.dojoxGridRowOver,
     .wm_template #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
     .wm_template .dojoxGridRowOver td.dojoxGridCell

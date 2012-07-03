@@ -107,6 +107,8 @@ background-repeat: no-repeat;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_wireframe   .wmbutton.Active,
+.wm_wireframe   .wmbutton:active,
 .wm_wireframe   .wmbutton:hover,
 .wm_wireframe   .wmbutton:focus,
 .wm_wireframe   .wmroundedbutton:hover,
@@ -815,6 +817,18 @@ background-color: #dddddd;
 background-color: #ffffff !important;
 color: #000000;
 }
+.wm_wireframe .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+background-color: #ffffff !important;
+color: #000000;
+}
+.wm_wireframe .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_wireframe .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+background-color: #eeeeee !important;
+color: #000000;
+}
 .wm_wireframe td.dojoxGrid-cell,
 .wm_wireframe td.dojoxGridCell {
 border-left-width: 0px;
@@ -843,6 +857,7 @@ border-right-width: 0px;
 .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_wireframe div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
+.wm_wireframe .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
 .wm_wireframe .wmlist-item.wmlist-item-selected,
 .wm_wireframe .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_wireframe .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -853,7 +868,7 @@ color: #000000;
 .dj_ie6 .wm_wireframe .wmlist-item.wmlist-item-over,
 .wm_wireframe div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_wireframe .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-.wm_wireframe .dojoxGridRowOver,
+.wm_wireframe div.dojoxGridRow.dojoxGridRowOver,
 .wm_wireframe .dojoxGridRowOdd.dojoxGridRowOver,
 .wm_wireframe #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
 .wm_wireframe .dojoxGridRowOver td.dojoxGridCell

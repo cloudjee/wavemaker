@@ -75,6 +75,7 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_coolblue   .wmbutton.Active,
 .wm_coolblue   .wmbutton:active,
 .wm_coolblue   .wmbutton.Focused,
 .wm_coolblue   .wmbutton:focus {
@@ -538,6 +539,18 @@ background-repeat: repeat-x;
 .wm_coolblue .MobileListStyle div.wmlist-item.Odd {
 background-color: #333333 !important;
 color: #ffffff;
+}
+.wm_coolblue .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_coolblue .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+background-color: #0e1601 !important;
+color: #FFFFFF;
+}
+.wm_coolblue .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_coolblue .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_coolblue .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_coolblue .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+background-color: #a0c0e0 !important;
+color: #000000;
 }
 .wm_coolblue .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
 background-image: url(images/arrowRightLight.png) !important;

@@ -107,6 +107,8 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_darkdawn   .wmbutton.Active,
+.wm_darkdawn   .wmbutton:active,
 .wm_darkdawn   .wmbutton:hover,
 .wm_darkdawn   .wmbutton:focus,
 .wm_darkdawn   .wmroundedbutton:hover,
@@ -815,6 +817,18 @@ background-color: #eeeeee;
 background-color: #555555 !important;
 color: #ffffff;
 }
+.wm_darkdawn .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_darkdawn .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+background-color: #0078a3 !important;
+color: #ffffff;
+}
+.wm_darkdawn .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_darkdawn .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_darkdawn .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_darkdawn .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+background-color: #f58400 !important;
+color: #ffffff;
+}
 .wm_darkdawn td.dojoxGrid-cell,
 .wm_darkdawn td.dojoxGridCell {
 border-left-width: 0px;
@@ -843,6 +857,7 @@ border-right-width: 0px;
 .wm_darkdawn div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_darkdawn div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_darkdawn div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
+.wm_darkdawn .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
 .wm_darkdawn .wmlist-item.wmlist-item-selected,
 .wm_darkdawn .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_darkdawn .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -853,7 +868,7 @@ color: #ffffff;
 .dj_ie6 .wm_darkdawn .wmlist-item.wmlist-item-over,
 .wm_darkdawn div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_darkdawn .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-.wm_darkdawn .dojoxGridRowOver,
+.wm_darkdawn div.dojoxGridRow.dojoxGridRowOver,
 .wm_darkdawn .dojoxGridRowOdd.dojoxGridRowOver,
 .wm_darkdawn #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
 .wm_darkdawn .dojoxGridRowOver td.dojoxGridCell
