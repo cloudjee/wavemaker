@@ -17,49 +17,31 @@ package com.wavemaker.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Copy;
-import org.apache.tools.ant.taskdefs.Delete;
-import org.apache.tools.ant.types.FileList;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.runtime.module.ModuleManager;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 
-/**
- * @author Matt Small
- * @author Joel Hare
- * @author Jeremy Grelle
- */
 public class NewCopyRuntimeJarsTask extends Task {
 
     public static final String CLASSPATH_ATTR_NAME = "Class-Path";
 
-    public static final String TASK_NAME = "copyRuntimeJarsTask";
+    //public static final String TASK_NAME = "copyRuntimeJarsTask";
 
     private static final String RUNTIME_JAR_PROPERTIES = "META-INF/runtimejar.properties";
 
@@ -76,8 +58,6 @@ public class NewCopyRuntimeJarsTask extends Task {
     private boolean overwrite = false;
 
     private boolean verbose = false;
-
-    private ClasspathUtils.Delegate cpDelegate;
 
     private Project wmProject;
 
@@ -219,78 +199,6 @@ public class NewCopyRuntimeJarsTask extends Task {
 
         //TODO:ant - copy pws files when supporting pws module
         //copyPwsFiles(this.from, this.wmProject);
-    }
-
-    protected ClasspathUtils.Delegate getDelegate() {
-
-        if (this.cpDelegate == null) {
-            this.cpDelegate = ClasspathUtils.getDelegate(this);
-        }
-        return this.cpDelegate;
-    }
-
-    protected ClassLoader getClassLoader() {
-        this.cpDelegate = this.cpDelegate == null ? getDelegate() : this.cpDelegate;
-        return this.cpDelegate.getClassLoader();
-    }
-
-    /*private void copyPwsFiles(File libDir, Project wmproject) {
-        File pwsNode = new File(libDir.getParentFile().getParentFile(), "app/templates/pws");
-        File pwsWebInfNode = new File(pwsNode, "WEB-INF");
-        Copy copyTask = new Copy();
-        copyTask.setProject(getProject());
-        copyTask.setPreserveLastModified(isPreserveLastModified());
-        copyTask.setTaskName(TASK_NAME);
-        copyTask.setOverwrite(true);
-        copyTask.setVerbose(isVerbose());
-        copyTask.setFlatten(false);
-        copyTask.setTodir(this.todir.getParentFile());
-
-        FileSet srcPwsFileSet = new FileSet();
-        srcPwsFileSet.setDir(pwsWebInfNode);*/
-        //srcPwsFileSet.createInclude().setName("**/*.*");
-        //srcPwsFileSet.createExclude().setName("**/.svn/**/*.*");
-
-        /*copyTask.add(srcPwsFileSet);
-        copyTask.perform();
-
-        String[] partnerNodeList = pwsNode.list();
-
-        if (partnerNodeList == null || partnerNodeList.length == 0) {
-            return;
-        }
-
-        for (String partnerNodeName : partnerNodeList) {
-            File partnerWebInfNode = new File(pwsNode, partnerNodeName + "/WEB-INF");
-            if (!partnerWebInfNode.exists()) {
-                continue;
-            }
-            copyTask = new Copy();
-            copyTask.setProject(getProject());
-            copyTask.setPreserveLastModified(isPreserveLastModified());
-            copyTask.setTaskName(TASK_NAME);
-            copyTask.setOverwrite(isOverwrite());
-            copyTask.setVerbose(isVerbose());
-            copyTask.setFlatten(false);
-            copyTask.setTodir(this.todir.getParentFile());
-
-            FileSet srcPartnerFileSet = new FileSet();
-            srcPartnerFileSet.setDir(partnerWebInfNode);*/
-            //srcPartnerFileSet.createInclude().setName("**/*.*");
-            //srcPartnerFileSet.createExclude().setName("**/.svn/**/*.*");
-
-            //copyTask.add(srcPartnerFileSet);
-            //copyTask.perform();
-        //}
-    //}
-
-    /**
-     * Set the classpathref - this classpath will be used to discover available modules.
-     * 
-     * @param r A reference to a Path structure - this should be a classpath or similar.
-     */
-    public void setClasspathRef(Reference r) {
-        getDelegate().setClasspathref(r);
     }
 
     public void setProjectRoot(File projectRoot) {

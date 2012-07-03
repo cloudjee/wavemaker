@@ -3,7 +3,6 @@ package com.wavemaker.tools.project;
 
 import com.wavemaker.tools.io.*;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.zip.ZipArchive;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
@@ -16,16 +15,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
 
-import org.apache.tools.ant.taskdefs.Ear;
-import org.apache.tools.ant.taskdefs.War;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.Project;
 import org.apache.catalina.ant.UndeployTask;
-import org.springframework.core.io.Resource;
 
 /**
- * Execute various deployment tasks.
+ * Relaces ant script tasks that generate war and ear file 
  * 
  * @author Seung Lee
  */
@@ -168,7 +161,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         task.setPreserveLastModified(true);
         task.setOverwrite(false);
         task.setVerbose(false);
-        //TODO: research needed
+        //TODO:ant - research needed
         //task.setClasspathRef();
 
         LocalFolder projectRoot = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
