@@ -1435,7 +1435,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     updateColumnData: function () {
 	var defaultSchema = {dataValue: {type: this.variable.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
         var viewFields = this.getViewFields() || defaultSchema;
-	var maxColumns = Math.round(this.bounds.w / 80);
+        var w = this.width == "100%" ? this.parent.bounds.w : this.parent.bounds.w; // this may not have been rendered yet
+	var maxColumns = Math.round(w / 80);
         dojo.forEach(viewFields, function (f, i) {
             // if the column already exists, skip it
             if (dojo.some(this.columns, function (item) {
