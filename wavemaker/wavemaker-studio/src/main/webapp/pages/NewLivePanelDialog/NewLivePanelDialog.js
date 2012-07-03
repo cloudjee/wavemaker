@@ -18,76 +18,83 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
     selectedTemplate: null,
     options: null,
     start: function() {
+        this.helpButton = new wm.ToolButton({owner: this,
+            parent: this.owner.owner.titleBar,
+            _classes: {domNode: ["StudioHelpIcon"]},
+            onclick: dojo.hitch(this, "openHelp"),
+            width: "16px",
+            height: "16px"
+        });
+    var options = this.options = [
+                      
+                       {name: this.getDictionaryItem("TRADITIONAL"),
+                       img: "images/GridLiveForm.png"},
+                      {name: this.getDictionaryItem("DIALOG"),
+                       img: "images/GridLiveFormDialog.png"},
+                       {name: this.getDictionaryItem("GRID"),
+                       img: "images/GridLiveFormEditable.png"},
+                       {name: this.getDictionaryItem("MENU"),
+                       img: "images/GridLiveFormLeft.png"},
+                      {name: this.getDictionaryItem("BREADCRUMB"),
+                       img: "images/GridLiveFormBreadcrumbs.png"},
+                      {name: this.getDictionaryItem("LIVEVARIABLE"),
+                       img:""}];
+    
+        var i = 0;
 
-	var options = this.options = [
-				      {name: this.getDictionaryItem("MENU"),
-				       img: "images/GridLiveFormLeft.png"},
-				       {name: this.getDictionaryItem("TRADITIONAL"),
-				       img: "images/GridLiveForm.png"},
-				      {name: this.getDictionaryItem("DIALOG"),
-				       img: "images/GridLiveFormDialog.png"},
-				      {name: this.getDictionaryItem("BREADCRUMB"),
-				       img: "images/GridLiveFormBreadcrumbs.png"},
-				      {name: this.getDictionaryItem("GRID"),
-				       img: "images/GridLiveFormEditable.png"},
-	                              {name: this.getDictionaryItem("LIVEVARIABLE"),
-				       img:""},];
-	
-        var i = 0; 
-
-	for (var i = 0; i < options.length; i++) {
+    for (var i = 0; i < options.length; i++) {
             var option = options[i];
             if (i % 3 == 0) {
                 var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
             }
             var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, 
-					 layoutKind: "top-to-bottom", 
-					 parent: panel, 
-					 owner: this, 
-					 name: "templatepanel_" + i, 
-					 margin: "4", 
-					 border: "1", 
-					 borderColor: "#888888", 
-					 width: "112px", 
-					 height: "120px"});
-	    if (i == 0) 
-		var firstimgpanel = imgpanel;
+                     layoutKind: "top-to-bottom", 
+                     parent: panel, 
+                     owner: this, 
+                     name: "templatepanel_" + i, 
+                     margin: "4", 
+                     border: "1", 
+                     borderColor: "#888888", 
+                     width: "112px", 
+                     height: "120px"});
+        if (i == 0) 
+        var firstimgpanel = imgpanel;
             var img = new wm.Picture({width: "100%", 
-				      height: "91px", 
-				      border: "1",
-				      borderColor: "#555555",
-				      parent: imgpanel, 
-				      owner: this, 
-				      name: "template"+ i});
+                      height: "91px", 
+                      border: "1",
+                      borderColor: "#555555",
+                      parent: imgpanel, 
+                      owner: this, 
+                      name: "template"+ i});
             img.domNode.style.backgroundImage = "url(" + option.img + ")";
             var label = new wm.Label({"width": "100%",
-				      height: "20px",
-				      parent: imgpanel,
-				      owner: this,
-				      name: "templatelabel" + i,
-				      caption: option.name});
+                      height: "20px",
+                      parent: imgpanel,
+                      owner: this,
+                      name: "templatelabel" + i,
+                      caption: option.name});
         }
         dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("onclick", this, "templateClicked");
         dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("dblclick", this, "templateDblClicked");
-	this.templateClicked2(firstimgpanel);
-	this.templatesInsertPanel.reflow();
+    this.templateClicked2(firstimgpanel);
+    this.templatesInsertPanel.reflow();
     },
 /* Copied from NewProjectDialog and not yet updated for use here
     reset: function() {
         var projectNames = {};
-	var projects = studio.project.getProjectList();
-	var l={};
-	dojo.forEach(projects, dojo.hitch(this, function(p) {
-	    projectNames[p] = true;
+    var projects = studio.project.getProjectList();
+    var l={};
+    dojo.forEach(projects, dojo.hitch(this, function(p) {
+        projectNames[p] = true;
         }));
-	var newname = wm.findUniqueName("Project", [projectNames]);
-	this.projectName.setDataValue(newname);
+    var newname = wm.findUniqueName("Project", [projectNames]);
+    this.projectName.setDataValue(newname);
     },
     */
     clearSelection: function() {
         if (this.selectedTemplate) {
             this.selectedTemplate.setBorderColor("#888888");
-            this.selectedTemplate.setBorder("1");	    
+            this.selectedTemplate.setBorder("1");       
             dojo.removeClass(this.selectedTemplate.domNode, "Selected");
             this.selectedTemplate = null;
         }
@@ -98,9 +105,9 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
             target = target.parent;
         if (!target) return;
         if (target != this.selectedTemplate) {
-	    this.templateClicked2(target);
+        this.templateClicked2(target);
         }
-	var selectedName = target.c$[1].caption;
+    var selectedName = target.c$[1].caption;
         this.onOkClick(selectedName);
     },
     templateClicked: function(inMouseEvent) {
@@ -109,7 +116,7 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
             target = target.parent;
         if (!target) return;
         if (target == this.selectedTemplate) return;
-	this.templateClicked2(target);
+    this.templateClicked2(target);
     },
     templateClicked2: function(inTarget) {
         this.clearSelection();
@@ -125,7 +132,10 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
         this.owner.owner.dismiss();
     },
     _onOkClick: function() {
-	this.onOkClick(this.selectedTemplate.c$[1].caption);
+    this.onOkClick(this.selectedTemplate.c$[1].caption);
+    },
+    openHelp: function() {
+        window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "NewLivePanelDialog");
     },
   _end: 0
 });
