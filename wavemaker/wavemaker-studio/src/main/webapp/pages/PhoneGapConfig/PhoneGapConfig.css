@@ -15,3 +15,10 @@
     color: black;
 }
 
+.PhoneGapConfig-iosPreviewPicture, .PhoneGapConfig-androidPreviewPicture, .PhoneGapConfig-otherPreviewPicture {
+    background-color: white;
+}
+
+.PhoneGapConfig .bindButton {
+    background-image: url(images/inspector_bound.gif);
+}

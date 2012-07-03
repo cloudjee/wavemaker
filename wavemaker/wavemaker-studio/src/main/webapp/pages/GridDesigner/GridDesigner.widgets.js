@@ -73,7 +73,7 @@
 	"columns": [{
 		"show": true,
 		"id": "show",
-		"title": "Show",
+		"title": "Desktop",
 		"width": "30px",
 		"displayType": "Text",
 		"noDelete": true,
@@ -83,7 +83,7 @@
 	}, {
 		"show": true,
 		"id": "mobileColumn",
-		"title": "Show Phone",
+		"title": "Phone",
 		"width": "30px",
 		"displayType": "Text",
 		"noDelete": true,
