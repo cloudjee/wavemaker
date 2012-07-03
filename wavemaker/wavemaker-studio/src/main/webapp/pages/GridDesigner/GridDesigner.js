@@ -398,139 +398,139 @@ dojo.declare("GridDesigner", wm.Page, {
     }
     },
     onDisplayExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("expression", inDataValue);
-    }
+        if (!inSetByCode) {
+            this.changeItem("expression", inDataValue);
+        }
     },
     onBackExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("backgroundColor", inDataValue);
-    }
+        if (!inSetByCode) {
+            this.changeItem("backgroundColor", inDataValue);
+        }
     },
-    onColorExprChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("textColor", inDataValue);
-    }
-    },
+    onColorExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("textColor", inDataValue);
+       }
+   },
     onCancelClick: function() {
-    this.currentGrid.set_columns(this.initialColumns);
-    this.owner.owner.hide();
-    },
-    onOkClick: function() {
-    this.owner.owner.hide();
-    },
-    onCellEdited: function(inSender, inValue, rowId, fieldId) {
-    this.updateGrid(rowId);
-    },
+       this.currentGrid.set_columns(this.initialColumns);
+       this.owner.owner.hide();
+   },
+   onOkClick: function() {
+       this.owner.owner.hide();
+   },
+   onCellEdited: function(inSender, inValue, rowId, fieldId) {
+       this.updateGrid(rowId);
+   },
 
 
     /* Currency Formatter Changes */
-    onCurrencyTypeChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.currency", inDataValue);
-    }
-    },
-    onCurrencyDijitsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.dijits", inDataValue);
-    }
-    },
-    onCurrencyRoundChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.round", inDataValue);
-    }
-    },
-    onDateLengthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.formatLength", inDataValue);
-    }
-    },
-    onDatePatternChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.datePattern", inDataValue);
-    }
-    },
-    onTimePatternChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.timePattern", inDataValue);
-    }
-    },
-    onUseLocalTimeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.useLocalTime", inDataValue);
-    }
-    },
-    onDateTimeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.dateType", inDataValue);
-    }
-    },
+   onCurrencyTypeChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.currency", inDataValue);
+       }
+   },
+   onCurrencyDijitsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.dijits", inDataValue);
+       }
+   },
+   onCurrencyRoundChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.round", inDataValue);
+       }
+   },
+   onDateLengthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.formatLength", inDataValue);
+       }
+   },
+   onDatePatternChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.datePattern", inDataValue);
+       }
+   },
+   onTimePatternChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.timePattern", inDataValue);
+       }
+   },
+   onUseLocalTimeChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.useLocalTime", inDataValue);
+       }
+   },
+   onDateTimeChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.dateType", inDataValue);
+       }
+   },
 
-    onNumberTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.numberType", inDataValue);
-    }
-    },
-    onNumberDijitsChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.dijits", inDataValue);
-    }
-    },
-    onNumberRoundChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.round", inDataValue);
-    }
-    },
-    onLinkPrefixChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.prefix", inDataValue);
-    }
-    },
-    onLinkPostfixChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.postfix", inDataValue);
-    }
-    },
-    onTargetChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.target", inDataValue);
-    }
-    },
-    onImageWidthChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.width", inDataValue);
-    }
-    },
-    onImageHeightChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.height", inDataValue);
-    }
-    },
-    onButtonClassChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("formatProps.buttonclass", inDataValue);
-    }
-    },
-    onRegexChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("editorProps.regExp", inDataValue);
-    }
-    },
-    onRequiredChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("editorProps.required", inDataValue);
-    }
-    },
-    onInvalidChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("editorProps.invalidMessage", inDataValue);
-    }
-    },
-    onOptionsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("editorProps.options", inDataValue);
-    }
-    },
+   onNumberTypeChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.numberType", inDataValue);
+       }
+   },
+   onNumberDijitsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.dijits", inDataValue);
+       }
+   },
+   onNumberRoundChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.round", inDataValue);
+       }
+   },
+   onLinkPrefixChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.prefix", inDataValue);
+       }
+   },
+   onLinkPostfixChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.postfix", inDataValue);
+       }
+   },
+   onTargetChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.target", inDataValue);
+       }
+   },
+   onImageWidthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.width", inDataValue);
+       }
+   },
+   onImageHeightChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.height", inDataValue);
+       }
+   },
+   onButtonClassChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.buttonclass", inDataValue);
+       }
+   },
+   onRegexChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("editorProps.regExp", inDataValue);
+       }
+   },
+   onRequiredChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("editorProps.required", inDataValue);
+       }
+   },
+   onInvalidChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("editorProps.invalidMessage", inDataValue);
+       }
+   },
+   onOptionsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("editorProps.options", inDataValue);
+       }
+   },
     onDataSetChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         this.changeItem("editorProps.selectDataSet", inDataValue);
