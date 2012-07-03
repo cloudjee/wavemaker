@@ -280,6 +280,7 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 		break;
 	    }
 	}
+	wm.require("wm.LivePanel");
 	var panel = new wm.LivePanel({owner: inOwner,
 				      parent: inParent,
 				      liveDataName: this.entityName.toLowerCase(),
