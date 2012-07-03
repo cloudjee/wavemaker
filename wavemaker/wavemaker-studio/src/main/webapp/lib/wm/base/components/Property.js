@@ -23,7 +23,9 @@ dojo.declare("wm.Property", wm.Component, {
         type: "",
 	init: function() {
 		this.inherited(arguments);
-	    this.type = '';
-	    if (this._isDesignLoaded) this.designTimeInit();
+	    if (this._isDesignLoaded && this.owner === studio.page) {
+		this.type = '';
+		this.designTimeInit();
+	    }
 	}
 });
