@@ -1735,7 +1735,7 @@ Studio.extend({
 	dojo.publish("Page-Saved");
     },
     saveProjectSuccess: function() {}, // for dojo.connect
-    beginBind: function(inPropName, editArea, type) {
+    beginBind: function(inPropName, editArea, type, callback) {
 	var bd = this.bindDialog;
 		    //p = this.getBindDialogProps(inPropName),
 	    var  p = {targetProperty: inPropName,
@@ -1754,17 +1754,21 @@ Studio.extend({
 		    bd.bindSourceDialog.applyButton._oldCaption =  bd.bindSourceDialog.applyButton.caption;		    
 		}
 		bd.bindSourceDialog.applyButton.setCaption(this.getDictionaryItem("IMPORT_RESOURCE_BUTTON_CAPTION"));
+
 		bd.bindSourceDialog.applyButtonClick = function() {
 		    var filepath = bd.bindSourceDialog.bindEditor.getValue("dataValue");
-		    var newtext = "";
-		    if (type == "css") {
-			newtext = "@import \"" + filepath + "\";";
-			editArea.setText(newtext + "\n" + editArea.getText());
-		    } else {
-		       newtext = "eval(wm.load(\"" + filepath + "\"));";
-			editArea.setText(editArea.getText() + "\n" + newtext);// goes at end so that errors don't stop class from being declared (also needed for current technique for extracting the editable part of the application.js file)
-		    }
-
+			if (callback) {
+				callback(filepath);
+			} else {
+			    var newtext = "";
+			    if (type == "css") {
+				newtext = "@import \"" + filepath + "\";";
+				editArea.setText(newtext + "\n" + editArea.getText());
+			    } else {
+			       newtext = "eval(wm.load(\"" + filepath + "\"));";
+				editArea.setText(editArea.getText() + "\n" + newtext);// goes at end so that errors don't stop class from being declared (also needed for current technique for extracting the editable part of the application.js file)
+			    }
+			}
 		    bd.bindSourceDialog.cancelButtonClick();
 		};
 		var closeConnect = dojo.connect(bd, "onClose", this, function() {
