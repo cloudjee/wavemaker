@@ -27,7 +27,7 @@ PropertyPublisher.widgets = {
 		listPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left",margin: "0,0,0,10"}, {}, {
 		    listHeader: ["wm.Label", {width: "100%", caption: "Summary"}],
 		    listPanelInner: ["wm.Panel", {_classes: {domNode: ["StudioDarkPanel"]},width:"100%", height: "100%", border: "1", borderColor: "#959DAB"}, {}, {
-			fullList: ["wm.DojoGrid", {width: "100%", height: "100%", margin: "0", deleteColumn: true, columns: [{show: true,title: "Widget", field: "name", width: "100%"},
+			fullList: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, width: "100%", height: "100%", margin: "0", deleteColumn: true, columns: [{show: true,title: "Widget", field: "name", width: "100%"},
 													 {show: true,title: "Property", field: "dataValue", width: "100%"}]},
 			   {onRowDeleted: "listRowDeleted"},
 			   {
