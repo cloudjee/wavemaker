@@ -288,7 +288,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         undeploy(getCanonicalPath(getProjectDir()), getDeployName());
     }
 
-    public LocalFile assembleWar(Map<String, Object> properties) {
+    protected LocalFile assembleWar(Map<String, Object> properties) {
         LocalFile warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         War warTask = new War();
@@ -301,17 +301,59 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         return warFile;
     }
 
-    public void assembleEar(Map<String, Object> properties) {
-        Ear earTask = new Ear();
+    protected void assembleEar(Map<String, Object> properties, LocalFile warFile) {
+        Ear ear = new Ear();
         FileSet fs = new FileSet();
-        LocalFile warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
         fs.setFile(warFile.getLocalFile());
         LocalFile earFile = (LocalFile)properties.get(EAR_FILE_NAME_PROPERTY);
-        earTask.setDestFile(earFile.getLocalFile());
+        ear.setDestFile(earFile.getLocalFile());
         LocalFolder webInf = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
         LocalFile appXml = (LocalFile)webInf.getFile("application.xml");
-        earTask.setAppxml(appXml.getLocalFile());
-        earTask.execute();
+        ear.setAppxml(appXml.getLocalFile());
+        ear.execute();
+    }
+
+    protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
+
+        StudioFileSystem fileSystem = this.projectManager.getFileSystem();
+        Map<String, Object> newProperties = new HashMap<String, Object>();
+
+        if (getProjectManager() != null && getProjectManager().getCurrentProject() != null) {
+            newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
+        }
+
+        newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
+        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
+
+        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
+        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
+
+        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
+        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
+
+        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
+        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
+
+        newProperties.putAll(properties);
+
+        try {
+            newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, new LocalFolder(fileSystem.getStudioWebAppRoot().getFile()));
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        newProperties.put(PROJECT_DIR_PROPERTY, projectDir);
+
+        Resource projectDirFile = fileSystem.getResourceForURI(projectDir.getLocalFile().getAbsolutePath());
+        String projectName = projectDirFile.getFilename();
+        newProperties.put(PROJECT_NAME_PROPERTY, projectName);
+
+        if (deployName != null) {
+            newProperties.put(DEPLOY_NAME_PROPERTY, deployName);
+            System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, deployName);
+        }
+
+        return newProperties;
     }
 
     private String undeploy(String projectDir, String deployName) {

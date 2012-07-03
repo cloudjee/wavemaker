@@ -65,7 +65,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     private static final String DEPLOYMENTS_FILE = "/deployments.js";
 
-    private StudioFileSystem fileSystem;
+    protected StudioFileSystem fileSystem;
 
     protected ProjectManager projectManager;
 

@@ -3,7 +3,6 @@ package com.wavemaker.tools.project;
 
 import com.wavemaker.tools.io.*;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.zip.ZipArchive;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
@@ -16,16 +15,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
 
-import org.apache.tools.ant.taskdefs.Ear;
-import org.apache.tools.ant.taskdefs.War;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.Project;
 import org.apache.catalina.ant.UndeployTask;
-import org.springframework.core.io.Resource;
 
 /**
- * Execute various deployment tasks.
+ * Relaces ant script tasks that generate war and ear file 
  * 
  * @author Seung Lee
  */
@@ -64,10 +57,10 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
                             ProjectManager origProjMgr,
                          StudioFileSystem fileSystem) throws WMRuntimeException {  //projectDir: dplstaging  //buildDir: fileutils
         String warFileName = warFile.getName();
-        LocalFolder archiveFolder = (LocalFolder)warFile.getParent();
+        Folder archiveFolder = warFile.getParent();
         int len = warFileName.length();
         String earFileName = warFileName.substring(0, len - 4) + ".ear";
-        LocalFile earFile = (LocalFile)archiveFolder.getFile(earFileName);
+        File earFile = archiveFolder.getFile(earFileName);
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(BUILD_WEBAPPROOT_PROPERTY, buildDir);
         properties.put(WAR_FILE_NAME_PROPERTY, warFile);
@@ -79,12 +72,9 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         File appXml = projFolder.getFile("webapproot/WEB-INF/application.xml");
         this.appXmlExists = appXml.exists();
 
-        LocalFolder wavemakerHome;
-        try {
-            wavemakerHome = new LocalFolder(fileSystem.getWaveMakerHome().getFile());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        Folder wavemakerHome;
+        wavemakerHome = this.fileSystem.getWaveMakerHomeFolder();
+
         properties.put(WAVEMAKER_HOME, wavemakerHome);
 
         properties.put(PROJECT_DIR_PROPERTY, projectDir);
@@ -105,17 +95,17 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         
         //copy js files
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
-        LocalFolder studioWebAppRoot = (LocalFolder)properties.get(STUDIO_WEBAPPROOT_PROPERTY);
+        Folder studioWebAppRoot = (Folder)properties.get(STUDIO_WEBAPPROOT_PROPERTY);
         String customWmDir = (String)properties.get(CUSTOM_WM_DIR_NAME_PROPERTY);
         //TODO:ant - following excluded filter does not seem to work.  maybe a bug in FilterOn for ant style?
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("/dojo/util/**", "/dojo/**/tests/**", "/wm/" + customWmDir + "/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
 
         //copy custom widgets
-        LocalFolder wavemakerHome = (LocalFolder)properties.get(WAVEMAKER_HOME);
-        excluded = FilterOn.antPattern(customWmDir + "/**");
-        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customWmDir + "/**/deployments.js");
-        studioWebAppRoot.getFolder("lib").find().include(included).exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
+        Folder wavemakerHome = (Folder)properties.get(WAVEMAKER_HOME);
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customWmDir + "/**");
+        excluded = FilterOn.antPattern(customWmDir + "/**/deployments.js");
+        wavemakerHome.find().include(included).exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib/wm"));
         
         //modify wavemaker token in .html and config.js
         WebAppAssembler.modifyApplicationBaseFolder(buildAppWebAppRoot);
@@ -143,20 +133,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         return assembleWar(properties);
     }
 
-    public LocalFile assembleWar(Map<String, Object> properties) {
+    protected LocalFile assembleWar(Map<String, Object> properties) {
         return null;
     }
 
-    public void assembleEar(Map<String, Object> properties, LocalFile warFile) {
-        Ear ear = new Ear();
-        FileSet fs = new FileSet();
-        fs.setFile(warFile.getLocalFile());
-        LocalFile earFile = (LocalFile)properties.get(EAR_FILE_NAME_PROPERTY);
-        ear.setDestFile(earFile.getLocalFile());
-        LocalFolder webInf = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
-        LocalFile appXml = (LocalFile)webInf.getFile("application.xml");
-        ear.setAppxml(appXml.getLocalFile());
-        ear.execute();
+    protected void assembleEar(Map<String, Object> properties, LocalFile warFile) {
+
     }
 
     public void build(Map<String, Object> properties) {
@@ -179,7 +161,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         task.setPreserveLastModified(true);
         task.setOverwrite(false);
         task.setVerbose(false);
-        //TODO: research needed
+        //TODO:ant - research needed
         //task.setClasspathRef();
 
         LocalFolder projectRoot = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
@@ -293,47 +275,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         return this.projectCompiler.compile();
     }
 
-    private Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
-
-        StudioFileSystem fileSystem = this.projectManager.getFileSystem();
-        Map<String, Object> newProperties = new HashMap<String, Object>();
-
-        if (getProjectManager() != null && getProjectManager().getCurrentProject() != null) {
-            newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
-        }
-
-        newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-
-        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
-        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
-
-        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-
-        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
-        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
-
-        newProperties.putAll(properties);
-
-        try {
-            newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, new LocalFolder(fileSystem.getStudioWebAppRoot().getFile()));
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        newProperties.put(PROJECT_DIR_PROPERTY, projectDir);
-
-        Resource projectDirFile = fileSystem.getResourceForURI(projectDir.getLocalFile().getAbsolutePath());
-        String projectName = projectDirFile.getFilename();
-        newProperties.put(PROJECT_NAME_PROPERTY, projectName);
-
-        if (deployName != null) {
-            newProperties.put(DEPLOY_NAME_PROPERTY, deployName);
-            System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, deployName);
-        }
-
-        return newProperties;
+    protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
+        return properties;
     }
 
     private static class Replace implements ResourceOperation<com.wavemaker.tools.io.File> {

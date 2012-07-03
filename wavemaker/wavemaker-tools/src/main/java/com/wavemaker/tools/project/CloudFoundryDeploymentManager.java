@@ -17,6 +17,7 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -25,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.apache.tools.ant.taskdefs.War;
 import org.apache.tools.ant.taskdefs.Ear;
-import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.FileSet;
 
 import com.wavemaker.tools.ant.ServiceCompilerTask;
@@ -38,6 +38,7 @@ import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.common.WMRuntimeException;
 
 public class CloudFoundryDeploymentManager extends StageDeploymentManager {
 
@@ -116,16 +117,14 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
     }
 
     public LocalFile assembleWar(Map<String, Object> properties) {
-        File warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
+        File warFile = (File)properties.get(WAR_FILE_NAME_PROPERTY);
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder tempDistFolder = (LocalFolder)buildAppWebAppRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
         tempDistFolder.createIfMissing();
         LocalFile tempWarFile = (LocalFile)tempDistFolder.getFile(warFile.getName());
         War warTask = new War();
         warTask.setBasedir(buildAppWebAppRoot.getLocalFile());
-
         warTask.setDestFile(tempWarFile.getLocalFile());
-        //warTask.setDestFile(((LocalFile)properties.get(WAR_FILE_NAME_PROPERTY)).getLocalFile());
         warTask.setExcludes("**/application.xml, **/*.documentation.json");
         org.apache.tools.ant.Project ant = new org.apache.tools.ant.Project();
         warTask.setProject(ant);
@@ -135,12 +134,11 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
         return tempWarFile;
     }
 
-    public void assembleEar(Map<String, Object> properties) {
+    public void assembleEar(Map<String, Object> properties, LocalFile warFile) {
         Ear earTask = new Ear();
         FileSet fs = new FileSet();
-        LocalFile warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
         fs.setFile(warFile.getLocalFile());
-        LocalFile earFile = (LocalFile)properties.get(EAR_FILE_NAME_PROPERTY);
+        File earFile = (File)properties.get(EAR_FILE_NAME_PROPERTY);
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder tempDistFolder = (LocalFolder)buildAppWebAppRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
         tempDistFolder.createIfMissing();
@@ -178,6 +176,49 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
         Project project = this.projectManager.getCurrentProject();
         CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
         target.undeploy(project);
+    }
+
+    protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
+
+        StudioFileSystem fileSystem = this.projectManager.getFileSystem();
+        Map<String, Object> newProperties = new HashMap<String, Object>();
+
+        if (getProjectManager() != null && getProjectManager().getCurrentProject() != null) {
+            newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
+        }
+
+        /*newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
+        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
+
+        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
+        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
+
+        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
+        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
+
+        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
+        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());*/
+
+        newProperties.putAll(properties);
+
+        try {
+            newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, new LocalFolder(fileSystem.getStudioWebAppRoot().getFile()));
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        newProperties.put(PROJECT_DIR_PROPERTY, projectDir);
+
+        Resource projectDirFile = fileSystem.getResourceForURI(projectDir.getLocalFile().getAbsolutePath());
+        String projectName = projectDirFile.getFilename();
+        newProperties.put(PROJECT_NAME_PROPERTY, projectName);
+
+        if (deployName != null) {
+            newProperties.put(DEPLOY_NAME_PROPERTY, deployName);
+            System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, deployName);
+        }
+
+        return newProperties;
     }
 
     private CloudFoundryDeploymentTarget getCloudFoundryDeploymentTarget() {
