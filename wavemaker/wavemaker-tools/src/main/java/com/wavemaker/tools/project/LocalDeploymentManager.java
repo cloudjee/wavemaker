@@ -53,35 +53,12 @@ public class LocalDeploymentManager extends StageDeploymentManager {
 
     static Logger logger = Logger.getLogger(LocalDeploymentManager.class);
 
-    // ant properties
-    /*private static final String PROJECT_DIR_PROPERTY = "project.dir";
-
-    private static final String ORIG_PROJ_DIR_PROPERTY = "orig.proj.dir";
-
-    private static final String PROJECT_NAME_PROPERTY = "project.name";
-
-    private static final String PROJECT_ENCODING_PROPERTY = "project.encoding";
-
-    private static final String TOMCAT_HOST_PROPERTY = "tomcat.host";
-
-    private static final String TOMCAT_PORT_PROPERTY = "tomcat.port";
-
-    private static final String DEPLOY_NAME_PROPERTY = "deploy.name";
-
-    private static final String STUDIO_WEBAPPROOT_PROPERTY = "studio.webapproot.dir";
-
-    private static final String WAR_FILE_NAME_PROPERTY = "war.file.name";
-
-    private static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";*/
-
     // What is this for ?
     public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
     
     public static final String COMMON_DIR_NAME_PROPERTY = "common";
 
     private static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
-
-    private static final String WAVEMAKER_HOME = "wavemaker.home";
 
     private static final String BUILD_RESOURCE_NAME = "app-deploy.xml";
 
@@ -92,10 +69,6 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     private static final String UNDEPLOY_OPERATION = "undeploy";
 
     private static final String BUILD_OPERATION = "build";
-
-    private static final String BUILD_WAR_OPERATION = "build-war";
-
-    private static final String BUILD_EAR_OPERATION = "build-ear";
 
     private static final String GEN_RTFILES_OPERATION = "generate-runtime-files";
 
@@ -208,7 +181,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         }
         Folder parent = new LocalFolder(dist);
         LocalFile warFile = (LocalFile)parent.getFile(f.getName());
-        buildWar(projectDir, buildDir,  warFile, includeEar, origProjMgr, this.projectManager.getFileSystem());
+        buildWar(projectDir, buildDir,  warFile, includeEar, this.projectManager.getFileSystem());
 
         /*int len = warFile.length();
         String earFileName = warFile.substring(0, len - 4) + ".ear";
@@ -247,17 +220,6 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
                                                 boolean includeEar) throws IOException {
         String warFileLocation = ((LocalFile) warFile).getLocalFile().getCanonicalPath();
-        buildWar(warFileLocation, tempWebAppRoot, includeEar, this.projectManager);
-        return warFile;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
-                                                boolean includeEar, ProjectManager origProjMgr) throws IOException {
-        String warFileLocation = ((LocalFile) warFile).getLocalFile().getCanonicalPath();
         buildWar(warFileLocation, tempWebAppRoot, includeEar, origProjMgr);
         return warFile;
     }
@@ -292,25 +254,28 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         LocalFile warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         War warTask = new War();
+        org.apache.tools.ant.Project ant = new Project();
+        warTask.setProject(ant);
         warTask.setBasedir(buildAppWebAppRoot.getLocalFile());
         warTask.setDestFile(warFile.getLocalFile());
         warTask.setExcludes("**/application.xml, **/*.documentation.json");
-        org.apache.tools.ant.Project ant = new Project();
-        warTask.setProject(ant);
         warTask.execute();
         return warFile;
     }
 
     protected void assembleEar(Map<String, Object> properties, LocalFile warFile) {
-        Ear ear = new Ear();
+        Ear earTask = new Ear();
+        org.apache.tools.ant.Project ant = new Project();
+        earTask.setProject(ant);
         FileSet fs = new FileSet();
         fs.setFile(warFile.getLocalFile());
+        earTask.addFileset(fs);
         LocalFile earFile = (LocalFile)properties.get(EAR_FILE_NAME_PROPERTY);
-        ear.setDestFile(earFile.getLocalFile());
+        earTask.setDestFile(earFile.getLocalFile());
         LocalFolder webInf = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
         LocalFile appXml = (LocalFile)webInf.getFile("application.xml");
-        ear.setAppxml(appXml.getLocalFile());
-        ear.execute();
+        earTask.setAppxml(appXml.getLocalFile());       
+        earTask.execute();
     }
 
     protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {

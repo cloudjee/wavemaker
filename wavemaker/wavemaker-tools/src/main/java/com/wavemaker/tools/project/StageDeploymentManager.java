@@ -27,8 +27,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected static final String PROJECT_DIR_PROPERTY = "project.dir";
 
-    protected static final String ORIG_PROJ_DIR_PROPERTY = "orig.proj.dir";
-
     protected static final String PROJECT_NAME_PROPERTY = "project.name";
 
     protected static final String PROJECT_ENCODING_PROPERTY = "project.encoding";
@@ -51,11 +49,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected static final String WAVEMAKER_HOME = "wavemaker.home";
 
-    protected boolean appXmlExists = false;
-
     protected void buildWar(LocalFolder projectDir, LocalFolder buildDir, File warFile, boolean includeEar,
-                            ProjectManager origProjMgr,
-                         StudioFileSystem fileSystem) throws WMRuntimeException {  //projectDir: dplstaging  //buildDir: fileutils
+                            StudioFileSystem fileSystem) throws WMRuntimeException {  //projectDir: dplstaging  //buildDir: fileutils
         String warFileName = warFile.getName();
         Folder archiveFolder = warFile.getParent();
         int len = warFileName.length();
@@ -67,10 +62,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         properties.put(EAR_FILE_NAME_PROPERTY, earFile);
         properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
 
-        Folder projFolder = origProjMgr.getCurrentProject().getRootFolder();
-        properties.put(ORIG_PROJ_DIR_PROPERTY, projFolder);
-        File appXml = projFolder.getFile("webapproot/WEB-INF/application.xml");
-        this.appXmlExists = appXml.exists();
+        properties.put(DEPLOY_NAME_PROPERTY, origProjMgr.getCurrentProject().getProjectName());
 
         Folder wavemakerHome;
         wavemakerHome = this.fileSystem.getWaveMakerHomeFolder();
@@ -78,7 +70,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         properties.put(WAVEMAKER_HOME, wavemakerHome);
 
         properties.put(PROJECT_DIR_PROPERTY, projectDir);
-        properties.put(DEPLOY_NAME_PROPERTY, projectDir.getName());
 
         properties = addMoreProperties(projectDir, null, properties);
 
@@ -113,22 +104,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         buildAppWebAppRoot.find().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
-
-        //assemble WAR
-        //InputStream is = ZipArchive.compress(buildAppWebAppRoot);
-        //com.wavemaker.tools.io.File warFile = (com.wavemaker.tools.io.File)properties.get(WAR_FILE_NAME_PROPERTY);
-        //OutputStream os = warFile.getContent().asOutputStream();
-        /*try {
-            IOUtils.copy(is, os);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        } finally {
-            try {
-                is.close();
-                os.close();
-            } catch (IOException ignore) {
-            }
-        }*/
 
         return assembleWar(properties);
     }
@@ -169,7 +144,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         task.execute();
     }
 
-    public void copyResources(Map<String, Object> properties) { //done
+    public void copyResources(Map<String, Object> properties) {
         LocalFolder projectRoot = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
         LocalFolder projClassFolder =
                 (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF").getFolder("classes");
@@ -207,9 +182,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     }
 
     public void generateWebxml(Map<String, Object> properties) {
-        if (this.appXmlExists) {
-            modifyApplicationXml(properties);
-        }
         InputStream is = ClassLoaderUtils.getResourceAsStream("com/wavemaker/tools/project/web.xml");
         LocalFolder webInf = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
         File webXml = webInf.getFile("web.xml");
@@ -226,10 +198,27 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         }
 
         MergeUserWebXmlTask task = new MergeUserWebXmlTask();
-        task.setWorkdir(webInf.toString());
+        task.setWorkFolder(webInf);
+        task.execute();
+
+        is = ClassLoaderUtils.getResourceAsStream("com/wavemaker/tools/project/application.xml");
+        File appXml = webInf.getFile("application.xml");
+        os = appXml.getContent().asOutputStream();
+        try {
+            IOUtils.copy(is, os);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        } finally {
+            try {
+                is.close();
+                os.close();
+            } catch (IOException e) {}
+        }
+
+        setAppNameInAppXml(properties);
     }
 
-    private void modifyApplicationXml(Map<String, Object> properties) {
+    private void setAppNameInAppXml(Map<String, Object> properties) {
         File appXml = ((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFile("WEB-INF/application.xml");
         String deployName = (String)properties.get(DEPLOY_NAME_PROPERTY);
         String content = appXml.getContent().asString();
@@ -237,7 +226,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         appXml.getContent().write(content);
     }
 
-    public void prepareWebAppRoot(Map<String, Object> properties) { //done
+    public void prepareWebAppRoot(Map<String, Object> properties) {
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder appWebAppRoot = (LocalFolder)((Folder)properties.get(PROJECT_DIR_PROPERTY)).getFolder("webapproot");
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("**/.svn/**/*.*", "WEB-INF/classes/**", "WEB-INF/lib/**", "WEB-INF/web.xml");

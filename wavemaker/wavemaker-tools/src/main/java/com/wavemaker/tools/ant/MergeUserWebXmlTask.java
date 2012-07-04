@@ -14,94 +14,78 @@
 
 package com.wavemaker.tools.ant;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.Task;
-
-import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectConstants;
 
-/**
- * 
- * @author Seung Lee
- */
-public class MergeUserWebXmlTask extends Task {
+public class MergeUserWebXmlTask {
 
-    public static final String TASK_NAME = "mergeUserWebXmlTask";
+    private static final String START_MARKER = "<!-- start of user xml contents -->";
 
-    private String workdir;
+    private static final String END_MARKER = "<!-- end of user xml contents -->";
 
-    private final String servletStr = "<servlet>";
+    private static final String SERVLET_TAG = "<servlet>";
 
-    private final String blockStart = "<!-- start of user xml contents -->";
+    private static final Pattern USER_WEB_XML_CONTENT_PATTERN = Pattern.compile("<web-app[^>]*?>(.*?)<\\/web-app>", Pattern.MULTILINE
+        | Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-    private final String blockEnd = "<!-- end of user xml contents -->";
+    private static final Pattern MARKED_CONTENT_PATTERN = Pattern.compile("\\Q" + START_MARKER + "\\E(.*?)\\Q" + END_MARKER + "\\E",
+        Pattern.MULTILINE | Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-    private final String root1 = "<web-app";
+    private Folder workFolder;
 
-    private final String root2 = ">";
+    private String workdir = null;  //TODO:ant - delete this line when ant scripts are entirely removed
 
-    private final String root3 = "</web-app>";
+    public String execute() {
+        File userWebXml = workFolder.getFile(ProjectConstants.USER_WEB_XML);
+        File webXml = workFolder.getFile(ProjectConstants.WEB_XML);
 
-    @Override
-    public void execute() {
-        if (this.workdir == null) {
-            throw new IllegalArgumentException("private String workDir; is not set");
-        }
-
-        File userwebxml = new File(this.workdir, ProjectConstants.USER_WEB_XML);
-        File webxml = new File(this.workdir, ProjectConstants.WEB_XML);
-
-        try {
-            int indx1, indx2, indx3;
-            String content = FileUtils.readFileToString(webxml, ServerConstants.DEFAULT_ENCODING);
-            String customcontent = FileUtils.readFileToString(userwebxml, ServerConstants.DEFAULT_ENCODING) + "\r\n";
-
-            indx1 = customcontent.indexOf(this.root1);
-            if (indx1 < 0) {
-                throw new RuntimeException("ERROR: Corrupted web.xml");
-            }
-
-            indx2 = customcontent.indexOf(this.root2, indx1 + this.root1.length());
-            if (indx2 < 0 || indx2 >= customcontent.length() - this.root3.length() - 1) {
-                throw new RuntimeException("ERROR: Corrupted web.xml");
-            }
-
-            indx3 = customcontent.indexOf(this.root3, indx2);
-            if (indx3 < 0) {
-                throw new RuntimeException("ERROR: Corrupted web.xml");
-            }
-
-            customcontent = customcontent.substring(indx2 + this.root2.length(), indx3);
-
-            indx1 = content.indexOf(this.blockStart);
-            String targetStr;
-            if (indx1 > 0) {
-                indx2 = content.indexOf(this.blockEnd, indx1);
-                if (indx2 < 0) {
-                    throw new RuntimeException("ERROR: Corrupted web.xml");
-                }
-                targetStr = content.substring(indx1, indx2 + this.blockEnd.length());
-                customcontent = this.blockStart + "\r\n" + customcontent + "\r\n" + this.blockEnd;
-            } else {
-                indx1 = content.indexOf(this.servletStr);
-                if (indx1 < 0) {
-                    throw new RuntimeException("ERROR: Corrupted web.xml");
-                }
-                targetStr = this.servletStr;
-                customcontent = "\r\n" + this.blockStart + "\r\n" + customcontent + "\r\n" + this.blockEnd + "\r\n\r\n" + "\t" + this.servletStr;
-            }
-            content = content.replace(targetStr, customcontent);
-            FileUtils.writeStringToFile(webxml, content, ServerConstants.DEFAULT_ENCODING);
-
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+        return mergeWebXml(webXml.getContent().asString(), userWebXml.getContent().asString());
     }
 
-    public void setWorkdir(String val) {
-        this.workdir = val;
+    /**
+     * Merge web.xml content with user specified content.
+     *
+     * @param webXmlContent the source web.xml content. This should be valid XML starting with a
+     *        <tt>&lt;web-app&gt;</tt> element. If the content contains existing user specified content (between
+     *        {@link #START_MARKER} and {@link #END_MARKER}) it will be replaced, otherwise user content will be
+     *        inserted above the <tt>&lt;servlet&gt;</tt> tag.
+     * @param userWebXmlContent user specific web.xml content. This should be valid XML with user defined content
+     *        specific inside a <tt>&lt;web-app&gt;</tt> element.
+     * @return the merged XML content.
+     */
+    public String mergeWebXml(CharSequence webXmlContent, CharSequence userWebXmlContent) {
+        Matcher userWebXmlMatcher = USER_WEB_XML_CONTENT_PATTERN.matcher(userWebXmlContent);
+        if (!userWebXmlMatcher.find()) {
+            throw new IllegalStateException("Corrupted user-web.xml");
+        }
+        String userContent = userWebXmlMatcher.group(1);
+
+        Matcher webXmlMatcher = MARKED_CONTENT_PATTERN.matcher(webXmlContent);
+        if (!webXmlMatcher.find()) {
+            String webXmlWithEmptyPlaceholder = webXmlContent.toString().replace(SERVLET_TAG, START_MARKER + END_MARKER + "\n\n    " + SERVLET_TAG);
+            System.out.println(webXmlWithEmptyPlaceholder);
+            webXmlMatcher = MARKED_CONTENT_PATTERN.matcher(webXmlWithEmptyPlaceholder);
+            if (!webXmlMatcher.find()) {
+                throw new IllegalStateException("Corrupted web.xml");
+            }
+        }
+        StringBuffer rtn = new StringBuffer();
+        webXmlMatcher.appendReplacement(rtn, START_MARKER + "\n" + userContent + "\n    " + END_MARKER);
+        webXmlMatcher.appendTail(rtn);
+        return rtn.toString();
+    }
+
+    public void setWorkFolder(Folder workFolder) {
+        this.workFolder = workFolder;
+    }
+
+    public void setWorkdir(String workdir) { //TODO:ant - this method should be delete when ant scripts are removed.
+        this.workdir = workdir;
+        this.workFolder = new LocalFolder(new java.io.File(workdir));
     }
 }

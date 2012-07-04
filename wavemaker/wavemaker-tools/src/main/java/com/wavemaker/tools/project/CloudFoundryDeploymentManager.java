@@ -102,17 +102,7 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
         LocalFolder buildDir = new LocalFolder(tempWebAppRoot);
         Folder dist = warFile.getParent();
         dist.createIfMissing();
-        buildWar(getProjectDir(), buildDir,  warFile, includeEar, this.projectManager, this.projectManager.getFileSystem());
-        return warFile;
-    }
-
-    @Override
-    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
-                                                boolean includeEar, ProjectManager origProjMgr) throws IOException {
-        LocalFolder buildDir = new LocalFolder(tempWebAppRoot);
-        Folder dist = warFile.getParent();
-        dist.createIfMissing();
-        buildWar(getProjectDir(), buildDir,  warFile, includeEar, origProjMgr, this.projectManager.getFileSystem());
+        buildWar(getProjectDir(), buildDir,  warFile, includeEar, this.projectManager.getFileSystem());
         return warFile;
     }
 
@@ -123,11 +113,11 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
         tempDistFolder.createIfMissing();
         LocalFile tempWarFile = (LocalFile)tempDistFolder.getFile(warFile.getName());
         War warTask = new War();
-        warTask.setBasedir(buildAppWebAppRoot.getLocalFile());
-        warTask.setDestFile(tempWarFile.getLocalFile());
-        warTask.setExcludes("**/application.xml, **/*.documentation.json");
         org.apache.tools.ant.Project ant = new org.apache.tools.ant.Project();
         warTask.setProject(ant);
+        warTask.setBasedir(buildAppWebAppRoot.getLocalFile());
+        warTask.setDestFile(tempWarFile.getLocalFile());
+        warTask.setExcludes("**/application.xml, **/*.documentation.json");        
         warTask.execute();
 
         tempWarFile.copyTo(warFile.getParent());
@@ -136,8 +126,11 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
 
     public void assembleEar(Map<String, Object> properties, LocalFile warFile) {
         Ear earTask = new Ear();
+        org.apache.tools.ant.Project ant = new org.apache.tools.ant.Project();
+        earTask.setProject(ant);
         FileSet fs = new FileSet();
         fs.setFile(warFile.getLocalFile());
+        earTask.addFileset(fs);
         File earFile = (File)properties.get(EAR_FILE_NAME_PROPERTY);
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder tempDistFolder = (LocalFolder)buildAppWebAppRoot.getFolder(DeploymentManager.DIST_DIR_DEFAULT);
@@ -147,8 +140,6 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
         LocalFolder webInf = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
         LocalFile appXml = (LocalFile)webInf.getFile("application.xml");
         earTask.setAppxml(appXml.getLocalFile());
-        org.apache.tools.ant.Project ant = new org.apache.tools.ant.Project();
-        earTask.setProject(ant);
         earTask.execute();
 
         tempEarFile.copyTo(earFile.getParent());

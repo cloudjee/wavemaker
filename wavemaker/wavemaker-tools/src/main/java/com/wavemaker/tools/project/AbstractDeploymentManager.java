@@ -73,6 +73,8 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     protected StudioConfiguration studioConfiguration;
 
+    protected ProjectManager origProjMgr;
+
     protected final StudioFileSystem getFileSystem() {
         return this.fileSystem;
     }
@@ -93,6 +95,11 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     public void setProjectCompiler(ProjectCompiler projectCompiler) {
         this.projectCompiler = projectCompiler;
+    }
+
+    @Override
+    public void setOrigProjMgr(ProjectManager origProjMgr) {
+        this.origProjMgr = origProjMgr;
     }
 
     @Override
