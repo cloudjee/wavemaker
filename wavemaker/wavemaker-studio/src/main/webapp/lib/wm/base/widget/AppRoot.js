@@ -197,20 +197,22 @@ this._inResize = true;
 	    */
 	},
     calcDeviceSize: function(width) {	
-	if (width >= 1150) {
+    if (width >= 1800) {
+    	return "1800";
+    } else if (width >= 1400) {
+    	return "1400";
+    } else if (width >= 1150) {
 	    return "1150";
 	} else if (width >= 900) {
 	    return "900";
-	} else if (width >= 750) {
-	    return "750";
-	} else if (width >= 600) {
-	    return "600";
+	} else if (width >= 650) {
+	    return "650";	
 	} else if (width >= 450) {
 	    return "450";
 	} else if (width >= 300) {
 	    return "300";
 	} else {
-	    return "tiny";
+	    return "200";
 	}
     }
 });

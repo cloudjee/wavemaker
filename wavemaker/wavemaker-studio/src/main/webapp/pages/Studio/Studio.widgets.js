@@ -15,7 +15,34 @@
 Studio.widgets = {
     loadingDialog: ["wm.LoadingDialog", {_classes: {domNode: ["studiodialog"]}}],
         themesListVar: ["wm.Variable", {type: "StringData"}],
-    deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],
+    /*deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],*/
+    deviceSizeType: ["wm.TypeDefinition", {internal: true}, {}, {
+        "deviceSizeType.deviceName": ["wm.TypeDefinitionField", {fieldName: "name", type: "String"}],
+        "deviceSizeType.deviceWidth": ["wm.TypeDefinitionField", {fieldName: "width", type: "String"}],
+        "deviceSizeType.deviceHeight": ["wm.TypeDefinitionField", {fieldName: "height", type: "String"}],
+        "deviceSizeType.deviceType": ["wm.TypeDefinitionField", {fieldName: "deviceType", type: "String"}]
+
+    }],
+/*    deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: "iPhone", dataValue: "320x480"}, {name: "iPad", dataValue: "768x1024"}, {name: "Galaxy Nexus", dataValue: "400x640"}, {name: "Galaxy Tab 7", dataValue: "600x1024"}, {name: "Galaxy Tab 10.1", dataValue: "800x1280"}]'}],*/
+    deviceSizeVar: ["wm.Variable", {type: "deviceSizeType", isList: 1, json: dojo.toJson([
+         {name: "All", width: "100%", height: "100%", deviceType: "desktop"},
+         {name: "iPhone", width: "320px", height: "480px", deviceType: "phone"},
+         {name: "iPad", width: "768px", height: "1024px", deviceType: "tablet"},
+         {name: "Galaxy Nexus", width: "400px", height: "640px", deviceType: "phone"},
+         {name: "HTC Thunderbolt", width: "320px", height: "508px", deviceType: "phone"},
+         {name: "Galaxy Tab 7", width: "600px", height: "1024px", deviceType: "tablet"},
+         {name: "Galaxy Tab 10.1", width: "800px", height: "1028px", deviceType: "tablet"},
+         {name: "1920px", width: "1920px", height: "100%", deviceType: "desktop"},
+         {name: "1440px", width: "1440px", height: "100%", deviceType: "desktop"},
+         {name: "1150px", width: "1150px", height: "100%", deviceType: "desktop"},
+         {name: "900px", width: "900px", height: "100%", deviceType: "desktop"},
+         {name: "750px", width: "750px", height: "100%", deviceType: "desktop"},
+         {name: "600px", width: "600px", height: "100%", deviceType: "desktop"},
+         {name: "450px", width: "450px", height: "100%", deviceType: "desktop"},
+         {name: "300px", width: "300px", height: "100%", deviceType: "desktop"},
+         {name: "200px", width: "200px", height: "100%", deviceType: "desktop"}
+         ])
+    }],
     deviceTypeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: "Desktop", dataValue: "desktop"}, {name: "Tablet", dataValue: "tablet"}, {name: "Phone", dataValue: "phone"}]'}],
 
     "com.wavemaker.editor.completions": ["wm.TypeDefinition", {internal: true}, {}, {
@@ -400,7 +427,7 @@ height: "29px", width: "420px",
 						    }],
 						    languageSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Language", margin:"0,0,0,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }],
-						    deviceDesignToggle: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/phone.png", captionUp: "", captionDown: "", clicked: true, width: "25px", height: "100%", "hint": "Multi-device design"}, {onclick: "devicesToggleClick"}]
+						    deviceDesignToggle: ["wm.ToggleButton", {showing: false, _classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/phone.png", captionUp: "", captionDown: "", clicked: true, width: "25px", height: "100%", "hint": "Multi-device design"}, {onclick: "devicesToggleClick"}]
 
 						}]
 					}],
@@ -408,29 +435,36 @@ height: "29px", width: "420px",
 				    binding: ["wm.Binding",{},{}, {
 					wire: ["wm.Wire", {"source":"deviceDesignToggle.clicked","targetProperty":"showing"}, {}]
 				    }],
-				    devicesTogglePanel: ["wm.ToggleButtonPanel", {width: "300px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, {
-					binding: ["wm.Binding",{},{}, {
-					    wire: ["wm.Wire", {"source":"desktopToggleButton","targetProperty":"currentButton"}, {}]
-					}],
-					desktopToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Desktop", border: "0,1,0,0"}, {onclick: "designDesktopUI"}],
-					tabletToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Tablet", border: "0,1,0,0"},  {onclick: "designTabletUI"}],
-					phoneToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Phone", border: "0,1,0,0"},   {onclick: "designPhoneUIClick"}],
-					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding", hint: "Enable this button by enabling mobile folding in your Page's properties in the services tab", border: "0"},   {onclick: "designMobileFolding"}]
+				    devicesTogglePanel: ["wm.ToggleButtonPanel", {width: "250px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, {
+					    binding: ["wm.Binding",{},{}, {
+					        wire: ["wm.Wire", {"source":"desktopToggleButton","targetProperty":"currentButton"}, {}]
+					    }],
+    					desktopToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Desktop", border: "0,1,0,0"}, {onclick: "designDesktopUI"}],
+    					tabletToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Tablet", border: "0,1,0,0"},  {onclick: "designTabletUI"}],
+    					phoneToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Phone", border: "0,0,0,0"},   {onclick: "designPhoneUIClick"}],
+    					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding", hint: "Enable this button by enabling mobile folding in your Page's properties in the services tab", border: "0", showing:false},   {onclick: "designMobileFolding"}]
 				    }],
 				    deviceSettingSpacer: ["wm.Spacer", {width: "100%"}],
-				    deviceSizeSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Size", margin:"4,0,4,15", width: "180px", height: "24px", captionSize: "50px", dataValue: "1150", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
+                    orientationTogglePanel: ["wm.ToggleButtonPanel", {width: "150px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, { 
+                         binding: ["wm.Binding",{},{}, {
+                            wire: ["wm.Wire", {"source":"portraitToggleButton","targetProperty":"currentButton"}, {}]
+                        }],                       
+                        portraitToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%",  height: "100%", margin: "0", caption: "Portrait", border: "0,1,0,0"}, {onclick: "deviceSizeSelectChanged"}],
+                        landscapeToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Landscape", border: "0,0,0,0"},  {onclick: "deviceSizeSelectChanged"}]                       
+                    }],
+				    deviceSizeSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Size", margin:"4,0,4,15", width: "180px", height: "24px", captionSize: "50px",  displayField: "name", dataField: ""},{onchange: "deviceSizeSelectChanged"},{
 					binding: ["wm.Binding",{},{}, {
-					    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
+					    wire: ["wm.Wire", {"source":"deviceSizeVar.queriedItems","targetProperty":"dataSet"}, {}]
 					}]
 				    }],
 
-				    deviceBarHelpBtn: ["wm.ToolButton", {width: "20px", height: "20px", margin: "5,0,0,0", hint: "Help", _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "showDeviceBarHelp"}]
+				    deviceBarHelpBtn: ["wm.ToolButton", {width: "20px", height: "20px", margin: "5,0,0,0", hint: "Phone and Tablet sizes are not exact; you need the real device to see how it will really look.  Click for more help", _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "showDeviceBarHelp"}]
 				}]
 				}],
-				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
-				    designerSpacer1: ["wm.Spacer", {showing: false, height: "100%"}],
-				    designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
-				    designerSpacer2: ["wm.Spacer", {showing: false, height: "100%"}],
+				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {				    
+				    designerWrapper: ["wm.Panel", {width: "100%", height: "100%", autoScroll: true, horizontalAlign:"center", verticalAlign: "middle"}, {}, {
+                        designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
+                    }],				    
 				    benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {
 							statusBarLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "100%", caption: ""}],

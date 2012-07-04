@@ -2099,26 +2099,15 @@ Studio.extend({
 
 	},
     getPreviewWindowOptions: function() {
-	var size = studio.deviceSizeSelect.getDataValue() || "";
+	    var invert = wm.deviceType != "desktop" && this.landscapeToggleButton.clicked;
+
+	var width = studio.deviceSizeSelect.getDataValue()[invert ? "height" : "width"];
+	var height= studio.deviceSizeSelect.getDataValue()[invert ? "width" : "height"]
+	var scrollbars = "scrollbars=" + (studio.deviceSizeSelect.getDataValue().deviceType == "desktop" ? 1 : 0);
+	var widthStr = width.match(/px/) ? ",width=" + width.replace(/px/,"") : ",width=1000";
+	var heightStr = height.match(/px/) ? ",height=" + height.replace(/px/,"") : ",height=700";	
+	return "resizable=1," + scrollbars + widthStr + heightStr;
 	
-	switch(size.toLowerCase()) {
-	case "all":
-	    return undefined;
-	case "1150":
-	    return "resizable=1,scrollbars=1,width=1155,height=900";
-	case "900":
-	    return "resizable=1,scrollbars=1,width=905,height=800";
-	case "750":
-	    return "resizable=1,scrollbars=1,width=755,height=750";
-	case "600":
-	    return "resizable=1,scrollbars=1,width=605,height=750";
-	case "450":
-	    return "resizable=1,scrollbars=1,width=455,height=600";
-	case "300":
-	    return "resizable=1,scrollbars=1,width=305,height=450";
-	case "tiny":
-	    return "resizable=1,scrollbars=1,width=250,height=350";
-	}
 
     },
     runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {

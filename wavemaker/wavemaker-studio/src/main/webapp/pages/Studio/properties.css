@@ -171,6 +171,18 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 .wm_studio .studio_EventPicker_PopupMenu.dijitMenu .dijitMenuItemHover .dijitMenuArrowCell img.dijitMenuExpand {
     background-image: url(../../lib/wm/base/widget/themes/wm_default/images/arrowRightLight.png) !important;
 }
+
+.AllCheckboxSetNote:before {
+    content:"(";
+}
+.AllCheckboxSetNote:after {
+    content:")";
+}
+.AllCheckboxSetNote {
+    font-style: italic;
+    font-size: 0.8em;
+    margin-left:20px;
+}
 /*
 
 .Studio-inspected {

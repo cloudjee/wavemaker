@@ -2401,27 +2401,32 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
 dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
     noBindColumn: true,
     noReinspect: true,
-    height: "300px",
+    height: "380px",
+
     init: function() {
 	this.inherited(arguments);
+  
 	this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
+  
 	this.displaySizes.setData([{name: "All",
 				    dataValue: ""},
-				   {name: ">= 1150<div style='margin-left:20px'>large/full screen</div>", // NOTE: ipad in landscape mode is 1024px
+                   {name: ">= 1800px<div class='AllCheckboxSetNote'>1920px monitor; window almost full screen</div>", // NOTE: ipad in landscape mode is 1024px
+                    dataValue: "1800"},
+                   {name: "1400px-1800px<div class='AllCheckboxSetNote'>1440px monitor; window almost full screen</div>", // NOTE: ipad in landscape mode is 1024px
+                    dataValue: "1400"},
+				   {name: "1150px-1300px<div class='AllCheckboxSetNote'>large window</div>", // NOTE: ipad in landscape mode is 1024px
 				    dataValue: "1150"},
-				   {name: "900px-1150px<div style='margin-left:20px'>large/widescreen desktop/tablet</div>",
+				   {name: "900px-1150px<div class='AllCheckboxSetNote'>Medium window, iPad in Landscape mode</div>",
 				    dataValue: "900"},
-				   {name: "750px-900px<div style='margin-left:20px'>medium desktop/tablet</div>",
-				    dataValue: "750"},
-				   {name: "600px-750px<div style='margin-left:20px'>small laptop/tablet</div>",
-				    dataValue: "600"},
-				   {name: "450px-600px<div style='margin-left:20px'>tablet</div>",
+				   {name: "650px-900px<div class='AllCheckboxSetNote'>medium desktop, iPad in Portrait mode</div>",
+				    dataValue: "650"},				   
+				   {name: "450px-650px<div class='AllCheckboxSetNote'>Large phone/Small tablet in Portrait mode</div>",
 				    dataValue: "450"},
-				   {name: "300px-450px<div style='margin-left:20px'>phone</div>",
+				   {name: "300px-450px<div class='AllCheckboxSetNote'>iPhone</div>",
 				    dataValue: "300"},
-				   {name: "< 300px<div style='margin-left:20px'>small phone</div>",
-				    dataValue: "tiny"}]);
-	this.setDataSet(this.displaySizes);
+				   {name: "200px<div class='AllCheckboxSetNote'>Sidebar Application</div>",
+				    dataValue: "200"}]);
+    this.setDataSet(this.displaySizes);
     }
 });
 

@@ -1602,17 +1602,14 @@ dojo.declare("Studio", wm.Page, {
         this.panel2.setDocked(true);
     if (!this.PIContents.docked)
         this.PIContents.setDocked(true);
-    var requestedCanvasWidth = inSender.getDataValue();
-    if (requestedCanvasWidth == "tiny") 
-        requestedCanvasWidth = 220;
-    else if  (requestedCanvasWidth == "") {
-        this.PIPanel.setWidth("250px");
-        requestedCanvasWidth = 0;
-    } else if (requestedCanvasWidth == 1150) {
-        requestedCanvasWidth = "100%";
-    } else {
-        requestedCanvasWidth = parseInt(requestedCanvasWidth);
+    inDataValue = this.deviceSizeSelect.getDataValue(); // other things call this method; inSender/inDataValue are not usable
+    if (!inDataValue) {
+        inDataValue = this.deviceSizeVar.getItem(0).getData();
     }
+    var invert = wm.deviceType != "desktop" && this.landscapeToggleButton.clicked;
+    this.designer.setWidth(invert ? inDataValue.height : inDataValue.width)
+    this.designer.setHeight(invert ? inDataValue.width : inDataValue.height);
+/*
     if (requestedCanvasWidth) {
         if (requestedCanvasWidth == "100%") {
         this.designer.setMargin("0");
@@ -1624,16 +1621,9 @@ dojo.declare("Studio", wm.Page, {
         this.designer.setMargin("0," + margin + ",0," + margin);
         }
         this.designer.reflow();
-        
-/*
-        var availWidth = this.bench.bounds.w + this.PIPanel.bounds.w;
-        var minPIPanelWidth = 250;
-        var PIWidth = availWidth - requestedCanvasWidth;
-        if (PIWidth < minPIPanelWidth)
-        PIWidth = minPIPanelWidth;
-        this.PIPanel.setWidth(PIWidth + "px");
-        */
+  
     }
+  */
     if (!inSetByCode) {
         dojo.publish("deviceSizeRecalc");
     }
@@ -1650,7 +1640,9 @@ dojo.declare("Studio", wm.Page, {
         studio.page.root.reflow();
         studio.refreshDesignTrees();
     }
-    
+    this.deviceSizeVar.setQuery({deviceType: "desktop"});
+    this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
+    this.orientationTogglePanel.hide();
     this.currentDeviceType = "desktop";
     app.addHistory({});
     dojo.removeClass(this.designer.domNode, "wmmobile");
@@ -1664,7 +1656,6 @@ dojo.declare("Studio", wm.Page, {
         w.resetDesignHeight();
         });
     }
-    this.deviceSizeSelect.setDataValue("1150");
     this.reinspect(); // some properties may change like height/minHeight
     },
     designTabletUI: function() {
@@ -1675,6 +1666,9 @@ dojo.declare("Studio", wm.Page, {
         studio.refreshDesignTrees();
     }
     this.currentDeviceType = "tablet";
+    this.deviceSizeVar.setQuery({deviceType: "tablet"});
+    this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
+    this.orientationTogglePanel.show();
     app.addHistory({});
     dojo.addClass(this.designer.domNode, "wmmobile");
     if (studio.page) {
@@ -1688,7 +1682,6 @@ dojo.declare("Studio", wm.Page, {
 
         });
     }
-    this.deviceSizeSelect.setDataValue("750");
     this.reinspect(); // some properties may change like height/minHeight
     },
     designPhoneUIClick: function(inSender) {
@@ -1702,6 +1695,9 @@ dojo.declare("Studio", wm.Page, {
         studio.refreshDesignTrees();
     }
     this.currentDeviceType = "phone";
+    this.deviceSizeVar.setQuery({deviceType: "phone"});
+    this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
+    this.orientationTogglePanel.show();
     app.addHistory({});
     dojo.addClass(this.designer.domNode, "wmmobile");
     if (studio.page) {
@@ -1714,7 +1710,6 @@ dojo.declare("Studio", wm.Page, {
         w.resetDesignHeight();
         });
     }
-    this.deviceSizeSelect.setDataValue("450");
     this.reinspect(); // some properties may change like height/minHeight
     },
     designMobileFoldingClick: function(inSender) {
@@ -2064,7 +2059,7 @@ dojo.declare("Studio", wm.Page, {
     this.publishedPropsDialog.page.reset(this.selected);
     },
     showDeviceBarHelp: function() {
-    window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/WM65RelNotes#HNewmobilesupport");
+        window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "MobileDevelopment");
     },
     browserZoomed: function() {
     var isZoomed = Boolean(app._currentZoomLevel);
