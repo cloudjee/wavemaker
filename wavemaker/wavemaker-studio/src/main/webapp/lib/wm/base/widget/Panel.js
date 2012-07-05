@@ -33,7 +33,7 @@ dojo.declare("wm.Panel", wm.Container, {
         var indexInParent = dojo.indexOf(this.parent.c$, this);
         this.destroy();
 	
-        var clone = parent.createComponent(name, "wm." + inType + "Panel", widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
+        var clone = parent.createComponent(name, "wm." + (inType||"") + "Panel", widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
         parent.moveControl(clone, indexInParent);
         parent.reflow();
 	studio.refreshVisualTree();
