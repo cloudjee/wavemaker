@@ -27,13 +27,25 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractResources<T extends Resource> implements Resources<T> {
 
+    private final ResourceFilterContext resourceFilterContext = new ResourceFilterContext() {
+
+        @Override
+        public Folder getSource() {
+            return AbstractResources.this.getSource();
+        }
+    };
+
+    protected final ResourceFilterContext getResourceFilterContext() {
+        return this.resourceFilterContext;
+    }
+
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Resources<File> files() {
         return (Resources) include(new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
                 return resource instanceof File;
             }
         });
@@ -45,7 +57,7 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         return (Resources) include(new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
                 return resource instanceof Folder;
             }
         });

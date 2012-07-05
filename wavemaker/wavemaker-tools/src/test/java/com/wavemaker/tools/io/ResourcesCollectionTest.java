@@ -141,7 +141,7 @@ public class ResourcesCollectionTest {
         return new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
                 return resource == on;
             }
         };

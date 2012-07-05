@@ -113,7 +113,7 @@ public abstract class FilterOn {
         return new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
                 for (String pattern : lowerCasePattern) {
                     if (ANT_PATH_MATCHER.match(pattern, resource.toString())) {
                         return true;
@@ -286,11 +286,11 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
-            if (this.parent != null && !this.parent.match(resource)) {
+        public boolean match(ResourceFilterContext context, Resource resource) {
+            if (this.parent != null && !this.parent.match(context, resource)) {
                 return false;
             }
-            return this.filter == null || this.filter.match(resource);
+            return this.filter == null || this.filter.match(context, resource);
         }
     }
 
@@ -303,9 +303,9 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
+        public boolean match(ResourceFilterContext context, Resource resource) {
             for (ResourceFilter filter : this.filters) {
-                if (filter.match(resource)) {
+                if (filter.match(context, resource)) {
                     return true;
                 }
             }
@@ -322,8 +322,8 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
-            return !this.filter.match(resource);
+        public boolean match(ResourceFilterContext context, Resource resource) {
+            return !this.filter.match(context, resource);
         }
     }
 
@@ -346,7 +346,7 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
+        public boolean match(ResourceFilterContext context, Resource resource) {
             String attributeString = this.attribute.get(resource);
             String matchString = this.value.toString();
             if (this.attribute.isIgnoreCase()) {

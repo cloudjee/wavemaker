@@ -47,6 +47,7 @@ import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFilterContext;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.zip.ZipArchive;
@@ -719,10 +720,10 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
             "/webapproot/WEB-INF/lib");
 
         @Override
-        public boolean match(Resource resource) {
+        public boolean match(ResourceFilterContext context, Resource resource) {
             if (resource instanceof Folder) {
                 Folder folder = (Folder) resource;
-                if (!PATHS.match(folder)) {
+                if (!PATHS.match(context, folder)) {
                     return false;
                 }
             }

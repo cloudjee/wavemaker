@@ -6,7 +6,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for {@link FilterOn}.
@@ -15,40 +18,48 @@ import org.junit.Test;
  */
 public class FilterOnTest {
 
+    @Mock
+    private ResourceFilterContext context;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
     public void shouldSupportCompoundFilters() throws Exception {
         ResourceFilter filter = FilterOn.names().starting("~").ending(".tmp", ".bak").notContaining("keep");
-        assertThat(filter.match(fileWithName("~file.tmp")), is(true));
-        assertThat(filter.match(fileWithName("~file.bak")), is(true));
-        assertThat(filter.match(fileWithName("file.tmp")), is(false));
-        assertThat(filter.match(fileWithName("~file.dat")), is(false));
-        assertThat(filter.match(fileWithName("~xxkeepxx.bak")), is(false));
+        assertThat(filter.match(this.context, fileWithName("~file.tmp")), is(true));
+        assertThat(filter.match(this.context, fileWithName("~file.bak")), is(true));
+        assertThat(filter.match(this.context, fileWithName("file.tmp")), is(false));
+        assertThat(filter.match(this.context, fileWithName("~file.dat")), is(false));
+        assertThat(filter.match(this.context, fileWithName("~xxkeepxx.bak")), is(false));
     }
 
     @Test
     public void shouldFilterHiddenResources() throws Exception {
         ResourceFilter filter = FilterOn.hidden();
-        assertThat(filter.match(fileWithName(".hidden")), is(true));
-        assertThat(filter.match(fileWithName("nothidden")), is(false));
-        assertThat(filter.match(folderWithName(".hidden")), is(true));
-        assertThat(filter.match(folderWithName("nothidden")), is(false));
+        assertThat(filter.match(this.context, fileWithName(".hidden")), is(true));
+        assertThat(filter.match(this.context, fileWithName("nothidden")), is(false));
+        assertThat(filter.match(this.context, folderWithName(".hidden")), is(true));
+        assertThat(filter.match(this.context, folderWithName("nothidden")), is(false));
     }
 
     @Test
     public void shouldFilterNonHiddenResources() throws Exception {
         ResourceFilter filter = FilterOn.nonHidden();
-        assertThat(filter.match(fileWithName(".hidden")), is(false));
-        assertThat(filter.match(fileWithName("nothidden")), is(true));
-        assertThat(filter.match(folderWithName(".hidden")), is(false));
-        assertThat(filter.match(folderWithName("nothidden")), is(true));
+        assertThat(filter.match(this.context, fileWithName(".hidden")), is(false));
+        assertThat(filter.match(this.context, fileWithName("nothidden")), is(true));
+        assertThat(filter.match(this.context, folderWithName(".hidden")), is(false));
+        assertThat(filter.match(this.context, folderWithName("nothidden")), is(true));
     }
 
     @Test
     public void shouldFilterOnPattern() throws Exception {
         ResourceFilter filter = FilterOn.antPattern("/dojo/**/tests/**");
-        assertThat(filter.match(folderWithPath("/dojo/folder/tests/file.js")), is(true));
-        assertThat(filter.match(folderWithPath("/dojo/some/folder/tests/file.js")), is(true));
-        assertThat(filter.match(folderWithPath("/dojo/some/folder/tests/another/file.js")), is(true));
+        assertThat(filter.match(this.context, folderWithPath("/dojo/folder/tests/file.js")), is(true));
+        assertThat(filter.match(this.context, folderWithPath("/dojo/some/folder/tests/file.js")), is(true));
+        assertThat(filter.match(this.context, folderWithPath("/dojo/some/folder/tests/another/file.js")), is(true));
     }
 
     private File fileWithName(String name) {
