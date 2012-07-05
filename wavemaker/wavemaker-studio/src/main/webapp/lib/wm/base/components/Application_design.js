@@ -176,6 +176,7 @@ wm.Object.extendSchema(wm.Application, {
     main: {group: "mobile", shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     tabletMain: {group: "mobile", order: 6, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     phoneMain: {group: "mobile", order: 7, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
+    showIOSPhoneGapBackButton: {group: "mobile", order: 100, type: "boolean"},
     isSecurityEnabled: {group: "widgetName", subgroup: "security", type: "boolean", hidden: 1},
     phoneGapLoginPage: {group: "mobile", order: 10, type: "string"},
     promptChromeFrame: {group: "widgetName",  subgroup: "behavior", order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
