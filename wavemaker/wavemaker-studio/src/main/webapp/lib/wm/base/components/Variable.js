@@ -583,7 +583,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		@returns Any 
 	*/
 	getItem: function(inIndex) {
-		return this.isList && this._needItem(inIndex);
+		return this.isList && this._needItem(inIndex) || !this.isList && this;
 	},
 	getItemData: function(inIndex) {
 	    if  (!this.isList) return;
@@ -610,6 +610,17 @@ dojo.declare("wm.Variable", wm.Component, {
 		result.push(inCallback(this.getItem(i)));
 	    }
 	    return result;
+	},
+	filterItems: function(inCallback) {
+		var result = [];
+		this.forEach(function(item, index) {
+			if (inCallback(item, index)) {
+				result.push(item.getData());
+			}
+		})
+		var v = new wm.Variable({type: this.type, owner: this});
+		v.setData(result);
+		return v;
 	},
 	// note: low level sort that requires a comparator function to be used.
 	sort: function(inComparator) {
