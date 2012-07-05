@@ -67,8 +67,7 @@ wm.ServiceCall.extend({
 });
 
 
-wm.Object.extendSchema(wm.ServiceCall, {
-    startUpdateComplete: { ignore: 1},
+wm.Object.extendSchema(wm.ServiceCall, {    
     setService: {method:1},
     setOperation: {method:1},
     update: {method:1},
@@ -128,8 +127,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     listType: {ignore: 1},
     isList: {ignore: 1},
     saveInCookie: {ignore: 1},
-    type: { ignore: 1 },
-    startUpdateComplete: { ignore: 1},
+    type: { ignore: 1 },    
     isList: {ignore: 1},
     total: {ignore: 1},
 

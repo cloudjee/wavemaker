@@ -41,7 +41,7 @@ dojo.declare("wm.ServiceCall", null, {
 		@type String
 	*/
 	startUpdate: false,
-	startUpdateComplete: false,
+	_startUpdateComplete: false,
 	/**
 		Name of the service called by this object.
 		@type String
@@ -303,11 +303,11 @@ dojo.declare("wm.ServiceCall", null, {
 		if (djConfig.isDebug) this.log("startUpdate");		
 		this.updateInternal();
 		if (djConfig.isDebug) this.endLog("startUpdate");
-		this.startUpdateComplete = true;
+		this._startUpdateComplete = true;
 	    }
 	},
 	doAutoUpdate: function() {
-	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) {
+	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this._startUpdateComplete || this.isDesignLoaded())) {
 		if (djConfig.isDebug && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");		    		
 		/* wait 20ms so that UI events can finish firing and so other inputs have time to be set */
 		wm.job(this.getRuntimeId() + ".doAutoUpdate", wm.isMobile ? 20 : 1, dojo.hitch(this, "updateInternal"));
