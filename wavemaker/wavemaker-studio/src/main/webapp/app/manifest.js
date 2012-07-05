@@ -15,6 +15,7 @@
 //
 // Studio module manifest
 // all loads except for css should be nop in production mode.
+
 wm.registerPaths(
 	["wm.studio.app", wm.basePath + "app"],
 	["wm.studio.pages", wm.basePath + "pages"]
@@ -82,6 +83,7 @@ wm.loadLibs([
 	"wm.base.components.ImageList_design",
 	"wm.base.components.Variable_design",
 	"wm.base.components.ServiceCall_design",
+    "wm.base.components.ServiceVariable_design",    
 	"wm.base.components.NavigationService_design",
 	"wm.base.components.LiveVariable_design",
 	"wm.base.components.LogoutVariable_design",

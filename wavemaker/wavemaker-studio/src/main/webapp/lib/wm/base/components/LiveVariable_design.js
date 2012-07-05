@@ -13,8 +13,9 @@
  */
 
 dojo.provide("wm.base.components.LiveVariable_design");
+dojo.require("wm.base.components.ServiceVariable_design");
 dojo.require("wm.base.components.LiveVariable");
-dojo.require("wm.base.components.ServiceCall_design");
+
 wm.Object.extendSchema(wm.LiveVariable, {
     
     /* Data group; data subgroup */
