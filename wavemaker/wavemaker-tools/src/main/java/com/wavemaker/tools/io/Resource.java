@@ -102,6 +102,7 @@ public interface Resource {
      * @return the full name of the resource, for example <tt>"/folder/file.txt"</tt> or <tt>"/folder/"</tt>
      * @see #getName()
      * @see #toString(ResourceStringFormat)
+     * @see #toStringRelativeTo(Folder)
      */
     @Override
     String toString();
@@ -111,8 +112,23 @@ public interface Resource {
      * 
      * @param format the format used for the name
      * @return the name
+     * @see #toString()
+     * @see #toStringRelativeTo(Folder)
      */
     String toString(ResourceStringFormat format);
+
+    /**
+     * Returns the the complete name of this resource (including path elements) relative to the specified source folder.
+     * The source must be a parent (or grandparent etc) of this resource. If the source is this folder an empty String
+     * is returned. The returned value does not include any leading slash, for example: '/a/b/c.txt' relative to '/a/'
+     * will return 'b/c.txt'.
+     * 
+     * @param source the source folder
+     * @return the name
+     * @see #toString()
+     * @see #toStringRelativeTo(Folder)
+     */
+    String toStringRelativeTo(Folder source);
 
     /**
      * Determines if this resource is equal to another object. Any resources that have the same type, path and are

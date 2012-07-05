@@ -107,7 +107,7 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         if (parent == null) {
             return folder;
         }
-        String name = parent.toString().substring(getSource().toString().length());
+        String name = parent.toStringRelativeTo(getSource());
         return name.length() == 0 ? folder : folder.getFolder(name);
     }
 
