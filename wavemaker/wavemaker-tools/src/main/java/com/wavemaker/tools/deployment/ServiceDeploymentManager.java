@@ -142,6 +142,7 @@ public class ServiceDeploymentManager {
         // call into existing deployment code to generate war
         // would be super nice to refactor this      
         this.deploymentManager.setProjectManager(projectMgr);
+        this.deploymentManager.setOrigProjMgr(this.projectMgr);
         this.deploymentManager.setStudioConfiguration(this.studioConfiguration);
         this.deploymentManager.setFileSystem(this.fileSystem);
         com.wavemaker.tools.io.File war = this.deploymentManager.buildWar(warFile, tempWebAppRoot, includeEar);

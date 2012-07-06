@@ -25,6 +25,7 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFilterContext;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
@@ -222,7 +223,7 @@ public class StoredFolderTest {
         Resources<Resource> resources = this.folder.list().include(new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
                 return resource instanceof File;
             }
         });
@@ -241,7 +242,7 @@ public class StoredFolderTest {
         Resources<File> resources = this.folder.list().files().include(new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
                 return true;
             }
         });

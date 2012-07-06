@@ -94,6 +94,12 @@ public abstract class StoredResource implements Resource {
     }
 
     @Override
+    public String toStringRelativeTo(Folder source) {
+        Assert.notNull(source, "Source must not be null");
+        return getPath().getPath().toStringRelativeTo(source.toString());
+    }
+
+    @Override
     public int hashCode() {
         return getStore().hashCode();
     }

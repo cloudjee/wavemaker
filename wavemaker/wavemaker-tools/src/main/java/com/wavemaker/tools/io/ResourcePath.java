@@ -70,6 +70,21 @@ public final class ResourcePath {
         return this.name;
     }
 
+    public String toStringRelativeTo(String source) {
+        Assert.notNull(source, "Source must not be null");
+        return toStringRelativeTo(new ResourcePath().get(source));
+    }
+
+    public String toStringRelativeTo(ResourcePath source) {
+        Assert.notNull(source, "Source must not be null");
+        if (source.equals(this)) {
+            return "";
+        }
+        String sourcePath = source.toString() + "/";
+        Assert.isTrue(toString().startsWith(sourcePath), "Source '" + source + "' must be a parent of '" + this + "'");
+        return toString().substring(sourcePath.length());
+    }
+
     /**
      * Get a new path relative to this one.
      * 

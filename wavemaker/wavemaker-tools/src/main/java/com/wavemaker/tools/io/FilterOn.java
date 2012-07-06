@@ -31,6 +31,10 @@ import org.springframework.util.Assert;
  */
 public abstract class FilterOn {
 
+    public static enum PathStyle {
+        RELATIVE_TO_SOURCE, FULL
+    }
+
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
     /**
@@ -39,7 +43,13 @@ public abstract class FilterOn {
      * @return the filter
      */
     public static AttributeFilter names() {
-        return getFor(ResourceAttribute.NAME_IGNORING_CASE);
+        return getFor(new ResourceAttribute(false) {
+
+            @Override
+            public String get(ResourceFilterContext context, Resource resource) {
+                return resource.getName();
+            }
+        });
     }
 
     /**
@@ -48,25 +58,64 @@ public abstract class FilterOn {
      * @return the filter
      */
     public static AttributeFilter caseSensitiveNames() {
-        return getFor(ResourceAttribute.NAME);
+        return getFor(new ResourceAttribute(true) {
+
+            @Override
+            public String get(ResourceFilterContext context, Resource resource) {
+                return resource.getName();
+            }
+        });
     }
 
     /**
-     * Start filtering based on {@link Resource} {@link Folder#toString() paths}. NOTE: matching is case insensitive.
+     * Start filtering based on {@link Resource} {@link Folder#toString() paths}. NOTE: matching is case insensitive and
+     * paths are considered relative to {@link ResourceFilterContext#getSource()}.
      * 
      * @return the filter
      */
     public static AttributeFilter paths() {
-        return getFor(ResourceAttribute.PATH_IGNORING_CASE);
+        return paths(PathStyle.RELATIVE_TO_SOURCE);
     }
 
     /**
      * Start filtering based on {@link Resource} {@link Folder#toString() paths}. NOTE: matching is case insensitive.
      * 
+     * @param pathStyle the path match style
+     * @return the filter
+     */
+    public static AttributeFilter paths(final PathStyle pathStyle) {
+        return getFor(new ResourceAttribute(true) {
+
+            @Override
+            public String get(ResourceFilterContext context, Resource resource) {
+                return PathStyle.FULL.equals(pathStyle) ? resource.toString() : resource.toStringRelativeTo(context.getSource());
+            }
+        });
+    }
+
+    /**
+     * Start filtering based on {@link Resource} {@link Folder#toString() paths}. NOTE: matching is case sensitive and
+     * paths are considered relative to {@link ResourceFilterContext#getSource()}.
+     * 
      * @return the filter
      */
     public static AttributeFilter caseSensitivePaths() {
-        return getFor(ResourceAttribute.PATH);
+        return caseSensitivePaths(PathStyle.RELATIVE_TO_SOURCE);
+    }
+
+    /**
+     * Start filtering based on {@link Resource} {@link Folder#toString() paths}. NOTE: matching is case sensitive.
+     * 
+     * @return the filter
+     */
+    public static AttributeFilter caseSensitivePaths(final PathStyle pathStyle) {
+        return getFor(new ResourceAttribute(false) {
+
+            @Override
+            public String get(ResourceFilterContext context, Resource resource) {
+                return PathStyle.FULL.equals(pathStyle) ? resource.toString() : resource.toStringRelativeTo(context.getSource());
+            }
+        });
     }
 
     /**
@@ -100,22 +149,37 @@ public abstract class FilterOn {
     }
 
     /**
-     * Returns an resource filter based on ant patterns.
+     * Returns an resource filter based on ant patterns. Paths are considered relative from the
+     * {@link ResourceFilterContext#getSource()}.
      * 
      * @param pattern the ant pattern
      * @return a ant pattern based resource filter
      */
     public static ResourceFilter antPattern(String... pattern) {
-        final String[] lowerCasePattern = new String[pattern.length];
+        return antPattern(PathStyle.RELATIVE_TO_SOURCE, pattern);
+    }
+
+    /**
+     * Returns an resource filter based on ant patterns.
+     * 
+     * @param pattern the ant pattern
+     * @return a ant pattern based resource filter
+     */
+    public static ResourceFilter antPattern(final PathStyle pathStyle, String... pattern) {
+        final String[] patternsToUse = new String[pattern.length];
         for (int i = 0; i < pattern.length; i++) {
-            lowerCasePattern[i] = pattern[i].toLowerCase();
+            patternsToUse[i] = pattern[i].toLowerCase();
+            if (!PathStyle.FULL.equals(pathStyle) && patternsToUse[i].startsWith("/")) {
+                patternsToUse[i] = patternsToUse[i].substring(1);
+            }
         }
         return new ResourceFilter() {
 
             @Override
-            public boolean match(Resource resource) {
-                for (String pattern : lowerCasePattern) {
-                    if (ANT_PATH_MATCHER.match(pattern, resource.toString())) {
+            public boolean match(ResourceFilterContext context, Resource resource) {
+                for (String pattern : patternsToUse) {
+                    String path = PathStyle.FULL.equals(pathStyle) ? resource.toString() : resource.toStringRelativeTo(context.getSource());
+                    if (ANT_PATH_MATCHER.match(pattern, path)) {
                         return true;
                     }
                 }
@@ -127,44 +191,15 @@ public abstract class FilterOn {
     /**
      * Various attributes that can be used to filter resources.
      */
-    public enum ResourceAttribute {
-
-        NAME(false) {
-
-            @Override
-            public String get(Resource resource) {
-                return resource.getName();
-            }
-        },
-        NAME_IGNORING_CASE(true) {
-
-            @Override
-            public String get(Resource resource) {
-                return resource.getName();
-            }
-        },
-        PATH(false) {
-
-            @Override
-            public String get(Resource resource) {
-                return resource.toString();
-            }
-        },
-        PATH_IGNORING_CASE(true) {
-
-            @Override
-            public String get(Resource resource) {
-                return resource.toString();
-            }
-        };
+    public static abstract class ResourceAttribute {
 
         private final boolean ignoreCase;
 
-        private ResourceAttribute(boolean ignoreCase) {
+        public ResourceAttribute(boolean ignoreCase) {
             this.ignoreCase = ignoreCase;
         }
 
-        public abstract String get(Resource resource);
+        public abstract String get(ResourceFilterContext context, Resource resource);
 
         public boolean isIgnoreCase() {
             return this.ignoreCase;
@@ -286,11 +321,11 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
-            if (this.parent != null && !this.parent.match(resource)) {
+        public boolean match(ResourceFilterContext context, Resource resource) {
+            if (this.parent != null && !this.parent.match(context, resource)) {
                 return false;
             }
-            return this.filter == null || this.filter.match(resource);
+            return this.filter == null || this.filter.match(context, resource);
         }
     }
 
@@ -303,9 +338,9 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
+        public boolean match(ResourceFilterContext context, Resource resource) {
             for (ResourceFilter filter : this.filters) {
-                if (filter.match(resource)) {
+                if (filter.match(context, resource)) {
                     return true;
                 }
             }
@@ -322,8 +357,8 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
-            return !this.filter.match(resource);
+        public boolean match(ResourceFilterContext context, Resource resource) {
+            return !this.filter.match(context, resource);
         }
     }
 
@@ -346,8 +381,8 @@ public abstract class FilterOn {
         }
 
         @Override
-        public boolean match(Resource resource) {
-            String attributeString = this.attribute.get(resource);
+        public boolean match(ResourceFilterContext context, Resource resource) {
+            String attributeString = this.attribute.get(context, resource);
             String matchString = this.value.toString();
             if (this.attribute.isIgnoreCase()) {
                 attributeString = attributeString.toLowerCase();

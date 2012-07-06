@@ -131,4 +131,25 @@ public class ResourcePathTest {
         assertThat(ab.append(root), is(equalTo(ab)));
         assertThat(ab.append(cd), is(equalTo(new ResourcePath().get("a/b/c/d"))));
     }
+
+    @Test
+    public void shouldReturnToStringRelativeToOther() throws Exception {
+        ResourcePath abcd = new ResourcePath().get("a/b/c/d");
+        assertThat(abcd.toStringRelativeTo("/a/b/"), is("c/d"));
+    }
+
+    @Test
+    public void shouldReturnEmptyToStringRelativeToSelf() throws Exception {
+        ResourcePath ab = new ResourcePath().get("a/b");
+        assertThat(ab.toStringRelativeTo("/a/b/"), is(""));
+    }
+
+    @Test
+    public void shouldNotReturnToStringRelativeToNonParent() throws Exception {
+        ResourcePath abcd = new ResourcePath().get("a/b/c/d");
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Source '/a/c' must be a parent of '/a/b/c/d'");
+        abcd.toStringRelativeTo("/a/c/");
+    }
+
 }
