@@ -1388,13 +1388,14 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "zIndex", editor: "wm.Number",advanced:1}
     ],
     search: function(inName) {
-	var props = this.inspected.listProperties();
-	wm.forEachProperty(props, function(p, propName) {
-	    /* TODO: Should test if isEditable prop */
-	    if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
-		return true;
-	});
-	return false;
+    	var props = this.inspected.listProperties();
+        var result = false;
+    	wm.forEachProperty(props, function(p, propName) {
+	       /* TODO: Should test if isEditable prop */
+	        if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
+		      result = true;
+	   });
+	   return result;
     },
     postInit: function() {
 	this.inherited(arguments);

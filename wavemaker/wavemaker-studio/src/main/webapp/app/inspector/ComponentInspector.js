@@ -1433,139 +1433,142 @@
 	     return inGroups;
 	 },
 
-     propertySearch:  function(inSender,inDisplayValue,inDataValue) {
-	 if (Boolean(inDisplayValue)) {
-	     if (this._modeBeforeSearch === undefined) {
-		 this._modeBeforeSearch = this.isAdvancedMode();
-		 this.mode = "advanced";
-	     }
-	 } else if (this._modeBeforeSearch !== undefined) {
-	     this.mode = this._modeBeforeSearch; 
-	     delete this._modeBeforeSearch;
-	     delete this._searchEditorsGenerated;
-	 } else {
-	     this.mode = dojo.hasClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown") ? "advanced" :
-		 dojo.hasClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown") ? "recommended" : "required";
-	     delete this._modeBeforeSearch;
-	     delete this._searchEditorsGenerated;
-	 }
+     propertySearch: function(inSender, inDisplayValue, inDataValue) {
+         if (Boolean(inDisplayValue)) {
+             if (this._modeBeforeSearch === undefined) {
+                 this._modeBeforeSearch = this.isAdvancedMode();
+                 this.mode = "advanced";
+             }
+         } else if (this._modeBeforeSearch !== undefined) {
+             this.mode = this._modeBeforeSearch;
+             delete this._modeBeforeSearch;
+             delete this._searchEditorsGenerated;
+         } else {
+             this.mode = dojo.hasClass(studio.togglePropertiesAdvancedButton.domNode, "toggleButtonDown") ? "advanced" : dojo.hasClass(studio.togglePropertiesRecommendedButton.domNode, "toggleButtonDown") ? "recommended" : "required";
+             delete this._modeBeforeSearch;
+             delete this._searchEditorsGenerated;
+         }
 
-	 var mode = this.mode;
+         var mode = this.mode;
 
-	 this.multiActive = Boolean(inDisplayValue) || this.preferredMultiActive;
-	 if (!this.multiActive) {
-	     var openFound = false;
-	     for (var i = 0; i < this.layers.length; i++) {
-		 if (this.layers[i].active && !openFound) {
-		     openFound = true;
-		 } else if (this.layers[i].active) {
-		     this.setLayerInactive(this.layers[i]);
-		 }
-	     }
-	 }
+         this.multiActive = Boolean(inDisplayValue) || this.preferredMultiActive;
+         if (!this.multiActive) {
+             var openFound = false;
+             for (var i = 0; i < this.layers.length; i++) {
+                 if (this.layers[i].active && !openFound) {
+                     openFound = true;
+                 } else if (this.layers[i].active) {
+                     this.setLayerInactive(this.layers[i]);
+                 }
+             }
+         }
 
-	 /* Search only works if all property editors are generated */
-	 if (inDisplayValue && (this._modeBeforeSearch != this.mode && !this._searchEditorsGenerated)) {
-	     this._searchEditorsGenerated = true;
-	     for (var i = 0; i < this.layers.length; i++) {
-		 var layer = this.layers[i];
-		 if (layer.c$.length === 0) {
-		     this.generateEditors(this.inspected, layer.propertyGroup, layer);
-		 }
-	     }
-	 }
-	 this.multiActive = true;
-	
-	 var props = this.props;
-	 wm.forEachProperty(this.editorHash, dojo.hitch(this, function(editor,key) {
-	     var prop = editor.propDef;
-	     if (prop) {
-		 if (inDisplayValue === "") {
-		     if (editor.parent instanceof wm.Layer) {
-			 editor.setShowing(!prop.advanced || mode == "advanced");
-		     } else {
-			 editor.parent.setShowing(!prop.advanced || mode == "advanced");
-		     }
-		 } else if (editor.search) {
-		     if (editor.search(inDisplayValue)) {
-			 editor.show();
-		     } else {
-			 editor.hide();
-		     }
-		 } else if (prop.name.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1 ||
-			    prop.shortname && prop.shortname.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1) {
-		     if (editor.parent.layoutKind == "left-to-right" && editor.parent instanceof wm.Layer == false) {
-			 editor.parent.show();
-		     } else {
-			 editor.show();
-		     }
-		 } else {
-		     if (editor.parent.layoutKind == "left-to-right" && editor.parent instanceof wm.Layer == false) {
-			 editor.parent.hide();
-		     } else {
-			 editor.hide();
-		     }
-		 }
-	     }
-	 }));
+         /* Search only works if all property editors are generated */
+         if (inDisplayValue && (this._modeBeforeSearch != this.mode && !this._searchEditorsGenerated)) {
+             this._searchEditorsGenerated = true;
+             for (var i = 0; i < this.layers.length; i++) {
+                 var layer = this.layers[i];
+                 var formPanel = layer.c$[0];
+                 if (formPanel.c$.length === 0) {
+                     this.generateEditors(this.inspected, layer.propertyGroup, formPanel);
+                 }
+             }
+         }
+         this.multiActive = true;
 
-	 dojo.forEach(this.moreLabelList, function(w) {
-	     w.hide();
-/*
-	     var hiddenCount = 0;
-	     var totalCount = 0;
-	     dojo.forEach(w.parent.c$, function(w) {
-		 if (w instanceof wm.AbstractEditor || w instanceof wm.Container || w instanceof wm.ToolButton) {
-		     totalCount++;
-		     if (!w.showing) {hiddenCount++;}
-		 }
-	     });
-	     w.setShowing(hiddenCount > 0);
-	     if (hiddenCount > 0 && hiddenCount < totalCount) {
-		 w.setCaption( "Show " + hiddenCount + " more");
-	     }
-	     */
-	 });
+         var props = this.props;
+         wm.forEachProperty(this.editorHash, dojo.hitch(this, function(editor, key) {
+             var prop = editor.propDef;
+             if (prop) {
+                 if (inDisplayValue === "") {
+                     if (editor.parent instanceof wm.Layer) {
+                         editor.setShowing(!prop.advanced || mode == "advanced");
+                     } else {
+                         editor.parent.setShowing(!prop.advanced || mode == "advanced");
+                     }
+                 } else if (editor.search) {
+                     if (editor.search(inDisplayValue)) {
+                         editor.show();
+                     } else {
+                         editor.hide();
+                     }
+                 } else if (prop.name.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1 || prop.shortname && prop.shortname.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1) {
+                     if (editor.parent.layoutKind == "left-to-right" && editor.parent instanceof wm.Layer == false) {
+                         editor.parent.show();
+                     } else {
+                         editor.show();
+                     }
+                 } else {
+                     if (editor.parent.layoutKind == "left-to-right" && editor.parent instanceof wm.Layer == false) {
+                         editor.parent.hide();
+                     } else {
+                         editor.hide();
+                     }
+                 }
+             }
+         }));
 
-
-	 dojo.forEach(this.subHeaderLabelList, function(w) {
-	     w.setShowing(!inDisplayValue);
-	 });
+         dojo.forEach(this.moreLabelList, function(w) {
+             w.hide();
+             /*
+         var hiddenCount = 0;
+         var totalCount = 0;
+         dojo.forEach(w.parent.c$, function(w) {
+         if (w instanceof wm.AbstractEditor || w instanceof wm.Container || w instanceof wm.ToolButton) {
+             totalCount++;
+             if (!w.showing) {hiddenCount++;}
+         }
+         });
+         w.setShowing(hiddenCount > 0);
+         if (hiddenCount > 0 && hiddenCount < totalCount) {
+         w.setCaption( "Show " + hiddenCount + " more");
+         }
+         */
+         });
 
 
-	 for (var i = 0; i < this.layers.length; i++) {
-	     var count = 0;
-	     var layer = this.layers[i];
-	     for (var j = 0; j < layer.c$.length; j++) { 
-		 if (layer.c$[j].showing) {
-		     var w = layer.c$[j];
-		     if (w instanceof wm.Container) {
-			 var hasShowingWidgets = false;
-			 dojo.forEach(w.c$, function(child) { if (child.showing) hasShowingWidgets = true;});
-			 if (hasShowingWidgets)
-			     count++;
-		     } else {
-			 count++;
-		     }
-		 }
-	     }
-	     if (inDisplayValue !== "") {
-		 if (count === 0) {
-		     this.setLayerInactive(this.layers[i]);
-		 } else {
-		     this.layers[i].activate();
-		 }
-	     } else {
-		 if (count === 0) {
-		     this.layers[i].hide();
-		 } else {
-		     this.layers[i].show();
-		     this.layers[i].flow();
-		 }
+         dojo.forEach(this.subHeaderLabelList, function(w) {
+             w.setShowing(!inDisplayValue);
+         });
 
-	     }
-	 }
-	 this.multiActive = this.preferredMultiActive;
+
+         for (var i = 0; i < this.layers.length; i++) {
+             var count = 0;
+             var layer = this.layers[i];
+             for (var j = 0; j < layer.c$.length; j++) {
+                 if (layer.c$[j].showing) {
+                     var w = layer.c$[j];
+                     if (w instanceof wm.Container) {
+                         var hasShowingWidgets = false;
+                         dojo.forEach(w.c$, function(child) {
+                             if (child.showing) hasShowingWidgets = true;
+                         });
+                         if (hasShowingWidgets) count++;
+                     } else {
+                         count++;
+                     }
+                 }
+             }
+             if (inDisplayValue !== "") {
+                 if (count === 0) {
+                     this.setLayerInactive(this.layers[i]);
+                 } else {
+                     this.layers[i].activate();
+                 }
+             } else {                 
+                     this.layers[i].show();
+                     this.layers[i].flow();
+                     wm.onidle(this, function() {
+                        for (var i = 0; i < this.layers.length; i++) {
+                            var l = this.layers[i];
+                            if (l.isActive() && wm.isInstanceType(l.c$[0], wm.FormPanel)) {
+                                l.c$[0].updateCaptionSizes();
+                            }
+                        }
+                     });
+             }
+         }
+         this.multiActive = this.preferredMultiActive;
      },
      toggleMultiactive: function() {
 	 this.preferredMultiActive = !this.preferredMultiActive;
