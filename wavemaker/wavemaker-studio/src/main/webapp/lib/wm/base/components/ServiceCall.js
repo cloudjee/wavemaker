@@ -66,6 +66,9 @@ dojo.declare("wm.ServiceCall", null, {
     init: function() {
         this.inherited(arguments);
         this._inFlightBacklog = [];
+        if (this._isDesignLoaded) {
+            this.subscribe("wmservices-changed", dojo.hitch(this, "servicesChanged"));
+        }
     },
     postInit: function() {
         this.inherited(arguments);
@@ -98,6 +101,7 @@ dojo.declare("wm.ServiceCall", null, {
             this._service = wm.services.getService(this.service, owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
             wm.fire(this._service, "setServiceCall", [this]);
             this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
+                              
         } catch (e) {
         } finally {
             delete this._inSetService;
@@ -472,6 +476,17 @@ wm.ServiceCall.extend({
     clearInput: "(clear input)",
     updateNow: "(update now)",
     queue: "(serviceCalls)",
+    servicesChanged: function() {
+        if (this.service) {
+            var owner = this.getOwnerApp();
+            this._service = wm.services.getService(this.service, // name of service
+                                                   owner && owner.declaredClass == "StudioApplication"); // hide from client
+            if (!this._service) this._service = new wm.Service({});
+            
+            // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated   
+            this._setOperation(this.operation, 1);
+        }
+    },
     getUniqueName: function(inName) {
         if (inName === "input") return "input";
         return this.inherited(arguments);
