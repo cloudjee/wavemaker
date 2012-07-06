@@ -1648,13 +1648,18 @@ dojo.declare("Studio", wm.Page, {
     dojo.removeClass(this.designer.domNode, "wmmobile");
     if (studio.page) {
         var self = this;
+        var regenerated = false;
         wm.forEachWidget(studio.page.root, function(w) {
         if (w._regenerateOnDeviceChange) {
             w = self.regenerateOnDeviceChange(w);
-            self.refreshVisualTree();
+            regenerated = true;
         }
         w.resetDesignHeight();
         });
+        if (regenerated) {
+            this.refreshVisualTree();
+            this.page.reflow();            
+        }
     }
     this.reinspect(); // some properties may change like height/minHeight
     },
@@ -1673,14 +1678,19 @@ dojo.declare("Studio", wm.Page, {
     dojo.addClass(this.designer.domNode, "wmmobile");
     if (studio.page) {
         var self = this;
+        var regenerated = false;
         wm.forEachWidget(studio.page.root, function(w) {
         if (w._regenerateOnDeviceChange) {
             w = self.regenerateOnDeviceChange(w);
-            self.refreshVisualTree();
+            regenerated = true;
         }
         w.resetDesignHeight();
 
         });
+        if (regenerated) {
+            this.refreshVisualTree();
+            this.page.reflow();            
+        }
     }
     this.reinspect(); // some properties may change like height/minHeight
     },
@@ -1702,13 +1712,18 @@ dojo.declare("Studio", wm.Page, {
     dojo.addClass(this.designer.domNode, "wmmobile");
     if (studio.page) {
         var self = this;
+        var regenerated = false;
         wm.forEachWidget(studio.page.root, function(w) {
         if (w._regenerateOnDeviceChange) {
             w = self.regenerateOnDeviceChange(w);
-            self.refreshVisualTree();
+            regenerated = true;
         }
         w.resetDesignHeight();
         });
+        if (regenerated) {
+            this.refreshVisualTree();
+            this.page.reflow();            
+        }
     }
     this.reinspect(); // some properties may change like height/minHeight
     },
