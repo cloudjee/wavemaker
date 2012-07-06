@@ -109,7 +109,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         // modify wavemaker token in .html and config.js
         WebAppAssembler.modifyApplicationBaseFolder(buildAppWebAppRoot);
         buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
-        buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker", "\""));
+        buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
 
