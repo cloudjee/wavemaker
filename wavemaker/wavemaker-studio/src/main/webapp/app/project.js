@@ -702,22 +702,29 @@ dojo.declare("wm.studio.Project", null, {
 	    var d5 = new dojo.Deferred();
 	    d4.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
-		if (webFileExists("login.html")) {
-		    var t = this.loadProjectData("login.html");
-		    if (t.match(/var wmThemeUrl\s*=.*?;/)) {
-			t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
-		    } else {
-			t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
-		    }
-		    t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + studio.application.theme + "\", name:\"" + studio.project.projectName + "\"}");
-		    var dlocal = this.saveProjectData("login.html", t, false, true);
-		    dlocal.addCallback(function() {d5.callback();});
-		} else {
-		    d5.callback();
-		}
-	    }));
+        if (webFileExists("login.html")) {
+            var t = this.loadProjectData("login.html");
+            if (t.match(/var wmThemeUrl\s*=.*?;/)) {
+                t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+            } else {
+                t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+            }
 
-
+            var themename = studio.application.theme;
+            if (t.match(/wavemakerNode\",\s*theme\:/)) {
+                t = t.replace(/wavemakerNode\",\s*theme\:\s*\".*?\"/, "wavemakerNode\", theme: \"" + themename + "\"");
+            } else {
+                // first time we save login.html, it doesn't have a theme or projectName in the constructor
+                t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themename + "\", name:\"" + studio.project.projectName + "\"}");
+            }
+            var dlocal = this.saveProjectData("login.html", t, false, true);
+            dlocal.addCallback(function() {
+                d5.callback();
+            });
+        } else {
+            d5.callback();
+        }
+        }));
 	    /* TODO: This should be moved into project template... but is here as it simplifies project upgrades */
 	    var d6 = new dojo.Deferred();
 	    d5.addCallback(dojo.hitch(this, function() {
