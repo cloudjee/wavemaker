@@ -16,7 +16,7 @@ dojo.declare("TypeDefinitionGeneratorDialog", wm.Page, {
       this.moreDefs = {};
 	var typeName = optionalInName || this.typeName.getDataValue();
 	if (this.typeDef.name != typeName) {
-	    this.typeDef.name = studio.application.getUniqueName(typeName);
+	    this.typeDef.setName(studio.application.getUniqueName(typeName));
 	}
       this.parseObj(obj, this.typeDef);      
 /*
