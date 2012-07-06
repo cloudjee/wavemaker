@@ -107,8 +107,12 @@ dojo.declare("wm.Service", wm.Component, {
 // ==========================================================
 
 wm.services = {
+
+    // Hash naming/describing all services; use _services for the actual Service instance. This hash provides the name and type for each service
 	byName: {},
-        _services: {},
+
+    // When a ServiceCall needs a service instance, _createService creates one and stores it in this hash
+    _services: {},
 	add: function(inService){
 		return wm.services.byName[inService.name] = inService;
 	},
