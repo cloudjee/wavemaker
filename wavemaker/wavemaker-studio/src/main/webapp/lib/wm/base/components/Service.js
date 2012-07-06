@@ -115,6 +115,7 @@ wm.services = {
 	remove: function(inService){
 		var n = inService.name;
 		this._destroyService(n);
+        delete wm.services._services[n];
 		delete wm.services.byName[n];
 	},
 	getNamesList: function() {
