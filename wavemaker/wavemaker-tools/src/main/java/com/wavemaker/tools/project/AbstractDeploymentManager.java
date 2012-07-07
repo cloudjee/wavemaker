@@ -194,7 +194,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 com.wavemaker.tools.project.Project finalProject = new com.wavemaker.tools.project.Project(finalProjectFolder, this.fileSystem);
                 File jsFile = finalProject.getWebAppRootFolder().getFile(originalFinalname + ".js");
                 File newJsFile = finalProject.getWebAppRootFolder().getFile(finalname + ".js");
-                jsFile.rename(newJsFile.toString());
+                jsFile.rename(newJsFile.getName());
 
                 // Correction 2: Change the class name in the js file
                 com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, newJsFile, originalFinalname, finalname);
