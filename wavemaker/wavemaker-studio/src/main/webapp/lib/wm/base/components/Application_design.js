@@ -177,7 +177,8 @@ wm.Object.extendSchema(wm.Application, {
     tabletMain: {group: "mobile", order: 6, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     phoneMain: {group: "mobile", order: 7, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     showIOSPhoneGapBackButton: {group: "mobile", order: 100, type: "boolean"},
-    isSecurityEnabled: {group: "widgetName", subgroup: "security", type: "boolean", hidden: 1},
+    isSecurityEnabled: {group: "widgetName", subgroup: "security", type: "boolean", hidden: 1}, // used as hint, not a fact
+    isLoginPageEnabled: {hidden:1,type:"boolean"}, // used to aid in restoring this setting if the user turns off security and then turns it back on
     phoneGapLoginPage: {group: "mobile", order: 10, type: "string"},
     promptChromeFrame: {group: "widgetName",  subgroup: "behavior", order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
     toastPosition: {group: "widgetName",  subgroup: "behavior", editor: "wm.prop.SelectMenu", editorProps: {
