@@ -20,6 +20,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
+import javax.xml.bind.JAXBException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -376,6 +377,39 @@ public class ServiceDefProcessorTest {
 
         File classPathServiceDef = this.project.getClassOutputFolder().getFile("services/" + classPathServiceId + "/servicedef.xml");
         assertTrue(classPathServiceDef.exists());
+    }
+
+    @Test
+    public void testWM4189() throws IOException, JAXBException, InterruptedException {
+        String serviceId = "serviceA";
+        Folder projectRoot = this.project.getRootFolder();
+
+        Folder serviceASrc = projectRoot.getFolder(DesignServiceManager.getRuntimeRelativeDir(serviceId));
+        File javaSrc = serviceASrc.getFile("Foo.java");
+        javaSrc.getContent().write(
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(java.util.List ints){return ints.get(0);}\n}");
+
+        ServiceDefProcessor processor = new ServiceDefProcessor();
+        processor.setFileSystem(this.fileSystem);
+        buildWithProcessor(this.project, serviceId, processor);
+
+        Service service = this.designServiceManager.getService(serviceId);
+        assertEquals("Foo", service.getClazz());
+        assertEquals(2, service.getOperation().size());
+
+        boolean foundGetInt2 = false;
+        for (Operation op : service.getOperation()) {
+            if (op.getName().equals("getInt2")) {
+                foundGetInt2 = true;
+
+                assertEquals(1, op.getParameter().size());
+                Parameter param = op.getParameter().get(0);
+                assertTrue(param.isIsList());
+                assertEquals("java.lang.Object", param.getTypeRef());
+            }
+        }
+        assertTrue("" + service.getOperation(), foundGetInt2);
     }
 
     private void buildWithProcessor(Project project, String serviceId, AbstractStudioServiceProcessor processor) throws IOException {
