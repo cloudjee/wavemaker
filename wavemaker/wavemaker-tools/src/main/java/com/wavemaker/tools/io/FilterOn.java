@@ -179,6 +179,7 @@ public abstract class FilterOn {
             public boolean match(ResourceFilterContext context, Resource resource) {
                 for (String pattern : patternsToUse) {
                     String path = PathStyle.FULL.equals(pathStyle) ? resource.toString() : resource.toStringRelativeTo(context.getSource());
+                    path = path.toLowerCase();
                     if (ANT_PATH_MATCHER.match(pattern, path)) {
                         return true;
                     }
