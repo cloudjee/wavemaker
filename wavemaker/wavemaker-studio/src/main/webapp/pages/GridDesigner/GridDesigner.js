@@ -30,115 +30,125 @@ dojo.declare("GridDesigner", wm.Page, {
             this.fullFormattersVar.addItem({name:studio.getDictionaryItem("wm.DojoGrid.ADD_FORMATTER"), dataValue:"- Add Formatter"});
     },
     updateDataSets: function() {
-    var list = [{dataValue:""}];
-    wm.listMatchingComponentIds([studio.page, studio.application], function(c) {
-        if (c instanceof wm.Variable && c.isList && c.name && c.name.indexOf("_") != 0) {
-        list.push({dataValue: c.getId()});
-        }
-    });
-    this.liveSourceVar.setData(list);
+        var list = [{
+            dataValue: ""
+        }];
+        wm.listMatchingComponentIds([studio.page, studio.application], function(c) {
+            if (c instanceof wm.Variable && c.isList && c.name && c.name.indexOf("_") != 0) {
+                list.push({
+                    dataValue: c.getId()
+                });
+            }
+        });
+        this.liveSourceVar.setData(list);
     },
-    setGrid: function(inGrid) {
-    this.currentGrid = inGrid;
-    this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
+ setGrid: function(inGrid) {
+     this.currentGrid = inGrid;
+     this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
+     this.currentDataSet = inGrid.dataSet;
+     this.initialColumns = inGrid.columns;
 
-    this.currentDataSet = inGrid.dataSet;
-    this.initialColumns = inGrid.columns
-
-    var columns = dojo.clone(inGrid.columns);
-    columns = dojo.filter(columns, function(col) {return !col.controller;});
-    var mobileIndex = -1;
-    for (var i = 0; i < columns.length; i++) {
-        if (!columns[i].mobileColumn) {
+     var columns = dojo.clone(inGrid.columns);
+     columns = dojo.filter(columns, function(col) {
+         return !col.controller;
+     });
+     var phoneIndex = -1;
+     var hasPhoneColumn = false;
+     for (var i = 0; i < columns.length; i++) {
         if (columns[i].field == "PHONE COLUMN") {
-            mobileIndex = 10000;
-        }
-        columns[i].mobileColumn = false;
+            phoneIndex = i;
+            hasPhoneColumn = true;
+        } else if (columns[i].mobileColumn) {
+            hasPhoneColumn = true;
         } else {
-        mobileIndex = i;
-        }
-    }
-    var updateGrid = false;
-    if (mobileIndex == -1) {
-        updateGrid = true;
-        columns.push({show: false, // does NOT show on desktop
-              field: "PHONE COLUMN",
-              title: "-",
-              width: "100%",
-              align: "left",
-              expression: "",
-              mobileColumn: true}); // DOES show on phone
-        mobileIndex = columns.length-1;
-    }
-    this.columnsVar.setData(columns);
-    this.mobileColumn = this.columnsVar.getItem(mobileIndex);
-    if (updateGrid) {
-        this.updateGrid();
-    } else {
-        this.regenerateMobileColumn();
-    }
-    this.updateFormatterList();
-    this.updateDataSets();
+             columns[i].mobileColumn = false;         
+         }
+     }
+     var updateGrid = false;
+     if (!hasPhoneColumn) {
+         updateGrid = true;
+         columns.push({
+             show: false,
+             // does NOT show on desktop
+             field: "PHONE COLUMN",
+             title: "-",
+             width: "100%",
+             align: "left",
+             expression: "",
+             mobileColumn: true
+         }); // DOES show on phone
+         phoneIndex = columns.length - 1;
+     }
+     this.columnsVar.setData(columns);
+     if (phoneIndex != -1) {
+         this.phoneColumn = this.columnsVar.getItem(phoneIndex);
+     } 
+     if (updateGrid) {
+         this.updateGrid();
+     } else {
+         this.regenerateMobileColumn();
+     }
+     this.updateFormatterList();
+     this.updateDataSets();
     },
     regenerateMobileColumn: function() {
-    if (!this.mobileColumn || this.mobileColumn.getValue("isCustomField")) return;
-    var mobileExpr = "";
-    var count = this.columnsVar.getCount();
+        if (!this.phoneColumn || this.phoneColumn.getValue("isCustomField")) return;
+        var mobileExpr = "";
+        var count = this.columnsVar.getCount();
 
 
-    for (var i = 0; i < count; i++) {
-        var column = this.columnsVar.getItem(i).getData();
-        if (!column.mobileColumn && column.show) {
+        for (var i = 0; i < count; i++) {
+            var column = this.columnsVar.getItem(i).getData();
+            if (!column.mobileColumn && column.show) {
 
-        if (column.expression) {
-            // don't even TRY to handle this
-        } else {
-            var value = "\${" + column.field + "}";
-            var formatProps = column.formatProps ? dojo.toJson(column.formatProps) : "{}";
-            if (column.formatFunc) {
-            switch(column.formatFunc) {
-            case "wm_date_formatter": 
-            case 'Date (WaveMaker)': 
-            case 'wm_localdate_formatter':
-            case 'Local Date (WaveMaker)':                  
-                value = "wm.DojoGrid.prototype.dateFormatter(" + formatProps + ", null,null,null," + value +")";
-                break;
-            case 'wm_number_formatter':
-            case 'Number (WaveMaker)':                  
-                value = "wm.DojoGrid.prototype.numberFormatter(" + formatProps + ", null,null,null," + value +")";
-                break;
-            case 'wm_currency_formatter':
-            case 'Currency (WaveMaker)':                    
-                value = "wm.DojoGrid.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value +")";
-                break;
-            case 'wm_image_formatter':
-            case 'Image (WaveMaker)':                   
-                value = "wm.DojoGrid.prototype.imageFormatter(" + formatProps + ", null,null,null," + value +")";
-                break;
-            case 'wm_link_formatter':
-            case 'Link (WaveMaker)':                    
-                value = "wm.DojoGrid.prototype.linkFormatter(" + formatProps + ", null,null,null," + value +")";
-                break;
-            case 'wm_button_formatter':
-                value = null;
-                break;
-            }
-            }
-            if (value) {
-            if (!mobileExpr) {
-                mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.title) + ": \" + " + value +  " + \"</div>\"\n";
-            } else {
-                mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
-            }
+                if (column.expression) {
+                    // don't even TRY to handle this
+                } else {
+                    var value = "\${" + column.field + "}";
+                    var formatProps = column.formatProps ? dojo.toJson(column.formatProps) : "{}";
+                    if (column.formatFunc) {
+                        switch (column.formatFunc) {
+                        case "wm_date_formatter":
+                        case 'Date (WaveMaker)':
+                        case 'wm_localdate_formatter':
+                        case 'Local Date (WaveMaker)':
+                            value = "wm.DojoGrid.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            break;
+                        case 'wm_number_formatter':
+                        case 'Number (WaveMaker)':
+                            value = "wm.DojoGrid.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            break;
+                        case 'wm_currency_formatter':
+                        case 'Currency (WaveMaker)':
+                            value = "wm.DojoGrid.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            break;
+                        case 'wm_image_formatter':
+                        case 'Image (WaveMaker)':
+                            value = "wm.DojoGrid.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            break;
+                        case 'wm_link_formatter':
+                        case 'Link (WaveMaker)':
+                            value = "wm.DojoGrid.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            break;
+                        case 'wm_button_formatter':
+                            value = null;
+                            break;
+                        }
+                    }
+                    if (value) {
+                        if (!mobileExpr) {
+                            mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
+                        } else {
+                            mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
+                        }
+                    }
+                }
             }
         }
-        }
-    }
-    if (studio.currentDeviceType != "phone") 
-        this.mobileColumn.beginUpdate();
-    this.mobileColumn.setValue("expression", mobileExpr);
-    if (studio.currentDeviceType != "phone") 
-        this.mobileColumn.endUpdate();
+
+        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
+        this.phoneColumn.setValue("expression", mobileExpr);
+        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
     },
     getColumnByField: function(inName) {
     for (var i = 0; i < this.currentGrid.columns.length; i++) {
@@ -217,7 +227,7 @@ changeItem: function(inName, inValue, optionalRowIndex) {
 
     var item = this.columnsVar.getItem(row);
 
-    if (item.getValue("mobileColumn") && inName == "expression") {
+    if (item.getValue("field") == "PHONE COLUMN" && inName == "expression") {
         item.beginUpdate();
         item.setValue("isCustomField", true);
         item.endUpdate();
@@ -231,7 +241,7 @@ changeItem: function(inName, inValue, optionalRowIndex) {
         item.endUpdate();
         this.grid.selectedItem.endUpdate();
 
-        if (item.getValue("mobileColumn") == false) {
+        if (item.getValue("field") != "PHONE COLUMN") {
             this.regenerateMobileColumn();
         }
 

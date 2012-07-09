@@ -76,7 +76,7 @@
         "show": true,
         "id": "show",
         "title": "Desktop",
-        "width": "30px",
+        "width": "50px",
         "displayType": "Text",
         "noDelete": true,
         "align": "left",
@@ -138,6 +138,7 @@
                 }]
             }]
             }],
+                        splitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],
             form: ["wm.DataForm", {width: "100%", height: "100%", layoutKind: "top-to-bottom",confirmChangeOnDirty: ""}, {}, {
             binding: ["wm.Binding", {}, {}, {
                 wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem","targetProperty":"dataSet"}, {}]
