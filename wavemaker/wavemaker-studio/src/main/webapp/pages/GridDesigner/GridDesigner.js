@@ -194,9 +194,9 @@ dojo.declare("GridDesigner", wm.Page, {
       } catch(e) {
           console.error('ERROR IN addButtonClick: ' + e); 
       } 
-  },
+    },
     deleteButtonClick: function(inSender) {
-    var row = this.grid.getSelectedIndex() ;
+    var row = this.grid.getSelectedIndex();
     if (row == -1) return;
     this.columnsVar.removeItem(row);
     this.updateGrid();
@@ -204,11 +204,13 @@ dojo.declare("GridDesigner", wm.Page, {
         this.grid.select(0);
     }), 10);
 
-    },
-    onColumnSelect: function(inSender) {
-
-    },
-    changeItem: function(inName, inValue, optionalRowIndex) {
+},
+onColumnSelect: function(inSender) {
+    this.onFormatChange(this.formatEditor, this.formatEditor.getDisplayValue(), this.formatEditor.getDataValue(), true);
+    this.onEditFieldChange(this.editorSelector, this.editorSelector.getDisplayValue(), this.editorSelector.getDataValue(), true);
+    this.updateRestrictValues();
+},
+changeItem: function(inName, inValue, optionalRowIndex) {
     if (this.columnsVar.isEmpty()) return;
     var row = (optionalRowIndex === undefined) ? this.grid.getSelectedIndex() : optionalRowIndex;
     if (row == -1) return;
@@ -223,11 +225,14 @@ dojo.declare("GridDesigner", wm.Page, {
 
     if (item.getValue(inName) != inValue) {
         item.beginUpdate(); // we don't need to regenerate the grid when this item changes
+        this.grid.selectedItem.beginUpdate();
         item.setValue(inName, inValue);
+        this.grid.selectedItem.setValue(inName, inValue);
         item.endUpdate();
+        this.grid.selectedItem.endUpdate();
 
         if (item.getValue("mobileColumn") == false) {
-        this.regenerateMobileColumn();
+            this.regenerateMobileColumn();
         }
 
         this.updateGrid(row);
@@ -235,38 +240,35 @@ dojo.declare("GridDesigner", wm.Page, {
         return true;
     }
     return false;
-    },
-    updateGrid: function() {
+},
+updateGrid: function() {
     this.regenerateMobileColumn();
-        var columns = this.columnsVar.getData();
+    var columns = this.columnsVar.getData();
     for (var i = 0; i < columns.length; i++) {
         var col = columns[i];
         if (col.editorProps) {
-        for (var name in col.editorProps) {
-            if (col.editorProps[name] === null)
-            delete col.editorProps[name];
-        }
+            for (var name in col.editorProps) {
+                if (col.editorProps[name] === null) delete col.editorProps[name];
+            }
         }
         if (col.constraints) {
-        for (var name in col.constraints) {
-            if (col.constraints[name] === null)
-            delete col.constraints[name];
-        }
+            for (var name in col.constraints) {
+                if (col.constraints[name] === null) delete col.constraints[name];
+            }
         }
         if (col.formatProps) {
-        for (var name in col.formatProps) {
-            if (col.formatProps[name] === null)
-            delete col.formatProps[name];
-        }
+            for (var name in col.formatProps) {
+                if (col.formatProps[name] === null) delete col.formatProps[name];
+            }
         }
     }
     this.currentGrid.set_columns(columns);
-    },
-    onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+},
+onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         this.changeItem("title", inDataValue);
     }
-    },
+},
     onWidthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         var displayValue = this.widthSizeEditor.getDisplayValue();
@@ -308,6 +310,7 @@ dojo.declare("GridDesigner", wm.Page, {
         formatProps.endUpdate();
         this.formatSubForm.setDataSet(formatProps);
         }
+    }
         switch(inDataValue) {
         case "wm_currency_formatter":
         this.currencyLayer.activate();
@@ -337,7 +340,7 @@ dojo.declare("GridDesigner", wm.Page, {
             eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
             this.owner.owner.hide();
         }
-        }
+        
     }
     },
     onEditFieldChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
@@ -369,6 +372,7 @@ dojo.declare("GridDesigner", wm.Page, {
         this.editorDateLayerSubForm.setDataSet(constraints);
         this.editorTextLayerSubForm.setDataSet(editorProps);
         }
+    }
         switch(inDataValue) {
         case "dojox.grid.cells._Widget":
         this.editorTextLayer.activate();
@@ -394,7 +398,7 @@ dojo.declare("GridDesigner", wm.Page, {
 
         default:
         this.editorPropBlankLayer.activate();
-        }
+        
     }
     },
     onDisplayExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
@@ -550,11 +554,28 @@ dojo.declare("GridDesigner", wm.Page, {
         }
         this.comboBoxDisplayFieldEditor.setOptions(options.join(","));
     }
-    },
+    },    
     onDisplayFieldChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         this.changeItem("editorProps.displayField", inDataValue);
     }
+    },
+    onIsSimpleTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) { 
+        this.updateRestrictValues();
+        if (!inSetByCode) {
+           this.changeItem("editorProps.isSimpleType", inSender.getChecked());
+        }
+    },
+    onIsRestrictValuesChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+    if (!inSetByCode) {
+        this.changeItem("editorProps.restrictValues", inSender.getChecked());
+    }
+    },
+    updateRestrictValues: function() {
+        var isSimple = this.isSimpleDataValueEditor.getChecked();
+        this.isRestrictDataValueEditor.setDisabled(!isSimple);
+        var restrictValues = this.grid.selectedItem.getValue("editorProps.restrictValues");
+        this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
     },
     onMaximumChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
