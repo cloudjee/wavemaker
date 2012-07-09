@@ -1450,3 +1450,6 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 height: 100%;
 display: inline-block;
 }
+.dojoxGrid .dijitComboBox .dijitArrowButton {
+height: 16px;
+}
