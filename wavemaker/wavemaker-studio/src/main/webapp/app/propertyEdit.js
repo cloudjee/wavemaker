@@ -1075,6 +1075,8 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer).sort();
 
 	} else {
+        /* Subpages components (via page containers in the page being designed) can also be listed, and need suitable events listed ,
+         * but now we just call listComponents on the subpage, not on the app and main page */
 	    var svarList = wm.listComponents([inPage], wm.ServiceVariable).sort();
 	    var lightboxList = wm.listComponents([inPage], wm.DojoLightbox);
 	    var navList = wm.listComponents([inPage], wm.NavigationCall).sort();
@@ -1196,6 +1198,9 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			    if (cname.indexOf(inPage.getRuntimeId() + ".") == 0)
 				cname = cname.substring(inPage.getRuntimeId().length + 1);
 			    rname = rname.replace(/^studio\.wip\./,"");
+                if (this.inspected.owner == studio.application && obj.isOwnedBy(studio.page)) {
+                    rname = "[" + studio.project.pageName + "]." + rname;
+                }
 			} else {
 			    cname = rname = obj;
 			}
