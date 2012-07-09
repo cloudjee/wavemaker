@@ -66,16 +66,31 @@ dojo.declare("dojox.grid._Events", null, {
 					}
 					dojo.stopEvent(e);
 				}
+
+                /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+                * WaveMaker: WM-4031: START Fixes for loss of selection of current row when finishing an edit using ENTER.  
+                * Bug caused by calling decorateEvent using a target that is the editor AFTER the editor has been removed
+                * from the document, preventing lookup of the current row.
+                */
+                var isDecorated = false;
 				if(!e.shiftKey){
 					var isEditing = this.edit.isEditing();
+                    if (isEditing) {
+                        var curView = this.focus.focusView || this.views.views[0];  //if no focusView than only one view
+                        curView.content.decorateEvent(e);
+                        isDecorated = true;
+                    }
 					this.edit.apply();
 					if(!isEditing){
 						this.edit.setEditCell(this.focus.cell, this.focus.rowIndex);
 					}
 				}
 				if (!this.edit.isEditing()){
-					var curView = this.focus.focusView || this.views.views[0];  //if no focusView than only one view
-					curView.content.decorateEvent(e);
+                    if (!isDecorated) {
+    					var curView = this.focus.focusView || this.views.views[0];  //if no focusView than only one view
+    					curView.content.decorateEvent(e);
+                    }
+                    /* WaveMaker: End of fix for WM-4031 */
 					this.onRowClick(e);
 					dojo.stopEvent(e);
 				}
