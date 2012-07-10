@@ -217,7 +217,7 @@ dojo.declare("wm.ServiceCall", null, {
     /* If the ServiceCall is already firing, it can't fire the current request; add it to our request queue
     * if inFlightBehavior specifies to do so.
     */
-    addtoBacklog: function() {
+    addToBacklog: function() {
         var d;
         if (this.inFlightBehavior == "executeLast") this._inFlightBacklog.pop();
         if (this.inFlightBehavior == "executeLast" || this.inFlightBehavior == "executeAll") {
