@@ -231,11 +231,15 @@ dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     newPage: true,
     currentPageOK: false,
     updateOptions: function() {
-	this.inherited(arguments)
-	var pagelist = wm.getPageList(this.currentPageOK);
-        if (this.newPage)
-	    pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
-	this.setOptions(pagelist);
+        this.inherited(arguments)
+        var pagelist = wm.getPageList(this.currentPageOK);
+        if (this.newPage) pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
+        this.setOptions(pagelist);
+        var dataValue = this.getDataValue() || "";
+        var pageName = this.inspected.getValue(this.propDef.name) || "";
+        if (!dataValue && pageName) {            
+            this.inspected.setValue(this.propDef.name, "");
+        }
     }
 });
 
