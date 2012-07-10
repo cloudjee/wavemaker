@@ -79,15 +79,12 @@
 
 
 [bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
-[bundlePackage.EditorsGroup, bundlePackage.CheckboxSet, "wm.CheckboxSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descCheckboxSet, {}, false],
-[bundlePackage.EditorsGroup, bundlePackage.RadioButtonSet, "wm.RadioSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descRadioSet, {}, false],
-[bundlePackage.EditorsGroup, bundlePackage.ListSet, "wm.ListSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descListSet, {}, false],
+
 [ bundlePackage.EditorsGroup, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9",bundlePackage.descColorPicker, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.Currency, "wm.Currency", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descCurrency, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.Number, "wm.Number", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9", bundlePackage.descNumber, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.RadioButton, "wm.RadioButton", "wm.base.widget.Editors.Radiobutton", "Studio_paletteImageList_9", bundlePackage.descRadioButton, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.RichText, "wm.RichText", "wm.base.widget.Editors.RichText", "Studio_paletteImageList_9",bundlePackage.descRichText, {}, false],
-[bundlePackage.EditorsGroup, bundlePackage.Select, "wm.SelectMenu", "wm.base.widget.Editors.Select", "Studio_paletteImageList_9", bundlePackage.descSelectMenu, {}, false],
 
 [bundlePackage.EditorsGroup, bundlePackage.Text, "wm.Text", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descText, {}, false],
 [ bundlePackage.EditorsGroup, bundlePackage.TextArea, "wm.LargeTextArea", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descTextArea, {}, false],
@@ -96,6 +93,11 @@
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.DateTimeGroup, bundlePackage.Date, "wm.Date", "wm.base.widget.Editors.Date", "Studio_paletteImageList_9", bundlePackage.descDate, {}, false],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.DateTimeGroup, bundlePackage.DateTime, "wm.DateTime", "wm.base.widget.Editors.Date", "Studio_paletteImageList_9", bundlePackage.descDate, {}, false],
 [bundlePackage.EditorsGroup + "/" + bundlePackage.DateTimeGroup, bundlePackage.Time, "wm.Time", "wm.base.widget.Editors.Date", "Studio_paletteImageList_9",bundlePackage.descTime, {}, false],
+
+[bundlePackage.EditorsGroup + "/" +  bundlePackage.DataSetEditorGroup, bundlePackage.Select, "wm.SelectMenu", "wm.base.widget.Editors.Select", "Studio_paletteImageList_9", bundlePackage.descSelectMenu, {}, false],
+[bundlePackage.EditorsGroup + "/" +  bundlePackage.DataSetEditorGroup, bundlePackage.CheckboxSet, "wm.CheckboxSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descCheckboxSet, {}, false],
+[bundlePackage.EditorsGroup + "/" +  bundlePackage.DataSetEditorGroup, bundlePackage.RadioButtonSet, "wm.RadioSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descRadioSet, {}, false],
+[bundlePackage.EditorsGroup + "/" +  bundlePackage.DataSetEditorGroup, bundlePackage.ListSet, "wm.ListSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descListSet, {}, false],
 
 
 [  bundlePackage.EditorsGroup + "/" +  bundlePackage.RelatedEditorGroup, bundlePackage.Lookup, "wm.Lookup", "wm.base.widget.Editors.Select", "Studio_paletteImageList_9", bundlePackage.descLookup, {}, false],

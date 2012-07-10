@@ -53,7 +53,7 @@
 	"DateTime" : "DateTime",
 	"DateTimeGroup" : "Date and Time",
 	"RelatedEditorGroup" : "Relationship Editors",
-
+    "DataSetEditorGroup": "DataSet Editors",
     "CheckboxSet": "CheckboxSet",
     "RadioButtonSet": "RadioSet",
     "ListSet": "ListSet",
