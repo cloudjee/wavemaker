@@ -145,9 +145,10 @@ public class LocalDeploymentManager extends StageDeploymentManager {
             return false;
         } finally {
             try {
-                is.close();
+                if (is != null) {
+                    is.close();
+                }
             } catch (IOException e) {
-
             }
         }
 
