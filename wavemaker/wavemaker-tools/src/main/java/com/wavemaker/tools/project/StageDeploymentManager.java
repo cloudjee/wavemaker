@@ -136,7 +136,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         copyJars(properties);
         copyResources(properties);
         generateRuntimeFiles(properties);
-        return this.projectCompiler.compile();
+        return this.projectCompiler.compile(this.projectManager.getCurrentProject());
     }
 
     public void copyJars(Map<String, Object> properties) {

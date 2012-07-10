@@ -83,7 +83,7 @@ public class ProjectCompiler {
         return compile(project);
     }
 
-    private String compile(final Project project) {
+    public String compile(final Project project) {
         try {
             copyRuntimeServiceFiles(project);
             JavaCompiler compiler = new WaveMakerJavaCompiler();
