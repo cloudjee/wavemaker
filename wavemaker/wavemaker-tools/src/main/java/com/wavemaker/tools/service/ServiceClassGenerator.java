@@ -25,7 +25,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceOperation;
+import com.wavemaker.tools.io.LatestLastModified;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -130,26 +130,5 @@ public class ServiceClassGenerator {
         public String getServiceId() {
             return this.serviceId;
         }
-    }
-
-    /**
-     * {@link ResourceOperation} to get the latest last modified value.
-     */
-    private static class LatestLastModified implements ResourceOperation<File> {
-
-        private long value;
-
-        @Override
-        public void perform(File resource) {
-            long lastModified = resource.getLastModified();
-            if (lastModified > this.value) {
-                this.value = lastModified;
-            }
-        }
-
-        public long getValue() {
-            return this.value;
-        }
-
     }
 }

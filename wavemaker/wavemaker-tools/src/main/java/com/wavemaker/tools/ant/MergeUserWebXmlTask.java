@@ -38,8 +38,6 @@ public class MergeUserWebXmlTask {
 
     private Folder workFolder;
 
-    private String workdir = null;  //TODO:ant - delete this line when ant scripts are entirely removed
-
     public String execute() {
         File userWebXml = workFolder.getFile(ProjectConstants.USER_WEB_XML);
         File webXml = workFolder.getFile(ProjectConstants.WEB_XML);
@@ -68,7 +66,6 @@ public class MergeUserWebXmlTask {
         Matcher webXmlMatcher = MARKED_CONTENT_PATTERN.matcher(webXmlContent);
         if (!webXmlMatcher.find()) {
             String webXmlWithEmptyPlaceholder = webXmlContent.toString().replace(SERVLET_TAG, START_MARKER + END_MARKER + "\n\n    " + SERVLET_TAG);
-            System.out.println(webXmlWithEmptyPlaceholder);
             webXmlMatcher = MARKED_CONTENT_PATTERN.matcher(webXmlWithEmptyPlaceholder);
             if (!webXmlMatcher.find()) {
                 throw new IllegalStateException("Corrupted web.xml");
@@ -84,8 +81,4 @@ public class MergeUserWebXmlTask {
         this.workFolder = workFolder;
     }
 
-    public void setWorkdir(String workdir) { //TODO:ant - this method should be delete when ant scripts are removed.
-        this.workdir = workdir;
-        this.workFolder = new LocalFolder(new java.io.File(workdir));
-    }
 }

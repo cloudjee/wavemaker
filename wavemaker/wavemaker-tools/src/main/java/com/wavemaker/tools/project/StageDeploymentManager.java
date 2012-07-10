@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.io.*;
 
 import org.apache.catalina.ant.UndeployTask;
+import org.apache.catalina.ant.DeployTask;
 
 /**
  * Relaces ant script tasks that generate war and ear file 
@@ -51,6 +52,37 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected void buildWar(LocalFolder projectDir, LocalFolder buildDir, File warFile, boolean includeEar,
                             StudioFileSystem fileSystem) throws WMRuntimeException {  //projectDir: dplstaging  //buildDir: fileutils
+        /*String warFileName = warFile.getName();
+        Folder archiveFolder = warFile.getParent();
+        int len = warFileName.length();
+        String earFileName = warFileName.substring(0, len - 4) + ".ear";
+        File earFile = archiveFolder.getFile(earFileName);
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(BUILD_WEBAPPROOT_PROPERTY, buildDir);
+        properties.put(WAR_FILE_NAME_PROPERTY, warFile);
+        properties.put(EAR_FILE_NAME_PROPERTY, earFile);
+        properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
+        properties.put(DEPLOY_NAME_PROPERTY, origProjMgr.getCurrentProject().getProjectName());
+        properties.put(WAVEMAKER_HOME, this.fileSystem.getWaveMakerHomeFolder());
+        properties.put(PROJECT_DIR_PROPERTY, projectDir);
+        properties = addMoreProperties(projectDir, null, properties);*/
+
+        Map<String, Object> properties = setProperties(projectDir, buildDir, warFile);
+
+        LocalFile warF = buildWar(properties);
+
+        if (includeEar) {
+            assembleEar(properties, warF);
+        }
+    }
+
+    protected Map<String, Object> setProperties(LocalFolder projectDir) {
+        LocalFolder buildDir = (LocalFolder)getProjectDir().getFolder("webapproot");
+        File warFile =getProjectDir().getFolder("dist").getFile(getDeployName() + ".war");
+        return setProperties(projectDir, buildDir, warFile);
+    }
+
+    private Map<String, Object> setProperties(LocalFolder projectDir, LocalFolder buildDir, File warFile) {
         String warFileName = warFile.getName();
         Folder archiveFolder = warFile.getParent();
         int len = warFileName.length();
@@ -61,23 +93,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         properties.put(WAR_FILE_NAME_PROPERTY, warFile);
         properties.put(EAR_FILE_NAME_PROPERTY, earFile);
         properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
-
-        properties.put(DEPLOY_NAME_PROPERTY, origProjMgr.getCurrentProject().getProjectName());
-
-        Folder wavemakerHome;
-        wavemakerHome = this.fileSystem.getWaveMakerHomeFolder();
-
-        properties.put(WAVEMAKER_HOME, wavemakerHome);
-
+        properties.put(DEPLOY_NAME_PROPERTY,  origProjMgr == null ? getDeployName() : origProjMgr.getCurrentProject().getProjectName());
+        properties.put(WAVEMAKER_HOME, this.fileSystem.getWaveMakerHomeFolder());
         properties.put(PROJECT_DIR_PROPERTY, projectDir);
-
         properties = addMoreProperties(projectDir, null, properties);
-
-        LocalFile warF = buildWar(properties);
-
-        if (includeEar) {
-            assembleEar(properties, warF);
-        }
+        this.buildInLine = buildDir.toString().equals(projectDir.getFolder("webapproot").toString());
+        return properties;
     }
 
     public LocalFile buildWar(Map<String, Object> properties) {
@@ -89,7 +110,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         Folder studioWebAppRoot = (Folder)properties.get(STUDIO_WEBAPPROOT_PROPERTY);
         String customWmDir = (String)properties.get(CUSTOM_WM_DIR_NAME_PROPERTY);
         //TODO:ant - following excluded filter does not seem to work.  maybe a bug in FilterOn for ant style?
-        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("/dojo/util/**", "/dojo/**/tests/**", "/wm/" + customWmDir + "/**");
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("dojo/util/**", "dojo/**/tests/**", "wm/" + customWmDir + "/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
 
         //copy custom widgets
@@ -116,20 +137,25 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     }
 
-    public void build(Map<String, Object> properties) {
+    public String build(Map<String, Object> properties) {
         copyJars(properties);
         copyResources(properties);
         generateRuntimeFiles(properties);
-        compile1();
+        return this.projectCompiler.compile();
     }
 
     public void copyJars(Map<String, Object> properties) {
         prepareWebAppRoot(properties);
         undeploy(properties);
 
+        LocalFolder buildWebAppRoot = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY));
+        LocalFolder buildWebAppLibDir = (LocalFolder)buildWebAppRoot.getFolder("WEB-INF/lib");
+        LocalFolder buildWebAppClassesDir = (LocalFolder)buildWebAppRoot.getFolder("WEB-INF/lib");
+        buildWebAppLibDir.createIfMissing();
+        buildWebAppClassesDir.createIfMissing();
+
         //CopyRuntimeJarsTask
         NewCopyRuntimeJarsTask task = new NewCopyRuntimeJarsTask();
-        LocalFolder buildWebAppLibDir = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF/lib");
         task.setTodir(buildWebAppLibDir);
         LocalFolder studioWebAppLibDir = (LocalFolder)((Folder)properties.get(STUDIO_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF/lib");
         task.setFrom(studioWebAppLibDir);
@@ -227,6 +253,9 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     }
 
     public void prepareWebAppRoot(Map<String, Object> properties) {
+        if (this.buildInLine) {
+            return;
+        }
         LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder appWebAppRoot = (LocalFolder)((Folder)properties.get(PROJECT_DIR_PROPERTY)).getFolder("webapproot");
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("**/.svn/**/*.*", "WEB-INF/classes/**", "WEB-INF/lib/**", "WEB-INF/web.xml");
@@ -252,16 +281,35 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         task.setUsername(userName);
         task.setPassword(password);
         task.setPath("/" + deployName);
+        task.setFailonerror(false);
         try {
             task.execute();
         } catch (Exception ex) {
-        } 
+        }
         File tomcatConfigXml = ((Folder)properties.get(PROJECT_DIR_PROPERTY)).getFile(deployName + ".xml");
         tomcatConfigXml.delete();
     }
 
-    public String compile1() {
-        return this.projectCompiler.compile();
+    public void deploy(Map<String, Object> properties) {
+        DeployTask task = new DeployTask();
+        String host = (String)properties.get(TOMCAT_HOST_PROPERTY);
+        String port = (String)properties.get(TOMCAT_PORT_PROPERTY);
+        String userName = (String)properties.get("tomcat.manager.username");
+        String password = (String)properties.get("tomcat.manager.password");
+        String tomcatManagerUrl =  "http://" + host + ":" + port + "/manager";
+        String deployName = (String)properties.get(DEPLOY_NAME_PROPERTY);
+        LocalFolder projectDir = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
+        String tomcatConfigXmlPath = ((LocalFile)projectDir.getFile(deployName + ".xml")).getLocalFile().getAbsolutePath();
+        task.setUrl(tomcatManagerUrl);
+        task.setUsername(userName);
+        task.setPassword(password);
+        task.setPath("/" + deployName);
+        task.setConfig(tomcatConfigXmlPath);
+        task.setFailonerror(true);
+        try {
+            task.execute();
+        } catch (Exception ex) {
+        } 
     }
 
     protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {

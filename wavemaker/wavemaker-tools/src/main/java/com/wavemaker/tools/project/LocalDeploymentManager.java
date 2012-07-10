@@ -14,34 +14,42 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Collections;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URL;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.log4j.Logger;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.War;
 import org.apache.tools.ant.taskdefs.Ear;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.LatestLastModified;
 
 /**
  * Main deployment class.
@@ -53,32 +61,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
 
     static Logger logger = Logger.getLogger(LocalDeploymentManager.class);
 
-    // What is this for ?
-    public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
-    
     public static final String COMMON_DIR_NAME_PROPERTY = "common";
-
-    private static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
-
-    private static final String BUILD_RESOURCE_NAME = "app-deploy.xml";
-
-    // targets
-
-    private static final String TEST_RUN_CLEAN_OPERATION = "testrunclean";
-
-    private static final String UNDEPLOY_OPERATION = "undeploy";
-
-    private static final String BUILD_OPERATION = "build";
-
-    private static final String GEN_RTFILES_OPERATION = "generate-runtime-files";
-
-    private static final String COPY_JARS_OPERATION = "copy-jars";
-
-    private static final String CLEAN_OPERATION = "clean";
-
-    private static final String TEST_RUN_START_PREP_OPERATION = "testrunstart-prep";
-
-    private static final String TEST_RUN_START_TEMP_OPERATION = "testrunstart-temp";
 
     public class Undeployer implements HttpSessionBindingListener {
 
@@ -101,9 +84,13 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         }
     }
 
+    private String testRunStart(LocalFolder projectDir, String deployName) {
 
+        Map<String, Object> properties = setProperties(projectDir);
 
-    private String testRunStart(String projectDir, String deployName) {
+        if (!continueTestRun(projectDir, deployName, properties)) {
+            return null;
+        }
 
         // this method for some reason is how we add the listener
         javax.servlet.http.HttpSession H = RuntimeAccess.getInstance().getSession();
@@ -111,10 +98,105 @@ public class LocalDeploymentManager extends StageDeploymentManager {
             H.setAttribute("Unloader", new Undeployer());
         }
 
-        antExecute(projectDir, deployName, TEST_RUN_START_PREP_OPERATION);
-        antExecute(projectDir, deployName, BUILD_OPERATION);
+        build(properties);
         compile();
-        return antExecute(projectDir, deployName, TEST_RUN_START_TEMP_OPERATION);
+
+        //testrunstart
+        undeploy(properties);
+        updateTomcatDeployConfig(properties);
+        deploy(properties);
+
+        return "TestRun completed";
+    }
+
+    private boolean continueTestRun(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
+        boolean rtn;
+        if (projectDir.getFile(deployName + ".xml").exists()) {
+            long l1 = projectDir.getFile(deployName + ".xml").getLastModified();
+            long l2 = projectDir.getFolder("webapproot/WEB-INF").find().files().performOperation(new LatestLastModified()).getValue();
+            if (l1 >= l2) {
+                return false;
+            }
+        } else {
+            return true;
+        }
+
+        String port = (String)properties.get(TOMCAT_PORT_PROPERTY);
+
+        com.wavemaker.tools.io.File deployTestF = projectDir.getFile("webapproot/" + deployName + "-deploy-test-file.txt");
+        deployTestF.createIfMissing();
+
+        String content = deployName + " deployed";
+        deployTestF.getContent().write(content);
+
+        String urlString = "http://localhost:" + port + "/" + deployName + "/" +deployTestF.getName();
+        InputStream is = null;
+        try {
+            URL url = new URL(urlString);
+            is = url.openStream();
+            if (is != null) {
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(is, writer, ServerConstants.DEFAULT_ENCODING);
+                rtn = writer.toString().equals(content);
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+
+            }
+        }
+
+        return rtn;
+    }
+
+    private void updateTomcatDeployConfig(Map<String, Object> properties) {
+        LocalFolder projectDir = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
+        String deployName = (String)properties.get(DEPLOY_NAME_PROPERTY);
+        LocalFile tomcatConfigXml = ((LocalFile)projectDir.getFile(deployName + ".xml"));
+        if (tomcatConfigXml.exists()) {
+            tomcatConfigXml.delete();
+        }
+        tomcatConfigXml.createIfMissing();
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+
+            NodeList nodeList = doc.getElementsByTagName("Context");
+
+            if (nodeList != null && nodeList.getLength() > 0) {
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    Node node = nodeList.item(i);
+                    if (node.getParentNode() != null) {
+                        node.getParentNode().removeChild(node);
+                    }
+                }
+            }
+
+            Element context = doc.createElement("Context");
+            context.setAttribute("antiJARLocking", "true'");
+            context.setAttribute("antiResourceLocking", "false");
+            context.setAttribute("privileged", "true");
+            String docBase = ((LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getLocalFile().getAbsolutePath();
+            context.setAttribute("docBase", docBase);
+
+            doc.appendChild(context);
+
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer tFormer = tFactory.newTransformer();
+
+            Source source = new DOMSource(doc);
+            Result dest = new StreamResult(tomcatConfigXml.getLocalFile());
+            tFormer.transform(source, dest);
+
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
     }
 
     /**
@@ -123,7 +205,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     @Override
     public String testRunStart() {
         String deployName = getDeployName();
-        testRunStart(getCanonicalPath(getProjectDir()), deployName);
+        testRunStart(getProjectDir(), deployName);
         return "/" + deployName;
     }
 
@@ -132,7 +214,8 @@ public class LocalDeploymentManager extends StageDeploymentManager {
      */
     @Override
     public String compile() {
-        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), COPY_JARS_OPERATION);
+        Map<String, Object> properties = setProperties(getProjectDir());
+        copyJars(properties);
         return this.projectCompiler.compile();
     }
 
@@ -141,7 +224,8 @@ public class LocalDeploymentManager extends StageDeploymentManager {
      */
     @Override
     public String cleanCompile() {
-        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), CLEAN_OPERATION);
+        Map<String, Object> properties = setProperties(getProjectDir());
+        clean(properties);
         return compile();
     }
 
@@ -150,8 +234,8 @@ public class LocalDeploymentManager extends StageDeploymentManager {
      */
     @Override
     public String build() {
-        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), BUILD_OPERATION);
-        return compile();
+        Map<String, Object> properties = setProperties(getProjectDir());
+        return build(properties);
     }
 
     /**
@@ -159,7 +243,9 @@ public class LocalDeploymentManager extends StageDeploymentManager {
      */
     @Override
     public String generateRuntime() {
-        return antExecute(getCanonicalPath(getProjectDir()), getDeployName(), GEN_RTFILES_OPERATION);
+        Map<String, Object> properties = setProperties(getProjectDir());
+        generateRuntimeFiles(properties);
+        return "Runtime files are successfully generated";
     }
 
     /**
@@ -167,13 +253,28 @@ public class LocalDeploymentManager extends StageDeploymentManager {
      */
     @Override
     public String cleanBuild() {
-        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), CLEAN_OPERATION);
-        return build();
+        Map<String, Object> properties = setProperties(getProjectDir());
+        clean(properties);
+        return build(properties);
     }
 
-    private void buildWar(LocalFolder projectDir, String buildDirPath, String warFilePath, boolean includeEar,
-                          ProjectManager origProjMgr) {  //projectDir: dplstaging  //buildDir: fileutils
-        LocalFolder buildDir = new LocalFolder(new File(buildDirPath));
+    private void clean(Map<String, Object> properties) {
+        LocalFolder buildWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
+        LocalFolder projectDir = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
+        if (this.buildInLine) {
+            buildWebAppRoot.getFolder("/WEB-INF/classes").delete();
+            buildWebAppRoot.getFolder("/WEB-INF/lib").getFolder("classes").delete();
+            projectDir.getFile(getDeployName() + ".xml").delete();
+        } else {
+            buildWebAppRoot.delete();
+        }
+    }
+
+    private void buildWar(LocalFolder projectDir, File buildDir, String warFilePath, boolean includeEar) {
+        //projectDir: dplstaging  //buildDir: fileutils
+        LocalFolder buildFolder = new LocalFolder(buildDir);
+        this.tempBuildWebAppRoot = buildFolder;
+        this.buildInLine = this.projectManager.getCurrentProject().getWebAppRootFolder().toString().equals(this.tempBuildWebAppRoot);
         File f = new File(warFilePath);
         File dist = f.getParentFile();
         if (!dist.exists()) {
@@ -181,36 +282,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         }
         Folder parent = new LocalFolder(dist);
         LocalFile warFile = (LocalFile)parent.getFile(f.getName());
-        buildWar(projectDir, buildDir,  warFile, includeEar, this.projectManager.getFileSystem());
-
-        /*int len = warFile.length();
-        String earFileName = warFile.substring(0, len - 4) + ".ear";
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put(BUILD_WEBAPPROOT_PROPERTY, buildDir);
-        properties.put(WAR_FILE_NAME_PROPERTY, warFile);
-        properties.put(EAR_FILE_NAME_PROPERTY, earFileName);
-        properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
-
-        try {
-            properties.put(WAVEMAKER_HOME, getFileSystem().getWaveMakerHome().getFile().getPath());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        File f = new File(warFile);
-        String projDir = f.getParentFile().getParentFile().getAbsolutePath();
-        properties.put(ORIG_PROJ_DIR_PROPERTY, projDir);
-
-        //properties.put(PROJECT_DIR_PROPERTY, getCanonicalPath(projectDir));
-        properties.put(DEPLOY_NAME_PROPERTY, projectDir.getName());
-
-        //build();
-
-        antExecute(getCanonicalPath(projectDir), BUILD_WAR_OPERATION, properties);
-
-        if (includeEar) {
-            antExecute(getCanonicalPath(projectDir), BUILD_EAR_OPERATION, properties);
-        }*/
+        buildWar(projectDir, buildFolder,  warFile, includeEar, this.projectManager.getFileSystem());
     }
 
     /**
@@ -220,13 +292,13 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
                                                 boolean includeEar) throws IOException {
         String warFileLocation = ((LocalFile) warFile).getLocalFile().getCanonicalPath();
-        buildWar(warFileLocation, tempWebAppRoot, includeEar, origProjMgr);
+        buildWar(warFileLocation, tempWebAppRoot, includeEar);
         return warFile;
     }
 
-    private void buildWar(String warFileName, java.io.File tempWebAppRoot, boolean includeEar, ProjectManager origProjMgr)
+    private void buildWar(String warFileName, java.io.File tempWebAppRoot, boolean includeEar)
             throws IOException {
-        buildWar(getProjectDir(), tempWebAppRoot.getAbsolutePath(), warFileName, includeEar, origProjMgr);
+        buildWar(getProjectDir(), tempWebAppRoot, warFileName, includeEar);
     }
 
     /**
@@ -234,20 +306,16 @@ public class LocalDeploymentManager extends StageDeploymentManager {
      */
     @Override
     public void testRunClean() {
-        antExecute(getCanonicalPath(getProjectDir()), getDeployName(), TEST_RUN_CLEAN_OPERATION);
+        Map<String, Object> properties = setProperties(getProjectDir());
+        undeploy(properties);
+        clean(properties);
     }
 
     @Override
     public void testRunClean(com.wavemaker.tools.project.Project project) {
-        antExecute(getCanonicalPath(getProjectDir(project)), getDeployName(project), TEST_RUN_CLEAN_OPERATION);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void undeploy() {
-        undeploy(getCanonicalPath(getProjectDir()), getDeployName());
+        Map<String, Object> properties = setProperties(getProjectDir(project));
+        undeploy(properties);
+        clean(properties);
     }
 
     protected LocalFile assembleWar(Map<String, Object> properties) {
@@ -321,128 +389,10 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         return newProperties;
     }
 
-    private String undeploy(String projectDir, String deployName) {
-        return antExecute(projectDir, deployName, UNDEPLOY_OPERATION);
-    }
-
-    public String antExecute(String projectDir, String targetName, Map<String, String> properties) {
-        return antExecute(projectDir, null, targetName, properties);
-    }
-
-    private String antExecute(String projectDir, String deployName, String targetName) {
-
-        Map<String, String> props = Collections.emptyMap();
-        return antExecute(projectDir, deployName, targetName, props);
-    }
-
-    private String antExecute(String projectDir, String deployName, String targetName, Map<String, String> properties) {
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(byteArrayOutputStream);
-        DefaultLogger logger = new DefaultLogger();
-        logger.setErrorPrintStream(printStream);
-        logger.setOutputPrintStream(printStream);
-        logger.setMessageOutputLevel(Project.MSG_INFO);
-
-        Project antProject = parseAntFile(projectDir, deployName, properties);
-
-        // remove all existing build listeners, and add in just mine
-        for (Object bl : antProject.getBuildListeners()) {
-            antProject.removeBuildListener((BuildListener) bl);
-        }
-        antProject.addBuildListener(logger);
-
-        try {
-            try {
-                LocalDeploymentManager.logger.info("RUN ANT");
-                antProject.executeTarget(targetName);
-                LocalDeploymentManager.logger.info("END ANT");
-            } finally {
-                printStream.close();
-            }
-        } catch (BuildException e) {
-            LocalDeploymentManager.logger.error(
-                "build failed with compiler output:\n" + byteArrayOutputStream.toString() + "\nmessage: " + e.getMessage(), e);
-            throw new BuildExceptionWithOutput(e.getMessage(), byteArrayOutputStream.toString() + "\nmessage: " + e.getMessage(), e);
-        }
-
-        String loggedOutput = byteArrayOutputStream.toString();
-        LocalDeploymentManager.logger.warn("Ant succeeded with logged output:\n" + loggedOutput);
-        return loggedOutput;
-    }
-
-    private Project parseAntFile(String projectDir, String deployName, Map<String, String> properties) {
-
-        Project ant = new Project();
-        StudioFileSystem fileSystem = this.projectManager.getFileSystem();
-        Map<String, Object> newProperties = new HashMap<String, Object>();
-
-        if (getProjectManager() != null && getProjectManager().getCurrentProject() != null) {
-            newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
-        }
-
-        newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-
-        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort());
-        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
-
-        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-
-        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
-        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
-
-        newProperties.putAll(properties);
-
-        try {
-            newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, fileSystem.getStudioWebAppRoot().getFile().getCanonicalPath());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        newProperties.put(PROJECT_DIR_PROPERTY, projectDir);
-
-        LocalDeploymentManager.logger.info("PUT DIR: " + projectDir);
-        Resource projectDirFile = fileSystem.getResourceForURI(projectDir);
-        String projectName = projectDirFile.getFilename();
-        newProperties.put(PROJECT_NAME_PROPERTY, projectName);
-
-        LocalDeploymentManager.logger.info("PUT NAME: " + projectName);
-
-        if (deployName != null) {
-            newProperties.put(DEPLOY_NAME_PROPERTY, deployName);
-            System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, deployName);
-        }
-
-        for (Map.Entry<String, Object> mapEntry : newProperties.entrySet()) {
-            ant.setProperty(mapEntry.getKey(), String.valueOf(mapEntry.getValue()));
-        }
-        ProjectHelper helper = ProjectHelper.getProjectHelper();
-        DefaultLogger log = new DefaultLogger();
-        log.setErrorPrintStream(System.err);
-        log.setOutputPrintStream(System.out);
-        log.setMessageOutputLevel(Project.MSG_INFO);
-        ant.addBuildListener(log);
-        ant.init();
-        helper.parse(ant, this.getClass().getResource(BUILD_RESOURCE_NAME));
-        return ant;
-    }
-
-    private String getCanonicalPath(LocalFolder folder) {
-        try {
-            return folder.getLocalFile().getCanonicalPath();
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    private String getDeployName() {
-        return getDeployName(this.projectManager.getCurrentProject());
-    }
-
-    private String getDeployName(com.wavemaker.tools.project.Project project) {
-        return project.getProjectName();
+    @Override
+    public void undeploy() {
+        Map<String, Object> properties = setProperties(getProjectDir());
+        undeploy(properties);
     }
 
     public static class DeploymentNamespaceMapper extends NamespacePrefixMapper {

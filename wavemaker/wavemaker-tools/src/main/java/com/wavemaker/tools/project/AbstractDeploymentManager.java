@@ -75,6 +75,10 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     protected ProjectManager origProjMgr;
 
+    protected LocalFolder tempBuildWebAppRoot = null;
+
+    protected boolean buildInLine;
+
     protected final StudioFileSystem getFileSystem() {
         return this.fileSystem;
     }
@@ -711,6 +715,14 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
             throw new WMRuntimeException("Current project must be set");
         }
         return getProjectDir(currentProject);
+    }
+
+    protected String getDeployName() {
+        return getDeployName(this.projectManager.getCurrentProject());
+    }
+
+    protected String getDeployName(com.wavemaker.tools.project.Project project) {
+        return project.getProjectName();
     }
 
     private static class ExportIncludeFilter implements ResourceFilter {
