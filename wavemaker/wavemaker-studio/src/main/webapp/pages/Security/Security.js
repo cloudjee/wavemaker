@@ -204,7 +204,7 @@ dojo.declare(
                 this.secEnableInput.setChecked(inResponse.enforceSecurity);
                 this.servicesLayer.setShowing(inResponse.enforceSecurity);
                 this.rolesLayer.setShowing(inResponse.enforceSecurity);
-                this.showLoginPageInput.setChecked(inResponse.enforceIndexHtml);
+                this.showLoginPageInput.setChecked(inResponse.enforceIndexHtml || studio.application.isLoginPageEnabled);
                 var t = inResponse.dataSourceType;
                 this.populatingOptions = true;
                 this.secProviderInput.setDataValue(t);
@@ -265,8 +265,8 @@ dojo.declare(
             this.ldapRoleDbEntityInput.setDataValue(inResponse.roleEntity);
             this.ldapRoleDbEntityInputChange();
         },
-        saveButtonClick : function(inSender) {
-            studio.saveAll(this);
+        saveButtonClick : function(inSender) {            
+            studio.saveAll(this);            
         },
         toastToSuccess : function() {
             this.onSaveSuccess();
@@ -807,7 +807,7 @@ dojo.declare(
         getDirty : function() {
             return this.dirty;
         },
-        save : function() {
+        save : function() {           
             if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
                 this.saveError({
                     owner : this,
@@ -895,6 +895,7 @@ dojo.declare(
                     this.saveServicesSetup();
                     studio.application.loadServerComponents();
                     studio.refreshServiceTree();
+                    studio.project.saveApplication();
                 });
             }
 
@@ -902,9 +903,13 @@ dojo.declare(
         saveComplete : function() {
         },
         onSaveSuccess : function() {
-            this._cachedData = this.getCachedData();
-            this.setDirty();
-            this.saveComplete();
+            studio.application.isLoginPageEnabled = this.showLoginPageInput.getChecked();
+            studio.application.isSecurityEnabled = this.secEnableInput.getChecked();
+            studio.project.saveApplication(dojo.hitch(this, function() {
+                this._cachedData = this.getCachedData();
+                this.setDirty();
+                this.saveComplete();
+            }));
         },
         getProgressIncrement : function() {
             return 5; // 1 tick is very fast; this is 5 times

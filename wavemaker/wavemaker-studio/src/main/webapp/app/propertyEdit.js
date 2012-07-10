@@ -1075,6 +1075,8 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer).sort();
 
 	} else {
+        /* Subpages components (via page containers in the page being designed) can also be listed, and need suitable events listed ,
+         * but now we just call listComponents on the subpage, not on the app and main page */
 	    var svarList = wm.listComponents([inPage], wm.ServiceVariable).sort();
 	    var lightboxList = wm.listComponents([inPage], wm.DojoLightbox);
 	    var navList = wm.listComponents([inPage], wm.NavigationCall).sort();
@@ -1196,6 +1198,9 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			    if (cname.indexOf(inPage.getRuntimeId() + ".") == 0)
 				cname = cname.substring(inPage.getRuntimeId().length + 1);
 			    rname = rname.replace(/^studio\.wip\./,"");
+                if (this.inspected.owner == studio.application && obj.isOwnedBy(studio.page)) {
+                    rname = "[" + studio.project.pageName + "]." + rname;
+                }
 			} else {
 			    cname = rname = obj;
 			}
@@ -1388,13 +1393,14 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "zIndex", editor: "wm.Number",advanced:1}
     ],
     search: function(inName) {
-	var props = this.inspected.listProperties();
-	wm.forEachProperty(props, function(p, propName) {
-	    /* TODO: Should test if isEditable prop */
-	    if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
-		return true;
-	});
-	return false;
+    	var props = this.inspected.listProperties();
+        var result = false;
+    	wm.forEachProperty(props, function(p, propName) {
+	       /* TODO: Should test if isEditable prop */
+	        if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
+		      result = true;
+	   });
+	   return result;
     },
     postInit: function() {
 	this.inherited(arguments);
@@ -2161,22 +2167,42 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	return propDef;
     },
     updateBindDescription: function() {
-	if (!this.bindDescWidget) return;
-	var propDef = this.propDef;
-	var inspected = this.inspectedSubcomponent || this.inspected;
-	var bindText = "<dl>";
-	if (inspected.$.binding) {
-	    wm.forEachProperty(inspected.$.binding.wires, dojo.hitch(this, function(wire, target) {
-		if (target.indexOf(propDef.name + ".") == 0 || this.inspectedSubcomponent) {
-		    bindText += "<dt>" + target.replace(/^.*?\./,"") + "</dt><dd>" + (wire.expression ? "expr: " + wire.expression : wire.source) + "</dd>";
-		}
-	    }));
-	}
+        if (!this.bindDescWidget) return;
+        var propDef = this.propDef;
+        var inspected = this.inspectedSubcomponent || this.inspected;
+        var bindTextNodes = document.createElement("dl");
+        if (inspected.$.binding) {
+            var self = this;
+            wm.forEachProperty(inspected.$.binding.wires, dojo.hitch(this, function(wire, target) {
+                if (target.indexOf(propDef.name + ".") == 0 || this.inspectedSubcomponent) {
+                    var dt = document.createElement("dt");
+                    dt.innerHTML = target.replace(/^.*?\./, "") + '<img src="images/inspector_bind_disabled.gif" class="DeleteBindButton">';
+                    dojo.query("img", dt).onclick(function() {
 
-	if (bindText != "<dl>") {
-	    bindText += "</dl>";
-	    this.bindDescWidget.setHtml("<div class='BindDescriptionHeader'>Your bindings</div>" + bindText);
-	}
+                        new wm.SetWireTask(wire.owner.owner, wire.targetProperty, {
+                            source: wire.source,
+                            expression: wire.expression,
+                            value: wire.owner.owner.getValue(wire.targetProperty)
+                        }, "", false, true);
+                    }).onmouseover(function(e) {                        
+                            app.createToolTip("Delete Binding", this, e);
+                    });
+                    var dd = document.createElement("dd");
+                    dd.innerHTML = (wire.expression ? "expr: " + wire.expression : wire.source);
+
+                    bindTextNodes.appendChild(dt);
+                    bindTextNodes.appendChild(dd);
+                }
+
+            }));
+        }
+
+
+        while (this.bindDescWidget.domNode.firstChild) {
+            this.bindDescWidget.domNode.removeChild(this.bindDescWidget.domNode.firstChild);
+        }
+        this.bindDescWidget.domNode.appendChild(bindTextNodes);
+
     },
     reinspect: function() {
 	this.updateBindDescription();

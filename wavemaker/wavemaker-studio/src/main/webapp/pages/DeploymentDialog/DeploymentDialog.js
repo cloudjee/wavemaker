@@ -44,7 +44,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		    databaseConnectionsLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 			databaseTypeEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
 			databaseUserEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
-			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: true}, {}],
+			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: false}, {}],
 			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "updateDbConnectionUrl"}],
 			databasePortEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
 			databaseNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],

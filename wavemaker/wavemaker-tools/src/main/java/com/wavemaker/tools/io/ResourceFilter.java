@@ -25,5 +25,5 @@ package com.wavemaker.tools.io;
  */
 public interface ResourceFilter {
 
-    boolean match(Resource resource);
+    boolean match(ResourceFilterContext context, Resource resource);
 }

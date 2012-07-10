@@ -42,7 +42,6 @@ import com.wavemaker.common.MessageResource;
  * @author Matt Small
  * @author Jeremy Grelle
  */
-@Deprecated
 public abstract class IOUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
@@ -279,7 +278,7 @@ public abstract class IOUtils {
      * 
      * @param source File object representing a file or directory to copy from.
      * @param destination File object representing the target; can only represent a file if the source is a file.
-     * @param includedPatterns the ant-style path pattern to be included.  Null means that all resources are included.
+     * @param includedPatterns the ant-style path pattern to be included. Null means that all resources are included.
      * @param excludedPatterns the ant-style path pattern to be excluded. Null means that no resources are excluded.
      * @throws IOException
      */

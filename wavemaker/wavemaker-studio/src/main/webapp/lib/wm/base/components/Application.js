@@ -32,6 +32,7 @@ dojo.declare("wm.Application", wm.Component, {
     tabletMain: "",
     phoneMain: "",
     isSecurityEnabled: false,
+    showIOSPhoneGapBackButton: false,
     phoneGapLoginPage: "Login",
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
@@ -513,7 +514,7 @@ dojo.declare("wm.Application", wm.Component, {
 		if (wm.isMobile) {
 		    dojo.addClass(document.body, "wmmobile")
 		}
-		if (window["PhoneGap"] && navigator.userAgent.match(/(iphone|ipad)/i)) {
+		if (window["PhoneGap"] && navigator.userAgent.match(/(iphone|ipad)/i) && app.showIOSPhoneGapBackButton) {
 		    this.appTitleBar = new wm.Panel({
 						 owner: this, 
 						 parent: this.appRoot,
@@ -972,8 +973,8 @@ dojo.declare("wm.Application", wm.Component, {
 	    this.toolTipDialog.fixPositionNode = node;
 	} else {
 	    this.toolTipDialog.fixPositionNode = null;
-	    var originalMouseX = this.toolTipDialog.bounds.l = event.mouseX;
-	    var originalMouseY = this.toolTipDialog.bounds.t = event.mouseY;
+	    var originalMouseX = this.toolTipDialog.bounds.l = event.screenX || event.clientX;
+	    var originalMouseY = this.toolTipDialog.bounds.t = event.screenY || event.clientY;
 	}
 	this.toolTipDialog.html.setHtml();	
 	this.toolTipDialog.show();

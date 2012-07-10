@@ -47,6 +47,7 @@ import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFilterContext;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.io.zip.ZipArchive;
@@ -197,7 +198,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 com.wavemaker.tools.project.Project finalProject = new com.wavemaker.tools.project.Project(finalProjectFolder, this.fileSystem);
                 File jsFile = finalProject.getWebAppRootFolder().getFile(originalFinalname + ".js");
                 File newJsFile = finalProject.getWebAppRootFolder().getFile(finalname + ".js");
-                jsFile.rename(newJsFile.toString());
+                jsFile.rename(newJsFile.getName());
 
                 // Correction 2: Change the class name in the js file
                 com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, newJsFile, originalFinalname, finalname);
@@ -698,8 +699,16 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     public String exportProject(String zipFileName) {
         Project project = getProjectManager().getCurrentProject();
         Resources<?> export = project.getRootFolder().find();
-        export = export.include(new ExportIncludeFilter());
-        InputStream inputStream = ZipArchive.compress(export);
+        export = export.exclude(FilterOn.antPattern("/export/**", "/dist/**", "/webapproot/WEB-INF/classes/**", "/webapproot/WEB-INF/lib/**",
+            "/phonegap/**"));
+        export = export.exclude(new ResourceFilter() {
+
+            @Override
+            public boolean match(ResourceFilterContext context, Resource resource) {
+                return resource instanceof File && resource.getParent().getParent() == null && resource.getName().toLowerCase().endsWith(".xml");
+            }
+        });
+        InputStream inputStream = ZipArchive.compress(export.files());
         File exportFile = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT).getFile(zipFileName);
         exportFile.getContent().write(inputStream);
         return exportFile.toString().substring(1);
@@ -723,29 +732,5 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     protected String getDeployName(com.wavemaker.tools.project.Project project) {
         return project.getProjectName();
-    }
-
-    private static class ExportIncludeFilter implements ResourceFilter {
-
-        private static final ResourceFilter PATHS = FilterOn.paths().notStarting("/export", "/dist", "/webapproot/WEB-INF/classes",
-            "/webapproot/WEB-INF/lib");
-
-        @Override
-        public boolean match(Resource resource) {
-            if (resource instanceof Folder) {
-                Folder folder = (Folder) resource;
-                if (!PATHS.match(folder)) {
-                    return false;
-                }
-            }
-            if (resource instanceof File) {
-                File file = (File) resource;
-                if (file.getParent().getParent() == null && file.getName().toLowerCase().endsWith(".xml")) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
     }
 }

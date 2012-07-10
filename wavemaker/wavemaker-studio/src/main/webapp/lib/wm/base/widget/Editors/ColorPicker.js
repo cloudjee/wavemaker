@@ -24,72 +24,84 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     colorPickerDialog: null,
     cancelValue: null,
     _empty: true,
-    regExp: "\#[0-9a-fA-F]{6}|\{.*\}", // could use a more precise regex for gradients
-    showMessages: false, // seems to mess up our color picker dialog when both are showing
+    regExp: "\#[0-9a-fA-F]{6}|\{.*\}",
+    // could use a more precise regex for gradients
+    showMessages: false,
+    // seems to mess up our color picker dialog when both are showing
     gradient: false,
     _createEditor: function(inNode, inProps) {
-	return new wm.dijit.form.ColorPicker(this.getEditorProps(inNode, inProps));
+        return new wm.dijit.form.ColorPicker(this.getEditorProps(inNode, inProps));
+    },
+    setInitialValue: function() {
+        this.inherited(arguments);
+        this.updateEditorColors(this.dataValue);
     },
     getDataValue: function() {
-	if (!this.gradient) {
-            if (this.getInvalid())
-		return this.defaultColor;
-	    return this.inherited(arguments) || this.defaultColor;
-	} else {
-	    return this.inherited(arguments);
-	}
-    }, 
+        if (!this.gradient) {
+            //if (this.getInvalid()) return this.defaultColor;
+            return this.inherited(arguments) || this.defaultColor;
+        } else {
+            return this.inherited(arguments);
+        }
+    },
     getEditorValue: function() {
-	var result = this.inherited(arguments);
-	if (this.gradient && result) {
-	    result = (dojo.fromJson(result));
-	}
-	return result;
+        var result = this.inherited(arguments);
+        if (this.gradient && result) {
+            result = (dojo.fromJson(result));
+        }
+        return result;
     },
     setEditorValue: function(inValue) {
-	if (this.gradient && inValue && typeof inValue == "object")
-	    inValue = dojo.toJson(inValue);
-	this.inherited(arguments);
+        if (this.gradient && inValue && typeof inValue == "object") inValue = dojo.toJson(inValue);
+        this.inherited(arguments);
     },
-/*    doChangeOnKey: function(inEvent) {
-	this.changed();
-	if (this.editor)
-	    this.editor.onChange(this.dataValue);
+    /*    doChangeOnKey: function(inEvent) {
+    this.changed();
+    if (this.editor)
+        this.editor.onChange(this.dataValue);
     },*/
-    onClose: function() {
+    onClose: function() {},
+    onchange: function(inValue) {
+        this.updateEditorColors(inValue);
     },
-	onchange: function(inValue) {
-	    if (this._inColorChange) return;
-	    this._inColorChange = true;
-	    if (!this.gradient) {
-		if (inValue) {
-		    this.editorNode.style.backgroundColor = inValue;
-		    var v1 = parseInt(inValue.substr(1,2),16);
-		    var v2 = parseInt(inValue.substr(3,2),16);
-		    var v3 = parseInt(inValue.substr(5,2),16);
-		    
-		    this.editorNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1+v2+v3 < 250) ? "white" : "black";
-		} else {
-		    this.editorNode.style.backgroundColor = "";
-		    this.editorNode.style.color = "";
-		}
-	    } else {
-		console.log(inValue);
-		if (typeof inValue == "string" && inValue.length) {
-		    inValue = dojo.fromJson(inValue);
-		}
-		
-		var style = inValue ? wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "") : "";
-		if (dojo.isIE < 10) {
-		    this.editorNode.style.filter = style;
-		} else {
-		    this.editorNode.style.background = style;
-		}
-	    }
-	    wm.job(this.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
-		this._inColorChange = false;
-	    });
-	}
+    updateEditorColors: function(inValue) {
+        if (this._inColorChange) return;
+        this._inColorChange = true;
+        if (!this.gradient) {
+            if (inValue) {
+                this.editorNode.style.backgroundColor = inValue;
+                var v1,v2,v3;
+                if (inValue.length > 5) {
+                    v1 = parseInt(inValue.substr(1, 2), 16);
+                    v2 = parseInt(inValue.substr(3, 2), 16);
+                    v3 = parseInt(inValue.substr(5, 2), 16);
+                } else {
+                    v1 = parseInt(inValue.substr(1, 1), 16);
+                    v2 = parseInt(inValue.substr(2, 1), 16);
+                    v3 = parseInt(inValue.substr(3, 1), 16);                    
+                }
+
+                this.editorNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1 + v2 + v3 < 250) ? "white" : "black";
+            } else {
+                this.editorNode.style.backgroundColor = "";
+                this.editorNode.style.color = "";
+            }
+        } else {            
+            if (typeof inValue == "string" && inValue.length) {
+                inValue = dojo.fromJson(inValue);
+            }
+
+            var style = inValue ? wm.getBackgroundStyle(inValue.startColor, inValue.endColor, inValue.colorStop, inValue.direction, "") : "";
+            if (dojo.isIE < 10) {
+                this.editorNode.style.filter = style;
+            } else {
+                this.editorNode.style.background = style;
+            }
+        }
+        wm.job(this.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
+            this._inColorChange = false;
+        });
+    }
 
 });
 
@@ -383,8 +395,8 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	this.connect(this.colorStop, "onchange", this, "_onChange");
 	this.html = new wm.Html({name: "html", owner: this, parent: this.bottomPanel, width: "100%", height: "100%", border: "1", borderColor: "black"});
 	this.buttonPanel = new wm.Panel({_classes: {domNode: ["dialogfooter"]}, owner: this, parent: this, verticalAlign: "top", horizontalAlign: "right", width: "100%", height: "30px", layoutKind: "left-to-right"});
-	this.okButton = new wm.Button({owner: this, parent: this.buttonPanel, caption: "OK", width: "80px", onclick: dojo.hitch(this, "onOKClick")});
-	this.cancelButton = new wm.Button({owner: this, parent: this.buttonPanel, caption: "Cancel", width: "80px", onclick: dojo.hitch(this, "onCancelClick")});
+	this.okButton = new wm.Button({_classes: {domNode: ["StudioButton", "OKButton"]},owner: this, parent: this.buttonPanel, caption: "OK", width: "80px", onclick: dojo.hitch(this, "onOKClick")});
+	this.cancelButton = new wm.Button({_classes: {domNode: ["StudioButton", "CancelButton"]}, owner: this, parent: this.buttonPanel, caption: "Cancel", width: "80px", onclick: dojo.hitch(this, "onCancelClick")});
 	wm.onidle(this, function( ){
 	    this.reflow();
 	    this._cupdating = true;

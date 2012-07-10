@@ -35,7 +35,10 @@
  */
 .wm_template  .wmeditor .dijitTextBox,
 .wm_template  .wmeditor .dijitTextArea,
-.wm_template  .wmeditor .dijitComboBox
+.wm_template  .wmeditor .dijitComboBox,
+.wm_template  .dojoxGrid .dijitTextBox,
+.wm_template  .dojoxGrid .dijitTextArea,
+.wm_template  .dojoxGrid .dijitComboBox
  {
      /* Borders-Editor_BorderStyle_Radius */
      -moz-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
@@ -67,16 +70,19 @@
 }
 
 
-
+.wm_template .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_template .wmeditor .dijitSelect .dijitArrowButton {
-    height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
     -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
     -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
     border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
     border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton {
+    height: 100% !important;
 }
 
 .wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
@@ -135,6 +141,7 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_template .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* Document-ClickablesDefault-Background_Color */
@@ -254,6 +261,7 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template .MainContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_template .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_template .MainContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* MainContent-ClickablesDefault-Background_Color */
@@ -345,6 +353,7 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template .EmphasizedContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_template .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_template .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* EmphasizedContent-ClickablesDefault-Background_Color */
@@ -427,6 +436,7 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template .HeaderContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_template .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_template .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */

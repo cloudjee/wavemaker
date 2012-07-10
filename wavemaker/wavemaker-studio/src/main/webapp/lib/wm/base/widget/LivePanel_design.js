@@ -195,7 +195,6 @@ wm.LivePanel.extend({
 	this.dataGrid.eventBindings.onSelect = this.name + ".popupLivePanelEdit";
 	newButton.eventBindings.onclick = this.name + ".popupLivePanelInsert";
 	deleteButton.eventBindings.onclick = this.liveForm.name + ".deleteData";
-	deleteButton.eventBindings.onclick1 = this.gridLayer.name;
 	saveButton.eventBindings.onclick = this.liveForm.name + ".saveDataIfValid";
 	cancelButton.eventBindings.onclick = this.gridLayer.name;
 	this.gridLayer.eventBindings.onShow = this.dataGrid.name + ".deselectAll";

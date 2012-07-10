@@ -61,7 +61,7 @@ public class FilteredResources<T extends Resource> extends AbstractResources<T> 
 
             private boolean isMatch(T element) {
                 for (ResourceFilter filter : FilteredResources.this.filters) {
-                    if (filter.match(element)) {
+                    if (filter.match(getResourceFilterContext(), element)) {
                         return true;
                     }
                 }

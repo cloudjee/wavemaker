@@ -77,6 +77,18 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 }
 
 
+.DeleteBindButton {
+    float: right;
+    width: 16px; 
+    height: 16px;
+    cursor: pointer;
+    border: solid 1px #aaa;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+
 /*
 .wminspector .wmbutton {
 	-moz-border-radius: 4px; 

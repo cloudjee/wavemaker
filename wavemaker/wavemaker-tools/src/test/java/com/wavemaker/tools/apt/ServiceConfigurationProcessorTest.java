@@ -456,6 +456,11 @@ public class ServiceConfigurationProcessorTest {
     }
 
     private void buildWithProcessor(Project project, String serviceClass, Processor processor) throws IOException {
+        String content = "public class Foo{public int getInt(){return 12;}}";
+        buildWithProcessor(project, serviceClass, processor, content);
+    }
+
+    private void buildWithProcessor(Project project, String serviceClass, Processor processor, String content) throws IOException {
         JavaCompiler compiler = new WaveMakerJavaCompiler();
         StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
         ResourceJavaFileManager fileManager = new ResourceJavaFileManager(standardFileManager);
@@ -463,8 +468,10 @@ public class ServiceConfigurationProcessorTest {
         project.getClassOutputFolder().createIfMissing();
         fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getClassOutputFolder()));
 
-        File javaSrc = project.getRootFolder().getFile("services/src/Foo.java");
-        javaSrc.getContent().write("public class Foo{public int getInt(){return 12;}}");
+        File javaSrc = project.getRootFolder().getFile("services/foo/src/Foo.java");
+        javaSrc.getContent().write(content);
+
+        fileManager.setLocation(StandardLocation.SOURCE_PATH, project.getSourceFolders());
 
         Iterable<? extends JavaFileObject> compilationUnits = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
             true);
@@ -476,7 +483,6 @@ public class ServiceConfigurationProcessorTest {
         CompilationTask task = compiler.getTask(null, fileManager, null, options, null, compilationUnits);
         task.setProcessors(Collections.singletonList(processor));
         // Perform the compilation task.
-        task.call();
-
+        assertTrue(task.call());
     }
 }

@@ -783,7 +783,7 @@ wm.getBackgroundStyle = function(startColor, endColor, colorStop, direction, bro
 	switch(browser) {
 	case "webkit":
 	    // return  "-webkit" + result; sadly some mobile webkit browsers don't support this 
-	    return "-webkit-gradient(linear, center top, center bottom, from(" + startColor + "), color-stop(" + colorStop + "%," + endColor+"), to(" + endColor+"))";
+	    return "-webkit-gradient(linear, " + (direction == "vertical" ? "center top, center bottom" : "left center, right center") + ", from(" + startColor + "), color-stop(" + colorStop + "%," + endColor+"), to(" + endColor+"))";
 	case "moz":
 	    return  "-moz" + result;
 	case "ieold":

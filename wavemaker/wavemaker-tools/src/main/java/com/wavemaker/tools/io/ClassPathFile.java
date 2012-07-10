@@ -74,6 +74,12 @@ public class ClassPathFile extends AbstractReadOnlyFile {
     }
 
     @Override
+    public String toStringRelativeTo(Folder source) {
+        Assert.notNull(source, "Source must not be null");
+        return this.path.toStringRelativeTo(source.toString());
+    }
+
+    @Override
     protected InputStream getInputStream() {
         return this.classLoader.getResourceAsStream(this.path.toString().substring(1));
     }

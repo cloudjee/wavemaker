@@ -125,7 +125,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
 		if (e.captionNode.clientWidth > max) {
 		    e.captionNode.style.maxWidth = max + "px";		    
 		}
-		e._isMaxEditor = (e == maxEditor);
+		e._isMaxEditor = maxEditor ? (e == maxEditor) : undefined;
 	    }
 	}));
     },
