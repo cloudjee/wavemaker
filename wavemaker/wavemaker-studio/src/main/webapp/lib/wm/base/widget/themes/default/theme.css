@@ -1376,6 +1376,9 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 }
 
 .dojoxColorPickerWebSafePreview {display:none;}
+.dojoxColorPickerOptional .OKButton,.dojoxColorPickerOptional .CancelButton {
+    border: solid 1px #333;
+}
 
 .MapMarkerTitle {
     margin: 0px 0px 2px 0px;
