@@ -52,32 +52,34 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 		dojo.addClass(n, this.className);
 		this.makeConnections();
 	},
-	makeConnections: function() {
-	    if (!wm.isMobile) {
-		this.connect(this.domNode, 'mouseover', this, 'mouseover'),
-		this.connect(this.domNode, 'mouseout', this, 'mouseout')
+    makeConnections: function() {
+        if (!wm.isMobile) {
+            this.connect(this.domNode, 'mouseover', this, 'mouseover'), this.connect(this.domNode, 'mouseout', this, 'mouseout')
 
-		this.connect(this.domNode,'click', this, function(evt) {
-		    wm.onidle(this,'click',{target: evt.target});
-		});
-		this.connect(this.domNode, 'dblclick', this, function(evt) {
-		    wm.onidle(this, 'dblclick',{target: evt.target});
-		});
-	    } else {
-		this.addTouchListener();
-	    }
-	},
+            this.connect(this.domNode, 'click', this, function(evt) {
+                wm.onidle(this, 'click', {
+                    target: evt.target
+                });
+            });
+            this.connect(this.domNode, 'dblclick', this, function(evt) {
+                wm.onidle(this, 'dblclick', {
+                    target: evt.target
+                });
+            });
+        } else {
+            this.addTouchListener();
+        }
+    },
+    
 
     onTouchStart: function(evt) {
 	if (!this.selected || this.list._selectionMode == "multiple") {
 	    if (this.selected) {
 		this._deselectionIndicatorOnly = true;
-		this.deselect();
-		this.selected = true;
+		this.deselect(true);		
 	    } else {
 		this._selectionIndicatorOnly = true;
-		this.select();
-		this.selected = false;
+		this.select(true);		
 	    }
 	    this.list._touchedItem =  this;
 	}
@@ -144,12 +146,16 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 	dblclick: function(e) {
 		this.list.ondblclick(e, this);
 	},
-	select: function() {
-	    this.selected = true;
-	    dojo.addClass(this.domNode, this.className +'-selected');
+	select: function(indicatorOnly) {
+        if (!indicatorOnly) {
+            this.selected = true;
+        }
+        dojo.addClass(this.domNode, this.className +'-selected');
 	},
-	deselect: function() {
-		this.selected = false;
+	deselect: function(indicatorOnly) {
+        if (!indicatorOnly) {
+            this.selected = false;
+        }
 		dojo.removeClass(this.domNode, this.className +'-selected');
 	}
 });
@@ -533,32 +539,35 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	},
     onLongClick: function(inItem) {
     },
-	onclick: function(inEvent, inItem) {
-	    
-	    var target = inEvent.target;
-	    if (target.firstChild && dojo.attr(target.firstChild, "wmcontroller")) {
-		target = target.firstChild;
-	    }
+    onclick: function(inEvent, inItem) {
 
-	    if (target && dojo.attr(target, "wmcontroller")) {
-		if (target.type == "checkbox") {
-		    if (target.checked) {
-			this.eventSelect(inItem);
-		    } else {
-			this.eventDeselect(inItem);
-		    }
-		} else if (target.type == "radio") {
-		    var toggleSelectWas = this.toggleSelect;
-		    this.toggleSelect = false;
-		    this.clickSelect(inItem, inEvent);
-		    this.toggleSelect = toggleSelectWas;
-		} else if (dojo.hasClass(target, "wmDeleteColumn") || dojo.hasClass(target, "wmDeleteColumnImage")) {
-		    this._deleteItem(inItem);
-		}
-	    } else {
-		this.clickSelect(inItem, inEvent);
-	    }
-	},
+        var target = inEvent.target;
+        if (target.firstChild && dojo.attr(target.firstChild, "wmcontroller")) {
+            target = target.firstChild;
+        }
+
+        if (target && dojo.attr(target, "wmcontroller")) {
+            if (target.type == "checkbox") {
+                if (!inItem.selected) {
+                    this.eventSelect(inItem);
+                } else {
+                    this.eventDeselect(inItem);
+                }
+                dojo.stopEvent(inEvent);
+            } else if (target.type == "radio") {
+                var toggleSelectWas = this.toggleSelect;
+                this.toggleSelect = false;
+                this.clickSelect(inItem, inEvent);
+                this.toggleSelect = toggleSelectWas;
+                dojo.stopEvent(inEvent);
+            } else if (dojo.hasClass(target, "wmDeleteColumn") || dojo.hasClass(target, "wmDeleteColumnImage")) {
+                this._deleteItem(inItem);
+            }
+        } else {
+            this.clickSelect(inItem, inEvent);
+        }
+    },
+    
     _deleteItem: function(inItem) {
 	if (this.deleteConfirm) {
 	    app.confirm(this.deleteConfirm, false, dojo.hitch(this, function() {

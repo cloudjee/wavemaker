@@ -62,25 +62,29 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 		}
 		return -1;
 	},
-    select: function() {
-	this.inherited(arguments);
-	if (this.list.columns && (this.list.selectionMode == "checkbox" || this.list.selectionMode == "radio")) {
-	    dojo.query("input",this.domNode)[0].checked = true;
-	}
-    },
-    deselect: function() {
-	this.inherited(arguments);
-	if (this.list.columns && (this.list.selectionMode == "checkbox" || this.list.selectionMode == "radio")) {
-	    dojo.query("input",this.domNode)[0].checked = false;
-	}
-    }
+    select: function(indicatorOnly) {
+       this.inherited(arguments);
+       if (!indicatorOnly && this.list.columns && (this.list.selectionMode == "checkbox" || this.list.selectionMode == "radio")) {
+            wm.job(this.getRuntimeId() + "changeCheckedStatus", 10, this, function() {
+                dojo.query("input", this.domNode)[0].checked = true;
+            });
+       }
+   },
+   deselect: function(indicatorOnly) {
+       this.inherited(arguments);
+       if (!indicatorOnly && this.list.columns && (this.list.selectionMode == "checkbox" || this.list.selectionMode == "radio")) {
+            wm.job(this.getRuntimeId() + "changeCheckedStatus", 10, this, function() {
+                dojo.query("input", this.domNode)[0].checked = false;
+            });
+       }
+   }
 });
 
 wm.Object.extendSchema(wm.ListItem, {
     getData: {group: "method", returns: "Object"}
 });
 
-dojo.declare("wm.List", wm.VirtualList, {    
+dojo.declare("wm.List", wm.VirtualList, {
     _regenerateOnDeviceChange: 1,
     _scrollTop: 0,
     styleAsGrid: true,
@@ -425,7 +429,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		if (isMobile) {
 		    for (var i = 0; i < this.columns.length; i++) {
 			var c = this.columns[i];
-			if (c.mobileColumn) {
+			if (c.mobileColumn && !c.controller) {
 			    useMobileColumn = true;
 			    break;
 			}
