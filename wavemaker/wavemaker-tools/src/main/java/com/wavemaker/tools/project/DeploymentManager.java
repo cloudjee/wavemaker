@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 public interface DeploymentManager {
 
@@ -113,6 +114,8 @@ public interface DeploymentManager {
     void setStudioConfiguration(StudioConfiguration studioConfiguration);
 
     void setProjectManager(ProjectManager projectManager);
+
+    void setProjectCompiler(ProjectCompiler projectCompiler);
 
     void setFileSystem(StudioFileSystem fileSystem);
 

@@ -73,8 +73,8 @@
 		<property name="fileSystem">
             <ref bean="fileSystem"/>
         </property>
-		<property name="deploymentManager">
-            <ref bean="deploymentManager"/>
+		<property name="projectCompiler">
+            <ref bean="projectCompiler"/>
         </property>
 	</bean>
 
