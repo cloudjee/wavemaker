@@ -338,7 +338,13 @@ dojo.declare("dijit.form._SliderMover",
 			pixelValue = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
 		widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false);
 	},
-
+    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: Not sure why parent methods call to destroy failed, but seems like the events are successfully disconnected if we call destroy twice,
+     * so here's the redundant call.  Symptoms: You click and drag, and then mouse up and it won't stop dragging even when the widget is dismissed. */
+    onMouseUp: function(e) {
+        this.inherited(arguments);
+        this.destroy();
+    },
 	destroy: function(e){
 		dojo.dnd.Mover.prototype.destroy.apply(this, arguments);
 		var widget = this.widget;
