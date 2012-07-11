@@ -180,7 +180,7 @@ dojo.declare("wm.Page", wm.Component, {
 		// so as not to conflict with user parts
 		wm.fire(this, "unloadSupport");
 		try {
-	            this._loadingPage = false;
+	        this._loadingPage = false;
 		    if (this.root) {
 			//this.root.leafFirstRenderCss();
 			this.reflow();
