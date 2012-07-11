@@ -1875,154 +1875,155 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 dojo.declare("wm.TouchMixin", null, {
     addTouchListener: function(optionalNode) {
-	if (!this._subscriptions) {
-	    this._subscriptions = [];
-	    this._connections = [];
-	    this._debugSubscriptions = [];
-	    this.subscribe = function() {
-		wm.Component.prototype.subscribe.apply(this, arguments);
-	    };
-	    this.connect =  function() {
-		wm.Component.prototype.connect.apply(this, arguments);
-	    };
+        if (!this._subscriptions) {
+            this._subscriptions = [];
+            this._connections = [];
+            this._debugSubscriptions = [];
+            this.subscribe = function() {
+                wm.Component.prototype.subscribe.apply(this, arguments);
+            };
+            this.connect = function() {
+                wm.Component.prototype.connect.apply(this, arguments);
+            };
             this.disconnectEvent = function() {
-		wm.Component.prototype.disconnectEvent.apply(this, arguments);
-	    };
-	    // also needs a getRuntimeId method
-	}
-	this.connect(optionalNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
-	if (!wm.isFakeMobile) {
-	    this.connect(optionalNode || this.domNode,"touchmove", this, "_onTouchMove");
-	    this.connect(optionalNode || this.domNode,"touchend", this, "_onTouchEnd");
-	}
-	this.subscribe("wmTouchMove", dojo.hitch(this, function() {
-	    wm.cancelJob(this.getRuntimeId() + ".longClick");
-	}));
+                wm.Component.prototype.disconnectEvent.apply(this, arguments);
+            };
+            // also needs a getRuntimeId method
+        }
+        this.connect(optionalNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+        if (!wm.isFakeMobile) {
+            this.connect(optionalNode || this.domNode, "touchmove", this, "_onTouchMove");
+            this.connect(optionalNode || this.domNode, "touchend", this, "_onTouchEnd");
+        }
+        this.subscribe("wmTouchMove", dojo.hitch(this, function() {
+            wm.cancelJob(this.getRuntimeId() + ".longClick");
+        }));
     },
-    _onTouchStart: function(e){
-	this._touchMoved = false;
-	var target;
-	if(e.targetTouches){
-	    if (e.targetTouches.length) {
-		this._touchStartY = e.targetTouches[0].clientY;
-		this._touchStartX = e.targetTouches[0].clientX;
-		target = e.targetTouches[0].target;
-	    }
-	} else if ("clientY" in e) {
-	    this._touchStartY = e.clientY;
-	    this._touchStartX = e.clientX;
-	    target = e.target;
-	    this.connect(document.body, "mousemove", this, "_onTouchMove");
-	    this.connect(document.body, "mouseup", this, "_onTouchEnd");
-	} else {
-	    delete this._touchStartY;
-	    delete this._touchStartX;
-	}
-	if ("_touchStartY" in this) {
-	    this._touchLastY = this._touchStartY;
-	    this._touchLastX = this._touchStartX;
-	    /* Return any value to declare this touch event ignored */
-	    if (this.onTouchStart(e, target)) {
-		this.disconnectEvent("mousemove");
-		this.disconnectEvent("mouseup");
-	    } else {
-		wm.job(this.getRuntimeId() + ".longClick", 1000, this, "_onLongTouch");
-	    }
-	}
+    _onTouchStart: function(e) {
+        this._touchMoved = false;
+        var target;
+        if (e.targetTouches) {
+            if (e.targetTouches.length) {
+                this._touchStartY = e.targetTouches[0].clientY;
+                this._touchStartX = e.targetTouches[0].clientX;
+                target = e.targetTouches[0].target;
+            }
+        } else if ("clientY" in e) {
+            this._touchStartY = e.clientY;
+            this._touchStartX = e.clientX;
+            target = e.target;
+            this.connect(document.body, "mousemove", this, "_onTouchMove");
+            this.connect(document.body, "mouseup", this, "_onTouchEnd");
+        } else {
+            delete this._touchStartY;
+            delete this._touchStartX;
+        }
+        if ("_touchStartY" in this) {
+            this._touchLastY = this._touchStartY;
+            this._touchLastX = this._touchStartX; /* Return any value to declare this touch event ignored */
+            if (this.onTouchStart(e, target)) {
+                this.disconnectEvent("mousemove");
+                this.disconnectEvent("mouseup");
+            } else {
+                wm.job(this.getRuntimeId() + ".longClick", 1000, this, "_onLongTouch");
+            }
+        }
     },
-    _onLongTouch:function() {
-	this.onLongTouch(this._touchStartX, this._touchStartY);
-	this._onTouchEnd(null, true);
+    _onLongTouch: function() {
+        this.onLongTouch(this._touchStartX, this._touchStartY);
+        this._onTouchEnd(null, true);
     },
     onTouchStart: function(event) {},
-    _onTouchMove: function(e){
-//	e.preventDefault(); // commented out so that touching a button and then moving will count as scrolling
-	var dyInitial, dyLatest, dxInitial, dxLatest;
-	if(e.targetTouches){
-	    if(e.targetTouches.length != 1){ return false; }
-	    dyInitial = e.targetTouches[0].clientY - this._touchStartY;
-	    dyLatest  = e.targetTouches[0].clientY - this._touchLastY;
-	    dxInitial = e.targetTouches[0].clientX - this._touchStartX;
-	    dxLatest  = e.targetTouches[0].clientX - this._touchLastX;
-	    this._touchLastY = e.targetTouches[0].clientY;
-	    this._touchLastX = e.targetTouches[0].clientX;
-	}else{
-	    dyInitial = e.clientY - this._touchStartY;
-	    dyLatest  = e.clientY - this._touchLastY;
-	    dxInitial = e.clientX - this._touchStartX;
-	    dxLatest  = e.clientX - this._touchLastX;
-	    this._touchLastY = e.clientY;
-	    this._touchLastX = e.clientX;
-	}
-	var posY = this._touchStartY + dyInitial;
-	var posX = this._touchStartX + dxInitial;
+    _onTouchMove: function(e) {
+        //  e.preventDefault(); // commented out so that touching a button and then moving will count as scrolling
+        var dyInitial, dyLatest, dxInitial, dxLatest;
+        if (e.targetTouches) {
+            if (e.targetTouches.length != 1) {
+                return false;
+            }
+            dyInitial = e.targetTouches[0].clientY - this._touchStartY;
+            dyLatest = e.targetTouches[0].clientY - this._touchLastY;
+            dxInitial = e.targetTouches[0].clientX - this._touchStartX;
+            dxLatest = e.targetTouches[0].clientX - this._touchLastX;
+            this._touchLastY = e.targetTouches[0].clientY;
+            this._touchLastX = e.targetTouches[0].clientX;
+        } else {
+            dyInitial = e.clientY - this._touchStartY;
+            dyLatest = e.clientY - this._touchLastY;
+            dxInitial = e.clientX - this._touchStartX;
+            dxLatest = e.clientX - this._touchLastX;
+            this._touchLastY = e.clientY;
+            this._touchLastX = e.clientX;
+        }
+        var posY = this._touchStartY + dyInitial;
+        var posX = this._touchStartX + dxInitial;
 
 
 
-	/* If the finger has moved more than 5 pixels, its not an accidental move; */
-	if (!this._touchMoved && (Math.abs(dyInitial) > 5 || Math.abs(dxInitial) > 5)) {
-	    this._touchMoved = true;
-	    wm.cancelJob(this.getRuntimeId() + ".longClick");
-	}
-	if (this._touchMoved) {
-	    this.onTouchMove(e, posY, dyInitial, dyLatest, posX, dxInitial, dxLatest);
-	}
+        /* If the finger has moved more than 5 pixels, its not an accidental move; */
+        if (!this._touchMoved && (Math.abs(dyInitial) > 5 || Math.abs(dxInitial) > 5)) {
+            this._touchMoved = true;
+            wm.cancelJob(this.getRuntimeId() + ".longClick");
+        }
+        if (this._touchMoved) {
+            this.onTouchMove(e, posY, dyInitial, dyLatest, posX, dxInitial, dxLatest);
+        }
     },
-    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {},
-    _onTouchEnd: function(e, noEvents){
-	wm.cancelJob(this.getRuntimeId() + ".longClick");
-	this.disconnectEvent("mousemove");
-	this.disconnectEvent("mouseup");
-	if (!noEvents) {
-	    this.onTouchEnd(e, this._touchMoved);
-	    if (!this._touchMoved) {
-		this.onTouch(this._touchStartX, this._touchStartY);
-	    }
-	}
+    onTouchMove: function(event, yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {},
+    _onTouchEnd: function(e, noEvents) {
+        wm.cancelJob(this.getRuntimeId() + ".longClick");
+        this.disconnectEvent("mousemove");
+        this.disconnectEvent("mouseup");
+        if (!noEvents) {
+            this.onTouchEnd(e, this._touchMoved);
+            if (!this._touchMoved) {
+                this.onTouch(this._touchStartX, this._touchStartY);
+            }
+        }
     },
-    onTouchEnd: function(event,isMove) {},
+    onTouchEnd: function(event, isMove) {},
     onTouch: function(posX, posY) {},
     onLongTouch: function(posX, posY) {}
 });
 
 dojo.declare("wm.TouchScrollMixin", wm.TouchMixin, {
     onTouchStart: function(event) {
-	this._touchTime = new Date().getTime();
-	if (this._touchAnimationId) {
-	    window.clearInterval(this._touchAnimationId);
-	}
+        this._touchTime = new Date().getTime();
+        if (this._touchAnimationId) {
+            window.clearInterval(this._touchAnimationId);
+        }
     },
-	onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {
-	    var node = this._scrollNode || this.domNode;
-	    node.scrollTop -= yChangeFromLast;
-	    var newTime = new Date().getTime();	    
-	    if (this._touchTime != newTime) {
-		this._touchVelocity = yChangeFromLast / (this._touchTime - newTime);
-		this._touchTime = newTime;
-	    }
-	    dojo.stopEvent(event);
-	},    
-    onTouchEnd: function(event,isMove) {
+    onTouchMove: function(event, yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {
+        var node = this._scrollNode || this.domNode;
+        node.scrollTop -= yChangeFromLast;
+        var newTime = new Date().getTime();
+        if (this._touchTime != newTime) {
+            this._touchVelocity = yChangeFromLast / (this._touchTime - newTime);
+            this._touchTime = newTime;
+        }
+        dojo.stopEvent(event);
+    },
+    onTouchEnd: function(event, isMove) {
 
-	if (isMove) {
-	    if (this._touchVelocity != Infinity && Math.abs(this._touchVelocity) > 0.15) {
-		if (this._touchAnimationId) {
-		    window.clearInterval(this._touchAnimationId);
-		}
-		this._touchAnimationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
-	    }
-	}
+        if (isMove) {
+            if (this._touchVelocity != Infinity && Math.abs(this._touchVelocity) > 0.15) {
+                if (this._touchAnimationId) {
+                    window.clearInterval(this._touchAnimationId);
+                }
+                this._touchAnimationId = window.setInterval(dojo.hitch(this, "_onAnimateScroll"), 50);
+            }
+        }
     },
     _onAnimateScroll: function() {
-	var node = this._scrollNode || this.domNode;
-	this._touchVelocity *= 0.9;
-	var top = node.scrollTop;
-	node.scrollTop = node.scrollTop + this._touchVelocity * 50;
-	var newTop = node.scrollTop;
-	var diff = Math.abs(newTop - top);
-	if (diff <= 1) {
-	    window.clearInterval(this._touchAnimationId);
-	}
+        var node = this._scrollNode || this.domNode;
+        this._touchVelocity *= 0.9;
+        var top = node.scrollTop;
+        node.scrollTop = node.scrollTop + this._touchVelocity * 50;
+        var newTop = node.scrollTop;
+        var diff = Math.abs(newTop - top);
+        if (diff <= 1) {
+            window.clearInterval(this._touchAnimationId);
+        }
     }
 
 });
