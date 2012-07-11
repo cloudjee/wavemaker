@@ -176,13 +176,11 @@ public class DeploymentService {
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
         File tempWebAppRoot = null;
         try {
-
             if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
 
-            if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
-            //if (!WMAppContext.getInstance().isCloudFoundry()) {
+            if (!WMAppContext.getInstance().isCloudFoundry() || deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
                 tempWebAppRoot = IOUtils.createTempDirectory();
                 com.wavemaker.tools.io.File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo, tempWebAppRoot);
                 if (!f.exists()) {
