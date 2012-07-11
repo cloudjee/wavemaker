@@ -1195,7 +1195,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    });
 
 	    dojo.forEach(this.columns, function(col){
-
+            if (col.field == "PHONE COLUMN" && !col.show) return;
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
 		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
 		    var width = col.width;
@@ -1950,14 +1950,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 	    if (inValue && inValue != '') {
 		var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
-		var onclick = "onclick='app.getValueById(\"" + this.getRuntimeId() + "\").gridButtonClicked(\"" + field + "\"," + rowIdx + ")' ";
-		return '<button ' + onclick + formatterProps.buttonclick + '" style="width:100%;display:inline-block" ' + classList + '>' + inValue + '</button>';
+		var onclick = "onclick='app.getValueById(\"" + this.getRuntimeId() + "\").gridButtonClicked(event,\"" + field + "\"," + rowIdx + ")' ";
+		return '<button ' + onclick + formatterProps.buttonclick  + classList + '>' + inValue + '</button>';
 	    }
 	    return inValue;
 	},
-    gridButtonClicked: function(fieldName, rowIndex) {
-	var rowData = this.getRow(rowIndex);
-	this.onGridButtonClick(fieldName, rowData, rowIndex);
+    gridButtonClicked: function(event,fieldName, rowIndex) {
+        event = event || window.event;
+        // prevent row selection which would trigger an onSelect/onSelectionChange events which could trigger navigation or other tasks contrary to executing of this button
+        dojo.stopEvent(event);          
+    	var rowData = this.getRow(rowIndex);
+	   this.onGridButtonClick(fieldName, rowData, rowIndex);
     },
     onGridButtonClick: function(fieldName, rowData, rowIndex) {},
 	linkFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){

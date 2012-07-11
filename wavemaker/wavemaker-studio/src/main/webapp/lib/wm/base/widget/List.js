@@ -100,55 +100,59 @@ dojo.declare("wm.List", wm.VirtualList, {
     minHeight: 60,
     deleteColumn: false,
     deleteConfirm: "Are you sure you want to delete this?",
-        autoScroll: false,
-	constructor: function() {
-		this._data = [];
-	},
-	columnWidths: "",
-	dataFields: "",
-        classNames: "wmlist",
+    autoScroll: false,
+    constructor: function() {
+        this._data = [];
+    },
+    columnWidths: "",
+    dataFields: "",
+    classNames: "wmlist",
     columns: "",
     _columnsHash: "",
-    /* TODO: Replace iterating over thousands of items with a hash lookup, also need to return the item index which is what is more often needed */
+     /* TODO: Replace iterating over thousands of items with a hash lookup, also need to return the item index which is what is more often needed */
     getItemForNode: function(inRowNode) {
-	var index = wm.Array.indexOf(this.items, inRowNode.id.replace(/^.*_/,""), function(item, id) {
-	    return item && item.rowId == id;
-	});
-	if (index == -1) return null;
-	return this.items[index];
+        var index = wm.Array.indexOf(this.items, inRowNode.id.replace(/^.*_/, ""), function(item, id) {
+            return item && item.rowId == id;
+        });
+        if (index == -1) return null;
+        return this.items[index];
     },
     deleteItem: function(inItem) {
-	var index = this.inherited(arguments);
-	dojo.query(".wmlist-item.Odd",this.domNode).removeClass("Odd");
-	dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
-	var data = this._data[index];
-	wm.Array.removeElementAt(this._data, index);
-	this.onRowDeleted(index, data);
+        var index = this.inherited(arguments);
+        dojo.query(".wmlist-item.Odd", this.domNode).removeClass("Odd");
+        dojo.query(".wmlist-item:nth-child(odd)", this.domNode).addClass("Odd");
+        var data = this._data[index];
+        wm.Array.removeElementAt(this._data, index);
+        this.onRowDeleted(index, data);
     },
-	onRowDeleted: function(rowId, rowData){},
+    onRowDeleted: function(rowId, rowData) {},
     setColumns: function(inColumns) {
-	this.columns = inColumns;
-	this._setSelectionColumn(this.selectionMode); // add in any controllers based on selection mode
-	this._setDeleteColumn(this.deleteColumn); // add in any controllers based on deleteColumn
-	this._setRightArrowColumn(this.rightNavArrow);
-	this._columnsHash = {};
-	var totalWidth = 0;
-	for (var i = 0; i < this.columns.length; i++) {
-	    var column = this.columns[i];
-	    this._columnsHash[column.field] = column;
-	    if (!column.width) column.width = "100%";
-	    if (column.width.match(/\%/)) totalWidth += Number(column.width);
-	}
-	if (!this.isDesignLoaded() && dojo.isIE <= 8) {
-	    for (var i = 0; i < this.columns.length; i++) {
-		var column = this.columns[i];
-		var w = column.width;
-		if (w.match(/\%/)) {
-		    column.width = (w * 100/totalWidth) + "%";
-		}
-	    }
-	}
+        this.columns = inColumns;
+        this._setSelectionColumn(this.selectionMode); // add in any controllers based on selection mode
+        this._setDeleteColumn(this.deleteColumn); // add in any controllers based on deleteColumn
+        this._setRightArrowColumn(this.rightNavArrow);
+        this._columnsHash = {};
+        var totalWidth = 0;
+        for (var i = 0; i < this.columns.length; i++) {
+            var column = this.columns[i];
+            this._columnsHash[column.field] = column;
+            if (!column.width) column.width = "100%";
+            if (column.width.match(/\%/)) totalWidth += Number(column.width);
+            if (column.field == "PHONE COLUMN" && !this._isDesignLoaded) {
+                column.expression = column.expression.replace(/\$\{runtimeId\}/g, this.getRuntimeId()).replace(/wm\.DojoGrid\.prototype\./g, "app.getValueById('" + this.getRuntimeId() +"').");
+            }
+        }
+        if (!this.isDesignLoaded() && dojo.isIE <= 8) {
+            for (var i = 0; i < this.columns.length; i++) {
+                var column = this.columns[i];
+                var w = column.width;
+                if (w.match(/\%/)) {
+                    column.width = (w * 100 / totalWidth) + "%";
+                }
+            }
+        }
     },
+    
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
 	    if (inMode == "checkbox" || inMode == "extended")
@@ -1541,11 +1545,7 @@ try {
                 for (var propIndex = 0; propIndex < props.length; propIndex++) {
                     cellData = cellData[props[propIndex]];
                 }
-                /*
-            if (inCol==0) {
-            this.lastCellData = cellData;
-            }
-            */
+
                 cellData = this.formatCell(dataFields, cellData, value, i, inCol);
             }
         }
@@ -1636,66 +1636,74 @@ wm.List.extend({
     renderDojoObj: function() {
 	this._render();
     },
-    formatCell: function(inField, inValue, inItem, inRowId,inColumnIndex) {
-	if (!this._columnsHash) {
-	    return inValue;
-	} else {
-	    var col = this._columnsHash[inField];
-	var value = "";
-	if (col.expression) {
-	    try	{
-		value = wm.expression.getValue(col.expression, inItem,this.owner);
-	    }catch(e){}
-	} else {
-	    value = inValue;
-	}
+    formatCell: function(inField, inValue, inItem, inRowId, inColumnIndex) {
+        if (!this._columnsHash) {
+            return inValue;
+        } else {
+            var col = this._columnsHash[inField];
+            var value = "";
+            if (col.expression) {
+                var expr = col.expression;
+                try {
+                    if (col.field == "PHONE COLUMN") {
+                       expr = expr.replace(/\$\{wm\.rowId\}/g,inRowId);
+                    }
+                    value = wm.expression.getValue(expr, inItem, this.owner);
+                } catch (e) {}
+            } else {
+                value = inValue;
+            }
 
-	if (col.formatFunc){
-	    switch(col.formatFunc){
-	    case 'wm_date_formatter':
-	    case 'Date (WaveMaker)':				    
-		value = this.dateFormatter(col.formatProps||{}, null,null,null,value);
-		break;
-	    case 'wm_localdate_formatter':
-	    case 'Local Date (WaveMaker)':				    
-		value = this.localDateFormatter(col.formatProps||{}, null,null,null,value);
-		break;
-	    case 'wm_time_formatter':
-	    case 'Time (WaveMaker)':				    
-		value = this.timeFormatter(col.formatProps||{}, null,null,null,value);
-		break;
-	    case 'wm_number_formatter':
-	    case 'Number (WaveMaker)':				    
-		value = this.numberFormatter(col.formatProps||{}, null,null,null,value);
-		break;
-	    case 'wm_currency_formatter':
-	    case 'Currency (WaveMaker)':				    
-		value = this.currencyFormatter(col.formatProps||{}, null,null,null,value);
-		break;
-	    case 'wm_image_formatter':
-	    case 'Image (WaveMaker)':				    
-		value = this.imageFormatter(col.formatProps||{}, null,null,null,value);	
-		break;
-	    case 'wm_link_formatter':
-	    case 'Link (WaveMaker)':				    
-		value = this.linkFormatter(col.formatProps||{}, null,null,null,value);	
-		break;
-	    case 'wm_button_formatter':
-		value = this.buttonFormatter(inField, col.formatProps||{}, inRowId, value);
-		break;
-	    default:
-		if (!this.isDesignLoaded()) {
-		    if (this.owner[col.formatFunc]) {
-			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {customStyles:[],customClasses: []}, inItem);
-		    }
-		} else {
-		    value = "<i>runtime only...</i>";
-		}
-		break;
-	    }
-	}
-	return value;
-	}
+            if (col.formatFunc) {
+                switch (col.formatFunc) {
+                case 'wm_date_formatter':
+                case 'Date (WaveMaker)':
+                    value = this.dateFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_localdate_formatter':
+                case 'Local Date (WaveMaker)':
+                    value = this.localDateFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_time_formatter':
+                case 'Time (WaveMaker)':
+                    value = this.timeFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_number_formatter':
+                case 'Number (WaveMaker)':
+                    value = this.numberFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_currency_formatter':
+                case 'Currency (WaveMaker)':
+                    value = this.currencyFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_image_formatter':
+                case 'Image (WaveMaker)':
+                    value = this.imageFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_link_formatter':
+                case 'Link (WaveMaker)':
+                    value = this.linkFormatter(col.formatProps || {}, null, null, null, value);
+                    break;
+                case 'wm_button_formatter':
+                    value = this.buttonFormatter(inField, col.formatProps || {}, null, null, null, value, inRowId);
+                    break;
+                default:
+                    if (!this.isDesignLoaded()) {
+                        if (this.owner[col.formatFunc]) {
+                            value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {
+                                customStyles: [],
+                                customClasses: []
+                            }, inItem);
+                        }
+                    } else {
+                        value = "<i>runtime only...</i>";
+                    }
+                    break;
+                }
+            }
+
+            return value;
+        }
     },
     dateFormatter: function(formatterProps, ignore1,ignore2,ignore3,inValue) {
 	    if (!inValue) {
@@ -1760,17 +1768,45 @@ wm.List.extend({
 	    }
 	    return inValue;
 	},
-    buttonFormatter: function(field, formatterProps, rowId, inValue) {
+    buttonFormatter: function(field, formatterProps, ignore1,ignore2,ignore3, inValue,rowId,cellObj) {
 	    if (inValue && inValue != '') {
-		var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
-		var onclick = "onclick='" + this.getRuntimeId() + ".gridButtonClicked(\"" + field + "\"," + rowId + ")' ";
-		return '<button ' + onclick + formatterProps.buttonclick + '" style="width:94%;display:inline-block" ' + classList + '>' + inValue + '</button>';
+		  var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
+          var eventText = this.getRuntimeId() + ".gridButtonClicked(event,\"" + field + "\"," + rowId + ")' ";
+          if (wm.isMobile) {
+            eventText = "ontouchstart='"  + this.getRuntimeId() + ".gridButtonTouchStart(event)' ontouchmove='" + this.getRuntimeId() + ".gridButtonTouchMove(event)' ontouchend='" + eventText + "'";
+          } else {
+            eventText = "onclick='" + eventText + "'";
+          }
+          
+		  return '<button ' + eventText + classList + '>' + inValue + '</button>';
 	    }
 	    return inValue;
 	},
-    gridButtonClicked: function(fieldName, rowIndex) {
-	var rowData = this._data[rowIndex];
-	this.onGridButtonClick(fieldName, rowData, rowIndex);
+    gridButtonTouchStart: function(event) {
+        event = event || window.event;
+        dojo.stopEvent(event);
+        this._buttonTouchPos = {y: event.targetTouches ? event.targetTouches[0].clientY : event.clientY,
+                                x: event.targetTouches ? event.targetTouches[0].clientX : event.clientX,
+                                isClick: true};
+    },
+    gridButtonTouchMove: function(event) {
+        event = event || window.event;
+        dojo.stopEvent(event);
+        if (this._buttonTouchPos.isClick) {
+            var y = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
+            var x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
+            console.log(Math.abs(x - this._buttonTouchPos.x));
+            this._buttonTouchPos.isClick = (Math.abs(y - this._buttonTouchPos.y) < 5 && Math.abs(x - this._buttonTouchPos.x) < 5);
+            console.log(this._buttonTouchPos.isClick);
+        }
+    },
+    gridButtonClicked: function(event, fieldName, rowIndex) {
+        event = event || window.event;
+        // prevent row selection which would trigger an onSelect/onSelectionChange events which could trigger navigation or other tasks contrary to executing of this button
+        dojo.stopEvent(event);  
+        if (wm.isMobile && !this._buttonTouchPos.isClick) return;
+ 	    var rowData = this._data[rowIndex];
+	    this.onGridButtonClick(fieldName, rowData, rowIndex);
     },
     onGridButtonClick: function(fieldName, rowData, rowIndex) {},
     setSelectedRow: function(inIndex) {

@@ -131,7 +131,9 @@ dojo.declare("GridDesigner", wm.Page, {
                             value = "wm.DojoGrid.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_button_formatter':
-                            value = null;
+                            value = "wm.DojoGrid.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
+/*                            var classList = formatProps.buttonclass ? formatProps.buttonclass  : "wmbutton";
+                            value = "<button class='" + classList + "' onclick=\'${runtimeId}[\"gridButtonClicked\"](event,\"" + column.field + "\",${rowId})\'>" ;*/
                             break;
                         }
                     }
