@@ -177,6 +177,7 @@ Studio.extend({
 		    this.exportProjectItem.set("disabled",inDisabled);
 		    this.deployProjectItem.set("disabled",inDisabled);
 	            this.saveProjectItem.set("disabled",inDisabled);
+                this.revertProjectItem.set("disabled",inDisabled);
 	  } catch(e) {
 	    console.error("disableMenuBar Failed");
 	    console.log(e);

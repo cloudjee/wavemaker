@@ -90,7 +90,7 @@ public class CompileTypeUtils {
         if (type.getKind() == TypeKind.ARRAY) {
             return ((ArrayType) type).getComponentType();
         } else {
-            return ((DeclaredType) type).getTypeArguments().get(0);
+            return getCollectionElement(processingEnv, (DeclaredType) type);
         }
     }
 
@@ -138,7 +138,7 @@ public class CompileTypeUtils {
         if (isPrimitiveWrapper(processingEnv, type)) {
             return typeDefForPrimitive(processingEnv, typeState, type);
         } else if (isCollection(processingEnv, type)) {
-            return buildTypeDefinition(processingEnv, typeState, type.getTypeArguments().get(0));
+            return buildTypeDefinition(processingEnv, typeState, getCollectionElement(processingEnv, type));
         } else if (isMap(processingEnv, type)) {
             return typeDefForMap(processingEnv, typeState, type);
         } else if (isEnum(processingEnv, type)) {
@@ -146,6 +146,13 @@ public class CompileTypeUtils {
         } else {
             return typeDefForBean(processingEnv, typeState, type);
         }
+    }
+
+    private static TypeMirror getCollectionElement(ProcessingEnvironment processingEnv, DeclaredType type) {
+        if (type.getTypeArguments().isEmpty()) {
+            return declaredTypeForName(processingEnv, Object.class.getName());
+        }
+        return type.getTypeArguments().get(0);
     }
 
     public static TypeDefinition typeDefForBean(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {

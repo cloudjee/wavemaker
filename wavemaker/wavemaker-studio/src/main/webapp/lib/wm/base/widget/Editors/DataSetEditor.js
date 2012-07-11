@@ -222,34 +222,39 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 		this.dataField    = "dataValue";
 	    }
 	},
-	setOptions: function(inOptions) {		
-		var wasUpdating = this._cupdating;
-		this._cupdating = true;
-	    if (inOptions) {
-		if (this.$.binding && this.$.binding.wires.dataSet) {
-		    this.$.binding.removeWireByProp("dataSet");
-		}
-		if (!this.displayField) {
-		    this.displayField = "dataValue";
-		    if (!this.dataField) {
-			this.dataField = "dataValue";
-		    }
-		}
+    setOptions: function(inOptions) {
+        var wasUpdating = this._cupdating;
+        this._cupdating = true;
+        if (inOptions) {
+            if (this.$.binding && this.$.binding.wires.dataSet) {
+                this.$.binding.removeWireByProp("dataSet");
+            }
+            if (!this.displayField) {
+                this.displayField = "dataValue";
+                if (!this.dataField) {
+                    this.dataField = "dataValue";
+                }
+            }
 
-		this.options = inOptions;
-		this.setOptionsVariable();
-		//this.createEditor();
-		
-		this.setDataSet(this.dataSet);
-	    }
-		if (!wasUpdating) {
-		    this._cupdating = false;
-		    if (!this.invalidCss)
-			this.sizeEditor();
-		    else
-			this.render();
-		}
-	},
+            this.options = inOptions;
+            this.setOptionsVariable();
+            //this.createEditor();
+            this.setDataSet(this.dataSet);
+        } else {
+            var hadOptions = this.options;
+            this.options = "";
+            if (this.dataSet && this.dataSet.owner == this && hadOptions) {
+                this.dataSet.clearData();
+                this.setDataSet(this.dataSet);
+            }
+        }
+        if (!wasUpdating) {
+            this._cupdating = false;
+            if (!this.invalidCss) this.sizeEditor();
+            else this.render();
+        }
+    },
+    
 
 
     _getDisplayData: function(inObj) {

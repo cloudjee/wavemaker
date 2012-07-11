@@ -164,7 +164,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     public String testRunStart(Project project) {
         try {
             ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
-            //applicationArchive = modifyApplicationArchive(applicationArchive);
+            applicationArchive = modifyApplicationArchive(applicationArchive);
             return doDeploy(applicationArchive, getSelfDeploymentInfo(project), false);
         } catch (DeploymentStatusException e) {
             throw new WMRuntimeException(e.getMessage(), e);

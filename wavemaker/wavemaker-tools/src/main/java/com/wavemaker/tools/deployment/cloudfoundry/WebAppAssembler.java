@@ -82,7 +82,7 @@ public class WebAppAssembler implements InitializingBean {
         String excludePattern = LocalDeploymentManager.COMMON_DIR_NAME_PROPERTY + "/**/deployments.js";
         fileSystem.copyRecursive(wavemakerHome, webAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
 
-        this.modifyApplicationBaseFolder(new LocalFolder(webAppRoot.getFile())).modify();
+        modifyApplicationBaseFolder(new LocalFolder(webAppRoot.getFile())).modify();
     }
 
     public static ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {

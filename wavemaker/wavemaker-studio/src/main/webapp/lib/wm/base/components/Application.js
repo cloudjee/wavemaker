@@ -973,8 +973,8 @@ dojo.declare("wm.Application", wm.Component, {
 	    this.toolTipDialog.fixPositionNode = node;
 	} else {
 	    this.toolTipDialog.fixPositionNode = null;
-	    var originalMouseX = this.toolTipDialog.bounds.l = event.mouseX;
-	    var originalMouseY = this.toolTipDialog.bounds.t = event.mouseY;
+	    var originalMouseX = this.toolTipDialog.bounds.l = event.screenX || event.clientX;
+	    var originalMouseY = this.toolTipDialog.bounds.t = event.screenY || event.clientY;
 	}
 	this.toolTipDialog.html.setHtml();	
 	this.toolTipDialog.show();

@@ -178,18 +178,6 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
             newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
         }
 
-        /*newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-
-        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
-        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
-
-        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-
-        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
-        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());*/
-
         newProperties.putAll(properties);
 
         try {

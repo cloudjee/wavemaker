@@ -2088,99 +2088,104 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
     restrictValues: true,
     isSimpleType: false,
     widgetClass: dijit.form.ComboBox,
-    getWidgetProps: function(inDatum){
-	if (this.widgetProps && this.widgetProps.isSimpleType) {
-	    this.isSimpleType = this.widgetProps.isSimpleType;
-	}
-	if (this.widgetProps && this.widgetProps.restrictValues !== undefined) {
-	    this.restrictValues = this.widgetProps.restrictValues;
-	}
-	return dojo.mixin({}, this.widgetProps||{}, {
-	    value: inDatum,
-	    store: this.generateStore(this.options, this.widgetProps.displayField)
-	});
+    getWidgetProps: function(inDatum) {
+        if (this.widgetProps && this.widgetProps.isSimpleType) {
+            this.isSimpleType = this.widgetProps.isSimpleType;
+        }
+        
+        this.restrictValues = this.widgetProps && this.widgetProps.restrictValues !== undefined ? this.widgetProps.restrictValues : true;
+        
+        return dojo.mixin({}, this.widgetProps || {}, {
+            value: inDatum,
+            store: this.generateStore(this.options, this.widgetProps.displayField)
+        });
     },
     generateStore: function(options, displayField) {
-			var items=[];
-			dojo.forEach(options, function(o){
-			    //items.push(o.dataValue);
-			    items.push(o);
-			});
-			var store = new dojo.data.ItemFileReadStore({data: {identifier: displayField, items: items}});
-	return store;
+        var items = [];
+        dojo.forEach(options, function(o) {
+            //items.push(o.dataValue);
+            items.push(o);
+        });
+        var store = new dojo.data.ItemFileReadStore({
+            data: {
+                identifier: displayField,
+                items: items
+            }
+        });
+        return store;
     },
-    apply: function(inRowIndex){		    
-	//this.inherited(arguments);
-	if (this.grid.canEdit(this, inRowIndex)) {
-	    if (!this.widget) return;
-	    var name = this.field;
-	    var objName = name.replace(/\..*?$/,"");
-	    var item = this.widget.item;
-	    var store = this.widget.store;
-	    if (this.widgetProps.owner) {
-		var value = this.widgetProps.owner.itemToJSONObject(store, item);
-		if (this.isSimpleType && typeof value == "object") {
-		    value = value[this.widgetProps.displayField];
-		}
-		var rowitem = this.grid.getItem(inRowIndex);
-		if (!this.restrictValues && value === undefined) {
-		    value = this.widget.get("value");
-		}
-		this.grid.doApplyCellEdit(value, inRowIndex, objName);
-	    }
-	}
-	this._finish(inRowIndex);
+    apply: function(inRowIndex) {
+        //this.inherited(arguments);
+        if (this.grid.canEdit(this, inRowIndex)) {
+            if (!this.widget) return;
+            var name = this.field;
+            var objName = name.replace(/\..*?$/, "");
+            var item = this.widget.item;
+            var store = this.widget.store;
+            if (this.widgetProps.owner) {
+                var value = this.widgetProps.owner.itemToJSONObject(store, item);
+                if (this.isSimpleType && typeof value == "object") {
+                    value = value[this.widgetProps.displayField];
+                }
+                var rowitem = this.grid.getItem(inRowIndex);
+                if (!this.restrictValues && this.isSimpleType && value === undefined) {
+                    value = this.widget.get("value");
+                }
+                this.grid.doApplyCellEdit(value, inRowIndex, objName);
+            }
+        }
+        this._finish(inRowIndex);
     },
 
-		getValue: function(){
-			var e = this.widget;
-			// make sure to apply the displayed value
-			e.set('displayedValue', e.get('displayedValue'));
-			return e.get('value');
-		}
-	});
+    getValue: function() {
+        var e = this.widget;
+        // make sure to apply the displayed value
+        e.set('displayedValue', e.get('displayedValue'));
+        return e.get('value');
+    }
+});
 
 
 dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
-    apply: function(inRowIndex){
-	var owner = this.widgetProps.owner;
-	var column = owner.getColumn(this.field);
-	var formatterProps = column.formatterProps;
-	var useLocalTime = formatterProps && formatterProps.useLocalTime;	
-	var value = this.getValue(inRowIndex);
-	if (!useLocalTime) {
-	    value.setHours(-wm.timezoneOffset,0,0);
-	}
-	this.applyEdit(value, inRowIndex);
-	this._finish(inRowIndex);
-    }    
+    apply: function(inRowIndex) {
+        var owner = this.widgetProps.owner;
+        var column = owner.getColumn(this.field);
+        var formatterProps = column.formatterProps;
+        var useLocalTime = formatterProps && formatterProps.useLocalTime;
+        var value = this.getValue(inRowIndex);
+        if (!useLocalTime) {
+            value.setHours(-wm.timezoneOffset, 0, 0);
+        }
+        this.applyEdit(value, inRowIndex);
+        this._finish(inRowIndex);
+    }
 
 });
 
 
 
-	dojo.declare("dojox.grid.cells.NumberTextBox", dojox.grid.cells._Widget, {
-		widgetClass: dijit.form.NumberTextBox
-	});
-	dojox.grid.cells.NumberTextBox.markupFactory = function(node, cell){
-		dojox.grid.cells._Widget.markupFactory(node, cell);
-	};
+dojo.declare("dojox.grid.cells.NumberTextBox", dojox.grid.cells._Widget, {
+    widgetClass: dijit.form.NumberTextBox
+});
+dojox.grid.cells.NumberTextBox.markupFactory = function(node, cell) {
+    dojox.grid.cells._Widget.markupFactory(node, cell);
+};
 
 
 
-	dojo.declare("dojox.grid.cells.ValidationTextBox", dojox.grid.cells._Widget, {
-	    widgetClass: dijit.form.ValidationTextBox,
-		getWidgetProps: function(inDatum){
-		    var props = this.inherited(arguments);
-		    return props;
-		}
-	});
-	dojox.grid.cells.ValidationTextBox.markupFactory = function(node, cell){
-		dojox.grid.cells._Widget.markupFactory(node, cell);
-	};
-	dojo.declare("dojox.grid.cells.TimeTextBox", dojox.grid.cells._Widget, {
-		widgetClass: dijit.form.TimeTextBox
-	});
-	dojox.grid.cells.TimeTextBox.markupFactory = function(node, cell){
-		dojox.grid.cells._Widget.markupFactory(node, cell);
-	};
+dojo.declare("dojox.grid.cells.ValidationTextBox", dojox.grid.cells._Widget, {
+    widgetClass: dijit.form.ValidationTextBox,
+    getWidgetProps: function(inDatum) {
+        var props = this.inherited(arguments);
+        return props;
+    }
+});
+dojox.grid.cells.ValidationTextBox.markupFactory = function(node, cell) {
+    dojox.grid.cells._Widget.markupFactory(node, cell);
+};
+dojo.declare("dojox.grid.cells.TimeTextBox", dojox.grid.cells._Widget, {
+    widgetClass: dijit.form.TimeTextBox
+});
+dojox.grid.cells.TimeTextBox.markupFactory = function(node, cell) {
+    dojox.grid.cells._Widget.markupFactory(node, cell);
+};

@@ -76,6 +76,10 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     protected ProjectManager origProjMgr;
 
+    protected LocalFolder tempBuildWebAppRoot = null;
+
+    protected boolean buildInLine;
+
     protected final StudioFileSystem getFileSystem() {
         return this.fileSystem;
     }
@@ -695,8 +699,16 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     public String exportProject(String zipFileName) {
         Project project = getProjectManager().getCurrentProject();
         Resources<?> export = project.getRootFolder().find();
-        export = export.include(new ExportIncludeFilter());
-        InputStream inputStream = ZipArchive.compress(export);
+        export = export.exclude(FilterOn.antPattern("/export/**", "/dist/**", "/webapproot/WEB-INF/classes/**", "/webapproot/WEB-INF/lib/**",
+            "/phonegap/**"));
+        export = export.exclude(new ResourceFilter() {
+
+            @Override
+            public boolean match(ResourceFilterContext context, Resource resource) {
+                return resource instanceof File && resource.getParent().getParent() == null && resource.getName().toLowerCase().endsWith(".xml");
+            }
+        });
+        InputStream inputStream = ZipArchive.compress(export.files());
         File exportFile = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT).getFile(zipFileName);
         exportFile.getContent().write(inputStream);
         return exportFile.toString().substring(1);
@@ -714,27 +726,11 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return getProjectDir(currentProject);
     }
 
-    private static class ExportIncludeFilter implements ResourceFilter {
+    protected String getDeployName() {
+        return getDeployName(this.projectManager.getCurrentProject());
+    }
 
-        private static final ResourceFilter PATHS = FilterOn.paths().notStarting("/export", "/dist", "/webapproot/WEB-INF/classes",
-            "/webapproot/WEB-INF/lib");
-
-        @Override
-        public boolean match(ResourceFilterContext context, Resource resource) {
-            if (resource instanceof Folder) {
-                Folder folder = (Folder) resource;
-                if (!PATHS.match(context, folder)) {
-                    return false;
-                }
-            }
-            if (resource instanceof File) {
-                File file = (File) resource;
-                if (file.getParent().getParent() == null && file.getName().toLowerCase().endsWith(".xml")) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+    protected String getDeployName(com.wavemaker.tools.project.Project project) {
+        return project.getProjectName();
     }
 }

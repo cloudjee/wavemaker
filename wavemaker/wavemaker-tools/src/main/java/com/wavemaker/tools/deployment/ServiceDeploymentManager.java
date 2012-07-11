@@ -24,7 +24,6 @@ import java.util.Map;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.io.Folder;
@@ -33,6 +32,7 @@ import com.wavemaker.tools.project.*;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * @author Simon Toens
@@ -48,7 +48,7 @@ public class ServiceDeploymentManager {
 
     private StudioConfiguration studioConfiguration;
 
-    private DeploymentManager deploymentManager;
+    private ProjectCompiler projectCompiler;
 
     public ServiceDeploymentManager() {
         // hack: these should be managed by Spring
@@ -129,8 +129,8 @@ public class ServiceDeploymentManager {
         this.fileSystem = fileSystem;
     }
 
-    public void setDeploymentManager(DeploymentManager deploymentManager) {
-        this.deploymentManager = deploymentManager;
+    public void setProjectCompiler(ProjectCompiler projectCompiler) {
+        this.projectCompiler = projectCompiler;
     }
 
     private Folder getProjectRoot() {
@@ -141,11 +141,17 @@ public class ServiceDeploymentManager {
                                                  java.io.File tempWebAppRoot, boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this      
-        this.deploymentManager.setProjectManager(projectMgr);
-        this.deploymentManager.setOrigProjMgr(this.projectMgr);
-        this.deploymentManager.setStudioConfiguration(this.studioConfiguration);
-        this.deploymentManager.setFileSystem(this.fileSystem);
-        com.wavemaker.tools.io.File war = this.deploymentManager.buildWar(warFile, tempWebAppRoot, includeEar);
+        DeploymentManager deploymentMgr;
+        if (WMAppContext.getInstance().isCloudFoundry()) {
+            deploymentMgr = new CloudFoundryDeploymentManager();
+        } else {
+            deploymentMgr = new LocalDeploymentManager();
+        }
+        deploymentMgr.setProjectManager(projectMgr);
+        deploymentMgr.setStudioConfiguration(this.studioConfiguration);
+        deploymentMgr.setFileSystem(this.fileSystem);
+        deploymentMgr.setProjectCompiler(this.projectCompiler);
+        com.wavemaker.tools.io.File war = deploymentMgr.buildWar(warFile, tempWebAppRoot, includeEar);
         return war;
     }
 
