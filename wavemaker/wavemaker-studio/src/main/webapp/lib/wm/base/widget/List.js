@@ -1506,64 +1506,69 @@ try {
 	}
     },
 	// item rendering override.
-	getCellContent: function(inRow, inCol, inHeader) {
-	    var dataFields = this._dataFields && this._dataFields[inCol];
-	    var cellData;
-	    var i = this._formatIndex != null ? this._formatIndex : this.getCount();
-	    if (this._firstItemIndex !== undefined) {
-		i += this._firstItemIndex;
-	    }
-	    /* If its a header... */
-	    if (inHeader) {
-		cellData = '<div>' + this.getHeading(dataFields);
-	    } 
+    getCellContent: function(inRow, inCol, inHeader) {
+        var dataFields = this._dataFields && this._dataFields[inCol];
+        var cellData;
+        var i = this._formatIndex != null ? this._formatIndex : this.getCount();
+        if (this._firstItemIndex !== undefined) {
+            i += this._firstItemIndex;
+        } /* If its a header... */
+        if (inHeader) {
+            cellData = '<div>' + this.getHeading(dataFields);
+        }
 
-/*
-	    else if (this.columns) {
-		var value = this._data[i];
-		cellData = value[dataFields];
-		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
-	    }
-	    */
-	    else if (this.columns) {
-		var columnDef = this._getColumnDef(inCol);
-		if (columnDef.controller) {
-		    if (columnDef.controller == "deleteColumn") {
-			cellData = "<div wmcontroller='true' class='wmDeleteColumn'><div wmcontroller='true' class='wmDeleteColumnImage'/></div>";
-		    } else if (columnDef.controller == "rightarrow") {
-			cellData = "<div class='mblArrowContainer'><div class='mblRightArrow mblArrow' /></div>";
-		    } else {
-			cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
-		    }
-		} else {
-		    var value = this._data[i];
-		    var cellData = value;
-		    var props = dataFields.split(".");
-		    for (var propIndex = 0; propIndex < props.length; propIndex++) {
-			cellData = cellData[props[propIndex]];
-		    }
-/*
-		    if (inCol==0) {
-			this.lastCellData = cellData;
-		    }
-		    */
-		    cellData = this.formatCell(dataFields,cellData, value, i, inCol);
-		}
-	    }
+        /*
+        else if (this.columns) {
+        var value = this._data[i];
+        cellData = value[dataFields];
+        cellData = this.formatCell(dataFields,cellData, value, i, inCol);
+        }
+        */
+        else if (this.columns) {
+            var columnDef = this._getColumnDef(inCol);
+            if (columnDef.controller) {
+                if (columnDef.controller == "deleteColumn") {
+                    cellData = "<div wmcontroller='true' class='wmDeleteColumn'><div wmcontroller='true' class='wmDeleteColumnImage'/></div>";
+                } else if (columnDef.controller == "rightarrow") {
+                    cellData = "<div class='mblArrowContainer'><div class='mblRightArrow mblArrow' /></div>";
+                } else {
+                    cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
+                }
+            } else {
+                var value = this._data[i];
+                var cellData = value;
+                var props = dataFields.split(".");
+                for (var propIndex = 0; propIndex < props.length; propIndex++) {
+                    cellData = cellData[props[propIndex]];
+                }
+                /*
+            if (inCol==0) {
+            this.lastCellData = cellData;
+            }
+            */
+                cellData = this.formatCell(dataFields, cellData, value, i, inCol);
+            }
+        }
 
-	    /* Else if the data came from a call to renderData([{randomHash},{randomHash},....]) */
-	    if (cellData == undefined) {
-		var d = this.getItemData(i);
-		f = wm.decapitalize(dataFields);
-		cellData = dataFields ? d[dataFields] : d;
-	    }
-	    var info = {column: inCol, data: cellData, header: inHeader};
-	    this.onformat(info, inCol, cellData, inHeader,value);
-	    if (!this.inSetContent) {
-		this._formatIndex = null;
-	    }
-	    return "<div class='wmlist-content'>" + info.data + "</div>";
-	},
+        /* Else if the data came from a call to renderData([{randomHash},{randomHash},....]) */
+        if (cellData == undefined) {
+            var d = this.getItemData(i);
+            f = wm.decapitalize(dataFields);
+            cellData = dataFields ? d[dataFields] : d;
+        }
+        var info = {
+            column: inCol,
+            data: cellData,
+            header: inHeader
+        };
+        this.onformat(info, inCol, cellData, inHeader, value);
+        if (!this.inSetContent) {
+            this._formatIndex = null;
+        }
+        if (cellData === undefined || cellData === null) cellData = "";
+        return "<div class='wmlist-content'>" + cellData + "</div>";
+    },
+    
 	getColWidth: function(inCol) {
 	    if (this.columns) {
 		return this.columns[inCol].width;
