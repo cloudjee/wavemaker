@@ -286,7 +286,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			this.setReadonly(this.readonly);
 		}
 
-		if (this.editor.displayMessage) {
+		if (this.editor && this.editor.displayMessage) {
 		    this.editor.displayMessage = dojo.hitch(this, function(message) {
 				if (!this.showMessages)
 					return;
