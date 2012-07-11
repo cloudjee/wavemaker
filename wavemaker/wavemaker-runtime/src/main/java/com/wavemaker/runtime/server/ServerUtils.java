@@ -387,10 +387,8 @@ public class ServerUtils {
      * 
      * @return the server time offset in mili-seconds
      */
-    public static String getServerTimeOffset() {
+    public static int getServerTimeOffset() {
         Calendar now = Calendar.getInstance();
-        int totalOffset = now.get(Calendar.ZONE_OFFSET) + now.get(Calendar.DST_OFFSET);
-
-        return Integer.toString(totalOffset);
+        return now.get(Calendar.ZONE_OFFSET) + now.get(Calendar.DST_OFFSET);
     }
 }
