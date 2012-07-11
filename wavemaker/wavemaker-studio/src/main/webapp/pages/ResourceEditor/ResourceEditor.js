@@ -148,9 +148,10 @@ dojo.declare("ResourceEditor", wm.Page, {
     onCommonChange: function(inPath, inContents) {
 
     },
-    scriptEditorCtrlKey: function(inSender, letter) {
+    scriptEditorCtrlKey: function(inSender, e, letter) {
         switch(letter.toLowerCase()) {
         case "s":
+            dojo.stopEvent(e);
             return this.saveTextEditor();
         }
     },

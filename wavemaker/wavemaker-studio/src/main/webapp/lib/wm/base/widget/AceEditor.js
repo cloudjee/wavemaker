@@ -87,8 +87,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	 */
 	if ((e.ctrlKey || dojo.isMac && e.metaKey) && app._keys[e.keyCode] != "CTRL" && !e.altKey) {
 	    if (dojo.indexOf(this.reservedCtrlKeys, app._keys[e.keyCode]) == -1) {
-		this.onCtrlKey(app._keys[e.keyCode], e.shiftKey);
-		dojo.stopEvent(e);
+		this.onCtrlKey(e, app._keys[e.keyCode], e.shiftKey);
 	    }
 	}
     },
