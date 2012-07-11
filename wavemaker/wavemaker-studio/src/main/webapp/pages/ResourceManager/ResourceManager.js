@@ -417,35 +417,54 @@ dojo.declare("ResourceManager", wm.Page, {
 						   }));	    
     },
     itemSelected: function() {
-	this.selectedItem = this.tree.selected.data;
-	this.updateToolbar();
+        this.selectedItem = this.tree.selected.data;
+        this.updateToolbar();
 
 
-	var itemName = this.selectedItem.itemName;
+        var itemName = this.selectedItem.itemName;
         var folder = (this.selectedItem instanceof wm.FolderResourceItem) ? this.selectedItem : this.tree.selected.parent.data;
         //this.uploadButton.input.setType("AnyData");
-        this.uploadButton.input.setData({dataValue: {path: folder.getFilePath()}});
-	this.getReadmeFile(folder.getFilePath());
+        this.uploadButton.input.setData({
+            dataValue: {
+                path: folder.getFilePath()
+            }
+        });
+        this.getReadmeFile(folder.getFilePath());
 
 
 
-	if (!this.isBlocked(this.selectedItem) && (
-	    this.selectedItem instanceof wm.HTMLResourceItem ||
-	    this.selectedItem instanceof wm.ImageResourceItem ||
-	    this.selectedItem instanceof wm.XMLResourceItem ||
-	    this.selectedItem instanceof wm.MiscResourceItem ||
-	    this.selectedItem instanceof wm.CSSResourceItem ||
-		this.selectedItem instanceof wm.JSResourceItem)) {
+        if (!this.isBlocked(this.selectedItem) && (
+        this.selectedItem instanceof wm.HTMLResourceItem || this.selectedItem instanceof wm.ImageResourceItem || this.selectedItem instanceof wm.XMLResourceItem || this.selectedItem instanceof wm.MiscResourceItem || this.selectedItem instanceof wm.CSSResourceItem || this.selectedItem instanceof wm.JSResourceItem)) {
 
-	    this.editorTabs.show();
-	var layer = this.editorTabs.addPageContainerLayer("ResourceEditor", itemName);
-	    layer.setDestroyable(true);
-	    layer.showDirtyFlag = true;
-	    layer.activate();
-	var page = layer.c$[0].page;
-	page.setItem(this.selectedItem);
-	    this.editorTabs.reflow();
-	}
+            this.editorTabs.show();
+            var layer = this.editorTabs.addPageContainerLayer("ResourceEditor", itemName);
+            layer.setDestroyable(true);
+            layer.showDirtyFlag = true;
+            layer.activate();
+            var page = layer.c$[0].page;
+            page.setItem(this.selectedItem);
+            this.editorTabs.reflow();
+            layer.customCloseOrDestroy = dojo.hitch(this, "closeEditor", layer);
+        }
+    },
+    closeEditor: function(inLayer) {
+        if (inLayer.c$[0].page.item == this.selectedItem) this.tree.deselect(this.selectedItem);
+            studio.confirmSaveDialog.page.setup(
+                studio.getDictionaryItem("CONFIRM_GENERIC_DISCARD_UNSAVED"),
+                /* Save button followed by onConfirm */
+                dojo.hitch(this, function() {
+                    inLayer.c$[0].page.saveTextEditor();
+                    inLayer.destroy();
+                    this.editorClosed();;
+                }),
+
+                /* onConfirm == dont save */
+                dojo.hitch(this, function() {
+                    inLayer.destroy();
+                    this.editorClosed();
+                }),
+                function() {}, !inLayer.isDirty);
+        
     },
     editorClosed: function() {
 	if (this.editorTabs.layers.length == 1) {

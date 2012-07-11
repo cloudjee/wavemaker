@@ -85,7 +85,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	 * event as e.ctrlKey: true, e.altKey: true, and then we call stopEvent on it and user's can't
 	 * type "}"
 	 */
-	if (e.ctrlKey && app._keys[e.keyCode] != "CTRL" && !e.altKey) {
+	if ((e.ctrlKey || dojo.isMac && e.metaKey) && app._keys[e.keyCode] != "CTRL" && !e.altKey) {
 	    if (dojo.indexOf(this.reservedCtrlKeys, app._keys[e.keyCode]) == -1) {
 		this.onCtrlKey(app._keys[e.keyCode], e.shiftKey);
 		dojo.stopEvent(e);
@@ -144,7 +144,8 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	}
     },
     clearDirty: function() {
-	this._cachedDataValue = this.dataValue;
+	    this._cachedDataValue = this.dataValue;
+        this.updateIsDirty();
     },
     reset: function() {
 	this.setDataValue(this._cachedDataValue);
