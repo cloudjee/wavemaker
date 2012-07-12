@@ -931,7 +931,11 @@ dojo.requireLocalization("dijit", "loading");
 				this.invalidated[inRowIndex]=true;
 			}else{
 				this.views.updateRow(inRowIndex);
-				this.scroller.rowHeightChanged(inRowIndex);
+				
+    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: added test for this.scroller to stop errors from being thrown and disrupting scrolling behaviors */
+				if (this.scroller)
+					this.scroller.rowHeightChanged(inRowIndex);
 			}
 		},
 

@@ -60,8 +60,18 @@ dijit.form.ValidationTextBox.prototype.validate = function(isFocused){
         while(parent && !dojo.hasClass(parent, "dojoxGridRow")) {
             parent = parent.parentNode;
         }
-        this._lastRow = parent;
-        this._lastCol = dojo.indexOf(this.domNode.parentNode.parentNode.parentNode.childNodes, this.domNode.parentNode.parentNode);        
+        if (this.domNode.parentNode) {
+	        this._lastRow = parent;
+    	    this._lastCol = dojo.indexOf(this.domNode.parentNode.parentNode.parentNode.childNodes, this.domNode.parentNode.parentNode);
+    	} else {
+  			wm.job("GridValidationNode", 20, this, function() {
+  				if (this.domNode.parentNode) {
+	     		    this._lastRow = parent;
+    	    		this._lastCol = dojo.indexOf(this.domNode.parentNode.parentNode.parentNode.childNodes, this.domNode.parentNode.parentNode);
+    			}
+  			});
+
+    	}
     }
 	this.displayMessage(message);
 	// CHANGE: return valid if focused or valid

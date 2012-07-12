@@ -149,7 +149,7 @@
     }
 
     .wm_template div.dojoxGridContent .dojoxGridCell {
-	background: transparent;
+	background-color: transparent;
     }
 
     .wm_template div.dojoxGridContent .dojoxGridCellFocus,
@@ -241,7 +241,7 @@
     }
 
     .wm_template .MainContent div.dojoxGridContent .dojoxGridCell {
-	background: transparent;
+	background-color: transparent;
     }
 
     .wm_template .MainContent div.dojoxGridContent .dojoxGridCellFocus,
@@ -288,7 +288,7 @@
     }
 
     .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGridCell {
-	background: transparent;
+	background-color: transparent;
     }
 
     .wm_template .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
@@ -336,7 +336,7 @@
     }
 
     .wm_template .HeaderContent div.dojoxGridContent .dojoxGridCell {
-	background: transparent;
+	background-color: transparent;
     }
 
     .wm_template .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
