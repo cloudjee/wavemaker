@@ -235,7 +235,7 @@ dojo.declare("ResourceManager", wm.Page, {
     },
     
     loadResources: function(optionalRoot) {
-
+    	if (!studio.application) return;
 	var root;
 	if (optionalRoot) {
 	    root = optionalRoot;
