@@ -48,6 +48,12 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		var w = (inOverwrite == undefined || inOverwrite == null) ? false : inOverwrite;
 		var sname = this.serviceNameInput.getValue("displayValue");
 		var opname = this.serviceOpInput.getValue("displayValue");
+
+		if (wm.services.byName[sname]) {
+			app.alert(this.getDictionaryItem("ALERT_SERVICE_NAME_TAKEN", {serviceName: sname}));
+			return;
+		}
+
 		if (!sname || sname.length == 0 || !opname || opname.length == 0) {
 		    app.alert(this.getDictionaryItem("ALERT_INPUT_NEEDED"));
 			return;

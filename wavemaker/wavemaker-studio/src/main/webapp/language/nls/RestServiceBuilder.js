@@ -21,5 +21,6 @@ ALERT_PARAMETER_EXISTS: "Parameter name already exists, please type in another o
 CONFIRM_APPEND: "This will append the query string '${query}' to the Service URL. Proceed?",
 CONFIRM_GENERATE_SCHEMA: "This will generate a XML Schema for the sample XML response entered in the text area. Proceed?",
 WAIT_GENERATE_SCHEMA: "Generating XML Schema...",
-ALERT_GENERATE_SCHEMA_ERROR: "Error occurred while Generating XML Schema!\n${error}"
+ALERT_GENERATE_SCHEMA_ERROR: "Error occurred while Generating XML Schema!\n${error}",
+ALERT_SERVICE_NAME_TAKEN: "The service name ${serviceName} is already in use; please choose a different name or delete the old service first."
 }
