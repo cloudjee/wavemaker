@@ -755,6 +755,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     
     addRow: function(inFields, selectOnAdd) {
             var editCell = null;
+            var newIndex, item;
             for (var i = 0; i < this.columns.length; i++) {
                 if (this.columns[i].fieldType) {
                     editCell = this.columns[i];
@@ -766,8 +767,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 this.variable.setData([inFields]);
                 this.variable.endUpdate();
                 this.variable.getItem(0).data._new = true;
-                this.variable.notify();
-                //this.renderDojoObj();
+                item = this.variable.getItem(0);
+                newIndex = 0;
+            } else {
+            	/*
                 if (selectOnAdd) {
                     this.setSelectedRow(0);
                     this.selectionChange(); // needs committing
@@ -776,7 +779,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     });
                 }
                 return;
-            }
+            }*/
             var data = dojo.clone(inFields);
             var v = new wm.Variable({
                 type: this.dataSet.type
@@ -796,11 +799,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
             }
             */
-            var newIndex = this.dataSet.getCount();
+            newIndex = this.dataSet.getCount();
             this.dataSet.beginUpdate();
             this.dataSet.addItem(v);
             this.dataSet.endUpdate();
-            var item = this.dataSet.getItem(newIndex);
+            item = this.dataSet.getItem(newIndex);
+        }
             item.data._new = true;
             var obj = item.getData();
             var dateFields = this.getDateFields();
