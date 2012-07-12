@@ -1749,64 +1749,73 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	return "html.WMApp body ." + inClassName;
     },
     addClass: function(inClassName) {
-	this.changed();
-	var className =  (typeof inClassName == "string") ? inClassName : "";
-	this.grid.addRow({dataValue: className || ""}, true);
+    	this.changed();
+    	var className = (typeof inClassName == "string") ? inClassName : "";
+    	this.grid.addRow({
+    		dataValue: className || ""
+    	}, true);
     },
     editClass: function(className) {
-	studio.editCodeDialog.show();
+    	studio.editCodeDialog.show();
 
-	var cssText = studio.cssEditArea.getDataValue();
-	if (studio.cssEditArea.getDataValue().indexOf("." + className) == -1) {
-	    cssText = studio.appCssEditArea.getDataValue();
-	}
-	var code = "";
-	var currentIndex = 0;
-	var startAndEndList = [];
-	while (true) {
-	    var startIndex = cssText.indexOf("." + className, currentIndex);
-	    if (startIndex == -1) break;
-	    var endIndex = cssText.indexOf("}", startIndex) + 1;
+    	var cssText = studio.cssEditArea.getDataValue();
+    	if (studio.cssEditArea.getDataValue().indexOf("." + className) == -1) {
+    		cssText = studio.appCssEditArea.getDataValue();
+    	}
+    	var code = "";
+    	var currentIndex = 0;
+    	var startAndEndList = [];
+    	while (true) {
+    		var startIndex = cssText.indexOf("." + className, currentIndex);
+    		if (startIndex == -1) break;
+    		var endIndex = cssText.indexOf("}", startIndex) + 1;
 
-	    // there may be rules before this rule: ".xxx, .wmbutton" so just go back to the end of the previous rule ".....}"
-	    startIndex = cssText.lastIndexOf("}", startIndex) + 1; 
+    		// there may be rules before this rule: ".xxx, .wmbutton" so just go back to the end of the previous rule ".....}"
+    		startIndex = cssText.lastIndexOf("}", startIndex) + 1;
 
-	    currentIndex = endIndex;
-	    
-	    code += cssText.substring(startIndex,endIndex) + "\n";
-	    startAndEndList.push({start: startIndex, end: endIndex});
-	}
-	if (!code) {
-	    code = this.getClassRuleName(className) +  " {\n\n}";
-	}
-		    studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
-			var editArea;
-			if (cssText == studio.cssEditArea.getDataValue()) {
-			    editArea = studio.cssEditArea;
-			} else if  (cssText == studio.appCssEditArea.getDataValue()) {
-			    editArea = studio.appCssEditArea;
-			}
-			// if either editor has somehow changed, this edit is invalidated
-			if (editArea) {
-			    if (startAndEndList.length == 0) {
-				cssText += inCode;
-			    } else if (startAndEndList.length > 1) {
-				/* If there are multiple places showing the selected class, the chance of us doing a good job updating
-				 * the right ones is pretty slim; the user may have added a new rule, removed an old rule, maintaining
-				 * the order just isn't trivial.  So, remove all blocks of code wherever they are so that we can put in
-				 * a new block with all the user's new CSS in a single place
-				 */
-				for (var i = startAndEndList.length - 1; i >= 0; i--) {				
-				    cssText = cssText.substring(0, startAndEndList[i].start) + cssText.substring(startAndEndList[i].end);
-				}
-				cssText += inCode;
-			    } else {
-				cssText = cssText.substring(0, startAndEndList[0].start) + inCode + cssText.substring(startAndEndList[0].end);
-			    }
-			    editArea.setDataValue(cssText);
-			    studio.cssChanged();
-			}
-		    }));
+    		currentIndex = endIndex;
+
+    		code += cssText.substring(startIndex, endIndex) + "\n";
+    		startAndEndList.push({
+    			start: startIndex,
+    			end: endIndex
+    		});
+    	}
+    	if (!code) {
+    		code = this.getClassRuleName(className) + " {\n\n}";
+    	}
+    	studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
+    		var editArea;
+    		if (cssText == studio.cssEditArea.getDataValue()) {
+    			editArea = studio.cssEditArea;
+    		} else if (cssText == studio.appCssEditArea.getDataValue()) {
+    			editArea = studio.appCssEditArea;
+    		}
+    		// if either editor has somehow changed, this edit is invalidated
+    		if (editArea) {
+    			if (startAndEndList.length == 0) {
+    				cssText += inCode;
+    			} else if (startAndEndList.length > 1) {
+    				/* If there are multiple places showing the selected class, the chance of us doing a good job updating
+    				 * the right ones is pretty slim; the user may have added a new rule, removed an old rule, maintaining
+    				 * the order just isn't trivial.  So, remove all blocks of code wherever they are so that we can put in
+    				 * a new block with all the user's new CSS in a single place
+    				 */
+    				for (var i = startAndEndList.length - 1; i >= 0; i--) {
+    					cssText = cssText.substring(0, startAndEndList[i].start) + cssText.substring(startAndEndList[i].end);
+    				}
+    				while (startAndEndList.length > 1) startAndEndList.pop();
+    				startAndEndList[0].start = cssText.length;
+    				cssText += inCode;
+    				startAndEndList[0].end = cssText.length + inCode.length;
+    			} else {
+    				cssText = cssText.substring(0, startAndEndList[0].start) + inCode + cssText.substring(startAndEndList[0].end);
+    				startAndEndList[0].end = startAndEndList[0].start + inCode.length;
+    			}
+    			editArea.setDataValue(cssText);
+    			studio.cssChanged();
+    		}
+    	}));
     },
 /*
     addClass: function(inClassName) {
