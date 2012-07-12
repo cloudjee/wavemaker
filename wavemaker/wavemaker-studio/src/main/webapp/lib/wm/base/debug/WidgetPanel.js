@@ -141,7 +141,7 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 	    dojo.addClass(this.selectionNode, "wmdebuggerSelectionNode");
 	    document.body.appendChild(this.selectionNode);
 	}
-	if (!this.selectedItem.isAncestorHidden()) {
+	if (this.selectedItem instanceof wm.Control && !this.selectedItem.isAncestorHidden()) {
 	    var coords = dojo.coords(this.selectedItem.domNode);
 	    dojo.marginBox(this.selectionNode, {l: parseInt(coords.x),
 						t: parseInt(coords.y),
