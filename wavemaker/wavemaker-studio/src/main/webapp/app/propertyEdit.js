@@ -258,16 +258,15 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     noForms: false,
     showInputs: false,
     updateOptions: function() {
-	this.inherited(arguments)
-	var matchType = "";
-	if (this.matchComponentType) {
-	    var value =  this.inspected.getValue(this.propDef.fullName)
-	    if (value)
-		matchType = value.type;
-	}
-	var sp = studio.page;
-	var r = this.getDataSets([sp, sp.app], matchType);
-/*
+    	this.inherited(arguments)
+    	var matchType = "";
+    	if (this.matchComponentType) {
+    		var value = this.inspected.getValue(this.propDef.fullName)
+    		if (value) matchType = value.type;
+    	}
+    	var sp = studio.page;
+    	var r = this.getDataSets([sp, sp.app], matchType);
+    	/*
 	if (this.showInputs) {
 	    var serviceVars = wm.listComponents([sp,sp.app], wm.ServiceVariable, true);
 	    for (var i = 0; i < serviceVars.length; i++) {
@@ -277,19 +276,21 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	    }
 	}
 	*/
-	if (this.widgetDataSets)
-	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-		if (!(w instanceof wm.PageContainer) && w !== this && !(wm.isInstanceType(w, wm.LiveFormBase)) && !(wm.isInstanceType(w, wm.AbstractEditor) && w.formField))
-		    r = r.concat(this.getDataSets([w],matchType));
-	    }),true);
-	r = r.sort();
-	/* If called from something other than the property panel, then this.inspected may not exist */
-	if (this.inspected) {
-	    wm.Array.removeElement(r,this.inspected.getId());
-	}
-	this.setOptions(r);
+    	if (this.widgetDataSets) wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
+    		if (!(w instanceof wm.PageContainer) && w !== this && !(wm.isInstanceType(w, wm.LiveFormBase)) && !(wm.isInstanceType(w, wm.AbstractEditor) && w.formField)) {
+    			var results = this.getDataSets([w], matchType);
+    			dojo.forEach(results, function(result) {
+    				if (dojo.indexOf(r, result) == -1) r.push(result);
+    			});
+    		}
+    	}), true);
+    
+	    r = r.sort(); /* If called from something other than the property panel, then this.inspected may not exist */
+	    if (this.inspected) {
+	    	wm.Array.removeElement(r, this.inspected.getId());
+	    }
+	    this.setOptions(r);
     },
-
 
     getDataSets: function(inOwners, matchType) {
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
