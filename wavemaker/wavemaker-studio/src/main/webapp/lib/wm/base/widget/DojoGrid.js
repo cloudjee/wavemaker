@@ -374,60 +374,66 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	this.connect(lvar, "onSuccess", this, "_onLiveEditResult");
 	return lvar;
     },
+    isEmptyLiveType: function(inType, inValue) {
+        var typeDef = wm.typeManager.getType(inType);
+        if (typeDef && typeDef.liveService) {
+            var primaryKey = wm.typeManager.getPrimaryKey(typeDef);
+            if (primaryKey && inValue && (inValue[primaryKey] === undefined || inValue[primaryKey] === null || inValue[primaryKey] === 0)) return true;
+        }
+        return false;
+    },
     writeSelectedItem: function() {
-	var deferred;
-	var rowIndex = this.getSelectedIndex();
-	if (dojo.isArray(rowIndex)) {
-	    if (rowIndex.length == 0) return;
-	    rowIndex = rowIndex[0];
-	}
-	var row = this.getRow(rowIndex);
-	var operation = row._wmVariable.data._new ? "insert" : "update";
-	var sourceData = this.selectedItem.getData();
-	if (dojo.isArray(sourceData)) sourceData = sourceData[0];
-	if (operation == "insert") {
-	    /*
-	    for (prop in sourceData) {
-		if (sourceData[prop] == "&nbsp;") {
-		    sourceData[prop] = "";
-		}
-	    }
-	    */
-	    /* Verify we have all required fields; return without writing if anything is missing */
-	    var fields = this.selectedItem._dataSchema;
-	    for (var field in fields) {
-		if (sourceData[field] === undefined || sourceData[field] === null) {
-		    if (fields[field].required) {
-			console.warn("Can not write a '" + this.selectedItem.type + "' when required field '" + field + "' has no value");
-			return;
-		    }
-		}
-	    }
-	}
+        var deferred;
+        var rowIndex = this.getSelectedIndex();
+        if (dojo.isArray(rowIndex)) {
+            if (rowIndex.length == 0) return;
+            rowIndex = rowIndex[0];
+        }
+        var row = this.getRow(rowIndex);
+        var operation = row._wmVariable.data._new ? "insert" : "update";
+        var sourceData = this.selectedItem.getData();
+        if (dojo.isArray(sourceData)) sourceData = sourceData[0];
+        if (operation == "insert") {
+            /*
+        for (prop in sourceData) {
+        if (sourceData[prop] == "&nbsp;") {
+            sourceData[prop] = "";
+        }
+        }
+        */
+            /* Verify we have all required fields; return without writing if anything is missing */
+            var fields = this.selectedItem._dataSchema;
+            for (var field in fields) {
+                if (sourceData[field] === undefined || sourceData[field] === null || this.isEmptyLiveType(fields[field].type, sourceData[field])) {
+                    if (fields[field].required) {
+                        console.warn("Can not write a '" + this.selectedItem.type + "' when required field '" + field + "' has no value");
+                        return;
+                    }
+                }
+            }
+        }
+        console.log("OP:" + operation);
+        /* Strip out date objects from sourceData */
+        var fields = this.selectedItem._dataSchema;
+        for (var field in fields) {
+            if (sourceData[field] instanceof Date) sourceData[field] = sourceData[field].getTime();
+        }
 
-	/* Strip out date objects from sourceData */
-	var fields = this.selectedItem._dataSchema;
-	for (var field in fields) {
-	    if (sourceData[field] instanceof Date)
-		sourceData[field] = sourceData[field].getTime();
-	}
+        if (operation === "insert") {
+            this.onLiveEditBeforeInsert(sourceData);
+        } else {
+            this.onLiveEditBeforeUpdate(sourceData);
+        }
 
-	if (operation === "insert") {
-	    this.onLiveEditBeforeInsert(sourceData);
-	} else {
-	    this.onLiveEditBeforeUpdate(sourceData);
-	}	    
-
-	if (!this.liveVariable) {
-	    this.liveVariable = this.createNewLiveVariable();
-	}
-	this.liveVariable.setSourceData(sourceData);
-	this.liveVariable.operation = operation;
-	var deferred = this.liveVariable.update();	    
-	if (operation == "insert")
-	    this.handleInsertResult(deferred,rowIndex); // in separate method to localize the variables
-	/* TODO: test that for both insert and update that the row's fields have been updated with any new data from the server response */
-	},
+        if (!this.liveVariable) {
+            this.liveVariable = this.createNewLiveVariable();
+        }
+        this.liveVariable.setSourceData(sourceData);
+        this.liveVariable.operation = operation;
+        var deferred = this.liveVariable.update();
+        if (operation == "insert") this.handleInsertResult(deferred, rowIndex); // in separate method to localize the variables
+        /* TODO: test that for both insert and update that the row's fields have been updated with any new data from the server response */
+    },
     onLiveEditBeforeInsert: function(inData) {},
     onLiveEditBeforeUpdate: function(inData) {},
     onLiveEditBeforeDelete: function(inData) {},
@@ -617,119 +623,119 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 
 	},
-	deleteRow: function(rowIndex) {
-	    var sourceData;
-	    if (this.liveEditing) {
-		sourceData = this.getRow(rowIndex);
-	    }
-	    if (this.liveEditing && (!sourceData._wmVariable || !sourceData._wmVariable.data._new)) {
+    deleteRow: function(rowIndex) {
+        var sourceData;
+        if (this.liveEditing) {
+            sourceData = this.getRow(rowIndex);
+        }
+        if (this.liveEditing && (!sourceData._wmVariable || !sourceData._wmVariable.data._new)) {
 
-		/* Strip out date objects from sourceData */
-		var fields = this.selectedItem._dataSchema;
-		for (var field in fields) {
-		    if (sourceData[field] instanceof Date)
-			sourceData[field] = sourceData[field].getTime();
-		}
-		var livevar = this.liveVariable;
-		if (!livevar) {
-		    livevar = this.liveVariable = this.createNewLiveVariable();
-		}
-		livevar.operation = "delete";
-		this.onLiveEditBeforeDelete(sourceData);
-		livevar.setSourceData(sourceData);
-		var deferred = livevar.update();
-		deferred.addCallback(dojo.hitch(this, 
-				    function(result) {
-					if (this.getSelectedIndex() == rowIndex)
-					    this.updateSelectedItem(-1);
-					var item = this.getRowData(rowIndex);
-					this.dojoObj.store.deleteItem(item);
-					this.dojoObj.render();
-				    }));
-		deferred.addErrback(dojo.hitch(this,
-					       function(result) {
-						   console.error(result);
-						   app.toastError(result.message);
-					       }));
-		
-		return;
-	    }
-	    this.updateSelectedItem(-1);
-	    var item = this.getRowData(rowIndex);
-	    this.dojoObj.store.deleteItem(item);
-	    if (this.dataSet && this.dataSet.data && this.dataSet.data.list) {
-		var dataSetIndex = dojo.indexOf(this.dataSet.data.list, item._wmVariable[0]);
-		if (dataSetIndex != -1) {
-		    this.dataSet.beginUpdate();
-		    this.dataSet.removeItem(dataSetIndex);
-		    this.dataSet.endUpdate();
-		}
-	    }
-	    this.dojoObj.render();
-	},
-	addRow: function(inFields, selectOnAdd) {
-	    try {
-		var editCell = null;
-		for (var i = 0; i < this.columns.length; i++) {
-		    if (this.columns[i].fieldType) {
-			editCell = this.columns[i];
-			break;
-		    }
-		}
-		if (this.getRowCount() == 0 && this.variable) {
-		    this.variable.beginUpdate();
-		    this.variable.setData([inFields]);
-		    this.variable.endUpdate();
-		    this.variable.getItem(0).data._new = true;
-		    this.variable.notify();
-		    //this.renderDojoObj();
-		    if (selectOnAdd) {
-			this.setSelectedRow(0);
-			this.selectionChange(); // needs committing
-			wm.onidle(this, function() {
-			    this.editCell(0, editCell.field);
-			});
-		    }
-		    return;
-		}
-		var data = dojo.clone(inFields);
-		var v = new wm.Variable({type: this.dataSet.type});
-		v.setData(data);
+            /* Strip out date objects from sourceData */
+            var fields = this.selectedItem._dataSchema;
+            for (var field in fields) {
+                if (sourceData[field] instanceof Date) sourceData[field] = sourceData[field].getTime();
+            }
+            var livevar = this.liveVariable;
+            if (!livevar) {
+                livevar = this.liveVariable = this.createNewLiveVariable();
+            }
+            livevar.operation = "delete";
+            this.onLiveEditBeforeDelete(sourceData);
+            livevar.setSourceData(sourceData);
+            var deferred = livevar.update();
+            deferred.addCallback(dojo.hitch(this, function(result) {
+                if (this.getSelectedIndex() == rowIndex) this.updateSelectedItem(-1);
+                var item = this.getRowData(rowIndex);
+                this.dojoObj.store.deleteItem(item);
+                //this.dojoObj.render();
+            }));
+            deferred.addErrback(dojo.hitch(this, function(result) {
+                console.error(result);
+                app.toastError(result.message);
+            }));
 
-		/* Adding it to the dojo store does not work well if its a large store where not all of the data is loaded into the store; it seems to get confused */
-		/*
-		  data._wmVariable = v;
-		  var schema = this.selectedItem._dataSchema;
-		  for (var key in schema) {
-		  if (!(key in data)) {
-		  data[key] = "";
-		  }
-		  }
-		  data._new = true;
-		  data._wmVariable = new wm.Variable({type: this.dataSet.type, owner: this});
-		  data._wmVariable.setData(data);
-		  debugger;
-		  var result = this.store.newItem(data);
-		*/
-		this.dataSet.addItem(v,0);
-		this.dataSet.getItem(0).data._new = true;
-		if (selectOnAdd || selectOnAdd === undefined) {
-		    this.setSelectedRow(0);
-		    this.selectionChange(); // needs committing
+            return;
+        }
+        this.updateSelectedItem(-1);
+        var item = this.getRowData(rowIndex);
+        this.dojoObj.store.deleteItem(item);
+        if (this.dataSet && this.dataSet.data && this.dataSet.data.list) {
+            var dataSetIndex = dojo.indexOf(this.dataSet.data.list, item._wmVariable[0]);
+            if (dataSetIndex != -1) {
+                this.dataSet.beginUpdate();
+                this.dataSet.removeItem(dataSetIndex);
+                this.dataSet.endUpdate();
+            }
+        }
+        //this.dojoObj.render();
+    },
+    
+    addRow: function(inFields, selectOnAdd) {
+            var editCell = null;
+            for (var i = 0; i < this.columns.length; i++) {
+                if (this.columns[i].fieldType) {
+                    editCell = this.columns[i];
+                    break;
+                }
+            }
+            if (this.getRowCount() == 0 && this.variable) {
+                this.variable.beginUpdate();
+                this.variable.setData([inFields]);
+                this.variable.endUpdate();
+                this.variable.getItem(0).data._new = true;
+                this.variable.notify();
+                //this.renderDojoObj();
+                if (selectOnAdd) {
+                    this.setSelectedRow(0);
+                    this.selectionChange(); // needs committing
+                    wm.onidle(this, function() {
+                        this.editCell(0, editCell.field);
+                    });
+                }
+                return;
+            }
+            var data = dojo.clone(inFields);
+            var v = new wm.Variable({
+                type: this.dataSet.type
+            });
+            v.setData(data);
 
-		    wm.onidle(this, function() {
-			this.dojoObj.scrollToRow(0);
-			this.editCell(0, editCell.field);
-		    });
-		    
-		}
-	    } finally {
-	      /* If the grid isn't bound to its dataSet, then it won't automatically regenerate when its dataSet is changed */
-	      if (!this.$.binding || !this.$.binding.wires.dataSet || this.$.binding.wires.dataSet != this.dataSet) {
-		  this.setDataSet(this.dataSet);
-	      }
-	    }
-	},
+/* Add to top of list
+            this.dataSet.addItem(v, 0);
+            this.dataSet.getItem(0).data._new = true;
+            if (selectOnAdd || selectOnAdd === undefined) {
+                this.setSelectedRow(0);
+                this.selectionChange(); // needs committing
+                wm.onidle(this, function() {
+                    this.dojoObj.scrollToRow(0);
+                    this.editCell(0, editCell.field);
+                });
+
+            }
+            */
+            var newIndex = this.dataSet.getCount();
+            this.dataSet.beginUpdate();
+            this.dataSet.addItem(v);
+            this.dataSet.endUpdate();
+            var item = this.dataSet.getItem(newIndex);
+            item.data._new = true;
+            var obj = item.getData();
+            var dateFields = this.getDateFields();
+            this.replaceDateFields(dateFields, obj);
+            obj._wmVariable = item;
+            this.store.newItem(obj);
+            if (selectOnAdd || selectOnAdd === undefined) {
+                this.setSelectedRow(newIndex);
+                this.selectionChange(); // needs committing
+                wm.onidle(this, function() {
+                    this.dojoObj.scrollToRow(newIndex);
+                    this.editCell(newIndex, editCell.field);
+                });
+
+            }            
+       
+    },
+    
     addEmptyRow: function(selectOnAdd) {
 	var set = function(obj, parts, value) {
 	    for (var partnum = 0; partnum < parts.length; partnum++) {
@@ -1074,46 +1080,48 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 	},
         customSort: function(a,b) {return "";},
-	setDojoStore: function(){
-		if (!this.variable){
-			this.store = null;
-			this.dsType = null;
-			return;
-		}
+    setDojoStore: function() {
+        if (!this.variable) {
+            this.store = null;
+            this.dsType = null;
+            return;
+        }
 
-		var storeData = {'items':[]};
-		var dataList = this.variable.getData() || [];
-	    if (!dojo.isArray(dataList) && !wm.isEmpty(dataList)) {
-		dataList = [dataList];
-	    }
-	    // If the user has provided a customSort method, use it
-	    // if its designtime, customSort will be the name of the method rather
-	    // than the actual method, so don't try running it 
-	    if (this.customSort != this.constructor.prototype.customSort && dojo.isFunction(this.customSort))
-		dataList = dataList.sort(this.customSort);
+        var storeData = {
+            'items': []
+        };
+        var dataList = this.variable.getData() || [];
+        if (!dojo.isArray(dataList) && !wm.isEmpty(dataList)) {
+            dataList = [dataList];
+        }
+        // If the user has provided a customSort method, use it
+        // if its designtime, customSort will be the name of the method rather
+        // than the actual method, so don't try running it 
+        if (this.customSort != this.constructor.prototype.customSort && dojo.isFunction(this.customSort)) dataList = dataList.sort(this.customSort);
 
 
-		var dateFields = this.getDateFields();
-		dojo.forEach(dataList, function(obj){
-			var dates = {};
-			dojo.forEach(dateFields, function(f){
-				if (obj[f])
-					dates[f] = new Date(obj[f]);
-			});
-		    //obj = wm.flattenObject(obj,true);
-			obj = dojo.mixin({},obj, dates);
-		}, this);
+        var dateFields = this.getDateFields();
+        dojo.forEach(dataList, dojo.hitch(this, "replaceDateFields", dateFields));
 
-	    if (dataList) {
-		for (var i = 0; i < dataList.length; i++)
-		    dataList[i]._wmVariable = this.variable.getItem(i);
-	    }
+        if (dataList) {
+            for (var i = 0; i < dataList.length; i++)
+            dataList[i]._wmVariable = this.variable.getItem(i);
+        }
 
-	    storeData.items = dataList;
-	    this.store = new dojo.data.ItemFileWriteStore({data: storeData});
-	    if (!this.caseSensitiveSort)
-		this.makeSortingInsensitive();
-	},
+        storeData.items = dataList;
+        this.store = new dojo.data.ItemFileWriteStore({
+            data: storeData
+        });
+        if (!this.caseSensitiveSort) this.makeSortingInsensitive();
+    },
+    replaceDateFields: function(dateFields, obj) {        
+            var dates = {};
+            dojo.forEach(dateFields, function(f) {
+                if (obj[f]) dates[f] = new Date(obj[f]);
+            });
+            //obj = wm.flattenObject(obj,true);
+            obj = dojo.mixin({}, obj, dates);      
+    },
 	makeSortingInsensitive: function(){
 		this.store.comparatorMap = {};
 		dojo.forEach(this.columns, function(col){
@@ -1149,7 +1157,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				      this.deselectAll();
 				      for(var i = 0; i < inItems.length; i++) {
 					  if (dojo.indexOf(items.data.list, inItems[i]._wmVariable[0]) != -1) {
-					      main.dojoGrid1.dojoObj.selection.addToSelection(i);
+					      this.dojoObj.selection.addToSelection(i);
 					      if (this._selectionMode == "single") {
 						  break;
 					      }
@@ -1158,9 +1166,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}));
     },
     _storeFetch: function(onComplete) {
-	this.dojoObj.store.fetch({sort: main.dojoGrid1.dojoObj.getSortProps(),
-				  query: main.dojoGrid1.dojoObj.query, 
-				  queryOptions: main.dojoGrid1.dojoObj.queryOptions, 
+	this.dojoObj.store.fetch({sort: this.dojoObj.getSortProps(),
+				  query: this.dojoObj.query, 
+				  queryOptions: this.dojoObj.queryOptions, 
 				  onComplete: onComplete});
     },
 	getStructure: function(){

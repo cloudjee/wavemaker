@@ -1810,103 +1810,105 @@ wm.List.extend({
     },
     onGridButtonClick: function(fieldName, rowData, rowIndex) {},
     setSelectedRow: function(inIndex) {
-	this.eventSelect(this.items[inIndex]);
+        this.eventSelect(this.items[inIndex]);
     },
-    select: function(inItemOrIndex) { 
-	if (typeof inItemOrIndex != "object") {
-	    this.deselectAll(true);
-	    this.eventSelect(this.items[inItemOrIndex]);
-	} else {
-	    this.inherited(arguments);
-	}
+    select: function(inItemOrIndex) {
+        if (typeof inItemOrIndex != "object") {
+            this.deselectAll(true);
+            this.eventSelect(this.items[inItemOrIndex]);
+        } else {
+            this.inherited(arguments);
+        }
     },
     /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
     selectByQuery: function(inQuery) {
-	if (!this.dataSet) return;
+        if (!this.dataSet) return;
 
-	/* Step 1: Find all matching items from the dataset */
-	var items = this.dataSet.query(inQuery);
-	
-	/* Step 2: We need all items to exist; generate all items */
-	if (this.renderVisibleRowsOnly) {
-	    this.renderVisibleRowsOnly = false;
-	    this._render();
-	    this.renderVisibleRowsOnly = true;
-	}
+        /* Step 1: Find all matching items from the dataset */
+        var items = this.dataSet.query(inQuery);
 
-	/* Step 3: Find and select all rows associated with those items */
-	this.deselectAll();
-	var count = items.getCount();
-	for (var i = 0; i < count; i++) {
-	    var item = items.data.list[i];
-	    this.addToSelection(this.items[dojo.indexOf(this.dataSet.data.list, item)]);
-	    if (this._selectionMode == "single") break;
-	}
+        /* Step 2: We need all items to exist; generate all items */
+        if (this.renderVisibleRowsOnly) {
+            this.renderVisibleRowsOnly = false;
+            this._render();
+            this.renderVisibleRowsOnly = true;
+        }
+
+        /* Step 3: Find and select all rows associated with those items */
+        this.deselectAll();
+        var count = items.getCount();
+        for (var i = 0; i < count; i++) {
+            var item = items.data.list[i];
+            this.addToSelection(this.items[dojo.indexOf(this.dataSet.data.list, item)]);
+            if (this._selectionMode == "single") break;
+        }
     },
     getRow: function(inRow) {
-	return this._data[inRow];
+        return this._data[inRow];
     },
     findRowIndexByFieldValue: function(inFieldName, inFieldValue) {
-	var item;
-	for (var i = 0; i < this._data.length; i++) {
-	    item = this._data[i];
-	    if (item[inFieldName] === inFieldValue) {
-		return i;
-	    }
-	}
-	return -1;
+        var item;
+        for (var i = 0; i < this._data.length; i++) {
+            item = this._data[i];
+            if (item[inFieldName] === inFieldValue) {
+                return i;
+            }
+        }
+        return -1;
     },
     getCell: function(rowIndex, inFieldName) {
-	var row = this._data[rowIndex];
-	if (row) {
+        var row = this._data[rowIndex];
+        if (row) {
 
-	var col = this._columnsHash ? this._columnsHash[inFieldName] : null;
-	if (col && col.isCustomField) {
-	    if (col.expression) {
-		return wm.expression.getValue(col.expression, row,this.owner);
+            var col = this._columnsHash ? this._columnsHash[inFieldName] : null;
+            if (col && col.isCustomField) {
+                if (col.expression) {
+                    return wm.expression.getValue(col.expression, row, this.owner);
 
-	    } else if (col.formatFunc){
-		switch(col.formatFunc){
-		case 'wm_date_formatter':
-		case 'Date (WaveMaker)':				    
-		case 'wm_localdate_formatter':
-		case 'Local Date (WaveMaker)':				    
-		case 'wm_time_formatter':
-		case 'Time (WaveMaker)':				    
-		case 'wm_number_formatter':
-		case 'Number (WaveMaker)':				    
-		case 'wm_currency_formatter':
-		case 'Currency (WaveMaker)':				    
-		case 'wm_image_formatter':
-		case 'Image (WaveMaker)':				    
-		case 'wm_link_formatter':
-		case 'Link (WaveMaker)':				    
-		    return undefined;// custom field with a formatter rather than a func to generate a value? Empty cell.
-		default:
-		    if (!this.isDesignLoaded())
-			return dojo.hitch(this.owner, col.formatFunc)("", rowIndex, dojo.indexOf(this.columns, col), inFieldName, {customStyles:[], customClasses:[]}, row);
-		}		    	    
-	    }
-	    return undefined;// custom field with no function to generate a value? Empty cell.
-	} else {
-		    return row[inFieldName];
-		
-	    }
-	}
-	    return "";
-	},
+                } else if (col.formatFunc) {
+                    switch (col.formatFunc) {
+                    case 'wm_date_formatter':
+                    case 'Date (WaveMaker)':
+                    case 'wm_localdate_formatter':
+                    case 'Local Date (WaveMaker)':
+                    case 'wm_time_formatter':
+                    case 'Time (WaveMaker)':
+                    case 'wm_number_formatter':
+                    case 'Number (WaveMaker)':
+                    case 'wm_currency_formatter':
+                    case 'Currency (WaveMaker)':
+                    case 'wm_image_formatter':
+                    case 'Image (WaveMaker)':
+                    case 'wm_link_formatter':
+                    case 'Link (WaveMaker)':
+                        return undefined; // custom field with a formatter rather than a func to generate a value? Empty cell.
+                    default:
+                        if (!this.isDesignLoaded()) return dojo.hitch(this.owner, col.formatFunc)("", rowIndex, dojo.indexOf(this.columns, col), inFieldName, {
+                            customStyles: [],
+                            customClasses: []
+                        }, row);
+                    }
+                }
+                return undefined; // custom field with no function to generate a value? Empty cell.
+            } else {
+                return row[inFieldName];
+
+            }
+        }
+        return "";
+    },
     setCell: function(rowIndex, fieldName, newValue, noRendering) {
-	var item = this.dataSet.getItem(rowIndex);
-	item.beginUpdate();
-	item.setValue(fieldName, newValue);
-	item.endUpdate();
-	var row = this._data[rowIndex];
-	if (row) {
-	    row[fieldName] = newValue;
-	    if (!noRendering) {
-		this.items[rowIndex].setContent(row);
-	    }
-	}
+        var item = this.dataSet.getItem(rowIndex);
+        item.beginUpdate();
+        item.setValue(fieldName, newValue);
+        item.endUpdate();
+        var row = this._data[rowIndex];
+        if (row) {
+            row[fieldName] = newValue;
+            if (!noRendering) {
+                this.items[rowIndex].setContent(row);
+            }
+        }
     },
 	getIsRowSelected: function(){
 		return !this.getEmptySelection();
@@ -1919,39 +1921,34 @@ wm.List.extend({
 	return this.items.length;
     },
     addRow: function(inFields, selectOnAdd) {
-	if (this.getRowCount() == 0 && this.variable) {
-	    this.dataSet.setData([inFields]);
-	    if (selectOnAdd) {
-		this.select(0);
-		this.selectionChange(); // needs committing
-	    }
-	    return;
-	  }
-	var data = dojo.clone(inFields);
-	var v = new wm.Variable({type: this.dataSet.type});
-	v.setData(data);
+       if (this.getRowCount() == 0 && this.variable) {
+           this.dataSet.setData([inFields]);
+           if (selectOnAdd) {
+               this.select(0);
+               this.selectionChange(); // needs committing
+           }
+           return;
+       }
+       var data = dojo.clone(inFields);
+       var v = new wm.Variable({
+           type: this.dataSet.type
+       });
+       v.setData(data);
 
-	    /* Adding it to the dojo store does not work well if its a large store where not all of the data is loaded into the store; it seems to get confused */
-/*
-	    data._wmVariable = v;
-	  var schema = this.selectedItem._dataSchema;
-	  for (var key in schema) {
-	    if (!(key in data)) {
-	      data[key] = "";
-	    }
-	  }
-	    data._new = true;
-	    data._wmVariable = new wm.Variable({type: this.dataSet.type, owner: this});
-	    data._wmVariable.setData(data);
-	    debugger;
-	    var result = this.store.newItem(data);
-	    */
-	    this.dataSet.addItem(v,0);
-	    this.dataSet.getItem(0).data._new = true;
-	  if (selectOnAdd || selectOnAdd === undefined) {
-	      this.select(0);
-	  }
-	},
+/* Insert at top
+       this.dataSet.addItem(v, 0);
+       this.dataSet.getItem(0).data._new = true;
+       if (selectOnAdd || selectOnAdd === undefined) {
+           this.select(0);
+       }
+       */
+       var newIndex = this.dataSet.getCount();
+       this.dataSet.addItem(v);
+       this.dataSet.getItem(newIndex).data._new = true;
+       if (selectOnAdd || selectOnAdd === undefined) {
+           this.select(newIndex);
+       }
+   },
     addEmptyRow: function(selectOnAdd) {
 	    var obj = {};
 	var hasVisibleValue = false;

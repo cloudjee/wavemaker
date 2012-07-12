@@ -55,6 +55,14 @@ dijit.form.ValidationTextBox.prototype.validate = function(isFocused){
 			message = this.getErrorMessage(true);
 		}
 	}
+    if (isFocused) {
+        var parent = this.domNode;
+        while(parent && !dojo.hasClass(parent, "dojoxGridRow")) {
+            parent = parent.parentNode;
+        }
+        this._lastRow = parent;
+        this._lastCol = dojo.indexOf(this.domNode.parentNode.parentNode.parentNode.childNodes, this.domNode.parentNode.parentNode);        
+    }
 	this.displayMessage(message);
 	// CHANGE: return valid if focused or valid
 	return isFocused || isValid;
@@ -74,14 +82,16 @@ dijit.form.ValidationTextBox.prototype.validator = function(value, constraints) 
 // dojo customization: hide tooltip after a delay
 
 dijit.form.ValidationTextBox.prototype.displayMessage = function(message){
-	if(this._message == message){ return; }
+	if(this._message == message){     
+        return; 
+    }
 	this._message = message;
 	this._cancelHideTooltip();
 	dijit.hideTooltip(this.domNode);
     if (message && this.inGrid && !this.domNode.parentNode) {
 	/* this.domNode is not currently in the document; must wait until it is */
 	wm.job("GridValidationNode", 20, dojo.hitch(this, function() {
-	    dijit.showTooltip(message, this.domNode, this.tooltipPosition);
+	    dijit.showTooltip(message, this.domNode.parentNode || this._lastRow.firstChild.firstChild.firstChild.childNodes[this._lastCol], this.tooltipPosition);
 	    dijit._hideTooltipHandle = setTimeout(dojo.hitch(this, function() {
 		wm.fire(this, "_hideTooltip");
 	    }), 2500);
