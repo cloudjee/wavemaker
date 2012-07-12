@@ -14,11 +14,7 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -185,13 +181,20 @@ public class WebServiceToolsManager {
 
         // copy user-specified WSDL file to the package folder
         wsdlFile = packageDir.getFile(origWsdlFile.getName());
-        // cftempfix
-        // if (!wsdlFile.getCanonicalFile().equals(origWsdlFile.getCanonicalFile())) {
-        // IOUtils.copy(origWsdlFile, wsdlFile);
-        // }
-        OutputStream os = wsdlFile.getContent().asOutputStream();
-        org.apache.commons.io.IOUtils.copy(new FileInputStream(origWsdlFile), os);
-        os.close();
+        OutputStream os = null;
+        InputStream is = null;
+        try {
+            os = wsdlFile.getContent().asOutputStream();
+            is = new FileInputStream(origWsdlFile);
+            org.apache.commons.io.IOUtils.copy(is, os);
+        } finally {
+            try {
+                os.close();
+                is.close();
+            } catch (IOException ex) {
+
+            }
+        }
 
         // cftempfix: copy wsdl file to temp directory because we need to pass URI to the rest of the process
         java.io.File tempWsdlDir = IOUtils.createTempDirectory("wsdl_directory", null);
