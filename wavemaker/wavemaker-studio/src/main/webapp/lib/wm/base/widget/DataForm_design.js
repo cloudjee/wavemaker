@@ -318,7 +318,7 @@ wm.FormPanel.extend({
                     else 
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 
-		    if (studio.currentDevice == "desktop") {
+		    if (studio.currentDeviceType == "desktop") {
 			e.setHeight(this.editorHeight);
 		    } else {
 			e.desktopHeight = this.editorHeight;
@@ -379,7 +379,8 @@ wm.FormPanel.extend({
      ***************/
 	getFormEditorProps: function() {
 		return {
-			size: this.editorSize,
+			width: this.editorWidth,
+			height: this.editorHeight,
 			readonly: this.readonly,
 			captionSize: this.captionSize,
 			captionAlign: this.captionAlign,
