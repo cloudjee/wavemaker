@@ -1957,7 +1957,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    if (!formatterProps.useLocalTime) {
 		inValue.setHours(inValue.getHours() + wm.timezoneOffset);
 	    }
-	var constraints = {selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
+	var constraints = {fullYear: true, selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
 	    return dojo.date.locale.format(inValue, constraints);
 	},
     /* DEPRECATED */

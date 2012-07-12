@@ -338,6 +338,8 @@ dojo.declare("wm.DateTime", wm.Date, {
 	}
 	this.dateEditor.setDataValue(d);
 	this.timeEditor.setDataValue(d);
+			this.updateReadonlyValue();
+
     },
     getEditorValue: function(inValue) {
 	var d = new Date();

@@ -1716,7 +1716,7 @@ wm.List.extend({
 	    if (!formatterProps.useLocalTime) {
 		inValue.setHours(inValue.getHours() + wm.timezoneOffset);
 	    }
-	var constraints = {selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
+	var constraints = {fullYear: true, selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
 	    return dojo.date.locale.format(inValue, constraints);
 	},
     numberFormatter: function(formatterProps, ignore1,ignore2,ignore3, inValue) {
