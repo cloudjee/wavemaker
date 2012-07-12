@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 
 dojo.provide("wm.studio.pages.ResourceEditor.ResourceEditor");
@@ -24,130 +24,123 @@ dojo.declare("ResourceEditor", wm.Page, {
 
     },
     setItem: function(inItem) {
-	this.item = inItem;
-	this._fullPath = this.item.getFilePath();
-	if (this.item instanceof wm.ImageResourceItem) {
-	    this.editor.hide();
-	    this.picture.show();
-	    var path = this._fullPath;
-	    path = path.replace(/\/webapproot/,"");
-	    path = "projects/" + studio.project.getProjectPath() + path;
-	    this.picture.setSource(path);
-	} else if (this.item instanceof wm.ZipResourceItem) {
-	} else if (this.item instanceof wm.JarResourceItem) {
-	} else {
-	    studio.resourceManagerService.requestAsync("readFile", [this.item.getFilePath()], dojo.hitch(this, "receiveItem"));
-	}
-	this.fullPath.setCaption(this._fullPath);
+        this.item = inItem;
+        this._fullPath = this.item.getFilePath();
+        if (this.item instanceof wm.ImageResourceItem) {
+            this.editor.hide();
+            this.picture.show();
+            var path = this._fullPath;
+            path = path.replace(/\/webapproot/, "");
+            path = "projects/" + studio.project.getProjectPath() + path;
+            this.picture.setSource(path);
+        } else if (this.item instanceof wm.ZipResourceItem) {} else if (this.item instanceof wm.JarResourceItem) {} else {
+            studio.resourceManagerService.requestAsync("readFile", [this.item.getFilePath()], dojo.hitch(this, "receiveItem"));
+        }
+        this.fullPath.setCaption(this._fullPath);
 
     },
     receiveItem: function(inResult) {
-	    var text = inResult;
-	    this.editor.setText(text);
-	    if (this.item instanceof wm.HTMLResourceItem) {
-		this.editor.setSyntax("html");
-		this.formatBtn.hide();
-	    } else if (this.item instanceof wm.XMLResourceItem) {
-		this.formatBtn.hide();
-		this.editor.setSyntax("xml");
-	    } else if (this.item instanceof wm.MiscResourceItem) {
-		this.formatBtn.hide();
-		this.editor.setSyntax("text");
-	    } else if (this.item instanceof wm.CSSResourceItem) {
-		this.formatBtn.hide();
-		this.editor.setSyntax("css");
-	    } else if (this.item instanceof wm.JSResourceItem) {
-		this.formatBtn.show();
-		this.editor.setSyntax("javascript");
-	    } else if (this.item instanceof wm.XMLResourceItem) {
-		this.formatBtn.hide();
-		this.editor.setSyntax("xml");
-	    } else {
-		this.formatBtn.hide();
-		this.editor.setSyntax("text");
-	    }
-	    
-	    wm.onidle(this, function() {
-		this.editor.setLineNumber(0);
-	    });
+        var text = inResult;
+        this.editor.setText(text);
+        if (this.item instanceof wm.HTMLResourceItem) {
+            this.editor.setSyntax("html");
+            this.formatBtn.hide();
+        } else if (this.item instanceof wm.XMLResourceItem) {
+            this.formatBtn.hide();
+            this.editor.setSyntax("xml");
+        } else if (this.item instanceof wm.MiscResourceItem) {
+            this.formatBtn.hide();
+            this.editor.setSyntax("text");
+        } else if (this.item instanceof wm.CSSResourceItem) {
+            this.formatBtn.hide();
+            this.editor.setSyntax("css");
+        } else if (this.item instanceof wm.JSResourceItem) {
+            this.formatBtn.show();
+            this.editor.setSyntax("javascript");
+        } else if (this.item instanceof wm.XMLResourceItem) {
+            this.formatBtn.hide();
+            this.editor.setSyntax("xml");
+        } else {
+            this.formatBtn.hide();
+            this.editor.setSyntax("text");
+        }
+
+        wm.onidle(this, function() {
+            this.editor.setLineNumber(0);
+        });
 
 
     },
 
     findScriptClick: function() {
-	this.editor.showSearch();
+        this.editor.showSearch();
     },
     refreshScriptClick: function() {
-	this.editor.reset();
+        this.editor.reset();
     },
     formatScriptClick: function() {
-	studio.formatScript(this.editor);
+        studio.formatScript(this.editor);
     },
     toggleWrapScriptClick: function() {
-	this.editor.toggleWordWrap();
+        this.editor.toggleWordWrap();
     },
     showEditorHelp: function() {
-	this.editor.showHelp();
+        this.editor.showHelp();
     },
-    saveTextEditor: function() {	
-	studio.beginWait("Saving...");
-	studio.resourceManagerService.requestSync("writeFile", [this._fullPath, this.editor.getDataValue()],
-						  dojo.hitch(this, function() {
-						      this.saveBtn.setDisabled(true);
-						      studio.endWait("Saving...");
-						      app.toastSuccess(this.getDictionaryItem("EDITS_SAVED"));
-						      this.editor.clearDirty();
-						      this.editor.focus();
-						      this.onFileChange(this._fullPath, this.editor.getDataValue());
-						  }),
-						  dojo.hitch(this, function() {
-						      studio.endWait("Saving...");
-						      app.toastError(this.getDictionaryItem("EDITS_FAILED"));
-						  })
-						 );
+    saveTextEditor: function() {
+        studio.beginWait("Saving...");
+        studio.resourceManagerService.requestSync("writeFile", [this._fullPath, this.editor.getDataValue()], dojo.hitch(this, function() {
+            this.saveBtn.setDisabled(true);
+            studio.endWait("Saving...");
+            app.toastSuccess(this.getDictionaryItem("EDITS_SAVED"));
+            this.editor.clearDirty();
+            this.editor.focus();
+            this.onFileChange(this._fullPath, this.editor.getDataValue());
+        }), dojo.hitch(this, function() {
+            studio.endWait("Saving...");
+            app.toastError(this.getDictionaryItem("EDITS_FAILED"));
+        }));
     },
     editorChange: function(inSender) {
-	var isDirty = this.editor.isDirty;
-	this.saveBtn.setDisabled(!isDirty);
-/*
-	this.owner.isDirty = isDirty;
-	this.owner.parent.updateIsDirty();
-	*/
+        var isDirty = this.editor.isDirty;
+        this.saveBtn.setDisabled(!isDirty);
+        /*
+    this.owner.isDirty = isDirty;
+    this.owner.parent.updateIsDirty();
+    */
     },
     onFileChange: function(inPath, inContents) {
-	if (inPath.match(/\/pages\//)) {
-	    inPath = inPath.replace(/.*?\/pages\//,"");
-	    this.onPageChange(inPath, inContents);
-	} else if (inPath.indexOf("/common/") == 0) {
-	    this.onCommonChange(inPath, inContents);
-	} else {
-	    switch(inPath) {
-		case "/webapproot/" + studio.project.projectName + ".js":
-		this.onProjectChange(inPath, inContents);
-		break;
-		case "/webapproot/app.css":
-		this.onProjectChange(inPath, inContents);
-		break;
-	    }
-	}
+        if (inPath.match(/\/pages\//)) {
+            inPath = inPath.replace(/.*?\/pages\//, "");
+            this.onPageChange(inPath, inContents);
+        } else if (inPath.indexOf("/common/") == 0) {
+            this.onCommonChange(inPath, inContents);
+        } else {
+            switch (inPath) {
+            case "/webapproot/" + studio.project.projectName + ".js":
+                this.onProjectChange(inPath, inContents);
+                break;
+            case "/webapproot/app.css":
+                this.onProjectChange(inPath, inContents);
+                break;
+            }
+        }
     },
     onPageChange: function(inPath, inContents) {
-	var matches = inPath.match(/^[^\/]*/);
-	var pageName = matches ? matches[0] : null; // should never be null;
-
-	/* Refresh all components so that page containers are updated */
-	if (pageName != studio.project.pageName) {
-	    var pageContainers = wm.listOfWidgetType(wm.PageContainer, false,false);
-	    for (var i = 0; i < pageContainers.length; i++) {
-		if (pageContainers[i].pageName == pageName)
-		    delete window[pageName];
-		    pageContainers[i].forceReloadPage();
-	    }
-	} else {
-	    studio._dontNavOnPageChange = true;
-	    studio.project.openPage(pageName);
-	    delete studio._dontNavOnPageChange;
-	}
+        var matches = inPath.match(/^[^\/]*/);
+        var pageName = matches ? matches[0] : null; // should never be null;
+        /* Refresh all components so that page containers are updated */
+        if (pageName != studio.project.pageName) {
+            var pageContainers = wm.listOfWidgetType(wm.PageContainer, false, false);
+            for (var i = 0; i < pageContainers.length; i++) {
+                if (pageContainers[i].pageName == pageName) delete window[pageName];
+                pageContainers[i].forceReloadPage();
+            }
+        } else {
+            studio._dontNavOnPageChange = true;
+            studio.project.openPage(pageName);
+            delete studio._dontNavOnPageChange;
+        }
     },
     onProjectChange: function(inPath, inContents) {
 
@@ -155,6 +148,12 @@ dojo.declare("ResourceEditor", wm.Page, {
     onCommonChange: function(inPath, inContents) {
 
     },
-
+    scriptEditorCtrlKey: function(inSender, e, letter) {
+        switch(letter.toLowerCase()) {
+        case "s":
+            dojo.stopEvent(e);
+            return this.saveTextEditor();
+        }
+    },
     _end: 0
 });

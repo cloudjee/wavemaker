@@ -110,17 +110,19 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     }
 
     private boolean continueTestRun(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
-        boolean rtn;
-        if (projectDir.getFile(deployName + ".xml").exists()) {
+        if (!appAlreadyDeployed(projectDir, deployName, properties)) {
+            return true;
+        } else if (projectDir.getFile(deployName + ".xml").exists()) {
             long l1 = projectDir.getFile(deployName + ".xml").getLastModified();
             long l2 = projectDir.getFolder("webapproot/WEB-INF").find().files().performOperation(new LatestLastModified()).getValue();
-            if (l1 >= l2) {
-                return false;
-            }
+            return (l1 < l2);
         } else {
             return true;
         }
+    }
 
+    private boolean appAlreadyDeployed(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
+        boolean rtn;
         String port = (String)properties.get(TOMCAT_PORT_PROPERTY);
 
         com.wavemaker.tools.io.File deployTestF = projectDir.getFile("webapproot/" + deployName + "-deploy-test-file.txt");

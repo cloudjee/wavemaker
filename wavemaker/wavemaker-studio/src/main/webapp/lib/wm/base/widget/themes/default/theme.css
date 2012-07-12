@@ -532,6 +532,14 @@ th {
 .dojoxGrid td {
 	-moz-outline: none;
 }
+.dojoxGrid td button {
+    width:100%;
+    display:inline-block;
+}
+.wmlist-item button {
+    width:94%;
+    display:inline-block;
+}
 
 .dojoxGridHeader .dojoxGridCheckSelector {
 display: none; /* if shown, selecting 500 rows hangs even chrome */

@@ -74,13 +74,15 @@ Studio.extend({
 	this.markupEditArea.toggleWordWrap();
     },
 
-    scriptEditorCtrlKey: function(inSender, letter) {
+    scriptEditorCtrlKey: function(inSender, e, letter) {
 	switch(letter.toLowerCase()) {
 	case "s":
+        dojo.stopEvent(e);
 	    return this.saveScriptClick();
 /*	case "e":
 	    return this.validateScriptClick();*/
 	case "i":
+        dojo.stopEvent(e);
 	    return this.formatScriptClick();
 /*
 	case "o":
@@ -91,6 +93,7 @@ Studio.extend({
 	    */
 	case ".":
 	case " ":
+        dojo.stopEvent(e);
 	    if (this.autoCompletionDialog && this.autoCompletionDialog.showing) {
 		for (var i = 0; i < this.autoCompletionList.dataSet.getCount() && this.autoCompletionList.dataSet.getItem(i).getValue("name").match(/\</); i++) {;}
 		this.autoCompletionList.select(i);
@@ -100,15 +103,17 @@ Studio.extend({
 	    }
 	}
     },
-    appScriptEditorCtrlKey: function(inSender, letter) {
+    appScriptEditorCtrlKey: function(inSender, e, letter) {
 	switch(letter.toLowerCase()) {
 	case "s":
+        dojo.stopEvent(e);
 	    return this.saveAppSrcClick();
 /*
 	case "e":
 	    return this.validateAppScriptClick();
 	    */
 	case "i":
+        dojo.stopEvent(e);
 	    return this.formatAppScriptClick();
 /*
 	case "o":
@@ -118,9 +123,10 @@ Studio.extend({
 	    */
 	}
     },
-    cssEditorCtrlKey: function(inSender, letter) {
+    cssEditorCtrlKey: function(inSender, e, letter) {
 	switch(letter.toLowerCase()) {
 	case "s":
+        dojo.stopEvent(e);
 	    return this.saveCssClick();
 	case "e":
 	    break;
@@ -134,9 +140,10 @@ Studio.extend({
 	    */
 	}
     },
-    markupEditorCtrlKey: function(inSender, letter) {
+    markupEditorCtrlKey: function(inSender, e, letter) {
 	switch(letter.toLowerCase()) {
 	case "s":
+        dojo.stopEvent(e);
 	    return this.saveMarkupClick();
 	case "e":
 	    break;
@@ -855,29 +862,30 @@ Studio.extend({
     },
 
     insertCompletedText: function() {
-		var data = this.autoCompletionList.selectedItem.getData();
-		if (data.description == "__") return;
-		var text = this._autoCompletionOriginalText;
-	if (!this._thisPresumed) {
-		text = text.substring(0,text.length-this._autoCompletionRemainder.length);
-	}
-		var data = this.autoCompletionList.selectedItem.getData();
-		text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
-	if (!text.match(/^(this|app)/)) {
-	    var newtext = this._autoCompletionObject == studio.page ? "this" : "app";
-	    text = newtext + (text.indexOf(".") == 0 ? "" : ".") + text;
-	}
-		if (!this.editArea.getSelectedText()) {
-		    var pos = this.editArea.getCursorPosition();
-		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length ), pos.row,pos.column);
-		    var replaceText = this.editArea.getSelectedText();
-		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
-		    var range = this.editArea.getSelectionRange();
-		    this.editArea.setSelectionRange(range.start.row, range.start.column + replaceText.length-replaceTextTrim.length, range.end.row,range.end.column);
-		}
+        var data = this.autoCompletionList.selectedItem.getData();
+        if (data.description == "__") return;
+        var text = this._autoCompletionOriginalText;
+        if (!this._thisPresumed) {
+            text = text.substring(0, text.length - this._autoCompletionRemainder.length);
+        }
+        var data = this.autoCompletionList.selectedItem.getData();
+        text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
+        if (!text.match(/^(this|app)/)) {
+            var newtext = this._autoCompletionObject == studio.page ? "this" : "app";
+            text = newtext + (text.indexOf(".") == 0 ? "" : ".") + text;
+        }
+        if (!this.editArea.getSelectedText()) {
+            var pos = this.editArea.getCursorPosition();
+            this.editArea.setSelectionRange(pos.row, Math.max(0, pos.column - this._autoCompletionOriginalText.length), pos.row, pos.column);
+            var replaceText = this.editArea.getSelectedText();
+            var replaceTextTrim = replaceText.replace(/^\s*/, "");
+            var range = this.editArea.getSelectionRange();
+            this.editArea.setSelectionRange(range.start.row, range.start.column + replaceText.length - replaceTextTrim.length, range.end.row, range.end.column);
+        }
 
-		this.editArea.replaceSelectedText(text);
-		this.listCompletions();
+        this.editArea.replaceSelectedText(text);
+        this.listCompletions();
+        this.editArea.focus();
     },
     autoCompletionDialogAutoHide: function() {
 	if (this.autoCompletionDialog.showing) {

@@ -27,6 +27,7 @@ wm.DojoGrid.extend({
 			    "-Header Styles", "Header-Background-Color", "Header-Font-Color", "Header-Image", "Header-Image-Position","Header-Image-Repeat"],
 	afterPaletteDrop: function() {
 		this.caption = this.caption || this.name;
+        this.singleClickEdit = true; // single click edit is the new default, but don't want to change existing projects
 		this.renderDojoObj();
 	},
 /* made obsolete by adding createWire to the property editor 

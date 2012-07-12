@@ -24,7 +24,7 @@ ResourceEditor.widgets = {
 	    editorHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 	    fullPath: ["wm.Label", {width: "100%", align: "right", height: "100%"}]	    
 	}],
-	editor: ["wm.AceEditor", {width: "100%", height: "100%", dataValue: "", syntax: "text"}, {onChange: "editorChange"}],
+	editor: ["wm.AceEditor", {width: "100%", height: "100%", dataValue: "", syntax: "text"}, {onCtrlKey: "scriptEditorCtrlKey",onChange: "editorChange"}],
 	picture: ["wm.Picture", {showing: false, width: "100%", height: "100%"}]
     }]
 }

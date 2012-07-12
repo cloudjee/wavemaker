@@ -55,13 +55,14 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		    this.dbSettingsButton.setBorder("0");
 		});
 	    }
-
-	    if (studio._runRequested) {
-		this.toolbarBtnHolder.setDisabled(true);
-	    }
-	    this.subscribe("testRunStateChange", this, function() {
-		this.toolbarBtnHolder.setDisabled(studio._runRequested);
-	    });
+        if (studio.isCloud()) {
+    	    if (studio._runRequested) {
+	           	this.toolbarBtnHolder.setDisabled(true);
+	        }
+	       this.subscribe("testRunStateChange", this, function() {
+		      this.toolbarBtnHolder.setDisabled(studio._runRequested);
+	       });
+       }
 
 	},
     onShow: function() {

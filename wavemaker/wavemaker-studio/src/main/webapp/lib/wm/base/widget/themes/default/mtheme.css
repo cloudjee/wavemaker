@@ -382,6 +382,11 @@ user-select: none;
    border: 0px;
 }
 
+.wmlist-item button {
+    width:94%;
+    display:inline-block;
+    min-height:35px;
+}
 /**/
 
 .wmdetail-item {

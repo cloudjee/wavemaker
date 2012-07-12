@@ -250,8 +250,11 @@ dojo.declare("QueryEditor", wm.Page, {
 			case "Time":
 			    val = "0";
 			    break;
-			default:
+			case "String":
 			    val = "a";
+			    break;
+			default:
+			    val = "{}";
 			}
 		    }
 			if (list) val = "[" + val + "]";

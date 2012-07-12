@@ -15,27 +15,27 @@
 dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
 dojo.require("wm.studio.app.servicesTree");
 dojo.declare("JavaEditor", wm.Page, {
-        i18n: true,
-	start: function() {
-            /*
+    i18n: true,
+    start: function() {
+        /*
             if (dojo.isFF > 4 || dojo.isWebKit || dojo.isIE >= 9)
                 this.javaCodeEditor.setSyntax("java");
             else 
                 this.javaCodeEditor.setSyntax("");
                 */
-		this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
-		this.update();
-		this.subscribe("wmtypes-changed", dojo.hitch(this, "typesChangedCall"));
+        this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
+        this.update();
+        this.subscribe("wmtypes-changed", dojo.hitch(this, "typesChangedCall"));
+        if (studio.isCloud()) {
+            if (studio._runRequested) {
+                this.toolbarBtnHolder.setDisabled(true);
+            }
+            this.subscribe("testRunStateChange", this, function() {
+                this.toolbarBtnHolder.setDisabled(studio._runRequested);
+            });
+        }
 
-	    if (studio._runRequested) {
-		this.toolbarBtnHolder.setDisabled(true);
-	    }
-	    this.subscribe("testRunStateChange", this, function() {
-		this.toolbarBtnHolder.setDisabled(studio._runRequested);
-	    });
-
-	},
-
+    },
 
     setDirty: function() {
 		wm.job(this.getRuntimeId() + "_keydown", 500, dojo.hitch(this, function() {
@@ -277,15 +277,19 @@ dojo.declare("JavaEditor", wm.Page, {
     formatClick: function() {
 	studio.formatScript(this.javaCodeEditor);
     },
-    onCtrlKey: function(inSender, letter) {
+    onCtrlKey: function(inSender, e, letter) {
 	switch(letter.toLowerCase()) {
 	case "s":
+        dojo.stopEvent(e);
 	    return this.javaServiceSaveButtonClick();
 	case "i":
+        dojo.stopEvent(e);
 	    return this.formatClick();
 	case "o":
+        dojo.stopEvent(e);
 	    return this.toggleWrapClick();
 	case "l":
+        dojo.stopEvent(e);
 	    return this.javaCodeEditor.promptGotoLine();
 	}
 

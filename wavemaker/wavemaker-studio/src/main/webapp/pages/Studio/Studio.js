@@ -703,13 +703,12 @@ dojo.declare("Studio", wm.Page, {
     this._runRequested = false;
     this.updateStateWhileDeploying(true);
     },
-    updateStateWhileDeploying: function(isDeployed) {
-    /* Only if there is an app open */
-    if (studio.application) {
-        dojo.publish("testRunStateChange");
-        //this.servicesPopupBtn.set('disabled', !isDeployed); // see also menu.js disableMenuBar
-        this.disableMenuBar(false);
-    }
+    updateStateWhileDeploying: function(isDeployed) { /* Only if there is an app open */
+        if (studio.application && this.isCloud()) {
+             dojo.publish("testRunStateChange");
+            //this.servicesPopupBtn.set('disabled', !isDeployed); // see also menu.js disableMenuBar
+            this.disableMenuBar(false);
+        }
     },
     deployError: function(result) {
     var application = this.application || this._application;

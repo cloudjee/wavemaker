@@ -349,7 +349,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         }
 
          if (!this.downloadFile) {
-            this.inherited(arguments);
+            return this.inherited(arguments);
         } else {
             var args = inArgs || this.input.getArgsHash();
             var baseurl = window.location.href;

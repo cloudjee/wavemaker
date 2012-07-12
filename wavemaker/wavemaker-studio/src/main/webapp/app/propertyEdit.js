@@ -206,15 +206,14 @@ dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
     displayField: "dataValue",
     postInit: function() {
-	this.inherited(arguments);
-	this.refreshOptions();
+        this.inherited(arguments);
+        this.refreshOptions();
     },
     refreshOptions: function() {
-	this.updateOptions();
-	this.setOptions(this.options);
+        this.updateOptions();
+        this.setOptions(this.options);
     },
-    updateOptions: function() {
-    }
+    updateOptions: function() {}
 });
 
 wm.getPageList = function(currentPageOK){
