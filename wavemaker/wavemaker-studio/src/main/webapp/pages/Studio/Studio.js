@@ -164,7 +164,6 @@ dojo.declare("Studio", wm.Page, {
     } else {
         studio.disableMenuBar(true);
     }
-
         if (this.isCloud()) {
             this.navLogoutBtn.setShowing(true);
             this.navEditAccountBtn.setShowing(true);
@@ -1632,99 +1631,107 @@ dojo.declare("Studio", wm.Page, {
     dojo.publish("deviceSizeRecalc");
     },
     */
-    designDesktopUI: function() {
-    this.widgetsTree.dragEnabled = true;
-    if (studio.page && studio.page.root._mobileFolded) {
-        studio.page.root.unfoldUI();
-        studio.page.root.reflow();
-        studio.refreshDesignTrees();
-    }
-    this.deviceSizeVar.setQuery({deviceType: "desktop"});
-    this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
-    this.orientationTogglePanel.hide();
-    this.currentDeviceType = "desktop";
-    app.addHistory({});
-    dojo.removeClass(this.designer.domNode, "wmmobile");
-    if (studio.page) {
-        var self = this;
+    regenerateOrUpdateWidgetsForDevice: function() {
         var regenerated = false;
-        wm.forEachWidget(studio.page.root, function(w) {
-        if (w._regenerateOnDeviceChange) {
-            w = self.regenerateOnDeviceChange(w);
-            regenerated = true;
-        }
-        w.resetDesignHeight();
+        var panels = [studio.page.root];
+        wm.forEachProperty(studio.page.$, function(inComponent) {
+            if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
         });
-        if (regenerated) {
-            this.refreshVisualTree();
-            this.page.reflow();            
+        wm.forEachProperty(studio.application.$, function(inComponent) {
+            if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+        });
+        var self = this;
+        dojo.forEach(panels, function(panel) {
+            wm.forEachWidget(panel, function(w) {
+                if (w._regenerateOnDeviceChange) {
+                    w = self.regenerateOnDeviceChange(w);
+                    regenerated = true;
+                }
+                w.resetDesignHeight();
+            });
+            if (panel.parent && panel.parent instanceof wm.Dialog) panel.parent.reflow();
+        });
+
+        return regenerated;
+    },
+    designDesktopUI: function() {
+        this.widgetsTree.dragEnabled = true;
+        if (studio.page && studio.page.root._mobileFolded) {
+            studio.page.root.unfoldUI();
+            studio.page.root.reflow();
+            studio.refreshDesignTrees();
         }
-    }
-    this.reinspect(); // some properties may change like height/minHeight
+        this.deviceSizeVar.setQuery({
+            deviceType: "desktop"
+        });
+        this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
+        this.orientationTogglePanel.hide();
+        this.currentDeviceType = "desktop";
+        app.addHistory({});
+        dojo.removeClass(this.designer.domNode, "wmmobile");
+        if (studio.page) {
+            var regenerated = this.regenerateOrUpdateWidgetsForDevice();
+            if (regenerated) {
+                this.refreshVisualTree();
+                this.page.reflow();
+            }
+        }
+        this.reinspect(); // some properties may change like height/minHeight
     },
     designTabletUI: function() {
-    this.widgetsTree.dragEnabled = true;
-    if (studio.page && studio.page.root._mobileFolded) {
-        studio.page.root.unfoldUI();
-        studio.page.root.reflow();
-        studio.refreshDesignTrees();
-    }
-    this.currentDeviceType = "tablet";
-    this.deviceSizeVar.setQuery({deviceType: "tablet"});
-    this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
-    this.orientationTogglePanel.show();
-    app.addHistory({});
-    dojo.addClass(this.designer.domNode, "wmmobile");
-    if (studio.page) {
-        var self = this;
-        var regenerated = false;
-        wm.forEachWidget(studio.page.root, function(w) {
-        if (w._regenerateOnDeviceChange) {
-            w = self.regenerateOnDeviceChange(w);
-            regenerated = true;
+        this.widgetsTree.dragEnabled = true;
+        if (studio.page && studio.page.root._mobileFolded) {
+            studio.page.root.unfoldUI();
+            studio.page.root.reflow();
+            studio.refreshDesignTrees();
         }
-        w.resetDesignHeight();
-
+        this.currentDeviceType = "tablet";
+        this.deviceSizeVar.setQuery({
+            deviceType: "tablet"
         });
-        if (regenerated) {
-            this.refreshVisualTree();
-            this.page.reflow();            
+        this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
+        this.orientationTogglePanel.show();
+        app.addHistory({});
+        dojo.addClass(this.designer.domNode, "wmmobile");
+        if (studio.page) {
+            var self = this;
+            var regenerated = this.regenerateOrUpdateWidgetsForDevice();
+
+            if (regenerated) {
+                this.refreshVisualTree();
+                this.page.reflow();
+            }
         }
-    }
-    this.reinspect(); // some properties may change like height/minHeight
+        this.reinspect(); // some properties may change like height/minHeight
     },
     designPhoneUIClick: function(inSender) {
-    this.designPhoneUI(false);
+        this.designPhoneUI(false);
     },
     designPhoneUI: function(inMobileFolding) {
-    this.widgetsTree.dragEnabled = true;
-    if (studio.page && studio.page.root._mobileFolded && !inMobileFolding) {
-        studio.page.root.unfoldUI();
-        studio.page.root.reflow();
-        studio.refreshDesignTrees();
-    }
-    this.currentDeviceType = "phone";
-    this.deviceSizeVar.setQuery({deviceType: "phone"});
-    this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
-    this.orientationTogglePanel.show();
-    app.addHistory({});
-    dojo.addClass(this.designer.domNode, "wmmobile");
-    if (studio.page) {
-        var self = this;
-        var regenerated = false;
-        wm.forEachWidget(studio.page.root, function(w) {
-        if (w._regenerateOnDeviceChange) {
-            w = self.regenerateOnDeviceChange(w);
-            regenerated = true;
+        this.widgetsTree.dragEnabled = true;
+        if (studio.page && studio.page.root._mobileFolded && !inMobileFolding) {
+            studio.page.root.unfoldUI();
+            studio.page.root.reflow();
+            studio.refreshDesignTrees();
         }
-        w.resetDesignHeight();
+        this.currentDeviceType = "phone";
+        this.deviceSizeVar.setQuery({
+            deviceType: "phone"
         });
-        if (regenerated) {
-            this.refreshVisualTree();
-            this.page.reflow();            
+        this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
+        this.orientationTogglePanel.show();
+        app.addHistory({});
+        dojo.addClass(this.designer.domNode, "wmmobile");
+        if (studio.page) {
+            var self = this;
+            var regenerated = this.regenerateOrUpdateWidgetsForDevice();
+
+            if (regenerated) {
+                this.refreshVisualTree();
+                this.page.reflow();
+            }
         }
-    }
-    this.reinspect(); // some properties may change like height/minHeight
+        this.reinspect(); // some properties may change like height/minHeight
     },
     designMobileFoldingClick: function(inSender) {
     this.designMobileFolding(false);
