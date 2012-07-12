@@ -729,7 +729,7 @@ display: none; /* if shown, selecting 500 rows hangs even chrome */
 }
 
 /* editing */
-
+/* editing, row styles */
 .dojoxGrid-row-editing td {
 	background-color: #F4FFF4;
 }
@@ -744,6 +744,27 @@ display: none; /* if shown, selecting 500 rows hangs even chrome */
 	background-color: #F8B8B6;
 }
 
+/* Editing cell styles */
+.dojoxGridCell.dirty {
+	   background-image: url(../../../../../images/silkIcons/pencil.png);
+	   background-repeat: no-repeat;
+	   background-position: 100% 0% !important;
+}
+.dojoxGridCell.dirty.saveFailed, .dojoxGridCell.saveFailed {
+	   background-image: url(../../../../../images/silkIcons/delete.png);
+	   background-repeat: no-repeat;
+	   background-position: 100% 0% !important;
+}
+.dojoxGridCell.saved {
+	   background-image: url(../../../../../images/silkIcons/accept.png);
+	   background-repeat: no-repeat;
+	   background-position: 100% 0% !important;
+}
+.dojoxGridCell.invalid {
+	background-image: url(../../../../../images/silkIcons/error.png);
+	   background-repeat: no-repeat;
+	   background-position: 100% 0% !important;	
+}
 .dojoxGrid-input, .dojoxGrid-select, .dojoxGrid-textarea {
 	margin: 0;
 	padding: 0;
