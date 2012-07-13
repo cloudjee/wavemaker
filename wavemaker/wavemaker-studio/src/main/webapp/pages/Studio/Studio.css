@@ -165,6 +165,14 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     background: none;
     background-color: #414B5C;
 }
+
+body .wmtablayers-tab:focus:not(.wmtablayers-selected),
+body .wmtablayers-tab:active:not(.wmtablayers-selected) {
+    /* Override mtheme.css */
+    background-color: inherit !important;
+    border: solid 1px #888;
+}
+
 /* Tab buttons */
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
@@ -175,17 +183,18 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     background: none;
     height: 24px;
     font-size: 12px;
+
+    -webkit-border-top-left-radius: 8px; 
+    -webkit-border-top-right-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
 }
 .dj_gecko .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .dj_gecko .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     padding: 3px 5px;
 }
 
-.StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
-	-webkit-border-top-left-radius: 8px; 
-	-webkit-border-top-right-radius: 8px;
-	border-top-right-radius: 8px;
-	border-top-left-radius: 8px;
+.StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {	
 	border: 1px solid #959DAB;
 	border-bottom: 0px solid transparent;
 	background-color: #414B5C;
@@ -193,7 +202,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     position: relative;
-    top: 2px;
+    top: 1px;
 }
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
