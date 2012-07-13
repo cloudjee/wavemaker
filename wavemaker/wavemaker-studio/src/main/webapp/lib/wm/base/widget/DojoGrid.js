@@ -961,7 +961,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			structure = {};
 	    var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, queryOptions: this.queryOptions, query: this.query || {}, updateDelay: 0};	    
 	    this.addDojoProps(props);
-	    this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%'}, this.domNode));
+	    this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%', disabled: this._disabled}, this.domNode));
 	    this.connectDojoEvents();
 	    this.setSelectionMode(this.selectionMode);
 	    this.dojoRenderer();
@@ -1103,7 +1103,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 	    } catch(e) {}
 	},
-        onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},
+        onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},        
 	getDataSet: function() {
 	    if (this.variable)
 		return this.variable;
@@ -1224,6 +1224,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  if (a<b) return -1;
 	  return 0;
 	},		
+    setDisabled: function(inDisabled) {
+        this.inherited(arguments);
+        if (this.dojoObj) {
+            this.dojoObj.set("disabled", this._disabled);
+        }
+    },
 
     /* WARNING: This uses dojo store's query syntax, not wm.Variable query syntax */
 	setQuery: function(q){

@@ -746,7 +746,7 @@ display: none; /* if shown, selecting 500 rows hangs even chrome */
 
 /* Editing cell styles */
 .dojoxGridCell.dirty {
-	   background-image: url(../../../../../images/silkIcons/pencil.png);
+	   background-image: url(../../../../../images/silkIcons/bullet_add.png);
 	   background-repeat: no-repeat;
 	   background-position: 100% 0% !important;
 }
@@ -1316,7 +1316,7 @@ cursor: pointer;
 .dojoGridNoHeader .dojoxGridMasterHeader {
     display: none !important;
 }
-.Disabled .dojoxGrid {
+.Disabled .dojoxGrid, .Disabled .wmlist-list {
 opacity: 0.6;
     filter: alpha(opacity=60);
 }
@@ -1327,7 +1327,7 @@ display: inline-block;
 
 .dojoxGridRow-inserting {
     font-style: italic;
-    font-weight: bold !important;
+    /*font-weight: bold !important;*/
 }
 
 code {

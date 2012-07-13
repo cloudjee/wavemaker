@@ -72,8 +72,8 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
     },
     
 
-    onTouchStart: function(evt) {
-	if (!this.selected || this.list._selectionMode == "multiple") {
+    onTouchStart: function(evt) {        
+	if (!this.list._disabled && !this.selected || this.list._selectionMode == "multiple") {
 	    if (this.selected) {
 		this._deselectionIndicatorOnly = true;
 		this.deselect(true);		
@@ -444,7 +444,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			this.addToSelection(li);
 	},
 	clickSelect: function(inItem, inEvent) {
-	    if (this._selectionMode == "none") return;
+	    if (this._selectionMode == "none" || this._disabled) return;
 	    var selectedIndexWas = this.getSelectedIndex();
 	    if (this._selectionMode == "multiple" && (inEvent.ctrlKey || inEvent.shiftKey)) {
 		if (inEvent.ctrlKey) {

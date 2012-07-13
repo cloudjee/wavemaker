@@ -264,7 +264,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 		*/
 	    }
 	},
-
+    setDisabled: function(inDisabled) {
+        this.inherited(arguments);
+        dojo.toggleClass(this.domNode, "Disabled", this._disabled);
+    },
     _ontouchstart: function(e) {
 	if (this._touchY && this._touchY.animationId) {
 	    window.clearInterval(this._touchY.animationId);

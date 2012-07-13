@@ -932,7 +932,10 @@ body .AppToolTip {
     display: inline-block;
     margin-left: 5px;
 }
-
+.Disabled .wmlist-list {
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
 .wmSizeNode {
 display: inline-block;
 }

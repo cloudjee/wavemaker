@@ -249,7 +249,11 @@ dojo.declare("dojox.grid.Selection", null, {
 	},
 
 	clickSelectEvent: function(e){
-		this.clickSelect(e.rowIndex, dojo.isCopyKey(e), e.shiftKey);
+         /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+          * WaveMaker: Adds support for disabling the grid */
+        if (!this.grid.disabled) {
+    		this.clickSelect(e.rowIndex, dojo.isCopyKey(e), e.shiftKey);
+        }
 	},
 
 	clear: function(){

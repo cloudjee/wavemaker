@@ -525,7 +525,9 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 
 	// editing
 	canEdit: function(inCell, inRowIndex){
-		return this._canEdit;
+         /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+          * WaveMaker: Adds support for disabling the grid */
+		return this._canEdit && !this.disabled;
 	},
 
 	_copyAttr: function(idx, attr){

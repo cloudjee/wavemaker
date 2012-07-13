@@ -85,7 +85,6 @@ wm.Object.extendSchema(wm.List, {
 
     /* Hidden/ignored group */
     columns: {hidden:1},
-    disabled: { ignore: 1 },
     nextRowId: {ignore:1},
     avgHeight: {ignore:1},
     isRowSelected: {ignore:1},

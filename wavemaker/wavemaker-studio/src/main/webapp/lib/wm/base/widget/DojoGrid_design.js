@@ -249,7 +249,6 @@ wm.Object.extendSchema(wm.DojoGrid, {
     caption:{ignore:1},
     scrollX:{ignore:1},
     scrollY:{ignore:1},
-    disabled:{ignore:1},
     query: {ignore:1},
     store:{ignore:1},
     menu:{ignore:1},
