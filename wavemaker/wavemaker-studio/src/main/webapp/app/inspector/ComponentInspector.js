@@ -1240,6 +1240,7 @@
 	     //this.generateEditors(inComponent,g.name, layer);
 		 g.layer = layer;
 		 var formPanel = new wm.FormPanel({owner: this,
+                            name: layer.name + "FormPanel",
 						   parent: layer,
 						   width: "100%",
 						   height: "100%",
