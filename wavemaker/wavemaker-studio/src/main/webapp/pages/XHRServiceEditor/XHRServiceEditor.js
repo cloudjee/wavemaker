@@ -39,7 +39,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 	var inputs = inService.parameters;
 	var inputsArray = [];
 	wm.forEachProperty(inputs, function(item, name) {
-	    inputsArray.push({name: name, type: item.type, isHeader: item.isHeader});
+	    inputsArray.push({name: name, type: item.type, transmitType: item.transmitType});
 	});
 	this.inputsVar.setData(inputsArray);
 
@@ -97,7 +97,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 
        var headers = {};
        var headersArray =  this.fixedHeadersVar.getData();
-       for (var i = 0; i < headersArray.length; i++) {
+       for (var i = 0; headersArray && i < headersArray.length; i++) {
 	   var item = headersArray[i];
 	   headers[item.name] = item.dataValue;
        }
@@ -106,15 +106,15 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 
        var inputs = {};
        var inputsArray =  this.inputsVar.getData();
-       for (var i = 0; i < inputsArray.length; i++) {
+       for (var i = 0; inputsArray && i < inputsArray.length; i++) {
 	   var item = inputsArray[i];
-	   inputs[item.name] = {isHeader: item.isHeader ? 1 : 0,
+	   inputs[item.name] = {transmitType: item.transmitType ? 1 : 0,
 				type: item.type || "string"};
        }
 
        c.parameters = inputs;
       
-      if (returnType != "New Type") {
+      if (returnType) {
           c.returnType = returnType;
       } else {
           var typeDef = new wm.TypeDefinition({name: serviceName + "Response", owner: studio.application});
@@ -124,6 +124,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 	  debugger;
           studio.TypeDefinitionGeneratorDialog.page.generateButtonClick(null, null, null, jsonText, typeDef.name);
       }
+       c.requestType = this.serviceRequestType.getDataValue();
        if (this.editService) {
 	   this.inherited(arguments);
 	   if (oldName != this.editService.name) {
@@ -139,7 +140,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
    },
     addInputRow: function() {
 	this.inputsGrid.addRow({type: "String",
-				isHeader: false,
+				transmitType: "parameter",
 				name: ""});
 
     },
