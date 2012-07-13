@@ -56,6 +56,7 @@ wm.componentList = {
     "wm.DataGrid": ["studio.build.wm_datagrid"],
     "wm.DojoFileUpload": ["studio.build.wm_fileupload"],
     "wm.DojoFlashFileUpload": ["studio.build.wm_fileupload"],
+    "wm.FileUpload": ["wm.base.widget.FileUpload"],
 
     /* OLD EDITORS */
     "wm.Editor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
@@ -68,6 +69,6 @@ wm.componentList = {
     "wm._LookupEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],/* Not used by studio */
     "wm._DateEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._TimeEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
-    "wm._RadioButtonEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"]
+    "wm._RadioButtonEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"]    
 
 }
