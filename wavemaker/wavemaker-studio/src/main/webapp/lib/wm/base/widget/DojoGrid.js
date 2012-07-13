@@ -282,7 +282,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					isInvalid = true;
 				} 
 			} else {
-				isInvalid = !editor.isValid();
+				isInvalid = editor.isValid && !editor.isValid();
 			}
 			if (isInvalid) {
 				wm.onidle(this, function() {
