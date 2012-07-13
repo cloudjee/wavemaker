@@ -36,7 +36,7 @@ if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     wm.isMobile = wm.device != "desktop";
     wm.isFakeMobile = wm.isMobile;
 } else {
-    wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window;
+    wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window || navigator.msMaxTouchPoints > 0;
     if (!wm.isMobile) {
 	wm.device = "desktop";
     } else {
