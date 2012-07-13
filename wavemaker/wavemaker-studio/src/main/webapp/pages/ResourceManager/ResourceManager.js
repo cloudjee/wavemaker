@@ -445,6 +445,7 @@ dojo.declare("ResourceManager", wm.Page, {
             page.setItem(this.selectedItem);
             this.editorTabs.reflow();
             layer.customCloseOrDestroy = dojo.hitch(this, "closeEditor", layer);
+            if (this.readmeHtml.bounds.h > 70) this.readmeHtml.setHeight("70px");
         }
     },
     closeEditor: function(inLayer) {
