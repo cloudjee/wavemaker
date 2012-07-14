@@ -478,7 +478,8 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    
 	},
     eventDeselect: function(inItem, ignoreSelectedItem) {
-		if (this._selectionMode == "multiple")
+		if (this._disabled) return;
+        if (this._selectionMode == "multiple")
 			this.removeFromSelection(inItem);
 		else
 			this.deselectAll(ignoreSelectedItem);
@@ -490,6 +491,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    }
 	},
 	eventSelect: function(inItem) {
+        if (this._disabled) return;
 		var selectInfo = {canSelect: true};
 		this._oncanselect(inItem, selectInfo);
 		if (selectInfo.canSelect) {
