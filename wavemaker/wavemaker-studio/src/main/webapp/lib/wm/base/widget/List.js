@@ -266,7 +266,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
     setDisabled: function(inDisabled) {
         this.inherited(arguments);
-        dojo.toggleClass(this.domNode, "Disabled", this._disabled);
+        dojo.toggleClass(this.domNode, "Disabled", this._disabled);        
     },
     _ontouchstart: function(e) {
 	if (this._touchY && this._touchY.animationId) {
@@ -1569,7 +1569,7 @@ try {
             this._formatIndex = null;
         }
         if (cellData === undefined || cellData === null) cellData = "";
-        return "<div class='wmlist-content'>" + cellData + "</div>";
+        return "<div class='wmlist-content'>" + info.data + "</div>";
     },
     
 	getColWidth: function(inCol) {
