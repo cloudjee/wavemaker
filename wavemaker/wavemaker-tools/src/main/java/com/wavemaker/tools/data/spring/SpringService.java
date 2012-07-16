@@ -15,6 +15,8 @@
 package com.wavemaker.tools.data.spring;
 
 import java.util.Arrays;
+import java.io.InputStream;
+import java.io.IOException;
 
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
@@ -114,9 +116,14 @@ public class SpringService {
         xmlReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_NONE);
 
         xmlReader.loadBeanDefinitions(servicetypes);
-        xmlReader.loadBeanDefinitions(new InputSource(r.getContent().asInputStream()));
+        InputStream is = r.getContent().asInputStream();
+        xmlReader.loadBeanDefinitions(new InputSource(is));
 
         ctx.refresh();
+        try {
+            is.close();
+        } catch (IOException ex) {            
+        }
 
         return ctx;
     }

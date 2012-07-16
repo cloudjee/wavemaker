@@ -130,6 +130,7 @@ public class ConfigurationCompilerTask extends CompilerTask {
 
             try {
                 Service service = DesignServiceManager.loadServiceDefinition(is, true);
+                is.close();
 
                 if (getVerbose()) {
                     System.out.println("checking service " + service.getId());
@@ -140,6 +141,7 @@ public class ConfigurationCompilerTask extends CompilerTask {
                 allServices.add(service);
             } catch (JAXBException e) {
                 throw new BuildException(e);
+            } catch (IOException ex) {
             }
         }
 
