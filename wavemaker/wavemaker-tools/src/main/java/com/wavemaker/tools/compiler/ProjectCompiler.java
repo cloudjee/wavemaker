@@ -112,16 +112,20 @@ public class ProjectCompiler {
     }
 
     public String compile(Folder srcdir, Folder destdir, Iterable<Resource> classpath) {
+        ArrayList<Folder> sources = new ArrayList<Folder>();
+        sources.add(srcdir);
+        return compile(sources, destdir, classpath);
+    }
+
+    public String compile(Iterable<? extends Resource> sources, Folder destination, Iterable<Resource> classpath) {
         try {
             JavaCompiler compiler = new WaveMakerJavaCompiler();
             StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
             standardFileManager.setLocation(StandardLocation.CLASS_PATH, getStandardClassPath());
             ResourceJavaFileManager projectFileManager = new ResourceJavaFileManager(standardFileManager);
-            ArrayList<Folder> sources = new ArrayList<Folder>();
-            sources.add(srcdir);
             projectFileManager.setLocation(StandardLocation.SOURCE_PATH, sources);
             ArrayList<Folder> destinations = new ArrayList<Folder>();
-            destinations.add(srcdir);
+            destinations.add(destination);
             projectFileManager.setLocation(StandardLocation.CLASS_OUTPUT, destinations);
             projectFileManager.setLocation(StandardLocation.CLASS_PATH, classpath);
             Iterable<JavaFileObject> compilationUnits = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
@@ -133,7 +137,7 @@ public class ProjectCompiler {
             }
             return compilerOutput.toString();
         } catch (IOException e) {
-            throw new WMRuntimeException("Unable to compile " + srcdir.getName(), e);
+            throw new WMRuntimeException("Compile error: " + e);
         }
     }
 
@@ -178,8 +182,12 @@ public class ProjectCompiler {
     }
 
     public Iterable<Resource> getClasspath(Project project) {
+        return getClasspath(project.getRootFolder());
+    }
+
+    public Iterable<Resource> getClasspath(Folder projectRoot) {
         List<Resource> classpath = new ArrayList<Resource>();
-        addAll(classpath, project.getRootFolder().getFolder("lib").list().files().include(JAR_FILE_FILTER));
+        addAll(classpath, projectRoot.getFolder("lib").list().files().include(JAR_FILE_FILTER));
         addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list().files().include(JAR_FILE_FILTER));
         return classpath;
     }
