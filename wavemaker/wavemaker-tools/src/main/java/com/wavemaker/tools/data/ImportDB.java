@@ -14,13 +14,7 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -334,7 +328,9 @@ public class ImportDB extends BaseDataModelSetup {
         if (javafiles != null) {
             try {
                 for (com.wavemaker.tools.io.File file : javafiles) {
-                    String content = IOUtils.toString(file.getContent().asInputStream(), ServerConstants.DEFAULT_ENCODING);
+                    InputStream is = file.getContent().asInputStream();
+                    String content = IOUtils.toString(is, ServerConstants.DEFAULT_ENCODING);
+                    is.close();
 
                     String fileName = file.getName();
                     int len = fileName.length();
