@@ -17,39 +17,48 @@ dojo.require("wm.base.widget.Panel");
 
 dojo.declare("wm.Template", wm.Panel, {
 	layoutKind: "top-to-bottom",
-	init: function() {
-	    this.readTemplate();
-	    if (!this.isDestroyed) {
-		this.inherited(arguments);
-	    }
-	},
+    init: function() {
+        this.readTemplate();
+        if (!this.isDestroyed) {
+            this.inherited(arguments);
+        } else {
+            throw "Template Created Successfully"; // abort the rest of this widget's lifecycle
+        }
+    },
+    
     postInit: function() {
 	    if (!this.isDestroyed) {
 		this.inherited(arguments);
 	    }
     },
-	readTemplate: function() {
-		if (this._template) {
-			if (dojo.isObject(this._template))
-				this._template = dojo.toJson(this._template);
-		    var components = this.readComponents(this._template);
-		    if (this.destroyTemplate) {
-			var index = this.getIndexInParent();
-			wm.forEachProperty(components, dojo.hitch(this, function(c, inName) {
-			    if (c instanceof wm.Control && c instanceof wm.Dialog == false) {
-				c.setParent(this.parent);
-				c.setIndexInParent(index);
-			    }
-			}));
-			this.destroy();
-		    } else {
-			/* Replace this with a panel so we don't need to include it in the build layers,
-			 * the widget is still a wm.Tmeplate, but will be written to widgets.js as a Panel
-			 */
-			this.publishClass = this.declaredClass = "wm.Panel"; 
-		    }
-		}
-	},
+    readTemplate: function() {
+        if (this._template) {
+            if (dojo.isObject(this._template)) this._template = dojo.toJson(this._template);
+            var components = this.readComponents(this._template);
+            if (this.destroyTemplate) {
+                var index = this.getIndexInParent();
+                dojo.forEach(components, dojo.hitch(this, function(c, i) {
+                    if (c instanceof wm.Control && c instanceof wm.Dialog == false) {
+                        c.setParent(this.parent);
+                        c.setIndexInParent(index);
+                    } 
+                    if (c instanceof wm.Layout) {
+                        while(c.c$.length > 0) {
+                            c.c$[0].setParent(c.parent);
+                        }
+                        c.destroy();
+                    }
+                }));
+                this.destroy();
+            } else {
+                /* Replace this with a panel so we don't need to include it in the build layers,
+                 * the widget is still a wm.Tmeplate, but will be written to widgets.js as a Panel
+                 */
+                this.publishClass = this.declaredClass = "wm.Panel";
+            }
+        }
+    },
+    
         adjustChildProps: function(inCtor, inProps) {
 	    if (wm.isClassInstanceType(inCtor, wm.Control))
                 this.inherited(arguments);

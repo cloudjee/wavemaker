@@ -133,6 +133,7 @@ dojo.declare("wm.Component", wm.Object, {
 	},
 
 	create: function(inProps){
+        try {
 	        this._initializing = true;
 		if (wm.debugPerformance) this.startTimerWithName("create",this.declaredClass);
 		this.prepare(inProps);
@@ -153,6 +154,9 @@ dojo.declare("wm.Component", wm.Object, {
 	        if (!this._temporaryComponent) 
 	            dojo.addOnWindowUnload(this, 'destroy');
 		if (wm.debugPerformance) this.stopTimerWithName("create",this.declaredClass);
+    } catch (e) {
+        console.error("Error thrown; failed to create " + this.toString() + ": " + e);
+    }
 	},
 	/**
 		Remove this component from the system and clean up
