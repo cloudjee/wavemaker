@@ -1428,18 +1428,29 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
     /* Hack to update the combobox editor items without rerendering the grid */
     updateEditorDataSet: function(dataSet, fieldId) {
-	var cells = this.dojoObj.layout.cells;
-	if (cells) {
-	    for (var i = 0; i < cells.length; i++) {
-		if (cells[i].field === fieldId) {
-		    cells[i].options = dataSet.getData();
-		    if (cells[i].widget) {
-			cells[i].widget.set("store", wm.grid.cells.ComboBox.prototype.generateStore(cells[i].options, cells[i].widgetProps.displayField));
-		    }
-		    break;
-		}
-	    }
-	}
+        var cells = this.dojoObj.layout.cells;
+        if (cells) {
+            for (var i = 0; i < cells.length; i++) {
+                if (cells[i].field === fieldId) {
+                    var data =  dataSet.getData();
+                    
+                    /* Dojo store dies if there are duplicate IDs.  Duplicate IDs become VERY easy if you have subobjects so we delete all subobjects.
+                     * Example: hrdb.Employee table has a manager that is also an employee and may use the same displayField or ID as an employee in the 
+                     * main list.  This causes failure and has to be removed
+                     */
+                     for (var j = 0; j < data.length; j++) {
+                        wm.forEachProperty(data[j], function(value,name) {                           
+                            if (typeof value == "object") delete data[j][name];
+                        });
+                     }
+                     cells[i].options = data;
+                    if (cells[i].widget) {
+                        cells[i].widget.set("store", wm.grid.cells.ComboBox.prototype.generateStore(cells[i].options, cells[i].widgetProps.displayField));
+                    }
+                    break;
+                }
+            }
+        }
     },
     getColumnIndex: function(inFieldName) {
           for (var i = 0; i < this.columns.length; i++) {
@@ -2207,13 +2218,14 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
     },
     generateStore: function(options, displayField) {
         var items = [];
-        dojo.forEach(options, function(o) {
+        dojo.forEach(options, function(o,i) {
+            o.wmDojoStoreId = i;
             //items.push(o.dataValue);
             items.push(o);
         });
         var store = new dojo.data.ItemFileReadStore({
             data: {
-                identifier: displayField,
+                identifier: "wmDojoStoreId",
                 items: items
             }
         });
