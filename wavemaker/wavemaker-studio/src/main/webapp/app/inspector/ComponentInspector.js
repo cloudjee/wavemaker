@@ -574,6 +574,7 @@
 	 var p = new wm.Panel({
 	     parent: inLayer,
 	     owner: this,
+         name: "wminspector-" + inLayer.name + "-" + inProp.name + "Panel",
 	     layoutKind: "left-to-right",
 	     height: "30px",
 	     width: "100%",
@@ -591,7 +592,7 @@
 	     width: "150px",//this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
 	     //height: "30px",
 	     caption: (inProp.shortname || inProp.name),
-	     _classes: {domNode: ["StudioButton", inProp.isPublished ? "isPublishedProp":""]},
+	     _classes: {domNode: ["StudioButton", "wmPropertyButton", "wmPropertyButton" + inProp.name, inProp.isPublished ? "isPublishedProp":""]},
 	     margin: "4,2,4,2",
 	     propDef: inProp,
 	     showing: !inProp.ignoretmp || this.isAdvancedMode(),

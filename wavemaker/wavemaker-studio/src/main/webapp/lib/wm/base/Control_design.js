@@ -330,33 +330,33 @@ wm.Control.extend({
 	return p;
     },
     showImageListDialog: function() {
-	var imageList = this._imageList
-	if (!imageList) {
-	    var imageListName = studio.getImageLists()[0];
-	    if (imageListName) {
-		this.setImageList(imageListName);
-		imageList = this._imageList;
-	    }
-	}
-	if (imageList) {
-	    var popupDialog = imageList.getPopupDialog();
-	    popupDialog.fixPositionNode = dojo.query(".wminspector-prop-button",dojo.byId("propinspect_row_editImageIndex"))[0];
-	    
-	    this._designImageListSelectCon = dojo.connect(imageList._designList, "onselect", this, function() {		    
-		    this.setImageIndex(imageList._designList.getSelectedIndex());
-		    studio.inspector.reinspect();
-	    });
+        var imageList = this._imageList
+        if (!imageList) {
+            var imageListName = studio.getImageLists()[0];
+            if (imageListName) {
+                this.setImageList(imageListName);
+                imageList = this._imageList;
+            }
+        }
+        if (imageList) {
+            var popupDialog = imageList.getPopupDialog();
+            popupDialog.fixPositionNode = dojo.query(".wmPropertyButtoneditImageIndex")[0];
 
-	    popupDialog.show();
-	    this._designImageListPopupCloseCon = dojo.connect(popupDialog, "setShowing", this, function(inShowing) {
-		if (!inShowing || studio.selected != this) {
-		    dojo.disconnect(this._designImageListPopupCloseCon);
-		    delete this._designImageListPopupCloseCon;
-		    dojo.disconnect(this._designImageListSelectCon);
-		    delete this._designImageListSelectCon;
-		}
-	    });
-	}
+            this._designImageListSelectCon = dojo.connect(imageList._designList, "onselect", this, function() {
+                this.setImageIndex(imageList._designList.getSelectedIndex());
+                studio.inspector.reinspect();
+            });
+
+            popupDialog.show();
+            this._designImageListPopupCloseCon = dojo.connect(popupDialog, "setShowing", this, function(inShowing) {
+                if (!inShowing || studio.selected != this) {
+                    dojo.disconnect(this._designImageListPopupCloseCon);
+                    delete this._designImageListPopupCloseCon;
+                    dojo.disconnect(this._designImageListSelectCon);
+                    delete this._designImageListSelectCon;
+                }
+            });
+        }
     },
     editImageIndex: function() {
 	    this.showImageListDialog();
