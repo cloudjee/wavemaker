@@ -356,62 +356,63 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     }
     },
     onEditFieldChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        if (this.changeItem("fieldType", inDataValue)) {
-        var row = this.grid.getSelectedIndex();
-        var item = this.columnsVar.getItem(row);
+        if (!inSetByCode) {
+            if (this.changeItem("fieldType", inDataValue)) {
+                var row = this.grid.getSelectedIndex();
+                var item = this.columnsVar.getItem(row);
 
-        var editorProps = item.getValue("editorProps");
-        editorProps.beginUpdate();
-        editorProps.clearData();
-        editorProps.endUpdate();
-        editorProps = this.form.dataSet.getValue("editorProps");
-        editorProps.beginUpdate();
-        editorProps.clearData();
-        editorProps.endUpdate();
+                var editorProps = item.getValue("editorProps");
+                editorProps.beginUpdate();
+                editorProps.clearData();
+                editorProps.endUpdate();
+                editorProps = this.form.dataSet.getValue("editorProps");
+                editorProps.beginUpdate();
+                editorProps.clearData();
+                editorProps.endUpdate();
 
-        var constraints = item.getValue("constraints");
-        constraints.beginUpdate();
-        constraints.clearData();
-        constraints.endUpdate();
-        constraints = this.form.dataSet.getValue("constraints");
-        constraints.beginUpdate();
-        constraints.clearData();
-        constraints.endUpdate();
-        this.editorSelectLayerSubForm.setDataSet(editorProps);
-        this.editorComboBoxLayerSubForm.setDataSet(editorProps);
-        this.editorNumberLayerSubForm.setDataSet(constraints);
-        this.editorDateLayerSubForm.setDataSet(constraints);
-        this.editorTextLayerSubForm.setDataSet(editorProps);
+                var constraints = item.getValue("constraints");
+                constraints.beginUpdate();
+                constraints.clearData();
+                constraints.endUpdate();
+                constraints = this.form.dataSet.getValue("constraints");
+                constraints.beginUpdate();
+                constraints.clearData();
+                constraints.endUpdate();
+                this.editorSelectLayerSubForm.setDataSet(editorProps);
+                this.editorComboBoxLayerSubForm.setDataSet(editorProps);
+                this.editorNumberLayerSubForm.setDataSet(constraints);
+                this.editorDateLayerSubForm.setDataSet(constraints);
+                this.editorTextLayerSubForm.setDataSet(editorProps);
+            }
         }
-    }
-        switch(inDataValue) {
+        switch (inDataValue) {
         case "dojox.grid.cells._Widget":
-        this.editorTextLayer.activate();
-        break;
+            this.editorTextLayer.activate();
+            break;
         case "dojox.grid.cells.NumberTextBox":
-        this.editorNumberLayer.activate();
-        break;
+            this.editorNumberLayer.activate();
+            break;
         case "dojox.grid.cells.DateTextBox":
-        this.editorDateLayer.activate();
-        break;
+            this.editorDateLayer.activate();
+            break;
         case "dojox.grid.cells.TimeTextBox":
-        this.editorTimeLayer.activate();
-        break;
+            this.editorTimeLayer.activate();
+            break;
         case "dojox.grid.cells.Checkbox":
-        this.editorCheckboxLayer.activate();
-        break;
+            this.editorCheckboxLayer.activate();
+            break;
         case "dojox.grid.cells.ComboBox":
-        this.editorComboBoxLayer.activate();
-        break;
+            this.editorComboBoxLayer.activate();
+            this.onDataSetChange(this.dataSetComboBoxEditor, this.grid.selectedItem.getValue("editorProps.selectDataSet"), this.grid.selectedItem.getValue("editorProps.selectDataSet"), true);
+            break;
         case "dojox.grid.cells.Select":
-        this.editorSelectLayer.activate();
-        break;
+            this.editorSelectLayer.activate();
+            break;
 
         default:
-        this.editorPropBlankLayer.activate();
-        
-    }
+            this.editorPropBlankLayer.activate();
+
+        }
     },
     onDisplayExprChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         if (!inSetByCode) {
@@ -548,24 +549,23 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
        }
    },
     onDataSetChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("editorProps.selectDataSet", inDataValue);
+        if (!inSetByCode) {
+            this.changeItem("editorProps.selectDataSet", inDataValue);
+        }
         var c = studio.page.getValueById(inDataValue);
         var options = [];
-        if (c)
-        var type = wm.typeManager.getType(c.type);
+        if (c) var type = wm.typeManager.getType(c.type);
         if (type) {
-        var fields = type.fields;
+            var fields = type.fields;
         }
         if (fields) {
-        for (var fieldName in fields) {
-            var fieldDef = fields[fieldName];
-            if (!wm.typeManager.isStructuredType(fieldDef.type))
-            options.push(fieldName);
-        }
+            for (var fieldName in fields) {
+                var fieldDef = fields[fieldName];
+                if (!wm.typeManager.isStructuredType(fieldDef.type)) options.push(fieldName);
+            }
         }
         this.comboBoxDisplayFieldEditor.setOptions(options.join(","));
-    }
+
     },    
     onDisplayFieldChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
