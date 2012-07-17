@@ -297,7 +297,7 @@ public class PhoneGapService {
     private void fixupXCodeFilesFollowingUpdate() {
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
-        File file = xcodePhoneGapFolder.getFile("../" + projectName + "/PhoneGap.plist");
+        File file = xcodePhoneGapFolder.getFile("../" + projectName + "/Cordova.plist");
         if (file.exists()) {
             String content = file.getContent().asString();
             String startExpression = "<key>ExternalHosts</key>";
