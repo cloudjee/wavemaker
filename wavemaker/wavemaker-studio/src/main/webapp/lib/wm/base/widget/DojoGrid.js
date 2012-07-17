@@ -1339,7 +1339,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			var selectDataSet = this.owner[col.editorProps.selectDataSet] || this.owner.getValueById(col.editorProps.selectDataSet);
 			if (selectDataSet) {
 			    if (!selectDataSet.isEmpty()) {
-				obj.options = selectDataSet.getData();
+				obj.options =  wm.grid.cells.ComboBox.prototype.cleansComboBoxOptions(selectDataSet);
 /*
 				var options = [];
 				var count = selectDataSet.getCount();
@@ -1438,18 +1438,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         if (cells) {
             for (var i = 0; i < cells.length; i++) {
                 if (cells[i].field === fieldId) {
-                    var data =  dataSet.getData();
-                    
-                    /* Dojo store dies if there are duplicate IDs.  Duplicate IDs become VERY easy if you have subobjects so we delete all subobjects.
-                     * Example: hrdb.Employee table has a manager that is also an employee and may use the same displayField or ID as an employee in the 
-                     * main list.  This causes failure and has to be removed
-                     */
-                     for (var j = 0; j < data.length; j++) {
-                        wm.forEachProperty(data[j], function(value,name) {                           
-                            if (typeof value == "object") delete data[j][name];
-                        });
-                     }
-                     cells[i].options = data;
+                    cells[i].options = wm.grid.cells.ComboBox.prototype.cleansComboBoxOptions(dataSet);                                          
                     if (cells[i].widget) {
                         cells[i].widget.set("store", wm.grid.cells.ComboBox.prototype.generateStore(cells[i].options, cells[i].widgetProps.displayField));
                     }
@@ -2221,6 +2210,16 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
             value: inDatum,
             store: this.generateStore(this.options, this.widgetProps.displayField)
         });
+    },
+    cleansComboBoxOptions: function(inDataSet) {
+        var data = inDataSet.getData();
+        for (var i = 0; i < data.length; i++) {     
+            var o = data[i];
+            wm.forEachProperty(o, function(value,name) {
+                if (typeof value == "object") delete o[name];
+            });
+        }
+        return data;
     },
     generateStore: function(options, displayField) {
         var items = [];
