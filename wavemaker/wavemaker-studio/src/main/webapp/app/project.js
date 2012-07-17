@@ -589,235 +589,254 @@ dojo.declare("wm.studio.Project", null, {
     getProgressIncrement: function(runtime) {
 	return runtime ? 0 : 16;
     },
-	saveApplication: function(callback) {
-	    var f = [];
+    saveApplication: function(callback) {
+        var f = [];
 
-	        try {
-		    studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
-		}catch(e) {console.error("Failed to write studio version to project file");}
-	        if (studio.tree.selected && studio.tree.selected.component == studio.application)
-		    studio.inspector.reinspect();
-		
-	    var c = wm.studioConfig;
-	    
-	    var allProjectJS = "";
-	    var projectName = this.projectName || stu
+        try {
+            studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
+        } catch (e) {
+            console.error("Failed to write studio version to project file");
+        }
+        if (studio.tree.selected && studio.tree.selected.component == studio.application) studio.inspector.reinspect();
 
-	    /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or 
-	     * losing a cookie by opening studio in another tab
-	     */
-	    var d = studio.studioService.requestAsync("openProject", [this.projectName]);
+        var c = wm.studioConfig;
+
+        var allProjectJS = "";
+        var projectName = this.projectName || stu
+
+        /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or 
+         * losing a cookie by opening studio in another tab
+         */
+        var d = studio.studioService.requestAsync("openProject", [this.projectName]);
 
 
-	    var dSecurityCheck = new dojo.Deferred();
-	    d.addCallback(dojo.hitch(this, function() {
-		var dlocal = studio.securityConfigService.requestAsync("isSecurityEnabled", []);
-		dlocal.addCallback(dojo.hitch(this, function(inResult) {
-		    studio.application.isSecurityEnabled = inResult;
-		    dSecurityCheck.callback();
-		}));
-	    }));
+        var dSecurityCheck = new dojo.Deferred();
+        d.addCallback(dojo.hitch(this, function() {
+            var dlocal = studio.securityConfigService.requestAsync("isSecurityEnabled", []);
+            dlocal.addCallback(dojo.hitch(this, function(inResult) {
+                studio.application.isSecurityEnabled = inResult;
+                dSecurityCheck.callback();
+            }));
+        }));
 
-	    var loadSMDDeferred = new dojo.Deferred();
-	    dSecurityCheck.addCallback(dojo.hitch(this, function() {
-	        studio.incrementSaveProgressBar(1);
-		allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
-		allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
-		allProjectJS += this.loadProjectData("types.js") + "\n";
-		var themename = studio.application.theme;
-		allProjectJS += "wm.Application.themeData['" + themename + "'] = " + dojo.toJson(wm.Application.themeData[themename]) + ";\n"; // TODO need to utilize this data
-	        studio.incrementSaveProgressBar(1);
-
-	    // Adds the boot.js file to the project's webapproot; may want to undo this
-
-		var bootJsPath = dojo.moduleUrl("lib.boot") + "boot.js";
-		var bootJs = loadDataSync(bootJsPath);
-
-		var dlocal = this.saveProjectData("boot.js", bootJs,false,true);
-		dlocal.addCallback(function() {loadSMDDeferred.callback();});
-	    }));
-
-	    var d1 = new dojo.Deferred();
-	    loadSMDDeferred.addCallback(dojo.hitch(this, function() {
-		if (!studio.isCloud()) {
-		    studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
-		    var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", []);
-		    dlocal.addCallback(function() {d1.callback();});
-		} else {
-		    d1.callback();
-		}
-	    }));
-
-	    var d2 = new dojo.Deferred();
-	    d1.addCallback(dojo.hitch(this, function() {
-	        studio.incrementSaveProgressBar(1);
-		studio.application.saveCounter = (studio.application.saveCounter || 0) +1;
-		var src = this.generateApplicationSource()
-	        studio.setSaveProgressBarMessage(this.projectName + ".js");
-		allProjectJS += src;
-
-		var dlocal = this.saveProjectData(this.projectName + ".js", src, false, true);
-		dlocal.addCallback(function() {d2.callback();});
-	    }));
-
-	    var d3 = new dojo.Deferred();
-	    d2.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		studio.setSaveProgressBarMessage(this.projectName + ".documentation.json");
-		var appdocumentation = studio.application.getDocumentationHash();
-
-		var dlocal = this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true), false, true);
-		dlocal.addCallback(function() {d3.callback();});
-	    }));
-
-	    var d4 = new dojo.Deferred();
-	    var themeUrl;
-	    d3.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-
-		// save html file, config file, and debug loader + css
-	        studio.setSaveProgressBarMessage(c.appIndexFileName);
-		var themename = studio.application.theme;
-		if (this.deployingProject || wm.studioConfig.environment != "local") {
-                    themeUrl = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
-		} else {
-                    themeUrl = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
-		}
-
-		if (webFileExists(c.appIndexFileName)) {
-		    var indexHtml = this.loadProjectData(c.appIndexFileName);
-		    if (indexHtml.match(/var wmThemeUrl\s*=.*?;/)) {
-			indexHtml = indexHtml.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
-		    } else {
-			indexHtml = indexHtml.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
-		    }
-
-	            var dlocal = this.saveProjectData(c.appIndexFileName, indexHtml, false, true);
-		} else {
-	            var dlocal = this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, themeUrl), false, true);
-		}
-		dlocal.addCallback(function() {d4.callback();});
-	    }));
-
-	    var d5 = new dojo.Deferred();
-	    d4.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-        if (webFileExists("login.html")) {
-            var t = this.loadProjectData("login.html");
-            if (t.match(/var wmThemeUrl\s*=.*?;/)) {
-                t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
-            } else {
-                t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
-            }
-
+        var loadSMDDeferred = new dojo.Deferred();
+        dSecurityCheck.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
+            allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
+            allProjectJS += this.loadProjectData("types.js") + "\n";
             var themename = studio.application.theme;
-            if (t.match(/wavemakerNode\",\s*theme\:/)) {
-                t = t.replace(/wavemakerNode\",\s*theme\:\s*\".*?\"/, "wavemakerNode\", theme: \"" + themename + "\"");
-            } else {
-                // first time we save login.html, it doesn't have a theme or projectName in the constructor
-                t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themename + "\", name:\"" + studio.project.projectName + "\"}");
-            }
-            var dlocal = this.saveProjectData("login.html", t, false, true);
+            allProjectJS += "wm.Application.themeData['" + themename + "'] = " + dojo.toJson(wm.Application.themeData[themename]) + ";\n"; // TODO need to utilize this data
+            studio.incrementSaveProgressBar(1);
+
+            // Adds the boot.js file to the project's webapproot; may want to undo this
+            var bootJsPath = dojo.moduleUrl("lib.boot") + "boot.js";
+            var bootJs = loadDataSync(bootJsPath);
+
+            var dlocal = this.saveProjectData("boot.js", bootJs, false, true);
             dlocal.addCallback(function() {
-                d5.callback();
+                loadSMDDeferred.callback();
             });
+        }));
+
+        var d1 = new dojo.Deferred();
+        loadSMDDeferred.addCallback(dojo.hitch(this, function() {
+            if (!studio.isCloud()) {
+                studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
+                var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", []);
+                dlocal.addCallback(function() {
+                    d1.callback();
+                });
+            } else {
+                d1.callback();
+            }
+        }));
+
+        var d2 = new dojo.Deferred();
+        d1.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            studio.application.saveCounter = (studio.application.saveCounter || 0) + 1;
+            var src = this.generateApplicationSource()
+            studio.setSaveProgressBarMessage(this.projectName + ".js");
+            allProjectJS += src;
+
+            var dlocal = this.saveProjectData(this.projectName + ".js", src, false, true);
+            dlocal.addCallback(function() {
+                d2.callback();
+            });
+        }));
+
+        var d3 = new dojo.Deferred();
+        d2.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            studio.setSaveProgressBarMessage(this.projectName + ".documentation.json");
+            var appdocumentation = studio.application.getDocumentationHash();
+
+            var dlocal = this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true), false, true);
+            dlocal.addCallback(function() {
+                d3.callback();
+            });
+        }));
+
+        var d4 = new dojo.Deferred();
+        var themeUrl;
+        d3.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+
+            // save html file, config file, and debug loader + css
+            studio.setSaveProgressBarMessage(c.appIndexFileName);
+            var themename = studio.application.theme;
+            if (this.deployingProject || wm.studioConfig.environment != "local") {
+                themeUrl = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
+            } else {
+                themeUrl = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+            }
+
+            if (webFileExists(c.appIndexFileName)) {
+                var indexHtml = this.loadProjectData(c.appIndexFileName);
+                if (indexHtml.match(/var wmThemeUrl\s*=.*?;/)) {
+                    indexHtml = indexHtml.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+                } else {
+                    indexHtml = indexHtml.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+                }
+
+                var dlocal = this.saveProjectData(c.appIndexFileName, indexHtml, false, true);
+            } else {
+                var dlocal = this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, themeUrl), false, true);
+            }
+            dlocal.addCallback(function() {
+                d4.callback();
+            });
+        }));
+
+        var d5 = new dojo.Deferred();
+        d4.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            if (webFileExists("login.html")) {
+                var t = this.loadProjectData("login.html");
+                if (t.match(/var wmThemeUrl\s*=.*?;/)) {
+                    t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+                } else {
+                    t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+                }
+
+                var themename = studio.application.theme;
+                if (t.match(/wavemakerNode\",\s*theme\:/)) {
+                    t = t.replace(/wavemakerNode\",\s*theme\:\s*\".*?\"/, "wavemakerNode\", theme: \"" + themename + "\"");
+                } else {
+                    // first time we save login.html, it doesn't have a theme or projectName in the constructor
+                    t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themename + "\", name:\"" + studio.project.projectName + "\"}");
+                }
+                var dlocal = this.saveProjectData("login.html", t, false, true);
+                dlocal.addCallback(function() {
+                    d5.callback();
+                });
+            } else {
+                d5.callback();
+            }
+        })); /* TODO: This should be moved into project template... but is here as it simplifies project upgrades */
+        var d6 = new dojo.Deferred();
+        d5.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            // save html file, config file, and debug loader + css
+            studio.setSaveProgressBarMessage(c.appChromeFileName);
+
+            var dlocal = this.saveProjectData(c.appChromeFileName, c.appChromeTemplate, true, true);
+            dlocal.addCallback(function() {
+                d6.callback();
+            });
+        }));
+
+        var d7 = new dojo.Deferred();
+        d6.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            /* 
+        // Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)
+        if (window.studio && studio.getProjectDir() &&  c.appConfigTemplate.indexOf('"../wavemaker/') != -1) {
+            c.appConfigTemplate = c.appConfigTemplate.replace('"../wavemaker/', '"../../wavemaker/');
+        }   
+        */
+            studio.setSaveProgressBarMessage(c.appConfigFileName);
+
+            var dlocal = this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true, true);
+            dlocal.addCallback(function() {
+                d7.callback();
+            });
+        }));
+
+
+        var d8 = new dojo.Deferred();
+        d7.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            var themename = studio.application.theme;
+            var path;
+            /*
+        if (this.deployingProject || wm.studioConfig.environment != "local") {
+                    path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
         } else {
-            d5.callback();
+                    path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+        }
+        */
+            studio.setSaveProgressBarMessage(c.appCssFileName);
+            var css = studio.getAppCss();
+
+            var cssArray = [];
+            dojo.forEach(css.split(/\n/), function(line) {
+                if (line.match(/\S/)) cssArray.push(line.replace(/^\s*/g, "").replace(/\'/g, "\"").replace(/\s+$/g, "") + "\\\n");
+            });
+            allProjectJS += "\n" + studio.project.projectName + ".prototype._css = '" + cssArray.join("") + "';";
+
+            var dlocal = this.saveProjectData(c.appCssFileName, css, false, true);
+            dlocal.addCallback(function() {
+                d8.callback();
+            });
+        }));
+
+        var d9 = new dojo.Deferred();
+        d8.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            var d = wm.load("lib/wm/common/" + wm.version.replace(/[^a-zA-Z0-9]/g, "") + "_patches.js", false, true);
+
+            d.addCallback(function(inResponse) {
+                allProjectJS += "\n" + inResponse;
+                d9.callback();
+            });
+            d.addErrback(function() {
+                d9.callback();
+            });
+        }));
+
+        var d10 = new dojo.Deferred();
+        d9.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            var dlocal = this.saveProjectData("project.a.js", allProjectJS, false, true);
+            dlocal.addCallback(function() {
+                d10.callback();
+            });
+        }));
+
+        /*
+        var d11 = new dojo.Deferred();
+        d10.addCallback(dojo.hitch(this, function() {
+        if (!studio.isCloud()) {
+            studio.setSaveProgressBarMessage("Update PhoneGap Setup");
+            var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
+            dlocal.addCallback(function() {d11.callback();});
+        } else {
+            d11.callback();
         }
         }));
-	    /* TODO: This should be moved into project template... but is here as it simplifies project upgrades */
-	    var d6 = new dojo.Deferred();
-	    d5.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		// save html file, config file, and debug loader + css
-	        studio.setSaveProgressBarMessage(c.appChromeFileName);
-
-	        var dlocal = this.saveProjectData(c.appChromeFileName, c.appChromeTemplate, true, true);
-		dlocal.addCallback(function() {d6.callback();});
-	    }));
-
-	    var d7 = new dojo.Deferred();
-	    d6.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		/* 
-		// Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)
-		if (window.studio && studio.getProjectDir() &&  c.appConfigTemplate.indexOf('"../wavemaker/') != -1) {
-		    c.appConfigTemplate = c.appConfigTemplate.replace('"../wavemaker/', '"../../wavemaker/');
-		}	
-		*/	
-	        studio.setSaveProgressBarMessage(c.appConfigFileName);
-
-		var dlocal = this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true, true);
-		dlocal.addCallback(function() {d7.callback();});
-	    }));
+        */
+        var d12 = new dojo.Deferred();
+        d10.addCallback(dojo.hitch(this, function() {
+            studio.incrementSaveProgressBar(1);
+            studio.setCleanApp();
+            if (callback) callback();
+        }));
 
 
-	    var d8 = new dojo.Deferred();
-	    d7.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		var themename = studio.application.theme;
-		var path;
-/*
-		if (this.deployingProject || wm.studioConfig.environment != "local") {
-                    path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
-		} else {
-                    path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
-		}
-		*/
-		studio.setSaveProgressBarMessage(c.appCssFileName);
-		var css = studio.getAppCss();
-
-		var cssArray = [];
-		dojo.forEach(css.split(/\n/), function(line) {
-		    if (line.match(/\S/)) 
-			cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + "\\\n");
-		});
-		allProjectJS += "\n" + studio.project.projectName + ".prototype._css = '" + cssArray.join("") + "';";
-
-		var dlocal = this.saveProjectData(c.appCssFileName, css, false, true);
-		dlocal.addCallback(function() {d8.callback();});
-	    }));
-
-	    var d9 = new dojo.Deferred();
-	    d8.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		var d = wm.load("lib/wm/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js",false,true);
-
-		d.addCallback(function(inResponse) {
-		    allProjectJS += "\n" + inResponse;
-		    d9.callback();
-		});
-		d.addErrback(function() {d9.callback();});
-	    }));
-
-	    var d10 = new dojo.Deferred();
-	    d9.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		var dlocal = this.saveProjectData("project.a.js", allProjectJS, false, true);
-		dlocal.addCallback(function() {d10.callback();});
-	    }));
-
-/*
-	    var d11 = new dojo.Deferred();
-	    d10.addCallback(dojo.hitch(this, function() {
-		if (!studio.isCloud()) {
-		    studio.setSaveProgressBarMessage("Update PhoneGap Setup");
-		    var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
-		    dlocal.addCallback(function() {d11.callback();});
-		} else {
-		    d11.callback();
-		}
-	    }));
-	    */
-	    var d12 = new dojo.Deferred();
-	    d10.addCallback(dojo.hitch(this, function() {
-		studio.incrementSaveProgressBar(1);
-		studio.setCleanApp();
-		callback();
-	    }));
-
-				       
-	},
+    },
+    
     getPhonegapBuild: function() {
 	if (!studio.phoneGapConfigDialog) {
 	var dialog = studio.phoneGapConfigDialog = 

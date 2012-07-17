@@ -895,7 +895,7 @@ dojo.declare(
                     this.saveServicesSetup();
                     studio.application.loadServerComponents();
                     studio.refreshServiceTree();
-                    //studio.project.saveApplication();  called by onSaveSuccess
+                    studio.project.saveApplication(); // Seems redundant but insures that securityEnabled and loginpageEnabled properties are updated and written
                 });
             }
 
