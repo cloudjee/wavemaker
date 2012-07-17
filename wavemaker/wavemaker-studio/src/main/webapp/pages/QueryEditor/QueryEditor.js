@@ -34,7 +34,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.subscribe("wm-project-changed", this, "update");
 		this.update();
 
-	    var buttons = [this.saveQueryBtn, this.newQueryBtn, this.delQueryBtn, this.addInputBtn, this.deleteParamBtn,this.runQueryBtn];
+	    var buttons = [this.saveQueryBtn, this.newQueryBtn, this.delQueryBtn, this.runQueryBtn];
 	    dojo.forEach(buttons, function(b) {
 		b.disconnectEvent("onclick");
 		dojo.connect(b.domNode, "onmousedown", function() {
@@ -854,9 +854,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.queryTextArea.setDisabled(!enable);
 		this.returnsSingleResultCheckBox.setDisabled(!enable);
 		this.queryInputsList.setDisabled(!enable);
-		this.deleteParamBtn.setDisabled(!enable);
 		this.bindNameInput.setDisabled(!enable);
-		this.addInputBtn.setDisabled(!enable);
 		this.bindParamInput.setDisabled(!enable);
 		this.runQueryBtn.setDisabled(!enable);
 		this.maxResultsInput.setDisabled(!enable);

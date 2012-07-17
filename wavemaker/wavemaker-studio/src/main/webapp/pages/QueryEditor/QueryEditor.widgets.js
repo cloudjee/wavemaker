@@ -68,12 +68,12 @@ QueryEditor.widgets = {
 					    queryParamsLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Query Parameters", border: "0", height: "18px", width: "100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-		                            editorToolbar2: ["wm.Panel", {border: "0", height: "29px", width:"100%",layoutKind: "left-to-right", margin:"4,0,0"}, {}, {
+		                            /*editorToolbar2: ["wm.Panel", {border: "0", height: "29px", width:"100%",layoutKind: "left-to-right", margin:"4,0,0"}, {}, {
 			                            toolbarBtnHolder2: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%", padding: "0,4"}, {}, {
 							addInputBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "24px", margin: "0", border: "0"}, {onclick: "addBindParam"}],
 							deleteParamBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "24px",  margin: "0", border: "0"}, {onclick: "removeBindParam"}]                                                    
                                                     }]
-                                                }],
+                                                }],*/
                                         
 					    paramsPanel: ["wm.Panel", { border: "0", height: "100%", width:"100%", padding: "4"}, {}, {
 						queryInputsList: ["wm.List", {_classes: {domNode: ["StudioList"]}, height: "100%", width: "100%", border: "0"}, {onselect: "parmSelected"}],
