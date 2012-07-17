@@ -275,7 +275,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	cellEditted: function(inValue, inRowIndex, inFieldName) {
 		var isInvalid;
-		if (this.dojoObj.edit.info.cell) {
+        /* Checkboxes and other editors that have one editor per column tend not to consistently provide the cell.widget property.
+        * Fortunately, we can ignore the invalid state of a checkbox.
+        */
+		if (this.dojoObj.edit.info.cell && this.dojoObj.edit.info.cell.widget) {
 			var editor = this.dojoObj.edit.info.cell.widget;
 			if (editor instanceof dijit.form.ComboBox && typeof inValue == "object") {
 				if (wm.isEmpty(inValue) && editor.getValue('displayedValue')) {
