@@ -62,8 +62,10 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
     private final String activeDirectoryDomain;
 
+    private final Integer batchSize;
+
     public HibernateSpringConfigExporter(String serviceName, String packageName, String dataPackage, String serviceClass,
-        boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain) {
+        boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain, Integer batchSize) {
 
         this.serviceName = serviceName;
         this.dataPackage = dataPackage;
@@ -71,6 +73,7 @@ public class HibernateSpringConfigExporter extends GenericExporter {
         this.useIndividualCRUDOperations = useIndividualCRUDOperations;
         this.impersonateUser = impersonateUser;
         this.activeDirectoryDomain = activeDirectoryDomain;
+        this.batchSize = batchSize;
 
         setTemplateName(TEMPLATE);
     }
@@ -84,7 +87,7 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
         Map<String, Context> additionalContext = new HashMap<String, Context>(1);
 
-        Context ctx = new Context(this.serviceName, this.serviceClass, this.impersonateUser, this.activeDirectoryDomain);
+        Context ctx = new Context(this.serviceName, this.serviceClass, this.impersonateUser, this.activeDirectoryDomain, this.batchSize);
 
         try {
 
@@ -110,12 +113,15 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
         private final String activeDirectoryDomain;
 
-        Context(String serviceName, String serviceClass, boolean impersonateUser, String activeDirectoryDomain) {
+        private final Integer batchSize;
+
+        Context(String serviceName, String serviceClass, boolean impersonateUser, String activeDirectoryDomain, Integer batchSize) {
 
             super(serviceName, getConfiguration(), HibernateSpringConfigExporter.this.useIndividualCRUDOperations);
             this.serviceClass = XMLUtils.escape(serviceClass);
             this.impersonateUser = impersonateUser;
             this.activeDirectoryDomain = activeDirectoryDomain;
+            this.batchSize = batchSize;
         }
 
         public String getServiceClass() {
@@ -138,6 +144,13 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
         public String getActiveDirectoryDomain() {
             return this.activeDirectoryDomain != null ? this.activeDirectoryDomain : "";
+        }
+
+        public String getAdditionalHibernateProperties() {
+            if (this.batchSize == null) {
+                return "";
+            }
+            return "<prop key=\"hibernate.jdbc.batch_size\">" + this.batchSize + "</prop>";
         }
 
         private String getFileList(List<Class<?>> entityClasses, String ext, boolean addDefaultQueryFile) {

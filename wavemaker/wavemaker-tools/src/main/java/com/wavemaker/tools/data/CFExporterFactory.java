@@ -37,6 +37,8 @@ public class CFExporterFactory implements ExporterFactory {
 
     private String activeDirectoryDomain;
 
+    private Object batchSize;
+
     @Override
     public ExporterTask getExporter(String type, HibernateToolTask parent, String serviceName) {
         Enhancer enhancer = new Enhancer();
@@ -70,7 +72,7 @@ public class CFExporterFactory implements ExporterFactory {
             proxy = (HibernateSpringConfigExporterTask) enhancer.create(new Class[] { HibernateToolTask.class, Folder.class, String.class,
                 String.class, String.class, String.class, boolean.class, boolean.class, String.class }, new Object[] { parent, this.destDir,
                 serviceName, this.packageName, this.dataPackage, this.className, this.useIndividualCRUDOperations, this.impersonateUser,
-                this.activeDirectoryDomain });
+                this.activeDirectoryDomain, this.batchSize });
         }
         return proxy;
     }
@@ -108,5 +110,10 @@ public class CFExporterFactory implements ExporterFactory {
     @Override
     public void setActiveDirectoryDomain(String activeDirectoryDomain) {
         this.activeDirectoryDomain = activeDirectoryDomain;
+    }
+
+    @Override
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 }

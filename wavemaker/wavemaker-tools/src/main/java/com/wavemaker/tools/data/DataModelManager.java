@@ -14,6 +14,8 @@
 
 package com.wavemaker.tools.data;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,8 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-
-import static org.springframework.util.StringUtils.hasText;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.IOUtils;
@@ -51,8 +51,8 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.DeploymentInfo;
-import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
@@ -171,12 +171,11 @@ public class DataModelManager {
 
     public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
-        return getExportDDL(username, password, null, dbms, connectionUrl, serviceId, schemaFilter,
-        driverClassName, dialectClassName, overrideTable);
+        return getExportDDL(username, password, null, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
     }
 
-    public String getExportDDL(String username, String password, String dbName, String dbms, String connectionUrl, String serviceId, String schemaFilter,
-        String driverClassName, String dialectClassName, boolean overrideTable) {
+    public String getExportDDL(String username, String password, String dbName, String dbms, String connectionUrl, String serviceId,
+        String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
 
         ExportDB exporter = getExporter(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             overrideTable);
@@ -198,19 +197,19 @@ public class DataModelManager {
 
     public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
-        return exportDatabase(username, password, null, dbType, connectionUrl, serviceId, schemaFilter,
-        driverClassName, dialectClassName, revengNamingStrategyClassName, overrideTable);
+        return exportDatabase(username, password, null, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
+            revengNamingStrategyClassName, overrideTable);
     }
 
-    public String exportDatabase(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId, String schemaFilter,
-        String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
+    public String exportDatabase(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId,
+        String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
         if (connectionUrl.contains(HSQLDB)) {
             connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
         }
 
-        ExportDB exporter = getExporter(username, password, dbName, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
-            overrideTable);
+        ExportDB exporter = getExporter(username, password, dbName, dbType, connectionUrl, serviceId, schemaFilter, driverClassName,
+            dialectClassName, overrideTable);
 
         String rtn = "";
 
@@ -573,8 +572,8 @@ public class DataModelManager {
         initialize(true);
     }
 
-    private ExportDB getExporter(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId, String schemaFilter,
-        String driverClassName, String dialectClassName, boolean overrideTable) {
+    private ExportDB getExporter(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId,
+        String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
 
         // composite classes must be compiled
         compile();
@@ -841,6 +840,7 @@ public class DataModelManager {
         importer.setJavaDir(javaDir);
         importer.setImpersonateUser(impersonateUser);
         importer.setActiveDirectoryDomain(activeDirectoryDomain);
+        importer.setBatchSize(getBatchSize(connectionUrl));
         importer.setProjectCompiler(this.projectCompiler);
         importer.setCurrentProjectName(this.projectManager.getCurrentProject().getProjectName());
         importer.setProjectManager(this.projectManager);
@@ -904,17 +904,23 @@ public class DataModelManager {
 
     }
 
-    public String getWebAppRoot()
-    {
-    	return ((LocalFolder)this.projectManager.getCurrentProject().getWebAppRootFolder()).getLocalFile().getPath();
+    private Integer getBatchSize(String connectionUrl) {
+        if (connectionUrl != null && connectionUrl.toLowerCase().startsWith("jdbc:hsqldb:")) {
+            // HSQL has poor batch errors, disable
+            return 0;
+        }
+        return null;
     }
 
-    private String reWriteCxnUrlForHsqlDB(String connectionUrl)
-    {
-    	//File webAppRoot = projectManager.getCurrentProject().getWebAppRoot();
+    public String getWebAppRoot() {
+        return ((LocalFolder) this.projectManager.getCurrentProject().getWebAppRootFolder()).getLocalFile().getPath();
+    }
 
-    	//return JDBCUtils.reWriteConnectionUrl(webAppRoot.getPath() + "/" + HSQL_SAMPLE_DB_SUB_DIR,
-    	//    connectionUrl);
+    private String reWriteCxnUrlForHsqlDB(String connectionUrl) {
+        // File webAppRoot = projectManager.getCurrentProject().getWebAppRoot();
+
+        // return JDBCUtils.reWriteConnectionUrl(webAppRoot.getPath() + "/" + HSQL_SAMPLE_DB_SUB_DIR,
+        // connectionUrl);
 
         return JDBCUtils.reWriteConnectionUrl(connectionUrl, getWebAppRoot());
     }

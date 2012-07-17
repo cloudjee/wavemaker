@@ -35,11 +35,9 @@ import org.hibernate.tool.ant.ExporterTask;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.dialect.MySQLDialect;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
@@ -52,7 +50,6 @@ import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * @author Simon Toens
@@ -225,6 +222,8 @@ public abstract class BaseDataModelSetup {
     protected boolean impersonateUser = false;
 
     protected String activeDirectoryDomain = null;
+
+    protected Integer batchSize = null;
 
     protected ProjectCompiler projectCompiler;
 
@@ -411,6 +410,14 @@ public abstract class BaseDataModelSetup {
 
     public void setActiveDirectoryDomain(String activeDirectoryDomain) {
         this.activeDirectoryDomain = activeDirectoryDomain;
+    }
+
+    public Integer getBatchSize() {
+        return this.batchSize;
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 
     protected void registerTmpFileForCleanup(File f) {
@@ -879,6 +886,7 @@ public abstract class BaseDataModelSetup {
         this.exporterFactory.setUseIndividualCRUDOperations(getUseIndividualCRUDOperations());
         this.exporterFactory.setImpersonateUser(BaseDataModelSetup.this.impersonateUser);
         this.exporterFactory.setActiveDirectoryDomain(BaseDataModelSetup.this.activeDirectoryDomain);
+        this.exporterFactory.setBatchSize(BaseDataModelSetup.this.batchSize);
 
         return this.exporterFactory.getExporter("springConfig", getParentTask(), this.serviceName);
     }
@@ -911,27 +919,27 @@ public abstract class BaseDataModelSetup {
     }
 
     public boolean isMySQL() {
-        return (this.dbtype != null && this.dbtype.equals(MYSQL_DB_TYPE));
+        return this.dbtype != null && this.dbtype.equals(MYSQL_DB_TYPE);
     }
 
     public boolean isSQLServer() {
-        return (this.dbtype != null && this.dbtype.equals(SQL_SERVER_DB_TYPE));
+        return this.dbtype != null && this.dbtype.equals(SQL_SERVER_DB_TYPE);
     }
 
     public boolean isOracle() {
-        return (this.dbtype != null && this.dbtype.equals(ORACLE_DB_TYPE));
+        return this.dbtype != null && this.dbtype.equals(ORACLE_DB_TYPE);
     }
 
     public boolean isHSQLDB() {
-        return (this.dbtype != null && this.dbtype.equals(HSQL_DB_TYPE));
+        return this.dbtype != null && this.dbtype.equals(HSQL_DB_TYPE);
     }
 
     public boolean isDB2() {
-        return (this.dbtype != null && this.dbtype.equals(DB2_DB_TYPE));
+        return this.dbtype != null && this.dbtype.equals(DB2_DB_TYPE);
     }
 
     public boolean isPostgres() {
-        return (this.dbtype != null && this.dbtype.equals(POSTGRESQL_DB_TYPE));
+        return this.dbtype != null && this.dbtype.equals(POSTGRESQL_DB_TYPE);
     }
 
     public void testConnection() {
