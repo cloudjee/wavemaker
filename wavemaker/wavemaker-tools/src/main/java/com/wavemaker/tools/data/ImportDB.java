@@ -45,6 +45,7 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;

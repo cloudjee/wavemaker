@@ -18,11 +18,7 @@ import com.wavemaker.tools.ant.MergeUserWebXmlTask;
 import com.wavemaker.tools.ant.NewCopyRuntimeJarsTask;
 import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
-import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.FilterOn;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceOperation;
-import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.*;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
 
@@ -136,7 +132,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         copyJars(properties);
         copyResources(properties);
         generateRuntimeFiles(properties);
-        return this.projectCompiler.compile(this.projectManager.getCurrentProject());
+        LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
+        LocalFolder projectRoot = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
+
+        Resources<Folder> svcSrc = projectRoot.find().include(FilterOn.antPattern("services/*/src", "src")).folders();
+        Folder destDir = buildAppWebAppRoot.getFolder("WEB-INF/classes");
+        return this.projectCompiler.compile(svcSrc, destDir, this.projectCompiler.getClasspath(buildAppWebAppRoot));
     }
 
     public void copyJars(Map<String, Object> properties) {
