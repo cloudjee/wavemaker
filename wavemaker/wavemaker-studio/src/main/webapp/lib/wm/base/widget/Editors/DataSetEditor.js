@@ -468,8 +468,10 @@ dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], 
 	destroyEditor: function() {
 	    var editor = this.editor;
 	    if (this.dijits) {
-		dojo.forEach(this.dijits, function(d) {d.destroy();});
+            var self= this;
+		  dojo.forEach(this.dijits, function(d) {d.destroy();});
 	    }
+        this.dijits = [];
 	    this.inherited(arguments);
 	    dojo.destroy(editor);
 	},
@@ -577,7 +579,7 @@ dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], 
 	this._dataValueValid = true;
     },
     destroy: function() {
-	dojo.forEach(this.dijits, function(d) {d.destroy();});
+	//dojo.forEach(this.dijits, function(d) {d.destroy();});
 	this.inherited(arguments);
     },
 
