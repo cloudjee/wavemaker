@@ -35,6 +35,8 @@ public class LocalExporterFactory implements ExporterFactory {
 
     private String activeDirectoryDomain;
 
+    private Integer batchSize;
+
     @Override
     public ExporterTask getExporter(String type, HibernateToolTask parent, String serviceName) {
 
@@ -49,7 +51,7 @@ public class LocalExporterFactory implements ExporterFactory {
             task = new Hbm2HbmXmlExporterTask(parent);
         } else if (type.equals("springConfig")) {
             task = new HibernateSpringConfigExporterTask(parent, null, serviceName, this.packageName, this.dataPackage, this.className,
-                this.useIndividualCRUDOperations, this.impersonateUser, this.activeDirectoryDomain);
+                this.useIndividualCRUDOperations, this.impersonateUser, this.activeDirectoryDomain, this.batchSize);
         }
         return task;
     }
@@ -86,5 +88,10 @@ public class LocalExporterFactory implements ExporterFactory {
     @Override
     public void setActiveDirectoryDomain(String activeDirectoryDomain) {
         this.activeDirectoryDomain = activeDirectoryDomain;
+    }
+
+    @Override
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 }

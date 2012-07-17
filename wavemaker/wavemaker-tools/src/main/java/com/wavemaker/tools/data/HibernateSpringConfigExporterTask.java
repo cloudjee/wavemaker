@@ -38,8 +38,10 @@ public class HibernateSpringConfigExporterTask extends GenericExporterTask {
 
     private final String activeDirectoryDomain;
 
+    private final Integer batchSize;
+
     public HibernateSpringConfigExporterTask(HibernateToolTask parent, Folder destDir, String serviceName, String packageName, String dataPackage,
-        String className, boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain) {
+        String className, boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain, Integer batchSize) {
         super(parent);
         this.destDir = destDir;
         this.serviceName = serviceName;
@@ -49,12 +51,13 @@ public class HibernateSpringConfigExporterTask extends GenericExporterTask {
         this.useIndividualCRUDOperations = useIndividualCRUDOperations;
         this.impersonateUser = impersonateUser;
         this.activeDirectoryDomain = activeDirectoryDomain;
+        this.batchSize = batchSize;
     }
 
     @Override
     public Exporter createExporter() {
         return new HibernateSpringConfigExporter(this.serviceName, this.packageName, this.dataPackage, this.className,
-            this.useIndividualCRUDOperations, this.impersonateUser, this.activeDirectoryDomain);
+            this.useIndividualCRUDOperations, this.impersonateUser, this.activeDirectoryDomain, this.batchSize);
     }
 
     public Folder getDestDir() {

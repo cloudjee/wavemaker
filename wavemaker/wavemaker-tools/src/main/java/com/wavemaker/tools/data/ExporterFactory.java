@@ -55,4 +55,6 @@ public interface ExporterFactory {
     public void setImpersonateUser(boolean impersonateUser);
 
     public void setActiveDirectoryDomain(String activeDirectoryDomain);
+
+    public void setBatchSize(Integer batchSize);
 }
