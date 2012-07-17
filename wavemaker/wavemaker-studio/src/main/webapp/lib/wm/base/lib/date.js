@@ -15,9 +15,12 @@
 dojo.provide('wm.base.lib.date');
 dojo.require("dojo.date.locale");
 
-wm.timezoneOffset = new Date().getTimezoneOffset()/60 + wm.serverTimeOffset/(1000*60*60); // hours offset
-if (isNaN(wm.timezoneOffset))
-    wm.timezoneOffset = 0;
+wm.setTimeZoneOffset = function() {
+    wm.timezoneOffset = new Date().getTimezoneOffset()/60 + wm.serverTimeOffset/(1000*60*60); // hours offset
+    if (isNaN(wm.timezoneOffset))
+	wm.timezoneOffset = 0;
+}
+if (wm.serverTimeOffset !== undefined) wm.setTimeZoneOffset();
 
 
 wm.convertValueToDate = function(inValue, inParams) {
