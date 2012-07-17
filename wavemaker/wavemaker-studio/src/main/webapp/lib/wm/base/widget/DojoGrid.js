@@ -753,7 +753,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         //this.dojoObj.render();
     },
     
-    addRow: function(inFields, selectOnAdd) {
+    addRow: function(inFields, selectOnAdd, ignoreLiveEditing) {
             var editCell = null;
             var newIndex, item;
             for (var i = 0; i < this.columns.length; i++) {
@@ -814,6 +814,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             if (selectOnAdd || selectOnAdd === undefined) {
                 this.setSelectedRow(newIndex);
                 this.selectionChange(); // needs committing
+                if (this.liveEditing && (ignoreLiveEditing || ignoreLiveEditing === undefined)) {
+                    this.writeSelectedItem();
+                }
                 wm.onidle(this, function() {
                     this.dojoObj.scrollToRow(newIndex);
                     this.editCell(newIndex, editCell.field);
