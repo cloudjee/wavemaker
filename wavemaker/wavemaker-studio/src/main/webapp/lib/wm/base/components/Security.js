@@ -58,7 +58,9 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 		wm.roles = wm.getUserRoles(true);
 	    }
 	    dojo.publish("wmRbacUpdate");
-			
+		if (window["PhoneGap"] && wm.serverTimeOffset === undefined) {
+            app.getServerTimeOffset();
+        }
 	    if (loginSuccessCallback) {
 		loginSuccessCallback(inUrl);
 	    } else if (window["PhoneGap"]) {
