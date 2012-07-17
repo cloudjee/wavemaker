@@ -1087,7 +1087,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         var ex = this.bindEditor.getValue("dataValue");
         }
         if (isExpression || isDisplayExpression) {
-        var ex2 = ex.replace(/\$\{.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
+        var ex2 = ex.replace(/\$\{(\[.*?\])?.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
 
         var error;
 
@@ -1203,11 +1203,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             }
         };
     },
-        _getSourceObject: function(inSource, inOwner) {
-        var parts = (inSource || "").split('.'), o = [];
+    _getSourceObject: function(inSource, inOwner) {
+        var parts = (inSource || "").split('.'),
+            o = [];
         //parts.length = (parts.length && (parts[0] == "app" || parts[0] == wm.decapitalize(studio.project.pageName))) ? 2 : 1;
-        while (inOwner.getValueById(parts.join('.')) instanceof wm.Component == false) {
-        parts.pop();
+        while (parts.length && inOwner.getValueById(parts.join('.')) instanceof wm.Component == false) {
+            parts.pop();
         }
         return inOwner.getValueById(parts.join('.'));
     },
