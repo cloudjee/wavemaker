@@ -1191,7 +1191,6 @@ dojo.declare("wm.List", wm.VirtualList, {
         var addingItems = false;
         for (var i = startAddingFrom; i < totalCount && currentHeight < targetHeight; i++) {
             addingItems = true;
-            console.log("SCROLL DOWN I: " + i + ", current: " + currentHeight + "; target: " + targetHeight);
             this._renderItem(i);
             // this calculation is correct, but probing the domNode forces the node to render
             // and slows performance; just use the average estimate for now
@@ -1802,9 +1801,7 @@ wm.List.extend({
         if (this._buttonTouchPos.isClick) {
             var y = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
             var x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
-            console.log(Math.abs(x - this._buttonTouchPos.x));
             this._buttonTouchPos.isClick = (Math.abs(y - this._buttonTouchPos.y) < 5 && Math.abs(x - this._buttonTouchPos.x) < 5);
-            console.log(this._buttonTouchPos.isClick);
         }
     },
     gridButtonClicked: function(event, fieldName, rowIndex) {
