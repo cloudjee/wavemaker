@@ -895,7 +895,7 @@ dojo.declare(
                     this.saveServicesSetup();
                     studio.application.loadServerComponents();
                     studio.refreshServiceTree();
-                    studio.project.saveApplication();
+                    //studio.project.saveApplication();  called by onSaveSuccess
                 });
             }
 
