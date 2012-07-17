@@ -514,7 +514,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		b.parent.moveControl(b,0);
 		app.alertDialog.buttonBar.reflow();
 		b.connect(b, "onclick", this, function() {
-		    debugger;
 		    app.alertDialog.hide();
 		    if (this._deployData.archiveType == "WAR") {
 			studio.downloadInIFrame("services/deploymentService.download?method=downloadProjectWar");

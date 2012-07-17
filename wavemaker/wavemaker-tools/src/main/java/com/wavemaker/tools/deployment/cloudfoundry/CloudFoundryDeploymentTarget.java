@@ -63,6 +63,7 @@ import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplic
 import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
 import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
 import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.io.local.LocalFolder;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
@@ -143,7 +144,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             applicationArchive = this.webAppAssembler.assemble(project);    
         } else {
             try {
-                this.webAppAssembler.prepareForAssemble(project, new FileSystemResource(tempWebAppRoot));
+                this.webAppAssembler.prepareForAssemble(new LocalFolder(tempWebAppRoot));
             } catch(IOException ex) {
                 throw new DeploymentStatusException(ex.getMessage());
             }

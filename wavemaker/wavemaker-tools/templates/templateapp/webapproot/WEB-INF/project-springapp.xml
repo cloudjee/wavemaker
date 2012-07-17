@@ -6,7 +6,6 @@
 			http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 			http://www.springframework.org/schema/mvc
 			http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
-
 	<import resource="classpath:springapp.xml" />
 	<import resource="classpath:**/*.spring.xml" />
 	<import resource="project-config.xml" />
@@ -37,6 +36,15 @@
 		<property name="alwaysUseFullPath" value="true" />
 	</bean>
 
+	<!-- Set user.languague to english as Javascript ONLY handles US number formatting -->
+	<bean id="systemPropertyInitializer" class="com.wavemaker.runtime.SystemPropertyInitiliazingBean">
+		<property name="systemProperties">
+			<map>
+				<entry key="user.language" value="en" />
+			</map>
+		</property>
+	</bean>
+	
 	<!--  <beans profile="cloud">-->
 		<mvc:resources mapping="/wavemaker/**" location="/"
 			cache-period="31556926" />

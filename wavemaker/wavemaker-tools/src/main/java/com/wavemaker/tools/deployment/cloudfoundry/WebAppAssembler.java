@@ -39,6 +39,7 @@ import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentM
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentBaseFolder;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 public class WebAppAssembler implements InitializingBean {
@@ -69,20 +70,23 @@ public class WebAppAssembler implements InitializingBean {
         this.studioApplicationArchiveEnties = executor.submit(new StudioApplicationArchiveEntriesCollector());
     }
 
-    public void prepareForAssemble(Project project, Resource webAppRoot) throws IOException {
-        Resource studioWebAppRoot = fileSystem.getStudioWebAppRoot();
-        List<String> excludePatterns = new ArrayList<String>();
-        excludePatterns.add("wm/" + LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**");
-        excludePatterns.add("dojo/util/**");
-        excludePatterns.add("dojo/**/tests/**");
-        fileSystem.copyRecursive(studioWebAppRoot.createRelative("/lib/"), webAppRoot.createRelative("/lib/"), null, excludePatterns);
+    public void prepareForAssemble(Folder webAppRoot) throws IOException {
+        prepareForAssemble(webAppRoot, this.fileSystem);    
+    }
 
-        Resource wavemakerHome = fileSystem.getWaveMakerHome();
-        String includePattern = LocalDeploymentManager.COMMON_DIR_NAME_PROPERTY + "/**";
-        String excludePattern = LocalDeploymentManager.COMMON_DIR_NAME_PROPERTY + "/**/deployments.js";
-        fileSystem.copyRecursive(wavemakerHome, webAppRoot.createRelative("/lib/wm/"), includePattern, excludePattern);
+    public static void prepareForAssemble(Folder webAppRoot, StudioFileSystem fileSystem) throws IOException {
 
-        modifyApplicationBaseFolder(new LocalFolder(webAppRoot.getFile())).modify();
+        Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**", "dojo/util/**",
+                "dojo/**/tests/**");
+        studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(webAppRoot.getFolder("lib"));
+
+        Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY  + "/**");
+        excluded = FilterOn.antPattern(LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY  + "/**/deployments.js");
+        wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
+
+        modifyApplicationBaseFolder(webAppRoot).modify();
     }
 
     public static ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {

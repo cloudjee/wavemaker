@@ -96,6 +96,7 @@ Configuration for '${agcontext.serviceName}' database service
                     org.hibernate.transaction.JDBCTransactionFactory
                 </prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
+                ${agcontext.additionalHibernateProperties}
             </props> 
         </property>
 
