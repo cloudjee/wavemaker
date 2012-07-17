@@ -156,18 +156,24 @@ public class Project extends AbstractFileService {
         }
     }
 
+    public List<Folder> getSourceFolders() {
+        return getSourceFolders(getRootFolder(), this.mavenProject);
+    }
+
     /**
      * Returns the service source folders or an empty list
-     * 
+     *
+     * @param projectRoot the root folder of the project
+     * @param isMavenProject 'true' indicates the project is a maven project.
      * @return the service source folder
      */
-    public List<Folder> getSourceFolders() {
+    public static List<Folder> getSourceFolders(Folder projectRoot, boolean isMavenProject) {
         List<Folder> sourceFolders = new ArrayList<Folder>();
-        Folder mainSourceFolder = getRootFolder().getFolder(this.mavenProject ? ProjectConstants.MAVEN_SRC_DIR : ProjectConstants.SRC_DIR);
+        Folder mainSourceFolder = projectRoot.getFolder(isMavenProject ? ProjectConstants.MAVEN_SRC_DIR : ProjectConstants.SRC_DIR);
         if (mainSourceFolder.exists()) {
             sourceFolders.add(mainSourceFolder);
         }
-        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list().folders();
+        Resources<Folder> serviceFolders = projectRoot.getFolder("services").list().folders();
         for (Folder serviceFolder : serviceFolders) {
             Folder serviceSourceFolder = serviceFolder.getFolder("src");
             if (serviceSourceFolder.exists()) {
