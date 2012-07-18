@@ -30,10 +30,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.ResourceFilter;
-import com.wavemaker.tools.project.StudioFileSystem;
-import com.wavemaker.tools.project.LocalDeploymentManager;
+import com.wavemaker.tools.project.*;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
@@ -77,13 +74,13 @@ public class WebAppAssembler implements InitializingBean {
     public static void prepareForAssemble(Folder webAppRoot, StudioFileSystem fileSystem) throws IOException {
 
         Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
-        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY + "/**", "dojo/util/**",
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + AbstractStudioFileSystem.COMMON_DIR + "/**", "dojo/util/**",
                 "dojo/**/tests/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(webAppRoot.getFolder("lib"));
 
         Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
-        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY  + "/**");
-        excluded = FilterOn.antPattern(LocalDeploymentManager.CUSTOM_WM_DIR_NAME_PROPERTY  + "/**/deployments.js");
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(AbstractStudioFileSystem.COMMON_DIR  + "/**");
+        excluded = FilterOn.antPattern(AbstractStudioFileSystem.COMMON_DIR  + "/**/deployments.js");
         wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
 
         modifyApplicationBaseFolder(webAppRoot).modify();

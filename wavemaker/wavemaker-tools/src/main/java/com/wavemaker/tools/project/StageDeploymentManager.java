@@ -99,8 +99,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
         Folder studioWebAppRoot = (Folder) properties.get(STUDIO_WEBAPPROOT_PROPERTY);
         String customWmDir = (String) properties.get(CUSTOM_WM_DIR_NAME_PROPERTY);
-        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("/dojo/util/**", "/dojo/**/tests/**",
-                "/wm/" + customWmDir + "/**");
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("dojo/util/**", "dojo/**/tests/**",
+                "wm/" + customWmDir + "/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
 
         // copy custom widgets
