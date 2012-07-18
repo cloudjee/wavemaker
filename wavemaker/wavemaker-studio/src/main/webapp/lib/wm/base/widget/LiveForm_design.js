@@ -66,33 +66,6 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 
 
 
-wm.getEditorClassName = function(type){
-    switch(type.toLowerCase()) {
-    case "checkbox":
-    case "java.lang.boolean":
-	type = "Checkbox";
-	break;
-    case "select":
-	type = "SelectMenu";
-	break;
-    case "date":
-    case "time":
-    case "java.util.date":
-	type = "DateTime";
-	break;
-    case "int":
-    case "java.lang.integer":
-    case "java.lang.short":
-    case "java.lang.long":
-    case "java.lang.float":
-    case "java.lang.double":
-	type = "Number";
-	break;
-    }
-    if (dojo.indexOf(wm.editors, type) == -1)
-	type = 'Text';
-    return 'wm.'+type;
-}
 
 wm.LiveFormBase.extend({
 	addEditors: "(addEditors)",
