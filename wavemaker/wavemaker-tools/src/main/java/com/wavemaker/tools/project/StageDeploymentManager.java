@@ -99,7 +99,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
         Folder studioWebAppRoot = (Folder) properties.get(STUDIO_WEBAPPROOT_PROPERTY);
         String customWmDir = (String) properties.get(CUSTOM_WM_DIR_NAME_PROPERTY);
-        // TODO:ant - following excluded filter does not seem to work. maybe a bug in FilterOn for ant style?
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("/dojo/util/**", "/dojo/**/tests/**",
                 "/wm/" + customWmDir + "/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
@@ -111,7 +110,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         wavemakerHome.find().include(included).exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib/wm"));
 
         // modify wavemaker token in .html and config.js
-        WebAppAssembler.modifyApplicationBaseFolder(buildAppWebAppRoot);
         buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
         buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
