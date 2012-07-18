@@ -136,8 +136,9 @@ wm.EditPanel.extend({
 	getLiveFormNames: function() {
 		var l = [""];
 		wm.forEachWidget(studio.page.root, function(w) {
-			if (w instanceof wm.LiveForm)
+			if (wm.isInstanceOf(w, wm.LiveForm)) {
 				l.push(w.getId());
+            }
 		});
 		return l;
 	},

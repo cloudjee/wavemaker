@@ -297,7 +297,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	},
 	getEditorsArray: function() {
 		return wm.getMatchingFormWidgets(this, function(w) {
-		    return (wm.Editor && wm.isInstanceType(w, wm.Editor) || wm.isInstanceType(w, wm.AbstractEditor));
+		    return (wm.isInstanceType(w, [wm.Editor, wm.AbstractEditor]));
 		});
 	},
 	// FIXME: handle related editors specially
@@ -323,7 +323,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 		var
 			s = parts.join('.'),
 			v = this.getValueById(s);
-		if (wm.Editor && wm.isInstanceType(v, wm.Editor) || wm.RelatedEditor && wm.isInstanceType(v, wm.RelatedEditor))
+		if (wm.isInstanceType(v, [wm.Editor, wm.RelatedEditor]))
 			return v;
 	},
 	// get editors bound to dataOutput
@@ -649,7 +649,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	    if (wm.isInstanceType(inEditor, wm.RelatedEditor) && inEditor.editingMode == "editable subform" && inEditor.ignoreParentReadonly)
 		return false; // devs must set readonly explicitly and must know what they are doing; some danger to editing subforms
 
-	    if ((wm.Editor && wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
+	    if (wm.isInstanceType(inEditor, [wm.Editor, wm.AbstractEditor]) && inEditor.formField) {
 			var
 				f = inEditor.formField,
 				dt = inForm.dataSet.type,

@@ -232,3 +232,4 @@ wm.getEditorClassName = function(type){
     return 'wm.'+type;
 }
     
+    

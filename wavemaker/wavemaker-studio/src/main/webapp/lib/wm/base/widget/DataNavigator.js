@@ -101,7 +101,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 			this.components.binding.addWire("", "liveSource", s);
 			return;
 		}
-	    s = wm.isInstanceType(s, wm.LiveForm) || wm.isInstanceType(s,wm.DataForm) ? s.dataSet : s;
+	    s = wm.isInstanceType(s, [wm.LiveForm,wm.DataForm]) ? s.dataSet : s;
 		if (s instanceof wm.LiveVariable) {
 			this.liveSource = s;
 			this.connect(this.liveSource, "onSuccess", this, "update");

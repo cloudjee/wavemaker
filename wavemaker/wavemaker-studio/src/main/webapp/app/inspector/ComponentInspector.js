@@ -1081,7 +1081,7 @@
 		     if (node.klass) {
 			 try {
 			     var prototype = dojo.getObject(node.klass).prototype;
-			     if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && prototype instanceof wm._BaseEditor == false && prototype instanceof wm.Editor == false && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
+			     if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
 				 if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
 				     var name = node.klass.replace(/^.*\./,"");
 				     if (dojo.indexOf(classList, name) == -1)
@@ -1089,7 +1089,7 @@
 				 }
 			     }
 			 } catch(e){}
-		     }
+	     }
 		 });
 
 		 dojo.forEach(classList, function(className,i) {

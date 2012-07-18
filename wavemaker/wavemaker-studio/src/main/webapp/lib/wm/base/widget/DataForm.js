@@ -28,8 +28,9 @@ wm.getMatchingFormWidgets = function(inForm, inMatch) {
 	wm.forEach(inForm.widgets, function(w) {
 			if (inMatch(w))
 				match.push(w);
-	    if (w instanceof wm.Container && (!wm.LiveFormBase || w instanceof wm.LiveFormBase == false) && w instanceof wm.DataForm == false) 
+    	    if (w instanceof wm.Container && !wm.isInstanceType(w, [wm.LiveFormBase, wm.DataForm])) {
 				match = match.concat(wm.getMatchingFormWidgets(w, inMatch));
+            }
 		});
 		return match;
 };

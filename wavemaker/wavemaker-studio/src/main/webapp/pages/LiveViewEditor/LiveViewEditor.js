@@ -19,7 +19,7 @@ wm.forAllEditors = function(inParent, inFn) {
 	var ws = inParent.widgets;
 	for (var en in ws) {
 		var e = ws[en];
-		if (e instanceof wm.Editor) {
+		if (wm.isInstanceType(e, wm.Editor)) {
 			inFn(e);
 		} else if (e instanceof wm.Container) {
 			wm.forAllEditors(e, inFn);
