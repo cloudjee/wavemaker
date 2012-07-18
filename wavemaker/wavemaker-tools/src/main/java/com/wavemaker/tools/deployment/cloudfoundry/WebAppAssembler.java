@@ -68,21 +68,7 @@ public class WebAppAssembler implements InitializingBean {
     }
 
     public void prepareForAssemble(Folder webAppRoot) throws IOException {
-        prepareForAssemble(webAppRoot, this.fileSystem);    
-    }
-
-    public static void prepareForAssemble(Folder webAppRoot, StudioFileSystem fileSystem) throws IOException {
-
-        Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
-        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + AbstractStudioFileSystem.COMMON_DIR + "/**", "dojo/util/**",
-                "dojo/**/tests/**");
-        studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(webAppRoot.getFolder("lib"));
-
-        Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
-        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(AbstractStudioFileSystem.COMMON_DIR  + "/**");
-        excluded = FilterOn.antPattern(AbstractStudioFileSystem.COMMON_DIR  + "/**/deployments.js");
-        wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
-
+        StageDeploymentManager.copyCustomFiles(webAppRoot, this.fileSystem, AbstractStudioFileSystem.COMMON_DIR);
         modifyApplicationBaseFolder(webAppRoot).modify();
     }
 
