@@ -64,10 +64,7 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 
 });
 
-// convert "foo.bar.spaz" of class wm.Editor to "fooBarSpazEditor1"
-wm.makeNameForProp = function(inProp, inSuffix) {
-	return inProp.replace(/\.(\S)/g, function(w) {return w.slice(1).toUpperCase();} ) + (inSuffix || "")+ "1";
-}
+
 
 wm.getEditorClassName = function(type){
     switch(type.toLowerCase()) {

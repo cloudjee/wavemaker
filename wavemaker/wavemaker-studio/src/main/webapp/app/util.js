@@ -196,3 +196,8 @@ wm.getEditorType = function(inPrimitive) {
 		t = map[t];
 	return dojo.indexOf(wm.editors, t) != -1 ? t : "Text";
 };
+
+// convert "foo.bar.spaz" of class wm.Editor to "fooBarSpazEditor1"
+wm.makeNameForProp = function(inProp, inSuffix) {
+	return inProp.replace(/\.(\S)/g, function(w) {return w.slice(1).toUpperCase();} ) + (inSuffix || "")+ "1";
+}
