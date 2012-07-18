@@ -309,7 +309,7 @@ wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetPr
     // If we don't match on list, this could be a fluke, treat it as warning rather than failure
     // If its a liveform, then give it a pass
     if (inTargetType.isList  && !inIsList || !inTargetType.isList && inIsList) {
-    if (inTargetProps.object instanceof wm.LiveForm) return 1;
+    if (wm.isInstanceType(inTargetProps.object, wm.LiveForm)) return 1;
     else return 2;
     }
 
