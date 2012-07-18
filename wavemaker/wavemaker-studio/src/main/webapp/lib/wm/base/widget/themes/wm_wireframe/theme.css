@@ -481,7 +481,10 @@ outline-width: 0 !important;
 }
 .wm_wireframe  .wmeditor .dijitTextBox,
 .wm_wireframe  .wmeditor .dijitTextArea,
-.wm_wireframe  .wmeditor .dijitComboBox
+.wm_wireframe  .wmeditor .dijitComboBox,
+.wm_wireframe  .dojoxGrid .dijitTextBox,
+.wm_wireframe  .dojoxGrid .dijitTextArea,
+.wm_wireframe  .dojoxGrid .dijitComboBox
 {
 -moz-border-radius: 2px;
 -webkit-border-radius: 2px;
@@ -505,15 +508,19 @@ display:block;
 border-radius-bottomleft: 2px;
 border-radius-bottomright: 2px;
 }
+.wm_wireframe .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_wireframe .wmeditor .dijitSelect .dijitArrowButton {
-height: 100% !important;
 -moz-border-radius-bottomright: 2px;
 -moz-border-radius-topright: 2px;
 -webkit-border-bottom-right-radius: 2px;
 -webkit-border-top-right-radius: 2px;
 border-radius-bottomright: 2px;
 border-radius-topright: 2px;
+}
+.wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .wmeditor .dijitSelect .dijitArrowButton {
+height: 100% !important;
 }
 .wm_wireframe .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
 height: 100% !important;
@@ -545,6 +552,7 @@ outline-width: 0;
 }
 @media screen {
 .wm_wireframe .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_wireframe .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_wireframe .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #ffffff;
@@ -629,6 +637,7 @@ background-repeat: no-repeat;
 }
 @media screen {
 .wm_wireframe .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_wireframe .MainContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_wireframe .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_wireframe .MainContent .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #ffffff;
@@ -691,6 +700,7 @@ background-repeat: no-repeat;
 }
 @media screen {
 .wm_wireframe .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_wireframe .EmphasizedContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_wireframe .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #ffffff;
@@ -745,6 +755,7 @@ background-repeat: no-repeat;
 }
 @media screen {
 .wm_wireframe .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_wireframe .HeaderContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_wireframe .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_wireframe .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #ffffff;
@@ -799,6 +810,9 @@ background-repeat: no-repeat;
 }
 .wm_wireframe div.dojoxGrid-row,
 .wm_wireframe div.dojoxGridRow,
+.wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOver,
+.wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
+.wm_wireframe .Disabled div.wmlist-item.wmlist-item-over,
 .wm_wireframe div.wmlist-item {
 font-family: Verdana;
 font-size: 8pt;
@@ -808,12 +822,19 @@ background-color: #eeeeee;
 }
 .wm_wireframe div.dojoxGrid-row.dojoxGrid-row-odd,
 .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd,
+.wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
+.wm_wireframe .Disabled div.wmlist-item.Odd.wmlist-item-over,
 .wm_wireframe .wmlist-item.Odd {
 color: #000000;
 background-color: #dddddd;
 }
 .wm_wireframe .MobileListStyle div.wmlist-item,
-.wm_wireframe .MobileListStyle div.wmlist-item.Odd {
+.wm_wireframe .Disabled.MobileListStyle div.wmlist-item,
+.wm_wireframe .Disabled.MobileListStyle div.wmlist-item.Odd,
+.wm_wireframe .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_wireframe .Disabled.MobileListStyle div.wmlist-item.Odd.wmlist-item-over,
+.wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
 background-color: #ffffff !important;
 color: #000000;
 }
@@ -877,7 +898,7 @@ background-color: #ffffff;
 color: #000000;
 }
 .wm_wireframe div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_wireframe div.dojoxGridContent .dojoxGridCellFocus,
 .wm_wireframe div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -945,7 +966,7 @@ background-color: #e5e5e5;
 color: #000000;
 }
 .wm_wireframe .MainContent div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_wireframe .MainContent div.dojoxGridContent .dojoxGridCellFocus,
 .wm_wireframe .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -977,7 +998,7 @@ background-color: #e5e5e5;
 color: #000000;
 }
 .wm_wireframe .EmphasizedContent div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_wireframe .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
 .wm_wireframe .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -1010,7 +1031,7 @@ background-color: #e5e5e5;
 color: #000000;
 }
 .wm_wireframe .HeaderContent div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_wireframe .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
 .wm_wireframe .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -1368,7 +1389,7 @@ background-color: transparent;
 .wm_wireframe div.wmtablayers-tabbar {
 background: transparent;
 }
-.wm_wireframe  #wavemakerNode > .wmlayout,
+.wm_wireframe  #wavemakerNode > div > .wmlayout,
 #studio_designer.wm_wireframe > .wmlayout,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
 -moz-border-radius: 0px;
@@ -1378,7 +1399,7 @@ border-radius: 0px;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
-.wm_wireframe  #wavemakerNode  > .wmlayout,
+.wm_wireframe  #wavemakerNode  > div > .wmlayout,
 #studio_designer.wm_wireframe > .wmlayout,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout,
 .wm_wireframe  #wavemakerNode  > .Document,
