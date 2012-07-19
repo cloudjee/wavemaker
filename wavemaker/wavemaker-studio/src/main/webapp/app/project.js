@@ -75,6 +75,7 @@ dojo.declare("wm.studio.Project", null, {
     newPage: function(inName, pageType, argHash, callback) {
 		if (!this.projectName)
 			return;
+		this.pageList.push(inName);
 		this.pageChanging();
 		this.pageName = inName;
 	        this.createPageArtifacts(pageType, argHash);

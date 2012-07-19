@@ -21,148 +21,147 @@ wm.Application.extend({
     set_theme: function(inTheme) {
         if (this.firstThemeChange) {
             app.confirm("Sometimes data can be lost when changing themes.  Do you want to save your project before changing themes?", true,
-			dojo.hitch(this, function() {
-			    studio.project.saveProject();
-			    this.firstThemeChange = false;
-			    this.setTheme(inTheme);
-			}),
-			dojo.hitch(this, function() {
-			    this.firstThemeChange = false;
-			    this.setTheme(inTheme);
-			}),
-			"Save and Change",
-			"Change Only");
+            dojo.hitch(this, function() {
+                studio.project.saveProject();
+                this.firstThemeChange = false;
+                this.setTheme(inTheme);
+            }),
+            dojo.hitch(this, function() {
+                this.firstThemeChange = false;
+                this.setTheme(inTheme);
+            }),
+            "Save and Change",
+            "Change Only");
 
-	} else {
-	    this.setTheme(inTheme);
-	}
+    } else {
+        this.setTheme(inTheme);
+    }
     },
 */
 
-	write: function(inIndent) {
-	    var props = dojo.toJson(this.writeProps(),true);
-	    props = props.substring(1,props.length-2);
+    write: function(inIndent) {
+        var props = dojo.toJson(this.writeProps(),true);
+        props = props.substring(1,props.length-2);
 
 
-	    var compsArray = this.writeComponents(inIndent);
+        var compsArray = this.writeComponents(inIndent);
 
-	    var classOrdering = ["wm.ImageList", "wm.TypeDefinition", "wm.LiveView"];
+        var classOrdering = ["wm.ImageList", "wm.TypeDefinition", "wm.LiveView"];
 
-	    compsArray = compsArray.sort(function(a,b) {
-		var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
-		var blist = b.match(/^(.*?)\:\s*\[\"(.*?)\"/);
-		var aindex = dojo.indexOf(classOrdering, alist[2]);
-		var bindex = dojo.indexOf(classOrdering, blist[2]);
-		if (aindex == -1) aindex = classOrdering.length;
-		if (bindex == -1) bindex = classOrdering.length;
-		if (aindex == bindex)
-		    return (alist[1] <= blist[1]) ? -1 : 1;
-		else
-		    return (aindex < bindex) ? -1 : 1;
+        compsArray = compsArray.sort(function(a,b) {
+        var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
+        var blist = b.match(/^(.*?)\:\s*\[\"(.*?)\"/);
+        var aindex = dojo.indexOf(classOrdering, alist[2]);
+        var bindex = dojo.indexOf(classOrdering, blist[2]);
+        if (aindex == -1) aindex = classOrdering.length;
+        if (bindex == -1) bindex = classOrdering.length;
+        if (aindex == bindex)
+            return (alist[1] <= blist[1]) ? -1 : 1;
+        else
+            return (aindex < bindex) ? -1 : 1;
 
-	    });
+        });
 
-	    var comps = compsArray.join(", " + sourcer_nl);
-	
-	    var customsrc = dojo.trim(String(studio.getAppScript())) || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
-	    var src = 'dojo.declare("' + this.declaredClass + '", wm.Application, {' +
-		props + ",\n\t" + 
-		    '"widgets": {\n' +  (comps || "") + '\n\t},\n\t' +
-		terminus + "\n});\n\n" + // terminus is defined in events.js
-		customsrc;
+        var comps = compsArray.join(", " + sourcer_nl);
+    
+        var customsrc = dojo.trim(String(studio.getAppScript())) || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
+        var src = 'dojo.declare("' + this.declaredClass + '", wm.Application, {' +
+        props + ",\n\t" + 
+            '"widgets": {\n' +  (comps || "") + '\n\t},\n\t' +
+        terminus + "\n});\n\n" + // terminus is defined in events.js
+        customsrc;
 
-	    return src;
-	},
+        return src;
+    },
     setToastPosition: function(inPosition) {
         this.toastPosition = inPosition.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
     },
     makePropEdit: function(inName, inValue, inEditorProps) {
-	switch (inName) {
-	case "theme":
+        switch (inName) {
+        case "theme":
             var options = [];
             var data = studio.themesListVar.getData();
-            dojo.forEach(data, function(item) {options.push(item.dataValue);});
-	    return new wm.prop.SelectMenu(dojo.mixin(inEditorProps,{options:options}));
-	}
-	return this.inherited(arguments);
+            dojo.forEach(data, function(item) {
+                options.push(item.dataValue);
+            });
+            return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {
+                options: options
+            }));
+        }
+        return this.inherited(arguments);
     },
     set_main: function(inMain) {
-	if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    return this.createNewPage();
-	}
-	this.main = inMain;
-	studio.setProjectMainPage(inMain);
+        if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+            return this.createNewPage();
+        }
+        this.main = inMain;
+        studio.setProjectMainPage(inMain);
     },
     set_phoneMain: function(inMain) {
-	if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    return this.createNewPage("phoneMain");
-	}
-	this.phoneMain = inMain;
+        if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+            return this.createNewPage("phoneMain");
+        }
+        this.phoneMain = inMain;
     },
     set_tabletMain: function(inMain) {
-	if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    return this.createNewPage("tabletMain");
-	}
-	this.tabletMain = inMain;
+        if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+            return this.createNewPage("tabletMain");
+        }
+        this.tabletMain = inMain;
     },
 
     createNewPage: function(optionalInPageType) {
-	var pages = studio.project.getPageList();
-	var l = {};
-	dojo.forEach(pages, function(p) {
-	    l[p] = true;
-	});
+        var pages = studio.project.getPageList();
+        var l = {};
+        dojo.forEach(pages, function(p) {
+            l[p] = true;
+        });
 
-        studio.promptForName("page", wm.findUniqueName(optionalInPageType ? wm.capitalize(optionalInPageType) : "Page", [l]), pages,
-                             dojo.hitch(this, function(n) {
-				 n = wm.capitalize(n);
-				 this[optionalInPageType || "main"] = n;
-				 studio.project.saveProject(false, dojo.hitch(this, function() {
-				     studio.project.newPage(n);
-				     switch(optionalInPageType) {
-				     case "tabletMain":
-						 studio.tabletToggleButton.click();
-						 break;
-				     case "phoneMain":
-						 studio.phoneToggleButton.click();
-						 break;
-				     default:
-						 studio.desktopToggleButton.click();
-						 break;
-				     }
-				 }));
-			     }));
+        studio.promptForName("page", wm.findUniqueName(optionalInPageType ? wm.capitalize(optionalInPageType) : "Page", [l]), pages, dojo.hitch(this, function(n) {
+            n = wm.capitalize(n);
+            this[optionalInPageType || "main"] = n;
+            studio.project.saveProject(false, dojo.hitch(this, function() {
+                studio.project.newPage(n);
+                switch (optionalInPageType) {
+                case "tabletMain":
+                    studio.tabletToggleButton.click();
+                    break;
+                case "phoneMain":
+                    studio.phoneToggleButton.click();
+                    break;
+                default:
+                    studio.desktopToggleButton.click();
+                    break;
+                }
+            }));
+        }));
     },
 
 
     incSubversionNumber: function() {
-	if (dojo.isString(this.projectSubVersion)) {
-	    if (parseInt(this.projectSubVersion) + "" == this.projectSubVersion)
-		this.projectSubVersion = parseInt(this.projectSubVersion) + 1;
-	    else {
-		var result = this.projectSubVersion.match(/\d+$/);
-		if (result) {
-		    this.projectSubVersion = this.projectSubVersion.replace(/\d+$/, "");
-		    result = parseInt(result[0]) + 1;
-		    this.projectSubVersion += result;
-		} else {
-		    this.projectSubVersion += "0";
-		}
-	    }
-	} else
-	    this.projectSubVersion++;
+        if (dojo.isString(this.projectSubVersion)) {
+            if (parseInt(this.projectSubVersion) + "" == this.projectSubVersion) this.projectSubVersion = parseInt(this.projectSubVersion) + 1;
+            else {
+                var result = this.projectSubVersion.match(/\d+$/);
+                if (result) {
+                    this.projectSubVersion = this.projectSubVersion.replace(/\d+$/, "");
+                    result = parseInt(result[0]) + 1;
+                    this.projectSubVersion += result;
+                } else {
+                    this.projectSubVersion += "0";
+                }
+            }
+        } else this.projectSubVersion++;
     },
     setPromptChromeFrame: function(inValue) {
-	this.promptChromeFrame = inValue;
-	var indexText = studio.project.loadProjectData("index.html");
-	if (inValue == "Allow IE 6 and 7")
-	    inValue = null;
-	else
-	    inValue = '"' + inValue + '"';
-	indexText = indexText.replace(/var\s+wmChromeFramePath.*/, "var wmChromeFramePath = " + inValue + ";")
-	studio.project.saveProjectData("index.html", indexText);
-	var src = studio.project.generateApplicationSource();
-	studio.project.saveProjectData(studio.project.projectName + ".js", src);
+        this.promptChromeFrame = inValue;
+        var indexText = studio.project.loadProjectData("index.html");
+        if (inValue == "Allow IE 6 and 7") inValue = null;
+        else inValue = '"' + inValue + '"';
+        indexText = indexText.replace(/var\s+wmChromeFramePath.*/, "var wmChromeFramePath = " + inValue + ";")
+        studio.project.saveProjectData("index.html", indexText);
+        var src = studio.project.generateApplicationSource();
+        studio.project.saveProjectData(studio.project.projectName + ".js", src);
     }
 });
 
@@ -182,8 +181,8 @@ wm.Object.extendSchema(wm.Application, {
     phoneGapLoginPage: {group: "mobile", order: 10, type: "string"},
     promptChromeFrame: {group: "widgetName",  subgroup: "behavior", order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
     toastPosition: {group: "widgetName",  subgroup: "behavior", editor: "wm.prop.SelectMenu", editorProps: {
-	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
-	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
+    options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
+    values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
     i18n: {group: "widgetName", type: "boolean", order: 6},
     theme: {group: "widgetName", type: "string", order: 7},
     currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
