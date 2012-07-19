@@ -87,7 +87,7 @@
 			<artifactId>FastInfoset</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.hsqldb</groupId>
+			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 		</dependency>
 		<dependency>

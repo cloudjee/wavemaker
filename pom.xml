@@ -111,7 +111,7 @@
 			<dependency>
 				<groupId>asm</groupId>
 				<artifactId>asm-attrs</artifactId>
-				<version>2.2.3</version>
+				<version>1.5.3</version>
 			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
@@ -290,9 +290,9 @@
 				<version>1.2.16</version>
 			</dependency>
 			<dependency>
-				<groupId>org.hsqldb</groupId>
+				<groupId>hsqldb</groupId>
 				<artifactId>hsqldb</artifactId>
-				<version>2.2.8</version>
+				<version>1.8.0.10</version>
 			</dependency>
 			<dependency>
 				<groupId>mysql</groupId>
