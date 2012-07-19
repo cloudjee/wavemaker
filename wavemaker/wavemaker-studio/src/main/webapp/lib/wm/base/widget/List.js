@@ -1816,6 +1816,10 @@ wm.List.extend({
     setSelectedRow: function(inIndex) {
         this.eventSelect(this.items[inIndex]);
     },
+    setSelectedItem: function(inData) {
+        if (inData instanceof wm.Variable) inData = inData.getData();
+        this.selectByQuery(inData);
+    },
     select: function(inItemOrIndex) {
         if (typeof inItemOrIndex != "object") {
             this.deselectAll(true);
