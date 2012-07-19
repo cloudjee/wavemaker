@@ -21,7 +21,7 @@
 [ bundlePackage.Frequent_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "Studio_paletteImageList_7", bundlePackage.descLabel, {}, false],
 [ bundlePackage.Frequent_Category, bundlePackage.Picture, "wm.Picture", "wm.base.widget.Picture", "Studio_paletteImageList_17",bundlePackage.descPicture, {}, false],
 [ bundlePackage.Frequent_Category, bundlePackage.DojoGrid, "wm.DojoGrid", "wm.base.widget.DojoGrid", "Studio_paletteImageList_8",bundlePackage.descGrid, {}, false],
-[ bundlePackage.Frequent_Category, bundlePackage.MobileList, "wm.List", "wm.base.widget.DojoGrid", "Studio_paletteImageList_8",bundlePackage.descMobileList, {styleAsGrid: false, rightNavArrow: true, headerVisible: false, height: "100%"}, false],
+[ bundlePackage.Frequent_Category, bundlePackage.MobileList, "wm.List", "wm.base.widget.DojoGrid", "Studio_paletteImageList_8",bundlePackage.descMobileList, {styleAsGrid: false, rightNavArrow: true, headerVisible: false, height: "100%", border: "0", margin: "0"}, false],
 [ bundlePackage.Frequent_Category, bundlePackage.PageContainer, "wm.PageContainer", "wm.base.widget.PageContainer", "Studio_paletteImageList_14", bundlePackage.descPageContainer, {}, false],
 [ bundlePackage.Frequent_Category, bundlePackage.Panel, "wm.Panel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descPanel, {}, false],
 [ bundlePackage.Frequent_Category, bundlePackage.Text, "wm.Text", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descText, {}, false],
