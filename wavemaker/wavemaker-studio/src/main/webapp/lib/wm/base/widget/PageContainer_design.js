@@ -14,6 +14,7 @@
 
 dojo.provide("wm.base.widget.PageContainer_design");
 dojo.require("wm.base.widget.PageContainer");
+dojo.require("wm.base.components.Property_design");
 
 // design only
 wm.PageContainer.extend({
