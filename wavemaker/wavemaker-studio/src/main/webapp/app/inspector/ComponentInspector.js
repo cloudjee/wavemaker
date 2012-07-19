@@ -407,7 +407,7 @@
 	 }
 	 */     
      },
-     isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {
+     isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {     	
 	 if (!skipIsAdvanced && (inProp.advanced && !this.isAdvancedMode() ||
 				 !inProp.requiredGroup && this.isRequiredMode())) {
 	     return false;
@@ -1081,7 +1081,7 @@
 		     if (node.klass) {
 			 try {
 			     var prototype = dojo.getObject(node.klass).prototype;
-			     if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
+			     if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor]) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
 				 if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
 				     var name = node.klass.replace(/^.*\./,"");
 				     if (dojo.indexOf(classList, name) == -1)
@@ -1351,7 +1351,7 @@
 	 }
 	 subgroupObj.props.push(inPropDef);
      },
-     buildGroups: function(inProps,showAllProps) {
+     buildGroups: function(inProps,showStyleInspector, showAllProps) {
 
 	 //var groups = {"required": this.makeNewGroupObj("required")}; // hash of all of the groups and subgroups and properties in those groups
 	 var groups = {"properties": this.makeNewGroupObj("properties")}; // hash of all of the groups and subgroups and properties in those groups
@@ -1360,8 +1360,11 @@
 
 	     dojo.forEach(inProps, dojo.hitch(this, function(inPropDef, index) {
 		 var groupName = (inPropDef && inPropDef.group) || defaultGroup;
-		 if (!this.isEditableProp(inPropDef, false, showAllProps || Boolean(groups[groupName])))
+		 if (showAllProps && (inPropDef.bindSource || inPropDef.bindTarget || inPropDef.bindable || !inPropDef.ignore && !inPropDef.writeonly && !inPropDef.hidden)) {
+		 	;
+		 } else if (!this.isEditableProp(inPropDef, false, showStyleInspector || Boolean(groups[groupName]))) {
 		     return;
+		 }
 		 var subgroupName = inPropDef && inPropDef.subgroup || "";
 
 		 /* Get a pointer to the group object we'll be adding this property into */
