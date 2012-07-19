@@ -1302,7 +1302,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    });
 
 	    dojo.forEach(this.columns, function(col){
-            if (col.field == "PHONE COLUMN" && !col.show) return;
+	    	if (this._isDesignLoaded && studio.currentDeviceType == "phone" && useMobileColumn) {
+	    		;
+	    	} else if (col.field == "PHONE COLUMN" && !col.show) return; // don't even include this complicated column in the structure unless we're in design mode
+	    	
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
 		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
 		    var width = col.width;

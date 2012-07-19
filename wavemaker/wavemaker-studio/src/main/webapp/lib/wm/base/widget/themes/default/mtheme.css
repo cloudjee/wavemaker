@@ -367,7 +367,7 @@ user-select: none;
 }
 
 
-.wmlist.MobileListStyle .wmlist-item {
+.wmmobile .wmlist.MobileListStyle .wmlist-item {
     margin: 5px;
     padding: 10px 5px;
     min-height: 12px;
