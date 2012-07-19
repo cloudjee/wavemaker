@@ -277,7 +277,6 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         //projectDir: dplstaging  //buildDir: fileutils
         LocalFolder buildFolder = new LocalFolder(buildDir);
         this.tempBuildWebAppRoot = buildFolder;
-        this.buildInLine = this.projectManager.getCurrentProject().getWebAppRootFolder().toString().equals(this.tempBuildWebAppRoot);
         File f = new File(warFilePath);
         File dist = f.getParentFile();
         if (!dist.exists()) {
