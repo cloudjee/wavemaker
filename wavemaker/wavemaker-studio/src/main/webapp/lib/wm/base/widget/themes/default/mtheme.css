@@ -918,17 +918,17 @@ body .AppToolTip {
     padding: 2px 5px 2px 5px;
     white-space: nowrap;
 }
-.wmeditor .wmCheckboxSetItem .dijitReset {
+.wmmobile .wmeditor .wmCheckboxSetItem .dijitReset {
     display: inline-block;
 }
-.wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive {
+.wmmobile .wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive {
     background-color: #00A;
 
 }
-.wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive:not(.dijitChecked) {
+.wmmobile .wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive:not(.dijitChecked) {
     color: #00A;
 }
-.wmeditor .wmCheckboxSetItem label {
+.wmmobile .wmeditor .wmCheckboxSetItem label {
     display: inline-block;
     margin-left: 5px;
 }
