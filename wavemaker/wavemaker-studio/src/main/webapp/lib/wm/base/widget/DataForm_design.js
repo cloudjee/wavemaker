@@ -479,12 +479,11 @@ wm.DataForm.extend({
 	this.inherited(arguments);
     },
     afterPaletteChildDrop: function(inWidget) {
-	this.inherited(arguments);
-	if (inWidget instanceof wm.LiveFormBase) {
-	    app.alert("Using a " + inWidget.declaredClass + " in a DataForm is not supported.  Please use a wm.SubForm, wm.OneToMany or wm.Lookup instead");
-	}
+        this.inherited(arguments);
+        if (wm.isInstanceType(inWidget, wm.LiveFormBase)) {
+            app.alert("Using a " + inWidget.declaredClass + " in a DataForm is not supported.  Please use a wm.SubForm, wm.OneToMany or wm.Lookup instead");
+        }
     },
-
     /****************
      * METHOD: set_type (DESIGN)
      * DESCRIPTION: Each time either the user or set_dataSet changes type, generate a new set of editors

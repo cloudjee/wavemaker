@@ -113,7 +113,7 @@ dojo.declare("wm.Application", wm.Component, {
          * IOS 4 and and older need this.  Native android browsers for 2.x devices need this.
          */
         if (wm.isMobile) {
-            if (wm.isAndroid > 2 || wm.isAndroid == "chrome" || wm.isIOS && wm.isIOS > 4 || wm.isFakeMobile) {;
+            if (wm.isAndroid > 2 || wm.isAndroid == "chrome" || wm.isIOS && wm.isIOS > 4 ) {;
             } else {
                 this._touchEnabled = true;
             }

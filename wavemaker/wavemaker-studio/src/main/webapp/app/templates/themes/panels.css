@@ -215,7 +215,7 @@ body.tundra .wm_template  div.wmheader,
    * DESCRIPTION: An optional set of styles for giving the document itself a square or rounded border
    ************************************************************************************************/
 
-.wm_template  #wavemakerNode > .wmlayout,
+.wm_template  #wavemakerNode > div > .wmlayout,
 #studio_designer.wm_template > .wmlayout, 
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
     /* Document-Styles-Border */
@@ -229,7 +229,7 @@ body.tundra .wm_template  div.wmheader,
 }
 
 /* .Document is what the dialog gets when its mapped to the document style*/
-.wm_template  #wavemakerNode  > .wmlayout,
+.wm_template  #wavemakerNode  > div > .wmlayout,
 #studio_designer.wm_template > .wmlayout, 
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout,
 .wm_template  #wavemakerNode  > .Document, 

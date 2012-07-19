@@ -59,7 +59,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
         Map<String, Object> properties = setProperties(projectDir, buildDir, warFile);
 
-        LocalFile warF = buildWar(properties);
+        LocalFile warF;
+        try {
+            warF = buildWar(properties);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
 
         if (includeEar) {
             assembleEar(properties, warF);
@@ -91,33 +96,34 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         return properties;
     }
 
-    public LocalFile buildWar(Map<String, Object> properties) {
+    public LocalFile buildWar(Map<String, Object> properties) throws IOException {
 
         build(properties);
 
-        // copy js files
-        LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
-        Folder studioWebAppRoot = (Folder) properties.get(STUDIO_WEBAPPROOT_PROPERTY);
         String customWmDir = (String) properties.get(CUSTOM_WM_DIR_NAME_PROPERTY);
-        // TODO:ant - following excluded filter does not seem to work. maybe a bug in FilterOn for ant style?
-        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("/dojo/util/**", "/dojo/**/tests/**",
-                "/wm/" + customWmDir + "/**");
-        studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib"));
-
-        // copy custom widgets
-        Folder wavemakerHome = (Folder) properties.get(WAVEMAKER_HOME);
-        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customWmDir + "/**");
-        excluded = FilterOn.antPattern(customWmDir + "/**/deployments.js");
-        wavemakerHome.find().include(included).exclude(excluded).files().copyTo(buildAppWebAppRoot.getFolder("lib/wm"));
+        LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
+        copyCustomFiles(buildAppWebAppRoot, getFileSystem(), customWmDir);
 
         // modify wavemaker token in .html and config.js
-        WebAppAssembler.modifyApplicationBaseFolder(buildAppWebAppRoot);
         buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
         buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
         buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
 
         return assembleWar(properties);
+    }
+
+    public static void copyCustomFiles(Folder webAppRoot, StudioFileSystem fileSystem, String customDir) throws IOException {
+
+        Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + customDir + "/**", "dojo/util/**",
+                "dojo/**/tests/**");
+        studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(webAppRoot.getFolder("lib"));
+
+        Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customDir  + "/**");
+        excluded = FilterOn.antPattern(customDir  + "/**/deployments.js");
+        wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
     }
 
     protected LocalFile assembleWar(Map<String, Object> properties) {

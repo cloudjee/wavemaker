@@ -30,7 +30,9 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    this.domNode.style.cssText += this.style + "overflow: hidden; position: relative;";
 	},
 	init: function() {
+        var domId = this.domNode.id;
 	    this.inherited(arguments);
+        this.domNode.id = domId;
 	    /* using onorientationchange is unreliable for android browser; may need to re-review this */
 	    /* The Android browser shipped by google with 2.x devices can not find the width and height of the screen when the onorientationchange event fires, and
 	     * the result is a big gap in the margin of the page.  While a delay could be used, on a test device the delay was significant and unpredictable.

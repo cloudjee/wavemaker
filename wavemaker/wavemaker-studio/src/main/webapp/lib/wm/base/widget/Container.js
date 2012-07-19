@@ -117,7 +117,8 @@ wm.define("wm.Container", wm.Control, {
 	    dojo.publish("wmTouchMove", [this]); // call this any time we stop the event from propagating up
 	var y = e.touches && e.touches.length ? e.touches[0].screenY : e.screenY;
 	var touchTarget = e.touches && e.touches.length ? e.touches[0].target : e.target;
-	if (touchTarget != app._touchY.targetNode) return;
+
+	if (touchTarget != app._touchY.targetNode && !wm.isFakeMobile) return;
 	var node = this.domNode;
 
 	/* Let the event bubble up if no room to scroll */
@@ -134,7 +135,6 @@ wm.define("wm.Container", wm.Control, {
 
 	// If Y is decreasing, then the user is trying to increase scrollTop, but we're already scrolled to the bottom, let the parent container handle it
 	if (y < lastY && node.clientHeight + node.scrollTop >= node.scrollHeight ||
-
 	    // If Y is Increasing, then the user is trying to decrease scrollTop, but we're already scrolled to the top, let the parent container handle it
 	    y > lastY && node.scrollTop <= 0)  {
 /*

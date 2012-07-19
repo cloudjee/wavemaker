@@ -408,7 +408,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 	/*if (inContainer._touchScroll) {
 	    ;
 	} else*/
-	if (inContainer.domNode.style.overflowY != scrollY) {
+	if (!wm.isFakeMobile && inContainer.domNode.style.overflowY != scrollY) {
 	    inContainer.domNode.style.overflowY = scrollY;
             inContainer.domNode.scrollTop = 0;
         }
@@ -426,7 +426,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
         inContainer._xscrollX = (scrollX=="auto");
 	/*if (inContainer._touchScroll) {
 	    ;
-	} else*/ if (inContainer.domNode.style.overflowX != scrollX) {
+	} else*/ if (!wm.isFakeMobile && inContainer.domNode.style.overflowX != scrollX) {
 	    inContainer.domNode.style.overflowX = scrollX;
             inContainer.domNode.scrollLeft = 0;
         }

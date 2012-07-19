@@ -481,7 +481,10 @@ outline-width: 0 !important;
 }
 .wm_default  .wmeditor .dijitTextBox,
 .wm_default  .wmeditor .dijitTextArea,
-.wm_default  .wmeditor .dijitComboBox
+.wm_default  .wmeditor .dijitComboBox,
+.wm_default  .dojoxGrid .dijitTextBox,
+.wm_default  .dojoxGrid .dijitTextArea,
+.wm_default  .dojoxGrid .dijitComboBox
 {
 -moz-border-radius: 4px;
 -webkit-border-radius: 4px;
@@ -505,15 +508,19 @@ display:block;
 border-radius-bottomleft: 4px;
 border-radius-bottomright: 4px;
 }
+.wm_default .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_default .wmeditor .dijitSelect .dijitArrowButton {
-height: 100% !important;
 -moz-border-radius-bottomright: 2px;
 -moz-border-radius-topright: 2px;
 -webkit-border-bottom-right-radius: 2px;
 -webkit-border-top-right-radius: 2px;
 border-radius-bottomright: 2px;
 border-radius-topright: 2px;
+}
+.wm_default .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_default .wmeditor .dijitSelect .dijitArrowButton {
+height: 100% !important;
 }
 .wm_default .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
 height: 100% !important;
@@ -545,6 +552,7 @@ outline-width: 0;
 }
 @media screen {
 .wm_default .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_default .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_default .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #333333;
@@ -629,6 +637,7 @@ background-repeat: no-repeat;
 }
 @media screen {
 .wm_default .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_default .MainContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_default .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_default .MainContent .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #cccccc;
@@ -691,6 +700,7 @@ background-repeat: no-repeat;
 }
 @media screen {
 .wm_default .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_default .EmphasizedContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_default .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_default .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #333333;
@@ -745,6 +755,7 @@ background-repeat: no-repeat;
 }
 @media screen {
 .wm_default .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_default .HeaderContent .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_default .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_default .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
 background-color: #666666;
@@ -799,6 +810,9 @@ background-repeat: no-repeat;
 }
 .wm_default div.dojoxGrid-row,
 .wm_default div.dojoxGridRow,
+.wm_default .Disabled div.dojoxGridRow.dojoxGridRowOver,
+.wm_default .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
+.wm_default .Disabled div.wmlist-item.wmlist-item-over,
 .wm_default div.wmlist-item {
 font-family: Verdana;
 font-size: 8pt;
@@ -808,12 +822,19 @@ background-color: #eeeeee;
 }
 .wm_default div.dojoxGrid-row.dojoxGrid-row-odd,
 .wm_default div.dojoxGridRow.dojoxGridRowOdd,
+.wm_default .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.wm_default .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
+.wm_default .Disabled div.wmlist-item.Odd.wmlist-item-over,
 .wm_default .wmlist-item.Odd {
 color: #000000;
 background-color: #dddddd;
 }
 .wm_default .MobileListStyle div.wmlist-item,
-.wm_default .MobileListStyle div.wmlist-item.Odd {
+.wm_default .Disabled.MobileListStyle div.wmlist-item,
+.wm_default .Disabled.MobileListStyle div.wmlist-item.Odd,
+.wm_default .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_default .Disabled.MobileListStyle div.wmlist-item.Odd.wmlist-item-over,
+.wm_default .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
 background-color: #333333 !important;
 color: #ffffff;
 }
@@ -877,7 +898,7 @@ background-color: #0e1601;
 color: #FFFFFF;
 }
 .wm_default div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_default div.dojoxGridContent .dojoxGridCellFocus,
 .wm_default div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -945,7 +966,7 @@ background-color: #444444;
 color: #ffffff;
 }
 .wm_default .MainContent div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_default .MainContent div.dojoxGridContent .dojoxGridCellFocus,
 .wm_default .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -977,7 +998,7 @@ background-color: #666666;
 color: #ffffff;
 }
 .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
 .wm_default .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -1010,7 +1031,7 @@ background-color: #333333;
 color: #ffffff;
 }
 .wm_default .HeaderContent div.dojoxGridContent .dojoxGridCell {
-background: transparent;
+background-color: transparent;
 }
 .wm_default .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
 .wm_default .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
@@ -1368,7 +1389,7 @@ background-color: transparent;
 .wm_default div.wmtablayers-tabbar {
 background: transparent;
 }
-.wm_default  #wavemakerNode > .wmlayout,
+.wm_default  #wavemakerNode > div > .wmlayout,
 #studio_designer.wm_default > .wmlayout,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
 -moz-border-radius: 0px;
@@ -1378,7 +1399,7 @@ border-radius: 0px;
 -webkit-box-shadow: 3px 3px 3px #000000;
 box-shadow: 3px 3px 3px #000000;
 }
-.wm_default  #wavemakerNode  > .wmlayout,
+.wm_default  #wavemakerNode  > div > .wmlayout,
 #studio_designer.wm_default > .wmlayout,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout,
 .wm_default  #wavemakerNode  > .Document,

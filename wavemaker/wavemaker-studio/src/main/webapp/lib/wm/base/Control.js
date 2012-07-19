@@ -1223,7 +1223,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}	
 
 	var paddArr = this.padding.split(paddingSplitter);
-	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) ? "auto" : "hidden");
+	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && !wm.isFakeMobile ? "auto" : "hidden");
 	var stylesObj;
 
 	var margins = (this.margin||"").split(marginSplitter);
@@ -1315,48 +1315,50 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	    return stylesObj;
 	},
-	setCssViaCssText: function(cssObj) {
-	    if (!this.domNode) return;
+    setCssViaCssText: function(cssObj) {
+        if (!this.domNode) return;
 
-	    var cssTextItems = [];	    
-	    wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
-		cssTextItems.push(styleName.replace(/([A-Z])/g,function(inLetter) {return "-" + inLetter.toLowerCase();}) + ":" + styleValue);
-		this._appliedStyles[styleName] = styleValue;
-	    }));
+        var cssTextItems = [];
+        wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
+            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
+                return "-" + inLetter.toLowerCase();
+            }) + ":" + styleValue);
+            this._appliedStyles[styleName] = styleValue;
+        }));
 
-	    /* margin/padding/border all affect the layout and sizing of widgets and can't be left to stylesheets */
-	    cssTextItems.push("margin:" + cssObj.margin);
-	    cssTextItems.push("padding:" + cssObj.padding);	    
-	    if (this.designBorderState) {
-		cssTextItems.push("border-top:" + cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor);
-		cssTextItems.push("border-bottom:" + cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor);
-		cssTextItems.push("border-left:" + cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor);
-		cssTextItems.push("border-right:" + cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor);
-	    } else {
-		cssTextItems.push("border-style:" + cssObj.borderStyle);
-		cssTextItems.push("border-width:" + cssObj.borderWidth);
-		cssTextItems.push("border-color:" + cssObj.borderColor);
-	    }
-	    if (cssObj.backgroundColor)
-		cssTextItems.push("background-color:" + cssObj.backgroundColor);
-	    cssTextItems.push("overflow-x:" + cssObj.overflowX);
-	    cssTextItems.push("overflow-y:" + cssObj.overflowY);
-	    if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto"||cssObj.overflowY == "scroll")) {
-		cssTextItems.push("-webkit-overflow-scrolling: touch");
-	    }
-	    if (cssObj.backgroundGradient) {
-		var gradient = cssObj.backgroundGradient;
-		inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
-		if (dojo.isIE < 10) {
-		    cssTextItems.push("filter: " + inValue);
-		} else {
-		    cssTextItems.push("background: " +  inValue);
-		}
-	    }
-	    // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
-	    // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
-	    this.domNode.style.cssText += cssTextItems.join(";");
-	},
+        /* margin/padding/border all affect the layout and sizing of widgets and can't be left to stylesheets */
+        cssTextItems.push("margin:" + cssObj.margin);
+        cssTextItems.push("padding:" + cssObj.padding);
+        if (this.designBorderState) {
+            cssTextItems.push("border-top:" + cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor);
+            cssTextItems.push("border-bottom:" + cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor);
+            cssTextItems.push("border-left:" + cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor);
+            cssTextItems.push("border-right:" + cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor);
+        } else {
+            cssTextItems.push("border-style:" + cssObj.borderStyle);
+            cssTextItems.push("border-width:" + cssObj.borderWidth);
+            cssTextItems.push("border-color:" + cssObj.borderColor);
+        }
+        if (cssObj.backgroundColor) cssTextItems.push("background-color:" + cssObj.backgroundColor);
+        cssTextItems.push("overflow-x:" + cssObj.overflowX);
+        cssTextItems.push("overflow-y:" + cssObj.overflowY);
+        if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto" || cssObj.overflowY == "scroll")) {
+            cssTextItems.push("-webkit-overflow-scrolling: touch");
+        }
+        if (cssObj.backgroundGradient) {
+            var gradient = cssObj.backgroundGradient;
+            inValue = wm.getBackgroundStyle(gradient.startColor, gradient.endColor, gradient.colorStop, gradient.direction, "");
+            if (dojo.isIE < 10) {
+                cssTextItems.push("filter: " + inValue);
+            } else {
+                cssTextItems.push("background: " + inValue);
+            }
+        }
+        // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
+        // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
+        this.domNode.style.cssText += cssTextItems.join(";");
+    },
+    
 	setCssViaDom: function(cssObj) {
 	    if (!this.domNode) return;
 	    var s = this.domNode.style;
