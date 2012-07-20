@@ -70,9 +70,9 @@ public class CFExporterFactory implements ExporterFactory {
             enhancer.setSuperclass(HibernateSpringConfigExporterTask.class);
             enhancer.setClassLoader(HibernateSpringConfigExporterTask.class.getClassLoader());
             proxy = (HibernateSpringConfigExporterTask) enhancer.create(new Class[] { HibernateToolTask.class, Folder.class, String.class,
-                String.class, String.class, String.class, boolean.class, boolean.class, String.class }, new Object[] { parent, this.destDir,
-                serviceName, this.packageName, this.dataPackage, this.className, this.useIndividualCRUDOperations, this.impersonateUser,
-                this.activeDirectoryDomain, this.batchSize });
+                String.class, String.class, String.class, boolean.class, boolean.class, String.class, Integer.class }, new Object[] { parent,
+                this.destDir, serviceName, this.packageName, this.dataPackage, this.className, this.useIndividualCRUDOperations,
+                this.impersonateUser, this.activeDirectoryDomain, this.batchSize });
         }
         return proxy;
     }
