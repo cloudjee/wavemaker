@@ -82,7 +82,7 @@ wm.componentList = {
 	'wm.Lookup':['build.Gzipped.wm_editors'],
 	'wm.FilteringLookup':['build.Gzipped.wm_editors'],
 	'wm.CheckboxSet':['build.Gzipped.wm_editors'],
-	'wm.RadioSet':['build.Gzipped.wm_editors'],
+	'wm.RadioSet':['build.Gzipped.wm_editors_misc'],
         'wm.ListSet':['build.Gzipped.wm_editors',"build.Gzipped.wm_list"],
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
