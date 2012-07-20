@@ -95,7 +95,7 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
         } catch (GenerationException e) {
             try {
                 // it may due to class/interface names collision, try to put
-                // schemas in seperate packages.
+                // schemas in separate packages.
                 this.jaxbBindingFiles = builder.generate(this.configuration.getOutputDirectory(), true);
                 typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
             } catch (GenerationException ex) {
