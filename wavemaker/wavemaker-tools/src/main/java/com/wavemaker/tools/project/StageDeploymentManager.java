@@ -92,7 +92,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         properties.put(WAVEMAKER_HOME, this.fileSystem.getWaveMakerHomeFolder());
         properties.put(PROJECT_DIR_PROPERTY, projectDir);
         properties = addMoreProperties(projectDir, null, properties);
-        this.buildInLine = buildDir.toString().equals(projectDir.getFolder("webapproot").toString());
+        this.buildInLine = buildDir.equals(projectDir.getFolder("webapproot"));
         return properties;
     }
 
@@ -141,10 +141,9 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder projectRoot = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
 
-        //Resources<Folder> svcSrc = projectRoot.find().include(FilterOn.antPattern("services/*/src", "src")).folders();
         Folder destDir = buildAppWebAppRoot.getFolder("WEB-INF/classes");
         return this.projectCompiler.compile(Project.getSourceFolders(projectRoot, false),
-                                            destDir, this.projectCompiler.getClasspath(buildAppWebAppRoot));
+                                            destDir, this.projectCompiler.getClasspath(projectRoot));
     }
 
     public void copyJars(Map<String, Object> properties) {
