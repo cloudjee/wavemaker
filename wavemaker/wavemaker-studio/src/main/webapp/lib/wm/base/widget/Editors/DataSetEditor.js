@@ -584,16 +584,19 @@ dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], 
     },
 
     setReadonly: function(inReadonly) {
-	this.readonly = Boolean(inReadonly);
-	if (!this.dijits) return;
-	for (var i = 0; i < this.dijits.length; i++) {
-	    var e = this.dijits[i];
-	    var checked = e.get("checked");
-	    e.set("disabled", this.readonly || this._disabled);
-	    if (!checked) {
-		e.domNode.parentNode.style.display = this.readonly ? "none" : "";
-	    }
-	}
+    	var wasReadonly = this.readonly;
+    	this.readonly = Boolean(inReadonly);
+    	if (!this.dijits) return;
+    	for (var i = 0; i < this.dijits.length; i++) {
+    		var e = this.dijits[i];
+    		var checked = e.get("checked");
+    		e.set("disabled", this.readonly || this._disabled);
+    		if (!checked) {
+    			e.domNode.parentNode.style.display = this.readonly ? "none" : "";
+    		} else if (wasReadonly) {
+    			e.domNode.parentNode.style.display = "";
+    		}
+    	}
     },
     setDisabled: function(inDisabled) {
 	this.inherited(arguments);
