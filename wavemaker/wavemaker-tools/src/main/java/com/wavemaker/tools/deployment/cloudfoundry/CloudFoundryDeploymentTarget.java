@@ -141,7 +141,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     public String deploy(Project project, DeploymentInfo deploymentInfo, java.io.File tempWebAppRoot) throws DeploymentStatusException {
         ApplicationArchive applicationArchive;
         if (tempWebAppRoot == null) {
-            applicationArchive = this.webAppAssembler.assemble(project);    
+            applicationArchive = this.webAppAssembler.assemble(project);
+            applicationArchive = modifyApplicationArchive(applicationArchive);
         } else {
             try {
                 this.webAppAssembler.prepareForAssemble(new LocalFolder(tempWebAppRoot));
@@ -150,7 +151,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             }
             applicationArchive = this.webAppAssembler.assemble(project.getProjectName(), new FileSystemResource(tempWebAppRoot));
         }
-        //applicationArchive = modifyApplicationArchive(applicationArchive);
         return doDeploy(applicationArchive, deploymentInfo);
     }
 
