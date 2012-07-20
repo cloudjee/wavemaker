@@ -679,28 +679,26 @@ dojo.declare("Studio", wm.Page, {
         this._liveLayoutReady = inReady;
     },
     deploySuccess: function(inUrl) {
-    if (inUrl) this._deployedUrl = inUrl;
-    var application = this.application || this._application;
-    if (application._deployStatus == "deploying")
-        application._deployStatus = "deployed";
+        if (inUrl) this._deployedUrl = inUrl;
+        var application = this.application || this._application;
+        if (application._deployStatus == "deploying") application._deployStatus = "deployed";
 
-    this.setLiveLayoutReady(true);
-    var previewWindowOptions = this.getPreviewWindowOptions();
-    if (this.previewWindow && this.previewWindowOptions != previewWindowOptions)
-        this.previewWindow.close();
-    this.previewWindowOptions = previewWindowOptions;
-    switch(this._runRequested) {
-    case "studioProjectCompile":
-        break;
-    case "studioProjectTest":       
-        this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl,true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
-        break;
-    case "studioProjectRun":
-        this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl,false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
-        break;
-    }
-    this._runRequested = false;
-    this.updateStateWhileDeploying(true);
+        this.setLiveLayoutReady(true);
+        var previewWindowOptions = this.getPreviewWindowOptions();
+        if (this.previewWindow && this.previewWindowOptions != previewWindowOptions) this.previewWindow.close();
+        this.previewWindowOptions = previewWindowOptions;
+        switch (this._runRequested) {
+        case "studioProjectCompile":
+            break;
+        case "studioProjectTest":
+            this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl, true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
+            break;
+        case "studioProjectRun":
+            this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl, false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
+            break;
+        }
+        this._runRequested = false;
+        this.updateStateWhileDeploying(true);
     },
     updateStateWhileDeploying: function(isDeployed) { /* Only if there is an app open */
         if (studio.application && this.isCloud()) {
@@ -728,17 +726,19 @@ dojo.declare("Studio", wm.Page, {
         return result;
         }
     },
-        deploy: function(inMsg, deployType, noWait) {
+    deploy: function(inMsg, deployType, noWait) {
         var application = this.application || this._application;
-        if (!application || application._deployStatus == "deploying") return;
+        if (!application || application._deployStatus == "deploying") {
+            if (!deployType.match(/compile/i))F this._runRequested = deployType;
+            return;
+        }
         application._deployStatus = "deploying";
 
         this._runRequested = deployType;
         var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
         d.addCallback(dojo.hitch(this, "deploySuccess"));
         d.addErrback(dojo.hitch(this, "deployError"));
-            if (!noWait)
-        this.waitForDeferred(d, inMsg);
+        if (!noWait) this.waitForDeferred(d, inMsg);
         this.updateStateWhileDeploying(false);
     },
 
