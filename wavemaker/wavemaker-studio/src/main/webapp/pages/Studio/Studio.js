@@ -729,7 +729,7 @@ dojo.declare("Studio", wm.Page, {
     deploy: function(inMsg, deployType, noWait) {
         var application = this.application || this._application;
         if (!application || application._deployStatus == "deploying") {
-            if (!deployType.match(/compile/i))F this._runRequested = deployType;
+            if (!deployType.match(/compile/i)) this._runRequested = deployType;
             return;
         }
         application._deployStatus = "deploying";
