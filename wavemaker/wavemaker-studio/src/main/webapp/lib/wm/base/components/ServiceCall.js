@@ -218,17 +218,19 @@ dojo.declare("wm.ServiceCall", null, {
     * if inFlightBehavior specifies to do so.
     */
     addToBacklog: function() {
-        var d;
+        var d = new dojo.Deferred();
         if (this.inFlightBehavior == "executeLast") this._inFlightBacklog.pop();
         if (this.inFlightBehavior == "executeLast" || this.inFlightBehavior == "executeAll") {
-            d = new dojo.Deferred();
             this._inFlightBacklog.push({
                 args: this.getArgs(),
                 operation: this.operation,
                 deferred: d,
                 eventChain: app.debugDialog ? app.debugDialog.cacheEventChain() : undefined
             });
+        } else {
+            d.errback("Unable to fire " + this.toString() + " because it is already firing, and the inFlightBehavior property is unset");
         }
+        return d;
     },
 
     /* Internal version of update method; please only call update() or updateInternal() */
@@ -241,6 +243,10 @@ dojo.declare("wm.ServiceCall", null, {
             this.onBeforeUpdate(this.input);
             wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
             return this.request();
+        } else {
+            var d = new dojo.Deferred();
+            d.errback("ServiceCall.canUpdate returns false");
+            return d;
         }
     },
     
@@ -325,7 +331,9 @@ dojo.declare("wm.ServiceCall", null, {
         if (!this._isDesignLoaded && this._inFlightBacklog && this._inFlightBacklog.length) {
             wm.onidle(this, function() {
                 var backlog = this._inFlightBacklog.shift();
-                this.request(backlog.args, backlog.operation, backlog.deferred);
+                if (backlog) {
+                    this.request(backlog.args, backlog.operation, backlog.deferred);
+                }
             });
         }
     },
