@@ -360,7 +360,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				} else {
 					for (var i = 0; i < this.columns.length; i++) {
 						if (this.columns[i].field.indexOf(inFieldName + ".") == 0) {
-							dojo.addClass(this.getCellNode(rowIdx, this.columns[i].field), "dirty");
+                            var cell = this.getCellNode(rowIdx, this.columns[i].field);
+                            if (cell) dojo.addClass(cell, "dirty");
 						}
 					}
 				}
