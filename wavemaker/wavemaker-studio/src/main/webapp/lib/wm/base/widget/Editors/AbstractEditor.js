@@ -582,7 +582,15 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.addEditorConnect(this.editor, "onChange", this, "changed");
 		this.addEditorConnect(this.editor, "onBlur", this, "blurred");
 		this.addEditorConnect(this.editor, "_onFocus", this, "focused");
-		this.addEditorConnect(this.editor.focusNode || this.editor.domNode || this.editor, "onkeypress", this, "keypressed");
+		var editorNode = this.editor.focusNode || this.editor.domNode || this.editor;
+		this.addEditorConnect(editorNode, "onkeypress", this, "keypressed");
+		if (editorNode.tagName == "INPUT") {
+			try {
+				this.addEditorConnect(editorNode, "oncut", this, "keypressed");
+				this.addEditorConnect(editorNode, "onpaste", this, "keypressed");
+			} catch(e) {}
+		}
+
 
 /*
 		this.addEditorConnect(this.editor.domNode, "onkeypress", this, "keypressed");
@@ -601,8 +609,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	keypressed: function(inEvent){
 	    /* Generally speaking, there aren't modifier keys in mobile devices (though I expect that to change); and I wasn't getting any charCode OR keyCode from some
 	     * mobile browsers (chrome for android)
-	     */
-	    if (wm.isMobile || inEvent.charCode || inEvent.keyCode == dojo.keys.BACKSPACE || inEvent.keyCode == dojo.keys.DELETE || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
+	     */	
+	     console.log(inEvent.type);
+	    if (inEvent.type == "cut" || inEvent.type == "paste" || wm.isMobile || inEvent.charCode || inEvent.keyCode == dojo.keys.BACKSPACE || inEvent.keyCode == dojo.keys.DELETE || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
 		this.validate();
 	        this.dokeypress(inEvent);
 	    }
