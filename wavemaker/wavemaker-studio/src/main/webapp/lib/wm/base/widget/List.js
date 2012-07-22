@@ -810,10 +810,6 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
         this.reflow();
 
-        if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
-            wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
-        }
-
         /*
           if (this.columns && this.deleteColumn) {
           this.columns.shift();
