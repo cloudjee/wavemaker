@@ -252,21 +252,21 @@ dojo.declare("Studio", wm.Page, {
          isJarMissing: function(inName) {
          return this._jarsMissing[inName];
      },
-         handleMissingJar: function(jar, step1) {
-         this.jarDownloadDialog.loadPage("HandleRequiredJars");
-         this.neededJars[jar] = true;
-         if (!this.project.loadingProject) {
-         this.jarDownloadDialog.page.html1.setHtml(step1);
-         this.jarDownloadDialog.show();
-         } else {
-         var count = 0;
-         for (var i in this.neededJars) count++;
-         this.jarDownloadDialog.page["html"+count].setHtml(step1);
-         this.jarDownloadDialog.page["layer" + (count*2-1)].show();
-         this.jarDownloadDialog.page["layer" + (count*2)].show();
-         }
+    handleMissingJar: function(jar, step1) {
+        this.jarDownloadDialog.setPage("HandleRequiredJars");
+        this.neededJars[jar] = true;
+        if (!this.project.loadingProject) {
+            this.jarDownloadDialog.page.html1.setHtml(step1);
+            this.jarDownloadDialog.show();
+        } else {
+            var count = 0;
+            for (var i in this.neededJars) count++;
+            this.jarDownloadDialog.page["html" + count].setHtml(step1);
+            this.jarDownloadDialog.page["layer" + (count * 2 - 1)].show();
+            this.jarDownloadDialog.page["layer" + (count * 2)].show();
+        }
 
-     },
+    },
      handleServiceVariableError: function(inServiceVar, inError) {
        studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
      },
