@@ -241,7 +241,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		    dbName: this["databaseNameEditor" + (i+1)].getDataValue(),
 		    connectionUrl:this["databaseURLEditor" + (i+1)].getDataValue(),
 		    username: this["databaseUserEditor" + (i+1)].getDataValue(),
-		    password: this["databasePasswordEditor" + (i+1)].getDataValue(),
+		    password: this["databasePasswordEditor" + (i+1)].getDataValue() ? this["databasePasswordEditor" + (i+1)].getDataValue() : "",
 		    jndiName: this["databaseLayers" + (i+1)].layerIndex == 1 ? this["databaseJNDINameEditor" + (i+1)].getDataValue() : null
 		});
 
