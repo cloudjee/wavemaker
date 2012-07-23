@@ -468,7 +468,7 @@ dojo.declare("ResourceManager", wm.Page, {
         
     },
     editorClosed: function() {
-	if (this.editorTabs.layers.length == 1) {
+	if (this.editorTabs.layers.length == 0) {
 	    this.editorTabs.hide();
 	}
     },
