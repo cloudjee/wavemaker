@@ -24,6 +24,9 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	*/
 	this.layers.decorator.buttonPanel.setParent(this.root);
 	this.layers.decorator.doneCaption = this.getDictionaryItem("DONE_CAPTION");
+    this.layers.decorator.nextButton.addUserClass("StudioButton");
+    this.layers.decorator.prevButton.addUserClass("StudioButton");
+    this.layers.decorator.buttonPanel.addUserClass("wmDialogFooter");
     },
     onShow: function() {
 	this.layer2.invalid = this.layer4.invalid = this.layer6.invalid = true;
