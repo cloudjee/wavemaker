@@ -140,33 +140,36 @@ wm.Control.extend({
 	this.setHeight(inHeight);
     },
     set_height: function(inHeight) {
-	if (inHeight.match(/\%/)) {
-	    this.desktopHeight = this.mobileHeight = inHeight;
-	} else {
-	    var isMobile = studio.currentDeviceType != "desktop";
-	    if (isMobile && this.enableTouchHeight) {
-		this.mobileHeight = inHeight;
-	    } else {
-		this.desktopHeight = inHeight;
-	    }
-	}
-	this.setSizeProp("height", inHeight, this.minHeight);
+        if (inHeight.match(/\%/)) {
+            this.desktopHeight = this.mobileHeight = inHeight;
+        } else {
+            var isMobile = studio.currentDeviceType != "desktop";
+            if (isMobile && this.enableTouchHeight) {
+                this.mobileHeight = inHeight;
+                if (this.desktopHeight.match(/\%/)) {
+                    this.desktopHeight = this.mobileHeight;
+                }
+            } else {
+                this.desktopHeight = inHeight;
+            }
+        }
+        this.setSizeProp("height", inHeight, this.minHeight);
     },
     set_minHeight: function(inHeight) {
-	var height = inHeight ? parseInt(inHeight) : 0;
-	var isMobile = studio.currentDeviceType != "desktop";
-	if (isMobile && this.enableTouchHeight) {
-	    this.minMobileHeight = height;
-	} else {
-	    this.minDesktopHeight = height;
-	}
-	this.setSizeProp("height", this.height, height);
+        var height = inHeight ? parseInt(inHeight) : 0;
+        var isMobile = studio.currentDeviceType != "desktop";
+        if (isMobile && this.enableTouchHeight) {
+            this.minMobileHeight = height;
+        } else {
+            this.minDesktopHeight = height;
+        }
+        this.setSizeProp("height", this.height, height);
     },
     resetDesignHeight: function() {
-	this._doingAutoSize = true;
-	this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight || this.height: this.desktopHeight || this.height);
-	this._doingAutoSize = false;
-	this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
+        this._doingAutoSize = true;
+        this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight || this.height : this.desktopHeight || this.height);
+        this._doingAutoSize = false;
+        this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
     },
 	// Begin design border
 	/*
