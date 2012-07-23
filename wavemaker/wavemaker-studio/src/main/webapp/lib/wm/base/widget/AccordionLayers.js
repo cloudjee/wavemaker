@@ -13,6 +13,7 @@
  */
 dojo.provide("wm.base.widget.AccordionLayers");
 dojo.require("wm.base.widget.Layers");
+dojo.require("wm.base.widget.Layers.AccordionDecorator");
 
 dojo.declare("wm.AccordionLayers", wm.Layers, {
     multiActive: false,

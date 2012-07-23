@@ -13,6 +13,7 @@
  */
 dojo.provide("wm.base.widget.WizardLayers");
 dojo.require("wm.base.widget.Layers");
+dojo.require("wm.base.widget.Layers.WizardDecorator");
 
 /************************************************************************
  * FEATURES:
