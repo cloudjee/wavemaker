@@ -276,6 +276,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
             this.setProp(propName, this[propName]);
             }
         }
+        if (this.$.binding) this.$.binding.refresh(); // update all bound values
         }
 
         if (this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
