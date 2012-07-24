@@ -851,7 +851,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
 	    var columnid = column.field||column.id;
-	    if (columnid == "PHONE COLUMN") next;
+	    if (columnid == "PHONE COLUMN") continue;
 	    var parts = columnid.split(".");
 	    var typeName = this.dataSet.type;
 	    var type = wm.typeManager.getType(typeName);
