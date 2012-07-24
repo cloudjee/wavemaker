@@ -608,7 +608,9 @@ dojo.declare("QueryEditor", wm.Page, {
 			this.typesLongNameLookup[shortName] = longName;
 			this.typesShortNameLookup[longName] = shortName;
 		}
-	    
+	    wm.Array.removeElement(names, "Timestamp");
+        wm.Array.removeElement(names, "sql.Date");
+        wm.Array.removeElement(names, "sql.Time");
 		this.bindTypeInput.editor.setOptions(names.join());
 		// set an initial type value so it cannot be created blank.
 		this.bindTypeInput.beginEditUpdate();
