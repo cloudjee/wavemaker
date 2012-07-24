@@ -412,6 +412,7 @@ Studio.extend({
 		    object = object[prefix];
 		else {
 		    var name = prefix;
+		    if (!object.listProperties) return;
 		    var props = object.listProperties();
 		    if (props[name] && props[name].prototype) {		    
 			if (props[name].prototype.indexOf(".") != -1) {
