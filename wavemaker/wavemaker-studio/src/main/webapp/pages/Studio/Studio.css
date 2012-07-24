@@ -222,7 +222,7 @@ body .wmtablayers-tab:active:not(.wmtablayers-selected) {
 */
 .Studio .StudioDarkPanel,
 .StudioTabs.StudioDarkLayers > div > .wmlayer,
-.StudioWizard.StudioDarkLayers > div > .wmlayer {
+.StudioWizard.StudioDarkLayers .wmWizardLayers-wizardWrapper > div > .wmlayer {
     background-color: #414B5C;
     color: white;
 }
