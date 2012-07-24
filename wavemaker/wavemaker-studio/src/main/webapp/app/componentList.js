@@ -35,10 +35,11 @@ wm.componentList = {
     "wm.gadget.TwitterTweetButton": ["studio.build.wm_gadget"],
     "wm.gadget.TwitterList": ["studio.build.wm_gadget"],
     "wm.DojoFisheye": ["studio.build.wm_gadget"],
+    "wm.Ticker": ["wm.base.widget.Ticker_design"],
 
     /* MISC EDITORS */
     "wm.OneToMany": ["studio.build.wm_editors"],
-    "wm.Calendar": ["studio.build.wm_editors"],
+    "wm.dijit.Calendar": ["studio.build.wm_editors"],
     "wm.Date": ["studio.build.wm_editors"],
     "wm.Time": ["studio.build.wm_editors"],
     "wm.DateTime": ["studio.build.wm_editors"],
@@ -49,7 +50,7 @@ wm.componentList = {
     "wm.ListViewer": ["studio.build.wm_misc"],
     "wm.Dashboard": ["studio.build.wm_dashboard"],
     "wm.DojoChart": ["studio.build.wm_charts"],
-    "wm.Gauge": ["studio.build.wm_charts"],
+    "wm.DojoGauge": ["studio.build.wm_charts"],
     "wm.PropertyTree": ["studio.build.wm_trees"],
     "wm.ObjectTree": ["studio.build.wm_trees"],
     "wm.DojoGrid": ["studio.build.wm_dojogrid"],
@@ -60,15 +61,27 @@ wm.componentList = {
 
     /* OLD EDITORS */
     "wm.Editor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm.TextEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._TextEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm.TextAreaEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._TextAreaEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._NumberEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm.NumberEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._CurrencyEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],/* Not used by studio */
+    "wm.CurrencyEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],/* Not used by studio */
+    "wm.SliderEditor": ["studio.build.wm_editors_misc", "studio.build.wm_editors_old"],/* Not used by studio */
     "wm._SliderEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],/* Not used by studio */
+    "wm.SelectEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._SelectEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
     "wm._LookupEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],/* Not used by studio */
     "wm._DateEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
-    "wm._TimeEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
-    "wm._RadioButtonEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"]    
+    "wm.DateEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm.CheckBoxEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm._CheckBoxEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm.RadioButtonEditor": ["studio.build.wm_editors_misc", "studio.build.wm_editors_old"],
+    "wm._RadioButtonEditor": ["studio.build.wm_editors_misc", "studio.build.wm_editors_old"],
+    "wm.TimeEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"],
+    "wm._TimeEditor": ["studio.build.wm_editors", "studio.build.wm_editors_old"]
+    
 
 }
