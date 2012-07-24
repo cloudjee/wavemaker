@@ -71,7 +71,7 @@ dojo.declare("wm.LayersDecorator", null, {
 	    { 
 		inLayer.domNode.style.display = inActive ? '' : 'none';
 		if (inActive) {
-		    inLayer.reflow();
+		    inLayer.reflowParent();
 		}
 	    } else {
 		this.anim(inLayer, inActive);
@@ -183,7 +183,7 @@ dojo.declare("wm.LayersDecorator", null, {
 			this.setLayerActive(old, false);		    
 		}
 		this.setLayerActive(inLayer, true);
-	    d.reflowParent();
+	    //d.reflowParent();
 	},
 	// default decorator has no caption
 	applyLayerCaption: function() {

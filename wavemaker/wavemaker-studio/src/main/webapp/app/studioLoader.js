@@ -40,6 +40,7 @@ dojo.registerModulePath("lib", wm.libPath);
 dojo.registerModulePath("wm", wm.libPath + "/wm");
 dojo.registerModulePath("wm.studio", wm.basePath); // this one seems silly, but we use it
 dojo.registerModulePath("common", wm.libPath + "/wm/common");
+dojo.registerModulePath("wm.packages", wm.libPath + "/wm/common/packages");
 dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
 dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 
@@ -72,7 +73,8 @@ if (!djConfig.debugBoot) {
 	    "studio.build.studio_base",
 	    "studio.build.studio",
 	    "css.wm.base.widget.themes.default.design",
-	    "css.wm.studio.pages.Studio.properties"
+	    "css.wm.studio.pages.Studio.properties",
+        "common.packages.lib"
 	]);
 } else {
     dojo.require("lib.manifest", true);

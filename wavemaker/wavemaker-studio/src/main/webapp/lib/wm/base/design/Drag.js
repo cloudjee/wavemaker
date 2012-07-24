@@ -313,7 +313,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    if (c) {
 		return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity;
 	    } else {
-		return !this.info.props.noPositioning;
+		return !this.info.props || !this.info.props.noPositioning;
 	    }
 	}
 });

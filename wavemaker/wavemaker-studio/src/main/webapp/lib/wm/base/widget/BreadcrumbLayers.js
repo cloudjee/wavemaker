@@ -13,6 +13,7 @@
  */
 dojo.provide("wm.base.widget.BreadcrumbLayers");
 dojo.require("wm.base.widget.Layers");
+dojo.require("wm.base.widget.Layers.BreadcrumbDecorator");
 
 dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
     conditionalTabButtons: true,

@@ -150,7 +150,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 	            props.name = props.name.replace(/\s/g,"");
 		var ctor = dojo.getObject(info.type);
 	    if (!ctor) {
-		wm.require(info.type);
+		wm.getComponentStructure(info.type);
 		 ctor = dojo.getObject(info.type);
 	    }
                 var owner = this.dragger.target.owner;

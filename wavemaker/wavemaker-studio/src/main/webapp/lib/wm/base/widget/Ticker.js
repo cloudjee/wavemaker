@@ -16,6 +16,7 @@ dojo.provide("wm.base.widget.Ticker");
 dojo.require("wm.base.widget.Panel");
 
 dojo.declare("wm.Ticker", wm.Panel, {
+    layoutKind: "left-to-right",
 	delay: 20,
 	motion: 4,
 	rewindDelay: 200,

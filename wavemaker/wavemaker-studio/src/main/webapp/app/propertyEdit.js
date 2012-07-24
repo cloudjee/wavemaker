@@ -1688,6 +1688,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
     var dataSet = this.dataSet = new wm.Variable({owner: this, name: "dataSet", type: "StringData", isList: true});
     var classList =  (this.inspected._classes && this.inspected._classes.domNode && this.inspected._classes.domNode.length) ? dojo.clone(this.inspected._classes.domNode) : [];
     dojo.forEach(classList, dojo.hitch(this, function(className) {this.dataSet.addItem({dataValue: className});}));
+    wm.require("wm.DojoGrid");
     var grid = this.grid = wm.DojoGrid({
         _classes: {domNode: ["StudioGrid"]},
         owner: this,

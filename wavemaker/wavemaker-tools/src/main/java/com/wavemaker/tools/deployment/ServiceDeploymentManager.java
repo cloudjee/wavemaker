@@ -152,6 +152,7 @@ public class ServiceDeploymentManager {
         deploymentMgr.setFileSystem(this.fileSystem);
         deploymentMgr.setProjectCompiler(this.projectCompiler);
         deploymentMgr.setProjectManager(projectMgr);
+        deploymentMgr.setOrigProjMgr(this.projectMgr);
         com.wavemaker.tools.io.File war = deploymentMgr.buildWar(warFile, tempWebAppRoot, includeEar);
         return war;
     }

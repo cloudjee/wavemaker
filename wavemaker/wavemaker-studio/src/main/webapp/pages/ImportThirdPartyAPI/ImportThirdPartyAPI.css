@@ -26,24 +26,12 @@
 }
 
 
-.ImportThirdPartyAPI .wmbutton {
-	background-image:url(../../images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
-	cursor: pointer !important;
-}
 
-.ImportThirdPartyAPI .wmbutton:hover,
 .ImportThirdPartyAPI .wmDojoFileUpload-button:hover {
     background-color: silver !important;
     background-image:url(images/wmbutton_bg.png) !important;
 }
 
-.ImportThirdPartyAPI .wmWizardLayers-buttonPanel button,
 .ImportThirdPartyAPI .wmDojoFileUpload-button {
     pointer: cursor;
 	background-image:url(images/dark_btn_bg.gif);

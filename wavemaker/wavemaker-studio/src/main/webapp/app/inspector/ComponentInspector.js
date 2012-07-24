@@ -1336,7 +1336,7 @@
 
 	 /* Step 2: Create it if its not there */
 	 if (!subgroupObj) {
-	     if (wm.propertyGroups[groupObj.name] && wm.propertyGroups[groupObj.name].subgroups[subgroupName]) {
+	     if (wm.propertyGroups[groupObj.name] &&wm.propertyGroups[groupObj.name].subgroups && wm.propertyGroups[groupObj.name].subgroups[subgroupName]) {
 		 subgroupObj = dojo.mixin({props: [], 
 					   name: subgroupName},
 					  wm.propertyGroups[groupObj.name].subgroups[subgroupName]);
