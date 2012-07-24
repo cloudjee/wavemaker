@@ -99,7 +99,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         }
 
         build(properties);
-        compile();
+        //compile();
 
         //testrunstart
         undeploy(properties);

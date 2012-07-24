@@ -66,4 +66,13 @@ public interface File extends Resource {
      * @return the file content
      */
     FileContent getContent();
+
+     /**
+     * RCopy this file to the specified folder if this file is newer than the destination.
+     *
+     * @param folder the folder to copy the file to
+     * @return a new resource (the current resource will no longer {@link #exists() exist}
+     * @throws ResourceDoesNotExistException if this resource no longer exists
+     */
+    Resource copyToIfNewer(Folder folder);
 }

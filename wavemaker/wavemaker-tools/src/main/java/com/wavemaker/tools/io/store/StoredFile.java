@@ -83,6 +83,19 @@ public abstract class StoredFile extends StoredResource implements File {
     }
 
     @Override
+    public File copyToIfNewer(Folder folder) {
+        Assert.notNull(folder, "Folder must not be null");
+        ensureExists();
+        File destination = folder.getFile(getName().toString());
+        if (this.getLastModified() > destination.getLastModified() || !destination.exists()) {
+            destination.getContent().write(this);
+            return destination;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public void createIfMissing() {
         if (!exists()) {
             createParentIfMissing();
