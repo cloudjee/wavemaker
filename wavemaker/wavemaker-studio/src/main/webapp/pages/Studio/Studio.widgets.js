@@ -666,6 +666,6 @@ height: "29px", width: "420px",
 		}],
 		markup: ["wm.Html", {height: "0", showing: false}, {}]
 		/*,
-		footer: ["wm.Html", {height: "18px", html: "Copyright &copy; 2008 <a target=\"_blank\" href=\"http://www.wavemaker.com\" style=\"color:#b4d5f0;\">WaveMaker Software</a>, Studio Version: wmVersionNumber", showing: false}, {}]*/
+		footer: ["wm.Html", {height: "18px", html: "Copyright &copy; 2008 <a target=\"_blank\" href=\"http://www.wavemaker.com\" style=\"color:#b4d5f0;\">VMware, Inc.</a>, Studio Version: wmVersionNumber", showing: false}, {}]*/
 	}]
 }
