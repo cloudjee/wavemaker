@@ -123,15 +123,19 @@
         }, {}]
     }]
 }],
-            panel4: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-                addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","margin":"4","width":"100%"}, {"onclick":"addButtonClick"}],
-                deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","margin":"4","width":"100%"}, {"onclick":"deleteButtonClick"}],
-                upButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "40px", imageList: "studio.silkIconImageList", imageIndex: 7,caption:""}, {onclick: "moveUp"}, {
+            panel4: ["wm.Panel", {"height":"32px","horizontalAlign":"middle","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+                addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","margin":"4","width":"90px",imageList: "studio.silkIconImageList", imageIndex: 1}, {"onclick":"addButtonClick"}],
+                panel4Spacer: ["wm.Spacer", {width: "100%"}],
+                upButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "90px", imageList: "studio.silkIconImageList", imageIndex: 7,caption:"Up"}, {onclick: "moveUp"}, {
                 binding: ["wm.Binding", {}, {}, {
                     wire: ["wm.Wire", {"expression":undefined,"source":"grid.emptySelection","targetProperty":"disabled"}, {}]
                 }]          
-                }],
-                downButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "40px", imageList: "studio.silkIconImageList", imageIndex: 2,caption:""}, {onclick: "moveDown"}, {
+                }]
+            }],
+            panel4b:["wm.Panel", {"height":"32px","horizontalAlign":"middle","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+                deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","margin":"4","width":"90px",imageList: "studio.silkIconImageList", imageIndex: 21}, {"onclick":"deleteButtonClick"}],
+                panel4bSpacer: ["wm.Spacer", {width: "100%"}],
+                downButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "90px", imageList: "studio.silkIconImageList", imageIndex: 2,caption:"Down"}, {onclick: "moveDown"}, {
                 binding: ["wm.Binding", {}, {}, {
                     wire: ["wm.Wire", {"expression":undefined,"source":"grid.emptySelection","targetProperty":"disabled"}, {}]
                 }]          
