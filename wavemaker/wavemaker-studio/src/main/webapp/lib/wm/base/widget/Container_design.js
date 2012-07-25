@@ -27,7 +27,7 @@ wm.Object.extendSchema(wm.Container, {
     */
     fitToContentWidth:  {group: "display", subgroup: "layout", order: 150, shortname: "Auto Width", type: "Boolean", advanced: true},
     fitToContentHeight: {group: "display", subgroup: "layout", order: 151, shortname: "Auto Height", type: "Boolean", advanced: true},
-    resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true, doNotPublish:1},
+    resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true, doNotPublish:1, shortname: "Resize to Fit"},
 
     layoutKind:         {group: "display", subgroup: "panel", order: 100, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
     horizontalAlign:    {group: "display", subgroup: "panel", order: 110, options: ["left","center","right"]},
