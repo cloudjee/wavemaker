@@ -1521,7 +1521,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
          parent: p,
          width: "100%",
          height: "30px",
-        caption: "Create CSS Class from these styles",
+        caption: "Create CSS Class",
         //hint: "Creates a css class based on these styles",
         hint: "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.",
         onclick: dojo.hitch(this, "generateCssRule")
@@ -1864,22 +1864,23 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
     },
     */
     changed: function() {
-    if (this.inspected._classes && this.inspected._classes.domNode) {
-        for (var i = this.inspected._classes.domNode.length-1; i >= 0; i--) {
-        this.inspected.removeUserClass(this.inspected._classes.domNode[i]);
+        if (this.inspected._classes && this.inspected._classes.domNode) {
+            for (var i = this.inspected._classes.domNode.length - 1; i >= 0; i--) {
+                if (this.inspected._classes.domNode) {
+                    this.inspected.removeUserClass(this.inspected._classes.domNode[i]);
+                }
+            }
         }
-    }
-    for (var i = 0; i < this.dataSet.getCount(); i++) {
-        var className = this.dataSet.getItem(i).getValue("dataValue");
-        if (className) {
-        this.inspected.addUserClass(className);
-        } else {
-        this.dataSet.removeItem(i);
-        i--;
+        for (var i = 0; i < this.dataSet.getCount(); i++) {
+            var className = this.dataSet.getItem(i).getValue("dataValue");
+            if (className) {
+                this.inspected.addUserClass(className);
+            } else {
+                this.dataSet.removeItem(i);
+                i--;
+            }
         }
-    }
-    },
-    getDataValue: function() {
+    },    getDataValue: function() {
     return this.inspected._classes && this.inspected._classes.domNode ? dojo.clone(this.inspected._classes.domNode) : [];
     },
     setDataValue: function(inValue) {
