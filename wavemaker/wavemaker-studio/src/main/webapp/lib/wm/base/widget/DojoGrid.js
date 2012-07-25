@@ -815,6 +815,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.replaceDateFields(dateFields, obj);
             obj._wmVariable = item;
             this.store.newItem(obj);
+            var cell = this.dojoObj.layout.cells[0].getNode(newIndex);
+            if (!cell) this.dojoObj.render();
             if (selectOnAdd || selectOnAdd === undefined) {
                 this.setSelectedRow(newIndex);
                 this.selectionChange(); // needs committing
@@ -823,7 +825,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
                 wm.onidle(this, function() {
                     this.dojoObj.scrollToRow(newIndex);
-                    this.editCell(newIndex, editCell.field);
+                    if (editCell) {
+                        this.editCell(newIndex, editCell.field);
+                    }
                 });
 
             }            
