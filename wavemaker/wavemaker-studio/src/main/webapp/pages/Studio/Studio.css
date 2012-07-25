@@ -254,8 +254,8 @@ div .StudioGrid td,
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer,
 .wminspector .StudioFieldGroupPanel {
     background-color: #1B222D;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
+    -webkit-border-radius: 0px 0px 4px 4px;
+    border-radius: 0px 0px 4px 4px;
     border-color: #959DAB;
 }
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers .wmlayer {
