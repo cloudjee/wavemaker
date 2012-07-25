@@ -202,6 +202,11 @@ body .wmtablayers-tab:active:not(.wmtablayers-selected) {
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     position: relative;
+    top: 2px; /* Preferred by firefox; maybe IE as well? */
+}
+.dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
+.dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+    position: relative;
     top: 1px;
 }
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
