@@ -80,6 +80,11 @@ public class ClassPathFile extends AbstractReadOnlyFile {
     }
 
     @Override
+    public File copyToIfNewer(Folder folder) {
+        return null;
+    }
+
+    @Override
     protected InputStream getInputStream() {
         return this.classLoader.getResourceAsStream(this.path.toString().substring(1));
     }

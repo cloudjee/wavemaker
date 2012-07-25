@@ -24,8 +24,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -40,8 +39,6 @@ import com.wavemaker.tools.project.ProjectConstants;
 public class NewCopyRuntimeJarsTask extends Task {
 
     public static final String CLASSPATH_ATTR_NAME = "Class-Path";
-
-    //public static final String TASK_NAME = "copyRuntimeJarsTask";
 
     private static final String RUNTIME_JAR_PROPERTIES = "META-INF/runtimejar.properties";
 
@@ -152,49 +149,41 @@ public class NewCopyRuntimeJarsTask extends Task {
         File runtimeJarFile = getRuntimeJarFile();
 
         List<String> runtimeJarNames = getReferencedClassPathJars(runtimeJarFile, true);
+        String[] runtimeJarNamesArr = runtimeJarNames.toArray(new String[runtimeJarNames.size()]);
 
         Resources<com.wavemaker.tools.io.File> projectJars = getProjectJarFileSet();
-
-        // Delete all jars not included in these lists
-        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern("*.jar");
-
-        List<ResourceFilter> flist;
-        ResourceFilter[] runtimeJarFilter = null;
-        if (runtimeJarNames != null && runtimeJarNames.size() > 0 ) {
-            flist = new ArrayList<ResourceFilter>();
-            for (String runtimeJarName : runtimeJarNames) {
-                flist.add(FilterOn.caseSensitiveNames().matching(runtimeJarName));
+        List<com.wavemaker.tools.io.File> projJarList = projectJars.fetchAll();
+        String[] proJarNamesArr = null;
+        if (projJarList != null && projJarList.size() > 0) {
+            proJarNamesArr = new String[projJarList.size()];
+            int i = 0;
+            for (com.wavemaker.tools.io.File projJar :projJarList) {
+                proJarNamesArr[i] = projJar.getName();
+                i++;
             }
-            runtimeJarFilter = flist.toArray(new ResourceFilter[runtimeJarNames.size()]);
         }
 
-        this.todir.find().include(included).exclude(runtimeJarFilter).files().delete();
+        // Delete all jars not included in these lists
 
-        //TODO:ant - The following lines of code intend to handle user-added jars but it seems wrong. Fix it.
-        /*for (String projectJarName : projectJars.getDirectoryScanner().getIncludedFiles()) {
-            String trimmedJarName = projectJarName.substring(ProjectConstants.LIB_DIR.length() + 1);
-            deleteFileSet.createExclude().setName(trimmedJarName);
-        }*/
+        ResourceFilter included = FilterOn.antPattern("*.jar");
+
+        ResourceFilter excluded = FilterOn.caseSensitiveNames().matching((String[]) ArrayUtils.addAll(runtimeJarNamesArr, proJarNamesArr));
+
+        this.todir.find().include(included).exclude(excluded).files().delete();
 
         // Copy all new or out of date jars to the target directory
 
         Resources<com.wavemaker.tools.io.File> sourceRuntimeFileSet = null;
         if (!this.todir.equals(this.from)) {
-            sourceRuntimeFileSet = this.from.find().include(runtimeJarFilter).files();
+            sourceRuntimeFileSet = this.from.find().include(FilterOn.caseSensitiveNames().matching(runtimeJarNamesArr)).files();
         }
 
         for (com.wavemaker.tools.io.File file : projectJars) {
-            com.wavemaker.tools.io.File destf = this.todir.getFile(file.getName());
-            if (destf.exists()) destf.delete(); //TODO:ant - prepareWebRoot should not copy this file.  Once fixed, this line should be removed.
-            destf.createIfMissing();
-            file.getContent().copyTo(destf.getContent().asOutputStream());    
+            file.copyToIfNewer(this.todir);
         }
 
         for (com.wavemaker.tools.io.File file : sourceRuntimeFileSet) {
-            com.wavemaker.tools.io.File destf = this.todir.getFile(file.getName());
-            if (destf.exists()) destf.delete(); //TODO:ant - prepareWebRoot should not copy this file.  Once fixed, this line should be removed.
-            destf.createIfMissing();
-            file.getContent().copyTo(destf.getContent().asOutputStream());
+            file.copyToIfNewer(this.todir);
         }
 
         //TODO:ant - copy pws files when supporting pws module

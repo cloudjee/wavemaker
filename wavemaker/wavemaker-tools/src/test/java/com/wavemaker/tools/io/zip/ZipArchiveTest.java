@@ -290,6 +290,13 @@ public class ZipArchiveTest {
         assertTrue(entryNames.contains("x/b/ba.txt"));
     }
 
+    @Test
+    public void shouldOnlyHaveExistingFolders() throws Exception {
+        // Underlying cause of WM-4263
+        assertThat(this.zip.hasExisting("/a/"), is(true));
+        assertThat(this.zip.hasExisting("/missing/"), is(false));
+    }
+
     private InputStream createSampleZip() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);

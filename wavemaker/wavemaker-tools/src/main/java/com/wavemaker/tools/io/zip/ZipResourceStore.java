@@ -61,7 +61,11 @@ abstract class ZipResourceStore implements ResourceStore {
 
     @Override
     public Resource getExisting(JailedResourcePath path) {
-        return getZipFile().getEntry(path).isFolder() ? getFolder(path) : getFile(path);
+        ZipFile.ZipFileDetailsEntry entry = getZipFile().getEntry(path, false);
+        if (entry == null) {
+            return null;
+        }
+        return entry.isFolder() ? getFolder(path) : getFile(path);
     }
 
     @Override
