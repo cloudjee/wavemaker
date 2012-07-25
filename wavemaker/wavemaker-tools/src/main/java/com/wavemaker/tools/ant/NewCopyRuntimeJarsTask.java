@@ -173,16 +173,15 @@ public class NewCopyRuntimeJarsTask extends Task {
 
         // Copy all new or out of date jars to the target directory
 
-        Resources<com.wavemaker.tools.io.File> sourceRuntimeFileSet = null;
         if (!this.todir.equals(this.from)) {
-            sourceRuntimeFileSet = this.from.find().include(FilterOn.caseSensitiveNames().matching(runtimeJarNamesArr)).files();
+            Resources<com.wavemaker.tools.io.File> sourceRuntimeFileSet =
+                    this.from.find().include(FilterOn.caseSensitiveNames().matching(runtimeJarNamesArr)).files();
+            for (com.wavemaker.tools.io.File file : sourceRuntimeFileSet) {
+                file.copyToIfNewer(this.todir);
+            }
         }
 
         for (com.wavemaker.tools.io.File file : projectJars) {
-            file.copyToIfNewer(this.todir);
-        }
-
-        for (com.wavemaker.tools.io.File file : sourceRuntimeFileSet) {
             file.copyToIfNewer(this.todir);
         }
 
