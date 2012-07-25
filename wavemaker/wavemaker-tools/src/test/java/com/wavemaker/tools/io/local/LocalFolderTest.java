@@ -19,6 +19,7 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.Resources;
 
 /**
  * Tests for {@link LocalFolder}.
@@ -76,6 +77,15 @@ public class LocalFolderTest {
         expected.add("/d/e/f.txt");
         expected.add("/g.txt");
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldFindFilesTwice() throws Exception {
+        // WM-4280
+        Resources<File> files = this.root.find().files();
+        List<File> all1 = files.fetchAll();
+        List<File> all2 = files.fetchAll();
+        assertThat(all1.size(), is(all2.size()));
     }
 
     @Test

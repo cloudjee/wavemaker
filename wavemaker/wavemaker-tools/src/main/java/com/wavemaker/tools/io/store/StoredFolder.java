@@ -90,7 +90,13 @@ public abstract class StoredFolder extends StoredResource implements Folder {
         if (!exists()) {
             return new ResourcesCollection<Resource>(this);
         }
-        return new ChildResources(new ChildResourceIterator(this));
+        return new ChildResources(new Iterable<Resource>() {
+
+            @Override
+            public Iterator<Resource> iterator() {
+                return new ChildResourceIterator(StoredFolder.this);
+            }
+        });
     }
 
     @Override
@@ -98,7 +104,13 @@ public abstract class StoredFolder extends StoredResource implements Folder {
         if (!exists()) {
             return new ResourcesCollection<Resource>(this);
         }
-        return new ChildResources(new RecursiveChildResourceIterator(this));
+        return new ChildResources(new Iterable<Resource>() {
+
+            @Override
+            public Iterator<Resource> iterator() {
+                return new RecursiveChildResourceIterator(StoredFolder.this);
+            }
+        });
     }
 
     @Override
@@ -246,11 +258,11 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
     private class ChildResources extends AbstractResources<Resource> {
 
-        private final Iterator<Resource> iterator;
+        private final Iterable<Resource> iterable;
 
-        public ChildResources(Iterator<Resource> iterator) {
-            Assert.notNull(iterator, "Iterator must not be null");
-            this.iterator = iterator;
+        public ChildResources(Iterable<Resource> iterable) {
+            Assert.notNull(iterable, "Iterable must not be null");
+            this.iterable = iterable;
         }
 
         @Override
@@ -260,7 +272,7 @@ public abstract class StoredFolder extends StoredResource implements Folder {
 
         @Override
         public Iterator<Resource> iterator() {
-            return this.iterator;
+            return this.iterable.iterator();
         }
 
     }
