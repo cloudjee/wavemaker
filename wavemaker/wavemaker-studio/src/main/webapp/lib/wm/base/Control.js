@@ -1226,9 +1226,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && !wm.isFakeMobile ? "auto" : "hidden");
 	var stylesObj;
 
-	var margins = (this.margin||"").split(marginSplitter);
-	var borders = (this.border||"").split(borderSplitter);
-	var paddings = (this.padding||"").split(paddingSplitter);
+	var margins = (this.margin||"0").split(marginSplitter);
+	var borders = (this.border||"0").split(borderSplitter);
+	var paddings = (this.padding||"0").split(paddingSplitter);
 	
 
 	    if (margins.length == 1) {
@@ -1319,11 +1319,29 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         if (!this.domNode) return;
 
         var cssTextItems = [];
+        var skipItems = ["backgroundColor", "padding", "margin",
+        "borderTopWidth", "borderTopStyle", "borderTopColor",
+        "borderBottomWidth", "borderBottomStyle", "borderBottomColor",
+        "borderLeftWidth", "borderLeftStyle", "borderLeftColor",
+        "borderRightWidth", "borderRightStyle", "borderRightColor",
+        "overflowX", "overflowY"];
         wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
-            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
-                return "-" + inLetter.toLowerCase();
-            }) + ":" + styleValue);
-            this._appliedStyles[styleName] = styleValue;
+        	if (dojo.indexOf(skipItems, styleName) == -1) {
+        		if (styleName == "backgroundGradient") {
+		            var gradient = cssObj.backgroundGradient;
+		            inValue = wm.getBackgroundStyle(gradient.startColor, gradient.endColor, gradient.colorStop, gradient.direction, "");
+		            if (dojo.isIE < 10) {
+		                cssTextItems.push("filter: " + inValue);
+		            } else {
+		                cssTextItems.push("background: " + inValue);
+		            }
+		        } else {
+		            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
+		                return "-" + inLetter.toLowerCase();
+		            }) + ":" + styleValue);		            
+		        }
+		        this._appliedStyles[styleName] = styleValue;
+	        }
         }));
 
         /* margin/padding/border all affect the layout and sizing of widgets and can't be left to stylesheets */
@@ -1345,15 +1363,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto" || cssObj.overflowY == "scroll")) {
             cssTextItems.push("-webkit-overflow-scrolling: touch");
         }
-        if (cssObj.backgroundGradient) {
-            var gradient = cssObj.backgroundGradient;
-            inValue = wm.getBackgroundStyle(gradient.startColor, gradient.endColor, gradient.colorStop, gradient.direction, "");
-            if (dojo.isIE < 10) {
-                cssTextItems.push("filter: " + inValue);
-            } else {
-                cssTextItems.push("background: " + inValue);
-            }
-        }
+        
         // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
         // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
         this.domNode.style.cssText += cssTextItems.join(";");
