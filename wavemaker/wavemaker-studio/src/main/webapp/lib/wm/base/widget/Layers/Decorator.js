@@ -148,6 +148,7 @@ dojo.declare("wm.LayersDecorator", null, {
 
 		inLayer.domNode.style.display = "";
 		dojo.addClass(inLayer.domNode, transition + "In" + (direction) + "Anim");
+		inLayer.reflowParent();
 	    }
     },
     animFade: function(inLayer, inShowing) {
