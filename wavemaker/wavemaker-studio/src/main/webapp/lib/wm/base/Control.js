@@ -1223,7 +1223,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}	
 
 	var paddArr = this.padding.split(paddingSplitter);
-	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && !wm.isFakeMobile ? "auto" : "hidden");
+	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && (!wm.isFakeMobile || this instanceof wm.Container == false) ? "auto" : "hidden");
 	var stylesObj;
 
 	var margins = (this.margin||"0").split(marginSplitter);
