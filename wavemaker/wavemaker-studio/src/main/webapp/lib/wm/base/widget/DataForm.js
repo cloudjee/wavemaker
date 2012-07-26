@@ -613,33 +613,42 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      *              to the server
      ***************/
     populateDataOutput: function() {
-	var d = this.dataOutput;
-	dojo.forEach(this.getEditorsArray(), dojo.hitch(this, function(e) {
-	    if (e instanceof wm.DataForm || e instanceof wm.SubForm || wm.isInstanceType(e, wm.SubForm)) {
+        var d = this.dataOutput || this.$.dataOutput;
 
-	    } else if (e.formField) {
-		d.setValue(e.formField, e.getDataValue());
+        if (this._inPopulateDataOutput) return d;
+        this._inPopulateDataOutput = true;
+        try {
+        dojo.forEach(this.getEditorsArray(), dojo.hitch(this, function(e) {
+            if (e instanceof wm.DataForm || e instanceof wm.SubForm || wm.isInstanceType(e, wm.SubForm)) {
+
+            } else if (e.formField) {
+                d.setValue(e.formField, e.getDataValue());
             }
-	}));
-	dojo.forEach(this.getRelatedEditorsArray(), dojo.hitch(this, function(subform) {
-	    subform.populateDataOutput();
-	    d.setValue(subform.formField, subform.dataOutput);
-	}));
+        }));
+        dojo.forEach(this.getRelatedEditorsArray(), dojo.hitch(this, function(subform) {
+            subform.populateDataOutput();
+            d.setValue(subform.formField, subform.dataOutput);
+        }));
 
-	if (this.$.binding) {
-	    var wires = this.$.binding.findWires(function(wire) {return (wire.targetProperty == "dataOutput" || wire.targetProperty.indexOf("dataOutput.") == 0);});
-	    dojo.forEach(wires, function(wire) { wire.refreshValue();});
-	}
+        if (this.$.binding) {
+            var wires = this.$.binding.findWires(function(wire) {
+                return (wire.targetProperty == "dataOutput" || wire.targetProperty.indexOf("dataOutput.") == 0);
+            });
+            dojo.forEach(wires, function(wire) {
+                wire.refreshValue();
+            });
+        }
 
-	/* Convert any isList elements into non lists if the type should not be a list;
-	 * useful for when binding dataOutput to a LiveVariable which always gives us a List */
-	wm.forEachProperty(this.dataOutput._dataSchema, dojo.hitch(this, function(fieldDef, fieldName) {
-	    var value = this.dataOutput.getValue(fieldName);
-	    if (value instanceof wm.Variable && value.isList && !fieldDef.isList) {
-		this.dataOutput.setValue(fieldName, value.getItem(0));
-	    }
-	}));
-        return this.dataOutput;
+        /* Convert any isList elements into non lists if the type should not be a list;
+         * useful for when binding dataOutput to a LiveVariable which always gives us a List */
+        wm.forEachProperty(d._dataSchema, dojo.hitch(this, function(fieldDef, fieldName) {
+            var value = d.getValue(fieldName);
+            if (value instanceof wm.Variable && value.isList && !fieldDef.isList) {
+                d.setValue(fieldName, value.getItem(0));
+            }
+        }));
+    } finally { delete this._inPopulateDataOutput;}
+        return d;
     },
 
     /****************
