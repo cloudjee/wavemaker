@@ -50,7 +50,6 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.LatestLastModified;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
 
@@ -113,15 +112,18 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     }
 
     private boolean continueTestRun(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
-        if (!appAlreadyDeployed(projectDir, deployName, properties)) {
-            return true;
-        } else if (projectDir.getFile(deployName + ".xml").exists()) {
-            long l1 = projectDir.getFile(deployName + ".xml").getLastModified();
-            long l2 = projectDir.getFolder("webapproot/WEB-INF").find().files().performOperation(new LatestLastModified()).getValue();
-            return l1 < l2;
-        } else {
-            return true;
-        }
+        return true;
+        // FIXME this code is broken, see WM-4282
+        // if (!appAlreadyDeployed(projectDir, deployName, properties)) {
+        // return true;
+        // } else if (projectDir.getFile(deployName + ".xml").exists()) {
+        // long l1 = projectDir.getFile(deployName + ".xml").getLastModified();
+        // long l2 = projectDir.getFolder("webapproot/WEB-INF").find().files().performOperation(new
+        // LatestLastModified()).getValue();
+        // return (l1 < l2);
+        // } else {
+        // return true;
+        // }
     }
 
     private boolean appAlreadyDeployed(LocalFolder projectDir, String deployName, Map<String, Object> properties) {

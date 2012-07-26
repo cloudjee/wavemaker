@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
@@ -383,7 +384,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void compile() {
         com.wavemaker.tools.project.Project project = this.projectManager.getCurrentProject();
-        this.projectCompiler.compile(this.destdir, this.classesdir, this.projectCompiler.getClasspath(project));
+        this.projectCompiler.compile(null, Collections.singleton(this.destdir), this.classesdir, this.projectCompiler.getClasspath(project));
     }
 
     protected void writePropertiesFile(Configuration cfg) {

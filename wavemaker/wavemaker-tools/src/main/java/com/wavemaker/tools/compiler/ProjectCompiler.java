@@ -85,7 +85,7 @@ public class ProjectCompiler {
 
     public String compile(final Project project) {
         try {
-            copyRuntimeServiceFiles(project);
+            copyRuntimeServiceFiles(project.getWebAppRootFolder(), project.getClassOutputFolder());
             JavaCompiler compiler = new WaveMakerJavaCompiler();
             StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
             standardFileManager.setLocation(StandardLocation.CLASS_PATH, getStandardClassPath());
@@ -111,14 +111,11 @@ public class ProjectCompiler {
         }
     }
 
-    public String compile(Folder srcdir, Folder destdir, Iterable<Resource> classpath) {
-        ArrayList<Folder> sources = new ArrayList<Folder>();
-        sources.add(srcdir);
-        return compile(sources, destdir, classpath);
-    }
-
-    public String compile(Iterable<? extends Resource> sources, Folder destination, Iterable<Resource> classpath) {
+    public String compile(Folder webAppRootFolder, Iterable<Folder> sources, Folder destination, Iterable<Resource> classpath) {
         try {
+            if (webAppRootFolder != null) {
+                copyRuntimeServiceFiles(webAppRootFolder, destination);
+            }
             JavaCompiler compiler = new WaveMakerJavaCompiler();
             StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
             standardFileManager.setLocation(StandardLocation.CLASS_PATH, getStandardClassPath());
@@ -158,16 +155,16 @@ public class ProjectCompiler {
      * 
      * @param project
      */
-    private void copyRuntimeServiceFiles(Project project) {
+    private void copyRuntimeServiceFiles(Folder webAppRootFolder, Folder classOutputFolder) {
         Folder webAppRoot = this.fileSystem.getStudioWebAppRootFolder();
         for (String serviceName : RUNTIME_SERVICE_NAMES) {
             File smdFile = webAppRoot.getFile("services/" + serviceName + ".smd");
             File springFile = webAppRoot.getFile("WEB-INF/classes/" + serviceName + ".spring.xml");
             if (smdFile.exists()) {
-                smdFile.copyTo(project.getWebAppRootFolder().getFolder("services"));
+                smdFile.copyTo(webAppRoot.getFolder("services"));
             }
             if (springFile.exists()) {
-                springFile.copyTo(project.getClassOutputFolder());
+                springFile.copyTo(classOutputFolder);
             }
         }
     }

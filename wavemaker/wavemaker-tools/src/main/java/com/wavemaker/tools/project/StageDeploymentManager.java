@@ -144,7 +144,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder projectRoot = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
 
         Folder destDir = buildAppWebAppRoot.getFolder("WEB-INF/classes");
-        return this.projectCompiler.compile(Project.getSourceFolders(projectRoot, false), destDir, this.projectCompiler.getClasspath(projectRoot));
+        return this.projectCompiler.compile(projectRoot.getFolder(ProjectConstants.WEB_DIR), Project.getSourceFolders(projectRoot, false), destDir,
+            this.projectCompiler.getClasspath(projectRoot));
     }
 
     public void copyJars(Map<String, Object> properties) {
