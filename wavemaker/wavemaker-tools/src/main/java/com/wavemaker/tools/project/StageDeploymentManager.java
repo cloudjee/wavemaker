@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.catalina.ant.UndeployTask;
 import org.apache.catalina.ant.DeployTask;
+import org.apache.catalina.ant.UndeployTask;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -17,8 +17,11 @@ import com.wavemaker.tools.ant.ConfigurationCompilerTask;
 import com.wavemaker.tools.ant.MergeUserWebXmlTask;
 import com.wavemaker.tools.ant.NewCopyRuntimeJarsTask;
 import com.wavemaker.tools.ant.ServiceCompilerTask;
-import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
-import com.wavemaker.tools.io.*;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceOperation;
+import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
 
@@ -54,8 +57,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected static final String WAVEMAKER_HOME = "wavemaker.home";
 
-    protected void buildWar(LocalFolder projectDir, LocalFolder buildDir, File warFile, boolean includeEar,
-                            StudioFileSystem fileSystem) throws WMRuntimeException {  //projectDir: dplstaging  //buildDir: fileutils
+    protected void buildWar(LocalFolder projectDir, LocalFolder buildDir, File warFile, boolean includeEar, StudioFileSystem fileSystem)
+        throws WMRuntimeException { // projectDir: dplstaging //buildDir: fileutils
 
         Map<String, Object> properties = setProperties(projectDir, buildDir, warFile);
 
@@ -72,8 +75,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     }
 
     protected Map<String, Object> setProperties(LocalFolder projectDir) {
-        LocalFolder buildDir = (LocalFolder)getProjectDir().getFolder("webapproot");
-        File warFile =getProjectDir().getFolder("dist").getFile(getDeployName() + ".war");
+        LocalFolder buildDir = (LocalFolder) getProjectDir().getFolder("webapproot");
+        File warFile = getProjectDir().getFolder("dist").getFile(getDeployName() + ".war");
         return setProperties(projectDir, buildDir, warFile);
     }
 
@@ -88,7 +91,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         properties.put(WAR_FILE_NAME_PROPERTY, warFile);
         properties.put(EAR_FILE_NAME_PROPERTY, earFile);
         properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
-        properties.put(DEPLOY_NAME_PROPERTY,  origProjMgr == null ? getDeployName() : this.origProjMgr.getCurrentProject().getProjectName());
+        properties.put(DEPLOY_NAME_PROPERTY, this.origProjMgr == null ? getDeployName() : this.origProjMgr.getCurrentProject().getProjectName());
         properties.put(WAVEMAKER_HOME, this.fileSystem.getWaveMakerHomeFolder());
         properties.put(PROJECT_DIR_PROPERTY, projectDir);
         properties = addMoreProperties(projectDir, null, properties);
@@ -116,13 +119,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     public static void copyCustomFiles(Folder webAppRoot, StudioFileSystem fileSystem, String customDir) throws IOException {
 
         Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
-        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + customDir + "/**", "dojo/util/**",
-                "dojo/**/tests/**");
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + customDir + "/**", "dojo/util/**", "dojo/**/tests/**");
         studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(webAppRoot.getFolder("lib"));
 
         Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
-        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customDir  + "/**");
-        excluded = FilterOn.antPattern(customDir  + "/**/deployments.js");
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customDir + "/**");
+        excluded = FilterOn.antPattern(customDir + "/**/deployments.js");
         wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
     }
 
@@ -142,8 +144,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder projectRoot = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
 
         Folder destDir = buildAppWebAppRoot.getFolder("WEB-INF/classes");
-        return this.projectCompiler.compile(Project.getSourceFolders(projectRoot, false),
-                                            destDir, this.projectCompiler.getClasspath(projectRoot));
+        return this.projectCompiler.compile(Project.getSourceFolders(projectRoot, false), destDir, this.projectCompiler.getClasspath(projectRoot));
     }
 
     public void copyJars(Map<String, Object> properties) {
@@ -152,14 +153,14 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
         LocalFolder buildWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
         LocalFolder buildWebAppLibDir = (LocalFolder) buildWebAppRoot.getFolder("WEB-INF/lib");
-        LocalFolder buildWebAppClassesDir = (LocalFolder )buildWebAppRoot.getFolder("WEB-INF/lib");
+        LocalFolder buildWebAppClassesDir = (LocalFolder) buildWebAppRoot.getFolder("WEB-INF/lib");
         buildWebAppLibDir.createIfMissing();
         buildWebAppClassesDir.createIfMissing();
 
         // CopyRuntimeJarsTask
         NewCopyRuntimeJarsTask task = new NewCopyRuntimeJarsTask();
         task.setTodir(buildWebAppLibDir);
-        LocalFolder studioWebAppLibDir = (LocalFolder) ((Folder)properties.get(STUDIO_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF/lib");
+        LocalFolder studioWebAppLibDir = (LocalFolder) ((Folder) properties.get(STUDIO_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF/lib");
         task.setFrom(studioWebAppLibDir);
         task.setPreserveLastModified(true);
         task.setOverwrite(false);
@@ -298,14 +299,14 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     public void deploy(Map<String, Object> properties) {
         DeployTask task = new DeployTask();
-        String host = (String)properties.get(TOMCAT_HOST_PROPERTY);
-        String port = (String)properties.get(TOMCAT_PORT_PROPERTY);
-        String userName = (String)properties.get("tomcat.manager.username");
-        String password = (String)properties.get("tomcat.manager.password");
-        String tomcatManagerUrl =  "http://" + host + ":" + port + "/manager";
-        String deployName = (String)properties.get(DEPLOY_NAME_PROPERTY);
-        LocalFolder projectDir = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
-        String tomcatConfigXmlPath = ((LocalFile)projectDir.getFile(deployName + ".xml")).getLocalFile().getAbsolutePath();
+        String host = (String) properties.get(TOMCAT_HOST_PROPERTY);
+        String port = (String) properties.get(TOMCAT_PORT_PROPERTY);
+        String userName = (String) properties.get("tomcat.manager.username");
+        String password = (String) properties.get("tomcat.manager.password");
+        String tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
+        String deployName = (String) properties.get(DEPLOY_NAME_PROPERTY);
+        LocalFolder projectDir = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
+        String tomcatConfigXmlPath = ((LocalFile) projectDir.getFile(deployName + ".xml")).getLocalFile().getAbsolutePath();
         task.setUrl(tomcatManagerUrl);
         task.setUsername(userName);
         task.setPassword(password);
@@ -315,7 +316,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         try {
             task.execute();
         } catch (Exception ex) {
-        } 
+        }
     }
 
     protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {

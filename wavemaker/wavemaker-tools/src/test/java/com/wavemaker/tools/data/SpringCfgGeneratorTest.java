@@ -28,7 +28,6 @@ import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
 

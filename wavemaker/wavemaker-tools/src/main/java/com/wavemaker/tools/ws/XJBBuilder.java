@@ -82,7 +82,7 @@ public class XJBBuilder {
         if (this.wsdl.isNoOverwriteCustomizationFiles() && bindingFile.exists()) {
             return bindingFile;
         }
-              
+
         PrintWriter pw = new PrintWriter(bindingFile.getContent().asOutputStream());
 
         XMLWriter xw = XMLUtils.newXMLWriter(pw);
@@ -98,24 +98,24 @@ public class XJBBuilder {
         xw.addAttribute("schemaLocation", schemaLocation);
         xw.addAttribute("node", "//xsd:schema[1]");
 
-        if(!bindingFile.getParent().hasExisting(this.wsdl.getServiceId() + (schemaCount - 1) + Constants.JAXB_BINDING_FILE_EXT)){
-        	xw.addElement("schemaBindings");
+        if (!bindingFile.getParent().hasExisting(this.wsdl.getServiceId() + (schemaCount - 1) + Constants.JAXB_BINDING_FILE_EXT)) {
+            xw.addElement("schemaBindings");
 
-        	// specify Java package name to be used for this schema
-        	xw.addElement("package");
-        	String pkgName = this.wsdl.getPackageName();
-        	if (useDifferentPackage && schemaCount > 1) {
-        		pkgName = pkgName + "." + "schema" + schemaCount;
-        	}
-        	xw.addAttribute("name", pkgName);
-        	xw.closeElement();
+            // specify Java package name to be used for this schema
+            xw.addElement("package");
+            String pkgName = this.wsdl.getPackageName();
+            if (useDifferentPackage && schemaCount > 1) {
+                pkgName = pkgName + "." + "schema" + schemaCount;
+            }
+            xw.addAttribute("name", pkgName);
+            xw.closeElement();
 
-        	// appending a suffix "Type" to all ComplexType Java class. This is
-        	// to avoid name conflicts between named type definitions and global
-        	// element declarations.
-        	xw.addElement("nameXmlTransform");
-        	xw.addElement("typeName");
-        	xw.addAttribute("suffix", "Type");
+            // appending a suffix "Type" to all ComplexType Java class. This is
+            // to avoid name conflicts between named type definitions and global
+            // element declarations.
+            xw.addElement("nameXmlTransform");
+            xw.addElement("typeName");
+            xw.addAttribute("suffix", "Type");
         }
         xw.finish();
         pw.close();

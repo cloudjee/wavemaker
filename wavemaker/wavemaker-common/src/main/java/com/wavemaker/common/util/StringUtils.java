@@ -467,7 +467,7 @@ public abstract class StringUtils {
             if (childPath != null && childPath.length() > 0 && childPath.substring(0, 1).equals("/")) {
                 path = rootPath + childPath;
             } else {
-                path = rootPath.length() == 0 ?childPath :  rootPath + "/" + childPath;
+                path = rootPath.length() == 0 ? childPath : rootPath + "/" + childPath;
             }
         } else {
             if (childPath != null && childPath.length() > 0 && childPath.substring(0, 1).equals("/")) {

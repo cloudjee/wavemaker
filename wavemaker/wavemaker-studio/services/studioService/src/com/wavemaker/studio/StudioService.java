@@ -46,7 +46,6 @@ import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.DeploymentManager;
@@ -173,19 +172,13 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
     }
 
     /*
-    @ExposeToClient
-    public void revertProject(String exportFileName) throws IOException {
-	Folder projectFolder = this.projectManager.getCurrentProject().getRootFolder();
-	Folder exportFolder = projectFolder.getFolder("export");
-	Folder tmpDest = projectFolder.getFolder("..");
-	exportFolder.moveTo(tmpDest);
-	Resource exportFile = tmpDest.getFile(exportFileName);
-	org.springframework.core.io.Resource altExportFile = this.projectManager.getCurrentProject().getProjectRoot().createRelative("../export/" + exportFileName);
-	this.deploymentManager.importFromZip(altExportFile);
-	tmpDest.moveTo(exportFolder);
-    }
-        
-    */
+     * @ExposeToClient public void revertProject(String exportFileName) throws IOException { Folder projectFolder =
+     * this.projectManager.getCurrentProject().getRootFolder(); Folder exportFolder = projectFolder.getFolder("export");
+     * Folder tmpDest = projectFolder.getFolder(".."); exportFolder.moveTo(tmpDest); Resource exportFile =
+     * tmpDest.getFile(exportFileName); org.springframework.core.io.Resource altExportFile =
+     * this.projectManager.getCurrentProject().getProjectRoot().createRelative("../export/" + exportFileName);
+     * this.deploymentManager.importFromZip(altExportFile); tmpDest.moveTo(exportFolder); }
+     */
 
     /**
      * @throws FileAccessException
@@ -723,5 +716,5 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         public void setUpgradeMessages(UpgradeInfo upgradeMessages) {
             this.upgradeMessages = upgradeMessages;
         }
-    }    
+    }
 }

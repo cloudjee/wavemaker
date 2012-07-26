@@ -14,28 +14,28 @@
 
 package com.wavemaker.studio;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.common.util.IOUtils;
 
 /**
  * Deployment Service used by WaveMaker to manage and deploy projects to various deployment targets.

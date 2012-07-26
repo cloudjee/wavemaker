@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectConstants;
 
 public class MergeUserWebXmlTask {
@@ -39,15 +38,15 @@ public class MergeUserWebXmlTask {
     private Folder workFolder;
 
     public String execute() {
-        File userWebXml = workFolder.getFile(ProjectConstants.USER_WEB_XML);
-        File webXml = workFolder.getFile(ProjectConstants.WEB_XML);
+        File userWebXml = this.workFolder.getFile(ProjectConstants.USER_WEB_XML);
+        File webXml = this.workFolder.getFile(ProjectConstants.WEB_XML);
 
         return mergeWebXml(webXml.getContent().asString(), userWebXml.getContent().asString());
     }
 
     /**
      * Merge web.xml content with user specified content.
-     *
+     * 
      * @param webXmlContent the source web.xml content. This should be valid XML starting with a
      *        <tt>&lt;web-app&gt;</tt> element. If the content contains existing user specified content (between
      *        {@link #START_MARKER} and {@link #END_MARKER}) it will be replaced, otherwise user content will be

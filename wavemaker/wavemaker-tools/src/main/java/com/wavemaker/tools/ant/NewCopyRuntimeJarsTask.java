@@ -23,15 +23,15 @@ import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import org.apache.tools.ant.Task;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.tools.ant.Task;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -157,7 +157,7 @@ public class NewCopyRuntimeJarsTask extends Task {
         if (projJarList != null && projJarList.size() > 0) {
             proJarNamesArr = new String[projJarList.size()];
             int i = 0;
-            for (com.wavemaker.tools.io.File projJar :projJarList) {
+            for (com.wavemaker.tools.io.File projJar : projJarList) {
                 proJarNamesArr[i] = projJar.getName();
                 i++;
             }
@@ -174,8 +174,8 @@ public class NewCopyRuntimeJarsTask extends Task {
         // Copy all new or out of date jars to the target directory
 
         if (!this.todir.equals(this.from)) {
-            Resources<com.wavemaker.tools.io.File> sourceRuntimeFileSet =
-                    this.from.find().include(FilterOn.caseSensitiveNames().matching(runtimeJarNamesArr)).files();
+            Resources<com.wavemaker.tools.io.File> sourceRuntimeFileSet = this.from.find().include(
+                FilterOn.caseSensitiveNames().matching(runtimeJarNamesArr)).files();
             for (com.wavemaker.tools.io.File file : sourceRuntimeFileSet) {
                 file.copyToIfNewer(this.todir);
             }
@@ -185,8 +185,8 @@ public class NewCopyRuntimeJarsTask extends Task {
             file.copyToIfNewer(this.todir);
         }
 
-        //TODO:ant - copy pws files when supporting pws module
-        //copyPwsFiles(this.from, this.wmProject);
+        // TODO:ant - copy pws files when supporting pws module
+        // copyPwsFiles(this.from, this.wmProject);
     }
 
     public void setProjectRoot(File projectRoot) {

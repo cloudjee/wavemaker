@@ -198,8 +198,8 @@ public class DataService {
             revengNamingStrategyClassName, overrideTable);
     }
 
-    public String cfExportDatabase(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName, String dialectClassName,
-        String revengNamingStrategyClassName, boolean overrideTable) {
+    public String cfExportDatabase(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName,
+        String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
 
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
@@ -207,8 +207,8 @@ public class DataService {
             String connectionUrl = info.getUrl();
             String username = info.getUserName();
             String password = info.getPassword();
-            return this.dataModelMgr.exportDatabase(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
-            revengNamingStrategyClassName, overrideTable);
+            return this.dataModelMgr.exportDatabase(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName,
+                dialectClassName, revengNamingStrategyClassName, overrideTable);
         } else {
             throw new UnsupportedOperationException();
         }
@@ -366,8 +366,8 @@ public class DataService {
         }
     }
 
-    public String cfGetExportDDL(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName,
-                                 String dialectClassName, boolean overrideTable) {
+    public String cfGetExportDDL(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName, String dialectClassName,
+        boolean overrideTable) {
         String username = "", password = "", connectionUrl = "";
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
@@ -380,8 +380,8 @@ public class DataService {
             }
         }
 
-        return this.dataModelMgr.getExportDDL(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
-                overrideTable);      
+        return this.dataModelMgr.getExportDDL(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName,
+            dialectClassName, overrideTable);
     }
 
     public RdbmsServiceInfo getCFRdbmsServiceInfo(CloudEnvironment cfEnv, String serviceId) throws WMRuntimeException {
