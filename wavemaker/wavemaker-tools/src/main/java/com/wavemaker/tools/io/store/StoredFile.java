@@ -118,7 +118,6 @@ public abstract class StoredFile extends StoredResource implements File {
 
         @Override
         public InputStream asInputStream() {
-            createParentIfMissing();
             return getStore().getInputStream();
         }
 
