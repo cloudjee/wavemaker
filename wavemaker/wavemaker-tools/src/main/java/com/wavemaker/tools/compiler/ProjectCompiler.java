@@ -156,12 +156,12 @@ public class ProjectCompiler {
      * @param project
      */
     private void copyRuntimeServiceFiles(Folder webAppRootFolder, Folder classOutputFolder) {
-        Folder webAppRoot = this.fileSystem.getStudioWebAppRootFolder();
+        Folder studioWebAppRootFolder = this.fileSystem.getStudioWebAppRootFolder();
         for (String serviceName : RUNTIME_SERVICE_NAMES) {
-            File smdFile = webAppRoot.getFile("services/" + serviceName + ".smd");
-            File springFile = webAppRoot.getFile("WEB-INF/classes/" + serviceName + ".spring.xml");
+            File smdFile = studioWebAppRootFolder.getFile("services/" + serviceName + ".smd");
+            File springFile = studioWebAppRootFolder.getFile("WEB-INF/classes/" + serviceName + ".spring.xml");
             if (smdFile.exists()) {
-                smdFile.copyTo(webAppRoot.getFolder("services"));
+                smdFile.copyTo(webAppRootFolder.getFolder("services"));
             }
             if (springFile.exists()) {
                 springFile.copyTo(classOutputFolder);
