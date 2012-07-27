@@ -1373,12 +1373,12 @@ public class DataModelConfiguration {
             try {
 
                 String relPath = getTypePath(gen.getCurrentTypeName());
+                String path = getRelServicePath(relPath);
 
                 if (backup) {
-                    backup(relPath);
+                    backup(path);
                 }
-
-                String path = getRelServicePath(relPath);
+                
                 gen.generateNext(baos);
 
                 if (DataServiceLoggers.parserLogger.isInfoEnabled()) {
