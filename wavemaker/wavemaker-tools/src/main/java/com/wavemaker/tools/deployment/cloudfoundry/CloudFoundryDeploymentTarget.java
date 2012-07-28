@@ -32,6 +32,7 @@ import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 import org.cloudfoundry.client.lib.archive.ZipApplicationArchive;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +40,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.WebUtils;
-import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -61,9 +61,9 @@ import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
+import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.io.local.LocalFolder;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
@@ -146,7 +146,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         } else {
             try {
                 this.webAppAssembler.prepareForAssemble(new LocalFolder(tempWebAppRoot));
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 throw new DeploymentStatusException(ex.getMessage());
             }
             applicationArchive = this.webAppAssembler.assemble(project.getProjectName(), new FileSystemResource(tempWebAppRoot));

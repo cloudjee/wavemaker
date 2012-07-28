@@ -20,6 +20,7 @@ import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.exception.ResourceException;
 
 /**
  * Tests for {@link LocalFolder}.
@@ -135,5 +136,18 @@ public class LocalFolderTest {
         assertThat(file1.hashCode(), is(equalTo(file1.hashCode())));
         assertThat(file1.hashCode(), is(equalTo(file2.hashCode())));
         assertThat(file1.hashCode(), is(not(equalTo(file3.hashCode()))));
+    }
+
+    @Test
+    public void shouldNotCreateMissingFileWhenGettingAsString() throws Exception {
+        // WM-4290
+        Folder folder = this.root.getFolder("test");
+        File file = folder.getFile("test.txt");
+        assertThat(folder.exists(), is(false));
+        try {
+            file.getContent().asString();
+        } catch (ResourceException e) {
+        }
+        assertThat(folder.exists(), is(false));
     }
 }

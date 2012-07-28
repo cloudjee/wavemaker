@@ -23,10 +23,8 @@ import net.sf.cglib.proxy.MethodProxy;
 import org.hibernate.tool.ant.HibernateToolTask;
 
 import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.project.StudioFileSystem;
 
 public class ExporterTaskInterceptor implements MethodInterceptor {
 

@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentMatcher;
 import org.springframework.util.FileCopyUtils;
+
 import com.wavemaker.tools.io.File;
 
 /**
@@ -172,10 +173,12 @@ public class ModifiedContentApplicationArchiveTest {
             }
         }
 
+        @Override
         public boolean canModify(File file) {
             return false;
         }
 
+        @Override
         public File modify(File file) {
             return null;
         }

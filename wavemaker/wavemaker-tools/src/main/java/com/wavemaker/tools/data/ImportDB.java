@@ -14,9 +14,17 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
@@ -45,7 +53,6 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -377,7 +384,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void compile() {
         com.wavemaker.tools.project.Project project = this.projectManager.getCurrentProject();
-        this.projectCompiler.compile(this.destdir, this.classesdir, this.projectCompiler.getClasspath(project));
+        this.projectCompiler.compile(null, Collections.singleton(this.destdir), this.classesdir, this.projectCompiler.getClasspath(project));
     }
 
     protected void writePropertiesFile(Configuration cfg) {

@@ -14,42 +14,44 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.net.URL;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.Source;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.taskdefs.War;
 import org.apache.tools.ant.taskdefs.Ear;
-import org.apache.commons.io.IOUtils;
+import org.apache.tools.ant.taskdefs.War;
+import org.apache.tools.ant.types.FileSet;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.LatestLastModified;
 
 /**
  * Main deployment class.
@@ -99,9 +101,9 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         }
 
         build(properties);
-        //compile();
+        // compile();
 
-        //testrunstart
+        // testrunstart
         undeploy(properties);
         updateTomcatDeployConfig(properties);
         deploy(properties);
@@ -110,20 +112,23 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     }
 
     private boolean continueTestRun(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
-        if (!appAlreadyDeployed(projectDir, deployName, properties)) {
-            return true;
-        } else if (projectDir.getFile(deployName + ".xml").exists()) {
-            long l1 = projectDir.getFile(deployName + ".xml").getLastModified();
-            long l2 = projectDir.getFolder("webapproot/WEB-INF").find().files().performOperation(new LatestLastModified()).getValue();
-            return (l1 < l2);
-        } else {
-            return true;
-        }
+        return true;
+        // FIXME this code is broken, see WM-4282
+        // if (!appAlreadyDeployed(projectDir, deployName, properties)) {
+        // return true;
+        // } else if (projectDir.getFile(deployName + ".xml").exists()) {
+        // long l1 = projectDir.getFile(deployName + ".xml").getLastModified();
+        // long l2 = projectDir.getFolder("webapproot/WEB-INF").find().files().performOperation(new
+        // LatestLastModified()).getValue();
+        // return (l1 < l2);
+        // } else {
+        // return true;
+        // }
     }
 
     private boolean appAlreadyDeployed(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
         boolean rtn;
-        String port = (String)properties.get(TOMCAT_PORT_PROPERTY);
+        String port = (String) properties.get(TOMCAT_PORT_PROPERTY);
 
         com.wavemaker.tools.io.File deployTestF = projectDir.getFile("webapproot/" + deployName + "-deploy-test-file.txt");
         deployTestF.createIfMissing();
@@ -131,7 +136,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         String content = deployName + " deployed";
         deployTestF.getContent().write(content);
 
-        String urlString = "http://localhost:" + port + "/" + deployName + "/" +deployTestF.getName();
+        String urlString = "http://localhost:" + port + "/" + deployName + "/" + deployTestF.getName();
         InputStream is = null;
         try {
             URL url = new URL(urlString);
@@ -158,9 +163,9 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     }
 
     private void updateTomcatDeployConfig(Map<String, Object> properties) {
-        LocalFolder projectDir = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
-        String deployName = (String)properties.get(DEPLOY_NAME_PROPERTY);
-        LocalFile tomcatConfigXml = ((LocalFile)projectDir.getFile(deployName + ".xml"));
+        LocalFolder projectDir = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
+        String deployName = (String) properties.get(DEPLOY_NAME_PROPERTY);
+        LocalFile tomcatConfigXml = (LocalFile) projectDir.getFile(deployName + ".xml");
         if (tomcatConfigXml.exists()) {
             tomcatConfigXml.delete();
         }
@@ -185,7 +190,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
             context.setAttribute("antiJARLocking", "true'");
             context.setAttribute("antiResourceLocking", "false");
             context.setAttribute("privileged", "true");
-            String docBase = ((LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getLocalFile().getAbsolutePath();
+            String docBase = ((LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY)).getLocalFile().getAbsolutePath();
             context.setAttribute("docBase", docBase);
 
             doc.appendChild(context);
@@ -262,8 +267,8 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     }
 
     private void clean(Map<String, Object> properties) {
-        LocalFolder buildWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
-        LocalFolder projectDir = (LocalFolder)properties.get(PROJECT_DIR_PROPERTY);
+        LocalFolder buildWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
+        LocalFolder projectDir = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
         if (this.buildInLine) {
             buildWebAppRoot.getFolder("/WEB-INF/classes").delete();
             buildWebAppRoot.getFolder("/WEB-INF/lib").getFolder("classes").delete();
@@ -274,7 +279,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
     }
 
     private void buildWar(LocalFolder projectDir, File buildDir, String warFilePath, boolean includeEar) {
-        //projectDir: dplstaging  //buildDir: fileutils
+        // projectDir: dplstaging //buildDir: fileutils
         LocalFolder buildFolder = new LocalFolder(buildDir);
         this.tempBuildWebAppRoot = buildFolder;
         File f = new File(warFilePath);
@@ -283,23 +288,22 @@ public class LocalDeploymentManager extends StageDeploymentManager {
             dist.mkdirs();
         }
         Folder parent = new LocalFolder(dist);
-        LocalFile warFile = (LocalFile)parent.getFile(f.getName());
-        buildWar(projectDir, buildFolder,  warFile, includeEar, this.projectManager.getFileSystem());
+        LocalFile warFile = (LocalFile) parent.getFile(f.getName());
+        buildWar(projectDir, buildFolder, warFile, includeEar, this.projectManager.getFileSystem());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
-                                                boolean includeEar) throws IOException {
+    public com.wavemaker.tools.io.File buildWar(com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot, boolean includeEar)
+        throws IOException {
         String warFileLocation = ((LocalFile) warFile).getLocalFile().getCanonicalPath();
         buildWar(warFileLocation, tempWebAppRoot, includeEar);
         return warFile;
     }
 
-    private void buildWar(String warFileName, java.io.File tempWebAppRoot, boolean includeEar)
-            throws IOException {
+    private void buildWar(String warFileName, java.io.File tempWebAppRoot, boolean includeEar) throws IOException {
         buildWar(getProjectDir(), tempWebAppRoot, warFileName, includeEar);
     }
 
@@ -320,9 +324,10 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         clean(properties);
     }
 
+    @Override
     protected LocalFile assembleWar(Map<String, Object> properties) {
-        LocalFile warFile = (LocalFile)properties.get(WAR_FILE_NAME_PROPERTY);
-        LocalFolder buildAppWebAppRoot = (LocalFolder)properties.get(BUILD_WEBAPPROOT_PROPERTY);
+        LocalFile warFile = (LocalFile) properties.get(WAR_FILE_NAME_PROPERTY);
+        LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
         War warTask = new War();
         org.apache.tools.ant.Project ant = new Project();
         warTask.setProject(ant);
@@ -333,6 +338,7 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         return warFile;
     }
 
+    @Override
     protected void assembleEar(Map<String, Object> properties, LocalFile warFile) {
         Ear earTask = new Ear();
         org.apache.tools.ant.Project ant = new Project();
@@ -340,14 +346,15 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         FileSet fs = new FileSet();
         fs.setFile(warFile.getLocalFile());
         earTask.addFileset(fs);
-        LocalFile earFile = (LocalFile)properties.get(EAR_FILE_NAME_PROPERTY);
+        LocalFile earFile = (LocalFile) properties.get(EAR_FILE_NAME_PROPERTY);
         earTask.setDestFile(earFile.getLocalFile());
-        LocalFolder webInf = (LocalFolder)((Folder)properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
-        LocalFile appXml = (LocalFile)webInf.getFile("application.xml");
-        earTask.setAppxml(appXml.getLocalFile());       
+        LocalFolder webInf = (LocalFolder) ((Folder) properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
+        LocalFile appXml = (LocalFile) webInf.getFile("application.xml");
+        earTask.setAppxml(appXml.getLocalFile());
         earTask.execute();
     }
 
+    @Override
     protected Map<String, Object> addMoreProperties(LocalFolder projectDir, String deployName, Map<String, Object> properties) {
 
         StudioFileSystem fileSystem = this.projectManager.getFileSystem();

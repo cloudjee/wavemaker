@@ -37,7 +37,6 @@ import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.common.util.XMLWriter;
 import com.wavemaker.json.type.OperationEnumeration;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
 import com.wavemaker.runtime.data.DataServiceMetaData;
@@ -47,10 +46,16 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
-import com.wavemaker.tools.data.*;
+import com.wavemaker.tools.data.BeanInfo;
+import com.wavemaker.tools.data.ColumnInfo;
+import com.wavemaker.tools.data.DataModelConfiguration;
+import com.wavemaker.tools.data.EntityInfo;
+import com.wavemaker.tools.data.ExporterFactory;
+import com.wavemaker.tools.data.PropertyInfo;
+import com.wavemaker.tools.data.RelatedInfo;
+import com.wavemaker.tools.data.SpringCfgGenerator;
 import com.wavemaker.tools.data.parser.HbmConstants;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.GenerationUtils;
 import com.wavemaker.tools.service.definitions.DataObject;
@@ -325,8 +330,8 @@ public class DataServiceUtils {
         return addPrefix(prefix, p);
     }
 
-    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName,
-                                                                   String dataPackage, ExporterFactory exporterFactory) {
+    public static com.wavemaker.tools.io.File createEmptyDataModel(Folder destDir, String serviceId, String packageName, String dataPackage,
+        ExporterFactory exporterFactory) {
 
         com.wavemaker.tools.io.File rtn = destDir.getFile(getCfgFileName(serviceId));
 
@@ -336,7 +341,7 @@ public class DataServiceUtils {
             g.setDestDir(rtn.getParent());
             g.setPackage(packageName);
             g.setDataPackage(dataPackage);
-            g.setServiceName(serviceId);           
+            g.setServiceName(serviceId);
             // write some parsable values into
             // connection properties
             g.setDefaultDBType();

@@ -71,8 +71,8 @@
 											<exclude name="**/jtds*.jar"/>
 											<exclude name="**/hibernate*.jar"/>
 											<exclude name="**/db2jcc.jar" />
-											<exclude name="**/ojdbc14.jar" />
-											<exclude name="**/wsdl4j.jar" />
+											<exclude name="**/ojdbc*.jar" />
+											<exclude name="**/wsdl4j*.jar" />
 										</patternset>
 									</unzip>
 								<copy todir="${buildroot}/studioConfig">
@@ -82,8 +82,8 @@
 											<exclude name="**/jtds*.jar"/>
 											<exclude name="**/hibernate*.jar"/>
 											<exclude name="**/db2jcc.jar" />
-											<exclude name="**/ojdbc14.jar" />
-											<exclude name="**/wsdl4j.jar" />
+											<exclude name="**/ojdbc*.jar" />
+											<exclude name="**/wsdl4j*.jar" />
 										</fileset>	
 									</copy>								
 								<!-- Licence -->

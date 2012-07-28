@@ -96,6 +96,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         return LocalStudioFileSystem.staticGetWaveMakerHome();
     }
 
+    @Override
     public int getTomcatPort() {
         String propVal = System.getProperty(TOMCAT_PORT_ENV, null);
         if (propVal != null) {
@@ -112,6 +113,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         return ConfigurationStore.getPreferenceInt(getClass(), TOMCAT_PORT_KEY, defaultValue);
     }
 
+    @Override
     public String getTomcatHost() {
         String propVal = System.getProperty(TOMCAT_HOST_ENV, null);
         if (propVal != null) {
@@ -128,6 +130,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         return ConfigurationStore.getPreference(getClass(), TOMCAT_HOST_KEY, defaultValue);
     }
 
+    @Override
     public String getTomcatManagerUsername() {
         String propVal = System.getProperty(TOMCAT_MANAGER_USER_ENV, null);
         if (propVal != null) {
@@ -136,6 +139,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         return ConfigurationStore.getPreference(getClass(), TOMCAT_MANAGER_USER_KEY, TOMCAT_MANAGER_USER_DEFAULT);
     }
 
+    @Override
     public String getTomcatManagerPassword() {
         String propVal = System.getProperty(TOMCAT_MANAGER_PASSWORD_ENV, null);
         if (propVal != null) {
