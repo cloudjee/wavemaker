@@ -38,7 +38,7 @@ Services.widgets = {
 								feedDescInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, /*singleLine: false, */showing: false, caption: "Description", captionSize: "240px", height: "24px", layoutKind: "left-to-right", displayValue: "Supports all of the popular RSS and Atom formats including RSS 0.90, RSS 0.91 Netscape, RSS 0.91 Userland, RSS 0.92, RSS 0.93, RSS 0.94, RSS 1.0, RSS 2.0, Atom 0.3, and Atom 1.0.", readonly: true}, {}, {
 									editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
-								authUsernameInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, showing: false, caption: "HTTP Basic Auth Username", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
+ 								authUsernameInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, showing: false, caption: "HTTP Basic Auth Username", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
 									editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 								}],
 								authPasswordInput: ["wm.Editor", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, showing: false, caption: "HTTP Basic Auth Password", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right"}, {onchange: "editorChange"}, {
