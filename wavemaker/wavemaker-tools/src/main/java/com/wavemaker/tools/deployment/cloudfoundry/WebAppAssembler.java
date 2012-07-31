@@ -74,17 +74,10 @@ public class WebAppAssembler implements InitializingBean {
         this.studioApplicationArchiveEnties = executor.submit(new StudioApplicationArchiveEntriesCollector());
     }
 
-    public void prepareForAssemble(Folder webAppRoot) throws IOException {
-        StageDeploymentManager.copyCustomFiles(webAppRoot, this.fileSystem, AbstractStudioFileSystem.COMMON_DIR);
-        modifyApplicationBaseFolder(webAppRoot);
-    }
-    
-    public static void modifyApplicationBaseFolder(Folder webAppRoot) {
-        webAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
-        webAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
-        webAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
-        webAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
-    }
+    //public void prepareForAssemble(Folder webAppRoot) throws IOException {
+    //    StageDeploymentManager.copyCustomFiles(webAppRoot, this.fileSystem, AbstractStudioFileSystem.COMMON_DIR);
+    //    modifyApplicationBaseFolder(webAppRoot);
+    //}
 
     public ApplicationArchive assemble(Project project) {
         return assemble(project.getProjectName(), project.getWebAppRoot());
