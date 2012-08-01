@@ -498,6 +498,8 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 			} else {
 			    this.editor.set("value", undefined, false);
 			}
+            this.editor.item = null;
+            this.selectedItem.clearData(); // may get called again in changed, but only if !_cupdating and hasValues
 		    this._lastValue = this.makeEmptyValue();
 
 		// need to preserve the values if we're in the middle of a dataSet change or we'll be firing onchange events even though the value remains unchanged
