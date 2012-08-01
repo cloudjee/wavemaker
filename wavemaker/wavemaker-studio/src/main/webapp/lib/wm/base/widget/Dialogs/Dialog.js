@@ -858,6 +858,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     animEnd: function() {
 	if (this.showing) {
 	    //this.domNode.style.opacity = 1; // needed for IE 9 beta
+        this.callOnShowParent();
 	} else {
 	    if (this.docked) this.setDocked(false);
 	    this.domNode.style.display = "none";
@@ -919,8 +920,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 		this.onShow();
 	    } else if (!inShowing && showingChanging) {
-		this.showing = Boolean(inShowing);
 		this.callOnHideParent();
+                this.showing = Boolean(inShowing);
+
 		if (this._animEnabled) {
 		    dojo.addClass(this.domNode, "fadeOutAnim");
 		} else {
