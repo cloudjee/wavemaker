@@ -14,9 +14,9 @@
 
 package com.wavemaker.tools.data.spring;
 
-import java.util.Arrays;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
@@ -122,7 +122,7 @@ public class SpringService {
         ctx.refresh();
         try {
             is.close();
-        } catch (IOException ex) {            
+        } catch (IOException ex) {
         }
 
         return ctx;

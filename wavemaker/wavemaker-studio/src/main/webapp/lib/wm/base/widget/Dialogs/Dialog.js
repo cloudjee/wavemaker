@@ -1348,7 +1348,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
     /* Resizing */
 	mousedown: function(e) {
-	    if (!this.modal) {
+	    if (!this.modal && !this.docked) {
 		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
 		this.domNode.style.zIndex = zindex;
 	    }

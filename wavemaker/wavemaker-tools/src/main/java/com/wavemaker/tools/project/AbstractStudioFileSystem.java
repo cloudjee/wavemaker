@@ -14,7 +14,9 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -29,7 +31,6 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 /**

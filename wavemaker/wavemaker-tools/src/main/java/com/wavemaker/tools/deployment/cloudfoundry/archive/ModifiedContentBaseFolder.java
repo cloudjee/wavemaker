@@ -20,8 +20,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.util.Assert;
-import com.wavemaker.tools.io.Folder;
+
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+
 /**
  * Decorator class that can be used to modify the contents of the selectd files
  * 
@@ -30,6 +32,7 @@ import com.wavemaker.tools.io.File;
 public class ModifiedContentBaseFolder {
 
     private final List<File> files;
+
     private List<ContentModifier> modifiers;
 
     /**
@@ -43,7 +46,7 @@ public class ModifiedContentBaseFolder {
         if (modifiers == null) {
             this.modifiers = Collections.emptyList();
         } else {
-            this.modifiers = (List<ContentModifier>)modifiers;
+            this.modifiers = (List<ContentModifier>) modifiers;
         }
 
         this.files = webAppRoot.list().files().fetchAll();
@@ -56,13 +59,12 @@ public class ModifiedContentBaseFolder {
 
     public void modify() {
         for (File file : this.files) {
-            for (ContentModifier modifier : modifiers) {
+            for (ContentModifier modifier : this.modifiers) {
                 if (modifier.canModify(file)) {
                     file = modifier.modify(file);
                 }
             }
         }
     }
-
 
 }

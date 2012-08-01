@@ -16,7 +16,10 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,14 +33,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.project.*;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
-import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
-import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentBaseFolder;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.FilterOn;
-import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.ResourceOperation;
+import com.wavemaker.tools.project.AbstractStudioFileSystem;
+import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.ResourceFilter;
+import com.wavemaker.tools.project.StageDeploymentManager;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 public class WebAppAssembler implements InitializingBean {
 
@@ -69,13 +76,14 @@ public class WebAppAssembler implements InitializingBean {
 
     public void prepareForAssemble(Folder webAppRoot) throws IOException {
         StageDeploymentManager.copyCustomFiles(webAppRoot, this.fileSystem, AbstractStudioFileSystem.COMMON_DIR);
-        modifyApplicationBaseFolder(webAppRoot).modify();
+        modifyApplicationBaseFolder(webAppRoot);
     }
-
-    public static ModifiedContentBaseFolder modifyApplicationBaseFolder(Folder webAppRoot) {
-        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js", "login.html").replaceAll(
-            "\\/wavemaker\\/", "/");
-        return new ModifiedContentBaseFolder(webAppRoot, modifier);
+    
+    public static void modifyApplicationBaseFolder(Folder webAppRoot) {
+        webAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
+        webAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
+        webAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
+        webAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
     }
 
     public ApplicationArchive assemble(Project project) {
@@ -282,6 +290,25 @@ public class WebAppAssembler implements InitializingBean {
         @Override
         public int hashCode() {
             return ObjectUtils.nullSafeHashCode(getName());
+        }
+    }
+
+    private static class Replace implements ResourceOperation<File> {
+
+        private final String fromExpression;
+
+        private final String toExpression;
+
+        public Replace(String fromExpression, String toExpression) {
+            this.fromExpression = fromExpression;
+            this.toExpression = toExpression;
+        }
+
+        @Override
+        public void perform(com.wavemaker.tools.io.File file) {
+            String content = file.getContent().asString();
+            content = content.replace(this.fromExpression, this.toExpression);
+            file.getContent().write(content);
         }
     }
 }

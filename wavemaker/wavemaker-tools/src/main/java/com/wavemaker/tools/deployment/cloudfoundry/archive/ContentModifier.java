@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
+
 import com.wavemaker.tools.io.File;
 
 /**
@@ -36,9 +37,9 @@ public interface ContentModifier {
      */
     public boolean canModify(ApplicationArchive.Entry entry);
 
-   /**
-    * Determine if the {@link #modify modify} method should be called for the given file.
-     *
+    /**
+     * Determine if the {@link #modify modify} method should be called for the given file.
+     * 
      * @param file the file
      * @return <tt>true</tt> if the {@link #modify modify} method should be called
      */
@@ -56,9 +57,9 @@ public interface ContentModifier {
     public InputStream modify(InputStream inputStream) throws IOException;
 
     /**
-     * Modify the content of the given file. Implementations should
-     * return a new {@link File} containing the modified content.
-     *
+     * Modify the content of the given file. Implementations should return a new {@link File} containing the modified
+     * content.
+     * 
      * @param file a {@link File} containing the existing content.
      * @return the modified file.
      */

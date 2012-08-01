@@ -229,7 +229,7 @@ public interface StudioFileSystem {
 
     /**
      * Recursively copy files and directories from the given root to a target location.
-     *
+     * 
      * @param root the root to copy
      * @param target the target destination
      * @param includedPatterns the list of ant-style path pattern to be included

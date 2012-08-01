@@ -206,6 +206,8 @@ public class WSDLBuilder {
         for (String id : this.schemaMap.keySet()) {
             Element schema = this.schemaMap.get(id);
             String location = schema.getOwnerDocument().getDocumentURI();
+            //Hack-around for http://java.net/jira/browse/JAX_WS-861
+            location = location.replace("%7E", "~");
             String systemId;
             if (this.serviceType == WebServiceType.REST) {
                 systemId = location;

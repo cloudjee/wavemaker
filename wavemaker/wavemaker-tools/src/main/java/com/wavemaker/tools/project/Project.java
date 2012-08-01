@@ -162,7 +162,7 @@ public class Project extends AbstractFileService {
 
     /**
      * Returns the service source folders or an empty list
-     *
+     * 
      * @param projectRoot the root folder of the project
      * @param isMavenProject 'true' indicates the project is a maven project.
      * @return the service source folder

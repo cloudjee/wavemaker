@@ -23,37 +23,36 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * 
  * @author ecallahan
- *
- * This task exists for projects that upgraded from 6.4.6 to 6.5.0.M3
- * Projects from 6.5.0.M2 and earlier already have this change 
+ * 
+ *         This task exists for projects that upgraded from 6.4.6 to 6.5.0.M3 Projects from 6.5.0.M2 and earlier already
+ *         have this change
  */
 public class ProjSvcsUpgradeTask implements UpgradeTask {
 
-	private static String rtSBxmlStr = ">\\s*<import resource=\"classpath:com/wavemaker/runtime/service/runtimeServiceBean.xml\"/>\\s*<";
+    private static String rtSBxmlStr = ">\\s*<import resource=\"classpath:com/wavemaker/runtime/service/runtimeServiceBean.xml\"/>\\s*<";
 
-	private static String wmSBxmlStr = ">\\s*<import resource=\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml\"/>\\s*<";
+    private static String wmSBxmlStr = ">\\s*<import resource=\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml\"/>\\s*<";
 
     private static String toStr = ">\n<";
 
     @Override
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		File file = project.getWebInfFolder().getFile("project-services.xml");
-		try {
-			String content = file.getContent().asString();
-			if(content.contains("classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml")){
-			content = content.replaceAll(rtSBxmlStr, toStr);
-			content = content.replaceAll(wmSBxmlStr, toStr);
-			file.getContent().write(content);
-			upgradeInfo.addMessage("\nProject-services.xml upgrade to 6.5 imports completed successfully.");
-			}
-			else{
-				//Task already done, nothing do to
-			}
-		} catch (ResourceException e) {
-			e.printStackTrace();
-			upgradeInfo.addMessage("\n*** Terminated with error while upgrading project-services.xml to 6.5 imports. "
-					+ "Please check the console message.***");
-		}
-	}
+        File file = project.getWebInfFolder().getFile("project-services.xml");
+        try {
+            String content = file.getContent().asString();
+            if (content.contains("classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml")) {
+                content = content.replaceAll(rtSBxmlStr, toStr);
+                content = content.replaceAll(wmSBxmlStr, toStr);
+                file.getContent().write(content);
+                upgradeInfo.addMessage("\nProject-services.xml upgrade to 6.5 imports completed successfully.");
+            } else {
+                // Task already done, nothing do to
+            }
+        } catch (ResourceException e) {
+            e.printStackTrace();
+            upgradeInfo.addMessage("\n*** Terminated with error while upgrading project-services.xml to 6.5 imports. "
+                + "Please check the console message.***");
+        }
+    }
 }

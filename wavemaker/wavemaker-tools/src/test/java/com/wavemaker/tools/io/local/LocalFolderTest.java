@@ -19,6 +19,8 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.exception.ResourceException;
 
 /**
  * Tests for {@link LocalFolder}.
@@ -79,6 +81,15 @@ public class LocalFolderTest {
     }
 
     @Test
+    public void shouldFindFilesTwice() throws Exception {
+        // WM-4280
+        Resources<File> files = this.root.find().files();
+        List<File> all1 = files.fetchAll();
+        List<File> all2 = files.fetchAll();
+        assertThat(all1.size(), is(all2.size()));
+    }
+
+    @Test
     public void shouldCopy() throws Exception {
         Folder destination = new LocalFolder(this.dest.getRoot());
         this.root.find().files().exclude(FilterOn.names().starting("f")).copyTo(destination);
@@ -125,5 +136,18 @@ public class LocalFolderTest {
         assertThat(file1.hashCode(), is(equalTo(file1.hashCode())));
         assertThat(file1.hashCode(), is(equalTo(file2.hashCode())));
         assertThat(file1.hashCode(), is(not(equalTo(file3.hashCode()))));
+    }
+
+    @Test
+    public void shouldNotCreateMissingFileWhenGettingAsString() throws Exception {
+        // WM-4290
+        Folder folder = this.root.getFolder("test");
+        File file = folder.getFile("test.txt");
+        assertThat(folder.exists(), is(false));
+        try {
+            file.getContent().asString();
+        } catch (ResourceException e) {
+        }
+        assertThat(folder.exists(), is(false));
     }
 }

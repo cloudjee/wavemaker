@@ -453,7 +453,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         });
 
         var _this = this;
-        this.simpleRb.connect(this.simpleRb, "onchange", this, function(inDisplayValue, inDataValue) {
+        this.simpleRb.connect(this.simpleRb, "onchange", this, function(inDisplayValue, inDataValue) {          
         //console.log("SIMPLE: " + inDisplayValue + " | " + inDataValue);
         if (inDataValue == "simple")
             _this.updateBindSourceUi(inDataValue);
@@ -776,6 +776,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                 this.expressionLayer.activate();
                 this.validLabel.setShowing(false);
                 this.invalidLabel.setShowing(false);
+                this.updateBindSourceUi("expression");
             } else {
                 this.treeLayer.activate();
                 this.expandBySource(s);

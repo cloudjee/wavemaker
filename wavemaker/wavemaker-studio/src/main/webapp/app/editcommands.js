@@ -75,87 +75,96 @@ Studio.extend({
     },
 
     scriptEditorCtrlKey: function(inSender, e, letter) {
-	switch(letter.toLowerCase()) {
-	case "s":
-        dojo.stopEvent(e);
-	    return this.saveScriptClick();
-/*	case "e":
+    	if (letter) {
+    		switch (letter.toLowerCase()) {
+    		case "s":
+    			dojo.stopEvent(e);
+    			return this.saveScriptClick();
+    			/*	case "e":
 	    return this.validateScriptClick();*/
-	case "i":
-        dojo.stopEvent(e);
-	    return this.formatScriptClick();
-/*
+    		case "i":
+    			dojo.stopEvent(e);
+    			return this.formatScriptClick();
+    			/*
 	case "o":
 	    return this.toggleWrapScriptClick();
 
 	case "g":
 	    return this.editArea.promptGotoLine();
 	    */
-	case ".":
-	case " ":
-        dojo.stopEvent(e);
-	    if (this.autoCompletionDialog && this.autoCompletionDialog.showing) {
-		for (var i = 0; i < this.autoCompletionList.dataSet.getCount() && this.autoCompletionList.dataSet.getItem(i).getValue("name").match(/\</); i++) {;}
-		this.autoCompletionList.select(i);
-		this.insertCompletedText();
-	    } else {
-		return this.listCompletions();
-	    }
-	}
+    		case ".":
+    		case " ":
+    			dojo.stopEvent(e);
+    			if (this.autoCompletionDialog && this.autoCompletionDialog.showing) {
+    				for (var i = 0; i < this.autoCompletionList.dataSet.getCount() && this.autoCompletionList.dataSet.getItem(i).getValue("name").match(/\</); i++) {;
+    				}
+    				this.autoCompletionList.select(i);
+    				this.insertCompletedText();
+    			} else {
+    				return this.listCompletions();
+    			}
+    		}
+    	}
     },
     appScriptEditorCtrlKey: function(inSender, e, letter) {
-	switch(letter.toLowerCase()) {
-	case "s":
-        dojo.stopEvent(e);
-	    return this.saveAppSrcClick();
-/*
+    	if (letter) {
+    		switch (letter.toLowerCase()) {
+    		case "s":
+    			dojo.stopEvent(e);
+    			return this.saveAppSrcClick();
+    			/*
 	case "e":
 	    return this.validateAppScriptClick();
 	    */
-	case "i":
-        dojo.stopEvent(e);
-	    return this.formatAppScriptClick();
-/*
+    		case "i":
+    			dojo.stopEvent(e);
+    			return this.formatAppScriptClick();
+    			/*
 	case "o":
 	    return this.toggleWrapAppScriptClick();
 	case "g":
 	    return this.appsourceEditor.promptGotoLine();
 	    */
-	}
+    		}
+    	}
     },
     cssEditorCtrlKey: function(inSender, e, letter) {
-	switch(letter.toLowerCase()) {
-	case "s":
-        dojo.stopEvent(e);
-	    return this.saveCssClick();
-	case "e":
-	    break;
-	case "i":
-	    break;
-/*
+    	if (letter) {
+    		switch (letter.toLowerCase()) {
+    		case "s":
+    			dojo.stopEvent(e);
+    			return this.saveCssClick();
+    		case "e":
+    			break;
+    		case "i":
+    			break;
+    			/*
 	case "o":
 	    return this.toggleWrapCssClick();
 	case "g":
 	    return this.cssEditArea.promptGotoLine();
 	    */
-	}
+    		}
+    	}
     },
     markupEditorCtrlKey: function(inSender, e, letter) {
-	switch(letter.toLowerCase()) {
-	case "s":
-        dojo.stopEvent(e);
-	    return this.saveMarkupClick();
-	case "e":
-	    break;
-	case "i":
-	    break;
-	case "o":
-	    break;
-	case "g":
-	    break;
-	}
-    },
+    	if (letter) {
 
+    		switch (letter.toLowerCase()) {
+    		case "s":
+    			dojo.stopEvent(e);
+    			return this.saveMarkupClick();
+    		case "e":
+    			break;
+    		case "i":
+    			break;
+    		case "o":
+    			break;
+    		case "g":
+    			break;
+    		}
+    	}
+    },
 
     findScriptClick: function() {
 	studio.editArea.showSearch();

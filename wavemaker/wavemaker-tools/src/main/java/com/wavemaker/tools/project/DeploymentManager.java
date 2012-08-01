@@ -20,9 +20,9 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.runtime.server.FileUploadResponse;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.compiler.ProjectCompiler;
 
 public interface DeploymentManager {
 
@@ -72,7 +72,7 @@ public interface DeploymentManager {
      */
     String cleanBuild();
 
-    //File buildWar(File warFile, boolean includeEar) throws IOException;
+    // File buildWar(File warFile, boolean includeEar) throws IOException;
 
     File buildWar(File warFile, java.io.File tempWebAppRoot, boolean includeEar) throws IOException;
 

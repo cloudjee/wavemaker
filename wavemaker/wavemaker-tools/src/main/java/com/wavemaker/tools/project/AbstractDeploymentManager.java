@@ -98,6 +98,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return this.projectManager;
     }
 
+    @Override
     public void setProjectCompiler(ProjectCompiler projectCompiler) {
         this.projectCompiler = projectCompiler;
     }

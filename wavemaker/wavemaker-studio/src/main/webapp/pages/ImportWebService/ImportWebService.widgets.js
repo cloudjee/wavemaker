@@ -36,7 +36,7 @@ ImportWebService.widgets = {
 										wsdlPathTypeInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "100px", width: "200px", layoutKind: "left-to-right", caption: "WSDL Path", display: "Select"}, {onchange: "wsdlPathTypeInputChange"}, {
 											editor: ["wm._SelectEditor", {}, {}]
 										}],
-										wsdlFileInput: ["wm.FileUpload", {uploadButton: false, operation: "uploadWSDL", width: "350px", showing: false, layoutKind: "left-to-right", border: "0"}, {}, {
+										wsdlFileInput: ["wm.FileUpload", {caption: "", uploadButton: false, operation: "uploadWSDL", width: "350px", showing: false, layoutKind: "left-to-right", border: "0"}, {}, {
 
 										}],
 										wsdlUrlInput: ["wm.Editor", {captionSize: "0px", width: "100%", layoutKind: "left-to-right"}, {}, {

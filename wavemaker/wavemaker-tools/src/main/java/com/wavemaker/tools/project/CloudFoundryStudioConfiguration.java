@@ -114,7 +114,7 @@ public class CloudFoundryStudioConfiguration implements StudioConfiguration {
 
     @Override
     public String getTomcatHost() {
-        throw new UnsupportedOperationException();   
+        throw new UnsupportedOperationException();
     }
 
     @Override

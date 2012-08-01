@@ -36,14 +36,14 @@ public interface SpinupService {
      * @return the domain
      */
     String getDomain();
-    
-    
+
     /**
      * Returns the domain for the given url
-     * @param url 
+     * 
+     * @param url
      * @return the domain of the given url
      */
-    
+
     String getDomain(String url);
 
     /**

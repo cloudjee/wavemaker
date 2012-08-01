@@ -123,7 +123,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
                          options: "px,%",
                          dataField: "dataValue",
                          displayField: "dataValue",
-                         width: "45px",
+                         width: "50px",
                          padding: "0",
                     readonly: this.readonly
                         });
