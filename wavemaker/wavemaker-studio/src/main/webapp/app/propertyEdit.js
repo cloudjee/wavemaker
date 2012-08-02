@@ -1893,7 +1893,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
     noBindColumn: true,
     noReinspect: true,
-    height: "80px",
+    height: "120px",
     dataField: "dataValue",
     displayField: "dataValue",
     forceCaptionPositionTop: true,
