@@ -17,6 +17,8 @@ package com.wavemaker.tools.deployment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.ObjectUtils;
+
 /**
  * Describes a deployment.
  * 
@@ -50,6 +52,8 @@ public class DeploymentInfo {
     private String deploymentUrl;
 
     private ArchiveType archiveType = ArchiveType.WAR;
+
+    private Boolean destroyAllData;
 
     public String getDeploymentId() {
         return this.deploymentId;
@@ -155,6 +159,14 @@ public class DeploymentInfo {
         this.deploymentUrl = deploymentUrl;
     }
 
+    public Boolean getDestroyAllData() {
+        return this.destroyAllData;
+    }
+
+    public void setDestroyAllData(Boolean destroyAllData) {
+        this.destroyAllData = destroyAllData;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -170,6 +182,7 @@ public class DeploymentInfo {
         result = prime * result + (this.target == null ? 0 : this.target.hashCode());
         result = prime * result + (this.token == null ? 0 : this.token.hashCode());
         result = prime * result + (this.username == null ? 0 : this.username.hashCode());
+        result = prime * result + (this.destroyAllData == null ? 0 : this.destroyAllData.hashCode());
         return result;
     }
 
@@ -185,72 +198,20 @@ public class DeploymentInfo {
             return false;
         }
         DeploymentInfo other = (DeploymentInfo) obj;
-        if (this.applicationName == null) {
-            if (other.applicationName != null) {
-                return false;
-            }
-        } else if (!this.applicationName.equals(other.applicationName)) {
-            return false;
-        }
-        if (this.archiveType != other.archiveType) {
-            return false;
-        }
-        if (this.databases == null) {
-            if (other.databases != null) {
-                return false;
-            }
-        } else if (!this.databases.equals(other.databases)) {
-            return false;
-        }
-        if (this.deploymentType != other.deploymentType) {
-            return false;
-        }
-        if (this.host == null) {
-            if (other.host != null) {
-                return false;
-            }
-        } else if (!this.host.equals(other.host)) {
-            return false;
-        }
-        if (this.name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!this.name.equals(other.name)) {
-            return false;
-        }
-        if (this.password == null) {
-            if (other.password != null) {
-                return false;
-            }
-        } else if (!this.password.equals(other.password)) {
-            return false;
-        }
-        if (this.port != other.port) {
-            return false;
-        }
-        if (this.target == null) {
-            if (other.target != null) {
-                return false;
-            }
-        } else if (!this.target.equals(other.target)) {
-            return false;
-        }
-        if (this.token == null) {
-            if (other.token != null) {
-                return false;
-            }
-        } else if (!this.token.equals(other.token)) {
-            return false;
-        }
-        if (this.username == null) {
-            if (other.username != null) {
-                return false;
-            }
-        } else if (!this.username.equals(other.username)) {
-            return false;
-        }
-        return true;
+        Boolean rtn = true;
+        rtn &= ObjectUtils.nullSafeEquals(this.applicationName, other.applicationName);
+        rtn &= ObjectUtils.nullSafeEquals(this.archiveType, other.archiveType);
+        rtn &= ObjectUtils.nullSafeEquals(this.databases, other.databases);
+        rtn &= ObjectUtils.nullSafeEquals(this.deploymentType, other.deploymentType);
+        rtn &= ObjectUtils.nullSafeEquals(this.host, other.host);
+        rtn &= ObjectUtils.nullSafeEquals(this.name, other.name);
+        rtn &= ObjectUtils.nullSafeEquals(this.password, other.password);
+        rtn &= ObjectUtils.nullSafeEquals(this.port, other.port);
+        rtn &= ObjectUtils.nullSafeEquals(this.target, other.target);
+        rtn &= ObjectUtils.nullSafeEquals(this.token, other.token);
+        rtn &= ObjectUtils.nullSafeEquals(this.username, other.username);
+        rtn &= ObjectUtils.nullSafeEquals(this.destroyAllData, other.destroyAllData);
+        return rtn;
     }
 
 }
