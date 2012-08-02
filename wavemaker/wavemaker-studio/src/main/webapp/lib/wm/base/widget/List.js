@@ -1543,7 +1543,11 @@ dojo.declare("wm.List", wm.VirtualList, {
                 var cellData = value;
                 var props = dataFields.split(".");
                 for (var propIndex = 0; propIndex < props.length; propIndex++) {
-                    cellData = cellData[props[propIndex]];
+                    if (cellData && typeof cellData == "object") {
+                        cellData = cellData[props[propIndex]];
+                    } else {
+                        cellData = null;
+                    }
                 }
 
                 cellData = this.formatCell(dataFields, cellData, value, i, inCol);
