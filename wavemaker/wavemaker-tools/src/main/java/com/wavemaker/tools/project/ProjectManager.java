@@ -16,6 +16,8 @@ package com.wavemaker.tools.project;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -43,6 +45,9 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.util.NoCloseInputStream;
+import com.wavemaker.tools.deployment.Deployments;
+import com.wavemaker.json.JSONMarshaller;
+import com.wavemaker.json.JSONState;
 
 /**
  * Manages projects; list of all available projects, and keeps track of any open projects. Normally this should be
@@ -359,6 +364,16 @@ public class ProjectManager {
                 this.fileSystem.deleteFile(logFolder);
             }
         }
+
+        Project project = getProject(projectName, false);
+        Deployments deployments = AbstractDeploymentManager.readDeployments(project, this.fileSystem);
+        deployments.removeAll(projectName);
+
+        org.springframework.core.io.Resource deploymentsResource =
+                this.fileSystem.getCommonDir().createRelative(AbstractDeploymentManager.DEPLOYMENTS_FILE);
+        Writer writer = new OutputStreamWriter(this.fileSystem.getOutputStream(deploymentsResource));
+        JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
+        writer.flush();
     }
 
     /**
