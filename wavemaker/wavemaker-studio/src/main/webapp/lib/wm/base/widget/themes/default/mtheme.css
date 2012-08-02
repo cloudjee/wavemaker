@@ -1103,8 +1103,11 @@ line-height:32px;
 border-bottom: solid 1px #999;
 }
  
-.wmmobile .wmlist-item {
+.wmmobile .wmlist-content {
     min-height: 32px;
+}
+.wmmobile .wmlist.MobileListStyle .wmlist-item .wmlist-content {
+    min-height: 0px;
 }
 
 .wmmobile .wmlist-content, .wmmobile .dojoxGridRow {
