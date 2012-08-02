@@ -98,4 +98,16 @@ public class Deployments {
         }
         return null;
     }
+
+    /**
+     * Remove deployment info saved for a project
+     *
+     * @param projectName
+     */
+    public void removeAll(String projectName) {
+        List<DeploymentInfo> deployments = forProject(projectName);
+        for (int i = 0; i < deployments.size(); i++) {
+            deployments.remove(i);
+        }
+    }
 }

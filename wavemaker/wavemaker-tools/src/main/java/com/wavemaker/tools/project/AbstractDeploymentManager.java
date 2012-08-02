@@ -64,7 +64,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     public static final String COMMON_MODULE_PREFIX = "common.packages.";
 
-    private static final String DEPLOYMENTS_FILE = "/deployments.js";
+    public static final String DEPLOYMENTS_FILE = "/deployments.js";
 
     protected StudioFileSystem fileSystem;
 
@@ -674,11 +674,15 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     }
 
     protected Deployments readDeployments() {
+        return readDeployments(this.projectManager.getCurrentProject(), this.fileSystem);
+    }
+
+    public static Deployments readDeployments(Project project, StudioFileSystem fileSystem) {
         com.wavemaker.tools.io.File deploymentsResource;
         try {
-            deploymentsResource = this.fileSystem.getCommonFolder().getFile(DEPLOYMENTS_FILE);
+            deploymentsResource = fileSystem.getCommonFolder().getFile(DEPLOYMENTS_FILE);
             if (!deploymentsResource.exists()) {
-                this.projectManager.getCurrentProject().writeFile(deploymentsResource, "{}");
+                project.writeFile(deploymentsResource, "{}");
                 return new Deployments();
             } else {
                 String s = FileCopyUtils.copyToString(new InputStreamReader(deploymentsResource.getContent().asInputStream()));

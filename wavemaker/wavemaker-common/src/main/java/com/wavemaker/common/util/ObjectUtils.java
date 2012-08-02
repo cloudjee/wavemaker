@@ -376,6 +376,5 @@ public abstract class ObjectUtils {
     }
 
     private ObjectUtils() {
-        throw new UnsupportedOperationException();
     }
 }

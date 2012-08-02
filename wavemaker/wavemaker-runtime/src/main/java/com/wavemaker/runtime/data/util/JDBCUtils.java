@@ -33,7 +33,6 @@ import com.wavemaker.runtime.data.DataServiceRuntimeException;
 public class JDBCUtils {
 
     private JDBCUtils() {
-        throw new UnsupportedOperationException();
     }
 
     public static void loadDriver(String driverClassName) {

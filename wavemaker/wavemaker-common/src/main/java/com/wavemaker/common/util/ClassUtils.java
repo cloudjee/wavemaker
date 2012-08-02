@@ -94,6 +94,5 @@ public class ClassUtils {
     }
 
     private ClassUtils() {
-        throw new UnsupportedOperationException();
     }
 }

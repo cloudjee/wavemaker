@@ -34,7 +34,6 @@ import com.wavemaker.runtime.server.InternalRuntime;
 public class SystemUtils {
 
     private SystemUtils() {
-        throw new UnsupportedOperationException();
     }
 
     public static Object clientPrepare(Object o) {

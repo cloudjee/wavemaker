@@ -541,7 +541,6 @@ public class DataServiceUtils {
     }
 
     private DataServiceUtils() {
-        throw new UnsupportedOperationException();
     }
 
 }
