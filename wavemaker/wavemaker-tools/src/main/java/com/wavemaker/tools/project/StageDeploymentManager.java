@@ -24,6 +24,7 @@ import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
 
 /**
  * Replaces ant script tasks that generate war and ear file
@@ -108,12 +109,16 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         copyCustomFiles(buildAppWebAppRoot, getFileSystem(), customWmDir);
 
         // modify wavemaker token in .html and config.js
-        buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
-        buildAppWebAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
-        buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
-        buildAppWebAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
+        modifyApplicationBaseFolder(buildAppWebAppRoot);
 
         return assembleWar(properties);
+    }
+
+    private static void modifyApplicationBaseFolder(Folder webAppRoot) {
+        webAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/app/", "\""));
+        webAppRoot.list().include(FilterOn.antPattern("*.html")).files().performOperation(new Replace("\"/wavemaker/", "\""));
+        webAppRoot.getFile("config.js").performOperation(new Replace("\"../wavemaker/", "\""));
+        webAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
     }
 
     public static void copyCustomFiles(Folder webAppRoot, StudioFileSystem fileSystem, String customDir) throws IOException {

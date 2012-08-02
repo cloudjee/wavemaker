@@ -396,7 +396,7 @@ public class SecurityToolsManager {
             secCons.setUserDataConstraint(userDataCons);
             wat.getDescriptionAndDisplayNameAndIcon().add(secCons);
 
-            WebXmlSupport.writeWebXml(null, wat, webXml);
+            WebXmlSupport.writeWebXml(project, wat, webXml);
         } finally {
             this.lock.unlock();
         }
