@@ -26,7 +26,6 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 public class HbmConstants {
 
     private HbmConstants() {
-        throw new UnsupportedOperationException();
     }
 
     public static final String MAPPING_EL = "hibernate-mapping";

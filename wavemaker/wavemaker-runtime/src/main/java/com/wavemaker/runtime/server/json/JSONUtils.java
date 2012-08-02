@@ -45,7 +45,6 @@ import com.wavemaker.runtime.service.ParsedServiceArguments;
 public class JSONUtils {
 
     private JSONUtils() {
-        throw new UnsupportedOperationException();
     }
 
     private static final Log logger = LogFactory.getLog(JSONUtils.class);

@@ -121,6 +121,5 @@ public class DataTypeMapper {
     }
 
     private DataTypeMapper() {
-        throw new UnsupportedOperationException();
     }
 }

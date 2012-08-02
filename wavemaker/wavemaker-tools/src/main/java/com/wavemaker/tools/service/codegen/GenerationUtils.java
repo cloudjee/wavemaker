@@ -41,6 +41,5 @@ public class GenerationUtils {
     }
 
     private GenerationUtils() {
-        throw new UnsupportedOperationException();
     }
 }

@@ -152,7 +152,6 @@ public class DataServiceConstants {
     public static final int DEFAULT_TENANT_ID = 999;
 
     private DataServiceConstants() {
-        throw new UnsupportedOperationException();
     }
 
 }
