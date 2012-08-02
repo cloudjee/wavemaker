@@ -611,7 +611,8 @@ dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], 
         if (!this.dijits) return;
         this.dijits[rowIndex].set("checked", true, false);
         this.dijits[rowIndex]._lastValueReported = true;
-    }
+    },
+    getReadOnlyNodeOverflow: function() {return "auto";}
 });
 
 
