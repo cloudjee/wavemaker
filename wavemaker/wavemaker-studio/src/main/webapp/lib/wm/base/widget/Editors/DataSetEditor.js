@@ -193,7 +193,10 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
         if (inDataField == "All Fields") this.dataField = "";
         else this.dataField = inDataField;
     },
-
+    clear: function() {
+        this.inherited(arguments);
+        this.selectedItem.clearData(); // may get called twice, but LiveForm may block the first one by setting _cupdating
+    },
 
     _getOptionsData: function() {
         var data = [];
