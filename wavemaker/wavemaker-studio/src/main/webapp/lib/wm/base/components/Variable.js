@@ -477,39 +477,37 @@ dojo.declare("wm.Variable", wm.Component, {
 		}
 		return v;
 	},
-	_setDataValue: function(n, v) {
-		// NOTE: variable value is null iff it has been explicitly set to null
-		// and no value has subsequently been set to any value, including null.
-		if (this._isNull && v !== undefined)
-			this._setNull(false);
-		this.beginUpdate();
-	    var o;
-	    if (v === null || v === undefined) {
-		o =  this._getDataValue(n,true);
-		if (o === null || o === undefined) {
-		    this.endUpdate();
-		    return;
-		}
-	    } else {
-		o = this._getDataValue(n);
-	    }
-	    this.endUpdate();
-		
-		if (o instanceof wm.Variable) {
-			// if we are updating, o's listeners will be notified by us
-			// o doesn't need to message them directly
-			if (this._updating)
-				o._updating++;
-			o.setData(v);
-			if (this._updating)
-				o._updating--;
-			return;
-		}
-		if (!(v instanceof wm.Variable)) {
-			this.data[n] = v;
-			this.dataValueChanged(n, v);
-		}
-	},
+    _setDataValue: function(n, v) {
+        // NOTE: variable value is null iff it has been explicitly set to null
+        // and no value has subsequently been set to any value, including null.
+        if (this._isNull && v !== undefined) this._setNull(false);
+        this.beginUpdate();
+        var o;
+        if (v === null || v === undefined) {
+            o = this._getDataValue(n, true);
+            if (o === v) {
+                this.endUpdate();
+                return;
+            }
+        } else {
+            o = this._getDataValue(n);
+        }
+        this.endUpdate();
+
+        if (o instanceof wm.Variable) {
+            // if we are updating, o's listeners will be notified by us
+            // o doesn't need to message them directly
+            if (this._updating) o._updating++;
+            o.setData(v);
+            if (this._updating) o._updating--;
+            return;
+        }
+        if (!(v instanceof wm.Variable)) {
+            this.data[n] = v;
+            this.dataValueChanged(n, v);
+        }
+    },
+    
 	//===========================================================================
 	// List API
 	//===========================================================================
