@@ -256,10 +256,10 @@ dojo.declare("wm.Component", wm.Object, {
         },
 	isDesignLoaded: function() {
 	    if (this._isDesignLoaded) return true;
-	    if (!window.studio) return false;
+	    if (!window.studio || !studio.page) return false;
 	    if (!this.owner) return false;
 	    if (this.getParentPage() == studio.page) return true;
-	    if (studio.page && this == studio.page) return true;
+	    if (this == studio.page) return true;
 	    if (this.isOwnedBy(studio.application)) return true;
 	    if (window["app"] && !this.isOwnedBy(window["app"]) && window["app"] != this) return true;
 	    return false;
