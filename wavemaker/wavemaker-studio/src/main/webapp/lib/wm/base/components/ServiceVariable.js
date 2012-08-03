@@ -49,7 +49,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     },
     /* Handle a successful response to a service call */
     processResult: function(inResult) {
-        if (this.type.match(/\<.*,.*\>/)) {
+        if (wm.isHashMapType(this.type)) {
             inResult = this.transposeHashMap(inResult);
         }
         this.setData(inResult);
