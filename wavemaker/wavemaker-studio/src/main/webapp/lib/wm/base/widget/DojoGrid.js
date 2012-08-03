@@ -166,7 +166,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 		var dateFields = this.getDateFields();
 		if (!pkList)
-			pkList = wm.data.getIncludeFields(this.variable.type);
+			pkList = this.primaryKeyFields || wm.data.getIncludeFields(this.variable.type);
 
 	    /* If there are no primary keys, then all fields are used to match this item -- this may fail, not trying will definitely fail */
 	        if (pkList.length == 0) {

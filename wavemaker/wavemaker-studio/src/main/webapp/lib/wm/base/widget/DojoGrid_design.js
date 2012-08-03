@@ -199,6 +199,10 @@ wm.Object.extendSchema(wm.DojoGrid, {
     singleClickEdit:   {group: "widgetName", subgroup: "editing", order: 32},
     liveEditing:       {group: "widgetName", subgroup: "editing", order: 1},
 
+    /* Behaviors */
+    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
+
+
     /* Display group; layout subgroup */
     //noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},
     noHeader: {group: "widgetName", subgroup: "layout", order: 50, advanced:1},

@@ -27,6 +27,11 @@ wm.Object.extendSchema(wm.VirtualList, {
     deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},
 
+
+    /* Behaviors */
+    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
+
+
     /* Ignored Group */
     box: { ignore: 1 },
 

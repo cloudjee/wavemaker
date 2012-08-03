@@ -1362,7 +1362,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         });
 
 
-        if (!pkList) pkList = this.dataSet ? wm.data.getIncludeFields(this.dataSet.type) : this._pkList || [];
+        if (!pkList) pkList = this.primaryKeyFields || this.dataSet ? wm.data.getIncludeFields(this.dataSet.type) : this._pkList || [];
 
         /* If there are no primary keys, then all fields are used to match this item -- this may fail, not trying will definitely fail */
         if (pkList.length == 0 && this.dataSet) {
