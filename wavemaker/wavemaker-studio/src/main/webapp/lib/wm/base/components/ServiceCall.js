@@ -454,7 +454,12 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
     return args;
     },
     getArgs: function() {
-        var data= this.getData(true), args=[], d;
+        wm.Variable.convertToHashMaps = true;
+        try {
+            var data= this.getData(true), args=[], d;
+        } catch(e){}
+        wm.Variable.convertToHashMaps = false;
+        
         // convert to array
         for (var p in this._dataSchema) {
             if (data) {

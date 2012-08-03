@@ -404,64 +404,67 @@ dojo.declare("wm.Variable", wm.Component, {
 		@returns Object
 	*/
 	// NB: output is POJSO
-	getData: function(flattenPrimitives) {
-		if (!this.data)
-			return;
-		if (this._isNull)
-			return null;
-		else if (this.isList) {
-		    // if its a byte list merge it into a single string and change it to a nonlist 
-		    if (this.type == "byte") { 
-			try {
-			    if (this.data.list && this.data.list[0] instanceof wm.Variable) {
-				this.data.list[0] = this.data.list[0].data.dataValue;
-			    }
-			    this.data = {dataValue: this.data.list.join("")};
-			} catch(e) {
-			    this.data = null;
-			}
-			this.isList = false;
-			
-			return dojo.clone(this.data); // getData never returns pointers into the datastructure but only copies so that manipulating it doesn't corrupt the wm.Variable
-		    } else {
-			var data = [];
-			for (var i=0, l= this.getCount(), v; i<l; i++) {
-				v = (this.getItem(i) || 0).getData(flattenPrimitives);
-				if (v)
-					data.push(v);
-			}
-			return data;
-		    }
-		} else if (flattenPrimitives && this.isPrimitive && this.data["dataValue"] !== undefined) {
-		    return this.data.dataValue;
-		} else if (this.isEmpty()) {
-		    return null;
-		} else {
-			var data = {};
-			var props = this.listDataProperties();
-			for (var i in props) {
-			    var v = this.data[i];
-			    if (wm.getDataConvertDates && v instanceof Date) {
-				v = v.getTime();
-			    }
-				// we may not always want all related junk
-				if (v !== undefined) {
-				    if (v instanceof wm.Variable) {
-					if (v.isEmpty()) 
-					    v = null;
-					else
-					    v = v.getData(flattenPrimitives)
-				    } 
-					// don't return undefined or empty, non-null variables properties
-					if (v === undefined || (v !== null && typeof v == "object" && wm.isEmpty(v)))
-						continue;
-					data[i] = v;
-				}
-			}
-			if (!wm.isEmpty(data))
-				return data;
-		}
-	},
+    getData: function(flattenPrimitives) {
+        if (!this.data) return;
+        if (this._isNull) return null;
+        else if (this.isList) {
+            // if its a byte list merge it into a single string and change it to a nonlist 
+            if (this.type == "byte") {
+                try {
+                    if (this.data.list && this.data.list[0] instanceof wm.Variable) {
+                        this.data.list[0] = this.data.list[0].data.dataValue;
+                    }
+                    this.data = {
+                        dataValue: this.data.list.join("")
+                    };
+                } catch (e) {
+                    this.data = null;
+                }
+                this.isList = false;
+
+                return dojo.clone(this.data); // getData never returns pointers into the datastructure but only copies so that manipulating it doesn't corrupt the wm.Variable
+            } else if (wm.Variable.convertToHashMaps && this.data.list && wm.isHashMapType(this.type)) {
+                var data = {};
+                for (var i = 0, l = this.getCount(), v; i < l; i++) {
+                    v = (this.getItem(i) || 0).getData(flattenPrimitives);
+                    data[v.name] = v.dataValue;
+                }
+                return data;
+            } else {
+                var data = [];
+                for (var i = 0, l = this.getCount(), v; i < l; i++) {
+                    v = (this.getItem(i) || 0).getData(flattenPrimitives);
+                    if (v) data.push(v);
+                }
+                return data;
+            }
+        } else if (flattenPrimitives && this.isPrimitive && this.data["dataValue"] !== undefined) {
+            return this.data.dataValue;
+        } else if (this.isEmpty()) {
+            return null;            
+        } else {
+            var data = {};
+            var props = this.listDataProperties();
+            for (var i in props) {
+                var v = this.data[i];
+                if (wm.getDataConvertDates && v instanceof Date) {
+                    v = v.getTime();
+                }                
+                // we may not always want all related junk
+                if (v !== undefined) {
+                    if (v instanceof wm.Variable) {
+                        if (v.isEmpty()) v = null;
+                        else v = v.getData(flattenPrimitives)
+                    }
+                    // don't return undefined or empty, non-null variables properties
+                    if (v === undefined || (v !== null && typeof v == "object" && wm.isEmpty(v))) continue;
+                    data[i] = v;
+                }
+            }
+            if (!wm.isEmpty(data)) return data;
+        }
+    },
+    
 	//===========================================================================
 	// Value API
 	//===========================================================================
