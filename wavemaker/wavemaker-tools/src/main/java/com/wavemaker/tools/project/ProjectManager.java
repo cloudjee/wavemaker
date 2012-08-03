@@ -365,15 +365,26 @@ public class ProjectManager {
             }
         }
 
-        Project project = getProject(projectName, false);
-        Deployments deployments = AbstractDeploymentManager.readDeployments(project, this.fileSystem);
-        deployments.removeAll(projectName);
+        Writer writer = null;
+        try {
+            Project project = getProject(projectName, false);
+            Deployments deployments = AbstractDeploymentManager.readDeployments(project, this.fileSystem);
+            deployments.removeAll(projectName);
 
-        org.springframework.core.io.Resource deploymentsResource =
-                this.fileSystem.getCommonDir().createRelative(AbstractDeploymentManager.DEPLOYMENTS_FILE);
-        Writer writer = new OutputStreamWriter(this.fileSystem.getOutputStream(deploymentsResource));
-        JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
-        writer.flush();
+            org.springframework.core.io.Resource deploymentsResource =
+                    this.fileSystem.getCommonDir().createRelative(AbstractDeploymentManager.DEPLOYMENTS_FILE);
+            writer = new OutputStreamWriter(this.fileSystem.getOutputStream(deploymentsResource));
+            JSONMarshaller.marshal(writer, deployments, new JSONState(), false, true);
+            writer.flush();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
