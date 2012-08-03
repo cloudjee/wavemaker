@@ -23,7 +23,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
         var templateList = [];
         var i = 0; 
 
-        var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
+        var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.desktopTemplatesInsertLayer, owner: this, name: "templateRow" + i});
         var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate", "Selected"]}, layoutKind: "top-to-bottom", parent: panel, owner: this, name: "templatepanel_" , margin: "4", border: "1", borderColor: "#888888", width: "112px", height: "120px"});
 	var firstimgpanel = imgpanel;
         this.noneTarget = imgpanel;
@@ -32,27 +32,42 @@ dojo.declare("NewProjectDialog", wm.Page, {
 
         var label = new wm.Label({"width": "100%", height: "20px", parent: imgpanel, owner: this, name: "templatelabel" + i, caption: "None"});
         i++;        
-
-
-        for (var templateKey in templates) {
-            var template = templates[templateKey];
-            if (i % 3 == 0) {
-                panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
+        var groupNames = [undefined];
+        wm.forEachProperty(templates, function(template, templateName) {
+            if (dojo.indexOf(groupNames, template.templateGroup) == -1) {
+                groupNames.push(template.templateGroup);
             }
-            var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, layoutKind: "top-to-bottom", parent: panel, owner: this, name: "templatepanel_" + templateKey, margin: "4", border: "1", borderColor: "#888888", width: "112px", height: "120px"});
-            var img = new wm.Picture({width: "100%", height: "100px", parent: imgpanel, owner: this, name: "template"+ i });
-            if (template.thumbnail) {
-                img.domNode.style.backgroundImage = "url(" + template.thumbnail + ")";
-            }
-            var label = new wm.Label({"width": "100%", height: "20px", parent: imgpanel, owner: this, name: "templatelabel" + i, caption: template.displayName || templateKey});
-            i++;
-        }
-        dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("onclick", this, "templateClicked");
-        dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("dblclick", this, "templateDblClicked");
+        });
+        dojo.forEach(groupNames, function(groupName) {
+            debugger;
+            this.addTemplates(templates, panel, groupName, i);
+            i = 0;
+        }, this);
+        dojo.query(".SelectableTemplate", this.tabs.domNode).connect("onclick", this, "templateClicked");
+        dojo.query(".SelectableTemplate", this.tabs.domNode).connect("dblclick", this, "templateDblClicked");
 	this.templateClicked2(firstimgpanel);
 	wm.onidle(this, function() {
 	    this.reflow();
 	});
+    },
+    addTemplates: function(templates, panel, templateGroup, i) {
+        for (var templateKey in templates) {
+            var template = templates[templateKey];
+            if (!templateGroup && !template.templateGroup || templateGroup == template.templateGroup) {
+                var layer = !templateGroup ? this.desktopTemplatesInsertLayer : this.tabs.getLayerByCaption(templateGroup);
+                if (!layer) layer = this.tabs.addLayer(templateGroup,true);
+                if (i % 3 == 0) {
+                    panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: layer, owner: this, name: "templateRow" + layer.name + i});
+                }
+                var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, layoutKind: "top-to-bottom", parent: panel, owner: this, name: "templatepanel_" + layer.name + templateKey, margin: "4", border: "1", borderColor: "#888888", width: "112px", height: "120px"});
+                var img = new wm.Picture({width: "100%", height: "100px", parent: imgpanel, owner: this, name: "template"+ layer.name + i });
+                if (template.thumbnail) {
+                    img.domNode.style.backgroundImage = "url(" + template.thumbnail + ")";
+                }
+                var label = new wm.Label({"width": "100%", height: "20px", parent: imgpanel, owner: this, name: "templatelabel" + layer.name + i, caption: template.displayName || templateKey});
+                i++;
+            }
+        }
     },
     reset: function() {
         var projectNames = {};
@@ -123,7 +138,10 @@ dojo.declare("NewProjectDialog", wm.Page, {
         } catch(e) {}
     },
     _onOkClick: function() {
-        studio.project.newProject(this.projectName.getDataValue(), this.themeName.getDataValue(), wm.fullTemplates[this.selectedTemplate.name.replace(/templatepanel_/,"")]);
+        var templateName = this.selectedTemplate.name;
+        var layer = this.selectedTemplate.isAncestorInstanceOf(wm.Layer);
+        templateName = templateName.substring(layer.name.length + "templatepanel_".length);
+        studio.project.newProject(this.projectName.getDataValue(), this.themeName.getDataValue(), wm.fullTemplates[templateName]);
     },
   _end: 0
 });

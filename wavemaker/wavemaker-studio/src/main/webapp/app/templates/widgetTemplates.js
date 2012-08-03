@@ -51,6 +51,7 @@ wm.widgetTemplates.twoColumn = {
 	}
 }
 wm.fullTemplates.fancyTemplate = {
+    templateGroup: "Sample",
 	displayName: bundlePackage.FancyTemplate,
         thumbnail: "app/templates/widgetTemplateImages/fancyTemplate.png",
 	layoutKind: "left-to-right",
@@ -186,7 +187,7 @@ wm.fullTemplates.sideMenuTemplate = {
 	}
 }
 
-wm.fullTemplates.tabTemplate = {
+wm.fullTemplates.tabTemplate = {    
 	displayName: bundlePackage.TabsTemplate,
         thumbnail: "app/templates/widgetTemplateImages/tabLayersTemplate.png",
 	layoutKind: "left-to-right",
@@ -270,6 +271,7 @@ wm.fullTemplates.topMenuTemplate = {
 	}]}
 }
 wm.fullTemplates.phoneLayout = {
+    templateGroup: "Mobile",
 	displayName: bundlePackage.PhoneTemplate,
         thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
          destroyTemplate: true,
@@ -307,6 +309,7 @@ variable1: ["wm.Variable", {"isList":true,"json":"[{name: \"Sunday\", dataValue:
 	}
 };
 wm.fullTemplates.tabletLayout = {
+    templateGroup: "Mobile",
 	displayName: bundlePackage.TabletTemplate,
         thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
          destroyTemplate: true,
