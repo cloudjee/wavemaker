@@ -18,6 +18,7 @@ dojo.require('wm.base.components.componentList');
 /* Clobber the runtime wm.componentList, providing a design time only version */
 wm.componentList = {
     "wm.LiveForm": ["studio.build.wm_livepanel"],
+    "wm.SimpleForm":["studio.build.wm_livepanel"],
     "wm.LivePanel": ["studio.build.wm_livepanel"],
     "wm.RelatedEditor": ["studio.build.wm_livepanel"],
     "wm.EditPanel": ["studio.build.wm_livepanel"],
