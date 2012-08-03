@@ -40,9 +40,18 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     /* Maximum number of results to return per page */
     maxResults: 0,
     designMaxResults: 50,
-
+    transposeHashMap: function(inData) {
+        var data = [];
+        wm.forEachProperty(inData, function(inValue, inName) {
+            data.push({name: inName, dataValue: inValue});
+        });
+        return data;
+    },
     /* Handle a successful response to a service call */
     processResult: function(inResult) {
+        if (this.type.match(/\<.*,.*\>/)) {
+            inResult = this.transposeHashMap(inResult);
+        }
         this.setData(inResult);
         if (this.service == "securityService" && this.operation == "logout") wm.logoutSuccess();
         this.inherited(arguments);

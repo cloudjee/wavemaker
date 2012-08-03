@@ -17,21 +17,41 @@ dojo.provide('wm.base.lib.types');
 wm.typeManager = {
 	types: {},
 	initialized: false,
-	initTypes: function() {
-	    if (wm.types && wm.types.types) {
-		wm.typeManager.setTypes(wm.types.types);
-	    } else {
-		this.addDefaultTypes();
-	    }
-	},
-	setTypes: function(inTypes) {
-	    this.clearTypes();
-	    if (inTypes) {
-		dojo.mixin(this.types, inTypes);
-	    }
-	    this.addDefaultTypes();
+    initTypes: function() {
+        if (wm.types && wm.types.types) {
+            wm.typeManager.setTypes(wm.types.types);
+        } else {
+            this.addDefaultTypes();
+        }
+    },
+    setTypes: function(inTypes) {
+        this.clearTypes();
+        if (inTypes) {
 
-	},
+            /* Handle special types that the server fails to fully define for us */
+            wm.forEachProperty(inTypes, function(inTypeDef, inName) {
+                var matches = inName.match(/\<(.*),(.*)\>/);
+                if (matches) {
+                    inTypeDef.isList = true;
+                    inTypeDef.fields = {
+                        name: {
+                            include: ["read"],
+                            isList: false,
+                            type: matches[1]
+                        },
+                        dataValue: {
+                            isList: false,
+                            type: matches[2]
+                        }
+                    };
+                }
+            });
+            dojo.mixin(this.types, inTypes);
+        }
+        this.addDefaultTypes();
+
+    },
+    
 	clearTypes: function() {
 		this._publicTypes = {};
 	        if (wm.dataSources) {
@@ -137,24 +157,29 @@ wm.typeManager = {
 			return !wm.typeManager.isStructuredType((p || 0).type);
 		});
 	},
-    getFieldList: function(inTypeSchema, inPath) {
 
-	if (typeof inTypeSchema == "string")
-	    inTypeSchema = this.getType(inTypeSchema).fields;
 
-	var result = [];
-	for (var i in inTypeSchema) {
-	    if (wm.typeManager.isStructuredType(inTypeSchema[i].type)) {
-		result = result.concat(this.getFieldList(inTypeSchema[i].type, i));
-	    } else {
-		result.push({dataIndex: (inPath ? inPath + "." : "") + i,
-			     caption: wm.capitalize(i),
-			     displayType: wm.capitalize(inTypeSchema[i].type)});
-	    }
-	}
-	    return result;
-	},
+    getFieldList: function(inTypeSchema, inPath, maxDepth, includedObjects) {
+        if (!includedObjects) includedObjects = {};
+        if (typeof inTypeSchema == "string") inTypeSchema = this.getType(inTypeSchema).fields;
 
+        var result = [];
+        for (var i in inTypeSchema) {
+            if (wm.typeManager.isStructuredType(inTypeSchema[i].type)) {
+                if (!inTypeSchema[i].isList && !includedObjects[inTypeSchema[i].type] && !wm.isListType(inTypeSchema[i].type) && (maxDepth === undefined || maxDepth >= 0)) {
+                    includedObjects[inTypeSchema[i].type] = true;
+                    result = result.concat(this.getFieldList(inTypeSchema[i].type, inPath ? inPath + "." + i : i, maxDepth === undefined ? undefined : maxDepth-1, includedObjects));
+                }
+            } else {
+                result.push({
+                    dataIndex: (inPath ? inPath + "." : "") + i,
+                    caption: wm.capitalize(i),
+                    displayType: wm.capitalize(inTypeSchema[i].type)
+                });
+            }
+        }
+        return result;
+    },
         getStructuredPropNames: function(inTypeSchema, includeIsList) {
 		return this.getFilteredPropNames(inTypeSchema, function(p) {
 			return wm.typeManager.isStructuredType((p || 0).type) || includeIsList && p.isList;
@@ -346,7 +371,7 @@ ListData: {listValue: {type: "Any", isList: true, isObject: false}}
 //wm.primitives = {};
 
 wm.isListType = function(inTypeName) {
-	return inTypeName && inTypeName.charAt(0) == "[";
+	return inTypeName && (inTypeName.charAt(0) == "[" || inTypeName.match(/\<.*,.*\>/));
 }
 
 // use forceList to optionally force friendly type to show list.

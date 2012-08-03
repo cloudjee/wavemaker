@@ -1660,7 +1660,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    else if (this.variable instanceof wm.Variable && wm.typeManager.getType(this.variable.type) && wm.typeManager.getType(this.variable.type).liveService)
 		    fields = wm.getDefaultView(this.variable.type) || [];
 	    else {
-		fields = wm.typeManager.getFieldList(this.variable._dataSchema, "");
+		fields = wm.typeManager.getFieldList(this.variable._dataSchema, "",3);
 	    }
 
 	    return fields;

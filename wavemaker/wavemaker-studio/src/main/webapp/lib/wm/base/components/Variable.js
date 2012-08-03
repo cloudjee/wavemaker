@@ -128,7 +128,9 @@ dojo.declare("wm.Variable", wm.Component, {
 		var t = inType;
 		if (wm.isListType(t)) {
 			this.isList = true;
-			t = t.slice(1, -1);
+            if (t.substring(t.length-1) == "]") {
+    			t = t.slice(1, -1);
+            }
 		// don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should 
 		// not lose the user's isList setting
 		} else if (!(this.data && this.data.list) && !this._inPostInit)
@@ -275,29 +277,31 @@ dojo.declare("wm.Variable", wm.Component, {
 		@param {Any} inData Input data.
 	*/
 	// NB: input can be a POJSO or a Variable
-	setData: function(inData) {
-	    /* Don't try setting data to null if we're still initializing components for the page;
-	     * that just clobbers the cookie/permanent memory with data not yet set
-	     */
-	    if (window["PhoneGap"] && this.saveInPhonegap || this.saveInCookie) {
-		var ownerPage = this.getParentPage();
-		if (ownerPage && ownerPage._loadingPage && !inData) return;
-	    }
+    setData: function(inData) {
+        /* Don't try setting data to null if we're still initializing components for the page;
+         * that just clobbers the cookie/permanent memory with data not yet set
+         */
+        if (window["PhoneGap"] && this.saveInPhonegap || this.saveInCookie) {
+            var ownerPage = this.getParentPage();
+            if (ownerPage && ownerPage._loadingPage && !inData) return;
+        }
 
-	    if (inData instanceof wm.Variable)
-		inData = inData.getData();
+        if (inData instanceof wm.Variable) inData = inData.getData();
 
-	    this.onPrepareSetData(inData);
-	    if (dojo.isArray(inData))
-		this._setArrayData(inData);
-	    else if (this.isPrimitive)
-		this._setPrimitiveData(inData);
-	    else
-		this._setObjectData(inData);
-	    this.notify();
-	    this.onSetData();
+        this.onPrepareSetData(inData);
+        
+        if (dojo.isArray(inData)) {
+            this._setArrayData(inData);
+        } else if (this.isPrimitive) {
+            this._setPrimitiveData(inData);
+        } else {
+            this._setObjectData(inData);
+        }
+        this.notify();
+        this.onSetData();
 
-	},
+    },
+    
 	onPrepareSetData: function(inData) {
 	},
 	onSetData: function() {},

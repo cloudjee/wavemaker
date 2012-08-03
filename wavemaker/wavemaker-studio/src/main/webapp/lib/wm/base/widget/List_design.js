@@ -159,7 +159,12 @@ wm.List.extend({
 	    this.columns = [];
 	}
 	var defaultSchema = {dataValue: {type: this.dataSet.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
-        var viewFields = this.getViewFields();
+        var viewFields;
+        if (wm.typeManager.getLiveService(this.dataSet.type)) {
+            viewFields = this.getViewFields();
+        } else {
+            viewFields = wm.typeManager.getFieldList(this.dataSet._dataSchema, "",2);
+        }
 /*
 	if (!viewFields || viewFields.length == 0) {
 	    viewFields =  [];
