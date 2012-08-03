@@ -207,7 +207,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     updateNow: {group:"operation", operation: 1},
 
     /* BindSource hidden group */
-    selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true, doc: 1},
+    selectedItem: {group: "widgetName", subgroup: "selection", readonly:1, bindSource: 1, bindTarget: 1, simpleBindProp: true, doc: 1,editor: "wm.prop.DataSetSelect", editorProps: {listMatch: false, widgetDataSets: true, allowAllTypes: true}},
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
 

@@ -77,7 +77,7 @@ wm.Object.extendSchema(wm.List, {
     onGridButtonClick: {order: 20, group: "events"},
 
     /* Hidden/bindSource group */
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
+    selectedItem: {group: "widgetName", subgroup: "selection", readonly:1, bindSource: 1, bindTarget: 1, simpleBindProp: true, doc: 1,editor: "wm.prop.DataSetSelect", editorProps: {listMatch: false, widgetDataSets: true, allowAllTypes: true}},
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
 
     /* Operations group */

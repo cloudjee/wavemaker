@@ -810,10 +810,6 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
         this.reflow();
 
-        if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
-            wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
-        }
-
         /*
           if (this.columns && this.deleteColumn) {
           this.columns.shift();
@@ -1547,7 +1543,11 @@ dojo.declare("wm.List", wm.VirtualList, {
                 var cellData = value;
                 var props = dataFields.split(".");
                 for (var propIndex = 0; propIndex < props.length; propIndex++) {
-                    cellData = cellData[props[propIndex]];
+                    if (cellData && typeof cellData == "object") {
+                        cellData = cellData[props[propIndex]];
+                    } else {
+                        cellData = null;
+                    }
                 }
 
                 cellData = this.formatCell(dataFields, cellData, value, i, inCol);
@@ -1815,6 +1815,10 @@ wm.List.extend({
     onGridButtonClick: function(fieldName, rowData, rowIndex) {},
     setSelectedRow: function(inIndex) {
         this.eventSelect(this.items[inIndex]);
+    },
+    setSelectedItem: function(inData) {
+        if (inData instanceof wm.Variable) inData = inData.getData();
+        this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {
         if (typeof inItemOrIndex != "object") {

@@ -22,6 +22,8 @@ wm.componentList = {
     "wm.RelatedEditor": ["studio.build.wm_livepanel"],
     "wm.EditPanel": ["studio.build.wm_livepanel"],
     "wm.DataNavigator": ["studio.build.wm_livepanel"],
+    'wm.BreadcrumbLayers':['build.Gzipped.wm_breadcrumblayer'],
+
 
 	/* GADGETS */
     "wm.FeedList": ["studio.build.wm_gadget"],

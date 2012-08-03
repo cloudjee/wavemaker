@@ -239,28 +239,49 @@ dojo.declare("wm.LiveView", wm.Component, {
 	},
 	//$ Set the dataType for the dataView. This is a type that supports crud operations.
 	setDataType: function(inType) {
-	    if (this._typeChangeSubscribe) {
-		try {
-		    dojo.disconnect(this._typeChangeSubscribe);
-		} catch(e) {}
-		delete this._typeChangeSubscribe;
-	    }
+		if (this._typeChangeSubscribe) {
+			try {
+				dojo.disconnect(this._typeChangeSubscribe);
+			} catch (e) {}
+			delete this._typeChangeSubscribe;
+		}
 		var t = this.dataType;
 		this.dataType = inType;
-		if (t != this.dataType)
-			this.dataTypeChanged();
-		if (this._defaultView)
-			this.createDefaultView();
+		if (t != this.dataType) this.dataTypeChanged();
+		if (this._defaultView) this.createDefaultView();
 
-	    if (this._isDesignLoaded && this.owner instanceof wm.Variable) {
-		var typeInfo = wm.typeManager.getType(this.dataType);
-		if (typeInfo) {
-		    this._typeChangeSubscribe = this._subscribeTypeChange = dojo.subscribe("ServiceTypeChanged-" + typeInfo.service, dojo.hitch(this, function() {
-			this.owner.typeChanged(this.owner.type);
-		    }));
+		if (this._isDesignLoaded && this.owner instanceof wm.Variable) {
+			var typeInfo = wm.typeManager.getType(this.dataType);
+			if (typeInfo) {
+				this._typeChangeSubscribe = this._subscribeTypeChange = dojo.subscribe("ServiceTypeChanged-" + typeInfo.service, dojo.hitch(this, function() {
+					this.owner.typeChanged(this.owner.type);
+				}));
+
+				// see if the type has changed to something that invalidates this view
+				if (this.view) {
+					for (var i = this.view.length - 1; i >= 0; i--) {
+						if (this.view[i].dataIndex.indexOf(".") == -1) {
+							if (!typeInfo.fields[this.view[i].dataIndex]) {
+								wm.Array.removeElementAt(this.view, i);
+							}
+						}
+					}
+
+					/* Sometimes fields are added to a database design; these need to show up in the LiveView or they don't also become available to the DojoGrid columns */
+					if (this.owner instanceof wm.LiveVariable) {
+						wm.forEachProperty(typeInfo.fields, dojo.hitch(this, function(inFieldDef, inFieldName) {
+							if (!wm.typeManager.isStructuredType(inFieldDef.type)) {
+								if (!dojo.some(this.view, function(fieldDef) { return fieldDef.dataIndex == inFieldName;})) {
+									this.addField(inFieldName);
+								}
+							}
+						}));
+					}
+				}
+			}
 		}
-	    }
 	},
+	
 	dataTypeChanged: function() {
 		// FIXME: we need to do something smart here. changing the datatype should probably zot
 		// the view info and may need to inform things bound to this and/or update.

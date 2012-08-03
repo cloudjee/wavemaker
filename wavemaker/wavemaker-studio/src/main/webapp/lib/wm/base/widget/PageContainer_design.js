@@ -148,24 +148,23 @@ wm.PageContainer.extend({
 		return [];
 	},
 	// write only binding.
-	writeComponents: function(inIndent) {
-	    /* Remove invalid bindings; typically caused by a wm.Property having been renamed or deleted */
-	    var props = this.listProperties();
-	    for (var propName in this.components.binding.wires) {
-		var componentName = propName.replace(/\..*$/,"");
-		if (!props[propName] && !props[componentName] && !this.subpageProplist[componentName]) {
-		    this.components.binding.removeWire(propName);
+	writeComponents: function(inIndent) { /* Remove invalid bindings; typically caused by a wm.Property having been renamed or deleted */
+		var props = this.listProperties();
+		for (var propName in this.components.binding.wires) {
+			var componentName = propName.replace(/\..*$/, "");
+			if (!props[propName] && !props[componentName] && !this.subpageProplist[componentName]) {
+				this.components.binding.removeWire(propName);
+			}
 		}
-	    }
 
 
 		var
-			s = [];
-			c = this.components.binding.write(inIndent);
-		if (c) 
-			s.push(c);
+		s = [];
+		c = this.components.binding.write(inIndent);
+		if (c) s.push(c);
 		return s;
 	},
+	
 	makePropEdit: function(inName, inValue, inEditorProps) {
 	    if (this.page && this.subpageProplist[inName]) {
 		try {
@@ -239,8 +238,8 @@ wm.PageContainer.extend({
 	var newprops = wm.listMatchingComponents([this.page], function(c) {return c instanceof wm.Property;});
 	this.subpageProplist = {};
 	this.subpageEventlist = {};
-	for (var i = 0; i < newprops.length; i++) {
-	    var p = newprops[i];
+	this.subpageMethodlist = {};
+	dojo.forEach(newprops, function(p,i){
 	    /* Don't clobber any existing properties */
 	    if (props[p.name] === undefined || !props[p.name].group) {
 		if (p.isEvent) {
@@ -250,6 +249,7 @@ wm.PageContainer.extend({
 			this[p.name] = function(){};
 		    }
 		    */
+		
 		} else {
 		    this.subpageProplist[p.name] = p.property;
 		}
@@ -270,14 +270,35 @@ wm.PageContainer.extend({
 		    var component = p.owner.getValueById(componentId);		    
 		    if (component && component instanceof wm.Component && propertyName) {
 			var propDef = component.listProperties()[propertyName];
+			if (propDef.method) {
+				this.subpageMethodlist[p.name] = p.property;
+				delete this.subpageProplist[p.name];
+			}
 			dojo.mixin(props[p.name], {editor: propDef.editor,
 						   options: propDef.options,
+						   operation: propDef.operation,
+						   ignore: propDef.ignore, // these three used for bind-only properties
+						   hidden: propDef.hidden,
+						   writeonly: propDef.writeonly,
+						   method: propDef.method,
 						   editorProps: propDef.editorProps});
+		    }
+		    if (propDef.operation) {
+		    	if (typeof propDef.operation == "string") {		    				    		
+		    		this[p.name] = function() {
+		    			component[propDef.operation]();
+		    		};
+		    	} else {
+		    		this[p.name] = function() {
+		    			component[propertyName]();
+		    		};
+		    	}
+		    	props[p.name].operation = 1;
 		    }
 		}
 
 	    }
-	}
+	},this);
 
 	return props;
     }
@@ -300,6 +321,7 @@ wm.Object.extendSchema(wm.PageContainer, {
     /* Hidden group */
     subpageProplist: {writeonly: 1},
     subpageEventlist: {writeonly: 1},
+    subpageMethodlist: {writeonly: 1},
 
     /* Ignored group */
     pageLoadedDeferred: {ignore: 1},

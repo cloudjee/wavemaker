@@ -112,48 +112,50 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.selectedItem.setLiveView((this.variable|| 0).liveView);
 		this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
 	},
-        setSelectedRow: function(rowIndex, isSelected, onSuccess) {
-	    if (!this.dataSet) return;
-	    /* Can't select the row unless the grid is rendered */
-	    if (!this.dojoObj && !this._renderHiddenGrid) {
-		this._renderHiddenGrid = true;
-		this.renderDojoObj();
-		this._renderHiddenGrid = false;
-	    }
-	    if (this._setRowTimeout) {
-		window.clearTimeout(this._setRowTimeout);
-		delete this._setRowTimeout;
-	    }
+    setSelectedRow: function(rowIndex, isSelected, onSuccess) {
+    	if (!this.dataSet) return; /* Can't select the row unless the grid is rendered */
+    	if (!this.dojoObj && !this._renderHiddenGrid) {
+    		this._renderHiddenGrid = true;
+    		this.renderDojoObj();
+    		this._renderHiddenGrid = false;
+    	}
+    	if (this._setRowTimeout) {
+    		window.clearTimeout(this._setRowTimeout);
+    		delete this._setRowTimeout;
+    	}
 
-	  if (isSelected == undefined) 
-	    isSelected = true;
+    	if (isSelected == undefined) isSelected = true;
 
-	  if (isSelected) {
-	      /* If this returns an empty object, its because the row hasn't been processed by the grid, and will only be processed 
-	       * when scrolled into view
-	       */
-	      if (wm.isEmpty(this.getRow(rowIndex))) {
-		  this.dojoObj.scrollToRow(rowIndex);
-		  wm.onidle(this, function() {
-		      this.setSelectedRow(rowIndex);
-		      if (onSuccess) onSuccess();
-		  });
-	      } else {
-		  this.dojoObj.selection.select(rowIndex);
-		  if (!this._cupdating) {
-		      this.onSelectionChange();
-		      this.onSelect();
-		  }
-		  this.dojoObj.scrollToRow(rowIndex);
-		  if (onSuccess) onSuccess();
-	      }
-	  } else {
-	      this.dojoObj.selection.setSelected(rowIndex,isSelected);
-	      this.onSelectionChange();
-	      this.onDeselect();
-	  }
+    	if (isSelected) {
+    		/* If this returns an empty object, its because the row hasn't been processed by the grid, and will only be processed 
+    		 * when scrolled into view
+    		 */
+    		if (wm.isEmpty(this.getRow(rowIndex))) {
+    			this.dojoObj.scrollToRow(rowIndex);
+    			wm.onidle(this, function() {
+    				this.setSelectedRow(rowIndex);
+    				if (onSuccess) onSuccess();
+    			});
+    		} else {
+    			this.dojoObj.selection.select(rowIndex);
+    			if (!this._cupdating) {
+    				this.onSelectionChange();
+    				this.onSelect();
+    			}
+    			this.dojoObj.scrollToRow(rowIndex);
+    			if (onSuccess) onSuccess();
+    		}
+    	} else {
+    		this.dojoObj.selection.setSelected(rowIndex, isSelected);
+    		this.onSelectionChange();
+    		this.onDeselect();
+    	}
 
-	},
+    },
+    setSelectedItem: function(inData) {
+        if (inData instanceof wm.Variable) inData = inData.getData();
+        this.selectByQuery(inData);
+    },
 	selectItemOnGrid: function(obj, pkList){
 		if (!this.store)
 			return;
@@ -854,7 +856,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
 	    var columnid = column.field||column.id;
-
+	    if (columnid == "PHONE COLUMN") continue;
 	    var parts = columnid.split(".");
 	    var typeName = this.dataSet.type;
 	    var type = wm.typeManager.getType(typeName);
