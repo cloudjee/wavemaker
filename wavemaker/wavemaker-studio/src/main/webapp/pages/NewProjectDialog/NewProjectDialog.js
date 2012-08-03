@@ -38,8 +38,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
                 groupNames.push(template.templateGroup);
             }
         });
-        dojo.forEach(groupNames, function(groupName) {
-            debugger;
+        dojo.forEach(groupNames, function(groupName) {            
             this.addTemplates(templates, panel, groupName, i);
             i = 0;
         }, this);
