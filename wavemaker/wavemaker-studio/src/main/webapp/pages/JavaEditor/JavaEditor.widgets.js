@@ -58,6 +58,9 @@ JavaEditor.widgets = {
 			}],
 			splitter1: ["wm.Splitter", {layout: "right"}, {}],
 			panel5: ["wm.Panel", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "220px"}, {}, {
+                helpLink: ["wm.Label", {width: "100%", height: "40px", align: "right", caption: "Java Services Help", singleLine: false, padding: "4,20,4,4",
+                                        link: "#",
+                                        _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "openHelp"}],
 				typeTree: ["wm.Tree", {height: "100%", border: "0"}, {}],
 				tabLayers1: ["wm.TabLayers", {border: "0", showing: false, width: "100%", height: "100%"}, {}, {
 					typeRefLayer: ["wm.Layer", {caption: "Type Reference"}, {}],

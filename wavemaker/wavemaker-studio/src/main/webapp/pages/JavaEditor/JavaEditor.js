@@ -296,5 +296,8 @@ dojo.declare("JavaEditor", wm.Page, {
 
 
     },
+    openHelp: function() {
+            window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "JavaServices");
+    },
 	_end: 0
 });

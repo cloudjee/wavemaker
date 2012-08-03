@@ -39,3 +39,7 @@
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 }
+
+.JavaEditor-helpLink {
+    background-position: 100% 10%;
+}
