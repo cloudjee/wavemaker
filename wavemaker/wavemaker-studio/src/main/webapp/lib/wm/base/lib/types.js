@@ -33,6 +33,7 @@ wm.typeManager = {
                 var matches = inName.match(/\<(.*),(.*)\>/);
                 if (matches) {
                     inTypeDef.isList = true;
+                    inTypeDef.isHashMap = true;
                     inTypeDef.fields = {
                         name: {
                             include: ["read"],
@@ -159,16 +160,14 @@ wm.typeManager = {
 	},
 
 
-    getFieldList: function(inTypeSchema, inPath, maxDepth, includedObjects) {
-        if (!includedObjects) includedObjects = {};
+    getFieldList: function(inTypeSchema, inPath, maxDepth) {
         if (typeof inTypeSchema == "string") inTypeSchema = this.getType(inTypeSchema).fields;
 
         var result = [];
         for (var i in inTypeSchema) {
             if (wm.typeManager.isStructuredType(inTypeSchema[i].type)) {
-                if (!inTypeSchema[i].isList && !includedObjects[inTypeSchema[i].type] && !wm.isListType(inTypeSchema[i].type) && (maxDepth === undefined || maxDepth >= 0)) {
-                    includedObjects[inTypeSchema[i].type] = true;
-                    result = result.concat(this.getFieldList(inTypeSchema[i].type, inPath ? inPath + "." + i : i, maxDepth === undefined ? undefined : maxDepth-1, includedObjects));
+                if (!inTypeSchema[i].isList &&  !wm.isListType(inTypeSchema[i].type) && (maxDepth === undefined || maxDepth >= 0)) {
+                    result = result.concat(this.getFieldList(inTypeSchema[i].type, inPath ? inPath + "." + i : i, maxDepth === undefined ? undefined : maxDepth-1));
                 }
             } else {
                 result.push({
@@ -373,18 +372,23 @@ ListData: {listValue: {type: "Any", isList: true, isObject: false}}
 wm.isListType = function(inTypeName) {
 	return inTypeName && (inTypeName.charAt(0) == "[" || inTypeName.match(/\<.*,.*\>/));
 }
-
+wm.isHashMapType = function(inTypeName) {
+    var typeDef = wm.typeManager.getType(inTypeName);
+    return typeDef && typeDef.isHashMap;
+}
 // use forceList to optionally force friendly type to show list.
 wm.getFriendlyTypeName = function(inType, inForceList) {
 	inType = inType || "(any)";
 	var
 		s = wm.typeManager.getService(inType),
 		isList = wm.isListType(inType),
-		t = s ? [s, inType.split(".").pop()].join('.') : inType;
-	if (isList)
-		t = t.slice(0,-1);
-	if (inForceList || isList)
-		t = t + " list";
+		t = s && !inType.match(/\</) ? [s, inType.split(".").pop()].join('.') : inType;
+	 if (!wm.isHashMapType(inType)) {
+        if (isList)
+    		t = t.slice(0,-1);
+    	if (inForceList || isList)
+    		t = t + " list";
+    }
 	return t;
 }
 
