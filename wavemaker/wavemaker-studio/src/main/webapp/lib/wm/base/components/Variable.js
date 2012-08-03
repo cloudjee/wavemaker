@@ -498,9 +498,14 @@ dojo.declare("wm.Variable", wm.Component, {
             }
         } else {
             o = this._getDataValue(n);
+            if (o === undefined && v instanceof wm.Variable) {
+                o = this.data[n] = this.createVariable({type: v.type, _subNard: true, name: n});
+            }
         }
         this.endUpdate();
+        if (!o && v instanceof wm.Variable) {
 
+        }
         if (o instanceof wm.Variable) {
             // if we are updating, o's listeners will be notified by us
             // o doesn't need to message them directly
@@ -512,7 +517,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (!(v instanceof wm.Variable)) {
             this.data[n] = v;
             this.dataValueChanged(n, v);
-        }
+        } 
     },
     
 	//===========================================================================
