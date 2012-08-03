@@ -368,5 +368,7 @@
 
     COMPILE_BUTTON_WIDTH: "100px",
     RUN_BUTTON_WIDTH: "75px",
-    TEST_BUTTON_WIDTH: "75px"
+    TEST_BUTTON_WIDTH: "75px",
+
+    "BIND_PROP_PANEL_NOBINDINGS": "There are no current bindings"
 }

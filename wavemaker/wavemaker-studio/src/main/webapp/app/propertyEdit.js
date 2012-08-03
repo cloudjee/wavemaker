@@ -1995,6 +1995,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
         this.bindLayer = this.tabs.layers[0];
         this.fieldLayer =this.tabs.layers[1];
         this.fieldForm = this.fieldLayer.c$[1];
+        if (!this.showMainInput) this.fieldLayer.activate();
     } else {
         studio.inspector.addSubGroupIndicator("Inputs", this, true, false);
 /*
@@ -2219,7 +2220,9 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 
             }));
         }
-
+        if (bindTextNodes.childNodes.length == 0) {
+            bindTextNodes.innerHTML = studio.getDictionaryItem("BIND_PROP_PANEL_NOBINDINGS");
+        }
 
         while (this.bindDescWidget.domNode.firstChild) {
             this.bindDescWidget.domNode.removeChild(this.bindDescWidget.domNode.firstChild);
