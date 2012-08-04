@@ -57,6 +57,7 @@ wm.Property.extend({
 		var propDef = c.listProperties()[prop];
 		if (propDef) {
 		    this.type = propDef.type;
+            this.method = propDef.method;
 		} else if (c instanceof wm.Variable && (!prop || prop == "dataSet")) {
 		    this.type = c.type;
 		}
