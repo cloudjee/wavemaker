@@ -108,85 +108,87 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.set_styleAsGrid(this.styleAsGrid);
-    },
+
     set_styleAsGrid: function(inValue) {
-	this.styleAsGrid = Boolean(inValue);
-	this[this.styleAsGrid ? "removeUserClass" : "addUserClass"]("MobileListStyle");
+        this.styleAsGrid = Boolean(inValue);
+        this[this.styleAsGrid ? "removeUserClass" : "addUserClass"]("MobileListStyle");
     },
     set_rightNavArrow: function(inValue) {
-	this.rightNavArrow = inValue;
-	this.setColumns(this.columns);
-	this.renderDojoObj();
+        this.rightNavArrow = inValue;
+        this.setColumns(this.columns);
+        this.renderDojoObj();
     },
     set_dataSet: function(inDataSet) {
-	var typeWas = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
-	this.setDataSet(inDataSet);
-	var typeIs = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
+        var typeWas = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
+        this.setDataSet(inDataSet);
+        var typeIs = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
 
-	/* Setup some default columns */
-	if (typeIs && typeIs != typeWas) {
-	    this.updateColumnData();
-	    this.renderDojoObj();
-	}
+        /* Setup some default columns */
+        if (typeIs && typeIs != typeWas) {
+            this.updateColumnData();
+            this.renderDojoObj();
+        }
     },
     set_autoSizeHeight: function(inValue) {
-	this.autoSizeHeight = Boolean(inValue);
-	this.renderVisibleRowsOnly = !inValue;
-	this._render();
+        this.autoSizeHeight = Boolean(inValue);
+        this.renderVisibleRowsOnly = !inValue;
+        this._render();
     },
     set_renderVisibleRowsOnly: function(inValue) {
-	this.autoSizeHeight = !inValue;
-	this.renderVisibleRowsOnly = Boolean(inValue);
-	this._render();
+        this.autoSizeHeight = !inValue;
+        this.renderVisibleRowsOnly = Boolean(inValue);
+        this._render();
     },
-    updateNow: function() {this.update();},
-    _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+    updateNow: function() {
+        this.update();
     },
-    showMenuDialog: function(e){
-	if (!this.columns) {
-	    this.columns = [];
-	    this.updateColumnData();
-	}
-	studio.gridDesignerDialog.show();
-	studio.gridDesignerDialog.page.setGrid(this);
+    _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {},
+    showMenuDialog: function(e) {
+        if (!this.columns) {
+            this.columns = [];
+            this.updateColumnData();
+        }
+        studio.gridDesignerDialog.show();
+        studio.gridDesignerDialog.page.setGrid(this);
     },
     set_selectionMode: function(inMode) {
-	this.selectionMode = inMode;
-	this.setSelectionMode(inMode);
-	this.selectedItem.setIsList(inMode == "multiple");
-	this._render();
-    },    
-    updateColumnData: function () {
-	if (!dojo.isArray(this.columns)) {
-	    this.columns = [];
-	}
-	var defaultSchema = {dataValue: {type: this.dataSet.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
+        this.selectionMode = inMode;
+        this.setSelectionMode(inMode);
+        this.selectedItem.setIsList(inMode == "multiple");
+        this._render();
+    },
+    updateColumnData: function() {
+        if (!dojo.isArray(this.columns)) {
+            this.columns = [];
+        }
+        var defaultSchema = {
+            dataValue: {
+                type: this.dataSet.type
+            }
+        }; // this is the schema to use if there is no schema (i.e. the type is a literal)
         var viewFields;
         if (wm.typeManager.getLiveService(this.dataSet.type)) {
             viewFields = this.getViewFields();
         } else {
-            viewFields = wm.typeManager.getFieldList(this.dataSet._dataSchema, "",2);
+            viewFields = wm.typeManager.getFieldList(this.dataSet._dataSchema, "", 2);
         }
-/*
-	if (!viewFields || viewFields.length == 0) {
-	    viewFields =  [];
-	    wm.forEachProperty(defaultSchema, function(item, fieldName) {
-		item = dojo.clone(item);
-		item.name = fieldName;
-		viewFields.push(item);
-	    });
-	}
-	*/
-        dojo.forEach(viewFields, function (f, i) {
+        /*
+    if (!viewFields || viewFields.length == 0) {
+        viewFields =  [];
+        wm.forEachProperty(defaultSchema, function(item, fieldName) {
+        item = dojo.clone(item);
+        item.name = fieldName;
+        viewFields.push(item);
+        });
+    }
+    */
+        dojo.forEach(viewFields, function(f, i) {
             // if the column already exists, skip it
-            if (dojo.some(this.columns, function (item) {
+            if (dojo.some(this.columns, function(item) {
                 return item.field == f.dataIndex;
             })) return;
 
-	    var schema = wm.typeManager.getTypeSchema(this.dataSet.type) || defaultSchema;
+            var schema = wm.typeManager.getTypeSchema(this.dataSet.type) || defaultSchema;
             // don't show one-to-many subentities in the grid
             if (wm.typeManager.isPropInList(schema, f.dataIndex)) return;
 
@@ -213,14 +215,14 @@ wm.List.extend({
         }, this);
 
         var newcolumns = [];
-        dojo.forEach(this.columns, dojo.hitch(this, function (col) {
+        dojo.forEach(this.columns, dojo.hitch(this, function(col) {
             // we don't update custom fields
             if (col.isCustomField || col.field == "PHONE COLUMN") {
                 newcolumns.push(col);
                 return;
             }
             // If the column is still in the viewFields after whatever change happened, then do nothing
-            if (dojo.some(viewFields, dojo.hitch(this, function (field) {
+            if (dojo.some(viewFields, dojo.hitch(this, function(field) {
                 return field.dataIndex == col.field;
             }))) {
                 newcolumns.push(col);
@@ -231,39 +233,36 @@ wm.List.extend({
             return;
         }));
         this.columns = newcolumns;
-	this.setColumns(this.columns);
+        this.setColumns(this.columns);
     },
-	getViewFields: function(){
-	    var fields = [];
-	    if (this.dataSet instanceof wm.LiveVariable)
-		fields = this.dataSet.getViewFields();
-	    else if (this.dataSet instanceof wm.Variable)
-		fields = wm.getDefaultView(this.dataSet.type) || [];
-	    return fields;
-	},
+    getViewFields: function() {
+        var fields = [];
+        if (this.dataSet instanceof wm.LiveVariable) fields = this.dataSet.getViewFields();
+        else if (this.dataSet instanceof wm.Variable) fields = wm.getDefaultView(this.dataSet.type) || [];
+        return fields;
+    },
 
-    editColumns:function() {
-	return this.showMenuDialog();
+    editColumns: function() {
+        return this.showMenuDialog();
     },
-    set_columns: function(inColumns){
-	this.setColumns(inColumns);
-	this._render();
+    set_columns: function(inColumns) {
+        this.setColumns(inColumns);
+        this._render();
     },
     listProperties: function() {
-	var props = this.inherited(arguments);
-	props.toggleSelect.ignoretmp = Boolean(this.selectionMode == "multiple");
-	props.selectionMode.ignoretmp = Boolean(!this.columns);
-	return props;
+        var props = this.inherited(arguments);
+        props.toggleSelect.ignoretmp = Boolean(this.selectionMode == "multiple");
+        props.selectionMode.ignoretmp = Boolean(!this.columns);
+        return props;
     },
     writeProps: function() {
-	var props = this.inherited(arguments);
-	if (props.columns && props.columns[0].controller) {
-	    props.columns.shift();
-	}
-	return props;
+        var props = this.inherited(arguments);
+        if (props.columns && props.columns[0].controller) {
+            props.columns.shift();
+        }
+        return props;
     }
 });
-
 
 
 wm.Object.extendSchema(wm.FocusableList, {

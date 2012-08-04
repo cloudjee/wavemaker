@@ -241,13 +241,15 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
 
     },
-    init: function() {
+    init: function() {        
         this.setSelectionMode(this.selectionMode);
         if (this.noHeader) { // another grid property
             this.headerVisible = false;
         }
         this.inherited(arguments);
-
+        if (!this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "MobileListStyle") == -1)) {
+             this.addUserClass("MobileListStyle");
+        }
         var spacerNodeTop = this.spacerNodeTop = document.createElement('div');
         spacerNodeTop.className = "wmlist-spacer";
         this.listNode.appendChild(spacerNodeTop);
