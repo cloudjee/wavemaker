@@ -13,6 +13,12 @@
  */
  
 
+.NewLivePanelDialog .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab {
+    color: black;
+}
+.NewLivePanelDialog .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab.wmtablayers-selected {
+    color: white;
+}
 
 
 .NewLivePanelDialog  .SelectableTemplate .wmpicture{
@@ -57,27 +63,17 @@
 /*        opacity: 1.0;*/
 
 }
-.NewLivePanelDialog .NewLivePanelDialog-templatesInsertPanel .SelectableTemplate.Selected .wmlabel {
+.NewLivePanelDialog .NewLivePanelDialog-tabs .SelectableTemplate.Selected .wmlabel {
     font-weight: bold;
     color: white;
 }
-.NewLivePanelDialog .NewLivePanelDialog-mainPanel,
-.NewLivePanelDialog .NewLivePanelDialog-mainPanel .wmeditor-caption {
-background-color: "#848c99";
-color: white;
-font-weight: bold;
-}
-.NewLivePanelDialog .NewLivePanelDialog-mainPanel input {
-   color: black !important;
-}
-.NewLivePanelDialog .NewLivePanelDialog-mainPanel .wmlabel {
-    text-align: center;
-}
 
-.NewLivePanelDialog .NewLivePanelDialog-templatesInsertPanel {
+
+.NewLivePanelDialog .NewLivePanelDialog-mobileTemplatesInsertPanel,
+.NewLivePanelDialog .NewLivePanelDialog-desktopTemplatesInsertPanel {
     background-color: white;
 }
-.NewLivePanelDialog .NewLivePanelDialog-templatesInsertPanel .wmlabel {
+.NewLivePanelDialog .NewLivePanelDialog-tabs .wmlabel {
     color: black;
     text-align: center;
     font-size: 8pt;

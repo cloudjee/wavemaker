@@ -28,56 +28,80 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
     var options = this.options = [
                       
                        {name: this.getDictionaryItem("TRADITIONAL"),
-                       img: "images/GridLiveForm.png"},
+                       img: "images/GridLiveForm.png",
+                       mobile: false},
                       {name: this.getDictionaryItem("DIALOG"),
-                       img: "images/GridLiveFormDialog.png"},
+                       img: "images/GridLiveFormDialog.png",
+                       mobile: false},                       
                        {name: this.getDictionaryItem("GRID"),
-                       img: "images/GridLiveFormEditable.png"},
+                       img: "images/GridLiveFormEditable.png",
+                       mobile: false},                    
                        {name: this.getDictionaryItem("MENU"),
-                       img: "images/GridLiveFormLeft.png"},
+                       img: "images/GridLiveFormLeft.png",
+                       mobile: false},                       
                       {name: this.getDictionaryItem("BREADCRUMB"),
-                       img: "images/GridLiveFormBreadcrumbs.png"},
+                       img: "images/GridLiveFormBreadcrumbs.png",
+                       mobile: false},                       
                       {name: this.getDictionaryItem("LIVEVARIABLE"),
-                       img:""}];
+                       img:"",
+                       mobile: false},
+                      {name: this.getDictionaryItem("TABLET"),
+                       img: "images/GridLiveFormLeft.png",
+                       mobile: true},                       
+                      {name: this.getDictionaryItem("PHONE"),
+                       img: "images/GridLiveFormBreadcrumbs.png",
+                       mobile: true},
+                      {name: this.getDictionaryItem("LIVEVARIABLE"),
+                       img:"",
+                       mobile: true}                       
+                    ];
     
         var i = 0;
-
-    for (var i = 0; i < options.length; i++) {
-            var option = options[i];
+        this.addTemplates(options, false);
+        this.addTemplates(options, true);
+        dojo.query(".SelectableTemplate", this.tabs.domNode).connect("onclick", this, "templateClicked");
+        dojo.query(".SelectableTemplate", this.tabs.domNode).connect("dblclick", this, "templateDblClicked");
+    this.templateClicked2(this.firstimgpanel);
+    this.tabs.reflow();
+    },
+    addTemplates: function(options, isMobile) {
+        var i = 0;
+        var panel;
+        var parent = !isMobile ? this.desktopTemplatesInsertPanel : this.mobileTemplatesInsertPanel;
+        dojo.forEach(options, function(option) {
+            debugger;
+            if (option.mobile != isMobile) return;            
             if (i % 3 == 0) {
-                var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
+                panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: parent, owner: this, name: "templateRow" + i});
             }
             var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, 
                      layoutKind: "top-to-bottom", 
                      parent: panel, 
                      owner: this, 
-                     name: "templatepanel_" + i, 
+                     name: "templatepanel_" + parent.name + i, 
                      margin: "4", 
                      border: "1", 
                      borderColor: "#888888", 
                      width: "112px", 
                      height: "120px"});
-        if (i == 0) 
-        var firstimgpanel = imgpanel;
+        if (!this.firstimgpanel) 
+            this.firstimgpanel = imgpanel;
             var img = new wm.Picture({width: "100%", 
                       height: "91px", 
                       border: "1",
                       borderColor: "#555555",
                       parent: imgpanel, 
                       owner: this, 
-                      name: "template"+ i});
+                      name: "template"+ parent.name + i});
             img.domNode.style.backgroundImage = "url(" + option.img + ")";
             var label = new wm.Label({"width": "100%",
                       height: "20px",
                       parent: imgpanel,
                       owner: this,
-                      name: "templatelabel" + i,
+                      name: "templatelabel" + parent.name + i,
                       caption: option.name});
-        }
-        dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("onclick", this, "templateClicked");
-        dojo.query(".SelectableTemplate", this.templatesInsertPanel.domNode).connect("dblclick", this, "templateDblClicked");
-    this.templateClicked2(firstimgpanel);
-    this.templatesInsertPanel.reflow();
+            i++;
+        }, this);
     },
 /* Copied from NewProjectDialog and not yet updated for use here
     reset: function() {

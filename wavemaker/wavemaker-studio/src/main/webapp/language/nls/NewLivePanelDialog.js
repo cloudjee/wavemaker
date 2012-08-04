@@ -17,5 +17,7 @@
     DIALOG: "Dialog",
     GRID: "Editable Grid",
     BREADCRUMB: "Breadcrumbs",
-    LIVEVARIABLE: "LiveVariable"
+    LIVEVARIABLE: "LiveVariable",
+    TABLET: "Tablet",
+    PHONE: "Phone"
 }

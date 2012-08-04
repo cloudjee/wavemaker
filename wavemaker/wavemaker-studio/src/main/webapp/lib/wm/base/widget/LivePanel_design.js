@@ -15,200 +15,229 @@
 dojo.provide("wm.base.widget.LivePanel_design");
 dojo.require("wm.base.widget.LivePanel");
 wm.require("wm.DojoGrid");
+wm.require("wm.List");
 wm.require("wm.LiveForm");
 
 wm.LivePanel.extend({
-	afterPaletteDrop: function() {
-	    wm.Container.prototype.afterPaletteDrop.call(this);
-	    if (!studio.LivePanelTypeChooserDialog) {
-		studio.LivePanelTypeChooserDialog = new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
-								       owner: studio,
-								       name: "LivePanelTypeChooserDialog",
-								       pageName: "NewLivePanelDialog",
-								       width: "371px",
-								       height: "375px",
-								       modal: true,
-								       hideControls: true,
-								       title: studio.getDictionaryItem("wm.LivePanel.CHOOSER_TITLE")});
-	    }
-	    studio.LivePanelTypeChooserDialog.show();
+    afterPaletteDrop: function() {
+        wm.Container.prototype.afterPaletteDrop.call(this);
+        if (!studio.LivePanelTypeChooserDialog) {
+            studio.LivePanelTypeChooserDialog = new wm.PageDialog({
+                _classes: {
+                    domNode: ["studiodialog"]
+                },
+                owner: studio,
+                name: "LivePanelTypeChooserDialog",
+                pageName: "NewLivePanelDialog",
+                width: "371px",
+                height: "405px",
+                modal: true,
+                hideControls: true,
+                title: studio.getDictionaryItem("wm.LivePanel.CHOOSER_TITLE")
+            });
+        }
+        studio.LivePanelTypeChooserDialog.show();
 
-	    studio.LivePanelTypeCancelConnection = 
-		studio.LivePanelTypeChooserDialog.page.connect(studio.LivePanelTypeChooserDialog.page,"onCancelClick",this,function() {
-		    dojo.disconnect(studio.LivePanelTypeOKConnection);
-		    dojo.disconnect(studio.LivePanelTypeCancelConnection);
-		    this.destroy();
-		    studio.refreshWidgetsTree();
-		});
+        studio.LivePanelTypeCancelConnection = studio.LivePanelTypeChooserDialog.page.connect(studio.LivePanelTypeChooserDialog.page, "onCancelClick", this, function() {
+            dojo.disconnect(studio.LivePanelTypeOKConnection);
+            dojo.disconnect(studio.LivePanelTypeCancelConnection);
+            this.destroy();
+            studio.refreshWidgetsTree();
+        });
 
-	    studio.LivePanelTypeOKConnection = 
-		studio.LivePanelTypeChooserDialog.page.connect(
-		    studio.LivePanelTypeChooserDialog.page,
-		    "onOkClick",
-		    this,
-		    function(inName) {
-			dojo.disconnect(studio.LivePanelTypeOKConnection);
-			dojo.disconnect(studio.LivePanelTypeCancelConnection);
-			delete studio.LivePanelTypeCancelConnection;
-			delete studio.LivePanelTypeOKConnection;
-			studio.beginWait(studio.getDictionaryItem("wm.LivePanel.WAIT_GENERATING"));
-			wm.onidle(this, function() {
-			    switch(inName) {
-			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("LIVEVARIABLE"):
-				var lvar = this.createLiveSource(this.liveSource, true);
-				studio.select(lvar);
-				studio.endWait();
-				var parent = this.parent;
-				this.destroy();
-				studio.refreshDesignTrees();
-				parent.reflow();
-				return;
-			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TRADITIONAL"):
-				this.createTraditionalLivePanel(inName.match(/Paging$/));
-				break;
-			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("MENU"):
-				this.createMenuLivePanel(inName.match(/Paging$/));
-				break;
-			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("DIALOG"):
-				this.createPopupLivePanel(inName.match(/Paging$/));
-				break;
-			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("BREADCRUMB"):
-				this.createBreadcrumbLivePanel(inName.match(/Paging$/));
-				break;
-			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("GRID"):
-				this.createEditableGrid();
-				break;
-			    case "Live Form Only":
-				this.createLiveForm();
-				break;
-			    case "Grid Only":
-				this.createGrid();
-				break;
-			    }
-			    this.reflow();
-			    studio.refreshWidgetsTree();
-			});
-		});
-	},
-    createBreadcrumbLivePanel: function(usePaging) {
-	this.breadcrumbs = new wm.BreadcrumbLayers({
-	    name: studio.page.getUniqueName(this.liveDataName + "Layers"),
-	    owner: this.owner,
-	    height:'100%',
-	    width: "100%",
-	    parent: this
-	});
-	if (this.breadcrumbs.layers[0]) this.breadcrumbs.layers[0].destroy();
+        studio.LivePanelTypeOKConnection = studio.LivePanelTypeChooserDialog.page.connect(
+        studio.LivePanelTypeChooserDialog.page, "onOkClick", this, function(inName) {
+            dojo.disconnect(studio.LivePanelTypeOKConnection);
+            dojo.disconnect(studio.LivePanelTypeCancelConnection);
+            delete studio.LivePanelTypeCancelConnection;
+            delete studio.LivePanelTypeOKConnection;
+            studio.beginWait(studio.getDictionaryItem("wm.LivePanel.WAIT_GENERATING"));
+            wm.onidle(this, function() {
+                switch (inName) {
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("LIVEVARIABLE"):
+                    var lvar = this.createLiveSource(this.liveSource, true);
+                    studio.select(lvar);
+                    studio.endWait();
+                    var parent = this.parent;
+                    this.destroy();
+                    studio.refreshDesignTrees();
+                    parent.reflow();
+                    return;
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TRADITIONAL"):
+                    this.createTraditionalLivePanel(inName.match(/Paging$/));
+                    break;
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("MENU"):
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TABLET"):
+                    this.createMenuLivePanel(inName.match(/Paging$/), inName == studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TABLET"));
+                    break;
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("DIALOG"):
+                    this.createPopupLivePanel(inName.match(/Paging$/));
+                    break;
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("BREADCRUMB"):
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("PHONE"):
+                    this.createBreadcrumbLivePanel(inName.match(/Paging$/), inName == studio.LivePanelTypeChooserDialog.page.getDictionaryItem("PHONE"));
+                    break;
+                case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("GRID"):
+                    this.createEditableGrid();
+                    break;
+                case "Live Form Only":
+                    this.createLiveForm();
+                    break;
+                case "Grid Only":
+                    this.createGrid();
+                    break;
+                }
+                this.reflow();
+                studio.refreshWidgetsTree();
+            });
+        });
+    },
+    createBreadcrumbLivePanel: function(usePaging, isMobile) {
+        this.breadcrumbs = new wm.BreadcrumbLayers({
+            name: studio.page.getUniqueName(this.liveDataName + "Layers"),
+            owner: this.owner,
+            height: '100%',
+            width: "100%",
+            parent: this
+        });
+        if (this.breadcrumbs.layers[0]) this.breadcrumbs.layers[0].destroy();
 
-	var gridLayer = this.gridLayer = this.breadcrumbs.addLayer(wm.capitalize(this.liveDataName) + " List");
+        var gridLayer = this.gridLayer = this.breadcrumbs.addLayer(wm.capitalize(this.liveDataName) + " List");
 
-	this.setAutoScroll(false);
-	this.dataGrid = new wm.DojoGrid({
-	    name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
-	    owner: this.owner,
-	    height:'100%',
-	    width: "100%",
-	    parent: gridLayer
-	});
-	if (usePaging) 
-	    var navigator = new wm.DataNavigator({
-		name: studio.page.getUniqueName(this.liveDataName + "DataNav"),
-		owner: this.owner,
-		width:'100%',
-		parent: gridLayer,
-		byPage: true		
-	    });
-
-	/* Generate the button panel under the grid */
-	var gridButtonPanel = new wm.Panel({owner: studio.page,
-					    name: studio.page.getUniqueName(this.liveDataName + "GridButtonPanel"),
-					    parent: gridLayer,
-					    layoutKind: "left-to-right",
-					    width: "100%",
-					    height: wm.Button.prototype.height,
-					    horizontalAlign: "right",
-					    verticalAlign: "top"});
-	var newButton = new wm.Button({owner: studio.page,
-				       name: studio.page.getUniqueName(this.liveDataName + "NewButton"),
-				       parent: gridButtonPanel,
-				       caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
-	var detailsLayer = this.detailsLayer = this.breadcrumbs.addLayer("Edit " + wm.capitalize(this.liveDataName));
-	detailsLayer.setAutoScroll(true);
-
-	/* Generate the LiveForm, LiveVariable and LiveView */
-	this.liveForm = new wm.LiveForm({
-				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
-				owner: this.owner,
-	                        parent: detailsLayer,
-				verticalAlign: "top",
-				horizontalAlign: "left",
-                   		margin: "4",
-                   		alwaysPopulateEditors: true,
-                   		liveEditing: false,
-                   		//editPanelStyle: "none",
-	                        _noEditPanel: true,
-				_liveSource: this.liveSource
-			});
-		this.liveForm.createLiveSource(this.liveSource);
-		var lvar = this.liveForm.dataSet.name;
-  	        if (usePaging) {
-		    this.liveForm.dataSet.maxResults = 30;
-		    navigator.setLiveSource(lvar);
-		}
-	this.dataGrid.$.binding.addWire("", "dataSet", lvar);
+        this.setAutoScroll(false);
+        if (isMobile) {
+        this.dataGrid = new wm.List({
+            styleAsGrid: false, 
+            rightNavArrow: true, 
+            headerVisible: false, 
+            margin: "0", 
+            border: "0",
+            name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
+            owner: this.owner,
+            height: '100%',
+            width: "100%",
+            parent: gridLayer
+        });
 
 
-	var liveFormConnect = this.liveForm.connect(this.liveForm, "finishAddEditors", this, function() {
-	    dojo.disconnect(liveFormConnect);
-	    this.liveForm.setReadonly(false);
-	    this.liveForm.setFitToContentHeight(false);
-	    this.liveForm.setHeight("100%");
-	});	    
+        } else {
+        this.dataGrid = new wm.DojoGrid({
+            name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
+            owner: this.owner,
+            height: '100%',
+            width: "100%",
+            parent: gridLayer
+        });
+    }
+        if (usePaging) var navigator = new wm.DataNavigator({
+            name: studio.page.getUniqueName(this.liveDataName + "DataNav"),
+            owner: this.owner,
+            width: '100%',
+            parent: gridLayer,
+            byPage: true
+        });
 
-	this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
+        /* Generate the button panel under the grid */
+        var gridButtonPanel = new wm.Panel({
+            owner: studio.page,
+            name: studio.page.getUniqueName(this.liveDataName + "GridButtonPanel"),
+            parent: gridLayer,
+            layoutKind: "left-to-right",
+            width: "100%",
+            height: wm.Button.prototype.height,
+            horizontalAlign: "right",
+            verticalAlign: "top"
+        });
+        var newButton = new wm.Button({
+            owner: studio.page,
+            name: studio.page.getUniqueName(this.liveDataName + "NewButton"),
+            parent: gridButtonPanel,
+            caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")
+        });
+        var detailsLayer = this.detailsLayer = this.breadcrumbs.addLayer("Edit " + wm.capitalize(this.liveDataName));
+        detailsLayer.setAutoScroll(true);
+
+        /* Generate the LiveForm, LiveVariable and LiveView */
+        this.liveForm = new wm.LiveForm({
+            name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
+            owner: this.owner,
+            parent: detailsLayer,
+            verticalAlign: "top",
+            horizontalAlign: "left",
+            margin: "4",
+            alwaysPopulateEditors: true,
+            liveEditing: false,
+            //editPanelStyle: "none",
+            _noEditPanel: true,
+            _liveSource: this.liveSource
+        });
+        this.liveForm.createLiveSource(this.liveSource);
+        var lvar = this.liveForm.dataSet.name;
+        if (usePaging) {
+            this.liveForm.dataSet.maxResults = 30;
+            navigator.setLiveSource(lvar);
+        }
+        this.dataGrid.$.binding.addWire("", "dataSet", lvar);
 
 
-	/* Create the buttonbar */
-	var formButtonPanel = new wm.Panel({owner: studio.page,
-					    name: studio.page.getUniqueName(this.liveDataName + "FormButtonPanel"),
-					    parent: detailsLayer,
-					    layoutKind: "left-to-right",
-					    width: "100%",
-					    height: wm.Button.prototype.height,
-					    horizontalAlign: "right",
-					    verticalAlign: "top"});	
-	var saveButton = this.saveButton = new wm.Button({owner: studio.page,
-							  name: studio.page.getUniqueName(this.liveDataName + "SaveButton"),
-							  parent: formButtonPanel,
-							  caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")});
-	var cancelButton = new wm.Button({owner: studio.page,
-					  name: studio.page.getUniqueName(this.liveDataName + "CancelButton"),
-					  parent: formButtonPanel,
-					  caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")});
-	var deleteButton = new wm.Button({owner: studio.page,
-					  name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
-				       parent: formButtonPanel,
-				       caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
-					      
+        var liveFormConnect = this.liveForm.connect(this.liveForm, "finishAddEditors", this, function() {
+            dojo.disconnect(liveFormConnect);
+            this.liveForm.setReadonly(false);
+            this.liveForm.setFitToContentHeight(false);
+            this.liveForm.setHeight("100%");
+        });
 
-	/* Generate all edit event handlers */
-	this.dataGrid.eventBindings.onSelect = this.name + ".popupLivePanelEdit";
-	newButton.eventBindings.onclick = this.name + ".popupLivePanelInsert";
-	deleteButton.eventBindings.onclick = this.liveForm.name + ".deleteData";
-	saveButton.eventBindings.onclick = this.liveForm.name + ".saveDataIfValid";
-	cancelButton.eventBindings.onclick = this.gridLayer.name;
-	this.gridLayer.eventBindings.onShow = this.dataGrid.name + ".deselectAll";
-	this.liveForm.eventBindings.onSuccess = this.name + ".popupLiveFormSuccess";
-	//this.liveForm.eventBindings.onResult = this.name + ".popupLiveFormResult";
-	//this.liveForm.eventBindings.onBeforeOperation = this.name + ".popupLiveFormBeforeOperation";
+        this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 
-	this.saveButton.$.binding.addWire(null, "disabled", "", "${" + this.liveForm.name + ".invalid} || !${" + this.liveForm.name + ".isDirty}");
-	deleteButton.$.binding.addWire(null, "disabled", this.dataGrid.name + ".emptySelection","");
-	this.$.binding.addWire(null, "gridLayer", this.gridLayer.name, ""); // insures that if "gridLayer" is renamed, we will still know the name of our gridLayer
-	this.$.binding.addWire(null, "detailsLayer", this.detailsLayer.name, ""); // insures that if "detailsLayer" is renamed, we will still know the name of our detailsLayer
-	this.$.binding.addWire(null, "liveForm", this.liveForm.name, "");
-	this.$.binding.addWire(null, "dataGrid", this.dataGrid.name, "");
-	this.$.binding.addWire(null, "saveButton", this.saveButton.name, "");
+
+        /* Create the buttonbar */
+        var formButtonPanel = new wm.Panel({
+            owner: studio.page,
+            name: studio.page.getUniqueName(this.liveDataName + "FormButtonPanel"),
+            parent: detailsLayer,
+            layoutKind: "left-to-right",
+            width: "100%",
+            height: wm.Button.prototype.height,
+            horizontalAlign: "right",
+            verticalAlign: "top"
+        });
+        var saveButton = this.saveButton = new wm.Button({
+            owner: studio.page,
+            name: studio.page.getUniqueName(this.liveDataName + "SaveButton"),
+            parent: formButtonPanel,
+            caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")
+        });
+        var cancelButton = new wm.Button({
+            owner: studio.page,
+            name: studio.page.getUniqueName(this.liveDataName + "CancelButton"),
+            parent: formButtonPanel,
+            caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")
+        });
+        var deleteButton = new wm.Button({
+            owner: studio.page,
+            name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
+            parent: formButtonPanel,
+            caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")
+        });
+
+
+        /* Generate all edit event handlers */
+        this.dataGrid.eventBindings.onSelect = this.name + ".popupLivePanelEdit";
+        newButton.eventBindings.onclick = this.name + ".popupLivePanelInsert";
+        deleteButton.eventBindings.onclick = this.liveForm.name + ".deleteData";
+        saveButton.eventBindings.onclick = this.liveForm.name + ".saveDataIfValid";
+        cancelButton.eventBindings.onclick = this.gridLayer.name;
+        this.gridLayer.eventBindings.onShow = this.dataGrid.name + ".deselectAll";
+        this.liveForm.eventBindings.onSuccess = this.name + ".popupLiveFormSuccess";
+        //this.liveForm.eventBindings.onResult = this.name + ".popupLiveFormResult";
+        //this.liveForm.eventBindings.onBeforeOperation = this.name + ".popupLiveFormBeforeOperation";
+        this.saveButton.$.binding.addWire(null, "disabled", "", "${" + this.liveForm.name + ".invalid} || !${" + this.liveForm.name + ".isDirty}");
+        deleteButton.$.binding.addWire(null, "disabled", this.dataGrid.name + ".emptySelection", "");
+        this.$.binding.addWire(null, "gridLayer", this.gridLayer.name, ""); // insures that if "gridLayer" is renamed, we will still know the name of our gridLayer
+        this.$.binding.addWire(null, "detailsLayer", this.detailsLayer.name, ""); // insures that if "detailsLayer" is renamed, we will still know the name of our detailsLayer
+        this.$.binding.addWire(null, "liveForm", this.liveForm.name, "");
+        this.$.binding.addWire(null, "dataGrid", this.dataGrid.name, "");
+        this.$.binding.addWire(null, "saveButton", this.saveButton.name, "");
     },
 
 
@@ -538,76 +567,76 @@ wm.LivePanel.extend({
 	},
 
 
-    	createMenuLivePanel: function(usePaging) {
-	    this.setLayoutKind("left-to-right");
-	    this.dataGrid = new wm.DojoGrid({
-                border: "1", 
-		name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
-		owner: this.owner,
-		height:'100%',
-		width: "200px",
-		parent: this
-	    });
-	    this.liveForm = new wm.LiveForm({
-		width: "100%",
-		height: "100%",
-		name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
-		owner: this.owner,
-		parent: this,
-		margin: "0",		    
-		verticalAlign: "top",
-		horizontalAlign: "center",
-		editorWidth: "100%",
-		_liveSource: this.liveSource
-	    });
+    createMenuLivePanel: function(usePaging, isMobile) {
+        this.setLayoutKind("left-to-right");
+        var ctor = isMobile ? wm.List : wm.DojoGrid;
+        this.dataGrid = new ctor({
+            border: "1",
+            name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
+            owner: this.owner,
+            height: '100%',
+            width: "200px",
+            parent: this
+        });
+        this.liveForm = new wm.LiveForm({
+            width: "100%",
+            height: "100%",
+            name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
+            owner: this.owner,
+            parent: this,
+            margin: "0",
+            verticalAlign: "top",
+            horizontalAlign: "center",
+            editorWidth: "100%",
+            _liveSource: this.liveSource
+        });
 
-	    this.liveForm.createLiveSource(this.liveSource);
-	    var lvar = this.liveForm.dataSet.name;
+        this.liveForm.createLiveSource(this.liveSource);
+        var lvar = this.liveForm.dataSet.name;
 
-	    this.dataGrid.$.binding.addWire("", "dataSet", lvar, "");
-	    this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
-	    this.liveForm.eventBindings.onSuccess = lvar;
-
-
-	    /* Now that the bindings are generated, all the editors and columns are generated and ready to manipulate */
-	    this.connectOnce(this.liveForm, "finishAddEditors", this, function() {
-		this.liveForm.setFitToContentHeight(false);
-		this.liveForm.setHeight("100%");
-		this.liveForm.setAutoScroll(true);
-		var editPanel = this.liveForm.getEditPanel();
-		if (editPanel) {
-		    var spacer = new wm.Spacer({owner: this.owner,
-						parent: this.liveForm,
-						name: studio.page.getUniqueName(this.liveDataName + "Spacer"),
-						width: "10px",
-						height: "100%"});
-		    this.liveForm.moveControl(spacer, this.liveForm.indexOfControl(editPanel));
-		}
-		this.reflow(); // added for fancypanel support
-
-		var displayField = wm.typeManager.getDisplayField(this.liveForm.dataSet.type);
-
-		if (this.dataGrid.columns) {
-		    var found = false;
-		    for (var i = 0; i < this.dataGrid.columns.length; i++) {
-			var col = this.dataGrid.columns[i];
-			if (col.field == displayField) {
-			    col.show = true;    
-			    found = true;
-			} else {
-			    col.show = false;
-			}
-		    }
-		    if (!found) {
-			this.dataGrid.columns[0].show = true;
-		    }
-		}
-		this.dataGrid.renderDojoObj();
-	    });
-
-	},
+        this.dataGrid.$.binding.addWire("", "dataSet", lvar, "");
+        this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
+        this.liveForm.eventBindings.onSuccess = lvar;
 
 
+        /* Now that the bindings are generated, all the editors and columns are generated and ready to manipulate */
+        this.connectOnce(this.liveForm, "finishAddEditors", this, function() {
+            this.liveForm.setFitToContentHeight(false);
+            this.liveForm.setHeight("100%");
+            this.liveForm.setAutoScroll(true);
+            var editPanel = this.liveForm.getEditPanel();
+            if (editPanel) {
+                var spacer = new wm.Spacer({
+                    owner: this.owner,
+                    parent: this.liveForm,
+                    name: studio.page.getUniqueName(this.liveDataName + "Spacer"),
+                    width: "10px",
+                    height: "100%"
+                });
+                this.liveForm.moveControl(spacer, this.liveForm.indexOfControl(editPanel));
+            }
+            this.reflow(); // added for fancypanel support
+            var displayField = wm.typeManager.getDisplayField(this.liveForm.dataSet.type);
+
+            if (this.dataGrid.columns) {
+                var found = false;
+                for (var i = 0; i < this.dataGrid.columns.length; i++) {
+                    var col = this.dataGrid.columns[i];
+                    if (col.field == displayField) {
+                        col.show = true;
+                        found = true;
+                    } else {
+                        col.show = false;
+                    }
+                }
+                if (!found) {
+                    this.dataGrid.columns[0].show = true;
+                }
+            }
+            this.dataGrid.renderDojoObj();
+        });
+
+    },
     _end: 0
 });
 

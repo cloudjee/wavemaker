@@ -18,7 +18,10 @@ NewLivePanelDialog.widgets = {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
             templatesPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", autoScroll: true},{}, {
                 templatesPanelLabel: ["wm.Label", {width: "100%", height: "24px", caption: "Select how you want your data to look"}],
-                templatesInsertPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", border: "1", borderColor: "#333333", padding: "5"}]
+                tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","NoRightMarginOnTab", "TransparentTabBar"]}, width: "100%", height: "100%", clientBorder: "1", clientBorderColor: "#414B5C"},{},{                                              
+                    desktopTemplatesInsertPanel: ["wm.Layer", {caption: "Desktop", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", padding: "5"}],
+                    mobileTemplatesInsertPanel: ["wm.Layer", {caption: "Mobile", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", padding: "5"}]
+                }]
             }]
         }],
             buttonPanel: ["wm.studio.DialogButtonPanel", {_classes: {domNode: ["wmDialogFooter"]}, width: "100%", height: "35px", layoutKind: "left-to-right", horizontalAlign: "right", verticalAlign: "top"},{}, {
