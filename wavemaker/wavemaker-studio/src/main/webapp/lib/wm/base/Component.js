@@ -956,42 +956,47 @@ this.panel1.createComponent("custom", "wm.Panel", {
                         // call a method on a component
                     } else if (dojo.isString(inHandler)) {
                         var o = inHandler.split('.');
+                        var m,c;
                         if (o.length > 1) {
-                            var m = o.pop();
+                            m = o.pop();
                             c = self.getValueById(o.join("."));
-                            if (c && c[m]) {
-                                if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
-                                    if (c instanceof wm.ServiceVariable) {
-                                        if (!c._debug) c._debug = {};
-                                        c._debug = {
-                                            trigger: inComponent.getId(),
-                                            eventName: eventName,
-                                            method: m,
-                                            lastUpdate: new Date()
-                                        };
-                                    }
-                                    var eventId = app.debugDialog.newLogEvent({
-                                        eventType: "subcomponentEvent",
+                        } else {
+                            c = self;
+                            m = o[0];
+                        }
+                        if (c && c[m]) {
+                            if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+                                if (c instanceof wm.ServiceVariable) {
+                                    if (!c._debug) c._debug = {};
+                                    c._debug = {
+                                        trigger: inComponent.getId(),
                                         eventName: eventName,
-                                        firingId: inComponent.getRuntimeId(),
-                                        affectedId: c instanceof wm.Component ? c.getRuntimeId() : undefined,
-                                        method: m
-                                    });
+                                        method: m,
+                                        lastUpdate: new Date()
+                                    };
                                 }
-                                // changed from c[m]() so that inSender and all arguments get forwarded
-                                try {
-                                    c[m].apply(c, self._eventArgs(this, args));
-                                } catch (e) {
-                                    var errorMessage = "Error in " + self.toString() + "." + m + ": " + e.message;
-                                    if (djConfig.isDebug) {
-                                        app.toastError(errorMessage);
-                                    } else {
-                                        console.error(errorMessage);
-                                    }
+                                var eventId = app.debugDialog.newLogEvent({
+                                    eventType: "subcomponentEvent",
+                                    eventName: eventName,
+                                    firingId: inComponent.getRuntimeId(),
+                                    affectedId: c instanceof wm.Component ? c.getRuntimeId() : undefined,
+                                    method: m
+                                });
+                            }
+                            // changed from c[m]() so that inSender and all arguments get forwarded
+                            try {
+                                c[m].apply(c, self._eventArgs(this, args));
+                            } catch (e) {
+                                var errorMessage = "Error in " + self.toString() + "." + m + ": " + e.message;
+                                if (djConfig.isDebug) {
+                                    app.toastError(errorMessage);
+                                } else {
+                                    console.error(errorMessage);
                                 }
                             }
                         }
                     }
+                        
                     if (eventId) {
                         app.debugDialog.endLogEvent(eventId);
                     }
