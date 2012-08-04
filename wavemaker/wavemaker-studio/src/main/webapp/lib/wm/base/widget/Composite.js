@@ -40,17 +40,20 @@ wm.publishProperty = function(ctor, name, id, schema) {
 			this.getValue(target).setValue(property, this[name] = inValue);
 		}
 		*/
-	} else if (target) {
-		// initialize value in prototype
-		pt[name] = undefined;
+	} else if (target) {		
+        if (schema.type == "function") {return;} // not supported except in PageContainers
+
+        // initialize value in prototype
+        pt[name] = undefined;
+        
 		// build getter/setter
 		var capP = name.slice(0, 1).toUpperCase() + name.slice(1);
 		pt["get" + capP] = function(inValue) {
 		    var t = this.getValue(target);
-		    if (property == "dataSet" && t instanceof wm.Variable) {
-			return t;
+            if (property == "dataSet" && t instanceof wm.Variable) {
+			     return t;
 		    } else {
-			return this[name] = this.getValue(target).getValue(property);
+			     return this[name] = this.getValue(target).getValue(property);
 		    }
 		}
 		pt["set" + capP] = function(inValue) {
