@@ -172,7 +172,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		// show all (non-list) structured properties
 		this._schemaToNode(inNode, inSchema, function(st, s) { return st && !s.isList; });
 		// show all list properties
-		this._schemaToNode(inNode, inSchema, function(st, s) { return st && s.isList; });
+		// this._schemaToNode(inNode, inSchema, function(st, s) { return st && s.isList; });
 	},
 	checkAncestors: function(inNode) {
 		var n = inNode.parent;
