@@ -524,10 +524,11 @@ dojo.declare("Studio", wm.Page, {
             this.select(this.page.root);
             this.refreshDesignTrees();
         }
-        debugger;
-        var deviceType = this.page.getPreferredDevice();
-        if (deviceType && deviceType != this.currentDeviceType) {
-            switch(deviceType) {
+        
+        if (this.page) {
+            var deviceType = this.page.getPreferredDevice();
+            if (deviceType && deviceType != this.currentDeviceType) {
+                switch (deviceType) {
                 case "tablet":
                     this.tabletToggleButton.click();
                     break;
@@ -538,15 +539,16 @@ dojo.declare("Studio", wm.Page, {
                     this.desktopToggleButton.click();
                 }
             } else {
-            switch(this.currentDeviceType) {
-            case "tablet":
-                this.designTabletUI();
-                break;
-            case "phone":
-                this.designPhoneUI();
-                break;
-            default: 
-                this.designDesktopUI();
+                switch (this.currentDeviceType) {
+                case "tablet":
+                    this.designTabletUI();
+                    break;
+                case "phone":
+                    this.designPhoneUI();
+                    break;
+                default:
+                    this.designDesktopUI();
+                }
             }
         }
         dojo.publish("wm-page-changed");

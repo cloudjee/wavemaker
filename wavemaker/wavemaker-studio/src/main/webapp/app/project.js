@@ -149,18 +149,23 @@ dojo.declare("wm.studio.Project", null, {
                     */
 
         getScriptTemplate: function(pageType, argHash) {
-		// NOTE: could present list of choices here
-	    switch(pageType) {
-	    case "wm.ListViewerRow":
-		return "button1Click: function(inSender) {\n" +
-		    "\t\t/* Example of finding and triggering an action based on a button click */\n" +
-		    "\t\tvar data = this.variable.getData();\n" +
-		    "\t\tconsole.log(\"You have just clicked on a button in the row showing the following data:\");\n" +
-		    "\t\tconsole.log(data);\n" +
-		    "\t}";
-	    default: 
-		return "";
+            var text = "";
+            if (argHash && argHash.template && argHash.template && argHash.template.preferredDevice) {
+                text += "\t\"preferredDevice\": \"" + argHash.template.preferredDevice + "\",\n";
+            }
+
+		  // NOTE: could present list of choices here
+	       switch(pageType) {
+	           case "wm.ListViewerRow":
+            		text += "\tbutton1Click: function(inSender) {\n" +
+            		    "\t\t/* Example of finding and triggering an action based on a button click */\n" +
+            		    "\t\tvar data = this.variable.getData();\n" +
+            		    "\t\tconsole.log(\"You have just clicked on a button in the row showing the following data:\");\n" +
+            		    "\t\tconsole.log(data);\n" +
+            		    "\t}";
+                        break;    	       
 	    }
+        return text;
     },
 	//=========================================================================
 	// Open

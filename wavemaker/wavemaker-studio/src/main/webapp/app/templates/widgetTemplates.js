@@ -272,6 +272,7 @@ wm.fullTemplates.topMenuTemplate = {
 }
 wm.fullTemplates.phoneLayout = {
     templateGroup: "Mobile",
+    preferredDevice: "phone",
 	displayName: bundlePackage.PhoneTemplate,
         thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
          destroyTemplate: true,
@@ -310,6 +311,7 @@ variable1: ["wm.Variable", {"isList":true,"json":"[{name: \"Sunday\", dataValue:
 };
 wm.fullTemplates.tabletLayout = {
     templateGroup: "Mobile",
+    preferredDevice: "tablet",
 	displayName: bundlePackage.TabletTemplate,
         thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
          destroyTemplate: true,
