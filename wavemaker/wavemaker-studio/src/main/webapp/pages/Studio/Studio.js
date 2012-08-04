@@ -524,15 +524,30 @@ dojo.declare("Studio", wm.Page, {
             this.select(this.page.root);
             this.refreshDesignTrees();
         }
-        switch(this.currentDeviceType) {
-        case "tablet":
-        this.designTabletUI();
-        break;
-        case "phone":
-        this.designPhoneUI();
-        break;
-        default: 
-        this.designDesktopUI();
+        debugger;
+        var deviceType = this.page.getPreferredDevice();
+        if (deviceType && deviceType != this.currentDeviceType) {
+            switch(deviceType) {
+                case "tablet":
+                    this.tabletToggleButton.click();
+                    break;
+                case "phone":
+                    this.phoneToggleButton.click();
+                    break;
+                default:
+                    this.desktopToggleButton.click();
+                }
+            } else {
+            switch(this.currentDeviceType) {
+            case "tablet":
+                this.designTabletUI();
+                break;
+            case "phone":
+                this.designPhoneUI();
+                break;
+            default: 
+                this.designDesktopUI();
+            }
         }
         dojo.publish("wm-page-changed");
         this.pagesChanged();

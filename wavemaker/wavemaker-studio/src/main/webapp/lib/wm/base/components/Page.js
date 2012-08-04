@@ -640,6 +640,15 @@ wm.Page.extend({
     getI18n: function() {
 	return this.getPageProperty("i18n");
     },
+    setPreferredDevice: function(inType) {
+        this.preferredDevice = inType;
+        if (this._isDesignLoaded) {
+            this.setPageProperty("preferredDevice", this.preferredDevice);
+        }
+    },
+    getPreferredDevice: function() {
+    return this.getPageProperty("preferredDevice");
+    },
     setValidateVisibleOnly: function(inValue) {
 	this.validateVisibleOnly = Boolean(inValue);
 	if (this._isDesignLoaded) {
@@ -672,6 +681,7 @@ wm.Object.extendSchema(wm.Page, {
     onLetterKey: {events: ["js", "disableNoEvent"]},
     onMiscKey: {events: ["js", "disableNoEvent"]},
     i18n: {group: "widgetName"},
+    preferredDevice: {hidden:1}, // determines which device type studio should use when opening the page for editing
     validateVisibleOnly: {group: "widgetName"},
     enableMobileFolding: {group: "widgetName"}
 });

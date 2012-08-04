@@ -911,6 +911,7 @@ dojo.declare("wm.studio.Project", null, {
 		if (studio.languageSelect.getDisplayValue() != "default") {
 		    studio.page.setI18n(true);
 		}
+        studio.page.setPreferredDevice(studio.currentDeviceType);
 
 		var text = studio.getScript();
 
