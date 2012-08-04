@@ -71,7 +71,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
 
         for (String sfBean : sessionFactoryBeanNames) {
             BeanDefinition beanDefinition = getBeanDefinition(beanFactory, sfBean);
-            beanDefinition.setLazyInit(false);
+            beanDefinition.setLazyInit(true);
             MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
             PropertyValue hibernateProperties = propertyValues.getPropertyValue("hibernateProperties");
 
