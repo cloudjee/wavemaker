@@ -577,9 +577,20 @@ public class DesignServiceManager {
      */
     @Deprecated
     public Resource getServiceDefXml(String serviceId) {
+        return getServiceDefXml(serviceId, true);
+    }
+
+    /**
+     * Return the path to a service's design-time service definition xml.
+     * 
+     * @param serviceId
+     * @return
+     */
+    @Deprecated
+    public Resource getServiceDefXml(String serviceId, boolean fallbackToClassPath) {
         try {
             Resource serviceDef = getServiceDesigntimeDirectory(serviceId).createRelative(SERVICE_DEF_XML);
-            if (!serviceDef.exists()) {
+            if (!serviceDef.exists() && fallbackToClassPath) {
                 Resource runtimeServiceDef = new ClassPathResource(SERVICES_DIR + serviceId + "/" + SERVICE_DEF_XML);
                 if (runtimeServiceDef.exists()) {
                     return runtimeServiceDef;
@@ -1176,7 +1187,7 @@ public class DesignServiceManager {
 
     public void saveServiceDefinition(String serviceId) {
 
-        Resource serviceDefFile = getServiceDefXml(serviceId);
+        Resource serviceDefFile = getServiceDefXml(serviceId, false);
         Service service = getCurrentServiceDefinition(serviceId);
 
         Service oldService = null;
