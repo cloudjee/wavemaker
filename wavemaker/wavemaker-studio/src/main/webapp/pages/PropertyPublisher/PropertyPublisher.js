@@ -40,7 +40,9 @@ dojo.declare("PropertyPublisher", wm.Page, {
 			if (p.isEvent || this.inspected.isEventProp(i)) {
 				p.group = "events";
 				if (i.match(/\d$/)) continue; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
-			} else if (p.isCustomMethod) {
+			} else if (p.method) {
+                p.group = "Methods";
+            } else if (p.isCustomMethod) {
 				p.group = "custommethods";
 			} else if (p.bindSource) {
 				p.group = "Bindings";			
@@ -52,7 +54,14 @@ dojo.declare("PropertyPublisher", wm.Page, {
 
 		var groups = studio.inspector.buildGroups(props, false, true);
 		studio.inspector.sortGroups(groups);
-		
+		for (var i = 0; i < groups.length; i++) {
+            if (groups[i].name == "Methods") {
+                var methods = groups[i];
+                wm.Array.removeElementAt(groups, i);
+                //groups.push(methods); Tried to allow publishing of functions to PageContainers, but just too many flaws for too small a feature
+                break;
+            }
+        }
 		groups.shift();
 		dojo.forEach(groups, dojo.hitch(this, function(group) {
 			var node = new wm.TreeNode(this.tree.root, {
