@@ -187,7 +187,7 @@ dependencies = {
 				"wm.base.widget.Layers",
 				"wm.base.widget.AccordionLayers",
 				"wm.base.widget.Layers_design",
-
+                "wm.base.widget.Composite",
 
 
 
