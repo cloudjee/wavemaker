@@ -55,7 +55,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 		    this.dbSettingsButton.setBorder("0");
 		});
 	    }
-        if (studio.isCloud()) {
+        if (studio.allowDisablingOfServiceItems && studio.isCloud()) {
     	    if (studio._runRequested) {
 	           	this.toolbarBtnHolder.setDisabled(true);
 	        }

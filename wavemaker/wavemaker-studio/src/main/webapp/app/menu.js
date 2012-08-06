@@ -164,7 +164,7 @@ Studio.extend({
             this.editPopupBtn.set("disabled", inDisabled);
             //this.viewPopupBtn.set("disabled",inDisabled);
             this.insertPopupBtn.set("disabled", inDisabled);
-            this.servicesPopupBtn.set("disabled", inDisabled || this.isCloud() && this._runRequested);
+            this.servicesPopupBtn.set("disabled", inDisabled || this.allowDisablingOfServiceItems && this.isCloud() && this._runRequested);
             this.pagePopupBtn.set("disabled", inDisabled);
             //this.leftToolbarButtons.setDisabled(inDisabled);
             /*

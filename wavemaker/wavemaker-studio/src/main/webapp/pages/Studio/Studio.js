@@ -291,7 +291,7 @@ dojo.declare("Studio", wm.Page, {
         }
         }
     },
-    isCloud: function() {
+    isCloud: function() {return true;
         return wm.studioConfig.environment && wm.studioConfig.environment != "local";
         //return  this.isModuleEnabled("cloud", "wm.cloud");
         },
@@ -717,8 +717,9 @@ dojo.declare("Studio", wm.Page, {
         this._runRequested = false;
         this.updateStateWhileDeploying(true);
     },
+    allowDisablingOfServiceItems: false,
     updateStateWhileDeploying: function(isDeployed) { /* Only if there is an app open */
-        if (studio.application && this.isCloud()) {
+        if (this.allowDisablingOfServiceItems && studio.application && this.isCloud()) {
              dojo.publish("testRunStateChange");
             //this.servicesPopupBtn.set('disabled', !isDeployed); // see also menu.js disableMenuBar
             this.disableMenuBar(false);

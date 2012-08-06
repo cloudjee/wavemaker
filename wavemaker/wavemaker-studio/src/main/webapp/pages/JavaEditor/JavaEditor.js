@@ -26,7 +26,7 @@ dojo.declare("JavaEditor", wm.Page, {
         this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
         this.update();
         this.subscribe("wmtypes-changed", dojo.hitch(this, "typesChangedCall"));
-        if (studio.isCloud()) {
+        if (studio.allowDisablingOfServiceItems && studio.isCloud()) {
             if (studio._runRequested) {
                 this.toolbarBtnHolder.setDisabled(true);
             }
