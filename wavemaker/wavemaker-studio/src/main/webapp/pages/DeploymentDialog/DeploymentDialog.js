@@ -65,57 +65,63 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 
     start: function() {
-	this.localizeStuff();
+        this.localizeStuff();
+        if (studio.isCloud()) {
+            this.tomcatRadio.hide();
+            this.newDeploymentDialog.setHeight("160px");
+        }
     },
     onShow: function() {
 
     },
     reset: function() {
-	this._currentDeploymentIndex = -1;
-	this.initDeploymentListVar();
+        this._currentDeploymentIndex = -1;
+        this.initDeploymentListVar();
     },
     localizeStuff: function() {
-	this.hsqldbBox.hsqldbPanel1[3].html1[1].html = this.getDictionaryItem("DBBOX_HSQLDB_HTML");
-	var innerPanelChildren = this.databaseBox.databasePanel1[3].databaseInnerPanel1[3];
-	innerPanelChildren.databaseConnectionEditor1[1].caption = this.getDictionaryItem("DBBOX_CONNECTION_CAPTION");
-	innerPanelChildren.databaseConnectionEditor1[1].helpText = this.getDictionaryItem("DBBOX_CONNECTION_HELPTEXT");
-	var layersChildren = innerPanelChildren.databaseLayers1[3];
-	var connectionsLayerChildren = layersChildren.databaseConnectionsLayer1[3];
-	connectionsLayerChildren.databaseTypeEditor1[1].caption = this.getDictionaryItem("DBBOX_TYPE_CAPTION");
-	connectionsLayerChildren.databaseUserEditor1[1].caption = this.getDictionaryItem("DBBOX_USERNAME_CAPTION");
-	connectionsLayerChildren.databasePasswordEditor1[1].caption = this.getDictionaryItem("DBBOX_PASSWORD_CAPTION");
-	connectionsLayerChildren.databaseHostEditor1[1].caption = this.getDictionaryItem("DBBOX_HOST_CAPTION");
-	connectionsLayerChildren.databasePortEditor1[1].caption = this.getDictionaryItem("DBBOX_PORT_CAPTION");
-	connectionsLayerChildren.databaseNameEditor1[1].caption = this.getDictionaryItem("DBBOX_NAME_CAPTION");
-	connectionsLayerChildren.databaseURLEditor1[1].caption = this.getDictionaryItem("DBBOX_URL_CAPTION");
-	
-	var jndiLayerChildren =  layersChildren.databaseJNDILayer1[3];
-	jndiLayerChildren.databaseJNDINameEditor1[1].caption = this.getDictionaryItem("DBBOX_JNDINAME_CAPTION");
+        this.hsqldbBox.hsqldbPanel1[3].html1[1].html = this.getDictionaryItem("DBBOX_HSQLDB_HTML");
+        var innerPanelChildren = this.databaseBox.databasePanel1[3].databaseInnerPanel1[3];
+        innerPanelChildren.databaseConnectionEditor1[1].caption = this.getDictionaryItem("DBBOX_CONNECTION_CAPTION");
+        innerPanelChildren.databaseConnectionEditor1[1].helpText = this.getDictionaryItem("DBBOX_CONNECTION_HELPTEXT");
+        var layersChildren = innerPanelChildren.databaseLayers1[3];
+        var connectionsLayerChildren = layersChildren.databaseConnectionsLayer1[3];
+        connectionsLayerChildren.databaseTypeEditor1[1].caption = this.getDictionaryItem("DBBOX_TYPE_CAPTION");
+        connectionsLayerChildren.databaseUserEditor1[1].caption = this.getDictionaryItem("DBBOX_USERNAME_CAPTION");
+        connectionsLayerChildren.databasePasswordEditor1[1].caption = this.getDictionaryItem("DBBOX_PASSWORD_CAPTION");
+        connectionsLayerChildren.databaseHostEditor1[1].caption = this.getDictionaryItem("DBBOX_HOST_CAPTION");
+        connectionsLayerChildren.databasePortEditor1[1].caption = this.getDictionaryItem("DBBOX_PORT_CAPTION");
+        connectionsLayerChildren.databaseNameEditor1[1].caption = this.getDictionaryItem("DBBOX_NAME_CAPTION");
+        connectionsLayerChildren.databaseURLEditor1[1].caption = this.getDictionaryItem("DBBOX_URL_CAPTION");
 
-	var cloudfoundryLayerChildren = layersChildren.databaseCloudFoundryLayer1[3];
-	cloudfoundryLayerChildren.databaseCloudFoundryType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
-	cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
-	cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
-	cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
-	cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");
+        var jndiLayerChildren = layersChildren.databaseJNDILayer1[3];
+        jndiLayerChildren.databaseJNDINameEditor1[1].caption = this.getDictionaryItem("DBBOX_JNDINAME_CAPTION");
+
+        var cloudfoundryLayerChildren = layersChildren.databaseCloudFoundryLayer1[3];
+        cloudfoundryLayerChildren.databaseCloudFoundryType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
+        cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
+        cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
+        cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
+        cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");
     },
     selectFirst: function() {
-	this.initDeploymentListVar();
-	if (this.deploymentListVar.getCount() > 0) {
-	    this.deploymentList.selectByIndex(0);
-	    this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(0),true);
-	} else {
-	    
-	}
+        this.initDeploymentListVar();
+        if (this.deploymentListVar.getCount() > 0) {
+            this.deploymentList.selectByIndex(0);
+            this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(0), true);
+        } else {
+
+        }
     },
     initDeploymentListVar: function() {
-	var deployments = [];
-	this.deploymentListVar.clearData();
-	dojo.forEach(studio._deploymentData, dojo.hitch(this, function(deployment,i) {	
-	    this.deploymentListVar.addItem({name: deployment.name, dataValue: deployment});
-	}));
+        var deployments = [];
+        this.deploymentListVar.clearData();
+        dojo.forEach(studio._deploymentData, dojo.hitch(this, function(deployment, i) {
+            this.deploymentListVar.addItem({
+                name: deployment.name,
+                dataValue: deployment
+            });
+        }));
     },
-
   cancelButtonClick: function(inSender) {
       try {
           
