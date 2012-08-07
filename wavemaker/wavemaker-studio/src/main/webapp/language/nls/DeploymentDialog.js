@@ -51,7 +51,7 @@ DBBOX_URL_CAPTION: "Connection URL",
 DBBOX_JNDINAME_CAPTION: "JNDI Name",
 DBBOX_CFTYPE_CAPTION: "Type",
 DBBOX_CFNAME_CAPTION: "Database Name",
-CF_DB_NODATA_WARNING: "Please note: WaveMaker will create the database schema in Cloud Foundry.  No data will be included.  Your database will be available but empty.  If your using database security, this will mean nobody can login.  To copy data into your database, go to <a target='docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Deploying#HPopulatingCloudFoundryDatabase'>Deployment Documentation</a>.",
-CF_DB_NODATA_WARNING_HEIGHT: "65px",
+CF_DB_NODATA_WARNING: "NOTE: You can pick an existing database service in your Cloud Foundry account, or type in a new name.  If you type in a new name, WaveMaker will create the database schema in your Cloud Foundry account.  Your database will be available but empty of data.  If your using database security, this will mean nobody can login.  To copy data into your database, go to <a target='docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Deploying#HPopulatingCloudFoundryDatabase'>Deployment Documentation</a>.",
+CF_DB_NODATA_WARNING_HEIGHT: "85px",
 "CF_MULTIPLE_DB_WARNING": "<div class='DeploymentWarning'>WARNING: Multiple databases may not work reliably on Cloud Foundry</div>"
 }

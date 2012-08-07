@@ -42,22 +42,26 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		databaseConnectionEditor1: ["wm.SelectMenu", {"caption":"","captionAlign":"left","captionSize":"140px","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"","options":"Standard, JNDI","width":"280px"}, {onchange: "updateDatabaseLayers"}],
 		databaseLayers1: ["wm.Layers", {fitToContentHeight: true}, {}, {
 		    databaseConnectionsLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-			databaseTypeEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
-			databaseUserEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
-			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: false}, {}],
-			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "updateDbConnectionUrl"}],
-			databasePortEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
-			databaseNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
-			databaseURLEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
+    			databaseTypeEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
+    			databaseUserEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
+    			databasePasswordEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","password":true,"width":"100%", required: false}, {}],
+    			databaseHostEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "updateDbConnectionUrl"}],
+    			databasePortEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
+    			databaseNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%"}, {onchange: "updateDbConnectionUrl"}],
+    			databaseURLEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
 		    }],
 		    databaseJNDILayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-			databaseJNDINameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
+    			databaseJNDINameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
 		    }],
 		    databaseCloudFoundryLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-			databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
-			databaseCloudFoundryNameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {}],
-			databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px", caption: ""}],
-			databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", caption: "", showing: false}]
+    	   		databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
+    			databaseCloudFoundryNameEditor1: ["wm.SelectMenu", {allowNone:1, restrictValues: false, "border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {},{
+                    binding: ["wm.Binding", {}, {}, {
+                        wire: ["wm.Wire", {targetProperty: "dataSet", source: "dataServiceListVar"}]
+                    }]
+                }],
+    			databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px"}],/* Height set from dictionary */
+    			databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]
 		    }]
 		}]
 	    }]
@@ -82,7 +86,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.hsqldbBox.hsqldbPanel1[3].html1[1].html = this.getDictionaryItem("DBBOX_HSQLDB_HTML");
         var innerPanelChildren = this.databaseBox.databasePanel1[3].databaseInnerPanel1[3];
         innerPanelChildren.databaseConnectionEditor1[1].caption = this.getDictionaryItem("DBBOX_CONNECTION_CAPTION");
-        innerPanelChildren.databaseConnectionEditor1[1].helpText = this.getDictionaryItem("DBBOX_CONNECTION_HELPTEXT");
         var layersChildren = innerPanelChildren.databaseLayers1[3];
         var connectionsLayerChildren = layersChildren.databaseConnectionsLayer1[3];
         connectionsLayerChildren.databaseTypeEditor1[1].caption = this.getDictionaryItem("DBBOX_TYPE_CAPTION");
@@ -99,6 +102,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var cloudfoundryLayerChildren = layersChildren.databaseCloudFoundryLayer1[3];
         cloudfoundryLayerChildren.databaseCloudFoundryType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
         cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
+        cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].helpText = this.getDictionaryItem("DBBOX_CFNAME_HELP"); 
         cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
         cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
         cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");
@@ -399,59 +403,121 @@ dojo.declare("DeploymentDialog", wm.Page, {
     /* When deploy is called, show a confirmation dialog with the deployment settings */
   deploy: function(inData) {
       try {
-	  if (inData.deploymentType == this.FILE_DEPLOY) {
-	      this.deploy2(inData);
-	  } else {
-	      studio.endWait();
-	      app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, dojo.hitch(this, function() {
-		  if (inData.deploymentType == this.CF_DEPLOY) {
-		      this.cloudFoundryDeployConfirmed(inData);
-		  } else {
-		      this.deploy2(inData);
-		  }
+          if (inData.deploymentType == this.FILE_DEPLOY) {
+              this.deploy2(inData);
+          } else {
+              studio.endWait();
+              app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false, 
+                dojo.hitch(this, function() {
+                  if (inData.deploymentType == this.CF_DEPLOY) {
+                      this.cloudFoundryDeployConfirmed(inData);
+                      this.cleanupCFDeployCheckboxes();
+                  } else {
+                      this.deploy2(inData);
+                  }
+                }),
+                dojo.hitch(this, function() {
+                  if (inData.deploymentType == this.CF_DEPLOY) {
+                      this.cleanupCFDeployCheckboxes();               
+                  }
+                })
+              );
+              app.confirmDialog.setWidth("450px");
+              if (inData.deploymentType == this.CF_DEPLOY) {
+                  this._updateSchemaCheckboxes = {};
+                  this._updateSchemaCheckboxesValue = {};
 
-	      }));
-	      app.confirmDialog.setWidth("450px");
-	      if (inData.deploymentType == this.CF_DEPLOY) {
-		  this._updateSchemaCheckbox = new wm.Checkbox({owner: this,
-								parent: app.confirmDialog.containerWidget.c$[0],
-								"_classes":{"domNode":["wm_FontColor_White"]},
-								caption: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA"),
-								helpText: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA_HELP"),
-								startChecked: true,
-								width: "240px",
-								captionSize: "100%",
-								minEditorWidth: 32,
-								captionAlign: "left",
-								captionPosition: "right",
-								name: "confirmUpdateSchemaCheckbox"});
-		  this._updateSchemaCheckbox.captionNode.style.color = "white";
-		  var deleteCheckboxSubscribe = dojo.connect(app.confirmDialog, "onClose", this, function() {
-		      if (this._updateSchemaCheckbox) {
-			  this._updateSchemaCheckboxValue = this._updateSchemaCheckbox.getChecked();
-			  this._updateSchemaCheckbox.destroy();
-			  delete this._updateSchemaCheckbox;
-		      }
-		      dojo.disconnect(deleteCheckboxSubscribe);
-		  });
-	      }
-	  }
-      } catch(e) {
-          console.error('ERROR IN deployButtonClick: ' + e); 
-      } 
+                  // Only show the checkboxes if an existing database has been selected
+                  var showCheckboxes = false;
+                  dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
+                    var id = dataBox.name.match(/(\d+)$/)[1];
+                      var databaseEditor = this["databaseCloudFoundryNameEditor" + id];
+                      if (!databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
+                  }, this);
+
+                  /* Was a label, but in order to get the nice tooltips, changed it into a readonly editor */
+                  this._alertLabel = new wm.Text({
+                      owner: this,
+                      parent: app.confirmDialog.containerWidget.c$[0],
+                      showing: showCheckboxes,
+                      width: "200px",
+                      caption: "",
+                      readonly: true,
+                      helpText:  this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA_HELP"),
+                      dataValue: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA")
+                  });
+                  dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
+                      var id = dataBox.name.match(/(\d+)$/)[1];
+                      var databaseEditor = this["databaseCloudFoundryNameEditor" + id];
+                      // User selected a new database name
+                      var c = new wm.Checkbox({
+                          owner: this,
+                          parent: app.confirmDialog.containerWidget.c$[0],
+                          showing: showCheckboxes,
+                          "_classes": {
+                              "domNode": ["StudioEditor"]
+                          },
+                          caption: dataBox.dataModel.dataModelName + ": " + databaseEditor.getDataValue(),
+                          startChecked: databaseEditor.selectedItem.isEmpty(),
+                          width: "240px",
+                          captionSize: "100%",
+                          minEditorWidth: 32,
+                          captionAlign: "left",
+                          captionPosition: "right",
+                          name: "confirmUpdateSchemaCheckbox" + id
+                      });
+                      this._updateSchemaCheckboxes[dataBox.dataModel.dataModelName] = c;
+                  }, this);
+                  /*
+              this._updateSchemaCheckbox = new wm.Checkbox({owner: this,
+                                    parent: app.confirmDialog.containerWidget.c$[0],
+                                    "_classes":{"domNode":["wm_FontColor_White"]},
+                                    caption: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA"),
+                                    helpText: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA_HELP"),
+                                    startChecked: false,
+                                    width: "240px",
+                                    captionSize: "100%",
+                                    minEditorWidth: 32,
+                                    captionAlign: "left",
+                                    captionPosition: "right",
+                                    name: "confirmUpdateSchemaCheckbox"});
+
+              this._updateSchemaCheckbox.captionNode.style.color = "white";
+              */                     
+                 
+          }
+      }
+  } catch (e) {
+      console.error('ERROR IN deployButtonClick: ' + e);
+  }
   },
-    cloudFoundryDeployConfirmed: function(inData) {
-	this._updateSchema = this._updateSchemaCheckbox ? this._updateSchemaCheckbox.getChecked() : this._updateSchemaCheckboxValue;
-	if (!inData.databases) inData.databases = [];
-	for (var i = 0; i < inData.databases.length; i++) {
-	    inData.databases[i].updateSchema = this._updateSchema;
-	}
-	if (!inData.token)
-	    inData.token = this.getTokenCookie(inData.target);
-	this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
-	    inData.token = inToken;
-	    this.deploy2(inData);
-	}));	
+  cleanupCFDeployCheckboxes: function() {
+      if (this._alertLabel) {
+          this._alertLabel.destroy();
+          delete this._alertLabel;
+      }
+      wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {
+          inCheckbox.destroy();
+      }));
+      delete this._updateSchemaCheckboxes;
+  },    
+  cloudFoundryDeployConfirmed: function(inData) {
+        //this._updateSchema = this._updateSchemaCheckbox ? this._updateSchemaCheckbox.getChecked() : this._updateSchemaCheckboxValue;
+
+        var updateSchema = {};
+        wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {            
+            updateSchema[inName] = inCheckbox.getChecked();        
+        }));
+        var d = inData.databases;
+        for (var i = 0; i < d.length; i++) {
+            d[i].updateSchema = updateSchema[d[i].dataModelId];
+        }
+
+        if (!inData.token) inData.token = this.getTokenCookie(inData.target);
+        this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
+            inData.token = inToken;
+            this.deploy2(inData);
+        }));
     },
     confirmToken: function(inToken, inTargetUrl,inCallback) {
 	if (!inToken || !inTargetUrl) {
@@ -469,16 +535,16 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}
     },
     showCFLogin: function(inCallback, inTargetUrl) {
-	if (inTargetUrl) {
-	    this.loginDialogTargetEditor.setDataValue(inTargetUrl);
-	    this.loginDialogTargetEditor.setReadonly(true);
-	} else {
-	    this.loginDialogTargetEditor.setDataValue("https://api.cloudfoundry.com");
-	    this.loginDialogTargetEditor.setReadonly(false);	    
-	}
-	this.cfLoginDialog.show();
-	this.loginDialogUserEditor.focus();		
-	this.cfLoginDialogSuccessHandler = inCallback;
+        if (inTargetUrl) {
+            this.loginDialogTargetEditor.setDataValue(inTargetUrl);
+            this.loginDialogTargetEditor.setReadonly(true);
+        } else {
+            this.loginDialogTargetEditor.setDataValue("https://api.cloudfoundry.com");
+            this.loginDialogTargetEditor.setReadonly(false);
+        }
+        this.cfLoginDialog.show();
+        this.loginDialogUserEditor.focus();
+        this.cfLoginDialogSuccessHandler = inCallback;
     },
     deploy2: function(inData) {
 	this._deployData = inData;
@@ -799,28 +865,28 @@ dojo.declare("DeploymentDialog", wm.Page, {
       }
   },
     onNewDeployOk: function() {
-	this._openningDeployment = true;
-	var groupvalue = this.tomcatRadio.getGroupValue();
-	switch(groupvalue) {
-	case "tc":
-	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
-	    this.newTomcatDeploy();
-	    break;
-	case "cf":
-	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
-	    this.newCloudFoundryDeploy();
-	    break;
-	case "files":
-	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
-	    this.newAppFileDeploy();
-	    break;
-	}
-	this.newDeploymentDialog.hide();
-	this.owner.owner.show();
-	this._openningDeployment = false;
+        this._openningDeployment = true;
+        var groupvalue = this.tomcatRadio.getGroupValue();
+        switch (groupvalue) {
+        case "tc":
+            this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.newTomcatDeploy();
+            break;
+        case "cf":
+            this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.newCloudFoundryDeploy();
+            break;
+        case "files":
+            this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.newAppFileDeploy();
+            break;
+        }
+        this.newDeploymentDialog.hide();
+        this.owner.owner.show();
+        this._openningDeployment = false;
     },
     onNewDeployCancel: function() {
-	this.newDeploymentDialog.hide();
+        this.newDeploymentDialog.hide();
     },
 
 
@@ -1069,170 +1135,161 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     populateAppFileDeploy: function(inData) {
-	this.editLayer.activate();
-	this.appFileLayer.activate();
-	this.fileDeploymentNameEditor.setDataValue(inData.name);
-	this.warRadioButton.setGroupValue(inData.archiveType);
-	var boxes = this.generateDataModelBoxes();
-	this.populateDataModelBoxes(inData.databases);
+        this.editLayer.activate();
+        this.appFileLayer.activate();
+        this.fileDeploymentNameEditor.setDataValue(inData.name);
+        this.warRadioButton.setGroupValue(inData.archiveType);
+        var boxes = this.generateDataModelBoxes();
+        this.populateDataModelBoxes(inData.databases);
     },
     newCloudFoundryDeploy: function() {
-	this.editLayer.activate();
-	this.owner.owner.show();
-	this.cloudFoundryLayer.activate();
-	var targetName = this.setUniqueDeploymentName("CloudFoundry 1", this.cfDeploymentNameEditor, this.CF_DEPLOY);
-	this.cfHostEditor.setDataValue("http://api.cloudfoundry.com");
-	this.cfNameEditor.setDataValue(studio.project.projectName);
+        this.editLayer.activate();
+        this.owner.owner.show();
+        this.cloudFoundryLayer.activate();
+        var targetName = this.setUniqueDeploymentName("CloudFoundry 1", this.cfDeploymentNameEditor, this.CF_DEPLOY);
+        this.cfHostEditor.setDataValue("https://api.cloudfoundry.com");
+        this.cfNameEditor.setDataValue(studio.project.projectName);
 
-	var boxes = this.generateDataModelBoxes();
-	dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
-	    var dataModel = b.dataModel;
-	    var connection = b.dataConnection;
-	    if (connection.dbtype.toLowerCase() != "mysql" && connection.dbtype.toLowerCase() != "postgresql")
-		app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {name: connection.dbtype}));
-	    this["databaseLayers" + (i+1)].setLayerIndex(2);
-	    if (studio.isCloud()) {
-		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(dataModel.dataModelName);
-	    } else {
-		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(connection.db);
-	    }
-	    this["databaseCloudFoundryType" + (i+1)].setDataValue(connection.dbtype);
-	    this["databaseConnectionEditor" + (i+1)].hide();
-	}));
-	this.editPanel.reflow();
+        var boxes = this.generateDataModelBoxes();
+        dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
+            var dataModel = b.dataModel;
+            var connection = b.dataConnection;
+            if (connection.dbtype.toLowerCase() != "mysql" && connection.dbtype.toLowerCase() != "postgresql") app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {
+                name: connection.dbtype
+            }));
+            this["databaseLayers" + (i + 1)].setLayerIndex(2);
+            if (studio.isCloud()) {
+                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(dataModel.dataModelName);
+            } else {
+                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(connection.db);
+            }
+            this["databaseCloudFoundryType" + (i + 1)].setDataValue(connection.dbtype);
+            this["databaseConnectionEditor" + (i + 1)].hide();
+        }));
+        this.editPanel.reflow();
+        
+        /* onidle insures that this dialog is on top */
+        wm.onidle(this, function() {
+            this.loginDialogTargetEditor.setReadonly(false);
+            this.showCFLogin(dojo.hitch(this, "loadDatabaseServices"), "");
+        });
     },
 		        
     populateCloudFoundryDeploy: function(inData) {
-	this.editLayer.activate();
-	this.cloudFoundryLayer.activate();
+        this.editLayer.activate();
+        this.cloudFoundryLayer.activate();
 
-	this.cfDeploymentNameEditor.setDataValue(inData.name);
-	this.cfDeploymentTypeEditor.setDataValue("CloudFoundry");
-	this.cfNameEditor.setDataValue(inData.applicationName);
-	this.cfHostEditor.setDataValue(inData.target);
+        this.cfDeploymentNameEditor.setDataValue(inData.name);
+        this.cfDeploymentTypeEditor.setDataValue("CloudFoundry");
+        this.cfNameEditor.setDataValue(inData.applicationName);
+        this.cfHostEditor.setDataValue(inData.target);
 
-	var boxes = this.generateDataModelBoxes();
-	dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
-	    var dataModel = b.dataModel;
-	    var inDbData;
-	    dojo.forEach(inData.databases, dojo.hitch(this, function(db) {
-		if (db.dataModelId == dataModel.name) 
-		    inDbData = db;
-	    }));
-	    this["databaseLayers" + (i+1)].setLayerIndex(2);
-	    if (inDbData) {
-		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(inDbData.dbName);
-		this["databaseConnectionEditor" + (i+1)].hide();
-	    } else {
-		this["databaseCloudFoundryNameEditor" + (i+1)].setDataValue(dataModel.name);
-		this["databaseConnectionEditor" + (i+1)].hide();
-	    }
-	}));
-	this.editPanel.reflow();
+        var boxes = this.generateDataModelBoxes();
+        dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
+            var dataModel = b.dataModel;
+            var inDbData;
+            dojo.forEach(inData.databases, dojo.hitch(this, function(db) {
+                if (db.dataModelId == dataModel.name) inDbData = db;
+            }));
+            this["databaseLayers" + (i + 1)].setLayerIndex(2);
+            if (inDbData) {
+                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(inDbData.dbName);
+                this["databaseConnectionEditor" + (i + 1)].hide();
+            } else {
+                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(dataModel.name);
+                this["databaseConnectionEditor" + (i + 1)].hide();
+            }
+        }));
+        this.editPanel.reflow();
+        var target = this.cfHostEditor.getDataValue();
+        var token = this.getTokenCookie(target);
+        this.confirmToken(token, target, dojo.hitch(this, "loadDatabaseServices"));
     },
     
     getIsDirty: function() {
 	return this.editPanel.getIsDirty() || this._currentDeploymentIndex >= 0 && !this.deploymentListVar.getItem(this._currentDeploymentIndex).getValue("dataValue").deploymentId;
     },
     deploymentListSelect: function(inSender, inItem, forceSelect) {
-	if (inItem)
-	    this.editLayer.activate();
-	if (!this._selectingListItem) {
-	    // if its dirty, or never been saved, confirm the user wants to lose changes
-	    if (!forceSelect && this.getIsDirty()) {
-/*
-		app.confirm(this.getDictionaryItem("CONFIRM_UNSAVED_CHANGES"), false, 
-			    dojo.hitch(this, function() {				
-				var oldSelectedIndex = this._currentDeploymentIndex;
-				this._currentDeploymentIndex = this.deploymentList.getSelectedIndex();
-				this.openDeployment(inSender.selectedItem.getData().dataValue);
-				if (oldSelectedIndex >= 0 && !this.deploymentListVar.getItem(oldSelectedIndex).getValue("dataValue").deploymentId) {
-				    this.deploymentListVar.removeItem(oldSelectedIndex);
-				    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
-				}
+        if (inItem) this.editLayer.activate();
+        if (!this._selectingListItem) {
+            // if its dirty, or never been saved, confirm the user wants to lose changes
+            if (!forceSelect && this.getIsDirty()) {               
 
-			    }),
-			    dojo.hitch(this, function() {
-				this.deploymentList.selectByIndex(this._currentDeploymentIndex);
-			    })
-			   );
-			   */
+                var newIndex = this.deploymentList.getSelectedIndex();
+                var oldSelectedIndex = this._currentDeploymentIndex;
+                var selectFunc = dojo.hitch(this, function() {
+                    this._currentDeploymentIndex = newIndex;
+                    this.openDeployment(inSender.selectedItem.getData().dataValue);
+                    if (oldSelectedIndex >= 0 && !this.deploymentListVar.getItem(oldSelectedIndex).getValue("dataValue").deploymentId) {
+                        this.deploymentListVar.removeItem(oldSelectedIndex);
+                        this.deploymentList.selectByIndex(this._currentDeploymentIndex);
+                    }
+                });
+                this.confirmSaveDialog.show();
+                this.saveDialogDontSaveButton.onclick = dojo.hitch(this, function() {
+                    this.confirmSaveDialog.hide();
+                    selectFunc();
+                });
 
-		var newIndex = this.deploymentList.getSelectedIndex();
-		var oldSelectedIndex = this._currentDeploymentIndex;
-		var selectFunc = dojo.hitch(this, function() {
-		                this._currentDeploymentIndex = newIndex;
-				this.openDeployment(inSender.selectedItem.getData().dataValue);
-				if (oldSelectedIndex >= 0 && !this.deploymentListVar.getItem(oldSelectedIndex).getValue("dataValue").deploymentId) {
-				    this.deploymentListVar.removeItem(oldSelectedIndex);
-				    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
-				}
-		});
-	      this.confirmSaveDialog.show();
-	      this.saveDialogDontSaveButton.onclick = dojo.hitch(this, function() {
-		  this.confirmSaveDialog.hide();
-		  selectFunc();
-	      });
+                this.saveDialogCancelButton.onclick = dojo.hitch(this, function() {
+                    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
+                    this.confirmSaveDialog.hide();
+                });
 
-	      this.saveDialogCancelButton.onclick = dojo.hitch(this, function() {
-		  this.deploymentList.selectByIndex(this._currentDeploymentIndex);
-		  this.confirmSaveDialog.hide();
-	      });
-
-	      this.saveDialogSaveButton.onclick = dojo.hitch(this, function() {
-		  var c1 = dojo.connect(this, "saveSuccess", this, function() {
-		      this.confirmSaveDialog.hide();
-		      this.deploymentList.selectByIndex(newIndex);
-		      selectFunc();
-		      dojo.disconnect(c1);
-		      dojo.disconnect(c2);
-		  });
-		  var c2 = dojo.connect(this, "saveFailed", this, function() {
-		      dojo.disconnect(c1);
-		      dojo.disconnect(c2);
-		  });
-		  this.deploymentList.selectByIndex(this._currentDeploymentIndex);
-		  this.saveButtonClick();
-	      });
-	    } else {
-		this._currentDeploymentIndex = this.deploymentList.getSelectedIndex();
-		this.openDeployment(inSender.selectedItem.getData().dataValue);		
-	    }
-	}
+                this.saveDialogSaveButton.onclick = dojo.hitch(this, function() {
+                    var c1 = dojo.connect(this, "saveSuccess", this, function() {
+                        this.confirmSaveDialog.hide();
+                        this.deploymentList.selectByIndex(newIndex);
+                        selectFunc();
+                        dojo.disconnect(c1);
+                        dojo.disconnect(c2);
+                    });
+                    var c2 = dojo.connect(this, "saveFailed", this, function() {
+                        dojo.disconnect(c1);
+                        dojo.disconnect(c2);
+                    });
+                    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
+                    this.saveButtonClick();
+                });
+            } else {
+                this._currentDeploymentIndex = this.deploymentList.getSelectedIndex();
+                this.openDeployment(inSender.selectedItem.getData().dataValue);
+            }
+        }
     },
-    openDeployment: function(data) {	     
-	this._openningDeployment = true;
-	    this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
-	    switch(data.deploymentType) {
-	    case this.TC_DEPLOY:
-		this.populateTomcatDeploy(data);
-		this.manageUndeployButton.hide();
-		break;
-	    case this.CF_DEPLOY:
-		this.populateCloudFoundryDeploy(data);
-		this.manageUndeployButton.show();
-		break;
-	    case this.FILE_DEPLOY:
-		this.populateAppFileDeploy(data);
-		this.manageUndeployButton.hide();
-		break;
-	    }
-	this._openningDeployment = false;
+    openDeployment: function(data) {
+        this._openningDeployment = true;
+        this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+        switch (data.deploymentType) {
+        case this.TC_DEPLOY:
+            this.populateTomcatDeploy(data);
+            this.manageUndeployButton.hide();
+            break;
+        case this.CF_DEPLOY:
+            this.populateCloudFoundryDeploy(data);
+            this.manageUndeployButton.show();
+            break;
+        case this.FILE_DEPLOY:
+            this.populateAppFileDeploy(data);
+            this.manageUndeployButton.hide();
+            break;
+        }
+        this._openningDeployment = false;
     },
     deploymentNameChange: function(inSender) {
-	if (this._openningDeployment) return;
-	var value = inSender.getDisplayValue();
-	var i = this.deploymentList.getSelectedIndex();
-	this.deploymentListVar.getItem(i).setValue("name", value);
-	this._selectingListItem = true;
-	this.deploymentList.selectByIndex(i);
-	delete this._selectingListItem;
+        if (this._openningDeployment) return;
+        var value = inSender.getDisplayValue();
+        var i = this.deploymentList.getSelectedIndex();
+        this.deploymentListVar.getItem(i).setValue("name", value);
+        this._selectingListItem = true;
+        this.deploymentList.selectByIndex(i);
+        delete this._selectingListItem;
     },
 
 
     /* Handling for the cloudfoundry login dialog */
     cfLoginCancelClick: function() {
-	this.cfLoginDialog.hide();
+        this.cfLoginDialog.hide();
     },
     cfLoginOkClick: function() {
 	studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
@@ -1240,22 +1297,22 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    "login",
 	    [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : this.loginDialogTargetEditor.getDataValue()],
 	    dojo.hitch(this, function(inData) {
-		this.setTokenCookie(this.loginDialogTargetEditor.getDataValue(), inData);
-		studio.endWait();
-		this.cfLoginDialog.hide();
-		if (this.cfLoginDialogSuccessHandler) {
-		    this.cfLoginDialogSuccessHandler(inData);
-		}
-	    }),
-	    dojo.hitch(this, function(inError) {
-		studio.endWait();
-		var message = inError.message;
-		if (message.match(/^403/)) {
-		    app.toastError(this.getDictionaryItem("INVALID_USER_PASS"));
-		} else {
-		    app.toastError(message);
-		}
-		this.loginDialogUserEditor.focus();
+    		this.setTokenCookie(this.loginDialogTargetEditor.getDataValue(), inData);
+    		studio.endWait();
+    		this.cfLoginDialog.hide();
+    		if (this.cfLoginDialogSuccessHandler) {
+    		    this.cfLoginDialogSuccessHandler(inData);
+    		}
+    	    }),
+    	    dojo.hitch(this, function(inError) {
+        		studio.endWait();
+        		var message = inError.message;
+        		if (message.match(/^403/)) {
+        		    app.toastError(this.getDictionaryItem("INVALID_USER_PASS"));
+        		} else {
+        		    app.toastError(message);
+        		}
+        		this.loginDialogUserEditor.focus();
 	    }));
     },
         
@@ -1332,42 +1389,48 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	}));
     },
     cloudFoundryAppListCloseButtonClick: function() {
-	this.cloudFoundryAppListDialog.hide();
+        this.cloudFoundryAppListDialog.hide();
     },
     showCloudFoundryAppListDialog: function(optionalCallback, optionalTargetUrl) {
-	this.cloudFoundryAppListDialog.show();
-	this.refreshCloudFoundryAppList(optionalCallback, optionalTargetUrl);
+        this.cloudFoundryAppListDialog.show();
+        this.refreshCloudFoundryAppList(optionalCallback, optionalTargetUrl);
     },
     manageCloudFoundryButtonClick: function() {
-	var data = this.deploymentList.selectedItem.getValue("dataValue");
-	var selectName;
-	if (data) {
-	    selectName = data.target;
-	} else if (this._deployData) {
-	    selectName = this._deployData.target;
-	}
-	this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {	    
-	    if (data) {
-		for (var i = 0; i < this.cachedCloudFoundryDeploymentList.length; i++) {
-		    if (this.cachedCloudFoundryDeploymentList[i].name == data.applicationName) {
-			var item = this.cloudFoundryAppList.getItem(i);
-			this.cloudFoundryAppList.eventSelect(item);
-			break;
-		    }
-		}
-	    }
-	}), selectName);
+        var data = this.deploymentList.selectedItem.getValue("dataValue");
+        var selectName;
+        if (data) {
+            selectName = data.target;
+        } else if (this._deployData) {
+            selectName = this._deployData.target;
+        }
+        this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {
+            if (data) {
+                for (var i = 0; i < this.cachedCloudFoundryDeploymentList.length; i++) {
+                    if (this.cachedCloudFoundryDeploymentList[i].name == data.applicationName) {
+                        var item = this.cloudFoundryAppList.getItem(i);
+                        this.cloudFoundryAppList.eventSelect(item);
+                        break;
+                    }
+                }
+            }
+        }), selectName);
     },
     cloudFoundryApplicationNameChanged: function() {
 
     },
-
+    loadDatabaseServices: function() {        
+            this.dataServiceListService.requestAsync("listDatabaseServices", [studio.isCloud() ? "" : this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),studio.isCloud() ? "" : this.loginDialogTargetEditor.getDataValue()],
+                dojo.hitch(this, function(inResult) {                    
+                    this.dataServiceListVar.setData(inResult);
+                })
+            );
+    },
     CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN",
     getTokenCookie: function(inTargetUrl) {
-	return 	dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl);
+	   return 	dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl);
     },
     setTokenCookie: function(inTargetUrl, inToken) {
-	dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl, inToken, {expires: 1});
+	   dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl, inToken, {expires: 1});
     },
     _end:0
 });

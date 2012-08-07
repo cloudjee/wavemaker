@@ -12,6 +12,9 @@
  *  limitations under the License.
  */
 DeploymentDialog.widgets = {
+    dataServiceListService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
+    dataServiceListVar: ["wm.Variable", {isList:1, type: "EntryData"}],
+
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
     cloudFoundryAppListDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
