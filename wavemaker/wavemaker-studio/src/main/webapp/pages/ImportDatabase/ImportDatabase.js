@@ -155,6 +155,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 	
 	importSampleBtnClick: function(inSender) {
+	    this.serviceNameInput.setDataValue("hrdb");
 	    studio.dataService.requestAsync("importSampleDatabase", 
 	            [], 
 	            dojo.hitch(this, "_importResult"), 

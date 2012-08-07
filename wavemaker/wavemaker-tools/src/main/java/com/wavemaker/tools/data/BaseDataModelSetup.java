@@ -183,7 +183,7 @@ public abstract class BaseDataModelSetup {
 
     protected String driverClassName = null;
 
-    protected String connectionUrl = null;
+    protected ConnectionUrl connectionUrl = null;
 
     protected String username = null;
 
@@ -247,7 +247,7 @@ public abstract class BaseDataModelSetup {
 
     public void setDefaultDBType() {
         setDBType(DEFAULT_DB_TYPE);
-        setConnectionUrl(JDBC_URL_SCHEME + DEFAULT_DB_TYPE + DEFAULT_HOST_PORT);
+        setConnectionUrl(new ConnectionUrl(JDBC_URL_SCHEME + DEFAULT_DB_TYPE + DEFAULT_HOST_PORT));
         setDriverClassName(getDriverClassForDBType(DEFAULT_DB_TYPE));
         setDialect(getDialectForDBType(DEFAULT_DB_TYPE));
     }
@@ -313,11 +313,11 @@ public abstract class BaseDataModelSetup {
         return this.driverClassName;
     }
 
-    public void setConnectionUrl(String connectionUrl) {
+    public void setConnectionUrl(ConnectionUrl connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
 
-    public String getConnectionUrl() {
+    public ConnectionUrl getConnectionUrl() {
         return this.connectionUrl;
     }
 
@@ -472,7 +472,7 @@ public abstract class BaseDataModelSetup {
     }
 
     protected void runDDL(String sql) {
-        runDDL(sql, this.connectionUrl);
+        runDDL(sql, this.connectionUrl.toString());
     }
 
     protected void runDDL(String sql, String url) {
@@ -492,7 +492,7 @@ public abstract class BaseDataModelSetup {
 
         p.put(DataServiceConstants.DB_USERNAME, this.username);
         p.put(DataServiceConstants.DB_PASS, this.password);
-        p.put(DataServiceConstants.DB_URL, this.connectionUrl);
+        p.put(DataServiceConstants.DB_URL, this.connectionUrl.toString());
         p.put(DataServiceConstants.DB_DRIVER_CLASS_NAME, this.driverClassName);
         p.put(DataServiceConstants.DB_DIALECT, this.dialect);
 
@@ -533,8 +533,9 @@ public abstract class BaseDataModelSetup {
 
         if (this.dbtype.equals(MYSQL_DB_TYPE)) {
             String defaultCatalog = this.catalogName;
-            if (defaultCatalog == null && !this.connectionUrl.endsWith("/")) {
-                defaultCatalog = this.connectionUrl.substring(this.connectionUrl.lastIndexOf("/") + 1);
+            String connectionUrl = this.connectionUrl.toString();
+            if (defaultCatalog == null && !connectionUrl.endsWith("/")) {
+                defaultCatalog = connectionUrl.substring(connectionUrl.lastIndexOf("/") + 1);
             }
             if (defaultCatalog != null) {
                 rtn.setProperty("hibernate.default_catalog", defaultCatalog);
@@ -656,7 +657,7 @@ public abstract class BaseDataModelSetup {
                 if (s == null) {
                     // try to get dbtype from the connection url
                     if (this.connectionUrl != null) {
-                        s = getDBTypeFromURL(this.connectionUrl);
+                        s = getDBTypeFromURL(this.connectionUrl.toString());
                     } else {
                         // will cause errror later
                     }
@@ -667,7 +668,7 @@ public abstract class BaseDataModelSetup {
                 }
             }
         } else if (this instanceof ImportDB) {
-            String s = getDBTypeFromURL(this.connectionUrl);
+            String s = getDBTypeFromURL(this.connectionUrl.toString());
             if (s != null) {
                 setDBType(s);
             }
@@ -759,7 +760,7 @@ public abstract class BaseDataModelSetup {
             }
 
             if (s != null) {
-                setConnectionUrl(s);
+                setConnectionUrl(new ConnectionUrl(s));
             }
         }
 
@@ -772,23 +773,24 @@ public abstract class BaseDataModelSetup {
         // depending on the db we're connection to, the catalog name
         // overrides parts of the connection url
         if (this.catalogName != null) {
+            String connectionUrl = this.connectionUrl.toString();
             if (this.dbtype == MYSQL_DB_TYPE) {
-                int i = this.connectionUrl.indexOf(this.catalogName);
+                int i = connectionUrl.indexOf(this.catalogName);
                 if (i == -1) {
-                    String newUrl = this.connectionUrl;
+                    String newUrl = connectionUrl;
                     String props = "";
-                    int j = this.connectionUrl.indexOf(";");
+                    int j = connectionUrl.indexOf(";");
                     if (j > -1) {
-                        props = this.connectionUrl.substring(j);
-                        newUrl = this.connectionUrl.substring(0, j);
+                        props = connectionUrl.substring(j);
+                        newUrl = connectionUrl.substring(0, j);
                     }
-                    int k = this.connectionUrl.lastIndexOf("//");
-                    int l = this.connectionUrl.lastIndexOf("/");
+                    int k = connectionUrl.lastIndexOf("//");
+                    int l = connectionUrl.lastIndexOf("/");
                     if (k != l - 1) {
                         newUrl = newUrl.substring(0, l);
                     }
                     newUrl += "/" + this.catalogName + props;
-                    this.connectionUrl = newUrl;
+                    this.connectionUrl = new ConnectionUrl(newUrl);
                     if (DataServiceLoggers.importLogger.isInfoEnabled()) {
                         DataServiceLoggers.importLogger.info("Added catalog to connection url: " + this.connectionUrl);
                     }
@@ -947,21 +949,21 @@ public abstract class BaseDataModelSetup {
         Collection<String> requiredProperties = new HashSet<String>();
         initConnection(requiredProperties, false);
         checkProperties(requiredProperties);
-
+        String connectionUrl = this.connectionUrl.toString();
         if (this.dbtype.equals(HSQL_DB_TYPE)) {
-            JDBCUtils.testHSQLConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+            JDBCUtils.testHSQLConnection(connectionUrl, this.username, this.password, this.driverClassName);
 
         } else if (this.dbtype.equals(MYSQL_DB_TYPE)) {
-            JDBCUtils.testMySQLConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+            JDBCUtils.testMySQLConnection(connectionUrl, this.username, this.password, this.driverClassName);
         } else if (this.dbtype.equals(ORACLE_DB_TYPE)) {
-            JDBCUtils.testOracleConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+            JDBCUtils.testOracleConnection(connectionUrl, this.username, this.password, this.driverClassName);
         } else if (this.dbtype.equals(SQL_SERVER_DB_TYPE)) {
-            JDBCUtils.testSQLServerConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+            JDBCUtils.testSQLServerConnection(connectionUrl, this.username, this.password, this.driverClassName);
         } else {
             if (DataServiceLoggers.importLogger.isInfoEnabled()) {
                 DataServiceLoggers.importLogger.info("Generic connection test for: " + this.connectionUrl);
             }
-            JDBCUtils.getConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+            JDBCUtils.getConnection(connectionUrl, this.username, this.password, this.driverClassName);
         }
     }
 

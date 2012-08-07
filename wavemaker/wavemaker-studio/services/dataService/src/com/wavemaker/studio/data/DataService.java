@@ -14,7 +14,6 @@
 
 package com.wavemaker.studio.data;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +25,7 @@ import java.util.Properties;
 
 import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.RdbmsServiceInfo;
+import org.springframework.util.Assert;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
@@ -35,10 +35,10 @@ import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.studio.CloudFoundryService;
 import com.wavemaker.tools.data.ColumnInfo;
+import com.wavemaker.tools.data.ConnectionUrl;
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.data.DataServiceLoggers;
 import com.wavemaker.tools.data.EntityInfo;
@@ -155,24 +155,8 @@ public class DataService {
     }
 
     public void writeConnectionProperties(String dataModelName, Properties connectionProperties) {
-
-        String connectionUrl = connectionProperties.getProperty(DataServiceConstants.DB_URL_KEY);
-
-        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
-
-        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-            // Now update the property to the rewitten value
-            connectionProperties.setProperty(DataServiceConstants.DB_URL_KEY, connectionUrl);
-
-            // Also set the hsqldbFile name
-            int n = connectionUrl.indexOf("/data") + 6;
-            String partialCxn = connectionUrl.substring(n);
-            int k = partialCxn.indexOf(';');
-            String hsqldbFileName = partialCxn.substring(0, k);
-            connectionProperties.setProperty(DataModelManager.HSQLFILE_PROP, hsqldbFileName);
-        }
-
-        this.dataModelMgr.getDataModel(dataModelName).writeConnectionProperties(connectionProperties);
+        ConnectionUrl connectionUrl = new ConnectionUrl(connectionProperties.getProperty(DataServiceConstants.DB_URL_KEY));
+        this.dataModelMgr.getDataModel(dataModelName).writeConnectionProperties(connectionUrl.rewriteProperties(connectionProperties));
     }
 
     public Properties readConnectionProperties(String dataModelName) {
@@ -182,9 +166,13 @@ public class DataService {
     public void importDatabase(String serviceId, String packageName, String username, String password, String connectionUrl, String tableFilter,
         String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
         String activeDirectoryDomain) {
-        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
-        this.dataModelMgr.importDatabase(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, null, driverClassName,
-            dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+        PreparedConnection connection = prepareConnection(connectionUrl);
+        try {
+            this.dataModelMgr.importDatabase(username, password, connection.getUrl(), serviceId, packageName, tableFilter, schemaFilter, null,
+                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+        } finally {
+            connection.release();
+        }
     }
 
     public void importSampleDatabase() {
@@ -206,32 +194,42 @@ public class DataService {
 
     public String exportDatabase(String serviceId, String username, String password, String connectionUrl, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
-
-        return this.dataModelMgr.exportDatabase(username, password, null, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
-            revengNamingStrategyClassName, overrideTable);
+        PreparedConnection connection = prepareConnection(connectionUrl);
+        try {
+            return this.dataModelMgr.exportDatabase(username, password, null, connection.getUrl(), serviceId, schemaFilter, driverClassName,
+                dialectClassName, revengNamingStrategyClassName, overrideTable);
+        } finally {
+            connection.release();
+        }
     }
 
     public String cfExportDatabase(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName,
         String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
-
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
-        if (cfEnv != null) {
-            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, dbName);
-            String connectionUrl = info.getUrl();
-            String username = info.getUserName();
-            String password = info.getPassword();
-            return this.dataModelMgr.exportDatabase(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName,
+        Assert.state(cfEnv != null, "Unable to get cloud environment");
+        RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, dbName);
+        String connectionUrl = info.getUrl();
+        String username = info.getUserName();
+        String password = info.getPassword();
+
+        PreparedConnection connection = prepareConnection(connectionUrl);
+        try {
+            return this.dataModelMgr.exportDatabase(username, password, dbName, dbms, connection.getUrl(), serviceId, schemaFilter, driverClassName,
                 dialectClassName, revengNamingStrategyClassName, overrideTable);
-        } else {
-            throw new UnsupportedOperationException();
+        } finally {
+            connection.release();
         }
     }
 
     public String getExportDDL(String serviceId, String username, String password, String connectionUrl, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
-
-        return this.dataModelMgr.getExportDDL(username, password, "", connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
-            overrideTable);
+        PreparedConnection connection = prepareConnection(connectionUrl);
+        try {
+            return this.dataModelMgr.getExportDDL(username, password, "", connection.getUrl(), serviceId, schemaFilter, driverClassName,
+                dialectClassName, overrideTable);
+        } finally {
+            connection.release();
+        }
     }
 
     public void newDataModel(String dataModelName) {
@@ -266,57 +264,48 @@ public class DataService {
     public void reImportDatabase(String dataModelName, String username, String password, String connectionUrl, String tableFilter,
         String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
         String activeDirectoryDomain) {
-
-        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
-
-        this.dataModelMgr.reImport(dataModelName, username, password, connectionUrl, tableFilter, schemaFilter, driverClassName, dialectClassName,
-            revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+        PreparedConnection connection = prepareConnection(connectionUrl);
+        try {
+            this.dataModelMgr.reImport(dataModelName, username, password, connection.getUrl(), tableFilter, schemaFilter, driverClassName,
+                dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+        } finally {
+            connection.release();
+        }
     }
 
     public void testConnection(String username, String password, String connectionUrl, String driverClassName) {
 
-        if (DataServiceLoggers.importLogger.isDebugEnabled()) {
-            DataServiceLoggers.importLogger.debug("Test connection for " + connectionUrl);
-        }
-
-        if (SystemUtils.isEncrypted(password)) {
-            password = SystemUtils.decrypt(password);
-        }
-
-        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
-
-        TestDBConnection t = new TestDBConnection();
-        t.setUsername(username);
-        t.setPassword(password);
-        t.setConnectionUrl(connectionUrl);
-
-        if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
-            t.setDriverClassName(driverClassName);
-        }
-
-        t.init();
-
+        PreparedConnection connection = prepareConnection(connectionUrl);
         try {
-            t.run();
-        } catch (RuntimeException ex) {
-            throw com.wavemaker.runtime.data.util.DataServiceUtils.unwrap(ex);
-        } finally {
-            t.dispose();
-        }
-    }
-
-    private String rewriteConnectionUrlIfNecessary(String connectionUrl) {
-        try {
-            if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-                ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                    DataServiceConstants.CURRENT_PROJECT_MANAGER);
-                String projRoot = ((LocalFolder) projMgr.getCurrentProject().getWebAppRootFolder()).getLocalFile().getCanonicalPath();
-                return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
+            if (DataServiceLoggers.importLogger.isDebugEnabled()) {
+                DataServiceLoggers.importLogger.debug("Test connection for " + connectionUrl);
             }
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
+
+            if (SystemUtils.isEncrypted(password)) {
+                password = SystemUtils.decrypt(password);
+            }
+
+            TestDBConnection t = new TestDBConnection();
+            t.setUsername(username);
+            t.setPassword(password);
+            t.setConnectionUrl(connection.getUrl());
+
+            if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
+                t.setDriverClassName(driverClassName);
+            }
+
+            t.init();
+
+            try {
+                t.run();
+            } catch (RuntimeException ex) {
+                throw com.wavemaker.runtime.data.util.DataServiceUtils.unwrap(ex);
+            } finally {
+                t.dispose();
+            }
+        } finally {
+            connection.release();
         }
-        return connectionUrl;
     }
 
     private void sortColumns(List<ColumnInfo> columns) {
@@ -381,7 +370,9 @@ public class DataService {
 
     public String cfGetExportDDL(String serviceId, String dbName, String dbms, String schemaFilter, String driverClassName, String dialectClassName,
         boolean overrideTable) {
-        String username = "", password = "", connectionUrl = "";
+        String username = "";
+        String password = "";
+        String connectionUrl = "";
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
             try {
@@ -392,9 +383,13 @@ public class DataService {
             } catch (WMRuntimeException ex) {
             }
         }
-
-        return this.dataModelMgr.getExportDDL(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName,
-            dialectClassName, overrideTable);
+        PreparedConnection connection = prepareConnection(connectionUrl);
+        try {
+            return this.dataModelMgr.getExportDDL(username, password, dbName, dbms, connection.getUrl(), serviceId, schemaFilter, driverClassName,
+                dialectClassName, overrideTable);
+        } finally {
+            connection.release();
+        }
     }
 
     public RdbmsServiceInfo getCFRdbmsServiceInfo(CloudEnvironment cfEnv, String serviceId) throws WMRuntimeException {
@@ -402,6 +397,42 @@ public class DataService {
             return cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);
         } catch (NullPointerException npe) {
             throw new WMRuntimeException("Unable to find service: " + serviceId + ". Ensure service is bound");
+        }
+    }
+
+    /**
+     * Prepare a connection that can be used to read a database. NOTE: the connection must be
+     * {@link PreparedConnection#release() released} after use.
+     * 
+     * @param url the connection URL
+     * @return a {@link PreparedConnection}.
+     */
+    private PreparedConnection prepareConnection(String url) {
+        ConnectionUrl connectionUrl = new ConnectionUrl(url);
+        if (connectionUrl.isHsqldb()) {
+            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+                DataServiceConstants.CURRENT_PROJECT_MANAGER);
+            connectionUrl.setHsqldbRootFolder((LocalFolder) projMgr.getCurrentProject().getWebAppRootFolder());
+        }
+        return new PreparedConnection(connectionUrl);
+    }
+
+    /**
+     * A connection that has been prepared for reading.
+     */
+    private static class PreparedConnection {
+
+        private final ConnectionUrl url;
+
+        public PreparedConnection(ConnectionUrl url) {
+            this.url = url;
+        }
+
+        public ConnectionUrl getUrl() {
+            return this.url;
+        }
+
+        public void release() {
         }
     }
 }
