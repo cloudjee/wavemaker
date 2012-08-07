@@ -182,13 +182,26 @@ public class DataService {
     public void importDatabase(String serviceId, String packageName, String username, String password, String connectionUrl, String tableFilter,
         String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
         String activeDirectoryDomain) {
-
         connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
-
         this.dataModelMgr.importDatabase(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, null, driverClassName,
             dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+    }
 
-        return;
+    public void importSampleDatabase() {
+        String serviceId = "hrdb";
+        String packageName = "com.hrdb";
+        String username = "sa";
+        String password = "";
+        String connectionUrl = "jdbc:hsqldb:file:hrdb;shutdown=true;ifexists=true;";
+        String tableFilter = ".*";
+        String schemaFilter = ".*";
+        String driverClassName = "";
+        String dialectClassName = "";
+        String revengNamingStrategyClassName = "";
+        boolean impersonateUser = false;
+        String activeDirectoryDomain = "";
+        importDatabase(serviceId, packageName, username, password, connectionUrl, tableFilter, schemaFilter, driverClassName, dialectClassName,
+            revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
     }
 
     public String exportDatabase(String serviceId, String username, String password, String connectionUrl, String schemaFilter,

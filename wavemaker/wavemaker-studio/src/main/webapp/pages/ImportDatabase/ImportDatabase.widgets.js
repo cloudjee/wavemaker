@@ -47,6 +47,9 @@ ImportDatabase.widgets = {
 	    }]
 	}],
 	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
+        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import Sample"}, {onclick: "importSampleBtnClick"}, {
+        }],
+        spacer1: ["wm.Spacer", {width: "10px"}, {}],
 		testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
