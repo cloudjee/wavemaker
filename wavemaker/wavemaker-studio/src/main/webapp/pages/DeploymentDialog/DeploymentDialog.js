@@ -60,8 +60,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
                         wire: ["wm.Wire", {targetProperty: "dataSet", source: "dataServiceListVar"}]
                     }]
                 }],
-    			databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px"}],/* Height set from dictionary */
-    			databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]
+                /* Height set from dictionary */
+    			databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px"}]/*,
+    			databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
 		    }]
 		}]
 	    }]
@@ -105,7 +106,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].helpText = this.getDictionaryItem("DBBOX_CFNAME_HELP"); 
         cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
         cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
-        cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");
+        /*cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");*/
     },
     selectFirst: function() {
         this.initDeploymentListVar();
@@ -426,15 +427,24 @@ dojo.declare("DeploymentDialog", wm.Page, {
               if (inData.deploymentType == this.CF_DEPLOY) {
                   this._updateSchemaCheckboxes = {};
                   this._updateSchemaCheckboxesValue = {};
-
+                  var databases = {};
                   // Only show the checkboxes if an existing database has been selected
                   var showCheckboxes = false;
-                  dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
-                    var id = dataBox.name.match(/(\d+)$/)[1];
-                      var databaseEditor = this["databaseCloudFoundryNameEditor" + id];
-                      if (!databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
-                  }, this);
-
+                  if (this.currentDatabaseBoxes.length) {
+                      dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
+                        var id = dataBox.name.match(/(\d+)$/)[1];
+                          var databaseEditor = this["databaseCloudFoundryNameEditor" + id];
+                          databases[dataBox.dataModel.dataModelName] = {updateSchema: databaseEditor.selectedItem.isEmpty(),
+                                                                        name: databaseEditor.getDataValue()};
+                          if (!databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
+                      }, this);
+                  } else if (inData.databases && inData.databases.length) {
+                      dojo.forEach(inData.databases, function(d) {
+                        showCheckboxes = true;
+                        databases[d.dataModelId] = {updateSchema: false,
+                                                    name: d.dbName};
+                      });
+                  }
                   /* Was a label, but in order to get the nice tooltips, changed it into a readonly editor */
                   this._alertLabel = new wm.Text({
                       owner: this,
@@ -446,10 +456,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       helpText:  this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA_HELP"),
                       dataValue: this.getDictionaryItem("CHECKBOX_UPDATE_SCHEMA")
                   });
-                  dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
-                      var id = dataBox.name.match(/(\d+)$/)[1];
-                      var databaseEditor = this["databaseCloudFoundryNameEditor" + id];
-                      // User selected a new database name
+                  wm.forEachProperty(databases, dojo.hitch(this, function(inValue, inName) {                  
+
                       var c = new wm.Checkbox({
                           owner: this,
                           parent: app.confirmDialog.containerWidget.c$[0],
@@ -457,17 +465,17 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           "_classes": {
                               "domNode": ["StudioEditor"]
                           },
-                          caption: dataBox.dataModel.dataModelName + ": " + databaseEditor.getDataValue(),
-                          startChecked: databaseEditor.selectedItem.isEmpty(),
+                          caption: inName + ": " + inValue.name,
+                          startChecked: inValue.updateSchema,
                           width: "240px",
                           captionSize: "100%",
                           minEditorWidth: 32,
                           captionAlign: "left",
                           captionPosition: "right",
-                          name: "confirmUpdateSchemaCheckbox" + id
+                          name: "confirmUpdateSchemaCheckbox" + inName
                       });
-                      this._updateSchemaCheckboxes[dataBox.dataModel.dataModelName] = c;
-                  }, this);
+                      this._updateSchemaCheckboxes[inName] = c;
+                  }));
                   /*
               this._updateSchemaCheckbox = new wm.Checkbox({owner: this,
                                     parent: app.confirmDialog.containerWidget.c$[0],
@@ -1006,9 +1014,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			    box.dataProperties = inData;
 			    box.dataConnection = connection;
 			    box.setTitle(this.getDictionaryItem("DATABASE_BOX_TITLE", {databaseName: c.dataModelName}));
-			    if (nonHSQLDBCount > 1) {
+			    /*if (nonHSQLDBCount > 1) {
 				this["databaseCloudFoundryWarnings" + nonHSQLDBCount].setShowing(true);
-			    }
+			    }*/
 			    this.currentDatabaseBoxes.push(box);
 			} else {
 			    var box = this.editPanel.createComponents(this.hsqldbBox, this)[0];
