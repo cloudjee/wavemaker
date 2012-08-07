@@ -97,7 +97,7 @@ Studio.widgets = {
     deploymentDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "900px", height: "680px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true,   titlebarButtons: "StudioHelpIcon"},{onMiscButtonClick: "deploymentHelp"}],
     loginDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]},  width: "250px", height: "325px", title: "Login", modal: true, hideControls: true, noEscape: true, pageName: "Login", deferLoad: true}],
     bindDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, pageName: "BindSourceDialog", deferLoad: false, modal: false, positionLocation: "tl", width: "650px", height: "400px", hideControls: true, title: "Binding..."}, {onHide: "endBind"}],
-    newProjectDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "492px", height: "430px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: ""}],
+    newProjectDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "492px", height: "450px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: ""}],
     helpDialog: ["wm.GenericDialog", {_classes: {domNode: ["studiodialog"]},   "height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
 
     progressDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "350px", height: "120px", title: "Saving...", noMinify: true, noMaxify: true, modal: true, noEscape: false}, {}, {

@@ -69,7 +69,6 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
         var panel;
         var parent = !isMobile ? this.desktopTemplatesInsertPanel : this.mobileTemplatesInsertPanel;
         dojo.forEach(options, function(option) {
-            debugger;
             if (option.mobile != isMobile) return;            
             if (i % 3 == 0) {
                 panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: parent, owner: this, name: "templateRow" + i});

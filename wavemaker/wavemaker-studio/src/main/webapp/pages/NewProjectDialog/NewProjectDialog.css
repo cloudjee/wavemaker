@@ -39,12 +39,6 @@
         opacity: 1.0;
         background-color: #eeeeee;
 }
-.NewProjectDialog .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab {
-    color: black;
-}
-.NewProjectDialog .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab.wmtablayers-selected {
-    color: white;
-}
 
 .NewProjectDialog .NewProjectDialog-tabs .SelectableTemplate.Selected{
         background-color: #ffffff;
@@ -69,8 +63,12 @@ font-weight: bold;
 }*/
 
 .NewProjectDialog .NewProjectDialog-tabs .wmlayer {
+    background-color: #636F80;
+}
+.NewProjectDialog .NewProjectDialog-tabs .wmlayer div {
     background-color: white;
 }
+
 .NewProjectDialog .NewProjectDialog-tabs .wmlabel {
     color: black;
     text-align: center;

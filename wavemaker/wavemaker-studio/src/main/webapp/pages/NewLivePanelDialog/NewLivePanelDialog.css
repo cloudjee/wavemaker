@@ -13,12 +13,6 @@
  */
  
 
-.NewLivePanelDialog .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab {
-    color: black;
-}
-.NewLivePanelDialog .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab.wmtablayers-selected {
-    color: white;
-}
 
 
 .NewLivePanelDialog  .SelectableTemplate .wmpicture{
@@ -68,6 +62,9 @@
     color: white;
 }
 
+.NewLivePanelDialog .NewLivePanelDialog-tabs .wmlayer {
+    background-color: #636F80;
+}
 
 .NewLivePanelDialog .NewLivePanelDialog-mobileTemplatesInsertPanel,
 .NewLivePanelDialog .NewLivePanelDialog-desktopTemplatesInsertPanel {

@@ -15,17 +15,19 @@
 
 NewProjectDialog.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
-        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {_classes: {domNode:["StudioDarkPanel"]}, backgroundColor:""},{}, {
             projectName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, selectOnClick: true, width: "100%", height: "24px", captionSize: "90px", caption: "Project Name", displayValue: "Project", regExp: '^[a-zA-Z][\\w\\d]+$', invalidMessage: "Only letters/numbers.  Must start with letter", tooltipDisplayTime: "6000"}, {"onEnterKeyPress":"onOkClick"}],
             themeName: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "100%", height: "24px",  captionSize: "90px", caption: "Theme", displayField: "dataValue", dataField: "dataValue" }, {"onEnterKeyPress":"onOkClick"}, {
-		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"studio.themesListVar"}, {}]
-		}]
+        		binding: ["wm.Binding", {}, {}, {
+        		    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"studio.themesListVar"}, {}]
+        		}]
             }],
             templatesPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top", autoScroll: true},{}, {
-                templatesPanelLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, width: "90px", height: "100%", caption: "Template"}],
-                tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","NoRightMarginOnTab", "TransparentTabBar"]}, width: "100%", height: "100%", clientBorder: "1", clientBorderColor: "#414B5C"},{},{                                              
-                    desktopTemplatesInsertLayer: ["wm.Layer", {caption: "Desktop", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top"}],
+                templatesPanelLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, styles: {fontWeight:"bold"}, width: "90px", height: "100%", caption: "Template", align: "right"}],
+                tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","StudioTabsInverted", "NoRightMarginOnTab", "TransparentTabBar"]}, width: "100%", height: "100%", clientBorder: "1", clientBorderColor: "#959DAB", margin:"4,10,10,4"},{},{  
+                    desktopTemplatesInsertLayer: ["wm.Layer", {caption: "Desktop", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", padding: "8"},{},{
+                        desktopTemplatesInsertPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom",horizontalAlign: "left", verticalAlign: "top"}]
+                    }],
                 }]
             }]
         }],
