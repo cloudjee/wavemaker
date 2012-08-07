@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,10 +32,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Ear;
-import org.apache.tools.ant.taskdefs.War;
-import org.apache.tools.ant.types.FileSet;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -322,36 +315,6 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         Map<String, Object> properties = setProperties(getProjectDir(project));
         undeploy(properties);
         clean(properties);
-    }
-
-    @Override
-    protected LocalFile assembleWar(Map<String, Object> properties) {
-        LocalFile warFile = (LocalFile) properties.get(WAR_FILE_NAME_PROPERTY);
-        LocalFolder buildAppWebAppRoot = (LocalFolder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
-        War warTask = new War();
-        org.apache.tools.ant.Project ant = new Project();
-        warTask.setProject(ant);
-        warTask.setBasedir(buildAppWebAppRoot.getLocalFile());
-        warTask.setDestFile(warFile.getLocalFile());
-        warTask.setExcludes("**/application.xml, **/*.documentation.json");
-        warTask.execute();
-        return warFile;
-    }
-
-    @Override
-    protected void assembleEar(Map<String, Object> properties, LocalFile warFile) {
-        Ear earTask = new Ear();
-        org.apache.tools.ant.Project ant = new Project();
-        earTask.setProject(ant);
-        FileSet fs = new FileSet();
-        fs.setFile(warFile.getLocalFile());
-        earTask.addFileset(fs);
-        LocalFile earFile = (LocalFile) properties.get(EAR_FILE_NAME_PROPERTY);
-        earTask.setDestFile(earFile.getLocalFile());
-        LocalFolder webInf = (LocalFolder) ((Folder) properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
-        LocalFile appXml = (LocalFile) webInf.getFile("application.xml");
-        earTask.setAppxml(appXml.getLocalFile());
-        earTask.execute();
     }
 
     @Override

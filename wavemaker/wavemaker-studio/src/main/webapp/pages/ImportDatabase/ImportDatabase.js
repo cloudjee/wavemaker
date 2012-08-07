@@ -25,9 +25,11 @@ dojo.declare("ImportDatabase", wm.Page, {
 			LOAD_IP_OP, [], dojo.hitch(this, "_loadedIP"));
 		this.update();
 	},
+	
     onShow: function() {
-	this.panel2.activate();
+        this.panel2.activate();
     },
+    
 	update: function(inImportDataModel) {
 		var d = inImportDataModel;
 		if (d) {
@@ -51,22 +53,15 @@ dojo.declare("ImportDatabase", wm.Page, {
 				setTimeout(dojo.hitch(this, "importBtnClick"), 100);
 		}
 	},
+	
 	cancelBtnClick: function(inSender) {
 		this._close();
 	},
-/*
-	onServiceNameKeyPress: function() {
-		setTimeout(dojo.hitch(this, "serviceNameChanged"), 0);
-	},
-	*/
+	
 	serviceNameChanged: function() {
 		this._updatePackage();
 	},
-/*
-	onUsernameKeyPress: function() {
-		setTimeout(dojo.hitch(this, "usernameChanged"), 0);
-	},
-	*/
+	
 	usernameChanged: function() {
 		var db = this.dbdropdown.getDisplayValue();
 		this._updateSchemaFilter(db, this.usernameInput.getDataValue(),
@@ -104,46 +99,31 @@ dojo.declare("ImportDatabase", wm.Page, {
 		this._updateImportConnectionUrl();
 		this.usernameChanged(); 
 	},
-/*
-	onImportHostKeyPress: function(inSender) {
-		setTimeout(dojo.hitch(this, "importHostChanged", inSender), 0);
-	},
-	*/
+	
 	importHostChanged: function(inSender) {
 		this._updateImportConnectionUrl();
 	},
-/*
-	onImportPortKeyPress: function() {
-		setTimeout(dojo.hitch(this, "importPortChanged"), 0);
-	},
-	*/
+	
 	importPortChanged: function() {
 		this._updateImportConnectionUrl();
 	},
-/*
-	onImportExtraKeyPress: function() {
-		setTimeout(dojo.hitch(this, "importExtraChanged"), 0);
-	},
-	*/
+	
 	importExtraChanged: function() {
 		this._updateServiceName();
 		this._updateImportConnectionUrl();
 	},
-/*
-	onImportExtra2KeyPress: function() {
-		setTimeout(dojo.hitch(this, "importExtra2Changed"), 0);
-	},
-	*/
+	
 	importExtra2Changed: function() {
 		this._updateImportConnectionUrl();
 	},
+	
 	testConnectionBtnClick: function(inSender) {
 		this._testConnection(this.connectionUrlInput.getDataValue(),
 					this.usernameInput.getDataValue(),
 					this.passwordInput.getDataValue(),
 					this.driverClassInput.getDataValue());
-		//this._testConnection(this.extraInput.getDataValue());
 	},
+	
 	importBtnClick: function(inSender) {
 	    if (this.dbdropdown.getDataValue("").toLowerCase() == "mysql" && dojo.isMac) {
 		app.confirm(this.getDictionaryItem("CONFIRM_MYSQL_MAC_IMPORT"), false, dojo.hitch(this, "importBtnClick2"));
@@ -153,6 +133,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 		this.importBtnClick2();
 	    }
 	},
+	
 	importBtnClick2: function(inSender) {
 		this.dataModelName = null;
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
@@ -172,37 +153,26 @@ dojo.declare("ImportDatabase", wm.Page, {
 					dojo.hitch(this, "_importResult"), 
 					dojo.hitch(this, "_importError"));
 	},
-
-	/*importBtnClick2: function(inSender) {
-	this.dataModelName = null;
-	studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
-	studio.dataService.requestAsync("cfImportDatabase",
-				[this.serviceNameInput.getDataValue(),
-				this.packageInput.getDataValue(),
-				//this.usernameInput.getDataValue(),
-				//this.passwordInput.getDataValue(),
-				//this.connectionUrlInput.getDataValue(),
-				this.tablePatternInput.getDataValue(),
-				this.schemaPatternInput.getDataValue(),
-				this.driverClassInput.getDataValue(),
-				this.dialectInput.getDataValue(),
-				 this.revengNamingStrategyInput.getDataValue(),
-				 this.executeAsMenu.getDataValue() == "Logged in user",
-				 this.activeDirectoryDomain.getDataValue()],
-				dojo.hitch(this, "_importResult"), 
-				dojo.hitch(this, "_importError"));
-	},*/
-
+	
+	importSampleBtnClick: function(inSender) {
+	    studio.dataService.requestAsync("importSampleDatabase", 
+	            [], 
+	            dojo.hitch(this, "_importResult"), 
+	            dojo.hitch(this, "_importError"));
+	},
+	
 	_updatePackage: function() {
 		this.packageInput.setDataValue("");
 		var s = this.serviceNameInput.getDataValue().toLowerCase();
 		this.packageInput.setDataValue(DEFAULT_PACKAGE_ROOT + s);
 	},
+	
 	_updateSchemaFilter: function(dbtype, username, schemaFilterInput) {
 		if (isOracle(dbtype) || isDB2(dbtype)) {
 			schemaFilterInput.setDataValue(username.toUpperCase());
 		}
 	},
+	
 	_updateImportConnectionUrl: function() {
 		var dbtype = this.dbdropdown.getDisplayValue();
 		var h = this.hostInput.getDataValue();
@@ -214,6 +184,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 
 		this.connectionUrlInput.setDataValue(s);
 	},
+	
 	_updateServiceName: function() {
 		var e = this.extraInput.getDataValue();
 		this.serviceNameChanged();
@@ -221,6 +192,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 		    e += "DB";
 		this.serviceNameInput.setDataValue(e);
 	},
+	
 	_testConnection: function(url, username, password, driverClassName) {
 		studio.beginWait("Test Connection: " + url);
 		studio.dataService.requestAsync(TEST_CONNECTION_OP,
@@ -228,38 +200,25 @@ dojo.declare("ImportDatabase", wm.Page, {
 			dojo.hitch(this, "_connectionSucceeded"), 
 			dojo.hitch(this, "_connectionFailed"));
 	},
-	/*_testConnection: function(serviceName) {
-		studio.beginWait("Test Connection: " + serviceName);
-		studio.dataService.requestAsync("cfTestConnection",
-			[serviceName],
-			dojo.hitch(this, "_connectionSucceeded"), 
-			dojo.hitch(this, "_connectionFailed"));
-	},*/
+	
 	_connectionSucceeded: function() {
 		studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_SUCCESS"));
 	},
+	
 	_connectionFailed: function(inError) {
 	    studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message}));
 	    app.alertDialog.setWidth("600px");
 	},
+	
 	_importResult: function() {
 		studio.endWait();
 		this.dataModelName = this.serviceNameInput.getDataValue();
-	        studio.updateServices();
-/*
-	        var layers = studio.databaseSubTab.layers;
-	    for (var i = 0; i < layers.length; i++) {
-		var pageContainer = layers[i].c$[0];
-		if (pageContainer.page instanceof DataObjectsEditor ||
-		    pageContainer.page instanceof QueryEditor) {
-		    pageContainer.page.update();
-		}
-	    }
-	    */
+	    studio.updateServices();
 	    this._close("Import");
 	},
+	
 	_importError: function(inError) {
 		studio.endWait();
 		var msg = "";
@@ -269,34 +228,18 @@ dojo.declare("ImportDatabase", wm.Page, {
 	    app.alert(this.getDictionaryItem("ALERT_IMPORT_FAILED", {error: inError.message}));
 	    app.alertDialog.setWidth("600px");
 	},
+	
 	_loadedIP: function(inData) {
 		this.ip = inData;
 	},
-/*
-	newBtnClick: function(inSender) {
-		var f = this.newDataModelInput.getDataValue();
-		this.dataModelName = f;
-		studio.beginWait("Adding " + f);
-		studio.dataService.requestAsync(NEW_DATA_MODEL_OP, 
-			[f], 
-			dojo.hitch(this, "newDataModelResult"), 
-			dojo.hitch(this, "newDataModelError"));
-	},
-	newDataModelError: function(inError) {
-		this.dataModelName = null;
-		app.alert(inError);
-	},
-	newDataModelResult: function() {
-		wm.fire(studio.getEditor("DataObjectsEditor").page, "newDataModelResult");
-		this._close("New");
-	},
-
-	*/
+	
 	_close: function(inWhy) {
 		wm.fire(this.owner, "dismiss", [inWhy]);
 	},
+	
     executeAsMenuChange: function(inSender) {
-	this.activeDirectoryDomain.setDisabled(this.executeAsMenu.getDataValue() != "Logged in user");
+        this.activeDirectoryDomain.setDisabled(this.executeAsMenu.getDataValue() != "Logged in user");
     },
+    
   _end: 0
 });

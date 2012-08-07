@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
 
 import org.apache.catalina.ant.DeployTask;
 import org.apache.catalina.ant.UndeployTask;
@@ -22,9 +24,9 @@ import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.zip.ZipArchive;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
 
 /**
  * Replaces ant script tasks that generate war and ear file
@@ -58,12 +60,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected static final String WAVEMAKER_HOME = "wavemaker.home";
 
-    protected void buildWar(LocalFolder projectDir, LocalFolder buildDir, File warFile, boolean includeEar, StudioFileSystem fileSystem)
+    protected void buildWar(LocalFolder projectDir, Folder buildDir, File warFile, boolean includeEar, StudioFileSystem fileSystem)
         throws WMRuntimeException { // projectDir: dplstaging //buildDir: fileutils
 
         Map<String, Object> properties = setProperties(projectDir, buildDir, warFile);
 
-        LocalFile warF;
+        File warF;
         try {
             warF = buildWar(properties);
         } catch (IOException ex) {
@@ -76,12 +78,12 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     }
 
     protected Map<String, Object> setProperties(LocalFolder projectDir) {
-        LocalFolder buildDir = (LocalFolder) getProjectDir().getFolder("webapproot");
+        Folder buildDir = getProjectDir().getFolder("webapproot");
         File warFile = getProjectDir().getFolder("dist").getFile(getDeployName() + ".war");
         return setProperties(projectDir, buildDir, warFile);
     }
 
-    private Map<String, Object> setProperties(LocalFolder projectDir, LocalFolder buildDir, File warFile) {
+    private Map<String, Object> setProperties(LocalFolder projectDir, Folder buildDir, File warFile) {
         String warFileName = warFile.getName();
         Folder archiveFolder = warFile.getParent();
         int len = warFileName.length();
@@ -100,7 +102,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         return properties;
     }
 
-    public LocalFile buildWar(Map<String, Object> properties) throws IOException {
+    public File buildWar(Map<String, Object> properties) throws IOException {
 
         build(properties);
 
@@ -133,13 +135,60 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
     }
 
-    protected LocalFile assembleWar(Map<String, Object> properties) {
-        return null;
+    protected com.wavemaker.tools.io.File assembleWar(Map<String, Object> properties) {
+        Folder buildAppWebAppRoot = (Folder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
+        com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("**/application.xml", "**/*.documentation.json");
+        Resources<com.wavemaker.tools.io.File> files = buildAppWebAppRoot.find().exclude(excluded).files();
+        InputStream is = ZipArchive.compress(files);
+        com.wavemaker.tools.io.File warFile = (com.wavemaker.tools.io.File)properties.get(WAR_FILE_NAME_PROPERTY);
+        OutputStream os = warFile.getContent().asOutputStream();
+        try {
+            com.wavemaker.common.util.IOUtils.copy(is, os);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        } finally {
+            try {
+                is.close();
+                os.close();
+            } catch (IOException ignore) {
+            }
+        }
+
+        return warFile;
     }
 
-    protected void assembleEar(Map<String, Object> properties, LocalFile warFile) {
+    protected void assembleEar(Map<String, Object> properties, com.wavemaker.tools.io.File warFile) {
+        ZipOutputStream out;
+        InputStream is;
+        try {
+            com.wavemaker.tools.io.File earFile = (com.wavemaker.tools.io.File) properties.get(EAR_FILE_NAME_PROPERTY);
+            out = new ZipOutputStream(earFile.getContent().asOutputStream());
+            out.putNextEntry(new ZipEntry(warFile.getName()));
+            is = warFile.getContent().asInputStream();
+            org.apache.commons.io.IOUtils.copy(is, out);
+            out.closeEntry();
+            is.close();
 
+            Folder webInf = ((Folder) properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF");
+            com.wavemaker.tools.io.File appXml = webInf.getFile("application.xml");
+            out.putNextEntry(new ZipEntry("META-INF/" + appXml.getName()));
+            is = appXml.getContent().asInputStream();
+            org.apache.commons.io.IOUtils.copy(is, out);
+            out.closeEntry();
+            is.close();
+
+            String maniFest = "Manifest-Version: 1.0\n" +
+                              "Created-By: WaveMaker Studio (VMware Inc.)";
+            out.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
+            org.apache.commons.io.IOUtils.write(maniFest, out);
+            out.closeEntry();
+            is.close();
+            out.close();
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
     }
+
 
     public String build(Map<String, Object> properties) {
         copyJars(properties);

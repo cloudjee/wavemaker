@@ -16,14 +16,17 @@
 dojo.provide("wm.studio.pages.ImportCloudFoundryDatabase.ImportCloudFoundryDatabase");
 
 dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
+    
     i18n: true,
     
     start: function() {
         this.update();
     },
+    
     onShow: function() {
         this.update();
     },
+    
     update: function(inImportDataModel) {
         this.cloudFoundryService.requestAsync("listDatabaseServices", ["", ""], dojo.hitch(this, function(inResult) {
             this.populateCloudFoundryAppList(inResult);
@@ -73,12 +76,24 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
             studio.endWait();
         });
     },
+    importSampleBtnClick: function(inSender) {
+        this._serviceName = "hrdb";
+        studio.dataService.requestAsync("importSampleDatabase", 
+                [], 
+                dojo.hitch(this, "_importResult"), 
+                function(inError) {
+                    app.alert(inError.toString());
+                    studio.endWait();
+                });
+    },
+    
     waitForStudioToRestart: function(serviceName, type) {
         studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_BINDING_RESTART1"));
         window.setTimeout(dojo.hitch(this, function() {
             this.waitForStudioToRestart2(serviceName, type);
         }), 5000);
     },
+    
     waitForStudioToRestart2: function(serviceName, type) {
         studio.studioService.requestAsync("getOpenProject", [], dojo.hitch(this, function(inResult) {
             // if a project is still open, the server hasn't yet restarted
@@ -94,18 +109,32 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
             }
         }));
     },
+    
     waitForStudioToRestart3: function(serviceName, type) {
         studio.studioService.requestAsync("openProject", [studio.project.projectName], dojo.hitch(this, function() {
             this.doImport(serviceName, type);
         }));
     },
+    
     doImport: function(serviceName, type) {
         studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_GENERATING"));
-        studio.dataService.requestAsync("cfImportDatabase", [serviceName, this.packageInput.getDataValue(), this.tablePatternInput.getDataValue(), this.schemaPatternInput.getDataValue(), "", "", this.revengNamingStrategyInput.getDataValue(), false, ""], dojo.hitch(this, "_importResult"), function(inError) {
+        studio.dataService.requestAsync("cfImportDatabase", [serviceName, 
+                                                            this.packageInput.getDataValue(), 
+                                                            this.tablePatternInput.getDataValue(), 
+                                                            this.schemaPatternInput.getDataValue(), 
+                                                            "", 
+                                                            "", 
+                                                            this.revengNamingStrategyInput.getDataValue(), 
+                                                            false, 
+                                                            ""], 
+                                        dojo.hitch(this, "_importResult"), function(inError) {
             app.alert(inError.toString());
-            studio.endWait();
-        });
+                studio.endWait();
+            }
+        );
+
     },
+    
     _importResult: function() {
         studio.endWait();
         this.dataModelName = this._serviceName;
