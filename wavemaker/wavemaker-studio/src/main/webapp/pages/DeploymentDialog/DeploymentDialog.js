@@ -1379,13 +1379,67 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    "target": this.loginDialogTargetEditor.getDataValue(),
 	    "token": this.getTokenCookie(this.loginDialogTargetEditor.getDataValue())
 	    };
-	this.undeploy(data);
+	app.confirm(this.getDictionaryItem("CONFIRM_UNDEPLOY", {projectName:name}), false, dojo.hitch(this, function(inData){this.undeploy(data);}), function(){return;});
     },
     undeploy: function(inData) {
 	studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
 	this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
 	    inData.token = inToken;
 	    studio.deploymentService.requestAsync("undeploy", [inData,this.deleteServicesCheckbox.getChecked()], 
+						  dojo.hitch(this, function(inResult) {
+						      studio.endWait();
+						      this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
+						  }),
+						  dojo.hitch(this, function(inError) {
+						      studio.endWait();
+						      app.alert(inError);
+						  }));
+	}));
+    },
+	cloudFoundryStartFromListButtonClick: function() {
+	var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
+	if (!selectedItem) return;
+	var name = selectedItem.id;
+	if (!name) return;
+	var data = {
+		"target": this.loginDialogTargetEditor.getDataValue(),
+	    "token": this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),
+	    "applicationName": name
+	    };
+	this.startApp(data);
+    },
+    startApp: function(inData) {
+	studio.beginWait(this.getDictionaryItem("WAIT_START"));
+	this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
+	    inData.token = inToken;
+	    this.cloudFoundryService.requestAsync("startApplication", [inData.token, inData.target, inData.applicationName], 
+						  dojo.hitch(this, function(inResult) {
+						      studio.endWait();
+						      this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
+						  }),
+						  dojo.hitch(this, function(inError) {
+						      studio.endWait();
+						      app.alert(inError);
+						  }));
+	}));
+    },
+    cloudFoundryStopFromListButtonClick: function() {
+	var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
+	if (!selectedItem) return;
+	var name = selectedItem.id;
+	if (!name) return;
+	var data = {
+		"target": this.loginDialogTargetEditor.getDataValue(),
+	    "token": this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),
+	    "applicationName": name
+	    };
+	this.stopApp(data);
+    },
+    stopApp: function(inData) {
+	studio.beginWait(this.getDictionaryItem("WAIT_STOP"));
+	this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
+	    inData.token = inToken;
+	    this.cloudFoundryService.requestAsync("stopApplication", [inData.token, inData.target, inData.applicationName], 
 						  dojo.hitch(this, function(inResult) {
 						      studio.endWait();
 						      this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
