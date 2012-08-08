@@ -239,6 +239,11 @@ body .wmtablayers-tab:active:not(.wmtablayers-selected) {
     color: black;
 }
 
+.Studio .StudioDarkPanel #studio_inspector .StudioEditor,
+.StudioTabs.StudioDarkLayers > div > .wmlayer #studio_inspector .StudioEditor {
+    background-color: inherit;
+}
+
 .StudioTabs.StudioDarkLayers > div > .wmlayer a,
 .StudioTabs.StudioDarkLayers > div > .wmlayer a:visited,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .wmlabel.StudioLabel,
