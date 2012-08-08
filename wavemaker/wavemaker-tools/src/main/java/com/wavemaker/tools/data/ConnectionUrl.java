@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.local.LocalFolder;
 
 public final class ConnectionUrl {
@@ -29,6 +30,7 @@ public final class ConnectionUrl {
         if (isHsqldb()) {
             String hsqldbFileName = extractHsqlDBFileName();
             properties.setProperty(HSQLFILE_PROP, hsqldbFileName);
+            properties.setProperty(DataServiceConstants.DB_URL_KEY, rewrite(DataServiceConstants.WEB_ROOT_TOKEN + "/data"));
         }
         return properties;
     }
@@ -96,7 +98,7 @@ public final class ConnectionUrl {
         assert index == 4;
 
         // String hsqlDBName = hsqlDbRootFolder + "/" + dbFileName;
-        String hsqlDBName = hsqlDbRootFolder + "/data/" + dbFileName;
+        String hsqlDBName = hsqlDbRootFolder + "/" + dbFileName;
 
         // Need more program logic for the settings on url
         String cxnUrl = new String("jdbc" + ":" + "hsqldb" + ":" + "file" + ":" + hsqlDBName);

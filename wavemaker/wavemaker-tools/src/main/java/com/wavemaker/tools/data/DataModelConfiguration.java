@@ -37,7 +37,6 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceOperation;
@@ -57,7 +56,6 @@ import com.wavemaker.tools.data.parser.HbmWriter;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
@@ -838,13 +836,6 @@ public class DataModelConfiguration {
     }
 
     public synchronized void writeConnectionProperties(Properties props) {
-        String connUrl = props.getProperty(DataServiceConstants.DB_URL_KEY);
-        if (!WMAppContext.getInstance().isCloudFoundry()) {
-            String projRoot = ((LocalFolder) this.projMgr.getCurrentProject().getWebAppRootFolder()).getLocalFile().getPath();
-            connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
-        }
-        props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
-
         this.springConfiguration.writeProperties(props);
     }
 
@@ -1378,7 +1369,7 @@ public class DataModelConfiguration {
                 if (backup) {
                     backup(path);
                 }
-                
+
                 gen.generateNext(baos);
 
                 if (DataServiceLoggers.parserLogger.isInfoEnabled()) {

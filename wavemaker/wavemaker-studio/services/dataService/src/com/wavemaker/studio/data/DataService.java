@@ -14,6 +14,7 @@
 
 package com.wavemaker.studio.data;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import org.cloudfoundry.runtime.env.RdbmsServiceInfo;
 import org.springframework.util.Assert;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -47,6 +49,7 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.data.QueryInfo;
 import com.wavemaker.tools.data.RelatedInfo;
 import com.wavemaker.tools.data.TestDBConnection;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.ProjectManager;
 
@@ -409,12 +412,31 @@ public class DataService {
      */
     private PreparedConnection prepareConnection(String url) {
         ConnectionUrl connectionUrl = new ConnectionUrl(url);
+        PreparedConnection preparedConnection = new PreparedConnection(connectionUrl);
         if (connectionUrl.isHsqldb()) {
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+            ProjectManager projectManager = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
                 DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            connectionUrl.setHsqldbRootFolder((LocalFolder) projMgr.getCurrentProject().getWebAppRootFolder());
+            Folder hsqlDbRootFolder = projectManager.getCurrentProject().getWebAppRootFolder().getFolder("data");
+            if (hsqlDbRootFolder.exists()) {
+                if (hsqlDbRootFolder instanceof LocalFolder) {
+                    connectionUrl.setHsqldbRootFolder((LocalFolder) hsqlDbRootFolder);
+                } else {
+                    LocalFolder tempFolder = createTempFolder();
+                    hsqlDbRootFolder.copyContentsTo(tempFolder);
+                    preparedConnection.deleteFolderOnRelease(tempFolder);
+                    connectionUrl.setHsqldbRootFolder(tempFolder);
+                }
+            }
         }
-        return new PreparedConnection(connectionUrl);
+        return preparedConnection;
+    }
+
+    private LocalFolder createTempFolder() {
+        try {
+            return new LocalFolder(IOUtils.createTempDirectory());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
@@ -424,8 +446,14 @@ public class DataService {
 
         private final ConnectionUrl url;
 
+        private final List<Folder> foldersToDeleteOnRelease = new ArrayList<Folder>();
+
         public PreparedConnection(ConnectionUrl url) {
             this.url = url;
+        }
+
+        public void deleteFolderOnRelease(Folder folder) {
+            this.foldersToDeleteOnRelease.add(folder);
         }
 
         public ConnectionUrl getUrl() {
@@ -433,6 +461,13 @@ public class DataService {
         }
 
         public void release() {
+            for (Folder folder : this.foldersToDeleteOnRelease) {
+                try {
+                    folder.delete();
+                } catch (Exception e) {
+                    // FIXME warning
+                }
+            }
         }
     }
 }
