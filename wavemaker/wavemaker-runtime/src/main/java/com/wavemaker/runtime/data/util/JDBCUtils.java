@@ -20,9 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 
@@ -127,71 +125,6 @@ public class JDBCUtils {
     public static void testSQLServerConnection(String url, String username, String password, String driverClassName) {
 
         runSql(new String[] { "SELECT NAME FROM master..sysdatabases" }, url, username, password, driverClassName);
-    }
-
-    // public static String reWriteConnectionUrl(String webAppRoot1, String connectionUrl)
-    public static String reWriteConnectionUrl(String connectionUrl, String webAppRoot) {
-        if (connectionUrl.contains(webAppRoot)) {
-            return connectionUrl;
-        }
-
-        StringTokenizer cxnStrTokens = new StringTokenizer(connectionUrl, ":");
-        String driverType = null;
-        String dbType = null;
-        String dbFormat = null;
-        String dbFileName = null;
-        int index = 0;
-
-        ArrayList<String> dbSettings = new ArrayList<String>();
-
-        while (cxnStrTokens.hasMoreElements()) {
-            String token = cxnStrTokens.nextToken();
-            if (token.equals("jdbc") && index == 0) {
-                driverType = token;
-            }
-
-            if (token.equals("hsqldb") && index == 1) {
-                dbType = token;
-            }
-
-            if (token.equals("file") && index == 2) {
-                dbFormat = token;
-            }
-
-            if (index == 3) {
-                // get the file path
-                StringTokenizer dbFileCfgTokens = new StringTokenizer(token, ";");
-                dbFileName = dbFileCfgTokens.nextToken();
-                while (dbFileCfgTokens.hasMoreTokens()) {
-                    dbSettings.add(dbFileCfgTokens.nextToken());
-                }
-            }
-
-            index++;
-        }
-
-        // Making sure it is the hsqldb file copy
-        assert driverType != null && driverType.equals("jdbc");
-        assert dbType != null && dbType.equals("hsqldb");
-        assert dbFormat != null && dbFormat.equals("file");
-        assert dbFileName != null;
-        assert index == 4;
-
-        // String hsqlDBName = webAppRoot + "/" + dbFileName;
-        String hsqlDBName = DataServiceConstants.WEB_ROOT_TOKEN + "/data/" + dbFileName;
-
-        // Need more program logic for the settings on url
-        String cxnUrl = new String("jdbc" + ":" + "hsqldb" + ":" + "file" + ":" + hsqlDBName);
-        Iterator<String> itr = dbSettings.iterator();
-
-        while (itr.hasNext()) {
-            cxnUrl += ";";
-            cxnUrl += itr.next();
-        }
-
-        cxnUrl = StringUtils.replacePlainStr(cxnUrl, DataServiceConstants.WEB_ROOT_TOKEN, webAppRoot);
-
-        return cxnUrl;
     }
 
     public static void testHSQLConnection(String url, String username, String password, String driverClassName) {

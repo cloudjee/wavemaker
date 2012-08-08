@@ -17,13 +17,22 @@ DeploymentDialog.widgets = {
 
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
-    cloudFoundryAppListDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
+    cloudFoundryAppListDialog: ["wm.DesignableDialog", {"title":"Cloud Foundry Applications", _classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
         mainPanel1: ["wm.studio.DialogMainPanel", {},{}, {
 	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
-	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: true, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
+	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: false, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
 	}],
 	buttonBar5: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-
+		cloudFoundryStartFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Start","margin":"4"}, {"onclick":"cloudFoundryStartFromListButtonClick"}, {
+		binding: ["wm.Binding", {}, {}, {
+		    wire: ["wm.Wire", {"expression":"Boolean(${cloudFoundryAppList.emptySelection} || ${cloudFoundryAppList.selectedItem.data.state} === 'STARTED')","targetProperty":"disabled"}, {}]
+		}]
+	    }],
+	    cloudFoundryStopFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Stop","margin":"4"}, {"onclick":"cloudFoundryStopFromListButtonClick"}, {
+		binding: ["wm.Binding", {}, {}, {
+		    wire: ["wm.Wire", {"expression":"Boolean(${cloudFoundryAppList.emptySelection} || ${cloudFoundryAppList.selectedItem.data.state} === 'STOPPED' || ${cloudFoundryAppList.selectedItem.data.id}.search('wavemaker-studio') !== -1)","targetProperty":"disabled"}, {}]
+		}]
+	    }],
 	    cloudFoundryUndeployFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Undeploy","margin":"4"}, {"onclick":"cloudFoundryUndeployFromListButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
 		    wire: ["wm.Wire", {"source":"cloudFoundryAppList.emptySelection","targetProperty":"disabled"}, {}]

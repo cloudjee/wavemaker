@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -43,7 +42,6 @@ import com.wavemaker.runtime.data.DataServiceInternal;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
 import com.wavemaker.tools.ant.ServiceCompilerTask;
@@ -73,10 +71,6 @@ public class DataModelManager {
     private static final String QUERIES_NODE = "Queries";
 
     public static final String HSQL_SAMPLE_DB_SUB_DIR = "data";
-
-    public static final String HSQLDB = ":hsqldb:";
-
-    public static final String HSQLFILE_PROP = "hsqldbFile";
 
     private final OneToManyMap<String, String> dataModelNames = new OneToManyMap<String, String>();
 
@@ -119,9 +113,9 @@ public class DataModelManager {
 
     }
 
-    public void importDatabase(String username, String password, String connectionUrl, String serviceId, String packageName, String tableFilter,
-        String schemaFilter, String catalogName, String driverClassName, String dialectClassName, String revengNamingStrategyClassName,
-        boolean impersonateUser, String activeDirectoryDomain) {
+    public void importDatabase(String username, String password, ConnectionUrl connectionUrl, String serviceId, String packageName,
+        String tableFilter, String schemaFilter, String catalogName, String driverClassName, String dialectClassName,
+        String revengNamingStrategyClassName, boolean impersonateUser, String activeDirectoryDomain) {
 
         this.serviceManager.validateServiceId(serviceId);
 
@@ -129,52 +123,22 @@ public class DataModelManager {
         Folder classesDir;
         classesDir = this.projectManager.getCurrentProject().getClassOutputFolder();
 
-        ImportDB importer = null;
-
+        ImportDB importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
+            driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir, classesDir, false);
         try {
-
-            importer = runImporter(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, catalogName,
-                driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain, outputDir, classesDir,
-                false);
-
             registerService(serviceId, importer);
-
-            String hsqldbFileName = null;
-
-            // Add the hsqldb file name to the property file
-            if (connectionUrl.contains(HSQLDB)) {
-                int n = connectionUrl.indexOf("/data") + 6;
-                String partialCxn = connectionUrl.substring(n);
-                int k = partialCxn.indexOf(';');
-                hsqldbFileName = partialCxn.substring(0, k);
-
-                Properties props = importer.getProperties();
-                props.setProperty(HSQLFILE_PROP, hsqldbFileName);
-                getDataModel(serviceId).writeConnectionProperties(props);
-            }
-
-        } catch (RuntimeException ex) {
-            // cftempfix - uncommented the following lines
-            /*
-             * try { // if import fails, don't leave artifacts from // import attempt around
-             * this.serviceManager.deleteService(serviceId); } catch (IOException ignore) { } catch
-             * (NoSuchMethodException ignore) { }
-             */
-
-            throw ex;
+            getDataModel(serviceId).writeConnectionProperties(connectionUrl.rewriteProperties(importer.getProperties()));
         } finally {
-            if (importer != null) {
-                importer.dispose();
-            }
+            importer.dispose();
         }
     }
 
-    public String getExportDDL(String username, String password, String dbms, String connectionUrl, String serviceId, String schemaFilter,
+    public String getExportDDL(String username, String password, String dbms, ConnectionUrl connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
         return getExportDDL(username, password, null, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
     }
 
-    public String getExportDDL(String username, String password, String dbName, String dbms, String connectionUrl, String serviceId,
+    public String getExportDDL(String username, String password, String dbName, String dbms, ConnectionUrl connectionUrl, String serviceId,
         String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
 
         ExportDB exporter = getExporter(username, password, dbName, dbms, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
@@ -195,68 +159,45 @@ public class DataModelManager {
         }
     }
 
-    public String exportDatabase(String username, String password, String dbType, String connectionUrl, String serviceId, String schemaFilter,
+    public String exportDatabase(String username, String password, String dbType, ConnectionUrl connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
         return exportDatabase(username, password, null, dbType, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName,
             revengNamingStrategyClassName, overrideTable);
     }
 
-    public String exportDatabase(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId,
+    public String exportDatabase(String username, String password, String dbName, String dbType, ConnectionUrl connectionUrl, String serviceId,
         String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
-
-        if (connectionUrl.contains(HSQLDB)) {
-            connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
-        }
 
         ExportDB exporter = getExporter(username, password, dbName, dbType, connectionUrl, serviceId, schemaFilter, driverClassName,
             dialectClassName, overrideTable);
-
-        String rtn = "";
-
-        String hsqldbFileName = null;
-
-        if (connectionUrl.contains(HSQLDB)) {
-            hsqldbFileName = this.extractHsqlDBFileName(connectionUrl);
-        }
-
-        exporter.setExportToDB(true);
-
         try {
+            exporter.setExportToDB(true);
             exporter.run();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder rtn = new StringBuilder();
             for (Throwable th : exporter.getErrors()) {
-                sb.append(th.getMessage());
-                sb.append(SystemUtils.getLineBreak());
-                sb.append(SystemUtils.getLineBreak());
+                rtn.append(th.getMessage());
+                rtn.append(SystemUtils.getLineBreak());
+                rtn.append(SystemUtils.getLineBreak());
             }
-            rtn = sb.toString().trim();
-
-            if (connectionUrl.contains(HSQLDB)) {
-                Properties props = exporter.getProperties();
-                props.setProperty(HSQLFILE_PROP, hsqldbFileName);
-                getDataModel(serviceId).writeConnectionProperties(props);
-            } else {
-                getDataModel(serviceId).writeConnectionProperties(exporter.getProperties());
-            }
+            getDataModel(serviceId).writeConnectionProperties(connectionUrl.rewriteProperties(exporter.getProperties()));
+            return rtn.toString().trim();
         } catch (RuntimeException ex) {
             throw com.wavemaker.runtime.data.util.DataServiceUtils.unwrap(ex);
         } finally {
             exporter.dispose();
         }
-
-        return rtn;
     }
 
-    public void reImport(String dataModelName, String username, String password, String connectionUrl, String tableFilter, String schemaFilter,
-        String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser, String activeDirectoryDomain) {
-
+    public void reImport(String dataModelName, String username, String password, ConnectionUrl connectionUrl, String tableFilter,
+        String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
+        String activeDirectoryDomain) {
         reImport(getDataModel(dataModelName), username, password, connectionUrl, dataModelName, tableFilter, schemaFilter, driverClassName,
             dialectClassName, revengNamingStrategyClassName, null, impersonateUser, activeDirectoryDomain);
     }
 
-    public void reImport(DataModelConfiguration cfg, String username, String password, String connectionUrl, String serviceId, String tableFilter,
-        String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, String catalogName,
-        boolean impersonateUser, String activeDirectoryDomain) {
+    private void reImport(DataModelConfiguration cfg, String username, String password, ConnectionUrl connectionUrl, String serviceId,
+        String tableFilter, String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName,
+        String catalogName, boolean impersonateUser, String activeDirectoryDomain) {
 
         ImportDB importer = null;
 
@@ -329,17 +270,7 @@ public class DataModelManager {
             DataModelConfiguration dmc = getDataModel(serviceId);
             dmc.addUserQueries(queries);
             save(serviceId, dmc, false, false);
-
-            String hsqldbFileName = null;
-
-            // Add the hsqldb file name to the property file
-            if (connectionUrl.contains(HSQLDB)) {
-                hsqldbFileName = extractHsqlDBFileName(connectionUrl);
-
-                Properties props = importer.getProperties();
-                props.setProperty(HSQLFILE_PROP, hsqldbFileName);
-                getDataModel(serviceId).writeConnectionProperties(props);
-            }
+            getDataModel(serviceId).writeConnectionProperties(connectionUrl.rewriteProperties(importer.getProperties()));
 
         } finally {
             if (importer != null) {
@@ -378,69 +309,47 @@ public class DataModelManager {
     }
 
     public void newDataModel(String dataModelName) {
-
         this.serviceManager.validateServiceId(dataModelName);
-
         Folder destDir = getServicePathFolder(dataModelName);
-
         String serviceClassPackage = DataServiceUtils.getDefaultPackage(dataModelName);
         String dataPackage = DataServiceUtils.getDefaultDataPackage(dataModelName);
-
         DataServiceUtils.createEmptyDataModel(destDir, dataModelName, serviceClassPackage, dataPackage, this.exporterFactory);
-
         DataModelConfiguration cfg = initialize(dataModelName, true);
-
         String serviceClass = StringUtils.fq(serviceClassPackage, StringUtils.upperCaseFirstLetter(dataModelName));
-
         this.serviceManager.defineService(new com.wavemaker.tools.data.DataServiceDefinition(dataModelName, cfg, this.serviceManager, serviceClass));
-
         save(dataModelName, cfg, true, true);
     }
 
     public void updateEntity(String dataModelName, String entityName, EntityInfo entity, boolean save) {
-
         DataModelConfiguration mgr = null;
-
         mgr = getDataModel(dataModelName);
-
         mgr.updateEntity(entityName, entity);
-
         if (save) {
             save(dataModelName, mgr);
         }
     }
 
     public void deleteEntity(String dataModelName, String entityName) {
-
         if (ObjectUtils.isNullOrEmpty(dataModelName)) {
             throw new IllegalArgumentException("dataModelName must bet set");
         }
-
         if (ObjectUtils.isNullOrEmpty(entityName)) {
             throw new IllegalArgumentException("entityName must be set");
         }
-
         DataModelConfiguration cfg = getDataModel(dataModelName);
-
         cfg.deleteEntity(entityName);
-
         save(dataModelName, cfg);
     }
 
     public void deleteQuery(String dataModelName, String queryName) {
-
         if (ObjectUtils.isNullOrEmpty(dataModelName)) {
             throw new IllegalArgumentException("dataModelName must bet set");
         }
-
         if (ObjectUtils.isNullOrEmpty(queryName)) {
             throw new IllegalArgumentException("queryName must be set");
         }
-
         DataModelConfiguration cfg = getDataModel(dataModelName);
-
         cfg.deleteQuery(queryName);
-
         save(dataModelName, cfg, false, false);
     }
 
@@ -453,7 +362,6 @@ public class DataModelManager {
     public void updateRelated(String dataModelName, String entityName, RelatedInfo[] related) {
         DataModelConfiguration mgr = getDataModel(dataModelName);
         mgr.updateRelated(entityName, Arrays.asList(related));
-
         save(dataModelName, mgr);
     }
 
@@ -461,7 +369,6 @@ public class DataModelManager {
         initialize(false);
         final DataModelConfiguration mgr = getDataModel(dataModelName);
         mgr.updateQuery(query);
-
         // no need to compile because checkQuery, which runs
         // right before, already compiled
         save(dataModelName, mgr, false, false);
@@ -572,7 +479,7 @@ public class DataModelManager {
         initialize(true);
     }
 
-    private ExportDB getExporter(String username, String password, String dbName, String dbType, String connectionUrl, String serviceId,
+    private ExportDB getExporter(String username, String password, String dbName, String dbType, ConnectionUrl connectionUrl, String serviceId,
         String schemaFilter, String driverClassName, String dialectClassName, boolean overrideTable) {
 
         // composite classes must be compiled
@@ -811,9 +718,10 @@ public class DataModelManager {
         return rtn;
     }
 
-    private ImportDB runImporter(String username, String password, String connectionUrl, String serviceId, String packageName, String tableFilter,
-        String schemaFilter, String catalogName, String driverClassName, String dialectClassName, String revengNamingStrategyClassName,
-        boolean impersonateUser, String activeDirectoryDomain, Folder outputDir, Folder classesDir, boolean reImport) {
+    private ImportDB runImporter(String username, String password, ConnectionUrl connectionUrl, String serviceId, String packageName,
+        String tableFilter, String schemaFilter, String catalogName, String driverClassName, String dialectClassName,
+        String revengNamingStrategyClassName, boolean impersonateUser, String activeDirectoryDomain, Folder outputDir, Folder classesDir,
+        boolean reImport) {
 
         if (ObjectUtils.isNullOrEmpty(packageName)) {
             throw new IllegalArgumentException("package must be set");
@@ -904,32 +812,12 @@ public class DataModelManager {
 
     }
 
-    private Integer getBatchSize(String connectionUrl) {
-        if (connectionUrl != null && connectionUrl.toLowerCase().startsWith("jdbc:hsqldb:")) {
+    private Integer getBatchSize(ConnectionUrl connectionUrl) {
+        if (connectionUrl.isHsqldb()) {
             // HSQL has poor batch errors, disable
             return 0;
         }
         return null;
-    }
-
-    public String getWebAppRoot() {
-        return ((LocalFolder) this.projectManager.getCurrentProject().getWebAppRootFolder()).getLocalFile().getPath();
-    }
-
-    private String reWriteCxnUrlForHsqlDB(String connectionUrl) {
-        // File webAppRoot = projectManager.getCurrentProject().getWebAppRoot();
-
-        // return JDBCUtils.reWriteConnectionUrl(webAppRoot.getPath() + "/" + HSQL_SAMPLE_DB_SUB_DIR,
-        // connectionUrl);
-
-        return JDBCUtils.reWriteConnectionUrl(connectionUrl, getWebAppRoot());
-    }
-
-    private String extractHsqlDBFileName(String connectionUrl) {
-        int n = connectionUrl.indexOf("/data") + 6;
-        String partialCxn = connectionUrl.substring(n);
-        int k = partialCxn.indexOf(';');
-        return partialCxn.substring(0, k);
     }
 
     public static Folder getJavaDir(Folder dir, String pathname) {

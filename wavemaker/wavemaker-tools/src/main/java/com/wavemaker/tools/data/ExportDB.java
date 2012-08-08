@@ -197,7 +197,7 @@ public class ExportDB extends BaseDataModelSetup {
 
                 prepareForExport(this.exportToDatabase);
 
-                Connection conn = JDBCUtils.getConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+                Connection conn = JDBCUtils.getConnection(this.connectionUrl.toString(), this.username, this.password, this.driverClassName);
 
                 Dialect dialect = Dialect.getDialect(connectionProperties);
 
@@ -296,21 +296,22 @@ public class ExportDB extends BaseDataModelSetup {
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
         String schemaName = t.v1, catalogName = t.v2;
 
+        String connectionUrl = this.connectionUrl.toString();
         String url;
         String urlDBName;
         if (WMAppContext.getInstance().isCloudFoundry()) {
-            url = this.connectionUrl;
+            url = connectionUrl;
             catalogName = this.dbName;
         } else {
             urlDBName = getDatabaseNameFromConnectionUrl();
-            url = this.connectionUrl;
+            url = connectionUrl;
 
             if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
                 throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
             }
 
             if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
-                url = this.connectionUrl.substring(0, this.connectionUrl.indexOf(urlDBName));
+                url = connectionUrl.substring(0, connectionUrl.indexOf(urlDBName));
                 if (isPostgres()) {
                     url += "postgres";
                 }
@@ -361,7 +362,7 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     private String getDatabaseNameFromConnectionUrl() {
-        return JDBCUtils.getMySQLDatabaseName(this.connectionUrl);
+        return JDBCUtils.getMySQLDatabaseName(this.connectionUrl.toString());
     }
 
     private Tuple.Two<String, String> getMappedSchemaAndCatalog() {

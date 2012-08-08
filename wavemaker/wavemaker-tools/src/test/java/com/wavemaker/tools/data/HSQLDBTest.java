@@ -56,7 +56,7 @@ public class HSQLDBTest {
 
         TestDBConnection t = new TestDBConnection();
         t.setUsername("sa");
-        t.setConnectionUrl(url);
+        t.setConnectionUrl(new ConnectionUrl(url));
         t.run();
     }
 
@@ -73,7 +73,7 @@ public class HSQLDBTest {
 
         TestDBConnection t = new TestDBConnection();
         t.setUsername("sa");
-        t.setConnectionUrl(url);
+        t.setConnectionUrl(new ConnectionUrl(url));
         try {
             t.run();
         } catch (DataServiceRuntimeException ex) {
@@ -98,7 +98,7 @@ public class HSQLDBTest {
 
         TestDBConnection t = new TestDBConnection();
         t.setUsername("sa");
-        t.setConnectionUrl(url);
+        t.setConnectionUrl(new ConnectionUrl(url));
         try {
             t.run();
         } catch (DataServiceRuntimeException ex) {
@@ -224,7 +224,7 @@ public class HSQLDBTest {
 
             ImportDB importer = new ImportDB();
             importer.setUsername("sa");
-            importer.setConnectionUrl(url);
+            importer.setConnectionUrl(new ConnectionUrl(url));
             importer.testConnection();
 
             Folder folder = new LocalFolder(outputDir);

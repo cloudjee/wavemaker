@@ -69,7 +69,27 @@ public class CloudFoundryService {
             }
         });
     }
+    
+    public void stopApplication (String token, String target, final String applicationName) {
+    	execute(token, target, "Failed to stop application.", new CloudFoundryRunnable() {
 
+    		@Override 
+    		public void run(CloudFoundryClient client){
+    			client.stopApplication(applicationName);
+    		}
+    	});
+    }
+
+    public void startApplication (String token, String target, final String applicationName) {
+    	execute(token, target, "Failed to start application.", new CloudFoundryRunnable() {
+
+    		@Override 
+    		public void run(CloudFoundryClient client){
+    			client.startApplication(applicationName);
+    		}
+    	});
+    }
+    
     public List<CloudService> listServices(String token, String target) {
         return execute(token, target, "Failed to retrieve CloudFoundry service list.", new CloudFoundryCallable<List<CloudService>>() {
 
@@ -184,24 +204,27 @@ public class CloudFoundryService {
 
     @HideFromClient
     private <V> V execute(String token, String target, String errorMessage, CloudFoundryCallable<V> callable) {
-        try {
-            if (!StringUtils.hasLength(token)) {
-                token = getAuthenticationToken();
-            }
-            if (!StringUtils.hasLength(target)) {
-                target = CloudFoundryUtils.getControllerUrl();
-            }
-            CloudFoundryClient client = new CloudFoundryClient(token, target);
-            return callable.call(client);
-        } catch (CloudFoundryException ex) {
-            if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
-            } else {
-                throw new WMRuntimeException(errorMessage, ex);
-            }
-        } catch (MalformedURLException ex) {
-            throw new WMRuntimeException(errorMessage, ex);
-        }
+    	try {
+    		if (!StringUtils.hasLength(token)) {
+    			token = getAuthenticationToken();
+    		}
+    		if (!StringUtils.hasLength(target)) {
+    			target = CloudFoundryUtils.getControllerUrl();
+    		}
+    		CloudFoundryClient client = new CloudFoundryClient(token, target);
+    		return callable.call(client);
+    	} catch (CloudFoundryException ex) {
+    		if (ex.getDescription().contains("Not enough memory")){
+    			throw new WMRuntimeException(errorMessage + " " + ex.getDescription());
+    		}
+    		if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
+    			throw new WMRuntimeException(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
+    		} else {
+    			throw new WMRuntimeException(errorMessage, ex);
+    		}
+    	} catch (MalformedURLException ex) {
+    		throw new WMRuntimeException(errorMessage, ex);
+    	}
     }
 
     private String getAuthenticationToken() {
