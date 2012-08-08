@@ -41,12 +41,14 @@ public class MergeUserWebXmlTask {
         File userWebXml = this.workFolder.getFile(ProjectConstants.USER_WEB_XML);
         File webXml = this.workFolder.getFile(ProjectConstants.WEB_XML);
 
-        return mergeWebXml(webXml.getContent().asString(), userWebXml.getContent().asString());
+        String newContent = mergeWebXml(webXml.getContent().asString(), userWebXml.getContent().asString());
+        webXml.getContent().write(newContent);
+        return newContent;
     }
 
     /**
      * Merge web.xml content with user specified content.
-     * 
+     *
      * @param webXmlContent the source web.xml content. This should be valid XML starting with a
      *        <tt>&lt;web-app&gt;</tt> element. If the content contains existing user specified content (between
      *        {@link #START_MARKER} and {@link #END_MARKER}) it will be replaced, otherwise user content will be
