@@ -193,7 +193,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         if (!this.debugId) this.debugId = [];
 
         /* STEP 1: Setup the _debug object used by the wm.debugger.ServicePanel */
-        if (eventType != "serviceCall" && eventType != "serviceCallResponse") {
+        if ((eventType != "serviceCall" && eventType != "serviceCallResponse")) {
             this._debug = {
                 trigger: callingMethod || eventType,
                 eventName: eventType,
@@ -227,19 +227,21 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 eventType: eventType,
                 id: app.debugDialog.newLogEvent({
                     eventType: "autoUpdate",
-                    eventName: "autoUpdate",
+                    sourceDescription: "An input has changed",
+                    resultDescription: "Because autoUpdate is set, " + this.getRuntimeId() + ".update() was called",
                     method: "update",
                     affectedId: this.getRuntimeId(),
                     firingId: this.getRuntimeId()
                 })
             });
 
-        } else if (eventType == "startUpdate") {
+        } else if (eventType == "start") {
             this.debugId.push({
                 eventType: eventType,
                 id: app.debugDialog.newLogEvent({
-                    eventType: "startUpdate",
-                    eventName: "startUpdate",
+                    eventType: "start",
+                    sourceDescription: "Owner has loaded",
+                    resultDescription: "Because startUpdate is set, " + this.getRuntimeId() + ".update() was called",                    
                     method: "update",
                     affectedId: this.getRuntimeId(),
                     firingId: this.owner.getRuntimeId()
@@ -253,7 +255,8 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 eventType: eventType,
                 id: app.debugDialog.newLogEvent({
                     eventType: "autoUpdate",
-                    eventName: "autoUpdate",
+                    sourceDescription: "An input has initialized",
+                    resultDescription: "Because autoUpdate is set, " + this.getRuntimeId() + ".update() was called",
                     method: "update",
                     affectedId: this.getRuntimeId(),
                     firingId: this.owner.getRuntimeId()
@@ -267,7 +270,8 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 eventType: eventType,
                 id: app.debugDialog.newLogEvent({
                     eventType: "update",
-                    eventName: callingMethod || "update",
+                    sourceDescription: (callingMethod ? callingMethod + "() called " : "") + this.getRuntimeId() + ".update()",
+                    resultDescription: "Processing request to fire service variable",
                     method: "update",
                     affectedId: this.getRuntimeId(),
                     firingId: ""
@@ -282,8 +286,9 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 eventType: eventType,
                 id: app.debugDialog.newLogEvent({
                     eventType: "serviceCall",
-                    eventName: "update",
-                    method: "<i>CallingServer</i>",
+                    sourceDescription: this.getRuntimeId() + ".update()",
+                    resultDescription: "Sending request to server",
+                    method: "request",
                     affectedId: this.getRuntimeId(),
                     firingId: this.getRuntimeId()
                 })
@@ -299,7 +304,8 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 eventType: eventType,
                 id: app.debugDialog.newLogEvent({
                     eventType: "serviceCallResponse",
-                    eventName: "<i>CallingServer</i>",
+                    sourceDescription: "Response received from server",
+                    resultDescription: errorMsg ? "Calling " + this.getRuntimeId() + ".onError()" : "Calling " + this.getRuntimeId() + ".onSuccess()",
                     method: errorMsg ? "processError" : "processResult",
                     affectedId: this.getRuntimeId(),
                     firingId: this.getRuntimeId()
@@ -319,7 +325,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         if (this.debugId && this.debugId.length) {
             var debugId = this.debugId.pop();
             if (debugId.eventType == eventType) {
-                app.debugDialog.endLogEvent(this.debugId);
+                app.debugDialog.endLogEvent(debugId.id);
             }
         }
         if (eventType == "serviceCallResponse") {
@@ -336,9 +342,9 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     /* Add logging to doStartUpdate */
     doStartUpdate: function() {
         if (this.canStartUpdate()) {
-            if (djConfig.isDebug && app.debugDialog) this.log("startUpdate");
+            if (djConfig.isDebug && app.debugDialog) this.log("start");
             this.inherited(arguments);
-            if (djConfig.isDebug && app.debugDialog) this.endLog("startUpdate");
+            if (djConfig.isDebug && app.debugDialog) this.endLog("start");
         }
     },
     doAutoUpdate: function() {
@@ -351,6 +357,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         }
     },
     request: function(inArgs, optionalOp, optionalDeferred) {
+
         if (djConfig.isDebug && app.debugDialog && this._debug) this._debug.request = this.getDebugArgs();
         if (djConfig.isDebug && app.debugDialog) {
             this.log("serviceCall", null, optionalOp);
@@ -415,7 +422,13 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     /* Adds logging to result method */
     result: function(inResult) {
         delete this._lastError;
-        if (app.debugDialog && djConfig.isDebug) this.log("serviceCallResponse");
+        if (app.debugDialog) {
+            this.log("serviceCallResponse");
+            if (this._jsonRpcServiceDeferred && this._jsonRpcServiceDeferred.xhr) {
+                var text = this._jsonRpcServiceDeferred.xhr.responseText;
+                this._lastResponse = (text || "").length > 1000 ? text.substring(0,1000) + "..." : text; 
+            }
+        }
         var result = this.inherited(arguments);
         if (app.debugDialog && djConfig.isDebug) this.endLog("serviceCallResponse");
         return inResult;

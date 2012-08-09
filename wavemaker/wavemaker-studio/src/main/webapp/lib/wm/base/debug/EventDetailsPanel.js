@@ -29,73 +29,78 @@ dojo.declare("wm.debug.EventDetailsPanel", wm.Layer, {
  * app.debugDialog.serviceGridPanel.activate
  */
     getRoot: function() {
-	return this;
+    return this;
     },
-	getRuntimeId: function(inId) {
-		inId = this.name + (inId ? "." + inId : "");
-		return this.owner != app.pageContainer ? this.owner.getRuntimeId(inId) : inId;
-	},
-	getId: function(inName) {
-		return inName;
-	},
+    getRuntimeId: function(inId) {
+        inId = this.name + (inId ? "." + inId : "");
+        return this.owner != app.pageContainer ? this.owner.getRuntimeId(inId) : inId;
+    },
+    getId: function(inName) {
+        return inName;
+    },
 
 
 
     postInit: function() {
-	this.inherited(arguments);
-	this.createComponents({
-	    eventListVar:["wm.Variable", {type: "EntryData", isList: true}],
-	    html: ["wm.Html", {margin: "8", width: "100%", height: "80px", autoSizeHeight:1}],
-	    eventsGrid: ["wm.DojoGrid", 
-				 {width: "100%", height: "100%","columns":[
-				     {"show":true,"field":"dataValue","title":"Type","width":"100px","align":"left"},
-				     {"show":true,"field":"name","title":"Event","width":"100%","align":"left"}
-				 ],
-				  "margin":"4"}, {}, {
-				      binding: ["wm.Binding", {"name":"binding"}, {}, {
-					  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"eventListVar","targetProperty":"dataSet"}, {}]
-				      }]
-				  }]
-	}, this);
+        this.inherited(arguments);
+        this.createComponents({
+            eventListVar:["wm.Variable", {type: "debugEventType", isList: true}],
+
+            html: ["wm.Html", {margin: "8", width: "100%", height: "80px", autoSizeHeight:1}],
+
+            eventsGrid: ["wm.DojoGrid", 
+                 {width: "100%", height: "100%","columns":[
+                        {show:!wm.isMobile,field:"order", title:"Order", width: "40px", formatFunc:"getRowNumb"},
+                        {show:!wm.isMobile,field:"eventType", title:"Type", width: "100px", formatFunc:"getEventType"},
+                        {show: true, field: "sourceDescription", width: "60%", title: "Cause of Action"},
+                        {show: true, field: "resultDescription", width: "100%", title: "Action Taken"},
+                         {"show":!wm.isMobile,"field":"time","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
+                          "formatProps": {
+                          "dateType": "time",
+                          formatLength: "medium"
+                          }},
+                         {"show":!wm.isMobile,"field":"duration","title":"Length (ms)","width":"80px","align":"left","formatFunc": "wm_number_formatter"}
+                                      ],
+                              "margin":"4"}, {}, {
+                                  binding: ["wm.Binding", {"name":"binding"}, {}, {
+                                  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"eventListVar","targetProperty":"dataSet"}, {}]
+                                  }]
+                              }]
+                
+
+        }, this);
     },
-    getResultText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
-	return wm.debug.EventsPanel.prototype.getResultText(inValue, rowId, cellId, cellField, cellObj, rowObj);
+    getEventType: function( inValue, rowId, cellId, cellField, cellObj, rowObj) {
+        return wm.debug.EventsPanel.prototype.getEventType(inValue, rowId, cellId, cellField, cellObj, rowObj);
     },
-    getSourceText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
-	return wm.debug.EventsPanel.prototype.getSourceText(inValue, rowId, cellId, cellField, cellObj, rowObj);
+    getRowNumb: function( inValue, rowId, cellId, cellField, cellObj, rowObj) {
+        return rowId + 1;
     },
     inspect: function(inComponent, inRequestData, inEventObj) {
-	if (!inEventObj) {
-	    this.hide();
-	    return;
-	} 
-	this.show();
+        if (!inEventObj) {
+            this.hide();
+            return;
+        }
+        this.show();
 
-	var id = inEventObj.id;
+        var id = inEventObj.id;
 
-	var causeList = inEventObj.causeList || [];
-	causeList.push({dataValue:id});
-	var eventChain = [];	
+        var causeList = inEventObj.causeList || [];
+        causeList.push({
+            dataValue: id
+        });
+        var eventChain = [];
+        var resultEvtHash = {};
+        var lastEvt = "";
+        var itemList = [];
+        for (var i = 0; i < causeList.length; i++) {
+            var item = wm.debug.EventsPanel.prototype.findEventById(causeList[i].dataValue);
+            itemList.push(dojo.clone(item));
+        }
+        this.eventListVar.setData(itemList);
+        this.html.setHtml("The grid below shows the chain of events that led to the selected event occuring");
+    },
+    showDetails: function() {
 
-	    var lastEvt = "";
-	    for (var i = 0; i < causeList.length; i++) {
-		var item = wm.debug.EventsPanel.prototype.findEventById(causeList[i].dataValue);
-		if (item) {
-		    var sourceEvt = wm.debug.EventsPanel.prototype.getSourceText(null, null, null, null, null, item);
-		    var resultEvt = wm.debug.EventsPanel.prototype.getResultText(null, null, null, null, null, item);
-		    var evtType = wm.debug.EventsPanel.prototype.getEventType(null, null, null, null, null, item);;
-		    if (sourceEvt != lastEvt) {
-			eventChain.push({dataValue: evtType,
-					 name: sourceEvt});
-		    }
-		    if (sourceEvt != resultEvt) {
-			eventChain.push({dataValue: evtType,
-					 name: resultEvt});
-			var lastEvt = resultEvt;
-		    }
-		}
-	}
-	this.eventListVar.setData(eventChain);
-	this.html.setHtml("The grid below shows the chain of events that led to the selected event occuring");
     }
 });

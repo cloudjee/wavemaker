@@ -782,14 +782,31 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		});
 		w.connectWire();
 	},
-	setAutoDataSet: function(inAutoDataSet) {
-		this.autoDataSet = inAutoDataSet;
-		if (this.autoDataSet) {
-			this.createDataSet();
-			this.update();
-		}
-	},
-	_getFormSource: function(inForm) {
+    setAutoDataSet: function(inAutoDataSet) {
+        this.autoDataSet = inAutoDataSet;
+        if (this.autoDataSet) {
+            this.createDataSet();
+            if (this.dataSet) {
+                var eventId = this.debugAutoSetData();
+                this.update();                
+                if (eventId) app.debugDialog.endLogEvent(eventId);
+            }
+        }
+    },
+    debugAutoSetData: function() {
+        if (app.debugDialog) {
+            var eventId = app.debugDialog.newLogEvent({
+                eventType: "update",
+                sourceDescription: "Initializing " + this.getRuntimeId(),
+                resultDescription: this.getRuntimeId() + ".setAutoDataSet() called to populate Lookup editor from server",
+                affectedId: this.getRuntimeId(),
+                firingId: this.getRuntimeId(),
+                method: "update"
+            });
+            return eventId;
+        }
+    },
+    	_getFormSource: function(inForm) {
 	    if (this.isAncestorInstanceOf(wm.RelatedEditor)) {
 		var w = wm.data.getPropWire(inForm, "dataSet");
 		return w && w.source && this.getRoot().getValueById(w.source);

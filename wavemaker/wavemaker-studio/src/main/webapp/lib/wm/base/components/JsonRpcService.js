@@ -259,17 +259,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.ensureArgs(inMethod, inArgs);
 		//if (wm.logging)
 	        this.debugLastMethod = inMethod;
-		if (djConfig.isDebug && !dojo.isFF) {
-		    if (console.groupCollapsed)
-			console.groupCollapsed("JsonRpcService.invoke method:", inMethod);
-		    else
-			console.group("JsonRpcService.invoke method:", inMethod);
-		    if (inArgs && inArgs.length) {
-		      console.log("Arguments:");
-		      console.log(inArgs); 
-		    }
-		    console.groupEnd();
-		}
+		
 		this.result = null;
 		this.error = null;
 
@@ -293,7 +283,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			d = this._service.callRemote(inMethod, inArgs || []);
 			d.addCallbacks(dojo.hitch(this, "onResult"), dojo.hitch(this, "onError"));
 		}
-		
+		if (invoker && app.debugDialog) invoker._jsonRpcServiceDeferred = d;
 	    wm.inflight.add(d, this.service, this.name, inArgs, inMethod, invoker);
 		this.inflight = true;
 		return d;
@@ -406,11 +396,12 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		    wm.connectionTimeout = matches ? Number(matches[1]) : 30;
 		    return;
 		}
-
+        
 		if (console.groupCollapsed)
 	            console.groupCollapsed("Service Call Failed: " + this.name + "." + this.debugLastMethod);
 		else
 	            console.group("Service Call Failed: " + this.name + "." + this.debugLastMethod);                              
+
 		if (message)
 		  console.error(message);                                                                               
                 console.groupEnd();    

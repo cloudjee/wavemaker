@@ -128,10 +128,11 @@ dojo.declare("wm.Page", wm.Component, {
 	    } else {
 		if (djConfig.isDebug) {
 		    this.debugId = app.debugDialog.newLogEvent({eventType: "loadComponents",
-								eventName: "loadComponents",
-								method: "loadComponents",
-								affectedId: this.getRuntimeId(),
-								firingId: this.getRuntimeId()});
+								                        sourceDescription: "Page Loading",
+                                                        resultDescription: this.name + " page's widgets and components initialized",
+                        								method: "loadComponents",
+                        								affectedId: this.getRuntimeId(),
+                        								firingId: this.getRuntimeId()});
 		}
 		this.loadComponents(widgets, null);
 		if (this.debugId) {
@@ -185,12 +186,13 @@ dojo.declare("wm.Page", wm.Component, {
 			//this.root.leafFirstRenderCss();
 			this.reflow();
 		    }
-		    if (djConfig.isDebug) {
-			this.debugId = app.debugDialog.newLogEvent({eventType: "start",
-								    eventName: "start",
-								    method: "start",
-								    affectedId: this.getRuntimeId(),
-								    firingId: this.getRuntimeId()});
+		    if (app.debugDialog) {
+    			this.debugId = app.debugDialog.newLogEvent({eventType: "start",
+                                                            sourceDescription: "",
+                        								    resultDescription: this.name + ".start()",
+                        								    method: "start",
+                        								    affectedId: this.getRuntimeId(),
+                        								    firingId: this.getRuntimeId()});
 		    }
 
 		    var backState = this.owner ? this.owner._restoreBackState : undefined; // owner is PageContainer

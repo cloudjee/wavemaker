@@ -69,48 +69,58 @@ dojo.declare("wm.Wire", wm.Component, {
 		return true;
 	},
     debugBindingEvent: function(inValue) {
-	try {
-	/* Ignore expressions that are just literals; they provide lots of initialization "events" but no interaction events */
-	if (djConfig.isDebug && !this.isAncestor(app.debugDialog) && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
-	    var firingId = "";
-	    if (this.source && !this.expression) {
-		var source = this.source;
-		wm.disableLazyLoad = true;
-		var sourceObj = this.getValueById(source);
-		wm.disableLazyLoad = false;
-		while (source && sourceObj instanceof wm.Component == false) {
-		    if (source.indexOf(".") != -1) {
-			source = source.substring(0, source.lastIndexOf("."));
-			sourceObj = this.getValueById(source);
-		    } else {
-			break;
-		    }
-		}
-		if (sourceObj) {
-		    firingId =  sourceObj.getRuntimeId();
-		} else {
-		    firingId = this.source + " not found";
-		}
-	    } else if (this.expression) {
-		firingId = "expression";
-	    }	    
-		
-	    this.debugId = app.debugDialog.newLogEvent({eventType: "bindingEvent",
-							eventName: "Binding",
-							affectedId: this.target.getRuntimeId(),
-							firingId: firingId,
-							boundProperty: this.targetProperty,
-							boundValue: inValue instanceof wm.Component ? inValue.toString() : (typeof inValue == "object" && inValue !== null && inValue.length) ? "[ARRAY]" : inValue,
-							boundSource: this.source,
-							boundExpression: this.expression});
-	}
-	} catch(e) {}
+        try { /* Ignore expressions that are just literals; they provide lots of initialization "events" but no interaction events */
+            if (djConfig.isDebug && !this.isAncestor(app.debugDialog) && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
+                var firingId = "";
+                if (this.source && !this.expression) {
+                    var source = this.source;
+                    wm.disableLazyLoad = true;
+                    var sourceObj = this.getValueById(source);
+                    wm.disableLazyLoad = false;
+                    while (source && sourceObj instanceof wm.Component == false) {
+                        if (source.indexOf(".") != -1) {
+                            source = source.substring(0, source.lastIndexOf("."));
+                            sourceObj = this.getValueById(source);
+                        } else {
+                            break;
+                        }
+                    }
+                    if (sourceObj) {
+                        firingId = sourceObj.getRuntimeId();
+                    } else {
+                        firingId = this.source + " not found";
+                    }
+                } else if (this.expression) {
+                    firingId = "expression";
+                }
+                if (inValue instanceof wm.Component) {
+                    inValue = inValue.getRuntimeId();
+                } else if (typeof inValue == "string") {
+                    inValue = '"' + inValue + '"';
+                } else {
+                    inValue = String(inValue);
+                }
+
+                this.debugId = app.debugDialog.newLogEvent({
+                    eventType: "binding",
+                    sourceDescription: this.owner._loading ? "Binding initialized" : (this.expression ? "Bind expression has changed" : this.source + " has changed"),
+                    resultDescription: this.target.getRuntimeId() + ".setValue(\"" + this.targetProperty + "\", " + inValue + ")",
+                    eventName: this.expression ? "Bind expression has changed" : this.source + " has changed",
+                    affectedId: this.target.getRuntimeId(),
+                    firingId: firingId,
+                    boundProperty: this.targetProperty,
+                    boundValue: inValue instanceof wm.Component ? "${" + inValue.getRuntimeId() + "}" : (typeof inValue == "object" && inValue !== null && inValue.length) ? "[ARRAY]" : inValue,
+                    boundSource: this.source,
+                    boundExpression: this.expression
+                });
+            }
+        } catch (e) {}
     },
     endDebugBindingEvent: function() {
-	if (this.debugId) {
-	    app.debugDialog.endLogEvent(this.debugId);
-	    delete this.debugId;
-	}
+        if (this.debugId) {
+            app.debugDialog.endLogEvent(this.debugId);
+            delete this.debugId;
+        }
     },
 	_sourceValueChanged: function(inValue) {
 		if (wm.bindingsDisabled)
