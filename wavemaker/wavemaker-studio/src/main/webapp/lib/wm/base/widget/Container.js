@@ -314,12 +314,14 @@ wm.define("wm.Container", wm.Control, {
 	},
 	removeControl: function(inControl) {
 		//this.dom.remove(inControl.dom);
-		for (var i=0, c; c=this.c$[i]; i++){
-			if (c == inControl) {
-				this.c$.splice(i, 1);
-				return i;
-			}
-		}
+        if (this.c$) {
+    		for (var i=0, c; c=this.c$[i]; i++){
+    			if (c == inControl) {
+    				this.c$.splice(i, 1);
+    				return i;
+    			}
+    		}
+        }
 	},
         // Added by michael k 5/15/09 to support the PopupHelp dialog
 	removeAllControls: function() {
