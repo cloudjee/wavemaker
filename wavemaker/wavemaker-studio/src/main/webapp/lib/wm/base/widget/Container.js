@@ -51,42 +51,43 @@ wm.define("wm.Container", wm.Control, {
 		this.c$ = [];
 	},
 	init: function() {
-	    if (this.dockRight) {
-		app.dockRight = this;
-	    } 
-	    if (this.dockLeft) {
-		app.dockLeft = this;
-	    } 
-	    if (this.dockTop) {
-		app.dockTop = this;
-	    } 
-	    if (this.dockBottom) {
-		app.dockBottom = this;
-	    }
-	    if (this.autoScroll && app._touchEnabled && !wm.disableTouchScroll) {
-		var node = this.domNode;
-		this.connect(node, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_ontouchstart");
-		if (!wm.isFakeMobile) {
-		    this.connect(node, "touchmove", this, "_ontouchmove");
-		    this.connect(node, "touchend",  this, "_ontouchend");
+		
+		if (this.dockRight) {
+			app.dockRight = this;
 		}
+		if (this.dockLeft) {
+			app.dockLeft = this;
+		}
+		if (this.dockTop) {
+			app.dockTop = this;
+		}
+		if (this.dockBottom) {
+			app.dockBottom = this;
+		}
+		if (this.autoScroll && app._touchEnabled && !wm.disableTouchScroll) {
+			var node = this.domNode;
+			this.connect(node, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_ontouchstart");
+			if (!wm.isFakeMobile) {
+				this.connect(node, "touchmove", this, "_ontouchmove");
+				this.connect(node, "touchend", this, "_ontouchend");
+			}
 
-/*
+			/*
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "min"));
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";
 		this._touchScroll.scrollers.outer.style.top = "0px";
 		*/
-	    }
+		}
 
 
-	    this.inherited(arguments);
-	    this.setLayoutKind(this.layoutKind);
-	    this.domNode.box = this.box = "";
-	    this._needsFitToContent = this.fitToContent = this.fitToContentWidth || this.fitToContentHeight;
+		this.inherited(arguments);
+		this.setLayoutKind(this.layoutKind);
+		this.domNode.box = this.box = "";
+		this._needsFitToContent = this.fitToContent = this.fitToContentWidth || this.fitToContentHeight;
 	},
-
+	
     _ontouchstart: function(e) {
 	if (app._touchY && app._touchY.animationId) {
 	    window.clearInterval(app._touchY.animationId);
