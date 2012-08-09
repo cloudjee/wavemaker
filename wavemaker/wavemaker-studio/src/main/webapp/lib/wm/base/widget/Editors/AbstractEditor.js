@@ -609,8 +609,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	keypressed: function(inEvent){
 	    /* Generally speaking, there aren't modifier keys in mobile devices (though I expect that to change); and I wasn't getting any charCode OR keyCode from some
 	     * mobile browsers (chrome for android)
-	     */	
-	     console.log(inEvent.type);
+	     */		     
 	    if (inEvent.type == "cut" || inEvent.type == "paste" || wm.isMobile || inEvent.charCode || inEvent.keyCode == dojo.keys.BACKSPACE || inEvent.keyCode == dojo.keys.DELETE || dojo.indexOf(this.changeKeycodes, inEvent.keyCode) != -1) {
 		this.validate();
 	        this.dokeypress(inEvent);
