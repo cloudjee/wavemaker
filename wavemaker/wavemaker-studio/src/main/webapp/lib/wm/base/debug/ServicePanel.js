@@ -80,46 +80,67 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	},this);	
     },
     XClick: function() {
-	this.serviceGrid.deselectAll();
-	this.showDataTabs(this.serviceGrid);
+        this.serviceGrid.deselectAll();
+        this.showDataTabs(this.serviceGrid);
     },
     showDataCell: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {
-	var data = rowObj.data;
-	if (data instanceof Error) {
-	    return data.toString();
-	} else if (dojo.isArray(data)) { 
-	    return data.length + ' items';
-	} else if (wm.isEmpty(data)) {
-	    return 'Empty';
-	} else {
-	    return 'Has Data';
-	}
+        var data = rowObj.data;
+        if (data instanceof Error) {
+            return data.toString();
+        } else if (dojo.isArray(data)) {
+            return data.length + ' items';
+        } else if (wm.isEmpty(data)) {
+            return 'Empty';
+        } else {
+            return 'Has Data';
+        }
     },
     showDataTabs: function(inSender) {
-	var hasSelection = this.serviceGrid.hasSelection();
-	this.serviceGrid.setColumnShowing("page",!hasSelection, true);
-	this.serviceGrid.setColumnShowing("lastUpdate",!hasSelection, true);
-	this.serviceGrid.setColumnShowing("firedBy",!hasSelection, true);
-	this.serviceGrid.setColumnShowing("data",!hasSelection, true);
-	this.serviceGrid.setColumnShowing("duration",!hasSelection, false);
+        var hasSelection = this.serviceGrid.hasSelection();
+        this.serviceGrid.setColumnShowing("page", !hasSelection, true);
+        this.serviceGrid.setColumnShowing("lastUpdate", !hasSelection, true);
+        this.serviceGrid.setColumnShowing("firedBy", !hasSelection, true);
+        this.serviceGrid.setColumnShowing("data", !hasSelection, true);
+        this.serviceGrid.setColumnShowing("duration", !hasSelection, false);
 
-	this.serviceGrid.setWidth(hasSelection ? "150px" : "100%");
-	if (hasSelection) {
-	    this.selectedGridItem = inSender.selectedItem;
-	    var eventId = inSender.selectedItem.getValue("eventId");
-	    if (eventId) {
-		var eventObj = wm.debug.EventsPanel.prototype.findEventById(eventId);
-	    }
-	    this.selectedItem = app.getValueById(inSender.selectedItem.getValue("id"));
-	    this.inspector.show();
-	    this.inspector.inspect(this.selectedItem, this.selectedGridItem, eventObj);
-	    this.splitter.show();
-	    this.splitter.findLayout();
-	} else {
-	    this.inspector.hide();
-	    this.splitter.hide();
-	}
+        this.serviceGrid.setWidth(hasSelection ? "150px" : "100%");
+        if (hasSelection) {
+            this.inspect(inSender);
+        } else {
+            this.inspector.hide();
+            this.splitter.hide();
+        }
+       
     },
+    inspect: function(inSender) {
+                    this.selectedGridItem = inSender.selectedItem;
+            var eventId = inSender.selectedItem.getValue("eventId");
+            if (eventId) {
+                var eventObj = wm.debug.EventsPanel.prototype.findEventById(eventId);
+            }
+            this.selectedItem = app.getValueById(inSender.selectedItem.getValue("id"));
+            this.inspector.show();
+            this.inspector.inspect(this.selectedItem, this.selectedGridItem, eventObj);
+            this.splitter.show();
+            this.splitter.findLayout();
+
+            if (this._requestConnect) {
+                dojo.disconnect(this._requestConnect);
+            }            
+            if (this._resultConnect) {
+                dojo.disconnect(this._resultConnect);
+            }      
+
+            this._requestConnect = dojo.connect(this.selectedItem, "request", this, function() {   
+                this.serviceGrid.selectByQuery({id: this.selectedItem.getRuntimeId()});
+                this.inspect(this.serviceGrid);
+            });
+            this._resultConnect = dojo.connect(this.selectedItem, "onResult", this, function() {   
+                this.serviceGrid.selectByQuery({id: this.selectedItem.getRuntimeId()});
+                this.inspect(this.serviceGrid);
+            });
+
+        },
 /*
     updateGridButtonClick: function(inSender, fieldName, rowData, rowIndex) {
       try {
@@ -133,114 +154,114 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
   },
     */
     getLoadingIcon: function() {
-	return dojo.moduleUrl("wm.base.widget.themes.default.images") + "loadingThrobber.gif";
+        return dojo.moduleUrl("wm.base.widget.themes.default.images") + "loadingThrobber.gif";
     },
     getErrorIcon: function() {
-	return dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png";
+        return dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png";
     },
     getSuccessIcon: function() {
-	return dojo.moduleUrl("lib.images.boolean.Signage") + "OK.png";
+        return dojo.moduleUrl("lib.images.boolean.Signage") + "OK.png";
     },
     newJsonEventStart: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
-	if (!this.isAncestorHidden()) {	
-	    this.generateServicesLayer();
-	}
-	var count = this.serviceListVar.getCount();
-	var id =  invoker ? invoker.getRuntimeId() : "";
-	for (var i = 0; i < count; i++) {
-	    var item = this.serviceListVar.getItem(i);
-	    if (id === item.getValue("id")) {
-		item.setValue("status", this.getLoadingIcon());
-		var self = this;
-		inDeferred.addCallback(function() {
-		    item.setValue("status", self.getSuccessIcon());
-		});
-		inDeferred.addErrback(function(inError) {
-		    item.setValue("status", self.getErrorIcon());
-		    item.setValue("data", inError);
-		});
-		break;
-	    }
-	}
+        if (!this.isAncestorHidden()) {
+            this.generateServicesLayer();
+        }
+        var count = this.serviceListVar.getCount();
+        var id = invoker ? invoker.getRuntimeId() : "";
+        for (var i = 0; i < count; i++) {
+            var item = this.serviceListVar.getItem(i);
+            if (id === item.getValue("id")) {
+                item.setValue("status", this.getLoadingIcon());
+                var self = this;
+                inDeferred.addCallback(function() {
+                    item.setValue("status", self.getSuccessIcon());
+                });
+                inDeferred.addErrback(function(inError) {
+                    item.setValue("status", self.getErrorIcon());
+                    item.setValue("data", inError);
+                });
+                break;
+            }
+        }
     },
-    newJsonEventEnd: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
-	;
+    newJsonEventEnd: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {;
     },
 
-   activate: function() {
-	this.generateServicesLayer();
+    activate: function() {
+        this.generateServicesLayer();
     },
-    deactivate: function() {
-    },
+    deactivate: function() {},
     generateServicesLayer: function() {
-	this.serviceListVar.beginUpdate();
-	for (var id in wm.Component.byId) {
-	    var c = wm.Component.byId[id];
+        this.serviceListVar.beginUpdate();
+        for (var id in wm.Component.byId) {
+            var c = wm.Component.byId[id];
 
-	    /* Only include servicevars */
-	    if (c instanceof wm.ServiceVariable == false) {
-		    continue;
-	    }
-	    var page = c.getParentPage();
-	    var pageName =  page ? page.declaredClass : "app";
-	    var componentName = id.indexOf(wm.decapitalize(pageName)) == 0 ? id.substring(pageName.length+1) : id;
-	    var firedBy = "";
-	    if (c._debug) {
-		if (c._debug.trigger) {
-		    firedBy = c._debug.trigger;
-		}
-		if (c._debug.eventName) {
-		    firedBy += "." + c._debug.eventName;
-		}
-	    } else {
-		firedBy = "";
-	    }
+            /* Only include servicevars */
+            if (c instanceof wm.ServiceVariable == false) {
+                continue;
+            }
+            var page = c.getParentPage();
+            var pageName = page ? page.declaredClass : "app";
+            var componentName = id.indexOf(wm.decapitalize(pageName)) == 0 ? id.substring(pageName.length + 1) : id;
+            var firedBy = "";
+            if (c._debug) {
+                if (c._debug.trigger) {
+                    firedBy = c._debug.trigger;
+                }
+                else if (c._debug.eventName) {
+                    firedBy = c._debug.eventName;
+                }
+            } else {
+                firedBy = "";
+            }
 
-	    var status = "";
-	    if (c instanceof wm.ServiceVariable) {
-		if (c._requester ) {
-		    status =  this.getLoadingIcon();
-		} else if  (c._lastError) {
-		    status =  this.getErrorIcon();
-		} else if (firedBy) {
-		    status = this.getSuccessIcon();
-		}
-	    }
-	    var itemData = {page: pageName,
-			    name: componentName,
-			    id: c.getRuntimeId(),
-			    status: status,
-			    lastUpdate: c._debug && c._debug.lastUpdate ? c._debug.lastUpdate :  undefined,
-			    duration: c._debug && c._debug.duration ? c._debug.duration : undefined,
-			    firedBy: firedBy || (c instanceof wm.ServiceVariable ? "<i>Never Fired</i>" : ""),
-			    data: c._lastError ? c._lastError : c.getData(),
-			    eventId: c._debug ? c._debug.eventId : null,
-			    request: c._debug ? c._debug.request : {}};
+            var status = "";
+            if (c instanceof wm.ServiceVariable) {
+                if (c._requester) {
+                    status = this.getLoadingIcon();
+                } else if (c._lastError) {
+                    status = this.getErrorIcon();
+                } else if (firedBy) {
+                    status = this.getSuccessIcon();
+                }
+            }
+            var itemData = {
+                page: pageName,
+                name: componentName,
+                id: c.getRuntimeId(),
+                status: status,
+                lastUpdate: c._debug && c._debug.lastUpdate ? c._debug.lastUpdate : undefined,
+                duration: c._debug && c._debug.duration ? c._debug.duration : undefined,
+                firedBy: firedBy || (c instanceof wm.ServiceVariable ? "<i>Never Fired</i>" : ""),
+                data: c._lastError ? c._lastError : c.getData(),
+                eventId: c._debug ? c._debug.eventId : null,
+                request: c._debug ? c._debug.request : {}
+            };
 
-	    // See if the item exists and update it if it does
-	    var found = false;
-	    var count = this.serviceListVar.getCount();
-	    for (var i = 0; i < count; i++) {
-		var item = this.serviceListVar.getItem(i);
-		if (item.getValue("page") == pageName && item.getValue("name") == componentName) {
-		    found = true;
-		    item.beginUpdate();
-		    item.setData(itemData);
-		    item.endUpdate();
-		    break;
-		}
-	    }
-	    if (!found) {
-		if (!itemData.lastUpdate) itemData.lastUpdate = new Date();
-		this.serviceListVar.addItem(itemData);
-	    }
-	}
+            // See if the item exists and update it if it does
+            var found = false;
+            var count = this.serviceListVar.getCount();
+            for (var i = 0; i < count; i++) {
+                var item = this.serviceListVar.getItem(i);
+                if (item.getValue("page") == pageName && item.getValue("name") == componentName) {
+                    found = true;
+                    item.beginUpdate();
+                    item.setData(itemData);
+                    item.endUpdate();
+                    break;
+                }
+            }
+            if (!found) {
+                if (!itemData.lastUpdate) itemData.lastUpdate = new Date();
+                this.serviceListVar.addItem(itemData);
+            }
+        }
 
-	this.serviceListVar.endUpdate();	    
-	this.serviceListVar.notify();
+        this.serviceListVar.endUpdate();
+        this.serviceListVar.notify();
     },
     newJsonEvent: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
-	
+
     }
 });
 

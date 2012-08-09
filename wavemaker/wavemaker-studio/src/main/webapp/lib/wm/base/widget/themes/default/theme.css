@@ -1125,9 +1125,7 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     left: 4px;
     top: -5px;   
 }
-.TabCloseIcon.DebuggerCloseButton {
-float: none;
-}
+
 .wmdatetimedialog,
 .wmdatetimedialog .dialogfooter {
 	-moz-border-radius: 0px !important; 

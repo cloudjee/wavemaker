@@ -73,13 +73,16 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     update: function() {
         if (this.dataSet instanceof wm.ServiceVariable) {
             if (djConfig.isDebug) {
+                var eventId = this.dataSet.log("update", this.getRuntimeId() + ".update()");
+                /*
                 var eventId = app.debugDialog.newLogEvent({
-                    eventType: "startUpdate",
-                    eventName: "startUpdate",
+                    eventType: "update",
+                    sourceDescription: "",
+                    resultDescription: this.getRuntimeId() + ".update() called to refresh editor's dataSet from server",
                     affectedId: this.getRuntimeId(),
-                    //firingId: this.getRuntimeId(),
+                    firingId: this.owner && this.owner._loadingPage ? this.owner.getRuntimeId() : "",
                     method: "update"
-                });
+                });*/
             }
             var d = this.dataSet.updateInternal(); // use internal because we're logging the cause of the update call here
             if (eventId) app.debugDialog.endLogEvent(eventId);

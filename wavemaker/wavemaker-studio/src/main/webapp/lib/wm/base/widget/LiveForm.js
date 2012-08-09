@@ -207,6 +207,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor management
 	//===========================================================================
 	populateEditors: function() {
+     
 		var i = this.getItemData(), data = i ? i.getData() : null;
 	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
@@ -712,25 +713,32 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		<i>dataOutput</i> property.
 	*/
 	insertData: function() {
-		return this.doOperation("insert");
+        var eventId = this.debugForm("insertData");
+		var result = this.doOperation("insert");
+        if (eventId) app.debugDialog.endLogEvent(eventId);
+        return result;
 	},
 	/**
 		Performs an update operation based on the data in the
 		<i>dataOutput</i> property.
 	*/
 	updateData: function() {
-		return this.doOperation("update");
-	},
+        var eventId = this.debugForm("updateData");
+        var result = this.doOperation("update");
+        if (eventId) app.debugDialog.endLogEvent(eventId);
+        return result;	},
 	/**
 		Performs a delete operation based on the data in the
 		<i>dataOutput</i> property.
 	*/
 	deleteData: function() {
 	    var f = dojo.hitch(this,function() {
-		this.onBeginDelete()
-		this.operation = "delete";
-		return this.doOperation("delete");
-	    });
+    		this.onBeginDelete()
+    		this.operation = "delete";
+            var eventId = this.debugForm("deleteData");
+            var result = this.doOperation("delete");
+            if (eventId) app.debugDialog.endLogEvent(eventId);
+            return result;	    });
 
 	    if (!this.confirmDelete) {
 		f();
@@ -743,6 +751,19 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 
 	    }
 	},
+    debugForm: function(method) {
+        if (app.debugDialog) {
+            var eventId = app.debugDialog.newLogEvent({
+                    eventType: "form",
+                    sourceDescription: "",
+                    resultDescription: this.getRuntimeId() + "." + method + "() has been called",
+                    affectedId: this.getRuntimeId(),
+                    firingId: this.getRuntimeId(),
+                    method: method
+                });
+            return eventId;
+        }
+    },
 	doOperation: function(inOperation) {
 		this.populateDataOutput();
 		var data = this.dataOutput.getData();
@@ -874,10 +895,22 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	    }
 	    /* END Deprecated */
 
-	    if (this.saveOnEnterKey)
-		this.saveDataIfValid();
+	    if (this.saveOnEnterKey) {
+            if (app.debugDialog) {
+                var eventId = app.debugDialog.newLogEvent({
+                        eventType: "componentEvent",
+                        sourceDescription: this.getRuntimeId() + " ENTER key pressed",
+                        resultDescription: this.getRuntimeId() + ".saveIfValid()",
+                        affectedId: this.getRuntimeId(),
+                        firingId: this.getRuntimeId(),
+                        method: "saveDataIfValid"
+                    });
+            }
+    		this.saveDataIfValid();
+            if (eventId) app.debugDialog.endLogEvent(eventId);
+        }
 	},
-        _cancelOnEnterKey: function() {
+    _cancelOnEnterKey: function() {
 		if (this._onEnterKeyHandle) {
 			clearTimeout(this._onEnterKeyHandle);
 			this._onEnterKeyHandle = null;

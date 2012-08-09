@@ -778,7 +778,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	*/
     },
     renderBoundsByCorner: function() {
-	if (!this.showing) return;
+        if (!this.showing) return;
         var w = this.width;
         var h = this.height;
 
@@ -787,38 +787,36 @@ dojo.declare("wm.Dialog", wm.Container, {
         var H = (isDesigned) ? studio.designer.bounds.h : this.domNode.parentNode.clientHeight;
 
 
-	if (String(w).match(/\%/)) {
-	    w = W * parseInt(w)/100;
-	} else {
-	    w = parseInt(w);
-	}
+        if (String(w).match(/\%/)) {
+            w = W * parseInt(w) / 100;
+        } else {
+            w = parseInt(w);
+        }
 
-	if (String(h).match(/\%/)) {
-	    h = H * parseInt(h)/100;
-	} else {
-	    h = parseInt(h);
-	}
+        if (String(h).match(/\%/)) {
+            h = H * parseInt(h) / 100;
+        } else {
+            h = parseInt(h);
+        }
 
-	//if (!this._isDesignLoaded) {
+        //if (!this._isDesignLoaded) {
         var buffer = 10;
-	if (w  > W-buffer*2) w = W-buffer*2;
-	if (h  > H-buffer*2) h = H-buffer*2;
-	//}
+        if (w > W - buffer * 2) w = W - buffer * 2;
+        if (h > H - buffer * 2) h = H - buffer * 2;
+        //}
+        var t, l;
 
-        var t,l;
-        
-        var top  = this.corner.substring(0,1);
-        var left = this.corner.substring(1,2);
-	var showingList = [];
-	var thisownerapp = this.getOwnerApp();
-	if (!this._percEx.h && !this._percEx.w) {
-	    for (var i = 0; i < wm.dialog.showingList.length; i++)
-		if (wm.dialog.showingList[i] != this && wm.dialog.showingList[i].getOwnerApp() == thisownerapp && (!window["studio"] || this != window["studio"].dialog))
-		    showingList.push(wm.dialog.showingList[i]);
-	    h = parseInt(h);
-	    var last = wm.Array.last(showingList);
-	}
-        switch(left) {
+        var top = this.corner.substring(0, 1);
+        var left = this.corner.substring(1, 2);
+        var showingList = [];
+        var thisownerapp = this.getOwnerApp();
+        if (!this._percEx.h && !this._percEx.w) {
+            for (var i = 0; i < wm.dialog.showingList.length; i++)
+            if (wm.dialog.showingList[i] != this && wm.dialog.showingList[i].getOwnerApp() == thisownerapp && (!window["studio"] || this != window["studio"].dialog)) showingList.push(wm.dialog.showingList[i]);
+            h = parseInt(h);
+            var last = wm.Array.last(showingList);
+        }
+        switch (left) {
         case "l":
             l = buffer;
             break;
@@ -826,16 +824,14 @@ dojo.declare("wm.Dialog", wm.Container, {
             l = W - w - buffer;
             break;
         case "c":
-	    l = Math.floor((W - w)/2);
-	    if (last && last.corner == this.corner)
-		l += 25; // offset it if its over another dialog so that there's a better (though not certain) chance of the dialog below being visible
-
+            l = Math.floor((W - w) / 2);
+            if (last && last.corner == this.corner) l += 25; // offset it if its over another dialog so that there's a better (though not certain) chance of the dialog below being visible
 
 
             break;
         }
 
-        switch(top) {
+        switch (top) {
         case "t":
             t = buffer;
             break;
@@ -843,111 +839,110 @@ dojo.declare("wm.Dialog", wm.Container, {
             t = H - h - buffer;
             break;
         case "c":
-	    t = Math.floor((H - h)/2);
-	    if (last && last.corner == this.corner)
-		t += 25;
+            t = Math.floor((H - h) / 2);
+            if (last && last.corner == this.corner) t += 25;
             break;
         }
 
-	this.setBounds(l, t, w, h);
-	wm.Control.prototype.renderBounds.call(this);
+        this.setBounds(l, t, w, h);
+        wm.Control.prototype.renderBounds.call(this);
     },
-	setContent: function(inContent) {
-		this.containerNode.innerHTML = inContent;
-	},
+    setContent: function(inContent) {
+        this.containerNode.innerHTML = inContent;
+    },
     animEnd: function() {
-	if (this.showing) {
-	    //this.domNode.style.opacity = 1; // needed for IE 9 beta
-        this.callOnShowParent();
-	} else {
-	    if (this.docked) this.setDocked(false);
-	    this.domNode.style.display = "none";
-	}
+        if (this.showing) {
+            //this.domNode.style.opacity = 1; // needed for IE 9 beta
+            this.callOnShowParent();
+        } else {
+            if (this.docked) this.setDocked(false);
+            this.domNode.style.display = "none";
+        }
     },
-        setShowing: function(inShowing, forceChange, skipOnClose) {
+    setShowing: function(inShowing, forceChange, skipOnClose) {
 
 
-	    /* Manage some global states; showingList and zIndexes */
-	    wm.Array.removeElement(wm.dialog.showingList, this);
-	    if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
-		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded);
-		wm.dialog.showingList.push(this);
-	        this.domNode.style.zIndex = zindex;
-		if (this.modal) {
-		    this.dialogScrim.domNode.style.zIndex = zindex-1;
-		}
+        /* Manage some global states; showingList and zIndexes */
+        wm.Array.removeElement(wm.dialog.showingList, this);
+        if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
+            var zindex = wm.dialog.getNextZIndex(this._isDesignLoaded);
+            wm.dialog.showingList.push(this);
+            this.domNode.style.zIndex = zindex;
+            if (this.modal) {
+                this.dialogScrim.domNode.style.zIndex = zindex - 1;
+            }
+        }
+
+
+        /* Unminify */
+        if (inShowing && this._minified) {
+            this.unminify(null, true);
+            delete this.showing; // stupid hack to fix bug in Safari Version 4.0.4 (6531.21.10)
+        }
+
+
+        /* Deal with the dialog's scrim alternate (this may not be needed anymore) */
+        wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
+
+
+        /* Deal with the dialog's scrim */
+        if (inShowing != this.showing && this.modal && !this._isDesignLoaded) {
+            this.dialogScrim.setShowing(inShowing);
+        }
+
+        var wasShowing = this.showing;
+        var showingChanging = Boolean(this.showing) != Boolean(inShowing);
+        if (showingChanging && this._animEnabled) {
+            dojo.removeClass(this.domNode, ["fadeInAnim", "fadeOutAnim"]);
+        }
+
+        // set it to showing so that rendering can happen; but set it to almost hidden BEFORE display is set to block
+        if (inShowing && showingChanging) {
+            if (this._animEnabled) {
+                this.domNode.opacity = 0.01;
+            }
+            this.inherited(arguments);
+            if (this._animEnabled) {
+                dojo.addClass(this.domNode, "fadeInAnim");
+            } else {
+                this.animEnd();
             }
 
+            // individual dialogs may override this to focus on something more specific, but at a minimum, I want focus somewhere on/in the dialog when it shows
+            if (this.modal && !this._noAutoFocus) {
+                this.domNode.tabIndex = -1;
+                this.domNode.focus();
+            }
+            this.onShow();
+        } else if (!inShowing && showingChanging) {
+            this.callOnHideParent();
+            this.showing = Boolean(inShowing);
 
-	    /* Unminify */
-	    if (inShowing && this._minified) {
-		this.unminify(null, true);
-		delete this.showing; // stupid hack to fix bug in Safari Version 4.0.4 (6531.21.10)
-	    }
-
-
-	    /* Deal with the dialog's scrim alternate (this may not be needed anymore) */
-	    wm.bgIframe.setShowing(inShowing && this.modal && !this.isDesignedComponent());
-
-
-	    /* Deal with the dialog's scrim */
-	    if (inShowing != this.showing && this.modal && !this._isDesignLoaded) {
-		this.dialogScrim.setShowing(inShowing);
-	    }
-
-	    var wasShowing = this.showing;
-	    var showingChanging = Boolean(this.showing) != Boolean(inShowing);
-	    if (showingChanging && this._animEnabled) {
-		dojo.removeClass(this.domNode, ["fadeInAnim", "fadeOutAnim"]);
-	    }
-
-	    // set it to showing so that rendering can happen; but set it to almost hidden BEFORE display is set to block
-	    if (inShowing && showingChanging) {
-		if (this._animEnabled) {
-		    this.domNode.opacity = 0.01;
-		}
-		this.inherited(arguments);
-		if (this._animEnabled) {
-		    dojo.addClass(this.domNode, "fadeInAnim");
-		} else {
-		    this.animEnd();
-		}
-
-		// individual dialogs may override this to focus on something more specific, but at a minimum, I want focus somewhere on/in the dialog when it shows
-		if (this.modal && !this._noAutoFocus) {
-                    this.domNode.tabIndex = -1;
-                    this.domNode.focus(); 
-		}
-		this.onShow();
-	    } else if (!inShowing && showingChanging) {
-		this.callOnHideParent();
-                this.showing = Boolean(inShowing);
-
-		if (this._animEnabled) {
-		    dojo.addClass(this.domNode, "fadeOutAnim");
-		} else {
-		    this.animEnd();
-		}
-		this.showing = false;
-		if (!skipOnClose && !this._minified) this.onClose("");
-	    }
+            if (this._animEnabled) {
+                dojo.addClass(this.domNode, "fadeOutAnim");
+            } else {
+                this.animEnd();
+            }
+            this.showing = false;
+            if (!skipOnClose && !this._minified) this.onClose("");
+        }
 
 
 
-	    if (this.designWrapper)
-		this.designWrapper.setShowing(inShowing);
+        if (this.designWrapper) this.designWrapper.setShowing(inShowing);
 
 
 
-	    // add to history whether we show or hide so that the URL updates
-	    if (!this._initializing && !this._isDesignLoaded &&  showingChanging && this.manageHistory) {
-		app.addHistory({id: this.getRuntimeId(),
-				options: {},
-				title: "Hide " + this.title});
-	    }
+        // add to history whether we show or hide so that the URL updates
+        if (!this._initializing && !this._isDesignLoaded && showingChanging && this.manageHistory) {
+            app.addHistory({
+                id: this.getRuntimeId(),
+                options: {},
+                title: "Hide " + this.title
+            });
+        }
 
-	},
-
+    },
 /*
         setShowing: function(inShowing, forceChange, skipOnClose) {
 	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime; 

@@ -123,6 +123,21 @@
     background-image: none;
 }
 
+
+.wm_template .wmeditor .wmeditor-caption {
+    font-family: inherit; /* Document-EditorsCaption-Font_Family */
+    font-size: inherit; /* Document-EditorsCaption-Font_TextSize */
+    color: inherit; /* Document-EditorsCaption-Font_Color */
+    font-weight: bold; /* Document-EditorsCaption-Font_Weight */
+}
+
+.wm_template .wmeditor .wmeditor-readonlyNode {
+    font-family: inherit; /* Document-EditorsReadonly-Font_Family */
+    font-size: inherit; /* Document-EditorsReadonly-Font_TextSize */
+    color: inherit; /* Document-EditorsReadonly-Font_Color */
+    font-weight: inherit; /* Document-EditorsReadonly-Font_Weight */
+}
+
     .wm_template  .wmeditor .dijitTextBox,
     .wm_template  .wmeditor .dijitTextArea,
     .wm_template  .wmeditor .dijitComboBox,

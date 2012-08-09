@@ -702,7 +702,7 @@ dojo.declare("wm.Layers", wm.Container, {
         return;
 
         wm.job(this.getRuntimeId() + ".renderBounds", 10, this, function() {
-        if (this.isDestroyed) return;
+        if (this.isDestroyed || this._lockHeaderHeight) return;
         this.decorator.tabsControl.domNode.style.height = 'auto';
         var newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
         if (newheight != this.decorator.tabsControl.bounds.h) {

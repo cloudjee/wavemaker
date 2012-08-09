@@ -36,7 +36,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
     _noAnimation:true,
     showTitleButtonsWhenDocked: true,
     noEscape: true,
-    minHeight: 300,
+    minHeight: wm.isMobile ? 400 : 300,
     noTopBottomDocking: false,
     noLeftRightDocking: true,
     useContainerWidget: true,
@@ -78,7 +78,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 		widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings",padding:"0",margin:"0"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
 		    widgetPanel: ["wm.debug.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
 		}],
-		consoleLayer:  ["wm.Layer", {caption: "Console",padding:"0",margin:"0"}, {onShow: "consolePanel.activate", onDeactivate: "consolePanel.deactivate"}, {
+		consoleLayer:  ["wm.Layer", {showing: wm.isMobile, caption: "Console",padding:"0",margin:"0"}, {onShow: "consolePanel.activate", onDeactivate: "consolePanel.deactivate"}, {
 		    consolePanel: ["wm.debug.ConsolePanel", {width: "100%", height: "100%", autoScroll:false}]
 		}]
 	    }]
@@ -270,7 +270,7 @@ dojo.declare("wm.debug.Inspector", wm.Container, {
     borderColor: "#888",
     postInit: function() {
 	this.createComponents({
-	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0"}, {}, {
+	    tabs: ["wm.TabLayers", {_classes: {domNode:["wmClosablePanel"]}, width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0", _lockHeaderHeight:1}, {}, {
 		eventsPanel: ["wm.debug.EventDetailsPanel",{}],
 		propertiesPanel: ["wm.debug.PropertyPanel", {},{},{}],
 		bindPanel: ["wm.debug.BindPanel", {}],		

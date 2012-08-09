@@ -29,7 +29,7 @@ dojo.declare("wm.debug.RequestPanel", wm.Layer, {
  * app.debugDialog.serviceGridPanel.activate
  */
     getRoot: function() {
-	return this;
+	   return this;
     },
 	getRuntimeId: function(inId) {
 		inId = this.name + (inId ? "." + inId : "");
@@ -42,58 +42,79 @@ dojo.declare("wm.debug.RequestPanel", wm.Layer, {
 
 
     postInit: function() {
-	this.inherited(arguments);
-	this.createComponents({
-	    //	    dataEditor: [wm.isMobile ? "wm.LargeTextArea" : "wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
-	    dataEditor: ["wm.LargeTextArea", {"height":"100%","name":"dataEditor","width":"100%"}],
-	    setRequestButton: ["wm.Button", {name: "fireButton", caption: "setRequest()", width: "120px", height:"20px",margin:"2",border:"1",borderColor:"#666"},{onclick: "fireFromDebugger"}]
-	}, this);
+        this.inherited(arguments);
+        this.createComponents({
+            //      dataEditor: [wm.isMobile ? "wm.LargeTextArea" : "wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
+            dataEditor: ["wm.LargeTextArea",
+            {
+                "editorBorder": false,
+                "height": "100%",
+                "name": "dataEditor",
+                "width": "100%",
+                padding: "0",
+               border: "0,0,1,0",
+               borderColor: "black"
+            }],
+            setRequestButton: ["wm.Button",
+            {
+                name: "fireButton",
+                caption: "setRequest()",
+                width: "120px",
+                height: "20px",
+                margin: "2",
+                border: "1",
+                borderColor: "#666"
+            }, {
+                onclick: "fireFromDebugger"
+            }]
+        }, this);
     },
 
 
     inspect: function(inComponent, inGridItem) {
-	this.selectedItem = inComponent;
-	if (!this.selectedItem || this.selectedItem instanceof wm.ServiceVariable == false) {
-	    this.hide();
-	    return;
-	}
-	this.show();
-	if (inGridItem) {
-	    var data = inGridItem.getValue('request');
-	    var cleanData;
-	    if (app.debugDialog.serviceGridPanel.declaredClass == "wm.DojoGrid") {
-		cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
-	    } else {
-		cleanData = data;
-	    }
-	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(cleanData||"")));
-	} else {
-	    var data;
-	    if (inComponent instanceof wm.LiveVariable && inComponent.operation == "read") {
-		data = inComponent.filter.getData();
-	    } else if (inComponent instanceof wm.LiveVariable) {
-		data = inComponent.sourceData.getData();
-	    } else {
-		data = inComponent.input.getData();
-	    }
-	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(data)));
-	}
-	if (this.dataEditor.setLineNumber)
-	    this.dataEditor.setLineNumber(0);
+
+        this.selectedItem = inComponent;
+        if (!this.selectedItem || this.selectedItem instanceof wm.ServiceVariable == false) {
+            this.hide();
+            return;
+        }
+        this.show();
+        if (inGridItem) {
+            var data = inGridItem.getValue('request');
+            var cleanData;
+            if (app.debugDialog.serviceGridPanel.serviceGrid.declaredClass == "wm.DojoGrid") {
+                cleanData = app.debugDialog.serviceGridPanel.serviceGrid.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store, data);
+            } else {
+                cleanData = data;
+            }
+            this.dataEditor.setDataValue(js_beautify(dojo.toJson(cleanData || "")));
+        } else {
+            var data;
+            if (inComponent instanceof wm.LiveVariable && inComponent.operation == "read") {
+                data = inComponent.filter.getData();
+            } else if (inComponent instanceof wm.LiveVariable) {
+                data = inComponent.sourceData.getData();
+            } else {
+                data = inComponent.input.getData();
+            }
+            this.dataEditor.setDataValue(js_beautify(dojo.toJson(data)));
+        }
+        if (this.dataEditor.setLineNumber) this.dataEditor.setLineNumber(0);
+
     },
     fireFromDebugger: function() {
-	var data = this.dataEditor.getDataValue();
-	data = eval("(" + data + ")");
-	if (this.selectedItem instanceof wm.LiveVariable && this.selectedItem.operation == "read") {
-	    this.selectedItem.filter.setData(data);
-	} else if (this.selectedItem instanceof wm.LiveVariable) {
-	    this.selectedItem.sourceData.setData(data);
-	} else {
-	    this.selectedItem.input.setData(data);
-	}
-	this.selectedItem.update();
+        var data = this.dataEditor.getDataValue();
+        data = eval("(" + data + ")");
+        if (this.selectedItem instanceof wm.LiveVariable && this.selectedItem.operation == "read") {
+            this.selectedItem.filter.setData(data);
+        } else if (this.selectedItem instanceof wm.LiveVariable) {
+            this.selectedItem.sourceData.setData(data);
+        } else {
+            this.selectedItem.input.setData(data);
+        }
+        this.selectedItem.update();
     },
     onShow: function() {
-	this.dataEditor.focus();
+        this.dataEditor.focus();
     }
 });

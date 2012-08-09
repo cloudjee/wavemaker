@@ -883,7 +883,8 @@ this.panel1.createComponent("custom", "wm.Panel", {
                     if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
                         var eventId = app.debugDialog.newLogEvent({
                             eventType: "javascriptEvent",
-                            eventName: eventName,
+                            sourceDescription: inComponent.getRuntimeId() + "." + eventName + "() has been called",
+                            resultDescription: "Calling " + this.getRuntimeId() + "." + inName + "()",
                             firingId: inComponent.getRuntimeId(),
                             affectedId: self.getRuntimeId(),
                             method: inName
@@ -942,6 +943,8 @@ this.panel1.createComponent("custom", "wm.Panel", {
                             }
                             var eventId = app.debugDialog.newLogEvent({
                                 eventType: "componentEvent",
+                                sourceDescription: inComponent.getRuntimeId() + "." + eventName + "() has been called",
+                                resultDescription: "Invoking " + c.getRuntimeId(),
                                 eventName: eventName,
                                 firingId: inComponent.getRuntimeId(),
                                 affectedId: c.getRuntimeId(),
@@ -977,7 +980,8 @@ this.panel1.createComponent("custom", "wm.Panel", {
                                 }
                                 var eventId = app.debugDialog.newLogEvent({
                                     eventType: "subcomponentEvent",
-                                    eventName: eventName,
+                                    sourceDescription: inComponent.getRuntimeId() + "." + eventName + "() has been called",
+                                    resultDescription: "Calling " + c.getRuntimeId() + "." + m + "()",
                                     firingId: inComponent.getRuntimeId(),
                                     affectedId: c instanceof wm.Component ? c.getRuntimeId() : undefined,
                                     method: m

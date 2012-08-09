@@ -30,7 +30,7 @@ DeploymentDialog.widgets = {
 	    }],
 	    cloudFoundryStopFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Stop","margin":"4"}, {"onclick":"cloudFoundryStopFromListButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"expression":"Boolean(${cloudFoundryAppList.emptySelection} || ${cloudFoundryAppList.selectedItem.data.state} === 'STOPPED' || ${cloudFoundryAppList.selectedItem.data.name}.search('wavemaker') !== -1)","targetProperty":"disabled"}, {}]
+		    wire: ["wm.Wire", {"expression":"Boolean(${cloudFoundryAppList.emptySelection} || ${cloudFoundryAppList.selectedItem.data.state} === 'STOPPED' || ${cloudFoundryAppList.selectedItem.data.id}.search('wavemaker-studio') !== -1)","targetProperty":"disabled"}, {}]
 		}]
 	    }],
 	    cloudFoundryUndeployFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Undeploy","margin":"4"}, {"onclick":"cloudFoundryUndeployFromListButtonClick"}, {

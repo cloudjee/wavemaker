@@ -393,6 +393,12 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-tools</artifactId>
 				<version>3.2.4.GA</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.beanshell</groupId>
+						<artifactId>bsh</artifactId>
+					</exclusion>
+				</exclusions>				
 			</dependency>
 			<dependency>
 				<groupId>org.json</groupId>

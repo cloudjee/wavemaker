@@ -49,6 +49,7 @@
     color: black;
     font-weight: normal;
 }
+
 #debugDialog .wmtablayers-tab.wmtablayers-selected {
    background-color: #ddd;
     color: black;
@@ -268,4 +269,9 @@
     background-color: #666;
     background-repeat: no-repeat;
     background-position: center center;
+}
+.TabCloseIcon.DebuggerCloseButton {
+float: left;
+margin-right: 5px;
+margin-left: 5px;
 }
