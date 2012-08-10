@@ -1835,3 +1835,9 @@ color: rgb(0,270,0);
     height: 32px;
     margin-top: 16px;
 }
+
+/* Waiting Dialog */
+#studio_dialog .StudioWaitingNotice {
+    font-size: 0.8Em;
+    margin-top: 8px;
+}
