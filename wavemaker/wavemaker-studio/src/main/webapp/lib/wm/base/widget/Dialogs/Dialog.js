@@ -63,7 +63,7 @@ wm.bgIframe = {
 		}
 		dojo.subscribe("window-resize", this, "size")
 	},
-        setShowing: function(inShowing,forceChange) {
+    setShowing: function(inShowing,forceChange) {
 		if (!this.domNode)
 			return;
 		if (forceChange || inShowing != this.showing) {
@@ -110,6 +110,7 @@ dojo.declare("wm.DialogResize", wm.MouseDrag, {
 dojo.declare("wm.Dialog", wm.Container, {
     manageHistory: true,
     manageURL: false,
+    enableTouchHeight: true,
     titlebarButtons: "",
     containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
@@ -860,7 +861,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         }
     },
     setShowing: function(inShowing, forceChange, skipOnClose) {
-
+        if (app.debugDialog) var ignoreFunctions = ["_setValue", "setProp","setValue"];
 
         /* Manage some global states; showingList and zIndexes */
         wm.Array.removeElement(wm.dialog.showingList, this);
@@ -913,7 +914,27 @@ dojo.declare("wm.Dialog", wm.Container, {
                 this.domNode.tabIndex = -1;
                 this.domNode.focus();
             }
+            if (app.debugDialog && this != app.debugDialog) {
+                var i = 0;
+                var caller = arguments.callee.caller;
+                ignoreFunctions.push("show");
+                while (caller && dojo.indexOf(ignoreFunctions, caller.nom) != -1 && i < 15) {
+                    caller = caller.caller;
+                    i++;
+                }
+                var eventId = app.debugDialog.newLogEvent({
+                            eventType: "dialog",
+                            sourceDescription: (caller && caller.nom ? caller.nom + "()" : ""),
+                            resultDescription: "Showing dialog: " + this.getRuntimeId() + ".setShowing(true)",
+                            firingId: this.getRuntimeId(),
+                            affectedId: this.getRuntimeId(),
+                            method: "show"
+                        });
+
+            }
             this.onShow();
+            if (eventId) app.debugDialog.endLogEvent(eventId);                    
+
         } else if (!inShowing && showingChanging) {
             this.callOnHideParent();
             this.showing = Boolean(inShowing);
@@ -924,7 +945,28 @@ dojo.declare("wm.Dialog", wm.Container, {
                 this.animEnd();
             }
             this.showing = false;
+
+            if (app.debugDialog && this != app.debugDialog) {
+                var i = 0;
+                var caller = arguments.callee.caller;
+                ignoreFunctions.push("hide");
+                while (caller && dojo.indexOf(ignoreFunctions, caller.nom) != -1 && i < 15) {
+                    caller = caller.caller;
+                    i++;
+                }
+                var eventId = app.debugDialog.newLogEvent({
+                            eventType: "dialog",
+                            sourceDescription: (caller && caller.nom ? caller.nom + "()" : ""),
+                            resultDescription: "Hiding dialog: " + this.getRuntimeId() + ".setShowing(false)",
+                            firingId: this.getRuntimeId(),
+                            affectedId: this.getRuntimeId(),
+                            method: "hide"
+                        });
+
+            }
+
             if (!skipOnClose && !this._minified) this.onClose("");
+            if (eventId) app.debugDialog.endLogEvent(eventId);                    
         }
 
 
@@ -1160,7 +1202,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  parent: this,
 					  owner: this,
 					  width: "100%",
-					  height: this.titlebarHeight + "px",
+					  desktopHeight: this.titlebarHeight + "px",
+                      mobileHeight: this.mobileTitlebarHeight + "px",
 					  margin: "0",
 					  padding: "0",
 					  border: border,

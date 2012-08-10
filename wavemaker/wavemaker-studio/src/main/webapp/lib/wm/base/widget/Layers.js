@@ -523,7 +523,28 @@ dojo.declare("wm.Layers", wm.Container, {
         }
         this._setLayerIndex(inIndex);
         if (fireEvents) {
-            l && l.onShow();
+            if (l) {
+                if (app.debugDialog && !this.isAncestor(app.debugDialog)) {
+                    var i = 0;
+                    var caller = arguments.callee.caller;
+                    var ignoreFunctions = ["setProp", "setLayer", "setLayerByName", "setLayerByCaption", "addLayer","activate","update"];
+                    while (caller && dojo.indexOf(ignoreFunctions, caller.nom) != -1 && i < 15) {
+                        caller = caller.caller;
+                        i++;
+                    }
+                    var eventId = app.debugDialog.newLogEvent({
+                                eventType: "layer",
+                                sourceDescription: (caller && caller.nom ? caller.nom + "()" : ""),
+                                resultDescription: "Activating Layer: " + l.getRuntimeId() + ".activate()",
+                                firingId: l.getRuntimeId(),
+                                affectedId: l.getRuntimeId(),
+                                method: "hide"
+                            });
+
+                }
+                l.onShow();
+                if (eventId) app.debugDialog.endLogEvent(eventId);
+            }
             oldLayer && oldLayer.onDeactivate();
         }
         if (fireEvents && this.lastLayerIndex != this.layerIndex) this.onchange(this.layerIndex);
