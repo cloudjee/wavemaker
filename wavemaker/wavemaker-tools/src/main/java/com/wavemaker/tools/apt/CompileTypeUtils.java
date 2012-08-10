@@ -74,7 +74,8 @@ public class CompileTypeUtils {
             ListReflectTypeDefinition listType = new ListReflectTypeDefinition();
             listType.setTypeName(type.toString());
             listTypes.add(listType);
-            typeState.addType(listType);
+            // NOTE: Do NOT add listType to the typeState, it will cause incorrect types to be returned on subsequent
+            // calls and causes issues such as WM-4320
         }
 
         TypeMirror componentType = componentTypeForArrayOrCollection(processingEnv, type);
@@ -202,7 +203,8 @@ public class CompileTypeUtils {
             def.setKeyFieldDefinition(objectDef);
             def.setValueFieldDefinition(objectDef);
         }
-        typeState.addType(def);
+        // NOTE: Do NOT add def to the typeState, it will cause incorrect types to be returned on subsequent
+        // calls and causes issues such as WM-4320
         return def;
     }
 
