@@ -1654,19 +1654,28 @@ dojo.declare("Studio", wm.Page, {
         var panels = [studio.page.root];
         wm.forEachProperty(studio.page.$, function(inComponent) {
             if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+            if (inComponent instanceof wm.Dialog) {
+                if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
+                if (inComponent.titleBar) inComponent.titleBar.resetDesignHeight();
+            }
         });
         wm.forEachProperty(studio.application.$, function(inComponent) {
             if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+            if (inComponent instanceof wm.Dialog) {
+                if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
+                if (inComponent.titleBar) inComponent.titleBar.resetDesignHeight();
+            }
         });
         var self = this;
         dojo.forEach(panels, function(panel) {
+          
             wm.forEachWidget(panel, function(w) {
                 if (w._regenerateOnDeviceChange) {
                     w = self.regenerateOnDeviceChange(w);
                     regenerated = true;
                 }
                 w.resetDesignHeight();
-            });
+            }, false);
             if (panel.parent && panel.parent instanceof wm.Dialog) panel.parent.reflow();
         });
 
