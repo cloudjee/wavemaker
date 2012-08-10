@@ -412,6 +412,8 @@ dojo.declare("Studio", wm.Page, {
                  this.pagePopupBtn.set("disabled",true);
              } else {
                  studio.startPageDialog.show();
+                 if (app.alertDialog && app.alertDialog.showing) app.alertDialog.show(); // raise it above the start page
+                 if (app.toastDialog && app.toastDialog.showing) app.toastDialog.show();
                  this.disableMenuBar(true);
              }
              //this.startLayer.activate();
