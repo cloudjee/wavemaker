@@ -25,9 +25,12 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.activation.DataSource;
 import javax.xml.bind.JAXBException;
@@ -531,32 +534,61 @@ public class WebServiceToolsManager {
     }
 
     public List<String> invokeRestCall(String endpointAddress) {
-        return this.invokeRestCall(endpointAddress, "GET", null, null, false, null, null);
+        return this.invokeRestCall(endpointAddress, "GET", null, null, false, null, null, null);
     }
 
     public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password) {
-        return this.invokeRestCall(endpointAddress, "GET", null, null, basicAuth, userName, password);
+		return invokeRestCall(endpointAddress, basicAuth, userName, password,
+				null);
+	}
+
+	public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password, Map<String, String> headers) {
+        return this.invokeRestCall(endpointAddress, "GET", null, null, basicAuth, userName, password, headers);
     }
 
     /**
+	 * Invokes a HTTP GET for the given endpoint address.
+	 * 
+	 * @param endpointAddress The service endpoint.
+	 * @param method Request method (GET, POST)
+	 * @param contentType Mime content type
+	 * @param postData post data
+	 * @return A list of string with list[0] represents the service response and list[1] represents the optional error
+	 *         message.
+	 */
+	public List<String> invokeRestCall(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
+	    String userName, String password) {
+			return invokeRestCall(endpointAddress, method, contentType,
+					postData, basicAuth, userName, password, null);
+		}
+
+	/**
      * Invokes a HTTP GET for the given endpoint address.
      * 
      * @param endpointAddress The service endpoint.
      * @param method Request method (GET, POST)
      * @param contentType Mime content type
      * @param postData post data
+     * @param headers TODO
      * @return A list of string with list[0] represents the service response and list[1] represents the optional error
      *         message.
      */
     public List<String> invokeRestCall(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
-        String userName, String password) {
+        String userName, String password, Map<String, String> headers) {
         QName serviceQName = new QName(constructNamespace(endpointAddress), "TestService");
 
         String responseString = null;
         String errorMessage = null;
 
+
+		Map<String, Object> headerParams = new HashMap<String, Object>();
+		Set<Entry<String, String>> entries = headers.entrySet();
+		for (Map.Entry<String, String> entry : entries) {
+			headerParams.put(entry.getKey(), entry.getValue());
+		}
+		
         try {
-            // TODO: For now, we only support the xml contenty type. It should
+            // TODO: For now, we only support the xml content type. It should
             // be extended to cover other content
             // TODO: types such as text/plain.
             String cType = contentType + "; charset=UTF-8";
@@ -569,7 +601,7 @@ public class WebServiceToolsManager {
                 bp.setHttpBasicAuthPassword(password);
             }
             responseString = HTTPBindingSupport.getResponseString(serviceQName, serviceQName, endpointAddress, HTTPRequestMethod.valueOf(method),
-                postSource, bp);
+                postSource, bp, headerParams);
             try {
                 // validate XML
                 XmlObject.Factory.parse(responseString);
@@ -635,7 +667,7 @@ public class WebServiceToolsManager {
         }
 
         String responseString = HTTPBindingSupport.getResponseString(serviceQName, serviceQName, endpointAddress, HTTPRequestMethod.valueOf(method),
-            postSource, bp);
+            postSource, bp, null);
 
         String outputType = null;
         String xmlSchemaText = null;

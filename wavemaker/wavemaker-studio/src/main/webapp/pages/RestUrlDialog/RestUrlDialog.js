@@ -24,13 +24,16 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		this.password = null;
 		this.userIdInput.setDisabled(true);
 		this.passwordInput.setDisabled(true);
-		this.basicAuthCheckbox.setChecked(false)
+		this.basicAuthCheckbox.setChecked(false);
 	},
 	clearAll: function() {
 		this.urlInput.clear();
 		this.responseTextArea.clear();
 		this.errorMessageTextArea.clear();
 		this.errorMessageTextArea.setShowing(false);
+	},
+	advancedBtnClick: function(inSender){
+		this.headersGrid.renderDojoObj();
 	},
 	testBtnClick: function(inSender) {
 		var u = this.urlInput.getValue("displayValue");
@@ -40,14 +43,20 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		var b = this.basicAuthCheckbox.getChecked();
 		var i = (this.userIdInput.getDataValue() == undefined ? "" : this.userIdInput.getDataValue());
 		var w = (this.passwordInput.getDataValue() == undefined ? "" : this.passwordInput.getDataValue());
+		var h = {};
+		var headers = this.headersVar.getData();
+		for (var i = 0; headers && i < headers.length; i++) {
+			var item = headers[i];
+			h[item.name] = item.dataValue;
+       }
 		if (u) {
 		    studio.beginWait(this.getDictionaryItem("WAIT_TEST_CLICK"));
 			if (m == "GET") {
-				studio.webService.requestAsync("invokeRestCall", [u, b, i, w], 
+				studio.webService.requestAsync("invokeRestCall", [u, b, i, w, h], 
 					dojo.hitch(this, "invokeRestCallSuccess"), 
 					dojo.hitch(this, "invokeRestCallError"));
 			} else { //POST
-				studio.webService.requestAsync("invokeRestCall", [u, m, t, p, b, i, w], 
+				studio.webService.requestAsync("invokeRestCall", [u, m, t, p, b, i, w, h], 
 					dojo.hitch(this, "invokeRestCallSuccess"), 
 					dojo.hitch(this, "invokeRestCallError"));
 			}
