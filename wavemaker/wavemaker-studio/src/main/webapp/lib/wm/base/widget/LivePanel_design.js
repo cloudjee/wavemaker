@@ -242,6 +242,7 @@ wm.LivePanel.extend({
         this.$.binding.addWire(null, "liveForm", this.liveForm.name, "");
         this.$.binding.addWire(null, "dataGrid", this.dataGrid.name, "");
         this.$.binding.addWire(null, "saveButton", this.saveButton.name, "");
+
     },
 
 
