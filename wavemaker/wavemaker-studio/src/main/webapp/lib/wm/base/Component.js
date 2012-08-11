@@ -880,11 +880,11 @@ this.panel1.createComponent("custom", "wm.Panel", {
         return function jsEventHandler() {
             var args = arguments;
             var f = function() {
-                    if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+                    if (app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
                         var eventId = app.debugDialog.newLogEvent({
                             eventType: "javascriptEvent",
                             sourceDescription: (inComponent instanceof wm.Component ? inComponent.getRuntimeId() + "." : "") + eventName + "() has been called",
-                            resultDescription: "Calling " + (this instanceof wm.Component ? this.getRuntimeId() + "." : "") + inName + "()",
+                            resultDescription: "Calling " + (self instanceof wm.Component ? self.getRuntimeId() + "." : "") + inName + "()",
                             firingId: inComponent instanceof wm.Component ? inComponent.getRuntimeId() : "",
                             affectedId: self.getRuntimeId(),
                             method: inName
@@ -901,9 +901,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
                             console.error(errorMessage);
                         }
                     }
-                    if (eventId) {
-                        app.debugDialog.endLogEvent(eventId);
-                    }
+                    if (eventId) app.debugDialog.endLogEvent(eventId);                    
                 };
             
             /* Events should not be fired until the owner has finished loading, as the event may require components that aren't yet generated */
@@ -931,7 +929,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
             var f = function() {
                     var c = wm.isInstanceType(inHandler, wm.Component) ? inHandler : self.getValueById(inHandler);
                     if (wm.isInstanceType(c, wm.Component)) {
-                        if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+                        if (app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
                             if (c instanceof wm.ServiceVariable) {
                                 if (!c._debug) c._debug = {};
                                 c._debug = {
@@ -968,7 +966,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
                             m = o[0];
                         }
                         if (c && c[m]) {
-                            if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+                            if (app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
                                 if (c instanceof wm.ServiceVariable) {
                                     if (!c._debug) c._debug = {};
                                     c._debug = {
@@ -1001,9 +999,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
                         }
                     }
                         
-                    if (eventId) {
-                        app.debugDialog.endLogEvent(eventId);
-                    }
+                    if (eventId) app.debugDialog.endLogEvent(eventId);
                 };
 
             /* Events should not be fired until the owner has finished loading, as the event may require components that aren't yet generated */

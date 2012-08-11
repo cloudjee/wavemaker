@@ -32,70 +32,70 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
     },
 
     postInit: function() {
-    this.inherited(arguments);
+        this.inherited(arguments);
 
-    var typeDef = this.createComponents({debugWidgetType: ["wm.TypeDefinition", {internal: true}, {}, {
-        field100: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string"}, {}],
-        field101: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string"}, {}],
-        field102: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string"}, {}],
-        field104: ["wm.TypeDefinitionField", {"fieldName":"type","fieldType":"string"}, {}],
-        field105: ["wm.TypeDefinitionField", {"fieldName":"showing","fieldType":"boolean"}, {}]
-    }]}, this)[0];
-    //typeDef.setOwner(this);
-    wm.typeManager.types.debugWidgetType.fields.id.include = ["update"];
+        var typeDef = this.createComponents({debugWidgetType: ["wm.TypeDefinition", {internal: true}, {}, {
+            field100: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string"}, {}],
+            field101: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string"}, {}],
+            field102: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string"}, {}],
+            field104: ["wm.TypeDefinitionField", {"fieldName":"type","fieldType":"string"}, {}],
+            field105: ["wm.TypeDefinitionField", {"fieldName":"showing","fieldType":"boolean"}, {}]
+        }]}, this)[0];
+        //typeDef.setOwner(this);
+        wm.typeManager.types.debugWidgetType.fields.id.include = ["update"];
 
-    var typeDef = this.createComponents({debugBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
-        field201: ["wm.TypeDefinitionField", {"fieldName":"fieldName","fieldType":"string"}, {}],
-        field202: ["wm.TypeDefinitionField", {"fieldName":"dataValue","fieldType":"string"}, {}],
-        field204: ["wm.TypeDefinitionField", {"fieldName":"boundTo","fieldType":"string"}, {}],
-         field205: ["wm.TypeDefinitionField", {"fieldName":"expression","fieldType":"boolean"}, {}],
-        field206: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"boolean"}, {}],
-        field207: ["wm.TypeDefinitionField", {"fieldName":"errors","fieldType":"boolean"}, {}]
-    }]}, this)[0];
-    //typeDef.setOwner(this);
-    wm.typeManager.types.debugBindingType.fields.fieldName.include = ["update"];
+        var typeDef = this.createComponents({debugBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
+            field201: ["wm.TypeDefinitionField", {"fieldName":"fieldName","fieldType":"string"}, {}],
+            field202: ["wm.TypeDefinitionField", {"fieldName":"dataValue","fieldType":"string"}, {}],
+            field204: ["wm.TypeDefinitionField", {"fieldName":"boundTo","fieldType":"string"}, {}],
+             field205: ["wm.TypeDefinitionField", {"fieldName":"expression","fieldType":"boolean"}, {}],
+            field206: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"boolean"}, {}],
+            field207: ["wm.TypeDefinitionField", {"fieldName":"errors","fieldType":"boolean"}, {}]
+        }]}, this)[0];
+        //typeDef.setOwner(this);
+        wm.typeManager.types.debugBindingType.fields.fieldName.include = ["update"];
 
 
-    var components = this.createComponents({
-        widgetListVar:  ["wm.Variable", {type: "debugWidgetType", isList: true}],
-        pageListVar: ["wm.Variable", {type: "StringData", isList: true}],
+        var components = this.createComponents({
+            widgetListVar:  ["wm.Variable", {type: "debugWidgetType", isList: true}],
+            pageListVar: ["wm.Variable", {type: "StringData", isList: true}],
 
-        classListVar:["wm.Variable", {type: "StringData", isList: true}],
-        gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
-        searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", mobileHeight: "40px", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
-            searchNameText: ["wm.Text", {resetButton: true, _resetButtonUrl: dojo.moduleUrl("lib.images.silkIcons").path + "arrow_undo.png", width: "100px", mobileHeight: "100%", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
-            searchClassText: ["wm.SelectMenu", {allowNone: true, emptyValue: "emptyString", restrictValues: false, width: "100px",  mobileHeight: "100%", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"},{
-                binding: ["wm.Binding", {"name":"binding"}, {}, {
-                    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"classListVar","targetProperty":"dataSet"}, {}]
+            classListVar:["wm.Variable", {type: "StringData", isList: true}],
+            gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
+            searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", mobileHeight: "40px", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
+                searchNameText: ["wm.Text", {resetButton: true, _resetButtonUrl: dojo.moduleUrl("lib.images.silkIcons").path + "arrow_undo.png", width: "100px", mobileHeight: "100%", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
+                searchClassText: ["wm.SelectMenu", {allowNone: true, emptyValue: "emptyString", restrictValues: false, width: "100px",  mobileHeight: "100%", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"},{
+                    binding: ["wm.Binding", {"name":"binding"}, {}, {
+                        wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"classListVar","targetProperty":"dataSet"}, {}]
+                    }]
+                }],
+                pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px", mobileHeight: "100%", displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
+                    binding: ["wm.Binding", {"name":"binding"}, {}, {
+                        wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"pageListVar","targetProperty":"dataSet"}, {}]
+                    }]
+                }],         
+                inspectParentButton: ["wm.Button",  {width: "100px", height: "20px", mobileHeight: "100%", margin:"0",margin:"2",caption: "Inspect Parent",border:"1",borderColor:"#666"}, {onclick: "inspectParent"},{
+                    binding: ["wm.Binding", {"name":"binding"}, {}, {
+                        wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetGrid.emptySelection","targetProperty":"disabled"}, {}]
+                    }]
                 }]
             }],
-            pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px", mobileHeight: "100%", displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
-                binding: ["wm.Binding", {"name":"binding"}, {}, {
-                    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"pageListVar","targetProperty":"dataSet"}, {}]
-                }]
-            }],         
-            inspectParentButton: ["wm.Button",  {width: "100px", height: "20px", mobileHeight: "100%", margin:"0",margin:"2",caption: "Inspect Parent",border:"1",borderColor:"#666"}, {onclick: "inspectParent"},{
-                binding: ["wm.Binding", {"name":"binding"}, {}, {
-                    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetGrid.emptySelection","targetProperty":"disabled"}, {}]
-                }]
-            }]
-        }],
-        widgetGrid: ["wm.DojoGrid", 
-                 {width: "100%", height: "100%","columns":[
-                 {"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
-                 {"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
-                 {"show":true,"field":"type","title":"Class","width":"120px","align":"left","formatFunc":""}
-                 ],
-                  "margin":"4",
-                  "name":"widgetGrid"}, {onSelect: "showWidgetEvent"}, {
-                  binding: ["wm.Binding", {"name":"binding"}, {}, {
-                      wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetListVar.queriedItems","targetProperty":"dataSet"}, {}]
-                  }]
-                  }]
-        }],
-        splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
-        inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
-    },this);
+            widgetGrid: ["wm.DojoGrid", 
+                     {width: "100%", height: "100%","columns":[
+                     {"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
+                     {"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
+                     {"show":true,"field":"type","title":"Class","width":"120px","align":"left","formatFunc":""}
+                     ],
+                      "margin":"4",
+                      "name":"widgetGrid"}, {onSelect: "showWidgetEvent"}, {
+                      binding: ["wm.Binding", {"name":"binding"}, {}, {
+                          wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetListVar.queriedItems","targetProperty":"dataSet"}, {}]
+                      }]
+                      }]
+            }],
+            splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
+            inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
+        },this);
     },
     XClick: function() {
         this.widgetGrid.deselectAll();
@@ -186,7 +186,7 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
         if (obj && obj.prototype instanceof wm.Component) {
             this.widgetListVar.queriedItems.setData(this.widgetListVar.queriedItems.filterItems(function(item) {
                 var type = dojo.getObject(item.getValue("type"));
-                return (type.prototype instanceof obj);
+                return (type.prototype instanceof obj || type.prototype === obj.prototype);
             }));
         }
 

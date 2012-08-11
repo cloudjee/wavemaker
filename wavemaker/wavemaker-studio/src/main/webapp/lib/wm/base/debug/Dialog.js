@@ -65,24 +65,25 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 
 
     postInit: function() {
-    this.inherited(arguments);
-    this.commands = [];
-    this.containerWidget.createComponents({
-        tabLayers: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "0", margin: "0"}, {}, {
-        servicesLayer: ["wm.Layer", {caption: "Services",padding:"0",margin:"0"}, {onShow: "serviceGridPanel.activate", onDeactivate: "serviceGridPanel.deactivate"}, {
-            serviceGridPanel: ["wm.debug.ServicePanel", {width: "100%", height: "100%", autoScroll: true}]
-        }],
-        eventsLayer: ["wm.Layer", {caption: "Events",padding:"0",margin:"0"}, {onShow: "eventsPanel.activate", onDeactivate: "eventsPanel.deactivate"}, {
-            eventsPanel: ["wm.debug.EventsPanel", {width: "100%", height: "100%", autoScroll: true}]
-        }],
-        widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings",padding:"0",margin:"0"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
-            widgetPanel: ["wm.debug.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
-        }],
-        consoleLayer:  ["wm.Layer", {showing: wm.isMobile, caption: "Console",padding:"0",margin:"0"}, {onShow: "consolePanel.activate", onDeactivate: "consolePanel.deactivate"}, {
-            consolePanel: ["wm.debug.ConsolePanel", {width: "100%", height: "100%", autoScroll:false}]
-        }]
-        }]
-    });
+        this.inherited(arguments);
+        
+        this.commands = [];
+        this.containerWidget.createComponents({
+            tabLayers: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "0", margin: "0"}, {}, {
+                servicesLayer: ["wm.Layer", {caption: "Services",padding:"0",margin:"0"}, {onShow: "serviceGridPanel.activate", onDeactivate: "serviceGridPanel.deactivate"}, {
+                    serviceGridPanel: ["wm.debug.ServicePanel", {width: "100%", height: "100%", autoScroll: true}]
+                }],
+                eventsLayer: ["wm.Layer", {caption: "Events",padding:"0",margin:"0"}, {onShow: "eventsPanel.activate", onDeactivate: "eventsPanel.deactivate"}, {
+                    eventsPanel: ["wm.debug.EventsPanel", {width: "100%", height: "100%", autoScroll: true}]
+                }],
+                widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings",padding:"0",margin:"0"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
+                    widgetPanel: ["wm.debug.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
+                }],
+                consoleLayer:  ["wm.Layer", {showing: wm.isMobile, caption: "Console",padding:"0",margin:"0"}, {onShow: "consolePanel.activate", onDeactivate: "consolePanel.deactivate"}, {
+                    consolePanel: ["wm.debug.ConsolePanel", {width: "100%", height: "100%", autoScroll:false}]
+                }]
+            }]
+        });
 
 /*
     this.addEventsLayer();
@@ -281,6 +282,9 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
         if (this.showing) {
             this._lastDocked = this.docked;
         }
+    },
+    onMiscButtonClick: function() {
+        window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_" + wm.version.replace(/^(\d+\.\d+).*$/,"$1") + "/Debugging");
     }
 });
 

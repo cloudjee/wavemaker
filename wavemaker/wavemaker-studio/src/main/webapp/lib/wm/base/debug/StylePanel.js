@@ -52,7 +52,7 @@ dojo.declare("wm.debug.StylePanel", wm.Layer, {
 		    borderInput: ["wm.Text", {width:"100%",caption: "border", captionSize: "100px"}, {onchange: "borderChange"}],
 		    borderColorInput: ["wm.ColorPicker", {width:"100%",caption: "borderColor", captionSize: "100px"}, {onchange: "borderColorChange"}],
 	    //styleInput: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%",minWidth:"150"}, {onChange: "stylesChange"}]
-		    styleInput: ["wm.LargeTextArea", {syntax: "css", width: "100%", height: "100%",minWidth:"150"}, {onChange: "stylesChange"}]
+		    styleInput: ["wm.LargeTextArea", {caption: "Styles", width: "100%", height: "100%",minWidth:"150"}, {onchange: "stylesChange"}]
 	}, this);
 
     },
@@ -99,58 +99,60 @@ dojo.declare("wm.debug.StylePanel", wm.Layer, {
 	this._inInspect = false;
     },
     widthChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this._inInspect || !this.selectedItem) return;
-	this.selectedItem.setWidth(inDataValue);
-	this.inspect();
+        if (this._inInspect || !this.selectedItem) return;
+        this.selectedItem.setWidth(inDataValue);
+        this.inspect();
     },
     heightChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this._inInspect || !this.selectedItem) return;
-	this.selectedItem.setHeight(inDataValue);
-	this.inspect();
+        if (this._inInspect || !this.selectedItem) return;
+        this.selectedItem.setHeight(inDataValue);
+        this.inspect();
     },
     marginChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this._inInspect || !this.selectedItem) return;
-	this.selectedItem.setMargin(inDataValue);
-	this.inspect();
+        if (this._inInspect || !this.selectedItem) return;
+        this.selectedItem.setMargin(inDataValue);
+        this.inspect();
     },
     paddingChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this._inInspect || !this.selectedItem) return;
-	this.selectedItem.setPadding(inDataValue);
-	this.inspect();
+        if (this._inInspect || !this.selectedItem) return;
+        this.selectedItem.setPadding(inDataValue);
+        this.inspect();
     },
     borderChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this._inInspect || !this.selectedItem) return;
-	this.selectedItem.setBorder(inDataValue);
-	this.inspect();
+        if (this._inInspect || !this.selectedItem) return;
+        this.selectedItem.setBorder(inDataValue);
+        this.inspect();
     },
     borderColorChange: function(inSender, inDisplayValue, inDataValue) {
-	if (this._inInspect || !this.selectedItem) return;
-	this.selectedItem.setBorderColor(inDataValue);
-	this.inspect();
+        if (this._inInspect || !this.selectedItem) return;
+        this.selectedItem.setBorderColor(inDataValue);
+        this.inspect();
     },
     stylesChange: function(inSender, inDataValue) {
-	if (this._inInspect || !this.selectedItem ) return;
-	wm.onidle(this, function() {
-	    var styles = inDataValue;
-	    var entries = styles.split(/;/);
-	    var stylesObj = {};
-	    for (var i = 0; i < entries.length; i++) {
-		var entry = entries[i];
-		if (entry.indexOf(":") != -1) {
-		    var styleName = dojo.trim(entry.substring(0,entry.indexOf(":")));	    
-		    var styleValue = dojo.trim(entry.substring(1+entry.indexOf(":")));
-		    styleName = styleName.replace(/-([a-z])/g,function(inValue) {return inValue.substring(1).toUpperCase();})
-		    if (styleName && styleValue) {
-			stylesObj[styleName] = styleValue;
-		    }
-		}
-	    }
-	    this.selectedItem.invalidCss = true;
-	    this.selectedItem.styles = stylesObj;
-	    this.selectedItem.renderCss();
-	    if (!dojo.isDescendant(document.activeElement, this.$.styleInput.domNode)) {
-		this.inspect();
-	    }
-	});
+        if (this._inInspect || !this.selectedItem) return;
+        wm.onidle(this, function() {
+            var styles = inDataValue;
+            var entries = styles.split(/;/);
+            var stylesObj = {};
+            for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                if (entry.indexOf(":") != -1) {
+                    var styleName = dojo.trim(entry.substring(0, entry.indexOf(":")));
+                    var styleValue = dojo.trim(entry.substring(1 + entry.indexOf(":")));
+                    styleName = styleName.replace(/-([a-z])/g, function(inValue) {
+                        return inValue.substring(1).toUpperCase();
+                    })
+                    if (styleName && styleValue) {
+                        stylesObj[styleName] = styleValue;
+                    }
+                }
+            }
+            this.selectedItem.invalidCss = true;
+            this.selectedItem.styles = stylesObj;
+            this.selectedItem.renderCss();
+            if (!dojo.isDescendant(document.activeElement, this.$.styleInput.domNode)) {
+                this.inspect();
+            }
+        });
     }
 });

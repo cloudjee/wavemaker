@@ -108,8 +108,7 @@ dojo.declare("wm.debug.DataPanel", wm.Layer, {
        } else {
            var data = inComponent.getData();
            this.dataEditor.setDataValue(js_beautify(dojo.toJson(data)));
-           if (this.dataEditor.setLineNumber) this.dataEditor.setLineNumber(0);
-           debugger;
+           if (this.dataEditor.setLineNumber) this.dataEditor.setLineNumber(0);           
            this.responseEditor.setDataValue(inComponent._lastResponse);
        }
        if (data instanceof Error) {

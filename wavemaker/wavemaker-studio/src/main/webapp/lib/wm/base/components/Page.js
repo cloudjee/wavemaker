@@ -126,7 +126,7 @@ dojo.declare("wm.Page", wm.Component, {
 		var result = dojo.parser.parse(this.domNode);
 		wm._dojoParserCurrentOwner = oldOwner;
 	    } else {
-		if (djConfig.isDebug) {
+		if (app.debugDialog) {
 		    this.debugId = app.debugDialog.newLogEvent({eventType: "loadComponents",
 								                        sourceDescription: "Page Loading",
                                                         resultDescription: this.name + " page's widgets and components initialized",
@@ -201,8 +201,8 @@ dojo.declare("wm.Page", wm.Component, {
 			this.start(backState, this.locationState);
 		    }
 		    if (this.debugId) {
-			app.debugDialog.endLogEvent(this.debugId);
-			delete this.debugId;
+    			app.debugDialog.endLogEvent(this.debugId);
+    			delete this.debugId;
 		    }
                     this._startCalled = true;
 	        if (wm.debugPerformance) {
@@ -431,54 +431,45 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	onStart: function(inPage) {		
 	},
-	keydown: function(e) {
-	    // if there are any modal dialogs showing, do not handle keypress, as
-	    // that would allow the user to interact with the page which is deliberately
-	    // blocked
-	    for (var i = 0; i < wm.dialog.showingList.length; i++) {
-		if (wm.dialog.showingList[i].modal) return;
-	    }
+    keydown: function(e) {
+        // if there are any modal dialogs showing, do not handle keypress, as
+        // that would allow the user to interact with the page which is deliberately
+        // blocked
+        for (var i = 0; i < wm.dialog.showingList.length; i++) {
+            if (wm.dialog.showingList[i].modal) return;
+        }
 
-	    // only the application's main page should be receiving keyboard events
-	      if (this.owner != app.pageContainer || this != app._page) return true;
+        // only the application's main page should be receiving keyboard events
+        if (this.owner != app.pageContainer || this != app._page) return true;
 
-	    var isInput = (e.target.tagName == "INPUT");
-	    var chr = app._keys[e.keyCode];
-            var isSpecial = chr && chr.length > 1;
+        var isInput = (e.target.tagName == "INPUT");
+        var chr = app._keys[e.keyCode];
+        var isSpecial = chr && chr.length > 1;
 
-            if (e.keyCode == dojo.keys.ESCAPE) {
-		this.onEscapeKey();
+        if (e.keyCode == dojo.keys.ESCAPE) {
+            this.onEscapeKey();
 
-	    } else if (e.shiftKey) {
-		if (djConfig.isDebug && (e.ctrlKey || e.altKey) && chr == "d") {
-		    app.debugDialog.show();
-		    dojo.stopEvent(e);
-		    return;
-		}
-                // we get a keyCode for the shiftKey being pressed which we should ignore; and a second keycode when a key is hit while shiftKey is held
-		if (e.keyCode != dojo.keys.SHIFT && !isInput) {
-		    if (this.onShiftKey(chr))
-			dojo.stopEvent(e);
-		}
-	    } else if (e.ctrlKey) {
-		if (e.keyCode != dojo.keys.CTRL) {
-		    if (this.onCtrlKey(chr))
-			dojo.stopEvent(e);
-		}
-	    } else if (e.keyCode == dojo.keys.ENTER && !isInput) {
-		if (this.onEnterKey())
-		    dojo.stopEvent(e);
-	    } else if (!isInput && e.keyCode) {
-                if (isSpecial) {
-		    if (this.onMiscKey(chr))
-			dojo.stopEvent(e);
-                } else {
-                    if (this.onLetterKey(chr))
-			dojo.stopEvent(e);
-		}
+        } else if (e.shiftKey) {
+            // we get a keyCode for the shiftKey being pressed which we should ignore; and a second keycode when a key is hit while shiftKey is held
+            if (e.keyCode != dojo.keys.SHIFT && !isInput) {
+                if (this.onShiftKey(chr)) dojo.stopEvent(e);
             }
+        } else if (e.ctrlKey) {
+            if (e.keyCode != dojo.keys.CTRL) {
+                if (this.onCtrlKey(chr)) dojo.stopEvent(e);
+            }
+        } else if (e.keyCode == dojo.keys.ENTER && !isInput) {
+            if (this.onEnterKey()) dojo.stopEvent(e);
+        } else if (!isInput && e.keyCode) {
+            if (isSpecial) {
+                if (this.onMiscKey(chr)) dojo.stopEvent(e);
+            } else {
+                if (this.onLetterKey(chr)) dojo.stopEvent(e);
+            }
+        }
 
-	},
+    },
+    
         onEnterKey: function() {},
         onShiftKey: function(inCharacter) {},
         onCtrlKey: function(inCharacter) {},
