@@ -448,6 +448,7 @@ wm.forEachWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 	if (!inWidget)
 		return false;
 
+    /* TODO: if inIgnoreBuiltin is false, perhaps we should use inWidget.widgets instead of getOrderedWidgets */
     for (var i=0, ws = inIgnoreBuiltin && inWidget instanceof wm.PageContainer ? [] : inWidget.getOrderedWidgets(), r, w; w=ws[i]; i++) {
 
 		if (w.forEachWidget && !inIgnoreBuiltin) {
