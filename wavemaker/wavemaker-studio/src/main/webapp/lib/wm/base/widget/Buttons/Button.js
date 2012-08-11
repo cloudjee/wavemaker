@@ -18,7 +18,8 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.Button", wm.ToolButton, {
-	height: "32px",
+	desktopHeight: "32px",
+    height: "32px",    
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
