@@ -474,6 +474,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
 	_loadedConnectionProperties: function(inData) {
 	    this._disableChangeEvents = true;
+		this.conHostInput.setRequired(true);
+		this.conExtraInput.setRequired(true);
 	    try {
 		this.conHostInput.setDataValue("");
 		this.conPortInput.setDataValue("");
@@ -501,10 +503,14 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		    this.conDBdropdown.setDisplayValue(inData.connectionUrl.length > 5 ? "Other" : "");
 
 			this.conHostInput.setShowing(false);
+			this.conHostInput.setRequired(false);
+			
 			this.conPortInput.setShowing(false);
 
 			this.conExtraInput.setCaption("");
 			this.conExtraInput.setShowing(false);
+			this.conExtraInput.setRequired(false);
+			
 			this.conExtra2Input.setCaption("");
 			this.conExtra2Input.setShowing(false);
 		} else {
