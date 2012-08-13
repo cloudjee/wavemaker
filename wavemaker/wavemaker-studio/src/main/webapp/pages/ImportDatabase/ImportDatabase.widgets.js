@@ -47,21 +47,21 @@ ImportDatabase.widgets = {
 	    }]
 	}],
 	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import Sample"}, {onclick: "importSampleBtnClick"}, {
+        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import HRDB Sample DataBase"}, {onclick: "importSampleBtnClick"}, {
         }],
-        spacer1: ["wm.Spacer", {width: "10px"}, {}],
+        spacer1: ["wm.Spacer", {width: "100%"}, {}],
 		testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
 		    }]
 		}],
-		spacer1: ["wm.Spacer", {width: "10px"}, {}],
+		spacer2: ["wm.Spacer", {width: "10px"}, {}],
 		importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
 		    }]
 		}],
-		spacer2: ["wm.Spacer", {width: "10px"}, {}],
+		spacer3: ["wm.Spacer", {width: "10px"}, {}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	    }]
 
