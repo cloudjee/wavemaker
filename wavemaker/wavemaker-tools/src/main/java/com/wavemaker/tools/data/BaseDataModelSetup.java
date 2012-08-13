@@ -164,7 +164,8 @@ public abstract class BaseDataModelSetup {
                 return t;
             }
         }
-        return null;
+        //Not a tooled DB 
+        return "Other";
     }
 
     public BaseDataModelSetup() {
@@ -660,6 +661,9 @@ public abstract class BaseDataModelSetup {
                         s = getDBTypeFromURL(this.connectionUrl.toString());
                     } else {
                         // will cause errror later
+                        if (DataServiceLoggers.importLogger.isWarnEnabled()) {
+                            DataServiceLoggers.importLogger.warn("Connection URL is NULL");
+                        }
                     }
                 }
 

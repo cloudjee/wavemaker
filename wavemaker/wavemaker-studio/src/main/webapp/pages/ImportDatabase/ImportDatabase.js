@@ -121,7 +121,8 @@ dojo.declare("ImportDatabase", wm.Page, {
 		this._testConnection(this.connectionUrlInput.getDataValue(),
 					this.usernameInput.getDataValue(),
 					this.passwordInput.getDataValue(),
-					this.driverClassInput.getDataValue());
+					this.driverClassInput.getDataValue(),
+					this.dialectInput.getDataValue());
 	},
 	
 	importBtnClick: function(inSender) {
@@ -194,10 +195,10 @@ dojo.declare("ImportDatabase", wm.Page, {
 		this.serviceNameInput.setDataValue(e);
 	},
 	
-	_testConnection: function(url, username, password, driverClassName) {
+	_testConnection: function(url, username, password, driverClassName, dialect) {
 		studio.beginWait("Test Connection: " + url);
 		studio.dataService.requestAsync(TEST_CONNECTION_OP,
-			[username, password, url, driverClassName],
+			[username, password, url, driverClassName, dialect],
 			dojo.hitch(this, "_connectionSucceeded"), 
 			dojo.hitch(this, "_connectionFailed"));
 	},
