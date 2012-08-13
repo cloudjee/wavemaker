@@ -618,9 +618,9 @@ dojo.declare("wm.Tree", wm.Box, {
         this._deselect();
         this.addToSelection(inNode);
     },
-    deselect: function(optionalNode) {
-        this.ondeselect(optionalNode || this.selected);
+    deselect: function(optionalNode,shiftClick) {
         this._deselect(optionalNode);
+        this.ondeselect(optionalNode || this.selected,shiftClick);
     },
     select: function(inNode, addToSelection) {
         if (!this.multiSelect) {
