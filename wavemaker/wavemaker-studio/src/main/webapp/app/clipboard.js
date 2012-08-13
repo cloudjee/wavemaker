@@ -52,7 +52,7 @@ Studio.extend({
             dojo.forEach(this.clipboard, function(clip, i) {
                 var c;
                 var p = inParent;
-                if (inParent instanceof wm.Layers && this.clipsboardClasses[i].prototype != wm.Layer) {
+                if (inParent instanceof wm.Layers && this.clipboardClasses[i] != "wm.Layer") {
                     p = altParent;
                 }
                 c = this._pasteControl(p, clip, this.clipboardClasses[i]);
