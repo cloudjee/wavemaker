@@ -45,18 +45,21 @@ RestUrlDialog.widgets = {
 				}]
 			    }]
 			}],
-		    headersPanel: ["wm.FancyPanel", {"height":"100%","title":"Headers", "labelHeight":"20"}, {}, {
-			headersGridPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+			headersLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Headers", height: "18px", border: "0"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],			headersGridPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 					headersGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Header Name","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false},{"show":true,"field":"dataValue","title":"Header Value","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false}],"deleteColumn":true,"localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
 					binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"expression":undefined,"source":"headersVar","targetProperty":"dataSet"}, {}]
 				}]
 		}],
 		    addHeaderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Add Header","desktopHeight":"48px","height":"48px","margin":"4"}, {"onclick":"headersGrid.addEmptyRow"}]
-		}],
 		}]
 		}],
 		    spacer61: ["wm.Spacer", {height: "10px"}, {}],
+			responseAreaLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Response", height: "18px", border: "0"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
 		    responseTextArea: ["wm.LargeTextArea", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea"}],
 		    errorMessageTextArea: ["wm.LargeTextArea", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea", showing: false}]
 		}],
