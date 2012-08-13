@@ -94,7 +94,18 @@
      		var c = inComponents[i];
      		var moreprops = c.listProperties();
      		wm.forEachProperty(props, function(p,name) {
-     			if (!moreprops[name]) delete props[name];
+     			if (!moreprops[name]) {
+                    delete props[name];
+                } else {
+                    if (moreprops[name].ignore) props[name].ignore = true;
+                    if (moreprops[name].ignoretmp) props[name].ignoretmp = true;
+                    if (moreprops[name].readonly) props[name].readonly = true;
+                    if (moreprops[name].hidden) props[name].hidden = true;
+                    if (moreprops[name].bindSource) props[name].bindSource = true;
+                    if (moreprops[name].bindTarget) props[name].bindTarget = true;
+                    if (moreprops[name].bindable) props[name].bindable = true;
+                    if (moreprops[name].editor != props[name].editor) props[name].ignore = true;
+                }
      		});
      	}
      	return props;
