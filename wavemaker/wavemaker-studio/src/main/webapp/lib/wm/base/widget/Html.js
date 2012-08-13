@@ -51,8 +51,8 @@ dojo.declare("wm.Html", wm.Control, {
 		            this.scheduleAutoSize();
                         }
 			return;
-		}	
-			
+		}
+
 		if (inHtml && dojo.isArray(inHtml))
 			inHtml = inHtml.join('');
 		if (inHtml && inHtml.value)
@@ -85,14 +85,14 @@ dojo.declare("wm.Html", wm.Control, {
 		var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
 		if (newHeight < this.minHeight) {
 		    newHeight = this.minHeight;
-		} 
+		}
 
 		/* Account for space needed for scrollbars */
 		if (contentWidth > this.bounds.w) {
 		    newHeight += 17;
 		}
 		    this.bounds.h = newHeight;
-		    this.height = newHeight + "px";		
+		    this.height = newHeight + "px";
 /*
 		if (setSize) {
 		    this.setHeight(newHeight + "px");
@@ -135,7 +135,7 @@ dojo.declare("wm.Html", wm.Control, {
 
 
 	    // the line underneath updates panel's width property. Therefore only required for studio.
-	    if (this.isDesignLoaded() && studio.designer.selected == this)
+	    if (this.isDesignLoaded() && dojo.indexOf(studio.designer.selected, this) != -1)
 		studio.inspector.reinspect();
             this._doingAutoSize = false;
 	},
@@ -155,7 +155,7 @@ dojo.declare("wm.Html", wm.Control, {
 	    this.inherited(arguments);
 	    if (this.isDesignLoaded())
                 if (this.autoSizeHeight || this.autoSizeWidth)
-	            this.doAutoSize(1,1);	
+	            this.doAutoSize(1,1);
         },
     getAutoSize: function() {
 	if (this.autoSizeWidth) return "width";

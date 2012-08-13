@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,7 +52,7 @@ dojo.declare("wm.Bounds", null, {
 	if (arguments.length == 1) {
 	    return this.setBounds(inL.l, inL.t, inL.w, inL.h)
 	}
-	
+
 	var b = this.bounds;
 	if (!isNaN(inL) && b.l != inL) {
 	    b.l = inL;
@@ -68,7 +68,7 @@ dojo.declare("wm.Bounds", null, {
 	    b.h = inH;
 	    this._boundsDirty = true;
 	}
-	
+
 	// If b.l, b.w, b.t or b.h is a string like "100", it should be changed to integer before adding.
 	// To ensure that we multiple it by 1.
 	b.r = b.l*1 + b.w*1;
@@ -196,7 +196,7 @@ dojo.declare("wm.Bounds", null, {
 	if (this.isRelativePositioned){
 	    return {w: this.width, h: this.height};
 	}
-	
+
 	var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
 	    var b = {
 		l: this.bounds.l,
@@ -240,11 +240,11 @@ dojo.declare("wm.DomNode", null, {
 	var s = this.node.style;
 	//		var style = {};
 	if (this.isRelativePositioned){
-	    s.width = inBox.w;	
+	    s.width = inBox.w;
 	    s.height = inBox.h;
-	    return true;	
+	    return true;
 	}
-	
+
 	var bl = inBox.l + "px";
 	if (!isNaN(inBox.l) && s.left != bl) {
 	    s.left = bl;
@@ -266,7 +266,7 @@ dojo.declare("wm.DomNode", null, {
 	    s.height = bh;
 	    s.lineHeight = inSingleLine ? bh : "normal";
 	    isChanged = true;
-	} 
+	}
 
 	//dojo.style(this.node, style);  proven to be very slow
 	return isChanged;
@@ -355,7 +355,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
        @type String
     */
     height: '',
-    minHeight: 0, // number represents pixels    
+    minHeight: 0, // number represents pixels
     minWidth: 0,
     minMobileHeight: 0,
     minDesktopHeight: 0,
@@ -400,15 +400,15 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     //===========================================================================
     constructor: function() {
 	this.widgets = {};
-	this._classes = dojo.clone(this._classes);    
+	this._classes = dojo.clone(this._classes);
     },
 
-    
+
     // experimental code for supporting dojo.parser
     // TODO:
     // 1. Need a way to find the parent widget (owner[node.parentNode.id]) should work, though we may need to parse "id" to strip out any owner ids
     // 2. Need a way to find the owner component (Page.js will need to set a global app._currentParseOwner before calling dojo.parser; and then restoring the prior value when its done in case Page.js is loading a pagecontainer)
-    // 3. Need a way to invoke postInit; probably will need Page.js to do a second traversal after all widgets are created calling postInit on each widget   
+    // 3. Need a way to invoke postInit; probably will need Page.js to do a second traversal after all widgets are created calling postInit on each widget
     markupFactory: function(params, node) {
 	var ctor = arguments.callee.arguments[2];
 	var domNode = node;
@@ -420,7 +420,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	params = dojo.mixin(params,{
 	    domNode: domNode,
 	    parentNode: domNode.parentNode,
-	    parent: parent,	    
+	    parent: parent,
 	    name: owner.getUniqueName(params.name),
 	    owner: owner,
 	    _designer: owner._designer,
@@ -464,7 +464,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (!this.isRelativePositioned)
 		this.domNode.style.position = "absolute";
             else
-		this.domNode.style.position = "relative";				
+		this.domNode.style.position = "relative";
 	    this.setParent(this.parent);
 	    this.setDomNode(this.domNode);
 	}
@@ -503,12 +503,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this.mobileHeight = this.height;
 	    } else {
 		this.height = this.mobileHeight = this.constructor.prototype.height;
-	    } 
+	    }
 	    if (this.minMobileHeight) {
 		this.minHeight = this.minMobileHeight;
 	    } else {
 		this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
-	    } 
+	    }
 	}
 
 	//if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
@@ -526,7 +526,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	else {
 	    this.border = (this.border) ? String(this.border) : "0";
 	}
-	this.borderExtents = this._parseExtents(this.border); 
+	this.borderExtents = this._parseExtents(this.border);
 
 	this.padding = String(this.padding);
 	this.paddingExtents = this._parseExtents(this.padding);
@@ -536,7 +536,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
    	this.setDisabled(this.disabled);
 
-	/* This code is only used in design mode... if then 
+	/* This code is only used in design mode... if then
   	if (this.styles) {
 	    this.set_styles(this.styles);
 	    this.styles = "";
@@ -591,11 +591,11 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		wm.forEachProperty(this.widgets, function(w,name) {
 		    wids.push(w);
 		});
-		for (var i = 0, w; (w = wids[i]); i++) 
+		for (var i = 0, w; (w = wids[i]); i++)
 		    w.destroy();
 		wids = [];
 	    }
-	    
+
 	    this.widgets = null;
 	    this.parentNode = null
 	    this.setParent(null);
@@ -619,7 +619,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this.dom.node = null;
 		this.dom = null;
 	    }
-	    
+
 	}
     },
     loaded: function() {
@@ -647,7 +647,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	if (this instanceof wm.Layout && this.owner == app._page) return false;
 	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
         var parent;
-        if (this.parent && this.parent instanceof wm.Control) 
+        if (this.parent && this.parent instanceof wm.Control)
             parent = this.parent;
         else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
             parent = this.owner.owner;
@@ -659,7 +659,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
 	if (this instanceof wm.Layer && !this.active) return true;
         var parent;
-        if (this.parent && this.parent instanceof wm.Control) 
+        if (this.parent && this.parent instanceof wm.Control)
             parent = this.parent;
         else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
             parent = this.owner.owner;
@@ -739,7 +739,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this._layerConnections = [];
         dojo.forEach(layers, dojo.hitch(this,function(l) {
             this._layerConnections.push(this.connect(l, "onShow", this, function() {
-                if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
+                if (dojo.every(layers, function(l2) {return l2.isActive();}) &&
                     dojo.every(dialogs, function(l2) {return l2.showing;})) {
                     f();
                 }
@@ -749,14 +749,14 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         dojo.forEach(dialogs, dojo.hitch(this,function(d) {
             this._layerConnections.push(this.connect(d, "setShowing", this, function() {
                 if (d.showing && !d._transitionToHiding) { // transition handles case where showing is true, but animation is running that will have it hidden very soon
-                    if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
+                    if (dojo.every(layers, function(l2) {return l2.isActive();}) &&
                         dojo.every(dialogs, function(l2) {return l2.showing;})) {
                         f();
                     }
                 }
             }));
         }));
-        
+
     },
     disconnectFromAllLayers: function() {
 	dojo.forEach(this._layerConnections, dojo.hitch(this, function(c) {
@@ -816,7 +816,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	wm.forEachProperty(this.widgets, function(w, name) {
 	    w.insertDomNodes();
 	});
-	
+
 	var parentPage = this.getParentPage();
 	try {
 	    var a= 1;
@@ -824,9 +824,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this.renderCss();
 		this.invalidCss = false;
 	    }
-	    
+
 	    var p = this.containerNode || this.parentNode || this.parent.domNode;
-  	    if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body) 
+  	    if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body)
 		p.appendChild(this.domNode);
 	} catch (e) {
 	    console.log("ERROR INSERTING DOM NODES FOR " + this.name );
@@ -885,7 +885,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    this.setSizeProp("height", inFlex*100 + "%");
 	}
     },
-    /* mkantor: Commented out 4/14/2010; presumed WM 4.x only 
+    /* mkantor: Commented out 4/14/2010; presumed WM 4.x only
        isFlex: function() {
        var box = this.getParentBox();
        if (!box)
@@ -924,10 +924,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.inherited(arguments);
 
         if (!this._doingAutoSize)
-	    this._needsAutoSize = true; 
+	    this._needsAutoSize = true;
 
 	if (this.isReflowEnabled()) {
-	    if (this.parent) 
+	    if (this.parent)
 		this.parent.reflow();
 	    else {
 		this.render();
@@ -949,7 +949,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.updateBounds();
     },
     /**
-       Update bounds and flex properties based on width/height properties 
+       Update bounds and flex properties based on width/height properties
     */
     updateBounds: function() {
 	//this.domNode.flex = 0;
@@ -1029,7 +1029,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
         // If widget suppports resizing, and isn't in the middle of doing an autoSize, then it now needs to be autoResized as its width or height have changed
         if (!this._doingAutoSize) {
-	    this._needsAutoSize = true; 
+	    this._needsAutoSize = true;
 
             // A setSize call that is not made while doing autoSize means we are no longer an autosize widget
             if (this.autoSizeHeight && n == "height") this.autoSizeHeight = false;
@@ -1039,7 +1039,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	// MK: One line fix added Feb 18 2010:
 	// Because the domNode of the designWrapper is not getting updated, we need to set invalidCss to true.  May prove unnecessary.
 	if(this.designWrapper) this.designWrapper.invalidCss = true;
-	
+
 	if (!this._loading)
 	    this.updateBounds();
 	if (this.isReflowEnabled() && this.showing) {
@@ -1077,7 +1077,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.setSizeProp("height", this.height, inMinHeight);
     },
 
-    // this method is related to set/getMinWidth/Height, but whereas set/getMinWidth/Height are basic setters/getters of the minWidth/minHeight property, 
+    // this method is related to set/getMinWidth/Height, but whereas set/getMinWidth/Height are basic setters/getters of the minWidth/minHeight property,
     // these methods are designed to allow each object to calculate at runtime what its preferred minimum is... unless one has been specified by the user.
     // NOTE: minWidth/minHeight are ignored if size is set in px instead of %.  minHeight/minWidth may also kick in for fitToContent containers.
     getMinWidthProp: function() {
@@ -1132,7 +1132,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 this.bounds.w = neww;
                 this.domNode.style.width = neww + "px";
             }
-        } 
+        }
 
         if (this.autoSizeHeight) {
             this.domNode.style.height = "";
@@ -1146,7 +1146,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             }
         }
 	if (this.isDesignLoaded() && studio.designer.selected == this)
-	    setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
+	    setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
         this._doingAutoSize = false;
     },
 
@@ -1178,7 +1178,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
     //===========================================================================
     // Rendering; forceRender is a way to skip the isReflowEnabled test
-    //===========================================================================    
+    //===========================================================================
     render: function(forceRender) {
 	if (forceRender || this.isReflowEnabled()) {
 	    this.renderCss();
@@ -1194,7 +1194,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 	// these should be called only once per object
 	var cssObj = this.buildCssSetterObj();
-	// some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.  
+	// some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.
 	if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
 	    this.setCssViaCssText(cssObj);
 	    this.renderedOnce = 1;
@@ -1220,7 +1220,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	if (this.margin.indexOf(",") == -1 && this.margin.indexOf(" ") != -1)
 	{
 	    marginSplitter = " ";
-	}	
+	}
 
 	var paddArr = this.padding.split(paddingSplitter);
 	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && (!wm.isFakeMobile || this instanceof wm.Container == false) ? "auto" : "hidden");
@@ -1229,7 +1229,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var margins = (this.margin||"0").split(marginSplitter);
 	var borders = (this.border||"0").split(borderSplitter);
 	var paddings = (this.padding||"0").split(paddingSplitter);
-	
+
 
 	    if (margins.length == 1) {
 		margins[1] = margins[2] = margins[3] = margins[0];
@@ -1338,7 +1338,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		        } else {
 		            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
 		                return "-" + inLetter.toLowerCase();
-		            }) + ":" + styleValue);		            
+		            }) + ":" + styleValue);
 		        }
 		        this._appliedStyles[styleName] = styleValue;
 	        }
@@ -1363,12 +1363,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto" || cssObj.overflowY == "scroll")) {
             cssTextItems.push("-webkit-overflow-scrolling: touch");
         }
-        
+
         // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
         // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
         this.domNode.style.cssText += cssTextItems.join(";");
     },
-    
+
 	setCssViaDom: function(cssObj) {
 	    if (!this.domNode) return;
 	    var s = this.domNode.style;
@@ -1396,7 +1396,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			    s[styleName] = styleValue;
 			    this._appliedStyles[styleName] = styleValue;
 			}
-		    } 
+		    }
 		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
 			    s.WebkitOverflowScrolling = "touch";
 		    }
@@ -1425,7 +1425,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    // bc
 	    if (this.designWrapper) {
 		this.designWrapper.controlBoundsChange();
-		this.designWrapper.renderBounds();			
+		this.designWrapper.renderBounds();
 	    }
 	    return isChanged;
 	},
@@ -1463,12 +1463,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	setAutoScroll: function(inAutoScroll) {
 	    this.autoScroll = inAutoScroll;
 	    if (inAutoScroll) {
-		if (this.isDesignLoaded() && (this.scrollX || this.scrollY)) {
-		    this.scrollX = false;
-		    this.scrollY = false;
-                    if (studio.designer.selected == this)
-			studio.inspector.reinspect();
-		}
+			if (this.isDesignLoaded() && (this.scrollX || this.scrollY)) {
+			    this.scrollX = false;
+			    this.scrollY = false;
+	            if (dojo.indexOf(studio.designer.selected, this) != -1) {
+					studio.inspector.reinspect();
+				}
+			}
 	    }
 
 	    // Update the css without also updating the bounds (TODO: make this mechanism less cumbersome)
@@ -1505,7 +1506,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	enable: function() {
 	    this.setValue("disabled", false);
 	},
-	toString: function(inText) {   
+	toString: function(inText) {
 	    var t = inText || "";
 	    if (!this.showing)
 		t += " (" + wm.getDictionaryItem("wm.Control.toString_HIDDEN") + ")";
@@ -1539,8 +1540,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		    this.domNode.parentNode.removeChild(this.domNode);
 		}
 	    }
-	    
-	    // If there is a new parent, add this component to its widgets and controls		
+
+	    // If there is a new parent, add this component to its widgets and controls
 	    /*
 	      if (newParent) {
 	      newParent.addWidget(this);
@@ -1615,7 +1616,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
 		w.setParentDisabled(this._disabled);
 	    }));
-	    
+
 	    dojo.toggleClass(this.domNode, "Disabled", this._disabled);
 	},
     setParentDisabled: function(inDisabled) {
@@ -1664,7 +1665,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	/**
 	   Add CSS class to a widget node.<br/>
 	   @param {String} inClass The class to add.
-	   @param {String} inNodeName (Optional) a property in this widget that references a node. 
+	   @param {String} inNodeName (Optional) a property in this widget that references a node.
 	   If ommitted, the default node is used.
 	   @example this.panel.addUserClass("hilite-border");
 	*/
@@ -1679,9 +1680,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	/**
 	   Remove a CSS class from a widget node.<br/>
 	   @param {String} inClass The class to remove.
-	   @param {String} inNodeName (Optional) a property in this widget that references a node. 
+	   @param {String} inNodeName (Optional) a property in this widget that references a node.
 	   If ommitted, the default node is used.
-	   @example this.panel.removeUserClass("hilite-border"); 
+	   @example this.panel.removeUserClass("hilite-border");
 	*/
 	removeUserClass: function(inClass, inNodeName) {
 	    inNodeName = inNodeName || "domNode";
@@ -1689,7 +1690,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (n)
 		dojo.removeClass(n, inClass);
 	    var cs = this._classes[inNodeName] || [];
-	    for (var i=0, c; c=cs[i]; i++) 
+	    for (var i=0, c; c=cs[i]; i++)
 		if (c == inClass)
 		    cs.splice(i--, 1);
 	    if (!cs.length)
@@ -1743,7 +1744,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     onRightClick: function(event){
     },
     onMouseOver: function(event){
-    }, 
+    },
     onMouseOut: function(event){
     },
 
@@ -1803,7 +1804,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			app.createToolTip(self.hint, self.domNode, event, self);
 		    }
 		});
-		
+
 	    }
 	    this.onMouseOver(event);
 	    dojo.stopEvent(event);
@@ -1817,7 +1818,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		});
 	    }
 	    this.onMouseOut(event);
-	    dojo.stopEvent(event); 
+	    dojo.stopEvent(event);
 	},
 	onMouseOver: function(event){},
     onMouseOut: function(event){},

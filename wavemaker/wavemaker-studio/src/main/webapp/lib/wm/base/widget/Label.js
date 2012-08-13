@@ -131,14 +131,14 @@ dojo.declare("wm.Label", wm.Control, {
         var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
         if (newHeight < this.minHeight) {
             newHeight = this.minHeight;
-        } 
+        }
 
         /* Account for space needed for scrollbars */
         if (contentWidth > this.bounds.w) {
             newHeight += 17;
         }
             this.bounds.h = newHeight;
-            this.height = newHeight + "px";     
+            this.height = newHeight + "px";
 /*
         if (setSize) {
             this.setHeight(newHeight + "px");
@@ -181,8 +181,8 @@ dojo.declare("wm.Label", wm.Control, {
 
 
         // the line underneath updates panel's width property. Therefore only required for studio.
-        if (this.isDesignLoaded() && studio.designer.selected == this)
-        studio.inspector.reinspect();
+        if (this.isDesignLoaded() && dojo.indexOf(studio.designer.selected, this) != -1)
+            studio.inspector.reinspect();
 
             this._doingAutoSize = false;
     },
@@ -190,7 +190,7 @@ dojo.declare("wm.Label", wm.Control, {
         var oldLink = this.link;
         this.link = inLink;
         this.renderLabel();
-        
+
         /* Make it bindable */
         this.valueChanged("link", inLink);
     },
@@ -200,7 +200,7 @@ dojo.declare("wm.Label", wm.Control, {
             if (oldSingleLine != inSingleLine)
                 this.domNode.style.lineHeight = (inSingleLine) ? this.bounds.h + "px" : "normal";
         this.renderLabel();
-        if (inSingleLine && this.autoSizeHeight) 
+        if (inSingleLine && this.autoSizeHeight)
         this.autoSizeHeight = false;
 
         if (inSingleLine != oldSingleLine && (this.autoSizeHeight || this.autoSizeWidth)) {

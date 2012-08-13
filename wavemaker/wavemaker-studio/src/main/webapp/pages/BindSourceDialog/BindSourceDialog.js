@@ -26,15 +26,15 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	    this.binderSource.initBinding(false, inProp);
 	},
     onClose: function(inWhy) {
-	var object = this.targetProps.object;
+		var object = this.targetProps.object;
 
-	// if the user clicked on any other components while binding, reselect the component that we're binding onClose
-	// However, this results in bad behaviors if we try to reselect a subcomponent, like the input of a servicevariable
-	if (object.owner == studio.page) {
-	    if (object != studio.selected) {
-		studio.select(object); 
-	    }
-	}
+		// if the user clicked on any other components while binding, reselect the component that we're binding onClose
+		// However, this results in bad behaviors if we try to reselect a subcomponent, like the input of a servicevariable
+		if (object.owner == studio.page) {
+		    if (dojo.indexOf(studio.selected, object) == -1) {
+				studio.select(object); 
+		    }
+		}
     },
     update: function(inTargetProps, noRegen) {
 	this.binderSource.pageSelect.beginEditUpdate();

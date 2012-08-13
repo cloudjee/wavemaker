@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 Studio.widgets = {
     loadingDialog: ["wm.LoadingDialog", {_classes: {domNode: ["studiodialog"]}}],
         themesListVar: ["wm.Variable", {type: "StringData"}],
@@ -90,7 +90,7 @@ Studio.widgets = {
 	navImageList: ["wm.ImageList", {width: 24, height: 28, colCount: 10, url: "images/navBtns.png"}, {}],
 //	canvasToolbarImageList: ["wm.ImageList", {width: 24, height: 24, colCount: 20, url: "images/canvasToolbarBtns.png"}, {}],
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
-    canvasToolbarImageList16: ["wm.ImageList", {width: "16", widthOffset: -1, height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],        
+    canvasToolbarImageList16: ["wm.ImageList", {width: "16", widthOffset: -1, height: "16", colCount: 22, url: "images/canvasToolbarBtns16.png"}, {}],
     contextualMenu: ["wm.PopupMenu", {"fullStructureStr":"[{\"label\":\"Help\",\"iconClass\":undefined,\"imageList\":null,\"children\":[]}]"},{onclick: "contextualMenuClick"}],
     genericDialog: ["wm.GenericDialog", {_classes: {domNode: ["studiodialog"]}}],
     startPageDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "790px", height: "465px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", corner: "cc" }],
@@ -108,7 +108,7 @@ Studio.widgets = {
     }],
 	layout: ["wm.Layout", {height: "100%"}, {}, {
 	    dialog: ["wm.Dialog", {height: "400px", border: "1", borderColor: "#666E80", _noAnimation: true, noEscape: false}, {}],
-		
+
 	    navigationBar: ["wm.Panel", {_classes: {domNode: ["StudioMenuBar"]}, width: "100%", height: "28px", border: "0", layoutKind: "left-to-right"}, {}, {
 			navBtnHolder: ["wm.Panel", {width: "100%", border: "0", layoutKind: "left-to-right", imageList: "navImageList", horizontalAlign: "left"}, {}, {
 			    navigationMenu: ["wm.DojoMenu", {_classes: {domNode: ["StudioMenuBar", "StudioMenu"]},
@@ -121,11 +121,11 @@ height: "29px", width: "420px",
 							       "openProjectItem": "Open Project...",
 							       "closeProjectItem": "Close Project"
 							   },
-						      "fullStructure": 
+						      "fullStructure":
 						      [
 							  {"defaultLabel" :"File",
 							 idInPage: "projectPopupBtn",
-							 "children": 
+							 "children":
 							 [
 							     {"defaultLabel":"New Project...",
 							       idInPage: "newProjectItem",
@@ -181,7 +181,7 @@ height: "29px", width: "420px",
 								    idInPage: "phonegapBuildItem",
 								    onClick: "project.getPhonegapBuild"}
 							       ],
-							       iconClass: "deployProjectItem"},                                      
+							       iconClass: "deployProjectItem"},
                                                               {"defaultLabel": "Preferences...",
 							       idInPage: "preferencesItem",
 							       onClick: "projectSettingsClick",
@@ -243,7 +243,7 @@ height: "29px", width: "420px",
 								 onClick: "outlinedClick",
 								 iconClass: "outlineItem"}]},
 								 */
-							  {"defaultLabel": "Insert", 
+							  {"defaultLabel": "Insert",
 							     idInPage: "insertPopupBtn",
 							     "children":[
 							     ]},
@@ -359,7 +359,7 @@ height: "29px", width: "420px",
 					label12: ["wm.Label", {_classes: {domNode:["StudioLabel"]},height: "22px", width: "100%", caption: "Visual Components", border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
-					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "3,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
+					widgetsTree: ["wm.DraggableTree", {multiSelect:1,height: "100%", border: "", padding: "3,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", ondeselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
 				    }],
 			    componentModel: ["wm.Layer", {_classes: {domNode: ["StudioLeftLayer"]}, caption: "Services", padding: "3,0,0,0"}, {onShow: "resetCompTreeSearch"}, {
 					compTreeSearch: ["wm.Text", {_classes: {domNode:["StudioEditor"]},caption: "", width: "100%",  height: "27px", placeHolder: "Find Component", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "compTreeSearchChange"}],
@@ -373,7 +373,7 @@ height: "29px", width: "420px",
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
 
-					compTree: ["wm.Tree", {height: "100%", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect"}]
+					compTree: ["wm.Tree", {multiSelect:1,height: "100%", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect", ondeselect: "treeSelect"}]
 				    }]
 
 /*
@@ -397,7 +397,7 @@ height: "29px", width: "420px",
 		    splitterSpacer: ["wm.Spacer", {_classes: {domNode: ["StudioTabBarBackground"]}, height: "32px", width:"100%"}],
 		    splitter1: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter", "StudioMainVerticalSplitter"]},border: "0", layout: "left", parentIsSplitter:1, height: "100%", width: "4px"}, {}]
 		}],
-		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "NoRightMarginOnTab"]}, conditionalTabButtons:true, customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
+		tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "NoRightMarginOnTab"]}, conditionalTabButtons:true, customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, {
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "1,1,0,1", layoutKind: "top-to-bottom", borderColor: "#959DAB"}, {}, {
@@ -445,12 +445,12 @@ height: "29px", width: "420px",
     					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding", hint: "Enable this button by enabling mobile folding in your Page's properties in the services tab", border: "0", showing:false},   {onclick: "designMobileFolding"}]
 				    }],
 				    deviceSettingSpacer: ["wm.Spacer", {width: "100%"}],
-                    orientationTogglePanel: ["wm.ToggleButtonPanel", {width: "150px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, { 
+                    orientationTogglePanel: ["wm.ToggleButtonPanel", {width: "150px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, {
                          binding: ["wm.Binding",{},{}, {
                             wire: ["wm.Wire", {"source":"portraitToggleButton","targetProperty":"currentButton"}, {}]
-                        }],                       
+                        }],
                         portraitToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%",  height: "100%", margin: "0", caption: "Portrait", border: "0,1,0,0"}, {onclick: "deviceSizeSelectChanged"}],
-                        landscapeToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Landscape", border: "0,0,0,0"},  {onclick: "deviceSizeSelectChanged"}]                       
+                        landscapeToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Landscape", border: "0,0,0,0"},  {onclick: "deviceSizeSelectChanged"}]
                     }],
 				    deviceSizeSelect: ["wm.SelectMenu", {_classes: {domNode:["StudioEditor"]},caption: "Size", margin:"4,0,4,15", width: "180px", height: "24px", captionSize: "50px",  displayField: "name", dataField: ""},{onchange: "deviceSizeSelectChanged"},{
 					binding: ["wm.Binding",{},{}, {
@@ -461,10 +461,10 @@ height: "29px", width: "420px",
 				    deviceBarHelpBtn: ["wm.ToolButton", {width: "20px", height: "20px", margin: "5,0,0,0", hint: "Phone and Tablet sizes are not exact; you need the real device to see how it will really look.  Click for more help", _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "showDeviceBarHelp"}]
 				}]
 				}],
-				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {				    
+				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerWrapper: ["wm.Panel", {width: "100%", height: "100%", autoScroll: true, horizontalAlign:"center", verticalAlign: "middle"}, {}, {
                         designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
-                    }],				    
+                    }],
 				    benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {
 							statusBarLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "100%", caption: ""}],
@@ -477,7 +477,7 @@ height: "29px", width: "420px",
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true, border: "1,0,0,1", borderColor: "#959DAB" }, {}, {
 				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked", "StudioDarkPanel"]},width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400,title: "Property Panel"}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
 				    inspectorToolbarOuter: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, width:"100%", height: "60px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"3,0,2,0"},{},{
-					inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
+					inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{
 					    propertySearchBar: ["wm.Text", {_classes: {domNode:["StudioEditor"]},resetButton: true, width: "100%", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
 					    propertySearchBarSpacer: ["wm.Spacer", {width: "20px"}],
 					    propertiesMenu: ["wm.PopupMenu", {
@@ -488,9 +488,9 @@ height: "29px", width: "420px",
 						{"separator":true,"defaultLabel":"Separator"},
 						{"label":"Component Info","defaultLabel":"Component Info","isCheckbox":false,"onClick":"generateDiagnostics", onClick: "inspector.generateComponentInfo"},
 						{idInPage: "writeDocumentationMenuItem", "label":"Write Documentation","defaultLabel":"Write Documentation","isCheckbox":true,"onClick":"selected.viewDocumentation"},
-						
+
 						{"separator":true,"defaultLabel":"Separator"}*/
-					    ]}, {}],					
+					    ]}, {}],
 					propMenuButton: ["wm.ToolButton", {height: "100%", width: "20px", caption: ""}, {onclick: "propertiesMenu"}]
 				    }],
 
@@ -531,11 +531,11 @@ height: "29px", width: "420px",
 						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
 						    editAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
-						    editAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]	    
+						    editAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]
 						}],
 						editAreaPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 						    editArea: ["wm.AceEditor", {width: "100%", height: "100%", minWidth: 20}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty", onChange1: "updateAutoComplete", onShow: "updateAutoComplete", onHide: "hideAutoComplete"}],
-						    editAreaSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],  
+						    editAreaSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],
 						    autoCompletionDialog: ["wm.Panel", {width: "200px", minWidth: 20, height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5"}, {}, {
 							listPanelLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Completions"}],
 							autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, renderVisibleRowsOnly: false, width: "100%", height: "100%", headerVisible: false, dataFields: "name", columns: [{show:true,field:"name",cssClass:"if (${name}.match(/\<b\>/)) {'CompletionListHeader';}" }]}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
@@ -550,7 +550,7 @@ height: "29px", width: "420px",
 						}]
 					    }],
 					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
-						
+
 						cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
 						    cssPageSaveBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
 						    cssPageFindBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
@@ -560,7 +560,7 @@ height: "29px", width: "420px",
 						    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
 						    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
-						    cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]	    
+						    cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]
 						}],
 						cssPageLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "Page CSS", height: "18px", width: "100%", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
@@ -624,7 +624,7 @@ height: "29px", width: "420px",
 						    themesPageDeleteBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
 						    themesPageRevertBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Revert Theme", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
 						}],
-                                                themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true, 
+                                                themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
                                                                                   pageName: "ThemeDesigner"}]
                                             }],
 

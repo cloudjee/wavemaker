@@ -1,7 +1,7 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
+
+
+
+
 /*
  *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
@@ -260,7 +260,7 @@ dojo.declare("wm.Editor", wm.Container, {
 	},
 	setValueAsEmpty: function(){
 		this.setDataValue(dojo.hitch(this.editor, 'makeEmptyValue')());
-	},	
+	},
 	clear: function() {
 		this.dataValue = null;
 		this.beginEditUpdate();
@@ -344,8 +344,8 @@ wm.Editor.extend({
 		var width = captionWidth * 4;
 		this.setWidth(width + 'px');
 		// the line underneath updates panel's width property. Therefore only required for studio.
-	        if (this.isDesignLoaded() && studio.designer.selected == this)
-			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
+	        if (this.isDesignLoaded() && dojo.indexOf(studio.designer.selected,this) != -1)
+			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
 	},
 	makePropEdit: function(inName, inValue, inEditorProps) {
 		switch (inName) {

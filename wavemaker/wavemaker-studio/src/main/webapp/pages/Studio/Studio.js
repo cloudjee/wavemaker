@@ -82,7 +82,7 @@ dojo.declare("Studio", wm.Page, {
             this.scriptPageFormatBtn.hide();
             this.appsrcPageFormatBtn.hide();
         }
- 
+
          app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
         this.neededJars = {};
     /*
@@ -280,7 +280,7 @@ dojo.declare("Studio", wm.Page, {
         dojo.connect(node, "onmouseout", this, function() {
             app.hideToolTip();
         });
-        
+
         } else {
         if (!this.isLoginShowing()) {
             if (!studio.getUserName()) {
@@ -313,7 +313,7 @@ dojo.declare("Studio", wm.Page, {
             return;
             if (this._forceExit)
             return;
-        var 
+        var
         u = this.getDictionaryItem("ALERT_UNSAVED_LOST"),
             s = this.getDictionaryItem("ALERT_NO_UNSAVED"),
             m = this.isProjectDirty() ? u : s;
@@ -422,13 +422,13 @@ dojo.declare("Studio", wm.Page, {
              } else {
                  this.disableMenuBar(true);
              }
-    
-                // mount project so live services and the resources folder can be accessed; 
-                // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources; 
-                // at some point a cleanup of that code may be needed.          
+
+                // mount project so live services and the resources folder can be accessed;
+                // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources;
+                // at some point a cleanup of that code may be needed.
             /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
                 if (!wm.studioConfig.preventLiveData && inName != '' && studio.application)
-                            studio.deploy(null,"studioProjectCompile", true); 
+                            studio.deploy(null,"studioProjectCompile", true);
         }
 
         //this.disableCanvasSourceBtns(!b);
@@ -456,39 +456,39 @@ dojo.declare("Studio", wm.Page, {
     var f = function(e) {
 
         if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
-        dojo.stopEvent(e);      
+        dojo.stopEvent(e);
         var menuObj = studio.contextualMenu;
         menuObj.removeAllChildren();
 
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_TUTORIALS"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_TUTORIALS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
                         });
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_DOCS"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
                         });
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_PROPDOCS"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
                         });
 
         menuObj.dojoObj.addChild(new dijit.MenuSeparator());
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_COMMUNITY"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_FORUMS"), "Forums");}
                         });
-                                                
+
         menuObj.update(e);
     };
     dojo.connect(this.domNode, "oncontextmenu", this, f);
     if (dojo.isFF < 5) {
         dojo.connect(this.domNode, "onmousedown", this, function(e) {
-        if (e.button == 2 || e.ctrlKey) 
+        if (e.button == 2 || e.ctrlKey)
         dojo.hitch(this, f)(e);
         });
     }
@@ -526,7 +526,7 @@ dojo.declare("Studio", wm.Page, {
             this.select(this.page.root);
             this.refreshDesignTrees();
         }
-        
+
         if (this.page) {
             var deviceType = this.page.getPreferredDevice();
             if (deviceType && deviceType != this.currentDeviceType) {
@@ -617,14 +617,14 @@ dojo.declare("Studio", wm.Page, {
     updateFullServiceList: function() {
     studio.updateServices();
     studio.application.loadServerComponents();
-    studio.refreshServiceTree(); 
+    studio.refreshServiceTree();
     },
     updateServices: function() {
         wm.typeManager.clearTypes();
         this.setLiveLayoutReady(false);
         this.servicesService.requestSync("listTypes", [], dojo.hitch(this, "typesChanged"));
         this.servicesService.requestSync("listServicesWithType", [], dojo.hitch(this, "servicesDataChanged"));
-            studio.refreshServiceTree(); 
+            studio.refreshServiceTree();
     },
     typesChanged: function(inData) {
         if (this._inRestoreCleanApp) return;
@@ -661,7 +661,7 @@ dojo.declare("Studio", wm.Page, {
         },
 
     refreshPagePalette: function() {
-        var 
+        var
             palette = studio.palette,
             list = this.project.getPageList(),
                     caption = bundlePackage.PageContainers,
@@ -675,7 +675,7 @@ dojo.declare("Studio", wm.Page, {
             }
     },
     refreshDataPalette: function() {
-        var 
+        var
             palette = studio.palette,
             list = wm.dataSources.sources,
             caption = bundlePackage.Database,
@@ -772,7 +772,7 @@ dojo.declare("Studio", wm.Page, {
             //this["_cachedEditDataeditArea"] = inScript;
         this.editArea.setText(inScript);
     },
-    
+
         getAppScript: function() {
         return this.appsourceEditor.getText();
     },
@@ -861,6 +861,7 @@ dojo.declare("Studio", wm.Page, {
         var tree = this.compTree;
         // FIXME: redundant
         var ctor = dojo.getObject(inType), p = (ctor || 0).prototype;
+        /* TODO: tree.selected may now be an array? */
         var s = tree.selected || 0, c = s.component || 0, owner = c.owner || s.owner || this.page;
         return owner.createComponent(this.makeName(inType, owner), inType, inProps);
     },
@@ -872,7 +873,7 @@ dojo.declare("Studio", wm.Page, {
         return c;
     },
     newWidget: function(inType, inProps) {
-        var p = this.findContainer(this.selected, inType) || studio.page.root.findContainer(inType);
+        var p = this.findContainer(this.selected[0], inType) || studio.page.root.findContainer(inType);
         if (p)
             return this._newWidget(inType, inProps, p);
         else
@@ -917,138 +918,157 @@ dojo.declare("Studio", wm.Page, {
     reinspect: function(forceRegen) {
 
         if (this.inspector && this.inspector.inspected && !forceRegen) {
-        this.inspector.reinspect();
+         this.inspector.reinspect();
         } else if (this.inspector  && forceRegen) {
-        var inspected = this.inspector.inspected;
-        this.inspector.inspected = null;
-        if (inspected)
-            this.inspector.inspect(inspected);
-        }               
+            var inspected = this.inspector.inspected;
+            this.inspector.inspected = null;
+            if (inspected)
+                this.inspector.inspect(inspected);
+        }
     },
-    inspect: function(inComponent) {
-    if (inComponent.noInspector) return;
+    inspect: function(inComponents) {
+        if (!dojo.isArray(inComponents)) {
+            if (inComponents instanceof wm.Component) inComponents = [inComponents];
+        }
+        //if (inComponent.noInspector) return;
         wm.job("studio.inspect", 1, dojo.hitch(this, function() {
-        this._inspect(inComponent);
+            this._inspect(inComponents);
         }));
     },
-    _inspect: function(inComponent) {
-    if (inComponent.isDestroyed || !this.application) return;
+    _inspect: function(inComponents) {
+        inComponents = dojo.filter(inComponents, function(c) {return !c.isDestroyed;});
+        if (inComponents.length == 0 || !this.application) return;
 
-    // update label
-    this.setInspectedCaption(inComponent);
-    // inspect component
-    //studio.inspector.setLayerByCaption("Properties");
-    studio.inspector.inspect(inComponent);
+        // update label
+        this.setInspectedCaption(inComponents[0]);
+        // inspect component
+        //studio.inspector.setLayerByCaption("Properties");
+        studio.inspector.inspect(inComponents);
     },
     setInspectedCaption: function(inComponent) {
-    this.PIContents.setTitle(inComponent ? inComponent.name  + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
+        this.PIContents.setTitle(inComponent ? inComponent.name + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
     },
-    select: function(inComponent, isNew) {      
-            if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
-/*
-            if (this._lastBindSelect == inComponent) {
-            var propList = inComponent.listDataProperties("bindTarget");
-            var randProp;
-            for (var i in propList) {
-                randProp = i;
-                break;
-            }
-            this.bindDialog.page.update({object: inComponent, targetProperty: randProp});
-            this.bindDialog.page.binderSource.searchBar.setDataValue("");
-            this._lastBindSelect = null;
-            } else {
-            */
-            this.bindDialog.page.binderSource.searchBar.setDataValue("#" + inComponent.name);
-            this._lastBindSelect = inComponent;
-/*          }*/
-            return;
-        }
-
-        // if there is a bindSelect, then set selected to null so that we can force a reselect
-        if (this._lastBindSelect) {
-                this._lastBindSelect = null;
-        this.selected = null;
-        }
-        if (this.selected == inComponent) {
-        /* Make sure the tree shows its selected */
-        if (this.selected && this.selected._studioTreeNode && !this.selected._studioTreeNode.selected) {
-            this.selected._studioTreeNode.tree.eventSelect(this.selected._studioTreeNode);
-        }
-        return;
-        }
- 
-        // if its a dialog or a widget within a dialog dismiss the dialog
-        // unless the new selection IS in the dialog as wel
-            if (this.selected && !this.selected.isDestroyed && this.selected instanceof wm.Control) {
-        var dialog1 = this.selected.getParentDialog();
-        var dialog2 = (inComponent instanceof wm.Control) ? inComponent.getParentDialog() : null;
-        if (dialog1 && dialog1 != dialog2)
-            dialog1.dismiss();
-        }
-        if (studio.selected && this.selected.deactivate)
-        this.selected.deactivate();
-
-        while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
-            inComponent = inComponent.parent;
-
-        if (inComponent) {
-        if (isNew && !this.inspector.isRequiredMode()) {
-            this.inspector.toggleRequiredProperties();
-        } else if (!isNew && this.inspector.isRequiredMode()) {
-            this.inspector.toggleAdvancedPropertiesSome();
-        }
-        if (this.treeSearch.getDataValue()) {
-            this.treeSearch.setDataValue("");
-            this.refreshVisualTree();
-        }
-        if (this.compTreeSearch.getDataValue()) {
-            this.compTreeSearch.setDataValue("");
-            this.refreshServiceTree();
-            this.refreshComponentTree();
-        }
-        this.statusBarLabel.setCaption("Editing " + inComponent.declaredClass);
-        }
+    select: function(inComponentOrArray, isNew) {
+        if (this.inSelect) return;
+        this.inSelect = true;
         try {
-            var s = this.selected = inComponent;
-            // make sure selected widget and all ancestors are showing
-            if (!this._dontNavOnPageChange) {
-            this.revealSelected();
+            var inComponents = dojo.isArray(inComponentOrArray) ? inComponentOrArray : !inComponentOrArray ? [] : [inComponentOrArray];
+            inComponents =  dojo.filter(inComponents, function(c) {return !c.isDestroyed;});
+
+            /* If the bind dialog is showing, then we aren't doing a bind selection rather than a regular studio select and inspect */
+            if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
+                this.bindDialog.page.binderSource.searchBar.setDataValue("#" + inComponents[0].name);
+                this._lastBindSelect = inComponents[0];
+                return;
             }
-            // select in designer
-            this.designer.select(s instanceof wm.Widget ? s : null);
-            // select component on appropriate tree
-            if (s) {
-                if (!s._studioTreeNode || s._studioTreeNode.tree != this.tree)
-                this.tree.deselect();
-                if (!s._studioTreeNode || s._studioTreeNode.tree != this.widgetsTree)
-                this.widgetsTree.deselect();
-                if (!s._studioTreeNode || s._studioTreeNode.tree != this.compTree)
-                this.compTree.deselect();
+
+            // if there is a bindSelect, then set selected to null so that we can force a reselect
+            if (this._lastBindSelect) {
+                this._lastBindSelect = null;
+                this.selected = null;
             }
-            this.selectInTree(s);
-            // show in inspector
-            if (s && !s.noInspector) {
-                this.inspect(s, true);
+
+            /* If there has been no change in what is selected, then just make sure the Model tree shows
+             * the selected widgets, and exit.
+             */
+            if (wm.Array.equals(this.selected,inComponents)) {
+                dojo.forEach(this.selected, function(c) {
+                    if (!c._studioTreeNode.selected)
+                        c._studioTreeNode.tree.eventSelect(c._studioTreeNode, true);
+                });
+                return;
             }
-            this.propertySearchBar.clear();
-        } finally {
+
+            // if its a dialog or a widget within a dialog dismiss the dialog
+            // unless the new selection IS in the dialog as well
+            var showingDialogs = dojo.filter(wm.dialog.showingList, function(d) {return d._isDesignLoaded;});
+            dojo.forEach(inComponents, function(selected) {
+                if (selected instanceof wm.Control) {
+                    var parentDialog = selected.getParentDialog();
+                    if (parentDialog) {
+                        if (!parentDialog.showing) parentDialog.show(); // show any dialogs with a selected item in it
+                        var index = dojo.indexOf(showingDialogs, parentDialog);
+                        if (index != -1) wm.Array.removeElementAt(showingDialogs); // remove from the list of old showing dialogs that need to be hidden any dialog that contains a selected item
+                    }
+                }
+            });
+            dojo.forEach(showingDialogs, function(d) {d.hide();});
+
+            /* Deactivate any deselected components */
+            dojo.forEach(studio.selected, function(c) {
+                if (dojo.indexOf(inComponents, c) == -1) {
+                    wm.fire(c, "deactivate");
+                }
+            });
+
+            /* TODO: Fix handling of locked components in multiselect studio
+            while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
+                inComponent = inComponent.parent;
+            */
+
+            if (inComponents.length) {
+                if (this.treeSearch.getDataValue()) {
+                    this.treeSearch.setDataValue("");
+                    this.refreshVisualTree();
+                }
+                if (this.compTreeSearch.getDataValue()) {
+                    this.compTreeSearch.setDataValue("");
+                    this.refreshServiceTree();
+                    this.refreshComponentTree();
+                }
+                var status = "Editing ";
+                dojo.forEach(inComponents, function(c,i) { status += (i ? ", " : "") + c.toString();});
+                this.statusBarLabel.setCaption(status);
+            }
+            try {
+                var s = this.selected = inComponents;
+                // make sure selected widget and all ancestors are showing
+                if (!this._dontNavOnPageChange) {
+                    this.revealSelected();
+                }
+                // select in designer
+                this.designer.selectFromStudio(s);
+
+                /* Update the selected tree items */
+                if (this.tree.selected && dojo.indexOf(this.selected, this.tree.selected) == -1) this.tree.deselect();
+                dojo.forEach([this.widgetsTree, this.compTree], function(inTree) {
+                    dojo.forEach(inTree.selected, function(c) {
+                        if (dojo.indexOf(this.selected, c) == -1) {
+                            inTree.deselect(c._studioTreeNode);
+                        }
+                    }, this);
+                }, this);
+
+                this.selectInTree(this.selected);
+
+                // show in inspector
+                var inspectableComponents = dojo.filter(s, function(c) {return !c.noInspector;});
+                if (inspectableComponents.length) {
+                    this.inspect(inspectableComponents, true);
+                }
+                this.propertySearchBar.clear();
+            } finally {
+                this.updateCutPasteUi();
+                this.updateStatus();
+            }
+        } finally{
+            this.inSelect = false;
         }
-        this.updateCutPasteUi();
-        this.updateStatus();
     },
     revealSelected: function() {
         // if the widget is on an inactive layer,
         // activate all parent layers so it's visible
-        var w = this.selected;
-        if (wm.isInstanceType(w, [wm.Control,wm.DojoLightbox])) {
-        while (w) {
-            wm.fire(w, "activate");
-            w = w.parent;
-        }
-        }
+        dojo.forEach(this.selected, function(w) {
+            if (wm.isInstanceType(w, [wm.Control,wm.DojoLightbox])) {
+                while (w) {
+                    wm.fire(w, "activate");
+                    w = w.parent;
+                }
+            }
+        });
     },
     selectParent: function() {
-        if (this.targetMode) 
+        if (this.targetMode)
             this.selectProperty()
         else
             this.designer.selectParent();
@@ -1100,7 +1120,7 @@ dojo.declare("Studio", wm.Page, {
                  {l: "ESC", d: this.getDictionaryItem("SHORTCUTS_ESC_2")},
                  {l: "DEL", d: this.getDictionaryItem("SHORTCUTS_DEL")},
 
-                     {d: this.getDictionaryItem("SHORTCUTS_HEADER_2")},     
+                     {d: this.getDictionaryItem("SHORTCUTS_HEADER_2")},
                  {l: "C-o", d: this.getDictionaryItem("SHORTCUTS_O")},
                  {l: "C-e", d: this.getDictionaryItem("SHORTCUTS_E")},
                  {l: "C-b", d: this.getDictionaryItem("SHORTCUTS_B")},
@@ -1118,7 +1138,7 @@ dojo.declare("Studio", wm.Page, {
         html = "<div class='KeyboardShortcutDialog'>" + html + "</div>";
         this.helpDialog.setUserPrompt(html);
         this.helpDialog.show();
-        
+
     },
     componentRenamed: function(inOld, inNew, inComponent) {
         this.renameComponentOnTree.apply(this, arguments);
@@ -1178,7 +1198,7 @@ dojo.declare("Studio", wm.Page, {
                    firstMsg = msg;
                    break;
                 }
-            if (firstMsg) 
+            if (firstMsg)
            this.beginWait(firstMsg);
                 else
            this.dialog.setShowing(false);
@@ -1203,7 +1223,7 @@ dojo.declare("Studio", wm.Page, {
     },
     updateStatus: function() {
         return;
-        var s = this.selected, m = [s ? s.name : '(no selection)'];
+        var s = this.selected[0], m = [s ? s.name : '(no selection)'];
         if (s && s instanceof wm.Widget) {
             var b = s.getBounds();
             m.push(Math.round(b.w) + ' x ' + Math.round(b.h));
@@ -1268,7 +1288,7 @@ dojo.declare("Studio", wm.Page, {
 
         if (e._wmstop)
         return true;
-        
+
 
         // only act on CTRL keys (but not SHIFT-CTRL); accepts command/alt as alternative to ctrl key.
         var ctrlKey = e.ctrlKey || e.metaKey;
@@ -1297,7 +1317,7 @@ dojo.declare("Studio", wm.Page, {
             dojo.stopEvent(e);
     },
         // Support keypress event that should do nothing and NOT bubble up to the window level
-        nullAction: function() { 
+        nullAction: function() {
         ;
     },
     /*topLayersChange: function(inSender) {
@@ -1324,13 +1344,13 @@ dojo.declare("Studio", wm.Page, {
         this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
         var appsrc = this.project.generateApplicationSource();
         var match = appsrc.split(terminus)
-                       
+
         appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
         this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
     },
     tabsChange: function(inSender) {
         if (!studio.page) return;
-        
+
         switch (inSender.name) {
         case "sourceTab":
             this.designer.showHideHandles(false);
@@ -1339,37 +1359,27 @@ dojo.declare("Studio", wm.Page, {
         case "workspace":
             this.designer.showHideHandles(true);
             // re-inspect when we show designer
-            if (this.selected) {
-                        // selected object may have changed; example: 
-                        // in liveview, I hit delete, now live view is no longer selected AND 
-                        // we change tabs going back to the canvas.
-                        if (this.selected == this.inspector.inspected)
-                this.inspector.reinspect();
-                        else
-                            this.inspector.inspect(this.selected);
+            if (this.selected.length) {
+                // selected object may have changed; example:
+                // in liveview, I hit delete, now live view is no longer selected AND
+                // we change tabs going back to the canvas.
+                if (wm.Array.equals(this.selected, this.inspector.inspected)) {
+                    this.inspector.reinspect();
+                } else {
+                    this.inspector.inspect(this.selected);
+                }
             }
             break;
         }
     },
     leftTabsChange: function(inSender) {
         var layer = inSender.getActiveLayer();
-        
+
         /* If the user goes to the palette, switch layers to the design/canvas layer */
-        if (layer.name == "mlpal" && this.page) 
+        if (layer.name == "mlpal" && this.page)
         this.navGotoDesignerClick();
     },
-    objectTabsChange: function(inSender) {
-        var layer = inSender.getActiveLayer();
-        var n = inSender.name;
-        /* leftObjects: visual model tab
-         * componentModel: components tab */
-        var tree = n == "leftObjects" ? this.tree : (l == "componentModel" ? this.compTree : null);
-        var ss = this.selected;
-        var s = tree && tree.selected;
-        var c = s && s.component;
-        if (tree && c && c != ss)
-        this.select(c);
-    },
+
     sourceTabsCanChange: function(inSender, inChangeInfo) {
     },
     sourceTabsChange: function(inSender) {
@@ -1385,7 +1395,7 @@ dojo.declare("Studio", wm.Page, {
     },
 
         generateAllDocumentation: function() {
-        
+
         var html = this.getDictionaryItem("GENERATE_DOCUMENTATION_HEADER");
         var c;
 
@@ -1394,7 +1404,7 @@ dojo.declare("Studio", wm.Page, {
         var comp = studio.application.components[c];
         if (comp.documentation || comp instanceof wm.Control == false)
             html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || this.getDictionaryItem("GENERATE_DOCUMENTATION_NODOCS")) + "</div>";
-        }       
+        }
 
 
         html += "<h2>" + this.getDictionaryItem("GENERATE_DOCUMENTATION_NONVISUAL_HEADER", {pageName: studio.project.pageName}) + "</h2>"
@@ -1404,25 +1414,38 @@ dojo.declare("Studio", wm.Page, {
         html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || this.getDictionaryItem("GENERATE_DOCUMENTATION_NODOCS")) + "</div>";
         }
 
-        html += "<h2>" + this.getDictionaryItem("GENERATE_DOCUMENTATION_VISUAL_HEADER", {pageName: studio.project.pageName}) + "</h2>"
+        html += "<h2>" + this.getDictionaryItem("GENERATE_DOCUMENTATION_VISUAL_HEADER", {pageName: studio.project.pageName}) + "</h2>";
         var widgets = wm.listOfWidgetType(wm.Control, false, true);
         for (var i = 0; i < widgets.length; i++) {
         var comp = widgets[i];
-        if (comp.documentation) 
+        if (comp.documentation)
             html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + comp.documentation  + "</div>";
         }
         this.appDocViewer.setHtml(html);
     },
-        printAppDocsClick: function(inSender) {
+    printAppDocsClick: function(inSender) {
         var win = window.open("", "APIPrintout", "width=800,height=500");
         var doc = win.document.open("text/html");
         doc.write(this.appDocViewer.html);
         doc.write("<script>window.setTimeout(function() {window.print();}, 100);</script>");
-        doc.close();        
+        doc.close();
     },
 
-    treeSelect: function(inSender, inNode) {
-        this.treeNodeSelect(inNode);
+    treeSelect: function(inSender, inNode, addToSelection) {
+        var selected = [];
+        if (inSender.multiSelect) {
+            dojo.forEach(inSender.selected, function(c) {selected.push(c);});
+            if (inSender.multiSelect && addToSelection) {
+                dojo.forEach(inSender == this.widgetsTree ? this.compTree.selected : this.widgetsTree.selected, function(c) {selected.push(c);});
+            }
+        } else {
+            selected = [inSender.selected];
+        }
+
+
+        if (selected.length) {
+            this.treeNodeSelect(selected);
+        }
         //this.select(inNode.component);
     },
     inflightChange: function() {
@@ -1460,55 +1483,77 @@ dojo.declare("Studio", wm.Page, {
         inControl.setValue(inProp, inValues[i]);
     },
     toggleWidthClick: function() {
-        var s = this.selected;
-        if (s) {
-            if (s.fitToContentWidth) {
-            s.setFitToContentWidth(false);
+        var changed = false;
+        dojo.forEach(this.selected, function(s) {
+            if (s) {
+                if (s.fitToContentWidth) {
+                    s.setFitToContentWidth(false);
+                }
+                this.toggleControlSize(s, "width");
+                changed = true;
             }
-            this.toggleControlSize(s, "width");
-                    this.inspector.reinspect();
-        }
+        },this);
+        if (changed) this.inspector.reinspect();
     },
-    toggleHeightClick: function() { 
-        var s = this.selected;
-        if (s) {
-            if (s.fitToContentHeight) {
-            s.setFitToContentHeight(false);
+    toggleHeightClick: function() {
+        var changed = false;
+        dojo.forEach(this.selected, function(s) {
+
+            if (s) {
+                if (s.fitToContentHeight) {
+                    s.setFitToContentHeight(false);
+                }
+                this.toggleControlSize(s, "height");
+                changed = true;
             }
-            this.toggleControlSize(s, "height");
-                    this.inspector.reinspect();
-        }
+        },this);
+        if (changed) this.inspector.reinspect();
+
     },
     fitToContainerContentClick: function() {
-        var s = this.selected;
-        if (s && s instanceof wm.Container) {
-            s.resizeToFit();
-        }
+        dojo.forEach(this.selected, function(s) {
+            if (s && s instanceof wm.Container) {
+                s.resizeToFit();
+            }
+        });
     },
     toggleVerticalAlignClick: function() {
-        var s = this.selected;
-        if (s) {
-            new wm.PropTask(s, "verticalAlign", s.verticalAlign);
-            this.toggleControlPosition(s, "verticalAlign", ["top", "middle", "bottom"]);
-                    this.inspector.reinspect();
-        }
+        var changed = false;
+        dojo.forEach(this.selected, function(s) {
+
+            if (s) {
+                new wm.PropTask(s, "verticalAlign", s.verticalAlign);
+                this.toggleControlPosition(s, "verticalAlign", ["top", "middle", "bottom"]);
+                changed = true;
+            }
+        });
+        if (changed) this.inspector.reinspect();
     },
     toggleHorizontalAlignClick: function() {
-        var s = this.selected;
-        if (s) {
-            new wm.PropTask(s, "horizontalAlign", s.horizontalAlign);
-            this.toggleControlPosition(s, "horizontalAlign", ["left", "center", "right"]);
-                    this.inspector.reinspect();
-        }
+        var changed = false;
+        dojo.forEach(this.selected, function(s) {
+            if (s) {
+                new wm.PropTask(s, "horizontalAlign", s.horizontalAlign);
+                this.toggleControlPosition(s, "horizontalAlign", ["left", "center", "right"]);
+                changed = true;
+            }
+        });
+        if (changed) this.inspector.reinspect();
+
     },
     toggleLayoutClick: function() {
-        var s = this.selected;
-        if (s) {
-            var v = "top-to-bottom", h = "left-to-right";
-            new wm.PropTask(s, "layoutKind", s.layoutKind);
-            s.setLayoutKind(s.layoutKind == v ? h : v);
-                    this.inspector.reinspect();
-        }
+        var changed = false;
+        dojo.forEach(this.selected, function(s) {
+            if (s) {
+                var v = "top-to-bottom",
+                    h = "left-to-right";
+                new wm.PropTask(s, "layoutKind", s.layoutKind);
+                s.setLayoutKind(s.layoutKind == v ? h : v);
+                changed = true;
+            }
+        });
+        if (changed) this.inspector.reinspect();
+
     },
     outlinedClick: function() {
         this.removeStudioClass(this._explodeClass);
@@ -1538,7 +1583,7 @@ dojo.declare("Studio", wm.Page, {
     },
     // a UI action concept would be handy for all this stuff
     updateCutPasteUi: function() {
-        var 
+        var
             klass = this.clipboardClass,
         //needsLayer = (klass == "wm.Layer"),
             disabled = !this.clipboard;
@@ -1574,7 +1619,7 @@ dojo.declare("Studio", wm.Page, {
         var t = inSender.componentType;
         if (t) {
             this.make(t);
-            wm.fire(this.selected, "showConfigureDialog");
+            wm.fire(this.selected[0], "showConfigureDialog");
         }
     },
 /*
@@ -1610,7 +1655,7 @@ dojo.declare("Studio", wm.Page, {
     revertThemeClick: function(inSender) {
     this.themesPage.page.revertTheme();
     },
-    devicesToggleClick: function(inSender){ 
+    devicesToggleClick: function(inSender){
     if (inSender.clicked) {
         app.warnOnce("mobileBetaWarn", "Please note that design for tablet and phone is in beta.  We encourage users to send feedback and suggestions on the forums.  But we do not gaurentee that this functionality is complete, and we may in the future choose to follow a different strategy and use different tools.");
     }
@@ -1639,7 +1684,7 @@ dojo.declare("Studio", wm.Page, {
         this.designer.setMargin("0," + margin + ",0," + margin);
         }
         this.designer.reflow();
-  
+
     }
   */
     if (!inSetByCode) {
@@ -1781,11 +1826,11 @@ dojo.declare("Studio", wm.Page, {
     return w;
     },
     languageSelectChanged: function(inSender, optionalPageName) {
-    if (this._changingLanguage) return; 
+    if (this._changingLanguage) return;
     var lastValue = this.languageSelect._lastValue;
     var newValue = this.languageSelect.getDisplayValue();
     if (lastValue == newValue) return;
-        
+
         this.confirmSaveDialog.page.setup(
         "",
         /* User clicks save */
@@ -1809,7 +1854,7 @@ dojo.declare("Studio", wm.Page, {
             this.languageSelect.setDisplayValue(lastValue);
             this._changingLanguage = false;
         }),
-        
+
         /* If project isn't dirty, just run don't save callback */
         !this.updateProjectDirty());
 /*
@@ -1869,7 +1914,7 @@ dojo.declare("Studio", wm.Page, {
     if (page == this.project.pageName || !page) return;
 
     var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: page, oldPage: this.project.pageName});
-        this.confirmPageChange(warnPage, page, 
+        this.confirmPageChange(warnPage, page,
                    dojo.hitch(this, function(noChanges) {
                    this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
                    }),
@@ -1918,9 +1963,9 @@ dojo.declare("Studio", wm.Page, {
     //=========================================================================
     // Designer Events
     //=========================================================================
-    designerSelect: function(inSender, inControl) {
-        if (inControl) {
-            this.select(inControl);
+    designerSelect: function(inSender, selected) {
+        if (selected.length) {
+            this.select(selected);
         }
     },
     designerMove: function(inSender, inDragger) {
@@ -1948,10 +1993,10 @@ dojo.declare("Studio", wm.Page, {
     },
         getUserName: function() {return this.userName;},
         editAccountClick: function(inSender) {
-        app.pageDialog.showPage("UserSettings",true, 500,200);        
+        app.pageDialog.showPage("UserSettings",true, 500,200);
         },
     logoutClick: function(inSender) {
-        this.confirmAppChange(this.getDictionaryItem("CONFIRM_LOGOUT"), undefined, 
+        this.confirmAppChange(this.getDictionaryItem("CONFIRM_LOGOUT"), undefined,
                                   dojo.hitch(this, function() {
                               this._isLogout = true;
                               studio.securityService.requestSync("logout", [], dojo.hitch(this, "logoutSuccess"));
@@ -1962,7 +2007,7 @@ dojo.declare("Studio", wm.Page, {
     },
 /*
         saveDocumentation: function() {
-        var html = this.documentationDialog.getHtml();     
+        var html = this.documentationDialog.getHtml();
         this.documentationDialog.editComponent.documentation = html;
         if (this.documentationDialog.editComponent == studio.selected)
         this.inspector.reinspect();
@@ -1974,7 +2019,7 @@ dojo.declare("Studio", wm.Page, {
             var d = studio.deploymentService.requestAsync("listThemes");
             d.addCallback(dojo.hitch(this, function(inData) {
                 var d = [];
-                for (var i = 0; i < inData.length; i++) 
+                for (var i = 0; i < inData.length; i++)
                     if (inData[i] != "wm_studio")
                         d.push({dataValue: inData[i]});
                 this.themesListVar.setData(d);
@@ -1985,12 +2030,12 @@ dojo.declare("Studio", wm.Page, {
     loadHelp: function(inType, inPropName, onSuccess) {
     var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
     var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
-    
+
     if (inType == studio.project.projectName) inType = "wm.Application";
     else if (inType == studio.project.pageName) inType = "wm.Page";
 
           inType = inType.substring(inType.indexOf(".")+1);
-    
+
           if (inType.indexOf("gadget.") == 0)
           inType = inType.substring(inType.indexOf(".")+1);
 
@@ -2076,38 +2121,49 @@ dojo.declare("Studio", wm.Page, {
     },
     */
     uploadStudioPatches: function() {
-    this.addPatchDialog.show();
+        this.addPatchDialog.show();
     },
 
 
     dockPropertyPanel: function() {
-    if (!this.PIContents.isDestroyed && !this.PIContents._destroying) {
-        this.PIContents.setShowing(true);
-        this.PIContents.setDocked(true,this.PIPanel);
-    }
+        if (!this.PIContents.isDestroyed && !this.PIContents._destroying) {
+            this.PIContents.setShowing(true);
+            this.PIContents.setDocked(true,this.PIPanel);
+        }
     },
     dockPalette: function() {
-    if (!this.panel2.isDestroyed && !this.panel2._destroying) {
-        this.panel2.setShowing(true);
-        this.panel2.setDocked(true,this.dockLeftPanel);
-    }
+        if (!this.panel2.isDestroyed && !this.panel2._destroying) {
+            this.panel2.setShowing(true);
+            this.panel2.setDocked(true,this.dockLeftPanel);
+        }
     },
     searchProperties: function(inSender,inDisplayValue,inDataValue) {
-    this.inspector.propertySearch(inDisplayValue);
+        this.inspector.propertySearch(inDisplayValue);
     },
     editPublishedProperties: function() {
-    this.publishedPropsDialog.show();
-    this.publishedPropsDialog.page.reset(this.selected);
+        this.publishedPropsDialog.show();
+        this.publishedPropsDialog.page.reset(this.selected[0]);
     },
     showDeviceBarHelp: function() {
         window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "MobileDevelopment");
     },
     browserZoomed: function() {
-    var isZoomed = Boolean(app._currentZoomLevel);
-    this.editAreaZoomWarningLabel.setShowing(isZoomed);
-    this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
-    this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
-    this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
+        var isZoomed = Boolean(app._currentZoomLevel);
+        this.editAreaZoomWarningLabel.setShowing(isZoomed);
+        this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
+        this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
+        this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
+    },
+    _lastAnalysis: 0,
+    analyzeProject: function(forceAnalysis) {
+        /*
+        var now = new Date().getTime();
+        if (now - this._lastAnalysis < 10 * 1000 * 60 && !forceAnalysis) return;
+        if (!studio.page) return;
+        this._lastAnalysis = now;
+        if (!this.projectIssuesDialog.page) this.projectIssuesDialog.setPage("projectIssuesDialog");
+        this.projectIssuesDialog.page.runAnalysis();
+        */
     }
 });
 

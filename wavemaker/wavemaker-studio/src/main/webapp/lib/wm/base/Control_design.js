@@ -32,8 +32,8 @@ wm.Control.extend({
 	_defaultClasses: null,
 	// design only
         getNumTabbableWidgets: function() {return 1;},
-	designMove: function(inTarget, inMoveInfo) {
-	    inTarget.designMoveControl(this, inMoveInfo);
+	designMove: function(inTarget, inMoveInfo,noUndo) {
+	    inTarget.designMoveControl(this, inMoveInfo,noUndo);
 	    wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 	},
 	resizeUpdate: function(inBounds) {
@@ -53,7 +53,7 @@ wm.Control.extend({
 		var domBox = dojo.marginBox(this.dom.node);
 		if (domBox.w == inBounds.w) {
 			delete inBounds.w;
-		} else 
+		} else
                     this.autoSizeWidth = false; // turn off autosize if user wants to resize in that axis
 		if (domBox.h == inBounds.h) {
 			delete inBounds.h;
@@ -63,7 +63,7 @@ wm.Control.extend({
 	_sizeFromNode: function(inBounds) {
 		var domBox = dojo.marginBox(this.dom.node);
 		if (("w" in inBounds) /*&& domBox.w != inBounds.w*/) {
-			if (!this.fitToContentWidth)			
+			if (!this.fitToContentWidth)
 				this.width = domBox.w + "px";
                     this.autoSizeWidth = false;
 		}
@@ -74,7 +74,7 @@ wm.Control.extend({
                     this.autoSizeHeight = false;
 		}
 
-	        this._needsAutoResize = true; 
+	        this._needsAutoResize = true;
 
 	},
     designResize: function(inBounds, isUndo) {
@@ -94,8 +94,8 @@ wm.Control.extend({
 
             // If its autosize, then when reflowParent is called, it will get autoResized based on changes to one or the other axis size;
             // Example: If I change the width, an autoSizeHeight widget needs to recalculate its height.
-                this._needsAutoSize = true; 
-            
+                this._needsAutoSize = true;
+
 
 		// Update our parent's layout
 		this.reflowParent();
@@ -173,9 +173,9 @@ wm.Control.extend({
     },
 	// Begin design border
 	/*
-		Gambit: store the real border in runtimeBorder and 
+		Gambit: store the real border in runtimeBorder and
 		toggle border between that and a default border based on studio setting
-		This should replicate the 4x behavior. Unfortunately, every page widget 
+		This should replicate the 4x behavior. Unfortunately, every page widget
 		must be rendered to apply the change.
 	*/
 /*
@@ -376,14 +376,14 @@ wm.Control.extend({
 	},
 	isSizeable: function() {
             return !this.isParentFrozen() && this.sizeable;
-            /* mkantor: Commented out 4/14/2010; presumed WM 4.x only 
+            /* mkantor: Commented out 4/14/2010; presumed WM 4.x only
 		return this.isParentFrozen() ? false : this.sizeable && !this.autoSize;
                 */
 	},
         /* Used by the design wrapper to determine if its control is resizable */
 	canResize: function(box) {
 	    return /* !(box=="v" && this.autoSizeWidth) && !(box == "h" && this.autoSizeHeight) && */ this.isSizeable();
-            /* mkantor: Commented out 4/14/2010; presumed WM 4.x only 
+            /* mkantor: Commented out 4/14/2010; presumed WM 4.x only
 		return this.isSizeable() && !this.autoSize && !this.isFlex();
                 */
 	},
@@ -403,7 +403,7 @@ wm.Control.extend({
 		var props = this.inherited(arguments);
 		if (!this.autoSize && !this.fluidSize) {
 			var b = this.domNode.parentNode.box;
-			if (b=='v') 
+			if (b=='v')
 				props.height = this.height;
 			else if (b=='h')
 				props.width = this.width;
@@ -426,7 +426,7 @@ wm.Control.extend({
 	if (this.mobileHeight == this.constructor.prototype.height) {
 	    delete props.mobileHeight;
 	}
-	
+
 	return props;
     },
 	writeChildren: function(inNode, inIndent, inOptions) {
@@ -536,7 +536,7 @@ wm.Object.extendSchema(wm.Control, {
     height: { group: "display", subgroup: "layout",  order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
     minWidth: { group: "display", subgroup: "layout", order: 40, advanced: true, ignoreHint: "minWidth is only available when width is % sized"},
     minHeight: { group: "display", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
-    
+
     minMobileHeight: {hidden:1, group: "mobile", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
     minDesktopHeight: {hidden:1, group: "mobile", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
     mobileHeight:{ group: "mobile", subgroup: "layout",  order: 80, doc: 1, editor: "wm.prop.SizeEditor", hidden: true},
@@ -545,7 +545,7 @@ wm.Object.extendSchema(wm.Control, {
     mobileFolding: {group: "mobile", subgroup: "layerfolding", order: 1, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
     mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
     mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
-    
+
     onTouchStart: {ignore:1},
     onTouchMove: {ignore:1},
     onTouchEnd: {ignore:1},
@@ -589,8 +589,8 @@ wm.Object.extendSchema(wm.Control, {
     autoScroll: {group: "display", subgroup: "scrolling", order: 100, writeonly: 1, type: "Boolean"},
     scrollX: {group: "display", subgroup: "scrolling", order: 101, writeonly: 1, advanced: 1},
     scrollY: {group: "display", subgroup: "scrolling", order: 102, writeonly: 1, advanced: 1}
-    
-    
+
+
 });
 
 wm.Object.extendSchema(wm.TouchScrollMixin, {});

@@ -65,8 +65,8 @@ wm.Object.extendSchema(wm.Container, {
     clearDirty: {method:1},
     resetData: {method:1},
     clearDirty: {method:1},
-    setBestWidth: {method:1}, 
-    setBestHeight:{method:1}, 
+    setBestWidth: {method:1},
+    setBestHeight:{method:1},
 
 
     /* Ignored group */
@@ -145,10 +145,10 @@ wm.Container.extend({
 	},
     designResizeForNewChild: function(layoutKind, reduceSize) {
 	if (this.owner != studio.page) return;
-	if (!this.autoScroll && 
-	    !this.scrollX && 
-	    !this.scrollY && 
-	    !this.fitToContent) 
+	if (!this.autoScroll &&
+	    !this.scrollX &&
+	    !this.scrollY &&
+	    !this.fitToContent)
 	{
 	    if (!layoutKind) {
 		layoutKind = this.layoutKind;
@@ -186,5 +186,23 @@ wm.Container.extend({
 	    }
 	}
     },
+    // FIXME: design only? vestigal?
+	findContainer: function(inType) {
+		if (!this.lock) {
+			if (this.freeze || !this.isWidgetTypeAllowed(inType)) {
+				for (var i in this.widgets) {
+					var w = this.widgets[i];
+					if (w.container) {
+						var r = w.findContainer(inType);
+						if (r)
+							return r;
+					}
+				}
+			} else {
+				return this;
+			}
+		}
+	},
+
 _end: 0
 });

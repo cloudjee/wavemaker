@@ -1276,35 +1276,34 @@ Studio.extend({
 
     /* Called only by isProjectDirty to report true/false to whether there are unsaved services */
     isServicesDirty: function() {
-	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab];
-	for (var i = 0; i < tabs.length; i++) {
-	    var tab = tabs[i];
-	    var isDirty = false;
-	    for (var j = 0; j < tab.layers.length; j++) {
-		var layer = tab.layers[j];
-		if (layer.c$.length == 0) continue;
-		var page = layer.c$[0].page;
-		if (page && page.getDirty && page.getDirty()) 
-		    return true;
-	    }
-	}
-	return false;
+    	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab];
+    	for (var i = 0; i < tabs.length; i++) {
+    		var tab = tabs[i];
+    		var isDirty = false;
+    		for (var j = 0; j < tab.layers.length; j++) {
+    			var layer = tab.layers[j];
+    			if (layer.c$.length == 0) continue;
+    			var page = layer.c$[0].page;
+    			if (page && page.getDirty && page.getDirty()) return true;
+    		}
+    	}
+    	return false;
     },
-
     /* Called whenever we want to update dirty indicators throughout studio as a result of some action such as
      * saving the project, or openning a new project
      */
-        updateProjectDirty: function() {
+    updateProjectDirty: function() {
 	    var dirty = false;
 	    dirty = this.updateCanvasDirty() || dirty;
 	    dirty = this.updateSourceDirty() || dirty;
 	    dirty = this.updateServicesDirtyTabIndicators() || dirty;
+	    if (dirty) studio.analyzeProject(false);
 	    return dirty;
 	},
 
     /* Called by updateProjectDirty; 
      * Updates the dirty indicator for canvas based on whether widgets at page or app level have any changes */
-        updateCanvasDirty: function() {
+    updateCanvasDirty: function() {
 	    var c = this._cleanPageData;
 	    var caption = this.workspace.caption;
 	    if (!c || !this.application) {

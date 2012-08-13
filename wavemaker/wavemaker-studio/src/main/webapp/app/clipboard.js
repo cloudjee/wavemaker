@@ -11,103 +11,119 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.clipboard");
 
 Studio.extend({
-	//=========================================================================
-	// Clipboard
-	//=========================================================================
-	copyControl: function(inControl) {
-		var c = inControl || this.designer.selected || this.selected;
-		if (!c)
-			return;
-		this.clipboard = c.serialize({styles: true});
-		this.clipboardClass = c.declaredClass;
-		this.updateCutPasteUi();
-	},
-	cutControl: function(inControl) {
-		var c = inControl || this.designer.selected || this.selected
-		if (!c)
-			return;
-	        new wm.DeleteTask({cutAction: true});
-		this.copyControl(c);
-		this._deleteControl(c);
-	},
-	pasteControl: function(inParent) {
-	    if (this.clipboard) {
-		var comp = this._pasteControl(inParent, this.clipboard, this.clipboardClass);
-		new wm.AddTask(comp);
-	    }
-	},
-        _pasteControl: function(inParent, inClip, inClass) {
-            this.renamedDuringPaste =  {}; // set in Component.js.createComponent()
+    //=========================================================================
+    // Clipboard
+    //=========================================================================
+    copyControl: function(inControls) {
+        var components= inControls || this.selected;
+        if (!components || !components.length)
+            return;
 
-	    var p;
-	    var rootPasteCtor = dojo.getObject(inClass);
-	    var newProps = {};
-	    /* If its a dialog or fancy panel, paste into its containerWidget */
-	    if (studio.selected instanceof wm.Dialog || studio.selected instanceof wm.FancyPanel) {
-		p = studio.selected.containerWidget;
-	    }
+        this.clipboard = dojo.map(components, function(c) {  return c.serialize({});});
+        this.clipboardClasses = dojo.map(components, function(c) {return c.declaredClass;});
+        this.updateCutPasteUi();
+    },
+    cutControl: function(inControls) {
+        var components = inControls || this.selected;
+        if (!components || !components.length)
+            return;
+        new wm.DeleteTask({cutAction: true});
+        this.copyControl(components);
+        this._deleteControl(components);
+    },
+    pasteControl: function(inParent) {
+        if (!inParent) inParent = studio.selected[0];
 
-	    /* If pasting into a wm.Layers, then either paste in the new layer or paste the contents into the active layer */
-	    else if (studio.selected instanceof wm.Layers) {
-		if (inClass != "wm.Layer") {
-		    p = studio.selected.getActiveLayer();
-		} else {
-		    p = studio.selected;
-		}
-	    } else {
-		/* Else we are NOT pasting into a wm.Layers; so if we have a wm.Layer, replace it with a wm.Panel */
-		if (inClass == "wm.Layer") { 
-		    inClip = inClip.replace(/\["(.*?)"/, "[\"wm.Panel\"");
-		    newProps.width = "100%";
-		    newProps.height = "100%";
-		} 
+        /* If we are pasting into a wm.Layers, and ANY of the components being pasted is not a wm.Layer, then generate a wm.Layer to
+         * put them all in
+         */
+         var altParent = inParent;
+        if (inParent instanceof wm.Layers && this.clipboard.length > 1 &&
+            dojo.some(this.clipboardClasses, function(inClass) { return inClass.prototype != wm.Layer;}))
+        {
+            altParent = inParent.addLayer("Pasted Layer");
+        }
+        var components = [];
+        if (this.clipboard) {
+            dojo.forEach(this.clipboard, function(clip, i) {
+                var c;
+                var p = inParent;
+                if (inParent instanceof wm.Layers && this.clipsboardClasses[i].prototype != wm.Layer) {
+                    p = altParent;
+                }
+                c = this._pasteControl(p, clip, this.clipboardClasses[i]);
+                if (c) components.push(c);
+            }, this);
+            new wm.AddTask(components);
+        }
+        this.select(components);
 
-		// findContainer will not return a locked panel
-		if (rootPasteCtor.prototype instanceof wm.Control)
-		    p = inParent || this.findContainer(this.selected, inClass) || studio.page.root.findContainer(inClass);
+    },
 
-		if (rootPasteCtor.prototype instanceof wm.Dialog)
-		    p = studio.page;
+    /* TODO: Need to examine the class of EACH widget, and treat it appropriately, can't just do the tests if there is only one class */
+    _pasteControl: function(inParent, inClip, inClass, noRefresh) {
+        this.renamedDuringPaste = {}; // set in Component.js.createComponent()
+        var p;
+        var rootPasteCtor = dojo.getObject(inClass);
+        var newProps = {}; /* If its a dialog or fancy panel, paste into its containerWidget */
+        if (inParent instanceof wm.Dialog || inParent instanceof wm.FancyPanel) {
+            p = studio.selected.containerWidget;
+        }
 
-	    }
+        /* If pasting into a wm.Layers, then either paste in the new layer or paste the contents into the active layer */
+        else if (inParent instanceof wm.Layers) {
+            if (inClass != "wm.Layer") {
+                p = inParent.getActiveLayer();
+            } else {
+                p = inParent;
+            }
+        } else { /* Else we are NOT pasting into a wm.Layers; so if we have a wm.Layer, replace it with a wm.Panel */
+            if (inClass == "wm.Layer") {
+                inClip = inClip.replace(/\["(.*?)"/, "[\"wm.Panel\"");
+                newProps.width = "100%";
+                newProps.height = "100%";
+            }
 
-		/* This might happen if the wm.Layout is locked; something one might do for a composite perhaps... */
-	    if (!p && rootPasteCtor.prototype && rootPasteCtor.prototype instanceof wm.Control) {
-		app.alert(studio.getDictionaryItem("ALERT_PASTE_FAILED_PANEL_LOCKED"))
-		return;
-	    }
+            // findContainer will not return a locked panel
+            if (rootPasteCtor.prototype instanceof wm.Control) p = inParent || this.findContainer(inParent, inClass) || studio.page.root.findContainer(inClass);
 
-		// start pasting: set global pasting flag
-		wm.pasting = true;
-	        if (p) {
-		    var comps = p.readComponents(inClip);
-		} else {
-		    var inClipStruct = dojo.fromJson(inClip);
-		    var comps = studio.page.createComponents(inClipStruct);
-		}
-		var comp = comps.length && comps.pop();
-	        if (comp)
-	            for (var prop in newProps) comp.setProp(prop, newProps[prop]);
-	        if (comp instanceof wm.Layer)
-		    comp.parent._setLayerIndex(comp.getIndex());
-		this.refreshDesignTrees();
-                if (rootPasteCtor.prototype instanceof wm.Control) {
-		    this.page.reflow();
-		}
-		this.select(comp);
+            if (rootPasteCtor.prototype instanceof wm.Dialog) p = studio.page;
 
-                this.updateEventsForRenamedComponents();
-                this.renamedDuringPaste = {}; // clean up memory usage/unneeded pointers
-                
-		// done pasting: set global pasting flag
-		wm.pasting = false;	    
-		return comp;
-	    },
-        updateEventsForRenamedComponents: function() {
+        }
+
+
+    /* This might happen if the wm.Layout is locked; something one might do for a composite perhaps... */
+    if (!p && rootPasteCtor.prototype && rootPasteCtor.prototype instanceof wm.Control) {
+        app.alert(studio.getDictionaryItem("ALERT_PASTE_FAILED_PANEL_LOCKED"))
+        return;
+    }
+
+    // start pasting: set global pasting flag
+    wm.pasting = true;
+    if (p) {
+        var comps = p.readComponents(inClip);
+    } else {
+        var inClipStruct = dojo.fromJson(inClip);
+        var comps = studio.page.createComponents(inClipStruct);
+    }
+    var comp = comps.length && comps.pop();
+    if (comp) for (var prop in newProps) comp.setProp(prop, newProps[prop]);
+    if (comp instanceof wm.Layer) comp.parent._setLayerIndex(comp.getIndex());
+    if (!noRefresh) this.refreshDesignTrees();
+    if (rootPasteCtor.prototype instanceof wm.Control) {
+        this.page.reflow();
+    }
+
+    this.updateEventsForRenamedComponents();
+    this.renamedDuringPaste = {}; // clean up memory usage/unneeded pointers
+    // done pasting: set global pasting flag
+    wm.pasting = false;
+    return comp;
+    },        updateEventsForRenamedComponents: function() {
             var renamed = this.renamedDuringPaste;
             for (var i in renamed) {
                 var comp = renamed[i];
@@ -125,23 +141,33 @@ Studio.extend({
 
             }
         },
-	//undoDeleteStack: [],
-	deleteControl: function() {
-		new wm.DeleteTask();
-	},
-	_deleteControl: function(inControl){
-		var c = inControl, p = c.parent, o = c.owner;
-		// FIXME: remove o check to delete sub-components.
-		if (!c.deletionDisabled && (o == this.application || o == this.page || o instanceof wm.TypeDefinition) && c != this.page.root && !(c.isParentFrozen && c.isParentFrozen()) || (o==null)) {
-		        (o || studio.page).removeComponent(c);
-			this.inspector.inspected = null;
-			c.destroy();
-			wm.fire(p, "reflow");
-			this.select(p || studio.page.root);
-			this.removeComponentFromTree(c);
-			return true;
-		} else {
-			console.debug('cannot delete subcomponent');
-		}
-	}
+    //undoDeleteStack: [],
+    deleteControl: function() {
+        new wm.DeleteTask();
+    },
+    _deleteControl: function(inControls){
+        var select;
+        dojo.forEach(inControls, function(c) {
+            var p = c.parent;
+            var o = c.owner;
+            if (!select) select = p;
+        // FIXME: remove o check to delete sub-components.
+        if (!c.deletionDisabled && (o == this.application || o == this.page || o instanceof wm.TypeDefinition) && c != this.page.root && !(c.isParentFrozen && c.isParentFrozen()) || (o==null)) {
+                (o || studio.page).removeComponent(c);
+            this.inspector.inspected = null;
+            c.destroy();
+            wm.fire(p, "reflow");
+            this.removeComponentFromTree(c);
+        } else {
+            console.debug('cannot delete subcomponent');
+        }
+    },this);
+        if (select && !select.isDestroyed) {
+            this.select(select);
+        } else {
+            this.select(studio.page.root);
+        }
+        return true;
+    }
+
 });

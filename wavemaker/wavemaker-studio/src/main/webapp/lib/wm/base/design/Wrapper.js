@@ -34,7 +34,7 @@ dojo.declare("wm.DomBorder", null, {
 		d.style.zIndex = 20;
 		return d;
 	},
-	setBounds: function(inBox) { 
+	setBounds: function(inBox) {
 		var hs = this.handles, bx=dojo._setBox, sz=this.size;
 		with(inBox){
 			bx(hs[0], l, t, w, sz);
@@ -50,7 +50,7 @@ dojo.declare("wm.DomBorder", null, {
 	showHide: function(inShow) {
 		for (var i=0, h; h=this.handles[i]; i++)
 			wm.showHideNode(h, inShow);
-	}, 
+	},
         destroy: function() {
 		for (var i=0, h; h=this.handles[i]; i++)
 		    dojo.destroy(h);
@@ -106,17 +106,25 @@ dojo.declare("wm.WrapperMover", wm.design.Mover, {
 		throw "No moving widgets while in mobile folding view";
 	    }
 		this.wrapper = inWrapper;
+		/*
+		if (!inWrapper._isSelected) {
+			inWrapper.select();
+		}*/
 		this.inherited(arguments, [e, {
-			control: this.wrapper.control, 
+			control: this.wrapper.control,
 			caption: this.wrapper.control.name
 		}]);
 	},
 	ondrop: function(e) {
-		var i = this.dropRect;
-	        if (!i) return; // there's no i if we call this after a right click instead of after a move
-		i.target = this.target;
-		new wm.DropTask(this.wrapper.control);
-		this.wrapper.designMove(i);
+		var info = this.dropRect;
+	        if (!info) return; // there's no i if we call this after a right click instead of after a move
+		info.target = this.target;
+		new wm.DropTask(dojo.indexOf(studio.designer.selected,this.wrapper.control) == -1 ? [this.wrapper.control] : studio.designer.selected);
+		var components =  (dojo.indexOf(studio.designer.selected, this.wrapper.control) == -1) ? [this.wrapper.control] : studio.designer.selected;
+		for (var i = components.length-1; i >= 0; i--) {
+			components[i].designMove(info.target, info);
+		}
+		studio.designer.onmove();
 		//with (this.dropRect) {
 		//	var dropInfo = {l: t, t: t, i: i, target: this.target};
 		//}
@@ -132,7 +140,7 @@ dojo.declare("wm.WrapperResizer", wm.design.Resizer, {
 	beginDrag: function(e, inWrapper) {
 		this.wrapper = inWrapper;
 		this.inherited(arguments, [e, {
-			control: this.wrapper.control, 
+			control: this.wrapper.control,
 			handleId: this.wrapper.getHitHandle(e),
 			cursor: this.wrapper.getCursor()
 		}]);
@@ -157,6 +165,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		this.makeLabel();
 		this.makeHandles();
 		//this.makeMarker();
+		this.runtimeId = this.control.getRuntimeId() + "_wmDesignWrapper";
 		this.inherited(arguments);
 		dojo.addClass(this.domNode, "wmdesign-wrapper");
 		this.domNode.style.cssText = "z-index: 10; visibility: hidden;";
@@ -195,12 +204,13 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	},
 	// make or acquire handles object
 	makeHandles: function() {
-		this.handles = this.surface.handles || (this.surface.handles = new wm.DesignHandles());
+		//this.handles = this.surface.handles || (this.surface.handles = new wm.DesignHandles());
+		this.handles = new wm.DesignHandles();
 	},
 	// attach to this control
 	setControl: function(inControl) {
-		var 
-			c = this.control = inControl, 
+		var
+			c = this.control = inControl,
 			n = this.designNode = c && c.domNode;
 		if (c) {
 			c.designWrapper = this;
@@ -227,7 +237,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	},
 	// make connections to our control
 	connect: function(n) {
-		var d = this.designConnects = wm.connectEvents(this, n, ["click", "mousedown", "mousemove"]);
+		var d = this.designConnects = wm.connectEvents(this, n, ["click", "mousedown", "mousemove","dblclick"]);
 		d.push(
 			dojo.connect(n, "onboundschange", this, "controlBoundsChange", true),
 			dojo.connect(this.control, "setName", this, "controlNameChanged")
@@ -274,7 +284,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		//this.setBounds(b);
 		this.renderBounds();
 		//dojo.marginBox(this.domNode, b);
-		if (this.handles.parent == this) 
+		if (this.handles.parent == this)
 			this.handles.setBounds(b);
 		// FIXME: hacky
 		// hides only the label, leaving the slant
@@ -288,14 +298,14 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
     setLabelPosition: function() {
 	if (this.isDestroyed) return;
 	    if (studio.selected == this.control) {
-		this.label.parentNode.style.right = 
+		this.label.parentNode.style.right =
 		    this.label.parentNode.style.top = "0px";
 	    } else {
 		this.label.parentNode.style.right = (this.control.marginExtents.r-2) + "px";
 		this.label.parentNode.style.top   = this.control.marginExtents.t + "px";
 	    }
     },
-	canSize: function(box, next) { 
+	canSize: function(box, next) {
 	    if (!this.control.canResize(box))
 			return false;
 		return true;
@@ -358,14 +368,14 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		if (!this.control.showing && inShow)
 			return;
 		this.handles.showHide(inShow, this);
-		if (inShow) 
+		if (inShow)
 			this.controlBoundsChange();
 	},
-	select: function(){
+	select: function(shiftKey, metaKey){
 		var c = this.control;
 		while (c && c.isParentLocked())
 			c = c.parent;
-		this.surface.select(c);
+		this.surface.select(c,shiftKey, metaKey);
 	},
 	_selected: function(inSelected){
 	        if (!this.domNode || !this.control.domNode) return;
@@ -377,6 +387,8 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	        this.domNode.style.zIndex = inSelected ? 11 : 10;
             }
 		wm.addRemoveClass(this.domNode, "wmdesign-wrapper-selected", inSelected);
+		this._isSelected = inSelected;
+		if (inSelected) this._studioSelectionTime = new Date().getTime();
 	},
 	onselected: function(){
 		this._selected(true);
@@ -386,7 +398,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 		this.control.render();
 		this.setLabelPosition();
 	    });
-		
+
 	},
 	ondeselected: function(){
 		this._selected(false);
@@ -421,8 +433,23 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	},
 	click: function(e) {
 		dojo.stopEvent(e);
-		this.select();
+		this.select(e.shiftKey, e.metaKey);
 		//wm.fire(this.control, "click", e);
+	},
+	dblclick: function(e) {
+		dojo.stopEvent(e);
+		// target has a strange way of getting mucked up on doubleclick
+		var control = wm.getWidgetByDomNode(e.target);
+		var parent = control.parent;
+		if (parent) {
+			var first = true;
+			dojo.forEach(parent.c$, function(c) {
+				if (c.designWrapper) {
+					c.designWrapper.select(!first);
+					first = false;
+				}
+			});
+		}
 	},
 	designMove: function(inDropInfo) {
 		this.surface.designMove(this.control, inDropInfo);

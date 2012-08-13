@@ -1076,108 +1076,117 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
     },
 
     applyBinding: function(inTargetProps, inClear) {
-        var isExpression        = this.isExpression();
-        var isDisplayExpression =  this.isDisplayExpression();
-        var isResource = this.isResource();     
-        var s = !isExpression && !isDisplayExpression && !isResource && this.bindEditor.getValue("dataValue");
-        if (isExpression) {
+      var isExpression = this.isExpression();
+      var isDisplayExpression = this.isDisplayExpression();
+      var isResource = this.isResource();
+      var s = !isExpression && !isDisplayExpression && !isResource && this.bindEditor.getValue("dataValue");
+      if (isExpression) {
         var ex = this.expressionEditor.getValue("dataValue");
-        } else if (isDisplayExpression) {
+      } else if (isDisplayExpression) {
         var ex = this.displayExpressionEditor.getValue("dataValue");
-        } else if (isResource) {
+      } else if (isResource) {
         var ex = this.bindEditor.getValue("dataValue");
-        }
-        if (isExpression || isDisplayExpression) {
+      }
+      if (isExpression || isDisplayExpression) {
         var ex2 = ex.replace(/\$\{(\[.*?\])?.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
-
         var error;
 
         try {
-            var result = eval(ex2);
-        } catch(e) {
-            error = e;
-            try {
+          var result = eval(ex2);
+        } catch (e) {
+          error = e;
+          try {
             if (dojo.trim(ex2).match(/^\{.*\}$/)) {
-                ex2 = "(" + ex2 + ")";
-                result = eval(ex2);
-                ex = "(" + ex + ")"; // success with this change to the expression
+              ex2 = "(" + ex2 + ")";
+              result = eval(ex2);
+              ex = "(" + ex + ")"; // success with this change to the expression
             }
-            } catch(e) {        
-            app.toastError(this.getDictionaryItem("UNABLE_TO_COMPILE", {error: e.message}));
+          } catch (e) {
+            app.toastError(this.getDictionaryItem("UNABLE_TO_COMPILE", {
+              error: e.message
+            }));
             return;
-            }
+          }
         }
-        
+
 
         if (isDisplayExpression && typeof result == "object" && result instanceof Date == false) {
-            app.toastError(this.getDictionaryItem("DOES_NOT_COMPILE", {expr: ex2}));
-            return;
+          app.toastError(this.getDictionaryItem("DOES_NOT_COMPILE", {
+            expr: ex2
+          }));
+          return;
         }
-        }
+      }
 
-        var tp = inTargetProps;
-        if (isResource || isDisplayExpression) {
-                tp.object.setValue(tp.targetProperty, ex);
-                wm.data.clearBinding(tp.object, tp.targetProperty);
-                studio.inspector.reinspect();
-                return true;
-        }
-        if (!(s || ex)) {
+      var tp = inTargetProps;
+      if (isResource || isDisplayExpression) {
+        tp.object.setValue(tp.targetProperty, ex);
+        wm.data.clearBinding(tp.object, tp.targetProperty);
+        studio.inspector.reinspect();
+        return true;
+      }
+      if (!(s || ex)) {
         app.alert(this.getDictionaryItem("ALERT_BLANK_MESSAGE"));
         return false;
         // FIXME: avoid limiting binding and prompt until we can make sure it will not be misleading.
-        } else /*if (this.canBind(tp, {object: sourceObject, source: s, expression: ex}) 
-           || this.promptToForceBinding(tp, s, isExpression)) */ {
-               try {
-               //wm.data.clearBinding(tp.object, tp.targetProperty);
-               //var
-               info = this._getBindingInfo(tp.object, tp.targetProperty,  s, ex);
-               wp = info.wireProps;
+      } else
+      /*if (this.canBind(tp, {object: sourceObject, source: s, expression: ex}) 
+           || this.promptToForceBinding(tp, s, isExpression)) */
+      {
+        try {
+          //wm.data.clearBinding(tp.object, tp.targetProperty);
+          //var
+          info = this._getBindingInfo(tp.object, tp.targetProperty, s, ex);
+          wp = info.wireProps;
 
-               var oldValue;
-               if (tp.object.$.binding && tp.object.$.binding.wires[wp.targetProperty]) {
-                   oldValue = {source: tp.object.$.binding.wires[wp.targetProperty].source,
-                       expression: tp.object.$.binding.wires[wp.targetProperty].expression};
-               } else {
-                   oldValue = {value: tp.object.getValue(wp.targetProperty) };
-               }
-               new wm.SetWireTask(tp.object,
-                          wp.targetProperty, 
-                          oldValue,
-                          wp.source || wp.expression,
-                          wp.expression,
-                         false);
-               
-               if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
-                   /* we probably need this._applyBinding stuff
-                   var wire = info.binding.addWire(wp.targetId, wp.targetProperty, wp.source, wp.expression);                   
-                   wm.logging && console.log("binding created:", info.targetId, wp.source || wp.expression);
-                               this._applyingBinding = true;
-                   studio.inspector.reinspect();
-                               this._applyingBinding = false;
-                   */
-                   if (this.propTree.showing && this.propTree.selected) {
-                   var newContent = this.propTree.selected.data.fieldName || this.propTree.selected.data.object.name;
-                   var wire = tp.object.$.binding.wires[wp.targetProperty];
-                   if (wire) {
-                       if (wire.expression) {
-                       newContent += " <span class='WireExpression'>" + wire.expression + "</span>";
-                       } else if (wire.source) {
-                       newContent += " <span class='WireSource'>" + wire.source + "</span>";
-                       } 
-                   }
-                   this.propTree.selected.setContent(newContent);
-                   }
-               } else
-                   wm.logging && console.debug('no binding owner or nothing to bind');
-               } catch(e) {
-               wm.data.clearBinding(tp.object, tp.targetProperty);
-               app.alert(this.getDictionaryItem("ALERT_BIND_ERROR", {error: e}));
-               return;
-               }
+          var oldValue;
+          var components = studio.selected.length > 1 ? studio.selected : [tp.object];
+          dojo.forEach(components, function(c) {
+            if (c.$.binding && c.$.binding.wires[wp.targetProperty]) {
+              oldValue = {
+                source: c.$.binding.wires[wp.targetProperty].source,
+                expression: c.$.binding.wires[wp.targetProperty].expression
+              };
+            } else {
+              oldValue = {
+                value: c.getValue(wp.targetProperty)
+              };
+            }
+            new wm.SetWireTask(c, wp.targetProperty, oldValue, wp.source || wp.expression, wp.expression, false);
+
+            if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
+              /* we probably need this._applyBinding stuff
+                     var wire = info.binding.addWire(wp.targetId, wp.targetProperty, wp.source, wp.expression);                   
+                     wm.logging && console.log("binding created:", info.targetId, wp.source || wp.expression);
+                                 this._applyingBinding = true;
+                     studio.inspector.reinspect();
+                                 this._applyingBinding = false;
+                     */
+              if (this.propTree.showing && this.propTree.selected) {
+                var newContent = this.propTree.selected.data.fieldName || this.propTree.selected.data.object.name;
+                var wire = c.$.binding.wires[wp.targetProperty];
+                if (wire) {
+                  if (wire.expression) {
+                    newContent += " <span class='WireExpression'>" + wire.expression + "</span>";
+                  } else if (wire.source) {
+                    newContent += " <span class='WireSource'>" + wire.source + "</span>";
+                  }
+                }
+                this.propTree.selected.setContent(newContent);
+              }
+            } else wm.logging && console.debug('no binding owner or nothing to bind');
+          }, this);
+        } catch (e) {
+          wm.data.clearBinding(c, tp.targetProperty);
+          app.alert(this.getDictionaryItem("ALERT_BIND_ERROR", {
+            error: e
+          }));
+          return;
         }
-            this.owner.clearButton.setDisabled(false);
-        return true;
+      }
+
+      this.owner.clearButton.setDisabled(false);
+      return true;
     },
     // return info about binding to be made
     _getBindingInfo: function(inTargetObject, inTargetProp, inSource, inExpression) {
