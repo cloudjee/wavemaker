@@ -398,13 +398,13 @@ public class MainConsole extends javax.swing.JFrame {
     private void btnAdvOptsActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnAdvOptsActionPerformed
     {// GEN-HEADEREND:event_btnAdvOptsActionPerformed
         try {
-            Main.printlnToLog("*** start btnAdvOptsActionPerformed");
+            //Main.printlnToLog("*** start btnAdvOptsActionPerformed");
             JDialog optsDlg = new LauncherAdvOptsDialog(this, true);
             optsDlg.getContentPane().setBackground(Color.WHITE);
             optsDlg.setLocationRelativeTo(this);
             optsDlg.setVisible(true);
             updatePortValues();
-            Main.printlnToLog("--- end btnAdvOptsActionPerformed");
+            //Main.printlnToLog("--- end btnAdvOptsActionPerformed");
         } catch (Exception e) {
             Main.printlnToLog(e.getMessage());
         }
@@ -450,7 +450,7 @@ public class MainConsole extends javax.swing.JFrame {
             this.pbStatus.setIndeterminate(true);
 
             try {
-                Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
+                //Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
                 com.wavemaker.desktop.launcher.Server.ValidateConfig(this.tomcatConfig);
                 this.appServer = Main.getServerInstance(this.tomcatConfig, false);
 
