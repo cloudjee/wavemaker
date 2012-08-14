@@ -309,17 +309,14 @@ dojo.declare("Studio", wm.Page, {
         wm.preloadImage(t + "tree_closed.gif");
     },
     windowUnload: function(e) {
-        if (this._isLogout)
-            return;
-            if (this._forceExit)
-            return;
-        var 
+        if (this._isLogout) return;
+        if (this._forceExit) return;
+        var
         u = this.getDictionaryItem("ALERT_UNSAVED_LOST"),
             s = this.getDictionaryItem("ALERT_NO_UNSAVED"),
             m = this.isProjectDirty() ? u : s;
         e.returnValue = m;
-        if (!m)
-            dojo.publish("wm-unload-app");
+        if (!m) dojo.publish("wm-unload-app");
         // safari requires value to be returned like this...
         return m;
     },
