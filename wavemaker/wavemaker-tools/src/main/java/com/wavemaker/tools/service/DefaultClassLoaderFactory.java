@@ -34,7 +34,7 @@ public class DefaultClassLoaderFactory implements ClassLoaderFactory {
 
     @Override
     public ClassLoader getClassLoader() {
-        return ResourceClassLoaderUtils.getClassLoaderForResources(this.paths);
+        return ResourceClassLoaderUtils.getClassLoaderForResources(true, this.paths);
     }
 
 }

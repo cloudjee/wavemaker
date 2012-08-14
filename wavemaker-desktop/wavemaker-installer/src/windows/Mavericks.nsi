@@ -102,10 +102,13 @@ Var ProjectsDialog
 #Page custom ProjectsDirectoryPage ProjectsDirectoryPageLeave
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
-Page custom RunLauncherPageFunction
-!define MUI_FINISHPAGE_TEXT "Do you need to clear your browser's cache ? $\r$\n$\r$\nIf this is not your first time running ${PRODUCT_NAME} on this machine, it is strongly suggested that you clear your browser's cache before running ${PRODUCT_NAME} again."
+# Page custom RunLauncherPageFunction
+!define MUI_FINISHPAGE_TEXT "Do you need to clear your browser's cache ? $\r$\n$\r$\nIt is strongly suggested that you clear your browser's cache before running ${PRODUCT_NAME}."
 # !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\${PRODUCT_NAME}.lnk"
 # !define MUI_FINISHPAGE_SHOWREADME_TEXT "Run ${PRODUCT_NAME}"
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_TEXT "Launch configuration tool and install dependencies."
+!define MUI_FINISHPAGE_RUN_FUNCTION "RunLauncherPageFunction"
 !define MUI_FINISHPAGE_LINK "Download EnterpriseDB's Postgres Plus Advanced Server"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.enterprisedb.com/products/download.do"
 !insertmacro MUI_PAGE_FINISH
@@ -596,7 +599,7 @@ Function DirectoryChanged
 FunctionEnd
 
 Function RunLauncherPageFunction
-		MessageBox MB_USERICON|MB_TOPMOST|MB_OK 'Launching configuration tool. The configuration tool will help you install dependencies required to complete installation '
+#		MessageBox MB_USERICON|MB_TOPMOST|MB_OK 'Launching configuration tool. The configuration tool will help you install dependencies required to complete installation '
 		Exec '"$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" -Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"'
 FunctionEnd
 

@@ -76,16 +76,22 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
             studio.endWait();
         });
     },
-    importSampleBtnClick: function(inSender) {
-        this._serviceName = "hrdb";
-        studio.dataService.requestAsync("importSampleDatabase", 
-                [], 
-                dojo.hitch(this, "_importResult"), 
-                function(inError) {
-                    app.alert(inError.toString());
-                    studio.endWait();
-                });
-    },
+	
+	importSampleBtnClick: function(inSender) {
+		studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
+		if(wm.services.byName["hrdb"] !== undefined){
+			studio.endWait();
+			app.toastInfo(this.getDictionaryItem("INFO_SAMPLE_ALREADY_IMPORTED"));
+			this._close("Import");
+		}
+		else{
+			this.serviceNameInput.setDataValue("hrdb");
+			studio.dataService.requestAsync("importSampleDatabase", 
+					[], 
+					dojo.hitch(this, "_importResult"), 
+					dojo.hitch(this, "_importError"));
+		}
+	},
     
     waitForStudioToRestart: function(serviceName, type) {
         studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_BINDING_RESTART1"));

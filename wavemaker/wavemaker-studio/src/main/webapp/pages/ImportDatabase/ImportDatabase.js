@@ -156,11 +156,19 @@ dojo.declare("ImportDatabase", wm.Page, {
 	},
 	
 	importSampleBtnClick: function(inSender) {
-	    this.serviceNameInput.setDataValue("hrdb");
-	    studio.dataService.requestAsync("importSampleDatabase", 
-	            [], 
-	            dojo.hitch(this, "_importResult"), 
-	            dojo.hitch(this, "_importError"));
+		studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
+		if(wm.services.byName["hrdb"] !== undefined){
+			studio.endWait();
+			app.toastInfo(this.getDictionaryItem("INFO_SAMPLE_ALREADY_IMPORTED"));
+			this._close("Import");
+		}
+		else{
+			this.serviceNameInput.setDataValue("hrdb");
+			studio.dataService.requestAsync("importSampleDatabase", 
+					[], 
+					dojo.hitch(this, "_importResult"), 
+					dojo.hitch(this, "_importError"));
+		}
 	},
 	
 	_updatePackage: function() {

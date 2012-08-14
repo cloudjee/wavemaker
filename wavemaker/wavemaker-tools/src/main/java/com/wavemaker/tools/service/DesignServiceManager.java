@@ -1036,7 +1036,7 @@ public class DesignServiceManager {
         // it has the src dir also so that services have the option of not
         // relying on 'testrun' having run
         // TODO - revisit this for Cloud Foundry
-        return ResourceClassLoaderUtils.getClassLoaderForResources(getServiceRuntimeFolder(sid),
+        return ResourceClassLoaderUtils.getClassLoaderForResources(true, getServiceRuntimeFolder(sid),
             this.projectManager.getCurrentProject().getClassOutputFolder());
     }
 
