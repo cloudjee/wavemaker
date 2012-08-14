@@ -22,6 +22,7 @@ wm.registerComponentLoader = function(inType, inLoader){
 };
 
 dojo.declare("wm.Application", wm.Component, {
+    debugDialog: null,
     touchToClickDelay: 500, // ms user must hold a touch for it to be treated as a click
     touchToRightClickDelay: 1500, // ms user must hold a touch for it to be treated as a right click
     eventDelay: wm.isMobile ? 100 : 0, // 100ms delay during which a user selection is highlighted and before the event is fired
@@ -124,7 +125,13 @@ dojo.declare("wm.Application", wm.Component, {
         this.createPageContainer();
 
         if (!this._isDesignLoaded) {
-            if (djConfig.isDebug && !this.debugDialog) this.createDebugDialog();
+            if (!this.debugDialog) {
+                if (this._overrideDebugDialog !== undefined) {
+                    if (this._overrideDebugDialog) this.createDebugDialog();
+                } else if  (djConfig.isDebug && (wm.device != "phone" || wm.isFakeMobile)) {
+                    this.createDebugDialog();
+                }
+            }
 
             this.pageDialog = new wm.PageDialog({
                 name: "pageDialog",
@@ -292,6 +299,7 @@ dojo.declare("wm.Application", wm.Component, {
         dojo["require"]("wm.base.components.JsonRpcService");
     if (!this.debugDialog) {
         this.debugDialog = new wm.debug.Dialog({owner: this, 
+                               titlebarButtons: "DebuggerHelpIcon",
                                name: "debugDialog",
                                width: "700px", 
                                height: "400px",
@@ -1071,39 +1079,72 @@ dojo.declare("wm.Application", wm.Component, {
     this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
-    var dockHeight = parseInt(parseInt(wm.Button.prototype.height)*0.8);
-    dockHeight += 3; // 2 for border, 1 for padding
-    this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: "100%", height: dockHeight + "px", border: "2,0,0,0", padding: "1,0,0,0", autoScroll: false, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
-    //document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
-    //this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
-    //this.resizeMinifiedDialogPanel();
-    this.appRoot.reflow();
+        var dockHeight = parseInt(parseInt(wm.isMobile ? wm.Button.prototype.mobileHeight : wm.Button.prototype.height) * 0.8);
+        dockHeight += 3; // 2 for border, 1 for padding
+        this.wmMinifiedDialogPanel = new wm.Panel({
+            name: "wmMinifiedDialogPanel",
+            width: "100%",
+            height: dockHeight + "px",
+            border: "2,0,0,0",
+            padding: "1,0,0,0",
+            autoScroll: false,
+            verticalAlign: "top",
+            horizontalAlign: "left",
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this.appRoot
+        });
+        //document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
+        //this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
+        //this.resizeMinifiedDialogPanel();
+        this.appRoot.reflow();
     },
     createMinifiedDialogLabel: function(title) {
-    var l = new wm.Button({caption: title, parent: app.wmMinifiedDialogPanel, owner: this, width: "100px", height: "100%", margin: "0", padding: "0", border:"1"});
-    app.wmMinifiedDialogPanel.show();
-    return l;
+        var l = new wm.Button({
+            caption: title,
+            parent: app.wmMinifiedDialogPanel,
+            owner: this,
+            width: "100px",
+            desktopHeight: "100%",
+            height: "100%",
+            margin: "0",
+            padding: "0",
+            border: "1"
+        });
+        app.wmMinifiedDialogPanel.show();
+        return l;
     },
     removeMinifiedDialogLabel: function(minifiedLabel) {
-    minifiedLabel.destroy();
-    if (this.wmMinifiedDialogPanel) {
-        this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
-    }
+        minifiedLabel.destroy();
+        if (this.wmMinifiedDialogPanel) {
+            this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
+        }
     },
     resizeMinifiedDialogPanel: function() {
-    var b = {l: 0,
-         t: this._page.root.bounds.h - this.wmMinifiedDialogPanel.bounds.h,
-         w: this._page.root.bounds.w,
-         h: 25};
-    this.wmMinifiedDialogPanel.setBounds(b);
-    this.wmMinifiedDialogPanel.renderBounds();
+        var b = {
+            l: 0,
+            t: this._page.root.bounds.h - this.wmMinifiedDialogPanel.bounds.h,
+            w: this._page.root.bounds.w,
+            h: 25
+        };
+        this.wmMinifiedDialogPanel.setBounds(b);
+        this.wmMinifiedDialogPanel.renderBounds();
     },
     createLeftToRightDockingPanel: function() {
-    if (!this._leftToRightDockingPanel) {
-        this._leftToRightDockingPanel = new wm.Panel({name: "_leftToRightDockingPanel", width: "100%", height: "100%", border: "0", padding: "", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
-        this.appRoot.moveControl(this._leftToRightDockingPanel, this.appRoot.indexOfControl(this.pageContainer));
-        this.pageContainer.setParent(this._leftToRightDockingPanel);    
-    }
+        if (!this._leftToRightDockingPanel) {
+            this._leftToRightDockingPanel = new wm.Panel({
+                name: "_leftToRightDockingPanel",
+                width: "100%",
+                height: "100%",
+                border: "0",
+                padding: "",
+                layoutKind: "left-to-right",
+                owner: this,
+                parent: this.appRoot
+            });
+            this.appRoot.moveControl(this._leftToRightDockingPanel, this.appRoot.indexOfControl(this.pageContainer));
+            this.pageContainer.setParent(this._leftToRightDockingPanel);
+        }
     },
     dockDialog: function(inDialog, inEdge) {
     if (inEdge == "l" || inEdge == "r") {
