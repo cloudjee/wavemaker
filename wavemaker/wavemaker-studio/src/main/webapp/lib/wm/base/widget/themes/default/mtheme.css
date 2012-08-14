@@ -310,12 +310,15 @@ user-select: none;
     height: 100%;
 }
 
+/* IOS 5 doesn't respect overflow: hidden for hiding list items without this. */
+.dj_safari .wmlist-wrapper {
+    overflow: scroll;    
+}
+
 .wmlist-list {
-    /*-webkit-overflow-scrolling: touch;  // unbelievable; no reliable onScroll events; no control of scrollTop on android 3/4 browsers
+    /*-webkit-overflow-scrolling: touch;  // unbelievable; no reliable onScroll events; no control of scrollTop on android 3, 4 browsers
 	overflow:auto;*/
         overflow: hidden;
-	/* cheat to hide IE scrollbar */
-	overflow-x: hidden;
 	position: relative; /* simplifies position calculations */
 }
 
