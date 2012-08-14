@@ -154,7 +154,7 @@ public class ExportDB extends BaseDataModelSetup {
                         ReflectionUtils.rethrowRuntimeException(e);
                     }
                 } else {
-                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, this.classesDir);
+                    export = ResourceClassLoaderUtils.runInClassLoaderContext(true, t, this.classesDir);
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");

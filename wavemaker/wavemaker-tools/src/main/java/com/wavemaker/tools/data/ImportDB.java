@@ -257,7 +257,7 @@ public class ImportDB extends BaseDataModelSetup {
 
         // need classloader with compiled classes and property files,
         // which are in destdir by now
-        this.serviceDefinition = ResourceClassLoaderUtils.runInClassLoaderContext(t, this.destdir, this.classesdir);
+        this.serviceDefinition = ResourceClassLoaderUtils.runInClassLoaderContext(true, t, this.destdir, this.classesdir);
 
         if (this.importDatabase && this.regenerate) {
             // regenerate java types (and mapping files). this gives us
