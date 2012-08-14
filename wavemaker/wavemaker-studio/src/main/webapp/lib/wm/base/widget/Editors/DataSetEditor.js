@@ -72,7 +72,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     },
     update: function() {
         if (this.dataSet instanceof wm.ServiceVariable) {
-            if (djConfig.isDebug) {
+            if (app.debugDialog) {
                 var eventId = this.dataSet.log("update", this.getRuntimeId() + ".update()");
                 /*
                 var eventId = app.debugDialog.newLogEvent({
