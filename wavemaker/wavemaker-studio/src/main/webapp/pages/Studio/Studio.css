@@ -235,7 +235,6 @@ body .wmtablayers-tab:active:not(.wmtablayers-selected) {
 .Studio .StudioDarkPanel .StudioEditor,
 .StudioTabs.StudioDarkLayers > div > .wmlayer .StudioEditor,
 .StudioWizard.StudioDarkLayers .wmWizardLayers-wizardWrapper > div > .wmlayer .StudioEditor {
-    background-color: #414B5C;
     color: black;
 }
 
