@@ -161,6 +161,8 @@ public class RESTService {
                     // java.net.URLEncoder.encode() encodes space " " as "+"
                     // instead of "%20".
                     v = v.replaceAll("\\+", "%20");
+                    //http://jira.wavemaker.com/browse/WM-3897
+                    v = v.replaceAll("%2F", "/");
                     endpointAddress.replace(index, index + param.length() + 2, v);
                 } catch (UnsupportedEncodingException e) {
                     throw new WebServiceInvocationException(e);

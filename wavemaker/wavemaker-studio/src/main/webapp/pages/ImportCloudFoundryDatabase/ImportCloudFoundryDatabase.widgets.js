@@ -52,13 +52,15 @@ ImportCloudFoundryDatabase.widgets = {
 	    }]
 	}],
 	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import Sample"}, {onclick: "importSampleBtnClick"}, {
+        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import HRDB Sample DataBase"}, {onclick: "importSampleBtnClick"}, {
         }],
+		spacer1: ["wm.Spacer", {width: "100%"}, {}],
 		importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
 		    }]
 		}],
+		spacer2: ["wm.Spacer", {width: "10px"}, {}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	}]
 

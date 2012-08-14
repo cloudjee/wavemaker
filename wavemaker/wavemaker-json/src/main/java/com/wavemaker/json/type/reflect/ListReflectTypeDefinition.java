@@ -56,6 +56,13 @@ public class ListReflectTypeDefinition extends ReflectTypeDefinition implements 
             Class<?> componentType = getKlass().getComponentType();
             return Array.newInstance(componentType, length);
         } else {
+            try {
+                Object instance = getKlass().newInstance();
+                if (instance instanceof Collection) {
+                    return instance;
+                }
+            } catch (Exception e) {
+            }
             throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_OR_ARRAY, getKlass());
         }
     }

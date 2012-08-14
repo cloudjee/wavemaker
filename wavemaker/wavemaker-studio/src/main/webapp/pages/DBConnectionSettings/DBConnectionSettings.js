@@ -69,7 +69,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 				this.conConnectionUrlInput.getDataValue(),
 				this.conUserInput.getDataValue(),
 				this.conPasswordInput.getDataValue(),
-				this.conDriverClassInput.getDataValue());
+				this.conDriverClassInput.getDataValue(),
+				this.conDialectInput.getDataValue());
 	},
 	reimportBtnClick: function(inSender) {
 		var dmn = this._getSelectedDataModelName();
@@ -473,6 +474,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	},
 	_loadedConnectionProperties: function(inData) {
 	    this._disableChangeEvents = true;
+		this.conHostInput.setRequired(true);
+		this.conExtraInput.setRequired(true);
 	    try {
 		this.conHostInput.setDataValue("");
 		this.conPortInput.setDataValue("");
@@ -500,10 +503,14 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		    this.conDBdropdown.setDisplayValue(inData.connectionUrl.length > 5 ? "Other" : "");
 
 			this.conHostInput.setShowing(false);
+			this.conHostInput.setRequired(false);
+			
 			this.conPortInput.setShowing(false);
 
 			this.conExtraInput.setCaption("");
 			this.conExtraInput.setShowing(false);
+			this.conExtraInput.setRequired(false);
+			
 			this.conExtra2Input.setCaption("");
 			this.conExtra2Input.setShowing(false);
 		} else {
@@ -600,11 +607,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 	_loadedIP: function(inData) {
 		this.ip = inData;
 	},
-	_testConnection: function(url, username, password, driverClassName) {
+	_testConnection: function(url, username, password, driverClassName, dialect) {
 	    studio.beginWait(this.getDictionaryItem("WAIT_TEST_CONNECTION", {url: url}));
 		studio.dataService.requestAsync(
 			TEST_CONNECTION_OP,
-			[username, password, url, driverClassName],
+			[username, password, url, driverClassName, dialect],
 			dojo.hitch(this, "_connectionSucceeded"), 
 			dojo.hitch(this, "_connectionFailed"));
 	},
