@@ -86,7 +86,7 @@ wm.bgIframe = {
 
 dojo.addOnLoad(function() {
 	// iframe covering required on IE6 and (wah) on FF2 Mac
-	if ((dojo.isIE && dojo.isIE < 7) || (dojo.isMoz && dojo.isMoz < 6 && navigator.userAgent.indexOf("Macintosh") != -1))
+	if ((dojo.isIE && dojo.isIE < 7) || (dojo.isFF && dojo.isFF < 4 && navigator.userAgent.indexOf("Macintosh") != -1))
 		wm.bgIframe.create();
 });
 
