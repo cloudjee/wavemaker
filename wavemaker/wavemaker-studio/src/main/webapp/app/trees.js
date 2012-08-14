@@ -176,8 +176,8 @@ Studio.extend({
 	    if (this.application) {
 		var svrComps = this.svrComps = dojo.mixin({},this.application.getServerComponents());
 		wm.forEachProperty(this.application.components, function(c, name) {
-		    if (c instanceof wm.XhrDefinition || c instanceof wm.TypeDefinition) {
-			svrComps[name] = c;
+		    if (c instanceof wm.XhrDefinition || c instanceof wm.TypeDefinition || c instanceof wm.LiveView) {
+			     svrComps[name] = c;
 		    }
 		});
 			
@@ -392,7 +392,8 @@ Studio.extend({
 	},
 	componentsToTree_rev: function(inNode, inComponents, inTypes, inType) {
 		var n = [], cn;
-	    for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
+        wm.forEachProperty(inComponents, function(inComponent, inName) {n.push(inName);});
+	    //for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort();
 		for (var i=0; (cn=n[i]); i++) {
 			var comp = inComponents[cn];
