@@ -272,7 +272,7 @@ div .StudioGrid td,
 }
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer,
 .wminspector .StudioFieldGroupPanel {
-    background-color: #1B222D;
+    background-color: #39414F;
     -webkit-border-radius: 0px 0px 4px 4px;
     border-radius: 0px 0px 4px 4px;
     border-color: #959DAB;
@@ -283,7 +283,7 @@ div .StudioGrid td,
 }
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > .wmtablayers-tabbar > .wmtablayers-selected {
     background: none;
-    background-color:  #1B222D;
+    background-color:  #39414F;
 }
 
 .StudioTabs.NoRightMarginOnTab > .wmtablayers-tabbar > .wmtablayers-tab {
