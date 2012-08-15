@@ -115,7 +115,12 @@ Studio.extend({
     if (comp instanceof wm.Layer) comp.parent._setLayerIndex(comp.getIndex());
     if (!noRefresh) this.refreshDesignTrees();
     if (rootPasteCtor.prototype instanceof wm.Control) {
-        this.page.reflow();
+	var d = comp.getParentDialog();
+        if (d) {
+            d.reflow();
+        } else {
+	    this.page.reflow();
+        }
     }
 
     this.updateEventsForRenamedComponents();
