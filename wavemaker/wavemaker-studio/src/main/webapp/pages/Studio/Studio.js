@@ -1705,6 +1705,7 @@ dojo.declare("Studio", wm.Page, {
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.hide();
         this.currentDeviceType = "desktop";
+        this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.removeClass(this.designer.domNode, "wmmobile");
         if (studio.page) {
@@ -1729,6 +1730,7 @@ dojo.declare("Studio", wm.Page, {
         });
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.show();
+        this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.addClass(this.designer.domNode, "wmmobile");
         if (studio.page) {
@@ -1758,6 +1760,7 @@ dojo.declare("Studio", wm.Page, {
         });
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.show();
+        this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.addClass(this.designer.domNode, "wmmobile");
         if (studio.page) {
