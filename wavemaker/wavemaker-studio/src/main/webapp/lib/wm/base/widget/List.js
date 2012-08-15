@@ -367,7 +367,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     setScrollTop: function(inTop) {
         var top = Math.max(0, inTop);
         if (wm.isMobile) { // should always be true for touch events 
-            top = Math.min(top, this.listNode.clientHeight - this.listNodeWrapper.clientHeight);
+            top = Math.min(top, Math.max(0,this.listNode.clientHeight - this.listNodeWrapper.clientHeight));
             if (dojo.isWebKit) {
                 this.listNode.style.WebkitTransform = "translate(0,-" + top + "px)";
             } else if (dojo.isMoz) {
