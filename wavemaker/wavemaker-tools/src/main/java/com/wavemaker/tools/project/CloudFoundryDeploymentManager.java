@@ -83,7 +83,7 @@ public class CloudFoundryDeploymentManager extends StageDeploymentManager {
 
     @Override
     public String generateRuntime() {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
+        return compile();
     }
 
     @Override
