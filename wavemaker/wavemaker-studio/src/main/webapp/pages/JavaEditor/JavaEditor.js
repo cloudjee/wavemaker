@@ -34,7 +34,9 @@ dojo.declare("JavaEditor", wm.Page, {
                 this.toolbarBtnHolder.setDisabled(studio._runRequested);
             });
         }
-
+        if (studio.isCloud()) {
+            this.serverTab.hide();
+        }
     },
 
     setDirty: function() {
