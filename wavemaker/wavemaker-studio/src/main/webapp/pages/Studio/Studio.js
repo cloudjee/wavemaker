@@ -57,35 +57,35 @@ dojo.declare("Studio", wm.Page, {
     // initialization
     //=========================================================================
     start: function(inBackState, inLocationState) {
-    this.subscribe("BrowserZoomed", this, "browserZoomed");
-    this.browserZoomed();
-    wm.applyFrameworkFixes();
-    this.progressDialog.titleButtonPanel.setShowing(true);
-    //this.progressDialog.titleClose.setShowing(true);
-    this.connect(this.navigationMenu, "renderDojoObj", this, function() {
-        this.disableMenuBar(!studio.application);
-    });
+        this.subscribe("BrowserZoomed", this, "browserZoomed");
+        this.browserZoomed();
+        wm.applyFrameworkFixes();
+        this.progressDialog.titleButtonPanel.setShowing(true);
+        //this.progressDialog.titleClose.setShowing(true);
+        this.connect(this.navigationMenu, "renderDojoObj", this, function() {
+            this.disableMenuBar(!studio.application);
+        });
         studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
-        wm.studioConfig.environment = inResult;
+            wm.studioConfig.environment = inResult;
         });
         if (dojo.isIE && dojo.isIE < 8) {
-        app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
-        app.alertDialog.setButton1Caption("");
-        return;
+            app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
+            app.alertDialog.setButton1Caption("");
+            return;
         }
 
         /* Create an empty patches file if there isn't one already */
-        studio.resourceManagerService.requestSync("writeFileIfDoesNotExist", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js", ""]);
+        studio.resourceManagerService.requestSync("writeFileIfDoesNotExist", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g, "") + "_patches.js", ""]);
 
         if (wm.EditArea && this.editArea instanceof wm.EditArea) {
             this.scriptPageCompletionsBtn.hide();
             this.scriptPageFormatBtn.hide();
             this.appsrcPageFormatBtn.hide();
         }
- 
-         app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
+
+        app._page = this; // not sure why this was failing to set, but I don't have time to investigate...
         this.neededJars = {};
-    /*
+        /*
         try{
             this.documentationDialog = new wm.RichTextDialog({_classes: {domNode: ["studiodialog"]},
                                       owner: this,
@@ -97,10 +97,10 @@ dojo.declare("Studio", wm.Page, {
         }
         */
 
-            this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
+        this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/, "").substring(0, 8));
 
         this.project = new wm.studio.Project();
-/*
+        /*
         this.startEditor = studio.addEditor("Start");
         this.startEditor.connect(this.startEditor, "onStart", this, "startPageOnStart");
         */
@@ -114,21 +114,29 @@ dojo.declare("Studio", wm.Page, {
         this.initUserSettings();
 
         // FIXME: hack
-            //this.owner = app;
+        //this.owner = app;
 
-        this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
+        this.scrim = new wm.Scrim({
+            owner: this,
+            name: "studioScrim",
+            _classes: {
+                domNode: ["wmdialog-scrim"]
+            },
+            waitCursor: false,
+            _noAnimation: true
+        });
         // populate palettes
         loadPackages();
-    this.disableMenuBar(true);
+        this.disableMenuBar(true);
         // init some UI
         this.outlinedClick();
         if (this.getUserSetting('explode')) {
             this.explodedClick();
         }
-            var multiActiveProperties = this.getUserSetting("multiActive");
-            studio.inspector.preferredMultiActive =  multiActiveProperties;
-            studio.inspector.multiActive = studio.inspector.preferredMultiActive;
-        this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+        var multiActiveProperties = this.getUserSetting("multiActive");
+        studio.inspector.preferredMultiActive = multiActiveProperties;
+        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
+        this.togglePropertiesMultiactiveItem.set("checked", !this.inspector.multiActive);
 
 
         /*
@@ -142,8 +150,7 @@ dojo.declare("Studio", wm.Page, {
         //this.connect(document, "keydown", this, "keydown");
         this.connect(wm.inflight, "change", this, "inflightChange");
         // Unload protection
-        if (wm.studioConfig.preventUnloadWarning)
-            dojo.connect(window, "onbeforeunload", this, "windowUnload");
+        if (wm.studioConfig.preventUnloadWarning) dojo.connect(window, "onbeforeunload", this, "windowUnload");
         // Listen to some topics
         dojo.subscribe("wm-textsizechange", this, "reflow");
         dojo.subscribe("wmwidget-rename", this, "componentRenamed");
@@ -151,19 +158,21 @@ dojo.declare("Studio", wm.Page, {
         // FIXME: can't we do status updates via dojo.publish?
         //setInterval(dojo.hitch(this, "updateStatus"), 2000);
         //this.preloadImages();
-            if (this.isCloud()) {
+        if (this.isCloud()) {
             this.preferencesItem.domNode.style.display = "none";
             this.partnerServicesItem.domNode.style.display = "none";
         }
-    var reopenProject = this.getUserSetting("reopenProject");
-    if (reopenProject) {
-        this.setUserSettings({reopenProject: ""});
-        this.project.openProject(reopenProject);
-    } else if (inLocationState) {
-        this.restoreFromLocationHash(inLocationState);
-    } else {
-        studio.disableMenuBar(true);
-    }
+        var reopenProject = this.getUserSetting("reopenProject");
+        if (reopenProject) {
+            this.setUserSettings({
+                reopenProject: ""
+            });
+            this.project.openProject(reopenProject);
+        } else if (inLocationState) {
+            this.restoreFromLocationHash(inLocationState);
+        } else {
+            studio.disableMenuBar(true);
+        }
         if (this.isCloud()) {
             this.navLogoutBtn.setShowing(true);
             this.navEditAccountBtn.setShowing(true);
@@ -171,14 +180,16 @@ dojo.declare("Studio", wm.Page, {
         }
 
 
-                /* Removal of projects tab
+        /* Removal of projects tab
         this.updateProjectTree();
         */
         this.subscribe("session-expiration-servicecall", this, "handleSessionExpiration");
         this.subscribe("service-variable-error", this, "handleServiceVariableError");
 
-                this.loadThemeList();
-         this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+        this.loadThemeList();
+        this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {
+            studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+        }));
 
         this.helpDialog.containerWidget.c$[0].setPadding("0");
         this.helpDialog.containerWidget.c$[0].setBorder("10");
@@ -199,18 +210,19 @@ dojo.declare("Studio", wm.Page, {
 
         this._jarsMissing = {};
         this.jarListService.requestAsync("getMissingJars").addCallback(dojo.hitch(this, function(inResult) {
-        for (var i = 0; i < inResult.length; i++) {
-            this._jarsMissing[inResult[i]] = true;
-        }
-        if (this._jarsMissing["hibernate3.jar"]) {
-            app.confirm(this.getDictionaryItem("STUDIO_CONFIG_TOOL_NOT_RUN"), false,
+            for (var i = 0; i < inResult.length; i++) {
+                this._jarsMissing[inResult[i]] = true;
+            }
+            if (this._jarsMissing["hibernate3.jar"]) {
+                app.confirm(this.getDictionaryItem("STUDIO_CONFIG_TOOL_NOT_RUN"), false,
+
                 function() {
                     window.location = "/ConfigurationTool";
                 });
-        }
+            }
         }));
 
-/*
+        /*
         this.pageSelect.setParent(null);
         this.tabs.decorator.tabsControl.domNode.appendChild(this.pageSelect.domNode)
         var s = this.pageSelect.domNode.style;
@@ -224,13 +236,13 @@ dojo.declare("Studio", wm.Page, {
         */
 
 
-    this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
-    this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
-    this.ribbon.setBestHeight();
+        this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
+        this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
+        this.ribbon.setBestHeight();
 
-    this.connect(this.webServiceSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.webServiceSubTab));
-    this.connect(this.databaseSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.databaseSubTab));
-    this.connect(this.JavaEditorSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.JavaEditorSubTab));
+        this.connect(this.webServiceSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.webServiceSubTab));
+        this.connect(this.databaseSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.databaseSubTab));
+        this.connect(this.JavaEditorSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.JavaEditorSubTab));
     },
     updateServiceTabStyle: function(inSender) {
     if (inSender.layers.length <= 1) {
@@ -267,34 +279,34 @@ dojo.declare("Studio", wm.Page, {
         }
 
     },
-     handleServiceVariableError: function(inServiceVar, inError) {
-       studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
-     },
+    handleServiceVariableError: function(inServiceVar, inError) {
+        studio.endWait(); // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
+    },
     handleSessionExpiration: function(serviceVar) {
         if (serviceVar.isDesignLoaded()) {
-        this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
-        var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
-        dojo.connect(node, "onmouseover", this, function(e) {
-            app.createToolTip(this.getDictionaryItem("TOOLTIP_SECURITY_ERROR"), node, e);
-        });
-        dojo.connect(node, "onmouseout", this, function() {
-            app.hideToolTip();
-        });
-        
+            this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
+            var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
+            dojo.connect(node, "onmouseover", this, function(e) {
+                app.createToolTip(this.getDictionaryItem("TOOLTIP_SECURITY_ERROR"), node, e);
+            });
+            dojo.connect(node, "onmouseout", this, function() {
+                app.hideToolTip();
+            });
+
         } else {
-        if (!this.isLoginShowing()) {
-            if (!studio.getUserName()) {
-            wm.logout();
-            } else {
-            studio.navGoToLoginPage();
+            if (!this.isLoginShowing()) {
+                if (!studio.getUserName()) {
+                    wm.logout();
+                } else {
+                    studio.navGoToLoginPage();
+                }
             }
-        }
         }
     },
     isCloud: function() {
-            return wm.studioConfig.environment && wm.studioConfig.environment != "local";
+        return wm.studioConfig.environment && wm.studioConfig.environment != "local";
         //return  this.isModuleEnabled("cloud", "wm.cloud");
-        },
+    },
     preloadImages: function() {
         var p = "images/", t = "lib/wm/base/widget/themes/default/images/";
         wm.preloadImage(p + "loadingThrobber.gif");
