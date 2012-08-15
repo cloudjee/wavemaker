@@ -255,10 +255,6 @@ dojo.declare("wm.Layers", wm.Container, {
                     flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
         this.inherited(arguments);
             this._isDesign = this.isDesignLoaded();
-        if (this._isDesign) {
-        this.flags.noModelDrop = true;
-        }
-
         
     },
     postInit: function() {

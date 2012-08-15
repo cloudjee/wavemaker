@@ -275,23 +275,30 @@ Studio.extend({
 	    return n;
 	},
     setupContextMenu: function(inNode, inComponent) {
-	if (inComponent) {
-	dojo.connect(inNode.domNode, "oncontextmenu", inComponent, "showContextMenu");
-	if (dojo.isFF) {
-	    dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
-		if (e.button == 2 || e.ctrlKey) inComponent.showContextMenu(e);
-	    });
-	}
-	}
+        if (inComponent) {
+            dojo.connect(inNode.domNode, "oncontextmenu", inComponent, "showContextMenu");
+            if (dojo.isFF) {
+                dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
+                    if (e.button == 2 || e.ctrlKey) inComponent.showContextMenu(e);
+                });
+            }
+        }
     },
     onWidgetTreeNodeDrop: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent) {
-	if (!inNewParentNode || !inNewParentNode.content) {
-	    this.refreshWidgetsTree();
-	} else {
-	    var movedComponent = inMovedNode.component;
-	    var parentComponent = inNewParentNode.component;
-	    parentComponent.designMoveControl(movedComponent, {i: inIndexInParent});
-	}
+        if (!inNewParentNode || !inNewParentNode.content) {
+            this.refreshWidgetsTree();
+        } else {
+            var movedComponent = inMovedNode.component;
+            var parentComponent = inNewParentNode.component;
+            parentComponent.designMoveControl(movedComponent, {
+                i: inIndexInParent
+            });
+        }
+    },
+    onCanDropNode: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent, inResponseInfo) {
+        if (inMovedNode.component instanceof wm.Layer && inNewParentNode.component instanceof wm.Layers == false) {
+            inResponseInfo.result = false;
+        }
     },
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {

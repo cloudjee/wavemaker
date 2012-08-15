@@ -359,7 +359,7 @@ height: "29px", width: "420px",
 					label12: ["wm.Label", {_classes: {domNode:["StudioLabel"]},height: "22px", width: "100%", caption: "Visual Components", border: "", padding: "4"}, {}, {
 					    format: ["wm.DataFormatter", {}, {}]
 					}],
-					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "3,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop"}]
+					widgetsTree: ["wm.DraggableTree", {height: "100%", border: "", padding: "3,0,0,0", dropBetweenNodes: true}, {onselect: "treeSelect", onNodeDrop: "onWidgetTreeNodeDrop", onCanDropNode: "onCanDropNode"}]
 				    }],
 			    componentModel: ["wm.Layer", {_classes: {domNode: ["StudioLeftLayer"]}, caption: "Services", padding: "3,0,0,0"}, {onShow: "resetCompTreeSearch"}, {
 					compTreeSearch: ["wm.Text", {_classes: {domNode:["StudioEditor"]},caption: "", width: "100%",  height: "27px", placeHolder: "Find Component", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "compTreeSearchChange"}],
