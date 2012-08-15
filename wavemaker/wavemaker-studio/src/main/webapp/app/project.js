@@ -801,6 +801,7 @@ dojo.declare("wm.studio.Project", null, {
         var d9 = new dojo.Deferred();
         d8.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
+            studio.setSaveProgressBarMessage("project.a.js");
             var d = wm.load("lib/wm/common/" + wm.version.replace(/[^a-zA-Z0-9]/g, "") + "_patches.js", false, true);
 
             d.addCallback(function(inResponse) {
@@ -815,6 +816,7 @@ dojo.declare("wm.studio.Project", null, {
         var d10 = new dojo.Deferred();
         d9.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
+            studio.setSaveProgressBarMessage("project.a.js");
             var dlocal = this.saveProjectData("project.a.js", allProjectJS, false, true);
             dlocal.addCallback(function() {
                 d10.callback();
