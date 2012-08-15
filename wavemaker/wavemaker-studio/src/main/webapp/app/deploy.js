@@ -272,22 +272,24 @@ Studio.extend({
 
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {
-	this.project.saveProject(true);
-	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
-	this.deploymentDialog.page.addButtonClick();
+        this.project.saveProject(true);
+        this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        this.deploymentDialog.page.addButtonClick();
     },
 
     settingsDeployClick: function() {
-	this.project.saveProject(true);
-	this.deploymentDialog.show();
-	this.deploymentDialog.page.selectFirst();
+        this.project.saveProject(true);
+        this.deploymentDialog.show();
+        this.deploymentDialog.page.selectFirst();
     },
     cloudFoundryDeploymentsClick: function() {
-	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
-	this.deploymentDialog.page.showCloudFoundryAppListDialog();
+        this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        this.deploymentDialog.page.showCloudFoundryAppListDialog();
     },
     deploymentHelp: function() {
-	window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "Deploying");
+        window.open(studio.getDictionaryItem("URL_DOCS", {
+            studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+        }) + "Deploying");
     },
     _end: 0
 });
