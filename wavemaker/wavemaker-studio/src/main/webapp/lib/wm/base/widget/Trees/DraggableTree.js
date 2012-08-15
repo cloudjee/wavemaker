@@ -116,7 +116,6 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
         }
 
         var result = {result:true};
-        if (targetNode.component instanceof wm.Layers == false) debugger;
         this.onCanDropNode(moveNode,  targetNode, index, oldparent, result);
         if (!result.result) return false;
 
