@@ -96,6 +96,7 @@
     "wm.DataModel.IMPORT_DATABASE_TITLE": "New Data Model",
     "wm.DataModel.TOAST_IMPORT_SUCCESS": "New Data Model ${dataModel} has been imported",
     "wm.DataModel.ENTER_NAME": "Enter your data model name",
+    "wm.DataModel.ENTER_NAME_TAKEN": "The name ${name} is already taken; Enter another data model name",
     "wm.DataModel.ORACLE_JAR_INSTRUCTIONS": "<p>To use Oracle databases, you'll need to download and install ojdbc14.jar</p><p>Go to <a target='_New' href='http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-10201-088211.html'>Oracle</a> and download ojdbc14.jar (or whatever the latest version number is).</p><p>Hit the \"Next\" button below when finished.</p>",
     "wm.DataModel.DB2_JAR_INSTRUCTIONS":  "<p>To use DB2 databases, you'll need to download and install db2jcc.jar</p><p>Go to <a target='_New' href='https://www14.software.ibm.com/webapp/iwm/web/reg/pick.do?source=swg-idsjs11'>IBM</a> and download their driver.</p><p>Open the zip file and find db2jcc.jar (you can ignore the file named db2jcc4.jar)</p><p>Hit the \"Next\" button below when finished.</p>",
 
