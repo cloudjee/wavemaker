@@ -886,9 +886,9 @@ dojo.declare(
                                 this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
                     } else if (t == "JOSSO") {
                         var roles = this.roleList._data;
-                        if (roles.length == 1) {
+                        if (roles.length == 1 || !this.secEnableInput.getChecked()) {
                             studio.securityConfigService.requestSync("configJOSSO", 
-                                [ this.secEnableInput.getChecked(), roles[0] ], 
+                                [ this.secEnableInput.getChecked(), roles[0] || "test"], 
                                 dojo.hitch(this, "configJOSSOResult"));
                             studio.application.loadServerComponents();
                             studio.refreshServiceTree();
