@@ -337,70 +337,89 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 
     setModal: function(inModal) {
-	dojo[inModal ? "removeClass" : "addClass"](this.domNode, "nonmodaldialog");
-	this.modal = (inModal === undefined || inModal === null) ? true : inModal;
+        dojo[inModal ? "removeClass" : "addClass"](this.domNode, "nonmodaldialog");
+        this.modal = (inModal === undefined || inModal === null) ? true : inModal;
 
-	if (this.dojoMoveable) {
-	    this.dojoMoveable.destroy();
-	    this.dojoMoveable = null;
-	}
-	if (!inModal && !this.dojoMoveable) {
-	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
-	    this.connect(this.dojoMoveable, "onMouseDown", this, function() {
-		if (!this.modal) {
-		    if (this.docked) {
-			this._userSized = true;
-			this.setDocked(false);
-		    }
-		    var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
-		    this.domNode.style.zIndex = zindex;
-		}
-	    });
-	    this.connect(this.dojoMoveable, "onMoveStop", this, function() {
-		if (this._openingTitleBarMenu) return;
-		this._userSized = true;
-		this.bounds.l = parseInt(this.domNode.style.left);
-		this.bounds.t = parseInt(this.domNode.style.top);		
-		if (!this._maxified) {
-		    if (!this.insureDialogVisible(true)) {
-			if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t+this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking ||
-			    this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
-			    this.setDocked(true);
-			}
-		    } 
-		}
-		this.setBounds(this.bounds); // recalcualtes right and bottom borders
-
-		/* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
-		if (!this.docked && this.bounds.t < 0) {
-		    var oldT = this.bounds.t;
-		    this.bounds.top = 0;
-		    this.renderBounds();
-		}	
-	    });
-	}
-	if (this.showing  && !this._isDesignLoaded) {
-	    this.dialogScrim.setShowing(this.modal);
-	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
-	}
-	this.titleButtonPanel.setShowing(!this.modal && (!this.docked || this.showTitleButtonsWhenDocked));
+        if (this.dojoMoveable) {
+            this.dojoMoveable.destroy();
+            this.dojoMoveable = null;
+        }
+        if (!inModal && !this.dojoMoveable) {
+            this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {
+                handle: this.titleLabel.domNode
+            });
+            this.connect(this.dojoMoveable, "onMouseDown", this, function() {
+                if (!this.modal) {
+                    if (this.docked) {
+                        this._userSized = true;
+                        this.setDocked(false);
+                    }
+                    var zindex = wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+                    this.domNode.style.zIndex = zindex;
+                }
+            });
+            this.connect(this.dojoMoveable, "onMoveStop", this, function() {
+                if (this._openingTitleBarMenu) return;
+                this._userSized = true;
+                this.bounds.l = parseInt(this.domNode.style.left);
+                this.bounds.t = parseInt(this.domNode.style.top);
+                if (!this._maxified) {
+                    if (!this.insureDialogVisible(true)) {
+                        if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t + this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking || this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
+                            this.setDocked(true);
+                        } 
+                    }
+                }
+                this.setBounds(this.bounds); // recalcualtes right and bottom borders
+               
+                if (!this.docked) {
+                    var rerender = false;
+                     if (this.bounds.l > app.appRoot.bounds.r) {
+                                this.bounds.l = app.appRoot.bounds.r - 100;
+                                rerender = true;
+                            }
+                            if (this.bounds.r < 0) {
+                                this.bounds.l = - this.bounds.w + 100;
+                                rerender = true;
+                            }
+                            if (this.bounds.t > app.appRoot.bounds.b) {
+                                this.bounds.t = app.appRoot.bounds.b - 100;
+                                rerender = true;
+                            }
+                             /* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
+                            if (this.bounds.t < 0) {
+                                this.bounds.t = 0;
+                                rerender = true;
+                            }                            
+                            if (rerender) {
+                                this.setBounds(this.bounds);
+                                wm.Control.prototype.renderBounds.call(this);
+                            }
+                }
+            });
+        }
+        if (this.showing && !this._isDesignLoaded) {
+            this.dialogScrim.setShowing(this.modal);
+            wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
+        }
+        this.titleButtonPanel.setShowing(!this.modal && (!this.docked || this.showTitleButtonsWhenDocked));
     },
     setNoEscape: function(inNoEscape) {
-	this.noEscape = inNoEscape;
-	this.titleClose.setShowing(!this.modal && !this.noEscape  && !wm.isMobile);
-    },	
+        this.noEscape = inNoEscape;
+        this.titleClose.setShowing(!this.modal && !this.noEscape && !wm.isMobile);
+    },
     setDocked: function(inDock, optionalParent, optionalEdge) {
-	if (this._isDesignLoaded) return;
-	var wasDocked = this.docked
-	if (Boolean(wasDocked) == Boolean(inDock)) return;
-	this.docked = inDock;
-	if (inDock) {	    
-	    this._dock(optionalParent, optionalEdge);
-	    dojo.addClass(this.domNode, "Docked");
-	} else {
-	    this._undock();
-	    dojo.removeClass(this.domNode, "Docked");
-	}
+        if (this._isDesignLoaded) return;
+        var wasDocked = this.docked
+        if (Boolean(wasDocked) == Boolean(inDock)) return;
+        this.docked = inDock;
+        if (inDock) {
+            this._dock(optionalParent, optionalEdge);
+            dojo.addClass(this.domNode, "Docked");
+        } else {
+            this._undock();
+            dojo.removeClass(this.domNode, "Docked");
+        }
     },
     _dock: function(parent, edge) {
 	var border = this.border;
@@ -1387,103 +1406,103 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 
     /* Resizing */
-	mousedown: function(e) {
-	    if (!this.modal && !this.docked) {
-		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
-		this.domNode.style.zIndex = zindex;
-	    }
+    mousedown: function(e) {
+        if (!this.modal && !this.docked) {
+            var zindex = wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+            this.domNode.style.zIndex = zindex;
+        }
 
-	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
-	    /* noMaxify is taken to mean that the dialog isn't designed to be resized, either to max size or any custom size */
-	    if (!this.modal && !this.noMaxify && e.target == this.domNode) {
+        /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
+        /* noMaxify is taken to mean that the dialog isn't designed to be resized, either to max size or any custom size */
+        if (!this.modal && !this.noMaxify && e.target == this.domNode) {
 
-		this._initialPosition = dojo.clone(this.bounds);
+            this._initialPosition = dojo.clone(this.bounds);
 
-		var leftTarget = e.clientX - this.marginExtents.l - this.borderExtents.l;
-		var rightTarget = e.clientX;
-		var topTarget = e.clientY - this.marginExtents.t - this.borderExtents.t;
-		var bottomTarget = e.clientY;
+            var leftTarget = e.clientX - this.marginExtents.l - this.borderExtents.l;
+            var rightTarget = e.clientX;
+            var topTarget = e.clientY - this.marginExtents.t - this.borderExtents.t;
+            var bottomTarget = e.clientY;
 
-		if (leftTarget - 12 <= this.bounds.l && leftTarget + 12 >= this.bounds.l) {
-		    this._dragBorderX = "left";
-		} else if (rightTarget - 12 <= this.bounds.r && rightTarget + 12 >= this.bounds.r) {
-		    this._dragBorderX = "right";
-		} else {
-		    this._dragBorderX = "";
-		}
-		if (topTarget - 12 <= this.bounds.t && topTarget + 12 >= this.bounds.t) {
-		    this._dragBorderY = "top";
-		} else if (bottomTarget - 12 <= this.bounds.b && bottomTarget + 12 >= this.bounds.b) {
-		    this._dragBorderY = "bottom";
-		} else {
-		    this._dragBorderY = "";
-		}
-		switch(this._dragBorderX + this._dragBorderY) {
-		case "lefttop":
-		    wm.Dialog.resizer.setCursor("nw-resize");
-		    break;
-		case "leftbottom":
-		    wm.Dialog.resizer.setCursor("sw-resize");
-		    break;
-		case "righttop":
-		    wm.Dialog.resizer.setCursor("ne-resize");
-		    break;
-		case "rightbottom":
-		    wm.Dialog.resizer.setCursor("se-resize");
-		    break;
-		case "top":
-		    wm.Dialog.resizer.setCursor("n-resize");
-		    break;
-		case "bottom":
-		    wm.Dialog.resizer.setCursor("s-resize");
-		    break;
-		case "left":
-		    wm.Dialog.resizer.setCursor("w-resize");
-		    break;
-		case "right":
-		    wm.Dialog.resizer.setCursor("e-resize");
-		    break;
-		}
-		wm.Dialog.resizer.beginResize(e, this);
-	    }
-	},
-	drag: function(inDx, inDy) {
-	    this._userSized = true;
-	    if (this._dragBorderX == "left") {
-		this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
-	    } else if (this._dragBorderX == "right") {
-		this.setBounds(NaN, NaN, this._initialPosition.r - this._initialPosition.l + inDx, NaN);
-	    }
+            if (leftTarget - 12 <= this.bounds.l && leftTarget + 12 >= this.bounds.l) {
+                this._dragBorderX = "left";
+            } else if (rightTarget - 12 <= this.bounds.r && rightTarget + 12 >= this.bounds.r) {
+                this._dragBorderX = "right";
+            } else {
+                this._dragBorderX = "";
+            }
+            if (topTarget - 12 <= this.bounds.t && topTarget + 12 >= this.bounds.t) {
+                this._dragBorderY = "top";
+            } else if (bottomTarget - 12 <= this.bounds.b && bottomTarget + 12 >= this.bounds.b) {
+                this._dragBorderY = "bottom";
+            } else {
+                this._dragBorderY = "";
+            }
+            switch (this._dragBorderX + this._dragBorderY) {
+            case "lefttop":
+                wm.Dialog.resizer.setCursor("nw-resize");
+                break;
+            case "leftbottom":
+                wm.Dialog.resizer.setCursor("sw-resize");
+                break;
+            case "righttop":
+                wm.Dialog.resizer.setCursor("ne-resize");
+                break;
+            case "rightbottom":
+                wm.Dialog.resizer.setCursor("se-resize");
+                break;
+            case "top":
+                wm.Dialog.resizer.setCursor("n-resize");
+                break;
+            case "bottom":
+                wm.Dialog.resizer.setCursor("s-resize");
+                break;
+            case "left":
+                wm.Dialog.resizer.setCursor("w-resize");
+                break;
+            case "right":
+                wm.Dialog.resizer.setCursor("e-resize");
+                break;
+            }
+            wm.Dialog.resizer.beginResize(e, this);
+        }
+    },
+    drag: function(inDx, inDy) {
+        this._userSized = true;
+        if (this._dragBorderX == "left") {
+            this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
+        } else if (this._dragBorderX == "right") {
+            this.setBounds(NaN, NaN, this._initialPosition.r - this._initialPosition.l + inDx, NaN);
+        }
 
 
-	    if (this._dragBorderY == "top") {
-		this.setBounds(NaN, this._initialPosition.t + inDy, NaN, this._initialPosition.h - inDy, NaN);
-	    } else if (this._dragBorderY == "bottom") {
-		this.setBounds(NaN, NaN, NaN, this._initialPosition.b - this._initialPosition.t + inDy);
-	    }
+        if (this._dragBorderY == "top") {
+            this.setBounds(NaN, this._initialPosition.t + inDy, NaN, this._initialPosition.h - inDy, NaN);
+        } else if (this._dragBorderY == "bottom") {
+            this.setBounds(NaN, NaN, NaN, this._initialPosition.b - this._initialPosition.t + inDy);
+        }
 
-	    this.renderBounds();
-	    if (!dojo.isIE || dojo.isIE >= 9) {
-		if (this.docked) {
-		    app.reflow();
-		} else {
-		    this.reflow();
-		}
-	    }
+        this.renderBounds();
+        if (!dojo.isIE || dojo.isIE >= 9) {
+            if (this.docked) {
+                app.reflow();
+            } else {
+                this.reflow();
+            }
+        }
 
-	},
-	drop: function() {	    
-	    this.reflow();
-	},
+    },
+    drop: function() {
+        this.reflow();
+    },
     setPositionNear: function(inWidgetOrName) {
-	if (inWidgetOrName instanceof wm.Component) {
-	    this.positionNear = inWidgetOrName.getId();
-	    this.fixPositionNode = inWidgetOrName.domNode;
-	} else {
-	    this.positionNear = inWidgetOrName;
-	    var widget = this.owner.getValueById(inWidgetOrName);
-	    this.fixPositionNode = widget ? widget.domNode : null;
-	}
-	this.renderBounds();
+        if (inWidgetOrName instanceof wm.Component) {
+            this.positionNear = inWidgetOrName.getId();
+            this.fixPositionNode = inWidgetOrName.domNode;
+        } else {
+            this.positionNear = inWidgetOrName;
+            var widget = this.owner.getValueById(inWidgetOrName);
+            this.fixPositionNode = widget ? widget.domNode : null;
+        }
+        this.renderBounds();
     }
 });
