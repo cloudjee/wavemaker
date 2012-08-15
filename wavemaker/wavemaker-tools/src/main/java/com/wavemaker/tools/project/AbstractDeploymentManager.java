@@ -678,26 +678,14 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     }
 
     public static Deployments readDeployments(Project project, StudioFileSystem fileSystem) {
-        com.wavemaker.tools.io.File deploymentsResource;
-        try {
-            deploymentsResource = fileSystem.getCommonFolder().getFile(DEPLOYMENTS_FILE);
-            if (!deploymentsResource.exists()) {
-                project.writeFile(deploymentsResource, "{}");
-                return new Deployments();
-            } else {
-                String s = FileCopyUtils.copyToString(new InputStreamReader(deploymentsResource.getContent().asInputStream()));
-                if (s.length() > 0) {
-                    JSON result = JSONUnmarshaller.unmarshal(s);
-                    // cftempfix - deploymentsResource.getDescription()
-                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.toString() + " is in an unexpected format.");
-                    return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
-                } else {
-                    return new Deployments();
-                }
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException("Failed to read stored deployments configuration.");
+        com.wavemaker.tools.io.File file = fileSystem.getCommonFolder().getFile(DEPLOYMENTS_FILE);
+        String content = file.exists() ? file.getContent().asString() : "";
+        if (!StringUtils.hasLength(content)) {
+            return new Deployments();
         }
+        JSON result = JSONUnmarshaller.unmarshal(content);
+        Assert.isTrue(result instanceof JSONObject, file.toString() + " is in an unexpected format.");
+        return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
     }
 
     @Override

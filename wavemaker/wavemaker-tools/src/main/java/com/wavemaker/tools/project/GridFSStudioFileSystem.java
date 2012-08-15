@@ -76,7 +76,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Folder getCommonFolder() {
-        return this.rootFolder.getFolder(COMMON_DIR);
+        return this.rootFolder.getFolder(COMMON_DIR).jail();
     }
 
     @Override
