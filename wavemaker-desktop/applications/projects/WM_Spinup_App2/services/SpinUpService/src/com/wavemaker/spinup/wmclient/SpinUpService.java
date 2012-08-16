@@ -33,7 +33,7 @@ public class SpinUpService extends JavaServiceSuperClass {
        private LoginCredentialsBean loginCredentials;
        private static int counter;
        private static int dailyCounter;
-       private static int dailyLimit = 3;
+       private static int dailyLimit = 500;
        private static int DOY = 0;
        private static GregorianCalendar gcal;
        private UserlogDB DBsvc = null;
