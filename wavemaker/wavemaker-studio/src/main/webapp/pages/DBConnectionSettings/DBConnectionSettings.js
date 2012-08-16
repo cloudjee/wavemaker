@@ -85,7 +85,16 @@ dojo.declare("DBConnectionSettings", wm.Page, {
             }));
             studio.dataService.requestAsync(REIMPORT_DB_OP, [
             dmn, this.conUserInput.getDataValue(), this.conPasswordInput.getDataValue(), /* If running in cloudfoundry, we want the internal cloud foundry database name, not our service name */
-            studio.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(), this.conTablePatternInput.getDataValue(), this.conSchemaPatternInput.getDataValue(), this.conDriverClassInput.getDataValue(), this.conDialectInput.getDataValue(), this.conRevengNamingStrategyInput.getDataValue(), this.executeAsMenu.getDataValue() == "Logged in user", this.activeDirectoryDomain.getDataValue()], dojo.hitch(this, "_reImportResult"), dojo.hitch(this, "_reImportError"));
+            studio.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(), 
+            this.conTablePatternInput.getDataValue(), 
+            this.conSchemaPatternInput.getDataValue(), 
+            this.conDriverClassInput.getDataValue(), 
+            this.conDialectInput.getDataValue(), 
+            this.conRevengNamingStrategyInput.getDataValue(), 
+            this.executeAsMenu.getDataValue() == "Logged in user", 
+            this.activeDirectoryDomain.getDataValue()], 
+            dojo.hitch(this, "_reImportResult"), 
+            dojo.hitch(this, "_reImportError"));
         }));
     },
     exportBtnClick: function(inSender) {
@@ -633,7 +642,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     _reImportResult: function() {
         studio.endWait();
         studio.updateServices();        
-            app.toastSuccess(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));
+        app.toastSuccess(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));        
         //studio.application.loadServerComponents("wm.Query");
 /*
         wm.fire(studio.getEditor("DataObjectsEditor").page, "update");      
