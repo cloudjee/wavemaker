@@ -65,6 +65,10 @@ public class SpinupController {
 			return responseHash;
     }
 
+    public Boolean isNewDeployment(LoginCredentialsBean credentials){
+     return !SpinupController.this.spinupService.studioExists(credentials);	
+    }
+    
     public Hashtable<String, String> performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response, boolean overwriteExisting) throws CloudFoundryException {
 		Hashtable<String, String> responseHash = new Hashtable<String, String>();  
         String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken, overwriteExisting);

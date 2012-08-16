@@ -218,6 +218,11 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		"parameters": null,
 		"returnType": "com.wavemaker.runtime.RuntimeAccess"
 	}, {
+		"name": "getServerTimeOffset",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "int"
+	}, {
 		"name": "getServiceEventNotifier",
 		"operationType": null,
 		"parameters": null,
@@ -487,10 +492,11 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha48", 
+	"projectSubVersion": "Alpha49", 
 	"projectVersion": 1, 
-	"saveCounter": 585, 
-	"studioVersion": "6.5.0.M3", 
+	"saveCounter": 605, 
+	"showIOSPhoneGapBackButton": false, 
+	"studioVersion": "6.5.0.M4", 
 	"tabletMain": "", 
 	"theme": "wm_default", 
 	"toastPosition": "br", 

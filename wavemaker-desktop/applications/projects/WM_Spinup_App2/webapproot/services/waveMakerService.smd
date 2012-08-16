@@ -29,6 +29,11 @@
 		"parameters": null,
 		"returnType": "com.wavemaker.runtime.RuntimeAccess"
 	}, {
+		"name": "getServerTimeOffset",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "int"
+	}, {
 		"name": "getServiceEventNotifier",
 		"operationType": null,
 		"parameters": null,

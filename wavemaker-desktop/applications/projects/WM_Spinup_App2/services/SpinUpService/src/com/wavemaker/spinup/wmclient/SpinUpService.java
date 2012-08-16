@@ -6,9 +6,7 @@ import com.userlogdb.data.Userlogin;
 import java.util.Hashtable;
 import java.util.Date;
 import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +31,11 @@ public class SpinUpService extends JavaServiceSuperClass {
        private SpinupController spinupController;
        private WavemakerStudioApplicationArchiveFactory wmApplicationArchiveFactory;
        private LoginCredentialsBean loginCredentials;
-       private HttpServletRequest request;
-       private HttpServletResponse response;
        private static int counter;
+       private static int dailyCounter;
+       private static int dailyLimit = 3;
+       private static int DOY = 0;
+       private static GregorianCalendar gcal;
        private UserlogDB DBsvc = null;
        private SharedSecret secret;
        private TransportToken transportToken;
@@ -44,9 +44,10 @@ public class SpinUpService extends JavaServiceSuperClass {
     public SpinUpService() {
        super(INFO);
        try{
+   	   gcal = new GregorianCalendar();
        DBsvc = (UserlogDB)RuntimeAccess.getInstance().getServiceBean("userlogDB");
        } catch(Exception e) {
-          log(ERROR, "Login has failed", e);
+          log(ERROR, "Failed to get DB log service", e);
           log(ERROR, e.getMessage());
        }
        
@@ -60,11 +61,6 @@ public class SpinUpService extends JavaServiceSuperClass {
             log(ERROR, "User: " + username + " NOT email");
 			return("Enter a valid email address for your Cloud Foundry account.");
 		  }
-          if(!(username.contains("@vmware.com") || username.contains("@wavemaker.com") || username.contains("@springsource.com") || username.contains("@springsource.org") || username.contains("@emc.com") || username.contains("@rbcon.com") || username.contains(
-"@rabbitmq.com"))){
-              log(ERROR, "User: " + username + " NOT allowed at this time");
-              return("WaveMaker for Cloud Foundry is currently in a limited preview mode. Check back with us soon to join our public beta.");
-          }
           log(DEBUG, "Logging in user: = " + username );
           loginCredentials = new LoginCredentialsBean(username, password);
           Hashtable<String, Object> loginResult = spinupController.processLogin(loginCredentials, RuntimeAccess.getInstance().getRequest());
@@ -83,7 +79,14 @@ public class SpinUpService extends JavaServiceSuperClass {
 	}
 	
     public Hashtable<String, String> launchStudio() {
-       Hashtable<String,String> result  = new Hashtable<String, String>();
+        Hashtable<String,String> result  = new Hashtable<String, String>();
+    	if(spinupController.isNewDeployment(loginCredentials)){
+    		if(dailyLimit()){
+    			result.put("ERROR", "Sorry, we have reached the preview limit for today.<BR>Please try back again tomorrow.");
+    			return result;
+    		}
+    	}
+    	
        try {
           log(DEBUG, "performing spinup for: " + loginCredentials.getUsername()); 
           result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse(), false); 
@@ -95,7 +98,7 @@ public class SpinUpService extends JavaServiceSuperClass {
           String msg = cfe.toString();
           if(msg.contains("Not enough memory capacity")){
             String allowed = msg.substring(msg.indexOf("(")+1, msg.indexOf(")"));
-            result.put("ERROR", "Insufficent memory to deploy studio to your account.<BR> " + allowed + "<BR>512M is required to start Studio");
+            result.put("ERROR", "Insufficent memory to deploy studio to your account.<BR> " + allowed + "<BR>512M is required to start Studio.");
           }
           else{
               result.put("ERROR", "Unable to deploy studio to your account.<BR> " + "Cause: " + cfe.toString());
@@ -122,6 +125,29 @@ public class SpinUpService extends JavaServiceSuperClass {
         e.printStackTrace();
         DBsvc.rollback();
         }
+    }
+    
+    /**
+     * @return true if daily limit has been reached
+     */
+    private Boolean dailyLimit(){
+    	gcal = new GregorianCalendar();
+    	int DOYnow = gcal.get(GregorianCalendar.DAY_OF_YEAR);
+    	if (DOYnow != DOY){
+    		DOY = DOYnow;
+    		dailyCounter = 1;
+    		log(INFO, "First customer for: " + DOY);
+    		return false;  				
+    	}
+   		if(dailyCounter < dailyLimit){
+   			log(INFO, "Today's counter now: " + ++dailyCounter);
+   			return false;
+    	}
+   		else{
+   			log(ERROR,"### ## Daily Limit of " + dailyLimit +" has been reached. No more studios will be deployed for " + DOY +". ## ###");
+   			return true;
+   		}
+    	
     }
     
     public String createKey(){
