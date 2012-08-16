@@ -19,10 +19,11 @@ EditVariable.widgets = {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "NoRightMarginOnTab", "StudioDarkLayers"]}, width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "#959DAB", _lockHeaderHeight:1, headerHeight: "32px"}, {}, {
 		guiLayer: ["wm.Layer", {caption: "Field Editor"}, {onShow: "onGuiShow"}, {
-		    panel1: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, "height":"20px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
-			AddButton: ["wm.ToolButton", {hint: "Add Menu Item", "caption":"","width":"18px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 25}, {"onclick":"addButtonClick"}],
-			DeleteButton: ["wm.ToolButton", {hint: "Delete Menu Item", "caption":"","width":"18px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 0}, {"onclick":"deleteButtonClick"}]//,
-			//DefaultItemButton: ["wm.ToolButton", {hint: "Make selected item the initial button value", "caption":"","width":"16px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 2}, {"onclick":"DefaultButtonClick"}]
+            panel1: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", height: "29px", horizontalAlign: "left", verticalAlgin: "top"}, {}, {
+
+    			AddButton: ["wm.studio.ToolbarButton", {hint: "Add Menu Item", "caption":"",imageList: "smallToolbarImageList", imageIndex: 25}, {"onclick":"addButtonClick"}],
+    			DeleteButton: ["wm.studio.ToolbarButton", {hint: "Delete Menu Item", "caption":"", imageList: "smallToolbarImageList", imageIndex: 0}, {"onclick":"deleteButtonClick"}]//,
+    			//DefaultItemButton: ["wm.ToolButton", {hint: "Make selected item the initial button value", "caption":"","width":"16px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 2}, {"onclick":"DefaultButtonClick"}]
 
 		    }],
 		    panel2: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "10"}, {}, {

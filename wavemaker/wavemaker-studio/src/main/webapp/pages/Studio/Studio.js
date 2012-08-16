@@ -2143,3 +2143,16 @@ dojo.declare("wm.studio.DialogButtonPanel", wm.Panel, {
     height: "35px",
     width: "100%"
 });
+dojo.declare("wm.studio.ToolbarButton", wm.ToolButton, {
+    _classes: {domNode: ["StudioToolbarButton"]},
+    margin: "4",
+    padding: "0,3,0,3",
+    width: "30px",
+    height: "100%"
+});
+dojo.declare("wm.studio.ToolbarSpacer", wm.Spacer, {
+    _classes: {domNode: ["StudioToolbarSpacer"]},
+    height: "24px", 
+    width: "12px", 
+    margin: "0,5"
+});

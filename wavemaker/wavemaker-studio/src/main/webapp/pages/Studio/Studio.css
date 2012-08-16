@@ -319,8 +319,17 @@ div .StudioGrid td,
 .Studio .StudioToolBar button {
     cursor: pointer;
 }
+/*
 .Studio .StudioToolBar button.wmtoolbutton:hover img {
     background-color:#344455 !important;
+}
+*/
+.StudioToolbarButton {
+    margin: 0 20% 0 20%;
+}
+.StudioToolbarButton:hover {
+        background-image:url(images/dark_toolbar_btn_sm_on.gif);
+        background-repeat: no-repeat;        
 }
 
 .Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton,
@@ -979,17 +988,9 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	background-repeat:repeat-x;
 }
 
-.Studio-toolbarspacer1, 
-.Studio-toolbarspacer2, 
-.Studio-toolbarspacer3, 
-.Studio-toolbarspacer4, 
-.Studio-toolbarspacer5, 
-.Studio-toolbarspacer6, 
-.Studio-sourceToolbarspacer6, 
-.Studio-toolbarspacer9 {
+.StudioToolbarSpacer {
 	background-image:url(images/toolbarspacer.gif);
-	/*border-left: solid 1px #3b3c3f;
-	border-right: solid 1px #c3c4c6;*/
+    background-repeat: no-repeat	
 }
 
 .Studio-navBarSpacer6,
@@ -1836,6 +1837,8 @@ color: rgb(0,270,0);
     height: 32px;
     margin-top: 16px;
 }
+
+
 
 /* Waiting Dialog */
 #studio_dialog .StudioWaitingNotice {

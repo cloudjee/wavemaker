@@ -16,20 +16,20 @@ JavaEditor.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	layoutBox1: ["wm.Layout", {height: "100%", imageList: "smallToolbarImageList"}, {}, {
 	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", height: "29px"}, {}, {
-		toolbarBtnHolder: ["wm.Panel", {border: "0", padding: "0,4", width: "100%", layoutKind: "left-to-right", height: "100%", verticalAlign: "middle"}, {}, {
-				javaServiceSaveButton: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "16px",  hint: "Save Java service", border: "0", margin: "0,4,0,4"}, {onclick: "javaServiceSaveButtonClick"}],
-				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				newJavaBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "16px", hint: "New Java Service", border: "0", margin: "0,4,0,4"}, {onclick: "newJavaBtnClick"}],
-				delJavaBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "16px", hint: "Delete Java Service", border: "0", margin: "0,4,0,4"}, {onclick: "delJavaBtnClick"}],
-				toolbarspacer2: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				openCmpOutBtn: ["wm.ToolButton", {imageIndex: 22, width: "24px", height: "16px", hint: "Open Compiler Output", border: "0", margin: "0,4,0,4"}, {onclick: "openCmpOutBtnClick"}],
-				closeCmpOutBtn: ["wm.ToolButton", {imageIndex: 23, width: "24px", height: "16px",  hint: "Close Compiler Output", border: "0", margin: "0,4,0,4"}, {onclick: "closeCmpOutBtnClick"}],
-			    javaServiceRefreshButton: ["wm.ToolButton", {imageIndex: 27, width: "24px", height: "16px",hint: "Refresh Java service from disk", border: "0", margin: "0,4,0,4"}, {onclick: "javaServiceRefreshButtonClick"}],
-			    toolbarspacer3: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-		    findBtn: ["wm.ToolButton", {width: "24px", height: "16px", margin: "0,4,0,4", hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
-			    formatBtn: ["wm.ToolButton", {width: "24px",  height: "16px", margin: "0,4,0,4", hint: "Reformat Code", imageIndex: 29}, {onclick: "formatClick"}],
-			    wordWrapBtn: ["wm.ToolButton", {_classes: {domNode: ["ToggleWordWrap"]},width: "24px",  height: "16px", margin: "0", hint: "Toggle line wrapping", imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
-			    pageHelpBtn: ["wm.ToolButton", {width: "24px", height: "16px",  margin: "0,4,0,4", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
+		toolbarBtnHolder: ["wm.Panel", {border: "0", padding: "0,4", width: "100%", layoutKind: "left-to-right", height: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
+				javaServiceSaveButton: ["wm.studio.ToolbarButton", {imageIndex: 8,   hint: "Save Java service"}, {onclick: "javaServiceSaveButtonClick"}],
+				toolbarspacer1: ["wm.studio.ToolbarSpacer", {}, {}],
+				newJavaBtn: ["wm.studio.ToolbarButton", {imageIndex: 25, hint: "New Java Service"}, {onclick: "newJavaBtnClick"}],
+				delJavaBtn: ["wm.studio.ToolbarButton", {imageIndex: 0,  hint: "Delete Java Service"}, {onclick: "delJavaBtnClick"}],
+				toolbarspacer2: ["wm.studio.ToolbarSpacer", {}, {}],
+				openCmpOutBtn: ["wm.studio.ToolbarButton", {imageIndex: 22,  hint: "Open Compiler Output"}, {onclick: "openCmpOutBtnClick"}],
+				closeCmpOutBtn: ["wm.studio.ToolbarButton", {imageIndex: 23,   hint: "Close Compiler Output"}, {onclick: "closeCmpOutBtnClick"}],
+			    javaServiceRefreshButton: ["wm.studio.ToolbarButton", {imageIndex: 27, hint: "Refresh Java service from disk"}, {onclick: "javaServiceRefreshButtonClick"}],
+			    toolbarspacer3: ["wm.studio.ToolbarSpacer", {}, {}],
+		    findBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
+			    formatBtn: ["wm.studio.ToolbarButton", {hint: "Reformat Code", imageIndex: 29}, {onclick: "formatClick"}],
+			    wordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]}, hint: "Toggle line wrapping", imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
+			    pageHelpBtn: ["wm.studio.ToolbarButton", { hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
 
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
