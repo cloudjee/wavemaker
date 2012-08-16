@@ -21,6 +21,8 @@
 package com.wavemaker.desktop.launcher.ui;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -40,6 +42,7 @@ import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.LifecycleListener;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
 import com.wavemaker.desktop.launcher.AppServer;
 import com.wavemaker.desktop.launcher.AppServer.SERVER_STATUS;
 import com.wavemaker.desktop.launcher.InvalidServerConfigurationException;
@@ -217,7 +220,15 @@ public class MainConsole extends javax.swing.JFrame {
         this.lblCurrentServerPortVal = new javax.swing.JLabel();
         this.lblCurrentShutdownPortVal = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+            	btnStopActionPerformed(null);
+            	System.exit(0);
+            }
+      });
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("MainConsole.title")); // NOI18N
         setBackground(new java.awt.Color(255, 255, 255));
