@@ -165,19 +165,25 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		});
 		return groupList;
 	},
-	updateGroupValue: function() {
-		var group = this.getGroup(), gv = this.getGroupValue();
-		for (var i=0, v, o; (v=group[i]); i++) {
-		    if (v) {
-			o = v.owner;// v.owner refers to a wm.RadioButton (dijit's owner)
-			if (o) {
-				// avoid setter since we just want to process the update
-				o.groupValue = gv;
-			    o.valueChanged("groupValue", gv);
-			}
-		    }
-		}
-	},
+    updateGroupValue: function() {
+        var group = this.getGroup(),
+            gv = this.getGroupValue();
+        for (var i = 0, v, o;
+        (v = group[i]); i++) {
+            if (v) {
+                o = v.owner; // v.owner refers to a wm.RadioButton (dijit's owner)
+                if (o) {
+                    // avoid setter since we just want to process the update
+                    if (o.groupValue != gv) {
+                        o.groupValue = gv;
+                        o.valueChanged("groupValue", gv);
+                        o.onGroupValueChange(gv);
+                    }
+                }
+            }
+        }
+    },
+    onGroupValueChange: function(inValue) {},
 	setGroupValue: function(inValue) {
 	    this.setEditorValue(inValue);
 /*
