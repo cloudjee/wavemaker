@@ -218,7 +218,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 		if (!noInherited) this.inherited(arguments);
 		var il = this._imageList;
 		if (il && il.getImageHtml && this.imageIndex >= 0) {
-			this.btnNode.style.padding = "0px";
+			if (this.btnNode != this.domNode) this.btnNode.style.padding = "0px";
 			this.updateImageListButtonHtml();
 		} else if (this.iconUrl) {
 			var url = this.iconUrl;
@@ -235,7 +235,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 
 			this.btnNode.innerHTML = "<img src='" + wm.theme.getImagesPath() + "blank.gif' style='margin: " + this.iconMargin + "; width: " + this.iconWidth + "; height: " + this.iconHeight + "; vertical-align: middle; background:url(" + root + url + ") no-repeat; background-color: transparent;' />" + captionHtml;
 
-			this.btnNode.style.padding = "0px";
+            if (this.btnNode != this.domNode) this.btnNode.style.padding = "0px";
 		} else {
 			this.btnNode.innerHTML = this.caption;
 			if (this.btnNode != this.domNode) {
