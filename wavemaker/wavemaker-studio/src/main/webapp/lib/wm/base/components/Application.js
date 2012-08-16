@@ -987,6 +987,7 @@ dojo.declare("wm.Application", wm.Component, {
     if (!this.toolTipDialog) {
         this.toolTipDialog = new wm.Dialog({_classes: {domNode: ["AppToolTip"]},
                         title: "",
+                        name: "toolTipDialog",
                         modal: false,
                         width: "350px",
                         height: "50px",
