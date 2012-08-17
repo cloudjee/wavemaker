@@ -11,13 +11,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 EditVariable.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"},{}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "NoRightMarginOnTab", "StudioDarkLayers"]}, width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
+	    tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "NoRightMarginOnTab", "StudioDarkLayers"]}, width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
 		guiLayer: ["wm.Layer", {caption: "Field Editor"}, {onShow: "onGuiShow"}, {
             panel1: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", height: "29px", horizontalAlign: "left", verticalAlgin: "top"}, {}, {
 

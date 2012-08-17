@@ -431,13 +431,13 @@ dojo.declare("Studio", wm.Page, {
              } else {
                  this.disableMenuBar(true);
              }
-    
-                // mount project so live services and the resources folder can be accessed; 
-                // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources; 
-                // at some point a cleanup of that code may be needed.          
+
+                // mount project so live services and the resources folder can be accessed;
+                // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources;
+                // at some point a cleanup of that code may be needed.
             /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
                 if (!wm.studioConfig.preventLiveData && inName != '' && studio.application)
-                            studio.deploy(null,"studioProjectCompile", true); 
+                            studio.deploy(null,"studioProjectCompile", true);
         }
 
         //this.disableCanvasSourceBtns(!b);
@@ -465,39 +465,39 @@ dojo.declare("Studio", wm.Page, {
     var f = function(e) {
 
         if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA" || dojo.hasClass(e.target, "ace_layer")) return true;
-        dojo.stopEvent(e);      
+        dojo.stopEvent(e);
         var menuObj = studio.contextualMenu;
         menuObj.removeAllChildren();
 
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_TUTORIALS"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_TUTORIALS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
                         });
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_DOCS"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
                         });
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_PROPDOCS"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}), "Docs");}
                         });
 
         menuObj.dojoObj.addChild(new dijit.MenuSeparator());
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
                         {"label": this.getDictionaryItem("MENU_ITEM_COMMUNITY"),
-                         iconClass: "StudioHelpIcon", 
+                         iconClass: "StudioHelpIcon",
                          onClick: function() {window.open(this.getDictionaryItem("URL_FORUMS"), "Forums");}
                         });
-                                                
+
         menuObj.update(e);
     };
     dojo.connect(this.domNode, "oncontextmenu", this, f);
     if (dojo.isFF < 5) {
         dojo.connect(this.domNode, "onmousedown", this, function(e) {
-        if (e.button == 2 || e.ctrlKey) 
+        if (e.button == 2 || e.ctrlKey)
         dojo.hitch(this, f)(e);
         });
     }
@@ -535,7 +535,7 @@ dojo.declare("Studio", wm.Page, {
             this.select(this.page.root);
             this.refreshDesignTrees();
         }
-        
+
         if (this.page) {
             var deviceType = this.page.getPreferredDevice();
             if (deviceType && deviceType != this.currentDeviceType) {
@@ -626,14 +626,14 @@ dojo.declare("Studio", wm.Page, {
     updateFullServiceList: function() {
     studio.updateServices();
     studio.application.loadServerComponents();
-    studio.refreshServiceTree(); 
+    studio.refreshServiceTree();
     },
     updateServices: function() {
         wm.typeManager.clearTypes();
         this.setLiveLayoutReady(false);
         this.servicesService.requestSync("listTypes", [], dojo.hitch(this, "typesChanged"));
         this.servicesService.requestSync("listServicesWithType", [], dojo.hitch(this, "servicesDataChanged"));
-            studio.refreshServiceTree(); 
+            studio.refreshServiceTree();
     },
     typesChanged: function(inData) {
         if (this._inRestoreCleanApp) return;
@@ -670,7 +670,7 @@ dojo.declare("Studio", wm.Page, {
         },
 
     refreshPagePalette: function() {
-        var 
+        var
             palette = studio.palette,
             list = this.project.getPageList(),
                     caption = bundlePackage.PageContainers,
@@ -684,7 +684,7 @@ dojo.declare("Studio", wm.Page, {
             }
     },
     refreshDataPalette: function() {
-        var 
+        var
             palette = studio.palette,
             list = wm.dataSources.sources,
             caption = bundlePackage.Database,
@@ -781,7 +781,7 @@ dojo.declare("Studio", wm.Page, {
             //this["_cachedEditDataeditArea"] = inScript;
         this.editArea.setText(inScript);
     },
-    
+
         getAppScript: function() {
         return this.appsourceEditor.getText();
     },
@@ -932,7 +932,7 @@ dojo.declare("Studio", wm.Page, {
         this.inspector.inspected = null;
         if (inspected)
             this.inspector.inspect(inspected);
-        }               
+        }
     },
     inspect: function(inComponent) {
     if (inComponent.noInspector) return;
@@ -952,7 +952,7 @@ dojo.declare("Studio", wm.Page, {
     setInspectedCaption: function(inComponent) {
     this.PIContents.setTitle(inComponent ? inComponent.name  + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
     },
-    select: function(inComponent, isNew) {      
+    select: function(inComponent, isNew) {
             if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
 /*
             if (this._lastBindSelect == inComponent) {
@@ -985,7 +985,7 @@ dojo.declare("Studio", wm.Page, {
         }
         return;
         }
- 
+
         // if its a dialog or a widget within a dialog dismiss the dialog
         // unless the new selection IS in the dialog as wel
             if (this.selected && !this.selected.isDestroyed && this.selected instanceof wm.Control) {
@@ -1057,7 +1057,7 @@ dojo.declare("Studio", wm.Page, {
         }
     },
     selectParent: function() {
-        if (this.targetMode) 
+        if (this.targetMode)
             this.selectProperty()
         else
             this.designer.selectParent();
@@ -1109,7 +1109,7 @@ dojo.declare("Studio", wm.Page, {
                  {l: "ESC", d: this.getDictionaryItem("SHORTCUTS_ESC_2")},
                  {l: "DEL", d: this.getDictionaryItem("SHORTCUTS_DEL")},
 
-                     {d: this.getDictionaryItem("SHORTCUTS_HEADER_2")},     
+                     {d: this.getDictionaryItem("SHORTCUTS_HEADER_2")},
                  {l: "C-o", d: this.getDictionaryItem("SHORTCUTS_O")},
                  {l: "C-e", d: this.getDictionaryItem("SHORTCUTS_E")},
                  {l: "C-b", d: this.getDictionaryItem("SHORTCUTS_B")},
@@ -1127,7 +1127,7 @@ dojo.declare("Studio", wm.Page, {
         html = "<div class='KeyboardShortcutDialog'>" + html + "</div>";
         this.helpDialog.setUserPrompt(html);
         this.helpDialog.show();
-        
+
     },
     componentRenamed: function(inOld, inNew, inComponent) {
         this.renameComponentOnTree.apply(this, arguments);
@@ -1187,7 +1187,7 @@ dojo.declare("Studio", wm.Page, {
                    firstMsg = msg;
                    break;
                 }
-            if (firstMsg) 
+            if (firstMsg)
            this.beginWait(firstMsg);
                 else
            this.dialog.setShowing(false);
@@ -1277,7 +1277,7 @@ dojo.declare("Studio", wm.Page, {
 
         if (e._wmstop)
         return true;
-        
+
 
         // only act on CTRL keys (but not SHIFT-CTRL); accepts command/alt as alternative to ctrl key.
         var ctrlKey = e.ctrlKey || e.metaKey;
@@ -1306,7 +1306,7 @@ dojo.declare("Studio", wm.Page, {
             dojo.stopEvent(e);
     },
         // Support keypress event that should do nothing and NOT bubble up to the window level
-        nullAction: function() { 
+        nullAction: function() {
         ;
     },
     /*topLayersChange: function(inSender) {
@@ -1333,13 +1333,13 @@ dojo.declare("Studio", wm.Page, {
         this.widgetsHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + this.getWidgets() + "</pre>");
         var appsrc = this.project.generateApplicationSource();
         var match = appsrc.split(terminus)
-                       
+
         appsrc = (match) ? match[0] + "\n\t" + terminus + "\n});" : appsrc;
         this.appsourceHtml.setHtml('<pre style="padding: 0; width: 100%; height: 100%;">' + appsrc + "</pre>");
     },
     tabsChange: function(inSender) {
         if (!studio.page) return;
-        
+
         switch (inSender.name) {
         case "sourceTab":
             this.designer.showHideHandles(false);
@@ -1349,8 +1349,8 @@ dojo.declare("Studio", wm.Page, {
             this.designer.showHideHandles(true);
             // re-inspect when we show designer
             if (this.selected) {
-                        // selected object may have changed; example: 
-                        // in liveview, I hit delete, now live view is no longer selected AND 
+                        // selected object may have changed; example:
+                        // in liveview, I hit delete, now live view is no longer selected AND
                         // we change tabs going back to the canvas.
                         if (this.selected == this.inspector.inspected)
                 this.inspector.reinspect();
@@ -1362,9 +1362,9 @@ dojo.declare("Studio", wm.Page, {
     },
     leftTabsChange: function(inSender) {
         var layer = inSender.getActiveLayer();
-        
+
         /* If the user goes to the palette, switch layers to the design/canvas layer */
-        if (layer.name == "mlpal" && this.page) 
+        if (layer.name == "mlpal" && this.page)
         this.navGotoDesignerClick();
     },
     objectTabsChange: function(inSender) {
@@ -1394,7 +1394,7 @@ dojo.declare("Studio", wm.Page, {
     },
 
         generateAllDocumentation: function() {
-        
+
         var html = this.getDictionaryItem("GENERATE_DOCUMENTATION_HEADER");
         var c;
 
@@ -1403,7 +1403,7 @@ dojo.declare("Studio", wm.Page, {
         var comp = studio.application.components[c];
         if (comp.documentation || comp instanceof wm.Control == false)
             html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + (comp.documentation || this.getDictionaryItem("GENERATE_DOCUMENTATION_NODOCS")) + "</div>";
-        }       
+        }
 
 
         html += "<h2>" + this.getDictionaryItem("GENERATE_DOCUMENTATION_NONVISUAL_HEADER", {pageName: studio.project.pageName}) + "</h2>"
@@ -1417,7 +1417,7 @@ dojo.declare("Studio", wm.Page, {
         var widgets = wm.listOfWidgetType(wm.Control, false, true);
         for (var i = 0; i < widgets.length; i++) {
         var comp = widgets[i];
-        if (comp.documentation) 
+        if (comp.documentation)
             html += "<hr/><h3>" + comp.name + " (" + comp.declaredClass + ")</h3><div style='padding-left: 15px'>" + comp.documentation  + "</div>";
         }
         this.appDocViewer.setHtml(html);
@@ -1427,7 +1427,7 @@ dojo.declare("Studio", wm.Page, {
         var doc = win.document.open("text/html");
         doc.write(this.appDocViewer.html);
         doc.write("<script>window.setTimeout(function() {window.print();}, 100);</script>");
-        doc.close();        
+        doc.close();
     },
 
     treeSelect: function(inSender, inNode) {
@@ -1478,7 +1478,7 @@ dojo.declare("Studio", wm.Page, {
                     this.inspector.reinspect();
         }
     },
-    toggleHeightClick: function() { 
+    toggleHeightClick: function() {
         var s = this.selected;
         if (s) {
             if (s.fitToContentHeight) {
@@ -1547,7 +1547,7 @@ dojo.declare("Studio", wm.Page, {
     },
     // a UI action concept would be handy for all this stuff
     updateCutPasteUi: function() {
-        var 
+        var
             klass = this.clipboardClass,
         //needsLayer = (klass == "wm.Layer"),
             disabled = !this.clipboard;
@@ -1619,7 +1619,7 @@ dojo.declare("Studio", wm.Page, {
     revertThemeClick: function(inSender) {
     this.themesPage.page.revertTheme();
     },
-    devicesToggleClick: function(inSender){ 
+    devicesToggleClick: function(inSender){
     if (inSender.clicked) {
         app.warnOnce("mobileBetaWarn", "Please note that design for tablet and phone is in beta.  We encourage users to send feedback and suggestions on the forums.  But we do not gaurentee that this functionality is complete, and we may in the future choose to follow a different strategy and use different tools.");
     }
@@ -1648,7 +1648,7 @@ dojo.declare("Studio", wm.Page, {
         this.designer.setMargin("0," + margin + ",0," + margin);
         }
         this.designer.reflow();
-  
+
     }
   */
     if (!inSetByCode) {
@@ -1679,7 +1679,7 @@ dojo.declare("Studio", wm.Page, {
         });
         var self = this;
         dojo.forEach(panels, function(panel) {
-          
+
             wm.forEachWidget(panel, function(w) {
                 if (w._regenerateOnDeviceChange) {
                     w = self.regenerateOnDeviceChange(w);
@@ -1802,11 +1802,11 @@ dojo.declare("Studio", wm.Page, {
     return w;
     },
     languageSelectChanged: function(inSender, optionalPageName) {
-    if (this._changingLanguage) return; 
+    if (this._changingLanguage) return;
     var lastValue = this.languageSelect._lastValue;
     var newValue = this.languageSelect.getDisplayValue();
     if (lastValue == newValue) return;
-        
+
         this.confirmSaveDialog.page.setup(
         "",
         /* User clicks save */
@@ -1830,7 +1830,7 @@ dojo.declare("Studio", wm.Page, {
             this.languageSelect.setDisplayValue(lastValue);
             this._changingLanguage = false;
         }),
-        
+
         /* If project isn't dirty, just run don't save callback */
         !this.updateProjectDirty());
 /*
@@ -1890,7 +1890,7 @@ dojo.declare("Studio", wm.Page, {
     if (page == this.project.pageName || !page) return;
 
     var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: page, oldPage: this.project.pageName});
-        this.confirmPageChange(warnPage, page, 
+        this.confirmPageChange(warnPage, page,
                    dojo.hitch(this, function(noChanges) {
                    this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
                    }),
@@ -1969,10 +1969,10 @@ dojo.declare("Studio", wm.Page, {
     },
         getUserName: function() {return this.userName;},
         editAccountClick: function(inSender) {
-        app.pageDialog.showPage("UserSettings",true, 500,200);        
+        app.pageDialog.showPage("UserSettings",true, 500,200);
         },
     logoutClick: function(inSender) {
-        this.confirmAppChange(this.getDictionaryItem("CONFIRM_LOGOUT"), undefined, 
+        this.confirmAppChange(this.getDictionaryItem("CONFIRM_LOGOUT"), undefined,
                                   dojo.hitch(this, function() {
                               this._isLogout = true;
                               studio.securityService.requestSync("logout", [], dojo.hitch(this, "logoutSuccess"));
@@ -1983,7 +1983,7 @@ dojo.declare("Studio", wm.Page, {
     },
 /*
         saveDocumentation: function() {
-        var html = this.documentationDialog.getHtml();     
+        var html = this.documentationDialog.getHtml();
         this.documentationDialog.editComponent.documentation = html;
         if (this.documentationDialog.editComponent == studio.selected)
         this.inspector.reinspect();
@@ -1995,7 +1995,7 @@ dojo.declare("Studio", wm.Page, {
             var d = studio.deploymentService.requestAsync("listThemes");
             d.addCallback(dojo.hitch(this, function(inData) {
                 var d = [];
-                for (var i = 0; i < inData.length; i++) 
+                for (var i = 0; i < inData.length; i++)
                     if (inData[i] != "wm_studio")
                         d.push({dataValue: inData[i]});
                 this.themesListVar.setData(d);
@@ -2006,12 +2006,12 @@ dojo.declare("Studio", wm.Page, {
     loadHelp: function(inType, inPropName, onSuccess) {
     var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
     var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
-    
+
     if (inType == studio.project.projectName) inType = "wm.Application";
     else if (inType == studio.project.pageName) inType = "wm.Page";
 
           inType = inType.substring(inType.indexOf(".")+1);
-    
+
           if (inType.indexOf("gadget.") == 0)
           inType = inType.substring(inType.indexOf(".")+1);
 
@@ -2152,7 +2152,20 @@ dojo.declare("wm.studio.ToolbarButton", wm.ToolButton, {
 });
 dojo.declare("wm.studio.ToolbarSpacer", wm.Spacer, {
     _classes: {domNode: ["StudioToolbarSpacer"]},
-    height: "24px", 
-    width: "12px", 
+    height: "24px",
+    width: "12px",
     margin: "0,5"
+});
+
+/* Added this widget mostly because headerHeight was getting trampled by the user's theme in mid-rerendering of the tabs */
+dojo.declare("wm.studio.TabLayers", wm.TabLayers, {
+    headerHeight: "31px",
+    "layersType": "Tabs",
+    "margin": "0",
+    "border": "0",
+    "borderColor": "#959DAB",
+    "clientBorder": "0",
+    "clientBorderColor": "#959DAB",
+    width: "100%",
+    height: "100%"
 });

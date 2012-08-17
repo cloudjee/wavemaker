@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 JavaEditor.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	layoutBox1: ["wm.Layout", {height: "100%", imageList: "smallToolbarImageList"}, {}, {
@@ -39,7 +39,7 @@ JavaEditor.widgets = {
 				javaServicePanel: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
 				    javaCodeEditor: ["wm.AceEditor", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onChange: "setDirty"}],
 					javaCodeSplitter: ["wm.Splitter", {layout: "bottom", border: "0"}, {}],
-				    logTabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, width: "100%", height: "200px",clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", conditionalTabButtons:true}, {onchange: "changeLogTab"}, {
+				    logTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, width: "100%", height: "200px",clientBorder: "1,0,0,0", clientBorderColor: "#959DAB", conditionalTabButtons:true}, {onchange: "changeLogTab"}, {
 					    complierTab: ["wm.Layer", {caption: "Compiler Messages"}, {}, {
 						    /*
 						javaCompilerOutputPanel: ["wm.Panel", {border: "0", height: "150px"}, {}, {
@@ -53,7 +53,7 @@ JavaEditor.widgets = {
 						logViewer: ["wm.PageContainer", {pageName: "LogViewer",  width: "100%", height: "100%"}]
 					    }]
 					}]
-							
+
 				}]
 			}],
 			splitter1: ["wm.Splitter", {layout: "right"}, {}],
@@ -62,7 +62,7 @@ JavaEditor.widgets = {
                                         link: "#",
                                         _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "openHelp"}],
 				typeTree: ["wm.Tree", {height: "100%", border: "0"}, {}],
-				tabLayers1: ["wm.TabLayers", {border: "0", showing: false, width: "100%", height: "100%"}, {}, {
+				tabLayers1: ["wm.studio.TabLayers", {border: "0", showing: false, width: "100%", height: "100%"}, {}, {
 					typeRefLayer: ["wm.Layer", {caption: "Type Reference"}, {}],
 					javaListLayer: ["wm.Layer", {caption: "Java Services"}, {}, {
 						tree: ["wm.ServicesTree", {height: "584px", border: "0", width: "224px"}, {onselect: "treeSelect"}]

@@ -11,17 +11,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 NewLivePanelDialog.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {_classes: {domNode:["StudioDarkPanel"]}, backgroundColor:""},{}, {
             templatesPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", autoScroll: true},{}, {
                 templatesPanelLabel: ["wm.Label", {width: "100%", height: "24px", caption: "Select how you want your data to look"}],
-                tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","StudioTabsInverted", "NoRightMarginOnTab", "TransparentTabBar"]}, width: "100%", height: "100%", clientBorder: "1", clientBorderColor: "#959DAB", margin:"10"},{},{  
+                tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs","StudioTabsInverted", "NoRightMarginOnTab", "TransparentTabBar"]}, width: "100%", height: "100%", clientBorder: "1", clientBorderColor: "#959DAB", margin:"10"},{},{
                     desktopTemplatesInsertLayer: ["wm.Layer", {caption: "Desktop", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", padding: "8"},{},{
                         desktopTemplatesInsertPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom",horizontalAlign: "left", verticalAlign: "top"}]
-                    }],                   
+                    }],
                     mobileTemplatesInsertLayer: ["wm.Layer", {caption: "Mobile", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top", padding: "8"},{},{
                         mobileTemplatesInsertPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom",horizontalAlign: "left", verticalAlign: "top"}]
                     }]

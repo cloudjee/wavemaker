@@ -11,13 +11,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 Security.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {"colCount":32,"height":16,"url":"images/smallToolbarBtns.png","width":16}, {}],
 	varUrlMap: ["wm.Variable", {"isList":true,"type":"com.wavemaker.studio.SecurityConfigService$SecurityURLMap"}, {}],
 	varServList: ["wm.Variable", {"isList":true,"type":"com.wavemaker.studio.SecurityServiceMap"}, {}],
 	varRoleList: ["wm.Variable", {"isList":true,"type":"EntryData"}, {}],
-        
+
 	layoutBox: ["wm.Layout", {"_classes":{"domNode":["wm-darksnazzy"]},"height":"100%"}, {}, {
 	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, "border":"0","height":"29px","layoutKind":"left-to-right"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {"border":"0","imageList":"smallToolbarImageList","layoutKind":"left-to-right","padding":"0,4","width":"100%"}, {}, {
@@ -25,7 +25,7 @@ Security.widgets = {
 			}],
 			logoBtmHolder: ["wm.Panel", {"border":"0","width":"221px"}, {}]
 		    }],
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
+	    tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
 		securityLayer: ["wm.Layer", {caption: "Setup Security"}, {}, {
 		    label1a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Security Configuration","padding":"4"}],
 		    panel1a: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left"}, {}, {
@@ -48,7 +48,7 @@ Security.widgets = {
 				    demoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Demo","imageList":"smallToolbarImageList"}, {"onShow":"showDemoLayer"}, {
 					panel1: ["wm.Panel", {"border":"0","height":"86px","layoutKind":"left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    panel6: ["wm.Panel", {"border":"0","width":"500px", height: "75px"}, {}, {
-						demoUsernameInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],	
+						demoUsernameInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],
 						demoPasswordInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Password","emptyValue":"null","padding":"2"}],
 						demoRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%", "border":"0","caption":"Role","display":"Select","emptyValue":"null","padding":"2"}]
 					    }],
@@ -142,8 +142,8 @@ Security.widgets = {
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							ldapRoleBySQLInput: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles based on username, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.name = ?' "}, {onchange: "setDirty"}]
 						    }]
-						}]								
-					    }]	
+						}]
+					    }]
 					}]
 				    }],
 				    jossoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"JOSSO"}, {"onShow":"showJossoLayer"}, {

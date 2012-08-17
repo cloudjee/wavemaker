@@ -234,7 +234,7 @@ PhoneGapConfig.widgets = {
     ])
     }],
 
-   
+
     domainsVar: ["wm.Variable",
     {
         "isList": true,
@@ -252,7 +252,7 @@ PhoneGapConfig.widgets = {
         {
             "padding": "5"
         }, {}, {
-            tabLayers1: ["wm.TabLayers",
+            tabLayers1: ["wm.studio.TabLayers",
             {
                 _classes: {
                     domNode: ["StudioTabs", "NoRightMarginOnTab", "TransparentTabBar", "StudioDarkLayers"]
@@ -616,7 +616,7 @@ PhoneGapConfig.widgets = {
                                     iosSrcEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, formField: "src", width: "100%", caption: "Source", captionSize: "80px",changeOnKey:1}, {onchange: "iosGraphicsChange"}],
                                     iosSrcBindButton: ["wm.ToolButton", {_classes: {domNode: ["bindButton"]}, width: "24px", height: "24px"},{onclick: "selectImage"}]
                                 }]/*,
-                                
+
                                 iosSpacer: ["wm.Spacer", {height: "100%"}],
                                 iosButtonPanel: ["wm.Panel", {width: "100%", height: "40px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "right"}, {}, {
                                       iosSaveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Save"},{onclick: "saveIOSGraphicsClick"}],
@@ -649,7 +649,7 @@ PhoneGapConfig.widgets = {
                                     "align": "left",
                                     "formatFunc": "",
                                     "mobileColumn": false
-                                }, 
+                                },
                                 {
                                     "show": true,
                                     "field": "imageType",
@@ -658,7 +658,7 @@ PhoneGapConfig.widgets = {
                                     "align": "left",
                                     "formatFunc": "",
                                     "mobileColumn": false
-                                }, 
+                                },
                                 {
                                     "show": true,
                                     "field": "src",
@@ -703,12 +703,12 @@ PhoneGapConfig.widgets = {
                                     }]
                                 }],
                                 androidNameEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, formField: "description", readonly:1,ignoreParentReadonly:1,width: "100%", caption: "", captionSize: "0px"}, {}],
-                                
+
                                 androidSrcEditorPanel: ["wm.Panel",{width: "100%", height:"24px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign:"left"},{},{
                                     androidSrcEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, formField: "src", width: "100%", caption: "Source", captionSize: "80px",changeOnKey:1}, {onchange: "androidGraphicsChange"}],
                                     androidSrcBindButton: ["wm.ToolButton", {_classes: {domNode: ["bindButton"]}, width: "24px", height: "24px"},{onclick: "selectImage"}]
                                 }]/*,
-                                
+
                                 iosSpacer: ["wm.Spacer", {height: "100%"}],
                                 iosButtonPanel: ["wm.Panel", {width: "100%", height: "40px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "right"}, {}, {
                                       iosSaveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Save"},{onclick: "saveIOSGraphicsClick"}],
@@ -741,7 +741,7 @@ PhoneGapConfig.widgets = {
                                     "align": "left",
                                     "formatFunc": "",
                                     "mobileColumn": false
-                                }, 
+                                },
                                 {
                                     "show": true,
                                     "field": "imageType",
@@ -750,7 +750,7 @@ PhoneGapConfig.widgets = {
                                     "align": "left",
                                     "formatFunc": "",
                                     "mobileColumn": false
-                                }, 
+                                },
                                 {
                                     "show": true,
                                     "field": "src",
@@ -795,12 +795,12 @@ PhoneGapConfig.widgets = {
                                     }]
                                 }],
                                 otherNameEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, formField: "description", readonly:1,ignoreParentReadonly:1,width: "100%", caption: "", captionSize: "0px"}, {}],
-                                
+
                                 otherSrcEditorPanel: ["wm.Panel",{width: "100%", height:"24px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign:"left"},{},{
                                     otherSrcEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, formField: "src", width: "100%", caption: "Source", captionSize: "80px",changeOnKey:1}, {onchange: "otherGraphicsChange"}],
                                     otherSrcBindButton: ["wm.ToolButton", {_classes: {domNode: ["bindButton"]}, width: "24px", height: "24px"},{onclick: "selectImage"}]
                                 }]/*,
-                                
+
                                 iosSpacer: ["wm.Spacer", {height: "100%"}],
                                 iosButtonPanel: ["wm.Panel", {width: "100%", height: "40px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "right"}, {}, {
                                       iosSaveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Save"},{onclick: "saveIOSGraphicsClick"}],
