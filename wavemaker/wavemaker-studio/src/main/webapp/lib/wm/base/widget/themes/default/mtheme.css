@@ -182,8 +182,9 @@ th {
 user-select: none;
 }
 
-.wmtablayers-tab:focus:not(.wmtablayers-selected),
-.wmtablayers-tab:active:not(.wmtablayers-selected) {
+/* Attempt to give visual feedback despite the fact that the user's finger is blocking out the button */
+.wmmobile .wmtablayers-tab:focus:not(.wmtablayers-selected),
+.wmmobile .wmtablayers-tab:active:not(.wmtablayers-selected) {
     background-color: white !important;
 }
 

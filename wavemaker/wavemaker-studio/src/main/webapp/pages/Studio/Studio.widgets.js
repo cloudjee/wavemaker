@@ -179,7 +179,7 @@ height: "29px", width: "420px",
 								   {separator:true},
 								   {label: "Phonegap Build",
 								    idInPage: "phonegapBuildItem",
-								    onClick: "project.getPhonegapBuild"}
+								    onClick: "getPhonegapBuild"}
 							       ],
 							       iconClass: "deployProjectItem"},                                      
                                                               {"defaultLabel": "Preferences...",
@@ -658,8 +658,8 @@ height: "29px", width: "420px",
 			webServiceTab: ["wm.Layer", {caption: "WebServices", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
 			    webServiceSubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs","StudioDarkLayers", "StudioDarkerLayers"]}, border: "1",conditionalTabButtons:true,  customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}],
-		    securityTab: ["wm.Layer", {caption: "Security", layoutKind: "top-to-bottom", showing: false, closable: true, border: "1",borderColor: "#959DAB"}, {}, {
-			    securitySubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},  border: "1",conditionalTabButtons:true, customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
+		    securityTab: ["wm.Layer", {caption: "Security", layoutKind: "top-to-bottom", showing: false, closable: true}, {}, {
+			    securitySubTab: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs"]},  border: "1",conditionalTabButtons:true, customCloseOrDestroy: "closeServiceTab", border: "0"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}]
 
 			}]
