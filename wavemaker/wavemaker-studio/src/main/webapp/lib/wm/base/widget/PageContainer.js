@@ -97,7 +97,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
             }));
         }
     },
-    setProp: function(inName, inValue) {    
+    setProp: function(inName, inValue) {
     if (this.subpageProplist !== null && this.page && this.subpageProplist[inName]) {
         var prop = this.subpageProplist[inName];
         if (prop) {
@@ -123,7 +123,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (prop) {
         return this.page.getValue(prop);
         }
-    } 
+    }
     if (this._isDesignLoaded && this.subpageEventlist !== null && this.page) {
         var prop = this.subpageEventlist[inName];
         if (prop) {
@@ -132,7 +132,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
     }
     return this.inherited(arguments);
     },
-        
+
         onError: function(inErrorOrMessage) {},
     createPageLoader: function() {
         this._pageLoader = new wm.PageLoader({owner: this, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned});
@@ -152,18 +152,18 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (this.isDestroyed)
             return;
       var owner = this.getMainPage();
-      if (owner) owner.subPageUnloaded(this.page);    
+      if (owner) owner.subPageUnloaded(this.page);
       try {
         this.inherited(arguments);
       } catch(e) {}
-      
+
       if (this._pageLoader)
       {
         this.destroyPreviousPage();
         this._pageLoader.destroy();
         this._pageLoader = null;
       }
-      owner = null; 
+      owner = null;
     },
     destroyPreviousPage: function(){
         for (var i = 0; i < this.pageLoadedList.length; i++)
@@ -188,10 +188,10 @@ dojo.declare("wm.PageContainer", wm.Control, {
             this.pageLoadedList.push(inPage);
             this.page = inPage;
             this[inPage.name] = inPage;
-    
+
             var owner = this.getMainPage();
-            if (owner) owner.subPageLoaded(this.page);    
-    
+            if (owner) owner.subPageLoaded(this.page);
+
             // FIXME: parent required for layout
             if (this.page.root)
                 this.page.root.parent = this;
@@ -206,44 +206,40 @@ dojo.declare("wm.PageContainer", wm.Control, {
         }
         catch(e)
         {
-            console.info('error in pageChanged in pagecontainer.js ......', e);         
+            console.info('error in pageChanged in pagecontainer.js ......', e);
         }
     },
     loadPage: function(inName) {
         try {
-        var d = this.isDesignLoaded(), s = wm.studioConfig;
-        if (d && s && s.preventSubPages)
-            return;
-        // bc: name with initial letter lowercase is required
-        var pageName = inName.charAt(0).toLowerCase() + inName.slice(1);
+            var d = this.isDesignLoaded(),
+                s = wm.studioConfig;
+            if (d && s && s.preventSubPages) return;
+            // bc: name with initial letter lowercase is required
+            var pageName = inName.charAt(0).toLowerCase() + inName.slice(1);
 
             // If the design is loaded, then page loading of the container is handled elsewhere.
-        if (pageName) {
-            if (!d && this.loadParentFirst) {
-            var parentPage =  this.getParentPage();
-            }
-            if (!d && this.loadParentFirst && parentPage && parentPage._loadingPage) {
-            // Prevent this from being connected multiple times
-            if (!this._pageLoaderConnectedToOwnerStart) {
-                if (this._currentPageConnect)
-                    dojo.disconnect(this._currentPageConnect);
-                this._currentPageConnect = this.owner.connect(this.owner, "start", dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
-                this._pageLoaderConnectedToOwnerStart = true;
-            }
+            if (pageName) {
+                if (!d && this.loadParentFirst) {
+                    var parentPage = this.getParentPage();
+                }
+                if (!d && this.loadParentFirst && parentPage && parentPage._loadingPage) {
+                    // Prevent this from being connected multiple times
+                    if (!this._pageLoaderConnectedToOwnerStart) {
+                        if (this._currentPageConnect) dojo.disconnect(this._currentPageConnect);
+                        this._currentPageConnect = this.owner.connect(this.owner, "start", dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
+                        this._pageLoaderConnectedToOwnerStart = true;
+                    }
+                } else {
+                    this._pageLoader.loadPage(inName, pageName);
+                    if (this._currentPageConnect) dojo.disconnect(this._currentPageConnect);
+                    if (this._pageLoader.page._startCalled) this.onStart();
+                    else this._currentPageConnect = this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
+                }
             } else {
-                        this._pageLoader.loadPage(inName, pageName);
-                if (this._currentPageConnect)
-                    dojo.disconnect(this._currentPageConnect);
-                        if (this._pageLoader.page._startCalled)
-                            this.onStart();
-                        else
-                    this._currentPageConnect = this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
+                this.destroyPreviousPage();
             }
-        } else {
-            this.destroyPreviousPage();
-        }
-        } catch(e) {
-        console.error("PageContainer page  '" + inName + "' failed to load: " + e);
+        } catch (e) {
+            console.error("PageContainer page  '" + inName + "' failed to load: " + e);
         }
     },
     pageLoaderOnOwnerStart: function(inName, pageName) {
@@ -253,7 +249,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
     },
     onStart: function() {
         delete this._locationState;
-        if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w) 
+        if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w)
         this.parent.reflow();
 
         if (this.subpageEventlist && this.page) {
@@ -313,39 +309,38 @@ dojo.declare("wm.PageContainer", wm.Control, {
             return this.page.forEachWidget(inFunc);
     },
     setPageName: function(inPageName, optionalInPageType) {
-        if (this._pageLoading)
-            return;
-    
-    if (this.manageHistory && this._pageName != inPageName &&  !this._isDesignLoaded) {
-        this._backState = {pageName: this._pageName};
-        if (this.page && this.page.generateBackState) {
-        this.page.generateBackState(this._backState);
-        }
-    }
-    this._lastPageName = this._pageName;
+        if (this._pageLoading) return;
 
-        if (this._designerOpenPageButton)
-        dojo[this._pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
+        if (this.manageHistory && this._pageName != inPageName && !this._isDesignLoaded) {
+            this._backState = {
+                pageName: this._pageName
+            };
+            if (this.page && this.page.generateBackState) {
+                this.page.generateBackState(this._backState);
+            }
+        }
+        this._lastPageName = this._pageName;
+
+        if (this._designerOpenPageButton) dojo[this._pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
 
         var o = this._pageName;
-    this._pageName = this[optionalInPageType || "pageName"] = inPageName || "";
+        this._pageName = this[optionalInPageType || "pageName"] = inPageName || "";
         if (this.isDesignedComponent() && this.designWrapper) {
-                this.createOpenPageButton();
-            }
+            this.createOpenPageButton();
+        }
 
         this.pageLoadedDeferred = new dojo.Deferred();
-            if (o != this._pageName)
-        this.loadPage(this._pageName);
+        if (o != this._pageName || !this.page) this.loadPage(this._pageName);
         this.valueChanged("pageName", this._pageName);
     },
 
-        // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
-        forceReloadPage: function() {
-            var pageName = this._pageName;
-            this.setPageName(null);
-            delete window[pageName];
-            this.setPageName(pageName);
-        },
+    // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
+    forceReloadPage: function() {
+        var pageName = this._pageName;
+        this.setPageName(null);
+        delete window[pageName];
+        this.setPageName(pageName);
+    },
     onPageChanged: function(inNewPage, inPreviousPage) {
     },
     // optimization: page created when shown if doesn't exist.
