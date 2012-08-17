@@ -85,7 +85,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 			this._close("Import");
 		}
 		else{
-			this.serviceNameInput.setDataValue("hrdb");
+			this._serviceName = "hrdb";
 			studio.dataService.requestAsync("importSampleDatabase",
 					[],
 					dojo.hitch(this, "_importResult"),
