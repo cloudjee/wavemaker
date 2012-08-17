@@ -28,17 +28,32 @@ dojo.declare("wm.Label", wm.Control, {
     init: function() {
         dojo.addClass(this.domNode, "wmlabel");
         this.inherited(arguments);
-        this.connect(this.domNode, "onclick", this, function(evt) {
-        window.setTimeout(dojo.hitch(this, "click",evt), 5);
-        });
-
+        this.connect(this.domNode, "onclick", this, "_onclick");
         // this.connectEvents(this.domNode, ["dblclick"]);  WAVEMAKER: Uncomment this if we find a good use for this...
     },
     build: function() {
-    this.inherited(arguments);
-    this.sizeNode = document.createElement("div");
-    dojo.addClass(this.sizeNode, "wmSizeNode");
-    this.domNode.appendChild(this.sizeNode);
+        this.inherited(arguments);
+        this.sizeNode = document.createElement("div");
+        dojo.addClass(this.sizeNode, "wmSizeNode");
+        this.domNode.appendChild(this.sizeNode);
+    },
+    _onclick: function(inEvent) {
+        var pseudoEvt = dojo.isIE && inEvent ? {
+                    clientX: inEvent.clientX,
+                    clientY: inEvent.clientY,
+                    offsetX: inEvent.offsetX,
+                    offsetY: inEvent.offsetY,
+                    screenX: inEvent.screenX,
+                    screenY: inEvent.screenY,
+                    pageX: inEvent.pageX,
+                    pageY: inEvent.pageY,
+                    x: inEvent.x,
+                    y: inEvent.y,
+                    target: inEvent.target,
+                    currentTarget: inEvent.currentTarget,
+                    "type": inEvent.type
+                } : inEvent || {};
+        window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);        
     },
     click: function(e) {
         this.onclick(e);
