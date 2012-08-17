@@ -733,7 +733,7 @@ dojo.declare("Studio", wm.Page, {
         this._runRequested = false;
         this.updateStateWhileDeploying(true);
     },
-    allowDisablingOfServiceItems: false,
+    allowDisablingOfServiceItems: true,
     updateStateWhileDeploying: function(isDeployed) { /* Only if there is an app open */
         if (this.allowDisablingOfServiceItems && studio.application && this.isCloud()) {
              dojo.publish("testRunStateChange");
