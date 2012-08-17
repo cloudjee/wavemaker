@@ -158,7 +158,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}
 
 	if (!this.docked) {
-	    if (this._isDesignLoaded) 
+	    if (this._isDesignLoaded)
 		studio.designer.domNode.appendChild(this.domNode);
 	    else
 		app.appRoot.domNode.appendChild(this.domNode);
@@ -200,21 +200,21 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
             if (this.designWrapper)
                 this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
-	    if (!this.docked) 
-		this.domNode.style.display = "none";		
+	    if (!this.docked)
+		this.domNode.style.display = "none";
 	    this._connections.push(this.connect(document, "keydown", this, "keydown"));
 	    this._subscriptions.push(dojo.subscribe("window-resize", this, "windowResize"));
 
 	    this.setModal(this.modal);
 
-	    this.setTitlebarBorder(this.titlebarBorder); 
+	    this.setTitlebarBorder(this.titlebarBorder);
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
 
 	    var containerWidget, containerNode;
-	    
+
             // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
-            var owner = (this.declaredClass == "wm.Dialog" || this._pageOwnsWidgets) ? this.owner : this; 
+            var owner = (this.declaredClass == "wm.Dialog" || this._pageOwnsWidgets) ? this.owner : this;
 
 
             // If the dialog has only a single widget inside of it, thats the titlebar, and the rest of it hasn't yet been created and needs creating.
@@ -227,11 +227,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (this.containerWidgetId) {
 		    containerWidget = this.owner.getValueById(this.containerWidgetId);
 		    containerNode = containerWidget.domNode;
-		} 
+		}
 	    } else if (this.c$.length == 1) {
 	        if (this.useContainerWidget) {
 	            containerWidget = this.containerWidget ||  new wm.Container({
-			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
+			_classes: {domNode: ["wmdialogcontainer", this.containerClass]},
 			name: owner.getUniqueName("containerWidget"),
 			parent: this,
 			owner: owner,
@@ -248,7 +248,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    containerNode = containerWidget.domNode;
 	        } else {
 		    containerNode = this.domNode;
-	        }		
+	        }
             } else {
 		containerWidget = this.c$[1]; // could be undefined
 	    }
@@ -262,7 +262,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 	    } else if (this.c$.length < 3) {
                 // use of buttonbar is only accepted if useContainerWidget is true
-               	if (this.useButtonBar && this.useContainerWidget) {		  
+               	if (this.useButtonBar && this.useContainerWidget) {
                     this.createButtonBar();
                 }
             } else {
@@ -297,7 +297,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         }
     },
     createButtonBar: function() {
-        var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; 
+        var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this;
 	this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
 				       name: "buttonBar",
 				       owner: owner,
@@ -367,11 +367,11 @@ dojo.declare("wm.Dialog", wm.Container, {
                     if (!this.insureDialogVisible(true)) {
                         if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t + this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking || this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
                             this.setDocked(true);
-                        } 
+                        }
                     }
                 }
                 this.setBounds(this.bounds); // recalcualtes right and bottom borders
-               
+
                 if (!this.docked) {
                     var rerender = false;
                      if (this.bounds.l > app.appRoot.bounds.r) {
@@ -390,7 +390,7 @@ dojo.declare("wm.Dialog", wm.Container, {
                             if (this.bounds.t < 0) {
                                 this.bounds.t = 0;
                                 rerender = true;
-                            }                            
+                            }
                             if (rerender) {
                                 this.setBounds(this.bounds);
                                 wm.Control.prototype.renderBounds.call(this);
@@ -427,7 +427,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (!edge) {
 	    if (this.bounds.t < 0 && !this.noTopBottomDocking)
 		edge = "t";
-	    else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking) 
+	    else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking)
 		edge = "b";
 	    else if (this.bounds.l < 0 && !this.noLeftRightDocking)
 		edge = "l";
@@ -506,7 +506,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	delete this._dockData;
 	var parent = this.parent;
 	app.removeDockedDialog(this); // TODO
-	if (this._isDesignLoaded) 
+	if (this._isDesignLoaded)
 	    studio.designer.domNode.appendChild(this.domNode);
 	else
 	    app.appRoot.domNode.appendChild(this.domNode);
@@ -548,7 +548,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	delete this.minifiedLabel;
 	    app.wmMinifiedDialogPanel.reflow();
 	this._minified = false;
-	if (!dontCallSetShowing) 
+	if (!dontCallSetShowing)
 	    this.show();
     },
     maxify: function() {
@@ -696,11 +696,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 			}
 		    }
 /*
-		    if (this.isDesignedComponent()) 
+		    if (this.isDesignedComponent())
 			this.dialogScrim.size(studio.designer.domNode);
 			*/
 		    return this.inherited(arguments);
-		}            
+		}
 	},
         // This should be able to take both the human readable value "top right", and also the streamlined "tr" and have it work regardless.
     // Note that vertical axis must always come before horizontal axis
@@ -738,8 +738,8 @@ dojo.declare("wm.Dialog", wm.Container, {
             if (testOnly) return false;
             else this.bounds.l = 0;
         }
-        if (!testOnly)           
-	    wm.Control.prototype.renderBounds.call(this);        
+        if (!testOnly)
+	    wm.Control.prototype.renderBounds.call(this);
         return true;
     },
 
@@ -873,7 +873,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     animEnd: function() {
         if (this.showing) {
             //this.domNode.style.opacity = 1; // needed for IE 9 beta
-            this.callOnShowParent();
+            //this.callOnShowParent();
         } else {
             if (this.docked) this.setDocked(false);
             this.domNode.style.display = "none";
@@ -951,8 +951,9 @@ dojo.declare("wm.Dialog", wm.Container, {
                         });
 
             }
+            this.callOnShowParent();
             this.onShow();
-            if (eventId) app.debugDialog.endLogEvent(eventId);                    
+            if (eventId) app.debugDialog.endLogEvent(eventId);
 
         } else if (!inShowing && showingChanging) {
             this.callOnHideParent();
@@ -985,7 +986,7 @@ dojo.declare("wm.Dialog", wm.Container, {
             }
 
             if (!skipOnClose && !this._minified) this.onClose("");
-            if (eventId) app.debugDialog.endLogEvent(eventId);                    
+            if (eventId) app.debugDialog.endLogEvent(eventId);
         }
 
 
@@ -1006,7 +1007,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 /*
         setShowing: function(inShowing, forceChange, skipOnClose) {
-	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime; 
+	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime;
 
 	    // First show/hide the scrim if we're modal
 	    if (inShowing != this.showing && this.modal && !this._isDesignLoaded)
@@ -1073,8 +1074,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 			if (app.debugDialog) {
 			    var eventChain = app.debugDialog.cacheEventChain();
 			}
-			this._showAnimation =  
-			    dojo.animateProperty({node: this.domNode, 
+			this._showAnimation =
+			    dojo.animateProperty({node: this.domNode,
 						  properties: {opacity: 1},
 						  duration: animationTime,
 						  onEnd: dojo.hitch(this, function() {
@@ -1101,8 +1102,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 			    var eventChain = app.debugDialog.cacheEventChain();
 			}
                         this._transitionToHiding = true;
-			this._hideAnimation = 
-			dojo.animateProperty({node: this.domNode, 
+			this._hideAnimation =
+			dojo.animateProperty({node: this.domNode,
 					      properties: {opacity: 0.01},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
@@ -1113,7 +1114,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
 						  if (this.docked) this.setDocked(false);
                                                   delete this._transitionToHiding;
-						      if (!skipOnClose && !this._minified) 
+						      if (!skipOnClose && !this._minified)
 						          this.onClose("");
 						      delete this._hideAnimation; // has no destroy method
 						  if (eventChain) {
@@ -1123,9 +1124,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 			    this._hideAnimation.play();
 		    }
 		} else {
-		    this.inherited(arguments);		    
+		    this.inherited(arguments);
 		    if (this.docked) this.setDocked(false);
-		    if (!skipOnClose && !this._minified) 
+		    if (!skipOnClose && !this._minified)
 			this.onClose("");
 		}
 	    }
@@ -1215,9 +1216,9 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     createTitle: function() {
 	var border = (String(this.titlebarBorder).match(",")) ? this.titlebarBorder : "0,0," + this.titlebarBorder + ",0";
-	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]}, 
+	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]},
 					  showing: this.title,
-					  name: "titleBar", 
+					  name: "titleBar",
 					  parent: this,
 					  owner: this,
 					  width: "100%",
@@ -1233,7 +1234,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 /*
 	if (wm.isMobile) {
 	    if (!wm.Dialog.titlebarMenu) {
-		wm.Dialog.titlebarMenu = app.createComponents({	
+		wm.Dialog.titlebarMenu = app.createComponents({
 		    _dialogTitlebarMenu: ["wm.PopupMenu", {}]
 		},app)[0];
 	    }
@@ -1270,7 +1271,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 							 {"label":"Full Size","separator":undefined,"defaultLabel":"Full Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"maxify"),"children":[]},
 							 {"label":"Normal Size","separator":undefined,"defaultLabel":"Normal Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"maxify"),"children":[]}
 						     ]);
-						     wm.Dialog.titlebarMenu.renderDojoObj(); 
+						     wm.Dialog.titlebarMenu.renderDojoObj();
 						     wm.Dialog.titlebarMenu.setItemShowing("Close", !this.noEscape);
 						     wm.Dialog.titlebarMenu.setItemShowing("Minify", !this.noMinify);
 						     wm.Dialog.titlebarMenu.setItemShowing("Full Size", !this.noMaxify && !this._maxified);
@@ -1279,7 +1280,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 						     */
 						 })
 	    });
-						 
+
 
 	}
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
@@ -1301,7 +1302,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      margin: "3,0,0,3",
 					     parent: buttonPanel,
 					      owner: this,
-					      showing:  !this.noMinify  && !wm.isMobile});	
+					      showing:  !this.noMinify  && !wm.isMobile});
 
 	this.titleMaxify = new wm.ToolButton({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
@@ -1313,8 +1314,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      margin: "3,0,0,3",
 					     parent: buttonPanel,
 					      owner: this,
-					      showing: !this.noMaxify && !wm.isMobile});	
-    
+					      showing: !this.noMaxify && !wm.isMobile});
+
 	this.titleLabel = new wm.Label({
 					  noInspector: true,
 	                                name: "dialogTitleLabel",
@@ -1373,7 +1374,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (this.titleLabel) {
 	    this.titleLabel.setCaption(inTitle);
 	    this.titleLabel.setShowing(true);
-	}	
+	}
 	if (this.titleBar)
 	    this.titleBar.setShowing(Boolean(inTitle));
     },
@@ -1386,7 +1387,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.renderBounds();
 	if(this.designWrapper) {
 	    this.designWrapper.controlBoundsChange();
-	    this.designWrapper.renderBounds();			
+	    this.designWrapper.renderBounds();
 	}
         this.reflow();
     },
