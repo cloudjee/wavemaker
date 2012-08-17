@@ -1,6 +1,7 @@
 dojo.declare("Main", wm.Page, {
 "preferredDevice": "desktop",
 start: function() {
+this.UserName.focus();
 },
 DownloadButton1Click: function(inSender) {
 window.open("http://wavemaker.com/downloads/", "self");
@@ -29,6 +30,7 @@ this.labelWarning.setShowing(true);
 this.error_warning_spacer_1.setShowing(true);
 this.error_warning_spacer_2.setShowing(true);
 this.loginLayer.activate();
+this.Password.focus();
 },
 progressBarTimerTimerFire: function(inSender) {
 var max = 1000 * 120;
