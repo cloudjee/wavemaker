@@ -55,7 +55,7 @@ Studio.extend({
 			this.refreshLiveData();
             if (this.isCloud()) {
                 this.userLabel.setSingleLine(false);
-                this.userLabel.setCaption("Editing services disabled while enabling live layout");
+                this.userLabel.setCaption("Editing/importing of services is disabled while enabling live layout");
                 this.userLabel.setAlign("center");
                 this.userLabel.domNode.style.backgroundColor = "red";
             }
