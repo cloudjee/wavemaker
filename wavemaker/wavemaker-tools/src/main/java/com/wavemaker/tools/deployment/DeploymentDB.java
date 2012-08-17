@@ -109,7 +109,8 @@ public class DeploymentDB {
             if (StringUtils.hasText(this.username)) {
                 props.put(prefix + DataServiceConstants.DB_USERNAME, this.username);
             }
-            if (StringUtils.hasText(this.password)) {
+            //if (StringUtils.hasText(this.password)) { //blank password is valid
+            if (this.password != null) {
                 props.put(prefix + DataServiceConstants.DB_PASS, this.password);
             }
             if (StringUtils.hasText(this.connectionUrl)) {

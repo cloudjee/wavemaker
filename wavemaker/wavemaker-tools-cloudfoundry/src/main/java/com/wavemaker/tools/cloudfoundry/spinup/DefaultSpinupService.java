@@ -50,6 +50,8 @@ public class DefaultSpinupService implements SpinupService {
 
     private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
+    private static final String STUDIO_APP_NAME = "wavemaker-studio";
+    
     private static final int MAX_NAMING_ATTEMPTS = 5;
 
     private static final int MAX_UPLOAD_ATTEMPTS = 3;
@@ -82,6 +84,23 @@ public class DefaultSpinupService implements SpinupService {
         domain = stripPrefix(domain, "api.");
         domain = "." + domain;
         return domain;
+    }
+    
+    @Override
+    public Boolean studioExists(LoginCredentials credentials){
+    	CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(credentials);
+    	login(cloudFoundryClient);
+    	List<CloudApplication> applications = cloudFoundryClient.getApplications();
+    	for (CloudApplication application : applications) {
+    			String appName = application.getName();
+    			if(appName.contains(STUDIO_APP_NAME)){
+    	            if (this.logger.isDebugEnabled()) {
+    	                this.logger.debug("Found exisiting studio: " + appName + " ");
+    	            }
+    				return true;
+    			}
+    	}
+    	return false;
     }
 
     private String stripPrefix(String s, String prefix) {

@@ -45,6 +45,15 @@ public interface SpinupService {
      */
 
     String getDomain(String url);
+    
+    
+    /**
+     * Returns true is account has wavemaker-studio application. Returns false otherwise.
+     * 
+     * @param credentials the login credentials of the user
+     * @return true is studio exists
+     */
+    Boolean studioExists(LoginCredentials credentials);
 
     /**
      * Login the user to cloud foundry and return a transport token for storage. This method should return quick enough
