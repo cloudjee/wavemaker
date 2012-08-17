@@ -31,8 +31,8 @@ dojo.declare("wm.Layer", wm.Container, {
         //console.info('layer destroy called');
         this._isLayerDestroying = true;
         var parent = this.parent;
-        if (parent && parent instanceof wm.Layers) 
-        parent.setCaptionMapLayer(this.caption, null);      
+        if (parent && parent instanceof wm.Layers)
+        parent.setCaptionMapLayer(this.caption, null);
         this.inherited(arguments);
         if (parent && parent.conditionalTabButtons && !parent.decorator.tabsControl.isDestroyed)
         parent.decorator.tabsControl.setShowing(parent.getVisibleLayerCount() > 1);
@@ -46,7 +46,7 @@ dojo.declare("wm.Layer", wm.Container, {
             delete this.title;
         }
         this.setCaption(this.caption);
-        
+
         if (!this.isRelativePositioned)
             dojo.addClass(this.domNode, "wmlayer");
     },
@@ -175,14 +175,14 @@ dojo.declare("wm.Layer", wm.Container, {
     generateStateUrl: function(stateObj) {
     if (this.active && !this._mobileFoldingGenerated) {
         var index = this.getIndex();
-        if (index == this.parent.defaultLayer || index === 0 && this.parent.defaultLayer === -1) return; 
+        if (index == this.parent.defaultLayer || index === 0 && this.parent.defaultLayer === -1) return;
         stateObj[this.getRuntimeId()] = 1;
     }
     },*/
     onTabDrop: function() {}
 });
 
-dojo.declare("wm.Layers", wm.Container, {    
+dojo.declare("wm.Layers", wm.Container, {
         manageHistory: true,
         manageURL: false,
         isMobileFoldingParent: false,
@@ -199,12 +199,12 @@ dojo.declare("wm.Layers", wm.Container, {
     destroy: function() {
         //console.info('LAYERS destroy called');
         this.inherited(arguments);
-        if (this.decorator) 
+        if (this.decorator)
         {
             this.decorator.destroy();
             this.decorator = null;
         }
-        
+
         this.layers = null;
         this.captionMap = null;
         this.client = null;
@@ -241,21 +241,21 @@ dojo.declare("wm.Layers", wm.Container, {
         else
         this.setHeaderHeight('20px'); // this case should never really come up as we don't use isRelativePositioned any more
             // vertical defaults to justified; once we get rid of justified, we can remove this property
-        this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, 
-                    border: "0", 
+        this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned,
+                    border: "0",
                     margin: "0",
                     padding: "0",
-                    name: "client", 
-                    parent: this, 
-                    owner: this, 
-                    height: "100%", 
-                    width: "100%", 
+                    name: "client",
+                    parent: this,
+                    owner: this,
+                    height: "100%",
+                    width: "100%",
                     verticalAlign: "top",
                     horizontalAlign: "left",
-                    flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
+                    flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector
         this.inherited(arguments);
             this._isDesign = this.isDesignLoaded();
-        
+
     },
     postInit: function() {
         this.inherited(arguments);
@@ -267,7 +267,7 @@ dojo.declare("wm.Layers", wm.Container, {
         // fire onshow when loaded
         if (wm.widgetIsShowing(this))
             this._fireLayerOnShow();
-        if (this.manageURL && this.owner.locationState) {       
+        if (this.manageURL && this.owner.locationState) {
         this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
         }
     },
@@ -360,7 +360,7 @@ dojo.declare("wm.Layers", wm.Container, {
             this.clientBorderColor = inBorderColor;
             for (var i = 0; i < this.layers.length; i++)
                 this.layers[i].setBorderColor(inBorderColor);
-        },    
+        },
     // public api for adding a layer
     addLayer: function(inCaption, doNotSelect) {
     var pg = this.createLayer(inCaption);
@@ -395,7 +395,7 @@ dojo.declare("wm.Layers", wm.Container, {
             this.decorator.undecorateLayer(inWidget, i);
             inWidget.active = false;
             inWidget.inFlow = false;
-            this.client.removeWidget(inWidget);            
+            this.client.removeWidget(inWidget);
             /*
             var found = false;
             for (j = 0; j < this.layers.length; j++) {
@@ -718,6 +718,7 @@ dojo.declare("wm.Layers", wm.Container, {
         wm.job(this.getRuntimeId() + ".renderBounds", 10, this, function() {
             if (this.isDestroyed || this._lockHeaderHeight) return;
             if (this.decorator.btns.length <= 1) return;
+            var originalHeight = this.decorator.tabsControl.bounds.h;
             this.decorator.tabsControl.domNode.style.height = 'auto';
             var newheight;
             var lastShowingTab;
@@ -728,8 +729,12 @@ dojo.declare("wm.Layers", wm.Container, {
                 }
             }
             /* Sometimes the buttons are a few px off, but we know they've wrapped to the next line of they are many pixels different in offsetTop */
-            if (!lastShowingTab || this.decorator.btns[0].offsetTop <= lastShowingTab.offsetTop +4 ) {
-                this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
+            if (!lastShowingTab || this.decorator.btns[0].offsetTop +4 >= lastShowingTab.offsetTop ) {
+                if (this.headerHeight == this.decorator.tabsControl.height) {
+                    this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
+                } else {
+                    this.decorator.tabsControl.setHeight(this.headerHeight);
+                }
             } else {
                 newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
                 if (newheight != this.decorator.tabsControl.bounds.h) {
