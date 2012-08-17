@@ -260,9 +260,7 @@ PhoneGapConfig.widgets = {
                 width: "100%",
                 height: "100%",
                 clientBorder: "1",
-                clientBorderColor: "#959DAB",
-                _lockHeaderHeight: 1,
-                headerHeight: "32px"
+                clientBorderColor: "#959DAB"
             }, {}, {
                 requiredLayer: ["wm.Layer",
                 {
@@ -538,7 +536,6 @@ PhoneGapConfig.widgets = {
                         _classes: {domNode: ["StudioTabs", "NoRightMarginOnTab", "TransparentTabBar", "StudioDarkLayers"]},
                 clientBorder: "1",
                 clientBorderColor: "#959DAB",
-                _lockHeaderHeight: 1,
                 headerHeight: "32px",
                         width: "100%",
                         height: "100%",

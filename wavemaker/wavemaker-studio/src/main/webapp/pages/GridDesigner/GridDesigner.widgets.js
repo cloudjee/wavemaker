@@ -148,7 +148,7 @@
                 wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem","targetProperty":"dataSet"}, {}]
             }],     
     
-            tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers", "NoRightMarginOnTab"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB",_lockHeaderHeight:1, headerHeight: "32px"}, {}, {
+            tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers", "NoRightMarginOnTab"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB"}, {}, {
                 layer1: ["wm.Layer", {"borderColor":"#999999","caption":"Basic Settings","horizontalAlign":"left","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
                 label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0",borderColor: "#959DAB", "padding":"4","width":"100%"}, {}, {
                     binding: ["wm.Binding", {}, {}, {
