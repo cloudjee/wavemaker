@@ -299,7 +299,7 @@ dojo.declare("wm.debug.Inspector", wm.Container, {
     borderColor: "#888",
     postInit: function() {
         this.createComponents({
-            tabs: ["wm.TabLayers", {_classes: {domNode:["wmClosablePanel"]}, width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0", _lockHeaderHeight:1}, {}, {
+            tabs: ["wm.TabLayers", {_classes: {domNode:["wmClosablePanel"]}, width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0"}, {}, {
             eventsPanel: ["wm.debug.EventDetailsPanel",{}],
             propertiesPanel: ["wm.debug.PropertyPanel", {},{},{}],
             bindPanel: ["wm.debug.BindPanel", {}],      

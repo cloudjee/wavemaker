@@ -211,21 +211,21 @@ dojo.declare("wm.Layers", wm.Container, {
     },
     prepare: function() {
         this.layers = [];
-        this.captionMap =[];
+        this.captionMap = [];
         this.inherited(arguments);
 
         // needs to happen before build generates the tabsControl or other affected widget
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
         if (!isMobile) {
-        if (this.desktopHeaderHeight != null) {
-            this.headerHeight = this.desktopHeaderHeight;
-        } else if (this.headerHeight) {
-            this.desktopHeaderHeight = this.headerHeight;
-        }
+            if (this.desktopHeaderHeight != null) {
+                this.headerHeight = this.desktopHeaderHeight;
+            } else if (this.headerHeight) {
+                this.desktopHeaderHeight = this.headerHeight;
+            }
         } else {
-        if (this.mobileHeaderHeight) {
-            this.headerHeight = this.mobileHeaderHeight;
-        } 
+            if (this.mobileHeaderHeight) {
+                this.headerHeight = this.mobileHeaderHeight;
+            }
         }
     },
     build: function() {
@@ -239,7 +239,7 @@ dojo.declare("wm.Layers", wm.Container, {
         if (!this.isRelativePositioned)
         dojo.addClass(this.domNode, "wmlayers");
         else
-        this.setHeaderHeight('20px');
+        this.setHeaderHeight('20px'); // this case should never really come up as we don't use isRelativePositioned any more
             // vertical defaults to justified; once we get rid of justified, we can remove this property
         this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, 
                     border: "0", 
@@ -709,24 +709,35 @@ dojo.declare("wm.Layers", wm.Container, {
         this.renderBounds();
 
     },
-        renderBounds: function() {
+    renderBounds: function() {
         this.inherited(arguments);
-        if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
-        return;
-        if (!this.decorator || !this.decorator.tabsControl)
-        return;
-        if (this.decorator.tabsControl.isDestroyed)
-        return;
+        if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs") return;
+        if (!this.decorator || !this.decorator.tabsControl) return;
+        if (this.decorator.tabsControl.isDestroyed) return;
 
         wm.job(this.getRuntimeId() + ".renderBounds", 10, this, function() {
-        if (this.isDestroyed || this._lockHeaderHeight) return;
-        this.decorator.tabsControl.domNode.style.height = 'auto';
-        var newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
-        if (newheight != this.decorator.tabsControl.bounds.h) {
-            this.decorator.tabsControl.setHeight(newheight + "px");
-        } else {
-            this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
-        }
+            if (this.isDestroyed || this._lockHeaderHeight) return;
+            if (this.decorator.btns.length <= 1) return;
+            this.decorator.tabsControl.domNode.style.height = 'auto';
+            var newheight;
+            var lastShowingTab;
+            for (var i = this.decorator.btns.length - 1; i >= 1; i--) {
+                if (this.decorator.btns[i].style.display != "none") {
+                    lastShowingTab = this.decorator.btns[i];
+                    break;
+                }
+            }
+            /* Sometimes the buttons are a few px off, but we know they've wrapped to the next line of they are many pixels different in offsetTop */
+            if (!lastShowingTab || this.decorator.btns[0].offsetTop <= lastShowingTab.offsetTop +4 ) {
+                this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
+            } else {
+                newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
+                if (newheight != this.decorator.tabsControl.bounds.h) {
+                    this.decorator.tabsControl.setHeight(newheight + "px");
+                } else {
+                    this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px"; // clear the "auto"
+                }
+            }
         });
     },
         getMinHeightProp: function() {
