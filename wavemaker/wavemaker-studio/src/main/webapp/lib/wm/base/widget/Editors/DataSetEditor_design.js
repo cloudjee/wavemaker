@@ -19,7 +19,6 @@ wm.selectDisplayTypes = [
 ];
 
 wm.DataSetEditor.extend({
-	updateNow: "(updateNow)",
     set_formField: function(inFormField) {
 	this.inherited(arguments);
 	if (!this.displayField && !this.displayExpression)
@@ -72,17 +71,17 @@ wm.DataSetEditor.extend({
 		if (ds) {
 		    this.components.binding.addWire("", "dataSet", ds.getId());
 		}
-	    } 
+	    }
 
-	     /* If the user triggers a set_dataSet(null) (user didn't trigger it if this._cupdating) then clear everything */    
-            else if (!inDataSet && !this._cupdating) {            
+	     /* If the user triggers a set_dataSet(null) (user didn't trigger it if this._cupdating) then clear everything */
+            else if (!inDataSet && !this._cupdating) {
 		this.components.binding.removeWireByProp("dataSet");
 		this.options = this.dataField = this.displayField = "";
 		this.setDataSet(inDataSet);
-	    } 
+	    }
 
 	    /* Else we have a dataSet and its a wm.Variable */
-	    else {		    
+	    else {
 		if (inDataSet) {
 		    this.dataType = inDataSet.type;
 		}
@@ -97,7 +96,7 @@ wm.DataSetEditor.extend({
 		/* If there is no displayExpression, and either no displayField or an invalid displayField, get a new displayField */
 		if (!this.displayExpression && inDataSet && inDataSet.type &&
 		    (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields || !wm.typeManager.getType(inDataSet.type).fields[this.displayField])) {
-                    this._setDisplayField();                                                                                
+                    this._setDisplayField();
                 }
 
 		else if (!this._cupdating && oldDataSet && inDataSet && inDataSet != this.$.liveVariable && (!this.displayField && !this.displayExpression || this._lastType != inDataSet.type))  {
@@ -115,7 +114,9 @@ wm.DataSetEditor.extend({
 
 
     updateNow: function() {
-	return this.update();
+        /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
+        if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);
+	   return this.update();
     },
     set_displayValue: function(inValue) {
 	if (this._multiSelect) {
@@ -138,7 +139,7 @@ wm.DataSetEditor.extend({
 			app.toastError("<" + ex2 + "> does not compile to a string value. Perhaps you need quotes?");
 			return;
 		    }
-			
+
 		} catch(e) {
 		    app.toastError("Unable to compile this expression: " + e);
 		    return;
@@ -187,13 +188,13 @@ wm.Object.extendSchema(wm.DataSetEditor, {
     updateNow: {group: "operation", operation: 1},
 
     /* Ignored group */
-    optionsVar: {ignore:1},    
+    optionsVar: {ignore:1},
     format: {ignore: 1},
     formatter: {ignore: 1},
     displayType: {ignore:1},
     emptyValue: {ignore: 1},
     optionsVar: {ignore:1},
-    
+
     /* Methods */
     setDataSet: {method:1, doc: 1},
     setOptions: {method:1, doc: 1}
@@ -205,7 +206,7 @@ wm.Object.extendSchema(wm.CheckboxSet, {
 
 wm.Object.extendSchema(wm.ListSet, {
     selectionMode: {group: "widgetName", subgroup: "behavior", order: 101, options: ["single", "multiple", "checkbox", "radio"]},
-    showSearchBar: {group: "widgetName", subgroup: "behavior", order: 100}, 
+    showSearchBar: {group: "widgetName", subgroup: "behavior", order: 100},
     deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "editor", subgroup: "confirmation", order: 10, advanced:1},
     readonly: {ignore:1},

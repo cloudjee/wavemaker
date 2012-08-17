@@ -46,7 +46,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     input:            {group: "dataSet", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, editor: "wm.prop.FieldGroupEditor", editorProps: {showMainInput: false, multiLayer: true}},
 
     /* Operations group */
-    updateNow:        {group: "operation", operation: "update",      order: 10},
+    updateNow:        {group: "operation", operation: "updateNow",      order: 10},
     clearInput:       {group: "operation", operation: "doClearInput",order: 30},
 
     /* Special deprecated group.... */
@@ -61,7 +61,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     listType: {ignore: 1},
     isList: {ignore: 1},
     saveInCookie: {ignore: 1},
-    type: { ignore: 1 },    
+    type: { ignore: 1 },
     isList: {ignore: 1},
     total: {ignore: 1},
 
@@ -81,6 +81,11 @@ wm.ServiceVariable.description = "Data from a service.";
 /**#@+ @design */
 wm.ServiceVariable.extend({
 
+    updateNow: function() {
+        /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
+        if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);
+        this.update();
+    },
     /** @lends wm.ServiceVariable.prototype */
     listProperties: function() {
         var p = this.inherited(arguments);
@@ -92,6 +97,6 @@ wm.ServiceVariable.extend({
 
         return p;
     }
-        
+
 });
 /**#@- @design */

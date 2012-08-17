@@ -173,11 +173,13 @@ dojo.declare("Studio", wm.Page, {
         } else {
             studio.disableMenuBar(true);
         }
+
+        /*
         if (this.isCloud()) {
             this.navLogoutBtn.setShowing(true);
             this.navEditAccountBtn.setShowing(true);
             this.projectNameLabel.setShowing(false);
-        }
+        }*/
 
 
         /* Removal of projects tab
@@ -303,7 +305,7 @@ dojo.declare("Studio", wm.Page, {
             }
         }
     },
-    isCloud: function() {
+    isCloud: function() {return true;
         return wm.studioConfig.environment && wm.studioConfig.environment != "local";
         //return  this.isModuleEnabled("cloud", "wm.cloud");
     },
@@ -436,8 +438,8 @@ dojo.declare("Studio", wm.Page, {
                 // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources;
                 // at some point a cleanup of that code may be needed.
             /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
-                if (!wm.studioConfig.preventLiveData && inName != '' && studio.application)
-                            studio.deploy(null,"studioProjectCompile", true);
+                if (!wm.studioConfig.preventLiveData && inName != '' && studio.application && !this.isCloud())
+                    studio.deploy(null,"studioProjectCompile", true);
         }
 
         //this.disableCanvasSourceBtns(!b);
@@ -624,13 +626,13 @@ dojo.declare("Studio", wm.Page, {
         window.document.title = title.join(" - ");
     },
     updateFullServiceList: function() {
-    studio.updateServices();
-    studio.application.loadServerComponents();
-    studio.refreshServiceTree();
+        studio.updateServices();
+        studio.application.loadServerComponents();
+        studio.refreshServiceTree();
     },
     updateServices: function() {
         wm.typeManager.clearTypes();
-        this.setLiveLayoutReady(false);
+        if (this.isLiveLayoutReady()) this.setLiveLayoutReady(studio.isCloud() ? -1 : false);
         this.servicesService.requestSync("listTypes", [], dojo.hitch(this, "typesChanged"));
         this.servicesService.requestSync("listServicesWithType", [], dojo.hitch(this, "servicesDataChanged"));
             studio.refreshServiceTree();
@@ -700,6 +702,9 @@ dojo.declare("Studio", wm.Page, {
             });
         });
     },
+    /* if isCloud, this will return -1 (true but needs to be updated), 0 (false, redeploy), or 1 (true)
+     * if not isCloud this will return true or false (redeploy)
+     */
     isLiveLayoutReady: function(inWarn) {
         return this._liveLayoutReady;
     },
@@ -711,7 +716,7 @@ dojo.declare("Studio", wm.Page, {
         var application = this.application || this._application;
         if (application._deployStatus == "deploying") application._deployStatus = "deployed";
 
-        this.setLiveLayoutReady(true);
+        this.setLiveLayoutReady(studio.isCloud() ? 1 : true);
         var previewWindowOptions = this.getPreviewWindowOptions();
         if (this.previewWindow && this.previewWindowOptions != previewWindowOptions) this.previewWindow.close();
         this.previewWindowOptions = previewWindowOptions;
