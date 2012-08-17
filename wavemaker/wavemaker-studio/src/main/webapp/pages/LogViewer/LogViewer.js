@@ -55,7 +55,7 @@ dojo.declare("LogViewer", wm.Page, {
         if (this.logName == "wm.log") {
             this.loadingDialog.show();
             studio.studioService.requestAsync("getMainLog", [500], function(result) {
-                if (result != _this.logArea.html) {
+                if (!_this.isDestroyed && result != _this.logArea.html) {
                     _this.logArea.setHtml(result.replace(/\</g, "&lt;").replace(/\</g, "&gt;").replace(/\n/g, "<br/>"));
                     /* If the user hasn't scrolled from the last time we set the _lastScrollTop,
                      * then continue to insure we are looking at the bottom of the log
@@ -74,7 +74,7 @@ dojo.declare("LogViewer", wm.Page, {
         } else {
             studio.studioService.requestAsync("getLogUpdate", [this.logName, this.lastTimeStamp], function(result) {
                 var logs = result.logs;
-                if (_this.logArea && logs) {
+                if (!_this.isDestroyed && _this.logArea && logs) {
                     if (_this._isClear) {
                         _this._isClear = false;
                         _this.logArea.setHtml(logs);
