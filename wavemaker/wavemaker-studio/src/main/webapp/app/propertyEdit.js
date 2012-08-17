@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.propertyEdit");
 
 dojo.declare("wm.SetPropTask", null, {
@@ -145,7 +145,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         this.typeEditor.setDataValue("%");
     } else if (displayValue.match(/px$/)) {
         this.numberEditor.setDataValue(displayValue.replace(/px$/,""));
-        this.typeEditor.setDataValue("px");     
+        this.typeEditor.setDataValue("px");
     } else {
         this.changed();
     }
@@ -177,7 +177,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
     dataField: "dataValue",
     displayField: "dataValue",
-    values: null, 
+    values: null,
     postInit: function() {
     this.inherited(arguments);
     this.refreshOptions();
@@ -244,7 +244,7 @@ dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
         this.setOptions(pagelist);
         var dataValue = this.getDataValue() || "";
         var pageName = this.inspected.getValue(this.propDef.name) || "";
-        if (!dataValue && pageName) {            
+        if (!dataValue && pageName) {
             this.inspected.setValue(this.propDef.name, "");
         }
     }
@@ -292,7 +292,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
                 });
             }
         }), true);
-    
+
         r = r.sort(); /* If called from something other than the property panel, then this.inspected may not exist */
         if (this.inspected) {
             wm.Array.removeElement(r, this.inspected.getId());
@@ -403,7 +403,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     this.setEditorValue(this.dataValue);
     this.endEditUpdate();
     }
-        
+
 });
 dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
     dataField: "dataValue",
@@ -443,13 +443,13 @@ dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
     this.updateOptions();
     return true;
     }
-        
+
 });
 
 
 dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
     dataField: "dataValue",
-    displayField: "dataValue",    
+    displayField: "dataValue",
     relatedFields: false,
     insepected: null,
     allowNone: false,
@@ -489,7 +489,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
         }
         var fields = dataSet._dataSchema;
         var newresults = [];
-        for (var i = 0; i < result.length; i++) {           
+        for (var i = 0; i < result.length; i++) {
             if (fields[result[i]].isList && this.oneToMany || !fields[result[i]].isList && !this.oneToMany) {
             newresults.push(result[i]);
             }
@@ -507,7 +507,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
         }
         var fields = dataSet._dataSchema;
         var newresults = [];
-        for (var i = 0; i < result.length; i++) {           
+        for (var i = 0; i < result.length; i++) {
             var type = fields[result[i]].type;
             var typeDef = wm.typeManager.getType(type);
             if (!typeDef || !typeDef.liveService || this.relatedFields) {
@@ -654,7 +654,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
                    height: "28px",
                    layoutKind: "left-to-right",
                    verticalAlign: "top",
-                   horizontalAlign: "left"});                    
+                   horizontalAlign: "left"});
     this.title =new wm.Label({owner: this,
                   name: "title",
                   parent: topPanel,
@@ -843,7 +843,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     var e =  new wm.prop.EventDijit(this.getEditorProps(inNode, inProps));
     e.owner = this;
     return e;
-    },    
+    },
     constructor: function() {
     if (!wm.prop.EventEditor.eventActions) {
         wm.prop.EventEditor.eventActions =  {
@@ -886,7 +886,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     dialogList = dialogList.sort();
     if (wm.PopupMenu && this.inspected instanceof wm.PopupMenu)
         wm.Array.removeElement(dialogList, this.inspected);
-    
+
     //var layerList = wm.listComponents([studio.page], wm.Layer);
     var layerList = [];
     var mobileFoldingList = [];
@@ -898,7 +898,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     }, false);
     layerList = layerList.sort();
     mobileFoldingList = mobileFoldingList.sort();
-    
+
 
 
     var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
@@ -956,8 +956,8 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
             if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
             a = timers;
             break;
-        }   
-        
+        }
+
         if (a && a.length) {
             items.push({name: n, dataValue: n});
             dojo.forEach(a, function(obj) {
@@ -1183,14 +1183,14 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
             if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
             componentList = timers;
             break;
-        }   
-        
+        }
+
         if (componentList && componentList.length) {
 /*
             if (currentPageSize + componentList.length + 1 > maxPageSize && inPage == studio.page) {
             inStructure.push({pageBreak:true});
             currentPageSize = 1;
-            } else {            
+            } else {
             currentPageSize += 1 + componentList.length;
             }
 
@@ -1259,7 +1259,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
         }
         } else {
         if (inPage != studio.page) return;
-        if (eventSchema && eventSchema.events) 
+        if (eventSchema && eventSchema.events)
             switch(name) {
             case "noEvent":
             if ( dojo.indexOf(eventSchema.events, "disableNoEvent") != -1) return;
@@ -1303,7 +1303,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     else {
         this.inherited(arguments);
         this.inspected.setProp(this.propName, value);
-        if (this.inspected == studio.selected) 
+        if (this.inspected == studio.selected)
         studio.inspector.reinspect();
 
         else {
@@ -1419,7 +1419,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     this.editors = {};
 
     this.tabs = this.createComponents({
-        tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
+        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
         basicLayer: ["wm.Layer", {caption: "Basic", padding: "4"}, {
         }],
         styleLayer: ["wm.Layer", {caption: "Styles", padding: "4"}, {},{
@@ -1435,7 +1435,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
         dojo.cookie("wm.prop.StyleEditor.layerIndex", this.tabs.layerIndex);
     });
-    
+
     this.basicLayer = this.tabs.layers[0];
     this.styleLayer = this.tabs.layers[1];
     this.classListLayer = this.tabs.layers[2];
@@ -1621,7 +1621,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
                    parent: this,
                    owner: this
                   });
-         
+
     var nameEditor = new wm.Text({width: "100%",
                       height: "100%",
                       caption: "",
@@ -1680,7 +1680,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 
     // Make sure that our class list contains only unique items
     var classesHash = {dialogfooter: true};
-    dojo.forEach(matches1, function(className) {classesHash[className.substring(1)] = 1;}); 
+    dojo.forEach(matches1, function(className) {classesHash[className.substring(1)] = 1;});
     dojo.forEach(matches2, function(className) {classesHash[className.substring(1)] = 1;});
     wm.forEachProperty(classesHash, function(obj,name) {classListVar.addItem({dataValue: name});});
     classListVar.sort();
@@ -1733,7 +1733,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
     */
     var addPanel = new wm.Panel({owner: this,
                      parent: this,
-                     width: "100%", 
+                     width: "100%",
                      height: "30px",
                      layoutKind: "left-to-right",
                      verticalAlign: "top",
@@ -1747,7 +1747,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
                     _classes: {domNode: ["StudioButton"]},
                     width: "100px",
                     onclick: dojo.hitch(this, "addClass")});
-    new wm.Label({owner: this, 
+    new wm.Label({owner: this,
               parent: this,
               width: "100%",
               height: "32px",
@@ -1955,7 +1955,7 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
             this.dijits[0]._lastValueReported = false;
         } else if (this.dijits[0].checked) {
             this.hadEveryone = true;
-            for (var i = 1; i < this.dijits.length; i++) {      
+            for (var i = 1; i < this.dijits.length; i++) {
             this.dijits[i].set("checked", false, false);
             this.dijits[i]._lastValueReported = false;
             }
@@ -1970,7 +1970,7 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
 });
 
 
-dojo.declare("wm.prop.FieldGroupEditor", wm.Container, { 
+dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     showMainInput: true,
     multiLayer: true,
     height: "300px",
@@ -1983,7 +1983,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     this.inherited(arguments);
     if (this.multiLayer) {
         this.tabs = this.createComponents({
-        tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
+        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
             bindLayer: ["wm.Layer", {caption: "Bindings", padding: "4", autoScroll: true}, {},{
             }],
             fieldLayer: ["wm.Layer", {caption: "Fields", padding: "4", autoScroll: true}, {},{
@@ -1999,7 +1999,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     } else {
         studio.inspector.addSubGroupIndicator("Inputs", this, true, false);
 /*
-        this.fieldsLabel = new wm.Label({_classes: {domNode: ["BindDescriptionHeader"]}, 
+        this.fieldsLabel = new wm.Label({_classes: {domNode: ["BindDescriptionHeader"]},
                          owner: this,
                          parent: this,
                          width: "100%",
@@ -2032,7 +2032,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     },
     generateEditors: function(c) {
     this.propDef.treeBindRoot = this.propDef.name;
-    var propDef = dojo.clone(this.propDef); 
+    var propDef = dojo.clone(this.propDef);
     propDef.advanced = false; // ComponentInspector's already taking care of this for us
     propDef.editor = "wm.prop.DataSetSelect";
     propDef.fullName = propDef.name;
@@ -2062,7 +2062,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     this.generateSubEditors();
     },
     generateSubEditors: function() {
-    var propDef = dojo.clone(this.propDef); 
+    var propDef = dojo.clone(this.propDef);
     if (!propDef.editorProps) {
         propDef.editorProps = {};
     }
@@ -2078,11 +2078,11 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     }
 
 
-    var isBound = studio.inspector.isPropBound(this.inspected, propDef); 
-    
-    
+    var isBound = studio.inspector.isPropBound(this.inspected, propDef);
+
+
     this.indent++;
-    
+
     var inspected = this.inspectedSubcomponent || this.inspected;
 
     var fields;
@@ -2092,7 +2092,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
         fields  = inspected.getValue(this.propDef.name)._dataSchema;
     }
     if (fields) {
-              
+
 /*
         this.fieldPanel =  panel = new wm.Panel({owner: this,
                              parent: this,
@@ -2128,7 +2128,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
             propDef.editorProps.widgetDataSets = true;
             propDef.editorProps.matchComponentType = true;
         }
-        
+
         e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
                             propDef, /* Property we are editing within the component */
                             this.fieldForm, /* Parent panel */
@@ -2158,7 +2158,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
              * 1. Naming the editor
              * 2. Calling getValue/setValue on the right property
              */
-            name: fieldName,            
+            name: fieldName,
 
             /* The type of the property we are editing; used by bind dialog to validate the type;
              * for literal types may be used to chose an editor widget for the property
@@ -2208,7 +2208,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
                             expression: wire.expression,
                             value: wire.owner.owner.getValue(wire.targetProperty)
                         }, "", false, true);
-                    }).onmouseover(function(e) {                        
+                    }).onmouseover(function(e) {
                             app.createToolTip("Delete Binding", this, e);
                     });
                     var dd = document.createElement("dd");
@@ -2233,7 +2233,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     reinspect: function() {
     this.updateBindDescription();
     var inspected = this.inspectedSubcomponent || this.inspected;
-     var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
+     var isBound = studio.inspector.isPropBound(inspected, this.propDef);
 
     /* TODO: fieldPanel does not appear to exist anymore */
     if (!isBound && this.fieldPanel && !this.fieldPanel.showing) {
@@ -2291,7 +2291,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 });
 
 
-dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, { 
+dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
     showMainInput: false,
     multiLayer: false,
     getPropDef: function(sourcePropDef, fieldName, fullName, type, isStructured) {
@@ -2309,13 +2309,13 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
         break;
     case "layer":
         propDef.editor = "wm.prop.WidgetSelect";
-        propDef.editorProps.widgetType = wm.Layer;      
+        propDef.editorProps.widgetType = wm.Layer;
         propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
         propDef.editorProps.createExpressionWire = false;
         break;
     case "layers":
         propDef.editor = "wm.prop.WidgetSelect";
-        propDef.editorProps.widgetType = wm.Layers;     
+        propDef.editorProps.widgetType = wm.Layers;
         propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
         propDef.editorProps.createExpressionWire = false;
         break;
@@ -2338,7 +2338,7 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
     default:
         propDef.editor = "";
         delete propDef.options;
-    } 
+    }
 
     return propDef;
     }
@@ -2369,7 +2369,7 @@ dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
     studio.inspector.props = props;
     this.setBestHeight();
     this.parent.setBestHeight();
-    }, 
+    },
     reinspect: function() {
     this.subinspected = this.inspected.getValue(this.propDef.name);
     if (!this.subinspected) {
@@ -2437,7 +2437,7 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
             this.dijits[0]._lastValueReported = false;
         } else if (this.dijits[0].checked) {
             this.hadAll = true;
-            for (var i = 1; i < this.dijits.length; i++) {      
+            for (var i = 1; i < this.dijits.length; i++) {
             this.dijits[i].set("checked", false, false);
             this.dijits[i]._lastValueReported = false;
             }
@@ -2458,9 +2458,9 @@ dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
 
     init: function() {
     this.inherited(arguments);
-  
+
     this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
-  
+
     this.displaySizes.setData([{name: "All",
                     dataValue: ""},
                    {name: ">= 1800px<div class='AllCheckboxSetNote'>1920px monitor; window almost full screen</div>", // NOTE: ipad in landscape mode is 1024px
@@ -2472,7 +2472,7 @@ dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
                    {name: "900px-1150px<div class='AllCheckboxSetNote'>Medium window, iPad in Landscape mode</div>",
                     dataValue: "900"},
                    {name: "650px-900px<div class='AllCheckboxSetNote'>medium desktop, iPad in Portrait mode</div>",
-                    dataValue: "650"},                 
+                    dataValue: "650"},
                    {name: "450px-650px<div class='AllCheckboxSetNote'>Large phone/Small tablet in Portrait mode</div>",
                     dataValue: "450"},
                    {name: "300px-450px<div class='AllCheckboxSetNote'>iPhone</div>",
@@ -2513,7 +2513,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
     this.editors = {};
     this.parent.setFitToContentHeight(true);
     this.tabs = this.createComponents({
-        tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
+        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
         descLayer: ["wm.Layer", {caption: "Description"}, {},{
             descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}]
         }],
@@ -2574,8 +2574,8 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
     if (this.isAncestorHidden()) return;
     this.descHtml.setHtml(this.inspected.generateDocumentation());
     this.notesEditor.setDataValue(this.inspected.documentation || "");
-    
-    if (!this.docsHtml.isAncestorHidden()) {    
+
+    if (!this.docsHtml.isAncestorHidden()) {
         var url = studio.loadHelp(this.inspected.declaredClass, "", dojo.hitch(this, function(inData) {
         if (inData)
             this.docsHtml.setHtml(inData);
