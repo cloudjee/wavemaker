@@ -1456,17 +1456,7 @@ wm.Variable.extend({
 });
 
 
-/**#@+ @design */
-wm.Variable.extend({
 
-        editJson: function() {
-		    studio.editVariableDialog.show();
-		    studio.editVariableDialog.page.reset(this);
-	},
-	isListBindable: function() {
-		return this.isList;
-	}
-});
 /**#@- @design */
 
 if (0) {
