@@ -220,8 +220,8 @@ public class ExportDB extends BaseDataModelSetup {
             throw new DataServiceRuntimeException(ex);
         } catch (SQLException qex) {
             throw new DataServiceRuntimeException(qex);
-        } catch (RuntimeException rex) {
-            if (rex.getCause().getMessage().contains(NO_SUITABLE_DRIVER) && WMAppContext.getInstance().isCloudFoundry()) {
+        } catch (RuntimeException rex) { 
+            if (rex.getCause() != null && rex.getCause().getMessage().contains(NO_SUITABLE_DRIVER) && WMAppContext.getInstance().isCloudFoundry()) {
                 String msg = rex.getMessage() + " - " + UNKNOWN_DATABASE;
                 throw new DataServiceRuntimeException(msg);
             } else {
