@@ -54,8 +54,8 @@ dojo.declare("wm.Application", wm.Component, {
         }
 
         /* load system dictionaries such as language/nls/component.js */
-        this.requireLocalization(); 
-        
+        this.requireLocalization();
+
         /* Patches is inlined into Project.a.js so it doesn't need a separate request unless in debug mode */
         if (djConfig.isDebug) {
             dojo["require"]("common." + wm.version.replace(/[^a-zA-Z0-9]/g, "") + "_patches", true);
@@ -147,7 +147,7 @@ dojo.declare("wm.Application", wm.Component, {
                 this.getServerTimeOffset();
             }
         }
-        
+
         /* Load all app-level components from project.js */
         this.loadComponents(this.constructor.widgets || this.widgets);
 
@@ -280,7 +280,7 @@ dojo.declare("wm.Application", wm.Component, {
         wm.locale = {};
         dojo.requireLocalization("wm.language", "components");
         wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
-        
+
         dojo.requireLocalization("wm.language", "properties");
         wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
     },
@@ -298,10 +298,10 @@ dojo.declare("wm.Application", wm.Component, {
         dojo["require"]("wm.base.debug.Dialog");
         dojo["require"]("wm.base.components.JsonRpcService");
     if (!this.debugDialog) {
-        this.debugDialog = new wm.debug.Dialog({owner: this, 
+        this.debugDialog = new wm.debug.Dialog({owner: this,
                                titlebarButtons: "DebuggerHelpIcon",
                                name: "debugDialog",
-                               width: "700px", 
+                               width: "700px",
                                height: "400px",
                                corner: "cr"});
     }
@@ -312,7 +312,7 @@ dojo.declare("wm.Application", wm.Component, {
 
     var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
     dojo.removeClass(node, this.theme);
-    
+
     if (this._isDesignLoaded && !isInit) {
         try {
         // write before we change the prototype so defaults are left blank
@@ -350,7 +350,7 @@ dojo.declare("wm.Application", wm.Component, {
 
     },
             // don't regenerate over and over; as long as the user remains in the theme designer,
-            // widgetsjs shouldn't change except as prototypes change, 
+            // widgetsjs shouldn't change except as prototypes change,
             // and we don't want the design to change each time the prototype border changes...
     cacheWidgets: function() {
         if (!this._widgetsjs) {
@@ -362,7 +362,7 @@ dojo.declare("wm.Application", wm.Component, {
                 }
             }
             var widgetsjs = dojo.fromJson("{"+ dialogs + studio.page.root.write("") + "}");
-            this._widgetsjs = widgetsjs;            
+            this._widgetsjs = widgetsjs;
         }
     },
     useWidgetCache: function() {
@@ -398,7 +398,7 @@ dojo.declare("wm.Application", wm.Component, {
     }
 
         wm.Application.themePrototypeData = {"wm.Control":this.theme};
-    
+
 /*
     for (var i in themeData) {
         try {
@@ -433,7 +433,7 @@ dojo.declare("wm.Application", wm.Component, {
             // undo all changes from the last theme for this class
             if (oldThemeData) {
                 var oldCtorData = oldThemeData[declaredClass];
-                if (oldCtorData) 
+                if (oldCtorData)
                     for (var j in oldCtorData) {
             if (wm.defaultPrototypeValues && wm.defaultPrototypeValues[declaredClass] && j in wm.defaultPrototypeValues[declaredClass]) {
                 p[j] = wm.defaultPrototypeValues[declaredClass][j];
@@ -442,7 +442,7 @@ dojo.declare("wm.Application", wm.Component, {
                             delete p[j]; // deleting it lets its parent class prototype value come through (only tested in chrome...)
             }
                         // however, for purposes of reflection/property inspection, if there is no parent class value coming through, lets give it some value.  TODO: Check its type and assign it something based on the property's type.
-                        if (p[j] === undefined) 
+                        if (p[j] === undefined)
                             p[j] = "";
             //if (optionalWidget) optionalWidget[j] = "";
                     }
@@ -491,10 +491,10 @@ dojo.declare("wm.Application", wm.Component, {
         path = dojo.moduleUrl("wm") + "base/widget/themes/" + inThemeName + "/theme.css";
         else
            path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/theme.css";
-        
+
         if (inDesign) {
                 var imagepath = path.replace(/\/[^\/]*$/,"/images");
-                while (imagepath.match(/[^\/]+\/\.\.\//)) 
+                while (imagepath.match(/[^\/]+\/\.\.\//))
                     imagepath = imagepath.replace(/[^\/]+\/\.\.\//,"");
                 if (optionalCss) {
                     themecss = optionalCss;
@@ -532,7 +532,7 @@ dojo.declare("wm.Application", wm.Component, {
         {
             this._pageLoader.destroy();
             this._pageLoader = null;
-        }   
+        }
         */
         if (this.pageContainer) {
         this.pageContainer.destroy();
@@ -542,8 +542,8 @@ dojo.declare("wm.Application", wm.Component, {
         {
             dojo.destroy(this.domNode);
             this.domNode = null;
-        }       
-        
+        }
+
                 if (this.pageDialog)
             this.pageDialog.destroy();
         delete this.pageDialog;
@@ -561,7 +561,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
         if (window["PhoneGap"] && navigator.userAgent.match(/(iphone|ipad)/i) && app.showIOSPhoneGapBackButton) {
             this.appTitleBar = new wm.Panel({
-                         owner: this, 
+                         owner: this,
                          parent: this.appRoot,
                          name: "appTitleBar",
                          width: "100%",
@@ -587,7 +587,7 @@ dojo.declare("wm.Application", wm.Component, {
                   width: "100%",
                   height: "100%",
                   caption: this.declaredClass});
-                    
+
         }
         this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory, manageURL: this.manageURL, owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
         this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
@@ -645,7 +645,7 @@ dojo.declare("wm.Application", wm.Component, {
     getRuntimeServiceDesignTime: function(owner) {
         if (!this._runtimeService)
             this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
-                                  owner: owner || this, 
+                                  owner: owner || this,
                                   designTime: true});
         return this._runtimeService;
     },
@@ -798,7 +798,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
 
         //this._pageLoader.unloadSupport();
-        try 
+        try
         {
             this.pageContainer.setPageName(this._pageName);//_pageLoader.loadPage(inName, inName.toLowerCase());
         }
@@ -807,7 +807,7 @@ dojo.declare("wm.Application", wm.Component, {
             // do nothing
           if (djConfig.isDebug)
             console.error("loadPage error: " + e);
-        }       
+        }
     },
         // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
         forceReloadPage: function() {
@@ -835,28 +835,28 @@ dojo.declare("wm.Application", wm.Component, {
     echoFile: function(filecontents, filetype, filename) {
         if (!this.echoFileService) {
         this.echoFileService =
-            new wm.ServiceVariable({owner: app, 
-                        name: "echoFileService", 
-                        downloadFile: true, 
-                        service: "waveMakerService", 
+            new wm.ServiceVariable({owner: app,
+                        name: "echoFileService",
+                        downloadFile: true,
+                        service: "waveMakerService",
                         operation: "echo"})
         this.echoFileService.input.setType("");
-        wm.typeManager.addType("echoInputs", 
-                       {internal: false, 
-                    fields: {contents: {type: "java.lang.String"}, 
+        wm.typeManager.addType("echoInputs",
+                       {internal: false,
+                    fields: {contents: {type: "java.lang.String"},
                          fileType: {type: "java.lang.String"},
                          fileName: {type: "java.lang.String"}}
-                       });        
+                       });
         this.echoFileService.input.setType("echoInputs");
         }
-    
+
     this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
     this.echoFileService.update();
     },
     showLoadingDialog: function(inMessage, inMessageWidth, optionalInTarget) {
     if (!this.loadingDialog) {
-        this.loadingDialog = new wm.LoadingDialog({owner: this, 
-                               name: "loadingDialog", 
+        this.loadingDialog = new wm.LoadingDialog({owner: this,
+                               name: "loadingDialog",
                                widgetToCover: this.appRoot});
     }
     this.loadingDialog.widgetToCover = optionalInTarget || this.appRoot;
@@ -982,102 +982,106 @@ dojo.declare("wm.Application", wm.Component, {
     toastInfo: function(inMsg, optionalDuration) {
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Info");
     },
-    
+
     createToolTip: function(message, node, event, source) {
-    if (!this.toolTipDialog) {
-        this.toolTipDialog = new wm.Dialog({_classes: {domNode: ["AppToolTip"]},
-                        title: "",
-                        name: "toolTipDialog",
-                        modal: false,
-                        width: "350px",
-                        height: "50px",
-                        fitToContentHeight: true,
-                        owner: this,
-                        corner: "tr",
-                        _fixPosition: true,
-                        useContainerWidget: true,
-                        //margin: "0,0,4,4",
-                        margin: "0",
-                        border: "1",
-                        padding: "4"});
-        this.toolTipDialog.containerWidget.destroy();
-        this.toolTipDialog.useContainerWidget = false;
-        delete this.toolTipDialog.containerWidget;
-        delete this.toolTipDialog.containerNode;
-        var html = new wm.Html({owner: this.toolTipDialog,
-                    parent: this.toolTipDialog,
-                    autoScroll:false,
-                    name: "html",
-                    width: "100%",
-                    height: "100%",
-                    margin: "0",
-                    padding: "0",
-                    autoSizeHeight: true});
-        this.toolTipDialog.html = html;
-    }
-    this.toolTipDialog.tipOwner = source;
-    if (node) {
-        this.toolTipDialog.fixPositionNode = node;
-    } else {
-        this.toolTipDialog.fixPositionNode = null;
-        var originalMouseX = this.toolTipDialog.bounds.l = event.screenX || event.clientX || event.mouseX;
-        var originalMouseY = this.toolTipDialog.bounds.t = event.screenY || event.clientY || event.mouseY;
-    }
-    this.toolTipDialog.html.setHtml();  
-    this.toolTipDialog.show();
-    this.toolTipDialog._cupdating = true;
-    this.toolTipDialog.html.setAutoSizeWidth(false);
-    this.toolTipDialog.html.setAutoSizeHeight(false);
-    this.toolTipDialog.setFitToContentHeight(false);        
-    this.toolTipDialog.setFitToContentWidth(false);     
+        if (!this.toolTipDialog) {
+            this.toolTipDialog = new wm.Dialog({
+                _classes: {
+                    domNode: ["AppToolTip"]
+                },
+                title: "",
+                name: "toolTipDialog",
+                modal: false,
+                width: "350px",
+                height: "50px",
+                fitToContentHeight: true,
+                owner: this,
+                corner: "tr",
+                _fixPosition: true,
+                useContainerWidget: true,
+                //margin: "0,0,4,4",
+                margin: "0",
+                border: "1",
+                padding: "4"
+            });
+            this.toolTipDialog.containerWidget.destroy();
+            this.toolTipDialog.useContainerWidget = false;
+            delete this.toolTipDialog.containerWidget;
+            delete this.toolTipDialog.containerNode;
+            var html = new wm.Html({
+                owner: this.toolTipDialog,
+                parent: this.toolTipDialog,
+                autoScroll: false,
+                name: "html",
+                width: "100%",
+                height: "100%",
+                margin: "0",
+                padding: "0",
+                autoSizeHeight: true
+            });
+            this.toolTipDialog.html = html;
+        }
+        this.toolTipDialog.tipOwner = source;
+        if (node) {
+            this.toolTipDialog.fixPositionNode = node;
+        } else {
+            this.toolTipDialog.fixPositionNode = null;
+            var originalMouseX = this.toolTipDialog.bounds.l = event.screenX || event.clientX || event.mouseX;
+            var originalMouseY = this.toolTipDialog.bounds.t = event.screenY || event.clientY || event.mouseY;
+        }
+        this.toolTipDialog.html.setHtml();
+        this.toolTipDialog.show();
+        this.toolTipDialog._cupdating = true;
+        this.toolTipDialog.html.setAutoSizeWidth(false);
+        this.toolTipDialog.html.setAutoSizeHeight(false);
+        this.toolTipDialog.setFitToContentHeight(false);
+        this.toolTipDialog.setFitToContentWidth(false);
         this.toolTipDialog.setHeight("25px");
         this.toolTipDialog.setWidth("350px");
         this.toolTipDialog.html.setHeight("100%");
         this.toolTipDialog.html.setWidth("100%");
-    this.toolTipDialog._cupdating = false;
-    this.toolTipDialog.renderBounds();
-    this.toolTipDialog.html.setHtml(message);   
-    if (String(message).length < 30) {
-        this.toolTipDialog.html.setAutoSizeWidth(true);
-        this.toolTipDialog.setFitToContentWidth(true);
-    } else {
-        this.toolTipDialog.html.setAutoSizeHeight(true);
-        this.toolTipDialog.setFitToContentHeight(true);
-    }
+        this.toolTipDialog._cupdating = false;
+        this.toolTipDialog.renderBounds();
+        this.toolTipDialog.html.setHtml(message);
+        if (String(message).length < 30) {
+            this.toolTipDialog.html.setAutoSizeWidth(true);
+            this.toolTipDialog.setFitToContentWidth(true);
+            dojo.addClass(this.toolTipDialog.domNode, "NoWrap");
+        } else {
+            this.toolTipDialog.html.setAutoSizeHeight(true);
+            this.toolTipDialog.setFitToContentHeight(true);
+            dojo.removeClass(this.toolTipDialog.domNode, "NoWrap");
+        }
 
-    var self = this;
-    if (this._testHintConnect)
-        dojo.disconnect(this._testHintConnect);
+        var self = this;
+        if (this._testHintConnect) dojo.disconnect(this._testHintConnect);
 
-        this._testHintConnect = 
-        this.connect(window.document.body, "onmousemove", this, function(evt) {
-            if (evt.target ===  this.toolTipDialog.domNode || dojo.isDescendant(evt.target, this.toolTipDialog.domNode)) return;
+        this._testHintConnect = this.connect(window.document.body, "onmousemove", this, function(evt) {
+            if (evt.target === this.toolTipDialog.domNode || dojo.isDescendant(evt.target, this.toolTipDialog.domNode)) return;
 
             /* If there is a mouse-over node, and the mouse has left the node, dismiss the tooltip */
             if (node) {
-            if (evt.target != node && !dojo.isDescendant(evt.target, node)) {
-                this.hideToolTip();
+                if (evt.target != node && !dojo.isDescendant(evt.target, node)) {
+                    this.hideToolTip();
+                }
             }
-            } 
 
             /* If there is no node, then just dismiss the tooltip if the mouse moves at least 20px from the location that started this tooltip */
-            else if (Math.abs(evt.clientX-originalMouseX) > 20 ||
-                   Math.abs(evt.clientY-originalMouseY) > 20) {
-            this.hideToolTip();
+            else if (Math.abs(evt.clientX - originalMouseX) > 20 || Math.abs(evt.clientY - originalMouseY) > 20) {
+                this.hideToolTip();
             }
         });
 
 
     },
     getToolTip: function() {
-    if (this.toolTipDialog)
-        return this.toolTipDialog.userPrompt;
-    return "";
+        if (this.toolTipDialog) return this.toolTipDialog.userPrompt;
+        return "";
     },
     hideToolTip: function() {
-    dojo.disconnect(this._testHintConnect);
-    delete  this._testHintConnect;
-    this.toolTipDialog.hide();
+        dojo.disconnect(this._testHintConnect);
+        delete this._testHintConnect;
+        this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
         var dockHeight = parseInt(parseInt(wm.isMobile ? wm.Button.prototype.mobileHeight : wm.Button.prototype.height) * 0.8);
@@ -1178,7 +1182,7 @@ dojo.declare("wm.Application", wm.Component, {
         this._bottomSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
         this.appRoot.moveControl(this._bottomSplitter,parentPanel.getIndexInParent());
         this._bottomSplitter.findLayout();
-        }       
+        }
         break;
     case "l":
         if (this._leftDock) {
@@ -1190,7 +1194,7 @@ dojo.declare("wm.Application", wm.Component, {
         this._leftSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this._leftToRightDockingPanel});
         this._leftToRightDockingPanel.moveControl(this._leftSplitter,1);
         this._leftSplitter.findLayout();
-        }       
+        }
         break;
     case "r":
         if (this._rightDock) {
@@ -1202,7 +1206,7 @@ dojo.declare("wm.Application", wm.Component, {
 
         this._rightSplitter.findLayout();
 
-        }       
+        }
         break;
     }
     inDialog.setParent(parentPanel);
@@ -1292,7 +1296,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
     }, inLayer._appRootButton));
 
-    // can't do inLayer.connect(inLayer, "destroy") because first thing we destroy is all connections 
+    // can't do inLayer.connect(inLayer, "destroy") because first thing we destroy is all connections
     this.connectOnce(inLayer, "destroy", this, function() {
         this.removeMobileTab(inLayer);
     });
@@ -1328,7 +1332,7 @@ dojo.declare("wm.Application", wm.Component, {
             title.innerHTML = titleHtml +  "#" + state.title;
             }
         }
-        */ 
+        */
 
         if (this.backButton) {
             this.backButton.setDisabled(this.history.length == 0);
@@ -1369,6 +1373,6 @@ dojo.declare("wm.Application", wm.Component, {
 });
 
 wm.Application.themePrototypeData = {};
-wm.Application.themeData = {};              
+wm.Application.themeData = {};
 
 
