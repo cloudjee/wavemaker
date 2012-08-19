@@ -24,6 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
@@ -199,7 +200,16 @@ public class DeploymentService {
             return e.getStatusMessage();
         } finally {
             if (tempWebAppRoot != null) {
-                IOUtils.deleteRecursive(tempWebAppRoot);
+                try {
+                    IOUtils.deleteRecursive(tempWebAppRoot);
+                } catch (IOException ex) {
+                    try {
+                        Thread.sleep(3000);
+                        IOUtils.deleteRecursive(tempWebAppRoot);
+                    } catch (InterruptedException ex1) {
+                        throw new WMRuntimeException(ex1);
+                    }
+                }
             }
         }
     }
