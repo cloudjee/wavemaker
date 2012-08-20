@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,7 +52,7 @@ dojo.declare("wm.Bounds", null, {
 	if (arguments.length == 1) {
 	    return this.setBounds(inL.l, inL.t, inL.w, inL.h)
 	}
-	
+
 	var b = this.bounds;
 	if (!isNaN(inL) && b.l != inL) {
 	    b.l = inL;
@@ -68,7 +68,7 @@ dojo.declare("wm.Bounds", null, {
 	    b.h = inH;
 	    this._boundsDirty = true;
 	}
-	
+
 	// If b.l, b.w, b.t or b.h is a string like "100", it should be changed to integer before adding.
 	// To ensure that we multiple it by 1.
 	b.r = b.l*1 + b.w*1;
@@ -196,7 +196,7 @@ dojo.declare("wm.Bounds", null, {
 	if (this.isRelativePositioned){
 	    return {w: this.width, h: this.height};
 	}
-	
+
 	var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
 	    var b = {
 		l: this.bounds.l,
@@ -240,11 +240,11 @@ dojo.declare("wm.DomNode", null, {
 	var s = this.node.style;
 	//		var style = {};
 	if (this.isRelativePositioned){
-	    s.width = inBox.w;	
+	    s.width = inBox.w;
 	    s.height = inBox.h;
-	    return true;	
+	    return true;
 	}
-	
+
 	var bl = inBox.l + "px";
 	if (!isNaN(inBox.l) && s.left != bl) {
 	    s.left = bl;
@@ -266,7 +266,7 @@ dojo.declare("wm.DomNode", null, {
 	    s.height = bh;
 	    s.lineHeight = inSingleLine ? bh : "normal";
 	    isChanged = true;
-	} 
+	}
 
 	//dojo.style(this.node, style);  proven to be very slow
 	return isChanged;
@@ -355,7 +355,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
        @type String
     */
     height: '',
-    minHeight: 0, // number represents pixels    
+    minHeight: 0, // number represents pixels
     minWidth: 0,
     minMobileHeight: 0,
     minDesktopHeight: 0,
@@ -399,151 +399,146 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     // Construction
     //===========================================================================
     constructor: function() {
-	this.widgets = {};
-	this._classes = dojo.clone(this._classes);    
+    	this.widgets = {};
+    	this._classes = dojo.clone(this._classes);
     },
 
-    
+
     // experimental code for supporting dojo.parser
     // TODO:
     // 1. Need a way to find the parent widget (owner[node.parentNode.id]) should work, though we may need to parse "id" to strip out any owner ids
     // 2. Need a way to find the owner component (Page.js will need to set a global app._currentParseOwner before calling dojo.parser; and then restoring the prior value when its done in case Page.js is loading a pagecontainer)
-    // 3. Need a way to invoke postInit; probably will need Page.js to do a second traversal after all widgets are created calling postInit on each widget   
+    // 3. Need a way to invoke postInit; probably will need Page.js to do a second traversal after all widgets are created calling postInit on each widget
     markupFactory: function(params, node) {
-	var ctor = arguments.callee.arguments[2];
-	var domNode = node;
-	var owner = wm._dojoParserCurrentOwner;
-	var parentid = node.parentNode.id;
-	while (parentid.indexOf("_") != -1 && !owner[parentid])
-	    parentid = parentid.substring(parentid.indexOf("_")+1);
-	var parent = owner[parentid];
-	params = dojo.mixin(params,{
-	    domNode: domNode,
-	    parentNode: domNode.parentNode,
-	    parent: parent,	    
-	    name: owner.getUniqueName(params.name),
-	    owner: owner,
-	    _designer: owner._designer,
-	    _loading:false}); // should be changing this to true... but need to do something about calling postInit in a second pass before we change this
-	var result = new ctor(params);
-	if (!params.parent && ctor.prototype.declaredClass == "wm.Layout")
-	    result.owner.root = result;
-	return result;
+        var ctor = arguments.callee.arguments[2];
+        var domNode = node;
+        var owner = wm._dojoParserCurrentOwner;
+        var parentid = node.parentNode.id;
+        while (parentid.indexOf("_") != -1 && !owner[parentid])
+        parentid = parentid.substring(parentid.indexOf("_") + 1);
+        var parent = owner[parentid];
+        params = dojo.mixin(params, {
+            domNode: domNode,
+            parentNode: domNode.parentNode,
+            parent: parent,
+            name: owner.getUniqueName(params.name),
+            owner: owner,
+            _designer: owner._designer,
+            _loading: false
+        }); // should be changing this to true... but need to do something about calling postInit in a second pass before we change this
+        var result = new ctor(params);
+        if (!params.parent && ctor.prototype.declaredClass == "wm.Layout") result.owner.root = result;
+        return result;
     },
     prepare: function(inProps) {
-	try {
-	    if (inProps) {
-		var owner = inProps.owner;
-		if (!owner && parent) {
-		    owner = inProps.owner = parent.owner;
-		}
-		if (owner) owner = owner.getOwnerApp();
-		if (owner)
-                    owner.loadThemePrototypeForClass(this.constructor, this);
-	    }
-	} catch(e) {
-	    console.error("What the hell?" + e);
-	}
-	this.inherited(arguments);
+        try {
+            if (inProps) {
+                var owner = inProps.owner;
+                if (!owner && parent) {
+                    owner = inProps.owner = parent.owner;
+                }
+                if (owner) owner = owner.getOwnerApp();
+                if (owner) owner.loadThemePrototypeForClass(this.constructor, this);
+            }
+        } catch (e) {
+            console.error("What the hell?" + e);
+        }
+        this.inherited(arguments);
     },
     postscript: function(inProps) {
-	this.inherited(arguments);
+        this.inherited(arguments);
     },
     create: function() {
-	this._cupdating = true;
-	this.inherited(arguments);
+        this._cupdating = true;
+        this.inherited(arguments);
     },
     build: function() {
-	this.domNode = dojo.byId(this.domNode||/*this.id||*/undefined);
-	if (!this.domNode)
-	    this.domNode = document.createElement('div');
+        this.domNode = dojo.byId(this.domNode || /*this.id||*/ undefined);
+        if (!this.domNode) this.domNode = document.createElement('div');
     },
     initDomNode: function() {
-	if (!this.dom) {
-	    this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
-	    if (!this.isRelativePositioned)
-		this.domNode.style.position = "absolute";
-            else
-		this.domNode.style.position = "relative";				
-	    this.setParent(this.parent);
-	    this.setDomNode(this.domNode);
-	}
+        if (!this.dom) {
+            this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
+            if (!this.isRelativePositioned) this.domNode.style.position = "absolute";
+            else this.domNode.style.position = "relative";
+            this.setParent(this.parent);
+            this.setDomNode(this.domNode);
+        }
     },
     init: function() {
 
-	this.initDomNode();
-	this.inherited(arguments);
+        this.initDomNode();
+        this.inherited(arguments);
 
-	var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-	if (!isMobile || !this.enableTouchHeight) {
-	    if (this.desktopHeight != null) {
-		this.height = this.desktopHeight;
-	    } else if (this.height) {
-		this.desktopHeight = this.height;
-	    } else {
-		this.height = this.desktopHeight = this.constructor.prototype.height;
-	    }
-	    if (this.minDesktopHeight) {
-		this.minHeight = this.minDesktopHeight;
-	    } else if (this.minHeight) {
-		this.minDesktopHeight = this.minHeight;
-	    } else {
-		this.minHeight = this.minDesktopHeight = this.constructor.prototype.minHeight;
-	    }
+        var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
+        if (!isMobile || !this.enableTouchHeight) {
+            if (this.desktopHeight != null) {
+                this.height = this.desktopHeight;
+            } else if (this.height) {
+                this.desktopHeight = this.height;
+            } else {
+                this.height = this.desktopHeight = this.constructor.prototype.height;
+            }
+            if (this.minDesktopHeight) {
+                this.minHeight = this.minDesktopHeight;
+            } else if (this.minHeight) {
+                this.minDesktopHeight = this.minHeight;
+            } else {
+                this.minHeight = this.minDesktopHeight = this.constructor.prototype.minHeight;
+            }
 
-	} else {
-	    if (this._isDesignLoaded && studio.currentDeviceType == "desktop" || this.desktopHeight == undefined) {
-		this.desktopHeight = this.height || this.mobileHeight;
-	    }
-	    if (this.desktopHeight && typeof this.desktopHeight == "string" && this.desktopHeight.match(/\%/)) {
-		this.height = this.mobileHeight = this.desktopHeight;
-	    } else if (this.mobileHeight) {
-		this.height = this.mobileHeight;
-	    } else if (this.height) {
-		this.mobileHeight = this.height;
-	    } else {
-		this.height = this.mobileHeight = this.constructor.prototype.height;
-	    } 
-	    if (this.minMobileHeight) {
-		this.minHeight = this.minMobileHeight;
-	    } else {
-		this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
-	    } 
-	}
+        } else {
+            if (this._isDesignLoaded && studio.currentDeviceType == "desktop" || this.desktopHeight == undefined) {
+                this.desktopHeight = this.height || this.mobileHeight;
+            }
+            if (this.desktopHeight && typeof this.desktopHeight == "string" && this.desktopHeight.match(/\%/)) {
+                this.height = this.mobileHeight = this.desktopHeight;
+            } else if (this.mobileHeight) {
+                this.height = this.mobileHeight;
+            } else if (this.height) {
+                this.mobileHeight = this.height;
+            } else {
+                this.height = this.mobileHeight = this.constructor.prototype.height;
+            }
+            if (this.minMobileHeight) {
+                this.minHeight = this.minMobileHeight;
+            } else {
+                this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
+            }
+        }
 
-	//if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
-	this.bc(); // mostly in here to support wm.Container's bc method
-	//
+        //if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
+        this.bc(); // mostly in here to support wm.Container's bc method
+        //
+        /*
+      this.setBorder(this.border);
+      this.setMargin(this.margin);
+      this.setPadding(this.padding);
+    */
+        if (this.isDesignLoaded())
+        // enable design borders
+        this.set_border((this.border) ? String(this.border) : "0");
+        else {
+            this.border = (this.border) ? String(this.border) : "0";
+        }
+        this.borderExtents = this._parseExtents(this.border);
 
-	/*
-	  this.setBorder(this.border);
-	  this.setMargin(this.margin);
-	  this.setPadding(this.padding);
-	*/
-	if (this.isDesignLoaded())
-	    // enable design borders
-	    this.set_border((this.border) ? String(this.border) : "0");
-	else {
-	    this.border = (this.border) ? String(this.border) : "0";
-	}
-	this.borderExtents = this._parseExtents(this.border); 
+        this.padding = String(this.padding);
+        this.paddingExtents = this._parseExtents(this.padding);
+        this.setMargin(String(this.margin));
+        this.doSetSizeBc();
+        if (!this.showing) this.setShowing(false, true);
 
-	this.padding = String(this.padding);
-	this.paddingExtents = this._parseExtents(this.padding);
-	this.setMargin(String(this.margin));
-	this.doSetSizeBc();
-	if (!this.showing) this.setShowing(false,true);
+        this.setDisabled(this.disabled);
 
-   	this.setDisabled(this.disabled);
-
-	/* This code is only used in design mode... if then 
-  	if (this.styles) {
-	    this.set_styles(this.styles);
-	    this.styles = "";
-	}
+        /* This code is only used in design mode... if then
+    if (this.styles) {
+        this.set_styles(this.styles);
+        this.styles = "";
+    }
 */
-	this.appendDOMNode(this.parent);
-	this.updateBounds();
+        this.appendDOMNode(this.parent);
+        this.updateBounds();
     },
 
     bc: function() {
@@ -551,164 +546,151 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
 
     postInit: function() {
-	this._cupdating = false;
-	this.inherited(arguments);
+        this._cupdating = false;
+        this.inherited(arguments);
 
-	// After we've finished creating the widget, NOW we render() -- just once; not over and over while we're setting borders and
-	// margins and everything else.
-	this.render(1);
+        // After we've finished creating the widget, NOW we render() -- just once; not over and over while we're setting borders and
+        // margins and everything else.
+        this.render(1);
 
 
-	if (this.addTouchListener && wm.isMobile && !window["studio"]) {
-	    //this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
-	    this.addTouchListener(this._touchNode || this.domNode);
-	}
+        if (this.addTouchListener && wm.isMobile && !window["studio"]) {
+            //this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+            this.addTouchListener(this._touchNode || this.domNode);
+        }
 
-	if (!this.$.binding && this.isDesignLoaded())
-	    new wm.Binding({name: "binding", owner: this});
-	if (this.hint) {
-	    this.setHint(this.hint);
-	}
+        if (!this.$.binding && this.isDesignLoaded()) new wm.Binding({
+            name: "binding",
+            owner: this
+        });
+        if (this.hint) {
+            this.setHint(this.hint);
+        }
     },
 
 
     destroy: function() {
-	if (this.isDestroyed || this._isDestroying)
-	    return;
-	this._isDestroying = true;
+        if (this.isDestroyed || this._isDestroying) return;
+        this._isDestroying = true;
 
-	try
-	{
-	    if (app.toolTipDialog && this == app.toolTipDialog.tipOwner) {
-		app.toolTipDialog.hide();
-	    }
+        try {
+            if (app.toolTipDialog && this == app.toolTipDialog.tipOwner) {
+                app.toolTipDialog.hide();
+            }
 
-	    if (this._layerConnections)
-		delete this._layerConnections;
+            if (this._layerConnections) delete this._layerConnections;
 
-	    if (this.widgets) {
-		var wids = [];
-		wm.forEachProperty(this.widgets, function(w,name) {
-		    wids.push(w);
-		});
-		for (var i = 0, w; (w = wids[i]); i++) 
-		    w.destroy();
-		wids = [];
-	    }
-	    
-	    this.widgets = null;
-	    this.parentNode = null
-	    this.setParent(null);
-	    wm.fire(this.designWrapper, "destroy");
-	    this.layout = null;
-	    this.inherited(arguments);
-	}
-	catch (e)
-	{
-	    console.info('Error while destroying : ' + this.name, e);
-	}
-	finally
-	{
-	    if (this.domNode)
-		dojo.destroy(this.domNode);
-	    this.domNode =  null;
-	    this._designee = null;
-	    if (this.dom && this.dom.node)
-	    {
-		dojo.destroy(this.dom.node);
-		this.dom.node = null;
-		this.dom = null;
-	    }
-	    
-	}
+            if (this.widgets) {
+                var wids = [];
+                wm.forEachProperty(this.widgets, function(w, name) {
+                    wids.push(w);
+                });
+                for (var i = 0, w;
+                (w = wids[i]); i++)
+                w.destroy();
+                wids = [];
+            }
+
+            this.widgets = null;
+            this.parentNode = null
+            this.setParent(null);
+            wm.fire(this.designWrapper, "destroy");
+            this.layout = null;
+            this.inherited(arguments);
+        } catch (e) {
+            console.info('Error while destroying : ' + this.name, e);
+        } finally {
+            if (this.domNode) dojo.destroy(this.domNode);
+            this.domNode = null;
+            this._designee = null;
+            if (this.dom && this.dom.node) {
+                dojo.destroy(this.dom.node);
+                this.dom.node = null;
+                this.dom = null;
+            }
+
+        }
     },
     loaded: function() {
-	this.inherited(arguments);
-	this.initUserClasses();
+        this.inherited(arguments);
+        this.initUserClasses();
     },
     setDomNode: function(inDomNode) {
-	var n = this.domNode = inDomNode;
-	if (dojo.isIE <= 8) {
-	    // forcing a size on the node now seems to help IE
-	    // honor auto sizing later
-	    n.style.width = "0px";
-	}
-	// id
-	this.updateId();
-	// classes
-	var cNames = this.classNames + (this.owner ? ' ' + this.owner.declaredClass.replace(/\./g,"") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
-	dojo.addClass(n,cNames);
-	this.initUserClasses();
-	//this.updateBounds();
+        var n = this.domNode = inDomNode;
+        if (dojo.isIE <= 8) {
+            // forcing a size on the node now seems to help IE
+            // honor auto sizing later
+            n.style.width = "0px";
+        }
+        // id
+        this.updateId();
+        // classes
+        var cNames = this.classNames + (this.owner ? ' ' + this.owner.declaredClass.replace(/\./g, "") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
+        dojo.addClass(n, cNames);
+        this.initUserClasses();
+        //this.updateBounds();
     },
 
 
     isAncestorHiddenLayer: function() {
-	if (this instanceof wm.Layout && this.owner == app._page) return false;
-	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
+        if (this instanceof wm.Layout && this.owner == app._page) return false;
+        if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
         var parent;
-        if (this.parent && this.parent instanceof wm.Control) 
-            parent = this.parent;
-        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
-            parent = this.owner.owner;
-	if (!parent) return false;
-	return parent.isAncestorHiddenLayer();
+        if (this.parent && this.parent instanceof wm.Control) parent = this.parent;
+        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control) parent = this.owner.owner;
+        if (!parent) return false;
+        return parent.isAncestorHiddenLayer();
     },
     isAncestorHidden: function() {
         if (!this.showing && this instanceof wm.Layer == false) return true;
-	if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
-	if (this instanceof wm.Layer && !this.active) return true;
+        if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
+        if (this instanceof wm.Layer && !this.active) return true;
         var parent;
-        if (this.parent && this.parent instanceof wm.Control) 
-            parent = this.parent;
-        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
-            parent = this.owner.owner;
-	if (!parent) return false;
-	return parent.isAncestorHidden();
+        if (this.parent && this.parent instanceof wm.Control) parent = this.parent;
+        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control) parent = this.owner.owner;
+        if (!parent) return false;
+        return parent.isAncestorHidden();
     },
 
     callOnShowParent: function() {
-	var self = this;
-	wm.forEachVisibleWidget(this, function(w) {
-	    if (self != w) {
-		/* For internal widget detection of changes to showing state, use _onShowParent */
-		if (w._onShowParent) {
-		    w._onShowParent();
-		}
+        var self = this;
+        wm.forEachVisibleWidget(this, function(w) {
+            if (self != w) { /* For internal widget detection of changes to showing state, use _onShowParent */
+                if (w._onShowParent) {
+                    w._onShowParent();
+                }
 
-		/* For public tooled detection use onShow; only call onShow if its been replaced with something other than
-		 * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
-		 */
-		else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
-		    w.onShow();
-		}
+                /* For public tooled detection use onShow; only call onShow if its been replaced with something other than
+                 * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
+                 */
+                else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
+                    w.onShow();
+                }
 
-	    }
-	}, true);
+            }
+        }, true);
     },
     callOnHideParent: function() {
-	var self = this;
-	if (!this.isDestroyed) {
-	    wm.forEachVisibleWidget(this, function(w) {
-		if (w.hint && app.toolTipDialog && app.toolTipDialog.tipOwner == self)
-		    app.hideToolTip();
-		if (self != w) {
-		/* For internal widget detection of changes to hideing state, use _onHideParent */
-		if (w._onHideParent) {
-		    w._onHideParent();
-		}
+        var self = this;
+        if (!this.isDestroyed) {
+            wm.forEachVisibleWidget(this, function(w) {
+                if (w.hint && app.toolTipDialog && app.toolTipDialog.tipOwner == self) app.hideToolTip();
+                if (self != w) { /* For internal widget detection of changes to hideing state, use _onHideParent */
+                    if (w._onHideParent) {
+                        w._onHideParent();
+                    }
 
-		/* For public tooled detection use onHide; only call onHide if its been replaced with something other than
-		 * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
-		 */
-		else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
-		    w.onHide();
-		}
+                    /* For public tooled detection use onHide; only call onHide if its been replaced with something other than
+                     * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
+                     */
+                    else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
+                        w.onHide();
+                    }
 
 
-		}
-	    }, true);
-	}
+                }
+            }, true);
+        }
     },
     onShow: function(){},
     onHide: function(){},
@@ -739,7 +721,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this._layerConnections = [];
         dojo.forEach(layers, dojo.hitch(this,function(l) {
             this._layerConnections.push(this.connect(l, "onShow", this, function() {
-                if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
+                if (dojo.every(layers, function(l2) {return l2.isActive();}) &&
                     dojo.every(dialogs, function(l2) {return l2.showing;})) {
                     f();
                 }
@@ -749,14 +731,14 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         dojo.forEach(dialogs, dojo.hitch(this,function(d) {
             this._layerConnections.push(this.connect(d, "setShowing", this, function() {
                 if (d.showing && !d._transitionToHiding) { // transition handles case where showing is true, but animation is running that will have it hidden very soon
-                    if (dojo.every(layers, function(l2) {return l2.isActive();}) && 
+                    if (dojo.every(layers, function(l2) {return l2.isActive();}) &&
                         dojo.every(dialogs, function(l2) {return l2.showing;})) {
                         f();
                     }
                 }
             }));
         }));
-        
+
     },
     disconnectFromAllLayers: function() {
 	dojo.forEach(this._layerConnections, dojo.hitch(this, function(c) {
@@ -816,7 +798,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	wm.forEachProperty(this.widgets, function(w, name) {
 	    w.insertDomNodes();
 	});
-	
+
 	var parentPage = this.getParentPage();
 	try {
 	    var a= 1;
@@ -824,9 +806,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this.renderCss();
 		this.invalidCss = false;
 	    }
-	    
+
 	    var p = this.containerNode || this.parentNode || this.parent.domNode;
-  	    if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body) 
+  	    if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body)
 		p.appendChild(this.domNode);
 	} catch (e) {
 	    console.log("ERROR INSERTING DOM NODES FOR " + this.name );
@@ -885,7 +867,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    this.setSizeProp("height", inFlex*100 + "%");
 	}
     },
-    /* mkantor: Commented out 4/14/2010; presumed WM 4.x only 
+    /* mkantor: Commented out 4/14/2010; presumed WM 4.x only
        isFlex: function() {
        var box = this.getParentBox();
        if (!box)
@@ -924,10 +906,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.inherited(arguments);
 
         if (!this._doingAutoSize)
-	    this._needsAutoSize = true; 
+	    this._needsAutoSize = true;
 
 	if (this.isReflowEnabled()) {
-	    if (this.parent) 
+	    if (this.parent)
 		this.parent.reflow();
 	    else {
 		this.render();
@@ -949,7 +931,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.updateBounds();
     },
     /**
-       Update bounds and flex properties based on width/height properties 
+       Update bounds and flex properties based on width/height properties
     */
     updateBounds: function() {
 	//this.domNode.flex = 0;
@@ -1029,7 +1011,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
         // If widget suppports resizing, and isn't in the middle of doing an autoSize, then it now needs to be autoResized as its width or height have changed
         if (!this._doingAutoSize) {
-	    this._needsAutoSize = true; 
+	    this._needsAutoSize = true;
 
             // A setSize call that is not made while doing autoSize means we are no longer an autosize widget
             if (this.autoSizeHeight && n == "height") this.autoSizeHeight = false;
@@ -1039,7 +1021,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	// MK: One line fix added Feb 18 2010:
 	// Because the domNode of the designWrapper is not getting updated, we need to set invalidCss to true.  May prove unnecessary.
 	if(this.designWrapper) this.designWrapper.invalidCss = true;
-	
+
 	if (!this._loading)
 	    this.updateBounds();
 	if (this.isReflowEnabled() && this.showing) {
@@ -1077,7 +1059,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	this.setSizeProp("height", this.height, inMinHeight);
     },
 
-    // this method is related to set/getMinWidth/Height, but whereas set/getMinWidth/Height are basic setters/getters of the minWidth/minHeight property, 
+    // this method is related to set/getMinWidth/Height, but whereas set/getMinWidth/Height are basic setters/getters of the minWidth/minHeight property,
     // these methods are designed to allow each object to calculate at runtime what its preferred minimum is... unless one has been specified by the user.
     // NOTE: minWidth/minHeight are ignored if size is set in px instead of %.  minHeight/minWidth may also kick in for fitToContent containers.
     getMinWidthProp: function() {
@@ -1132,7 +1114,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 this.bounds.w = neww;
                 this.domNode.style.width = neww + "px";
             }
-        } 
+        }
 
         if (this.autoSizeHeight) {
             this.domNode.style.height = "";
@@ -1146,7 +1128,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             }
         }
 	if (this.isDesignLoaded() && studio.designer.selected == this)
-	    setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
+	    setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
         this._doingAutoSize = false;
     },
 
@@ -1178,7 +1160,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
     //===========================================================================
     // Rendering; forceRender is a way to skip the isReflowEnabled test
-    //===========================================================================    
+    //===========================================================================
     render: function(forceRender) {
 	if (forceRender || this.isReflowEnabled()) {
 	    this.renderCss();
@@ -1194,7 +1176,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 	// these should be called only once per object
 	var cssObj = this.buildCssSetterObj();
-	// some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.  
+	// some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.
 	if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
 	    this.setCssViaCssText(cssObj);
 	    this.renderedOnce = 1;
@@ -1220,7 +1202,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	if (this.margin.indexOf(",") == -1 && this.margin.indexOf(" ") != -1)
 	{
 	    marginSplitter = " ";
-	}	
+	}
 
 	var paddArr = this.padding.split(paddingSplitter);
 	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && (!wm.isFakeMobile || this instanceof wm.Container == false) ? "auto" : "hidden");
@@ -1229,7 +1211,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	var margins = (this.margin||"0").split(marginSplitter);
 	var borders = (this.border||"0").split(borderSplitter);
 	var paddings = (this.padding||"0").split(paddingSplitter);
-	
+
 
 	    if (margins.length == 1) {
 		margins[1] = margins[2] = margins[3] = margins[0];
@@ -1338,7 +1320,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		        } else {
 		            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
 		                return "-" + inLetter.toLowerCase();
-		            }) + ":" + styleValue);		            
+		            }) + ":" + styleValue);
 		        }
 		        this._appliedStyles[styleName] = styleValue;
 	        }
@@ -1363,12 +1345,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto" || cssObj.overflowY == "scroll")) {
             cssTextItems.push("-webkit-overflow-scrolling: touch");
         }
-        
+
         // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
         // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
         this.domNode.style.cssText += cssTextItems.join(";");
     },
-    
+
 	setCssViaDom: function(cssObj) {
 	    if (!this.domNode) return;
 	    var s = this.domNode.style;
@@ -1396,7 +1378,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			    s[styleName] = styleValue;
 			    this._appliedStyles[styleName] = styleValue;
 			}
-		    } 
+		    }
 		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
 			    s.WebkitOverflowScrolling = "touch";
 		    }
@@ -1425,7 +1407,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    // bc
 	    if (this.designWrapper) {
 		this.designWrapper.controlBoundsChange();
-		this.designWrapper.renderBounds();			
+		this.designWrapper.renderBounds();
 	    }
 	    return isChanged;
 	},
@@ -1505,7 +1487,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	enable: function() {
 	    this.setValue("disabled", false);
 	},
-	toString: function(inText) {   
+	toString: function(inText) {
 	    var t = inText || "";
 	    if (!this.showing)
 		t += " (" + wm.getDictionaryItem("wm.Control.toString_HIDDEN") + ")";
@@ -1539,8 +1521,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		    this.domNode.parentNode.removeChild(this.domNode);
 		}
 	    }
-	    
-	    // If there is a new parent, add this component to its widgets and controls		
+
+	    // If there is a new parent, add this component to its widgets and controls
 	    /*
 	      if (newParent) {
 	      newParent.addWidget(this);
@@ -1615,7 +1597,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
 		w.setParentDisabled(this._disabled);
 	    }));
-	    
+
 	    dojo.toggleClass(this.domNode, "Disabled", this._disabled);
 	},
     setParentDisabled: function(inDisabled) {
@@ -1664,7 +1646,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	/**
 	   Add CSS class to a widget node.<br/>
 	   @param {String} inClass The class to add.
-	   @param {String} inNodeName (Optional) a property in this widget that references a node. 
+	   @param {String} inNodeName (Optional) a property in this widget that references a node.
 	   If ommitted, the default node is used.
 	   @example this.panel.addUserClass("hilite-border");
 	*/
@@ -1679,9 +1661,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	/**
 	   Remove a CSS class from a widget node.<br/>
 	   @param {String} inClass The class to remove.
-	   @param {String} inNodeName (Optional) a property in this widget that references a node. 
+	   @param {String} inNodeName (Optional) a property in this widget that references a node.
 	   If ommitted, the default node is used.
-	   @example this.panel.removeUserClass("hilite-border"); 
+	   @example this.panel.removeUserClass("hilite-border");
 	*/
 	removeUserClass: function(inClass, inNodeName) {
 	    inNodeName = inNodeName || "domNode";
@@ -1689,7 +1671,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (n)
 		dojo.removeClass(n, inClass);
 	    var cs = this._classes[inNodeName] || [];
-	    for (var i=0, c; c=cs[i]; i++) 
+	    for (var i=0, c; c=cs[i]; i++)
 		if (c == inClass)
 		    cs.splice(i--, 1);
 	    if (!cs.length)
@@ -1743,7 +1725,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     onRightClick: function(event){
     },
     onMouseOver: function(event){
-    }, 
+    },
     onMouseOut: function(event){
     },
 
@@ -1803,7 +1785,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			app.createToolTip(self.hint, self.domNode, event, self);
 		    }
 		});
-		
+
 	    }
 	    this.onMouseOver(event);
 	    dojo.stopEvent(event);
@@ -1817,7 +1799,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		});
 	    }
 	    this.onMouseOut(event);
-	    dojo.stopEvent(event); 
+	    dojo.stopEvent(event);
 	},
 	onMouseOver: function(event){},
     onMouseOut: function(event){},
