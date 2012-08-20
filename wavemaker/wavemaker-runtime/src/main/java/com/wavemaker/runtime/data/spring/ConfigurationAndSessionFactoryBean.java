@@ -20,6 +20,7 @@ import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.util.Assert;
 
 import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 /**
  * @author Simon Toens
@@ -65,8 +66,9 @@ public class ConfigurationAndSessionFactoryBean extends LocalSessionFactoryBean 
     }
 
     private Class<? extends Configuration> getDefaultConfigurationClass() {
+
         WMAppContext wmApp = WMAppContext.getInstance();
-        if (wmApp != null && wmApp.isMultiTenant()) {
+        if (wmApp != null && wmApp.isMultiTenant() && this.getClass().getName().equals(DataServiceConstants.SESSION_FACTORY_BEAN_CLASS)) {
             return ConfigurationExt.class;
         } else {
             return Configuration.class;

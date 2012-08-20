@@ -288,7 +288,7 @@ public class DataServiceSpringConfiguration {
                 auxBean.setId(bean.getId() + DataServiceConstants.AUX_BEAN_SUFFIX);
                 auxBean.setAbstract(bean.getAbstract());
                 //auxBean.setAutowire(bean.getAutowire());
-                auxBean.setClazz(bean.getClazz());
+                auxBean.setClazz(bean.getClazz() + DataServiceConstants.AUX_BEAN_SUFFIX);
                 //auxBean.setDependencyCheck(bean.getDependencyCheck());
                 //auxBean.setDependsOn(bean.getDependsOn());
                 auxBean.setDescription(bean.getDescription());
