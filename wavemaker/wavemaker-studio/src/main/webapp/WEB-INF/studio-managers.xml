@@ -531,6 +531,13 @@
             </bean>
         </property>
     </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+    	<property name="eventListener">
+    		<bean class="com.wavemaker.studio.data.DataServiceProjectEventListener">
+    			<property name="dataModelManager" ref="dataModelManager"/>
+    		</bean>
+    	</property>
+    </bean>
 
 	<bean id="localExporterFactory" class="com.wavemaker.tools.data.LocalExporterFactory"
 		scope="singleton" lazy-init="true">
@@ -632,3 +639,4 @@
     </beans>
     
 </beans>
+	
