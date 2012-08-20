@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.io;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -36,6 +37,8 @@ import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
  */
 public abstract class ResourceURL {
 
+    static int i;
+
     public static final String PROTOCOL = "rfs";
 
     /**
@@ -46,8 +49,20 @@ public abstract class ResourceURL {
      * @throws MalformedURLException
      */
     public static URL get(Resource resource) throws MalformedURLException {
+        return get(resource, false);
+    }
+
+    /**
+     * Get a URL for the given {@link Resource}.
+     * 
+     * @param resource the resource
+     * @param nonLocking if the URL should protect against file locking
+     * @return a URL for the resource
+     * @throws MalformedURLException
+     */
+    public static URL get(Resource resource, boolean nonLocking) throws MalformedURLException {
         String spec = getSpec(resource);
-        ResourceURLStreamHandler handler = new ResourceURLStreamHandler(resource);
+        ResourceURLStreamHandler handler = new ResourceURLStreamHandler(resource, nonLocking);
         return new URL(null, spec, handler);
     }
 
@@ -55,13 +70,25 @@ public abstract class ResourceURL {
      * Get a {@link List} of {@link URL}s for the given {@link Resource}s.
      * 
      * @param resources
-     * @return
+     * @return a list of URLs for the resource
      * @throws MalformedURLException
      */
     public static List<URL> getForResources(Iterable<? extends Resource> resources) throws MalformedURLException {
+        return getForResources(resources, false);
+    }
+
+    /**
+     * Get a {@link List} of {@link URL}s for the given {@link Resource}s.
+     * 
+     * @param resources
+     * @param nonLocking if the URL should protect against file locking
+     * @return a list of URLs for the resource
+     * @throws MalformedURLException
+     */
+    public static List<URL> getForResources(Iterable<? extends Resource> resources, boolean nonLocking) throws MalformedURLException {
         List<URL> urls = new ArrayList<URL>();
         for (Resource resource : resources) {
-            urls.add(get(resource));
+            urls.add(get(resource, nonLocking));
         }
         return Collections.unmodifiableList(urls);
     }
@@ -77,8 +104,11 @@ public abstract class ResourceURL {
 
         private final Folder root;
 
-        public ResourceURLStreamHandler(Resource resource) {
+        private final boolean nonLocking;
+
+        public ResourceURLStreamHandler(Resource resource, boolean nonLocking) {
             this.root = findRoot(resource);
+            this.nonLocking = nonLocking;
         }
 
         @Override
@@ -102,7 +132,7 @@ public abstract class ResourceURL {
                 if (!file.exists()) {
                     throw new IOException("File '" + file + "' does not exist");
                 }
-                return new FileURLConnection(url, file);
+                return new FileURLConnection(url, file, this.nonLocking);
             } catch (ResourceTypeMismatchException e) {
                 throw new IOException("Unable to open URL connection to folder '" + path + "'", e);
             }
@@ -116,9 +146,12 @@ public abstract class ResourceURL {
 
         private final File file;
 
-        public FileURLConnection(URL url, File file) {
+        private final boolean nonLocking;
+
+        public FileURLConnection(URL url, File file, boolean nonLocking) {
             super(url);
             this.file = file;
+            this.nonLocking = nonLocking;
         }
 
         @Override
@@ -127,6 +160,9 @@ public abstract class ResourceURL {
 
         @Override
         public InputStream getInputStream() throws IOException {
+            if (this.nonLocking) {
+                return new ByteArrayInputStream(this.file.getContent().asBytes());
+            }
             return this.file.getContent().asInputStream();
         }
     }

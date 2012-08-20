@@ -11,21 +11,21 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 Security.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {"colCount":32,"height":16,"url":"images/smallToolbarBtns.png","width":16}, {}],
 	varUrlMap: ["wm.Variable", {"isList":true,"type":"com.wavemaker.studio.SecurityConfigService$SecurityURLMap"}, {}],
 	varServList: ["wm.Variable", {"isList":true,"type":"com.wavemaker.studio.SecurityServiceMap"}, {}],
 	varRoleList: ["wm.Variable", {"isList":true,"type":"EntryData"}, {}],
-        
+
 	layoutBox: ["wm.Layout", {"_classes":{"domNode":["wm-darksnazzy"]},"height":"100%"}, {}, {
 	    editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, "border":"0","height":"29px","layoutKind":"left-to-right"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {"border":"0","imageList":"smallToolbarImageList","layoutKind":"left-to-right","padding":"0,4","width":"100%"}, {}, {
-			    saveButton: ["wm.ToolButton", {"border":"0","hint":"Save Security settings","imageIndex":8,"width":"24px"}, {"onclick":"saveButtonClick"}]
+			    saveButton: ["wm.studio.ToolbarButton", {"hint":"Save Security settings","imageIndex":8}, {"onclick":"saveButtonClick"}]
 			}],
 			logoBtmHolder: ["wm.Panel", {"border":"0","width":"221px"}, {}]
 		    }],
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
+	    tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", "conditionalTabButtons":true}, {}, {
 		securityLayer: ["wm.Layer", {caption: "Setup Security"}, {}, {
 		    label1a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Security Configuration","padding":"4"}],
 		    panel1a: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left"}, {}, {
@@ -48,20 +48,20 @@ Security.widgets = {
 				    demoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"Demo","imageList":"smallToolbarImageList"}, {"onShow":"showDemoLayer"}, {
 					panel1: ["wm.Panel", {"border":"0","height":"86px","layoutKind":"left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    panel6: ["wm.Panel", {"border":"0","width":"500px", height: "75px"}, {}, {
-						demoUsernameInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],	
+						demoUsernameInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Username","emptyValue":"null","padding":"2"}],
 						demoPasswordInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%","border":"0","caption":"Password","emptyValue":"null","padding":"2"}],
 						demoRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px",width: "100%", "border":"0","caption":"Role","display":"Select","emptyValue":"null","padding":"2"}]
 					    }],
 					    spacer2: ["wm.Spacer", {"width":"4px"}, {}],
-					    panel8: ["wm.Panel", {"border":"0","width":"40px", height: "100%", verticalAlign: "top"}, {}, {
-						demoAddUserButton: ["wm.ToolButton", {"border":"0","height":"28px","hint":"Add User","imageIndex":25,"margin":"0","width":"24px"}, {"onclick":"demoAddUserButtonClick"}]
+					    panel8: ["wm.Panel", {"border":"0","width":"40px", height: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+						  demoAddUserButton: ["wm.studio.ToolbarButton", {"hint":"Add User","imageIndex":25, height: "30px"}, {"onclick":"demoAddUserButtonClick"}]
 					    }]
 					}],
 					panel2: ["wm.Panel", {"border":"0","height":"140px","layoutKind":"left-to-right", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    demoUserList: ["wm.List", {"border":"0","dataFields":"userid,password,roles","width":"500px", height: "100%", margin: "0,2,0,90"}, {"onformat":"demoUserListFormat"}],
 					    spacer3: ["wm.Spacer", {"width":"4px"}, {}],
-					    panel7: ["wm.Panel", {"border":"0","width":"40px", height: "100%"}, {}, {
-						demoDeleteUserButton: ["wm.ToolButton", {"border":"0","height":"28px","hint":"Remove User","imageIndex":0,"margin":"0","width":"24px"}, {"onclick":"demoDeleteUserButtonClick"}]
+					    panel7: ["wm.Panel", {"border":"0","width":"40px", height: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+						  demoDeleteUserButton: ["wm.studio.ToolbarButton", {"hint":"Remove User","imageIndex":0, height: "30px"}, {"onclick":"demoDeleteUserButtonClick"}]
 					    }]
 					}]
 				    }],
@@ -142,8 +142,8 @@ Security.widgets = {
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
 							ldapRoleBySQLInput: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles based on username, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.name = ?' "}, {onchange: "setDirty"}]
 						    }]
-						}]								
-					    }]	
+						}]
+					    }]
 					}]
 				    }],
 				    jossoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"JOSSO"}, {"onShow":"showJossoLayer"}, {
@@ -174,14 +174,14 @@ Security.widgets = {
 							    }]
 							}],
 							panel13: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_TopNone","wm_Padding_BottomNone","wm_Padding_24px"]},"border":"0","width":"40px"}, {}, {
-							    addRoleButton: ["wm.ToolButton", {"border":"0","height":"24px","hint":"Add Role","imageIndex":25,"margin":"0,0,0,2","width":"30px"}, {"onclick":"addRoleButtonClick"}]
+							    addRoleButton: ["wm.studio.ToolbarButton", {"hint":"Add Role","imageIndex":25, height: "30px"}, {"onclick":"addRoleButtonClick"}]
 							}]
 						    }],
 						    panel10: ["wm.Panel", {"border":"0","height":"100%","layoutKind":"left-to-right"}, {}, {
 							spacer19: ["wm.Spacer", {"width":"96px"}, {}],
 							roleList: ["wm.List", {"_classes":{"domNode":["wm_BackgroundColor_White"]},"border":"0","columnWidths":"100%","headerVisible":false,"height":"100%","width":"360px"}, {}],
 							panel11: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_RightNone","wm_Padding_TopNone","wm_Padding_24px"]},"border":"0","width":"40px"}, {}, {
-							    deleteRoleButton: ["wm.ToolButton", {"border":"0","height":"28px","hint":"Remove Role","imageIndex":0,"margin":"0,0,0,4","width":"30px"}, {"onclick":"deleteRoleButtonClick"}]
+							    deleteRoleButton: ["wm.studio.ToolbarButton", {"hint":"Remove Role","imageIndex":0, height: "30px"}, {"onclick":"deleteRoleButtonClick"}]
 							}]
 						    }]
 						}]

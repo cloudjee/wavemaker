@@ -79,5 +79,12 @@ wm.Variable.extend({
 	props.queriedItems.isList = true;
 	props.queriedItems.bindSource = this.isList;
 	return props;
+    },
+    editJson: function() {
+        studio.editVariableDialog.show();
+        studio.editVariableDialog.page.reset(this);
+    },
+    isListBindable: function() {
+        return this.isList;
     }
 });

@@ -23,27 +23,34 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		this.inherited(arguments);
 		this.createHeader(inLayer, inIndex);
 	},
-	createHeader: function(inLayer, inIndex) {
-                var captionHeight = inLayer.parent.captionHeight;
-		var p = this.decoree.client;
-		var h = inLayer.header = new wm.Label({
-		    caption: inLayer.caption,
-		        width: "100%",
-		        margin: "0,0,2,0",
-		        height: captionHeight + "px",
-                        padding: "4,4,0,4",
-			_classes: {domNode: ["wmaccordion-header"]},
-			showing: inLayer.showing,
-			parent: p,
-		        owner: p,
-		    border: this.decoree.captionBorder !== undefined ? this.decoree.captionBorder : this.captionBorder,
-		        borderColor: this.decoree.captionBorderColor !== undefined ? this.decoree.captionBorderColor : this.captionBorderColor
-		});
-	    h.domNode.appendChild(dojo.create("span", {innerHTML: "", className: "accordionArrowNode"}));
-		p.moveControl(h, inIndex*2);
-		dojo.addClass(inLayer.domNode, "wmaccordion-content");
-		this.decoree.connect(h.domNode, 'onclick', dojo.hitch(this, "headerClicked", inLayer));
-	},
+    createHeader: function(inLayer, inIndex) {
+        var captionHeight = inLayer.parent.captionHeight;
+        var p = this.decoree.client;
+        var h = inLayer.header = new wm.Label({
+            caption: inLayer.caption,
+            width: "100%",
+            margin: "0,0,2,0",
+            height: captionHeight + "px",
+            padding: "4,4,0,4",
+            _classes: {
+                domNode: ["wmaccordion-header"]
+            },
+            showing: inLayer.showing,
+            parent: p,
+            owner: p,
+            border: this.decoree.captionBorder !== undefined ? this.decoree.captionBorder : this.captionBorder,
+            borderColor: this.decoree.captionBorderColor !== undefined ? this.decoree.captionBorderColor : this.captionBorderColor,
+            onclick: dojo.hitch(this, "headerClicked", inLayer)
+        });
+        h.domNode.appendChild(dojo.create("span", {
+            innerHTML: "",
+            className: "accordionArrowNode"
+        }));
+        p.moveControl(h, inIndex * 2);
+        dojo.addClass(inLayer.domNode, "wmaccordion-content");
+        //this.decoree.connect(h.domNode, 'onclick', dojo.hitch(this, "headerClicked", inLayer));
+    },
+    
 	headerClicked: function(inLayer, e) {
 		var d = this.decoree;
 		// prevent designer click

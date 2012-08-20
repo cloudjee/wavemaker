@@ -176,8 +176,8 @@ Studio.extend({
 	    if (this.application) {
 		var svrComps = this.svrComps = dojo.mixin({},this.application.getServerComponents());
 		wm.forEachProperty(this.application.components, function(c, name) {
-		    if (c instanceof wm.XhrDefinition || c instanceof wm.TypeDefinition) {
-			svrComps[name] = c;
+		    if (c instanceof wm.XhrDefinition || c instanceof wm.TypeDefinition || c instanceof wm.LiveView) {
+			     svrComps[name] = c;
 		    }
 		});
 			
@@ -275,23 +275,30 @@ Studio.extend({
 	    return n;
 	},
     setupContextMenu: function(inNode, inComponent) {
-	if (inComponent) {
-	dojo.connect(inNode.domNode, "oncontextmenu", inComponent, "showContextMenu");
-	if (dojo.isFF) {
-	    dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
-		if (e.button == 2 || e.ctrlKey) inComponent.showContextMenu(e);
-	    });
-	}
-	}
+        if (inComponent) {
+            dojo.connect(inNode.domNode, "oncontextmenu", inComponent, "showContextMenu");
+            if (dojo.isFF) {
+                dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
+                    if (e.button == 2 || e.ctrlKey) inComponent.showContextMenu(e);
+                });
+            }
+        }
     },
     onWidgetTreeNodeDrop: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent) {
-	if (!inNewParentNode || !inNewParentNode.content) {
-	    this.refreshWidgetsTree();
-	} else {
-	    var movedComponent = inMovedNode.component;
-	    var parentComponent = inNewParentNode.component;
-	    parentComponent.designMoveControl(movedComponent, {i: inIndexInParent});
-	}
+        if (!inNewParentNode || !inNewParentNode.content) {
+            this.refreshWidgetsTree();
+        } else {
+            var movedComponent = inMovedNode.component;
+            var parentComponent = inNewParentNode.component;
+            parentComponent.designMoveControl(movedComponent, {
+                i: inIndexInParent
+            });
+        }
+    },
+    onCanDropNode: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent, inResponseInfo) {
+        if (inMovedNode.component instanceof wm.Layer && inNewParentNode.component instanceof wm.Layers == false) {
+            inResponseInfo.result = false;
+        }
     },
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
@@ -392,7 +399,8 @@ Studio.extend({
 	},
 	componentsToTree_rev: function(inNode, inComponents, inTypes, inType) {
 		var n = [], cn;
-	    for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
+        wm.forEachProperty(inComponents, function(inComponent, inName) {n.push(inName);});
+	    //for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort();
 		for (var i=0; (cn=n[i]); i++) {
 			var comp = inComponents[cn];

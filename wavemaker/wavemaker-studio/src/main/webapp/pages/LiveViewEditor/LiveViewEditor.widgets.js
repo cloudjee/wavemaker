@@ -18,10 +18,10 @@ LiveViewEditor.widgets = {
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%", imageList: "smallToolbarImageList"}, {}, {
 		managerToolbar: ["wm.Panel", {border: "0", padding: "0,4", height: "29px", layoutKind: "left-to-right"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
-				saveLiveViewBtn: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%", border: "", margin: "", hint: "Save LiveView"}, {onclick: "saveLiveViewBtnClick"}],
-				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				newLiveViewBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "100%", border: "", margin: "", hint: "New LiveView", showing: false}, {onclick: "newLiveViewBtnClick"}],
-				delLiveViewBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "100%", border: "", margin: "", hint: "Delete LiveView"}, {onclick: "delLiveViewBtnClick"}]
+				saveLiveViewBtn: ["wm.studio.ToolbarButton", {imageIndex: 8,hint: "Save LiveView"}, {onclick: "saveLiveViewBtnClick"}],
+				toolbarspacer1: ["wm.studio.ToolbarSpacer", {}, {}],
+				newLiveViewBtn: ["wm.studio.ToolbarButton", {imageIndex: 25,hint: "New LiveView", showing: false}, {onclick: "newLiveViewBtnClick"}],
+				delLiveViewBtn: ["wm.studio.ToolbarButton", {imageIndex: 0, hint: "Delete LiveView"}, {onclick: "delLiveViewBtnClick"}]
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
 		}],

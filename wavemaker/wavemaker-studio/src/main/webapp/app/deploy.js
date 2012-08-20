@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.studio.app.deploy");
 
@@ -42,9 +42,10 @@ Studio.extend({
 	// Live Data
 	//=====================================================================
 	refreshLiveData: function() {
-	    if (!wm.studioConfig.preventLiveData)
+	    if (!wm.studioConfig.preventLiveData) {
 		    this.deploy("", "studioProjectCompile", true);
-		    
+        }
+
 	},
 	makeLiveDataCall: function(inCallback) {
 		if (this.isLiveLayoutReady()) {
@@ -52,11 +53,21 @@ Studio.extend({
 		} else {
 			// update live data
 			this.refreshLiveData();
+            if (this.isCloud()) {
+                this.userLabel.setSingleLine(false);
+                this.userLabel.setCaption("Editing/importing of services is disabled while enabling live layout");
+                this.userLabel.setAlign("center");
+                this.userLabel.domNode.style.backgroundColor = "red";
+            }
 		    if (this.application && (this._deploying || this.application._deployStatus == "deploying") && this._deployer) {
 				// deferred to return immediately
 				var liveDataDeferred = new dojo.Deferred();
 				// add our callback to deployer handling liveData update
-				this._deployer.addCallback(function(inResult) {
+				this._deployer.addCallbacks(dojo.hitch(this, function(inResult) {
+                    if (this.isCloud()) {
+                        this.userLabel.setCaption("");
+                        this.userLabel.domNode.style.backgroundColor = "";
+                    }
 					// call our callback
 					var r = inCallback();
 					// if it's a deferred, fire the liveDataDeferred when it's ready
@@ -72,7 +83,13 @@ Studio.extend({
 							liveDataDeferred.callback(true);
 					}
 					return inResult;
-				});
+				}),
+                dojo.hitch(this, function() {
+                    if (this.isCloud()) {
+                        this.userLabel.setCaption("");
+                        this.userLabel.domNode.style.backgroundColor = "";
+                    }
+                }));
 				return liveDataDeferred;
 			}
 		}
@@ -87,8 +104,8 @@ Studio.extend({
 	isSecurityEnabledResult: function(inResponse) {
 		if (inResponse) {
 		    app.alert(this.getDictionaryItem("ALERT_LIVE_LAYOUT_SECURITY_WARNING"));
-		    
-		    
+
+
 		}
 	},
 	*/
@@ -104,7 +121,7 @@ Studio.extend({
 					  left: "1px",
 					  width: "1px",
 					  height: "1px",
-					  visibility: "hidden"}); 
+					  visibility: "hidden"});
 		      dojo.body().appendChild(iframe);
 
 		      iframe.src = url;
@@ -120,7 +137,7 @@ Studio.extend({
 	exportClick: function(inSender) {
 	    studio.beginWait("Building ZIP File...");
 	    studio.deploymentService.requestAsync("exportProject", [studio.project.projectName + "." + studio.application.getFullVersionNumber() + ".zip"], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
-	},			  
+	},
 	exportClickCallback: function(inResponse) {
 	    studio.endWait("Building ZIP File...");
 	    app.alert(this.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", {inResponse: inResponse}));
@@ -156,12 +173,12 @@ Studio.extend({
 	getImportProjectDialog: function() {
 	  if (!this.importProjectDialog) {
 	      this.importProjectDialog = new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
-							    owner: studio, 
-							    pageName: "ImportFile", 
-							    width: "500px", 
-							    height: "120px", 
-							    hideControls: true, 
-							    title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"), 
+							    owner: studio,
+							    pageName: "ImportFile",
+							    width: "500px",
+							    height: "120px",
+							    hideControls: true,
+							    title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"),
 							    modal: false});
 	  }
 	    return this.importProjectDialog;
@@ -169,7 +186,7 @@ Studio.extend({
 /*
 	getImportFileDialog: function() {
 	  if (!this.importFileDialog) {
-              this.importFileDialog = new wm.FileUploadDialog({title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"), 
+              this.importFileDialog = new wm.FileUploadDialog({title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"),
                                                                noEscape: false,
                                                                uploadService: "deploymentService",
                                                                uploadOperation: "uploadProjectZipFile",
@@ -198,8 +215,8 @@ Studio.extend({
    importProjectClickCallback: function(inSource, inResponse) {
       studio.endWait();
       var d = studio.startPageDialog.page.refreshProjectList();
-       
-       app.toastDialog.showToast(this.getDictionaryItem("TOAST_IMPORT_PROJECT", {inResponse: inResponse}), 3000, "Success");		
+
+       app.toastDialog.showToast(this.getDictionaryItem("TOAST_IMPORT_PROJECT", {inResponse: inResponse}), 3000, "Success");
       wm.fire(this.owner, "dismiss");
       studio.project.openProject(inResponse);
       },
@@ -214,9 +231,9 @@ Studio.extend({
 	//=====================================================================
 	deployComponent: function(inName, inNamespace, inDisplayName, inGroup, inData) {
 		var klass = inNamespace ? inNamespace + '.' + inName : inName;
-		studio.deploymentService.requestAsync("deployClientComponent", 
-			[inName, inNamespace, inData], 
-			dojo.hitch(this, "deployComponentCallback", 'common.packages.' + klass, inDisplayName, inGroup), 
+		studio.deploymentService.requestAsync("deployClientComponent",
+			[inName, inNamespace, inData],
+			dojo.hitch(this, "deployComponentCallback", 'common.packages.' + klass, inDisplayName, inGroup),
 			dojo.hitch(this, "deployComponentError", inName, inNamespace));
 	},
 	deployComponentCallback: function(inModule, inDisplayName, inGroup, inResponse) {
@@ -227,7 +244,7 @@ Studio.extend({
 		dojo._loadedUrls = [];
 		// remove from palette
 		studio.palette.removeItem(inGroup, inDisplayName);
-		// re-require our module 
+		// re-require our module
 		// use "require" to avoid interacting with the Dojo build system.
 		dojo["require"](inModule);
 		// if we get here, no exceptions occured
@@ -272,22 +289,24 @@ Studio.extend({
 
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {
-	this.project.saveProject(true);
-	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
-	this.deploymentDialog.page.addButtonClick();
+        this.project.saveProject(true);
+        this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        this.deploymentDialog.page.addButtonClick();
     },
 
     settingsDeployClick: function() {
-	this.project.saveProject(true);
-	this.deploymentDialog.show();
-	this.deploymentDialog.page.selectFirst();
+        this.project.saveProject(true);
+        this.deploymentDialog.show();
+        this.deploymentDialog.page.selectFirst();
     },
     cloudFoundryDeploymentsClick: function() {
-	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
-	this.deploymentDialog.page.showCloudFoundryAppListDialog();
+        this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        this.deploymentDialog.page.showCloudFoundryAppListDialog();
     },
     deploymentHelp: function() {
-	window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "Deploying");
+        window.open(studio.getDictionaryItem("URL_DOCS", {
+            studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+        }) + "Deploying");
     },
     _end: 0
 });

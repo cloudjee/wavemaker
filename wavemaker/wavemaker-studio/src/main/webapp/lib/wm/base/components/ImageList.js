@@ -54,7 +54,7 @@ dojo.declare("wm.ImageList", wm.Component, {
 	for (var i = 0; i < this.iconCount; i++) {
 	    var col = i % this.colCount;
 	    var row = Math.floor(i / this.colCount);
-	    text += "." + id + "_" + i + " {background-position: -" + (this.width*col + (this.widthOffset || 0)) + "px -" + (this.height * row) + "px !important;}\n";
+	    text += "." + id + "_" + i + " {background-position: -" + this.width*col + "px -" + (this.height * row) + "px !important;}\n";
 	}
 
 	setCss(style, text);
@@ -94,7 +94,7 @@ dojo.declare("wm.ImageList", wm.Component, {
 			' height="' + this.height + '"' + 
 			' style="' +
 			'vertical-align: middle; ' + 
-		        'background:url(' + url + ') no-repeat ' + (-this.width * col + (this.widthOffset||0)) + 'px ' + (-this.height * row) + 'px;"' +
+		        'background:url(' + url + ') no-repeat ' + (-this.width * col) + 'px ' + (-this.height * row) + 'px;"' +
 			'>';
 	}    
 });

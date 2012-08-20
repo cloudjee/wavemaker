@@ -141,7 +141,6 @@ dojo.declare("wm.Number", wm.Text, {
 		if (a.charAt(i) == b.charAt(i+iOffset) || b.charAt(i+iOffset).match(/\D/)) {
 		    inValue += a.charAt(i);
 		} else {
-		    debugger;
 		    inValue += "_";
 		    iOffset++;
 		}

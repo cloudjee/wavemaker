@@ -15,7 +15,7 @@
 ImportDatabase.widgets = {
     layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    panel1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers","NoRightMarginOnTab"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
+	    panel1: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers","NoRightMarginOnTab"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
 		panel2: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "center", verticalAlign: "middle"}, {}, {
 
 
@@ -36,8 +36,8 @@ ImportDatabase.widgets = {
 			schemaPatternInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Schema Filter", width: "100%", border: "0", emptyValue: "emptyString",helpText: "When you are importing a database that supports schemas, WaveMaker Studio imports only the tables for the default schema. If you want to import tables from other schemas, add the schema names in this field."}, {onEnterKeyPress: "importBtnClick"}]
 		    }],
 		    panel4b: ["wm.Panel", {horizontalAlign: "center", verticalAlign: "top", layoutKind: "top-to-bottom", width: "50%", height: "100%", padding: "10,20,10,20"}, {}, {
-			driverClassInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Driver Class", width: "100%", border: "0", emptyValue: "emptyString", helpText: "JDBC driver class name. WaveMaker Studio creates a JAR file for each database that uses a specified driver. If you want to use a different JAR file for connecting, specify it here (the JAR file must be in the Application Server's class path)."}, {onEnterKeyPress: "importBtnClick"}],
-			dialectInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Dialect", width: "100%", border: "0", emptyValue: "emptyString", helpText:"Hibernate dialect.  Most users should leave this blank.  For more information go to http://docs.jboss.org/hibernate/core/3.3/reference/en/html/session-configuration.html#configuration-optional-dialects"}, {onEnterKeyPress: "importBtnClick"}],
+			driverClassInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Driver Class", width: "100%", border: "0", emptyValue: "null", helpText: "JDBC driver class name. WaveMaker Studio creates a JAR file for each database that uses a specified driver. If you want to use a different JAR file for connecting, specify it here (the JAR file must be in the Application Server's class path)."}, {onEnterKeyPress: "importBtnClick"}],
+			dialectInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Dialect", width: "100%", border: "0", emptyValue: "null", helpText:"Hibernate dialect.  Most users should leave this blank.  For more information go to http://docs.jboss.org/hibernate/core/3.3/reference/en/html/session-configuration.html#configuration-optional-dialects"}, {onEnterKeyPress: "importBtnClick"}],
 			revengNamingStrategyInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Naming Strategy", width: "100%", border: "0", emptyValue: "emptyString", helpText: "Most users should leave this blank.  Enter the name of a java class you created for handling the naming strategy."}, {onEnterKeyPress: "importBtnClick"}],
 			/* Do not localize the options property; any change to options requires change to ImportDatabase.js */
 			executeAsMenu: ["wm.SelectMenu", {captionAlign: "left", captionSize: "120px", caption: "Execute as", options: "Database credentials, Logged in user", dataValue: "Database credentials", width: "100%", helpText: "Typically your database connections will just use the username and password configured above.  If you need the connection to do an 'Execute As' and use the currently logged in user's credentials (i.e. the user who has logged into your deployed application), you can set that here."}, {onchange: "executeAsMenuChange"}],
@@ -47,21 +47,21 @@ ImportDatabase.widgets = {
 	    }]
 	}],
 	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import Sample"}, {onclick: "importSampleBtnClick"}, {
+        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import HRDB Sample DataBase"}, {onclick: "importSampleBtnClick"}, {
         }],
-        spacer1: ["wm.Spacer", {width: "10px"}, {}],
+        spacer1: ["wm.Spacer", {width: "100%"}, {}],
 		testConnectionBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Test Connection", width: "160px"}, {onclick: "testConnectionBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
 		    }]
 		}],
-		spacer1: ["wm.Spacer", {width: "10px"}, {}],
+		spacer2: ["wm.Spacer", {width: "10px"}, {}],
 		importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
 		    }]
 		}],
-		spacer2: ["wm.Spacer", {width: "10px"}, {}],
+		spacer3: ["wm.Spacer", {width: "10px"}, {}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	    }]
 

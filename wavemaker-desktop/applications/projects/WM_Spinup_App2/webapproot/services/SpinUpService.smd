@@ -13,6 +13,11 @@
 		"parameters": null,
 		"returnType": "java.lang.String"
 	}, {
+		"name": "dailyLimit",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.Boolean"
+	}, {
 		"name": "launchStudio",
 		"operationType": null,
 		"parameters": null,

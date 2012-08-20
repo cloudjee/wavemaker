@@ -945,7 +945,10 @@ display:block;
     width: 16px;
     height: 16px;
 }
-
+/* Needed by IE9 */
+.wmaccordion-header .wmSizeNode {
+    width: 100%;
+}
 #app_wmMinifiedDialogPanel {
     background-color: #aaa;
 }

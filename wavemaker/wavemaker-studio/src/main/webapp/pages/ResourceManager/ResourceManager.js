@@ -194,9 +194,10 @@ dojo.declare("ResourceManager", wm.Page, {
         this.uploadButton._serviceVariable.input.setType("AnyData");
 
 	//this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
-	this.connect(studio, "projectChanged", this, function() {
+	this.connect(studio, "projectChanged", this, function() {        
 	    this.shortcutList.setDataValue("/webapproot/resources");
 	    this.onShortcutSelect(this.shortcutList);
+        while (this.editorTabs.layers.length) this.editorTabs.layers[this.editorTabs.layers.length-1].destroy();
 	});
 	this.propertiesPanel = this.resourceProperties;
 	this.dragger = new wm.ResourceMover();

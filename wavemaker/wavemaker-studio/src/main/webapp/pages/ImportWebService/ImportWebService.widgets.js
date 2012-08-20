@@ -13,14 +13,13 @@
  */
  
 ImportWebService.widgets = {
+    inputVar: ["wm.Variable", {"isList":true,"type":"EntryData"}, {}],
     layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", autoScroll: false}, {}, {
 		dialog: ["wm.Panel", {height: "100%", border: "0", width: "100%"}, {}, {
 			panel: ["wm.Panel", {height: "100%", border: "0"}, {}, {
 				typePanel: ["wm.Panel", {height: "30px", border: "0", padding: "4,0,4,0"}, {}, {
 					panel4: ["wm.Panel", {height: "24px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
-						typeInput: ["wm.Editor", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "300px", width: "470px", layoutKind: "left-to-right", caption: "Select the type of web service to import:", display: "Select"}, {onchange: "typeInputChange"}, {
-							editor: ["wm._SelectEditor", {}, {}]
-						}]
+						typeInput: ["wm.SelectMenu", {displayField: "dataValue", dataField: "dataValue", "caption":"Select the type of web service to import:", "captionSize":"300px", "dataValue":undefined,"displayValue":"","helpText":"SOAP - Import a SOAP Service WSDL file <BR>WADL - REST services that have a WADL or WSDL file <BR>BUILD-A-Service - REST services that return XML<BR>XHR/JSON - REST Services that return JSON and direct server calls<BR>Feed - RSS Feeds","width":"470px"}, {"onchange":"typeInputChange"}]
 					}]
 				}],
 				layersSpacerPanel: ["wm.Panel", {_classes: {domNode: ["wm_Padding_8px"]}, height: "100%", border: "0"}, {}, {

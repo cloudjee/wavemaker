@@ -36,12 +36,13 @@ MenuDesigner.widgets = {
             mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 		treeLabel: ["wm.Label", {caption: "Use tree to design your dialog", height: "20px", width: "100%"}],
 		panel2: ["wm.Panel", {_classes: {domNode: ["StudioDarkPanel"]}, "height":"100%","horizontalAlign":"left","layoutKind":"top-to-bottom","verticalAlign":"top","width":"100%", border: "1", borderColor: "#959DAB"}, {}, {
-		    toolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, "height":"20px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
-			AddButton: ["wm.ToolButton", {hint: "Add Menu Item", "caption":"","width":"18px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 25}, {"onclick":"AddButtonClick"}],
-			EditButton: ["wm.ToolButton", {hint: "Edit Menu Item (or double click item)", "caption":"","width":"18px", height: "16px", imageList: "studio.silkIconImageList", imageIndex: 75}, {"onclick":"EditButtonClick"}],
-			DeleteButton: ["wm.ToolButton", {hint: "Delete Menu Item", "caption":"","width":"18px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 0}, {"onclick":"DeleteButtonClick"}],
-			SeparatorButton: ["wm.ToolButton", {hint: "Add Separator", "caption":"-","width":"18px", height: "16px"}, {"onclick":"SeparatorButtonClick"}]//,
-			//DefaultItemButton: ["wm.ToolButton", {hint: "Make selected item the initial button value", "caption":"","width":"16px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 2}, {"onclick":"DefaultButtonClick"}]
+            toolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", height: "29px", width: "100%", horizontalAlign: "left", verticalAlgin: "top"}, {}, {
+
+    			AddButton: ["wm.studio.ToolbarButton", {hint: "Add Menu Item", "caption":"",imageList: "smallToolbarImageList", imageIndex: 25}, {"onclick":"AddButtonClick"}],
+    			EditButton: ["wm.studio.ToolbarButton", {hint: "Edit Menu Item (or double click item)", "caption":"",imageList: "studio.silkIconImageList", imageIndex: 75}, {"onclick":"EditButtonClick"}],
+    			DeleteButton: ["wm.studio.ToolbarButton", {hint: "Delete Menu Item", "caption":"",imageList: "smallToolbarImageList", imageIndex: 0}, {"onclick":"DeleteButtonClick"}],
+    			SeparatorButton: ["wm.studio.ToolbarButton", {hint: "Add Separator", "caption":"", iconUrl: "images/h_splitter_handle.gif", iconMargin: "8px 0px 0px 3px"}, {"onclick":"SeparatorButtonClick"}]//,
+    			//DefaultItemButton: ["wm.ToolButton", {hint: "Make selected item the initial button value", "caption":"","width":"16px", height: "16px", imageList: "smallToolbarImageList", imageIndex: 2}, {"onclick":"DefaultButtonClick"}]
 			
 		    }],
 

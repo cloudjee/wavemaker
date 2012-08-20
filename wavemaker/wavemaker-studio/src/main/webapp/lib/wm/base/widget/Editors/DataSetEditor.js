@@ -72,7 +72,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     },
     update: function() {
         if (this.dataSet instanceof wm.ServiceVariable) {
-            if (djConfig.isDebug) {
+            if (app.debugDialog) {
                 var eventId = this.dataSet.log("update", this.getRuntimeId() + ".update()");
                 /*
                 var eventId = app.debugDialog.newLogEvent({
@@ -488,9 +488,9 @@ dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], 
                 //if (i) html += "<br/>";
                 html += "<div class='wmCheckboxSetItem'><input id='" + id + "' name='" + this.getRuntimeId().replace(".", "_") + "' dojoType='" + this._dijitClass + "' value='" + i + "'>";
                 if (wm.isMobile) {
-                    html += "<label>" + this._getDisplayData(item) + "</label></div>"; // let the touchmanager decide whether to check or uncheck; using the for= tells dojo to do it
+                    html += "<label class='wmeditor-caption'>" + this._getDisplayData(item) + "</label></div>"; // let the touchmanager decide whether to check or uncheck; using the for= tells dojo to do it
                 } else {
-                    html += "<label for='" + id + "'>" + this._getDisplayData(item) + "</label></div>";
+                    html += "<label class='wmeditor-caption' for='" + id + "'>" + this._getDisplayData(item) + "</label></div>";
                 }
             }
             this.editor.innerHTML = html;

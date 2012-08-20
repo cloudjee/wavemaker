@@ -276,7 +276,7 @@ public class DataService {
         }
     }
 
-    public void testConnection(String username, String password, String connectionUrl, String driverClassName) {
+    public void testConnection(String username, String password, String connectionUrl, String driverClassName, String dialectClassName) {
 
         PreparedConnection connection = prepareConnection(connectionUrl);
         try {
@@ -291,6 +291,8 @@ public class DataService {
             TestDBConnection t = new TestDBConnection();
             t.setUsername(username);
             t.setPassword(password);
+            t.setDialect(dialectClassName);
+            t.setDriverClassName(driverClassName);
             t.setConnectionUrl(connection.getUrl());
 
             if (!ObjectUtils.isNullOrEmpty(driverClassName)) {
@@ -350,7 +352,7 @@ public class DataService {
             String url = info.getUrl();
             String username = info.getUserName();
             String password = info.getPassword();
-            testConnection(username, password, url, "");
+            testConnection(username, password, url, "", null);
         } else {
             throw new UnsupportedOperationException();
         }

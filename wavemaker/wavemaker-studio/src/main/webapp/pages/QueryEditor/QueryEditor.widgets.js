@@ -17,10 +17,10 @@ QueryEditor.widgets = {
 	layoutBox1: ["wm.Layout", {height: "100%", imageList: "smallToolbarImageList"}, {}, {
 	    editorToolbar: ["wm.Panel", {_classes: {domNode:["StudioToolBar"]}, border: "0", height: "29px", width: "100%", layoutKind: "left-to-right", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%", padding: "0,4"}, {}, {
-				saveQueryBtn: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%", margin: "0", border: "0", disabled: true, hint: "Save Query"}, {onclick: "saveQuery"}],
-				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				newQueryBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "100%", margin: "0", border: "0", hint: "New Query"}, {onclick: "newQuery"}],
-				delQueryBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "100%",  margin: "0", border: "0", disabled: true, hint: "Delete Query"}, {onclick: "removeQuery"}]
+				saveQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 8,  disabled: true, hint: "Save Query"}, {onclick: "saveQuery"}],
+				toolbarspacer1: ["wm.studio.ToolbarSpacer", {}, {}],
+				newQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 25, hint: "New Query"}, {onclick: "newQuery"}],
+				delQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 0,  disabled: true, hint: "Delete Query"}, {onclick: "removeQuery"}]
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
 		}],
@@ -117,7 +117,8 @@ QueryEditor.widgets = {
 						editor: ["wm._NumberEditor", {}, {}]
 					    }],
 					    spacer15: ["wm.Spacer", {width: "30px"}, {}],
-					    runQueryBtn: ["wm.Button", {caption: "<img src=\"images/flash_16.png\"/>", margin: "0", width: "24px", border: "0", 
+                        runQueryBtn: ["wm.studio.ToolbarButton", {caption: "", iconUrl: "images/flash_16.png", 
+					    /*runQueryBtn: ["wm.Button", {caption: "<img src=\"images/flash_16.png\"/>", margin: "0", width: "24px", border: "0", */
 								        disabled: true, hint: "Test Query"}, {onclick: "runQuery"}]
 					}],
 					emptyResultSetLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Empty Result Set", border: "0", width: "200px", showing: false}, {}, {

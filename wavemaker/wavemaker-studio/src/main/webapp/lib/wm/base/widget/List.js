@@ -271,7 +271,16 @@ dojo.declare("wm.List", wm.VirtualList, {
     postInit: function() {
         this.inherited(arguments);
         if (this.renderVisibleRowsOnly && !this._isDesignLoaded) {
-            this.connect(this.listNode, "onscroll", this, "_onScroll");
+            this.connect(this.listNode, "onscroll", this, wm.isMobile ? "blockScrolling" : "_onScroll");
+        }
+
+        /* Handles special case where the list gets the scroll event; since its proven necessary in IOS 5 to set the list-wrapper to overflow: scroll
+         * to since overflow: hidden failed to hide content
+         */
+        if (wm.isIOS) {
+            this.connect(this.domNode, "ontouchstart", dojo, "stopEvent");
+            if (this.listNodeWrapper)
+                this.connect(this.listNodeWrapper, "ontouchstart", dojo, "stopEvent");
         }
     },
     setDisabled: function(inDisabled) {
@@ -289,7 +298,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         /* Block any parent scrolling if this list has room to scroll */
         if (this.listNode.clientHeight > this.listNodeWrapper.clientHeight) {
             dojo.stopEvent(e);
-        }
+       }
     },
     _ontouchmove: function(e, yPos, yChangeFromInitial, yChangeFromLast) { /* Do nothing if no room to scroll */
         if (this.listNode.clientHeight <= this.listNodeWrapper.clientHeight || yChangeFromLast > 0 && this.getScrollTop() == 0 || yChangeFromLast < 0 && this.getScrollTop() >= Math.max(this.listNode.scrollHeight, this.listNodeWrapper.scrollHeight)) {
@@ -304,7 +313,6 @@ dojo.declare("wm.List", wm.VirtualList, {
         */
             return;
         }
-
         var time = new Date().getTime();
         var deltaTime = time - this._touchY.time;
         var scrollTop = this._scrollTop;
@@ -359,7 +367,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     setScrollTop: function(inTop) {
         var top = Math.max(0, inTop);
         if (wm.isMobile) { // should always be true for touch events 
-            top = Math.min(top, this.listNode.clientHeight - this.listNodeWrapper.clientHeight);
+            top = Math.min(top, Math.max(0,this.listNode.clientHeight - this.listNodeWrapper.clientHeight));
             if (dojo.isWebKit) {
                 this.listNode.style.WebkitTransform = "translate(0,-" + top + "px)";
             } else if (dojo.isMoz) {
@@ -794,6 +802,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.scrollDownAddItems(0);
                 this.avgHeight = this.getAverageItemHeight();
                 this.updateBottomSpacerHeight();
+                var sc = this.getScrollTop();                
+                if (sc > 0) 
+                    this.setScrollTop(sc); // maintain the user's current scroll position -- if its not past the bottom of the list
             } else {
                 this._renderDojoObjSkipped = true;
             }
@@ -1062,6 +1073,9 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     getAverageItemHeight: function() {
         return this.avgHeight;
+    },
+    blockScrolling: function() {
+        this.listNodeWrapper.scrollTop = 0;
     },
     _onScroll: function(direction, doCleanup) {
         if (this._inScroll) return; // some browsers treat our dom manipulation as scrolling events; need to prevent these from being handled

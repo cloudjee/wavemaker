@@ -726,7 +726,8 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
         var eventId = this.debugForm("updateData");
         var result = this.doOperation("update");
         if (eventId) app.debugDialog.endLogEvent(eventId);
-        return result;	},
+        return result;	
+    },
 	/**
 		Performs a delete operation based on the data in the
 		<i>dataOutput</i> property.

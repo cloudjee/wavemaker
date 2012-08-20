@@ -21,6 +21,8 @@
 package com.wavemaker.desktop.launcher.ui;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -40,6 +42,7 @@ import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.LifecycleListener;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
 import com.wavemaker.desktop.launcher.AppServer;
 import com.wavemaker.desktop.launcher.AppServer.SERVER_STATUS;
 import com.wavemaker.desktop.launcher.InvalidServerConfigurationException;
@@ -217,7 +220,15 @@ public class MainConsole extends javax.swing.JFrame {
         this.lblCurrentServerPortVal = new javax.swing.JLabel();
         this.lblCurrentShutdownPortVal = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+            	btnStopActionPerformed(null);
+            	System.exit(0);
+            }
+      });
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/wavemaker/desktop/launcher/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("MainConsole.title")); // NOI18N
         setBackground(new java.awt.Color(255, 255, 255));
@@ -398,13 +409,13 @@ public class MainConsole extends javax.swing.JFrame {
     private void btnAdvOptsActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnAdvOptsActionPerformed
     {// GEN-HEADEREND:event_btnAdvOptsActionPerformed
         try {
-            Main.printlnToLog("*** start btnAdvOptsActionPerformed");
+            //Main.printlnToLog("*** start btnAdvOptsActionPerformed");
             JDialog optsDlg = new LauncherAdvOptsDialog(this, true);
             optsDlg.getContentPane().setBackground(Color.WHITE);
             optsDlg.setLocationRelativeTo(this);
             optsDlg.setVisible(true);
             updatePortValues();
-            Main.printlnToLog("--- end btnAdvOptsActionPerformed");
+            //Main.printlnToLog("--- end btnAdvOptsActionPerformed");
         } catch (Exception e) {
             Main.printlnToLog(e.getMessage());
         }
@@ -450,7 +461,7 @@ public class MainConsole extends javax.swing.JFrame {
             this.pbStatus.setIndeterminate(true);
 
             try {
-                Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
+                //Main.printlnToLog(bundle.getString("STATUS_MSG_STARTING"));
                 com.wavemaker.desktop.launcher.Server.ValidateConfig(this.tomcatConfig);
                 this.appServer = Main.getServerInstance(this.tomcatConfig, false);
 

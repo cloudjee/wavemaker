@@ -45,7 +45,7 @@ dojo.declare("wm.debug.DataPanel", wm.Layer, {
        this.inherited(arguments);
        this.createComponents({
            //dataEditor: [wm.isMobile ? "wm.LargeTextArea" : "wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
-           tabs: ["wm.TabLayers", {conditionalTabButtons:1,width:"100%",height:"100%", _lockHeaderHeight:1,headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0"},{},{
+           tabs: ["wm.TabLayers", {conditionalTabButtons:1,width:"100%",height:"100%",headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0"},{},{
                 dataLayer: ["wm.Layer", {caption: "Current Data", horizontalAlign: "left", verticalAlign: "top"},{},{
                    dataEditor: ["wm.LargeTextArea",
                    {

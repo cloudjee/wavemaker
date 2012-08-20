@@ -37,6 +37,7 @@ dojo.declare("wm.pageContainerMixin", null, {
         this._connections.push(this.connect(this.pageContainer, "onError", this, "onError"));
         this.pageContainer.dismiss = dojo.hitch(this, "dismiss");
         if (this.pageName && !this.deferLoad) this.setPage(this.pageName);
+        else this.pageContainer._pageName = this.pageName; // will load the page when PageContainer's reveal method is called
         this.createControls();
     },
     onError: function(inErrorOrMessage) {},
@@ -112,19 +113,19 @@ dojo.declare("wm.pageContainerMixin", null, {
             this.controlsPanel.destroy();
             this.controlsPanel = null;
         }
-        
+
         if (this.closeButton)
         {
             this.closeButton.destroy();
             this.closeButton = null;
         }
-        
+
         if (this.controlsBevel)
         {
             this.controlsBevel.destroy();
             this.controlsBevel = null;
         }
-        
+
         if (this.buttonPanel)
         {
             this.buttonPanel.destroy();
@@ -138,7 +139,7 @@ dojo.declare("wm.pageContainerMixin", null, {
             this.pageContainer.destroy();
             this.pageContainer = null;
         }
-        
+
         this.inherited(arguments);
     }
 });
@@ -151,10 +152,12 @@ dojo.declare("wm.PageDialog", [wm.Dialog, wm.pageContainerMixin], {
         this.inherited(arguments);
         this.initPageContainer();
     },
+    /*
     setShowing: function(inShow, forceChange) {
         this.inherited(arguments);
         if (this.deferLoad && inShow) this.setPage(this.pageName);
     },
+    */
     setPageName: function(inPageName) {
         if (this._pageLoading) return;
         if (this.isDesignLoaded()) {

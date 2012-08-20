@@ -84,7 +84,6 @@ dojo.declare("XHRServiceEditor", wm.Page, {
        if (this.editService) {
 	   c = this.editService;
 	   if (c.name != serviceName) {
-	       debugger;
 	       c.set_name(serviceName,true);
 	   }
        } else {
@@ -121,7 +120,6 @@ dojo.declare("XHRServiceEditor", wm.Page, {
 	  c.returnType = typeDef.name;
           wm.TypeDefinition.prototype.getTypeDefinitionDialog();
           studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(typeDef);
-	  debugger;
           studio.TypeDefinitionGeneratorDialog.page.generateButtonClick(null, null, null, jsonText, typeDef.name);
       }
        c.requestType = this.serviceRequestType.getDataValue();

@@ -801,6 +801,7 @@ dojo.declare("wm.studio.Project", null, {
         var d9 = new dojo.Deferred();
         d8.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
+            studio.setSaveProgressBarMessage("project.a.js");
             var d = wm.load("lib/wm/common/" + wm.version.replace(/[^a-zA-Z0-9]/g, "") + "_patches.js", false, true);
 
             d.addCallback(function(inResponse) {
@@ -815,6 +816,7 @@ dojo.declare("wm.studio.Project", null, {
         var d10 = new dojo.Deferred();
         d9.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
+            studio.setSaveProgressBarMessage("project.a.js");
             var dlocal = this.saveProjectData("project.a.js", allProjectJS, false, true);
             dlocal.addCallback(function() {
                 d10.callback();
@@ -843,23 +845,7 @@ dojo.declare("wm.studio.Project", null, {
 
     },
     
-    getPhonegapBuild: function() {
-	if (!studio.phoneGapConfigDialog) {
-	var dialog = studio.phoneGapConfigDialog = 
-		new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
-				   owner: studio,
-				   width: "600px",
-				   height: "780px",
-				   title: "Phonegap Build Config",
-				   pageName: "PhoneGapConfig",
-				   hideControls: true,
-				   modal: true});
-	} else {
-	    var dialog = studio.phoneGapConfigDialog;
-	    dialog.page.reset();
-	}
-	dialog.show();
-    },
+
     // Right now, the documentation files are our only place for storing project meta data... stuff that should be widget level properties,
     // but which should not show up at runtime.  So we need a quick way to change them and save them
     setMetaDataFlag: function(key,value) {
@@ -2267,17 +2253,35 @@ Studio.extend({
 
     /* User selects the menu item for installing third party extensions */
     importPartnerService: function() {
-	this.ImportThirdPartyAPIDialog.show();
+        this.ImportThirdPartyAPIDialog.show();
     },
 
     revertProjectClick: function(inSender) {
-	app.confirm(this.getDictionaryItem("CONFIRM_REVERT_PROJECT"),
-		    false,
-		    function() {
-			studio.project.openProject1(studio.project.projectName, studio.project.pageName, new dojo.Deferred());
-		    });
-	//studio.revertProjectOptionsDialog.show();
-    }
+        app.confirm(this.getDictionaryItem("CONFIRM_REVERT_PROJECT"), false, function() {
+            studio.project.openProject1(studio.project.projectName, studio.project.pageName, new dojo.Deferred());
+        });
+        //studio.revertProjectOptionsDialog.show();
+    },
+    getPhonegapBuild: function() {
+        if (!this.phoneGapConfigDialog) {
+            var dialog = this.phoneGapConfigDialog = new wm.PageDialog({
+                _classes: {
+                    domNode: ["studiodialog"]
+                },
+                owner: this,
+                width: "600px",
+                height: "780px",
+                title: "Phonegap Build Config",
+                pageName: "PhoneGapConfig",
+                hideControls: true,
+                modal: true
+            });
+        } else {
+            var dialog = this.phoneGapConfigDialog;
+            dialog.page.reset();
+        }
+        dialog.show();
+    },
 });
 
 

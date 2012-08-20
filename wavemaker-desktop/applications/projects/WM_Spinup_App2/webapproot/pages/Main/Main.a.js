@@ -1,5 +1,7 @@
 dojo.declare("Main", wm.Page, {
+"preferredDevice": "desktop",
 start: function() {
+this.UserName.focus();
 },
 DownloadButton1Click: function(inSender) {
 window.open("http://wavemaker.com/downloads/", "self");
@@ -12,6 +14,7 @@ inSender.getData().dataValue.substring(0,successString.length) === successString
 //  this.finishProgressBarTimer.startTimer();
 },
 LoginSuccess: function(inSender, inDeprecated) {
+this.endWait();
 this.LaunchStudioserviceVariable.update();
 this.progressBar1.setProgress(0);
 this.waitingLayer.activate();
@@ -20,12 +23,14 @@ this._startTimerTime = new Date().getTime();
 this._endTimerTime = this._startTimerTime + 1000 * 120;
 },
 LoginError: function(inSender, inError) {
+this.endWait();
 if(!inError){inError = "The user name or password you entered is incorrect.";}
 this.labelWarning.setCaption(inError);
 this.labelWarning.setShowing(true);
 this.error_warning_spacer_1.setShowing(true);
 this.error_warning_spacer_2.setShowing(true);
 this.loginLayer.activate();
+this.Password.focus();
 },
 progressBarTimerTimerFire: function(inSender) {
 var max = 1000 * 120;
@@ -61,27 +66,64 @@ duration: 1500
 })}).play();
 },
 LaunchStudioserviceVariableError: function(inSender, inError) {
+this.endWait();
+var error = inSender.getData();
 this.labelError.setShowing(true);
-this.labelError.setCaption(inError.length > 0 ? inError : "Unable to deploy Studio to your account");
+this.labelError.setCaption(inError.toString() != "Error" && error[0].dataValue.length > 0 ? error[0].dataValue : "Unable to deploy Studio to your account");
 this.loginLayer.activate();
 },
 LaunchStudioserviceVariableSuccess: function(inSender, inDeprecated) {
-result = inDeprecated;
-if (!result || result.ERROR) return this.LaunchStudioserviceVariableError(inSender, result.ERROR);
-url = result.studio_url;
-token = result.wavemaker_authentication_token;
-cfdomain = result.domain;
+this.endWait();
+var result = inSender.getData();
+if (!result || result[0].name == "ERROR") return this.LaunchStudioserviceVariableError(inSender, result[0].dataValue);
+token = result[0].dataValue;
+url = result[1].dataValue;
+cfdomain = result[2].dataValue;
 var cookie_expire = new Date();
 cookie_expire.setTime(cookie_expire.getTime() + 30000);
 dojo.cookie("wavemaker_authentication_token", token, {expires: cookie_expire.toGMTString(), domain: cfdomain});
 window.location = url;
 },
 LogInButtonClick: function(inSender) {
+this.beginWait("Logging in");
 this.labelError.setShowing(false);
 this.labelWarning.setShowing(false);
 this.error_warning_spacer_1.setShowing(false);
 this.error_warning_spacer_2.setShowing(false);
 this.LoginServiceVariable.update();
+},
+beginWait: function(inMsg, inNoThrobber) {
+if (!this.waitMsg) this.waitMsg = {};
+if (!inMsg)
+return;
+this.dialog.setWidth("242px");
+this.dialog.setHeight("115px");
+this.dialog.containerNode.innerHTML = [
+'<table class="wmWaitDialog"><tr><td>',
+inNoThrobber ? '' : '<div class="wmWaitThrobber">&nbsp;</div>',
+'<div class="wmWaitMessage">',
+inMsg,
+'</div>',
+'<br />',
+'</td></tr></table>',
+''].join('');
+this.dialog.setShowing(true);
+this.waitMsg[inMsg] = 1;
+},
+endWait: function(optionalMsg) {
+if (optionalMsg)
+delete this.waitMsg[optionalMsg];
+else
+this.waitMsg = {};
+var firstMsg = "";
+for (var msg in this.waitMsg) {
+firstMsg = msg;
+break;
+}
+if (firstMsg)
+this.beginWait(firstMsg);
+else
+this.dialog.setShowing(false);
 },
 _end: 0
 });
@@ -110,6 +152,7 @@ wire1: ["wm.Wire", {"expression":undefined,"source":"adminPC","targetProperty":"
 }]
 }]
 }],
+dialog: ["wm.Dialog", {"borderColor":"#666E80"}, {}],
 layoutBox1: ["wm.Layout", {"horizontalAlign":"center","styles":{"color":"#ffffff"},"verticalAlign":"top","width":"1379px"}, {"onEnterKeyPress":"LogInButtonClick"}, {
 ParentPanel: ["wm.Panel", {"_classes":{"domNode":["largerLineHeight"]},"height":"100%","horizontalAlign":"left","styles":{"fontSize":"14px","color":"#3f3f3f","backgroundColor":"#f8f9f9","fontFamily":"Arial, Tahoma, Verdana, Helvetica, sans serif"},"verticalAlign":"top","width":"960px"}, {}, {
 BannerPanel: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -242,6 +285,27 @@ color: white !important;\
 box-shadow: 0px 0px 2px 2px #444444;\
 -moz-box-shadow: 0px 0px 2px 2px #444444;\
 -webkit-box-shadow: 0px 0px 2px 2px #444444;\
+}\
+.wmWaitDialog {\
+background-image:url(resources/images/waitdialog_bg.gif);\
+background-repeat:repeat-x;\
+background-color: #d7d7d7;\
+vertical-align: middle;\
+color: #000;\
+height: 100%;\
+width: 100%;\
+overflow: hidden;\
+text-align: center;\
+padding: 10px;\
+}\
+.wmWaitDialog .wmWaitMessage {\
+font-weight: normal;\
+font-size: 12px;\
+}\
+.wmWaitDialog .wmWaitThrobber {\
+background: url(resources/images/makewavesani_lg.gif) center no-repeat;\
+height: 40px;\
+padding-bottom: 8px;\
 }\
 ';
 Main.prototype._htmlText = '';

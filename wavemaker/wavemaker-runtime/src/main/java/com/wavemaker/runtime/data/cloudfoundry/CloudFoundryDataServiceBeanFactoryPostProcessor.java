@@ -37,6 +37,7 @@ import org.springframework.beans.factory.support.ManagedProperties;
 import org.springframework.util.CollectionUtils;
 
 import com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 /**
  * {@link BeanFactoryPostProcessor} implementation that replaces all local MySQL datasources with services provided by
@@ -71,7 +72,11 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
 
         for (String sfBean : sessionFactoryBeanNames) {
             BeanDefinition beanDefinition = getBeanDefinition(beanFactory, sfBean);
-            beanDefinition.setLazyInit(true);
+            if (sfBean.contains(DataServiceConstants.AUX_BEAN_SUFFIX)) {
+                beanDefinition.setLazyInit(false);
+            } else {
+                beanDefinition.setLazyInit(true);    
+            }
             MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
             PropertyValue hibernateProperties = propertyValues.getPropertyValue("hibernateProperties");
 

@@ -42,5 +42,7 @@ WARN_NO_SERVICES: "No Project Services Found",
     SERVICE_TITLE_AND_NAME: "Service <b>${serviceName}</b> Settings",
     SERVICE_TITLE: "Service Settings",
     SERVICE_DEFAULT_SETTING: "Default",
-    SERVICE_DATABASE_SERVICES_NAME: "Database Services"
+    SERVICE_DATABASE_SERVICES_NAME: "Database Services",
+
+    ALERT_JOSSO_ONE_ROLE: "JOSSO Setup requires there to be one role setup"
 }
