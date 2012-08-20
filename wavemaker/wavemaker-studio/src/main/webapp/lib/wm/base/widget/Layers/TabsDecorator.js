@@ -344,7 +344,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	    wm.Array.insertElementAt(this.btns, f, inToIndex);
 	}
 });
-
+dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {}); // backwards compatability
 /*
 dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 	decorateContainer: function() {
