@@ -1686,7 +1686,7 @@ dojo.declare("Studio", wm.Page, {
         dojo.forEach(panels, function(panel) {
 
             wm.forEachWidget(panel, function(w) {
-                if (w._regenerateOnDeviceChange) {
+                if (w._regenerateOnDeviceChange && w.getParentPage() == studio.page) {
                     w = self.regenerateOnDeviceChange(w);
                     regenerated = true;
                 }
