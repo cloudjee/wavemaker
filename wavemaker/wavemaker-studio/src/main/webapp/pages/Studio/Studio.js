@@ -306,7 +306,7 @@ dojo.declare("Studio", wm.Page, {
         }
     },
     isCloud: function() {
-         return wm.studioConfig.environment && wm.studioConfig.environment != "local";
+        return wm.studioConfig.environment && wm.studioConfig.environment != "local";
         //return  this.isModuleEnabled("cloud", "wm.cloud");
     },
     preloadImages: function() {
@@ -1780,46 +1780,44 @@ dojo.declare("Studio", wm.Page, {
         this.reinspect(); // some properties may change like height/minHeight
     },
     designMobileFoldingClick: function(inSender) {
-    this.designMobileFolding(false);
-    },
-    designMobileFolding: function(inSkipWarning) {
-    if (studio.page) {
-        this.designPhoneUI(true);
-        this.widgetsTree.dragEnabled = false;
-        studio.page.root.foldUI();
-        //studio.page.root.unfoldUI();
-        studio.page.root.reflow();
-        studio.refreshDesignTrees();
-        if (inSkipWarning !== true) {
-        app.warnOnce("mobileFoldingWarning", "Mobile Folding is a powerful but complicated feature which is in beta, and may not be supported in the future.  While in Mobile Folding view, you can not <li>Move widgets</li><li>Edit any layer objects that are generated</li></ol>You must leave the Mobile Folding view to perform these actions.");
-        }
+       this.designMobileFolding(false);
+   },
+   designMobileFolding: function(inSkipWarning) {
+       if (studio.page) {
+           this.designPhoneUI(true);
+           this.widgetsTree.dragEnabled = false;
+           studio.page.root.foldUI();
+           //studio.page.root.unfoldUI();
+           studio.page.root.reflow();
+           studio.refreshDesignTrees();
+           if (inSkipWarning !== true) {
+               app.warnOnce("mobileFoldingWarning", "Mobile Folding is a powerful but complicated feature which is in beta, and may not be supported in the future.  While in Mobile Folding view, you can not <li>Move widgets</li><li>Edit any layer objects that are generated</li></ol>You must leave the Mobile Folding view to perform these actions.");
+           }
 
-    }
-    },
-    regenerateOnDeviceChange: function(w) {
-    var json = "{" + w.write("") + "}";
-    var owner = w.owner;
-    var parent = w.parent;
-    var index = w.getIndexInParent();
-    w.destroy();
-    w = parent.createComponents(dojo.fromJson(json), owner)[0];
-    w.setIndexInParent(index);
-    return w;
-    },
+       }
+   },
+   regenerateOnDeviceChange: function(w) {
+       var json = "{" + w.write("") + "}";
+       var owner = w.owner;
+       var parent = w.parent;
+       var index = w.getIndexInParent();
+       w.destroy();
+       w = parent.createComponents(dojo.fromJson(json), owner)[0];
+       w.setIndexInParent(index);
+       return w;
+   },
     languageSelectChanged: function(inSender, optionalPageName) {
-    if (this._changingLanguage) return;
-    var lastValue = this.languageSelect._lastValue;
-    var newValue = this.languageSelect.getDisplayValue();
-    if (lastValue == newValue) return;
+        if (this._changingLanguage) return;
+        var lastValue = this.languageSelect._lastValue;
+        var newValue = this.languageSelect.getDisplayValue();
+        if (lastValue == newValue) return;
 
-        this.confirmSaveDialog.page.setup(
-        "",
-        /* User clicks save */
+        this.confirmSaveDialog.page.setup("", /* User clicks save */
         dojo.hitch(this, function() {
-            this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
-            delete this._designLanguage;
-            this.languageSelectChanged2();
-            dojo.disconnect(this._saveConnect);
+            this._saveConnect = dojo.connect(this, "saveProjectSuccess", this, function() {
+                delete this._designLanguage;
+                this.languageSelectChanged2();
+                dojo.disconnect(this._saveConnect);
             });
             this._designLanguage = lastValue;
             this.saveAll(studio.project);
@@ -1836,9 +1834,8 @@ dojo.declare("Studio", wm.Page, {
             this._changingLanguage = false;
         }),
 
-        /* If project isn't dirty, just run don't save callback */
-        !this.updateProjectDirty());
-/*
+        /* If project isn't dirty, just run don't save callback */ !this.updateProjectDirty());
+        /*
         app.confirm(this.getDictionaryItem("CONFIRM_SAVE_LANGUAGE"), false,
             dojo.hitch(this, function() {
                 this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
@@ -1859,52 +1856,53 @@ dojo.declare("Studio", wm.Page, {
 
     },
     languageSelectChanged2: function() {
-    this.languageSelect.clearDirty();
-    var lang = this.languageSelect.getDisplayValue();
-    if (lang == "other") {
-        app.prompt("Enter code", "",
-               function(inResult) {
-               var options = studio.languageSelect.options.split(/,/);
-               options[options.length-1] = inResult;
-               options.push("other");
-               studio.languageSelect.setOptions(options.join(","));
-               studio.languageSelect.setDisplayValue(inResult);
-               },
-               function() {
-               studio.languageSelect.setDisplayValue("default");
-               });
-        return;
-    }
-    if (lang != "default") {
-        var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
-        try {
-        data = dojo.fromJson(data);
-        this.page.installDesignDictionary(data);
-        } catch(e){
-        console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
+        this.languageSelect.clearDirty();
+        var lang = this.languageSelect.getDisplayValue();
+        if (lang == "other") {
+            app.prompt("Enter code", "", function(inResult) {
+                var options = studio.languageSelect.options.split(/,/);
+                options[options.length - 1] = inResult;
+                options.push("other");
+                studio.languageSelect.setOptions(options.join(","));
+                studio.languageSelect.setDisplayValue(inResult);
+            }, function() {
+                studio.languageSelect.setDisplayValue("default");
+            });
+            return;
         }
-    } else {
-        this.page.installDesignDictionary({});
-    }
-    this.setCleanPage();
-    studio.inspector.reinspect();
+        if (lang != "default") {
+            var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
+            try {
+                data = dojo.fromJson(data);
+                this.page.installDesignDictionary(data);
+            } catch (e) {
+                console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
+            }
+        } else {
+            this.page.installDesignDictionary({});
+        }
+        this.setCleanPage();
+        studio.inspector.reinspect();
     },
     pageSelectChanged: function(inSender, optionalPageName, inDataValue, inSetByCode) {
-    if (!studio.page || this.disabledPageSelectChanged || inSetByCode) return;
-    var page = optionalPageName || inSender.getDataValue();
-    if (page == this.project.pageName || !page) return;
+        if (!studio.page || this.disabledPageSelectChanged || inSetByCode) return;
+        var page = optionalPageName || inSender.getDataValue();
+        if (page == this.project.pageName || !page) return;
 
-    var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: page, oldPage: this.project.pageName});
-        this.confirmPageChange(warnPage, page,
-                   dojo.hitch(this, function(noChanges) {
-                   this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
-                   }),
-                   dojo.hitch(this, function() {
-                   this.disabledPageSelectChanged = true;
-                   this.pageSelect.setDataValue(studio.project.pageName);
-                   this.disabledPageSelectChanged = false;
-                   }));
-    //this.project.openPage(pagename);
+        var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {
+            newPage: page,
+            oldPage: this.project.pageName
+        });
+        this.confirmPageChange(warnPage, page, dojo.hitch(this, function(noChanges) {
+            this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {
+                pageName: page
+            }), dojo.hitch(this.project, "openPage", page, !noChanges));
+        }), dojo.hitch(this, function() {
+            this.disabledPageSelectChanged = true;
+            this.pageSelect.setDataValue(studio.project.pageName);
+            this.disabledPageSelectChanged = false;
+        }));
+        //this.project.openPage(pagename);
     },
 
     selectProperty: function(inSender, info, text) {
