@@ -305,8 +305,8 @@ dojo.declare("Studio", wm.Page, {
             }
         }
     },
-    isCloud: function() {return true;
-        return wm.studioConfig.environment && wm.studioConfig.environment != "local";
+    isCloud: function() {
+         return wm.studioConfig.environment && wm.studioConfig.environment != "local";
         //return  this.isModuleEnabled("cloud", "wm.cloud");
     },
     preloadImages: function() {
