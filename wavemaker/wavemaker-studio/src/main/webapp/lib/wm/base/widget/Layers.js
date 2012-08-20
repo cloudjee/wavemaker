@@ -16,7 +16,7 @@ dojo.provide("wm.base.widget.Layers");
 dojo.require("wm.base.widget.Container");
 dojo.require("wm.base.widget.Layers.Decorator");
 dojo.require("wm.base.widget.Layers.TabsDecorator");
-dojo.require("wm.base.widget.Layers.AccordionDecorator");
+//dojo.require("wm.base.widget.Layers.AccordionDecorator");
 
 dojo.declare("wm.Layer", wm.Container, {
     height: "100%",
