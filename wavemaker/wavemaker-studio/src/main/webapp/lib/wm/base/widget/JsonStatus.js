@@ -27,55 +27,50 @@ dojo.declare("wm.JsonStatus", wm.Control, {
     argsList: null,
     minimize: false,
     build: function() {
-	this.inherited(arguments);
+        this.inherited(arguments);
 
-	this.buttonNode = document.createElement("div");
-	dojo.addClass(this.buttonNode, "wmjsonstatusicon");
-	this.domNode.appendChild(this.buttonNode);
+        this.buttonNode = document.createElement("div");
+        dojo.addClass(this.buttonNode, "wmjsonstatusicon");
+        this.domNode.appendChild(this.buttonNode);
 
-	this.messageNode = document.createElement("div");
-	dojo.addClass(this.messageNode, "wmjsonstatuslabel");
-	this.domNode.appendChild(this.messageNode);
+        this.messageNode = document.createElement("div");
+        dojo.addClass(this.messageNode, "wmjsonstatuslabel");
+        this.domNode.appendChild(this.messageNode);
     },
     init: function() {
-	this.inherited(arguments);
-	this.connect(wm.inflight, "add", this, "add");
-	this.connect(wm.inflight, "remove", this, "remove");
-	this.connect(this.domNode, "onclick", this, function(evt) {
-	    window.setTimeout(dojo.hitch(this, "onclick",evt), 5);
-	});
-	this.argsList = [];
+        this.inherited(arguments);
+        this.connect(wm.inflight, "add", this, "add");
+        this.connect(wm.inflight, "remove", this, "remove");
+        this.connect(this.domNode, "onclick", this, function(evt) {
+            window.setTimeout(dojo.hitch(this, "onclick", evt), 5);
+        });
+        this.argsList = [];
     },
     add: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
-	this.updateSpinner();
-	if (this.bounds.w > 40)
-	    this.updateMessage();
+        this.updateSpinner();
+        if (this.bounds.w > 40) this.updateMessage();
     },
     remove: function(inDeferred, inResult) {
-	this.updateSpinner();
-	if (this.bounds.w > 40)
-	    this.updateMessage();
+        this.updateSpinner();
+        if (this.bounds.w > 40) this.updateMessage();
     },
     updateSpinner: function() {
-	if (wm.inflight._inflight.length)
-	    dojo.addClass(this.domNode, "wmStatusWaiting");
-	else
-	    dojo.removeClass(this.domNode, "wmStatusWaiting");
+        if (wm.inflight._inflight.length) dojo.addClass(this.domNode, "wmStatusWaiting");
+        else dojo.removeClass(this.domNode, "wmStatusWaiting");
     },
     updateMessage: function() {
-	this.messageNode.innerHTML = wm.Array.last(wm.inflight._inflightNames) || "";
+        this.messageNode.innerHTML = wm.Array.last(wm.inflight._inflightNames) || "";
     },
     setMinimize: function(inMinimize) {
-	if (inMinimize) {
-	    this.setWidth((parseInt(this.iconWidth) + this.padBorderMargin.l + this.padBorderMargin.r) + "px");
-	    this.setHeight((parseInt(this.iconHeight) + this.padBorderMargin.t + this.padBorderMargin.b) + "px");
-	    this.messageNode.innerHTML = "";
-	} else {
-	    this.setWidth("80px");
-	}
+        if (inMinimize) {
+            this.setWidth((parseInt(this.iconWidth) + this.padBorderMargin.l + this.padBorderMargin.r) + "px");
+            this.setHeight((parseInt(this.iconHeight) + this.padBorderMargin.t + this.padBorderMargin.b) + "px");
+            this.messageNode.innerHTML = "";
+        } else {
+            this.setWidth("80px");
+        }
     },
-    onclick: function() {
-    }
+    onclick: function() {}
 });
 
 wm.Object.extendSchema(wm.JsonStatus, {
