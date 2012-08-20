@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
 dojo.provide("wm.base.components.Variable");
 dojo.require("wm.base.Component");
 
-// FIXME: because we cannot guarantee the global "app" is a component's application 
+// FIXME: because we cannot guarantee the global "app" is a component's application
 // (because studio has an app) and the runtimeService must be local to a project
 // get the app corresponding to the given component.
 wm.getRuntimeService = function(inComponent) {
     var a = dojo.getObject("studio.wip.app") || app;
-     
+
 	return wm.fire(a, "getRuntimeService");
 };
 
@@ -40,14 +40,14 @@ wm.getRuntimeServiceDesignTime = function(inComponent) {
 dojo.declare("wm.Variable", wm.Component, {
 	/** @lends wm.Variable.prototype */
 	json: "",
-	/** 
+	/**
 		Type of data stored in the variable, or type of each item in the list.
 		@type String
 	*/
 	type: "",
     //primaryKeyFields: "",
 
-	/** 
+	/**
 		True if this variable contains a list (aka array).
 		@type Boolean
 	*/
@@ -84,7 +84,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	    var textdata = dojo.cookie(this.getRuntimeId());
 	    if (textdata) this.json = textdata;
 	}
-	if (this.json) 
+	if (this.json)
 	    this.setJson(this.json);
 	else
 	    this._clearData();
@@ -101,7 +101,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	wmTypesChanged: function() {
 	    if (this.owner instanceof wm.Variable)
 		this.beginUpdate();
-	    if (this.isPrimitive || wm.typeManager.isType(this.type)) 
+	    if (this.isPrimitive || wm.typeManager.isType(this.type))
 		this.setType(this.type);
 	    if (studio.inspector && studio.inspector.inspected == this) {
 		studio.inspect(this);
@@ -124,14 +124,14 @@ dojo.declare("wm.Variable", wm.Component, {
             //this.unsubscribe("TypeChange-" + this.type);
 		if (!this.canSetType(inType))
 			return;
-		
+
 		var t = inType;
 		if (wm.isListType(t)) {
 			this.isList = true;
             if (t.substring(t.length-1) == "]") {
     			t = t.slice(1, -1);
             }
-		// don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should 
+		// don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should
 		// not lose the user's isList setting
 		} else if (!(this.data && this.data.list) && !this._inPostInit)
 			this.isList = false;
@@ -140,7 +140,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	    if (this.type != t)
 		hasChanged = true;
 	    else if (this._isDesignLoaded) {
-		hasChanged = dojo.toJson(this._getSchemaForType(inType)) != dojo.toJson(this._dataSchema);		
+		hasChanged = dojo.toJson(this._getSchemaForType(inType)) != dojo.toJson(this._dataSchema);
 	    }
 	    this._hasChanged = hasChanged;
 		this.type = t;
@@ -199,7 +199,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	setJson: function(inJson) {
 		this.json = inJson;
-		try { 
+		try {
 			var d = eval("(" + inJson + ")");
 		} catch(e) {
 		  console.error("Json error in " + this.name + ": " + e);
@@ -214,8 +214,8 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	listDataProperties: function() {
 		var list = this._listSchemaProperties({}, this._dataSchema, "getDataTypeInfo");
-		for (var i in list) { 
-			list[i].bindable = true; 
+		for (var i in list) {
+			list[i].bindable = true;
 		};
 		return list;
 	},
@@ -289,7 +289,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (inData instanceof wm.Variable) inData = inData.getData();
 
         this.onPrepareSetData(inData);
-        
+
         if (dojo.isArray(inData)) {
             this._setArrayData(inData);
         } else if (this.isPrimitive) {
@@ -301,7 +301,7 @@ dojo.declare("wm.Variable", wm.Component, {
         this.onSetData();
 
     },
-    
+
 	onPrepareSetData: function(inData) {
 	},
 	onSetData: function() {},
@@ -408,7 +408,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (!this.data) return;
         if (this._isNull) return null;
         else if (this.isList) {
-            // if its a byte list merge it into a single string and change it to a nonlist 
+            // if its a byte list merge it into a single string and change it to a nonlist
             if (this.type == "byte") {
                 try {
                     if (this.data.list && this.data.list[0] instanceof wm.Variable) {
@@ -441,7 +441,7 @@ dojo.declare("wm.Variable", wm.Component, {
         } else if (flattenPrimitives && this.isPrimitive && this.data["dataValue"] !== undefined) {
             return this.data.dataValue;
         } else if (this.isEmpty()) {
-            return null;            
+            return null;
         } else {
             var data = {};
             var props = this.listDataProperties();
@@ -449,7 +449,7 @@ dojo.declare("wm.Variable", wm.Component, {
                 var v = this.data[i];
                 if (wm.getDataConvertDates && v instanceof Date) {
                     v = v.getTime();
-                }                
+                }
                 // we may not always want all related junk
                 if (v !== undefined) {
                     if (v instanceof wm.Variable) {
@@ -464,7 +464,7 @@ dojo.declare("wm.Variable", wm.Component, {
             if (!wm.isEmpty(data)) return data;
         }
     },
-    
+
 	//===========================================================================
 	// Value API
 	//===========================================================================
@@ -517,9 +517,9 @@ dojo.declare("wm.Variable", wm.Component, {
         if (!(v instanceof wm.Variable)) {
             this.data[n] = v;
             this.dataValueChanged(n, v);
-        } 
+        }
     },
-    
+
 	//===========================================================================
 	// List API
 	//===========================================================================
@@ -562,9 +562,9 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	// Returns a Variable representing item inIndex
 	// If the item is currently raw data, it's replaced
-	// with a new Variable. Created Variable is initialized 
+	// with a new Variable. Created Variable is initialized
 	// with the raw list data unless inData is supplied.
-	// If inData is supplied the Variable is populated with 
+	// If inData is supplied the Variable is populated with
 	// inData.
 	_needItem: function(inIndex, inData) {
 		if (inIndex >= this.getCount() && inData === undefined) return null;
@@ -590,7 +590,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	/**
 		Return an item by numeric index in the list owned by this variable (only valid if <a href="#isList">isList</a> is true).
 		@param {Number} inIndex The numeric index of the item to fetch
-		@returns Any 
+		@returns Any
 	*/
 	getItem: function(inIndex) {
 		return this.isList && this._needItem(inIndex) || !this.isList && this;
@@ -649,11 +649,11 @@ dojo.declare("wm.Variable", wm.Component, {
 	        this.notify();
 	    }
 	},
-    
+
 	/**
 		Set the cursor by index. When data forms a list, the cursor indicates the item used in calls to getValue.
-		@param {Number} inCursor The numeric index of the item to use as the Variable's 
-		@returns Any 
+		@param {Number} inCursor The numeric index of the item to use as the Variable's
+		@returns Any
 	*/
 	setCursor: function(inCursor) {
 		this.cursor = Math.max(0, Math.min(this.getCount()-1, inCursor));
@@ -661,28 +661,28 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	/**
 		Increments the cursor.
-		@returns Any 
+		@returns Any
 	*/
 	setNext: function() {
 		this.setCursor(this.cursor+1);
 	},
 	/**
 		Decrements the cursor.
-		@returns Any 
+		@returns Any
 	*/
 	setPrevious: function() {
 		this.setCursor(this.cursor-1);
 	},
 	/**
 		Sets the cursor to the first item.
-		@returns Any 
+		@returns Any
 	*/
 	setFirst: function() {
 		this.setCursor(0);
 	},
 	/**
 		Sets the cursor to the last item.
-		@returns Any 
+		@returns Any
 	*/
 	setLast: function() {
 		this.setCursor(this.getCount()-1);
@@ -765,7 +765,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		    return -1;
 		var obj = inVariable;
 		if (obj instanceof wm.Variable){
-			obj = inVariable.getData();			
+			obj = inVariable.getData();
 		}
 
 		var list = (this.data || 0).list || [];
@@ -779,52 +779,66 @@ dojo.declare("wm.Variable", wm.Component, {
 					break;
 				}
 			}
-			
+
 			if (isEqual)
 				return i;
 		}
 	        return -1;
 	},
     getQueriedItems: function() {
-	if (!this.queriedItems) {
-	    this.queriedItems = new wm.Variable({isList: true,
-						 type: this.type,
-						 name: "queriedItems"});
-	    this.queriedItems.setOwner(this,true);
-	    // queried items are ALL items until a query has been issued
-	    this.queriedItems.setDataSet(this);
-	}
-	return this.queriedItems;
+    	if (!this.queriedItems) {
+    		this.queriedItems = new wm.Variable({
+    			isList: true,
+    			type: this.type,
+    			name: "queriedItems"
+    		});
+    		this.queriedItems.setOwner(this, true);
+    		// queried items are ALL items until a query has been issued
+    		this.queriedItems.setDataSet(this);
+    	}
+    	return this.queriedItems;
     },
     setQuery: function(query) {
-	this._query = query;
-	if (query) {
-	    return this.query(query,true);
-	} else {
-	    this.getQueriedItems().setDataSet(this);
-	}
+    	this._query = query;
+    	if (query) {
+    		return this.query(query, true);
+    	} else {
+    		this.getQueriedItems().setDataSet(this);
+    	}
     },
     query: function(inSample, updateQueriedItems) {
-	    if (!this.isList) return;
-	    var count = this.getCount();
-	    var result = [];
-	    if (inSample instanceof wm.Variable) {
-		inSample = inSample.getData();
-	    }
-	    for (var i = 0; i < count; i++) {
-		var item = this.getItem(i);
-		if (this._queryItem(item, inSample, i)) {
-		    result.push(item);
-		}
-	    }
-	if (updateQueriedItems) {
-	    var v  = this.getQueriedItems();
-	} else {
-	    var v = new wm.Variable({type: this.type, isList: true, name: "QueryResults"});
-	    v.setOwner(this,true);
-	}
-	v.setData(result);
-	return v;
+    	if (!this.isList) return;
+    	var maxResults = inSample._maxResults || 0;
+    	delete inSample._maxResults;
+
+    	var count = this.getCount();
+    	var result = [];
+    	if (inSample instanceof wm.Variable) {
+    		inSample = inSample.getData();
+    	}
+    	if (!inSample) inSample = {};
+    	for (var i = 0; i < count; i++) {
+    		var item = this.getItem(i);
+    		if (this._queryItem(item, inSample, i)) {
+    			result.push(item);
+    		}
+    		if (maxResults) {
+    			if (result.length >= maxResults) break;
+    		}
+    	}
+    	if (updateQueriedItems) {
+    		var v = this.getQueriedItems();
+    	} else {
+    		var v = new wm.Variable({
+    			type: this.type,
+    			isList: true,
+    			name: "QueryResults"
+    		});
+    		v.setOwner(this, true);
+    	}
+    	v.setData(result);
+    	if (maxResults) inSample._maxResults = maxResults; // undo our modifications to the user's structure so they can reuse it
+    	return v;
     },
 /*
     _queryItem: function(inItem, inSample, inIndex) {
@@ -837,8 +851,8 @@ dojo.declare("wm.Variable", wm.Component, {
 	    var conditions = value;
 	    wm.forEachProperty(conditions, function(valueB, conditionKey) {
 		switch(conditionValue) {
-		case ">": 
-		    if (valueB <= valueA) 
+		case ">":
+		    if (valueB <= valueA)
 		case ">=":
 
 		case "<":
@@ -1136,7 +1150,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			this.dataChanged();
 		    this.updatePermanentMemory();
 		}
-	},    
+	},
 	// id-based notification
 	valueChanged: function(inProp, inValue) {
 	    if (!this.type || this.type == this.declaredClass) return; // if it doesn't yet have any type information, then nobody wants to listen to changes to this component
@@ -1151,7 +1165,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	//===========================================================================
 	// Referencing
 	//===========================================================================
-    /* 
+    /*
 	setDataSet: function(inDataSet) {
 		this.dataSet = "";
 		if (inDataSet instanceof wm.Variable) {
@@ -1240,7 +1254,7 @@ dojo.declare("wm.Variable", wm.Component, {
 				var schema = this._dataSchema, s;
 				for (var i in schema) {
 					s = schema[i];
-					if (!s.isList && (this.data[i] === undefined) 
+					if (!s.isList && (this.data[i] === undefined)
 						&& !wm.typeManager.isStructuredType(s.type))
 						return true;
 				}
@@ -1266,14 +1280,14 @@ dojo.declare("wm.Variable", wm.Component, {
 					    v.setData(propData);
 					    v.endUpdate();
 					  }
-					}					  
-					
+					}
+
 					// NOTE: Default is that async doesn't have a value; this feature seems unreliable so far so don't use
 				    var d;
 					if (this.async) {
 					  d = s.requestAsync("read", args);
 					} else {
-					    d = s.requestSync("read", args);					  
+					    d = s.requestSync("read", args);
 					}
 				    d.addCallback(dojo.hitch(this, function() {
 					f();
@@ -1300,7 +1314,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		// lazy load if the type is a list or we have required data to read.
 		return inTypeInfo.isList || this._hasRequiredReadData();
 	},
-	// check our schema and data to see if 
+	// check our schema and data to see if
 	// we have all necessary data that is required
 	// for the lazy load "read" operation
 	_hasRequiredReadData: function() {
@@ -1316,10 +1330,10 @@ dojo.declare("wm.Variable", wm.Component, {
 		return true;
 	},
 
-    toString: function(inText) {   
+    toString: function(inText) {
 	var t = inText || "";
 	var isEmpty =  this.isEmpty();
-	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: isEmpty}); 
+	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: isEmpty});
 	return this.inherited(arguments, [t]);
     },
     _end: 0
@@ -1401,7 +1415,7 @@ wm.Variable.extend({
 					    v.setData(propData);
 					    v.endUpdate();
 					  }
-					}					  
+					}
 
 					if (this.async) {
 					  s.requestAsync("read", args, f);
@@ -1486,7 +1500,7 @@ wm.Variable.extend({
 	    console.log(inItem);
 	    console.log(inAttribute);
 	    var result = inItem.getValue(inAttribute);
-	    if (result === undefined) 
+	    if (result === undefined)
 		result = defaultValue;
 	    return result;
 	} else {
@@ -1518,7 +1532,7 @@ wm.Variable.extend({
 	    throw "getAttribute must have a wm.Variable as an input";
 	}
     },
-    
+
     hasAttribute: function(inItem, inAttribute) {
 	if (this.isItem(inItem) && typeof inAttribute == "string") {
 	    var value = inItem.getValue(inItem, inAttribute);
@@ -1562,7 +1576,7 @@ wm.Variable.extend({
 	var items = [];
 	var i, key;
 	if(requestArgs.query){
-	    /* Uncomment out the regex stuff if we ever have a need for it; this is dojo's code, probably good, but 
+	    /* Uncomment out the regex stuff if we ever have a need for it; this is dojo's code, probably good, but
 	     * not needed, and therefore just slows things down
 	    var value,
 	    ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : true;
@@ -1658,7 +1672,7 @@ wm.Variable.extend({
     // no-op
     close: function(inRequestToClose) {},
 
-    // Before getLabel does more than return undefined, we'll need to decide users should get displayField/displayExpression properties 
+    // Before getLabel does more than return undefined, we'll need to decide users should get displayField/displayExpression properties
     getLabel: function(inItem) {
 	if (this.displayField) {
 	    return inItem.getValue(this.displayField);
@@ -1788,7 +1802,7 @@ wm.Variable.extend({
 		}
 		result.push(item);
 		return options.count ? result.length < options.count : false;
-	    }, 
+	    },
 	    {stopOnTrue: true, start: options.start || 0}
 	);
 	return {total: result.length,
@@ -1811,7 +1825,7 @@ wm.Variable.extend({
 	var item = this.get(id);
 	if (item) {
 	    var index = this.getItemIndex(item);
-	    if (index != -1) 
+	    if (index != -1)
 		this.removeItem(index);
 	}
     },
@@ -1846,6 +1860,6 @@ wm.Variable.extend({
 		}
 	       };
     }
-    
+
 });
 }
