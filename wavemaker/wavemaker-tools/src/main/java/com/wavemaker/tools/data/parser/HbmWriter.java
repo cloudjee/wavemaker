@@ -188,7 +188,8 @@ public class HbmWriter extends BaseHbmWriter {
 
     private void writeToManyProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns) {
 
-        this.xmlWriter.addElement(HbmConstants.SET_EL, HbmConstants.NAME_ATTR, property.getName(), HbmConstants.INVERSE_ATTR, "true");
+        this.xmlWriter.addElement(HbmConstants.SET_EL, HbmConstants.NAME_ATTR, property.getName(), HbmConstants.INVERSE_ATTR, "true",
+                                   HbmConstants.CASCADE_ATTR, ObjectUtils.toString(property.getCascadeOptions()));
 
         this.xmlWriter.addElement(HbmConstants.KEY_EL);
         for (ColumnInfo ci : property.allColumns()) {
