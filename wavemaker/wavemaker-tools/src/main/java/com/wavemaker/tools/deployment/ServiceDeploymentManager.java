@@ -67,7 +67,8 @@ public class ServiceDeploymentManager {
         for (DeploymentDB db : info.getDatabases()) {
             allDbProps.putAll(db.asProperties());
         }
-        return generateWebapp(getProjectRoot(), allDbProps, tempWebAppRoot, info.getArchiveType().equals(ArchiveType.EAR));
+        return generateWebapp(getProjectRoot(), allDbProps, tempWebAppRoot,
+                info.getArchiveType().equals(ArchiveType.EAR), info.getDeploymentType());
     }
 
     /*
@@ -81,7 +82,7 @@ public class ServiceDeploymentManager {
      */
 
     private com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, java.io.File tempWebAppRoot,
-        boolean includeEar) {
+        boolean includeEar, DeploymentType type) {
         File stagingProjectDir = null;
 
         try {
@@ -89,7 +90,7 @@ public class ServiceDeploymentManager {
             Folder stagingProjectDirFolder = new LocalFolder(stagingProjectDir);
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
-            prepareForDeployment(mgr, properties);
+            prepareForDeployment(mgr, properties, type);
             return buildWar(mgr.getProjectManager(), getWarFile(), tempWebAppRoot, includeEar);
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
@@ -164,7 +165,7 @@ public class ServiceDeploymentManager {
         return war;
     }
 
-    private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties) {
+    private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties, DeploymentType type) {
 
         for (Service service : mgr.getServices()) {
             // hack: only run for dataservices for now
@@ -179,7 +180,7 @@ public class ServiceDeploymentManager {
             int indx = 0;
             for (ServiceDeployment sd : this.serviceDeployments) {
                 indx++;
-                sd.prepare(service.getId(), m, mgr, indx);
+                sd.prepare(service.getId(), m, mgr, indx, type);
             }
         }
     }

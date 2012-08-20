@@ -27,6 +27,7 @@ import com.wavemaker.common.util.XMLWriter;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.ServiceDeployment;
+import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
@@ -65,7 +66,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     private static final String WEB_XML_INSERT_BEFORE = "</web-app>";
 
     @Override
-    public void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx) {
+    public void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx,
+                        DeploymentType type) {
 
         String rootPath = DesignServiceManager.getRuntimeRelativeDir(serviceName);
         String cfgFile = DataServiceUtils.getCfgFileName(serviceName);
@@ -81,7 +83,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             modifyWebSphereBindings(mgr, jndiName, indx);
             configureResourceRef(mgr, jndiName);
         } else {
-            configureDeploymentProperties(cfg, properties);
+            configureDeploymentProperties(cfg, properties, type);
         }
     }
 
@@ -127,7 +129,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.writeProperties(newProps, false);
     }
 
-    private void configureDeploymentProperties(DataServiceSpringConfiguration cfg, Map<String, String> deploymentProperties) {
+    private void configureDeploymentProperties(DataServiceSpringConfiguration cfg, Map<String, String> deploymentProperties,
+                                               DeploymentType type) {
         Properties existingProps = cfg.readProperties(true);
         for (Entry<String, String> prop : deploymentProperties.entrySet()) {
             existingProps.setProperty(prop.getKey(), prop.getValue());
@@ -135,6 +138,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.writeProperties(existingProps, true);
         cfg.configureDbAlias(existingProps.getProperty(DB_ALIAS_PROPERTY));
         cfg.configureHibernateSchemaUpdate(existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
+        cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
     }
 

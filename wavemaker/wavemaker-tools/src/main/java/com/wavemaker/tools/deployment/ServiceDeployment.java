@@ -33,8 +33,10 @@ public interface ServiceDeployment {
      *        deployment options They could be prefixed with the service name.
      * @param mgr DesignServiceManager
      * @param indx Serial number to ensures unique reference binding ID
+     * @param type Deployment Type
      * 
      */
-    void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx);
+    void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx,
+                 DeploymentType type);
 
 }
