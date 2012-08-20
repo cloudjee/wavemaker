@@ -46,7 +46,7 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
  */
 public class DefaultSpinupService implements SpinupService {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(DefaultSpinupService.class);
 
     private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
@@ -94,8 +94,8 @@ public class DefaultSpinupService implements SpinupService {
     	for (CloudApplication application : applications) {
     			String appName = application.getName();
     			if(appName.contains(STUDIO_APP_NAME)){
-    	            if (this.logger.isDebugEnabled()) {
-    	                this.logger.debug("Found exisiting studio: " + appName + " ");
+    	            if (log.isInfoEnabled()) {
+    	                log.info("Found exisiting studio: " + appName + " " + "for " + credentials.getUsername());
     	            }
     				return true;
     			}
@@ -130,8 +130,8 @@ public class DefaultSpinupService implements SpinupService {
 
     protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
         try {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Cloud foundry client for user " + credentials.getUsername() + " at " + getControllerUrl());
+            if (log.isTraceEnabled()) {
+                log.trace("Cloud foundry client for user " + credentials.getUsername() + " at " + getControllerUrl());
             }
             return new CloudFoundryClient(credentials.getUsername(), credentials.getPassword(), getControllerUrl());
         } catch (MalformedURLException e) {
@@ -141,8 +141,8 @@ public class DefaultSpinupService implements SpinupService {
 
     protected CloudFoundryClient getCloudFoundryClient(AuthenticationToken token) {
         try {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Cloud foundry client for user authenticated user at " + getControllerUrl());
+            if (log.isTraceEnabled()) {
+                log.trace("Cloud foundry client for user authenticated user at " + getControllerUrl());
             }
             return new CloudFoundryClient(token.toString(), getControllerUrl());
         } catch (MalformedURLException e) {
@@ -152,15 +152,13 @@ public class DefaultSpinupService implements SpinupService {
 
     private String login(CloudFoundryClient cloudFoundryClient) {
         try {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Logging into cloud foundry");
+            if (log.isTraceEnabled()) {
+                log.trace("Logging into cloud foundry");
             }
             return cloudFoundryClient.login();
         } catch (CloudFoundryException e) {
             if (HttpStatus.FORBIDDEN.equals(e.getStatusCode())) {
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Login failed, thowing InvalidLoginCredentialsException");
-                }
+                    log.error("Login failed, thowing InvalidLoginCredentialsException");
                 throw new InvalidLoginCredentialsException(e);
             }
             throw e;
@@ -277,18 +275,18 @@ public class DefaultSpinupService implements SpinupService {
         public String start(boolean overwriteExisting) throws CloudFoundryException {
             ApplicationDetails applicationDetails = deployAsNecessary(overwriteExisting);
             DefaultSpinupService.this.propagation.sendTo(this.cloudFoundryClient, this.secret, applicationDetails.getName());
-            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                DefaultSpinupService.this.logger.debug("Starting application " + applicationDetails.getName());
+            if (log.isTraceEnabled()) {
+                log.trace("Starting application " + applicationDetails.getName());
             }
             CloudFoundryUtils.restartApplicationAndWaitUntilRunning(this.cloudFoundryClient, applicationDetails.getName());
-            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                DefaultSpinupService.this.logger.debug("Started application " + applicationDetails.getName());
+            if (log.isInfoEnabled()) {
+                log.info("Started application " + applicationDetails.getName());
             }
             return applicationDetails.getUrl();
         }
 
         private ApplicationDetails deployAsNecessary(boolean overwriteExisting) {
-            DefaultSpinupService.this.logger.debug("Deploying application");
+            log.debug("Deploying application");
             boolean upgrading = false;
             List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
             for (CloudApplication application : applications) {
@@ -300,15 +298,15 @@ public class DefaultSpinupService implements SpinupService {
                     if (DefaultSpinupService.this.namingStrategy.isMatch(applicationDetails)) {
                         upgrading = DefaultSpinupService.this.namingStrategy.isUpgradeRequired(applicationDetails);
                         if (!upgrading && !overwriteExisting) {
-                            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                                DefaultSpinupService.this.logger.debug("Skipping deployment of already installed up to date application "
+                            if (log.isInfoEnabled()) {
+                                log.info("Skipping deployment of already installed up to date application "
                                     + applicationDetails.getName());
                             }
                             return applicationDetails;
                         } else {
                             deleteExistingApplication(applicationDetails);
-                            if (DefaultSpinupService.this.logger.isInfoEnabled()) {
-                                DefaultSpinupService.this.logger.info("Deleted existing application " + applicationDetails.getName());
+                            if (log.isInfoEnabled()) {
+                                log.info("Deleted existing application " + applicationDetails.getName());
                             }
                         }
                     }
@@ -317,20 +315,20 @@ public class DefaultSpinupService implements SpinupService {
             addMissingServices();
             ApplicationDetails applicationDetails = createApplicationWithUniqueUrl();
 
-            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
+            if (log.isTraceEnabled()) {
+                log.trace("Uploading application " + applicationDetails.getName());
             }
             uploadApplication(applicationDetails.getName());
-            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                DefaultSpinupService.this.logger.debug("Uploaded application " + applicationDetails.getName());
+            if (log.isDebugEnabled()) {
+                log.debug("Uploaded application " + applicationDetails.getName());
             }
 
-            DefaultSpinupService.this.logger.debug("Setting environment variabled");
+            log.debug("Setting environment variable: " + CLOUD_CONTROLLER_VARIABLE_NAME);
             CloudApplication application = this.cloudFoundryClient.getApplication(applicationDetails.getName());
             Map<String, String> env = new HashMap<String, String>(application.getEnvAsMap());
             env.put(CLOUD_CONTROLLER_VARIABLE_NAME, getControllerUrl());
             this.cloudFoundryClient.updateApplicationEnv(applicationDetails.getName(), env);
-            DefaultSpinupService.this.logger.debug("Application deployment complete");
+            log.debug("Application deployment complete");
             return applicationDetails;
         }
 
@@ -371,7 +369,7 @@ public class DefaultSpinupService implements SpinupService {
         }
 
         private void addMissingServices() {
-            DefaultSpinupService.this.logger.debug("Adding missing services");
+            log.debug("Adding missing services");
             if (DefaultSpinupService.this.services != null) {
                 Map<String, CloudService> servicesByName = getServicesByName();
                 List<CloudService> existingServices = this.cloudFoundryClient.getServices();
@@ -380,8 +378,8 @@ public class DefaultSpinupService implements SpinupService {
                 }
                 for (CloudService cloudService : servicesByName.values()) {
                     this.cloudFoundryClient.createService(cloudService);
-                    if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                        DefaultSpinupService.this.logger.debug("Created service " + cloudService.getName());
+                    if (log.isTraceEnabled()) {
+                        log.trace("Created service " + cloudService.getName());
                     }
                 }
             }
@@ -404,8 +402,8 @@ public class DefaultSpinupService implements SpinupService {
                 try {
                     ApplicationNamingStrategyContext context = newApplicationNamingStrategyContext(attempt);
                     ApplicationDetails applicationDetails = DefaultSpinupService.this.namingStrategy.newApplicationDetails(context);
-                    if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                        DefaultSpinupService.this.logger.debug("Named application " + applicationDetails.getName() + " URL "
+                    if (log.isDebugEnabled()) {
+                        log.debug("Named application " + applicationDetails.getName() + " URL "
                             + applicationDetails.getUrl() + " attempt #" + attempt);
                     }
                     List<String> uris = Collections.singletonList(applicationDetails.getUrl());
@@ -414,9 +412,7 @@ public class DefaultSpinupService implements SpinupService {
                     return applicationDetails;
                 } catch (CloudFoundryException e) {
                     if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_NAMING_ATTEMPTS) {
-                        if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                            DefaultSpinupService.this.logger.debug("Application naming failed due to exception after " + attempt + " attempts");
-                        }
+                            log.error("Application naming failed due to exception after " + attempt + " attempts");
                         throw e;
                     }
                 }

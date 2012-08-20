@@ -17,7 +17,7 @@ import com.wavemaker.tools.io.zip.ZipArchive;
 @Component
 public class VersionProvider {
 
-        private final Log logger = LogFactory.getLog(getClass());
+        private final Log log = LogFactory.getLog(VersionProvider.class);
 
         private String studioVersion = null;
 
@@ -36,8 +36,8 @@ public class VersionProvider {
         			break;
         		}
         	}
-        	if (this.logger.isInfoEnabled()) {
-        		this.logger.info("Studio version is: " + this.studioVersion);
+        	if (log.isInfoEnabled()) {
+        		log.info("*** Studio version is: " + this.studioVersion + "***");
         	}
         	configjs.close();
         	return this.studioVersion;

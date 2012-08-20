@@ -29,7 +29,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 
 public class ServiceResponse {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(ServiceResponse.class);
 
     private static final String INITIAL_REQUEST = "wm-initial-request";
 
@@ -62,14 +62,14 @@ public class ServiceResponse {
 
     public synchronized Object addResponse(long startTime, Object obj) {
         String requestId = this.getRequestId();
-        this.logger.debug("ServiceResponse: addResponse: " + requestId + "  ***");
+        log.debug("ServiceResponse: addResponse: " + requestId + "  ***");
         if (System.currentTimeMillis() - this.runtimeAccess.getStartTime() > (this.connectionTimeout - 3) * 1000) {
             this.cleanup();
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("status", "done");
             jsonObj.put("result", obj);
             Tuple.Two<Long, JSONObject> t = new Tuple.Two<Long, JSONObject>(System.currentTimeMillis(), jsonObj);
-            this.logger.debug("ServiceResponse: addResponse: putting: " + requestId + " status: " + jsonObj.get("status") + "  +++");
+            log.debug("ServiceResponse: addResponse: putting: " + requestId + " status: " + jsonObj.get("status") + "  +++");
             this.serviceResponseTable.put(requestId, t);
         } else {
             this.threads.remove(requestId);
@@ -87,7 +87,7 @@ public class ServiceResponse {
                 if (t != null) {
                     long time = t.v1;
                     if (System.currentTimeMillis() - time > (this.connectionTimeout - 3) * 1000 * 2) {
-                        this.logger.debug("ServiceResponse: Cleanup: Remvoving: " + requestId + " " + thread.getId() + " ---");
+                        log.debug("ServiceResponse: Cleanup: Remvoving: " + requestId + " " + thread.getId() + " ---");
                         this.serviceResponseTable.remove(requestId);
                         this.threads.remove(requestId);
                     }
@@ -101,7 +101,7 @@ public class ServiceResponse {
         resp.put("status", "error");
         resp.put("result", obj);
         Tuple.Two<Long, JSONObject> t = new Tuple.Two<Long, JSONObject>(System.currentTimeMillis(), resp);
-        this.logger.debug("ServiceResponse: addError: putting" + this.getRequestId() + "  +++");
+        log.debug("ServiceResponse: addError: putting" + this.getRequestId() + "  +++");
         this.serviceResponseTable.put(this.getRequestId(), t);
     }
 
@@ -174,11 +174,11 @@ public class ServiceResponse {
 
     public synchronized JSONObject getResponse() {
         String requestId = this.getRequestId();
-        this.logger.debug("ServiceResponse: getResponse: " + this.getRequestId() + " ***");
+        log.debug("ServiceResponse: getResponse: " + this.getRequestId() + " ***");
         if (this.serviceResponseTable.containsKey(requestId)) {
             Tuple.Two<Long, JSONObject> t = this.serviceResponseTable.get(requestId);
             JSONObject rtn = t.v2;
-            this.logger.debug("ServiceResponse: getResponse: Remvoving: " + requestId + " ---");
+            log.debug("ServiceResponse: getResponse: Remvoving: " + requestId + " ---");
             this.serviceResponseTable.remove(requestId);
             this.threads.remove(requestId);
             return rtn;

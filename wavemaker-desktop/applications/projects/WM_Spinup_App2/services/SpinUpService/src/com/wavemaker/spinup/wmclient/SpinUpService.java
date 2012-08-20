@@ -54,6 +54,9 @@ public class SpinUpService extends JavaServiceSuperClass {
     }
 
 	public String login(String username, String password){
+        if(username == null || password == null) {
+             return("The user name or password you entered is incorrect.");
+        }
 		username = username.toLowerCase();
 		log(INFO, "Processing: " + username);
 		try {

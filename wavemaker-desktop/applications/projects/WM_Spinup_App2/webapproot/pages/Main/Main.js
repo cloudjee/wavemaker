@@ -69,18 +69,18 @@ dojo.declare("Main", wm.Page, {
 
   LaunchStudioserviceVariableError: function(inSender, inError) {
       this.endWait();
-      var error = inSender.getData();
+      var error = inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue");
       this.labelError.setShowing(true);
-      this.labelError.setCaption(inError.toString() != "Error" && error[0].dataValue.length > 0 ? error[0].dataValue : "Unable to deploy Studio to your account");
+      this.labelError.setCaption(inError.toString() != "Error" && error.length > 0 ? error : "Unable to deploy Studio to your account");
       this.loginLayer.activate();      
     },
   LaunchStudioserviceVariableSuccess: function(inSender, inDeprecated) {
       this.endWait();
-      var result = inSender.getData();
-      if (!result || result[0].name == "ERROR") return this.LaunchStudioserviceVariableError(inSender, result[0].dataValue);
-      token = result[0].dataValue;
-      url = result[1].dataValue;
-      cfdomain = result[2].dataValue;
+      var result = inSender.getDataSet();
+      if (!result || result.query({name:"ERROR"}).getItem(0)) return this.LaunchStudioserviceVariableError(inSender, inSender);
+      token = result.query({name:"wavemaker_authentication_token"}).getItem(0).getValue("dataValue");
+      url =  result.query({name:"studio_url"}).getItem(0).getValue("dataValue");
+      cfdomain =  result.query({name:"domain"}).getItem(0).getValue("dataValue");
       var cookie_expire = new Date();  
       cookie_expire.setTime(cookie_expire.getTime() + 30000);
       dojo.cookie("wavemaker_authentication_token", token, {expires: cookie_expire.toGMTString(), domain: cfdomain});
