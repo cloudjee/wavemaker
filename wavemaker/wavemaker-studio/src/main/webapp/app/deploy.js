@@ -55,9 +55,9 @@ Studio.extend({
 			this.refreshLiveData();
             if (this.isCloud()) {
                 this.userLabel.setSingleLine(false);
-                this.userLabel.setCaption("Editing/importing of services is disabled while enabling live layout");
+                dojo.addClass(this.userLabel.domNode, "wmjsonstatus wmStatusWaiting");
+                this.userLabel.setCaption("<span style='display:inline-block;float:none;width:20px;height:20px;margin-right:5px;' class='wmjsonstatusicon'>&nbsp;</span>Editing/importing of services is disabled while enabling live layout");
                 this.userLabel.setAlign("center");
-                this.userLabel.domNode.style.backgroundColor = "red";
             }
 		    if (this.application && (this._deploying || this.application._deployStatus == "deploying") && this._deployer) {
 				// deferred to return immediately
@@ -66,7 +66,7 @@ Studio.extend({
 				this._deployer.addCallbacks(dojo.hitch(this, function(inResult) {
                     if (this.isCloud()) {
                         this.userLabel.setCaption("");
-                        this.userLabel.domNode.style.backgroundColor = "";
+                        dojo.removeClass(this.userLabel.domNode, "wmjsonstatus wmStatusWaiting");
                     }
 					// call our callback
 					var r = inCallback();
@@ -87,7 +87,7 @@ Studio.extend({
                 dojo.hitch(this, function() {
                     if (this.isCloud()) {
                         this.userLabel.setCaption("");
-                        this.userLabel.domNode.style.backgroundColor = "";
+                        dojo.removeClass(this.userLabel.domNode, "wmjsonstatus wmStatusWaiting");
                     }
                 }));
 				return liveDataDeferred;
