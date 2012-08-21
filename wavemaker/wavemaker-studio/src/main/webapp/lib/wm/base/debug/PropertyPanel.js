@@ -23,69 +23,69 @@ dojo.declare("wm.debug.PropertyPanel", wm.Layer, {
     horizontalAlign: "left",
     autoScroll: true,
     inspect: function(inComponent) {
-	if (!inComponent) {
-	    this.hide();
-	    return;
-	}
-	this.show();
-	this.selectedItem = inComponent;
-	this.removeAllControls();
-	new wm.Label({owner: this,
-		      parent: this,
-		      width: "100%", 
-		      singleLine: false, 
-		      height: "40px", 
-		      caption: "Access with<br/>" + this.selectedItem.getRuntimeId() });
-	var ignoreProps = {margin:true,
-			   border:true,
-			   borderColor:true,
-			   padding:true,
-			   width: true,
-			   height: true,
-			   left:true,
-			   top:true,
-			   container:true,
-			   rootId:true,
-			   theme:true};
-	for (var propName in this.selectedItem) {
-	    if (propName.indexOf("_") == 0) continue;
-	    if (this.selectedItem[propName] instanceof Node) continue;
-	    if (typeof this.selectedItem[propName] == "function") continue;
-	    if (typeof this.selectedItem[propName] == "object" && this.selectedItem[propName] instanceof wm.Component == false) continue;
-	    if (ignoreProps[propName]) continue;
-	    this.generateEditor(propName);
-	}
-	this.reflow();
+    if (!inComponent) {
+        this.hide();
+        return;
+    }
+    this.show();
+    this.selectedItem = inComponent;
+    this.removeAllControls();
+    new wm.Label({owner: this,
+              parent: this,
+              width: "100%",
+              singleLine: false,
+              height: "40px",
+              caption: "Access with<br/>" + this.selectedItem.getRuntimeId() });
+    var ignoreProps = {margin:true,
+               border:true,
+               borderColor:true,
+               padding:true,
+               width: true,
+               height: true,
+               left:true,
+               top:true,
+               container:true,
+               rootId:true,
+               theme:true};
+    for (var propName in this.selectedItem) {
+        if (propName.indexOf("_") == 0) continue;
+        if (wm.isNode(this.selectedItem[propName])) continue;
+        if (typeof this.selectedItem[propName] == "function") continue;
+        if (typeof this.selectedItem[propName] == "object" && this.selectedItem[propName] instanceof wm.Component == false) continue;
+        if (ignoreProps[propName]) continue;
+        this.generateEditor(propName);
+    }
+    this.reflow();
     },
     generateEditor: function(inName) {
-	var value = this.selectedItem[inName];
-	var type = typeof value;
-	var ctor;
-	if (type == "boolean") {
-	    ctor = wm.Checkbox;
-	} else if (type == "number") {
-	    ctor = wm.Number;
-	} else if (type == "object") {
-	    value = value.toString();
-	    ctor = wm.Text;
-	} else {
-	    ctor = wm.Text;
-	}
-	var e = new ctor({owner: this,
-			  parent: this,
-			  readonly: type == "object",
-			  width: "100%",
-			  caption: inName,
-			  dataValue: value,
-			  startChecked: value,
-			  captionSize: "100px"});
-	
-	e.onchange = dojo.hitch(this, function(inDisplayValue, inDataValue) {
-	    if (this.selectedItem["set" + wm.capitalize(inName)]) {
-		this.selectedItem["set" + wm.capitalize(inName)](inDataValue);
-	    } else {
-		this.selectedItem[inName] = inDataValue;
-	    }
-	});
+    var value = this.selectedItem[inName];
+    var type = typeof value;
+    var ctor;
+    if (type == "boolean") {
+        ctor = wm.Checkbox;
+    } else if (type == "number") {
+        ctor = wm.Number;
+    } else if (type == "object") {
+        value = value.toString();
+        ctor = wm.Text;
+    } else {
+        ctor = wm.Text;
+    }
+    var e = new ctor({owner: this,
+              parent: this,
+              readonly: type == "object",
+              width: "100%",
+              caption: inName,
+              dataValue: value,
+              startChecked: value,
+              captionSize: "100px"});
+
+    e.onchange = dojo.hitch(this, function(inDisplayValue, inDataValue) {
+        if (this.selectedItem["set" + wm.capitalize(inName)]) {
+        this.selectedItem["set" + wm.capitalize(inName)](inDataValue);
+        } else {
+        this.selectedItem[inName] = inDataValue;
+        }
+    });
     }
 });
