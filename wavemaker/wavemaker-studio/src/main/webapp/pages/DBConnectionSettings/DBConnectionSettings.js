@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.studio.pages.DBConnectionSettings.DBConnectionSettings");
 
@@ -78,22 +78,22 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         var dmn = this._getSelectedDataModelName();
         app.confirm(this.getDictionaryItem("CONFIRM_REIMPORT", {
             modelName: dmn
-        }), false, 
+        }), false,
         dojo.hitch(this, function() {
             studio.beginWait(this.getDictionaryItem("WAIT_REIMPORT", {
                 modelName: dmn
             }));
             studio.dataService.requestAsync(REIMPORT_DB_OP, [
             dmn, this.conUserInput.getDataValue(), this.conPasswordInput.getDataValue(), /* If running in cloudfoundry, we want the internal cloud foundry database name, not our service name */
-            studio.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(), 
-            this.conTablePatternInput.getDataValue(), 
-            this.conSchemaPatternInput.getDataValue(), 
-            this.conDriverClassInput.getDataValue(), 
-            this.conDialectInput.getDataValue(), 
-            this.conRevengNamingStrategyInput.getDataValue(), 
-            this.executeAsMenu.getDataValue() == "Logged in user", 
-            this.activeDirectoryDomain.getDataValue()], 
-            dojo.hitch(this, "_reImportResult"), 
+            studio.isCloud() ? this._originalConnectionString : this.conConnectionUrlInput.getDataValue(),
+            this.conTablePatternInput.getDataValue(),
+            this.conSchemaPatternInput.getDataValue(),
+            this.conDriverClassInput.getDataValue(),
+            this.conDialectInput.getDataValue(),
+            this.conRevengNamingStrategyInput.getDataValue(),
+            this.executeAsMenu.getDataValue() == "Logged in user",
+            this.activeDirectoryDomain.getDataValue()],
+            dojo.hitch(this, "_reImportResult"),
             dojo.hitch(this, "_reImportError"));
         }));
     },
@@ -117,7 +117,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 /*
         exportBtnClick2: function() {
             studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
-            studio.dataService.requestAsync(LOAD_DDL_OP, 
+            studio.dataService.requestAsync(LOAD_DDL_OP,
                             [
                                 "MyTestDatabase",
                                 "root",
@@ -128,27 +128,27 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                                 "",
                                 this.overrideFlagInput.getChecked()
                             ],
-                            dojo.hitch(this, "_getDDLResult"), 
+                            dojo.hitch(this, "_getDDLResult"),
                             dojo.hitch(this, "_getDDLError"));
     },
     */
     exportBtnClick2: function() {
         studio.beginWait(this.getDictionaryItem("WAIT_LOADING_DDL"));
         if (studio.isCloud()) {
-            studio.dataService.requestAsync("cfGetExportDDL", 
+            studio.dataService.requestAsync("cfGetExportDDL",
                             [
                                 this._getSelectedDataModelName(),
                                 this.conExtraInput.getDataValue(),
                                 this.conDBdropdown.getDataValue().toLowerCase(),
                                 this.conSchemaPatternInput.getDataValue(),
-                                this.conDriverClassInput.getDataValue(),                                
+                                this.conDriverClassInput.getDataValue(),
                                 this.conDialectInput.getDataValue(),
                                 this.overrideFlagInput.getChecked()
                             ],
-                            dojo.hitch(this, "_getDDLResult"), 
+                            dojo.hitch(this, "_getDDLResult"),
                             dojo.hitch(this, "_getDDLError"));
         } else {
-            studio.dataService.requestAsync(LOAD_DDL_OP, 
+            studio.dataService.requestAsync(LOAD_DDL_OP,
                             [
                                 this._getSelectedDataModelName(),
                                 this.conUserInput.getDataValue(),
@@ -159,7 +159,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                                 this.conDialectInput.getDataValue(),
                                 this.overrideFlagInput.getChecked()
                             ],
-                            dojo.hitch(this, "_getDDLResult"), 
+                            dojo.hitch(this, "_getDDLResult"),
                             dojo.hitch(this, "_getDDLError"));
         }
     },
@@ -195,7 +195,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         if (this._disableChangeEvents) return;
         var db = this.conDBdropdown.getDisplayValue();
         var username = this.conUserInput.getDataValue();
-        this._updateSchemaFilter(db, username, 
+        this._updateSchemaFilter(db, username,
                     this.conSchemaPatternInput);
     },
     onConPasswordKeyPress: function() {
@@ -226,7 +226,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         this.conDriverClassInput.setDataValue("");
         this.conDialectInput.setDataValue("");
         this.conRevengNamingStrategyInput.setDataValue("");
-                             
+
         this._updateConConnectionUrl();
         this.conUsernameChanged();
         if (studio.isCloud()) {
@@ -301,7 +301,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     beginCFExport: function() {
         /* Step 1: find out if the service exists */
-        var d = this.cfService.requestAsync("getService", ["","", this.conExtraInput.getDataValue()], 
+        var d = this.cfService.requestAsync("getService", ["","", this.conExtraInput.getDataValue()],
                                              dojo.hitch(this, function(inService) {
                                                   if (inService) {
                                                       this.executeCFExportCheckIsBound();
@@ -344,7 +344,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         // this will restart the studio server
         this.cfService.requestAsync("bindService", ["", "", serviceName, ""], dojo.hitch(this, function() {
             this.waitForStudioToRestart(serviceName);
-        }), 
+        }),
         function(inError) {
             app.alert(inError);
             studio.endWait();
@@ -359,7 +359,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         studio.studioService.requestAsync("getOpenProject", [], dojo.hitch(this, function(inResult) {
             // if a project is still open, the server hasn't yet restarted
             this.waitForStudioToRestart(serviceName);
-        }), 
+        }),
         dojo.hitch(this, function(inError) {
             // server has restarted, and is now responding
             if (inError.message.match(/No open project/i)) {
@@ -380,7 +380,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         var dbname = this.conExtraInput.getDataValue();
         studio.dataService.requestAsync("cfExportDatabase", [
             this._getSelectedDataModelName(),
-                dbname,            
+                dbname,
                 this.conDBdropdown.getDataValue().toLowerCase(),
                 this.conSchemaPatternInput.getDataValue(),
                 this.conDriverClassInput.getDataValue(),
@@ -390,7 +390,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
             ],
             dojo.hitch(this, function(inData) {
                 this._exportResult(inData, dbname);
-            }), 
+            }),
             dojo.hitch(this, "_exportError"));
     },
     executeExport: function() {
@@ -405,7 +405,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                 this.conRevengNamingStrategyInput.getDataValue(),
                 this.overrideFlagInput.getChecked()
             ],
-            dojo.hitch(this, "_exportResult"), 
+            dojo.hitch(this, "_exportResult"),
             dojo.hitch(this, "_exportError"));
     },
 
@@ -414,7 +414,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 
     overrideFlagInputChanged: function() {
         var checked = this.overrideFlagInput.getChecked();
-        
+
         var dbtype = this.conDBdropdown.getDisplayValue();
         var h = this.conHostInput.getDataValue();
         var p = this.conPortInput.getDataValue();
@@ -425,7 +425,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 
         this.conConnectionUrlInput.setDataValue(s);
     },
-    
+
     _updateSchemaFilter: function(dbtype, username, schemaFilterInput) {
         if (isOracle(dbtype) || isDB2(dbtype)) {
             schemaFilterInput.setDataValue(username.toUpperCase());
@@ -465,7 +465,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
             this.dataModelList.selectByIndex(0);
             }
             this.dataModelListSelect();
-        } 
+        }
     },
     _loadedConnectionProperties: function(inData) {
         this._disableChangeEvents = true;
@@ -499,13 +499,13 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 
             this.conHostInput.setShowing(false);
             this.conHostInput.setRequired(false);
-            
+
             this.conPortInput.setShowing(false);
 
             this.conExtraInput.setCaption("");
             this.conExtraInput.setShowing(false);
             this.conExtraInput.setRequired(false);
-            
+
             this.conExtra2Input.setCaption("");
             this.conExtra2Input.setShowing(false);
         } else {
@@ -515,16 +515,16 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                 this.conDBdropdown.endEditUpdate();
 
             setupWidgetsForDatabaseType(
-                l[0], 
-                this.ip, 
+                l[0],
+                this.ip,
                 //this.conHostLabel,
-                this.conHostInput, 
+                this.conHostInput,
                 //this.conPortLabel,
-                this.conPortInput, 
+                this.conPortInput,
                 //this.conExtraInputLabel,
-                this.conExtraInput, 
+                this.conExtraInput,
                 //this.conExtra2InputLabel,
-                this.conExtra2Input, 
+                this.conExtra2Input,
                 this.conTablePatternInput,
                 this.conSchemaPatternInput,
                         this.conUserInput,
@@ -532,7 +532,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                 this.executeAsMenu,
                         this.activeDirectoryDomain
                 //this.newDatabaseInput
-                );  
+                );
 
             if (l[1] == null) {
                 this.conHostInput.setDataValue("");
@@ -548,7 +548,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                 if (studio.isCloud()) {
                 this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
                 } else {
-                this.conExtraInput.setDataValue("");                
+                this.conExtraInput.setDataValue("");
                 }
             } else {
                 this.conExtraInput.setDataValue(l[3]);
@@ -572,8 +572,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
             }
 
         }
-        
-        
+
+
 
 
         this.conUserInput.setDataValue(inData.username);
@@ -607,7 +607,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         studio.dataService.requestAsync(
             TEST_CONNECTION_OP,
             [username, password, url, driverClassName, dialect],
-            dojo.hitch(this, "_connectionSucceeded"), 
+            dojo.hitch(this, "_connectionSucceeded"),
             dojo.hitch(this, "_connectionFailed"));
     },
     _connectionSucceeded: function() {
@@ -616,7 +616,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     _connectionFailed: function(inError) {
         studio.endWait();
-        app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message})); 
+        app.alert(this.getDictionaryItem("ALERT_CONNECTION_FAILED", {error: inError.message}));
         app.alertDialog.setWidth("600px");
     },
     _propWriteOk: function(inData) {
@@ -641,11 +641,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     _reImportResult: function() {
         studio.endWait();
-        studio.updateServices();        
-        app.toastSuccess(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));        
+        studio.updateServices();
+        app.toastSuccess(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));
         //studio.application.loadServerComponents("wm.Query");
 /*
-        wm.fire(studio.getEditor("DataObjectsEditor").page, "update");      
+        wm.fire(studio.getEditor("DataObjectsEditor").page, "update");
         wm.fire(studio.getEditor("QueryEditor").page, "update");
         */
     },
@@ -676,17 +676,18 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         this.msgDialogLoaded = true;
     },
     _exportResult: function(inData, cfdbname) {
-        studio.endWait();
         var n = this._getSelectedDataModelName();
         this._loadConnectionProperties(n);
         if (inData != "") {
+            studio.endWait();
             this.msgDialog.page.setup(false);
             this.msgDialog.page.ddlEditor.setDataValue(inData);
             this.msgDialog.show();
         } else {
-            if (studio.isCloud()) {
+            if (studio.isCloud() && cfdbname != n) {
                 this.doImport(cfdbname);
             } else {
+                studio.endWait();
                 app.toastSuccess(this.getDictionaryItem("TOAST_EXPORT_SUCCESS"));
             }
         }
@@ -699,21 +700,21 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         } else {
             msg = inError;
         }
-        app.alert(this.getDictionaryItem("ALERT_EXPORT_FAILED", {error: msg}));        
+        app.alert(this.getDictionaryItem("ALERT_EXPORT_FAILED", {error: msg}));
     },
 
     doImport: function(serviceName, type) {
         studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING_GENERATING"));
-        studio.dataService.requestAsync("cfImportDatabase", [serviceName, 
+        studio.dataService.requestAsync("cfImportDatabase", [serviceName,
                                                             "com." + serviceName,
                                                             ".*",
                                                             ".*",
-                                                            "", 
-                                                            "", 
                                                             "",
-                                                            false, 
-                                                            ""], 
-                                        dojo.hitch(this, "_importResult"), 
+                                                            "",
+                                                            "",
+                                                            false,
+                                                            ""],
+                                        dojo.hitch(this, "_importResult"),
                                         function(inError) {
                                             app.alert(inError.toString());
                                             studio.endWait();
@@ -721,17 +722,17 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         );
 
     },
-    
+
     _importResult: function() {
-        studio.endWait();        
+        studio.endWait();
         studio.updateFullServiceList()
-        
-        this.owner.owner.hide();        
+
+        this.owner.owner.hide();
     },
     _loadConnectionProperties: function(dataModelName) {
         studio.dataService.requestAsync(
             LOAD_CONNECTION_PROPS_OP,
-            [dataModelName], 
+            [dataModelName],
             dojo.hitch(this, "_loadedConnectionProperties"));
     },
     _enableAll: function(enable) {
