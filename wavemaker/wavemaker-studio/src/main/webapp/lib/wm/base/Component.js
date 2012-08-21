@@ -33,15 +33,15 @@ dojo.declare("wm.Component", wm.Object, {
         theme: "wm_tundra", // default theme for all components (including Application and Page)
 
 	/** @lends wm.Component.prototype */
-	/** 
-		Name of this object. 
+	/**
+		Name of this object.
 		Must be unique to it's owner.
 		@type String
 		@example this.label1.setValue("name", "titleLabel");
 	*/
 	name: '',
-	/** 
-		Name of this object. 
+	/**
+		Name of this object.
 		Must be unique to it's owner.
 		@type String
 		@example newButton.setValue("owner", this);
@@ -70,7 +70,7 @@ dojo.declare("wm.Component", wm.Object, {
 	return null;
     },
     getParentPage: function() {
-	if (this instanceof wm.Page || this instanceof wm.PageDialog) 
+	if (this instanceof wm.Page || this instanceof wm.PageDialog)
 	    return this;
 	if (this.owner)
 	    return this.owner.getParentPage();
@@ -145,13 +145,13 @@ dojo.declare("wm.Component", wm.Object, {
 
 		if (this._designer)
 			wm.fire(this, "designCreate");
-		
+
 		if (!this._loading) {
 		    this.postInit();
 	            delete this._initializing;
 		}
-		
-	        if (!this._temporaryComponent) 
+
+	        if (!this._temporaryComponent)
 	            dojo.addOnWindowUnload(this, 'destroy');
 		if (wm.debugPerformance) this.stopTimerWithName("create",this.declaredClass);
     } catch (e) {
@@ -180,7 +180,7 @@ dojo.declare("wm.Component", wm.Object, {
 				for (var n in c)
 					delete c[n];
 				c.isDestroyed = true;
-			}	
+			}
 			comps = null;
 			delete this.components;
 			delete this.$;
@@ -188,8 +188,8 @@ dojo.declare("wm.Component", wm.Object, {
 			this.setOwner(null);
 			/*
 			delete this.owner;
-			delete this._designee;			
-			delete this.target;			
+			delete this._designee;
+			delete this.target;
 			delete this.widgets;
 			*/
 			this.isDestroyed = true;
@@ -197,7 +197,7 @@ dojo.declare("wm.Component", wm.Object, {
 		catch(e)
 		{
 			//console.info('error while deleting component', e);
-		}			
+		}
 	},
 	prepare: function(inProps) {
 		this.readProps(inProps);
@@ -247,7 +247,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    if (!this.isDesignLoaded()) return false;
 
             var page = this.getParentPage();
-	    while (page && page.name != "wip") 
+	    while (page && page.name != "wip")
 		page = page.owner;
 
 	    return page.name == "wip";
@@ -278,19 +278,19 @@ dojo.declare("wm.Component", wm.Object, {
 	//=======================================================
 	addComponent: function(inComponent) {
 		var n = inComponent.name;
-		//if (this.components[n]) 
+		//if (this.components[n])
 		//	wm.logging && console.debug('Duplicate object name "' + n + '" in owner ' + this);
 		this.components[n] = inComponent;
 	},
 	removeComponent: function(inComponent) {
 		if (!this.components)
 			return;
-			
+
 		var n = inComponent.name;
 		if (this.components[n] == inComponent)
 			delete this.components[n];
 	},
-        setOwner: function(inOwner, nonWritable) {
+    setOwner: function(inOwner, nonWritable) {
 	    var isDesign = this.isDesignLoaded();
 
 	    // setOwner is called any time a component is created or destroyed, so is a perfect place for
@@ -315,12 +315,12 @@ dojo.declare("wm.Component", wm.Object, {
 		    if ((!originalOwner && this.owner instanceof wm.Page == false) ||
 			(this.owner != originalOwner && originalOwner &&
 			(this.owner instanceof wm.Page == false && originalOwner instanceof wm.Page ||
-			 this.owner instanceof wm.Page && originalOwner instanceof wm.Page == false))) 
+			 this.owner instanceof wm.Page && originalOwner instanceof wm.Page == false)))
 		    {
-			this.updateId();  
+			this.updateId();
 			// If my id has been changed by this, then so will all of my children's ids...
 			if (this.isDesignLoaded())
-			    this.resetChildIds(); 		    
+			    this.resetChildIds();
                     }
 		}
 	        delete this.rootId;
@@ -329,7 +329,7 @@ dojo.declare("wm.Component", wm.Object, {
 	isOwnedBy: function(inOwner) {
 		var o = this.owner;
 		while (o) {
-			if (o == inOwner) 
+			if (o == inOwner)
 				return true;
 			o = o.owner;
 		}
@@ -361,7 +361,7 @@ dojo.declare("wm.Component", wm.Object, {
 	        if (id != this.id) {
 		    this.id = id;
 		    delete this.runtimeId;
-		}	    
+		}
 	},
 
 	// make a streamable id
@@ -429,14 +429,14 @@ dojo.declare("wm.Component", wm.Object, {
 	    return this.rootId;
 	},
 	/**
-		Return a string that can globally identify a name 
+		Return a string that can globally identify a name
 		as a child of this component.
 		@param {String} inName The name to qualify.
 		@returns {String} The qualified id string.
 	*/
 	// make a globally unique runtime id
 	getRuntimeId: function(inName) {
-	    if (!this.runtimeId || this.isDesignLoaded()) {		
+	    if (!this.runtimeId || this.isDesignLoaded()) {
 		this.runtimeId = this.getRootId() + this.getId();
 	    }
 	    var result =  (inName) ? this.runtimeId + "." + inName :  this.runtimeId;
@@ -472,7 +472,7 @@ dojo.declare("wm.Component", wm.Object, {
 		if (r && r._wmNull) {
 		  return app.getValue(inId);
 		}
-	    
+
 	    if (r !== undefined) return r;
 
 	    if (inId && wm.Component.byId[inId]) {
@@ -498,10 +498,10 @@ dojo.declare("wm.Component", wm.Object, {
 		    }
 		}
 	    }
-	    
+
 	    return undefined;
 	},
-	/* 
+	/*
   	LiveForm does not work with the impovement changes below.
         getValue: function(inName) {
                 if (typeof inName != "string" || inName.indexOf(".") != -1)
@@ -529,7 +529,7 @@ dojo.declare("wm.Component", wm.Object, {
 
         },
 	*/
-	
+
 	//=======================================================
 	// Utility
 	//=======================================================
@@ -551,7 +551,7 @@ dojo.declare("wm.Component", wm.Object, {
 	    wm.Array.removeElement(connections, c);
 	    dojo.hitch(this, targetMethod)();
 	});
-	
+
 	var c = dojo.connect.apply(dojo,args);
 
 	connections.push(c);
@@ -666,7 +666,7 @@ dojo.declare("wm.Component", wm.Object, {
 		{
 			return;
 		}
-		
+
 		//console.info('Event: ' + evtId);
 		dojo.publish(evtId + "-changed", [inValue, this]);
 
@@ -709,7 +709,7 @@ dojo.declare("wm.Component", wm.Object, {
 		@param inChildren {Object} Name/value pairs that describe child components to create on this object.
 		@param inOwner {Object} Optional. Override automatic value for "owner".
 		@example
-this.panel1.createComponent("custom", "wm.Panel", { 
+this.panel1.createComponent("custom", "wm.Panel", {
 	// properties
 	height: "3em",
 }, {
@@ -764,7 +764,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 
 		props.name = props.owner.getRoot()._loading || props.owner._loading ? inName : props.owner.getUniqueName(inName);
 
-	    // All custom methods should be page methods; page methods have not been evaled, so 
+	    // All custom methods should be page methods; page methods have not been evaled, so
 	    // can not be defined nor invoked at design time
 	    if (!this.isDesignLoaded()) {
 		for (var p in props) {
@@ -777,7 +777,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 
 		//
 		var w = this._create(ctor, props);
-                if (w.name != inName && wm.pasting && window["studio"]) 
+                if (w.name != inName && wm.pasting && window["studio"])
                     studio.renamedDuringPaste[inName] = w;
 
 		try{
@@ -843,7 +843,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 		        } else {
 			    // otherwise, connect the named event
 			    this.connect(inComponent._eventSource||inComponent, n.replace(/\d*$/,""), this.makeEvent(e, f, inComponent, n.replace(/\d*$/,"")));
-			    // For most events, doing connections this way is a bad idea; many uses of 
+			    // For most events, doing connections this way is a bad idea; many uses of
 			    // events are done from code rather than inEvents; however, for performance
 			    // reasons and because dynamically setting onRightClick is something I'm ok not
 			    // suporting, I've made an exception here.
@@ -901,9 +901,9 @@ this.panel1.createComponent("custom", "wm.Panel", {
                             console.error(errorMessage);
                         }
                     }
-                    if (eventId) app.debugDialog.endLogEvent(eventId);                    
+                    if (eventId) app.debugDialog.endLogEvent(eventId);
                 };
-            
+
             /* Events should not be fired until the owner has finished loading, as the event may require components that aren't yet generated */
             if (self instanceof wm.Page && self._loadingPage) {
                 self.connectOnce(self, "start", this, f);
@@ -925,7 +925,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
             // or a (string) Id of a component + a dotted method suffix
             //console.info('inHandler ', inHandler, ' instanceof wm.Component = ' + (inHandler instanceof wm.Component));
             //console.info('wm.isInstanceType = ' + wm.isInstanceType(inHandler, 'wm.Component'));
-            var args = arguments;            
+            var args = arguments;
             var f = function() {
                     var c = wm.isInstanceType(inHandler, wm.Component) ? inHandler : self.getValueById(inHandler);
                     if (wm.isInstanceType(c, wm.Component)) {
@@ -998,7 +998,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
                             }
                         }
                     }
-                        
+
                     if (eventId) app.debugDialog.endLogEvent(eventId);
                 };
 
@@ -1039,7 +1039,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 	    }
 	    if (!timingObj[timerName]) timingObj[timerName] = [];
 	    timingObj[timerName].push(result);
-	
+
 	  return result;
 	},
         subtractTimerWithName: function(timerName, componentName,time) {
