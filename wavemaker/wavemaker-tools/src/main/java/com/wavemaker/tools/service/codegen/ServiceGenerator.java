@@ -275,6 +275,7 @@ public abstract class ServiceGenerator {
                 this.codeModel.build(f, f, null);
                 Folder folder = new LocalFolder(f);
                 folder.copyContentsTo(this.configuration.getOutputDirectory());
+                IOUtils.deleteRecursive(f);
             }
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);
