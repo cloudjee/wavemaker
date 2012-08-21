@@ -40,7 +40,8 @@ dojo.declare("wm.Scrim", wm.Widget, {
     },
 	reflowParent: function() {
 		//if (this.domNode.parentNode)
-		dojo.marginBox(this.domNode, dojo.contentBox(this.domNode.parentNode));
+        if (this.domNode.parentNode)
+    		dojo.marginBox(this.domNode, dojo.contentBox(this.domNode.parentNode));
 	},
 	scrimify: function(/*inFunc*/) {
 		var f = dojo.hitch.apply(dojo, arguments);
@@ -69,8 +70,8 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		    if (this._hideAnimation) {
 			this._hideAnimation.stop();
 		    }
-		    this._showAnimation = this._showAnimation || 
-			dojo.animateProperty({node: this.domNode, 
+		    this._showAnimation = this._showAnimation ||
+			dojo.animateProperty({node: this.domNode,
 					      properties: {opacity: 0.35},
 					      duration: animationTime});
 		    if (this._showAnimation.status() != "playing") {
@@ -79,20 +80,20 @@ dojo.declare("wm.Scrim", wm.Widget, {
 			this._showAnimation.play();
 		    }
 		} else {
-		    this.inherited(arguments);		    
+		    this.inherited(arguments);
 		}
 
 	    } else {
 		if (animationTime) {
 		    if (this._showAnimation)
 			this._showAnimation.stop();
-		    this._hideAnimation = 
+		    this._hideAnimation =
 			this._hideAnimation ||
-			dojo.animateProperty({node: this.domNode, 
+			dojo.animateProperty({node: this.domNode,
 					      properties: {opacity: 0.01},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
-                                                  if (!this.domNode) 
+                                                  if (!this.domNode)
                                                       return;
 						  wm.Control.prototype.setShowing.call(this,false);
 					      })});
@@ -100,7 +101,7 @@ dojo.declare("wm.Scrim", wm.Widget, {
 			this._hideAnimation.play();
 		    }
 		} else {
-		    this.inherited(arguments);		    
+		    this.inherited(arguments);
 		}
 	    }
 	},

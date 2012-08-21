@@ -73,18 +73,18 @@ wm.requireCss = function(modulepath) {
 }
 
 
-wm.isEqual = function (a1, a2){ 
+wm.isEqual = function (a1, a2){
 	try{
 		if(a1 == a2)
-			return true; 
-		if(dojo.isArray(a1) && dojo.isArray(a2)) 
-			return dojo.toJson([].concat(a1).sort()) == dojo.toJson([].concat(a2).sort())   
-		return dojo.toJson(a1) == dojo.toJson(a2) 
+			return true;
+		if(dojo.isArray(a1) && dojo.isArray(a2))
+			return dojo.toJson([].concat(a1).sort()) == dojo.toJson([].concat(a2).sort())
+		return dojo.toJson(a1) == dojo.toJson(a2)
 	} catch(e) {
 		console.info('Could not compare objects ', arguments, ' therefore returning false. Error ', e);
 		return false;
 	}
-} 
+}
 
 wm.compareStrings = function(a, b) {
 	return a < b ? -1 : a == b ? 0 : 1;
@@ -93,7 +93,7 @@ wm.compareStrings = function(a, b) {
 wm.toTitleCase = function(s){
 	return s.replace(/\b\w+\b/g, function(word) {
 		return word ? word.charAt(0).toUpperCase() + (word.slice(1) || "").toLowerCase() : "";
-	}); 
+	});
 }
 
 wm.delimCat = function(inPrefix, inSuffix, inDelim) {
@@ -150,7 +150,7 @@ wm.isEmpty = function(inObj) {
 	for (var i in inObj)
 		return false;
     }
-    // for (var i in inObj) finds no properties 
+    // for (var i in inObj) finds no properties
     if (typeof inObj == "object" && inObj instanceof Date)
         return false;
     return true;
@@ -158,7 +158,7 @@ wm.isEmpty = function(inObj) {
 
 wm.fire = function(obj, method, args) {
 	var f = obj && method && obj[method];
-	if (f) 
+	if (f)
 		return args ? f.apply(obj, args) : f.call(obj);
 }
 
@@ -213,8 +213,8 @@ wm.showHideNode = function(inNode, inTrueToShow) {
 
 wm.kids = function(inNode, inTag) {
 	var result = [], t=inTag.toUpperCase();
-	for (var i=0, n; (n=inNode.childNodes[i]); i++) 
-		if (n.tagName == inTag) 
+	for (var i=0, n; (n=inNode.childNodes[i]); i++)
+		if (n.tagName == inTag)
 			result.push(n);
 	return result;
 }
@@ -225,9 +225,9 @@ wm.divkids = function(inNode) {
 
 wm.clearSelection = function() {
 	try{
-		if (window.getSelection) 
+		if (window.getSelection)
 			window.getSelection().collapseToEnd();
-		else if (document.selection) 
+		else if (document.selection)
 			document.selection.clear();
 	}catch(e){
 	}
@@ -373,7 +373,7 @@ wm.connectEvents = function(inObject, inNode, inEvents) {
 }
 
 wm._isUniqueName = function(inName, inNameSpaces) {
-	for (var j=0, s; (s=inNameSpaces[j]); j++) 
+	for (var j=0, s; (s=inNameSpaces[j]); j++)
 		if (inName in s)
 			return false;
 	return true;
@@ -384,9 +384,9 @@ wm.findUniqueName = function(inName, inNameSpaces) {
 		return inName;
 	var m = (inName || '').match(/([^\d]*)([\d]*)/);
 	var i = m[2] || 1, n0 = m[1] || 'noname';
-	do { 
-		inName = n0 + (i > 0 ? i : ''); 
-		i++; 
+	do {
+		inName = n0 + (i > 0 ? i : '');
+		i++;
 	} while (!wm._isUniqueName(inName, inNameSpaces));
 	return inName;
 }
@@ -398,7 +398,7 @@ wm.getValidJsName = function(inName) {
 	/*********************************************************
 	 * This used to be     inName = inName.replace(new RegExp("[^a-zA-Z0-9_]", "g"), "");
 	 * however this is unfriendly to valid unicode strings.  Instead
-	 * we now use an algorithm for determining if we have a valid name and if not, trimming 
+	 * we now use an algorithm for determining if we have a valid name and if not, trimming
 	 * characters until we have a valid name
 	 */
     var isInvalid = true;
@@ -467,7 +467,7 @@ wm.forEachWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 // if inFunc returns false, do not call on its widgets; unlike wm.forEachWidgets though, it does NOT mean cancel calling on other subtrees
 wm.forEachVisibleWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
     var result;
-    if (inFunc && inWidget && !inWidget.isAncestorHidden()) 
+    if (inFunc && inWidget && !inWidget.isAncestorHidden())
 	result = inFunc(inWidget);
 
     if (result !== false) {
@@ -564,7 +564,7 @@ wm.isInstanceType = function(obj, type){
 	{
 		console.info('failed responding to instanceType query with obj = ', obj, ' and type = ', type);
 	}
-	
+
 	return false;
 }
 */
@@ -586,7 +586,7 @@ wm.isInstanceType = function(obj, types){
 	return types && obj instanceof types;
     }
 }
-/* Obsolete with dojo 1.4 
+/* Obsolete with dojo 1.4
 wm.isClassInstanceType = function(inClass, type) {
         //console.log("TEST " + inClass.prototype.declaredClass);
 
@@ -666,6 +666,11 @@ wm.getWidgetByDomNode = function(element) {
         return widget;
 }
 
+wm.isNode = function(inObject) {
+    if (window["Node"]) return inObject instanceof Node;
+    if (typeof inObject == "object" && inObject) return "nodeType" in inObject && "appendChild" in inObject;
+}
+
 if (!wm.Array) wm.Array = {};
 
 /* Side effect: alters input inArray Object.  Returns inArray Object; Return is mostly used for chaining operations together */
@@ -683,7 +688,7 @@ wm.Array.removeElement = function(inArray, inElement) {
     var index = dojo.indexOf(inArray, inElement);
     if (index >= 0)
 	inArray.splice(index, 1);
-    return inArray; 
+    return inArray;
 }
 
 wm.Array.equals = function(a, b,optionalCallback) {
@@ -700,7 +705,7 @@ wm.Array.equals = function(a, b,optionalCallback) {
     return true;
 }
 
- 
+
 wm.Array.indexOf = function(inArray, inValue, inCallback) {
     for (var i = 0; i < inArray.length; i++) {
         if (inCallback(inArray[i], inValue))
@@ -757,7 +762,7 @@ setIe6Css = function(inSheet, inCss) {
 /* Stupid hack to hide a conditional dojo.require package from the build system
    so that something like touchscroll doesn't get built into the core libraries -- especially
    since nonwebkit browsers break on touchscroll and its a useless library for desktop apps.
-   The bulid system searches for "dojo.require", by using dojo["require"] the 
+   The bulid system searches for "dojo.require", by using dojo["require"] the
    build system ignores this and doesn't try to add this package into the layer.
  */
 wm.conditionalRequire = function(packageName, condition) {
@@ -783,7 +788,7 @@ wm.getBackgroundStyle = function(startColor, endColor, colorStop, direction, bro
     var result = "-linear-gradient(" + (direction == "vertical" ? "top" : "left") + ", " + startColor + " 0%," + endColor + " " + colorStop + "%," + endColor + " 100%)";
 	switch(browser) {
 	case "webkit":
-	    // return  "-webkit" + result; sadly some mobile webkit browsers don't support this 
+	    // return  "-webkit" + result; sadly some mobile webkit browsers don't support this
 	    return "-webkit-gradient(linear, " + (direction == "vertical" ? "center top, center bottom" : "left center, right center") + ", from(" + startColor + "), color-stop(" + colorStop + "%," + endColor+"), to(" + endColor+"))";
 	case "moz":
 	    return  "-moz" + result;
