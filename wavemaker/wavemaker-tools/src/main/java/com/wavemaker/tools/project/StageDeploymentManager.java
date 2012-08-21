@@ -1,3 +1,4 @@
+//
 
 package com.wavemaker.tools.project;
 
@@ -6,8 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.catalina.ant.DeployTask;
 import org.apache.catalina.ant.UndeployTask;
@@ -22,18 +23,18 @@ import com.wavemaker.tools.ant.ServiceCompilerTask;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.zip.ZipArchive;
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.io.zip.ZipArchive;
 
 /**
  * Replaces ant script tasks that generate war and ear file
  * 
  * @author Seung Lee
  */
-
 public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected static final String PROJECT_DIR_PROPERTY = "project.dir";
@@ -59,6 +60,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     protected static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
 
     protected static final String WAVEMAKER_HOME = "wavemaker.home";
+
+    private static final ResourceFilter DEFAULT_EXCLUDES = FilterOn.antPattern("**/.svn/**");
 
     protected void buildWar(LocalFolder projectDir, Folder buildDir, File warFile, boolean includeEar, StudioFileSystem fileSystem)
         throws WMRuntimeException { // projectDir: dplstaging //buildDir: fileutils
@@ -127,20 +130,20 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
         Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + customDir + "/**", "dojo/util/**", "dojo/**/tests/**");
-        studioWebAppRoot.getFolder("lib").find().exclude(excluded).files().copyTo(webAppRoot.getFolder("lib"));
+        studioWebAppRoot.getFolder("lib").find().exclude(excluded).exclude(DEFAULT_EXCLUDES).files().copyTo(webAppRoot.getFolder("lib"));
 
         Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
         com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customDir + "/**");
         excluded = FilterOn.antPattern(customDir + "/**/deployments.js");
-        wavemakerHome.find().include(included).exclude(excluded).files().copyTo(webAppRoot.getFolder("lib/wm"));
+        wavemakerHome.find().include(included).exclude(excluded).exclude(DEFAULT_EXCLUDES).files().copyTo(webAppRoot.getFolder("lib/wm"));
     }
 
     protected com.wavemaker.tools.io.File assembleWar(Map<String, Object> properties) {
         Folder buildAppWebAppRoot = (Folder) properties.get(BUILD_WEBAPPROOT_PROPERTY);
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("**/application.xml", "**/*.documentation.json");
-        Resources<com.wavemaker.tools.io.File> files = buildAppWebAppRoot.find().exclude(excluded).files();
+        Resources<com.wavemaker.tools.io.File> files = buildAppWebAppRoot.find().exclude(excluded).exclude(DEFAULT_EXCLUDES).files();
         InputStream is = ZipArchive.compress(files);
-        com.wavemaker.tools.io.File warFile = (com.wavemaker.tools.io.File)properties.get(WAR_FILE_NAME_PROPERTY);
+        com.wavemaker.tools.io.File warFile = (com.wavemaker.tools.io.File) properties.get(WAR_FILE_NAME_PROPERTY);
         OutputStream os = warFile.getContent().asOutputStream();
         try {
             com.wavemaker.common.util.IOUtils.copy(is, os);
@@ -177,8 +180,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
             out.closeEntry();
             is.close();
 
-            String maniFest = "Manifest-Version: 1.0\n" +
-                              "Created-By: WaveMaker Studio (VMware Inc.)";
+            String maniFest = "Manifest-Version: 1.0\n" + "Created-By: WaveMaker Studio (VMware Inc.)";
             out.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
             org.apache.commons.io.IOUtils.write(maniFest, out);
             out.closeEntry();
@@ -188,7 +190,6 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
             throw new WMRuntimeException(ex);
         }
     }
-
 
     public String build(Map<String, Object> properties) {
         copyJars(properties);
@@ -231,10 +232,10 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
     public void copyResources(Map<String, Object> properties) {
         LocalFolder projectRoot = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
         LocalFolder projClassFolder = (LocalFolder) ((Folder) properties.get(BUILD_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF").getFolder("classes");
-        projectRoot.getFolder("src").find().exclude(FilterOn.names().ending(".java")).files().copyTo(projClassFolder);
+        projectRoot.getFolder("src").find().exclude(FilterOn.names().ending(".java")).exclude(DEFAULT_EXCLUDES).files().copyTo(projClassFolder);
 
         for (Folder serviceFolder : projectRoot.getFolder("services").list().folders()) {
-            serviceFolder.getFolder("src").find().exclude(FilterOn.names().ending(".java")).files().copyTo(projClassFolder);
+            serviceFolder.getFolder("src").find().exclude(FilterOn.names().ending(".java")).exclude(DEFAULT_EXCLUDES).files().copyTo(projClassFolder);
         }
     }
 
@@ -247,7 +248,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
         LocalFolder projectRoot = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
         com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern("services/*/designtime/servicedef.xml");
-        Resources<File> files = projectRoot.find().include(included).files();
+        Resources<File> files = projectRoot.find().include(included).exclude(DEFAULT_EXCLUDES).files();
         for (File file : files) {
             task.addWmResource(file);
         }
@@ -320,14 +321,14 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         LocalFolder appWebAppRoot = (LocalFolder) ((Folder) properties.get(PROJECT_DIR_PROPERTY)).getFolder("webapproot");
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("**/.svn/**/*.*", "WEB-INF/classes/**", "WEB-INF/lib/**",
             "WEB-INF/web.xml");
-        appWebAppRoot.find().exclude(excluded).files().copyTo(buildAppWebAppRoot);
+        appWebAppRoot.find().exclude(excluded).exclude(DEFAULT_EXCLUDES).files().copyTo(buildAppWebAppRoot);
 
         buildAppWebAppRoot.getFolder("WEB-INF/classes").createIfMissing();
         buildAppWebAppRoot.getFolder("WEB-INF/lib").createIfMissing();
         buildAppWebAppRoot.getFolder("services").createIfMissing();
 
         com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern("WEB-INF/classes/*.spring.xml");
-        appWebAppRoot.find().include(included).files().copyTo(buildAppWebAppRoot);
+        appWebAppRoot.find().include(included).exclude(DEFAULT_EXCLUDES).files().copyTo(buildAppWebAppRoot);
     }
 
     public void undeploy(Map<String, Object> properties) {

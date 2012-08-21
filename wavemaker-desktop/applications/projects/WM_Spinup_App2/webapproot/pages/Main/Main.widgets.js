@@ -47,10 +47,10 @@ Main.widgets = {
 							error_warning_spacer_2: ["wm.Spacer", {"height":"4px","showing":false,"width":"96px"}, {}],
 							LoginPanel: ["wm.Panel", {"fitToContentHeight":true,"height":"142px","horizontalAlign":"left","margin":"15,0,0,0","verticalAlign":"top","width":"100%"}, {"onEnterKeyPress":"LoginServiceVariable"}, {
 								label2: ["wm.Label", {"autoSizeHeight":true,"caption":"Cloud Foundry Username","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
-								UserName: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","height":"32px","minDesktopHeight":96,"padding":"0","required":true,"showMessages":false,"styles":{"backgroundColor":"","fontSize":"undefinedpx"}}, {}],
+								UserName: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","emptyValue":"null","height":"32px","minDesktopHeight":96,"padding":"0","required":true,"showMessages":false,"styles":{"backgroundColor":"","fontSize":"undefinedpx"}}, {}],
 								spacer1: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
 								label3: ["wm.Label", {"autoSizeHeight":true,"caption":"Cloud Foundry Password","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
-								Password: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","height":"32px","maxHeight":0,"minDesktopHeight":96,"padding":"0","password":true,"required":true,"showMessages":false}, {}]
+								Password: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","emptyValue":"null","height":"32px","maxHeight":0,"minDesktopHeight":96,"padding":"0","password":true,"required":true,"showMessages":false}, {}]
 							}],
 							spacer3: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
 							panel7: ["wm.Panel", {"fitToContentHeight":true,"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {

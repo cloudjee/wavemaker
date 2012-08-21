@@ -641,7 +641,7 @@ public class SecurityToolsManager {
             }
         }
         wat.getDescriptionAndDisplayNameAndIcon().remove(secRole);
-        WebXmlSupport.writeWebXml(null, wat, webXml);
+        WebXmlSupport.writeWebXml(wat, webXml.getContent().asWriter());
     }
 
     /**
