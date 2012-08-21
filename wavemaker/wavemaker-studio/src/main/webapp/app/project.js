@@ -151,7 +151,7 @@ dojo.declare("wm.studio.Project", null, {
         getScriptTemplate: function(pageType, argHash) {
             var text = "";
             if (argHash && argHash.template && argHash.template && argHash.template.preferredDevice) {
-                text += "\t\"preferredDevice\": \"" + argHash.template.preferredDevice + "\",\n";
+                text += "\"preferredDevice\": \"" + argHash.template.preferredDevice + "\",\n";
             }
 
           // NOTE: could present list of choices here

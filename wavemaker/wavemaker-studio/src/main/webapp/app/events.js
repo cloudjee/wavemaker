@@ -11,22 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
 
-/* LOCALIZATION NOTES: 
- * This file is not localized at this time as we do not believe that localization of 
+
+/* LOCALIZATION NOTES:
+ * This file is not localized at this time as we do not believe that localization of
  * custom javascript code is likely to be supported.
  */
 dojo.provide("wm.studio.app.events");
 
 terminus = "_end: 0";
 pageScript = function(name, defaultFunctions) {
+    if (defaultFunctions && !defaultFunctions.match(/,\s*$/)) defaultFunctions += ",";
 	return [
 		'dojo.declare("' + name + '", wm.Page, {',
 		'    start: function() {',
 		'            ',
 		'    },',
-	         (defaultFunctions ? "    " + defaultFunctions + "," : ""),
+	         (defaultFunctions ? "    " + defaultFunctions : ""),
 		'    ' + terminus,
 		'});'
 	].join('\n');
