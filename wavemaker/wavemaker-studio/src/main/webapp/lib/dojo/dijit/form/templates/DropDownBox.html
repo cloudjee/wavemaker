@@ -4,9 +4,9 @@
 	><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer'
 		dojoAttachPoint="_buttonNode, _popupStateNode" role="presentation"
 		>
-			    <!-- Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
-			      WaveMaker: These inputs are just horrible on touch devices; changed to span-->
-<span class="dijitReset dijitInputField dijitArrowButtonInner" value="&#9660; " type="text" tabIndex="-1" readonly="readonly" role="presentation"
+			    <!-- Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+			      WaveMaker: Unfortunate hack to replace input with span to avoid focus issues with mobile that cause keyboards to pop open -->
+<${buttonNodeType} class="dijitReset dijitInputField dijitArrowButtonInner" value="&#9660; " type="text" tabIndex="-1" readonly="readonly" role="presentation"
 			${_buttonInputDisabled}
 	/></div
 	><div class='dijitReset dijitValidationContainer'
