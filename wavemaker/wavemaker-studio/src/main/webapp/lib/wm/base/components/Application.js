@@ -834,123 +834,127 @@ dojo.declare("wm.Application", wm.Component, {
     },
     echoFile: function(filecontents, filetype, filename) {
         if (!this.echoFileService) {
-        this.echoFileService =
-            new wm.ServiceVariable({owner: app,
-                        name: "echoFileService",
-                        downloadFile: true,
-                        service: "waveMakerService",
-                        operation: "echo"})
-        this.echoFileService.input.setType("");
-        wm.typeManager.addType("echoInputs",
+            this.echoFileService = new wm.ServiceVariable({
+                owner: app,
+                name: "echoFileService",
+                downloadFile: true,
+                service: "waveMakerService",
+                operation: "echo"
+            })
+            this.echoFileService.input.setType("");
+            wm.typeManager.addType("echoInputs",
                        {internal: false,
-                    fields: {contents: {type: "java.lang.String"},
-                         fileType: {type: "java.lang.String"},
-                         fileName: {type: "java.lang.String"}}
+                        fields: {contents: {type: "java.lang.String"},
+                                 fileType: {type: "java.lang.String"},
+                                 fileName: {type: "java.lang.String"}}
                        });
-        this.echoFileService.input.setType("echoInputs");
+             this.echoFileService.input.setType("echoInputs");
         }
 
-    this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
-    this.echoFileService.update();
+        this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
+        this.echoFileService.update();
     },
     showLoadingDialog: function(inMessage, inMessageWidth, optionalInTarget) {
-    if (!this.loadingDialog) {
-        this.loadingDialog = new wm.LoadingDialog({owner: this,
-                               name: "loadingDialog",
-                               widgetToCover: this.appRoot});
-    }
-    this.loadingDialog.widgetToCover = optionalInTarget || this.appRoot;
-    this.loadingDialog.setCaption(inMessage || "Loading...");
-    if (inMessageWidth)
-        this.loadingDialog._label.setWidth(inMessageWidth);
-    this.loadingDialog.show();
+        if (!this.loadingDialog) {
+            this.loadingDialog = new wm.LoadingDialog({
+                owner: this,
+                name: "loadingDialog",
+                widgetToCover: this.appRoot
+            });
+        }
+        this.loadingDialog.widgetToCover = optionalInTarget || this.appRoot;
+        this.loadingDialog.setCaption(inMessage || "Loading...");
+        if (inMessageWidth) this.loadingDialog._label.setWidth(inMessageWidth);
+        this.loadingDialog.show();
     },
     hideLoadingDialog: function() {
-    if (this.loadingDialog) this.loadingDialog.hide();
+        if (this.loadingDialog) this.loadingDialog.hide();
     },
     warnOnce: function(inCookieName, inAlertText) {
-    var cookie = dojo.cookie(inCookieName);
-    if (cookie) return false;
-    wm.require("wm.Checkbox");
-    this.alert(inAlertText);
-    var c = new wm.Checkbox({owner: this.alertDialog,
-                 parent: this.alertDialog.containerWidget.c$[0],
-                 margin: "10,0,0,0",
-                 height: "30px",
-                 width: "100%",
-                 caption: "Don't warn again",
-                 captionPosition: "right",
-                 captionAlign: "left",
-                 captionSize: "100%"
-                });
-    this.alertDialog.connectOnce(this.alertDialog, "onClose", this, function() {
-        if (c.getChecked())
-        dojo.cookie(inCookieName, true);
-        c.destroy();
-    });
-    return true;
+        var cookie = dojo.cookie(inCookieName);
+        if (cookie) return false;
+        wm.require("wm.Checkbox");
+        this.alert(inAlertText);
+        var c = new wm.Checkbox({
+            owner: this.alertDialog,
+            parent: this.alertDialog.containerWidget.c$[0],
+            margin: "10,0,0,0",
+            height: "30px",
+            width: "100%",
+            caption: "Don't warn again",
+            captionPosition: "right",
+            captionAlign: "left",
+            captionSize: "100%"
+        });
+        this.alertDialog.connectOnce(this.alertDialog, "onClose", this, function() {
+            if (c.getChecked()) dojo.cookie(inCookieName, true);
+            c.destroy();
+        });
+        return true;
     },
-        alert: function(inText, nonmodal) {
-            if (!this.alertDialog) {
-            this.alertDialog = new wm.GenericDialog({name: "alertDialog",
-                                                             _noAnimation: true,
-                                 owner: this,
-                                 title: wm.getDictionaryItem("wm.Application.TITLE_ALERT"),
-                                 noEscape: false,
-                                 width: "400px",
-                                 height: "180px",
-                                 button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK"),
-                                 button1Close: true,
-                                 userPrompt: ""});
-                this.alertDialog.domNode.style.zIndex = 45;
+    alert: function(inText, nonmodal) {
+        if (!this.alertDialog) {
+            this.alertDialog = new wm.GenericDialog({
+                name: "alertDialog",
+                _noAnimation: true,
+                owner: this,
+                title: wm.getDictionaryItem("wm.Application.TITLE_ALERT"),
+                noEscape: false,
+                width: "400px",
+                height: "180px",
+                button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK"),
+                button1Close: true,
+                userPrompt: ""
+            });
+            this.alertDialog.domNode.style.zIndex = 45;
 
-            }
+        }
 
         if (this.alertDialog.width != "400px") this.alertDialog.setWidth("400px"); // reset any width changes made by users
-        if (dojo.isObject(inText))
-        inText = inText.toString();
+        if (dojo.isObject(inText)) inText = inText.toString();
         nonmodal = Boolean(nonmodal);
         this.alertDialog.setUserPrompt(inText);
         this.alertDialog.setModal(!nonmodal);
         this.alertDialog.show();
     },
 
-        confirmOKFunc: null,
-        confirmCancelFunc: null,
-    confirm: function(inText, nonmodal, onOKFunc, onCancelFunc, optionalOKText,optionalCancelText, noshow) {
-            if (!this.confirmDialog) {
-            this.confirmDialog = new wm.GenericDialog({name: "confirmDialog",
-                                                           _noAnimation: true,
-                                   owner: this,
-                                   noEscape: false,
-                                   width: "350px",
-                                   height: "180px",
-                               button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"),
-                                   button1Close: true,
-                                   button2Caption: wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"),
-                                   button2Close: true,
-                                   userPrompt: "confirm..."});
-                this.confirmDialog.domNode.style.zIndex = 50;
-                this.confirmDialog.connect(this.confirmDialog, "onButton1Click", this,"confirmDialogOKClick");
-                this.confirmDialog.connect(this.confirmDialog, "onButton2Click", this,"confirmDialogCancelClick");
-                this.confirmDialog.connect(this.confirmDialog, "_onEsc", this,"confirmDialogCancelClick");
-            }
+    confirmOKFunc: null,
+    confirmCancelFunc: null,
+    confirm: function(inText, nonmodal, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, noshow) {
+        if (!this.confirmDialog) {
+            this.confirmDialog = new wm.GenericDialog({
+                name: "confirmDialog",
+                _noAnimation: true,
+                owner: this,
+                noEscape: false,
+                width: "350px",
+                height: "180px",
+                button1Caption: wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"),
+                button1Close: true,
+                button2Caption: wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"),
+                button2Close: true,
+                userPrompt: "confirm..."
+            });
+            this.confirmDialog.domNode.style.zIndex = 50;
+            this.confirmDialog.connect(this.confirmDialog, "onButton1Click", this, "confirmDialogOKClick");
+            this.confirmDialog.connect(this.confirmDialog, "onButton2Click", this, "confirmDialogCancelClick");
+            this.confirmDialog.connect(this.confirmDialog, "_onEsc", this, "confirmDialogCancelClick");
+        }
         nonmodal = Boolean(nonmodal);
         this.confirmDialog.setUserPrompt(inText);
         this.confirmDialog.setModal(!nonmodal);
-            this.confirmDialog.setShowInput(false);
-        this.confirmDialog.setTitle( wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
-            this.confirmOKFunc = onOKFunc;
-            this.confirmCancelFunc = onCancelFunc;
-            this.confirmDialog.setButton1Caption(optionalOKText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"));
-            this.confirmDialog.setButton2Caption(optionalCancelText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"));
-            if (!noshow)
-            this.confirmDialog.show();
-        },
-    prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText,optionalCancelText) {
+        this.confirmDialog.setShowInput(false);
+        this.confirmDialog.setTitle(wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
+        this.confirmOKFunc = onOKFunc;
+        this.confirmCancelFunc = onCancelFunc;
+        this.confirmDialog.setButton1Caption(optionalOKText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"));
+        this.confirmDialog.setButton2Caption(optionalCancelText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"));
+        if (!noshow) this.confirmDialog.show();
+    },
+    prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText) {
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
         this.confirmDialog.setShowInput(true);
-    this.confirmDialog.setTitle( wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
+        this.confirmDialog.setTitle(wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
         this.confirmDialog.setInputDataValue(inDefaultValue || "");
         this.confirmDialog.show();
     },
