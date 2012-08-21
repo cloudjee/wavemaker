@@ -17,8 +17,8 @@
 dojo.provide("wm.base.widget.Trees.Tree");
 dojo.require("wm.base.Control");
 
-try { 
-	document.execCommand("BackgroundImageCache", false, true); 
+try {
+	document.execCommand("BackgroundImageCache", false, true);
 } catch(e) {
 };
 
@@ -95,7 +95,7 @@ dojo.declare("wm.TreeNode", null, {
 	    if (this.isDestroyed) return;
 	    this.isDestroyed = true;
 	    this.removeChildren();
-	    
+
 		if (this.tree.nodes[this.id])
 			this.tree._removeNode(this);
 	    if (this.parent) {
@@ -195,7 +195,7 @@ dojo.declare("wm.TreeNode", null, {
 			i.className = ic;
 		// node class
 		var nc = (isLast ? this.classes.lastItem : "") + (this.closed ? "" : " " + this.classes.open);
-		if (n.className != nc)		    
+		if (n.className != nc)
 			n.className = nc;
 		// FIXME: not a good check for if we have unrendered children (might be lazy)
 		var hasChildren = !this._childrenRendered && (this.hasChildren || this._hasChildren || (this._data.children && this._data.children.length));
@@ -394,7 +394,7 @@ dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
 		].join("");
 		this.btnNode = li.firstChild;
 		this.checkboxNode = this.btnNode.nextSibling;
-		this.contentNode = this.checkboxNode.nextSibling;	    
+		this.contentNode = this.checkboxNode.nextSibling;
 	},
 	click: function(e) {
 		if (e.target == this.checkboxNode)
@@ -464,7 +464,7 @@ dojo.declare("wm.TreeTextNode", wm.TreeNode, {
 		    '">'
 		].join("");
 		this.btnNode = li.firstChild;
-		this.contentNode = this.btnNode.nextSibling;	    
+		this.contentNode = this.btnNode.nextSibling;
 		this.inputNode = this.contentNode.nextSibling;
 	    dojo.connect(this.inputNode, "onchange", this, "onChange");
 	},
@@ -480,7 +480,7 @@ dojo.declare("wm.TreeTextNode", wm.TreeNode, {
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
 	render: function(inContent) {
-/*	    if (this.tree._touchScroll) 
+/*	    if (this.tree._touchScroll)
 		 this.domNode = this.tree._touchScroll.scrollers.inner;
 	    else*/
 		this.domNode = this.tree.domNode;
@@ -503,17 +503,6 @@ dojo.declare("wm.Tree", wm.Box, {
 	autoScroll: true,
 	init: function() {
 		this.inherited(arguments);
-
-/*
-	    if (app._touchEnabled) {
-		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
-		this._touchScroll = new TouchScroll(this.domNode, {/ *elastic:true, * /owner: this});
-		this._touchScroll.scrollers.outer.style.position = "absolute";
-		this._touchScroll.scrollers.outer.style.left = "0px";
-		this._touchScroll.scrollers.outer.style.top = "0px";
-		this.setConnectors(false);
-	    }
-    */
 		dojo.addClass(this.domNode, "wmtree");
 		this.setConnectors(this.connectors);
 		this._nodeId = 0;
@@ -633,19 +622,19 @@ dojo.declare("wm.Tree", wm.Box, {
 		//var t = new Date();
 		this.renderDataNode(this.root, this._data);
 		//console.log("rendering took", new Date().valueOf() - t.valueOf());
-		
+
 	},
 	renderDataNode: function(inParent, inData) {
 		if (!inData)
 			return;
 		inParent._childrenRendered = true;
 		dojo.forEach(inData, dojo.hitch(this, function(d) {
-			var 
+			var
 				p = {
-					data: d.data || d.content, 
-					_data: d, 
-					checked: d.checked, 
-					content: d.content, 
+					data: d.data || d.content,
+					_data: d,
+					checked: d.checked,
+					content: d.content,
 					closed: d.closed,
 					image: d.image,
 					_childrenRendered: true
@@ -749,7 +738,7 @@ dojo.declare("wm.Tree", wm.Box, {
 			}
 		}
 	},
-  findTreeNode: function(dataValue, inStartNode) { 
+  findTreeNode: function(dataValue, inStartNode) {
       var n = inStartNode || this.root;
       for (var i=0, k, c; (k=n.kids[i]); i++) {
           if (dataValue == k.data)
@@ -759,7 +748,7 @@ dojo.declare("wm.Tree", wm.Box, {
           if (c)
             return c;
           }
-      }                
+      }
   },
     findNodeByCallack: function(inCallback) {
 	return this.root.findDescendant(inCallback);

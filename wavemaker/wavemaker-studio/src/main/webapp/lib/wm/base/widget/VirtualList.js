@@ -70,7 +70,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
             this.addTouchListener();
         }
     },
-    
+
 
     onTouchStart: function(evt) {
         if (!this.list._disabled && !this.selected || this.list._selectionMode == "multiple") {
@@ -186,19 +186,6 @@ dojo.declare("wm.VirtualList", wm.Control, {
         this.connect(this, "onSelect", this, "onselect"); // changed from onselect to onSelect for grid compatibility
         if (this.ondeselect)
         this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
-        /* Sadly, IOS 5 can scroll without the touch scroller, but there are no events nor dom properties we can use during flick scrolling so its a no-go, even if native scrolling works for panels where we don't need special handling of flicking (i.e. dynamic row generation/deletion) */
-
-/*
-        if (app._touchEnabled || wm.isIOS) {
-        wm.conditionalRequire("lib.github.touchscroll.touchscroll"+ (djConfig.isDebug ? "" : "min"));
-        this._listTouchScroll = new TouchScroll(this.listNode, {elastic:true,owner: this});
-        this.listNode = this._listTouchScroll.scrollers.inner;
-        this._listTouchScroll.scrollers.outer.style.position = "absolute";
-        this._listTouchScroll.scrollers.outer.style.left = "0px";
-        this._listTouchScroll.scrollers.outer.style.top = "0px";
-        this.connect(this._listTouchScroll, "setupScroller", this, "postSetupScroller");
-        }
-        */
     },
     postSetupScroller: function() {
     var touchScrollOuter = this._listTouchScroll.scroller ? this._listTouchScroll.scroller.outer : null;
@@ -257,7 +244,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
     if (result) {
         var hidden = this.isAncestorHidden();
         if (this.headerVisible && !hidden) {
-        wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));     
+        wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));
         }
     }
     return result;
@@ -464,10 +451,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
         } else {
             var s = this.selected, oldIndex = s && s.index, newIndex = inItem.index;
             if (oldIndex !== newIndex){
-                    this.eventDeselect(inItem,true);                    
+                    this.eventDeselect(inItem,true);
                 this.eventSelect(inItem);
             } else {
-                if (this.toggleSelect) 
+                if (this.toggleSelect)
                     this.eventDeselect(inItem);
             }
         }
@@ -476,7 +463,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
                     options: {selectedRow: selectedIndexWas},
                     title: "SelectionChange"});
         }
-        
+
     },
     eventDeselect: function(inItem, ignoreSelectedItem) {
         if (this._disabled) return;
@@ -570,7 +557,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
             this.clickSelect(inItem, inEvent);
         }
     },
-    
+
     _deleteItem: function(inItem) {
     if (this.deleteConfirm) {
         app.confirm(this.deleteConfirm, false, dojo.hitch(this, function() {

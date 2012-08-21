@@ -42,7 +42,7 @@ wm.define("wm.Container", wm.Control, {
     autoScroll: false,
     //themeStyleType: "",        // A funky parameter that won't ever show up in widgets.js; instead it adds/removes classes (more of a style's inspector kind of property, but one that identifies the type of content and leaves it to the theme to decide how to render it)
         fitToContentWidth: false,  // Container automatically resizes itself to match the width of its content, or minWidth if % sized content
-        fitToContentHeight: false, // Container automatically resizes itself to match the height of its content, or minHeight if % sized content      
+        fitToContentHeight: false, // Container automatically resizes itself to match the height of its content, or minHeight if % sized content
         fitToContent: false,       // shortcut for (fitToContentWidth || fitToContentHeight)
         _needsFitToContent: false, // Init time flag that signals that this fitToContent container has not yet been fit to its content
 
@@ -51,7 +51,7 @@ wm.define("wm.Container", wm.Control, {
         this.c$ = [];
     },
     init: function() {
-        
+
         if (this.dockRight) {
             app.dockRight = this;
         }
@@ -64,7 +64,7 @@ wm.define("wm.Container", wm.Control, {
         if (this.dockBottom) {
             app.dockBottom = this;
         }
-        
+
         if (this.autoScroll && app._touchEnabled && !wm.disableTouchScroll) {
             var node = this.domNode;
             this.connect(node, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_ontouchstart");
@@ -72,14 +72,6 @@ wm.define("wm.Container", wm.Control, {
                 this.connect(node, "touchmove", this, "_ontouchmove");
                 this.connect(node, "touchend", this, "_ontouchend");
             }
-
-            /*
-        wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "min"));
-        this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
-        this._touchScroll.scrollers.outer.style.position = "absolute";
-        this._touchScroll.scrollers.outer.style.left = "0px";
-        this._touchScroll.scrollers.outer.style.top = "0px";
-        */
         }
 
 
@@ -88,7 +80,7 @@ wm.define("wm.Container", wm.Control, {
         this.domNode.box = this.box = "";
         this._needsFitToContent = this.fitToContent = this.fitToContentWidth || this.fitToContentHeight;
     },
-    
+
     _ontouchstart: function(e) {
         if (app._touchY && app._touchY.animationId) {
             window.clearInterval(app._touchY.animationId);
@@ -218,7 +210,7 @@ wm.define("wm.Container", wm.Control, {
         this.connect(this.domNode, "onkeypress", this, "keypress");
     },
         keypress: function(evt) {
-        var self = this; 
+        var self = this;
         if (evt.keyCode == dojo.keys.ENTER && evt.target.tagName != "TEXTAREA") {
         wm.job(this.getRuntimeId() + ".enterkeypress", 50, dojo.hitch(this, function() {
             if (!this.isDestroyed)
@@ -270,7 +262,7 @@ wm.define("wm.Container", wm.Control, {
             this.contentAlign = this.layoutAlign;
             delete this.layoutAlign;
         }
-        
+
             /* this.layoutFit I believe is an obsolete wm 4.x property */
         if (this.layoutFit) {
             this.fitToContentWidth = this.fitToContentHeight = this.layoutFit;
@@ -396,7 +388,7 @@ wm.define("wm.Container", wm.Control, {
         adjustSetSizeProp: function(n,v) {
         if (n == "height" && this.fitToContentHeight && this.getPreferredFitToContentHeight)
         return this.getPreferredFitToContentHeight() + "px";
-        if (n == "width" && this.fitToContentWidth && this.getPreferredFitToContentWidth) 
+        if (n == "width" && this.fitToContentWidth && this.getPreferredFitToContentWidth)
         return this.getPreferredFitToContentWidth() + "px";
         return v;
     },
@@ -405,12 +397,12 @@ wm.define("wm.Container", wm.Control, {
     //
     reflow: function() {
         this._boundsDirty = true;
-        if (!this.isReflowEnabled()) 
+        if (!this.isReflowEnabled())
         return;
         /* If this widget is fitToContent, then we'll need to update this container's width/height to fit its contents; and that means the parent will need to reflow.
-         * If the parent is fitToContent, (TODO: Is this still needed?) then any we'll need to call this.parent.reflow() which will cause the parent to flow its children, 
-         * (of which this container is one), and the children to flow their children of which this is one. 
-         *  After this is done, this too will call calcFitToContent.  
+         * If the parent is fitToContent, (TODO: Is this still needed?) then any we'll need to call this.parent.reflow() which will cause the parent to flow its children,
+         * (of which this container is one), and the children to flow their children of which this is one.
+         *  After this is done, this too will call calcFitToContent.
          */
         if (this.parent && (this.fitToContent || this.parent.fitToContent)) {
             if (this._needsFitToContent) delete this._needsFitToContent;
@@ -431,7 +423,7 @@ wm.define("wm.Container", wm.Control, {
         max = this.bounds.h;
         for (var i = 0; i < this.c$.length; i++) {
         var c = this.c$[i];
-        if (c.enableTouchHeight && !c._percEx.h && c.mobileHeight) { 
+        if (c.enableTouchHeight && !c._percEx.h && c.mobileHeight) {
             if (c.bounds.h > max) max = c.bounds.h;
         }
         }
@@ -439,7 +431,7 @@ wm.define("wm.Container", wm.Control, {
         var hasMobileHeight = false;
         for (var i = 0; i < this.c$.length; i++) {
         var c = this.c$[i];
-        if (c.enableTouchHeight && !c._percEx.h && c.mobileHeight) { 
+        if (c.enableTouchHeight && !c._percEx.h && c.mobileHeight) {
             hasMobileHeight = true;
             break;
         }
@@ -464,7 +456,7 @@ wm.define("wm.Container", wm.Control, {
         }
     },
     renderControls: function() {
-        // code to insure that a container's scrollbars are updated when a child is resized... 
+        // code to insure that a container's scrollbars are updated when a child is resized...
         // this means that autoscroll has a slower rendering execution than non-autoscroll
         //if (this.autoScroll && this._xneedReflow || this.fitToContent) this.renderBounds();
         for (var i=0, c; c=this.c$[i]; i++) {
@@ -480,7 +472,7 @@ wm.define("wm.Container", wm.Control, {
     if (wm.Container.delayedReflowWidgets[this.getRuntimeId()])
         return;
     wm.Container.delayedReflowWidgets[this.getRuntimeId()] = this;
-    
+
     var newParents = [];
 
     /* Iterate over every existing delayed widget and find if they have a common parent that could be reflowed instead */
@@ -658,7 +650,7 @@ wm.define("wm.Container", wm.Control, {
                 s.position = 'absolute';
             w.moveable = !f;
             if (b == 'h' || b == 'v') {
-                w.width = bw; 
+                w.width = bw;
                 w.height = bh;
                 w.updateBounds();
             }
@@ -699,7 +691,7 @@ wm.define("wm.Container", wm.Control, {
 
         wm.forEachWidget(this,dirty);
     },
-    /* What is the maximum width that this container can achieve given its parents and assuming we aren't planning on using scrollbars? 
+    /* What is the maximum width that this container can achieve given its parents and assuming we aren't planning on using scrollbars?
      * The answer is a function of the parent's getCurrentMaxWidth and the sizes of this container's siblings.
      */
     getCurrentMaxWidth: function() {
@@ -727,7 +719,7 @@ wm.define("wm.Container", wm.Control, {
             return this.bounds.w - this.padBorderMargin.l - this.padBorderMargin.r;
     },
 
-    /* What is the maximum height that this container can achieve given its parents and assuming we aren't planning on using scrollbars? 
+    /* What is the maximum height that this container can achieve given its parents and assuming we aren't planning on using scrollbars?
      * The answer is a function of the parent's getCurrentMaxHeight and the sizes of this container's siblings.
      */
     getCurrentMaxHeight: function() {
@@ -755,20 +747,20 @@ wm.Container.extend({
      * top-to-bottom container: width is the max of the widths of all px sized children and the minWidths for % sized children
      */
     getPreferredFitToContentWidth: function() {
-        // get the maximum width in this column; 
+        // get the maximum width in this column;
         // and get the sum of widths in this row... we'll worry later about whether its a row or column
-                var extra = this.padBorderMargin.r + this.padBorderMargin.l;    
+                var extra = this.padBorderMargin.r + this.padBorderMargin.l;
             var max = 0;
             var sum = 0;
         var percentUsed = 0;
         var v;
         var count = 0;
-        for (var i=0, c; c=this.c$[i]; i++) {           
+        for (var i=0, c; c=this.c$[i]; i++) {
             if (this.layout.inFlow(c)) {
                 count++;
                 if (
                 /* if its a fitToContentWidth widget, then its height is determined by calling getPreferredFitToContentHeight */
-                c.fitToContentWidth || 
+                c.fitToContentWidth ||
                     /* If there is a fitToContentWidth panel that contains a Container that is percent sized, then
                      * assume the parent will resize to fit whatever height this % sized container needs.
                      * If c is autoScrolling, then its size isn't affected by its contents.
@@ -788,8 +780,8 @@ wm.Container.extend({
                     }
                 }
                 max = Math.max(max, v);
-                sum += v;               
-                
+                sum += v;
+
             }
         }
 
@@ -814,9 +806,9 @@ wm.Container.extend({
     },
     getPreferredFitToContentHeight: function() {
         if (this.layoutKind == "fluid") return this.getFluidHeight();
-        // get the maximum width in this column; 
+        // get the maximum width in this column;
         // and get the sum of height in this row... we'll worry later about whether its a row or column
-            var extra = this.padBorderMargin.t + this.padBorderMargin.b;    
+            var extra = this.padBorderMargin.t + this.padBorderMargin.b;
         var max = 0;
         var sum = 0;
         var percentUsed = 0;
@@ -827,7 +819,7 @@ wm.Container.extend({
                 count++;
 
                 if (
-                c.fitToContentHeight || 
+                c.fitToContentHeight ||
                     /* If there is a fitToContentHeight panel that contains a Container that is percent sized, then
                      * assume the parent will resize to fit whatever height this % sized container needs.
                      * If c is autoscrolling, then its size is not affected by its children.
@@ -928,7 +920,7 @@ wm.Container.extend({
 
             // KANA: for the JobDesigner
         if (this.isDesignLoaded())
-            dojo.publish("LayoutKindChanged", [this]); 
+            dojo.publish("LayoutKindChanged", [this]);
         this.reflow();
     },
     setHorizontalAlign: function(inHorizAlign) {
@@ -1037,7 +1029,7 @@ wm.Container.extend({
             classes = classes.join(" ");
             html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;' " + style + " class='"+classes+"'>" + h + "</div>");
         }
-        }       
+        }
     }
     html.push("</div>");
     return html.join("");
