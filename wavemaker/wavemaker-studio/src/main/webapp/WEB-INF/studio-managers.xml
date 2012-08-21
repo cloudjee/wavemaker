@@ -506,6 +506,14 @@
                         <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M3.ProjSvcsUpgradeTask" />
                     </list>
                 </entry>
+                <entry key="0.52">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
+                            <property name="file"
+                                value="webapproot/WEB-INF/project-springapp.xml" />
+                        </bean>
+                    </list>
+                </entry>                
             </map>
         </property>
         <property name="deploymentManager">
