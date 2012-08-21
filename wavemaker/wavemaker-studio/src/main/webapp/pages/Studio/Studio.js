@@ -224,6 +224,12 @@ dojo.declare("Studio", wm.Page, {
             }
         }));
 
+        /* Do this test at the end so that the dialog will be at the top z-index */
+        if (dojo.isIE == 8) {
+            app.warnOnce("dontRunStudioInIE8", this.getDictionaryItem("DONT_RUN_IE8"));
+        }
+
+
         /*
         this.pageSelect.setParent(null);
         this.tabs.decorator.tabsControl.domNode.appendChild(this.pageSelect.domNode)

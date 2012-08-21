@@ -15,6 +15,7 @@
 
 {
     ALERT_OLD_IE_BAD: "<p>WaveMaker applications can run on IE6 or above.</p><p>However, WaveMaker Studio requires Chrome, FireFox or IE8.</p><p>Note: if you are running WaveMaker studio in IE8, you must turn off compatibility mode.</p>",
+    DONT_RUN_IE8: "Developing applications using Studio in IE8 may work, but is unsupported.  We recommend Chrome, Firefox, Safari or IE9 and above",
     TOOLTIP_SECURITY_ERROR: "A security error shown here has no effect on the project you are designing.  It does indicate that we are unable to show your data within the designer.  You can typically fix this problem by running your application, logging in to your application, and then the data should show up in the designer",
 
     /* Documentation; Help Menu */
@@ -132,13 +133,13 @@
     /* wm.PopupMenuButton, wm.DojoMenu */
     "wm.PopupMenuButton.MENU_DESIGNER_TITLE":"Edit Menu",
     "wm.DojoMenu.MENU_DESIGNER_TITLE": "Edit Menu",
-    "wm.PopupMenu.DEFAULT_STRUCTURE": 
+    "wm.PopupMenu.DEFAULT_STRUCTURE":
         [{label: "File",	children: [{label: "Save"},{label: "Close"}]},
 	{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},
         {label: "Help"}],
 
     /* wm.ContextMenuDialog */
-    "wm.ContextMenuDialog.DELETE_LABEL": 'Delete', 
+    "wm.ContextMenuDialog.DELETE_LABEL": 'Delete',
     "wm.ContextMenuDialog.SHOW_MORE": 'Show Advanced Properties >>',
     "wm.ContextMenuDialog.SHOW_LESS": '<< Hide Advanced Properties',
 
@@ -176,7 +177,7 @@
     "wm.Query.TAB_CAPTION": "Query",
     "wm.DataModel.TAB_CAPTION": "Data Model",
 
-    
+
     /* LivePanel, LiveForm, EditPanel, RelatedEditor */
     "wm.RelatedEditor.BAD_EDIT_MODE": "For this editor to be editable, its parent editor must have an editingMode of editable.",
     "wm.RelatedEditor.LOOKUP_CAPTION": "${fieldName} (lookup)",
@@ -232,7 +233,7 @@
     "ALERT_PASTE_FAILED_PANEL_LOCKED": "Unable to paste.  All containers are either locked or frozen."    ,
     "CONFIRM_GENERIC_DISCARD_UNSAVED": 'Discard unsaved changes?',
 
-    
+
     WAIT_BUILDING_WAR: "Building WAR file. It may take several minutes. Please wait.",
     ALERT_LIVE_LAYOUT_SECURITY_WARNING: "In order for Live Layout to work, project security needs to be disabled.<br/>Please uncheck the 'Enable Security' check box in the Security Editor to disable security.<br/>To disable Live Layout, launch Studio in 'nolive' mode.",
     ALERT_BUILDING_ZIP_SUCCESS: "Successfully exported project to zip file into your Project Folder at <ul><li>${inResponse}</li></ul>To import this project unzip it into the projects directory of another studio.",
@@ -293,12 +294,12 @@
     "wm.EventEditor.LIST_TIMERS": "TIMERS:",
     "wm.EventEditor.LIST_PAGECONTAINERS": "Page Containers:",
     /* Inspectors */
-    "wm.DataInspector.TOAST_EXPRESSION_FAILED": "This value failed to compile; please try again.  Most common problem: lack of quotes",    
+    "wm.DataInspector.TOAST_EXPRESSION_FAILED": "This value failed to compile; please try again.  Most common problem: lack of quotes",
     "wm.ComponentInpsectorPanel.PROPERTY_NODE_CAPTION": "Properties",
     "wm.ComponentInpsectorPanel.EVENT_NODE_CAPTION": "Events",
     "wm.ComponentInpsectorPanel.CUSTOMMETHOD_NODE_CAPTION": "Custom Methods",
-    "wm.Inspector.PROPERTIES_HEADER_CAPTION": "Properties",    
-    "wm.Inspector.VALUES_HEADER_CAPTION": "Value",    
+    "wm.Inspector.PROPERTIES_HEADER_CAPTION": "Properties",
+    "wm.Inspector.VALUES_HEADER_CAPTION": "Value",
     "wm.StyleInspector.BASIC_STYLE_LAYER_CAPTION": "Basic",
     "wm.StyleInspector.CLASSES_LAYER_CAPTION": "Classes",
     "wm.StyleInspector.CUSTOM_LAYER_CAPTION": "Custom Styles",
