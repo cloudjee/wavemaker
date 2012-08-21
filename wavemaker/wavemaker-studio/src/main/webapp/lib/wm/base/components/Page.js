@@ -34,7 +34,7 @@ dojo.declare("wm.Page", wm.Component, {
         enableMobileFolding: false,
 	create: function() {
 	    this.inherited(arguments);
-	    if (!this.name) 
+	    if (!this.name)
 		this.name = this.declaredClass.toLowerCase();
 
 	    wm.Page.registerPage(this);
@@ -55,9 +55,9 @@ dojo.declare("wm.Page", wm.Component, {
 	destroy: function() {
 	    wm.Page.deregisterPage(this);
 	  	var owner = this.getMainPage();
-	  	if (owner) 
-			owner.subPageUnloaded(this);	  
-	  	if (window.app) 
+	  	if (owner)
+			owner.subPageUnloaded(this);
+	  	if (window.app)
 			window.app.subPageUnloaded(this);
 		wm.fire(this.root, "destroy");
 		this.inherited(arguments);
@@ -90,9 +90,9 @@ dojo.declare("wm.Page", wm.Component, {
 	    var d = notAppOwned ? this.domNode || document.body : app.appRoot.domNode;
 	    var ds = d.style;
 		dojo.addClass(d, this.declaredClass);
-		
+
 		// if noAppOwned, we set left to negetive value so that user cannot see
-		// the actual rendering. After this is done, we should place this div at 
+		// the actual rendering. After this is done, we should place this div at
 		// the place it was earlier(ie, previousStyleLeft).
 		var previousStyleLeft = ds.left;
 		if (notAppOwned)
@@ -145,13 +145,13 @@ dojo.declare("wm.Page", wm.Component, {
 		//this.loadCssHtml();
 		wm.timePage && console.timeEnd("page.loadComponents");
 		var self = this;
-	    
+
 		// reverting Michael's change here.
 		//if (this.getRoot() instanceof wm.Page && this.getRoot()._loadingPage) {
 		//this.postRender();
 		//this.onShow();
 	    //} else
-		
+
 		dojo.addOnLoad(dojo.hitch(this, function(){
 		    this.postRender();
 		    if (notAppOwned)
@@ -163,7 +163,7 @@ dojo.declare("wm.Page", wm.Component, {
 		    //console.info('postInitCalled = ' + postInitCalled);
 		    //postInitCalled = 0;
 		}));
-	    
+
 		//console.profile();
 
 	},
@@ -304,13 +304,13 @@ dojo.declare("wm.Page", wm.Component, {
 				console.info('Error : Page.js trying to get component dynamically-------------> ' + e);
 			}
 
-			if (!ctor) 
+			if (!ctor)
 			{
 				console.debug('Component type "' + inType + '" is not available.');
 				ctor = wm.Box;
 			}
 		}
-		
+
 
 		// FIXME: this check really needs to go
 		// yuk
@@ -325,7 +325,7 @@ dojo.declare("wm.Page", wm.Component, {
 				parentNode: parentNode
 			};
 		}
-	    
+
         // props.name should overwrite getUniqueName(inName), which should overwrite inProps.
 	    if (!props.owner) {
 		if (inParent && inParent instanceof wm.Layout)
@@ -342,11 +342,11 @@ dojo.declare("wm.Page", wm.Component, {
 		}, props);
 
 
-		if (this.isRelativePositioned && inType == "wm.Layout"){ 
-			props.isRelativePositioned = true;	
+		if (this.isRelativePositioned && inType == "wm.Layout"){
+			props.isRelativePositioned = true;
 		}
 
-	    // All custom methods should be page methods; page methods have not been evaled, so 
+	    // All custom methods should be page methods; page methods have not been evaled, so
 	    // can not be defined nor invoked at design time
 	    if (!this.isDesignLoaded()) {
 		for (var p in props) {
@@ -376,7 +376,7 @@ dojo.declare("wm.Page", wm.Component, {
 			if (inChildren)
 				this.loadComponents(inChildren, c);
 
-			c.loaded(); // Component.loaded calls postInit 
+			c.loaded(); // Component.loaded calls postInit
 
 	                var timeToLoad = this.stopTimerWithName("LoadComponent", inType);
 	        if (wm.debugPerformance) {
@@ -392,7 +392,7 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	printPagePerformanceData: function() {
 	  var totalsByMethod = {};
-			    
+
 			    for (var componentType in wm.Component.timingByComponent) {
 			      var obj = wm.Component.timingByComponent[componentType];
 
@@ -417,7 +417,7 @@ dojo.declare("wm.Page", wm.Component, {
 
 	loadComponents: function(inChildren, inParent) {
 		for (var i in inChildren) {
-			try 
+			try
 			{
 			 this.loadComponent(i, inParent, inChildren[i][0], inChildren[i][1], inChildren[i][2], inChildren[i][3]);
 			} catch(e) {
@@ -429,7 +429,7 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	onShow: function() {
 	},
-	onStart: function(inPage) {		
+	onStart: function(inPage) {
 	},
     keydown: function(e) {
         // if there are any modal dialogs showing, do not handle keypress, as
@@ -469,7 +469,7 @@ dojo.declare("wm.Page", wm.Component, {
         }
 
     },
-    
+
         onEnterKey: function() {},
         onShiftKey: function(inCharacter) {},
         onCtrlKey: function(inCharacter) {},
@@ -539,7 +539,7 @@ wm.Page.extend({
 	this._editLanguage = lang
 
 	/* 1. Restore the default language so we're editting a fresh copy in the new language
-	 * 2. Create a new set of cache values to store the default language in 
+	 * 2. Create a new set of cache values to store the default language in
 	 */
 	    var compList = wm.listComponents([this], wm.Component, false);
 	    for (var i = 0; i < compList.length; i++) {
@@ -549,13 +549,13 @@ wm.Page.extend({
 		    var value = c.getProp(prop);
 		    // only do this for non-objects or for objects that aren't dojo objects nor domNodes
 		    // typeof null should NOT be "object" :-(
-		    if (value === null || typeof value != "object" || value.declaredClass === undefined && value instanceof Node == false) {
+		    if (value === null || typeof value != "object" || value.declaredClass === undefined && !wm.isNode(value)) {
 		    //if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
 			/* Restore the default values any time we change languages and clear the cache */
 			if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {
 			    c.setProp(prop, c["_original_i18n_" + prop]);
-			    value = c["_original_i18n_" + prop]; 
-			    delete c["_original_i18n_" + prop]; 
+			    value = c["_original_i18n_" + prop];
+			    delete c["_original_i18n_" + prop];
 			}
 			if (!isDefaultLang) {
 			    c["_original_i18n_" + prop] = (typeof value == "object") ? dojo.clone(value) : value;
@@ -584,7 +584,7 @@ wm.Page.extend({
 	for (var i = 0; i < compList.length; i++) {
 	    var c = compList[i];
 	    var props = c.listWriteableProperties();
-	    for (var prop in props) {		
+	    for (var prop in props) {
 		if (c.hasLocalizedProp(prop)) {
 		    if (!result[c.name])
 			result[c.name] = {};
@@ -605,7 +605,7 @@ wm.Page.extend({
 	    text = text.replace(/\{(.*?)\n/, '{$1\n\t"' + inPropName + '": ' + inValue + ',\n');
 	}
 	studio.setScript(text);
-	
+
     },
     getPageProperty: function(inPropName) {
 	if (typeof inValue == "string")
@@ -684,7 +684,7 @@ wm.Part = wm.Page
 
 
 dojo.mixin(wm.Page, {
-    /* static variable for storing all pages; each element is an array so that there can be 
+    /* static variable for storing all pages; each element is an array so that there can be
      * multiple "page5" pages at the same time.  Note that if it weren't an array, then when
      * we destroy the page and remove page5 from this list, that we could no longer access ANY page5.
      */
@@ -697,7 +697,7 @@ dojo.mixin(wm.Page, {
         }
     },
     registerPage: function(inPage) {
-        // We'll need the page to 
+        // We'll need the page to
         if (!wm.Page.byName[inPage.declaredClass]) wm.Page.byName[inPage.declaredClass] = [];
         wm.Page.byName[inPage.declaredClass].push(inPage);
     },
