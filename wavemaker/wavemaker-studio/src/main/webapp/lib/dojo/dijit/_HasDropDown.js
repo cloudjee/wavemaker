@@ -4,7 +4,7 @@ dojo.declare("dijit._HasDropDown",
 	null,
 	{
         /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
-         * WaveMaker: Unfortunate hack to replace input with span to avoid focus issues with mobile that cause keyboards to pop open */
+         * WaveMaker: Unfortunate hack to replace input with span to avoid focus issues with mobile that cause keyboards to pop open
          */
         buttonNodeType: wm.isMobile ? "span" : "input",
 
