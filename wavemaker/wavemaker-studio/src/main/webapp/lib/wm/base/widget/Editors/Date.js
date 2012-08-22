@@ -21,148 +21,156 @@ dojo.require("dijit.form.TimeTextBox");
 // Date Editor
 //===========================================================================
 dojo.declare("wm.Date", wm.Text, {
-        openOnClick: true,
-        useLocalTime: false,
-	promptMessage: "",
-	invalidMessage: "",
-	minimum: "",
-	maximum: "",
-        dateMode: "Date",
-	//locale: '',
-    
-	validationEnabled: function() { return true;},
-        getEditorConstraints: function() {
-	    var constraints = {};	
-		if (this.minimum)
-		    constraints.min = this.convertValue(this.minimum);
-		if (this.maximum)
-		    constraints.max = this.convertValue(this.maximum);
-	    return constraints;
-	},
-	getEditorProps: function(inNode, inProps) {
-	    var constraints = this.getEditorConstraints();
+    openOnClick: true,
+    useLocalTime: false,
+    promptMessage: "",
+    invalidMessage: "",
+    minimum: "",
+    maximum: "",
+    dateMode: "Date",
+    //locale: '',
+    validationEnabled: function() {
+        return true;
+    },
+    getEditorConstraints: function() {
+        var constraints = {};
+        if (this.minimum) constraints.min = this.convertValue(this.minimum);
+        if (this.maximum) constraints.max = this.convertValue(this.maximum);
+        return constraints;
+    },
+    getEditorProps: function(inNode, inProps) {
+        var constraints = this.getEditorConstraints();
 
-		var prop = dojo.mixin(this.inherited(arguments), {
-			promptMessage: this.promptMessage,
-			invalidMessage: this.invalidMessage || "$_unset_$",
-			constraints: constraints,
-			required: this.required,
-		        openOnClick: this.openOnClick,
-		    value: this.convertValue(this.displayValue)
-		}, inProps || {});
-		
-/*
-		if (this.locale != '')
-			prop.lang = this.locale;
+        var prop = dojo.mixin(this.inherited(arguments), {
+            promptMessage: this.promptMessage,
+            invalidMessage: this.invalidMessage || "$_unset_$",
+            constraints: constraints,
+            required: this.required,
+            openOnClick: this.openOnClick,
+            value: this.convertValue(this.displayValue)
+        }, inProps || {});
+
+        /*
+        if (this.locale != '')
+            prop.lang = this.locale;
 */
-		return prop;
-	},
-	_createEditor: function(inNode, inProps) {
-	    var e = new wm.form.DateTextBox(this.getEditorProps(inNode, inProps));
-	    if (wm.isMobile) {
-		var self = this;
-		dojo.query("input",e.domNode).forEach(function(node) {
-		    dojo.attr(node,"readonly", true);
-		})
-	    }
-	    return e;
-	},
-	convertValue: function(inValue) {
-	    return wm.convertValueToDate(inValue, {selector: this.dateMode.toLowerCase(), formatLength: this.formatLength, timePattern: this.use24Time ? "HH:mm" : "hh:mm a"});
-	},
-	getEditorValue: function() {
-	    var d = this.inherited(arguments);
-	    if (d) {
-		if (!this.useLocalTime) {
-		    if (this.dateMode == "Date") {
-			d.setHours(-wm.timezoneOffset,0,0);
-		    } else {
-			d = dojo.date.add(d,"hour",-wm.timezoneOffset);
-		    }
-		}
-		return d.getTime();
-	    }
-	    return this.makeEmptyValue();
-	},
-	setEditorValue: function(inValue) {
-	    var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
-
-	    // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
-	    if (!this.useLocalTime && v) {
-		v = new Date(v); // don't modify the source data as the called may still need it 
-		v.setHours(v.getHours() + wm.timezoneOffset);
-	    }
-	    this.inherited(arguments, [v]);
-	},
-        setDefaultOnInsert:function() {
-	    if (this.defaultInsert) {
-		if (this.$.binding && this.$.binding.wires.defaultInsert)
-		    this.$.binding.wires.defaultInsert.refreshValue();
-		this.setDataValue(this.defaultInsert); // setDataValue knows how to handle Date and long; dijit.set apparently does not.
-		this.invalidate();
-	    }
-	},
+        return prop;
+    },
+    _createEditor: function(inNode, inProps) {
+        var e = new wm.form.DateTextBox(this.getEditorProps(inNode, inProps));
+        if (wm.isMobile) {
+            var self = this;
+            dojo.query("input", e.domNode).forEach(function(node) {
+                dojo.attr(node, "readonly", true);
+            })
+        }
+        return e;
+    },
+    convertValue: function(inValue) {
+        return wm.convertValueToDate(inValue, {
+            selector: this.dateMode.toLowerCase(),
+            formatLength: this.formatLength,
+            timePattern: this.use24Time ? "HH:mm" : "hh:mm a"
+        });
+    },
+    getEditorValue: function() {
+        var d = this.inherited(arguments);
+        if (d) {
+            if (!this.useLocalTime) {
+                if (this.dateMode == "Date") {
+                    d.setHours(-wm.timezoneOffset, 0, 0);
+                } else {
+                    d = dojo.date.add(d, "hour", -wm.timezoneOffset);
+                }
+            }
+            return d.getTime();
+        }
+        return this.makeEmptyValue();
+    },
+    setEditorValue: function(inValue) {
+        var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
+        // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
+        if (!this.useLocalTime && v) {
+            v = new Date(v); // don't modify the source data as the called may still need it
+            v.setHours(v.getHours() + wm.timezoneOffset);
+        }
+        this.inherited(arguments, [v]);
+    },
+    setDefaultOnInsert: function() {
+        if (this.defaultInsert) {
+            if (this.$.binding && this.$.binding.wires.defaultInsert) this.$.binding.wires.defaultInsert.refreshValue();
+            this.setDataValue(this.defaultInsert); // setDataValue knows how to handle Date and long; dijit.set apparently does not.
+            this.invalidate();
+        }
+    },
     calcDisplayValue: function(inDate) {
-	var d = inDate;
-	if (d instanceof Date == false)
-	    d = new Date(inDate);
-	return dojo.date.locale.format(d, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm' : "hh:mm a"});
+        var d = inDate;
+        if (d instanceof Date == false) d = new Date(inDate);
+        return dojo.date.locale.format(d, {
+            formatLength: this.formatLength,
+            fullYear: true,
+            selector: this.dateMode.toLowerCase(),
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+        });
 
-    },	
-	getDisplayValue: function() {
-	    if (this.editor)
-		return this.editor.get("displayedValue");
-	    else if (this.dataValue)
-		return this.calcDisplayValue(this.dataValue);
-	    else
-		return "";
-	},
+    },
+    getDisplayValue: function() {
+        if (this.editor) return this.editor.get("displayedValue");
+        else if (this.dataValue) return this.calcDisplayValue(this.dataValue);
+        else return "";
+    },
 
     /* Note that the definition of what are legal values is based on the conversions done by getEditorConstraints */
-	setMaximum: function(inMax) {
-	    if (!inMax) {
-		this.maximum = null;
-	    } else {
-		this.maximum = inMax;
-	    }
-	    if (this.editor) {
-		this.editor._setConstraintsAttr(this.getEditorConstraints());
-		this.editor.validate();
-	    }
-	},
-	setMinimum: function(inMin) {
-	    if (!inMin) {
-		this.minimum = null;
-	    } else {
-		this.minimum = inMin;
-	    }
-	    if (this.editor) {
-		this.editor._setConstraintsAttr(this.getEditorConstraints());
-		this.editor.validate();
-	    }
-	},
+    setMaximum: function(inMax) {
+        if (!inMax) {
+            this.maximum = null;
+        } else {
+            this.maximum = inMax;
+        }
+        if (this.editor) {
+            this.editor._setConstraintsAttr(this.getEditorConstraints());
+            this.editor.validate();
+        }
+    },
+    setMinimum: function(inMin) {
+        if (!inMin) {
+            this.minimum = null;
+        } else {
+            this.minimum = inMin;
+        }
+        if (this.editor) {
+            this.editor._setConstraintsAttr(this.getEditorConstraints());
+            this.editor.validate();
+        }
+    },
 
 
     calcIsDirty: function(val1, val2) {
-	if (val1 === undefined || val1 === null)
-	    val1 = 0;
-	if (val2 === undefined || val2 === null)
-	    val2 = 0;
+        if (val1 === undefined || val1 === null) val1 = 0;
+        if (val2 === undefined || val2 === null) val2 = 0;
 
-	if (val1 instanceof Date == false) {
-	    val1 = new Date(val1);
-	}
-	if (val2 instanceof Date == false) {
-	    var val2 = new Date(val2);
-	}
+        if (val1 instanceof Date == false) {
+            val1 = new Date(val1);
+        }
+        if (val2 instanceof Date == false) {
+            var val2 = new Date(val2);
+        }
 
-	if (val1 && val2 && val1.getTime() == val2.getTime()) {
-	    return false;
-	}
-	val1 = dojo.date.locale.format(val1, {formatLength: this.formatLength || "short", selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm' :  "hh:mm a"});
-	val2 = dojo.date.locale.format(val2, {formatLength: this.formatLength || "short", selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm'  : "hh:mm a"});
+        if (val1 && val2 && val1.getTime() == val2.getTime()) {
+            return false;
+        }
+        val1 = dojo.date.locale.format(val1, {
+            formatLength: this.formatLength || "short",
+            selector: this.dateMode.toLowerCase(),
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+        });
+        val2 = dojo.date.locale.format(val2, {
+            formatLength: this.formatLength || "short",
+            selector: this.dateMode.toLowerCase(),
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+        });
 
-	return val1 != val2;
+        return val1 != val2;
     }
 
 });
@@ -172,78 +180,86 @@ dojo.declare("wm.Date", wm.Text, {
 //===========================================================================
 dojo.declare("wm.Time", wm.Date, {
     use24Time: false,
-	timePattern:'hh:mm a',
+    timePattern: 'hh:mm a',
     useWMDropDown: false,
     init: function() {
-	this.inherited(arguments);
-	if (this.use24Time) {
-	    this.timePattern = this.timePattern.replace(/h/g,"H").replace(/ a/,"");
-	}
+        this.inherited(arguments);
+        if (this.use24Time) {
+            this.timePattern = this.timePattern.replace(/h/g, "H").replace(/ a/, "");
+        }
     },
     setDataValue: function(inValue) {
-	if (inValue) {
-	    var d = new Date(inValue);
-	    d.setYear(1970);
-	    d.setMonth(0);
-	    d.setDate(1);	    
-	}
-	this.inherited(arguments, [inValue ? d.getTime() : null]);
+        if (inValue) {
+            var d = new Date(inValue);
+            d.setYear(1970);
+            d.setMonth(0);
+            d.setDate(1);
+        }
+        this.inherited(arguments, [inValue ? d.getTime() : null]);
     },
-	getEditorProps: function(inNode, inProps) {
-		var prop = dojo.mixin(this.inherited(arguments), {
-		    use24Time: this.use24Time,
-		    constraints:{timePattern: this.timePattern}}, inProps || {});
-		return prop;
-	},
-	convertValue: function(inValue) {
-		return wm.convertValueToDate(inValue, {selector: "time"});
-	},
-	_createEditor: function(inNode, inProps) {
-	    var e;
-	    if (this.useWMDropDown) {
-		e = new wm.form.TimeTextBox(this.getEditorProps(inNode, inProps));
-	    } else {
-		e = new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
-	    }
-	    if (wm.isMobile) {
-		var self = this;
-		dojo.query("input",e.domNode).forEach(function(node) {
-		    dojo.attr(node,"readonly", true);
-		})
-		
-	    }
-	    return e;
-	},
-	getEditorValue: function() {
-	    var d = wm.Text.prototype.getEditorValue.call(this);
-	    if (d) {
-		if (!this.useLocalTime)
-		    d.setHours(d.getHours()-wm.timezoneOffset);
-		return d.getTime();
-	    }
-	    return this.makeEmptyValue();
-	},
+    getEditorProps: function(inNode, inProps) {
+        var prop = dojo.mixin(this.inherited(arguments), {
+            use24Time: this.use24Time,
+            constraints: {
+                timePattern: this.timePattern
+            }
+        }, inProps || {});
+        return prop;
+    },
+    convertValue: function(inValue) {
+        return wm.convertValueToDate(inValue, {
+            selector: "time"
+        });
+    },
+    _createEditor: function(inNode, inProps) {
+        var e;
+        if (this.useWMDropDown) {
+            e = new wm.form.TimeTextBox(this.getEditorProps(inNode, inProps));
+        } else {
+            e = new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
+        }
+        if (wm.isMobile) {
+            var self = this;
+            dojo.query("input", e.domNode).forEach(function(node) {
+                dojo.attr(node, "readonly", true);
+            })
+
+        }
+        return e;
+    },
+    getEditorValue: function() {
+        var d = wm.Text.prototype.getEditorValue.call(this);
+        if (d) {
+            if (!this.useLocalTime) d.setHours(d.getHours() - wm.timezoneOffset);
+            return d.getTime();
+        }
+        return this.makeEmptyValue();
+    },
 
     calcIsDirty: function(val1, val2) {
-	if (val1 === undefined || val1 === null)
-	    val1 = 0;
-	if (val2 === undefined || val2 === null)
-	    val2 = 0;
+        if (val1 === undefined || val1 === null) val1 = 0;
+        if (val2 === undefined || val2 === null) val2 = 0;
 
-	if (val1 instanceof Date == false) {
-	    val1 = new Date(val1);
-	}
-	if (val2 instanceof Date == false) {
-	    var val2 = new Date(val2);
-	}
+        if (val1 instanceof Date == false) {
+            val1 = new Date(val1);
+        }
+        if (val2 instanceof Date == false) {
+            var val2 = new Date(val2);
+        }
 
-	if (val1 && val2 && val1.getTime() == val2.getTime()) {
-	    return false;
-	}
-	val1 = dojo.date.locale.format(val1, {timePattern: this.timePattern, selector: "time"});
-	val2 = dojo.date.locale.format(val2, {timePattern: this.timePattern, selector: "time"});
+        if (val1 && val2 && val1.getTime() == val2.getTime()) {
+            return false;
+        }
+        val1 = dojo.date.locale.format(val1, {
+            timePattern: this.timePattern,
+            selector: "time"
+        });
+        val2 = dojo.date.locale.format(val2, {
+            timePattern: this.timePattern,
+            selector: "time"
+        });
 
-	return val1 != val2;
+        return val1 != val2;
     }
 
 });
@@ -256,8 +272,8 @@ dojo.declare("wm.DateTime", wm.Date, {
     dateMode: "Date and Time",
 
     _createEditor: function(inNode, inProps) {
-	this.containerWidget = new wm.Container({width: "100%", 
-						 height: "100%", 
+	this.containerWidget = new wm.Container({width: "100%",
+						 height: "100%",
 						 layoutKind: "left-to-right",
 						 horizontalAlign: "left",
 						 verticalAlign: "top",
@@ -366,7 +382,7 @@ dojo.declare("wm.DateTime", wm.Date, {
     setDateMode: function(inValue) {
 	// must get value before changing formatLength because formatLength determines how to parse the value
 	var value = this.getDataValue();
-	this.dateMode = inValue; 
+	this.dateMode = inValue;
 	if (this.editor) {
 	    switch(this.dateMode) {
 	    case "Date and Time":
@@ -401,11 +417,11 @@ dojo.declare("wm.DateTime", wm.Date, {
 	this.dateEditor.setMinimum(inValue);
     }
 
-/* OLD EDITOR 
+/* OLD EDITOR
     getEditorConstraints: function() {
 	var constraints = this.inherited(arguments);
 	constraints.formatLength = this.formatLength;
-	constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";	
+	constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";
 	switch(this.dateMode) {
 	case "Date and Time":
 	    constraints.selector = "datetime";
@@ -428,7 +444,7 @@ dojo.declare("wm.DateTime", wm.Date, {
     _createEditor: function(inNode, inProps) {
 	var e = dijit.form.DateTimeTextBox(this.getEditorProps(inNode, inProps));
 	if (wm.isMobile) {
-	    dojo.attr(e.focusNode, "readonly", true);	    
+	    dojo.attr(e.focusNode, "readonly", true);
 	    //this.connect(e.domNode, "ontouchstart", e, "openDropDown");
 	}
 	return e;
@@ -556,7 +572,7 @@ dojo.declare(
 
 		this.dropDown.setUse24Time(this.use24Time);
 
-		
+
 		this.dropDown._currentDijit = this;
 		this._aroundNode = app.appRoot.domNode;
 		this._preparedNode = true;
@@ -581,7 +597,7 @@ dojo.declare(
 		    //this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
 		    this.dropDown.setHeight("240px");
 		    this.dropDown.setWidth("260px");
-		}		   
+		}
 
 		if (!noReposition) {
 		    var editorPos = dojo.coords(this.owner.editor.domNode);
@@ -601,7 +617,7 @@ dojo.declare(
 		    }
 		    dojo.marginBox(this.dropDown.domNode.parentNode, position);
 		}
-		
+
 		this.dropDown.buttonPanel.setShowing(wm.isMobile);
 		this.dropDown.callOnShowParent();
 		this.dropDown.setDataValue(this.get("value"));
@@ -629,7 +645,7 @@ dojo.require("wm.base.widget.Container");
 dojo.declare("wm.TimePicker", wm.Container, {
     use24Time: false,
     border: "1",
-    borderColor: "#333",    
+    borderColor: "#333",
     height: "452px",
     width: "220px", // appears to be ignored; see this.dropDown.setWidth() call above
     padding: "0",
@@ -659,7 +675,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
     },
     showContents: function() {
 	if (!this.mainPanel.showing) {
-	    this._cupdating = true;	
+	    this._cupdating = true;
 	    this.mainPanel.setShowing(true);
 	    this.hours.renderDojoObj();
 	    this.minutes.renderDojoObj();
@@ -678,7 +694,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 					layoutKind: "left-to-right",
 					horizontalAlign: "left",
 					verticalAlign: "center",
-					width: "100%", 
+					width: "100%",
 					height: "100%"});
 	wm.require("wm.List");
 	this.hours = new wm.List({owner: this,
@@ -688,7 +704,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 				  columns: [{"show":true,"title":"Hour","width":"100%","align":"left","field": "dataValue", mobileColumn:1}],
 				  _pkList: ["dataValue"],
 				  height: "100%",
-				  padding: "2",					
+				  padding: "2",
 				  width: "100%",
 				    minWidth: 100,
 				  border: "0,2,0,0",
@@ -707,7 +723,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 				  columns: [{"show":true,"title":"Minute","width":"100%","align":"left","field": "dataValue", mobileColumn:1}],
 				  _pkList: ["dataValue"],
 				  height: "100%",
-				  padding: "2",					
+				  padding: "2",
 				  width: "100%",
 				    minWidth: 100,
 				    border: "0,2,0,0",
@@ -733,7 +749,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 				     displayValue: "",
 				     height: "100%",
 				     options: ["1","2","3","4","5","6","7","8","9","10","11","12"],
-				     padding: "2",					
+				     padding: "2",
 				     width: "100%",
 				     onchange: onchange});
 
@@ -805,7 +821,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 					 desktopHeight: "32px"});
 
 
-						   
+
 	this.okButton = new wm.Button({owner: this,
 				       parent: this.buttonPanel,
 				       name: "okButton",
@@ -883,7 +899,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 	    var hour;
 	    if (this.use24Time) {
 		hour = Number(timematches[1]);
-		
+
 	    } else {
 		var isPM = timematches[3].toLowerCase() == "pm";
 		//this.hours.setDataValue(timematches[1].replace(/^0*/,""));
@@ -893,11 +909,11 @@ dojo.declare("wm.TimePicker", wm.Container, {
 		} else {
 		    this.amButton.onclick(this.amButton);
 		}
-		    
+
 	    }
 	    this.hours.deselectAll();
 	    this.hours.selectItemOnGrid({dataValue: hour}, ["dataValue"]);
-	    
+
 	}
     },
     onOkClick: function() {
