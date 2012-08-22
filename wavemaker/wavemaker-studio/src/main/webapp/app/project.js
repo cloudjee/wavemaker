@@ -1987,7 +1987,7 @@ Studio.extend({
                 modal: false,
                 owner: studio,
                 hideControls: true,
-                height: "170px",
+                height: "130px",
                 width: "500px"});
             d.onClose = function(inWhy) {
                 /* Removal of projects tab
