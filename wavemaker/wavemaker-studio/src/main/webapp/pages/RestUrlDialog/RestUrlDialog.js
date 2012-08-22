@@ -45,8 +45,8 @@ dojo.declare("RestUrlDialog", wm.Page, {
 		var w = (this.passwordInput.getDataValue() == undefined ? "" : this.passwordInput.getDataValue());
 		var h = {};
 		var headers = this.headersVar.getData();
-		for (var i = 0; headers && i < headers.length; i++) {
-			var item = headers[i];
+		for (var k = 0; headers && k < headers.length; k++) {
+			var item = headers[k];
 			h[item.name] = item.dataValue;
        }
 		if (u) {

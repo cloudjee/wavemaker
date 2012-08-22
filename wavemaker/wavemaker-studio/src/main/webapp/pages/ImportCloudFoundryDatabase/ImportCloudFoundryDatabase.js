@@ -89,7 +89,10 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 			studio.dataService.requestAsync("importSampleDatabase",
 					[],
 					dojo.hitch(this, "_importResult"),
-					dojo.hitch(this, "_importError"));
+					function(inError) {
+						app.alert(inError.toString());
+						studio.endWait();
+					});
 		}
 	},
 
