@@ -191,6 +191,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         Assert.isInstanceOf(Resource.class, resource, "GFS: Expected a Resource");
         try {
             GFSResource relativeResource = (GFSResource) resource.createRelative(path);
+            relativeResource.getResource(Folder.class).createIfMissing();
             return relativeResource;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
