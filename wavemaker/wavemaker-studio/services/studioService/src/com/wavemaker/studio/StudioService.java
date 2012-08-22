@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.util.FileAccessException;
+import com.wavemaker.common.CommonConstants;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
@@ -48,6 +49,7 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -205,7 +207,6 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
      * Read arbitrary data from a file in this project's web directory.
      * 
      * @param path
-     * @param data
      */
     @ExposeToClient
     public String readWebFile(String path) throws IOException {
@@ -465,6 +466,16 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             File destinationFile = destinationFolder.getFile(filename);
             destinationFile.getContent().write(file.getInputStream());
             ret.setPath(destinationFile.getName());
+
+            // Copy jar to common/lib in WaveMaker Home
+            Folder commonLib = fileSystem.getWaveMakerHomeFolder().getFolder(CommonConstants.COMMON_LIB);
+            commonLib.createIfMissing();
+            File destinationJar = commonLib.getFile(filename);
+            destinationJar.getContent().write(file.getInputStream());
+            
+            // Copy jar to project's lib
+            com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern("*.jar");
+            commonLib.find().include(included).files().copyTo(this.projectManager.getCurrentProject().getRootFolder().getFolder("lib"));
         } catch (IOException e) {
             ret.setError(e.getMessage());
         }

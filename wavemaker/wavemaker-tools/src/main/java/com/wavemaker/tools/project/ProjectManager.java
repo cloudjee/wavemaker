@@ -43,6 +43,8 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.util.NoCloseInputStream;
 import com.wavemaker.tools.deployment.Deployments;
@@ -227,6 +229,12 @@ public class ProjectManager {
         openProject(projectName);
         Project project = getCurrentProject();
         project.setProjectVersion(getUpgradeManager().getCurrentVersion());
+
+        Folder commonLib = fileSystem.getWaveMakerHomeFolder().getFolder(CommonConstants.COMMON_LIB);
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern("*.jar");
+        if (commonLib.exists()) {
+            commonLib.find().include(included).files().copyTo(project.getRootFolder().getFolder("lib"));
+        }
     }
 
     /**

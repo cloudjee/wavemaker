@@ -16,6 +16,7 @@ package com.wavemaker.tools.apt;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -57,10 +58,17 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 
-@SupportedAnnotationTypes({ "com.wavemaker.runtime.service.annotations.ExposeToClient", "com.wavemaker.runtime.service.annotations.HideFromClient" })
+@SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({ ServiceProcessorConstants.PROJECT_NAME_PROP, ServiceProcessorConstants.PROJECT_ROOT_PROP })
 public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
+
+    private static final List<Class<? extends Annotation>> ANNOTATIONS;
+    static {
+        ANNOTATIONS = new ArrayList<Class<? extends Annotation>>();
+        ANNOTATIONS.add(ExposeToClient.class);
+        ANNOTATIONS.add(HideFromClient.class);
+    }
 
     private static final String LIVE_SERVICE_CLASS = "com.wavemaker.runtime.service.LiveDataService";
 
@@ -91,7 +99,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             return false;
         }
 
-        for (TypeElement annotation : annotations) {
+        for (Class<? extends Annotation> annotation : ANNOTATIONS) {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
             for (Element e : elements) {
                 if (e instanceof TypeElement) {
