@@ -241,7 +241,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
 
     },
-    init: function() {        
+    init: function() {
         this.setSelectionMode(this.selectionMode);
         if (this.noHeader) { // another grid property
             this.headerVisible = false;
@@ -366,7 +366,8 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     setScrollTop: function(inTop) {
         var top = Math.max(0, inTop);
-        if (wm.isMobile) { // should always be true for touch events 
+        if (wm.isMobile) { // should always be true for touch events
+            var topWas = this._scrollTop;
             top = Math.min(top, Math.max(0,this.listNode.clientHeight - this.listNodeWrapper.clientHeight));
             if (dojo.isWebKit) {
                 this.listNode.style.WebkitTransform = "translate(0,-" + top + "px)";
@@ -379,7 +380,9 @@ dojo.declare("wm.List", wm.VirtualList, {
             }
             this.listNode.style.transform = "translate(0,-" + top + "px)";
             this._scrollTop = top;
-            this._onScroll();
+            if (!this._inScroll) {
+                this._onScroll(top > topWas ? "down" : "up");
+            }
         } else {
             this.listNode.scrollTop = top ;
         }
@@ -676,11 +679,10 @@ dojo.declare("wm.List", wm.VirtualList, {
         this.inherited(arguments);
     },
     _onShowParent: function() {
-        if (this._renderDojoObjSkipped && !this._headerRendered) {
+        // if spacerNodeTop has height, then calling _render insures that its height doesn't excede the current dataSet
+        // TODO: Support a property for always going back to scrollTop = 0 any time its shown
+        if (this._renderDojoObjSkipped && !this._headerRendered || this.spacerNodeTop.clientHeight) {
             wm.onidle(this, "_render");
-        } else if (this.spacerNodeTop.clientHeight) {
-            this._scrollTop = 0;
-            this._onScroll();
         }
     },
     setShowing: function(inShowing) {
@@ -802,8 +804,8 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.scrollDownAddItems(0);
                 this.avgHeight = this.getAverageItemHeight();
                 this.updateBottomSpacerHeight();
-                var sc = this.getScrollTop();                
-                if (sc > 0) 
+                var sc = this.getScrollTop();
+                if (sc > 0)
                     this.setScrollTop(sc); // maintain the user's current scroll position -- if its not past the bottom of the list
             } else {
                 this._renderDojoObjSkipped = true;
@@ -1080,9 +1082,6 @@ dojo.declare("wm.List", wm.VirtualList, {
     _onScroll: function(direction, doCleanup) {
         if (this._inScroll) return; // some browsers treat our dom manipulation as scrolling events; need to prevent these from being handled
         this._inScroll = true;
-        wm.onidle(this, function() {
-            delete this._inScroll;
-        });
         //console.log("_onScroll; scrollTop: " + this.getScrollTop());
         try {
             // sometimes the last scroll event causes scrollTop to change, triggering a new onScroll event
@@ -1113,17 +1112,23 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.scrollDownAddItems();
                 this.scrollUpAddItems();
             }
-        } catch (e) {}
-        this._lastScrollTop = scrollTop;
-        this._lastScrollTime = new Date().getTime();
-        //app.toastSuccess("ScrollTop UPDATING3: " + scrollTop + "; LAST: " + this._lastScrollTop);
-        this._isScrolling = false;
+        } catch (e) {
+
+        } finally {
+            this._lastScrollTop = scrollTop;
+            this._lastScrollTime = new Date().getTime();
+            //app.toastSuccess("ScrollTop UPDATING3: " + scrollTop + "; LAST: " + this._lastScrollTop);
+            this._isScrolling = false;
+            delete this._inScroll;
+        }
+
+
     },
     _testScrollTop: function() {
         this._onScroll(null, true);
     },
 
-    /* 1. Once we generate an item, that item stays in the items array.  
+    /* 1. Once we generate an item, that item stays in the items array.
        1a. Never destroy its node once generated, switch from showing/hiding it as it scrolls in/out of view
        1b. Each row knows if it should be shown or not
        2. List knows if/when an item has been skipped and can insert items into the middle
@@ -1218,8 +1223,8 @@ dojo.declare("wm.List", wm.VirtualList, {
             }
         } else if (!this._paging) {
             if (this.dataSet instanceof wm.LiveVariable && this.dataSet.getPage() < this.dataSet.getTotalPages() - 1) {
-                this.dataSet._appendData = true; 
-                /* Uncomment this to test paging with real service call delays 
+                this.dataSet._appendData = true;
+                /* Uncomment this to test paging with real service call delays
                 wm.job("DELAY", 5000, this, function() {  */
                 this.dataSet.setNextPage();
                 //});
@@ -1240,7 +1245,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             }
         }
 
-        /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling 
+        /* Add 10 more rows so they don't have to be suddenly rendered if the user starts scrolling
         var extraTenMax = i + 10;
         for (; i < totalCount && i < extraTenMax; i++) {
         this._renderItem(i);
