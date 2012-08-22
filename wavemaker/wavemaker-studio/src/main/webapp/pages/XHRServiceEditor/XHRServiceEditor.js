@@ -27,6 +27,10 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         this.inputsGrid.setColumnComboBoxOptions("type", options);
         this.serviceResponseType.setDataValue("New Type");
     },
+    onShow: function() {
+        if (this.owner.owner != studio)
+            this.owner.owner.importButton.setDisabled(false);
+    },
     setService: function(inService) {
         this.editService = inService;
         this.serviceName.setDataValue(inService.name);
@@ -130,11 +134,13 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         } else {
             var typeDef = new wm.TypeDefinition({
                 name: serviceName + "Response",
-                owner: studio.application
+                owner: studio.application,
+                _isDesignLoaded: true
             });
             c.returnType = typeDef.name;
             wm.TypeDefinition.prototype.getTypeDefinitionDialog();
             studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(typeDef);
+            studio.TypeDefinitionGeneratorDialog.page.typeName.setDataValue(typeDef.name)
             studio.TypeDefinitionGeneratorDialog.page.generateButtonClick(null, null, null, jsonText, typeDef.name);
         }
         c.requestType = this.serviceRequestType.getDataValue();

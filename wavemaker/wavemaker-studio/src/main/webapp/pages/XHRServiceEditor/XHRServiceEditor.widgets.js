@@ -22,14 +22,14 @@ XHRServiceEditor.widgets = {
     }],
     inputsVar: ["wm.Variable", {"isList":true,"type":"inputsType"}, {}],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"},{}, {
-        mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:true},{}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:true, border: "0"},{}, {
 	    fancyPanel1: ["wm.FancyPanel", {"height":"190px","title":"Service Settings"}, {}, {
 		formPanel1: ["wm.FormPanel", {"desktopHeight":"157px","height":"157px","type":"wm.FormPanel"}, {}, {
-		    serviceName: ["wm.Text", {"caption":"Service Name","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Any component name is a valid name.  To control grouping of your XHR Services, you can also use dot notation: \"vmware.com.Login\"","required":true,"width":"100%"}, {}],
-		    serviceUrl: ["wm.Text", {"caption":"URL","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Do not include any parameters in the url such as ?arg1=value1","required":true,"width":"100%"}, {}],
-		    serviceContentType: ["wm.Text", {"caption":"Content Type","captionSize":"120px","dataValue":"application/x-www-form-urlencoded","desktopHeight":"26px","displayValue":"application/x-www-form-urlencoded","height":"26px","helpText":"Common values include<ul><li>application/x-www-form-urlencoded</li><li>application/json</li><ul>","required":true,"width":"100%"}, {}],
-		    serviceRequestType: ["wm.SelectMenu", {"caption":"Request Type","captionSize":"120px","dataField":"dataValue","dataValue":"GET","desktopHeight":"26px","displayField":"dataValue","displayValue":"GET","height":"26px","options":"GET,POST,PUT,DELETE","required":true,"width":"200px"}, {}],
-		    useProxyCheckbox: ["wm.Checkbox", {"caption":"useProxy","displayValue":true,"startChecked":true}, {}]
+		    serviceName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"Service Name","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Any component name is a valid name.  To control grouping of your XHR Services, you can also use dot notation: \"vmware.com.Login\"","required":true,"width":"100%"}, {}],
+		    serviceUrl: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"URL","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Do not include any parameters in the url such as ?arg1=value1","required":true,"width":"100%"}, {}],
+		    serviceContentType: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"Content Type","captionSize":"120px","dataValue":"application/x-www-form-urlencoded","desktopHeight":"26px","displayValue":"application/x-www-form-urlencoded","height":"26px","helpText":"Common values include<ul><li>application/x-www-form-urlencoded</li><li>application/json</li><ul>","required":true,"width":"100%"}, {}],
+		    serviceRequestType: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, "caption":"Request Type","captionSize":"120px","dataField":"dataValue","dataValue":"GET","desktopHeight":"26px","displayField":"dataValue","displayValue":"GET","height":"26px","options":"GET,POST,PUT,DELETE","required":true,"width":"200px"}, {}],
+		    useProxyCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "caption":"useProxy","displayValue":true,"startChecked":true}, {}]
 		}]
 	    }],
 	    fancyPanel2: ["wm.FancyPanel", {"height":"250px","title":"Fixed Headers"}, {}, {
@@ -56,8 +56,8 @@ XHRServiceEditor.widgets = {
 		}]
 	    }],
 	    fancyPanel4: ["wm.FancyPanel", {"height":"350px","title":"Return Type"}, {}, {
-		serviceResponseType: ["wm.prop.DataTypeSelect", {useLiterals: true, addNewOption: true, "caption":"Return Type","captionAlign":"left","dataField":"dataValue","dataValue":"","displayField":"dataValue","displayValue":"","width":"293px"}, {}],
-		returnedJSONEditor: ["wm.LargeTextArea", {"caption":"Enter sample JSON response","dataValue":undefined,"displayValue":"","height":"100%","width":"100%"}, {}, {
+		serviceResponseType: ["wm.prop.DataTypeSelect", {_classes: {domNode: ["StudioEditor"]}, useLiterals: true, addNewOption: true, "caption":"Return Type","captionAlign":"left","dataField":"dataValue","dataValue":"","displayField":"dataValue","displayValue":"","width":"293px"}, {}],
+		returnedJSONEditor: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "caption":"Enter sample JSON response","dataValue":undefined,"displayValue":"","height":"100%","width":"100%"}, {}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {"expression":"${serviceResponseType.dataValue} != \"New Type\"","targetProperty":"disabled"}, {}]
 		    }]
