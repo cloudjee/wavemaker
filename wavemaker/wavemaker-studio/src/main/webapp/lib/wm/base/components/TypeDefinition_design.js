@@ -16,14 +16,13 @@ dojo.require("wm.base.components.TypeDefinition");
 
 wm.TypeDefinitionField.extend({
     set_fieldName: function(inFieldName) {
-	this.fieldName = inFieldName;
+        this.fieldName = inFieldName;
         this._treeNodeName = inFieldName; // used by studio to show node in model tree
         if (!this._cupdating) {
             this.owner.doRemoveType();
             this.owner.doAddType();
         }
-	if (!this._cupdating && studio.page)
-	    studio.refreshComponentTree();
+        if (!this._cupdating && studio.page) studio.refreshComponentTree();
     },
     set_fieldType: function(inType) {
         this.fieldType = inType || "String";
@@ -47,12 +46,12 @@ wm.TypeDefinitionField.extend({
         }
     },
     addField: function() {
-	this.owner.addField();
+	   this.owner.addField();
     }
 });
 wm.Object.extendSchema(wm.TypeDefinitionField, {
     name: {requiredGroup: 0, hidden: 1},
-    owner: {ignore:1},    
+    owner: {ignore:1},
     fieldName: {group: "widgetName", subgroup: "fields", order: 1},
     fieldType: {group: "widgetName", subgroup: "fields", order: 2, editor: "wm.prop.DataTypeSelect", editorProps: {useLiterals:1}},
     isList:  {group: "widgetName", subgroup: "fields", order: 3},
@@ -64,28 +63,29 @@ wm.Object.extendSchema(wm.TypeDefinitionField, {
 
 wm.TypeDefinition.extend({
     getTypeDefinitionDialog: function() {
-	if (!studio.TypeDefinitionGeneratorDialog) {
-	    studio.TypeDefinitionGeneratorDialog = 
-		new wm.PageDialog({owner: studio,
-				   _classes: {domNode: ["studiodialog"]},
-				   name: "TypeDefinitionGeneratorDialog",
-				   pageName: "TypeDefinitionGeneratorDialog",
-				   width: "500px",
-				   height: "400px",
-				   border: "2",
-				   borderColor: "white",
-				   modal: false,
-				   hideControls: true});
-	    }
-	return studio.TypeDefinitionGeneratorDialog;
+        if (!studio.TypeDefinitionGeneratorDialog) {
+            studio.TypeDefinitionGeneratorDialog = new wm.PageDialog({
+                owner: studio,
+                _classes: {domNode: ["studiodialog"]},
+                name: "TypeDefinitionGeneratorDialog",
+                pageName: "TypeDefinitionGeneratorDialog",
+                width: "500px",
+                height: "400px",
+                border: "2",
+                borderColor: "white",
+                modal: false,
+                hideControls: true
+            });
+        }
+        return studio.TypeDefinitionGeneratorDialog;
     },
     afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.setOwner(studio.application);
-	this.getTypeDefinitionDialog();
-	studio.TypeDefinitionGeneratorDialog.show();
-	studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(this);
-	
+        this.inherited(arguments);
+        this.setOwner(studio.application);
+        this.getTypeDefinitionDialog();
+        studio.TypeDefinitionGeneratorDialog.show();
+        studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(this);
+
     },
     _isWriteableComponent: function(inName, inProperties) {return true;},
     set_name: function(inName) {
@@ -100,34 +100,34 @@ wm.TypeDefinition.extend({
         }
         return this.fields;
     },
-        addField: function() {
-	    studio.componentModel.activate();
-            this.fieldsAsTypes = null;
-	    var	defName = this.getUniqueName("field1");
-            var field = new wm.TypeDefinitionField({name: defName, 
-						    fieldName: defName, 
-						    _treeNodeName: defName,
-						    owner: this});
+    addField: function() {
+        studio.componentModel.activate();
+        this.fieldsAsTypes = null;
+        var defName = this.getUniqueName("field1");
+        var field = new wm.TypeDefinitionField({
+            name: defName,
+            fieldName: defName,
+            _treeNodeName: defName,
+            owner: this
+        });
 
-            this.fields = null; // force this to be recalculated
+        this.fields = null; // force this to be recalculated
+        this.doRemoveType(); // old type def is missing this field
+        this.doAddType(); // now we update the type def
+        if (this._isDesignLoaded) {
+            studio.select(field);
+        }
 
-            this.doRemoveType(); // old type def is missing this field
-            this.doAddType(); // now we update the type def
-
-	    if (this._isDesignLoaded) {
-		studio.select(field);
-	    }
-
-        },
+    },
     removeComponent: function(inComponent) {
-	if (this.$[inComponent.name]) {
-	    this.inherited(arguments);
-	    if (!this.isDestroyed && !this._isDestroying || studio.application && studio.application._isDestroying) {
-		delete this.fields;
-		this.getCollection();
-		this.doAddType();
-	    }
-	}
+        if (this.$[inComponent.name]) {
+            this.inherited(arguments);
+            if (!this.isDestroyed && !this._isDestroying || studio.application && studio.application._isDestroying) {
+                delete this.fields;
+                this.getCollection();
+                this.doAddType();
+            }
+        }
     }
 });
 
