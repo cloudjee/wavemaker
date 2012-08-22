@@ -509,8 +509,10 @@
                 <entry key="0.52">
                     <list>
                         <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
-                            <property name="file"
-                                value="webapproot/WEB-INF/project-springapp.xml" />
+                            <property name="file" value="webapproot/WEB-INF/project-springapp.xml" />
+                        </bean>
+                        <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
+                            <property name="file" value="webapproot/WEB-INF/project-services.xml" />
                         </bean>
                     </list>
                 </entry>                
