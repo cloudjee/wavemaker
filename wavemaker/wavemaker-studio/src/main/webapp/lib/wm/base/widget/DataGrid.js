@@ -91,7 +91,10 @@ dojo.declare("wm.MavericksModel", dojox.grid.data.Model, {
 		var
 			i = this.getRow(inRowIndex),
 			f = i && (inField >= 0) && this.fields.values[inField];
-		return f && (i.data[f.key] || i.getValue(f.key));
+            if (f)
+		      return (i.data[f.key] || i.getValue(f.key));
+            else
+                return "";
 	},
 	setDatum: function(inDatum, inRowIndex, inField){
 		if (inDatum !== undefined) {
@@ -139,14 +142,14 @@ dojo.declare("wm.DataGridColumn", wm.Component, {
 	/**
 		This column will be as wide as needed to fill available space.
 		If there is no space avaiable, the column will be invisible.
-		If multiple columns are <i>autoSize</i>, the available space 
+		If multiple columns are <i>autoSize</i>, the available space
 		is divided evenly.
 	*/
 	autoSize: false,
 	/**
 		This column will be as wide as needed to fill available space.
 		If there is no space avaiable, the column will be invisible.
-		If multiple columns are <i>autoSize</i>, the available space 
+		If multiple columns are <i>autoSize</i>, the available space
 		is divided evenly.
 	*/
 	dataExpression: "",
@@ -189,7 +192,7 @@ dojo.declare("wm.DataGridColumn", wm.Component, {
 	setColumnWidth: function(inColumnWidth) {
 		this.columnWidth = inColumnWidth;
 		this.autoSize = false;
-		this.owner.columnsChanged();  		
+		this.owner.columnsChanged();
 	},
 	formatChanged: function() {
             if (this.isDesignLoaded() && !this._cupdating) this.owner.renderGrid();
@@ -200,9 +203,9 @@ dojo.declare("wm.DataGridColumn", wm.Component, {
 		//this.owner.columnsChanged();
 	},
 	getCellProps: function() {
-		var cell = { 
-			name: this.caption, 
-			field: this.field, 
+		var cell = {
+			name: this.caption,
+			field: this.field,
 			dataExpression: this.dataExpression,
 			hide: !this.showing
 		};
@@ -334,7 +337,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 	},
 	headerCellDesignClick: function(e){
 		var c = this._columns[e.cell.index];
-		if (c) 
+		if (c)
 			studio.select(c);
 		//this.dijit.constructor.prototype.onHeaderCellClick.call(this.dijit, e);
 		dojo.stopEvent(e);
@@ -386,18 +389,18 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 					delete this.dijit.rows.grid;
 				if (this.dijit.scroller){
 					delete this.dijit.scroller.contentNodes;
-					delete this.dijit.scroller.pageNodes;	
+					delete this.dijit.scroller.pageNodes;
 				}
 				if (this.dijit.params){
 					delete this.dijit.params.parentNode;
-					delete this.dijit.params.srcNodeRef;	
+					delete this.dijit.params.srcNodeRef;
 				}
 				if (this.dijit.layout){
 					delete this.dijit.layout.cells;
 					delete this.dijit.layout.grid;
 					delete this.dijit.layout.structure;
 				}
-				
+
 				delete this.dijit._connects;
 				//delete this.dijit.layout;
 				delete this.dijit.parentNode;
@@ -406,7 +409,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 				delete this.dijit.lastFocusNode;
 				delete this.dijit.edit;
 				delete this.dijit.focus;
-				
+
 				delete this.dijit.structure;
 				delete this.dijit.views;
 				delete this.dijit.viewsHeaderNode;
@@ -420,7 +423,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 
 		if (this.dijitProps){
 			delete this.dijitProps.parentNode;
-			delete this.dijitProps;	
+			delete this.dijitProps;
 		}
 	},
 	// columns and structure
@@ -452,7 +455,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 		rows.push(subrow);
 	// =========================================
 	// r&d: let's make another subrow for detail
-	/*	cell = { 
+	/*	cell = {
 			name: ' ', get: dojo.hitch(this, "getDetail"), colSpan: 4, styles: 'padding: 0; margin: 0;'
 		};
 		rows.push([cell]);*/
@@ -628,7 +631,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 		this._adjustColumnProps(col);
 		this._addColumn(col);
 	},
-	// 
+	//
 	_hasDefaultColumns: function() {
 		var c = this._columns[0];
 		return (!c || (!c.field && !c.dataExpression) && this._columns.length == 1);
@@ -674,14 +677,14 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 			this.setStructure(this.columnsToStructure());
 			this.onAfterRender();
 		}
-		
+
 	},
 	// selection
 	/**
 		Select a row by index.
 		<br/>
 		Previous selection is cleared.
-		@param {Number} inIndex Integer index of row to select. 
+		@param {Number} inIndex Integer index of row to select.
 	*/
 	select: function(inIndex) {
 		this.dijit.selection.select(inIndex);
@@ -710,7 +713,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 	/**
 		Returns true if there are no selected rows.
 		<br/><br/>
-		This method exists to support the bindable emptySelection 
+		This method exists to support the bindable emptySelection
 		virtual property (i.e. it implements <code>getValue("emptySelection")</code>.).
 		<br />
 		@returns @Boolean True if no rows are selected.
@@ -726,7 +729,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 	updateSelected: function() {
 		if (!this.selectedItem)
 			return;
-			
+
 		var s = this.dijit.selection.selectedIndex;
 		this.selected = this.dataSet && s >= 0 ? this.dataSet.getItem(s) : null;
 		if (this.selected)
@@ -819,11 +822,11 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 		Allows user code to customize column objects.
 		<br/><br/>
 		This event is fired for each column in the Grid. Custom code
-		can modify the column object to alter behavior or appearance 
+		can modify the column object to alter behavior or appearance
 		of the Grid.
 		<br/><br/>
 		@param {wm.DataGridColumn} inColumn Object whose properties describe the grid column.
-		@param {Number} inIndex Numeric index of the column 
+		@param {Number} inIndex Numeric index of the column
 	*/
 	onSetColumns: function(inColumn, inIndex) {
 	},
@@ -831,7 +834,7 @@ dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 		Allows user code to customize grid structure.
 		<br/><br/>
 		This event is fired whenever the Grid is initialized. Custom code
-		can modify the structure object to alter behavior or appearance 
+		can modify the structure object to alter behavior or appearance
 		of the Grid.
 		<br/><br/>
 		ToDo: document inStructure properties.
@@ -903,7 +906,7 @@ wm.DataGrid.extend({
 	},
 	doRemoveColumn: function(inColumn) {
 		inColumn.destroy();
-		// FIXME: hack 
+		// FIXME: hack
 		this._columns = [];
 		this.loaded();
 		// end hack
