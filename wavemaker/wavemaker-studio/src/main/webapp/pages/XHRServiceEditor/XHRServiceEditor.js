@@ -60,7 +60,13 @@ dojo.declare("XHRServiceEditor", wm.Page, {
             });
         });
         this.fixedHeadersVar.setData(headersArray);
-        this.buttonBar.show();
+        this.toolbar.show();
+    },
+    onDeleteClick: function(inSender) {
+        wm.XhrService.prototype.removeOperation(this.editService.name);
+        this.editService.destroy();
+        studio.refreshServiceTree();
+        this.dismiss();
     },
     okButtonClick: function(inSender) {
         var oldName = this.editService ? this.editService.name : "";
