@@ -54,7 +54,8 @@ Start.widgets = {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
-							    iframe: ["wm.IFrame", {source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
+							    iframe: ["wm.IFrame", {showing: true, source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}],
+                                iframeCF: ["wm.IFrame", {showing: false, source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
 								}]
 							}]
 					}],
