@@ -21,11 +21,13 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 
 /**
  * @author Michael Kantor
  */
+@ExposeToClient
 public class JavaServiceSuperClass {
 
     private Logger logger;
