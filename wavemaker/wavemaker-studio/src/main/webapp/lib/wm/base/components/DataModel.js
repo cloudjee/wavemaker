@@ -31,21 +31,20 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
     port: "",
     dbName: "",
     noPrompt: false,
-        _type: "import",
+    _type: "import",
     afterPaletteDrop: function() {
         this.newDataModelDialog();
         return true;
     },
     newDataModelDialog: function(inSender) {
-        if (this._type == "import") {       
-        var d = studio.isCloud() ? this.getCloudFoundryDatabasesDialog() : this.getCreateDataModelDialog();
-        if (d.page)
-            d.page.update(this);
-        d.show();
+        if (this._type == "import") {
+            var d = studio.isCloud() ? this.getCloudFoundryDatabasesDialog() : this.getCreateDataModelDialog();
+            if (d.page) d.page.update(this);
+            d.show();
         } else {
-        app.prompt(studio.getDictionaryItem("wm.DataModel.ENTER_NAME"), "MyTestDatabase", dojo.hitch(this, "createDataModel"));
+            app.prompt(studio.getDictionaryItem("wm.DataModel.ENTER_NAME"), "MyTestDatabase", dojo.hitch(this, "createDataModel"));
         }
-/*
+        /*
         if (this._type == "import") {
         d.page.tabs.setLayerIndex(0);
         d.setHeight("300px");
@@ -61,19 +60,20 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
             while (wm.services.byName[newValue]) newValue += "1";
                 app.prompt(studio.getDictionaryItem("wm.DataModel.ENTER_NAME_TAKEN", {name: inValue}), newValue, dojo.hitch(this, "createDataModel"));
                 return;
-        }   
+        }
         this._dataModelName = inValue;
         studio.beginWait(studio.getDictionaryItem("wm.DataModel.WAIT_ADDING", {dataModel: inValue}));
-        studio.dataService.requestAsync(NEW_DATA_MODEL_OP, 
-            [inValue], 
-            dojo.hitch(this, "newDataModelResult"), 
+        studio.dataService.requestAsync(NEW_DATA_MODEL_OP,
+            [inValue],
+            dojo.hitch(this, "newDataModelResult"),
             dojo.hitch(this, "newDataModelError"));
     },
     newDataModelError: function(inError) {
+        studio.endWait();
         app.alert(inError);
     },
     newDataModelResult: function() {
-        this.completeNewDataModel();  
+        this.completeNewDataModel();
         studio.endWait(studio.getDictionaryItem("wm.DataModel.WAIT_ADDING", {dataModel: this._dataModelName}));
     },
 
@@ -145,7 +145,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
                 break;
                 }
             }
-            studio.refreshServiceTree();        
+            studio.refreshServiceTree();
 
             // If designing a data model
             if (this._dataModelName) {
@@ -159,14 +159,14 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
             var page = studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page;
             page.objectPages.setLayer(page.DEFAULT_PAGE);
             */
-            } 
+            }
 
             // else we're importing a datamodel
             else {
             app.toastSuccess(studio.getDictionaryItem("wm.DataModel.TOAST_IMPORT_SUCCESS", {dataModel: n}));
             }
         }
-       
+
     },
     editView: function() {
         var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
@@ -232,20 +232,20 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 
     showOracleJarDialog: function() {
     studio.handleMissingJar("ojdbc14.jar",
-                studio.getDictionaryItem("wm.DataModel.ORACLE_JAR_INSTRUCTIONS"));              
+                studio.getDictionaryItem("wm.DataModel.ORACLE_JAR_INSTRUCTIONS"));
 
     },
     showDB2JarDialog: function() {
     studio.handleMissingJar("db2jcc.jar",
                 studio.getDictionaryItem("wm.DataModel.DB2_JAR_INSTRUCTIONS"));
-    
+
     },
 
     hasServiceTreeDrop: function() {return true;},
     onServiceTreeDrop: function(inParent, inOwner) {
     return new wm.LiveVariable({owner: inOwner,
                     name: inOwner.getUniqueName("liveVariable")});
-    }   
+    }
 
 });
 
