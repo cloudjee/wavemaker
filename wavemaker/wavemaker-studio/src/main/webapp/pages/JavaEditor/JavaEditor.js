@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.pages.JavaEditor.JavaEditor");
 dojo.require("wm.studio.app.servicesTree");
 dojo.declare("JavaEditor", wm.Page, {
@@ -20,7 +20,7 @@ dojo.declare("JavaEditor", wm.Page, {
         /*
             if (dojo.isFF > 4 || dojo.isWebKit || dojo.isIE >= 9)
                 this.javaCodeEditor.setSyntax("java");
-            else 
+            else
                 this.javaCodeEditor.setSyntax("");
                 */
         this.tree.initNodeChildren = dojo.hitch(this.tree, "treeInitNodeChildren");
@@ -62,7 +62,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		}));
     },
 
-    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can
      * interact with them
      */
     dirty: false,
@@ -141,7 +141,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		this.layers.setLayer("defaultServiceLayer");
 	},
 	typesChangedCall: function(inData) {
-		studio.servicesService.requestAsync("listTypesTree", null, 
+		studio.servicesService.requestAsync("listTypesTree", null,
 				dojo.hitch(this, "typesChangedCallback"));
 	},
 	typesChangedCallback: function(inData) {
@@ -159,7 +159,7 @@ dojo.declare("JavaEditor", wm.Page, {
                             }));
 	},
 	deleteServiceCallback: function(inData) {
-	    studio.application.removeServerComponent(this.javaService);	    
+	    studio.application.removeServerComponent(this.javaService);
 	    studio.refreshServiceTree("");
 	    var pageContainer = this.owner;
 	    var subtablayer = pageContainer.parent;
@@ -168,7 +168,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	    if (subtablayers.layers.length == 1)
 		javalayer.hide();
 	    subtablayer.destroy();
-	    
+
 /*
 		this.tree.serviceId = null;
 		this.javaCodeEditor.setText("");
@@ -232,7 +232,7 @@ dojo.declare("JavaEditor", wm.Page, {
 		}
 	    var m;
 	    if (inData.buildSucceeded) {
-		m = this.getDictionaryItem("COMPILE_LOG_SUCCESS", 
+		m = this.getDictionaryItem("COMPILE_LOG_SUCCESS",
 					   {time: dojo.date.locale.format(new Date(), {selector: "time",
 										       formatLength: "medium"})});
 	    } else {
@@ -280,7 +280,7 @@ dojo.declare("JavaEditor", wm.Page, {
 	studio.formatScript(this.javaCodeEditor);
     },
     onCtrlKey: function(inSender, e, letter) {
-	switch(letter.toLowerCase()) {
+	switch(String(letter).toLowerCase()) {
 	case "s":
         dojo.stopEvent(e);
 	    return this.javaServiceSaveButtonClick();
