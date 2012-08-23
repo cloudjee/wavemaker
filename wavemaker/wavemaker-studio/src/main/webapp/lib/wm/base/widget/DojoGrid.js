@@ -282,12 +282,15 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.cancelEdit();
     },
     cellEditted: function(inValue, inRowIndex, inFieldName) {
-        if (isNaN(inValue)) {
+        /* Sometimes the grid cancels editing in a wierd state */
+        if (typeof inValue == "number" && isNaN(inValue)) {
             try {
                 this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex,"_wmVariable").getValue(inFieldName));
             } catch(e) {}
             return;
         }
+
+
 		var isInvalid;
         /* Checkboxes and other editors that have one editor per column tend not to consistently provide the cell.widget property.
         * Fortunately, we can ignore the invalid state of a checkbox.
