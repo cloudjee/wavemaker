@@ -51,105 +51,107 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		   "dojox.grid._RadioSelector"],
 
     setLocalizationStructure: function(inStructure) {
-	this.localizationStructure = inStructure;
-	for (var i = 0; i < this.columns.length; i++) {
-	    var c = this.columns[i];
-	    if (this.localizationStructure[c.field]) {
-		c.title = this.localizationStructure[c.field];
-	    }
-	}
-	if (!this._cupdating && this.dojoObj) {
-	    this.renderDojoObj();
-	}
+        this.localizationStructure = inStructure;
+        for (var i = 0; i < this.columns.length; i++) {
+            var c = this.columns[i];
+            if (this.localizationStructure[c.field]) {
+                c.title = this.localizationStructure[c.field];
+            }
+        }
+        if (!this._cupdating && this.dojoObj) {
+            this.renderDojoObj();
+        }
 
     },
-	init: function() {
-	    this.setSelectionMode(this.selectionMode);
-	    if (!this.columns) {
-		this.columns = [];
-	    } else if (this.localizationStructure) {
-		this.setLocalizationStructure(this.localizationStructure);
-	    }
-	    for (var i = 0; i < this.requiredLibs.length; i++) {
-		dojo['require'](this.requiredLibs[i]);
-	    }
-	    /* Small upgrade task for getting to 6.4 */
-	    for (var i = 0; i < this.columns.length; i++) {
-		if (this.columns[i].id) {
-		    this.columns[i].field = this.columns[i].id;
-		    delete this.columns[i].id;
-		}
-	    }
+    init: function() {
+        this.setSelectionMode(this.selectionMode);
+        if (!this.columns) {
+            this.columns = [];
+        } else if (this.localizationStructure) {
+            this.setLocalizationStructure(this.localizationStructure);
+        }
+        for (var i = 0; i < this.requiredLibs.length; i++) {
+            dojo['require'](this.requiredLibs[i]);
+        } /* Small upgrade task for getting to 6.4 */
+        for (var i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].id) {
+                this.columns[i].field = this.columns[i].id;
+                delete this.columns[i].id;
+            }
+        }
 
-		this.inherited(arguments);
-		var varProps = {name: "selectedItem", owner: this,
-						json: this._selectionMode == 'multiple' ? '[]' : '',
-						type: this.variable ? this.variable.type : "any" };
-		this.selectedItem = new wm.Variable(varProps);
+        this.inherited(arguments);
+        var varProps = {
+            name: "selectedItem",
+            owner: this,
+            json: this._selectionMode == 'multiple' ? '[]' : '',
+            type: this.variable ? this.variable.type : "any"
+        };
+        this.selectedItem = new wm.Variable(varProps);
 
-		this.updateSelectedItem(-1);
-		this.setSelectionMode(this.selectionMode);
-	},
+        this.updateSelectedItem(-1);
+        this.setSelectionMode(this.selectionMode);
+    },
 
-        setNoHeader: function (inValue) {
-            this.noHeader = inValue;
-            dojo.toggleClass(this.domNode, "dojoGridNoHeader", inValue);
-        },
+    setNoHeader: function(inValue) {
+        this.noHeader = inValue;
+        dojo.toggleClass(this.domNode, "dojoGridNoHeader", inValue);
+    },
 
-	postInit: function() {
-		this.inherited(arguments);
-	        if (this.noHeader)
-		    this.setNoHeader(this.noHeader);
+    postInit: function() {
+        this.inherited(arguments);
+        if (this.noHeader) this.setNoHeader(this.noHeader);
 
-	    if (this.variable && this.variable.getData() || this.columns && this.columns.length) {
-			this.renderDojoObj();
-	    }
-	    if (this._isDesignLoaded) {
-		this.subscribe("deviceSizeRecalc", dojo.hitch(this, "deviceTypeChange"));
-	    }
-	},
+        if (this.variable && this.variable.getData() || this.columns && this.columns.length) {
+            this.renderDojoObj();
+        }
+        if (this._isDesignLoaded) {
+            this.subscribe("deviceSizeRecalc", dojo.hitch(this, "deviceTypeChange"));
+        }
+    },
+
 	dataSetToSelectedItem: function() {
 		this.selectedItem.setLiveView((this.variable|| 0).liveView);
 		this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
 	},
     setSelectedRow: function(rowIndex, isSelected, onSuccess) {
-    	if (!this.dataSet) return; /* Can't select the row unless the grid is rendered */
-    	if (!this.dojoObj && !this._renderHiddenGrid) {
-    		this._renderHiddenGrid = true;
-    		this.renderDojoObj();
-    		this._renderHiddenGrid = false;
-    	}
-    	if (this._setRowTimeout) {
-    		window.clearTimeout(this._setRowTimeout);
-    		delete this._setRowTimeout;
-    	}
+        if (!this.dataSet) return; /* Can't select the row unless the grid is rendered */
+        if (!this.dojoObj && !this._renderHiddenGrid) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
+        if (this._setRowTimeout) {
+            window.clearTimeout(this._setRowTimeout);
+            delete this._setRowTimeout;
+        }
 
-    	if (isSelected == undefined) isSelected = true;
+        if (isSelected == undefined) isSelected = true;
 
-    	if (isSelected) {
-    		/* If this returns an empty object, its because the row hasn't been processed by the grid, and will only be processed
-    		 * when scrolled into view
-    		 */
-    		if (wm.isEmpty(this.getRow(rowIndex))) {
-    			this.dojoObj.scrollToRow(rowIndex);
-    			wm.onidle(this, function() {
-    				this.setSelectedRow(rowIndex);
-    				if (onSuccess) onSuccess();
-    			});
-    		} else {
-    			this.dojoObj.selection.select(rowIndex);
-    			if (!this._cupdating) {
-    				this.onSelectionChange();
-    				this.onSelect();
-    			}
-    			this.dojoObj.scrollToRow(rowIndex);
-    			if (onSuccess) onSuccess();
-    		}
-    	} else {
-    		this.dojoObj.selection.setSelected(rowIndex, isSelected);
-    		this.onSelectionChange();
-    		this.onDeselect();
-    	}
+        if (isSelected) {
+            /* If this returns an empty object, its because the row hasn't been processed by the grid, and will only be processed
+             * when scrolled into view
+             */
+            if (wm.isEmpty(this.getRow(rowIndex))) {
+                this.dojoObj.scrollToRow(rowIndex);
+                wm.onidle(this, function() {
+                    this.setSelectedRow(rowIndex);
+                    if (onSuccess) onSuccess();
+                });
+            } else {
+                this.dojoObj.selection.select(rowIndex);
+                if (!this._cupdating) {
+                    this.onSelectionChange();
+                    this.onSelect();
+                }
+                this.dojoObj.scrollToRow(rowIndex);
+                if (onSuccess) onSuccess();
+            }
+        } else {
+            this.dojoObj.selection.setSelected(rowIndex, isSelected);
+            this.onSelectionChange();
+            this.onDeselect();
+        }
 
     },
     setSelectedItem: function(inData) {
