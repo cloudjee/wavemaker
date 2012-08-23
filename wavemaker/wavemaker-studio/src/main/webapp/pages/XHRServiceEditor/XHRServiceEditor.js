@@ -175,7 +175,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         this.dismiss();
     },
     dismiss: function() {
-        if (wm.isInstanceType(this.owner.owner, ImportWebService)) {
+        if (wm.isInstanceType(this.owner.owner, window["ImportWebService"])) {
             this.owner.owner.dismiss();
         } else {
             var tabs = this.owner.parent.parent;
