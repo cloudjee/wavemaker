@@ -31,18 +31,23 @@ wm.Object.extendSchema(wm.Date, {
     minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
     maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
 
+    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
+    formatLength: {group: "editor", subgroup: "display", order: 3, options:["short", "medium", "long"]},
+
     /* Ignored Group */
     password: {ignore:1},
     regExp: {ignore:1},
     maxChars: {ignore:1},
     changeOnKey: { ignore: 1 },
     resetButton: {ignore: 1},
-     selectOnClick: {ignore: 1}
+     selectOnClick: {ignore: 1},
+     dateMode: {ignore:1}
 });
 
 wm.Object.extendSchema(wm.Time, {
     /* Editor group; display subgroup */
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
+    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
 
     /* Ignored group */
     use24Time: {hidden:1},
@@ -65,7 +70,14 @@ wm.Object.extendSchema(wm.DateTime, {
     dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1}
 });
-
+wm.Date.extend({
+     set_formatLength: function(inValue) {
+        // must get value before changing formatLength because formatLength determines how to parse the value
+        var value = this.getDataValue();
+        this.formatLength = inValue;
+        this.setDataValue(value);
+    }
+});
 wm.DateTime.extend({
     afterPaletteDrop: function() {
         this.inherited(arguments);
@@ -88,6 +100,8 @@ wm.DateTime.extend({
         // must get value before changing formatLength because formatLength determines how to parse the value
         var value = this.getDataValue();
         this.formatLength = inValue;
+        this.timeEditor.set_formatLength(inValue);
+        this.dateEditor.set_formatLength(inValue);
         this.setDataValue(value);
     },
     set_use24Time: function(inValue) {

@@ -28,6 +28,7 @@ dojo.declare("wm.Date", wm.Text, {
     minimum: "",
     maximum: "",
     dateMode: "Date",
+    formatLength: "short",
     //locale: '',
     validationEnabled: function() {
         return true;
