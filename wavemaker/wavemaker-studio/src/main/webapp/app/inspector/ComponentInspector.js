@@ -14,7 +14,7 @@
 
 /* TODO: 1. Required | Recommended | All
  *       2. Work on show More labels, styling and handling during search
- * 
+ *
 
  dojo.provide("wm.studio.app.inspector.ComponentInspector");
 
@@ -40,12 +40,12 @@
   * doc: if the property isn't a method, and its not visible (ignored), this signals that its still something the user should know about, just not in the properties panel
   * simpleBindProp: This property is the only property to show for this widget under the basic bind dialog
   * categoryParent: OLD DEF: Adds a tree node to the property panel to the node with the given name; selecting the node shows the properties for the component specified in categoryProps
-  * categoryProps.component: inspector will inspect this[categoryProps.component] (i.e. this.dataOutput) 
+  * categoryProps.component: inspector will inspect this[categoryProps.component] (i.e. this.dataOutput)
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
   * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
   * doNotPublish: property is not publishable (i.e. can't be exposed to parent pagecontainer)  hidden, ignored and writeonly properties are already skipped
-  * 
+  *
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
   *
   * How to control what editor shows up for a property
@@ -63,7 +63,7 @@
   * 7. Make a _design files for every component
   * 8. Find all bindable/bindTarget properties that should be readonly and make them readonly
   */
- dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
+ dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {
      _allowClickClose: true,
      captionSize: "35%",
      defaultEditorHeight: "24px",
@@ -88,7 +88,7 @@
 	     if (l.isActive() && l.propertyGroup) this._activeLayers.push(l.propertyGroup.equivalentName || l.propertyGroup.name);
 	 }, this);
      },
-     inspect: function(inComponent, forceInspect) {	
+     inspect: function(inComponent, forceInspect) {
 	 if (this.inspected == inComponent && !forceInspect) {
 	     return this.reinspect();
 	 }
@@ -241,7 +241,7 @@
 		 }
 		 */
 		 var binde = this.bindEditorHash[this.getHashId(inComponent,propFullName)];
-		 if (e) {		     
+		 if (e) {
 		     this.reinspectEditor(inComponent, e, binde, p);
 		 }
 /*
@@ -252,7 +252,7 @@
 		     e = undefined;
 		 }
 		 var binde = this.bindEditorHash[this.getHashId(inComponent,propFullName)];
-		 if (e) {		     
+		 if (e) {
 		     this.reinspectEditor(inComponent, e, binde, p);
 		 }
 		 delete this.processingRequiredGroup;
@@ -293,14 +293,14 @@
 	 else if (e instanceof wm.SelectMenu && !inProp.options) {
 	     var parent = e.parent;
 	     parent.removeAllControls();
-	     e = this.generateEditor(inComponent,inProp, parent.parent, parent); 
+	     e = this.generateEditor(inComponent,inProp, parent.parent, parent);
 	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propPath)] = e;
-	 
+
 	     /* If the editor was regenerated, it already shows the latest value; no need to set the editor here */
 	     skipSetEditor = true;
-	 } 
+	 }
 
-	 
+
 	 if (!skipSetEditor) {
 
 	     /* Find the current value of the property, which may be a binding */
@@ -332,10 +332,10 @@
 		 // If the value has changed, update it.
 		 if (newVal !== oldVal) {
 		     e.setDataValue(newVal);
-		 } 
+		 }
 
 		 /* If the dataValue is an object, only the editor can figure out whether its really changed or not,
-		  * just call setDataValue and let it sort things out 
+		  * just call setDataValue and let it sort things out
 		  */
 		 else if (typeof newVal == "object" && newVal !== null) {
 		     e.setDataValue(newVal);// make sure the editor sees the updated hash or array
@@ -355,7 +355,7 @@
 	     } else {
 		 e.parent.setShowing(!inProp.ignoretmp);
 	     }
-	     
+
 	     /* If its a bindable property, update whether the bindeditor or regular editor is showing and update the bindeditor's value. */
 	     if (inProp.bindable || inProp.bindTarget) {
 		 e.setShowing(!isBound);
@@ -368,7 +368,7 @@
 /*
 	 if (inProp.subcomponent) {
 	     var subcomponent = inComponent.$[propName];
-	     if (this.subcomponents[subcomponent.getId()] && 
+	     if (this.subcomponents[subcomponent.getId()] &&
 		 this.subcomponents[subcomponent.getId()].className == subcomponent.declaredClass) {
 		 this.reinspect(subcomponent);
 	     } else if (this.subcomponents[subcomponent.getId()]) {
@@ -405,9 +405,9 @@
 		 this.generateEditors(subcomponent, inProp.group, currentLayer);
 	     }
 	 }
-	 */     
+	 */
      },
-     isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {     	
+     isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {
 	 if (!skipIsAdvanced && (inProp.advanced && !this.isAdvancedMode() ||
 				 !inProp.requiredGroup && this.isRequiredMode())) {
 	     return false;
@@ -419,7 +419,7 @@
 	     return false;
 	 if (inProp.method)
 	     return false;
-	 if (inProp.bindTarget || inProp.bindable) 
+	 if (inProp.bindTarget || inProp.bindable)
 	     return true; // shows up even if writeonly/hidden are true; user can't set the value but can bind the value
 	 if (inProp.writeonly || inProp.hidden) /* writeonly and hidden appear to be identical */
 	     return false;
@@ -440,14 +440,14 @@
 	 var allProps = inComponent ? inComponent.listProperties() : {};
 	 var props = {};
 	 wm.forEachProperty(allProps, dojo.hitch(this, function(originalP,i) {
-	     if (this.isEditableProp(originalP, true, true)) {	     
+	     if (this.isEditableProp(originalP, true, true)) {
 		 var p = dojo.mixin({name: i}, originalP);
 		 if (originalP.isEvent || inComponent.isEventProp(i)) {
 		     p.group = "events";
 		     if (i.match(/\d$/)) return; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
-		 } else if (originalP.isCustomMethod) 
+		 } else if (originalP.isCustomMethod)
 		     p.group = "custommethods";
-		 else if (!originalP.group) 
+		 else if (!originalP.group)
 		     p.group = "properties";
 		 props[i] = p;
 	     }
@@ -477,18 +477,18 @@
 	 return newprops;
      },
      addSubGroupIndicator: function(inName, inParent, inShowing, inBigSeparator) {
-	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, 
+	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]},
 						    parent: inParent,
-						    owner: this, 
-						    caption:inName, 
-						    width: "100%", 
+						    owner: this,
+						    caption:inName,
+						    width: "100%",
 						    height: this.defaultEditorHeight,
 						    singleLine: true,
-						    //border: "0,0,1,0", 
+						    //border: "0,0,1,0",
 						    border: "0",
-						    borderColor: inBigSeparator ? "#959DAB" : "#444444", 
-						    showing: inShowing, 
-						    padding: "0", 
+						    borderColor: inBigSeparator ? "#959DAB" : "#444444",
+						    showing: inShowing,
+						    padding: "0",
 						    margin: "0,0,0,2"}));
      },
      generateEditors: function(inComponent, inGroup, inLayer) {
@@ -502,8 +502,8 @@
 		 if (subgroup.props.length && (subgroup.props.length > 1 || subgroup.props[0].editor != "wm.prop.FieldGroupEditor") && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
 		     count++;
 		     this.addSubGroupIndicator(/*(inGroup.displayName || inGroup.name) + " - " + */(subgroup.displayName || subgroup.name),
-					       inLayer,  
-					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}), 
+					       inLayer,
+					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}),
 					       false);
 		 }
 		 if (subgroup.props.length || subgroup.subgroups.length) {
@@ -514,7 +514,7 @@
 	     if (inGroup.props) {
 		 this._generateEditors(inComponent, inLayer, inGroup.props);
 	     }
-	     delete this.processingRequiredGroup; 
+	     delete this.processingRequiredGroup;
 	 } else if (inPropList) {
 	     this._generateEditors(inComponent, inLayer, this.props);
 	 }
@@ -583,7 +583,7 @@
 	 });
 	 var s = new wm.Spacer({width: "100%",//this.captionSize,
 				parent: p,
-				owner: this				
+				owner: this
 			       });
 	 var b = new wm.Button({
 	     owner: this,
@@ -602,7 +602,7 @@
 
 	 var s = new wm.Spacer({width: "20px",
 				parent: p,
-				owner: this				
+				owner: this
 			       });
 	 this.editorHash[this.getHashId(inComponent,inProp.name)] = b;
 	 b.connect(b, "onclick", this, function() {
@@ -611,7 +611,7 @@
 	 });
      },
 
-     generatePanelForEditor: function(inParent, inName) {	 
+     generatePanelForEditor: function(inParent, inName) {
 	 return new wm.Panel({
 	     owner: this,
 	     parent: inParent,
@@ -633,7 +633,7 @@
 	 var fullPropName = inProp.fullName || propName;
 	 var hashId = (optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName);
 	 /**********************************************************
-	  * Get the panel we'll insert our editor into 
+	  * Get the panel we'll insert our editor into
 	  **********************************************************/
 	 var panel = optionalParent;
 	 if (!panel) {
@@ -652,11 +652,11 @@
 	 }
 
 	 /**********************************************************
-	  * Get the current value of the editor; some complex editors don't have a value as such, 
+	  * Get the current value of the editor; some complex editors don't have a value as such,
 	  * but instead manage their own values in which case this lookup is ignored
 	  ***********************************************************/
 
-	 var isBound = this.isPropBound(inComponent, inProp); 
+	 var isBound = this.isPropBound(inComponent, inProp);
 	 if (isBound) {
 	     var wire = inComponent.$.binding.wires[fullPropName || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
@@ -678,9 +678,9 @@
 
 
 	 /**********************************************************
-	  * Get the editor properties 
+	  * Get the editor properties
 	  **********************************************************/
-	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel, hashId);	 
+	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel, hashId);
 	 editorProps.showing = !isBound || inProp.editor == "wm.prop.FieldGroupEditor";
 
 	 if (inProp.editorProps) {
@@ -699,7 +699,7 @@
 	     if (!e || e instanceof wm.Control == false) {
 		 var ctor;
 		 /*
-		 if (inProp.subcomponent) {		
+		 if (inProp.subcomponent) {
 		     return this.generateSubcomponentEditors(inComponent, inProp, panel);
 		 } else {
 		 */
@@ -712,7 +712,7 @@
 
 	     e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, inProp, inComponent));
 	 }
-     
+
 	 /* Cache a refernce to the editor so that reinspect can quickly find it */
 	 this.editorHash[hashId] = e;
 
@@ -744,7 +744,7 @@
 	var inValue = "";
 	 if (!inSource && !inExpr) {
 	    ;
-	 } else if (inSource) 
+	 } else if (inSource)
 	    //inValue = "bind: " + inSource;
 	    inValue = inSource;
 	else if (inExpr === undefined || inExpr === null || inExpr === "" || String(inExpr).match(/^\s*$/))
@@ -785,7 +785,7 @@
       * Isn't it enough to know that this component has a binding on this field?
       * Nope; for wm.Variable's dataSet property, if there is a field "name" that you've bound to,
       * then it will appear that you've bound the variable's name property which isn't bindable,
-      * when in fact you've bound the name data field 
+      * when in fact you've bound the name data field
       **************************************************************************************/
      isPropBound: function(inComponent, inProp) {
 	 return Boolean((inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.fullName || inProp.name]);
@@ -820,8 +820,8 @@
 	     var w = inComponent.$.binding.wires[inProp.fullName || inProp.name];
 	     editorProps.dataValue = this.getFormattedBoundValue(inProp.type, w.source,w.expression);
 	 }
-	 var bindEditorProps = 
-	     dojo.mixin(editorProps, 
+	 var bindEditorProps =
+	     dojo.mixin(editorProps,
 			{ captionSize: (e.captionSize == "100%") ? "80px" : e.captionSize, // 100% for checkbox; need more than 16px to show bind value
 			  disabled: true,
 			  _classes: {domNode: ["wminspector-boundvalue","StudioEditor",inProp.isPublished ? "isPublishedProp":""]},
@@ -865,7 +865,7 @@
 			       _classes: {domNode: ["wminspector-bindProp"]},
 			       caption: "",
 			       margin: captionHeight + ",0,0,0",
-			       width: "20px",			       
+			       width: "20px",
 			       height: captionHeight + 20 + "px"});
 	 var self = this;
 	 l.onclick = function() {
@@ -886,11 +886,11 @@
 	 if (inComponent.isDestroyed) return;
 
 	 // onchange events triggered by setting values in the editors programatically should be ignored
-	 if (this._inspecting) return; 
+	 if (this._inspecting) return;
 
 	 var e = inSender;
 	 try {
-	     /* If the editor doesn't have the createWire flag on it, then inputs into the editor should result in 
+	     /* If the editor doesn't have the createWire flag on it, then inputs into the editor should result in
 	      * simply setting of the property
 	      */
 	     if (!e.createWire && (!inComponent.$.binding || !inComponent.$.binding.wires[inProp.name])) {
@@ -901,7 +901,7 @@
 		     //inComponent.setProp(inProp.name, inDataValue);
 		     new wm.SetPropTask(inComponent, inProp.name, inComponent.getProp(inProp.name), inDataValue, false);
 		 }
-	     } 
+	     }
 
 	     /* Else we need to create a wm.Wire for the new value */
 	     else {
@@ -909,19 +909,21 @@
 		  * we're just binding to inProp.name.  bindTarget is used by wm.prop.FieldGroupEditor.
 		  */
 		 var bindPropName = e.bindTarget || inProp.fullName || inProp.name;
-		 new wm.SetWireTask(inComponent, 
-				    bindPropName, 
+		 new wm.SetWireTask(inComponent,
+				    bindPropName,
 				    inComponent.$.binding && inComponent.$.binding.wires[bindPropName] ? {source: inComponent.$.binding.wires[bindPropName].source,
 													  expression: inComponent.$.binding.wires[bindPropName].expression,
-													  value: inComponent.getValue(bindPropName)} : {}, 
-				    inDataValue, 
-				    e.createExpressionWire);
+													  value: inComponent.getValue(bindPropName)} : {},
+				    inDataValue,
+				    e.createExpressionWire,
+                    false,
+                    false);
 	     }
 	 } catch(e) {}
 
 	 /************************************************************************************************************
 	  * Adding a wire calls inComponent.setValue(propName, valueOfTheSourceOrExpression);
-          * sometimes a widget simply destroys itself and creates a replacement copy; 
+          * sometimes a widget simply destroys itself and creates a replacement copy;
           * for example, when I change editorType my text editor is destroyed and a number editor is created.
 	  * If that happens, we don't want to reinpsect...
 	  ************************************************************************************************************/
@@ -1021,7 +1023,7 @@
      */
      /* Called by propertyEdit's wm.SetWireTask */
      parseExpressionForWire: function(inValue, skipValidation) {
-	 // A bind wire expression must be a string 
+	 // A bind wire expression must be a string
 	 if (typeof inValue == "number") {
 	     return String(inValue);
 	 } else if (typeof inValue == "boolean") {
@@ -1043,7 +1045,7 @@
 	     var tmp2 = function() {
 		 return eval(tmp);
 	     }.call(this.inspected.owner || this.inspected);
-	     //var tmp2 = eval(tmp);		
+	     //var tmp2 = eval(tmp);
 	     /* TODO: In 6.4 we openned the bind dialog so they could edit their bind expression in a larger area */
 	     if (tmp2 === undefined) {
 		 //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
@@ -1101,8 +1103,8 @@
 			 app.toastInfo("Testing " + className + "." + inPropName);
 			 studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
 			     if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
-				 window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + 
-					     className + "_" + inPropName + 
+				 window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) +
+					     className + "_" + inPropName +
 					     "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
 			     }
 			 });
@@ -1137,7 +1139,7 @@
 		     //  And in case of proxy problems, show the link so the user can open it themselves
 		     wm.job("PropDoc", 1700, dojo.hitch(this, function() {
 			 if (this._loadingContent)
-			     bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page"); 
+			     bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page");
 		     }));
 		 }
 	     }
@@ -1180,7 +1182,7 @@
 	 },
      /* TODO: Make sure we handle subcomponents correctly, there was a lot of extra code in the previous version of inspector */
      getBindDialogProps: function(inComponent,inPropDef, inEditor) {
-	 var result = {object: inComponent, 
+	 var result = {object: inComponent,
 		       targetProperty: inPropDef.fullName || inPropDef.name,
 		       propDef: inEditor && inEditor.propDef ? inEditor.propDef : inPropDef};
 	 return result;
@@ -1198,7 +1200,7 @@
 				   parent: inLayer,
 				   caption: "Show " + hiddenCount + " more",
 				   align: "right",
-				   width: "80px"});	 
+				   width: "80px"});
 	     l.onclick = dojo.hitch(this, function() {
 		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
 		     w._showAllClicked = true;
@@ -1248,15 +1250,15 @@
 						   autoSizeCaption: true});
 /*
 	     if (this._activeLayer == g.name || g.equivalentName) {
-		 this._reselectLayerIndex = this.layers.length-1;		
+		 this._reselectLayerIndex = this.layers.length-1;
 	     }
 	     */
-	     layer.connect(layer, "onShow", this, function() { 
+	     layer.connect(layer, "onShow", this, function() {
 		 this.onLayerShow(layer, inComponent);
 	     });
 	     }
 	 }, this);
-     
+
 /*
      for (var i = 0; i < groups.length; i++) {
 	 var g = groups[i];
@@ -1273,7 +1275,7 @@
 	     this.layers[i].setMargin("2,0,2,0");
 	     this.layers[i].header.setMargin(i == 0 ? "2" : "0,2,2,2");
 	     this.layers[i].setFitToContentHeight(true);
-	 }	
+	 }
 	 this.setFitToContentHeight(true);
      },
 	 // property groups
@@ -1302,7 +1304,7 @@
 	     result.order = wm.propertyGroups[inName].order;
 	     result.equivalentName = wm.propertyGroups[inName].equivalentName;
 	     result.layer = this.isGroupALayer(wm.propertyGroups[inName]);
- 
+
 	     result.noDisplayName =  wm.propertyGroups[inName].noDisplayName;
 	     if (inName == "widgetName") {
 		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Properties"; // TODO: Localize
@@ -1337,7 +1339,7 @@
 	 /* Step 2: Create it if its not there */
 	 if (!subgroupObj) {
 	     if (wm.propertyGroups[groupObj.name] &&wm.propertyGroups[groupObj.name].subgroups && wm.propertyGroups[groupObj.name].subgroups[subgroupName]) {
-		 subgroupObj = dojo.mixin({props: [], 
+		 subgroupObj = dojo.mixin({props: [],
 					   name: subgroupName},
 					  wm.propertyGroups[groupObj.name].subgroups[subgroupName]);
 
@@ -1386,7 +1388,7 @@
 		 } else {
 		     groupObj.props.push(newPropDef);
 		 }
-		 
+
 		 /* Enter into the required group if needed */
 /*
 		 if (newPropDef.requiredGroup) {
@@ -1560,7 +1562,7 @@
                  } else {
                      this.layers[i].activate();
                  }
-             } else {                 
+             } else {
                      this.layers[i].show();
                      this.layers[i].flow();
                      wm.onidle(this, function() {
@@ -1590,7 +1592,7 @@
 		 }
 	     }));
 
-	 }	 
+	 }
      },
 
      toggleRequiredProperties: function(inSender) {
@@ -1626,18 +1628,18 @@
 	 }
      },
      isAdvancedMode: function() {
-	 return this.mode == "advanced"; 
+	 return this.mode == "advanced";
      },
      isRequiredMode: function() {
-	 return this.mode == "required"; 
+	 return this.mode == "required";
      },
      isRecommendedMode: function() {
-	 return this.mode == "recommended"; 
+	 return this.mode == "recommended";
      },
      generateComponentInfo: function() {
 	 var html = this.inspected.generateDocumentation();
 	 if (!studio.componentDiagnosticsDialog) {
-	     studio.componentDiagnosticsDialog = new wm.Dialog({owner: studio, 
+	     studio.componentDiagnosticsDialog = new wm.Dialog({owner: studio,
 								name: "componentDiagnosticsDialog",
 								width: "300px",
 								height: "500px",
@@ -1702,15 +1704,15 @@ wm.addPropertyGroups = function(propGroups) {
 // registry of groups to show in inspector
 wm.addPropertyGroups({
 /* NEW SCHEMA */
-    properties: {displayName: "Properties", 
+    properties: {displayName: "Properties",
 		 layer: true,
 	       order: 1,
 	       subgroups: {}},
-    common: {//displayName: "Common", 
+    common: {//displayName: "Common",
 	noDisplayName: true,
 	     order: 10,
 	     subgroups: {}},
-    display: {displayName: "Display", 
+    display: {displayName: "Display",
 	      order: 15,
 	      subgroups: {
 		  /* Confirmed */
@@ -1809,7 +1811,7 @@ wm.addPropertyGroups({
     /* Confirmed */
     "editor text": {displayName: "Editor Text",
 		    order: 50,
-		    subgroups: {		    
+		    subgroups: {
 			caption: {displayName: "Caption",
 				  order: 0},
 			help: {displayName: "Help",
@@ -1821,7 +1823,7 @@ wm.addPropertyGroups({
 		    }
 		   },
     /* Confirmed */
-    editor: {displayName: "Editor", 
+    editor: {displayName: "Editor",
 	     equivalentName: "widgetName",
 	     order: 44,
 	     subgroups: {
@@ -1879,7 +1881,7 @@ wm.addPropertyGroups({
 	     }
 	    },
 
-    subwidgets: {displayName: "Children", 
+    subwidgets: {displayName: "Children",
 		 layer: true,
 		 order: 60,
 		 subgroups: {
@@ -1893,7 +1895,7 @@ wm.addPropertyGroups({
 			       order: 15}
 		 }
 		},
-    data: {displayName: "Data", 
+    data: {displayName: "Data",
 	   layer: false,//function(inComponent) { return inComponent instanceof wm.Control;},
 	   order: 70,
 	   subgroups: {

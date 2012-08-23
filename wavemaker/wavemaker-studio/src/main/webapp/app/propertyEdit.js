@@ -41,14 +41,15 @@ dojo.declare("wm.SetPropTask", null, {
 });
 
 dojo.declare("wm.SetWireTask", null, {
-    constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsExpression, skipValidation) {
+    constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsExpression, skipValidation, skipParseExpression) {
         dojo.mixin(this, {
             component: inComponent,
             propName: inPropName,
             oldValue: inOldValue,
             newValue: inNewValue,
             isExpression: inIsExpression,
-            skipValidation: skipValidation
+            skipValidation: skipValidation,
+            skipParseExpression: skipParseExpression
         });
         this.hint = 'change "' + inPropName + '"';
         this.redo();
@@ -57,7 +58,8 @@ dojo.declare("wm.SetWireTask", null, {
         this.component.$.binding.removeWireByProp(this.propName);
         if (inValue) {
             if (type == "expr") {
-                inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
+                if (!this.skipParseExpression)
+                    inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
                 this.component.$.binding.addWire("", this.propName, "", inValue);
             } else if (type == "source") {
                 this.component.$.binding.addWire("", this.propName, inValue);

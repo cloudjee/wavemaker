@@ -1150,7 +1150,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                         value: tp.object.getValue(wp.targetProperty)
                     };
                 }
-                new wm.SetWireTask(tp.object, wp.targetProperty, oldValue, wp.source || wp.expression, wp.expression, false);
+                new wm.SetWireTask(tp.object, wp.targetProperty, oldValue, wp.source || wp.expression, wp.expression, false, true);
 
                 if (info.binding && wp.targetProperty && (wp.source || wp.expression)) {
                     /* we probably need this._applyBinding stuff
