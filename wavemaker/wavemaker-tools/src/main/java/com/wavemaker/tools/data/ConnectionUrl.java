@@ -26,7 +26,7 @@ public final class ConnectionUrl {
     }
 
     public Properties rewriteProperties(Properties properties) {
-        properties = new Properties(properties);
+        //properties = new Properties(properties);
         if (isHsqldb()) {
             String hsqldbFileName = extractHsqlDBFileName();
             properties.setProperty(HSQLFILE_PROP, hsqldbFileName);
