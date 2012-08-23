@@ -29,7 +29,7 @@ wm.Object.extendSchema(wm.Date, {
 
     /* Editor group; validation subgroup */
     minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
-    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
+    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
 
     /* Ignored Group */
     password: {ignore:1},
@@ -68,33 +68,35 @@ wm.Object.extendSchema(wm.DateTime, {
 
 wm.DateTime.extend({
     afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.flow();
+        this.inherited(arguments);
+        this.flow();
     },
-        makePropEdit: function(inName, inValue, inEditorProps) {
-	    switch (inName) {
-	    case "dataValue":
-	    case "defaultInsert":
-	    case "maximum":
-	    case "minimum":
-		return new wm.DateTime(dojo.mixin({dateMode: this.dateMode}, inEditorProps));
-	    }
-	    return this.inherited(arguments);
-	},
+    makePropEdit: function(inName, inValue, inEditorProps) {
+        switch (inName) {
+        case "dataValue":
+        case "defaultInsert":
+        case "maximum":
+        case "minimum":
+            return new wm.DateTime(dojo.mixin({
+                dateMode: this.dateMode
+            }, inEditorProps));
+        }
+        return this.inherited(arguments);
+    },
 
     set_formatLength: function(inValue) {
-	// must get value before changing formatLength because formatLength determines how to parse the value
-	var value = this.getDataValue();
-	this.formatLength = inValue; 
-	this.setDataValue(value);
+        // must get value before changing formatLength because formatLength determines how to parse the value
+        var value = this.getDataValue();
+        this.formatLength = inValue;
+        this.setDataValue(value);
     },
     set_use24Time: function(inValue) {
-	this.use24Time = inValue;
-	this.createEditor();
+        this.use24Time = inValue;
+        this.createEditor();
     },
     listProperties: function() {
-	var p = this.inherited(arguments);
-	p.use24Time.ignoretmp = this.dateMode == "Date";
-	return p;
+        var p = this.inherited(arguments);
+        p.use24Time.ignoretmp = this.dateMode == "Date";
+        return p;
     }
 });
