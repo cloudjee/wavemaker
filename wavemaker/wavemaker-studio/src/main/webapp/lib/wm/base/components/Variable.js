@@ -65,35 +65,34 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	*/
     init: function() {
-	this.inherited(arguments);
-	if (this._isDesignLoaded) {
-		this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
-	}
+        this.inherited(arguments);
+        if (this._isDesignLoaded) {
+            this._subscriptions.push(dojo.subscribe("wmtypes-changed", this, "wmTypesChanged"));
+        }
     },
     postInit: function() {
-	this.inherited(arguments);
-	this._inPostInit = true;
-	// optimization: we should never need bindings on subNards so not creating them
-	if (!this._subNard && !this.$.binding)
-	    new wm.Binding({name: "binding", owner: this});
-	this.setType(this.type, true);
-	if (window["PhoneGap"] && this.saveInPhonegap) {
-	    var textdata = window.localStorage.getItem(this.getRuntimeId());
-	    if (textdata) this.json = textdata;
-	} else if (this.saveInCookie) {
-	    var textdata = dojo.cookie(this.getRuntimeId());
-	    if (textdata) this.json = textdata;
-	}
-	if (this.json)
-	    this.setJson(this.json);
-	else
-	    this._clearData();
+        this.inherited(arguments);
+        this._inPostInit = true;
+        // optimization: we should never need bindings on subNards so not creating them
+        if (!this._subNard && !this.$.binding) new wm.Binding({
+            name: "binding",
+            owner: this
+        });
+        this.setType(this.type, true);
+        if (window["PhoneGap"] && this.saveInPhonegap) {
+            var textdata = window.localStorage.getItem(this.getRuntimeId());
+            if (textdata) this.json = textdata;
+        } else if (this.saveInCookie) {
+            var textdata = dojo.cookie(this.getRuntimeId());
+            if (textdata) this.json = textdata;
+        }
+        if (this.json) this.setJson(this.json);
+        else this._clearData();
 
-	this._inPostInit = false;
+        this._inPostInit = false;
 
-	// need to reinitialize after type is set
-	if (!this._updating && this.$.binding)
-	    this.$.binding.refresh();
+        // need to reinitialize after type is set
+        if (!this._updating && this.$.binding) this.$.binding.refresh();
     },
 	//===========================================================================
 	// Type Information
