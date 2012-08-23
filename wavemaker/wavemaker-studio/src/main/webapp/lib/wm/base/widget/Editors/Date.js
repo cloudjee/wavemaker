@@ -272,244 +272,252 @@ dojo.declare("wm.DateTime", wm.Date, {
     dateMode: "Date and Time",
 
     _createEditor: function(inNode, inProps) {
-	this.containerWidget = new wm.Container({width: "100%",
-						 height: "100%",
-						 layoutKind: "left-to-right",
-						 horizontalAlign: "left",
-						 verticalAlign: "top",
-						 name: "containerWidget",
-						 owner: this,
-						 domNode: inNode
-						});
+        this.containerWidget = new wm.Container({
+            width: "100%",
+            height: "100%",
+            layoutKind: "left-to-right",
+            horizontalAlign: "left",
+            verticalAlign: "top",
+            name: "containerWidget",
+            owner: this,
+            domNode: inNode
+        });
 
-	this.dateEditor = new wm.Date({owner: this,
-				       parent: this.containerWidget,
-				       name: "date",
-				       showing: this.dateMode != "Time",
-				       width: "100%",
-				       height: "100%",
-				       padding: "0",
-				       openOnClick: this.openOnClick,
-				       useLocalTime: this.useLocalTime,
-				       formatLength: this.formatLength,
-				       maximum: this.maximum,
-				       minimum: this.minimum,
-				       onchange: dojo.hitch(this, "changed")
-				      });
-	this.timeEditor = new wm.Time({owner: this,
-				       useWMDropDown: true,
-				       name: "time",
-				       parent: this.containerWidget,
-				       showing: this.dateMode != "Date",
-				       width: "100%",
-				       height: "100%",
-				       padding: "0",
-				       openOnClick: this.openOnClick,
-				       useLocalTime: this.useLocalTime,
-				       formatLength: this.formatLength,
-				       use24Time: this.use24Time,
-				       onchange: dojo.hitch(this, "changed")
-				      });
-	if (this._disabled) this.setDisabled(this.disabled);
-	return this.containerWidget;
+        this.dateEditor = new wm.Date({
+            owner: this,
+            parent: this.containerWidget,
+            name: "date",
+            showing: this.dateMode != "Time",
+            width: "100%",
+            height: "100%",
+            padding: "0",
+            openOnClick: this.openOnClick,
+            useLocalTime: this.useLocalTime,
+            formatLength: this.formatLength,
+            maximum: this.maximum,
+            minimum: this.minimum,
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.timeEditor = new wm.Time({
+            owner: this,
+            useWMDropDown: true,
+            name: "time",
+            parent: this.containerWidget,
+            showing: this.dateMode != "Date",
+            width: "100%",
+            height: "100%",
+            padding: "0",
+            openOnClick: this.openOnClick,
+            useLocalTime: this.useLocalTime,
+            formatLength: this.formatLength,
+            use24Time: this.use24Time,
+            onchange: dojo.hitch(this, "changed")
+        });
+        if (this._disabled) this.setDisabled(this.disabled);
+        return this.containerWidget;
     },
     flow: function() {
-	if (this.containerWidget && !this.containerWidget.isDestroyed)
-	    this.containerWidget.flow();
+        if (this.containerWidget && !this.containerWidget.isDestroyed) this.containerWidget.flow();
     },
     sizeEditor: function() {
-	this.inherited(arguments);
-	this.flow();
+        this.inherited(arguments);
+        this.flow();
     },
 
     setDisabled: function(inValue) {
-	wm.Control.prototype.setDisabled.call(this, inValue);
-	if (this.containerWidget) {
-	    this.containerWidget._parentDisabled = this._disabled;
-	    this.containerWidget.setDisabled(inValue);
-	}
+        wm.Control.prototype.setDisabled.call(this, inValue);
+        if (this.containerWidget) {
+            this.containerWidget._parentDisabled = this._disabled;
+            this.containerWidget.setDisabled(inValue);
+        }
     },
     focus: function(inValue) {
-	if (!this.editor) return;
-	    switch(this.dateMode) {
-	    case "Date and Time":
-	    case "Date":
-		this.dateEditor.focus();
-		break;
-	    case "Time":
-		this.timeEditor.focus();
-		break;
-	    }
+        if (!this.editor) return;
+        switch (this.dateMode) {
+        case "Date and Time":
+        case "Date":
+            this.dateEditor.focus();
+            break;
+        case "Time":
+            this.timeEditor.focus();
+            break;
+        }
     },
-    _getValidatorNode: function() {return null;},
+    _getValidatorNode: function() {
+        return null;
+    },
     setEditorValue: function(inValue) {
-	if (!this.editor) return;
-	var d;
-	if (inValue instanceof Date) {
-	    d = new Date(inValue); // else our date calculations modify the input object which can cause ugly side effects
-	} else if (String(inValue).match(/^\d+$/)) {
-	    d = new Date(inValue); // its a long
-	} else if (inValue) {
-	    d =  wm.convertValueToDate(inValue, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm'  : "hh:mm a"});
-	}
-	this.dateEditor.setDataValue(d);
-	this.timeEditor.setDataValue(d);
-			this.updateReadonlyValue();
+        if (!this.editor) return;
+        var d;
+        if (inValue instanceof Date) {
+            d = new Date(inValue); // else our date calculations modify the input object which can cause ugly side effects
+        } else if (String(inValue).match(/^\d+$/)) {
+            d = new Date(inValue); // its a long
+        } else if (inValue) {
+            d = wm.convertValueToDate(inValue, {
+                formatLength: this.formatLength,
+                selector: this.dateMode.toLowerCase(),
+                timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            });
+        }
+        this.dateEditor.setDataValue(d);
+        this.timeEditor.setDataValue(d);
+        this.updateReadonlyValue();
 
     },
     getEditorValue: function(inValue) {
-	var d = new Date();
-	if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
-	    var v = this.dateEditor.getDataValue(); // gets long
-	    if (v) {
-		var datetmp = new Date(v);
-		d.setFullYear(datetmp.getFullYear(), datetmp.getMonth(), datetmp.getDate());
-	    } else {
-		return null;
-	    }
-	}
-	if (this.dateMode == "Time" || this.dateMode == "Date and Time") {
-	    var v = this.timeEditor.getDataValue(); // gets long
-	    if (v) {
-		var datetmp = new Date(v);
-		d.setHours(datetmp.getHours(), datetmp.getMinutes(), datetmp.getSeconds());
-	    } else {
-		d.setHours(0, 0, 0);
-	    }
-	}
-	return d.getTime();
+        var d = new Date();
+        if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
+            var v = this.dateEditor.getDataValue(); // gets long
+            if (v) {
+                var datetmp = new Date(v);
+                d.setFullYear(datetmp.getFullYear(), datetmp.getMonth(), datetmp.getDate());
+            } else {
+                return null;
+            }
+        }
+        if (this.dateMode == "Time" || this.dateMode == "Date and Time") {
+            var v = this.timeEditor.getDataValue(); // gets long
+            if (v) {
+                var datetmp = new Date(v);
+                d.setHours(datetmp.getHours(), datetmp.getMinutes(), datetmp.getSeconds());
+            } else {
+                d.setHours(0, 0, 0);
+            }
+        }
+        return d.getTime();
     },
     setDateMode: function(inValue) {
-	// must get value before changing formatLength because formatLength determines how to parse the value
-	var value = this.getDataValue();
-	this.dateMode = inValue;
-	if (this.editor) {
-	    switch(this.dateMode) {
-	    case "Date and Time":
-		this.dateEditor.show();
-		this.timeEditor.show();
-		break;
-	    case "Date":
-		this.dateEditor.show();
-		this.timeEditor.hide();
-		break;
-	    case "Time":
-		this.dateEditor.hide();
-		this.timeEditor.show();
-		break;
-	    }
-	}
-	this.setDataValue(value);
+        // must get value before changing formatLength because formatLength determines how to parse the value
+        var value = this.getDataValue();
+        this.dateMode = inValue;
+        if (this.editor) {
+            switch (this.dateMode) {
+            case "Date and Time":
+                this.dateEditor.show();
+                this.timeEditor.show();
+                break;
+            case "Date":
+                this.dateEditor.show();
+                this.timeEditor.hide();
+                break;
+            case "Time":
+                this.dateEditor.hide();
+                this.timeEditor.show();
+                break;
+            }
+        }
+        this.setDataValue(value);
     },
 
     _getReadonlyValue: function() {
-	return this.calcDisplayValue(this.getDataValue());
+        return this.calcDisplayValue(this.getDataValue());
     },
     getDisplayValue: function() {
-	return this.calcDisplayValue(this.getDataValue());
+        return this.calcDisplayValue(this.getDataValue());
     },
     setMaximum: function(inValue) {
-	this.maximum = inValue;
-	this.dateEditor.setMaximum(inValue);
+        this.maximum = inValue;
+        this.dateEditor.setMaximum(inValue);
     },
     setMinimum: function(inValue) {
-	this.minimum = inValue;
-	this.dateEditor.setMinimum(inValue);
+        this.minimum = inValue;
+        this.dateEditor.setMinimum(inValue);
     }
 
-/* OLD EDITOR
+    /* OLD EDITOR
     getEditorConstraints: function() {
-	var constraints = this.inherited(arguments);
-	constraints.formatLength = this.formatLength;
-	constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";
-	switch(this.dateMode) {
-	case "Date and Time":
-	    constraints.selector = "datetime";
-	    break;
-	case "Date":
-	    constraints.selector = "date";
-	    break;
-	case "Time":
-	    constraints.selector = "date";
-	    break;
-	}
-	return constraints;
+    var constraints = this.inherited(arguments);
+    constraints.formatLength = this.formatLength;
+    constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";
+    switch(this.dateMode) {
+    case "Date and Time":
+        constraints.selector = "datetime";
+        break;
+    case "Date":
+        constraints.selector = "date";
+        break;
+    case "Time":
+        constraints.selector = "date";
+        break;
+    }
+    return constraints;
     },
     getEditorProps: function(inNode, inProps) {
-	var p = this.inherited(arguments);
-	p._selector = this.dateMode == "Date and Time" ? "datetime" : this.dateMode.toLowerCase();
-	p.use24Time = this.use24Time;
-	return p;
+    var p = this.inherited(arguments);
+    p._selector = this.dateMode == "Date and Time" ? "datetime" : this.dateMode.toLowerCase();
+    p.use24Time = this.use24Time;
+    return p;
     },
     _createEditor: function(inNode, inProps) {
-	var e = dijit.form.DateTimeTextBox(this.getEditorProps(inNode, inProps));
-	if (wm.isMobile) {
-	    dojo.attr(e.focusNode, "readonly", true);
-	    //this.connect(e.domNode, "ontouchstart", e, "openDropDown");
-	}
-	return e;
+    var e = dijit.form.DateTimeTextBox(this.getEditorProps(inNode, inProps));
+    if (wm.isMobile) {
+        dojo.attr(e.focusNode, "readonly", true);
+        //this.connect(e.domNode, "ontouchstart", e, "openDropDown");
+    }
+    return e;
     },
 / *
     _createEditor: function(inNode, inProps) {
-	var e = this.inherited(arguments);
-	var node = document.createElement("div");
-	node.innerHTML = "<div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer' role='presentation' ><input class='dijitReset dijitInputField dijitArrowButtonInner' value='▼ ' type='text' tabindex='-1' readonly='readonly' role='presentation'></div>";
-	e.domNode.appendChild(node.firstChild);
-	this._arrowNode = e.domNode.firstChild;
-	e.domNode.appendChild(e.domNode.firstChild); // make the first child the last child
-	dojo.destroy(node);
-	dojo.addClass(e.domNode, "dijitComboBox");
-	return e;
+    var e = this.inherited(arguments);
+    var node = document.createElement("div");
+    node.innerHTML = "<div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer' role='presentation' ><input class='dijitReset dijitInputField dijitArrowButtonInner' value='▼ ' type='text' tabindex='-1' readonly='readonly' role='presentation'></div>";
+    e.domNode.appendChild(node.firstChild);
+    this._arrowNode = e.domNode.firstChild;
+    e.domNode.appendChild(e.domNode.firstChild); // make the first child the last child
+    dojo.destroy(node);
+    dojo.addClass(e.domNode, "dijitComboBox");
+    return e;
     },
     * /
     */
 
 
-/*
+    /*
     updateIsDirty: function() {
-	var wasDirty = this.isDirty;
-	var isDirty = true;
-	var dataValue = this.calcDisplayValue(this.dataValue);
-	var lastValue = this.calcDisplayValue(this._lastValue);
-	if (dataValue == lastValue) {
-	    isDirty = false;
-	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
-		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
-	    isDirty = false;
-	}
-	this.valueChanged("isDirty", this.isDirty = isDirty);
-	if (wasDirty != this.isDirty)
-	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
-	if (!app.disableDirtyEditorTracking)
-	    wm.fire(this.parent, "updateIsDirty");
+    var wasDirty = this.isDirty;
+    var isDirty = true;
+    var dataValue = this.calcDisplayValue(this.dataValue);
+    var lastValue = this.calcDisplayValue(this._lastValue);
+    if (dataValue == lastValue) {
+        isDirty = false;
+    } else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
+           (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
+        isDirty = false;
+    }
+    this.valueChanged("isDirty", this.isDirty = isDirty);
+    if (wasDirty != this.isDirty)
+        dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
+    if (!app.disableDirtyEditorTracking)
+        wm.fire(this.parent, "updateIsDirty");
     },
     setDisabled: function(inDisabled) {
-	this.inherited(arguments);
-	if (this.disabled && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
-	    wm.DateTime.dialog.hide();
+    this.inherited(arguments);
+    if (this.disabled && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+        wm.DateTime.dialog.hide();
     },
     setShowing: function(inDisabled) {
-	this.inherited(arguments);
-	if (!this.showing && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
-	    wm.DateTime.dialog.hide();
+    this.inherited(arguments);
+    if (!this.showing && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+        wm.DateTime.dialog.hide();
     },
     setReadonly: function(inDisabled) {
-	this.inherited(arguments);
-	if (this.readonly && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
-	    wm.DateTime.dialog.hide();
+    this.inherited(arguments);
+    if (this.readonly && wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+        wm.DateTime.dialog.hide();
     },
     destroy: function(inDisabled) {
-	if (wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
-	    wm.DateTime.dialog.hide();
-	this.inherited(arguments);
+    if (wm.DateTime.dialog && wm.DateTime.dialog._currentEditor == this)
+        wm.DateTime.dialog.hide();
+    this.inherited(arguments);
     },
     okClicked: function() {
-	wm.DateTime.dialog.hide();
-	this.changed();
+    wm.DateTime.dialog.hide();
+    this.changed();
     },
     cancelClicked: function() {
-	wm.DateTime.dialog.hide();
-	this.setDisplayValue(this._initialDisplayValue);
+    wm.DateTime.dialog.hide();
+    this.setDisplayValue(this._initialDisplayValue);
     },
     */
 
