@@ -277,7 +277,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	cellEditted: function(inValue, inRowIndex, inFieldName) {
         if (isNaN(inValue)) {
-            this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex,"_wmVariable").getValue(inFieldName));
+            try {
+                this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex,"_wmVariable").getValue(inFieldName));
+            } catch(e) {}
             return;
         }
 		var isInvalid;
