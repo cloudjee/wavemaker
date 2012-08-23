@@ -100,6 +100,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
     postInit: function() {
         this.inherited(arguments);
+        this.subscribe("window-resize", this, "resize");
         if (this.noHeader) this.setNoHeader(this.noHeader);
 
         if (this.variable && this.variable.getData() || this.columns && this.columns.length) {
@@ -277,7 +278,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             }
 
 	},
-	cellEditted: function(inValue, inRowIndex, inFieldName) {
+	resize: function() {
+        this.cancelEdit();
+    },
+    cellEditted: function(inValue, inRowIndex, inFieldName) {
         if (isNaN(inValue)) {
             try {
                 this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex,"_wmVariable").getValue(inFieldName));
@@ -690,7 +694,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 
     cancelEdit: function() {
-    	this.dojoObj.edit.cancel();
+        if (this.dojoObj && this.dojoObj.edit)
+    	   this.dojoObj.edit.cancel();
     },
     setCell: function(rowIndex, fieldName, newValue, noRendering) {
     	if (rowIndex < 0) {
