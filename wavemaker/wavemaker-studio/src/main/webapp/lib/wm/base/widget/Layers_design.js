@@ -402,23 +402,23 @@ wm.TabLayers.extend({
     themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}],
 
     set_conditionalTabButtons: function(inValue) {
-	this.conditionalTabButtons = Boolean(inValue);
-	this.decorator.tabsControl.setShowing(!this.conditionalTabButtons || this.layers.length > 1);
+        this.conditionalTabButtons = Boolean(inValue);
+        this.decorator.tabsControl.setShowing(!this.conditionalTabButtons || this.layers.length > 1);
     },
     set_verticalButtons: function(inValue) {
-	this.verticalButtons = Boolean(inValue);
-	if (inValue) {
-	    this.setLayoutKind("left-to-right");
-	} else {
-	    this.setLayoutKind("top-to-bottom");
-	}
-	this.decorator.decorateContainer();
-	this.reflow();
-	this.decorator.decorateLayers();
+        this.verticalButtons = Boolean(inValue);
+        if (inValue) {
+            this.setLayoutKind("left-to-right");
+        } else {
+            this.setLayoutKind("top-to-bottom");
+        }
+        this.decorator.decorateContainer();
+        this.reflow();
+        this.decorator.decorateLayers();
     },
     set_headerWidth: function(inWidth) {
-	this.headerWidth = inWidth;
-	this.c$[0].setWidth(inWidth);
+        this.headerWidth = inWidth;
+        this.c$[0].setWidth(inWidth);
     }
 });
 
@@ -427,41 +427,42 @@ wm.WizardLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],
     set_hasButtonBar: function(inValue) {
-	this.hasButtonBar = inValue;
-	if (this.decorator.buttonPanel)
-	    this.decorator.buttonPanel.setShowing(inValue);
+        this.hasButtonBar = inValue;
+        if (this.decorator.buttonPanel) this.decorator.buttonPanel.setShowing(inValue);
     },
     set_bottomButtons: function(inValue) {
-	this.bottomButtons = inValue;
-	this.generateBottomButtonEvents();
+        this.bottomButtons = inValue;
+        this.generateBottomButtonEvents();
 
-	this.decorator.addFooter();
+        this.decorator.addFooter();
 
-	this.reflow();
-	studio.reinspect(true)
+        this.reflow();
+        studio.reinspect(true)
     },
     set_verticalButtons: function(inValue) {
-	this.verticalButtons = Boolean(inValue);
-	if (inValue) {
-	    this.setLayoutKind("left-to-right");
-	} else {
-	    this.setLayoutKind("top-to-bottom");
-	}
-	this.decorator.decorateContainer();
-	this.reflow();
-	this.decorator.decorateLayers();
+        this.verticalButtons = Boolean(inValue);
+        if (inValue) {
+            this.setLayoutKind("left-to-right");
+        } else {
+            this.setLayoutKind("top-to-bottom");
+        }
+        this.decorator.decorateContainer();
+        this.reflow();
+        this.decorator.decorateLayers();
     },
     set_headerWidth: function(inWidth) {
-	this.headerWidth = inWidth;
-	this.c$[0].setWidth(inWidth);
+        this.headerWidth = inWidth;
+        this.c$[0].setWidth(inWidth);
     },
     listProperties: function() {
-	var p = this.inherited(arguments);
-	var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
-	for (var i = 0; i < bottomButtons.length; i++) {
-	    p["onBottom" + i + "Button"] = {isEvent:true};
-	}
-	return p;
+        var p = this.inherited(arguments);
+        var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
+        for (var i = 0; i < bottomButtons.length; i++) {
+            p["onBottom" + i + "Button"] = {
+                isEvent: true
+            };
+        }
+        return p;
     }
 });
 
@@ -471,8 +472,8 @@ wm.BreadcrumbLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],
     set_headerWidth: function(inWidth) {
-	this.headerWidth = inWidth;
-	this.c$[0].setWidth(inWidth);
+        this.headerWidth = inWidth;
+        this.c$[0].setWidth(inWidth);
     }
 });
 
