@@ -117,7 +117,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
         this.endEditUpdate();
 
 
-        /* WM-2515; setInitialValue is also called each time the editor is recreated -- such as when it gets a new dataSet; 
+        /* WM-2515; setInitialValue is also called each time the editor is recreated -- such as when it gets a new dataSet;
          *          fire an onChange if we have a displayValue after setting initialValue as this counts as a change in value
          *          from before it was recreated.
          */
@@ -257,7 +257,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
             else this.render();
         }
     },
-    
+
 
 
     _getDisplayData: function(inObj) {
@@ -279,6 +279,12 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     calcIsDirty: function(val1, val2) {
         var string1 = "";
         var string2 = "";
+        if (this.dataField) {
+            string1 = dojo.isArray(val1) ? val1.join(",") : String(val1||"");
+            string2 = dojo.isArray(val2) ? val2.join(",") : String(val2||"");
+            return string1 != string2;
+        }
+
         if (val1 instanceof wm.Variable && val1.isList || dojo.isArray(val1)) {
             var count = val1 instanceof wm.Variable ? val1.getCount() : val1.length;
             for (var i = 0; i < count; i++) {
@@ -683,8 +689,13 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     },
     doOnchange: function() {
         var e = this.editor;
-        if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
-        this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
+        if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading()) {
+            this.displayValue = this.getDisplayValue();
+            this.dataValue = this.getDataValue();
+            this.valueChanged("displayValue", this.displayValue);
+            this.valueChanged("dataValue", this.dataValue);
+            this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
+        }
     },
     _onShowParent: function() {
     if (this.grid)
@@ -793,11 +804,11 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     if (this.grid) this.grid.deleteConfirm = inConfirm;
     },
     renderGrid: function() {
-    if (this.grid.dojoObj) 
+    if (this.grid.dojoObj)
         this.grid.dojoObj.scroller.contentNodes[0].parentNode.style.overflowX = "hidden";
     },
     connectEditor: function() {
-    if (!this.$.binding) 
+    if (!this.$.binding)
         new wm.Binding({name: "binding", owner: this});
     this.selectedItem.$.binding.addWire("", "dataSet", this.name + ".editor.selectedItem");
     this.connect(this.grid, "onSelectionChange", this, "changed");
