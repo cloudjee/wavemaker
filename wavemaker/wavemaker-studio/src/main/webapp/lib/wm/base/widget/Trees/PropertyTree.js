@@ -51,11 +51,12 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
     // wm.Variable that the selected item contains
     init: function() {
         this.inherited(arguments);
-        this.setConfigJson(this.configJson);
-        this.selectedItem = new wm.Variable({
+         this.selectedItem = new wm.Variable({
             name: "selectedItem",
             owner: this
         });
+        this.setConfigJson(this.configJson);
+
         this.setDataSet(this.dataSet);
     },
     setConfigJson: function(inJson) {
