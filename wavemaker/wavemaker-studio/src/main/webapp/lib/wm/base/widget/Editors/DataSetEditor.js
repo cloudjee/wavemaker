@@ -698,13 +698,12 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
         }
     },
     _onShowParent: function() {
-    if (this.grid)
-        this.grid.renderDojoObj();
+        if (this.grid) this.grid.renderDojoObj();
     },
     flow: function() {
-    if (this.editor) {
-        this.editor.flow();
-    }
+        if (this.editor) {
+            this.editor.flow();
+        }
     },
     setShowSearchBar: function(inShow) {
         this.showSearchBar = Boolean(inShow);
@@ -796,28 +795,29 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     // does not have readonly mode
     },
     setDeleteColumn: function(inColumn) {
-    this.deleteColumn = inColumn;
-    if (this.grid) this.grid.setDeleteColumn(inColumn);
+        this.deleteColumn = inColumn;
+        if (this.grid) this.grid.setDeleteColumn(inColumn);
     },
     setDeleteConfirm: function(inConfirm) {
-    this.deleteConfirm = inConfirm;
-    if (this.grid) this.grid.deleteConfirm = inConfirm;
+        this.deleteConfirm = inConfirm;
+        if (this.grid) this.grid.deleteConfirm = inConfirm;
     },
     renderGrid: function() {
-    if (this.grid.dojoObj)
-        this.grid.dojoObj.scroller.contentNodes[0].parentNode.style.overflowX = "hidden";
+        if (this.grid.dojoObj) this.grid.dojoObj.scroller.contentNodes[0].parentNode.style.overflowX = "hidden";
     },
     connectEditor: function() {
-    if (!this.$.binding)
-        new wm.Binding({name: "binding", owner: this});
-    this.selectedItem.$.binding.addWire("", "dataSet", this.name + ".editor.selectedItem");
-    this.connect(this.grid, "onSelectionChange", this, "changed");
+        if (!this.$.binding) new wm.Binding({
+            name: "binding",
+            owner: this
+        });
+        this.selectedItem.$.binding.addWire("", "dataSet", this.name + ".editor.selectedItem");
+        this.connect(this.grid, "onSelectionChange", this, "changed");
     },
     deselectAll: function() {
-    this.grid.deselectAll();
+        this.grid.deselectAll();
     },
     selectItem: function(rowIndex) {
-    this.grid.setSelectedRow(rowIndex);
+        this.grid.setSelectedRow(rowIndex);
     },
 
 /*
