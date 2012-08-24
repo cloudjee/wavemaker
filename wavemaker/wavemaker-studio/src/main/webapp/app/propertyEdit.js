@@ -2260,7 +2260,9 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
         }
         }
         this.generateSubEditors(inspected);
-        this.editors._ROOT.updateOptions();
+        if (this.editors._ROOT) {
+            this.editors._ROOT.updateOptions();
+        }
         //this.parent.setBestHeight();
     } else {
         /* Else call reinspectEditor on each editor */
