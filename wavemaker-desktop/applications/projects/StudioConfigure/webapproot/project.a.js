@@ -218,6 +218,11 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		"parameters": null,
 		"returnType": "com.wavemaker.runtime.RuntimeAccess"
 	}, {
+		"name": "getServerTimeOffset",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "int"
+	}, {
 		"name": "getServiceEventNotifier",
 		"operationType": null,
 		"parameters": null,
@@ -470,7 +475,7 @@ wm.types = {
 		}
 	}
 };
-wm.Application.themeData['wm_studio'] = {"wm.Control":{"borderColor":"#FBFBFB"},"wm.ToggleButton":{"border":"1","borderColor":"#ABB8CF"},"wm.ToggleButtonPanel":{"border":"1","borderColor":"#ABB8CF"},"wm.Button":{"border":"1","borderColor":"#323332","height":"32px"},"wm.RoundedButton":{"border":"0","borderColor":"#ABB8CF"},"wm.Layout":{"border":"0"},"wm.Bevel":{"bevelSize":4,"border":"0"},"wm.Splitter":{"bevelSize":"6","border":"0"},"wm.AccordionDecorator":{"captionBorder":"0,0,1,0","captionBorderColor":"#FBFBFB"},"wm.AccordionLayers":{"border":"0"},"wm.FancyPanel":{"margin":"2","border":"0"},"wm.TabLayers":{"headerHeight":"31px","layersType":"Tabs","margin":"0","border":"0","borderColor":"#959DAB","clientBorder":"0","clientBorderColor":"#959DAB","width":"100%","height":"100%"},"wm.WizardLayers":{"margin":"0","border":"0","clientBorder":"0","clientBorderColor":"#FBFBFB"},"wm.Layer":{"margin":"0","padding":"0"},"wm.Dialog":{"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.PageDialog":{"noBevel":true,"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.DesignableDialog":{"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.GenericDialog":{"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.studio.DialogMainPanel":{"width":"100%","height":"100%","horizontalAlign":"left","verticalAlign":"top","padding":"5","border":"5","borderColor":"#313743","backgroundColor":"#848c99"},"wm.DojoMenu":{"padding":"0","border":"0","borderColor":"#000000"},"wm.List":{"margin":"0","border":"0"},"wm.dijit.ProgressBar":{"border":"0"},"wm.RichText":{"border":"0","borderColor":"#B3B3B3"},"wm.DataGrid":{"border":"0"},"wm.Label":{},"wm.Picture":{},"wm.Spacer":{},"wm.Layers":{"border":"0"},"wm.PageContainer":{},"wm.Panel":{},"wm.CheckBoxEditor":{},"wm.CurrencyEditor":{},"wm.Text":{"border":undefined},"wm.SelectMenu":{},"wm.dijit.Calendar":{"border":"0"},"wm.DojoGrid":{"border":"0"}};
+wm.Application.themeData['wm_studio'] = {"wm.Control":{"borderColor":"#FBFBFB"},"wm.ToggleButton":{"border":"1","borderColor":"#ABB8CF"},"wm.ToggleButtonPanel":{"border":"1","borderColor":"#ABB8CF"},"wm.Button":{"border":"1","borderColor":"#323332","height":"32px"},"wm.RoundedButton":{"border":"0","borderColor":"#ABB8CF"},"wm.Layout":{"border":"0"},"wm.Bevel":{"bevelSize":4,"border":"0"},"wm.Splitter":{"bevelSize":"6","border":"0"},"wm.AccordionDecorator":{"captionBorder":"0,0,1,0","captionBorderColor":"#FBFBFB"},"wm.AccordionLayers":{"border":"0"},"wm.FancyPanel":{"margin":"2","border":"0","innerBorder":"1"},"wm.TabLayers":{},"wm.WizardLayers":{"margin":"0","border":"0","clientBorder":"0","clientBorderColor":"#FBFBFB"},"wm.Layer":{"margin":"0","padding":"0"},"wm.Dialog":{"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.PageDialog":{"noBevel":true,"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.DesignableDialog":{"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.GenericDialog":{"border":"1","margin":"0","borderColor":"#959DAB","titlebarBorder":"0,0,1,0","titlebarBorderColor":"#959DAB","footerBorder":"1,0,0,0","footerBorderColor":"#959DAB","titlebarHeight":"23"},"wm.studio.DialogMainPanel":{"width":"100%","height":"100%","horizontalAlign":"left","verticalAlign":"top","padding":"5","border":"5","borderColor":"#313743","backgroundColor":"#848c99"},"wm.DojoMenu":{"padding":"0","border":"0","borderColor":"#000000"},"wm.List":{"margin":"0","border":"0"},"wm.dijit.ProgressBar":{"border":"0"},"wm.RichText":{"border":"0","borderColor":"#B3B3B3"},"wm.DataGrid":{"border":"0"},"wm.Label":{},"wm.Picture":{},"wm.Spacer":{},"wm.Layers":{"border":"0"},"wm.PageContainer":{},"wm.Panel":{},"wm.CheckBoxEditor":{},"wm.CurrencyEditor":{},"wm.Text":{"border":undefined},"wm.SelectMenu":{},"wm.dijit.Calendar":{"border":"0"},"wm.DojoGrid":{"border":"0"}};
 dojo.declare("StudioConfigure", wm.Application, {
 	"dialogAnimationTime": 350, 
 	"disableDirtyEditorTracking": false, 
@@ -485,8 +490,9 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"phoneMain": "", 
 	"projectSubVersion": 139, 
 	"projectVersion": 1, 
-	"saveCounter": 11, 
-	"studioVersion": "6.5.0.M1", 
+	"saveCounter": 16, 
+	"showIOSPhoneGapBackButton": false, 
+	"studioVersion": "6.5.0.M4", 
 	"tabletMain": "", 
 	"theme": "wm_studio", 
 	"toastPosition": "br", 
