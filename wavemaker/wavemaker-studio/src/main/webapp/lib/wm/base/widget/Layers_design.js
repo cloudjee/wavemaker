@@ -100,19 +100,19 @@ wm.Layer.extend({
 		    iconClass: "Studio_silkIconImageList_30",
 		    children: []};
 
-	data.children.push({label: "Previous", 
+	data.children.push({label: "Previous",
 			    iconClass: "Studio_silkIconImageList_30",
 			    onClick: dojo.hitch(this, function() {
 				this.editProp("movePrevious");
 			    })
 			   });
-	data.children.push({label: "Next", 
+	data.children.push({label: "Next",
 			    iconClass: "Studio_silkIconImageList_30",
 			    onClick: dojo.hitch(this, function() {
 				this.editProp("moveNext");
 			    })
 			   });
-		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);	
+		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
     },
 	listProperties: function() {
 	    var props = this.inherited(arguments);
@@ -195,159 +195,162 @@ wm.Object.extendSchema(wm.Layers, {
 
 wm.Layers.extend({
     themeable: false,
-	_noCreate: true,
+    _noCreate: true,
     resetDesignHeight: function() {
-	this.inherited(arguments);
-	this.setHeaderHeight(studio.currentDeviceType != "desktop" ? this.mobileHeaderHeight || this.desktopHeaderHeight : this.desktopHeaderHeight);
+        this.inherited(arguments);
+        this.setHeaderHeight(studio.currentDeviceType != "desktop" ? this.mobileHeaderHeight || this.desktopHeaderHeight : this.desktopHeaderHeight);
     },
     set_isMobileFoldingParent: function(isParent) {
-	this.isMobileFoldingParent = Boolean(isParent);
-	var self = this;
+        this.isMobileFoldingParent = Boolean(isParent);
+        var self = this;
 
-	/* There can be only one parent */
-	if (this.isMobileFoldingParent) {
-	    wm.forEachWidget(studio.page.root, function(w) {
-		if (w.isMobileFoldingParent && w != self) {
-		    w.isMobileFoldingParent = false;
-		}
-	    }, true);
-	}
+        /* There can be only one parent */
+        if (this.isMobileFoldingParent) {
+            wm.forEachWidget(studio.page.root, function(w) {
+                if (w.isMobileFoldingParent && w != self) {
+                    w.isMobileFoldingParent = false;
+                }
+            }, true);
+        }
 
-	if (studio.mobileFoldingToggleButton.clicked) {
-	    // redo mobile folding
-	    studio.designPhoneUI(false);
-	    studio.designMobileFolding(true);
-	}
+        if (studio.mobileFoldingToggleButton.clicked) {
+            // redo mobile folding
+            studio.designPhoneUI(false);
+            studio.designMobileFolding(true);
+        }
     },
     set_headerHeight: function(inHeight) {
-	var isMobile = studio.currentDeviceType != "desktop";
-	if (isMobile)
-	    this.mobileHeaderHeight = inHeight;
-	else
-	    this.desktopHeaderHeight = inHeight;
-	this.userDefHeaderHeight = this.headerHeight;
-	this.setHeaderHeight(inHeight);
+        var isMobile = studio.currentDeviceType != "desktop";
+        if (isMobile) this.mobileHeaderHeight = inHeight;
+        else this.desktopHeaderHeight = inHeight;
+        this.userDefHeaderHeight = this.headerHeight;
+        this.setHeaderHeight(inHeight);
     },
-        afterPaletteDrop: function(){
-	    this.inherited(arguments);
-	    this.addLayer();
-	    this.setClientBorder(this.clientBorder);
-	    this.setClientBorderColor(this.clientBorderColor);
-	},
-	set_defaultLayer: function(inLayerIndex) {
-		this.setDefaultLayer(inLayerIndex);
-		if (this.defaultLayer != -1)
-			this.set_layerIndex(this.defaultLayer);
-	},
-        set_layersType: function(inLayersType) {
-            this.layersType = inLayersType;
-            var newClass;
-            switch(inLayersType) {
-            case "Tabs":
-            case "RoundedTabs":
-                newClass = "wm.TabLayers";
-                break;
-            case "Accordion":
-                newClass = "wm.AccordionLayers";
-                break;
-            case "Layers":
-                newClass = "wm.Layers";
-                break;
-            case "Breadcrumb":
-                newClass = "wm.BreadcrumbLayers";
-                break;
-            case "Wizard":
-                newClass = "wm.WizardLayers";
-                break;
+    afterPaletteDrop: function() {
+        this.inherited(arguments);
+        this.addLayer();
+        this.setClientBorder(this.clientBorder);
+        this.setClientBorderColor(this.clientBorderColor);
+    },
+    set_defaultLayer: function(inLayerIndex) {
+        this.setDefaultLayer(inLayerIndex);
+        if (this.defaultLayer != -1) this.set_layerIndex(this.defaultLayer);
+    },
+    set_layersType: function(inLayersType) {
+        this.layersType = inLayersType;
+        var newClass;
+        switch (inLayersType) {
+        case "Tabs":
+        case "RoundedTabs":
+            newClass = "wm.TabLayers";
+            break;
+        case "Accordion":
+            newClass = "wm.AccordionLayers";
+            break;
+        case "Layers":
+            newClass = "wm.Layers";
+            break;
+        case "Breadcrumb":
+            newClass = "wm.BreadcrumbLayers";
+            break;
+        case "Wizard":
+            newClass = "wm.WizardLayers";
+            break;
 
-            }
-            var widgetsjs = this.write("");
-            widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/,""));
-	    var name = this.name;	
-            var parent = this.parent;
-	    var owner = this.owner;
-            var indexInParent = dojo.indexOf(this.parent.c$, this);
-            this.destroy();
-            var clone = parent.createComponent(name, newClass, widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
-            parent.moveControl(clone, indexInParent);
-            parent.reflow();
-	    studio.refreshVisualTree();
-	    studio.select(clone);
+        }
+        var widgetsjs = this.write("");
+        widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/, ""));
+        var name = this.name;
+        var parent = this.parent;
+        var owner = this.owner;
+        var indexInParent = dojo.indexOf(this.parent.c$, this);
+        this.destroy();
+        var clone = parent.createComponent(name, newClass, widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
+        parent.moveControl(clone, indexInParent);
+        parent.reflow();
+        studio.refreshVisualTree();
+        studio.select(clone);
 
-        },
-	set_layerIndex: function(inLayerIndex) {
-		this.setLayerIndex(inLayerIndex);
-		if (this.isDesignLoaded())
-			studio.select(this.getLayer());
-	},
-	set_layerInactive: function(inLayer) {
-		this.setLayerInactive(inLayer);
-		if (this.isDesignLoaded())
-			studio.select(this);
-	},
-	getLayerInfo: function(inNameList, inIndexList) {
-		dojo.forEach(this.layers, function(l) {
-			inNameList.push(l.name);
-			inIndexList.push(this.indexOfLayer(l));
-		}, this);
-	},
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	    switch (inName) {
-	    case "defaultLayer":
-		var options = [""], values = [-1];
-		this.getLayerInfo(options, values);
-		return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: options, values: values}));
-	    }
-	    return this.inherited(arguments);
-	},
+    },
+    set_layerIndex: function(inLayerIndex) {
+        this.setLayerIndex(inLayerIndex);
+        if (this.isDesignLoaded()) studio.select(this.getLayer());
+    },
+    set_layerInactive: function(inLayer) {
+        this.setLayerInactive(inLayer);
+        if (this.isDesignLoaded()) studio.select(this);
+    },
+    getLayerInfo: function(inNameList, inIndexList) {
+        dojo.forEach(this.layers, function(l) {
+            inNameList.push(l.name);
+            inIndexList.push(this.indexOfLayer(l));
+        }, this);
+    },
+    makePropEdit: function(inName, inValue, inEditorProps) {
+        switch (inName) {
+        case "defaultLayer":
+            var options = [""],
+                values = [-1];
+            this.getLayerInfo(options, values);
+            return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {
+                options: options,
+                values: values
+            }));
+        }
+        return this.inherited(arguments);
+    },
     add: function() {
-				this.addLayer();
-				// FIXME: need to refresh tree and select layer
-				studio.refreshVisualTree();
-				studio.select(null);
-				studio.select(this);
-	},
-	listProperties: function() {
-		var props = this.inherited(arguments);
-		props.headerHeight.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs' && this.layersType != "Wizard" || this.verticalButtons);
-		props.headerWidth.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs'  && this.layersType != "Wizard" || !this.verticalButtons);
-	        props.isMobileFoldingParent.ignoretmp = !studio.mobileFoldingToggleButton.clicked;
-		return props;
-	},
-	getOrderedWidgets: function() {
-		return this.layers;
-	},
+        this.addLayer();
+        // FIXME: need to refresh tree and select layer
+        studio.refreshVisualTree();
+        studio.select(null);
+        studio.select(this);
+    },
+    listProperties: function() {
+        var props = this.inherited(arguments);
+        props.headerHeight.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs' && this.layersType != "Wizard" || this.verticalButtons);
+        props.headerWidth.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs' && this.layersType != "Wizard" || !this.verticalButtons);
+        props.isMobileFoldingParent.ignoretmp = !studio.mobileFoldingToggleButton.clicked;
+        return props;
+    },
+    getOrderedWidgets: function() {
+        return this.layers;
+    },
     createDesignContextMenu: function(menuObj, optionalSubmenuArray) {
-	if (this.layers.length) {
-	    var data = {label: "Show Layer",
-			iconClass: "Studio_silkIconImageList_95",
-			children: []};
+        if (this.layers.length) {
+            var data = {
+                label: "Show Layer",
+                iconClass: "Studio_silkIconImageList_95",
+                children: []
+            };
 
-	    for (var i = 0; i < this.layers.length; i++) {
-		if (!this.layers[i].isActive())
-		    data.children.push(this.addLayerToContextMenu(i));
-	    }
-	    if (optionalSubmenuArray) {
-		optionalSubmenuArray.push({label: "add",
-					   iconClass: "Studio_silkIconImageList_30",
-					   onClick: dojo.hitch(this, function() {
-					       this.addLayer();
-					   })});
-		dojo.forEach(data.children, function(i) {optionalSubmenuArray.push(i);});
-	    } else
-		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
-	}
+            for (var i = 0; i < this.layers.length; i++) {
+                if (!this.layers[i].isActive()) data.children.push(this.addLayerToContextMenu(i));
+            }
+            if (optionalSubmenuArray) {
+                optionalSubmenuArray.push({
+                    label: "add",
+                    iconClass: "Studio_silkIconImageList_30",
+                    onClick: dojo.hitch(this, function() {
+                        this.addLayer();
+                    })
+                });
+                dojo.forEach(data.children, function(i) {
+                    optionalSubmenuArray.push(i);
+                });
+            } else var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
+        }
     },
     addLayerToContextMenu: function(i) {
-	return 	{label:   this.layers[i].name,
-		 iconClass: "Studio_paletteImageList_0",
-		 onClick: dojo.hitch(this, function() {
-		     this.setLayerIndex(i);
-		 })
-		};
+        return {
+            label: this.layers[i].name,
+            iconClass: "Studio_paletteImageList_0",
+            onClick: dojo.hitch(this, function() {
+                this.setLayerIndex(i);
+            })
+        };
     }
 });
-
 
 dojo.require("wm.base.widget.AccordionLayers");
 wm.AccordionLayers.extend({
@@ -395,7 +398,7 @@ wm.Object.extendSchema(wm.WizardLayers, {
 
 wm.TabLayers.extend({
     themeable: true,
-    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],
+    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "desktopHeaderHeight", "mobileHeaderHeight"],
     themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}],
 
     set_conditionalTabButtons: function(inValue) {
