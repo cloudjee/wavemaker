@@ -23,14 +23,14 @@ XHRServiceEditor.widgets = {
     }],
     inputsVar: ["wm.Variable", {"isList":true,"type":"inputsType"}, {}],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"},{}, {
-        mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:true, border: "0"},{}, {
-	    fancyPanel1: ["wm.FancyPanel", {"height":"190px","title":"Service Settings"}, {}, {
-            toolbar: ["wm.Panel", {_classes: {domNode:["StudioToolBar"]}, showing: false, border: "0", height: "29px", width: "100%", layoutKind: "left-to-right", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
+        toolbar: ["wm.Panel", {_classes: {domNode:["StudioToolBar"]}, showing: false, border: "0", height: "29px", width: "100%", layoutKind: "left-to-right", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
                 toolbarBtnHolder: ["wm.Panel", {imageList: "smallToolbarImageList", border: "0", height: "100%", layoutKind: "left-to-right", width: "100%", padding: "0,4", horizontalAlign: "left", verticalAlign: "top"}, {}, {
                     saveQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 8, hint: "Save"}, {onclick: "okButtonClick"}],
                     delQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 0, hint: "Delete"}, {onclick: "onDeleteClick"}]
                 }]
             }],
+        mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:true, border: "0"},{}, {
+	    fancyPanel1: ["wm.FancyPanel", {"height":"190px","title":"Service Settings"}, {}, {
     		formPanel1: ["wm.FormPanel", {"desktopHeight":"157px","height":"157px","type":"wm.FormPanel"}, {}, {
     		    serviceName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"Service Name","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Any component name is a valid name.  To control grouping of your XHR Services, you can also use dot notation: \"vmware.com.Login\"","required":true,"width":"100%"}, {}],
     		    serviceUrl: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"URL","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Do not include any parameters in the url such as ?arg1=value1","required":true,"width":"100%"}, {}],
@@ -41,7 +41,7 @@ XHRServiceEditor.widgets = {
 	    }],
 	    fancyPanel2: ["wm.FancyPanel", {"height":"250px","title":"Fixed Headers"}, {}, {
 		fixedHeadersGridPanel: ["wm.Panel", {"height":"200px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-		    fixedHeadersGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Header Name","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false},{"show":true,"field":"dataValue","title":"Header Value","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false}],"deleteColumn":true,"localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+		    fixedHeadersGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[{"show":true,"field":"name","title":"Header Name","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false},{"show":true,"field":"dataValue","title":"Header Value","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false}],"deleteColumn":true,"localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
     binding: ["wm.Binding", {}, {}, {
 	wire: ["wm.Wire", {"expression":undefined,"source":"fixedHeadersVar","targetProperty":"dataSet"}, {}]
     }]
@@ -51,7 +51,7 @@ XHRServiceEditor.widgets = {
 	    }],
 	    fancyPanel3: ["wm.FancyPanel", {"height":"250px","title":"Inputs"}, {}, {
 		inputsGridPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-		    inputsGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Input Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false, "fieldType": "dojox.grid.cells._Widget"},
+		    inputsGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[{"show":true,"field":"name","title":"Input Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false, "fieldType": "dojox.grid.cells._Widget"},
 							    {"show":true,"field":"type","title":"Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Select","mobileColumn":false},
 							    {"show":true,"field":"isHeader","title":"Is Header","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool","mobileColumn":false}],
 						 "deleteColumn":true,"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
