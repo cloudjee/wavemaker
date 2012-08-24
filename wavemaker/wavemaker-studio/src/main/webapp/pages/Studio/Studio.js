@@ -67,6 +67,9 @@ dojo.declare("Studio", wm.Page, {
         });
         studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
             wm.studioConfig.environment = inResult;
+			if(studio.startPageDialog.page){
+				studio.startPageDialog.page.setCloudSplash();
+			}
         });
         if (dojo.isIE && dojo.isIE < 8) {
             app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));

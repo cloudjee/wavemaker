@@ -13,9 +13,8 @@
  */
  
 dojo.declare("Start", wm.Page, {
-        i18n: true,
+    i18n: true,
 	start: function() {
-
 	    this.copyright.setHtml(this.copyright.html + wm.studioConfig.studioVersion);
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
@@ -28,6 +27,12 @@ dojo.declare("Start", wm.Page, {
 		    studio.panel1.domNode.appendChild(this.owner.owner.dialogScrim.domNode);
 		});
 	    }
+	},
+	setCloudSplash: function() {
+	//show the CF splash if cloud. Keeps source property brandable
+		if (studio.isCloud()){ 
+			this.iframe.setSource("http://wavemaker.com/cf_splash");
+			}	
 	},
 	update: function() {
 	    this.refreshProjectList();
