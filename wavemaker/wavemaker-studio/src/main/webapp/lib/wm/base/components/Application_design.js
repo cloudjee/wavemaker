@@ -13,6 +13,7 @@
  */
 
 dojo.provide("wm.base.components.Application_design");
+dojo.require("wm.base.Component_design");
 dojo.require("wm.base.components.Application");
 
 wm.Application.extend({
@@ -63,10 +64,10 @@ wm.Application.extend({
         });
 
         var comps = compsArray.join(", " + sourcer_nl);
-    
+
         var customsrc = dojo.trim(String(studio.getAppScript())) || studio.project.projectName + ".extend({\n\n\t" + terminus + "\n});";
         var src = 'dojo.declare("' + this.declaredClass + '", wm.Application, {' +
-        props + ",\n\t" + 
+        props + ",\n\t" +
             '"widgets": {\n' +  (comps || "") + '\n\t},\n\t' +
         terminus + "\n});\n\n" + // terminus is defined in events.js
         customsrc;
@@ -171,7 +172,7 @@ wm.Object.extendSchema(wm.Application, {
     onPageChanged: {events: ["js", "disableNoEvent"]},
     page: {ignore:1},
     deviceSize: {ignore: 1, bindSource:1},
-    name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
+    name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation.
     main: {group: "mobile", shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     tabletMain: {group: "mobile", order: 6, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     phoneMain: {group: "mobile", order: 7, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
