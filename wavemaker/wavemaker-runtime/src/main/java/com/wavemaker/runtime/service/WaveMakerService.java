@@ -26,6 +26,7 @@ import java.net.URLEncoder;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -165,10 +166,27 @@ public class WaveMakerService {
             InputStream response = connection.getInputStream();
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new InputStreamReader(response, charset));
-                for (String line; (line = reader.readLine()) != null;) {
-                    returnString.append(line);
-                }
+            	reader = new BufferedReader(new InputStreamReader(response, charset));
+            	for (String line; (line = reader.readLine()) != null;) {
+            		returnString.append(line);
+            	}
+            	int i = 0;
+            	String field;
+            	HttpServletResponse wmResponse = RuntimeAccess.getInstance().getResponse();
+            	while((field = connection.getHeaderField(i)) != null) {
+            		String key = connection.getHeaderFieldKey(i);
+            		if(key == null) {
+            			wmResponse.addHeader(key, "");
+            		}
+            		else {
+            			if(key.equals("Content-Length") || key.equals("Content-Type") || key.equals("Proxy-Connection")|| key.equals("Expires")){
+            				logger.debug("Remote server returned header of: " + key + " " + field + " it was not forwarded");
+            			}
+            			else{
+            				wmResponse.addHeader(key, field);
+            			}}
+            		i++;
+            	}
             } finally {
                 if (reader != null) {
                     try {
