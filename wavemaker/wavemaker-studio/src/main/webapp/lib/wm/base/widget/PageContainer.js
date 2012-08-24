@@ -41,101 +41,100 @@ dojo.declare("wm.PageContainer", wm.Control, {
         this.updatePageName();
         this._initialPageName = this._pageName;
         if (app && app.locationState && app.locationState[this.getRuntimeId()]) {
-        this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
-        this._locationState = app.locationState;
+            this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
+            this._locationState = app.locationState;
         }
 
-            if (!this.deferLoad || !this.isAncestorHidden())
-          this.loadPage(this._pageName);
+        if (!this.deferLoad || !this.isAncestorHidden()) this.loadPage(this._pageName);
         //this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
         dojo.addOnWindowUnload(this, 'destroy');
 
         if (this.subpageEventlist && !this._isDesignLoaded) {
-        for (var propName in this.subpageEventlist) {
-            if (this[propName] === undefined) {
-            this[propName] = function(){};
+            for (var propName in this.subpageEventlist) {
+                if (this[propName] === undefined) {
+                    this[propName] = function() {};
+                }
             }
         }
-        }
-       if (this.subpageMethodlist && !this._isDesignLoaded) {
-        wm.forEachProperty(this.subpageMethodlist, dojo.hitch(this, function(value, name) {
-            this[name] = dojo.hitch(this, function(){
-                var w = this.page.getValueById(value.replace(/\..*?$/,""));
-                var f = w[value.replace(/^.*\./,"")];
-                f.apply(w, arguments);
-            });
-        }));
+        if (this.subpageMethodlist && !this._isDesignLoaded) {
+            wm.forEachProperty(this.subpageMethodlist, dojo.hitch(this, function(value, name) {
+                this[name] = dojo.hitch(this, function() {
+                    var w = this.page.getValueById(value.replace(/\..*?$/, ""));
+                    var f = w[value.replace(/^.*\./, "")];
+                    f.apply(w, arguments);
+                });
+            }));
         }
         if (this._isDesignLoaded) {
-        this.subscribe("deviceSizeRecalc", dojo.hitch(this, "updatePageName"));
+            this.subscribe("deviceSizeRecalc", dojo.hitch(this, "updatePageName"));
         }
     },
     updatePageName: function() {
-    var device = this._isDesignLoaded ? studio.currentDeviceType : wm.device;
-    if (device == "phone" && this.phonePageName)
-        this._pageName = this.phonePageName;
-    else if (device == "tablet" && this.tabletPageName)
-        this._pageName = this.tabletPageName;
-    else
-        this._pageName = this.pageName;
-    if (this._isDesignLoaded && !this._cupdating) {
-        this.loadPage(this._pageName);
-    }
+        var device = this._isDesignLoaded ? studio.currentDeviceType : wm.device;
+        if (device == "phone" && this.phonePageName) this._pageName = this.phonePageName;
+        else if (device == "tablet" && this.tabletPageName) this._pageName = this.tabletPageName;
+        else this._pageName = this.pageName;
+        if (this._isDesignLoaded && !this._cupdating) {
+            this.loadPage(this._pageName);
+        }
     },
-        postInit: function() {
+    postInit: function() {
         this.inherited(arguments);
         if (this.isDesignedComponent() && this.designWrapper) {
-        dojo.addClass(this.designWrapper.domNode, "pageContainerDesignWrapper");
-                this.designWrapper.domNode.style.backgroundColor = "white";
-                this.createOpenPageButton();
+            dojo.addClass(this.designWrapper.domNode, "pageContainerDesignWrapper");
+            this.designWrapper.domNode.style.backgroundColor = "white";
+            this.createOpenPageButton();
         }
         if (this.isDesignedComponent() && this.getRoot() instanceof wm.Application) {
             this.subscribe("Page-Saved", dojo.hitch(this, function() {
-            if (this._pageName == studio.project.pageName) {
-                this.forceReloadPage();
-            }
+                if (this._pageName == studio.project.pageName) {
+                    this.forceReloadPage();
+                }
             }));
         }
     },
     setProp: function(inName, inValue) {
-    if (this.subpageProplist !== null && this.page && this.subpageProplist[inName]) {
-        var prop = this.subpageProplist[inName];
-        if (prop) {
-        if (inValue instanceof wm.Component === false)
-            this[inName] = inValue;
-        return this.page.setValue(prop, inValue);
+        if (this.subpageProplist !== null && this.page && this.subpageProplist[inName]) {
+            var prop = this.subpageProplist[inName];
+            if (prop) {
+                if (inValue instanceof wm.Component === false) this[inName] = inValue;
+                return this.page.setValue(prop, inValue);
+            }
+        } else if (this.subpageEventlist !== null && this.page && this.subpageEventlist[inName]) {
+            var prop = this.subpageEventlist[inName];
+            if (prop) {
+                if (this._isDesignLoaded) {
+                    return this.setEvent(inName, inValue);
+                } else {
+                    return this.inherited(arguments);
+                }
+            }
         }
-    } else if (this.subpageEventlist !== null && this.page && this.subpageEventlist[inName]) {
-        var prop = this.subpageEventlist[inName];
-        if (prop) {
-        if (this._isDesignLoaded) {
-            return this.setEvent(inName,inValue);
-        } else {
-            return this.inherited(arguments);
-        }
-        }
-    }
-    return this.inherited(arguments);
+        return this.inherited(arguments);
     },
     getProp: function(inName) {
-    if (this.subpageProplist !== null && this.page) {
-        var prop = this.subpageProplist[inName];
-        if (prop) {
-        return this.page.getValue(prop);
+        if (this.subpageProplist !== null && this.page) {
+            var prop = this.subpageProplist[inName];
+            if (prop) {
+                return this.page.getValue(prop);
+            }
         }
-    }
-    if (this._isDesignLoaded && this.subpageEventlist !== null && this.page) {
-        var prop = this.subpageEventlist[inName];
-        if (prop) {
-        return this._getProp(inName);
+        if (this._isDesignLoaded && this.subpageEventlist !== null && this.page) {
+            var prop = this.subpageEventlist[inName];
+            if (prop) {
+                return this._getProp(inName);
+            }
         }
-    }
-    return this.inherited(arguments);
+        return this.inherited(arguments);
     },
 
-        onError: function(inErrorOrMessage) {},
+    onError: function(inErrorOrMessage) {},
     createPageLoader: function() {
-        this._pageLoader = new wm.PageLoader({owner: this, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned});
+        this._pageLoader = new wm.PageLoader({
+            owner: this,
+            domNode: this.domNode,
+            isRelativePositioned: this.isRelativePositioned
+        });
         this._connections.push(this.connect(this._pageLoader, "onPageChanged", this, "pageChanged"));
         this._connections.push(this.connect(this._pageLoader, "onError", this, "onError"));
     },
