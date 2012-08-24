@@ -197,8 +197,9 @@ dojo.declare("wm.Page", wm.Component, {
 
 		    var backState = this.owner ? this.owner._restoreBackState : undefined; // owner is PageContainer
 
-		    if (!this._isDesignLoaded) {
-			this.start(backState, this.locationState);
+
+		    if (!window["studio"] || !studio.page || !this.isAncestor(studio.page)) {
+			     this.start(backState, this.locationState);
 		    }
 		    if (this.debugId) {
     			app.debugDialog.endLogEvent(this.debugId);
@@ -210,9 +211,9 @@ dojo.declare("wm.Page", wm.Component, {
 
 		    console.log("PAGE "+ timeToLoad + " ms");
 		}
-		    if (!this._isDesignLoaded) {
-			this.onStart();
-		    }
+		    //if (!this._isDesignLoaded) {
+			     this.onStart();
+		    //}
 
                     /* Moved to Application.pageChanged
 		    if (this.owner == app) {

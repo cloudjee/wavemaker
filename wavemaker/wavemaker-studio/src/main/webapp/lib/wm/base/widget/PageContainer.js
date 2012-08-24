@@ -225,7 +225,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
                     // Prevent this from being connected multiple times
                     if (!this._pageLoaderConnectedToOwnerStart) {
                         if (this._currentPageConnect) dojo.disconnect(this._currentPageConnect);
-                        this._currentPageConnect = this.owner.connect(this.owner, "start", dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
+                        this._currentPageConnect = this.owner.connect(this.owner, "onStart", dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
                         this._pageLoaderConnectedToOwnerStart = true;
                     }
                 } else {
