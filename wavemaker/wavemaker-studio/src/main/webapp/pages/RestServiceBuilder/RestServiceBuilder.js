@@ -149,16 +149,22 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		var basicAuth = this.owner.owner.restUrlPage.page.basicAuth;
 		var userId = this.owner.owner.restUrlPage.page.userId;
 		var password = this.owner.owner.restUrlPage.page.password;
+		var headers = this.owner.owner.restUrlPage.page.headersVar.getData();
+		var h = {};
+		for (var k = 0; headers && k < headers.length; k++) {
+			var item = headers[k];
+			h[item.name] = item.dataValue;
+        }
 		if (url) {
 			studio.beginWait("Populating...");
 			if (method == "GET") {
 				studio.webService.requestAsync("generateRESTWsdlSettings", 
-					[url, basicAuth, userId, password], 
+					[url, basicAuth, userId, password, h], 
 					dojo.hitch(this, "generateRESTWsdlSettingsSuccess"), 
 					dojo.hitch(this, "generateRESTWsdlSettingsError"));
 			} else { //POST
 				studio.webService.requestAsync("generateRESTWsdlSettings", 
-					[url, method, contentType, postData, basicAuth, userId, password], 
+					[url, method, contentType, postData, basicAuth, userId, password, h], 
 					dojo.hitch(this, "generateRESTWsdlSettingsSuccess"), 
 					dojo.hitch(this, "generateRESTWsdlSettingsError"));
 			}
