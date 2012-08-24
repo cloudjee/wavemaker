@@ -32,7 +32,7 @@ wm.Object.extendSchema(wm.Date, {
     maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
 
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
-    formatLength: {group: "editor", subgroup: "display", order: 3, options:["short", "medium", "long"]},
+    formatLength: {ignore:1},
 
     /* Ignored Group */
     password: {ignore:1},
@@ -64,20 +64,13 @@ wm.Object.extendSchema(wm.DateTime, {
 
     /* Editor group; display subgroup */
     use24Time: {group: "editor", subgroup: "display", order: 10, ignoreHint: "Only available if dateMode is not 'Date'", advanced: 1},
-    formatLength: {group: "editor", subgroup: "display", order: 3, options:["short", "medium", "long"]},
+    formatLength: {ignore:1},
 
     /* Editor group; value subgroup */
     dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1}
 });
-wm.Date.extend({
-     set_formatLength: function(inValue) {
-        // must get value before changing formatLength because formatLength determines how to parse the value
-        var value = this.getDataValue();
-        this.formatLength = inValue;
-        this.setDataValue(value);
-    }
-});
+
 wm.DateTime.extend({
     afterPaletteDrop: function() {
         this.inherited(arguments);
@@ -96,14 +89,6 @@ wm.DateTime.extend({
         return this.inherited(arguments);
     },
 
-    set_formatLength: function(inValue) {
-        // must get value before changing formatLength because formatLength determines how to parse the value
-        var value = this.getDataValue();
-        this.formatLength = inValue;
-        this.timeEditor.set_formatLength(inValue);
-        this.dateEditor.set_formatLength(inValue);
-        this.setDataValue(value);
-    },
     set_use24Time: function(inValue) {
         this.use24Time = inValue;
         this.createEditor();
