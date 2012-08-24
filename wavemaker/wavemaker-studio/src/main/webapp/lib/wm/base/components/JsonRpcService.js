@@ -358,7 +358,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
     },
     onLongResponseTimeError: function(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, deferred, inError) {
             if (!deferred.xhr) return; // happens with livelayout requests from studio
-        if (deferred.xhr.status == 504) {
+        if ((deferred.xhr.status == 504) || (deferred.xhr.status == 502 && 
+                deferred.xhr.getResponseHeader("X-Squid-Error") === "ERR_ZERO_SIZE_OBJECT 0" )) {         
             this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred, requestId);
         } else {
             longDeferred.errback(this.onError(inError));
