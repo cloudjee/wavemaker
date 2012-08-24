@@ -151,14 +151,14 @@ public class WebService {
         return rtn;
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password)
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password, Map<String, String> headers)
         throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth, userName, password);
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth, userName, password, headers);
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
-        String userName, String password) throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType, postData, basicAuth, userName, password);
+        String userName, String password, Map<String, String> headers) throws WebServiceException, IOException, XmlException {
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType, postData, basicAuth, userName, password, headers);
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress) throws WebServiceException, IOException, XmlException {

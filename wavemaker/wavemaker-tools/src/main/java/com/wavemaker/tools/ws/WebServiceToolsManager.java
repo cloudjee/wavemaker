@@ -627,12 +627,12 @@ public class WebServiceToolsManager {
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress) throws WebServiceException, IOException, XmlException {
-        return this.generateRESTWsdlSettings(endpointAddress, false, null, null);
+        return this.generateRESTWsdlSettings(endpointAddress, false, null, null, null);
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password)
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password, Map<String, String> headers)
         throws WebServiceException, IOException, XmlException {
-        return this.generateRESTWsdlSettings(endpointAddress, "GET", null, null, basicAuth, userName, password);
+        return this.generateRESTWsdlSettings(endpointAddress, "GET", null, null, basicAuth, userName, password, headers);
     }
 
     /**
@@ -649,7 +649,7 @@ public class WebServiceToolsManager {
      * @throws XmlException
      */
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
-        String userName, String password) throws WebServiceException, IOException, XmlException {
+        String userName, String password, Map<String, String> headers) throws WebServiceException, IOException, XmlException {
         RESTWsdlSettings settings = new RESTWsdlSettings();
 
         URL serviceUrl = new URL(endpointAddress);
@@ -671,8 +671,14 @@ public class WebServiceToolsManager {
             bp.setHttpBasicAuthPassword(password);
         }
 
+        Map<String, Object> headerParams = new HashMap<String, Object>();
+		Set<Entry<String, String>> entries = headers.entrySet();
+		for (Map.Entry<String, String> entry : entries) {
+			headerParams.put(entry.getKey(), entry.getValue());
+		}
+
         String responseString = HTTPBindingSupport.getResponseString(serviceQName, serviceQName, endpointAddress, HTTPRequestMethod.valueOf(method),
-            postSource, bp, null);
+            postSource, bp, headerParams);
 
         String outputType = null;
         String xmlSchemaText = null;
