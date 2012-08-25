@@ -1308,6 +1308,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     /* Handling for the cloudfoundry login dialog */
     cfLoginCancelClick: function() {
+		this.cloudFoundryAppListDialog.hide();
         this.cfLoginDialog.hide();
     },
     cfLoginOkClick: function() {
