@@ -97,79 +97,84 @@ dojo.declare("wm.SetWireTask", null, {
 dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
     editorBorder: false,
     pxOnly: false,
-    validationEnabled: function() {return false;},
+    validationEnabled: function() {
+        return false;
+    },
     flow: function() {
-    this.editor.flow();
+        this.editor.flow();
     },
     _createEditor: function(inNode) {
-    this.editor = new wm.Panel({layoutKind: "left-to-right",
-                    owner: this,
-                    parent: this,
-                    width: "100%",
-                    height: "100%",
-                    name: "editor",
-                    readonly: this.readonly
-                   });
-    this.numberEditor = new wm.Text({owner: this,
-                     regExp: "^\\d*(%|px|)",
-                       parent: this.editor,
-                       width: "100%",
-                       name: "numberEditor",
-                     minWidth: 30,
-                       padding: "0,1,0,0",
-                    readonly: this.readonly
-                      });
-    this.typeEditor = new wm.SelectMenu({owner: this,
-                         parent: this.editor,
-                         name: "typeEditor",
-                         options: "px,%",
-                         dataField: "dataValue",
-                         displayField: "dataValue",
-                         width: "50px",
-                         padding: "0",
-                    readonly: this.readonly
-                        });
-    if (this.pxOnly) {
-        this.typeEditor.setReadonly(true);
-        this.typeEditor.setDataValue("px");
-    }
-    this.numberEditor.connect(this.numberEditor, "onchange", this, "numberChanged");
-    this.typeEditor.connect(this.typeEditor, "onchange", this, "changed");
-    return this.editor;
+        this.editor = new wm.Panel({
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this,
+            width: "100%",
+            height: "100%",
+            name: "editor",
+            readonly: this.readonly
+        });
+        this.numberEditor = new wm.Text({
+            owner: this,
+            regExp: "^\\d*(%|px|)",
+            parent: this.editor,
+            width: "100%",
+            name: "numberEditor",
+            minWidth: 30,
+            padding: "0,1,0,0",
+            readonly: this.readonly
+        });
+        this.typeEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this.editor,
+            name: "typeEditor",
+            options: "px,%",
+            dataField: "dataValue",
+            displayField: "dataValue",
+            width: "50px",
+            padding: "0",
+            readonly: this.readonly
+        });
+        if (this.pxOnly) {
+            this.typeEditor.setReadonly(true);
+            this.typeEditor.setDataValue("px");
+        }
+        this.numberEditor.connect(this.numberEditor, "onchange", this, "numberChanged");
+        this.typeEditor.connect(this.typeEditor, "onchange", this, "changed");
+        return this.editor;
     },
     numberChanged: function() {
-    var displayValue = this.numberEditor.getDisplayValue();
-    if (this.pxOnly) {
-        displayValue = parseInt(displayValue);
-        this.changed();
-    } else if (displayValue.match(/\%$/)) {
-        this.numberEditor.setDataValue(displayValue.replace(/\%$/,""));
-        this.typeEditor.setDataValue("%");
-    } else if (displayValue.match(/px$/)) {
-        this.numberEditor.setDataValue(displayValue.replace(/px$/,""));
-        this.typeEditor.setDataValue("px");
-    } else {
-        this.changed();
-    }
+        var displayValue = this.numberEditor.getDisplayValue();
+        if (this.pxOnly) {
+            displayValue = parseInt(displayValue);
+            this.changed();
+        } else if (displayValue.match(/\%$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/\%$/, ""));
+            this.typeEditor.setDataValue("%");
+        } else if (displayValue.match(/px$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/px$/, ""));
+            this.typeEditor.setDataValue("px");
+        } else {
+            this.changed();
+        }
     },
     getEditorValue: function() {
-    return this.numberEditor.getDataValue() + this.typeEditor.getDataValue();
+        return this.numberEditor.getDataValue() + this.typeEditor.getDataValue();
     },
     setEditorValue: function(inValue) {
-    var result = String(inValue).match(/^(\d+)(.*)$/);
-    if (result) {
-        this.numberEditor.setDataValue(result[1]);
-        this.typeEditor.setDataValue(result[2] || "px");
-    } else {
-        this.numberEditor.setDataValue(100);
-        this.typeEditor.setDataValue("px");
-    }
+        var result = String(inValue).match(/^(\d+)(.*)$/);
+        if (result) {
+            this.numberEditor.setDataValue(result[1]);
+            this.typeEditor.setDataValue(result[2] || "px");
+        } else {
+            this.numberEditor.setDataValue(100);
+            this.typeEditor.setDataValue("px");
+        }
     },
     setDisabled: function(inDisabled) {
-    this.inherited(arguments);
-    if (this.editor) {
-        this.editor.setDisabled(this.disabled);
-    }
+        this.inherited(arguments);
+        if (this.editor) {
+            this.editor.setDisabled(this.disabled);
+        }
     }
 });
 
