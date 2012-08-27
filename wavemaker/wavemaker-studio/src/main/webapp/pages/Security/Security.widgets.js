@@ -147,7 +147,7 @@ Security.widgets = {
 					}]
 				    }],
 				    jossoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"JOSSO"}, {"onShow":"showJossoLayer"}, {
-					userNotice: ["wm.Html", {"border":"0","height":"142px","html":"<h3> Edit web.xml <BR> Register as partner app in agent config <BR> Copy jsp to webapproot</h3>","width":"359px", padding: "5"}, {}]
+					   userNotice: ["wm.Html", {"border":"0","height":"100%","html":"<H3>Setting up JOSSO</H3><ol><li>Before saving this security panel, you must set up exactly one role using the Roles tab above</li><li>Edit web.xml<ul><li>Register as partner app in agent config</li><li>Copy jsp to webapproot</li></ul></li><li>Read more about JOSSO Setup in the <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/Authentication#HUsingJOSSOAuthentication'>Authentication Page</a> of the wiki</li></ol>","width":"359px", padding: "5"}, {}]
 				    }]
 				}]
 			    }]
