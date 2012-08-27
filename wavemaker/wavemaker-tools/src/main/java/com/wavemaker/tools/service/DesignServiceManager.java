@@ -303,13 +303,7 @@ public class DesignServiceManager {
      */
     public void deleteService(String serviceId) throws IOException, NoSuchMethodException {
 
-        Map<String, Service> serviceDefs = getCurrentServiceDefinitions();
-        serviceDefs.remove(serviceId);
-
-        Folder serviceHome = getServiceFolder(serviceId);
-        Project project = this.projectManager.getCurrentProject();
-        project.deleteFile(serviceHome);
-        project.deleteFile(ConfigurationCompiler.getSmdFile(project, serviceId));
+        deleteServiceShallow(serviceId);
 
         // salesforce - if salesforceService is deleted, delete the relevant
         // loginService as well
@@ -320,6 +314,16 @@ public class DesignServiceManager {
         generateRuntimeConfiguration(null);// XXX MAV-569 should do a real build
 
         this.deploymentManager.testRunClean();
+    }
+
+    private void deleteServiceShallow(String serviceId) throws IOException {
+        Map<String, Service> serviceDefs = getCurrentServiceDefinitions();
+        serviceDefs.remove(serviceId);
+
+        Folder serviceHome = getServiceFolder(serviceId);
+        Project project = this.projectManager.getCurrentProject();
+        project.deleteFile(serviceHome);
+        project.deleteFile(ConfigurationCompiler.getSmdFile(project, serviceId));
     }
 
     /**
@@ -444,19 +448,31 @@ public class DesignServiceManager {
     public void validateServiceId(String id) {
 
         if (ObjectUtils.isNullOrEmpty(id)) {
+            try {
+                deleteServiceShallow(id);
+            } catch(IOException e) {}
             throw new InvalidServiceIdException(id, "it cannot be null or empty");
         }
 
         if (RESERVED_WORDS.contains(id)) {
+            try {
+                deleteServiceShallow(id);
+            } catch(IOException e) {}
             throw new InvalidServiceIdException(id, "it contains a reserved word");
         }
 
         if (!StringUtils.isValidJavaIdentifier(id)) {
+            try {
+                deleteServiceShallow(id);
+            } catch(IOException e) {}
             throw new InvalidServiceIdException(id, "it must be a valid java identifier");
         }
 
         // last check should be for already existing service id
         if (getServiceIds().contains(id)) {
+            try {
+                deleteServiceShallow(id);  
+            } catch(IOException e) {}
             throw new DuplicateServiceIdException(id);
         }
     }
