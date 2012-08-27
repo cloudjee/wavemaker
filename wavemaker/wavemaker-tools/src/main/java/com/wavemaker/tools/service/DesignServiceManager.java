@@ -448,9 +448,6 @@ public class DesignServiceManager {
     public void validateServiceId(String id) {
 
         if (ObjectUtils.isNullOrEmpty(id)) {
-            try {
-                deleteServiceShallow(id);
-            } catch(IOException e) {}
             throw new InvalidServiceIdException(id, "it cannot be null or empty");
         }
 
@@ -470,9 +467,6 @@ public class DesignServiceManager {
 
         // last check should be for already existing service id
         if (getServiceIds().contains(id)) {
-            try {
-                deleteServiceShallow(id);  
-            } catch(IOException e) {}
             throw new DuplicateServiceIdException(id);
         }
     }
