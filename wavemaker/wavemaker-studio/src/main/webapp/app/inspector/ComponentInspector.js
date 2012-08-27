@@ -1160,7 +1160,9 @@
 			 noEscape: false,
 			 useContainerWidget: false,
 			 hideControls: true,
-			 corner: "tl"
+			 corner: "tl",
+             noTopBottomDocking: false,
+             noLeftRightDocking: false
 		     };
 		     var d = studio.helpPopup = new wm.PageDialog(props);
 		 }
