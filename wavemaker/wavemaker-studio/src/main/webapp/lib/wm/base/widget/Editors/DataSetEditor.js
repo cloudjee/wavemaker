@@ -59,8 +59,10 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
             if (dataSet) {
                 var fields = dataSet._dataSchema;
                 var field = fields[this.formField];
-                var type = field.type;
-                var fieldName = wm.typeManager.getDisplayField(type);
+                if (field) {
+                    var type = field.type;
+                    var fieldName = wm.typeManager.getDisplayField(type);
+                }
             }
         } else if (dataSet && dataSet.type) {
             var type = dataSet.type;
