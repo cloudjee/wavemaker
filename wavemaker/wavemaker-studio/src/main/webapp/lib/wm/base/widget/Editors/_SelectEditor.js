@@ -15,7 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors._SelectEditor");
 dojo.require("wm.base.widget.Editors.Base");
-
+dojo.require("wm.base.data.SimpleStore");
 
 //===========================================================================
 // Select Editor
