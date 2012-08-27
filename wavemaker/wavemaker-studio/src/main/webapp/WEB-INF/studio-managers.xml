@@ -514,8 +514,9 @@
                         <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
                             <property name="file" value="webapproot/WEB-INF/project-services.xml" />
                         </bean>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M4.IE10XUAUpgradeTask"/>
                     </list>
-                </entry>                
+                </entry>   
             </map>
         </property>
         <property name="deploymentManager">
