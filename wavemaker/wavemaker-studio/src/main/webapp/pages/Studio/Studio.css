@@ -369,9 +369,9 @@ div .StudioGrid td,
 
 
 .Studio .studiodialog.Docked .dialogtitlebar {
-    background-image:none;
+   /* background-image:none;
         background-color: #414B5C;
-	color: #FFF;
+	color: #FFF;*/
 	text-align: left;
 	font-size: 100%;
 }
