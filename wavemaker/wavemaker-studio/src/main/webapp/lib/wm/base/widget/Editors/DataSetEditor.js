@@ -325,6 +325,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     setDisplayValue: function(inValue) {
         this._setEditorValue(inValue, true);
         this.updateReadonlyValue();
+        this.clearDirty(); // calls to setDisplayValue are like calls to setDataValue: triggered by code external to the widget, so not a user edit
     },
     _setEditorValue: function(inValue, inUseDisplay) {
         var self = this;

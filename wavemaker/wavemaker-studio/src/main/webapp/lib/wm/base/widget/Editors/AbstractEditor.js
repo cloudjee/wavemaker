@@ -916,7 +916,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         return val1 != val2;
     },
     clearDirty: function() {
-        this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
+        this._lastValueReported = this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
         this.updateIsDirty();
     },
     updateIsDirty: function() {
