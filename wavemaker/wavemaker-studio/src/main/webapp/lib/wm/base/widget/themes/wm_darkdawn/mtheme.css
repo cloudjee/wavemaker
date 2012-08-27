@@ -400,6 +400,18 @@ outline-width: 0;
 background-color: #555555;
 background-image: none;
 }
+.wm_darkdawn .wmeditor .wmeditor-caption {
+font-family: inherit;
+font-size: inherit;
+color: inherit;
+font-weight: bold;
+}
+.wm_darkdawn .wmeditor .wmeditor-readonlyNode {
+font-family: inherit;
+font-size: inherit;
+color: inherit;
+font-weight: inherit;
+}
 .wm_darkdawn  .wmeditor .dijitTextBox,
 .wm_darkdawn  .wmeditor .dijitTextArea,
 .wm_darkdawn  .wmeditor .dijitComboBox,

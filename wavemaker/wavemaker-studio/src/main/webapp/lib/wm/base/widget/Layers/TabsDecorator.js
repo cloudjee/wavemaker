@@ -433,7 +433,7 @@ dojo.declare("wm.TabsControl", wm.Control, {
 		    this.height = "100%";
 		    this.width = this.owner.headerWidth;
 		} else {
-		    this.height = this.owner.headerHeight;
+		    this.height = this.owner._headerHeight;
 		}
 	    }
 	    this.inherited(arguments);

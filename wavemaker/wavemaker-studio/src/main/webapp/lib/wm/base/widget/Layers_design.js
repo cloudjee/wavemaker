@@ -136,7 +136,6 @@ wm.Object.extendSchema(wm.Layers, {
     headerHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
     headerWidth: {ignore:1,  group: "widgetName", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
     mobileHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
-    desktopHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
 
     /* Common Group */
     manageURL: {ignore:0},
@@ -198,7 +197,7 @@ wm.Layers.extend({
     _noCreate: true,
     resetDesignHeight: function() {
         this.inherited(arguments);
-        this.setHeaderHeight(studio.currentDeviceType != "desktop" ? this.mobileHeaderHeight || this.desktopHeaderHeight : this.desktopHeaderHeight);
+        this.setHeaderHeight(studio.currentDeviceType != "desktop" ? this.mobileHeaderHeight || this.headerHeight : this.headerHeight);
     },
     set_isMobileFoldingParent: function(isParent) {
         this.isMobileFoldingParent = Boolean(isParent);
@@ -221,16 +220,25 @@ wm.Layers.extend({
     },
     set_headerHeight: function(inHeight) {
         var isMobile = studio.currentDeviceType != "desktop";
-        if (isMobile) this.mobileHeaderHeight = inHeight;
-        else this.desktopHeaderHeight = inHeight;
+        this[isMobile ? "mobileHeaderHeight" : "headerHeight"] = inHeight;
         this.userDefHeaderHeight = this.headerHeight;
         this.setHeaderHeight(inHeight);
+    },
+    get_headerHeight: function() {
+        var isMobile = studio.currentDeviceType != "desktop";
+        return this[isMobile ? "mobileHeaderHeight" : "headerHeight"];
     },
     afterPaletteDrop: function() {
         this.inherited(arguments);
         this.addLayer();
         this.setClientBorder(this.clientBorder);
         this.setClientBorderColor(this.clientBorderColor);
+        if ("headerHeight" in this) {
+            if (studio.currentDeviceType == "desktop")
+                this.setHeaderHeight(this.headerHeight);
+            else
+                this.setHeaderHeight(this.mobileHeaderHeight);
+        }
     },
     set_defaultLayer: function(inLayerIndex) {
         this.setDefaultLayer(inLayerIndex);
@@ -379,9 +387,8 @@ wm.Object.extendSchema(wm.TabLayers, {
     conditionalTabButtons: {group: "widgetName", subgroup: "behavior"},
     verticalButtons: {group: "widgetName", subgroup: "layout"},
     layoutKind: { writeonly: 1},
+    mobileHeaderHeight: {ignore:0},
     headerHeight: {ignore: 0},
-    mobileHeaderHeight: {ignore: 0},
-    desktopHeaderHeight: {ignore: 0},
     headerWidth: {ignore: 0}
 });
 
@@ -390,7 +397,6 @@ wm.Object.extendSchema(wm.WizardLayers, {
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0},
     mobileHeaderHeight: {ignore: 0},
-    desktopHeaderHeight: {ignore: 0},
     verticalButtons: {group: "widgetName", subgroup: "layout"},
     bottomButtons: {group: "widgetName", subgroup: "layout"}
 });
@@ -398,7 +404,7 @@ wm.Object.extendSchema(wm.WizardLayers, {
 
 wm.TabLayers.extend({
     themeable: true,
-    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "desktopHeaderHeight", "mobileHeaderHeight"],
+    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight", "mobileHeaderHeight"],
     themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}],
 
     set_conditionalTabButtons: function(inValue) {

@@ -400,6 +400,18 @@ outline-width: 0;
 background-color: #807e7e;
 background-image: none;
 }
+.wm_graphite .wmeditor .wmeditor-caption {
+font-family: inherit;
+font-size: inherit;
+color: inherit;
+font-weight: bold;
+}
+.wm_graphite .wmeditor .wmeditor-readonlyNode {
+font-family: inherit;
+font-size: inherit;
+color: inherit;
+font-weight: inherit;
+}
 .wm_graphite  .wmeditor .dijitTextBox,
 .wm_graphite  .wmeditor .dijitTextArea,
 .wm_graphite  .wmeditor .dijitComboBox,

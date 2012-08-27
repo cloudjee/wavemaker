@@ -216,17 +216,7 @@ dojo.declare("wm.Layers", wm.Container, {
 
         // needs to happen before build generates the tabsControl or other affected widget
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-        if (!isMobile) {
-            if (this.desktopHeaderHeight != null) {
-                this.headerHeight = this.desktopHeaderHeight;
-            } else if (this.headerHeight) {
-                this.desktopHeaderHeight = this.headerHeight;
-            }
-        } else {
-            if (this.mobileHeaderHeight) {
-                this.headerHeight = this.mobileHeaderHeight;
-            }
-        }
+        this._headerHeight =  (isMobile && this.mobileHeaderHeight) ? this.mobileHeaderHeight || this.headerHeight : this.headerHeight;
     },
     build: function() {
         this.inherited(arguments);
@@ -237,9 +227,9 @@ dojo.declare("wm.Layers", wm.Container, {
 
         this.userDefHeaderHeight = this.headerHeight;
         if (!this.isRelativePositioned)
-        dojo.addClass(this.domNode, "wmlayers");
+            dojo.addClass(this.domNode, "wmlayers");
         else
-        this.setHeaderHeight('20px'); // this case should never really come up as we don't use isRelativePositioned any more
+            this.setHeaderHeight('20px'); // this case should never really come up as we don't use isRelativePositioned any more
             // vertical defaults to justified; once we get rid of justified, we can remove this property
         this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned,
                     border: "0",
@@ -698,11 +688,11 @@ dojo.declare("wm.Layers", wm.Container, {
     },
     // used only by Tabs
     headerHeight: "27px",
-        mobileHeaderHeight: "37px",
+    mobileHeaderHeight: "37px",
     setHeaderHeight: function(inHeight) {
         if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs" && this.layersType != "Wizard" && this.layersType != "Breadcrumb")
             return;
-        this.headerHeight = inHeight;
+        this._headerHeight = inHeight;
         this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
 
         delete this._lastTabHeight;
@@ -730,13 +720,13 @@ dojo.declare("wm.Layers", wm.Container, {
             }
             /* Sometimes the buttons are a few px off, but we know they've wrapped to the next line of they are many pixels different in offsetTop */
             if (!lastShowingTab || this.decorator.btns[0].offsetTop +4 >= lastShowingTab.offsetTop ) {
-                if (this.headerHeight == this.decorator.tabsControl.height) {
+                if (this._headerHeight == this.decorator.tabsControl.height) {
                     this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
                 } else {
-                    this.decorator.tabsControl.setHeight(this.headerHeight);
+                    this.decorator.tabsControl.setHeight(this._headerHeight);
                 }
             } else {
-                newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
+                newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this._headerHeight));
                 if (newheight != this.decorator.tabsControl.bounds.h) {
                     this.decorator.tabsControl.setHeight(newheight + "px");
                 } else {
@@ -748,7 +738,7 @@ dojo.declare("wm.Layers", wm.Container, {
         getMinHeightProp: function() {
             if (this.minHeight) return this.minHeight;
             var minHeight = 80;
-            if (this.layersType.match(/tabs/i)) minHeight += parseInt(this.headerHeight);
+            if (this.layersType.match(/tabs/i)) minHeight += parseInt(this._headerHeight);
             return minHeight;
         },
         getMinWidthProp: function() {
