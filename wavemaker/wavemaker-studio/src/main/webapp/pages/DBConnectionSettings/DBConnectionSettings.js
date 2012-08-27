@@ -472,51 +472,50 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         this.conHostInput.setRequired(true);
         this.conExtraInput.setRequired(true);
         try {
-        this.conHostInput.setDataValue("");
-        this.conPortInput.setDataValue("");
-        this.conExtraInput.setDataValue("");
-        this.conExtra2Input.setDataValue("");
+            this.conHostInput.setDataValue("");
+            this.conPortInput.setDataValue("");
+            this.conExtraInput.setDataValue("");
+            this.conExtra2Input.setDataValue("");
 
-        this.conUserInput.setDataValue("");
-        this.conPasswordInput.setDataValue("");
-        this.conConnectionUrlInput.setDataValue("");
-        this.conTablePatternInput.setDataValue("");
-        this.conSchemaPatternInput.setDataValue("");
-        this.conDriverClassInput.setDataValue("");
-        this.conDialectInput.setDataValue("");
-        this.conRevengNamingStrategyInput.setDataValue("");
-        this.activeDirectoryDomain.setDataValue("");
+            this.conUserInput.setDataValue("");
+            this.conPasswordInput.setDataValue("");
+            this.conConnectionUrlInput.setDataValue("");
+            this.conTablePatternInput.setDataValue("");
+            this.conSchemaPatternInput.setDataValue("");
+            this.conDriverClassInput.setDataValue("");
+            this.conDialectInput.setDataValue("");
+            this.conRevengNamingStrategyInput.setDataValue("");
+            this.activeDirectoryDomain.setDataValue("");
 
-        if (inData == null || inData.length == 0) {
-            return;
-        }
+            if (inData == null || inData.length == 0) {
+                return;
+            }
 
-        this._originalConnectionString = inData.connectionUrl;
-        var l = parseConnectionUrl(inData.connectionUrl, inData);
+            this._originalConnectionString = inData.connectionUrl;
+            var l = parseConnectionUrl(inData.connectionUrl, inData);
 
-        if (l == null) {
-            this.conDBdropdown.setDisplayValue(inData.connectionUrl.length > 5 ? "Other" : "");
+            if (l == null) {
+                this.conDBdropdown.setDisplayValue(inData.connectionUrl.length > 5 ? "Other" : "");
 
-            this.conHostInput.setShowing(false);
-            this.conHostInput.setRequired(false);
+                this.conHostInput.setShowing(false);
+                this.conHostInput.setRequired(false);
 
-            this.conPortInput.setShowing(false);
+                this.conPortInput.setShowing(false);
 
-            this.conExtraInput.setCaption("");
-            this.conExtraInput.setShowing(false);
-            this.conExtraInput.setRequired(false);
+                this.conExtraInput.setCaption("");
+                this.conExtraInput.setShowing(false);
+                this.conExtraInput.setRequired(false);
 
-            this.conExtra2Input.setCaption("");
-            this.conExtra2Input.setShowing(false);
-        } else {
+                this.conExtra2Input.setCaption("");
+                this.conExtra2Input.setShowing(false);
+            } else {
 
                 this.conDBdropdown.beginEditUpdate(); // don't allow onchange events
-            this.conDBdropdown.setDisplayValue(l[0]);
+                this.conDBdropdown.setDisplayValue(l[0]);
                 this.conDBdropdown.endEditUpdate();
 
-            setupWidgetsForDatabaseType(
-                l[0],
-                this.ip,
+                setupWidgetsForDatabaseType(
+                l[0], this.ip,
                 //this.conHostLabel,
                 this.conHostInput,
                 //this.conPortLabel,
@@ -524,86 +523,78 @@ dojo.declare("DBConnectionSettings", wm.Page, {
                 //this.conExtraInputLabel,
                 this.conExtraInput,
                 //this.conExtra2InputLabel,
-                this.conExtra2Input,
-                this.conTablePatternInput,
-                this.conSchemaPatternInput,
-                        this.conUserInput,
-                        this.conPasswordInput,
-                this.executeAsMenu,
-                        this.activeDirectoryDomain
+                this.conExtra2Input, this.conTablePatternInput, this.conSchemaPatternInput, this.conUserInput, this.conPasswordInput, this.executeAsMenu, this.activeDirectoryDomain
                 //this.newDatabaseInput
                 );
 
-            if (l[1] == null) {
-                this.conHostInput.setDataValue("");
-            } else {
-                this.conHostInput.setDataValue(l[1]);
-            }
-            if (l[2] == null) {
-                this.conPortInput.setDataValue("");
-            } else {
-                this.conPortInput.setDataValue(l[2]);
-            }
-            if (l[3] == null) {
-                if (studio.isCloud()) {
-                this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+                if (l[1] == null) {
+                    this.conHostInput.setDataValue("");
                 } else {
-                this.conExtraInput.setDataValue("");
+                    this.conHostInput.setDataValue(l[1]);
+                }
+                if (l[2] == null) {
+                    this.conPortInput.setDataValue("");
+                } else {
+                    this.conPortInput.setDataValue(l[2]);
+                }
+                if (l[3] == null) {
+                    if (studio.isCloud()) {
+                        this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+                    } else {
+                        this.conExtraInput.setDataValue("");
+                    }
+                } else {
+                    this.conExtraInput.setDataValue(l[3]);
+                }
+                if (l[4] == null) {
+                    this.conExtra2Input.setDataValue("");
+                } else {
+                    this.conExtra2Input.setDataValue(l[4]);
+                }
+                if (inData.executeAs == null) {
+                    this.executeAsMenu.setDataValue("Database credentials");
+                } else {
+                    this.executeAsMenu.setDataValue(inData.executeAs ? "Logged in user" : "Database credentials");
+                }
+                if (inData.activeDirectoryDomain) {
+                    this.activeDirectoryDomain.setDataValue(inData.activeDirectoryDomain);
+                }
+
+                if (studio.isCloud() || !this.conExtraInput.getDataValue() && (this.conDBdropdown.getDataValue().toLowerCase() == "mysql" || this.conDBdropdown.getDataValue().toLowerCase() == "postgres" || this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb")) {
+                    this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
+                }
+
+            }
+
+
+
+            this.conUserInput.setDataValue(inData.username);
+            this.conPasswordInput.setDataValue(inData.password);
+            if (l) {
+                if (this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb") {
+                    this.conConnectionUrlInput.setDataValue(buildInitialCxnUrl(l[0], l[3], inData.connectionUrl, this.overrideFlagInput.getChecked()));
+                } else {
+                    this._updateConConnectionUrl();
                 }
             } else {
-                this.conExtraInput.setDataValue(l[3]);
+                this.conConnectionUrlInput.setDataValue(inData.connectionUrl);
             }
-            if (l[4] == null) {
-                this.conExtra2Input.setDataValue("");
-            } else {
-                this.conExtra2Input.setDataValue(l[4]);
-            }
-            if (inData.executeAs == null) {
-            this.executeAsMenu.setDataValue("Database credentials");
-            } else {
-            this.executeAsMenu.setDataValue(inData.executeAs ? "Logged in user" : "Database credentials");
-            }
-            if (inData.activeDirectoryDomain) {
-            this.activeDirectoryDomain.setDataValue(inData.activeDirectoryDomain);
-            }
-
-            if (studio.isCloud() || !this.conExtraInput.getDataValue() && (this.conDBdropdown.getDataValue().toLowerCase() == "mysql" || this.conDBdropdown.getDataValue().toLowerCase() == "postgres"  || this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb")) {
-            this.conExtraInput.setDataValue(this.dataModelList._data[this.dataModelList.getSelectedIndex()]);
-            }
-
-        }
-
-
-
-
-        this.conUserInput.setDataValue(inData.username);
-        this.conPasswordInput.setDataValue(inData.password);
-        if(l) {
-            if (this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb"){
-            this.conConnectionUrlInput.setDataValue(buildInitialCxnUrl(l[0], l[3], inData.connectionUrl, this.overrideFlagInput.getChecked()));
-            } else {
-            this._updateConConnectionUrl();
-            }
-        } else {
-            this.conConnectionUrlInput.setDataValue(inData.connectionUrl);
-        }
-        this.conTablePatternInput.setDataValue(inData.tableFilter);
-        this.conSchemaPatternInput.setDataValue(inData.schemaFilter);
-        this.conDriverClassInput.setDataValue(inData.driverClassName);
-        this.conDialectInput.setDataValue(inData.dialect);
-        var rns = inData.reverseNamingStrategy;
-        this.conRevengNamingStrategyInput.setDataValue(rns);
-        } catch(e) {
-        ;
+            this.conTablePatternInput.setDataValue(inData.tableFilter);
+            this.conSchemaPatternInput.setDataValue(inData.schemaFilter);
+            this.conDriverClassInput.setDataValue(inData.driverClassName);
+            this.conDialectInput.setDataValue(inData.dialect);
+            var rns = inData.reverseNamingStrategy;
+            this.conRevengNamingStrategyInput.setDataValue(rns);
+        } catch (e) {;
         } finally {
-        this._disableChangeEvents = false;
+            this._disableChangeEvents = false;
         }
     },
     _loadedIP: function(inData) {
         this.ip = inData;
     },
     _testConnection: function(url, username, password, driverClassName, dialect) {
-        studio.beginWait(this.getDictionaryItem("WAIT_TEST_CONNECTION", {url: url}));
+        studio.beginWait(this.getDictionaryItem("WAIT_TEST_CONNECTION", {url: url.replace(/\:/g, ": ")}));
         studio.dataService.requestAsync(
             TEST_CONNECTION_OP,
             [username, password, url, driverClassName, dialect],
