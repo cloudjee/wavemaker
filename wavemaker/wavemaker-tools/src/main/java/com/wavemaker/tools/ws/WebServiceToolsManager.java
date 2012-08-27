@@ -720,6 +720,11 @@ public class WebServiceToolsManager {
             parameterizedUrl = endpointAddress;
         }
 
+        Set<Entry<String, String>> headerEntries = headers.entrySet();
+		for (Map.Entry<String, String> entry : headerEntries) {
+			inputs.add(new RESTInputParam(entry.getKey(), RESTInputParam.InputType.STRING, RESTInputParam.InputLocation.HEADER));
+		}
+
         settings.setServiceName(serviceName);
         settings.setOperationName("invoke");
         settings.setInputs(inputs);

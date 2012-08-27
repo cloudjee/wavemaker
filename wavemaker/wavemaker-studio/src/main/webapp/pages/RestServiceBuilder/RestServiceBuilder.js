@@ -177,7 +177,12 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	    this.serviceNameInput.setValue("displayValue", serviceName);
 		this.serviceOpInput.setValue("displayValue", inResponse.operationName);
 		var d = inResponse.inputs;
-	    this.inputFieldListVar.setData(d);
+		this.inputFieldListVar.clearData();
+		for (var i = 0; i < d.length; i++) {
+			var isHeader = d[i].location == "header" ? true : false;
+			this.inputFieldListVar.addItem({isHeader: isHeader, name: d[i].name, type: d[i].type});
+		}
+
 	    //this.inParamsList.renderData(d);
 		this.urlInput.setValue("displayValue", inResponse.parameterizedUrl);
 		this.schemaTextRadioInput.components.editor.setChecked(true);

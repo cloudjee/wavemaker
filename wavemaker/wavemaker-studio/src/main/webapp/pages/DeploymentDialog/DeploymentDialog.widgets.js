@@ -80,16 +80,20 @@ DeploymentDialog.widgets = {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your Cloud Foundry Account Info","padding":"4","width":"100%"}, {}],
-		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
-		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
-		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}]
+		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
+		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
+		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}]
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup", width: "100px", height: "100%"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cfLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cfLoginCancelClick"}],
-	    cfLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}]	    
+	    cfLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"expression":"(${loginDialogTargetEditor.dataValue} === \"\" || ${loginDialogUserEditor.dataValue} === \"\" || ${loginDialogPasswordEditor.dataValue} === \"\")","targetProperty":"disabled"}, {}]
+				}]
+			}]	    
 	}]
     }],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
