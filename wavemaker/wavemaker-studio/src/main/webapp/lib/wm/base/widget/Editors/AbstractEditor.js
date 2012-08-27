@@ -35,7 +35,8 @@ wm.defaultEmptyValue = function(inType){
 
 
 dojo.declare("wm.AbstractEditor", wm.Control, {
-    _captionTagName: "div", // we should use "label", but using label causes the editor to receive events from the label node.  This means accidentlly clicking on a label
+    _captionTagName: "div",
+    // we should use "label", but using label causes the editor to receive events from the label node.  This means accidentlly clicking on a label
     //  while touch scrolling can cause an editor to focus, its popup to popup and all manner of unintended consequences.
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
     classNames: "wmeditor",
@@ -46,42 +47,42 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     dataValueBindingEvaluated: "onInsert",
 
     /* Formating */
-	formatter: '',
-	height: "24px",
-	width: "300px",
-        enableTouchHeight: true,
-        mobileHeight: "35px",
-	padding: "2",
-	border: "0",
-	editorBorder: true,
+    formatter: '',
+    height: "24px",
+    width: "300px",
+    enableTouchHeight: true,
+    mobileHeight: "35px",
+    padding: "2",
+    border: "0",
+    editorBorder: true,
 
     /* Editor */
-        dataValue: null,
-        displayValue: null,
-	emptyValue: "unset",
-	required: false,
-	readonly: false,
-        ignoreParentReadonly: false,
-        editorNode: null,
-        isDirty: false,
-        _lastValue: "",
-        _lastValueReported: "",
+    dataValue: null,
+    displayValue: null,
+    emptyValue: "unset",
+    required: false,
+    readonly: false,
+    ignoreParentReadonly: false,
+    editorNode: null,
+    isDirty: false,
+    _lastValue: "",
+    _lastValueReported: "",
 
     /* Caption */
-	caption: "",
-        captionPosition: "left",
-	captionSize: "100px",
-        captionNode: null,
-	captionAlign: "right",
-	singleLine: true,
+    caption: "",
+    captionPosition: "left",
+    captionSize: "100px",
+    captionNode: null,
+    captionAlign: "right",
+    singleLine: true,
 
     /* Tips */
     helpText: "",
 
     /* Events */
-        changeOnEnter: false,
-        changeOnKey: false,
-        _updating: 0,
+    changeOnEnter: false,
+    changeOnKey: false,
+    _updating: 0,
 
     scrim: true,
 
@@ -153,41 +154,38 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    }
 	},
     setCaptionPosition: function(pos) {
-	var oldPos = this.captionPosition;
-	this.captionPosition = pos;
-	if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
-	    if (this.height.match(/px/) && parseInt(this.height) < 48)
-		this.setValue("height","48px");
-	    this.captionSize = "28px";
-	} else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
-	    if (this.bounds.h >= 48) {
-		this.setValue("height",this.constructor.prototype.height);
-	    }
-	    if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
-		this.captionSize = "100px";
-	    }
-	}
-	this.sizeEditor();
+        var oldPos = this.captionPosition;
+        this.captionPosition = pos;
+        if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
+            if (this.height.match(/px/) && parseInt(this.height) < 48) this.setValue("height", "48px");
+            this.captionSize = "28px";
+        } else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
+            if (this.bounds.h >= 48) {
+                this.setValue("height", this.constructor.prototype.height);
+            }
+            if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
+                this.captionSize = "100px";
+            }
+        }
+        this.sizeEditor();
     },
     setCaptionPositionLF: function(inPosition) {
-	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
-	if (liveform) {
-	    this.setCaptionPosition(liveform.captionPosition);
-	    this.setCaptionSize(liveform.captionSize);
-	    this.setCaptionAlign(liveform.captionAlign);
-	    if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height)
-		this.setValue("height",liveform.editorHeight);  // don't set height for large text areas/richtext areas based on editorHeight.
-	}
-	this.sizeEditor();
+        var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
+        if (liveform) {
+            this.setCaptionPosition(liveform.captionPosition);
+            this.setCaptionSize(liveform.captionSize);
+            this.setCaptionAlign(liveform.captionAlign);
+            if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height) this.setValue("height", liveform.editorHeight); // don't set height for large text areas/richtext areas based on editorHeight.
+        }
+        this.sizeEditor();
     },
     setSingleLine: function(inSingleLine) {
-	this.singleLine = inSingleLine;
-	var s = this.captionNode.style;
-	s.whiteSpace =  (inSingleLine) ? "nowrap" : "normal";
-	s.overflow =  "hidden";
-	s.lineHeight = (this.singleLine) ? s.height : "normal";
-	if (this.readOnlyNode)
-		this.updateReadOnlyNodeStyle();
+        this.singleLine = inSingleLine;
+        var s = this.captionNode.style;
+        s.whiteSpace = (inSingleLine) ? "nowrap" : "normal";
+        s.overflow = "hidden";
+        s.lineHeight = (this.singleLine) ? s.height : "normal";
+        if (this.readOnlyNode) this.updateReadOnlyNodeStyle();
     },
 	setDisabled: function(inDisabled) {
 	    this.inherited(arguments);
@@ -208,34 +206,37 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.inherited(arguments);
 	},
     createHelpNode: function() {
-	this.helpNode = dojo.create("div", {className: "EditorHelpIcon"}, this.domNode);
-	if (typeof this.helpText == "string") {
-	    this._helpTextOverConnect =
-		this.connect(this.helpNode, "onmouseover", this, function(e) {
-		    wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-			var coords = dojo.coords(this.helpNode);
-			//app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
-			app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
-		    }));
-		});
-	    this._helpTextOutConnect =
-		this.connect(this.helpNode, "onmouseout", this, function() {
-		    wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-			if (app.getToolTip() == this.helpText) // make sure tooltip isn't showing another editor's help text
-			    app.hideToolTip();
-		    }));
+        this.helpNode = dojo.create("div", {
+            className: "EditorHelpIcon"
+        }, this.domNode);
+        if (typeof this.helpText == "string") {
+            this._helpTextOverConnect = this.connect(this.helpNode, "onmouseover", this, function(e) {
+                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
+                    var coords = dojo.coords(this.helpNode);
+                    //app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
+                    app.createToolTip(this.helpText, null, {
+                        mouseX: coords.x,
+                        mouseY: coords.y + coords.h
+                    });
+                }));
+            });
+            this._helpTextOutConnect = this.connect(this.helpNode, "onmouseout", this, function() {
+                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
+                    if (app.getToolTip() == this.helpText) // make sure tooltip isn't showing another editor's help text
+                    app.hideToolTip();
+                }));
 
-		});
-	}
-	this.connect(this.helpNode, "onclick", this, "onHelpClick");
+            });
+        }
+        this.connect(this.helpNode, "onclick", this, "onHelpClick");
     },
     onHelpClick: function() {},
     destroyHelpNode: function() {
-	dojo.destroy(this.helpNode);
-	wm.Array.removeElement(this._connections,this._helpTextOverConnect);
-	wm.Array.removeElement(this._connections,this._helpTextOutConnect);
-	dojo.disconnect(this._helpTextOverConnect);
-	dojo.disconnect(this._helpTextOutConnect);
+        dojo.destroy(this.helpNode);
+        wm.Array.removeElement(this._connections, this._helpTextOverConnect);
+        wm.Array.removeElement(this._connections, this._helpTextOutConnect);
+        dojo.disconnect(this._helpTextOverConnect);
+        dojo.disconnect(this._helpTextOutConnect);
 
     },
     createEditor: function(inProps) {
@@ -467,48 +468,46 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		s.left = (this.getContentBounds().w-16) + "px";
 	    }
 	},
-        setHelpText: function(inText) {
-	    var formerText = this.helpText;
-	    this.helpText = inText;
-	    if (inText && !this.helpNode) {
-		this.createHelpNode();
-		this.sizeEditor();
-	    } else if (!inText && this.helpNode) {
-		this.destroyHelpNode();
-		this.sizeEditor();
-	    } else if (inText && !formerText) {
-		this.sizeEditor();
-	    }
-	},
-        updateReadOnlyNodeStyle: function(h) {
-	    var s = this.readOnlyNode.style;
-	    var overflow = this.getReadOnlyNodeOverflow();
-	    if (s.overflow != overflow) s.overflow = overflow;
+    setHelpText: function(inText) {
+        var formerText = this.helpText;
+        this.helpText = inText;
+        if (inText && !this.helpNode) {
+            this.createHelpNode();
+            this.sizeEditor();
+        } else if (!inText && this.helpNode) {
+            this.destroyHelpNode();
+            this.sizeEditor();
+        } else if (inText && !formerText) {
+            this.sizeEditor();
+        }
+    },
+    updateReadOnlyNodeStyle: function(h) {
+        var s = this.readOnlyNode.style;
+        var overflow = this.getReadOnlyNodeOverflow();
+        if (s.overflow != overflow) s.overflow = overflow;
 
-	    var lineHeight = this.getReadOnlyNodeLineHeight();
-	    if(s.lineHeight != lineHeight) s.lineHeight = (lineHeight == "normal") ? lineHeight : lineHeight + "px";
+        var lineHeight = this.getReadOnlyNodeLineHeight();
+        if (s.lineHeight != lineHeight) s.lineHeight = (lineHeight == "normal") ? lineHeight : lineHeight + "px";
 
-	    var whiteSpace = this.getReadOnlyNodeWhiteSpace();
-	    if (s.whiteSpace != whiteSpace) s.whiteSpace = whiteSpace;
+        var whiteSpace = this.getReadOnlyNodeWhiteSpace();
+        if (s.whiteSpace != whiteSpace) s.whiteSpace = whiteSpace;
 
-	    var wordWrap = this.getReadOnlyNodeWordWrap();
-	    if (s.wordWrap != wordWrap) s.wordWrap = wordWrap;
-	},
-        getReadOnlyNodeLineHeight: function() {
-	    if (this.singleLine)
-		return parseInt(this.readOnlyNode.style.height) + ((this.editorBorder) ? 2 : 0);
-	    else
-		return "normal";
-	},
-        getReadOnlyNodeOverflow: function() {
-		return "hidden";
-	},
-        getReadOnlyNodeWhiteSpace: function() {
-		return "nowrap";
-	},
-        getReadOnlyNodeWordWrap: function() {
-		return "normal";
-	},
+        var wordWrap = this.getReadOnlyNodeWordWrap();
+        if (s.wordWrap != wordWrap) s.wordWrap = wordWrap;
+    },
+    getReadOnlyNodeLineHeight: function() {
+        if (this.singleLine) return parseInt(this.readOnlyNode.style.height) + ((this.editorBorder) ? 2 : 0);
+        else return "normal";
+    },
+    getReadOnlyNodeOverflow: function() {
+        return "hidden";
+    },
+    getReadOnlyNodeWhiteSpace: function() {
+        return "nowrap";
+    },
+    getReadOnlyNodeWordWrap: function() {
+        return "normal";
+    },
     adjustCaptionPositionForMobile: function() {
 		if (this.captionPosition == "left" || this.captionPosition == "right") {
 		// see if we need to switch to top
@@ -624,40 +623,40 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.doOnfocus();
 	},
     doOnblur: function() {
-	if (!this.disabled) {
-	    /* Sometimes values don't update before the event fires; build in a delay before the event handler so
-	     * values have time to update before firing the handler.
-	     */
-	    wm.onidle(this, function() {
-		this.onblur();
-	    });
-	}
+        if (!this.disabled) {
+            /* Sometimes values don't update before the event fires; build in a delay before the event handler so
+             * values have time to update before firing the handler.
+             */
+            wm.onidle(this, function() {
+                this.onblur();
+            });
+        }
     },
     onblur: function() {},
     doOnfocus: function() {
-	if (!this.disabled) {
+        if (!this.disabled) {
 
-	    /* Sometimes values don't update before the event fires; build in a delay before the event handler so
-	     * values have time to update before firing the handler.
-	     */
-	    wm.onidle(this, function() {
-		    this.onfocus();
-	    });
-	}
+            /* Sometimes values don't update before the event fires; build in a delay before the event handler so
+             * values have time to update before firing the handler.
+             */
+            wm.onidle(this, function() {
+                this.onfocus();
+            });
+        }
     },
     onfocus: function() {},
     changed: function() {
-	this.validate();
-	this.doOnchange();
+        this.validate();
+        this.doOnchange();
     },
     doOnchange: function() {
-	if (this.editorChanged()) {
-	    var e = this.editor;
-	    if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
+        if (this.editorChanged()) {
+            var e = this.editor;
+            if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
 
 
-		this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
-	}
+            this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
+        }
     },
     onchange: function(inDisplayValue, inDataValue, inSetByCode) {},
 	_getValidatorNode: function() {
@@ -693,20 +692,20 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	isValid: function() {
 		return !this.getInvalid();
 	},
-	getInvalid: function() {
-	    var validationEnabled = this.validationEnabled();
-	    if (validationEnabled && this.editor && this.editor.isValid) { /* test for existence of isValid method */
-		if (this._isValid === undefined)
-		    this._isValid = this.editor.isValid();
-		return !(this.readonly || this._isValid);
-	    } else if (this.required && !this.readonly) {
-		var value = this.getDataValue();
-		if (value === undefined || value === null || value === "") {
-		    return true;
-		}
-	    }
-	},
-        setInvalid: function() {
+    getInvalid: function() {
+        var validationEnabled = this.validationEnabled();
+        if (validationEnabled && this.editor && this.editor.isValid) { /* test for existence of isValid method */
+            if (this._isValid === undefined) this._isValid = this.editor.isValid();
+            return !(this.readonly || this._isValid);
+        } else if (this.required && !this.readonly) {
+            var value = this.getDataValue();
+            if (value === undefined || value === null || value === "") {
+                return true;
+            }
+        }
+    },
+
+    setInvalid: function() {
 	    this._isValid = false;
 	    this.editor.set("state","Error");
         this.editorValidated();
@@ -715,7 +714,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	_getReadonlyValue: function() {
 		return this.getDisplayValue() || "";
 	},
-        createReadOnlyNode: function() {
+    createReadOnlyNode: function() {
 	    var node = dojo.create("div");
 	    dojo.addClass(node, "wmeditor-readonlyNode");
 	    var readstyle = node.style;
@@ -771,24 +770,25 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.updateReadonlyValue();
 	},
 
-	updateReadonlyValue: function(inValue) {
-	    if (this.readonly && this.readOnlyNode){
-		var value;
-		if (this.$.format && this.$.format.declaredClass != "wm.DataFormatter") {
-		    value = this.$.format.format(inValue || this.getDataValue());
-		} else if (this.formatter && dojo.isFunction(this.owner[this.formatter])) {
-		    try {
-			value = this.owner[this.formatter](this, inValue || this.getDataValue());
-		    } catch(e) {
-			console.error("Formatter error in " + this.toString() + ": " + e);
-		    }
-		}
-		if (value === undefined) {
-		    value = inValue || this._getReadonlyValue();
-		}
-		this.readOnlyNode.innerHTML = value;
-	    }
-	},
+    updateReadonlyValue: function(inValue) {
+        if (this.readonly && this.readOnlyNode) {
+            var value;
+            if (this.$.format && this.$.format.declaredClass != "wm.DataFormatter") {
+                value = this.$.format.format(inValue || this.getDataValue());
+            } else if (this.formatter && dojo.isFunction(this.owner[this.formatter])) {
+                try {
+                    value = this.owner[this.formatter](this, inValue || this.getDataValue());
+                } catch (e) {
+                    console.error("Formatter error in " + this.toString() + ": " + e);
+                }
+            }
+            if (value === undefined) {
+                value = inValue || this._getReadonlyValue();
+            }
+            this.readOnlyNode.innerHTML = value;
+        }
+    },
+
 	getDisplayValue: function() {
 		return this.editor && this.editor.declaredClass &&  this.editor.get && this.editor.get('displayedValue') ? this.editor.get('displayedValue') || "" : this.getEditorValue() || "";
 	},
@@ -813,31 +813,32 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 		return (v || v === 0) ? v : this.makeEmptyValue();
 	},
-        normalizeDataValue: function(inValue) {return inValue;},
-	setEditorValue: function(inValue) {
-	    if (this.editor) {  // If using html widgets and replacing them with dijits use  if (this.editor && this.editor.declaredClass) {
-		inValue = inValue === undefined ? null : inValue;
-		inValue = this.normalizeDataValue(inValue);
-		var oldValue = this.editor.get('value');
-		this.editor.set('value',inValue, false);
+    normalizeDataValue: function(inValue) {return inValue;},
+    setEditorValue: function(inValue) {
+        if (this.editor) { // If using html widgets and replacing them with dijits use  if (this.editor && this.editor.declaredClass) {
+            inValue = inValue === undefined ? null : inValue;
+            inValue = this.normalizeDataValue(inValue);
+            var oldValue = this.editor.get('value');
+            this.editor.set('value', inValue, false);
 
-		/* Bug in dojo causes this value NOT to be updated if we pass in "false" as our last
-		 * parameter to set("value"); we pass in false so we can maintain an easier to
-		 * understand syncrhonous setting of values and triggering of side effects */
-		this.editor._lastValueReported = inValue ? inValue : "";
-		if (oldValue != inValue) {
-		    this.changed();
-		} else if ((typeof inValue != "object" || inValue === null) && this.dataValue !== inValue) {
-		    this.displayValue = this.getDisplayValue();
-		    this.dataValue = this.getDataValue();
-		}
+            /* Bug in dojo causes this value NOT to be updated if we pass in "false" as our last
+             * parameter to set("value"); we pass in false so we can maintain an easier to
+             * understand syncrhonous setting of values and triggering of side effects */
+            this.editor._lastValueReported = inValue ? inValue : "";
+            if (oldValue != inValue) {
+                this.changed();
+            } else if ((typeof inValue != "object" || inValue === null) && this.dataValue !== inValue) {
+                this.displayValue = this.getDisplayValue();
+                this.dataValue = this.getDataValue();
+            }
 
-		/* If updateReadonlyValue is called before this.changed, then this.dataValue will not yet have been set */
-		this.updateReadonlyValue();
-	    } else {
-		this.dataValue = inValue;
-	    }
-	},
+            /* If updateReadonlyValue is called before this.changed, then this.dataValue will not yet have been set */
+            this.updateReadonlyValue();
+        } else {
+            this.dataValue = inValue;
+        }
+    },
+
 	setDisplayValue: function(inValue) {
 		this.setEditorValue(inValue);
 	},
@@ -880,70 +881,66 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
      * use a subclass that provides its own editorChanged method, and which returns true.
      * Added to prevent onblur from firing bindings and onchange events if onKeyPress already fired that change.
      */
-	editorChanged: function() {
-	    var displayValue = this.getDisplayValue();
-	    var changed = false;
-	    if (this.displayValue != displayValue) {
-		this.valueChanged("displayValue", this.displayValue = displayValue);
-		changed = true;
-	    }
+    editorChanged: function() {
+        var displayValue = this.getDisplayValue();
+        var changed = false;
+        if (this.displayValue != displayValue) {
+            this.valueChanged("displayValue", this.displayValue = displayValue);
+            changed = true;
+        }
 
-	    var dataValue = this.getDataValue();
-	    if (this.calcIsDirty(dataValue, this._lastValueReported)) {
-		this.valueChanged("dataValue", this.dataValue = dataValue);
-		changed = true;
-	    } else {
-		this.dataValue = dataValue; // its possible for _lastValueReported to not be stored in this.dataValue, though its probably just a special case for DataSet editors
-	    }
-	    if (changed) {
-		/* NOTE: editorChanged is called when the user types OR when setDataValue is called
-		 * _lastValue must NOT be updated if its caused by the user typing, so its cleared from
-		 * setDataValue instead.  But _inPostInit gets special treatment.
-		 */
-		if (this._inPostInit) {
-		    this._lastValue = this.dataValue;
-		}
-		this.updateIsDirty();
-	    }
-	    return changed;
-		//wm.fire(this.editor, "ownerEditorChanged");
-	},
+        var dataValue = this.getDataValue();
+        if (this.calcIsDirty(dataValue, this._lastValueReported)) {
+            this.valueChanged("dataValue", this.dataValue = dataValue);
+            changed = true;
+        } else {
+            this.dataValue = dataValue; // its possible for _lastValueReported to not be stored in this.dataValue, though its probably just a special case for DataSet editors
+        }
+        if (changed) {
+            /* NOTE: editorChanged is called when the user types OR when setDataValue is called
+             * _lastValue must NOT be updated if its caused by the user typing, so its cleared from
+             * setDataValue instead.  But _inPostInit gets special treatment.
+             */
+            if (this._inPostInit) {
+                this._lastValue = this.dataValue;
+            }
+            this.updateIsDirty();
+        }
+        return changed;
+        //wm.fire(this.editor, "ownerEditorChanged");
+    },
 
     calcIsDirty: function(val1, val2) {
-	if (val1 === undefined || val1 === null)
-	    val1 = "";
-	if (val2 === undefined || val2 === null)
-	    val2 = "";
-	return val1 != val2;
+        if (val1 === undefined || val1 === null) val1 = "";
+        if (val2 === undefined || val2 === null) val2 = "";
+        return val1 != val2;
     },
     clearDirty: function() {
-	this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
-	this.updateIsDirty();
+        this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
+        this.updateIsDirty();
     },
     updateIsDirty: function() {
-	var wasDirty = this.isDirty;
-	var isDirty = true;
-	if (!this.calcIsDirty(this.dataValue, this._lastValue)) {
-	    isDirty = false;
-	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
-		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
-	    isDirty = false;
-	}
-	this.valueChanged("isDirty", this.isDirty = isDirty);
-	if (wasDirty != this.isDirty)
-	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
-	if (!app.disableDirtyEditorTracking)
-	    wm.fire(this.parent, "updateIsDirty");
+        var wasDirty = this.isDirty;
+        var isDirty = true;
+        if (!this.calcIsDirty(this.dataValue, this._lastValue)) {
+            isDirty = false;
+        } else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) && (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
+            isDirty = false;
+        }
+        this.valueChanged("isDirty", this.isDirty = isDirty);
+        if (wasDirty != this.isDirty) dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
+        if (!app.disableDirtyEditorTracking) wm.fire(this.parent, "updateIsDirty");
     },
-	getDataValue: function() {
-	    if (this.isReady()) {
-		return this.getEditorValue();
-	    } else if (this.dataValue === null || this.dataValue === undefined || this.dataValue === "") {
-		return this.makeEmptyValue();
-	    } else {
-		return this.dataValue;
-	    }
-	},
+    getDataValue: function() {
+        if (this.isReady()) {
+            return this.getEditorValue();
+        } else if (this.dataValue === null || this.dataValue === undefined || this.dataValue === "") {
+            return this.makeEmptyValue();
+        } else {
+            return this.dataValue;
+        }
+    },
+
 	setDataValue: function(inValue) {
 	    this._inSetDataValue = true;
 	    // for simplicity, treat undefined as null
@@ -975,7 +972,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	focus: function() {
 		wm.fire(this.editor, "focus");
 	},
-        reset: function() {
+    reset: function() {
 	    this.setDataValue(this._lastValue);
 	    this.resetState();
 	},
@@ -1033,51 +1030,50 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	isLoading: function() {
 		return this._loading;
 	},
-	dokeypress: function(inEvent) {
-		if (this.changeOnKey || (this.changeOnEnter && inEvent.keyCode == dojo.keys.ENTER))
-		    wm.onidle(this, "doChangeOnKey", inEvent);
-	        if (inEvent.keyCode == dojo.keys.ENTER)
-		    wm.onidle(this, "onEnterKeyPress", [this]);
-	},
+    dokeypress: function(inEvent) {
+        if (this.changeOnKey || (this.changeOnEnter && inEvent.keyCode == dojo.keys.ENTER)) wm.onidle(this, "doChangeOnKey", inEvent);
+        if (inEvent.keyCode == dojo.keys.ENTER) wm.onidle(this, "onEnterKeyPress", [this]);
+    },
+
 	doChangeOnKey: function(inEvent) {
 		var e = this.editor;
 	        //e.set("value",e.get("value"));
 	    this.changed();
 	},
 
-	setDefaultOnInsert:function(){
-	        if (this.editor && this.defaultInsert) {
-		    if (this.$.binding && this.$.binding.wires.defaultInsert)
-			this.$.binding.wires.defaultInsert.refreshValue();
+    setDefaultOnInsert: function() {
+        if (this.editor && this.defaultInsert) {
+            if (this.$.binding && this.$.binding.wires.defaultInsert) this.$.binding.wires.defaultInsert.refreshValue();
 
-		    this.editor.set('value', this.defaultInsert, false);
-		    this.invalidate();
-		}
-	},
+            this.editor.set('value', this.defaultInsert, false);
+            this.invalidate();
+        }
+    },
+
     onEnterKeyPress: function() {},
 
 
     toHtml: function(inWidth) {
-	var remainingWidth = inWidth - 4; // always seem to need a 4px buffer to avoid wrapping
-	var margin = "2px 4px 2px 4px";
-	remainingWidth -= 8; // margin for the wrapper div
-	remainingWidth -= 2; // border for the editor
-	var captionSize = 125;
-	var topToBottomLayout =  (remainingWidth - captionSize < 100 || this.captionPosition == "top" || this.captionPosition == "bottom");
-	if (this.caption && this.captionSize != "0px" && this.captionSize != "0%" && !topToBottomLayout) {
-	    var captionPadding = 4;
-	    var editorSize = remainingWidth - captionSize;
-	    return "<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'><div class='wmeditor-label' style='width:" + (captionSize-captionPadding) + "px;padding-right:" + captionPadding + "px;display:inline-block;'>" + this.caption + "</div><div class='wmeditor-value' style='display: inline-block;width:" + editorSize + "px'>" + (this.getDisplayValue() || "&nbsp;") + "</div></div>";
-	} else {
-	    var html = [];
-	    html.push("<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'>");
-	    if (this.caption && this.captionSize != "0px" && this.captionSize != "0%") {
-		html.push("<div class='wmeditor-label' >" + this.caption + "</div>");
-	    }
-	    html.push("<div class='wmeditor-value'>" + (this.getDisplayValue() || "&nbsp;") + "</div>");
-	    html.push("</div>");
-	    return html.join("\n");
-	}
+        var remainingWidth = inWidth - 4; // always seem to need a 4px buffer to avoid wrapping
+        var margin = "2px 4px 2px 4px";
+        remainingWidth -= 8; // margin for the wrapper div
+        remainingWidth -= 2; // border for the editor
+        var captionSize = 125;
+        var topToBottomLayout = (remainingWidth - captionSize < 100 || this.captionPosition == "top" || this.captionPosition == "bottom");
+        if (this.caption && this.captionSize != "0px" && this.captionSize != "0%" && !topToBottomLayout) {
+            var captionPadding = 4;
+            var editorSize = remainingWidth - captionSize;
+            return "<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'><div class='wmeditor-label' style='width:" + (captionSize - captionPadding) + "px;padding-right:" + captionPadding + "px;display:inline-block;'>" + this.caption + "</div><div class='wmeditor-value' style='display: inline-block;width:" + editorSize + "px'>" + (this.getDisplayValue() || "&nbsp;") + "</div></div>";
+        } else {
+            var html = [];
+            html.push("<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'>");
+            if (this.caption && this.captionSize != "0px" && this.captionSize != "0%") {
+                html.push("<div class='wmeditor-label' >" + this.caption + "</div>");
+            }
+            html.push("<div class='wmeditor-value'>" + (this.getDisplayValue() || "&nbsp;") + "</div>");
+            html.push("</div>");
+            return html.join("\n");
+        }
     }
 
 });
