@@ -24,7 +24,6 @@ DataObjectsEditor.widgets = {
 		addEntityButton: ["wm.studio.ToolbarButton", {imageIndex: 25, title: "New", whint: "New"}, {onclick: "addButtonClick"}],
 		removeButton: ["wm.studio.ToolbarButton", {imageIndex: 0, title: "Delete",  hint: "Delete"}, {onclick: "removeButtonClick"}],
 		toolbarspacer2: ["wm.studio.ToolbarSpacer", {}, {}],
-		importDBButton: ["wm.studio.ToolbarButton", {imageIndex: 20, title: "Import Database",  hint: "Import Database"}, {onclick: "importDBButtonClick"}],
 		dbSettingsButton: ["wm.studio.ToolbarButton", {imageIndex: 21, title: "Database Connections",  hint: "Database Connections"}, {onclick: "dbSettingsButtonClick"}]
 	    }],
 	    logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]

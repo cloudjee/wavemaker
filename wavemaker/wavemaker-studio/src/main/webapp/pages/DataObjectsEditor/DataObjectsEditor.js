@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.studio.pages.DataObjectsEditor.DataObjectsEditor");
 wm.require("wm.DataGrid");
@@ -49,8 +49,6 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             this.addEntityButton.setBorder("0");
             this.removeButton.setBorder("1");
             this.removeButton.setBorder("0");
-            this.importDBButton.setBorder("1");
-            this.importDBButton.setBorder("0");
             this.dbSettingsButton.setBorder("1");
             this.dbSettingsButton.setBorder("0");
         });
@@ -132,7 +130,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.relationshipsList.setDataSet(this.relationshipsListVar);
     },
     initData: function() {
-        studio.dataService.requestSync(LOAD_DATA_TYPES_TREE_OP, 
+        studio.dataService.requestSync(LOAD_DATA_TYPES_TREE_OP,
             null, dojo.hitch(this, "gotInitData"));
     },
     gotInitData: function(inData) {
@@ -140,8 +138,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.valueTypes = inData.valueTypes;
     },
     reloadEntityNode: function(entity) {
-        studio.dataService.requestSync("getTypesSubtree", 
-            [this.currentDataModelName], 
+        studio.dataService.requestSync("getTypesSubtree",
+            [this.currentDataModelName],
             dojo.hitch(this, "gotDataToUpdateEntityNode", entity));
     },
     gotDataToUpdateEntityNode: function(entity, inData) {
@@ -160,31 +158,15 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             if (entityData) {
                 var closed = entityNode.closed;
 
-                // open all entityNode's children so 
-                // removeChildren will actually remove 
+                // open all entityNode's children so
+                // removeChildren will actually remove
                 // node's kids
-                entityNode.setOpen(true); 
+                entityNode.setOpen(true);
                 entityNode.removeChildren();
                 this.tree.renderDataNode(entityNode, entityData);
                 entityNode.setOpen(!closed);
             }
         }
-    },
-        importDBButtonClick: function() {
-        if (!studio.importDBDialog) {
-        var d = studio.importDBDialog = new wm.PageDialog({
-            owner: app,
-            pageName: "ImportDatabase",
-            hideControls: true,
-            width: 700,
-            height: 340,
-            title: this.getDictionaryItem("TITLE_IMPORT_DATABASE")
-        });
-        d.onPageReady = dojo.hitch(d, function() {
-            d.onShow = dojo.hitch(d.page, "update");
-        })
-        }
-        studio.importDBDialog.show();
     },
     getConnectionsDialog: function() {
     var d = this.dbConnectDialog;
@@ -194,7 +176,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.dbConnectDialog = d = new wm.PageDialog({
         _classes: {domNode: ["studiodialog"]},
         owner: app,
-        pageName: "DBConnectionSettings", 
+        pageName: "DBConnectionSettings",
         hideControls: true,
         width:720,
         height:510,
@@ -230,7 +212,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.relationshipsListVar.setData([]);
         this.relationshipsListVar.endUpdate();
         this.relationshipsList.setDataSet(this.relationshipsListVar);
-        setTimeout(dojo.hitch(this,'resetChanges'), 0);     
+        setTimeout(dojo.hitch(this,'resetChanges'), 0);
     },
     getCachedData: function() {
 
@@ -244,18 +226,18 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         }
 
 
-    return this.tableDetailSchemaName.getDataValue() + "|" + 
-        this.tableDetailCatalogName.getDataValue() + "|" + 
+    return this.tableDetailSchemaName.getDataValue() + "|" +
+        this.tableDetailCatalogName.getDataValue() + "|" +
         this.tableDetailEntityName.getDataValue() + "|" +
         this.tableDetailTableName.getDataValue() + "|" +
         this.tableDetailPackageName.getDataValue() + "|" +
         this.dynamicInsertCheckBox.getChecked() + "|" +
-        this.dynamicUpdateCheckBox.getChecked() + "|" + 
-        this.refreshCheckBox.getChecked() + "|" + 
+        this.dynamicUpdateCheckBox.getChecked() + "|" +
+        this.refreshCheckBox.getChecked() + "|" +
         this.tableDetailTableName.getDataValue() + "|" +
         relations + "|" +
         columns;
-        
+
     },
     setDirty: function() {
         wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
@@ -283,7 +265,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.saveButton1.setDisabled(!changed);
         }));
     },
-    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can
      * interact with them
      */
     dirty: false,
@@ -329,7 +311,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.dynamicUpdateCheckBox && this.dynamicUpdateCheckBox.isDirty ||
         this.refreshCheckBox && this.refreshCheckBox.isDirty;
     },
-    tableDetailSchemaNameChange: function(inSender) {       
+    tableDetailSchemaNameChange: function(inSender) {
         this.setDirty();
     },
     tableDetailCatalogNameChange: function(inSender) {
@@ -398,7 +380,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             this.currentDataModelName = null;
         }
 
-        if (d == ROOT_NODE || d == DATA_MODEL_ROOT_NODE || 
+        if (d == ROOT_NODE || d == DATA_MODEL_ROOT_NODE ||
             d == ENTITY_ROOT_NODE) {
             this.resetSelection();
             this.objectPages.setLayer(this.DEFAULT_PAGE);
@@ -418,7 +400,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         }
 
         this.objectPages.setLayer(this.OBJECT_PAGE);
-        this.setDataObject(this.currentDataModelName, 
+        this.setDataObject(this.currentDataModelName,
             this.getEntityName(inNode));
         this._cachedData = this.getCachedData();
     },
@@ -475,13 +457,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         var entity = {};
 
         if (otherTypeNode == null) {
-            entity.packageName = DEFAULT_PACKAGE_ROOT + 
+            entity.packageName = DEFAULT_PACKAGE_ROOT +
                 this.currentDataModelName + DATA_PACKAGE_NAME;
         } else {
             studio.dataService.requestSync(
                 "getEntityWithoutProperties",
-                [this.currentDataModelName, 
-                otherTypeNode.data[1]], 
+                [this.currentDataModelName,
+                otherTypeNode.data[1]],
                 dojo.hitch(this, "gotEntityAsTemplate",entity));
         }
 
@@ -489,10 +471,10 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         if (tableName) {
             entity.tableName = tableName;
         } else {
-            entity.tableName = 
+            entity.tableName =
                 this.getTableNameFromEntityName(entityName);
         }
-        
+
         return entity;
     },
     gotEntityAsTemplate: function(entity, inData) {
@@ -617,11 +599,11 @@ dojo.declare("DataObjectsEditor", wm.Page, {
     saveRelationships: function(inSender) {
         this.relationshipsList.dijit.edit.apply();
         var relatedProperties = this.getRelatedProperties();
-        studio.dataService.requestAsync("updateRelated", 
+        studio.dataService.requestAsync("updateRelated",
                 [this.currentDataModelName,
-                this.tableDetailEntityName.getDataValue(), 
-                relatedProperties], 
-                dojo.hitch(this, "relUpdateCompleted"), 
+                this.tableDetailEntityName.getDataValue(),
+                relatedProperties],
+                dojo.hitch(this, "relUpdateCompleted"),
                 dojo.hitch(this, "relUpdateError"));
     },
     detailRelSelect: function(inSender, inItem) {
@@ -635,8 +617,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         var length = this.relationshipsListVar.getCount();
         for (var i = 0; i < length; i++) {
             var rel = this.relationshipsListVar.getData()[i];
-            rel.fullyQualifiedType = 
-                this.currentEntity.packageName + "." + 
+            rel.fullyQualifiedType =
+                this.currentEntity.packageName + "." +
                 rel.relatedType;
             rtn.push(rel);
         }
@@ -654,12 +636,12 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             existingNames.push(this.relationshipsListVar
                 .getItem(i).getValue("name"));
         }
-        
+
         var newRelName = "rel";
         newRelName = this.findUniqueName(existingNames, newRelName);
-        
+
         var r = this.columnListVar.getItem(this.columnList.dijit.selection.selectedIndex);
-        var newrel = {name: newRelName, 
+        var newrel = {name: newRelName,
             relatedType: this.relationshipsList._columns[1].selectOptions[0],
             cardinality: r.getValue("notNull") ? ONE_TO_ONE : ONE_TO_ZERO_OR_ONE,
             tableName: this.tableDetailTableName.getDataValue(),
@@ -741,8 +723,8 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             this._resetPrecisionAndLength(props[i].column);
         }
 
-        studio.dataService.requestAsync("updateColumns", 
-                    [this.currentDataModelName, 
+        studio.dataService.requestAsync("updateColumns",
+                    [this.currentDataModelName,
                     entityName, columns, props],
                     dojo.hitch(this, "colUpdateCompleted"),
                     dojo.hitch(this, "colUpdateError"));
@@ -770,7 +752,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         var i = 0;
         for (var j=0,z=children.length;j<z;j++) {
             var child = children[j];
-            
+
             if (child.data[0] == RELATIONSHIP_NODE) {
                 continue;
             }
@@ -783,7 +765,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
     populatePropertyInfo: function(propertyInfo, node) {
         propertyInfo.name = node.data[1];
 
-        if (this.currentPropertyName != null && 
+        if (this.currentPropertyName != null &&
             propertyInfo.name == this.currentPropertyName) {
             propertyInfo.name = this.propertyName.getInputValue();
         }
@@ -866,11 +848,11 @@ dojo.declare("DataObjectsEditor", wm.Page, {
     updateEntity: function(entity, isNew) {
             // var save = this.onlyEntityIsDirty;
             var save = this.isEntityDirty();
-        studio.dataService.requestSync("updateEntity", 
-                        [this.currentDataModelName, 
-                        this.currentEntityName, 
-                        entity, save], 
-            dojo.hitch(this, "entityUpdateCompleted", entity), 
+        studio.dataService.requestSync("updateEntity",
+                        [this.currentDataModelName,
+                        this.currentEntityName,
+                        entity, save],
+            dojo.hitch(this, "entityUpdateCompleted", entity),
             dojo.hitch(this, "entityUpdateError"));
     },
     entityUpdateCompleted: function(entity, inSender) {
@@ -881,7 +863,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         var length = this.relationshipsListVar.getCount();
         for (var i = 0; i < length; i++) {
             var rel = this.relationshipsListVar.getData()[i];
-            if (rel.cardinality == ONE_TO_ONE || 
+            if (rel.cardinality == ONE_TO_ONE ||
                 rel.cardinality == ONE_TO_ZERO_OR_ONE) {
                 var r = this.relationshipsListVar.getItem(i);
                 r.setValue("tableName", tn);
@@ -939,14 +921,14 @@ dojo.declare("DataObjectsEditor", wm.Page, {
                 return;
             }
             studio.beginWait("Adding " + f);
-            studio.dataService.requestAsync(NEW_DATA_MODEL_OP, 
-                [f], 
-                dojo.hitch(this, "newDataModelResult"), 
+            studio.dataService.requestAsync(NEW_DATA_MODEL_OP,
+                [f],
+                dojo.hitch(this, "newDataModelResult"),
                 dojo.hitch(this, "newDataModelError"));
         } else {*/
             var types = this.getDataModelTypeNodes();
             var newEntityName = this.findUniqueEntityName();
-                   app.prompt(this.getDictionaryItem("PROMPT_NEW_TABLE"), this.getTableNameFromEntityName(this.findUniqueEntityName()), 
+                   app.prompt(this.getDictionaryItem("PROMPT_NEW_TABLE"), this.getTableNameFromEntityName(this.findUniqueEntityName()),
                                    dojo.hitch(this, function(t) {
                            var entity = this.constructEntity(
                            this.getEntityNameFromTableName(t), t);
@@ -955,13 +937,13 @@ dojo.declare("DataObjectsEditor", wm.Page, {
                                        studio.loadingDialog.widgetToCover = this.objectPages.getActiveLayer();
                        studio.loadingDialog.show();
                            this.getEntityOutputChanged(entity);
-                                       
-                           // add single column so we have a valid Hibernate 
+
+                           // add single column so we have a valid Hibernate
                            // mapping file
-                           this.addColumn("id", true, false, true, 
-                                      DEFAULT_COL_LENGTH, DEFAULT_COL_PRECISION, 
+                           this.addColumn("id", true, false, true,
+                                      DEFAULT_COL_LENGTH, DEFAULT_COL_PRECISION,
                                       IDENTITY_GENERATOR, HIBERNATE_INT_TYPE);
-                                       
+
                            this.saveEntity(null, true);
                                    }));
         //}
@@ -980,11 +962,11 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.setSchemas();
         this.resetChanges();
     },
-    addColumn: function(name, isPk, isFk, notNull, length, precision, 
-        generator, sqlType) 
+    addColumn: function(name, isPk, isFk, notNull, length, precision,
+        generator, sqlType)
     {
-        var newcol = {name:name, isPk:isPk, isFk:isFk, notNull:notNull, 
-             length:length, precision:precision, 
+        var newcol = {name:name, isPk:isPk, isFk:isFk, notNull:notNull,
+             length:length, precision:precision,
              generator:generator, sqlType:sqlType};
         this.columnListVar.addItem(newcol);
         /*this.columnListVar.setItem(
@@ -995,7 +977,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
     removeButtonClick: function(inSender) {
         var dmn = this.currentDataModelName;
         var c = studio.tree.selected && studio.tree.selected.component;
-        
+
         if (!c) {
             app.alert(this.getDictionaryItem("ALERT_SELECT_TO_DELETE"));
             return;
@@ -1006,14 +988,14 @@ dojo.declare("DataObjectsEditor", wm.Page, {
                                 dojo.hitch(this, function() {
                         studio.beginWait(this.getDictionaryItem("WAIT_DELETE_MODEL", {modelName: dmn}));
                         studio.dataService.requestAsync(
-                    "removeDataModel", 
+                    "removeDataModel",
                     [dmn],
-                    dojo.hitch(this, "removeDataModelCompleted"), 
+                    dojo.hitch(this, "removeDataModelCompleted"),
                     dojo.hitch(this, "removeDataModelFailed"));
                                 }));
         } else {
             var n = c.entityName;
-            app.confirm(this.getDictionaryItem("CONFIRM_DELETE_ENTITY", {entityName: n}), false, 
+            app.confirm(this.getDictionaryItem("CONFIRM_DELETE_ENTITY", {entityName: n}), false,
                                 dojo.hitch(this, function() {
             var types = this.getDataModelTypeNodes();
             if (types == null) {
@@ -1062,12 +1044,12 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             existingNames.push(this.columnListVar.getItem(i)
                 .getValue("name"));
         }
-        
+
         var newColName = "newcol";
         newColName = this.findUniqueName(existingNames, newColName);
 
-        this.addColumn(newColName, defaultIsPk, false, true, 
-                DEFAULT_COL_LENGTH, DEFAULT_COL_PRECISION, 
+        this.addColumn(newColName, defaultIsPk, false, true,
+                DEFAULT_COL_LENGTH, DEFAULT_COL_PRECISION,
                 "", HIBERNATE_INT_TYPE);
     },
     removeCol: function(inSender) {
@@ -1122,7 +1104,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         }
     },
     resetSelection: function() {
-        this.dataObject = {name: "", table: ""}; 
+        this.dataObject = {name: "", table: ""};
     },
     columnListCanEdit: function(inSender, ioEdit, inCell, inRowIndex) {
         if (inCell.index < 7) {
