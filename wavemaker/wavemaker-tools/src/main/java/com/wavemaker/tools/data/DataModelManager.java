@@ -101,6 +101,10 @@ public class DataModelManager {
         this.projectCompiler = projectCompiler;
     }
 
+    public ProjectCompiler getProjectCompiler() {
+        return  this.projectCompiler;
+    }
+
     public void setExporterFactory(ExporterFactory exporterFactory) {
         this.exporterFactory = exporterFactory;
     }
