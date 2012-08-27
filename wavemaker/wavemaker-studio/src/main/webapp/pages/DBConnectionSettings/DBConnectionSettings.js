@@ -603,7 +603,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     _connectionSucceeded: function() {
         studio.endWait();
-        app.alert(this.getDictionaryItem("ALERT_CONNECTION_SUCCESS"));
+        app.toastSuccess(this.getDictionaryItem("ALERT_CONNECTION_SUCCESS"));
     },
     _connectionFailed: function(inError) {
         studio.endWait();
@@ -611,7 +611,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         app.alertDialog.setWidth("600px");
     },
     _propWriteOk: function(inData) {
-        app.alert(this.getDictionaryItem("ALERT_CONNECTION_PROPS_SUCCESS"));
+        app.toastSuccess(this.getDictionaryItem("ALERT_CONNECTION_PROPS_SUCCESS"));
     },
     _propWriteFailed: function(inData) {
         app.alert(this.getDictionaryItem("ALERT_CONNECTION_PROPS_FAILED"));
@@ -633,7 +633,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     _reImportResult: function() {
         studio.endWait();
         studio.updateServices();
-        app.toastSuccess(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));
+        app.alert(this.getDictionaryItem("TOAST_REIMPORT_SUCCESS"));
         //studio.application.loadServerComponents("wm.Query");
 /*
         wm.fire(studio.getEditor("DataObjectsEditor").page, "update");
