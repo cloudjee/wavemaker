@@ -140,6 +140,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         }
         this.numberEditor.connect(this.numberEditor, "onchange", this, "numberChanged");
         this.typeEditor.connect(this.typeEditor, "onchange", this, "changed");
+        if (this.disabled) this.editor.setDisabled(true);
         return this.editor;
     },
     numberChanged: function() {
