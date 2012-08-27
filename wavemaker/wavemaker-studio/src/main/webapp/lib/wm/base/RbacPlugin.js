@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.base.RbacPlugin");
 dojo.require("wm.base.Control");
 dojo.require("wm.base.components.ServiceVariable");
@@ -22,7 +22,7 @@ wm.Plugin.plugin("rbac", wm.Widget, {
     roles: '',
     prepare: function() {
         this.rbacSocket(arguments);
-        if (this.roles && this.roles.length) {
+        if (this.roles && this.roles.length && app.isSecurityEnabled) {
             this._rbacShowingRequested = this.showing;
             this.showing = this.updateRbacShowing(this.showing);
             this.subscribe("wmRbacUpdate", this, "reshowRbac");
@@ -162,7 +162,7 @@ wm.Plugin.plugin("mobile", wm.Control, {
             } else {
                 deviceSize = deviceSize.height;
             }
-            if (deviceSize == "100%") return true;            
+            if (deviceSize == "100%") return true;
             deviceSize = app.appRoot.calcDeviceSize(parseInt(deviceSize));
             var isOk = true;
             if (this.deviceSizes && dojo.indexOf(this.deviceSizes, deviceSize) == -1) return false;
