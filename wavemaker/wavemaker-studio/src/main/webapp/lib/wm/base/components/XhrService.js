@@ -239,6 +239,9 @@ dojo.declare("wm.XhrDefinition", wm.Component, {
        this.inherited(arguments);
        this.initType();
    },
+   destroy: function() {
+           wm.XhrService.prototype.removeOperation(this.name);
+   },
    initType: function() {
        if (this.url) {
            wm.XhrService.prototype.addOperation({
