@@ -255,7 +255,8 @@ public class DataService {
             values = "";
         }
 
-        this.dataModelMgr.compile();
+        //this.dataModelMgr.compile();
+        this.dataModelMgr.getProjectCompiler().compile();
 
         return this.dataModelMgr.getDataModel(dataModelName).runQuery(query, inputs, values, maxResults);
     }
