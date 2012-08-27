@@ -236,24 +236,26 @@ dojo.declare("wm.XhrDefinition", wm.Component, {
     contentType: "application/x-www-form-urlencoded",
 
     postInit: function() {
-    this.inherited(arguments);
-    this.initType();
-    },
-    initType: function() {
-    if (this.url) {
-    wm.XhrService.prototype.addOperation({name:    this.name,
-                          url:     this.url,
-                          requestType:    this.requestType,
-                          headers: this.headers,
-                          parameters: this.parameters,
-                          useProxy:this.useProxy,
-                          contentType: this.contentType,
-                          returnType: this.returnType});
-    }
-    },
-    designSelect: function() {
-    var d = studio.navGotoEditor("XHRServiceEditor", studio.webServiceTab, this.name + "Layer", this.name);
-/*
+       this.inherited(arguments);
+       this.initType();
+   },
+   initType: function() {
+       if (this.url) {
+           wm.XhrService.prototype.addOperation({
+               name: this.name,
+               url: this.url,
+               requestType: this.requestType,
+               headers: this.headers,
+               parameters: this.parameters,
+               useProxy: this.useProxy,
+               contentType: this.contentType,
+               returnType: this.returnType
+           });
+       }
+   },
+   designSelect: function() {
+       var d = studio.navGotoEditor("XHRServiceEditor", studio.webServiceTab, this.name + "Layer", this.name);
+       /*
     var d = studio.xhrDesignerDialog || new wm.PageDialog({owner: studio,
                                    _classes: {domNode: ["studiodialog"]},
                                    name: "xhrDesignerDialog",
@@ -265,8 +267,8 @@ dojo.declare("wm.XhrDefinition", wm.Component, {
                                    title: "XHR Service Editor"});
     d.show();
     */
-    d.page.setService(this);
-    }
+       d.page.setService(this);
+   }
 });
 
 wm.Object.extendSchema(wm.XhrDefinition, {
