@@ -475,21 +475,21 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     },
     */
     setDataSet: function(inDataSet, noSetEditorValue) {
-    this._inSetDataSet = true;
-    this.inherited(arguments);
-    if (this.editor) {
-        this.editor.set("store", this.generateStore());
-        if (!noSetEditorValue) {
-        this.setEditorValue(this.dataValue);
+        this._inSetDataSet = true;
+        this.inherited(arguments);
+        if (this.editor) {
+            this.editor.set("store", this.generateStore());
+            if (!noSetEditorValue) {
+                this.setEditorValue(this.dataValue);
+            }
         }
-    }
-    delete  this._inSetDataSet;
+        delete this._inSetDataSet;
     },
     clear: function() {
         // note: hack to call internal dijit function to ensure we can
         // set a blank value even if this is not a valid value
         if (this.editor) {
-                 var valueWas = this.editor.get("displayedValue");
+            var valueWas = this.editor.get("displayedValue");
             if (this.restrictValues) {
                 this.editor.set('value', '', false);
             } else {
@@ -499,25 +499,26 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
             this.selectedItem.clearData(); // may get called again in changed, but only if !_cupdating and hasValues
             this._lastValue = this.makeEmptyValue();
 
-        // need to preserve the values if we're in the middle of a dataSet change or we'll be firing onchange events even though the value remains unchanged
-        if (!this._inSetDataSet) {
-            this.displayValue = "";
-            this.dataValue = null;
+            // need to preserve the values if we're in the middle of a dataSet change or we'll be firing onchange events even though the value remains unchanged
+            if (!this._inSetDataSet) {
+                this.displayValue = "";
+                this.dataValue = null;
 
-                        // because we passed in false above so as to fire out own SYNCRHONOUS onchange
-                        // _lastValueReported is not cleared, which means that trying to changing the value
-                        // back to _lastValueReported will fail to fire an onchange event
-                        this.editor._lastValueReported = "";
-            this.updateReadonlyValue();
-            this.resetState();
-        }
-                    if (!this._cupdating && valueWas  && this.hasValues())
-                        this.changed();
+                // because we passed in false above so as to fire out own SYNCRHONOUS onchange
+                // _lastValueReported is not cleared, which means that trying to changing the value
+                // back to _lastValueReported will fail to fire an onchange event
+                this.editor._lastValueReported = "";
+                this.updateReadonlyValue();
+                this.resetState();
+            }
+            if (!this._cupdating && valueWas && this.hasValues()) this.changed();
         } else {
             this.resetState();
         }
     },
-    validationEnabled: function() {return !this.restrictValues;},
+    validationEnabled: function() {
+        return !this.restrictValues;
+    },
     _getValidatorNode: function() {
         var result = dojo.query(".dijitValidationContainer", this.editor.domNode)[0];
         result.firstChild.value = "";
@@ -536,59 +537,55 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
         }
     },
     */
-        blurred: function() {
+    blurred: function() {
         this.inherited(arguments);
         var displayValue = this.displayValue;
         if (this.getDisplayValue() != displayValue) {
-        this.doOnchange();
+            this.doOnchange();
         }
     },
-        getInvalid: function() {
+    getInvalid: function() {
         if (!this.validationEnabled()) {
-        if (this.required && !this.getDataValue())
-            return true;
-        return false;
+            if (this.required && !this.getDataValue()) return true;
+            return false;
         }
         var valid;
         if (!this.editor || this.editor._focused) {
-        valid = true;
+            valid = true;
         } else {
-        var dataValue = this.getDataValue();
-        var hasValue = Boolean(dataValue);
-        // always valid if !this.restrictValue
-        // always valid if !this.displayValue, but if there is a displayValue there must be a dataValue /* May not be true in dojo 1.6 */
-        var display = this.getDisplayValue();
+            var dataValue = this.getDataValue();
+            var hasValue = Boolean(dataValue);
+            // always valid if !this.restrictValue
+            // always valid if !this.displayValue, but if there is a displayValue there must be a dataValue /* May not be true in dojo 1.6 */
+            var display = this.getDisplayValue();
 
-        this._isValid = (!this.restrictValues || (display && hasValue || !display) );
-        //console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
+            this._isValid = (!this.restrictValues || (display && hasValue || !display));
+            //console.log("_isValid:" + this._isValid + "; display="+display + "; data:"+this.dataValue);
 
-
-        if (this.readonly) valid = true;
-        else if (this.required) {
-            if (!this.restrictValues && !display) {
-            valid = false;
-            } else if (this.restrictValues && !hasValue) {
-            valid = false;
+            if (this.readonly) valid = true;
+            else if (this.required) {
+                if (!this.restrictValues && !display) {
+                    valid = false;
+                } else if (this.restrictValues && !hasValue) {
+                    valid = false;
+                } else {
+                    valid = true;
+                }
+            } else if (this.restrictValues && display && !hasValue) {
+                valid = false;
             } else {
-            valid = true;
+                valid = true;
             }
-        } else if (this.restrictValues && display && !hasValue){
-            valid = false;
-        } else {
-            valid = true;
-        }
-/*
+            /*
         else if (this.required && !this.dataValue) valid = false;
         else if (this.restrictValues && display && !this.dataValue) valid = false;
         else valid = true;
         */
-        }
-        /* Clear invalid flag if its now valid; don't set invalid flag until dojo decides its time to set it */
-        if (valid )
-        this.validatorNode.style.display = "none";
+        } /* Clear invalid flag if its now valid; don't set invalid flag until dojo decides its time to set it */
+        if (valid) this.validatorNode.style.display = "none";
         return !valid;
     },
-/*
+    /*
     updateSelectedItem: function() {
         // FIXME: only if dataField is All Field should we update entire selectedItem.
         var v = this.getEditorValue(true);
@@ -597,75 +594,71 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     },
     */
     getSelectedIndex: function() {
-    return this.getItemIndex(this.selectedItem.getData());
+        return this.getItemIndex(this.selectedItem.getData());
     },
 
-        getItemIndex: function(item) {
+    getItemIndex: function(item) {
         if (!item) return -1;
-            var data = this.editor.store.data;
-            for (var i = 0; i < data.length; i++)
-                if (item == data[i] || item[this.dataField] == data[i][this.dataField]) return i;
-            return -1;
-        },
+        var data = this.editor.store.data;
+        for (var i = 0; i < data.length; i++)
+        if (item == data[i] || item[this.dataField] == data[i][this.dataField]) return i;
+        return -1;
+    },
 
     getEditorValue: function() {
-    var result = this.inherited(arguments);
+        var result = this.inherited(arguments);
 
-    if (!result && !this.restrictValues)
-        result = this.editor.get("displayedValue");
-    return (result || result === 0) ? result : this.makeEmptyValue();
+        if (!result && !this.restrictValues) result = this.editor.get("displayedValue");
+        return (result || result === 0) ? result : this.makeEmptyValue();
     },
     getDisplayValue: function() {
-        if (this.editor)
-        return this.editor.get('displayedValue');
+        if (this.editor) return this.editor.get('displayedValue');
         return null;
     },
     blurred: function() {
-    this.changed();
-    this.doOnblur();
+        this.changed();
+        this.doOnblur();
     },
     changed: function() {
-    if (wm.isMobile && this.editor && this.editor.focusNode == document.activeElement) {
-        this.editor.focusNode.blur();
-        return; // blur will trigger changed call
-    }
-    var item;
-    var index;
-    if (this.editor)
-        item = this.editor.get('item');
+        if (wm.isMobile && this.editor && this.editor.focusNode == document.activeElement) {
+            this.editor.focusNode.blur();
+            return; // blur will trigger changed call
+        }
+        var item;
+        var index;
+        if (this.editor) item = this.editor.get('item');
         var result = null;
-    if (this.editor)
-        var displayedValue = this.editor.get("displayedValue");
+        if (this.editor) var displayedValue = this.editor.get("displayedValue");
 
-    /* If there is an item its mobile then just use the item as the mobile version of the select editor's item is always good */
-    if (item && wm.isMobile) {
-        this.selectedItem.setData(item);
-    }
+        /* If there is an item its mobile then just use the item as the mobile version of the select editor's item is always good */
+        if (item && wm.isMobile) {
+            this.selectedItem.setData(item);
+        }
 
-    /* item may still be set in the dijit even though the displayed value no longer matches it; */
-    else if (item && displayedValue == item.name) {
-        index =  item.id;
-        var result = this.dataSet.getItem(index);
-        this.selectedItem.setData(result);
+        /* item may still be set in the dijit even though the displayed value no longer matches it; */
+        else if (item && displayedValue == item.name) {
+            index = item.id;
+            var result = this.dataSet.getItem(index);
+            this.selectedItem.setData(result);
         } else {
-        this.selectedItem.setData(null);
+            this.selectedItem.setData(null);
         }
         if (this.editor && this.editor._lastValueReported === "" && displayedValue !== "") {
-        this.editor._lastValueReported = displayedValue;
+            this.editor._lastValueReported = displayedValue;
         }
 
         return this.inherited(arguments);
 
     },
     selectItem: function(rowIndex) {
-    if (!this.editor) return;
-    var item = this.dataSet.getItem(rowIndex);
-    this.selectedItem.setData(item);
-    //this.editor.set("value", String(item.getIndexInOwner()), false);
-    this.editor.set("value", this._getDisplayData(item), false);
-    if (wm.isMobile) {
-        this.editor.item = item.getData();
-    }
+        if (!this.editor) return;
+        var item = this.dataSet.getItem(rowIndex);
+        this.selectedItem.setData(item);
+        //this.editor.set("value", String(item.getIndexInOwner()), false);
+        this.editor.set("value", this._getDisplayData(item), false);
+        if (wm.isMobile) {
+            this.editor.item = item.getData();
+        }
     }
 
 /*
@@ -702,14 +695,14 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
     dataField: "",
     autoDataSet: true,
     startUpdate: true,
-        maxResults: 500,
-        ignoreCase: true,
+    maxResults: 500,
+    ignoreCase: true,
     init: function() {
         this.inherited(arguments);
         if (this.autoDataSet && this.formField) {
-        this.createDataSet();
+            this.createDataSet();
         } else if (!this.autoDataSet) {
-        this.startUpdate = false;
+            this.startUpdate = false;
         }
     },
     createDataSet: function() {
@@ -717,58 +710,58 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
         var parentForm = this.getParentForm();
         if (parentForm) {
 
-        if (wm.isInstanceType(parentForm, wm.LiveForm) && !parentForm.dataSet)
-            return;
-        if (wm.isInstanceType(parentForm, wm.DataForm) && !parentForm.dataSet && !parentForm.type)
-            return;
-        if (!wm.getFormLiveView || !wm.getFormField) return;
+            if (wm.isInstanceType(parentForm, wm.LiveForm) && !parentForm.dataSet) return;
+            if (wm.isInstanceType(parentForm, wm.DataForm) && !parentForm.dataSet && !parentForm.type) return;
+            if (!wm.getFormLiveView || !wm.getFormField) return;
 
-        var view = wm.getFormLiveView(parentForm);
-        var parentType = wm.isInstanceType(parentForm, wm.DataForm) ? parentForm.type : parentForm.dataSet && parentForm.dataSet.type;
+            var view = wm.getFormLiveView(parentForm);
+            var parentType = wm.isInstanceType(parentForm, wm.DataForm) ? parentForm.type : parentForm.dataSet && parentForm.dataSet.type;
 
-        var ff = wm.getFormField(this);
+            var ff = wm.getFormField(this);
 
-        try {
-            var currentType;
-            if (this.dataType) {
-            currentType = this.dataType;
-            } else if (parentForm instanceof wm.ServiceInputForm) {
-            var typeDef = parentForm.dataOutput._dataSchema;
-            if (typeDef) {
-                currentType = typeDef[ff] ? typeDef[ff].type : null;
+            try {
+                var currentType;
+                if (this.dataType) {
+                    currentType = this.dataType;
+                } else if (parentForm instanceof wm.ServiceInputForm) {
+                    var typeDef = parentForm.dataOutput._dataSchema;
+                    if (typeDef) {
+                        currentType = typeDef[ff] ? typeDef[ff].type : null;
+                    }
+                } else if (parentType && parentType != "any") {
+                    currentType = wm.typeManager.getType(parentType).fields[ff].type;
+                } else {
+                    currentType = "string";
+                }
+            } catch (e) {}
+
+            if (view) {
+                view.addRelated(ff);
             }
-            } else if (parentType && parentType != "any") {
-            currentType = wm.typeManager.getType(parentType).fields[ff].type ;
-            } else {
-            currentType = "string";
-            }
-        } catch(e) {}
-
-        if (view) {
-            view.addRelated(ff);
-        }
-        var lv = this.dataSet = new wm.LiveVariable({
-            name: "liveVariable",
-            owner: this,
-            autoUpdate: false,
-            startUpdate: false,
-            _rootField: view ? ff : null,
-            liveView: view,
-            liveSource: view ? undefined : currentType,
-            maxResults: this.maxResults,
-            ignoreCase: this.ignoreCase,
-            refireOnDbChange: true,
-            orderBy: this.orderBy // right now, only FilteringSelect provides the orderBy property
-        });
-        this.selectedItem.setType(this.dataSet.type);
-        this.createDataSetWire(lv);
+            var lv = this.dataSet = new wm.LiveVariable({
+                name: "liveVariable",
+                owner: this,
+                autoUpdate: false,
+                startUpdate: false,
+                _rootField: view ? ff : null,
+                liveView: view,
+                liveSource: view ? undefined : currentType,
+                maxResults: this.maxResults,
+                ignoreCase: this.ignoreCase,
+                refireOnDbChange: true,
+                orderBy: this.orderBy // right now, only FilteringSelect provides the orderBy property
+            });
+            this.selectedItem.setType(this.dataSet.type);
+            this.createDataSetWire(lv);
         }
     },
 
-
     createDataSetWire: function(inDataSet) {
         if (!this.$.binding) {
-        new wm.Binding({name: "binding", owner: this});
+            new wm.Binding({
+                name: "binding",
+                owner: this
+            });
         }
         var w = this._dataSetWire = new wm.Wire({
             name: "dataFieldWire",
@@ -803,17 +796,17 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
             return eventId;
         }
     },
-        _getFormSource: function(inForm) {
+    _getFormSource: function(inForm) {
         if (this.isAncestorInstanceOf(wm.RelatedEditor)) {
-        var w = wm.data.getPropWire(inForm, "dataSet");
-        return w && w.source && this.getRoot().getValueById(w.source);
-        /*var o = this.owner, w = wm.data.getPropWire(o, "dataValue");
+            var w = wm.data.getPropWire(inForm, "dataSet");
+            return w && w.source && this.getRoot().getValueById(w.source);
+            /*var o = this.owner, w = wm.data.getPropWire(o, "dataValue");
         return w && w.source && this.getRoot().getValueById(w.source);*/
         } else {
-        var lf = this.isAncestorInstanceOf(wm.LiveForm) || this.isAncestorInstanceOf(wm.DataForm);
-        if (lf && this.formField) {
-            return lf.dataSet.getValue(this.formField);
-        }
+            var lf = this.isAncestorInstanceOf(wm.LiveForm) || this.isAncestorInstanceOf(wm.DataForm);
+            if (lf && this.formField) {
+                return lf.dataSet.getValue(this.formField);
+            }
         }
     },
     // NOTE: lookups automatically push data back to their source
@@ -825,35 +818,35 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 
         this.inherited(arguments);
         if (wm.getParentForm) {
-        var f = wm.getParentForm(this);
-/*
-        if (f instanceof wm.RelatedEditor) {
-        var s = this._getFormSource(f);
-        if (s) {
-                        s.beginUpdate();
-            //console.log(s.getId(), this.dataValue);
-                var v = this._selectedData;
-            // update cursor
-            if (this.autoDataSet && this.dataSet) {
-                            // this is invalid; in some conditions, the objects in the datastore that populate _selectedData are no longer exact replicas of the objects in the datastore; for example, they have _selectMenuName property added to them
-                //var i = this.dataSet.getItemIndex(v);
-                            var i = this.getItemIndex(v);
-                if (i >=0)
-                    this.dataSet.cursor = i;
+            var f = wm.getParentForm(this);
+    /*
+            if (f instanceof wm.RelatedEditor) {
+            var s = this._getFormSource(f);
+            if (s) {
+                            s.beginUpdate();
+                //console.log(s.getId(), this.dataValue);
+                    var v = this._selectedData;
+                // update cursor
+                if (this.autoDataSet && this.dataSet) {
+                                // this is invalid; in some conditions, the objects in the datastore that populate _selectedData are no longer exact replicas of the objects in the datastore; for example, they have _selectMenuName property added to them
+                    //var i = this.dataSet.getItemIndex(v);
+                                var i = this.getItemIndex(v);
+                    if (i >=0)
+                        this.dataSet.cursor = i;
+                }
+                s.setData(v);
+                this.endEditUpdate();
+                //wm.fire(f, "populateEditors");
             }
-            s.setData(v);
-            this.endEditUpdate();
-            //wm.fire(f, "populateEditors");
+            }
+            */
         }
-        }
-        */
-    }
 
         /* If this is a wm.Lookup within a composite key acting to select an id, we need to propagate its value up to the parent form's relationship */
         if (this.relationshipName && !this.selectedItem.isEmpty()) {
-        var subform = this.getParentForm();
-        var mainform = subform.getParentForm();
-        mainform.dataOutput.setValue(this.relationshipName, this.selectedItem);
+            var subform = this.getParentForm();
+            var mainform = subform.getParentForm();
+            mainform.dataOutput.setValue(this.relationshipName, this.selectedItem);
         }
     }
 });
@@ -880,63 +873,60 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
     placeHolder: "Start typing to find matches",
     filterField: "", // right now we only support filtering upon a single field
     prepare: function() {
-    this.inherited(arguments);
-    this.maxResults = this.pageSize;
-    this.filterField = this.displayField;
-    this.orderBy = "asc: " + this.displayField;
-    if (!this.autoDataSet)
-        this.changeOnKey = true;
+        this.inherited(arguments);
+        this.maxResults = this.pageSize;
+        this.filterField = this.displayField;
+        this.orderBy = "asc: " + this.displayField;
+        if (!this.autoDataSet) this.changeOnKey = true;
     },
     _onchange: function(optionalValue) {
-    if (this.disabled || this.readonly || !this.isActive()) return;
-    var autoDataSet = this.autoDataSet && this.getParentForm();
-    var value = optionalValue || this.editor.get("displayedValue");
-    if (autoDataSet) {
-        var lastValue = this.dataSet.filter.getValue(this.filterField);
-    }
-
-    /* Insure that oldValue doesn't get used in setDataSet if there is no current item */
-    if (!this.editor.get("item")) {
-        this.dataValue = "";
-    }
-
-    /* Don't update the filter if its already firing; keep it at its last value so we'll know when it returns
-     * what was requested
-     */
-    if (value != this._lastQueryValue) {
-        this._lastQueryValue = value;
-
+        if (this.disabled || this.readonly || !this.isActive()) return;
+        var autoDataSet = this.autoDataSet && this.getParentForm();
+        var value = optionalValue || this.editor.get("displayedValue");
         if (autoDataSet) {
-        this.dataSet.filter.setValue(this.filterField, value);
-        if (value === undefined || value === null || value === "") {
-            this.dataSet.setData([]);
-        } else {
-            this.dataSet.update();
+            var lastValue = this.dataSet.filter.getValue(this.filterField);
         }
-        } else {
-        this.displayValue = value;
-        this.valueChanged("displayValue", value);
-        this.dataSet.update();
+
+        /* Insure that oldValue doesn't get used in setDataSet if there is no current item */
+        if (!this.editor.get("item")) {
+            this.dataValue = "";
         }
-    }
+
+        /* Don't update the filter if its already firing; keep it at its last value so we'll know when it returns
+         * what was requested
+         */
+        if (value != this._lastQueryValue) {
+            this._lastQueryValue = value;
+
+            if (autoDataSet) {
+                this.dataSet.filter.setValue(this.filterField, value);
+                if (value === undefined || value === null || value === "") {
+                    this.dataSet.setData([]);
+                } else {
+                    this.dataSet.update();
+                }
+            } else {
+                this.displayValue = value;
+                this.valueChanged("displayValue", value);
+                this.dataSet.update();
+            }
+        }
     },
     getDisplayValue: function() {
-    if (this.editor)
-        return this.editor.get('displayedValue');
-    else
-        return this.inherited(arguments);
+        if (this.editor) return this.editor.get('displayedValue');
+        else return this.inherited(arguments);
     },
     setDataValue: function(inData) {
-    if (this.dataSet && inData) {
-        this.dataSet.setData(inData ? [inData] : null);
-    }
-    this.inherited(arguments);
+        if (this.dataSet && inData) {
+            this.dataSet.setData(inData ? [inData] : null);
+        }
+        this.inherited(arguments);
     },
     setPageSize: function(inValue) {
-    this.maxResults = this.pageSize = inValue;
+        this.maxResults = this.pageSize = inValue;
     },
     isActive: function() {
-    return this.editor._focused || this.editor.dropDown && this.editor.dropDown.domNode.parentNode && this.editor.dropDown.domNode.parentNode.style.display != "none";
+        return this.editor._focused || this.editor.dropDown && this.editor.dropDown.domNode.parentNode && this.editor.dropDown.domNode.parentNode.style.display != "none";
     }
 });
 if (!wm.isMobile) {
@@ -948,28 +938,27 @@ if (!wm.isMobile) {
     },
 
     setDataSet: function(inDataSet) {
-    this.inherited(arguments, [inDataSet, true]);
-    if (this.dataSet && !this.dataSet.isEmpty() && this.isActive()) {
-        wm.job(this.getRuntimeId() + ".handleSetDataSet", 1, dojo.hitch(this, function() {
-        if (this.editor.declaredClass != "wm.dijit.form.ComboBox") {
-            var item = this.editor.get("item");
-            if (item) {
-            if (item[this._storeNameField] != this.editor.get("displayedValue"))
-                item = null;
-            }
-            if (!item && this.editor.get("displayedValue")) {
-            this.editor._startSearchFromInput();
-            }
-            this._onchange(); // see if there have been any new characters since our last request was fired
+        this.inherited(arguments, [inDataSet, true]);
+        if (this.dataSet && !this.dataSet.isEmpty() && this.isActive()) {
+            wm.job(this.getRuntimeId() + ".handleSetDataSet", 1, dojo.hitch(this, function() {
+                if (this.editor.declaredClass != "wm.dijit.form.ComboBox") {
+                    var item = this.editor.get("item");
+                    if (item) {
+                        if (item[this._storeNameField] != this.editor.get("displayedValue")) item = null;
+                    }
+                    if (!item && this.editor.get("displayedValue")) {
+                        this.editor._startSearchFromInput();
+                    }
+                    this._onchange(); // see if there have been any new characters since our last request was fired
+                }
+            }));
         }
-        }));
-    }
     },
     doOnchange: function() {
-    this._onchange();
-    if (this.editor.get("item")) {
-        this.inherited(arguments);
-    }
+        this._onchange();
+        if (this.editor.get("item")) {
+            this.inherited(arguments);
+        }
     },
     _end: 0
 });
@@ -982,26 +971,24 @@ if (!wm.isMobile) {
         return p;
     },
     setDataSet: function(inDataSet) {
-    this.inherited(arguments, [inDataSet, true]);
-    if (this.dataSet) {
-        if (this.editor && this.editor.dropDown) {
-        this.editor.listSet.setDataSet(this.dataSet);
+        this.inherited(arguments, [inDataSet, true]);
+        if (this.dataSet) {
+            if (this.editor && this.editor.dropDown) {
+                this.editor.listSet.setDataSet(this.dataSet);
+            }
         }
-    }
     },
-
     _onOpenDropDown: function() {
         var l = this.editor.listSet;
         l.searchBar.setPlaceHolder(this.placeHolder);
         if (this._searchBarChangeConnect) {
-        dojo.disconnect(this._searchBarChangeConnect);
-        wm.Array.removeElement(this._connections, this._searchBarChangeConnect);
+            dojo.disconnect(this._searchBarChangeConnect);
+            wm.Array.removeElement(this._connections, this._searchBarChangeConnect);
         }
         this._searchBarChangeConnect = l.searchBar.connect(l.searchBar, "onchange", this, function(inDisplayValue, inDataValue) {
-        this._onchange(inDisplayValue);
+            this._onchange(inDisplayValue);
         });
     },
-
     _end: 0
     });
 }
@@ -1101,13 +1088,15 @@ dojo.declare(
                               })});
     },
 
-    openDropDown: function(/*Function*/ callback){
-        app.addHistory({id: this.owner.getRuntimeId(),
-                options: {},
-                title: "Hide Popup"});
+    openDropDown: function( /*Function*/ callback) {
+        app.addHistory({
+            id: this.owner.getRuntimeId(),
+            options: {},
+            title: "Hide Popup"
+        });
 
         if (!this.dropDown) {
-        this.createDropDown();
+            this.createDropDown();
         }
         this.listSet.setShowing(false); // improves performance
         this._cupdating = true;
@@ -1116,43 +1105,42 @@ dojo.declare(
         this.dropDown.setShowing(true);
 
         if (this.owner.displayExpression) {
-        this.listSet.setDisplayField("");
-        this.listSet.setDisplayExpression(this.owner.displayExpression);
+            this.listSet.setDisplayField("");
+            this.listSet.setDisplayExpression(this.owner.displayExpression);
         } else {
-        this.listSet.setDisplayExpression("");
-        this.listSet.setDisplayField(this.owner.displayField);
+            this.listSet.setDisplayExpression("");
+            this.listSet.setDisplayField(this.owner.displayField);
         }
         if (this.owner.allowNone) {
-        if (!this.owner._dataSet) {
-            this.owner._dataSet = new wm.Variable();
-        }
-        this.owner._dataSet.setDataSet(this.owner.dataSet);
-        var newItem = {};
-        for (var fieldName in this.owner._dataSet._dataSchema) {
-            newItem[fieldName] = "";
-        }
-        this.owner._dataSet.addItem(newItem,0);
-        this.listSet.setDataSet(this.owner._dataSet);
+            if (!this.owner._dataSet) {
+                this.owner._dataSet = new wm.Variable();
+            }
+            this.owner._dataSet.setDataSet(this.owner.dataSet);
+            var newItem = {};
+            for (var fieldName in this.owner._dataSet._dataSchema) {
+                newItem[fieldName] = "";
+            }
+            this.owner._dataSet.addItem(newItem, 0);
+            this.listSet.setDataSet(this.owner._dataSet);
         } else {
-        this.listSet.setDataSet(this.owner.dataSet);
+            this.listSet.setDataSet(this.owner.dataSet);
         }
         /*
          this.listSet.setDataValue(this.owner.dataValue); // must be done after grid._render()
          this._cupdating = false;
          */
         // TODO: Need to preselect the current value!
-
         /* wm.onidle allows the dialog to render before populating the somewhat slow list */
         wm.onidle(this, function() {
-        this.listSet.setShowing(true);
-        this.listSet.grid._render();
-        this._cupdating = true;
-        this.listSet.grid._cupdating = true;
-        this.listSet.setDataValue(this.owner.dataValue);
-        this.listSet.grid._cupdating = false;
-        this._cupdating = false;
+            this.listSet.setShowing(true);
+            this.listSet.grid._render();
+            this._cupdating = true;
+            this.listSet.grid._cupdating = true;
+            this.listSet.setDataValue(this.owner.dataValue);
+            this.listSet.grid._cupdating = false;
+            this._cupdating = false;
         });
         this._opened = true;
         return true;
     }
-    });
+});
