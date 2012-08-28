@@ -301,7 +301,9 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
         if (this.inspected) {
             wm.Array.removeElement(r, this.inspected.getId());
         }
-        this.setOptions(r);
+        if (!wm.Array.equals(this.options,r)) {
+            this.setOptions(r);
+        }
     },
 
     getDataSets: function(inOwners, matchType) {
@@ -393,7 +395,9 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
             this.allowNone = false;
             options.unshift(this.emptyLabel);
         }
-        this.setOptions(options);
+        if (!wm.Array.equals(this.options,options)) {
+            this.setOptions(options);
+        }
     },
     setEditorValue: function(inValue) {
         if (!inValue && this.emptyLabel) {
@@ -481,7 +485,9 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
         } else {
         options = [];
         }
-    this.setOptions(options);
+        if (!wm.Array.equals(this.options,options)) {
+            this.setOptions(options);
+        }
     },
     getSchemaOptions: function(inSchema) {
         var result =  wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema, true);
