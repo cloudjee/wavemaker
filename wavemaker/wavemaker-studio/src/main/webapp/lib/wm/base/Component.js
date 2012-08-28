@@ -577,7 +577,11 @@ dojo.declare("wm.Component", wm.Object, {
 	    return item[1] != inEvent;
 	  });
 	},
-        findConnection: function(inEvent) {
+    disconnect: function(connectionObj) {
+        dojo.disconnect(connectionObj);
+        wm.Array.removeElement(this._connections, connectionObj);
+    },
+    findConnection: function(inEvent) {
 	    for (var i = 0; i < this._connections.length; i++) {
 		var con = this._connections[i];
 		if (con[1] == inEvent)
