@@ -43,6 +43,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (app && app.locationState && app.locationState[this.getRuntimeId()]) {
             this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
             this._locationState = app.locationState;
+            this._restoringLocationState = true;
         }
 
         if (!this.deferLoad || !this.isAncestorHidden()) this.loadPage(this._pageName);
@@ -274,12 +275,13 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (this.$.binding) this.$.binding.refresh(); // update all bound values
         }
 
-        if (this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
-        app.addHistory({id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
-                options: this._backState,
-                title: "Show " + this._pageName});
-        delete this._backState;
+        if (this._restoringLocationState || this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
+            app.addHistory({id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
+                    options: this._backState,
+                    title: "Show " + this._pageName});
+            delete this._backState;
         }
+        delete this._restoringLocationState;
     },
     handleBack: function(inOptions) {
     if (!inOptions.pageName || inOptions.pageName == this._pageName)
