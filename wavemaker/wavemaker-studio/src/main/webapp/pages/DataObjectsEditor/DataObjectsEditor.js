@@ -458,7 +458,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
 
         if (otherTypeNode == null) {
             entity.packageName = DEFAULT_PACKAGE_ROOT +
-                this.currentDataModelName + DATA_PACKAGE_NAME;
+                this.currentDataModelName.toLowerCase() + DATA_PACKAGE_NAME;
         } else {
             studio.dataService.requestSync(
                 "getEntityWithoutProperties",

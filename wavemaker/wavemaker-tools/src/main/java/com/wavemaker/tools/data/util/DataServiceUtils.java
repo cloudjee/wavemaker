@@ -208,7 +208,7 @@ public class DataServiceUtils {
     }
 
     public static String getDefaultPackage(String serviceName) {
-        return DataServiceConstants.DEFAULT_PACKAGE_ROOT + serviceName;
+        return DataServiceConstants.DEFAULT_PACKAGE_ROOT + serviceName.toLowerCase();
     }
 
     public static String getDefaultDataPackage(String serviceName) {
