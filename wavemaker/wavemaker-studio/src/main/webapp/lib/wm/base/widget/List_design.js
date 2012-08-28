@@ -125,7 +125,7 @@ wm.List.extend({
 
         /* Setup some default columns */
         if (typeIs && typeIs != typeWas) {
-            this.updateColumnData();
+            this.updateColumnData(false);
             this.renderDojoObj();
         }
     },
@@ -148,7 +148,7 @@ wm.List.extend({
     showMenuDialog: function(e) {
         if (!this.columns) {
             this.columns = [];
-            this.updateColumnData();
+            this.updateColumnData(false);
         }
         studio.gridDesignerDialog.show();
         studio.gridDesignerDialog.page.setGrid(this);
@@ -159,7 +159,7 @@ wm.List.extend({
         this.selectedItem.setIsList(inMode == "multiple");
         this._render();
     },
-    updateColumnData: function() {
+    updateColumnData: function(updating) {
         if (!dojo.isArray(this.columns)) {
             this.columns = [];
         }
@@ -206,7 +206,7 @@ wm.List.extend({
             }
 
             this.columns.push({
-                show: i < 15,
+                show: updating ? false : i < 15,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,

@@ -449,7 +449,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     _setDataFields: function(inDataFields) {
         if (!this.columns && this.dataSet) {
             if (this._isDesignLoaded) {
-                this.updateColumnData();
+                this.updateColumnData(false);
             } else {
                 this.convertToColumns();
             }
@@ -595,6 +595,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     // virtual binding target
     setDataSet: function(inDataSet) {
         try {
+            var oldDataSet = this.dataSet;
             if (!this.canSetDataSet(inDataSet)) this.dataSet = "";
             else this.dataSet = inDataSet;
             var t = (inDataSet || 0).type || "AnyData";
@@ -610,6 +611,14 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.scrollDownAddItems();
                 delete this._paging;
             } else {
+                 if (this._isDesignLoaded && this.columns && this.columns.length && inDataSet && inDataSet.type && (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type)) {
+                     if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
+                     this._typeChangedConnect = this.connect(this.dataSet, "typeChanged", this, function() {
+                         this.updateColumnData(true); // if the type changes for this.variable, reapply this variable's new type info
+                         this._render();
+                     });
+                     this.updateColumnData(true);
+                 }
                 this.setSelectedItemType(t);
                 this.dataSetToSelectedItem(inDataSet);
                 this.onsetdata(this.dataSet);
