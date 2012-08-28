@@ -198,7 +198,7 @@ dojo.declare("wm.Page", wm.Component, {
 		    var backState = this.owner ? this.owner._restoreBackState : undefined; // owner is PageContainer
 
 
-		    if (!window["studio"] || !studio.page || !this.isAncestor(studio.page)) {
+		    if (!window["studio"] || !studio.page || this != studio.page && !this.isAncestor(studio.page)) {
 			     this.start(backState, this.locationState);
 		    }
 		    if (this.debugId) {
