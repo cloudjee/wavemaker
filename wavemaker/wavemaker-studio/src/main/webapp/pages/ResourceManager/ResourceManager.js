@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 
 dojo.provide("wm.studio.pages.ResourceManager.ResourceManager");
@@ -41,8 +41,8 @@ dojo.declare("ResourceManager", wm.Page, {
     renameItem: function() {
         if (!this.selectedItem || this.selectedItem.isRoot()) return;
 
-        app.prompt(this.getDictionaryItem("PROMPT_NAME", {oldName: this.selectedItem.getItemName()}), 
-		   this.selectedItem.getItemName(), 
+        app.prompt(this.getDictionaryItem("PROMPT_NAME", {oldName: this.selectedItem.getItemName()}),
+		   this.selectedItem.getItemName(),
                    dojo.hitch(this.selectedItem, "setItemName"));
 /*
 	this.promptDialog.page.setTitle("Prompt: Rename");
@@ -87,7 +87,7 @@ dojo.declare("ResourceManager", wm.Page, {
     addNewFile: function() {
 	// add a reusable dialog box that takes only a FileUpload widget
 	this.doingFileUpdate =  false;
-	this.getAddFileDialog().show();	
+	this.getAddFileDialog().show();
     },
     updateItem: function() {
 	// add a reusable dialog box that takes only a FileUpload widget
@@ -194,7 +194,7 @@ dojo.declare("ResourceManager", wm.Page, {
         this.uploadButton._serviceVariable.input.setType("AnyData");
 
 	//this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
-	this.connect(studio, "projectChanged", this, function() {        
+	this.connect(studio, "projectChanged", this, function() {
 	    this.shortcutList.setDataValue("/webapproot/resources");
 	    this.onShortcutSelect(this.shortcutList);
         while (this.editorTabs.layers.length) this.editorTabs.layers[this.editorTabs.layers.length-1].destroy();
@@ -207,7 +207,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	//this.resourcesFolder.setHeight("100%");
 	//this.resourcesFolder.setMarginLeft(0);
 
-	//this.items = [["Folder", "A folder for your resources", "/wavemaker/images/resourceManagerIcons/folder16.png", "wm.FolderResourceItem"], 
+	//this.items = [["Folder", "A folder for your resources", "/wavemaker/images/resourceManagerIcons/folder16.png", "wm.FolderResourceItem"],
 		      /*
 		      ["Image", "A graphics resource file", "picture.png", "wm.ImageResourceItem"],
 		      ["JS Library", "A javascript resource file", "jscript.jpg", "wm.JSResourceItem"],
@@ -226,7 +226,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	//resourcePalette.setMoverRoot(this.resourcesFolder);
 	dojo.forEach(this.items,function(i) {
 	    var treeNode = resourcePalette.addItem(i[0],i[1],i[2],i[3]);
-	});	
+	});
 	*/
 
 	if (studio.application && studio.page) {
@@ -234,7 +234,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.onShortcutSelect(this.shortcutList);
 	}
     },
-    
+
     loadResources: function(optionalRoot) {
     	if (!studio.application) return;
 	var root;
@@ -254,8 +254,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.selectedItem = null;
 	var _this = this;
 	this._loadingResources = this._loadingResources ? this._loadingResources + 1 : 1;
-	this.getReadmeFile(root);
-	studio.resourceManagerService.requestAsync("getFolder", [root||""], 
+	studio.resourceManagerService.requestAsync("getFolder", [root||""],
                                                    function(rootfolder) {
 						       _this._loadingResources--;
 						       if (_this._loadingResources === 0) {
@@ -277,12 +276,12 @@ dojo.declare("ResourceManager", wm.Page, {
 	    this.getAddPromptDialog();
             */
 	this.showPropertiesPanel();
-	  
+
   },
     dragDropItem: function() {
       var moveNode = this.draggedItem;
       var moveItem   = moveNode.data;
-      
+
       var targetNode = this.dragger.target;
       if (!targetNode) {
 	return;
@@ -301,8 +300,8 @@ dojo.declare("ResourceManager", wm.Page, {
 	    return;
 	}
 	var _this = this;
-	studio.resourceManagerService.requestAsync("renameFile", 
-                                                   [moveItem.getFilePath(), targetItem.getFilePath() + "/" + moveItem.getItemName(), false], 
+	studio.resourceManagerService.requestAsync("renameFile",
+                                                   [moveItem.getFilePath(), targetItem.getFilePath() + "/" + moveItem.getItemName(), false],
 						   function(response) {
 						     try {
 						       if (!response) {
@@ -324,7 +323,7 @@ dojo.declare("ResourceManager", wm.Page, {
 						       _this.loadResources(true);
 						     }
 						   },
-                                                   dojo.hitch(app, "toastWarning"));	
+                                                   dojo.hitch(app, "toastWarning"));
     },
     /*
 
@@ -339,8 +338,8 @@ dojo.declare("ResourceManager", wm.Page, {
 	var root = this.tree.root.kids[0].data;
 	var rootPath = root.rootPath;
 	var tree = this.tree;
-		     studio.resourceManagerService.requestAsync("getFolder", [rootPath||""], 
-					     function(rootfolder) { 
+		     studio.resourceManagerService.requestAsync("getFolder", [rootPath||""],
+					     function(rootfolder) {
 					       var openFolderHash;
 					       if (keepOpenFolders && _this.resourcesFolder) {
 						   tree.openFolderHash = {isOpen: true, children: _this.resourcesFolder.buildOpenFolderStateHash()};
@@ -358,7 +357,7 @@ dojo.declare("ResourceManager", wm.Page, {
 								function(inError) {
                                                                     this.reportError(inError);
 								});
-     
+
 	if (this.resourcesFolder) {
 	    this.selectedItem = null;
 	    this.draggedItem = null;
@@ -399,24 +398,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	}
 	return false;
     },
-    getReadmeFile: function(inFolderPath) {
-	studio.resourceManagerService.requestAsync("readFile", [inFolderPath + "/Readme.txt"], 
-						   dojo.hitch(this, function(inResult) {
-						       if (inResult) {
-							   this.readmeHtml.show();
-							   this.splitter2.show();
-							   inResult = inResult.replace(/\n/g,"<br/>");						       
-							   this.readmeHtml.setHtml(inFolderPath + "/Readme.txt:<br/><div class='README'>" + inResult + "</README>");
-						       } else {
-							   this.readmeHtml.hide();							   
-							   this.splitter2.hide();
-						       }
-						   }),
-						   dojo.hitch(this, function() {
-							   this.readmeHtml.hide();							   
-							   this.splitter2.hide();
-						   }));	    
-    },
+
     itemSelected: function() {
         this.selectedItem = this.tree.selected.data;
         this.updateToolbar();
@@ -430,7 +412,6 @@ dojo.declare("ResourceManager", wm.Page, {
                 path: folder.getFilePath()
             }
         });
-        this.getReadmeFile(folder.getFilePath());
 
 
 
@@ -446,7 +427,6 @@ dojo.declare("ResourceManager", wm.Page, {
             page.setItem(this.selectedItem);
             this.editorTabs.reflow();
             layer.customCloseOrDestroy = dojo.hitch(this, "closeEditor", layer);
-            if (this.readmeHtml.bounds.h > 70) this.readmeHtml.setHeight("70px");
         }
     },
     closeEditor: function(inLayer) {
@@ -466,7 +446,7 @@ dojo.declare("ResourceManager", wm.Page, {
                     this.editorClosed();
                 }),
                 function() {}, !inLayer.isDirty);
-        
+
     },
     editorClosed: function() {
 	if (this.editorTabs.layers.length == 0) {
@@ -530,10 +510,10 @@ dojo.declare("ResourceManager", wm.Page, {
 			  padding: "0,0,0,20",
 			  width: "100%",
 			  height: "48px"});
-	    this.selectedItem.addCustomDataToPropertiesPanel(this.propertiesPanel);	    
+	    this.selectedItem.addCustomDataToPropertiesPanel(this.propertiesPanel);
 	}
 	this.propertiesPanel.reflow();
-    },    
+    },
     updateToolbar: function() {
       if (this.selectedItem == null) {
 	this.resourcesFileToolBar.hide();
@@ -648,7 +628,7 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 		this.inherited(arguments);
 		// calc a target rect
 		var r = { l: this.pxp - this.rootOffset.x, t: this.pyp - this.rootOffset.y, w:0, h: 0};
-					   
+
 		// locate target
 		this.findTarget(r);
 	},
@@ -662,12 +642,12 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 		if (this.target && this.target.data instanceof wm.FolderResourceItem) {
 			this.setCursor("default");
 			this.targetNode = this.target.domNode;
-			dojo.query(".dndHover").removeClass("dndHover");		  
-			dojo.addClass(this.target.domNode, "dndHover");		  
+			dojo.query(".dndHover").removeClass("dndHover");
+			dojo.addClass(this.target.domNode, "dndHover");
 		} else {
 			this.setCursor("no-drop");
 			this.targetNode = null;
-			dojo.query(".dndHover").removeClass("dndHover");		  
+			dojo.query(".dndHover").removeClass("dndHover");
 		}
 		/*
 		if (this.target && this.target.layout.renderEdges) {
@@ -677,21 +657,21 @@ dojo.declare("wm.ResourceMover", wm.DragDropper, {
 		this.updateAvatar();
 	},
 	updateAvatar: function() {
-	  this.showHideAvatar(Boolean(this.target));	  
+	  this.showHideAvatar(Boolean(this.target));
 	  if (this.target) {
 	    var dn = this.target.data.getItemName();
 	      this.setAvatarContent(studio.resourcesPage.page.getDictionaryItem("AVATAR_DROP", {caption: this.info.caption, target: dn}));
 	  }
 	},
 
-	findTarget: function(inHit) {	 
+	findTarget: function(inHit) {
 		var t;
 
 		if (this.targetInRoot(inHit)) {
 			t = this._findTarget(inHit, this.root);
 		} else
 		  t = null;
-		if (t == this.manager.draggedItem) 
+		if (t == this.manager.draggedItem)
 		  t = null;
 		if (t != this.target) {
 		  //console.log("SET TARGET TO " + ((t==null) ? "NULL" : t.data.getItemName()));
@@ -735,7 +715,7 @@ wm.ResourceItem.extend({
 					     app.toastError(self.getDictionaryItem("EDITS_FAILED"));
 					     this.loadResourcesData(true);
 					 })
-					 					 
+
 					);
     },
 
@@ -748,7 +728,7 @@ wm.ResourceItem.extend({
 	studio.resourceManagerService.requestAsync("moveNewFile", [uploadedName, this.buildFilePath(newName), !isNewFile],
 						   function(result) {
 						     try {
-						       _this.finishFileUploadOnSuccess(result,isNewFile); 
+						       _this.finishFileUploadOnSuccess(result,isNewFile);
 						       manager.updateModifiedDate();
 						     } catch(e) {
 						       console.error("Setup of new file Failed:" + e);
@@ -756,11 +736,11 @@ wm.ResourceItem.extend({
 						     }
 						   },
                                                    dojo.hitch(app, "toastWarning"));
-	
+
     },
     // mostly this verifies the result of the upload rename op and
-    // then shows properties.  
-    finishFileUploadOnSuccess: function(result,isNewFile) {  
+    // then shows properties.
+    finishFileUploadOnSuccess: function(result,isNewFile) {
 	if (!result) {
 	    app.alert(bundleStudio.R_FailedToPlaceFile);
 	    return;
@@ -783,7 +763,7 @@ wm.ResourceItem.extend({
       if (!possibleParent || !possibleParent.treeNode) return false;
       if (possibleParent.treeNode == root) return true;
 
-      var possibleParentNode = possibleParent.treeNode;      
+      var possibleParentNode = possibleParent.treeNode;
       var parent = thisNode;
       while (parent.parent  && parent.parent != root  && parent != possibleParentNode)
 	parent = parent.parent;
@@ -815,7 +795,7 @@ wm.ResourceItem.extend({
                     dojo.hitch(this, function() {
 
 	                studio.resourceManagerService.requestAsync("deleteFile", [ this.getFilePath()],
-                             dojo.hitch(this, function(result) { 
+                             dojo.hitch(this, function(result) {
 		                 try {
 		                     if (!result) {
 			                 app.alert(studio.resourcesPage.page.getDictionaryItem("ALERT_DELETE_FAILED", {fileName: this.getItemName()}));
@@ -857,9 +837,9 @@ wm.ResourceItem.extend({
 						     } catch(e) {
 						       console.error("Renmame Failed:" + e);
 						       _this.loadResourcesData(true);
-						     }						     
+						     }
 						   },
-                                                   dojo.hitch(app, "toastWarning"));	
+                                                   dojo.hitch(app, "toastWarning"));
     },
 
 
@@ -897,7 +877,7 @@ wm.ImageResourceItem.extend({
 			    source:   this.getItemPath(),
 			  padding: "0,0,0,20",
 			  width: "100%",
-			  height: "100%"});      
+			  height: "100%"});
     }
 });
 
@@ -918,9 +898,9 @@ wm.ZipResourceItem.extend({
 						     } catch(e) {
 						       console.error("Unzip Failed:" + e);
 						       _this.loadResourcesData(true);
-						     }											     
+						     }
 						   },
-                                                   dojo.hitch(app, "toastWarning"));	
+                                                   dojo.hitch(app, "toastWarning"));
     }
 });
 
@@ -933,7 +913,7 @@ wm.JarResourceItem.extend({
 					    name: "inClassPathCheckbox",
 					    width: "120px",
 					    captionSize: "100px",
-					    height: "28px",			
+					    height: "28px",
 					       startChecked: this.isInClassPath,
 					       parent: propertiesPanel,
 					       owner: studio.resourcesPage.page});
@@ -944,7 +924,7 @@ wm.JarResourceItem.extend({
     changeIsClassPath: function(inDisplayValue, inDataValue) {
       var isChecked = this.checkbox.getChecked();
       var _this = this;
-      studio.resourceManagerService.requestAsync("changeClassPath", [ this.getFilePath(), isChecked],	
+      studio.resourceManagerService.requestAsync("changeClassPath", [ this.getFilePath(), isChecked],
 						       function(result) {
 							   if (!result) {
 							     if (isChecked)
@@ -979,7 +959,7 @@ wm.FolderResourceItem.extend({
 	newFolder.treeNode.data = newFolder;
       manager.setSelectedItem(newFolder);
       newFolder.mkdir();
-      
+
     },
     addNewFile: function(inName) {
       var manager = studio.resourcesPage.getComponent("resourceManager");
@@ -1039,7 +1019,7 @@ wm.FolderResourceItem.extend({
 						       _this.loadResourcesData(true);
 						     }
 						       },
-                                                   dojo.hitch(app, "toastWarning"));	
+                                                   dojo.hitch(app, "toastWarning"));
 
     },
 

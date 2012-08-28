@@ -68,9 +68,7 @@ ResourceManager.widgets = {
 		}],
 		splitter: ["wm.Splitter", {}],
 	    rightPanel: ["wm.Panel", {width: "100%", height: "100%",layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-		readmeHtml: ["wm.Html", {width: "100%", height: "120px"}],
-		splitter2: ["wm.Splitter", {}],
-		editorTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, showing: false, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB"},{onCloseOrDestroy: "editorClosed"}]
+		  editorTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers"]}, showing: false, width: "100%", height: "100%", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB"},{onCloseOrDestroy: "editorClosed"}]
 		}]
 	    }]
     }]
