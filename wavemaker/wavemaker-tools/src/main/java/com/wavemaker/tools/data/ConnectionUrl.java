@@ -2,10 +2,7 @@
 package com.wavemaker.tools.data;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.io.local.LocalFolder;
@@ -26,12 +23,18 @@ public final class ConnectionUrl {
     }
 
     public Properties rewriteProperties(Properties properties) {
+        Properties newProps = new Properties();
+        Enumeration keys = properties.propertyNames();
+        for (;keys.hasMoreElements();) {
+            String key = (String)keys.nextElement();
+            newProps.setProperty(key, properties.getProperty(key));
+        }
         if (isHsqldb()) {
             String hsqldbFileName = extractHsqlDBFileName();
-            properties.setProperty(HSQLFILE_PROP, hsqldbFileName);
-            properties.setProperty(DataServiceConstants.DB_URL_KEY, rewrite(DataServiceConstants.WEB_ROOT_TOKEN + "/data"));
+            newProps.setProperty(HSQLFILE_PROP, hsqldbFileName);
+            newProps.setProperty(DataServiceConstants.DB_URL_KEY, rewrite(DataServiceConstants.WEB_ROOT_TOKEN + "/data"));
         }
-        return properties;
+        return newProps;
     }
 
     private String extractHsqlDBFileName() {
