@@ -729,7 +729,6 @@ public class DataModelManager {
             throw new IllegalArgumentException("package must be set");
         }
 
-        packageName = packageName.toLowerCase();
         if (packageName.endsWith(".")) {
             if (packageName.length() == 1) {
                 throw new IllegalArgumentException("illegal package name " + packageName);
