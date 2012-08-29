@@ -133,7 +133,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
              * when scrolled into view
              */
             if (wm.isEmpty(this.getRow(rowIndex))) {
-                this.dojoObj.scrollToRow(rowIndex);
+                this.scrollToRow(rowIndex);
+
                 wm.onidle(this, function() {
                     this.setSelectedRow(rowIndex);
                     if (onSuccess) onSuccess();
@@ -144,7 +145,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     this.onSelectionChange();
                     this.onSelect();
                 }
-                this.dojoObj.scrollToRow(rowIndex);
+                this.scrollToRow(rowIndex);
+
                 if (onSuccess) onSuccess();
             }
         } else {
@@ -153,6 +155,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.onDeselect();
         }
 
+    },
+    scrollToRow: function(inRow) {
+        if (this.dojoObj && (this.dojoObj.scroller.firstVisibleRow > inRow || this.dojoObj.scroller.lastVisibleRow < inRow)) {
+            this.dojoObj.scrollToRow(inRow);
+        }
     },
     setSelectedItem: function(inData) {
         if (inData instanceof wm.Variable) inData = inData.getData();
@@ -200,7 +207,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     }
 
                     this._setRowTimeout = setTimeout(function() {
-                        _this.dojoObj.scrollToRow(idx);
+                        _this.scrollToRow(idx);
                         wm.onidle(_this, function() {
                             this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
                             try {
