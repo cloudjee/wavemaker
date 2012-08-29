@@ -875,22 +875,28 @@ dojo.declare("wm.Application", wm.Component, {
         if (cookie) return false;
         wm.require("wm.Checkbox");
         this.alert(inAlertText);
-        var c = new wm.Checkbox({
-            owner: this.alertDialog,
-            parent: this.alertDialog.containerWidget.c$[0],
-            margin: "10,0,0,0",
-            height: "30px",
-            width: "100%",
-            caption: "Don't warn again",
-            captionPosition: "right",
-            captionAlign: "left",
-            captionSize: "100%"
-        });
-        this.alertDialog.connectOnce(this.alertDialog, "onClose", this, function() {
-            if (c.getChecked()) dojo.cookie(inCookieName, true);
-            c.destroy();
-        });
+        if (!this._warnOnceCheckbox) {
+            this._warnOnceCheckbox = new wm.Checkbox({
+                owner: this.alertDialog,
+                parent: this.alertDialog.containerWidget.c$[0],
+                margin: "10,0,0,0",
+                height: "30px",
+                width: "100%",
+                caption: "Don't warn again",
+                captionPosition: "right",
+                captionAlign: "left",
+                captionSize: "100%"
+            });
+        }
+        if (this._warnOnceConnect) this.disconnect(this._warnOnceConnect);
+        this._warnOnceConnect = this.alertDialog.connectOnce(this.alertDialog, "onClose", dojo.hitch(this, "_cleanupWarnOnce", inCookieName));
         return true;
+    },
+    _cleanupWarnOnce: function(inCookieName) {
+            if (this._warnOnceCheckbox.getChecked()) dojo.cookie(inCookieName, true);
+            this._warnOnceCheckbox.destroy();
+            delete this._warnOnceCheckbox;
+            delete this._warnOnceConnect;
     },
     alert: function(inText, nonmodal) {
         if (!this.alertDialog) {

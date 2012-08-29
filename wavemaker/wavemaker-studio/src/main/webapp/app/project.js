@@ -1188,8 +1188,22 @@ dojo.declare("wm.studio.Project", null, {
     },
     getDirty: function() {return studio.updateProjectDirty();},
     getDictionaryItem: function() {
-    studio.getDictionaryItem(arguments);
-    }
+        studio.getDictionaryItem(arguments);
+    },
+    errorCheck: function() {
+        try {
+            var errors = [];
+            wm.forEachProperty(studio.page.$, function(w) {
+                var e = w._errorCheck();
+                if (e) errors = errors.concat(e);
+            });
+            studio.warningsListVar.setData(errors);
+            studio.warningsButton.setShowing(errors.length);
+            if (errors.length) {
+                studio.statusBarLabel.setCaption("Errors were found");
+            }
+        } catch(e) {}
+    },
 });
 
 //=========================================================================
@@ -1726,6 +1740,7 @@ Studio.extend({
     } else {
         app.toastSuccess(this.getDictionaryItem("TOAST_SAVE_PROJECT_SUCCESS"));
         this.saveProjectSuccess();
+        this.project.errorCheck();
     }
     var activeLayer = this.tabs.getActiveLayer();
     while (activeLayer.c$[0] instanceof wm.Layers)

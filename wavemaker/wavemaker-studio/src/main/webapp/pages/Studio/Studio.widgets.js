@@ -52,7 +52,7 @@ Studio.widgets = {
 	"com.wavemaker.editor.completions.params":      ["wm.TypeDefinitionField", {fieldType: "String", fieldName: "params"}]
     }],
 
-
+    warningsListVar: ["wm.Variable", {type: "EntryData", isList: true}],
     autoCompletionVariable: ["wm.Variable", {type: "com.wavemaker.editor.completions", isList: true}],
 	studioService: ["wm.JsonRpcService", {service: "studioService", sync: true}, {}],
 	phoneGapService: ["wm.JsonRpcService", {service: "phoneGapService", sync: true}, {}],
@@ -467,8 +467,9 @@ height: "29px", width: "420px",
                     }],
 				    benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {
-							statusBarLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "100%", caption: ""}],
-							status: ["wm.JsonStatus", {iconWidth: "26", height: "100%", border: "0, 0, 0, 1", borderColor: "#666E80", width: "300px"}, {}]
+                                warningsButton: ["wm.studio.ToolbarButton", {showing: false, iconUrl: "lib/images/boolean/Signage/Caution.png", hint: "Click for details on errors in your project"}, {onclick: "showProjectDesignWarnings"}],
+    							statusBarLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "100%", caption: ""}],
+    							status: ["wm.JsonStatus", {iconWidth: "26", height: "100%", border: "0, 0, 0, 1", borderColor: "#666E80", width: "300px"}, {}]
 						    }]
 						}]
 
