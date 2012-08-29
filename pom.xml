@@ -197,6 +197,12 @@
 				<groupId>com.sun.xml.fastinfoset</groupId>
 				<artifactId>FastInfoset</artifactId>
 				<version>1.2.9</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.xml</groupId>
+						<artifactId>jsr173</artifactId>
+					</exclusion>
+				</exclusions>				
 			</dependency>
 			<dependency>
 				<groupId>com.sun.xml.messaging.saaj</groupId>
