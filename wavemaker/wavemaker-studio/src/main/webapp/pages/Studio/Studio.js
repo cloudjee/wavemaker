@@ -2136,11 +2136,21 @@ dojo.declare("Studio", wm.Page, {
         window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "MobileDevelopment");
     },
     browserZoomed: function() {
-    var isZoomed = Boolean(app._currentZoomLevel);
-    this.editAreaZoomWarningLabel.setShowing(isZoomed);
-    this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
-    this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
-    this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
+        var isZoomed = Boolean(app._currentZoomLevel);
+        this.editAreaZoomWarningLabel.setShowing(isZoomed);
+        this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
+        this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
+        this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
+    },
+    showProjectDesignWarnings: function(inSender, inEvent) {
+
+        var text = "The following errors were found in your project<ul>";
+        this.warningsListVar.forEach(function(item) {
+            text += "<li>" + item.getValue("name") + "</li>";
+        });
+        text += "</ul>";
+
+        app.alert(text);
     }
 });
 

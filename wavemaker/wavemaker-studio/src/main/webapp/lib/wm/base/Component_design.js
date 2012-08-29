@@ -57,6 +57,7 @@ wm.Object.extendSchema(wm.Component, {
 //=======================================================
 wm.Component.extend({
     themeable: false,
+    _errorCheck: function() {return null;},
     designCreate: function() {
         this.eventBindings = {};
         this.referenceProps = {};

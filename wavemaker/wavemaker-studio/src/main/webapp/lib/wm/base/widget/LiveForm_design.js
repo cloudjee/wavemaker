@@ -81,6 +81,33 @@ wm.LiveFormBase.extend({
 	designPasted: function() {
 		this._checkBindings();
 	},
+
+    _errorCheck: function() {
+        var editors = this.getEditorsArray();
+        var relatedEditors = this.getRelatedEditorsArray();
+        var all = editors.concat(relatedEditors);
+
+        var typeDef = this.dataSet ? wm.typeManager.getType(this.dataSet.type) : null;
+        var formFields = {};
+        var errors = [];
+        dojo.forEach(all, function(e) {
+            var formField = e.formField;
+            if (formField) {
+                if (formFields[formField]) {
+                    errors.push({name: this.name + " has multiple editors with formField = " + formField, dataValue: this.name});
+                } else {
+                    formFields[formField] = e;
+                }
+                if (typeDef) {
+                    if (!typeDef.fields[formField]) {
+                        errors.push({name: e.name + " has an invalid formField \"" + formField + "\" for type \"" + this.dataSet.type + "\"", dataValue: e.name});
+                    }
+                }
+            }
+        }, this);
+        return errors;
+    },
+
 	//===========================================================================
 	// Property management
 	//===========================================================================
@@ -96,7 +123,7 @@ wm.LiveFormBase.extend({
 	set_dataSet: function(inDataSet) {
 		if (inDataSet instanceof wm.Variable) {
 		    this.setDataSet(inDataSet);
-		    
+
 		    if (this.canAddEditors(inDataSet)) {
 			this.addEditors();
 		    }
@@ -131,7 +158,7 @@ wm.LiveFormBase.extend({
 	},
 	removeEditors: function() {
 		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
-			    false, 
+			    false,
 			    dojo.hitch(this, "_removeEditors"));
 	},
     _removeEditors: function() {
@@ -304,7 +331,7 @@ wm.LiveFormBase.extend({
 		if (e) {
 		    if (e.parent.horizontalAlign != "justified")
 			    e.setWidth(this.editorWidth);
-                        else 
+                        else
                             e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 		    if (studio.currentDevice == "desktop") {
 			e.setHeight(this.editorHeight);
@@ -476,12 +503,12 @@ wm.LiveFormBase.extend({
 	},
         setName: function(inName) {
             var editPanel = this.getEditPanel();
-	    if (!editPanel) 
+	    if (!editPanel)
 		return this.inherited(arguments);
             if (!editPanel.isCustomized && editPanel.lock) {
                 this.setName2(inName);
             } else {
-                app.confirm(studio.getDictionaryItem("wm.LiveForm.SET_NAME_CONFIRM"), false, 
+                app.confirm(studio.getDictionaryItem("wm.LiveForm.SET_NAME_CONFIRM"), false,
                             dojo.hitch(this, function() {
                                 this.setName2(inName);
                                 studio.inspector.reinspect();
@@ -495,15 +522,15 @@ wm.LiveFormBase.extend({
             wm.Container.prototype.setName.call(this, inName);
             var editPanel = this.getEditPanel();
             if (editPanel) {
-                editPanel.destroy(); 
-                this.addEditPanel();                
+                editPanel.destroy();
+                this.addEditPanel();
             }
         },
 
     generateButtons: function() {
 	if (!this._generateButtonsDialog) {
-	    var dialog = 
-		this._generateButtonsDialog = 
+	    var dialog =
+		this._generateButtonsDialog =
 		new wm.GenericDialog({modal: true,
 				      footerBorder: "0",
 				      title: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_TITLE"),
@@ -527,14 +554,14 @@ wm.LiveFormBase.extend({
 	    });
 
 	    dialog.connect(dialog, "onButton2Click", this, function() {
-		var panel = this.owner.loadComponent(this.name + "ButtonPanel", this, "wm.Panel", 
+		var panel = this.owner.loadComponent(this.name + "ButtonPanel", this, "wm.Panel",
 						 {height: wm.Button.prototype.height,
 						  mobileHeight: wm.Button.prototype.mobileHeight,
 						  enableTouchHeight: true,
 						  layoutKind: "left-to-right",
 						  verticalAlign: "top",
-						  horizontalAlign: "right",						  
-						  width: "100%"});		
+						  horizontalAlign: "right",
+						  width: "100%"});
 
 		/* Generate a save button that is only enabled if data is valid and calls saveDataIfValid */
 		var saveButton = this.saveButton = new wm.Button({owner: studio.page,
@@ -586,7 +613,7 @@ wm.LiveFormBase.extend({
 
 	}
 	    this._generateButtonsDialog.show();
-	
+
 	},
 	getFormSubDataSetNames: function(inForm) {
 		var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
@@ -614,7 +641,7 @@ wm.Object.extendSchema(wm.LiveForm, {
     /* Editor group; behavior subgroup */
     liveEditing:    {group: "widgetName", subgroup: "behavior", order: 5, type: "Boolean"},
     alwaysPopulateEditors: {group: "widgetName", subgroup: "behavior", order: 4, type: "Boolean"},
-    operation:      {group: "widgetName", subgroup: "behavior", order: 10, options: ["insert", "update", "delete"], type: "String", advanced:1},     
+    operation:      {group: "widgetName", subgroup: "behavior", order: 10, options: ["insert", "update", "delete"], type: "String", advanced:1},
     saveOnEnterKey: {group: "widgetName", subgroup: "behavior", order: 20, type: "Boolean", advanced:1},
     confirmDelete:  {group: "widgetName", subgroup: "confirmation", order: 30, advanced:1},
 
@@ -703,7 +730,7 @@ wm.LiveForm.extend({
             var e = this.getEditPanel();
             if (e)
                 e.destroy();
-            if (inStyle != "none") 
+            if (inStyle != "none")
                 this.addEditPanel();
             else
                 this.reflow();
@@ -772,7 +799,7 @@ wm.LiveForm.extend({
 			if (e.formField == ff)
 				return true;
 		}
-		
+
 		var arr = this.getFormEditorsArray() || [];
 		for(var i = 0; i < arr.length; i++){
 			var e = arr[i];

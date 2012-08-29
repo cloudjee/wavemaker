@@ -81,7 +81,7 @@ wm.FormPanel.extend({
 
     removeEditors: function() {
 		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
-			    false, 
+			    false,
 			    dojo.hitch(this, "_removeEditors"));
     },
     _removeEditors: function() {
@@ -115,8 +115,8 @@ wm.FormPanel.extend({
 
     /****************
      * METHOD: makeEditors (DESIGNTIME)
-     * DESCRIPTION: 1. Iterate over each editor that is no longer needed (it has a formField that isn't in the new type) 
-     *                 and destroy it. 
+     * DESCRIPTION: 1. Iterate over each editor that is no longer needed (it has a formField that isn't in the new type)
+     *                 and destroy it.
      *              2. Iterate over each field of the new type and generate an editor if there isn't one already
      ***************/
     getTypeDef: function() {
@@ -153,7 +153,7 @@ wm.FormPanel.extend({
 		this.isCompositeKey = dataSource == "compositeKey";
 		/* If its a composite key, see if there are any foreign keys, and change their types from int/string to the type of the foreign object */
 		if (dataSource == "compositeKey") {
-		    
+
 		    var def = studio.dataService.requestSync("getRelated", [service, parentForm.type.replace(/^.*\./,"")]);
 		    def.addCallback(dojo.hitch(this, function(inData) {
 			var relationshipsToDelete = [];
@@ -190,7 +190,7 @@ wm.FormPanel.extend({
 
 		}
 	    }
-	    
+
 
 	    var editors = this.getEditorsArray();
 
@@ -206,7 +206,7 @@ wm.FormPanel.extend({
 			var e = this.makeEditor(fieldDef, fieldName);
 			if (e instanceof wm.Lookup && dataSource == "compositeKey") {
 			    e.dataField = e.formField;
-			    e.dataType = fieldDef.type; 
+			    e.dataType = fieldDef.type;
 			    e.relationshipName = fieldDef.relationshipName; // TODO: If the user changes formField on this editor, the relationshipName won't by in sync, and the project will break
 			}
 		    }
@@ -279,12 +279,12 @@ wm.FormPanel.extend({
 		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
 		/* don't automatically add grids
 		    props.editingMode = "readonly";
-		    var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);		
+		    var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);
 		e.set_type(fieldDef.type);
 		*/
-	    } 
+	    }
 
-	    /* Anything else, and  just get an editable subform for lack of a better idea */ 
+	    /* Anything else, and  just get an editable subform for lack of a better idea */
 	    else {
 		props.editingMode = "one-to-one";
 		props.subFormOnly = this.subFormOnly;
@@ -305,7 +305,7 @@ wm.FormPanel.extend({
      ***************/
 	createEditor: function(inFieldInfo, inProps, inEvents, inClass) {
 		var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
-		if (e) {		    
+		if (e) {
 		    this.placeEditor(e);
 		    if (wm.isInstanceType(e, wm.Number) || wm.isInstanceType(e, wm.Date) ||  wm.isInstanceType(e, wm.DateTime)) {
 			e.emptyValue = "zero";
@@ -315,7 +315,7 @@ wm.FormPanel.extend({
 
 		    if (e.parent.horizontalAlign != "justified")
 			e.setWidth(this.editorWidth);
-                    else 
+                    else
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 
 		    if (studio.currentDeviceType == "desktop") {
@@ -341,7 +341,7 @@ wm.FormPanel.extend({
 			    if (editors[i] != inEditor) {
 				var parent = editors[i].parent;
 				if (parent != inEditor.parent) {
-				    inEditor.setParent(parent);				
+				    inEditor.setParent(parent);
 				}
 				parent.moveControl(inEditor,i+1);
 				break;
@@ -417,7 +417,7 @@ wm.Object.extendSchema(wm.DataForm, {
     /* Ignored group */
     isCompositeKey: {hidden:1},
     noDataSet: {ignore: 1, bindSource: 1}
-    
+
 });
 
 wm.Object.extendSchema(wm.DBForm, {
@@ -473,7 +473,7 @@ wm.Object.extendSchema(wm.DBForm, {
 wm.DataForm.extend({
     /****************
      * METHODS: afterPaletteDrop
-     * DESCRIPTION:  Setup onEnterKeyPress event handler 
+     * DESCRIPTION:  Setup onEnterKeyPress event handler
      ***************/
     afterPaletteDrop: function() {
 	this.inherited(arguments);
@@ -483,6 +483,31 @@ wm.DataForm.extend({
         if (wm.isInstanceType(inWidget, wm.LiveFormBase)) {
             app.alert("Using a " + inWidget.declaredClass + " in a DataForm is not supported.  Please use a wm.SubForm, wm.OneToMany or wm.Lookup instead");
         }
+    },
+    _errorCheck: function() {
+        var editors = this.getEditorsArray();
+        var relatedEditors = this.getRelatedEditorsArray();
+        var all = editors.concat(relatedEditors);
+
+        var typeDef = this.dataSet ? wm.typeManager.getType(this.dataSet.type) : null;
+        var formFields = {};
+        var errors = [];
+        dojo.forEach(all, function(e) {
+            var formField = e.formField;
+            if (formField) {
+                if (formFields[formField]) {
+                    errors.push({name: this.name + " has multiple editors with formField = " + formField, dataValue: this.name});
+                } else {
+                    formFields[formField] = e;
+                }
+                if (typeDef) {
+                    if (!typeDef.fields[formField]) {
+                        errors.push({name: e.name + " has an invalid formField \"" + formField + "\" for type \"" + this.dataSet.type + "\"", dataValue: e.name});
+                    }
+                }
+            }
+        }, this);
+        return errors;
     },
     /****************
      * METHOD: set_type (DESIGN)
@@ -501,7 +526,7 @@ wm.DataForm.extend({
 
     /****************
      * METHOD: set_dataSet (DESIGN)
-     * DESCRIPTION: 
+     * DESCRIPTION:
      *       1. Takes in a name of a variable and creates a binding from that variable to our dataSet property.
      *          The binding then immediately calls set_dataSet(wm.Variable).
      *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
@@ -564,7 +589,7 @@ wm.DataForm.extend({
     reformatForOneToManyEditors: function() {
 	var eds = this.getOneToManyEditorsArray();
 	if (!eds.length) return;
-	
+
 	// If there is a FormPanel within this form, then we've already been through this...
 	var panels = this.getFormPanelsArray();
 	if (panels.length) return;
@@ -637,7 +662,7 @@ wm.DataForm.extend({
      *              Finish by updating the model.
      ***************/
 	finishAddEditors: function() {
-	    var eds = this.getEditorsArray();		
+	    var eds = this.getEditorsArray();
 	    if (!this.generateInputBindings) {
 		this.populateEditors();
 	    }
@@ -956,7 +981,7 @@ wm.DBForm.extend({
 
     listProperties: function() {
 	var props = this.inherited(arguments);
-	props.dataSet.ignoretmp = this.formBehavior == "insertOnly";	
+	props.dataSet.ignoretmp = this.formBehavior == "insertOnly";
 	return props;
     },
 
@@ -1015,7 +1040,7 @@ wm.DBForm.extend({
 	editButton.eventBindings.onclick = this.name + ".editCurrentObject";
 	editButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
 	this.$.binding.addWire(null, "editButton", editButton.getId(), "");
-	
+
 	if (!noRefresh) {
 	    buttonPanel.reflow();
 	    studio.refreshDesignTrees();
@@ -1032,7 +1057,7 @@ wm.DBForm.extend({
 	deleteButton.eventBindings.onclick = this.name + ".deleteData";
 	deleteButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
 	this.$.binding.addWire(null, "deleteButton", deleteButton.getId(), "");
-	
+
 	if (!noRefresh) {
 	    buttonPanel.reflow();
 	    studio.refreshDesignTrees();
@@ -1051,7 +1076,7 @@ wm.DBForm.extend({
 	saveButton.$.binding.addWire(null, "disabled", "", "\${" + this.name + ".invalid} || !\${" + this.name + ".isDirty}");
 	this.$.binding.addWire(null, "saveButton", saveButton.getId(), "");
 
-	
+
 	if (!noRefresh) {
 	    buttonPanel.reflow();
 	    studio.refreshDesignTrees();
@@ -1070,7 +1095,7 @@ wm.DBForm.extend({
 	resetButton.$.binding.addWire(null, "disabled", "", "!\${" + this.name + ".isDirty}");
 	this.$.binding.addWire(null, "resetButton", resetButton.getId(), "");
 
-	
+
 	if (!noRefresh) {
 	    buttonPanel.reflow();
 	    studio.refreshDesignTrees();
@@ -1099,13 +1124,13 @@ wm.DBForm.extend({
 	    }
 	    if (this.formBehavior == "standard") {
 		this.generateDeleteButton(buttonPanel,true);
-	    }	    
+	    }
 	    this.generateCancelButton(buttonPanel, true);
 	    this.generateSaveButton(buttonPanel, true);
 	} else {
 	    if (this.formBehavior == "standard") {
 		this.generateDeleteButton(buttonPanel,true);
-	    }	    
+	    }
 	    if (this.formBehavior == "standard") {
 		this.generateNewButton(buttonPanel, true);
 	    }
@@ -1129,7 +1154,7 @@ wm.ServiceForm.extend({
 
     /****************
      * METHOD: set_dataSet (DESIGN)
-     * DESCRIPTION: 
+     * DESCRIPTION:
      *       1. Takes in a name of a variable and creates a binding from that variable to our dataSet property.
      *          The binding then immediately calls set_dataSet(wm.Variable).
      *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
@@ -1212,7 +1237,7 @@ wm.SubForm.extend({
 		if (ff && ff != '')
 		    this.set_formField(ff);
 	    }
-	    	
+
 	},
 	getUniqueFormField: function(){
 			var lf = wm.getParentForm(this);
@@ -1225,7 +1250,7 @@ wm.SubForm.extend({
 				if (!lf.isFormFieldInForm(arr[i]))
 					return arr[i];
 			}
-			
+
 			return arr[1];
 	},
 	set_formField: function(inFieldName) {
@@ -1290,7 +1315,7 @@ wm.Object.extendSchema(wm.ServiceInputForm, {
     onCancelEdit: {ignore: 1},
 
     serviceVariable: { readonly: 1, group: "widgetName", subgroup: "data", requiredGroup:1, order: 5, bindTarget: 1, type: "wm.Variable", createWire:1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: wm.ServiceVariable, excludeType: wm.LiveVariable}}
-    
+
 });
 wm.ServiceInputForm.extend({
     subFormOnly: true,
