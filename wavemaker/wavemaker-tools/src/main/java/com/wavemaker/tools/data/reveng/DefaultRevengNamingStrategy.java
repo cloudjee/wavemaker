@@ -21,6 +21,8 @@ import org.hibernate.cfg.reveng.TableIdentifier;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.Tuple;
 
+import java.sql.Types;
+
 /**
  * @author Simon Toens
  */
@@ -43,4 +45,17 @@ public class DefaultRevengNamingStrategy extends DelegatingReverseEngineeringStr
         return StringUtils.fq(t.v1, StringUtils.toJavaIdentifier(t.v2));
     }
 
+    @Override
+    public String columnToHibernateTypeName(TableIdentifier table, String columnName, int sqlType, int length, 
+                                            int precision, int scale, boolean nullable, boolean generatedIdentifier) {
+        String type;
+
+        if (sqlType == Types.CHAR && length == 1) {
+            type = "string";
+        } else {
+            type = super.columnToHibernateTypeName(table, columnName, sqlType, length, precision, scale, nullable, generatedIdentifier);
+        }
+
+        return type;
+    }
 }
