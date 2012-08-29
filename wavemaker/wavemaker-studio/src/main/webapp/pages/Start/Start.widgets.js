@@ -54,8 +54,9 @@ Start.widgets = {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
-							    iframe: ["wm.IFrame", {showing: true, source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]								}]
-							}]
+							    iframe: ["wm.IFrame", {source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
+                            }]
+						}]
 					}],
 				    layer2: ["wm.Layer", {caption: "Projects", horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {onShow: "projectsTabOnShow"}, {
 					projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true, emptyValue: "emptyString"}, {onchange: "filterProjectList", onEnterKeyPress: "openFirstProject"}],
