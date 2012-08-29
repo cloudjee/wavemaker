@@ -64,9 +64,9 @@ public class UpgradeManager implements InitializingBean {
         } else if (projectVersion < projectMaxVersion) {
             UpgradeInfo ret = new UpgradeInfo();
             String exportName = project.getProjectName() + "-upgrade-" + projectVersion + ".zip";
-            this.deploymentManager.exportProject(exportName);
+            String backupExportFile = this.deploymentManager.exportProject(exportName);
             this.deploymentManager.testRunClean();
-
+            ret.setBackupExportFile(backupExportFile);
             for (Entry<Double, List<UpgradeTask>> entry : getUpgrades().entrySet()) {
 
                 if (entry.getKey() <= projectVersion) {
