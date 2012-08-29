@@ -107,10 +107,10 @@ wm.LivePanel.extend({
         this.setAutoScroll(false);
         if (isMobile) {
         this.dataGrid = new wm.List({
-            styleAsGrid: false, 
-            rightNavArrow: true, 
-            headerVisible: false, 
-            margin: "0", 
+            styleAsGrid: false,
+            rightNavArrow: true,
+            headerVisible: false,
+            margin: "0",
             border: "0",
             name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
             owner: this.owner,
@@ -129,6 +129,8 @@ wm.LivePanel.extend({
             parent: gridLayer
         });
     }
+    this.reflow(); // make sure that the bounds.w for the grid is correct so that we can correctly judge the number of columns to show */
+
         if (usePaging) var navigator = new wm.DataNavigator({
             name: studio.page.getUniqueName(this.liveDataName + "DataNav"),
             owner: this.owner,
@@ -201,7 +203,7 @@ wm.LivePanel.extend({
             width: "100%",
             desktopHeight: wm.Button.prototype.height,
             mobileHeight: wm.Button.prototype.mobileHeight,
-            enableTouchHeight: true,            
+            enableTouchHeight: true,
             horizontalAlign: "right",
             verticalAlign: "top"
         });
@@ -255,6 +257,7 @@ wm.LivePanel.extend({
             width: "100%",
             parent: this
         });
+        this.reflow(); // make sure that the bounds.w for the grid is correct so that we can correctly judge the number of columns to show */
         if (usePaging) var navigator = new wm.DataNavigator({
             name: studio.page.getUniqueName(this.liveDataName + "DataNav"),
             owner: this.owner,
@@ -404,7 +407,7 @@ wm.LivePanel.extend({
             deleteColumn: true,
             singleClickEdit: true
         });
-
+        this.reflow(); // make sure that the bounds.w for the grid is correct so that we can correctly judge the number of columns to show */
         var gridButtonPanel = new wm.Panel({
             owner: studio.page,
             name: studio.page.getUniqueName(this.liveDataName + "GridButtonPanel"),
@@ -413,7 +416,7 @@ wm.LivePanel.extend({
             width: "100%",
             desktopHeight: wm.Button.prototype.height,
             mobileHeight: wm.Button.prototype.mobileHeight,
-            enableTouchHeight: true,            
+            enableTouchHeight: true,
             horizontalAlign: "right",
             verticalAlign: "top"
         });
@@ -499,7 +502,8 @@ wm.LivePanel.extend({
 	    width: "100%",
 	    parent: this
 	});
-	
+	this.reflow(); // make sure that the bounds.w for the grid is correct so that we can correctly judge the number of columns to show */
+
 	var livevar = new wm.LiveVariable({owner: studio.page,
 					   name: studio.page.getUniqueName(this.liveDataName + "LiveVariable1"),
 					   liveSource: this.liveSource,
@@ -526,7 +530,7 @@ wm.LivePanel.extend({
 	    livevar.destroy(); // don't need this except to help generate editors
 	    dojo.disconnect(liveFormConnect);
 	    studio.refreshWidgetsTree();
-	});	    
+	});
 	this.liveForm.set_dataSet(livevar);
 
 
@@ -542,7 +546,7 @@ wm.LivePanel.extend({
                                                      minHeight: 220,
 						     mobileFolding: true,
 						     mobileFoldingCaption:wm.capitalize(this.liveDataName) + " List",
-						     mobileFoldingIndex: 0,						     
+						     mobileFoldingIndex: 0,
 						     title: wm.capitalize(this.liveDataName)});
 		this.dataGrid = new wm.DojoGrid({
                                 border: "0", // wm.FancyPanel + theme change; fancy panel provides the border; ignore any default borders provided by theme
@@ -552,7 +556,8 @@ wm.LivePanel.extend({
 				parent: fancyPanel1.containerWidget, // wm.FancyPanel change; revert to returning "this"
 				_classes: {"domNode":["omgDataGrid"]}
 			});
-	    if (usePaging) 
+        this.reflow(); // make sure that the bounds.w for the grid is correct so that we can correctly judge the number of columns to show */
+	    if (usePaging)
 		var navigator = new wm.DataNavigator({
 		    name: studio.page.getUniqueName(this.liveDataName + "DataNav"),
 		    owner: this.owner,
@@ -573,7 +578,7 @@ wm.LivePanel.extend({
 				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
 				owner: this.owner,
 		                parent: fancyPanel2.containerWidget, // wm.FancyPanel change; revert to returning "this"
-		                margin: "0",		    
+		                margin: "0",
 				verticalAlign: "top",
 				horizontalAlign: "center",
 		                editorWidth: "90%",
@@ -618,7 +623,7 @@ wm.LivePanel.extend({
             editorWidth: "100%",
             _liveSource: this.liveSource
         });
-
+        this.reflow(); // make sure that the bounds.w for the grid is correct so that we can correctly judge the number of columns to show */
         this.liveForm.createLiveSource(this.liveSource);
         var lvar = this.liveForm.dataSet.name;
 
