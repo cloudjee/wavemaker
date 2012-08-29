@@ -690,6 +690,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         if (this.dojoObj && this.dojoObj.edit)
            this.dojoObj.edit.cancel();
     },
+    applyEdit: function() {
+        if (this.dojoObj && this.dojoObj.edit)
+           this.dojoObj.edit.apply();
+    },
     setCell: function(rowIndex, fieldName, newValue, noRendering) {
         if (rowIndex < 0) {
             console.error("setCell requires 0 or greater for row index");
@@ -1719,6 +1723,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     onSort: function(inSortField) {
     },
     _onClick: function(evt){
+        if (evt.target && dojo.hasClass(evt.target, "dojoxGridScrollbox")) {
+            this.applyEdit();
+            return;
+        }
         var params = this._onGridEvent(evt);
 
     // This will happen if user clicks on empty area of grid.
@@ -2087,6 +2095,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         event = event || window.event;
         // prevent row selection which would trigger an onSelect/onSelectionChange events which could trigger navigation or other tasks contrary to executing of this button
         dojo.stopEvent(event);
+        this.applyEdit();
         var rowData = this.getRow(rowIndex);
        this.onGridButtonClick(fieldName, rowData, rowIndex);
     },
