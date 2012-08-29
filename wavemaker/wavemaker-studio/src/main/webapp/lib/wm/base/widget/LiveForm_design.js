@@ -653,7 +653,7 @@ wm.Object.extendSchema(wm.LiveForm, {
     generateButtons: {group: "operation", order: 12, operation:1},
 
     /* Events group */
-    onBeforeOperation: {advanced:1},
+    onBeforeOperation: {advanced:1,hidden:1}, /* Passes input rather than sourceData; do not use */
     onBeginDelete:     {advanced:1},
     onBeginInsert:     {advanced:1},
     onBeginUpdate:     {advanced:1},
