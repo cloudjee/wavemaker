@@ -145,13 +145,22 @@ dojo.declare("wm.Application", wm.Component, {
 
             if (wm.serverTimeOffset === undefined) {
                 this.getServerTimeOffset();
+            } else {
+                wm.currentTimeZone = new Date().getTimezoneOffset();
             }
+            window.setInterval(dojo.hitch(this, "_pollForTimezoneChange"), 10000); //3600000); // once per hour check to see if the timezone has changed
         }
 
         /* Load all app-level components from project.js */
         this.loadComponents(this.constructor.widgets || this.widgets);
 
         this._setupKeys();
+    },
+    _pollForTimezoneChange: function() {
+        if (new Date().getTimezoneOffset() != wm.currentTimeZone) {
+            wm.setTimeZoneOffset();
+            wm.currentTimeZone = new Date().getTimezoneOffset();
+        }
     },
     getServerTimeOffset: function() {
         if (!this.serverTimeSVar) {
@@ -163,6 +172,7 @@ dojo.declare("wm.Application", wm.Component, {
                 onSuccess: function(inResult) {
                     wm.serverTimeOffset = inResult;
                     wm.setTimeZoneOffset();
+                    wm.currentTimeZone = new Date().getTimezoneOffset();
                 }
             });
         }
