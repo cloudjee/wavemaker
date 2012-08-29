@@ -1199,7 +1199,9 @@ dojo.declare("wm.studio.Project", null, {
             });
             studio.warningsListVar.setData(errors);
             studio.warningsButton.setShowing(errors.length);
-
+            if (errors.length) {
+                studio.statusBarLabel.setCaption("Errors were found");
+            }
         } catch(e) {}
     },
 });
