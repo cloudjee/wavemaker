@@ -78,8 +78,6 @@ public class ImportDB extends BaseDataModelSetup {
 
     private static final String GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genServiceClass";
 
-    private static final String CREATE_JAR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "jar";
-
     private static final String GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genHibernateCfg";
 
     private static final String GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genServiceMain";
@@ -264,11 +262,6 @@ public class ImportDB extends BaseDataModelSetup {
             // java types using generics.
             regenerate();
         }
-
-        // cftempfix - 3 lines commented out temporarily
-        // if (this.createJar) {
-        // AntUtils.jar(new File(this.serviceName + ".jar"), this.destdir);
-        // }
 
     }
 
@@ -558,13 +551,6 @@ public class ImportDB extends BaseDataModelSetup {
         }
     }
 
-    private void checkCreateJar() {
-        String s = this.properties.getProperty(CREATE_JAR_SYSTEM_PROPERTY);
-        if (s != null) {
-            setCreateJar(Boolean.getBoolean(CREATE_JAR_SYSTEM_PROPERTY));
-        }
-    }
-
     private void checkGenerateServiceMain() {
         String s = this.properties.getProperty(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY);
         if (s != null) {
@@ -735,7 +721,6 @@ public class ImportDB extends BaseDataModelSetup {
             checkGenerateOldStyleOps();
         }
         checkClassesDir();
-        checkCreateJar();
         checkGenerateServiceMain();
         checkRevengMetaDataDialect();
         checkRevengNamingStrategy();
