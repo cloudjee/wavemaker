@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.pages.QueryEditor.QueryEditor");
 
 dojo.declare("QueryEditor", wm.Page, {
@@ -33,6 +33,8 @@ dojo.declare("QueryEditor", wm.Page, {
                 this._startCalled = true;
 		this.subscribe("wm-project-changed", this, "update");
 		this.update();
+        this.helpHtml.setHtml(this.helpHtml.html.replace(/\$\{wmdoc\}/g,
+            studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")})));
 
 	    var buttons = [this.saveQueryBtn, this.newQueryBtn, this.delQueryBtn, this.runQueryBtn];
 	    dojo.forEach(buttons, function(b) {
@@ -126,7 +128,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.saveQueryBtn.setDisabled(true);
 
 		var args = [this.dataModelName, this.selectedQueryName];
-		studio.dataService.requestAsync(LOAD_QUERY_OP, args, 
+		studio.dataService.requestAsync(LOAD_QUERY_OP, args,
 			dojo.hitch(this, "_getQueryResult"));
 	},
 	/*queriesTreeSelected: function(inSender, inNode) {
@@ -147,7 +149,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this._loadTypes();
 
 		var d = inNode.data[0];
-		if (d == ROOT_NODE || d == DATA_MODEL_ROOT_NODE || 
+		if (d == ROOT_NODE || d == DATA_MODEL_ROOT_NODE ||
 			d == QUERY_ROOT_NODE) {
 			this._enableAll(false);
 			this.newQueryBtn.setDisabled(false);
@@ -157,17 +159,17 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.saveQueryBtn.setDisabled(true);
 
 		var args = [this.dataModelName, inNode.data[1]];
-		studio.dataService.requestAsync(LOAD_QUERY_OP, args, 
+		studio.dataService.requestAsync(LOAD_QUERY_OP, args,
 			dojo.hitch(this, "_getQueryResult"));
 	},*/
 	queryNameKeyPress: function(inSender) {
-		setTimeout(dojo.hitch(this, "queryNameChanged"), 0);		
+		setTimeout(dojo.hitch(this, "queryNameChanged"), 0);
 	},
 	queryNameChanged: function(inSender) {
 		this.setDirty();
 	},
 	queryCommentKeyPress: function(inSender) {
-		setTimeout(dojo.hitch(this, "queryCommentChanged"), 0);		
+		setTimeout(dojo.hitch(this, "queryCommentChanged"), 0);
 	},
 	queryCommentChanged: function(inSender) {
 		this.setDirty();
@@ -183,7 +185,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	    this.updateInputList(inSender.getDataValue());
 	},
 	singleResultKeyPress: function(inSender) {
-		setTimeout(dojo.hitch(this, "singleResultChanged"), 0);		
+		setTimeout(dojo.hitch(this, "singleResultChanged"), 0);
 	},
 	singleResultChanged: function(inSender) {
 		this.setDirty();
@@ -225,8 +227,8 @@ dojo.declare("QueryEditor", wm.Page, {
 			bindParamValues,
 			this.maxResultsInput.getDataValue()];
 		studio.beginWait(this.getDictionaryItem("WAIT_RUN"));
-		studio.dataService.requestAsync(RUN_QUERY_OP, runQueryInput, 
-			dojo.hitch(this, "_runQueryResult"), 
+		studio.dataService.requestAsync(RUN_QUERY_OP, runQueryInput,
+			dojo.hitch(this, "_runQueryResult"),
 			dojo.hitch(this, "_runQueryError"));
 	    });
 	},
@@ -283,10 +285,10 @@ dojo.declare("QueryEditor", wm.Page, {
 	    this._cachedData = this.getCachedData();
 	},
     getCachedData: function() {
-	return dojo.string.trim(this.queryNameInput.getDataValue() || "") 
-		+ "|" + this.queryDataModelInput.getDataValue() 
-		+ "|" + this.queryCommentInput.getDataValue() 
-		+ "|" + this.queryTextArea.getDataValue() 
+	return dojo.string.trim(this.queryNameInput.getDataValue() || "")
+		+ "|" + this.queryDataModelInput.getDataValue()
+		+ "|" + this.queryCommentInput.getDataValue()
+		+ "|" + this.queryTextArea.getDataValue()
 		+ "|" + this.returnsSingleResultCheckBox.editor.getChecked()
 	    + "|" + dojo.toJson(this._getQueryInputs());
     },
@@ -316,14 +318,14 @@ dojo.declare("QueryEditor", wm.Page, {
 	    this.fixDoubleQuotes();
 
 		var name = dojo.string.trim(this.queryNameInput.getDataValue());
-		
+
 		// check existing query with the same name
 
-		var cs = studio.application.getServerComponents();   
+		var cs = studio.application.getServerComponents();
 		for (var i in cs) {
 			var c = cs[i];
 			if (c.declaredClass == "wm.Query" && c != this.query && c.queryName == name) {
-                            app.confirm(this.getDictionaryItem("CONFIRM_OVERWRITE", {name: name}), false, 
+                            app.confirm(this.getDictionaryItem("CONFIRM_OVERWRITE", {name: name}), false,
 					dojo.hitch(this, function() {
 					    studio.dataService.requestSync(
 						REMOVE_QUERY_OP, [c.dataModelName, c.queryName],
@@ -334,7 +336,7 @@ dojo.declare("QueryEditor", wm.Page, {
 					}),
 					dojo.hitch(this, "saveComplete"));
 			    return; // when the user clicks, then we'll do something; we're finished until the user clicks
-			} 
+			}
 		}
 
 		this._saveQuery2(c);
@@ -364,7 +366,7 @@ dojo.declare("QueryEditor", wm.Page, {
 			this._getQueryInputs(),
 			bindParamValues];
 		studio.dataService.requestAsync(CHECK_QUERY_OP, checkQueryInput,
-			dojo.hitch(this, "_checkQueryCompleted"), 
+			dojo.hitch(this, "_checkQueryCompleted"),
 			dojo.hitch(this, "_checkQueryError"));
 	},
 	_checkQueryCompleted: function() {
@@ -380,7 +382,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		var sr = this.returnsSingleResultCheckBox.editor.getChecked();
 
 		var fqOutputType = null;
-		var queryInfo = { 
+		var queryInfo = {
 				name: name,
 				comment: comment,
 				query: this._getQueryValue(),
@@ -390,8 +392,8 @@ dojo.declare("QueryEditor", wm.Page, {
 				returnsSingleResult: sr
 				};
 		studio.dataService.requestAsync(SAVE_QUERY_OP,
-			[this.dataModelName, queryInfo], 
-			dojo.hitch(this, "_saveQueryCompleted"), 
+			[this.dataModelName, queryInfo],
+			dojo.hitch(this, "_saveQueryCompleted"),
 			dojo.hitch(this, "_saveQueryError"));
 	},
 	_saveQueryCompleted: function() {
@@ -400,13 +402,13 @@ dojo.declare("QueryEditor", wm.Page, {
 		//this._loadQueries();
 		this.saveQueryBtn.setDisabled(true);
 		this.queryDataModelInput.setDisabled(true);
-	       
+
 		if (!this.query || this.query.name != this.query.newName) {
 			this.deleteQuery = this.query;
 			var n = this.queryNameInput.getDataValue();
 			this.query =  new wm.Query({
 				name: n,
-				dataModelName: this.dataModelName, 
+				dataModelName: this.dataModelName,
 				queryName: n
 			});
 
@@ -421,7 +423,7 @@ dojo.declare("QueryEditor", wm.Page, {
 /*
 			  app.pageDialog.showPage("GenericDialog",true,350,140);
 			  app.pageDialog.page.setupPage("Prompt...", "Your new query has been saved; do you want to delete the original or keep both the new query and the original?");
-			  
+
 			  app.pageDialog.page.setupButton(1, "Delete Old Query", dojo.hitch(this, "_deleteOriginalQuery"));
 			  app.pageDialog.page.setupButton(2, "Keep Old Query", dojo.hitch(this, "_keepOriginalQuery"));
 
@@ -453,7 +455,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		    studio.application.removeServerComponent(_this.deleteQuery);
 		    studio.refreshServiceTree();
 		    studio.selected = null;
-		    studio.select(_this.query);		    
+		    studio.select(_this.query);
 		    studio.endWait();
 			_this.onSaveSuccess();
 		  });
@@ -503,7 +505,7 @@ dojo.declare("QueryEditor", wm.Page, {
 	    }));
     },
 
-    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can
      * interact with them
      */
     dirty: false,
@@ -632,7 +634,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		wm.Array.removeElementAt(oldData,j);
 	    }
 	}
-	
+
 	for (var name in currentParams) {
 	    var found = false;
 	    for (var i = 0; i < oldData.length; i++) {
@@ -656,8 +658,8 @@ dojo.declare("QueryEditor", wm.Page, {
 			return;
 		}
 /*
-		var bp = {name:this.bindNameInput.getDataValue(), 
-			  type:this.bindTypeInput.getDisplayValue(), 
+		var bp = {name:this.bindNameInput.getDataValue(),
+			  type:this.bindTypeInput.getDisplayValue(),
 			  list:this.isInputListCheckBox.editor.getChecked(),
 			  value: this.bindParamInput.getDataValue()};
                           */
@@ -700,8 +702,8 @@ dojo.declare("QueryEditor", wm.Page, {
 	},
     parameterPropEdit: function(inSender) {
        	if (this._paramSelecting) return;
-	    var bp = {name:this.bindNameInput.getDataValue(), 
-		      type:this.bindTypeInput.getDisplayValue(), 
+	    var bp = {name:this.bindNameInput.getDataValue(),
+		      type:this.bindTypeInput.getDisplayValue(),
 		      list:this.isInputListCheckBox.getChecked(),
 		      value: this.bindParamInput.getDataValue()};
         var selectedIndex = this.queryInputsList.getSelectedIndex();
@@ -815,7 +817,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		*/
 	},
 	_loadTypes: function() {
-		studio.servicesService.requestSync(LOAD_PRIMITIVES_OP, 
+		studio.servicesService.requestSync(LOAD_PRIMITIVES_OP,
 			[], dojo.hitch(this, "_primitivesLoaded"));
 	},
 	_primitivesLoaded: function(inData) {
@@ -823,7 +825,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.primitivesShortNameLookup = {};
 		for (var shortName in inData) {
 			var longName = inData[shortName];
-			this.primitivesShortNameLookup[longName] = shortName; 
+			this.primitivesShortNameLookup[longName] = shortName;
 		}
 		this.primitivesLongNameLookup = inData;
 
@@ -862,7 +864,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.maxResultsInput.setDisabled(!enable);
 	},
 	/*_findQueryNode: function(dataModelName, queryName) {
-		var dataModelNode = this._findNodeByName(this.queriesTree.root, 
+		var dataModelNode = this._findNodeByName(this.queriesTree.root,
 			dataModelName);
 
 		if (dataModelNode == null) {
