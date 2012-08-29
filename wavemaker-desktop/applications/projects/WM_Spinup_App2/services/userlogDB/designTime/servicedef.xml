@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="userlogDB" class="com.userlogdb.UserlogDB" CRUDService="true" type="DataService" springFile="userlogDB.spring.xml">
+    <operation operationType="hqlquery" name="getUserloginById">
+        <parameter name="id" typeRef="java.lang.Integer" isList="false"/>
+        <return typeRef="com.userlogdb.data.Userlogin" isList="false"/>
+    </operation>
+    <dataobjects>
+        <dataobject javaType="com.userlogdb.data.Userlogin" supportsQuickData="true">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="username" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="login" typeRef="java.util.Date" isList="false" allowNull="false"/>
+        </dataobject>
+    </dataobjects>
+</service>
