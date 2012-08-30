@@ -79,14 +79,14 @@ wm.fullTemplates.fancyTemplate = {
 						binding: ["wm.Binding", {}, {}, {
 							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
 						}]
-					}],
-					button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]
+					}]
 				}],
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    text1: ["wm.Text", {"placeHolder":"Search",resetButton: true,"width":"100%"}, {}],
 					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"lib/images/silkIcons/zoom.png","width":"16px"}, {}]
 				}]
-			}]
+			}],
+            button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]
 		}],
 		panel3: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    dojoMenu1: ["wm.DojoMenu", {"_classes":{"domNode":["ClickableDojoMenu"]},"borderColor":"#666666","fullStructure":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Zoom","children":[{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}]},{"label":"Help"}],"height":"100%","localizationStructure":{},"padding":"4,10,0,10","transparent":false}, {}]
