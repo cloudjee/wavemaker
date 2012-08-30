@@ -420,7 +420,7 @@ dojo.declare("wm.Page", wm.Component, {
 		for (var i in inChildren) {
 			try
 			{
-			 this.loadComponent(i, inParent, inChildren[i][0], inChildren[i][1], inChildren[i][2], inChildren[i][3]);
+			 this.loadComponent(i, inParent, inChildren[i][0], inChildren[i][1] || {}, inChildren[i][2], inChildren[i][3]);
 			} catch(e) {
 			  console.error("FAILED TO LOAD " + "[" + inChildren[i][1].name + "] " + i + ": ", e);
 			  console.log("COMPONENT:");console.log(inChildren);
