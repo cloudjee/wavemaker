@@ -85,9 +85,9 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                 Object value = hibernateProperties.getValue();
                 if (value instanceof ManagedProperties) {
                     hibernatePropsPropertyValue = (ManagedProperties) hibernateProperties.getValue();
-                    TypedStringValue dialect = (TypedStringValue) hibernatePropsPropertyValue.get(new TypedStringValue("hibernate.dialect"));
+                    TypedStringValue dialect = (TypedStringValue) hibernatePropsPropertyValue.get(new TypedStringValue(DataServiceConstants.HIBERNATE_DIALECT_PROPERTY));
                     if (dialect != null && dialect.equals(new TypedStringValue("com.wavemaker.runtime.data.dialect.MySQLDialect"))) {
-                        hibernatePropsPropertyValue.put(new TypedStringValue("hibernate.dialect"), new TypedStringValue(
+                        hibernatePropsPropertyValue.put(new TypedStringValue(DataServiceConstants.HIBERNATE_DIALECT_PROPERTY), new TypedStringValue(
                             "org.hibernate.dialect.MySQLDialect"));
                     }
                 }
