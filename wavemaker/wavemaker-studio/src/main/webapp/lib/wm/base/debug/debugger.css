@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 /* Overall debugger styles */
-#debugDialog_containerWidget, 
+#debugDialog_containerWidget,
 #debugDialog .wmtablayers {
     background-color: #aaa;
     font-size: 10px;
@@ -35,15 +35,15 @@
     border-left: solid 1px #666;
     border-right: solid 1px #666;
     border-top: solid 1px #666;
-    -moz-border-radius-topleft: 2px; 
+    -moz-border-radius-topleft: 2px;
     -moz-border-radius-topright: 2px;
     -webkit-border-top-left-radius: 2px;
     -webkit-border-top-right-radius: 2px;
-    border-radius-topleft: 2px;
-    border-radius-topright: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
     -moz-box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */
-    box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */    
+    box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */
     background-image: none;
     background-color: #999;
     color: black;
@@ -85,24 +85,24 @@
     border-top-width: 0px;
     border-bottom-width: 0px;
     border-right-width: 1px !important;
-    border-style: solid;   
+    border-style: solid;
     border-color: #888;
 }
 
-#debugDialog div.dojoxGridRow.dojoxGridRowSelected, 
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected,
 #debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-#debugDialog div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 #debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-#debugDialog div.dojoxGridRow.dojoxGridRowSelected .dojoxGridCell, 
-#debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected .dojoxGridCell, 
-#debugDialog div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver .dojoxGridCell, 
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected .dojoxGridCell,
+#debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected .dojoxGridCell,
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver .dojoxGridCell,
 #debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver .dojoxGridCell {
     background-color: #888;
     color: white;
 }
 
-#debugDialog .dojoxGridRowOver, 
-#debugDialog .dojoxGridRowOver .dojoxGridCell, 
+#debugDialog .dojoxGridRowOver,
+#debugDialog .dojoxGridRowOver .dojoxGridCell,
 #debugDialog .dojoxGridRowOdd.dojoxGridRowOver {
     background-color: #aaa !important;
     color: #000000 !important;
@@ -143,7 +143,7 @@
     font-weight: normal;
     border-radius: 2px;
     -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;    
+    -moz-border-radius: 2px;
     -moz-box-shadow: 1px 1px 1px #aaa;
     -webkit-box-shadow: 1px 1px 1px #aaa;
     box-shadow: 1px 1px 1px #aaa;
@@ -159,7 +159,7 @@
     font-weight: normal;
     border-radius: 2px;
     -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;    
+    -moz-border-radius: 2px;
     -moz-box-shadow: 0px 0px 0px #aaa;
     -webkit-box-shadow: 0px 0px 0px #aaa;
     box-shadow: 0px 0px 0px #aaa;
@@ -183,9 +183,9 @@
     -moz-border-radius-topright: 0px;
     -webkit-border-bottom-right-radius: 0px;
     -webkit-border-top-right-radius: 0px;
-    border-radius-bottomright: 0px;
-    border-radius-topright: 0px;
-}    
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
 #debugDialog .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
 #debugDialog .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
 	background-image: url(../widget/themes/wm_default/images/comboArrowDownLight.png);
@@ -193,8 +193,8 @@
         -moz-border-radius-topright: 0px;
         -webkit-border-bottom-right-radius: 0px;
         -webkit-border-top-right-radius: 0px;
-         border-radius-bottomright: 0px;
-         border-radius-topright: 0px;
+        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;
 }
 
 
@@ -221,7 +221,7 @@
     #debugDialog .wmeditor .dijitSelect .dijitButtonContents {
 
 	border-color: #999;
-	border-width: 1px; 
+	border-width: 1px;
 	font-family: Verdana;
 	font-size: 8px;
 	color: #000000;
@@ -234,7 +234,7 @@
     #debugDialog .wmeditor .dijitComboBox.dijitHover,
     #debugDialog .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     #debugDialog .wmeditor .RichTextEditable:hover iframe {
-	color: #000000; 
+	color: #000000;
 	border-color: #999;
 	background-color: #ddd;
 	background-image: none;

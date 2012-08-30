@@ -152,8 +152,8 @@
         -moz-border-radius-topright: 0px !important;
         -webkit-border-top-left-radius: 0px !important;
         -webkit-border-top-right-radius: 0px !important;
-         border-radius-topleft: 0px !important;
-         border-radius-topright: 0px !important;    
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
 }
 
 .wm_BorderTopStyle_Curved4px {
@@ -161,8 +161,8 @@
         -moz-border-radius-topright: 4px !important;
         -webkit-border-top-left-radius: 4px !important;
         -webkit-border-top-right-radius: 4px !important;
-         border-radius-topleft: 4px !important;
-         border-radius-topright: 4px !important;    
+        border-top-left-radius: 4px !important;
+        border-top-right-radius: 4px !important;
 }
 
 .wm_BorderTopStyle_Curved8px {
@@ -170,7 +170,8 @@
         -moz-border-radius-topright: 8px !important;
         -webkit-border-top-left-radius: 8px !important;
         -webkit-border-top-right-radius: 8px !important;
-         border-radius-topright: 8px !important;    
+        border-top-left-radius: 8px !important;
+        border-top-right-radius: 8px !important;
 }
 
 .wm_BorderTopStyle_Curved12px {
@@ -178,8 +179,8 @@
         -moz-border-radius-topright: 12px !important;
         -webkit-border-top-left-radius: 12px !important;
         -webkit-border-top-right-radius: 12px !important;
-         border-radius-topleft: 12px !important;
-         border-radius-topright: 12px !important;    
+        border-top-left-radius: 12px !important;
+        border-top-right-radius: 12px !important;
 }
 
 .wm_BorderBottomStyle_NoCurve {
@@ -187,8 +188,8 @@
         -moz-border-radius-bottomright: 0px !important;
         -webkit-border-bottom-right-radius: 0px !important;
         -webkit-border-bottom-left-radius: 0px !important;
-         border-radius-bottomleft: 0px !important;
-         border-radius-bottomright: 0px !important;    
+        border-bottom-right-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
 }
 
 .wm_BorderBottomStyle_Curved4px {
@@ -196,8 +197,8 @@
         -moz-border-radius-bottomright: 4px !important;
         -webkit-border-bottom-right-radius: 4px !important;
         -webkit-border-bottom-left-radius: 4px !important;
-         border-radius-bottomleft: 4px !important;
-         border-radius-bottomright: 4px !important;    
+        border-bottom-right-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
 }
 
 .wm_BorderBottomStyle_Curved8px {
@@ -205,8 +206,8 @@
         -moz-border-radius-bottomright: 8px !important;
         -webkit-border-bottom-right-radius: 8px !important;
         -webkit-border-bottom-left-radius: 8px !important;
-         border-radius-bottomleft: 8px !important;
-         border-radius-bottomright: 8px !important;    
+        border-bottom-right-radius: 8px !important;
+        border-bottom-left-radius: 8px !important;
 }
 
 .wm_BorderBottomStyle_Curved12px {
@@ -214,8 +215,8 @@
         -moz-border-radius-bottomright: 12px !important;
         -webkit-border-bottom-right-radius: 12px !important;
         -webkit-border-bottom-left-radius: 12px !important;
-         border-radius-bottomleft: 12px !important;
-         border-radius-bottomright: 12px !important;    
+        border-bottom-right-radius: 12px !important;
+        border-bottom-left-radius: 12px !important;
 }
 
 .wm_BorderShadow_NoShadow {
@@ -253,7 +254,7 @@
 }
 
 .wm_BackgroundColor_Graphite {
-    background: #555555 !important;	
+    background: #555555 !important;
     color: white !important;
 }
 
@@ -294,10 +295,10 @@
 }
 
 .wm_BackgroundGradient_Blue {
-	background: #00357d url(images/panel-header.png) repeat-x center top !important;	
+	background: #00357d url(images/panel-header.png) repeat-x center top !important;
 }
 
-.wm_BackgroundChromeBar_Blue {	
+.wm_BackgroundChromeBar_Blue {
 	background: #3274D0 url(images/chrome_blue.gif) repeat-x !important;
 }
 
@@ -405,7 +406,7 @@
 }
 
 .wm_Mouse_help {
-    cursor: help !important; 
+    cursor: help !important;
 }
 
 .wm_Mouse_move {

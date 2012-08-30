@@ -30,8 +30,8 @@ Start-tabLayers1 {
     -moz-border-radius-topright: 10px;
     -webkit-border-top-left-radius: 10px;
     -webkit-border-top-right-radius: 10px;
-    border-radius-topleft: 10px;
-    border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 #studio_startPageDialog.studiodialog, .Start-panel5, .Start-panel1 {
     -webkit-border-radius: 10px;
@@ -119,8 +119,8 @@ Start-tabLayers1 {
 	-moz-border-radius-topright: 4px;
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
-	border-radius-topleft: 4px;
-	border-radius-topright: 4px;
+	border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 
     -moz-box-shadow: 4px 4px 4px #111;
     -webkit-box-shadow: 4px 4px 4px #111;
@@ -165,6 +165,8 @@ Start-tabLayers1 {
     border: 1px solid #687585;
 */
     -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 .Start .StudioList.wmlist .wmlist-cell {
     border-bottom: solid 0px transparent;
