@@ -853,7 +853,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
 	if (this._updating) return;
 	var date = new Date(0);
 	var hour = this.hours.selectedItem.getValue("dataValue");
-	if (hour == 12) hour = 0;
+	if (hour == 12 && !this.use24Time) hour = 0;
 	var minute = this.minutes.selectedItem.getValue("dataValue");
 	var isPM = this.pmButton.clicked;
 	date.setHours(hour + (isPM ? 12 : 0), minute);
