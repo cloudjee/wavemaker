@@ -44,7 +44,6 @@ public abstract class AbstractFileService implements FileService {
         return this.fileSystem;
     }
 
-    // cftempfix
     public AbstractFileService() {
     }
 
