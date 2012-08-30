@@ -290,6 +290,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     getDataSet: {method:1, returns: "wm.Variable"},
     setDataSet: {method:1},
     showCSVData: {method:1},
+    toCSVData: {method:1},
     setSortIndex:{method:1},
     setSortField:{method:1},
     setQuery: {method:1},
