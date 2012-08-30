@@ -165,6 +165,6 @@
 		"border": "0"
 	},
 	"wm.DojoGrid": {
-		"border": "0"
+
 	}
 }
