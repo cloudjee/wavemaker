@@ -50,7 +50,7 @@
 		"clientBorder": "1", 
 		"border": "0", 
 		"clientBorderColor": "#999999", 
-		"headerHeight": "29px", 
+		"headerHeight": "30px", 
 		"borderColor": "#999999", 
 		"mobileHeaderHeight": "38px"
 	}, 
