@@ -47,7 +47,8 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 
     //validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
 
-
+    isCustomized: {hidden:1},
+    editPanelStyle: {hidden:1},
 
 
     /* Ignored group */
