@@ -23,31 +23,8 @@
    *              not affected by panel type... unless the developer wants to put in their own CSS
    ************************************************************************************************/
 .wm_template button.wmtablayers-tab {
-    /* wm.TabLayers-BorderStyle_Shadow */
-    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_Shadow */
-    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
-    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
     height: 12px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
-}
-
-.wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-
-    /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
-}
-
-.wm_template .wmtablayers-tab.wmtablayers-selected,
-.wm_template .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_template .wmtablayers-tab.wmtablayers-selected:focus,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected:hover,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected:focus {
-    -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-Active-BorderStyle_Shadow */
-    -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
-    box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 
 
@@ -73,13 +50,6 @@
     font-size: 9; /* wm.TabLayers-Button_TextSize */
     width: 95%;
     margin-left: 5%;
-}
-
-.wm_template .wmtablayers-verticaltab:hover, .wm_template .wmtablayers-verticaltab:focus {
-    /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: -2px 2px 2px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    -webkit-box-shadow: -2px 2px 2px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    box-shadow: -2px 2px 2px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
 }
 
 /* Spacing between each tab */
