@@ -711,15 +711,16 @@ dojo.declare("wm.Layers", wm.Container, {
             var originalHeight = this.decorator.tabsControl.bounds.h;
             this.decorator.tabsControl.domNode.style.height = 'auto';
             var newheight;
-            var lastShowingTab;
+            var lastShowingTab, firstShowingTab;
             for (var i = this.decorator.btns.length - 1; i >= 1; i--) {
                 if (this.decorator.btns[i].style.display != "none") {
+                    if (!firstShowingTab) firstShowingTab = this.decorator.btns[i];
                     lastShowingTab = this.decorator.btns[i];
                     break;
                 }
             }
             /* Sometimes the buttons are a few px off, but we know they've wrapped to the next line of they are many pixels different in offsetTop */
-            if (!lastShowingTab || this.decorator.btns[0].offsetTop +4 >= lastShowingTab.offsetTop ) {
+            if (lastShowingTab && Math.abs(firstShowingTab.offsetTop - lastShowingTab.offsetTop) > 4 ) {
                 if (this._headerHeight == this.decorator.tabsControl.height) {
                     this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
                 } else {
