@@ -52,10 +52,12 @@ font-weight: bold;
 }
 @media screen {
 .wm_wireframe .wmtogglebuttonpanel .wmbutton:first-child {
-border-radius-topleft: 2px !important;
-border-radius-bottomleft: 2px !important;
 -webkit-border-top-left-radius: 2px !important;
 -webkit-border-bottom-left-radius: 2px !important;
+-moz-border-radius-topleft: 2px !important;
+-moz-border-radius-bottomleft: 2px !important;
+border-top-left-radius: 2px !important;
+border-bottom-left-radius: 2px !important;
 }
 .wm_wireframe .wmtogglebuttonpanel .wmbutton:last-child {
 border-radius-topright: 2px !important;
@@ -385,8 +387,8 @@ background-image: none !important;
 -moz-border-radius-topright: 0px;
 -webkit-border-top-left-radius: 0px;
 -webkit-border-top-right-radius: 0px;
-border-radius-topleft: 0px;
-border-radius-topright: 0px;
+border-top-left-radius: 0px;
+border-top-right-radius: 0px;
 }
 .wm_wireframe .dialogfooter,
 .wm_wireframe .wmpagedialog-controlspanel {
@@ -495,8 +497,8 @@ border-radius: 2px;
 -moz-border-radius-topleft: 2px;
 -webkit-border-top-left-radius: 2px;
 -webkit-border-bottom-left-radius: 2px;
-border-radius-bottomleft: 2px;
-border-radius-top-left: 2px;
+border-top-left-radius: 2px;
+border-bottom-left-radius: 2px;
 border-right: solid 0px transparent !important;
 display:block;
 }
@@ -505,8 +507,8 @@ display:block;
 -moz-border-radius-bottomright: 2px;
 -webkit-border-bottom-left-radius: 2px;
 -webkit-border-bottom-right-radius: 2px;
-border-radius-bottomleft: 2px;
-border-radius-bottomright: 2px;
+border-bottom-left-radius: 2px;
+border-bottom-right-radius: 2px;
 }
 .wm_wireframe .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
@@ -1278,26 +1280,8 @@ border-color: black;
 box-shadow: 4px 4px 8px black;
 }
 .wm_wireframe button.wmtablayers-tab {
--moz-box-shadow: 0px 0px 0px #444444;
--webkit-box-shadow: 0px 0px 0px #444444;
-box-shadow: 0px 0px 0px #444444;
 height: 23px;
 font-size: 9;
-}
-.wm_wireframe .wmtablayers-tab:hover, .wm_wireframe .wmtablayers-tab:focus {
--moz-box-shadow: 0px 0px 0px #444444;
--webkit-box-shadow: 0px 0px 0px #444444;
-box-shadow: 1px 0px 1px #444444;
-}
-.wm_wireframe .wmtablayers-tab.wmtablayers-selected,
-.wm_wireframe .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus,
-.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
-.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:hover,
-.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:focus {
--moz-box-shadow: 0px 0px 0px #444444;
--webkit-box-shadow: 0px 0px 0px #444444;
-box-shadow: 0px 0px 0px #444444;
 }
 .wm_wireframe .wmtablayers-tab.wmtablayers-selected,
 .wm_wireframe .wmtablayers-tab.wmtablayers-tab {
@@ -1306,8 +1290,8 @@ margin-left: 8px;
 -moz-border-radius-topright: 2px;
 -webkit-border-top-left-radius: 2px;
 -webkit-border-top-right-radius: 2px;
-border-radius-topleft: 2px;
-border-radius-topright: 2px;
+border-top-left-radius: 2px;
+border-top-right-radius: 2px;
 }
 .wm_wireframe button.wmtablayers-verticaltab {
 -moz-box-shadow: 0px 0px 0px #444444;
@@ -1317,11 +1301,6 @@ font-size: 9;
 width: 95%;
 margin-left: 5%;
 }
-.wm_wireframe .wmtablayers-verticaltab:hover, .wm_wireframe .wmtablayers-verticaltab:focus {
--moz-box-shadow: 0px 0px 0px #444444;
--webkit-box-shadow: 0px 0px 0px #444444;
-box-shadow: -2px 2px 2px #444444;
-}
 .wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
 .wm_wireframe .wmtablayers-verticaltab.wmtablayers-verticaltab {
 margin-bottom: 5px;
@@ -1329,8 +1308,8 @@ margin-bottom: 5px;
 -moz-border-radius-topleft: 2px;
 -webkit-border-bottom-left-radius: 2px;
 -webkit-border-top-left-radius: 2px;
-border-radius-bottomleft: 2px;
-border-radius-topleft: 2px;
+border-bottom-left-radius: 2px;
+border-top-left-radius: 2px;
 }
 .wm_wireframe .wmtablayers-verticaltab:focus,
 .wm_wireframe .wmtablayers-tab:focus {
@@ -1338,10 +1317,11 @@ outline-width: 0;
 }
 .wm_wireframe .wmFancyPanel-containerWidget {
 -moz-border-radius-topright: 0px !important;
+-moz-border-radius-topleft: 0px !important;
 -webkit-border-top-left-radius: 0px !important;
 -webkit-border-top-right-radius: 0px !important;
-border-radius-topleft: 0px !important;
-border-radius-topright: 0px !important;
+border-top-left-radius: 0px !important;
+border-top-right-radius: 0px !important;
 -moz-box-shadow: 0px 0px 0px black !important;
 -webkit-box-shadow: 0px 0px 0px black !important;
 box-shadow: 0px 0px 0px black !important;
@@ -1364,16 +1344,16 @@ border-radius: 2px;
 -moz-border-radius-bottomright: 2px;
 -webkit-border-bottom-left-radius: 2px;
 -webkit-border-bottom-right-radius: 2px;
-border-radius-bottomleft: 2px;
-border-radius-bottomright: 2px;
+border-bottom-left-radius: 2px;
+border-bottom-right-radius: 2px;
 }
 .wm_wireframe .wmFancyPanel-labelWidget {
 -moz-border-radius-topleft: 2px;
 -moz-border-radius-topright: 2px;
 -webkit-border-top-left-radius: 2px;
 -webkit-border-top-right-radius: 2px;
-border-radius-topleft: 2px;
-border-radius-topright: 2px;
+border-top-left-radius: 2px;
+border-top-right-radius: 2px;
 }
 .wm_wireframe .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
 display: block;
