@@ -1555,10 +1555,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             });
         }, this);
 
-        if (this.isDesignLoaded()) {
-            if (!this.contextMenu) this.designCreate(); // special case from themedesigner
-            this.contextMenu.setDataSet(this.columns);
-        }
     },
 
     // if the type changes, we need to adjust rather than regenerate our columns
