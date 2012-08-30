@@ -11,12 +11,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.base.widget.Dashboard_design");
 dojo.require("wm.base.widget.Dashboard");
 dojo.require("wm.base.widget.ContextMenuDialog");
 dojo.require("wm.base.Control_design");
+dojo.require("dojo.data.ItemFileWriteStore");
 
 wm.Dashboard.extend({
   themeable: false,
@@ -37,11 +38,11 @@ wm.Dashboard.extend({
 
 	    }
 		this.headerAttr[2].dataStore = this.pageStore;
-	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: studio.getDictionaryItem("wm.Dashboard.CAPTION_ADD_PORTLET"), 
-							onAddButtonClick: dojo.hitch(this, 'addNewPortlet'), 
-							headerAttr: this.headerAttr, 
-							dataSet: this.portlets, 
-							newRowDefault: defaultPortletParams, 
+	    this.contextMenu = new wm.ContextMenuDialog({addButtonLabel: studio.getDictionaryItem("wm.Dashboard.CAPTION_ADD_PORTLET"),
+							onAddButtonClick: dojo.hitch(this, 'addNewPortlet'),
+							headerAttr: this.headerAttr,
+							dataSet: this.portlets,
+							newRowDefault: defaultPortletParams,
 							 noLeftRightDocking: true,
 							 _classes: {domNode: ["studiodialog"]},
 							addDeleteColumn: true});
@@ -69,7 +70,7 @@ wm.Dashboard.extend({
 				var p = dijit.byId(Obj.portletId);
 				if (!p)
 					return;
-				p.attr('title', inValue);					 
+				p.attr('title', inValue);
 			  	break;
 			case 'page':
 				var p = dijit.byId(Obj.portletId);
@@ -91,7 +92,7 @@ wm.Dashboard.extend({
 	updatePageList: function(){
 		var pages = wm.getPageList(false);
 		var pageList = [];
-		
+
 		dojo.forEach(pages, function(pageName){
 			pageList.push({name:pageName, value:pageName});
 		});
@@ -117,14 +118,14 @@ wm.Dashboard.extend({
 			pList = this.portlets;
 		    }
 			this.updatePortletXY();
-			var writePortlets = [];		
+			var writePortlets = [];
 			dojo.forEach(pList, function(obj){
 				var coord = this.portletXY[obj.portletId];
 				if (coord){
 					obj.x = coord.x;
 					obj.y = coord.y;
 				}
-				
+
 				var wObj = dojo.clone(obj);
 				delete wObj.portletId;
 				writePortlets.push(wObj);
