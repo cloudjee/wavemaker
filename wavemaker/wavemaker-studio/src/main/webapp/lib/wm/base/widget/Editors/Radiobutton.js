@@ -81,6 +81,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		var o = g[i].owner;
 		if (o._setEditorValueCalled) {
 		    setEditorValueCalled = true;
+		    this.valueChanged("groupValue", this.groupValue = o.groupValue);
 		    break;
 		}
 	    }
@@ -132,7 +133,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		}
 
 		if (!found) {
-		    // If we made it this far, then inValue does not match any of our radio buttons; 
+		    // If we made it this far, then inValue does not match any of our radio buttons;
 		    // so no buttons should be checked
 		    for (var i=0, v, o; (v=group[i]); i++) {
 			if (v) {
@@ -214,7 +215,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 			if (v.checked)
 				return v.owner.checkedValue;// v.owner refers to a wm.RadioButton (dijit's owner)
 		// if none checked, return an emptyValue; for consistency use the first editor in the group.
-		for (var i=0, v; (v=group[i]); i++) 
+		for (var i=0, v; (v=group[i]); i++)
 			return v.owner.makeEmptyValue(); // v.owner refers to a wm.RadioButton (dijit's owner)
 	},
 	isLoading: function() {
@@ -243,6 +244,14 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 					v.owner.setStartChecked(false); // v.owner refers to a wm.RadioButton (dijit's owner)
 		}
 		this.inherited(arguments);
+	},
+	setChecked: function(inChecked) {
+		this.inherited(arguments);
+		/* If _cupdating, then changed won't be called, so we have to update the groupValue now */
+		if (this._cupdating && inChecked) {
+			this.updateGroupValue();
+			this._setEditorValueCalled = true;
+		}
 	},
 	editorChanged: function() {
 	    this.inherited(arguments);
