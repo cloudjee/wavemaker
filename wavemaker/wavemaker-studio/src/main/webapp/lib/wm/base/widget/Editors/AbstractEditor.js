@@ -1019,7 +1019,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		return p;
 	},
 	valueChanged: function(inProp, inValue) {
-		if (this._updating)
+		if (this._updating && (inProp == "dataValue" || inProp == "isDirty" || inProp == "displayValue" || inProp == "invalid"))
 			return;
 	    if (inProp == "dataValue")
 		this._lastValueReported = inValue;
