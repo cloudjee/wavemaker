@@ -87,7 +87,6 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         wsdlFilePaths.add(this.wsdl.getURI());
         List<String> jaxbBindingFilePaths = new ArrayList<String>();
         for (File jaxbBindingFile : this.jaxbBindingFiles) {
-            // cftempfix
             jaxbBindingFilePaths.add(jaxbBindingFile.toString());
         }
         S2JJAXBModel model = ((JAXBTypeMapper) this.wsdl.getTypeMapper()).getJAXBModel();
