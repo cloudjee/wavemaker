@@ -783,7 +783,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             var editCell = null;
             var newIndex, item;
             for (var i = 0; i < this.columns.length; i++) {
-                if (this.columns[i].fieldType) {
+                if (this.columns[i].fieldType && this.columns[i].fieldType != "dojox.grid.cells.Bool") {
                     editCell = this.columns[i];
                     break;
                 }
