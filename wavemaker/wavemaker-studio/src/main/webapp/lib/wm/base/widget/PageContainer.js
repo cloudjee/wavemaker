@@ -40,7 +40,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 
         this.updatePageName();
         this._initialPageName = this._pageName;
-        if (app && app.locationState && app.locationState[this.getRuntimeId()]) {
+        if (this.manageURL && app && app.locationState && app.locationState[this.getRuntimeId()]) {
             this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
             this._locationState = app.locationState;
             this._restoringLocationState = true;
@@ -275,10 +275,10 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (this.$.binding) this.$.binding.refresh(); // update all bound values
         }
 
-        if (this._restoringLocationState || this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
+        if (this._restoringLocationState || (this.manageHistory || this.manageURL) && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
             app.addHistory({id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
                     options: this._backState,
-                    title: "Show " + this._pageName});
+                    title: "Show " + this._pageName}, !this.manageHistory || this._restoringLocationState);
             delete this._backState;
         }
         delete this._restoringLocationState;
