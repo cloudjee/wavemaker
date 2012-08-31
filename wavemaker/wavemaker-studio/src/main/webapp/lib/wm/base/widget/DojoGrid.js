@@ -336,19 +336,22 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }
 
         // values of the selectedItem must be updated, but do NOT call a selectionChange event, as its the same selected item, just different place the data is stored
-        var rowIdx = this.getSelectedIndex();
-        if (rowIdx != inRowIndex) {
-            this.setSelectedRow(inRowIndex, true);
-        } else {
-            this.updateSelectedItem(rowIdx);
-        }
+        if (this.selectionMode != "none") {
+            var rowIdx = this.getSelectedIndex();
+            if (rowIdx != inRowIndex) {
+                this.setSelectedRow(inRowIndex, true);
+            } else {
+                this.updateSelectedItem(rowIdx);
+            }
 
-        var allowLazyLoad = this.selectedItem._allowLazyLoad;
-        this.selectedItem._allowLazyLoad = false;
-        var oldValue = this.selectedItem.getValue(inFieldName);
-        this.selectedItem._allowLazyLoad = allowLazyLoad;
-        if (oldValue === inValue) return;
-        this.selectedItem.setValue(inFieldName, inValue);
+
+            var allowLazyLoad = this.selectedItem._allowLazyLoad;
+            this.selectedItem._allowLazyLoad = false;
+            var oldValue = this.selectedItem.getValue(inFieldName);
+            this.selectedItem._allowLazyLoad = allowLazyLoad;
+            if (oldValue === inValue) return;
+            this.selectedItem.setValue(inFieldName, inValue);
+        }
 
         // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
         if (inFieldName.indexOf(".") != -1) {
