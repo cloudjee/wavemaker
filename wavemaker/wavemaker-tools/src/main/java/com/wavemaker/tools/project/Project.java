@@ -414,15 +414,4 @@ public class Project extends AbstractFileService {
     private String getPropertyName(Class<?> clazz, String key) {
         return clazz.getName() + ProjectConstants.PROP_SEP + key;
     }
-
-    // TODO: API - remove this method after API conversion is completed
-    @Override
-    public StudioFileSystem getFileSystem() {
-        if (this.projectRoot == null) {
-            StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-            return fileSystem;
-        } else {
-            return super.getFileSystem();
-        }
-    }
 }
