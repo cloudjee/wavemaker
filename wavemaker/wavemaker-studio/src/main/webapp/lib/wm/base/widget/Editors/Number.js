@@ -22,7 +22,8 @@ dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.CurrencyTextBox");
 
 
-/* Fixes handling of places property in wm.Number */
+/* Fixes handling of places property in wm.Number. Can't do a subclass unless we subclass both wm.form.NumberTextBox
+ * and its NumberSpinner subclass */
 dijit.form.NumberTextBox.extend({
     format: function(value, constraints) {
         // summary:
@@ -46,6 +47,19 @@ dijit.form.NumberTextBox.extend({
         constraints = dojo.mixin({}, constraints, this.editOptions);
         if (!this._focused) delete constraints.pattern;
         return this._formatter(value, constraints);
+    },
+
+    /* Called as the user types */
+    _refreshState: function(){
+        //var value = this.toString();
+        var value = this.get("displayedValue");
+        var index = value.indexOf(".");
+        if (this.editOptions.places && this.editOptions.placeWhileTyping && index != -1) {
+            var newvalue = value.substr(0, index) + "." + value.substr(index+1,this.editOptions.places);
+            if (newvalue != value)
+                this.focusNode.value = newvalue;
+        }
+        this.inherited(arguments);
     }
 });
 
@@ -65,6 +79,7 @@ dojo.declare("wm.Number", wm.Text, {
     minimum: "",
     maximum: "",
     places: "",
+    applyPlacesWhileTyping: false,
     _messages: {
         rangeMin: "Minimum number must be less than the maximum setting of ${0}.",
         rangeMax: "Maximum number must be greater than the minimum setting of ${0}."
@@ -108,6 +123,7 @@ dojo.declare("wm.Number", wm.Text, {
         var places = this._getPlaces();
         if (places !== "") {
             p.editOptions.places = places;
+            p.editOptions.placeWhileTyping = this.applyPlacesWhileTyping;
         }
         return p;
     },
@@ -174,11 +190,15 @@ dojo.declare("wm.Number", wm.Text, {
     */
 
     _createEditor: function(inNode, inProps) {
-        if (this.spinnerButtons && !wm.isMobile) return new dijit.form.NumberSpinner(this.getEditorProps(inNode, inProps));
-        else {
-            return new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
+        var e;
+        if (this.spinnerButtons && !wm.isMobile) {
+            e = new dijit.form.NumberSpinner(this.getEditorProps(inNode, inProps));
+        } else {
+            e = new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
         }
+        return e;
     },
+
     /*
     _getPattern: function() {
         var
