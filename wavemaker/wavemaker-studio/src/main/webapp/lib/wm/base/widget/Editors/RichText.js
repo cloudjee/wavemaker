@@ -13,7 +13,7 @@
  */
 
 
- 
+
 dojo.provide("wm.base.widget.Editors.RichText");
 
 dojo.require("wm.base.widget.Editors.Text");
@@ -27,7 +27,7 @@ dojo.require("dijit._editor.plugins.LinkDialog");
 dojo.require("dojox.editor.plugins.FindReplace");
 
 //===========================================================================
-// Rich Text Editor  
+// Rich Text Editor
 //===========================================================================
 
 dojo.declare("wm.RichText", wm.LargeTextArea, {
@@ -181,10 +181,12 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this._ready = false;
 		this.editorNode = document.createElement("div");
 		this.domNode.appendChild(this.editorNode);
-		this.editor = new dijit.Editor({height: parseInt(this.height), 
+		this.editor = new dijit.Editor({height: parseInt(this.height),
 						plugins: this.plugins,
 						disabled: this.disabled},
 					       this.editorNode);
+        dojo.addClass(this.editorNode, "RichTextEditable");
+
 		this._onLoad();
 		return this.editor;
 	    } else {
@@ -207,7 +209,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		}
 	},
 	updateFocusNode: function(){
-	    //this.editor.focusNode.style.lineHeight = "12px"; // needed for safari... 
+	    //this.editor.focusNode.style.lineHeight = "12px"; // needed for safari...
 		this.editor.focusNode.style.overflow = "auto";
 	    if (this._isDesignLoaded) {
 		wm.onidle(this, function() {
@@ -223,7 +225,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	setDisabled: function(inDisabled) {
 	    this.disabled = inDisabled;
 	    if (this.editor)
-		this.editor.set("disabled",this.disabled || this._parentDisabled); 
+		this.editor.set("disabled",this.disabled || this._parentDisabled);
 	},
     getDisplayValue: function() {
 	if (!this.editor || this.editor instanceof dijit.form.SimpleTextarea) {
@@ -252,10 +254,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 			this.editor.onLoadDeferred.addCallback(dojo.hitch(this, 'setEditorValue', inValue));
 		  return;
 		}
-		
-		if (inValue === null || inValue === undefined) 
+
+		if (inValue === null || inValue === undefined)
   		inValue = "\n\n";
-		if (dojo.isString(inValue)) 
+		if (dojo.isString(inValue))
 	 	  inValue += "";
 		try {
 		  this.editor.set('value', inValue);
@@ -265,8 +267,8 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		}
 	}
  });
- 
- 
+
+
  wm.Object.extendSchema(wm.RichText, {
      /* subwidget group; buttons subgroup */
      toolbarUndo: {group: "editor", subgroup: "toolbar", order: 1, shortname: "undo"},
@@ -294,7 +296,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
      tooltipDisplayTime: {ignore: 1},
      promptMessage: {ignore: 1},
      displayValue: {ignore: 1},
-     
+
      /* Method group */
      setToolbarUndo: {method:1},
      setToolbarStyle: {method:1},
@@ -307,7 +309,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
      setToolbarSize: {method:1},
      setToolbarColor: {method:1}
  });
- 
+
  wm.RichText.extend({
 	setToolbarUndo:function(val) {
 		this.toolbarUndo = val;

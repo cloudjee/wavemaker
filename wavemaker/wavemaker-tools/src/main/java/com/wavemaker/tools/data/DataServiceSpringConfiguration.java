@@ -52,6 +52,7 @@ import com.wavemaker.tools.spring.beans.Prop;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Props;
 import com.wavemaker.tools.spring.beans.Value;
+import com.wavemaker.tools.deployment.DeploymentType;
 
 /**
  * Encapsulates access to the Data Model Spring configuration.
@@ -272,6 +273,37 @@ public class DataServiceSpringConfiguration {
 
     public List<Bean> getBeansByType(Class<?> type) {
         return this.beans.getBeansByType(type.getName());
+    }
+
+    // Add dummy beans used to export table structure when deploying to cloud foundry
+    public void createAuxSessionFactoryBeans(DeploymentType type) {
+        if (type != DeploymentType.CLOUD_FOUNDRY) {
+            return;
+        }
+
+        List<Bean> factoryBeans = this.beans.getBeansByType(DataServiceConstants.SESSION_FACTORY_BEAN_CLASS);
+        if (factoryBeans != null && factoryBeans.size() > 0) {
+            for (Bean bean : factoryBeans) {
+                Bean auxBean = new Bean();
+                auxBean.setId(bean.getId() + DataServiceConstants.AUX_BEAN_SUFFIX);
+                auxBean.setAbstract(bean.getAbstract());
+                //auxBean.setAutowire(bean.getAutowire());
+                auxBean.setClazz(bean.getClazz() + DataServiceConstants.AUX_BEAN_SUFFIX);
+                //auxBean.setDependencyCheck(bean.getDependencyCheck());
+                //auxBean.setDependsOn(bean.getDependsOn());
+                auxBean.setDescription(bean.getDescription());
+                auxBean.setDestroyMethod(bean.getDestroyMethod());
+                auxBean.setFactoryBean(bean.getFactoryBean());
+                auxBean.setFactoryMethod(bean.getFactoryMethod());
+                auxBean.setInitMethod(bean.getInitMethod());
+                auxBean.setLazyInit(bean.getLazyInit());
+                auxBean.setMetasAndConstructorArgsAndProperties(bean.getMetasAndConstructorArgsAndProperties());
+                auxBean.setName(bean.getName());
+                auxBean.setParent(bean.getParent());
+                auxBean.setScope(bean.getScope());
+                this.beans.addBean(auxBean);
+            }
+        }
     }
 
     void configureJNDIDataSource(String jndiName) {

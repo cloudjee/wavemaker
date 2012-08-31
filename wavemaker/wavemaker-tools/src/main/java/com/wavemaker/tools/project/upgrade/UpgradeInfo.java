@@ -32,6 +32,8 @@ public class UpgradeInfo {
 
     private Map<String, List<String>> verbose = new HashMap<String, List<String>>();
 
+    private String backupExportFile;
+
     private double version = -1;
 
     public void addMessage(String message) {
@@ -74,5 +76,13 @@ public class UpgradeInfo {
 
     public void setVerbose(Map<String, List<String>> verbose) {
         this.verbose = verbose;
+    }
+
+    public String getBackupExportFile() {
+        return this.backupExportFile;
+    }
+
+    public void setBackupExportFile(String backupExportFile) {
+        this.backupExportFile = backupExportFile;
     }
 }

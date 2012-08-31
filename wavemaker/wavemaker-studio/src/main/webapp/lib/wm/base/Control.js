@@ -399,8 +399,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     // Construction
     //===========================================================================
     constructor: function() {
-	this.widgets = {};
-	this._classes = dojo.clone(this._classes);
+    	this.widgets = {};
+    	this._classes = dojo.clone(this._classes);
     },
 
 
@@ -410,140 +410,129 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     // 2. Need a way to find the owner component (Page.js will need to set a global app._currentParseOwner before calling dojo.parser; and then restoring the prior value when its done in case Page.js is loading a pagecontainer)
     // 3. Need a way to invoke postInit; probably will need Page.js to do a second traversal after all widgets are created calling postInit on each widget
     markupFactory: function(params, node) {
-	var ctor = arguments.callee.arguments[2];
-	var domNode = node;
-	var owner = wm._dojoParserCurrentOwner;
-	var parentid = node.parentNode.id;
-	while (parentid.indexOf("_") != -1 && !owner[parentid])
-	    parentid = parentid.substring(parentid.indexOf("_")+1);
-	var parent = owner[parentid];
-	params = dojo.mixin(params,{
-	    domNode: domNode,
-	    parentNode: domNode.parentNode,
-	    parent: parent,
-	    name: owner.getUniqueName(params.name),
-	    owner: owner,
-	    _designer: owner._designer,
-	    _loading:false}); // should be changing this to true... but need to do something about calling postInit in a second pass before we change this
-	var result = new ctor(params);
-	if (!params.parent && ctor.prototype.declaredClass == "wm.Layout")
-	    result.owner.root = result;
-	return result;
+        var ctor = arguments.callee.arguments[2];
+        var domNode = node;
+        var owner = wm._dojoParserCurrentOwner;
+        var parentid = node.parentNode.id;
+        while (parentid.indexOf("_") != -1 && !owner[parentid])
+        parentid = parentid.substring(parentid.indexOf("_") + 1);
+        var parent = owner[parentid];
+        params = dojo.mixin(params, {
+            domNode: domNode,
+            parentNode: domNode.parentNode,
+            parent: parent,
+            name: owner.getUniqueName(params.name),
+            owner: owner,
+            _designer: owner._designer,
+            _loading: false
+        }); // should be changing this to true... but need to do something about calling postInit in a second pass before we change this
+        var result = new ctor(params);
+        if (!params.parent && ctor.prototype.declaredClass == "wm.Layout") result.owner.root = result;
+        return result;
     },
     prepare: function(inProps) {
-	try {
-	    if (inProps) {
-		var owner = inProps.owner;
-		if (!owner && parent) {
-		    owner = inProps.owner = parent.owner;
-		}
-		if (owner) owner = owner.getOwnerApp();
-		if (owner)
-                    owner.loadThemePrototypeForClass(this.constructor, this);
-	    }
-	} catch(e) {
-	    console.error("What the hell?" + e);
-	}
-	this.inherited(arguments);
+        try {
+            if (inProps) {
+                var owner = inProps.owner;
+                if (!owner && parent) {
+                    owner = inProps.owner = parent.owner;
+                }
+                if (owner) owner = owner.getOwnerApp();
+                if (owner) owner.loadThemePrototypeForClass(this.constructor, this);
+            }
+        } catch (e) {
+            console.error("What the hell?" + e);
+        }
+        this.inherited(arguments);
     },
     postscript: function(inProps) {
-	this.inherited(arguments);
+        this.inherited(arguments);
     },
     create: function() {
-	this._cupdating = true;
-	this.inherited(arguments);
+        this._cupdating = true;
+        this.inherited(arguments);
     },
     build: function() {
-	this.domNode = dojo.byId(this.domNode||/*this.id||*/undefined);
-	if (!this.domNode)
-	    this.domNode = document.createElement('div');
+        this.domNode = dojo.byId(this.domNode || /*this.id||*/ undefined);
+        if (!this.domNode) this.domNode = document.createElement('div');
     },
     initDomNode: function() {
-	if (!this.dom) {
-	    this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
-	    if (!this.isRelativePositioned)
-		this.domNode.style.position = "absolute";
-            else
-		this.domNode.style.position = "relative";
-	    this.setParent(this.parent);
-	    this.setDomNode(this.domNode);
-	}
+        if (!this.dom) {
+            this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
+            if (!this.isRelativePositioned) this.domNode.style.position = "absolute";
+            else this.domNode.style.position = "relative";
+            this.setParent(this.parent);
+            this.setDomNode(this.domNode);
+        }
     },
     init: function() {
 
-	this.initDomNode();
-	this.inherited(arguments);
+        this.initDomNode();
+        this.inherited(arguments);
 
-	var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-	if (!isMobile || !this.enableTouchHeight) {
-	    if (this.desktopHeight != null) {
-		this.height = this.desktopHeight;
-	    } else if (this.height) {
-		this.desktopHeight = this.height;
-	    } else {
-		this.height = this.desktopHeight = this.constructor.prototype.height;
-	    }
-	    if (this.minDesktopHeight) {
-		this.minHeight = this.minDesktopHeight;
-	    } else if (this.minHeight) {
-		this.minDesktopHeight = this.minHeight;
-	    } else {
-		this.minHeight = this.minDesktopHeight = this.constructor.prototype.minHeight;
-	    }
+        var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
+        if (!isMobile || !this.enableTouchHeight) {
+            if (this.desktopHeight != null) {
+                this.height = this.desktopHeight;
+            } else if (this.height) {
+                this.desktopHeight = this.height;
+            } else {
+                this.height = this.desktopHeight = this.constructor.prototype.height;
+            }
+            if (this.minDesktopHeight) {
+                this.minHeight = this.minDesktopHeight;
+            } else if (this.minHeight) {
+                this.minDesktopHeight = this.minHeight;
+            } else {
+                this.minHeight = this.minDesktopHeight = this.constructor.prototype.minHeight;
+            }
 
-	} else {
-	    if (this._isDesignLoaded && studio.currentDeviceType == "desktop" || this.desktopHeight == undefined) {
-		this.desktopHeight = this.height || this.mobileHeight;
-	    }
-	    if (this.desktopHeight && typeof this.desktopHeight == "string" && this.desktopHeight.match(/\%/)) {
-		this.height = this.mobileHeight = this.desktopHeight;
-	    } else if (this.mobileHeight) {
-		this.height = this.mobileHeight;
-	    } else if (this.height) {
-		this.mobileHeight = this.height;
-	    } else {
-		this.height = this.mobileHeight = this.constructor.prototype.height;
-	    }
-	    if (this.minMobileHeight) {
-		this.minHeight = this.minMobileHeight;
-	    } else {
-		this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
-	    }
-	}
+        } else {
+            if (this._isDesignLoaded && studio.currentDeviceType == "desktop" || this.desktopHeight == undefined) {
+                this.desktopHeight = this.height || this.mobileHeight;
+            }
+            if (this.desktopHeight && typeof this.desktopHeight == "string" && this.desktopHeight.match(/\%/)) {
+                this.height = this.mobileHeight = this.desktopHeight;
+            } else if (this.mobileHeight) {
+                this.height = this.mobileHeight;
+            } else if (this.height) {
+                this.mobileHeight = this.height;
+            } else {
+                this.height = this.mobileHeight = this.constructor.prototype.height;
+            }
+            if (this.minMobileHeight) {
+                this.minHeight = this.minMobileHeight;
+            } else {
+                this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
+            }
+        }
 
-	//if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
-	this.bc(); // mostly in here to support wm.Container's bc method
-	//
+        //if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
+        this.bc(); // mostly in here to support wm.Container's bc method
+        //
+        /*
+      this.setBorder(this.border);
+      this.setMargin(this.margin);
+      this.setPadding(this.padding);
+    */
+        if (this.isDesignLoaded())
+        // enable design borders
+        this.set_border((this.border) ? String(this.border) : "0");
+        else {
+            this.border = (this.border) ? String(this.border) : "0";
+        }
+        this.borderExtents = this._parseExtents(this.border);
 
-	/*
-	  this.setBorder(this.border);
-	  this.setMargin(this.margin);
-	  this.setPadding(this.padding);
-	*/
-	if (this.isDesignLoaded())
-	    // enable design borders
-	    this.set_border((this.border) ? String(this.border) : "0");
-	else {
-	    this.border = (this.border) ? String(this.border) : "0";
-	}
-	this.borderExtents = this._parseExtents(this.border);
+        this.padding = String(this.padding);
+        this.paddingExtents = this._parseExtents(this.padding);
+        this.setMargin(String(this.margin));
+        this.doSetSizeBc();
+        if (!this.showing) this.setShowing(false, true);
 
-	this.padding = String(this.padding);
-	this.paddingExtents = this._parseExtents(this.padding);
-	this.setMargin(String(this.margin));
-	this.doSetSizeBc();
-	if (!this.showing) this.setShowing(false,true);
+        this.setDisabled(this.disabled);
 
-   	this.setDisabled(this.disabled);
-
-	/* This code is only used in design mode... if then
-  	if (this.styles) {
-	    this.set_styles(this.styles);
-	    this.styles = "";
-	}
-*/
-	this.appendDOMNode(this.parent);
-	this.updateBounds();
+        this.appendDOMNode(this.parent);
+        this.updateBounds();
     },
 
     bc: function() {
@@ -551,164 +540,151 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
 
     postInit: function() {
-	this._cupdating = false;
-	this.inherited(arguments);
+        this._cupdating = false;
+        this.inherited(arguments);
 
-	// After we've finished creating the widget, NOW we render() -- just once; not over and over while we're setting borders and
-	// margins and everything else.
-	this.render(1);
+        // After we've finished creating the widget, NOW we render() -- just once; not over and over while we're setting borders and
+        // margins and everything else.
+        this.render(1);
 
 
-	if (this.addTouchListener && wm.isMobile && !window["studio"]) {
-	    //this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
-	    this.addTouchListener(this._touchNode || this.domNode);
-	}
+        if (this.addTouchListener && wm.isMobile && !window["studio"]) {
+            //this.connect(this._touchNode || this.domNode, wm.isFakeMobile ? "mousedown" : "touchstart", this, "_onTouchStart");
+            this.addTouchListener(this._touchNode || this.domNode);
+        }
 
-	if (!this.$.binding && this.isDesignLoaded())
-	    new wm.Binding({name: "binding", owner: this});
-	if (this.hint) {
-	    this.setHint(this.hint);
-	}
+        if (!this.$.binding && this.isDesignLoaded()) new wm.Binding({
+            name: "binding",
+            owner: this
+        });
+        if (this.hint) {
+            this.setHint(this.hint);
+        }
     },
 
 
     destroy: function() {
-	if (this.isDestroyed || this._isDestroying)
-	    return;
-	this._isDestroying = true;
+        if (this.isDestroyed || this._isDestroying) return;
+        this._isDestroying = true;
 
-	try
-	{
-	    if (app.toolTipDialog && this == app.toolTipDialog.tipOwner) {
-		app.toolTipDialog.hide();
-	    }
+        try {
+            if (app.toolTipDialog && this == app.toolTipDialog.tipOwner) {
+                app.toolTipDialog.hide();
+            }
 
-	    if (this._layerConnections)
-		delete this._layerConnections;
+            if (this._layerConnections) delete this._layerConnections;
 
-	    if (this.widgets) {
-		var wids = [];
-		wm.forEachProperty(this.widgets, function(w,name) {
-		    wids.push(w);
-		});
-		for (var i = 0, w; (w = wids[i]); i++)
-		    w.destroy();
-		wids = [];
-	    }
+            if (this.widgets) {
+                var wids = [];
+                wm.forEachProperty(this.widgets, function(w, name) {
+                    wids.push(w);
+                });
+                for (var i = 0, w;
+                (w = wids[i]); i++)
+                w.destroy();
+                wids = [];
+            }
 
-	    this.widgets = null;
-	    this.parentNode = null
-	    this.setParent(null);
-	    wm.fire(this.designWrapper, "destroy");
-	    this.layout = null;
-	    this.inherited(arguments);
-	}
-	catch (e)
-	{
-	    console.info('Error while destroying : ' + this.name, e);
-	}
-	finally
-	{
-	    if (this.domNode)
-		dojo.destroy(this.domNode);
-	    this.domNode =  null;
-	    this._designee = null;
-	    if (this.dom && this.dom.node)
-	    {
-		dojo.destroy(this.dom.node);
-		this.dom.node = null;
-		this.dom = null;
-	    }
+            this.widgets = null;
+            this.parentNode = null
+            this.setParent(null);
+            wm.fire(this.designWrapper, "destroy");
+            this.layout = null;
+            this.inherited(arguments);
+        } catch (e) {
+            console.info('Error while destroying : ' + this.name, e);
+        } finally {
+            if (this.domNode) dojo.destroy(this.domNode);
+            this.domNode = null;
+            this._designee = null;
+            if (this.dom && this.dom.node) {
+                dojo.destroy(this.dom.node);
+                this.dom.node = null;
+                this.dom = null;
+            }
 
-	}
+        }
     },
     loaded: function() {
-	this.inherited(arguments);
-	this.initUserClasses();
+        this.inherited(arguments);
+        this.initUserClasses();
     },
     setDomNode: function(inDomNode) {
-	var n = this.domNode = inDomNode;
-	if (dojo.isIE <= 8) {
-	    // forcing a size on the node now seems to help IE
-	    // honor auto sizing later
-	    n.style.width = "0px";
-	}
-	// id
-	this.updateId();
-	// classes
-	var cNames = this.classNames + (this.owner ? ' ' + this.owner.declaredClass.replace(/\./g,"") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
-	dojo.addClass(n,cNames);
-	this.initUserClasses();
-	//this.updateBounds();
+        var n = this.domNode = inDomNode;
+        if (dojo.isIE <= 8) {
+            // forcing a size on the node now seems to help IE
+            // honor auto sizing later
+            n.style.width = "0px";
+        }
+        // id
+        this.updateId();
+        // classes
+        var cNames = this.classNames + (this.owner ? ' ' + this.owner.declaredClass.replace(/\./g, "") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
+        dojo.addClass(n, cNames);
+        this.initUserClasses();
+        //this.updateBounds();
     },
 
 
     isAncestorHiddenLayer: function() {
-	if (this instanceof wm.Layout && this.owner == app._page) return false;
-	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
+        if (this instanceof wm.Layout && this.owner == app._page) return false;
+        if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
         var parent;
-        if (this.parent && this.parent instanceof wm.Control)
-            parent = this.parent;
-        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
-            parent = this.owner.owner;
-	if (!parent) return false;
-	return parent.isAncestorHiddenLayer();
+        if (this.parent && this.parent instanceof wm.Control) parent = this.parent;
+        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control) parent = this.owner.owner;
+        if (!parent) return false;
+        return parent.isAncestorHiddenLayer();
     },
     isAncestorHidden: function() {
         if (!this.showing && this instanceof wm.Layer == false) return true;
-	if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
-	if (this instanceof wm.Layer && !this.active) return true;
+        if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
+        if (this instanceof wm.Layer && !this.active) return true;
         var parent;
-        if (this.parent && this.parent instanceof wm.Control)
-            parent = this.parent;
-        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control)
-            parent = this.owner.owner;
-	if (!parent) return false;
-	return parent.isAncestorHidden();
+        if (this.parent && this.parent instanceof wm.Control) parent = this.parent;
+        else if (this.owner instanceof wm.Page && this.owner.owner instanceof wm.Control) parent = this.owner.owner;
+        if (!parent) return false;
+        return parent.isAncestorHidden();
     },
 
     callOnShowParent: function() {
-	var self = this;
-	wm.forEachVisibleWidget(this, function(w) {
-	    if (self != w) {
-		/* For internal widget detection of changes to showing state, use _onShowParent */
-		if (w._onShowParent) {
-		    w._onShowParent();
-		}
+        var self = this;
+        wm.forEachVisibleWidget(this, function(w) {
+            if (self != w) { /* For internal widget detection of changes to showing state, use _onShowParent */
+                if (w._onShowParent) {
+                    w._onShowParent();
+                }
 
-		/* For public tooled detection use onShow; only call onShow if its been replaced with something other than
-		 * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
-		 */
-		else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
-		    w.onShow();
-		}
+                /* For public tooled detection use onShow; only call onShow if its been replaced with something other than
+                 * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
+                 */
+                else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
+                    w.onShow();
+                }
 
-	    }
-	}, true);
+            }
+        }, true);
     },
     callOnHideParent: function() {
-	var self = this;
-	if (!this.isDestroyed) {
-	    wm.forEachVisibleWidget(this, function(w) {
-		if (w.hint && app.toolTipDialog && app.toolTipDialog.tipOwner == self)
-		    app.hideToolTip();
-		if (self != w) {
-		/* For internal widget detection of changes to hideing state, use _onHideParent */
-		if (w._onHideParent) {
-		    w._onHideParent();
-		}
+        var self = this;
+        if (!this.isDestroyed) {
+            wm.forEachVisibleWidget(this, function(w) {
+                if (w.hint && app.toolTipDialog && app.toolTipDialog.tipOwner == self) app.hideToolTip();
+                if (self != w) { /* For internal widget detection of changes to hideing state, use _onHideParent */
+                    if (w._onHideParent) {
+                        w._onHideParent();
+                    }
 
-		/* For public tooled detection use onHide; only call onHide if its been replaced with something other than
-		 * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
-		 */
-		else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
-		    w.onHide();
-		}
+                    /* For public tooled detection use onHide; only call onHide if its been replaced with something other than
+                     * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
+                     */
+                    else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
+                        w.onHide();
+                    }
 
 
-		}
-	    }, true);
-	}
+                }
+            }, true);
+        }
     },
     onShow: function(){},
     onHide: function(){},

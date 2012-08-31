@@ -22,7 +22,7 @@ dojo.require("wm.base.components.ServiceQueue");
 // Note: wm.ServiceCall is not a component. This primarily so that it can be combined
 // with components that have other capabilities.
 /**
-    Infrastructure for encapsulating a {@link wm.Service} configuration with a trigger 
+    Infrastructure for encapsulating a {@link wm.Service} configuration with a trigger
     to invoke the configured service.
     @name wm.ServiceCall
     @class
@@ -31,7 +31,7 @@ dojo.require("wm.base.components.ServiceQueue");
 dojo.declare("wm.ServiceCall", null, {
     /** @lends wm.ServiceCall.prototype */
     /**
-        Set true to automatically <a href="#update">update</a> this service when 
+        Set true to automatically <a href="#update">update</a> this service when
         the service configuration or input is modified.
         @type String
     */
@@ -101,7 +101,7 @@ dojo.declare("wm.ServiceCall", null, {
             this._service = wm.services.getService(this.service, owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
             wm.fire(this._service, "setServiceCall", [this]);
             this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
-                              
+
         } catch (e) {
         } finally {
             delete this._inSetService;
@@ -114,8 +114,9 @@ dojo.declare("wm.ServiceCall", null, {
         this._service = wm.services.getService(this.service, owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
         wm.fire(this._service, "setServiceCall", [this]);
         this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
+        if (this.setType) this.setType(this.type);
     },
-    
+
     /* Set the operation and update the inputs */
     _setOperation: function(inOperation, forceUpdate) {
         this.operation = inOperation;
@@ -138,20 +139,20 @@ dojo.declare("wm.ServiceCall", null, {
     operationChanged: function(forceUpdate) {
         this.input.operationChanged(this.operation, this._operationInfo.parameters);
     },
-    
+
     /* Create the ServiceInput component */
     createInput: function() {
         var i = new wm.ServiceInput({name: "input", owner: this });
         i.operationChanged(this.operation, this._operationInfo.parameters);
         return i;
     },
-    
+
     /* Any time the input is changed, fire doAutoUpdate() */
     inputChanged: function() {
         this.doAutoUpdate();
     },
-    
-    /* Fire doStartUpdate when the page finishes loading.  
+
+    /* Fire doStartUpdate when the page finishes loading.
      * NOTE: If owner is a Composite or Application, this may not work
      */
     connectStartUpdate: function() {
@@ -202,7 +203,7 @@ dojo.declare("wm.ServiceCall", null, {
             wm.job(this.getRuntimeId() + ".doAutoUpdate", wm.isMobile ? 20 : 1, dojo.hitch(this, "updateInternal"));
         }
     },
-    
+
     /* Public method for firing the service call */
     update: function() {
         // moved to RBacPlugin; if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
@@ -249,7 +250,7 @@ dojo.declare("wm.ServiceCall", null, {
             return d;
         }
     },
-    
+
     /* Sets info.canUpdate to false if the ServiceCall is unable to fire */
     canUpdate: function() {
         var info = {canUpdate: this._getCanUpdate() };
@@ -283,8 +284,8 @@ dojo.declare("wm.ServiceCall", null, {
 
     /* inArgs optional too... typically provided by calls from the request backlog/inflight queue*/
     request: function(inArgs, optionalOp, optionalDeferred) {
-        var args = inArgs || this.getArgs();                       
-        
+        var args = inArgs || this.getArgs();
+
         /* Tell the Service component to fire */
         var d = this._requester = this._service.invoke(optionalOp || this.operation, args, this.owner, this);
 
@@ -310,7 +311,7 @@ dojo.declare("wm.ServiceCall", null, {
             return d;
         }
     },
-    
+
     /* This is called when the Service completes its call successfully.  This does cleanup, and calls processResult */
     result: function(inResult) {
         this._requester = false;
@@ -353,7 +354,7 @@ dojo.declare("wm.ServiceCall", null, {
     },
 
     /* Called by error(); calls onResult and onError */
-    processError: function(inError) {        
+    processError: function(inError) {
         this.onResult(inError);
         this.onError(inError);
     },
@@ -371,7 +372,7 @@ dojo.declare("wm.ServiceCall", null, {
     },
     /**
         onBeforeUpdate event fires before a service is invoked.
-        @param {wm.ServiceInput} ioInput The input object used to determine what data 
+        @param {wm.ServiceInput} ioInput The input object used to determine what data
         will be passed to the service.
         @event
     */
@@ -403,7 +404,7 @@ dojo.declare("wm.ServiceCall", null, {
     onError: function(inError) {
     }
 });
-        
+
 
 //===========================================================================
 // Variable used as a service input
@@ -423,7 +424,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
     },
     isDataProp: function(inProp) {
         // Note: it's important we assume all properties are data properties unless _dataSchema is set
-        // Since the dataSchema is set externally, 
+        // Since the dataSchema is set externally,
         // bindings may set data properties before data schema is set, creating errors.
         return wm.isEmpty(this._dataSchema) || (inProp in this._dataSchema) ;
     },
@@ -455,7 +456,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
             var data= this.getData(true), args=[], d;
         } catch(e){}
         wm.Variable.convertToHashMaps = false;
-        
+
         // convert to array
         for (var p in this._dataSchema) {
             if (data) {
@@ -491,8 +492,8 @@ wm.ServiceCall.extend({
             this._service = wm.services.getService(this.service, // name of service
                                                    owner && owner.declaredClass == "StudioApplication"); // hide from client
             if (!this._service) this._service = new wm.Service({});
-            
-            // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated   
+
+            // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
             this._setOperation(this.operation, 1);
         }
     },
@@ -502,7 +503,7 @@ wm.ServiceCall.extend({
     },
     /** @lends wm.ServiceCall.prototype */
     doDesigntimeUpdate: function() {
-        this._designTime = true; //The line is not being used now.  It may be used in the future to differenciate requests from 
+        this._designTime = true; //The line is not being used now.  It may be used in the future to differenciate requests from
         //Studio from requests deployed application.
         return studio.makeLiveDataCall(dojo.hitch(this, "_update"));
     },

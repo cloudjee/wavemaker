@@ -14,3 +14,28 @@ a,a:visited {
     -moz-box-shadow: 0px 0px 2px 2px #444444;
     -webkit-box-shadow: 0px 0px 2px 2px #444444;
 }
+
+
+.wmWaitDialog {
+    background-image:url(resources/images/waitdialog_bg.gif);
+	background-repeat:repeat-x;
+	background-color: #d7d7d7;
+	vertical-align: middle;
+	color: #000;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	text-align: center;
+	padding: 10px;
+}
+
+.wmWaitDialog .wmWaitMessage {
+	font-weight: normal;
+	font-size: 12px;
+}
+
+.wmWaitDialog .wmWaitThrobber {
+	background: url(resources/images/makewavesani_lg.gif) center no-repeat;
+	height: 40px;
+	padding-bottom: 8px;
+}

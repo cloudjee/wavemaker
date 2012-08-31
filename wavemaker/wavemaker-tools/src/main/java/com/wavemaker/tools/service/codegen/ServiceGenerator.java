@@ -264,8 +264,6 @@ public abstract class ServiceGenerator {
         postGenerateClassBody(serviceCls);
 
         try {
-            // TODO - I suspect this will need to be re-written for CF, so let's cheat for now
-            // cftempfix
             Folder dir = this.configuration.getOutputDirectory();
             if (dir instanceof LocalFolder) {
                 File dest = ((LocalFolder) dir).getLocalFile();
@@ -275,6 +273,7 @@ public abstract class ServiceGenerator {
                 this.codeModel.build(f, f, null);
                 Folder folder = new LocalFolder(f);
                 folder.copyContentsTo(this.configuration.getOutputDirectory());
+                IOUtils.deleteRecursive(f);
             }
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);

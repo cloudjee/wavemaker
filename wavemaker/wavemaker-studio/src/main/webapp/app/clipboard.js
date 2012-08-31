@@ -128,7 +128,9 @@ Studio.extend({
     // done pasting: set global pasting flag
     wm.pasting = false;
     return comp;
-    },        updateEventsForRenamedComponents: function() {
+    },
+    updateEventsForRenamedComponents: function() {
+
             var renamed = this.renamedDuringPaste;
             for (var i in renamed) {
                 var comp = renamed[i];

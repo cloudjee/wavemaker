@@ -43,7 +43,7 @@
    *              the titlebar
    ************************************************************************************************/
 
-.wm_template .dialogtitlebar .wmlabel{    
+.wm_template .dialogtitlebar .wmlabel{
     /* Dialogs-Styles-Font */
     font-family: sans-serif; /* Dialogs-Styles-Font_Family */
     font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
@@ -62,8 +62,8 @@
     -moz-border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
     -webkit-border-top-left-radius: 2px;/* wm.Dialog_Inner-Radius */
     -webkit-border-top-right-radius: 2px;/* wm.Dialog_Inner-Radius */
-    border-radius-topleft: 2px;/* wm.Dialog_Inner-Radius */
-    border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
+    border-top-left-radius: 2px;/* wm.Dialog_Inner-Radius */
+    border-top-right-radius: 2px;/* wm.Dialog_Inner-Radius */
 }
 
 
@@ -73,7 +73,7 @@
    * DESCRIPTION: Sets the font and backgound colors, and rounding for
    *              the button panel at the bottom of the dialog
    ************************************************************************************************/
-.wm_template .dialogfooter, 
+.wm_template .dialogfooter,
 .wm_template .wmpagedialog-controlspanel {
     /* Dialogs-Styles-Font */
     font-family: sans-serif; /* Dialogs-Styles-Font_Family */
@@ -92,8 +92,9 @@
     -moz-border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
     -webkit-border-bottom-left-radius: 2px;/* wm.Dialog_Inner-Radius */
     -webkit-border-bottom-right-radius: 2px;/* wm.Dialog_Inner-Radius */
-    border-radius-bottomleft: 2px;/* wm.Dialog_Inner-Radius */
-    border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
+    border-bottom-left-radius: 2px;/* wm.Dialog_Inner-Radius */
+    border-bottom-right-radius: 2px;/* wm.Dialog_Inner-Radius */
+
 }
 
 

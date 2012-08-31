@@ -117,8 +117,8 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		    this.htmlLoader.setUrl(inPath + ".html" + this.randomParam);
 			inCtor.html = this.htmlLoader.html;
 			inCtor.html = inCtor.css = "";
-			
-			// We do not propertly cache the widgets.js file after its been loaded... 
+
+			// We do not propertly cache the widgets.js file after its been loaded...
 			// we delete it from memory.  But dojoScriptLoader assumes we keep it in memory and refuses to reload it.
 			// By deleting it from its list of loaded urls, it should always reload.
 		    var randpath = inPath + ".widgets.js" +  this.randomParam;
@@ -139,7 +139,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	},
 	loadPageCode: function(inName) {
 		//console.info('this.getpath(): ' + this.getPath());		//console.info('wm.pagesFolder: ' + wm.pagesFolder);
-		
+
 	    var path = this.getPath() + wm.pagesFolder + inName + "/" + inName;
 	    var ctor = dojo.getObject(inName);
 	    if (!ctor)
@@ -181,7 +181,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		    console.error("Page not found:", inClassName);
                     this.onError("Page not loaded:" + inClassName);// if you localize onError, then developers can't do tests on the return value
                 }
-	    } catch(e) { 
+	    } catch(e) {
 		console.error("Page not found:", inClassName);
                 this.onError(e);
             }
@@ -213,9 +213,9 @@ dojo.declare("wm.PageLoader", wm.Component, {
 		if (this.previousPage) {
 			this.destroyPage(this.previousPage);
 			delete this.previousPage;
-			
-			// since we are deleting previous page, we should also mark '_supported = false' because 
-			// while deleting previous page we are deleting all html nodes too. 
+
+			// since we are deleting previous page, we should also mark '_supported = false' because
+			// while deleting previous page we are deleting all html nodes too.
 			if (this.previousClassName)
 			{
 				try
@@ -233,6 +233,14 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	onBeforeCreatePage: function() {
 	},
 	onPageChanged: function(inNewPage, inPreviousPage) {
-	}
+	},
+    isDesignLoaded: function() {
+        if (!window["studio"]) return false;
+        if (this.inherited(arguments)) return true;
+        var o = this.owner;
+        while (o && o instanceof wm.Application == false && o != studio.page) o = o.owner;
+        if (o == studio.page) return true;
+        return false;
+    }
 });
 

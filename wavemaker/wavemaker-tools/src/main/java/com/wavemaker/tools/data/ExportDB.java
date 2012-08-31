@@ -154,7 +154,7 @@ public class ExportDB extends BaseDataModelSetup {
                         ReflectionUtils.rethrowRuntimeException(e);
                     }
                 } else {
-                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, this.classesDir);
+                    export = ResourceClassLoaderUtils.runInClassLoaderContext(true, t, this.classesDir);
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");
@@ -220,8 +220,8 @@ public class ExportDB extends BaseDataModelSetup {
             throw new DataServiceRuntimeException(ex);
         } catch (SQLException qex) {
             throw new DataServiceRuntimeException(qex);
-        } catch (RuntimeException rex) {
-            if (rex.getCause().getMessage().contains(NO_SUITABLE_DRIVER) && WMAppContext.getInstance().isCloudFoundry()) {
+        } catch (RuntimeException rex) { 
+            if (rex.getCause() != null && rex.getCause().getMessage().contains(NO_SUITABLE_DRIVER) && WMAppContext.getInstance().isCloudFoundry()) {
                 String msg = rex.getMessage() + " - " + UNKNOWN_DATABASE;
                 throw new DataServiceRuntimeException(msg);
             } else {
@@ -346,16 +346,13 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     private void checkHbmFilesDir(Collection<String> requiredProperties) {
-        // cftempfix - For now, we assume that no properties are supposed to be set to represent directories.
-        if (this.hbmFilesDir instanceof LocalFolder) {
+        //It is assumed that, on CF, no properties are set to provide default directory for hbm files.
+        if (!WMAppContext.getInstance().isCloudFoundry()) {
             if (this.hbmFilesDir == null) {
                 String s = this.properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
                 if (s != null) {
                     setHbmFilesDir(new LocalFolder(new File(s)));
                 }
-            }
-
-            if (this.hbmFilesDir == null) {
                 requiredProperties.add(HBM_FILES_DIR_SYSTEM_PROPERTY);
             }
         }

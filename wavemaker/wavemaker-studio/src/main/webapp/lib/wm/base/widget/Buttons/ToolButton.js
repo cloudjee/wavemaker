@@ -209,7 +209,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 
 	updateImageListButtonHtml: function() {
 		var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
-		var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl + '">' + this.caption + '</span>' : "";
+		var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl + '">' + (this.caption == undefined ? "" : this.caption) + '</span>' : "";
 		var ii = this.getCurrentImageIndex();
 		this.btnNode.innerHTML = this._imageList.getImageHtml(ii) + captionHtml;
 	},
@@ -218,7 +218,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 		if (!noInherited) this.inherited(arguments);
 		var il = this._imageList;
 		if (il && il.getImageHtml && this.imageIndex >= 0) {
-			this.btnNode.style.padding = "0px";
+			if (this.btnNode != this.domNode) this.btnNode.style.padding = "0px";
 			this.updateImageListButtonHtml();
 		} else if (this.iconUrl) {
 			var url = this.iconUrl;
@@ -230,12 +230,12 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 				root = this.getPath() || "";
 			}
 			var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
-			var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl + '">' + this.caption + '</span>' : "";
+			var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl + '">' + (this.caption == undefined ? "" : this.caption) + '</span>' : "";
 
 
 			this.btnNode.innerHTML = "<img src='" + wm.theme.getImagesPath() + "blank.gif' style='margin: " + this.iconMargin + "; width: " + this.iconWidth + "; height: " + this.iconHeight + "; vertical-align: middle; background:url(" + root + url + ") no-repeat; background-color: transparent;' />" + captionHtml;
 
-			this.btnNode.style.padding = "0px";
+            if (this.btnNode != this.domNode) this.btnNode.style.padding = "0px";
 		} else {
 			this.btnNode.innerHTML = this.caption;
 			if (this.btnNode != this.domNode) {

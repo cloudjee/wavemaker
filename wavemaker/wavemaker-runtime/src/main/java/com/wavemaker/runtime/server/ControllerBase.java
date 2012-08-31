@@ -142,7 +142,7 @@ public abstract class ControllerBase extends AbstractController {
                 message = t.toString();
             }
             if (this.serviceResponse != null && !this.serviceResponse.isPollingRequest() && this.serviceResponse.getConnectionTimeout() > 0
-                && System.currentTimeMillis() - this.runtimeAccess.getStartTime() > this.serviceResponse.getConnectionTimeout() * 1000) {
+                && System.currentTimeMillis() - this.runtimeAccess.getStartTime() > (this.serviceResponse.getConnectionTimeout() - 3) * 1000) {
                 this.serviceResponse.addError(t);
             }
             return handleError(message, t);

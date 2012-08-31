@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.templates.widgetTemplates");
 
 if (!wm.widgetTemplates) wm.widgetTemplates = {};
@@ -20,7 +20,7 @@ if (!wm.widgetSpecificTemplate) wm.widgetSpecificTemplate = {};
 
 
 /*********************************************************************************************************************************************************************
- * NOTES: 
+ * NOTES:
  *    Michael: Looks like the people who designed this originally intended for the wm.Template to have high level properties of contaner such as layoutKind,
  *             width, height, border, etc... but these now appear to be ignored.  Anything not in _template is NOT dropped onto the canvas when you drag
  *             a template from palette to canvas.
@@ -28,11 +28,11 @@ if (!wm.widgetSpecificTemplate) wm.widgetSpecificTemplate = {};
  *             specially named panels into the canvas when dropped onto the canvas.
  *********************************************************************************************************************************************************************/
  /***** COMMENTING OUT OLD TEMPLATES ***/
- 
- 
- 
- 
- 
+
+
+
+
+
 wm.widgetTemplates.twoColumn = {
 	layoutKind: "top-to-bottom",
 	width: "100%",
@@ -67,7 +67,7 @@ wm.fullTemplates.fancyTemplate = {
 	}],
 	varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
 		input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
-	}],	
+	}],
 	    panel1: ["wm.Panel", {"border":"0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"80%", minHeight: "660", minWidth:"800"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"borderColor":"#004c68","height":"60px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -79,14 +79,14 @@ wm.fullTemplates.fancyTemplate = {
 						binding: ["wm.Binding", {}, {}, {
 							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
 						}]
-					}],
-					button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]
+					}]
 				}],
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    text1: ["wm.Text", {"placeHolder":"Search",resetButton: true,"width":"100%"}, {}],
 					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"lib/images/silkIcons/zoom.png","width":"16px"}, {}]
 				}]
-			}]
+			}],
+            button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]
 		}],
 		panel3: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    dojoMenu1: ["wm.DojoMenu", {"_classes":{"domNode":["ClickableDojoMenu"]},"borderColor":"#666666","fullStructure":[{"label":"File","children":[{"label":"New"},{"label":"Open"},{"label":"Save"},{"label":"Close"}]},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Zoom","children":[{"label":"25%"},{"label":"50%"},{"label":"100%"},{"label":"150%"}]},{"label":"Help"}],"height":"100%","localizationStructure":{},"padding":"4,10,0,10","transparent":false}, {}]
@@ -145,7 +145,7 @@ wm.fullTemplates.fancyTemplate = {
 			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"300px"}, {}, {
 			}]
 		}]
-	}]}	
+	}]}
 }
 
 wm.fullTemplates.sideMenuTemplate = {
@@ -158,6 +158,9 @@ wm.fullTemplates.sideMenuTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
+        varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+            input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+        }],
 	    panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","minWidth":900,minHeight: 600, "verticalAlign":"top","width":"75%"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -168,7 +171,8 @@ wm.fullTemplates.sideMenuTemplate = {
 					text1: ["wm.Text", {"placeHolder":"Search",resetButton: true,"width":"100%"}, {}],
 					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"lib/images/silkIcons/zoom.png","width":"16px"}, {}]
 				}]
-			}]
+			}],
+            logoutButton: ["wm.Button", {"caption":"Logout","margin":"4"}, {"onclick":"varTemplateLogout"}]
 		}],
 		panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"120px"}, {}, {
@@ -187,7 +191,7 @@ wm.fullTemplates.sideMenuTemplate = {
 	}
 }
 
-wm.fullTemplates.tabTemplate = {    
+wm.fullTemplates.tabTemplate = {
 	displayName: bundlePackage.TabsTemplate,
         thumbnail: "app/templates/widgetTemplateImages/tabLayersTemplate.png",
 	layoutKind: "left-to-right",
@@ -197,13 +201,16 @@ wm.fullTemplates.tabTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
+        varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+            input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+        }],
 	    panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","minWidth":900,minHeight:600, "verticalAlign":"top","width":"75%"}, {}, {
 		panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
-		    label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
+		        label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
 			}],
 			panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"right","verticalAlign":"middle","width":"100%"}, {}, {
-			    dojoMenu1: ["wm.DojoMenu", {"fullStructure":[{"label":"Help"},{"label":"About"}],"height":"24px","localizationStructure":{},"transparent":true,"width":"140px"}, {}]
+			    dojoMenu1: ["wm.DojoMenu", {"fullStructure":[{"label":"Help"},{"label":"About"}, {"label": "Logout", onClick: "varTemplateLogout"}],"height":"24px","localizationStructure":{},"transparent":true,"width":"250px"}, {}]
 			}]
 		}],
 		panel2: ["wm.MainContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -224,7 +231,7 @@ wm.fullTemplates.tabTemplate = {
 			}],
 			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
 			}]
-		}]	
+		}]
 	    }]
 	}
 }
@@ -239,6 +246,9 @@ wm.fullTemplates.topMenuTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
+        varTemplateLogout: ["wm.LogoutVariable", {}, {}, {
+            input: ["wm.ServiceInput", {"type":"logoutInputs"}, {}]
+        }],
 	    panelCenter: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"900px", minHeight: 600}, {}, {
 		panelHeader: ["wm.HeaderContentPanel", {"height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -249,7 +259,8 @@ wm.fullTemplates.topMenuTemplate = {
 					text1: ["wm.Text", {"placeHolder":"Search",resetButton: true,"width":"100%"}, {}],
 					picture5: ["wm.Picture", {"border":"0","height":"16px","source":"lib/images/silkIcons/zoom.png","width":"16px"}, {}]
 				}]
-			}]
+			}],
+            logoutButton: ["wm.Button", {"caption":"Logout","margin":"4"}, {"onclick":"varTemplateLogout"}]
 		}],
 		panel2: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    dojoMenu1: ["wm.DojoMenu", {"_classes":{"domNode":["ClickableDojoMenu"]},"fullStructure":[{"label":"Placerat","children":[{"label":"Tristique"},{"label":"Lacinia"},{"label":"Egestas"},{"label":"Viverra"}]},{"label":"Feugiat","children":[{"label":"Consequat"},{"label":"Facilisis"},{"label":"Convallis"}]},{"label":"Bibendum","children":[{"label":"Pulvinar"},{"label":"Bibendum"},{"label":"Curabitur"},{"label":"Phasellus"}]},{"label":"Habitasse"}],"height":"24px","localizationStructure":{},"transparent":false}, {}]
@@ -267,7 +278,7 @@ wm.fullTemplates.topMenuTemplate = {
 			}],
 			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
 			}]
-		}]	
+		}]
 	}]}
 }
 wm.fullTemplates.phoneLayout = {
@@ -316,41 +327,26 @@ wm.fullTemplates.tabletLayout = {
         thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
          destroyTemplate: true,
 	_template: {
-monthsVar: ["wm.Variable", {"isList":true,"json":"[{name: \"January\", dataValue: 0}, {name: \"February\", dataValue: 1},{name: \"March\", dataValue: 2},{name: \"April\", dataValue: 3},{name: \"May\", dataValue: 4},{name: \"June\", dataValue: 5},{name: \"July\", dataValue: 6},{name: \"August\", dataValue: 7},{name: \"September\", dataValue: 8},{name: \"October\", dataValue: 9},{name: \"November\", dataValue: 10},{name: \"December\", dataValue: 11}]","type":"EntryData"}, {}],
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","margin":"0","verticalAlign":"top"}, {}, {
 		toggleButtonPanel1: ["wm.ToggleButtonPanel", {"horizontalAlign":"left","manageHistory":true,"manageURL":true,"margin":"0,1,0,0","verticalAlign":"top"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"expression":undefined,"source":"navButton1","targetProperty":"currentButton"}, {}]
 			}],
-			navButton1: ["wm.Button", {"border":"0,1,0,0","caption":"Page One","desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer1"}],
-			navButton2: ["wm.Button", {"border":"0,1,0,0","caption":"Page Two","desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer2"}],
-			navButton3: ["wm.Button", {"border":"0","borderColor":"#ABB8CF","caption":"Page Three","desktopHeight":"100%","height":"40px","margin":"0","width":"100%"}, {"onclick":"layer3"}]
+			navButton1: ["wm.Button", {"border":"0,1,0,0","caption":"Layer One",  "desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer1"}],
+			navButton2: ["wm.Button", {"border":"0,1,0,0","caption":"Layer Two",  "desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer2"}],
+			navButton3: ["wm.Button", {"border":"0",      "caption":"Layer Three","desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer3"}]
 		}],
 		layers1: ["wm.Layers", {"margin":"3,0,0,0"}, {}, {
 			layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
-				dojoGrid1: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"dataValue","title":"DataValue","width":"100%","align":"left","formatFunc":"","mobileColumn":false}],"height":"100%","margin":"0","minHeight":0,"width":"150px"}, {}, {
-					binding: ["wm.Binding", {}, {}, {
-						wire: ["wm.Wire", {"expression":undefined,"source":"monthsVar","targetProperty":"dataSet"}, {}]
-					}]
-				}],
-				panel1: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-					label1: ["wm.Label", {"border":"0","caption":"Page One","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
-					dataForm1: ["wm.DataForm", {"border":"1","captionSize":"100px","desktopHeight":"56px","enableTouchHeight":true,"height":"76px","horizontalAlign":"left","isCompositeKey":false,"mobileHeight":"76px","type":"EntryData","verticalAlign":"top"}, {}, {
-						binding: ["wm.Binding", {}, {}, {
-							wire: ["wm.Wire", {"expression":undefined,"source":"dojoGrid1.selectedItem","targetProperty":"dataSet"}, {}]
-						}],
-						nameEditor1: ["wm.Text", {"caption":"Name","changeOnKey":true,"dataValue":"","desktopHeight":"26px","emptyValue":"emptyString","formField":"name","height":"35px","required":undefined,"width":"100%"}, {}],
-						dataValueEditor1: ["wm.Text", {"caption":"DataValue","changeOnKey":true,"dataValue":"","desktopHeight":"26px","emptyValue":"emptyString","formField":"dataValue","height":"35px","required":undefined,"width":"100%"}, {}]
-					}]
-				}]
+				label1: ["wm.Label", {"border":"0","caption":"Your Start Page","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}]
 			}],
 			layer2: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
-				label2: ["wm.Label", {"border":"0","caption":"Page Two","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
-				pageContainer2: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+				label2: ["wm.Label", {"border":"0","caption":"PageContainer1 is below this label","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
+				pageContainer1: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
 			}],
 			layer3: ["wm.Layer", {"borderColor":"","caption":"layer3","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
-				label3: ["wm.Label", {"border":"0","caption":"Page Three","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
-				pageContainer3: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+				label3: ["wm.Label", {"border":"0","caption":"PageContainer2 is below this label","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
+				pageContainer2: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
 			}]
 		}]
 	}]
@@ -375,7 +371,7 @@ wm.fullTemplates.fancyCenteredTemplate = {
 
 		    }]
 		}],
-                        
+
 		panel0: ["wm.Panel", {"height":"100%","width":"100%","verticalAlign":"top","horizontalAlign":"left","layoutKind":"top-to-bottom"}, {}, {
 		    panel1: ["wm.Panel", {"height":"24px","width":"100%","verticalAlign":"top","horizontalAlign":"left","layoutKind":"left-to-right","lock":true}, {}, {
 			templateTopLeft: ["wm.Panel", {"_classes":{"domNode":["fancytemplate-top-left"]},"height":"100%","width":"24px","verticalAlign":"top","horizontalAlign":"left"}, {}],

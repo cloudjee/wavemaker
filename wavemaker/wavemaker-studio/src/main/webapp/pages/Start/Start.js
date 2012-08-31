@@ -11,11 +11,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-dojo.declare("Start", wm.Page, {
-        i18n: true,
-	start: function() {
 
+dojo.declare("Start", wm.Page, {
+    i18n: true,
+	start: function() {
 	    this.copyright.setHtml(this.copyright.html + wm.studioConfig.studioVersion);
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
@@ -29,6 +28,12 @@ dojo.declare("Start", wm.Page, {
 		});
 	    }
 	},
+	setCloudSplash: function() {
+	//show the CF splash if cloud. Keeps source property brandable
+		if (studio.isCloud()){
+			this.iframe.setSource("studioService.download?method=getContent&inUrl=http://wavemaker.com/cf_splash");
+			}
+	},
 	update: function() {
 	    this.refreshProjectList();
 		this.disEnableProjectButtons(true);
@@ -40,7 +45,7 @@ dojo.declare("Start", wm.Page, {
 		this.tabLayers1.setLayer("layer2");
 	},
 	highlightProject: function(inName) {
-	    
+
 	    },
 	// Welcome tab
 	newProjectClick: function() {
@@ -63,7 +68,7 @@ dojo.declare("Start", wm.Page, {
 	},
 	documentationClick: function() {
 	    window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
-	},	
+	},
 	registerClick: function() {
 		window.open(this.getDictionaryItem("URL_REGISTER"));
 	},
@@ -77,8 +82,8 @@ dojo.declare("Start", wm.Page, {
 	    }
 		this.existingProjectList.renderData(list);
 /*
-		for (var i = 0; i < list.length; i++) 
-		    this.existingProjectList.items[i].projectName = list[i];	    
+		for (var i = 0; i < list.length; i++)
+		    this.existingProjectList.items[i].projectName = list[i];
 		    */
 	    this._showingList = list;
 	},
@@ -95,7 +100,7 @@ dojo.declare("Start", wm.Page, {
 			   dojo.hitch(this, function() {
 		               if (studio.project.projectName == projname)
 			           studio.project.closeProject();
-			       studio.project.deleteProject(projname);	       
+			       studio.project.deleteProject(projname);
 
 			   }));
 	    }
@@ -117,7 +122,7 @@ dojo.declare("Start", wm.Page, {
 	},
 	refreshProjectList: function() {
 	    var d = studio.studioService.requestSync("listProjects", null, dojo.hitch(this, "listProjectsResult"));
-	    this.disEnableProjectButtons(this.existingProjectList.selected != true);	    
+	    this.disEnableProjectButtons(this.existingProjectList.selected != true);
 	},
 	listProjectsResult: function(inResult) {
 	    var data = [];

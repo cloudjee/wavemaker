@@ -95,7 +95,6 @@ public class PhoneGapService {
                 setupPhonegapFiles(layout);
             }
         }
-        fixupXCodeFilesFollowingSetup();
     }
 
     /**
@@ -103,6 +102,7 @@ public class PhoneGapService {
      */
     @ExposeToClient
     public void updatePhonegapFiles(int portNumb, String themeName) {
+        setupPhonegapFiles();
         String serverUrl = SystemUtils.getIP();
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         for (FolderLayout layout : FolderLayout.values()) {
@@ -119,11 +119,23 @@ public class PhoneGapService {
             return;
         }
         Folder phoneGapLibFolder = phoneGapWebFolder.getFolder("lib");
+        if (isOutOfDate(phoneGapLibFolder)) {
+            phoneGapLibFolder.delete();
+        }
         if (phoneGapLibFolder.exists()) {
             return;
         }
         setupPhonegapProjectFiles(phoneGapWebFolder, phoneGapLibFolder);
         purgeUnnecessarySetupFiles(phoneGapLibFolder);
+    }
+
+    private boolean isOutOfDate(Folder phoneGapLibFolder) {
+        File phoneGapVersion = phoneGapLibFolder.getFile("wm/WMVersion.txt");
+        File wavemakerVersion = this.fileSystem.getStudioWebAppRootFolder().getFile("lib/wm/WMVersion.txt");
+        if (!phoneGapVersion.exists()) {
+            return true;
+        }
+        return !phoneGapVersion.getContent().asString().equals(wavemakerVersion.getContent().asString());
     }
 
     private void setupPhonegapProjectFiles(final Folder phoneGapWebFolder, Folder phoneGapLibFolder) {
@@ -140,22 +152,6 @@ public class PhoneGapService {
         }
     }
 
-    private void fixupXCodeFilesFollowingSetup() {
-        /*
-         * phonegap has fixed this finally?
-         * 
-         * Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE); String projectName =
-         * this.projectManager.getCurrentProject().getProjectName(); File mainViewControllerFile =
-         * xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
-         * 
-         * if (mainViewControllerFile.exists()) { String content = mainViewControllerFile.getContent().asString(); int
-         * start = content.indexOf("(BOOL)shouldAutorotateToInterfaceOrientation"); int end = content.indexOf("}",
-         * start) + 1; content = content.substring(0, start) +
-         * "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
-         * + content.substring(end); mainViewControllerFile.getContent().write(content); }
-         */
-    }
-
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
         phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending(".gz")).delete();
         phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending("_grid.js")).delete();
@@ -169,7 +165,6 @@ public class PhoneGapService {
         phoneGapLibFolder.getFolder("build").list().files().include(FilterOn.names().ending(".js")).delete();
 
         phoneGapLibFolder.getFolder("images/boolean/").delete();
-        // phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
         Folder dojo = phoneGapLibFolder.getFolder("dojo");
         dojo.getFolder("util").delete();

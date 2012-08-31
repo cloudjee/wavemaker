@@ -21,19 +21,27 @@
     -moz-border-radius: 8px;
     border-radius: 8px;
 }
+.dj_ie9 .Start-layoutBox1 {
+    border-radius: 0px;
+}
+
 Start-tabLayers1 {
-    -moz-border-radius-topleft: 10px; 
-    -moz-border-radius-topright: 10px; 
-    -webkit-border-top-left-radius: 10px; 
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    -webkit-border-top-left-radius: 10px;
     -webkit-border-top-right-radius: 10px;
-    border-radius-topleft: 10px; 
-    border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 #studio_startPageDialog.studiodialog, .Start-panel5, .Start-panel1 {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
 }
+.dj_ie9 #studio_startPageDialog.studiodialog, .dj_ie9.Start-panel5, .dj_ie9 .Start-panel1 {
+    border-radius: 0px;
+}
+
 .Start a, .Start a:visited, .Start a:hover {
     color: white;
 }
@@ -111,8 +119,8 @@ Start-tabLayers1 {
 	-moz-border-radius-topright: 4px;
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
-	border-radius-topleft: 4px; 
-	border-radius-topright: 4px;
+	border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 
     -moz-box-shadow: 4px 4px 4px #111;
     -webkit-box-shadow: 4px 4px 4px #111;
@@ -157,6 +165,8 @@ Start-tabLayers1 {
     border: 1px solid #687585;
 */
     -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 }
 .Start .StudioList.wmlist .wmlist-cell {
     border-bottom: solid 0px transparent;
@@ -170,7 +180,7 @@ Start-tabLayers1 {
     background: -moz-linear-gradient(top, #646971 0%,#37414D 43%,#37414D 100%);
     background: -o-linear-gradient(top, #646971 0%,#37414D 43%,#37414D 100%);
     background: -ms-linear-gradient(top, #646971 0%,#37414D 43%,#37414D 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#646971', endColorstr='#37414D',GradientType=0);    
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#646971', endColorstr='#37414D',GradientType=0);
 
 }
 .Start .Start-existingProjectList .wmlist-item-selected td {

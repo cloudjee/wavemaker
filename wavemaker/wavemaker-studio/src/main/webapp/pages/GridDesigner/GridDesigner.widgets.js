@@ -129,7 +129,7 @@
                 upButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "90px", imageList: "studio.silkIconImageList", imageIndex: 7,caption:"Up"}, {onclick: "moveUp"}, {
                 binding: ["wm.Binding", {}, {}, {
                     wire: ["wm.Wire", {"expression":undefined,"source":"grid.emptySelection","targetProperty":"disabled"}, {}]
-                }]          
+                }]
                 }]
             }],
             panel4b:["wm.Panel", {"height":"32px","horizontalAlign":"middle","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -138,7 +138,7 @@
                 downButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "90px", imageList: "studio.silkIconImageList", imageIndex: 2,caption:"Down"}, {onclick: "moveDown"}, {
                 binding: ["wm.Binding", {}, {}, {
                     wire: ["wm.Wire", {"expression":undefined,"source":"grid.emptySelection","targetProperty":"disabled"}, {}]
-                }]          
+                }]
                 }]
             }]
             }],
@@ -146,9 +146,9 @@
             form: ["wm.DataForm", {width: "100%", height: "100%", layoutKind: "top-to-bottom",confirmChangeOnDirty: ""}, {}, {
             binding: ["wm.Binding", {}, {}, {
                 wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem","targetProperty":"dataSet"}, {}]
-            }],     
-    
-            tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers", "NoRightMarginOnTab"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB",_lockHeaderHeight:1, headerHeight: "32px"}, {}, {
+            }],
+
+            tabLayers1: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers", "NoRightMarginOnTab"]}, "margin":"4", clientBorder: "1", clientBorderColor: "#959DAB"}, {}, {
                 layer1: ["wm.Layer", {"borderColor":"#999999","caption":"Basic Settings","horizontalAlign":"left","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
                 label1: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0",borderColor: "#959DAB", "padding":"4","width":"100%"}, {}, {
                     binding: ["wm.Binding", {}, {}, {
@@ -206,7 +206,7 @@
                         imageWidthTarget: ["wm.Number", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "border":"0","caption":"Width","captionAlign":"left","dataValue":undefined,"displayValue":"","helpText":"Width of the images; leave blank if the width may vary.  Width is in px (leave out the px)","width":"100%", formField: "width"}, {onchange: "onImageWidthChange"}],
                         imageHeightTarget: ["wm.Number", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "border":"0","caption":"Height","captionAlign":"left","dataValue":undefined,"displayValue":"","helpText":"Height of the images; leave blank if the height may vary.  Height is in px (leave out the px)","width":"100%", formField: "height"}, {onchange: "onImageHeightChange"}]
                         }],
-    
+
                         buttonLayer: ["wm.Layer", {}, {}, {
                         buttonClassEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"CSS Class",captionAlign: "left", "dataValue":null,"helpText":"Enter a CSS class such as Column1Button, and then go to your CSS tab and add a CSS rule for .Column1Button { font-weight: bold; background-image: ...}.  Default is wmbutton; your class will replace wmbutton.  You can enter \"wmbutton Column1Button\" if you want to use both classes.", formField: "buttonclass"}, {onchange: "onButtonClassChange"}],
                         buttonLabel: ["wm.Label", {width: "100%", caption: "Next step: Setup your grid's onGridButtonClick event handler"}]
@@ -215,7 +215,7 @@
                     }]
                 }],
                 displayExpressionEditor: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Display Expression","dataValue":undefined,"displayValue":"", formField: "expression",
-                                           "helpText":"<p>Display expressions can be simple expressions <code>${firstname} + \" \" + ${lastname}</code> if firstname and lastname are field names for your grid data.</p><p>Display expressions can be complex expressions: <code>if (${firstname}) {<br/>   'Dr. ' + ${firstname};<br/>} else {<br/>   'Mr. NoName';<br/>}</code>NOTE: Last statement or value is the value of your display expression; return statements are invalid and can not be used.</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p>", 
+                                           "helpText":"<p>Display expressions can be simple expressions <code>${firstname} + \" \" + ${lastname}</code> if firstname and lastname are field names for your grid data.</p><p>Display expressions can be complex expressions: <code>if (${firstname}) {<br/>   'Dr. ' + ${firstname};<br/>} else {<br/>   'Mr. NoName';<br/>}</code>NOTE: Last statement or value is the value of your display expression; return statements are invalid and can not be used.</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p>",
                                            width: "100%", height: "100%", emptyValue: "emptyString"}, {onchange: "onDisplayExprChange"}]
                 }],
                 advancedLayer: ["wm.Layer", {"caption":"Advanced Settings","horizontalAlign":"left","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:false}, {}, {
@@ -248,7 +248,7 @@
                     }],
                     editorTimeLayer: ["wm.Layer", {}, {}, {
                     }],
-    
+
                     editorNumberLayer: ["wm.Layer", {}, {}, {
                         editorNumberLayerSubForm: ["wm.SubForm", {width: "100%", height: "100%",  padding: "0", margin: "0",formField: "constraints", fitToContentHeight:true,confirmChangeOnDirty: ""}, {}, {
                         minNumberEditor: ["wm.Number", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Minimum",captionAlign: "left", "dataValue":null,"helpText":"To change this via binding will require some custom code, not ready to publish at this number.", formField: "min"}, {onchange: "onMinimumChange"}],
@@ -282,13 +282,13 @@
                     }]
                 }],
                 backgroundColorEditor1: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Background Color","dataValue":undefined,"displayValue":"","height":"122px",
-                                          "helpText":"Display expression that returns a color; <code>if (${budget} > 50) \"red\";</code><p>See Display Expression tips for more information</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p>", 
+                                          "helpText":"Display expression that returns a color; <code>if (${budget} > 50) \"red\";</code><p>See Display Expression tips for more information</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p>",
                                           width: "100%", formField: "backgroundColor"}, {onchange: "onBackExprChange"}],
                 textColorEditor: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Text Color","dataValue":undefined,"displayValue":"","height":"122px",
-                                       "helpText":"Display expression that returns a color; <code>if (${budget} > 50) \"red\";</code><p>See Display Expression tips for more information</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p>", 
+                                       "helpText":"Display expression that returns a color; <code>if (${budget} > 50) \"red\";</code><p>See Display Expression tips for more information</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p>",
                                        width: "100%", formField: "textColor"}, {onchange: "onColorExprChange"}],
                 customClassEditor: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "caption":"Custom CSS Class","dataValue":undefined,"displayValue":"",
-                                     "helpText":"Enter a display expression that returns a CSS Class name; example: <code>if (${budget} > 50) {\n  \"TooHigh\";\n } else if (${budget} < 0) {\n \"TooLow\";\n } else {\n \"JustRight\";\n }</code>NOTE: Last statement or value is the value of your display expression; return statements are invalid and can not be used.</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p><p>Suggested use-case: adding custom styling, such as icons for buttons.</p>", 
+                                     "helpText":"Enter a display expression that returns a CSS Class name; example: <code>if (${budget} > 50) {\n  \"TooHigh\";\n } else if (${budget} < 0) {\n \"TooLow\";\n } else {\n \"JustRight\";\n }</code>NOTE: Last statement or value is the value of your display expression; return statements are invalid and can not be used.</p><p><a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Binding+Expressions+Display+Expressions' target='Docs'>More docs</a></p><p>Suggested use-case: adding custom styling, such as icons for buttons.</p>",
                                      width: "100%", formField: "cssClass"}, {onchange: "onCustomCssClassChange"}]
                 }]
             }]

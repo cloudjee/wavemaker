@@ -16,7 +16,7 @@
   /**************************************************************************************************
    * TYPE:        wm.AbstractEditor / wm._BaseEditor
    *
-   * DESCRIPTION: Sets the styling of all editors, as well as a few things I've arbitrarily linked to 
+   * DESCRIPTION: Sets the styling of all editors, as well as a few things I've arbitrarily linked to
    *              editor style such as the progress bar.  The first section of this document
    *              consists of common editors styles regardless of what kind of panel the editor is in.
    ************************************************************************************************/
@@ -26,7 +26,7 @@
 .wm_template .wmeditor .dijitTextArea.dijitFocused,
 .wm_template .wmeditor .dijitComboBox.dijitFocused,
 .wm_template .wmeditor .dijitSelect.dijitFocused {
-	outline-width: 0 !important;    
+	outline-width: 0 !important;
 }
 
 
@@ -52,8 +52,9 @@
     -moz-border-radius-topleft: 4px; /* Borders-Editor_BorderStyle_Radius */
     -webkit-border-top-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
     -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
-    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
-    border-radius-top-left: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-top-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+
     border-right: solid 0px transparent !important;
     display:block;
 }
@@ -65,8 +66,8 @@
     -moz-border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
     -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
     -webkit-border-bottom-right-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
-    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
-    border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-bottom-right-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
 
 
@@ -102,17 +103,17 @@
 
 .wm_template .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
 	background-position: 30% 30%;
-	background-image: url(images/comboArrowDownLight.png); /* wm.NumberSpinner-Down-Arrow_Image */    
+	background-image: url(images/comboArrowDownLight.png); /* wm.NumberSpinner-Down-Arrow_Image */
 }
 .wm_template .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
-	background-image: url(images/comboArrowUpLight.png); /* wm.NumberSpinner-Up-Arrow_Image */    
+	background-image: url(images/comboArrowUpLight.png); /* wm.NumberSpinner-Up-Arrow_Image */
 }
   /**************************************************************************************************
    * TYPE:        Slider
    *
    * TODO:        I haven't really worked in support for slider into themes.  Color and Background
    *              should show up when editting the slider widget in the theme designer or colors/images
-   *              should be automatically assigned. I don't think this gets so much use that I've 
+   *              should be automatically assigned. I don't think this gets so much use that I've
    *              put in the effort just yet.
    ************************************************************************************************/
 .wm_template .dijitSlider .dijitProgressBarLabel {
@@ -132,13 +133,13 @@
    * DESCRIPTION: All styles applied at the Document-Level are never disabled, and apply anywhere
    *              that another panel class doesn't override the behavior.
    ************************************************************************************************/
-@media screen { /* Document-Level */ 
+@media screen { /* Document-Level */
 
   /**************************************************************************************************
    * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
    *
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
-   *              button. 
+   *              button.
    ************************************************************************************************/
 .wm_template .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_template .dojoxGrid .dijitComboBox .dijitArrowButton,
@@ -148,7 +149,7 @@
     background-image: none;
 }
 
-    
+
 .wm_template .wmeditor .wmeditor-caption {
 	font-family: inherit; /* Document-EditorsCaption-Font_Family */
 	font-size: inherit; /* Document-EditorsCaption-Font_TextSize */
@@ -163,7 +164,7 @@
 	font-weight: inherit; /* Document-EditorsReadonly-Font_Weight */
 }
 
-    
+
     .wm_template .dojoxGrid .dijitTextBox,
     .wm_template .dojoxGrid .dijitComboBox,
     .wm_template .dojoxGrid .dijitSelect .dijitButtonContents,
@@ -247,18 +248,18 @@
     }
 
     /* END SECTION wm.AbstractEditor */
-    
-    
-    
+
+
+
 }
 
 
-@media screen { /* MainContent-Level */ 
+@media screen { /* MainContent-Level */
   /**************************************************************************************************
    * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
    *
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
-   *              button. 
+   *              button.
    ************************************************************************************************/
 .wm_template .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_template .MainContent .dojoxGrid .dijitComboBox .dijitArrowButton,
@@ -340,17 +341,17 @@
 	background-repeat: repeat-x; /* MainContent-EditorsFocus-Background_Image-Repeat */
     }
 
-    
-    
+
+
 }
 
 
-@media screen { /* EmphasizedContent-Level */ 
+@media screen { /* EmphasizedContent-Level */
   /**************************************************************************************************
    * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
    *
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
-   *              button. 
+   *              button.
    ************************************************************************************************/
 .wm_template .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_template .EmphasizedContent .dojoxGrid .dijitComboBox .dijitArrowButton,
@@ -425,15 +426,15 @@
 	background-repeat: repeat-x; /* EmphasizedContent-EditorsFocus-Background_Image-Repeat */
     }
     /* END inner content panel editors */
-    
+
 }
 
-@media screen { /* HeaderContent-Level */ 
+@media screen { /* HeaderContent-Level */
   /**************************************************************************************************
    * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
    *
    * DESCRIPTION: We need to set the background color and background image for the menu's popup
-   *              button. 
+   *              button.
    ************************************************************************************************/
 .wm_template .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_template .HeaderContent .dojoxGrid .dijitComboBox .dijitArrowButton,
@@ -508,6 +509,6 @@
 	background-repeat: repeat-x; /* HeaderContent-EditorsFocus-Background_Image-Repeat */
     }
     /* END inner content panel editors */
-    
+
 }
 

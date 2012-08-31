@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.propertyEdit");
 
 dojo.declare("wm.SetPropTask", null, {
@@ -41,14 +41,15 @@ dojo.declare("wm.SetPropTask", null, {
 });
 
 dojo.declare("wm.SetWireTask", null, {
-    constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsExpression, skipValidation) {
+    constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsExpression, skipValidation, skipParseExpression) {
         dojo.mixin(this, {
             component: inComponent,
             propName: inPropName,
             oldValue: inOldValue,
             newValue: inNewValue,
             isExpression: inIsExpression,
-            skipValidation: skipValidation
+            skipValidation: skipValidation,
+            skipParseExpression: skipParseExpression
         });
         this.hint = 'change "' + inPropName + '"';
         this.redo();
@@ -57,7 +58,8 @@ dojo.declare("wm.SetWireTask", null, {
         this.component.$.binding.removeWireByProp(this.propName);
         if (inValue) {
             if (type == "expr") {
-                inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
+                if (!this.skipParseExpression)
+                    inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
                 this.component.$.binding.addWire("", this.propName, "", inValue);
             } else if (type == "source") {
                 this.component.$.binding.addWire("", this.propName, inValue);
@@ -95,79 +97,85 @@ dojo.declare("wm.SetWireTask", null, {
 dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
     editorBorder: false,
     pxOnly: false,
-    validationEnabled: function() {return false;},
+    validationEnabled: function() {
+        return false;
+    },
     flow: function() {
-    this.editor.flow();
+        this.editor.flow();
     },
     _createEditor: function(inNode) {
-    this.editor = new wm.Panel({layoutKind: "left-to-right",
-                    owner: this,
-                    parent: this,
-                    width: "100%",
-                    height: "100%",
-                    name: "editor",
-                    readonly: this.readonly
-                   });
-    this.numberEditor = new wm.Text({owner: this,
-                     regExp: "^\\d*(%|px|)",
-                       parent: this.editor,
-                       width: "100%",
-                       name: "numberEditor",
-                     minWidth: 30,
-                       padding: "0,1,0,0",
-                    readonly: this.readonly
-                      });
-    this.typeEditor = new wm.SelectMenu({owner: this,
-                         parent: this.editor,
-                         name: "typeEditor",
-                         options: "px,%",
-                         dataField: "dataValue",
-                         displayField: "dataValue",
-                         width: "50px",
-                         padding: "0",
-                    readonly: this.readonly
-                        });
-    if (this.pxOnly) {
-        this.typeEditor.setReadonly(true);
-        this.typeEditor.setDataValue("px");
-    }
-    this.numberEditor.connect(this.numberEditor, "onchange", this, "numberChanged");
-    this.typeEditor.connect(this.typeEditor, "onchange", this, "changed");
-    return this.editor;
+        this.editor = new wm.Panel({
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this,
+            width: "100%",
+            height: "100%",
+            name: "editor",
+            readonly: this.readonly
+        });
+        this.numberEditor = new wm.Text({
+            owner: this,
+            regExp: "^\\d*(%|px|)",
+            parent: this.editor,
+            width: "100%",
+            name: "numberEditor",
+            minWidth: 30,
+            padding: "0,1,0,0",
+            readonly: this.readonly
+        });
+        this.typeEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this.editor,
+            name: "typeEditor",
+            options: "px,%",
+            dataField: "dataValue",
+            displayField: "dataValue",
+            width: "50px",
+            padding: "0",
+            readonly: this.readonly
+        });
+        if (this.pxOnly) {
+            this.typeEditor.setReadonly(true);
+            this.typeEditor.setDataValue("px");
+        }
+        this.numberEditor.connect(this.numberEditor, "onchange", this, "numberChanged");
+        this.typeEditor.connect(this.typeEditor, "onchange", this, "changed");
+        if (this.disabled) this.editor.setDisabled(true);
+        return this.editor;
     },
     numberChanged: function() {
-    var displayValue = this.numberEditor.getDisplayValue();
-    if (this.pxOnly) {
-        displayValue = parseInt(displayValue);
-        this.changed();
-    } else if (displayValue.match(/\%$/)) {
-        this.numberEditor.setDataValue(displayValue.replace(/\%$/,""));
-        this.typeEditor.setDataValue("%");
-    } else if (displayValue.match(/px$/)) {
-        this.numberEditor.setDataValue(displayValue.replace(/px$/,""));
-        this.typeEditor.setDataValue("px");     
-    } else {
-        this.changed();
-    }
+        var displayValue = this.numberEditor.getDisplayValue();
+        if (this.pxOnly) {
+            displayValue = parseInt(displayValue);
+            this.changed();
+        } else if (displayValue.match(/\%$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/\%$/, ""));
+            this.typeEditor.setDataValue("%");
+        } else if (displayValue.match(/px$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/px$/, ""));
+            this.typeEditor.setDataValue("px");
+        } else {
+            this.changed();
+        }
     },
     getEditorValue: function() {
-    return this.numberEditor.getDataValue() + this.typeEditor.getDataValue();
+        return this.numberEditor.getDataValue() + this.typeEditor.getDataValue();
     },
     setEditorValue: function(inValue) {
-    var result = String(inValue).match(/^(\d+)(.*)$/);
-    if (result) {
-        this.numberEditor.setDataValue(result[1]);
-        this.typeEditor.setDataValue(result[2] || "px");
-    } else {
-        this.numberEditor.setDataValue(100);
-        this.typeEditor.setDataValue("px");
-    }
+        var result = String(inValue).match(/^(\d+)(.*)$/);
+        if (result) {
+            this.numberEditor.setDataValue(result[1]);
+            this.typeEditor.setDataValue(result[2] || "px");
+        } else {
+            this.numberEditor.setDataValue(100);
+            this.typeEditor.setDataValue("px");
+        }
     },
     setDisabled: function(inDisabled) {
-    this.inherited(arguments);
-    if (this.editor) {
-        this.editor.setDisabled(this.disabled);
-    }
+        this.inherited(arguments);
+        if (this.editor) {
+            this.editor.setDisabled(this.disabled);
+        }
     }
 });
 
@@ -177,38 +185,34 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
     dataField: "dataValue",
     displayField: "dataValue",
-    values: null, 
+    values: null,
     postInit: function() {
-    this.inherited(arguments);
-    this.refreshOptions();
+        this.inherited(arguments);
+        this.refreshOptions();
     },
     getDataValue: function() {
-    if (!this.values)
-        return this.inherited(arguments);
-    var display = this.getDisplayValue();
-    for (var i = 0; i < this.options.length; i++) {
-        if (display == this.options[i]) {
-        return this.values[i];
+        if (!this.values) return this.inherited(arguments);
+        var display = this.getDisplayValue();
+        for (var i = 0; i < this.options.length; i++) {
+            if (display == this.options[i]) {
+                return this.values[i];
+            }
         }
-    }
     },
     setEditorValue: function(inValue) {
-    if (!this.values)
-        return this.inherited(arguments);
-    for (var i = 0; i < this.values.length; i++) {
-        if (inValue == this.values[i]) {
-        return this.inherited(arguments, [this.options[i]]);
+        if (!this.values) return this.inherited(arguments);
+        for (var i = 0; i < this.values.length; i++) {
+            if (inValue == this.values[i]) {
+                return this.inherited(arguments, [this.options[i]]);
+            }
         }
-    }
     },
     refreshOptions: function() {
-    this.updateOptions();
-    this.setOptions(this.options);
+        this.updateOptions();
+        this.setOptions(this.options);
     },
-    updateOptions: function() {
-    }
+    updateOptions: function() {}
 });
-
 
 dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
@@ -244,7 +248,7 @@ dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
         this.setOptions(pagelist);
         var dataValue = this.getDataValue() || "";
         var pageName = this.inspected.getValue(this.propDef.name) || "";
-        if (!dataValue && pageName) {            
+        if (!dataValue && pageName) {
             this.inspected.setValue(this.propDef.name, "");
         }
     }
@@ -292,12 +296,14 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
                 });
             }
         }), true);
-    
+
         r = r.sort(); /* If called from something other than the property panel, then this.inspected may not exist */
         if (this.inspected) {
             wm.Array.removeElement(r, this.inspected.getId());
         }
-        this.setOptions(r);
+        if (!wm.Array.equals(this.options,r)) {
+            this.setOptions(r);
+        }
     },
 
     getDataSets: function(inOwners, matchType) {
@@ -360,50 +366,52 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     allowNone: true,
     emptyLabel: "",
     updateOptions: function() {
-    this.inherited(arguments)
-    var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
-    var options;
-    if (!ds && this.inspected.formField) {
-        var form = this.inspected.getParentForm();
-        if (form) {
-        var schema = form.dataSet._dataSchema[this.inspected.formField]; // doesn't work if formField is x.y, only x
-        if (schema) {
-            var type = schema.type;
+        this.inherited(arguments)
+        var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
+        var options;
+        if (!ds && this.inspected.formField) {
+            var form = this.inspected.getParentForm();
+            if (form) {
+                var schema = form.dataSet._dataSchema[this.inspected.formField]; // doesn't work if formField is x.y, only x
+                if (schema) {
+                    var type = schema.type;
+                }
+                if (type) {
+                    var typeDef = wm.typeManager.getType(type);
+                }
+                if (typeDef) {
+                    options = wm.typeManager.getSimplePropNames(typeDef.fields)
+                }
+            }
         }
-        if (type) {
-            var typeDef = wm.typeManager.getType(type);
+        if (!options) {
+            if (ds) {
+                options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+            } else {
+                options = [];
+            }
         }
-        if (typeDef) {
-            options = wm.typeManager.getSimplePropNames(typeDef.fields)
+        if (this.emptyLabel) {
+            this.allowNone = false;
+            options.unshift(this.emptyLabel);
         }
+        if (!wm.Array.equals(this.options,options)) {
+            this.setOptions(options);
         }
-    }
-    if (!options) {
-        if (ds) {
-        options = wm.typeManager.getSimplePropNames(ds._dataSchema);
-        } else {
-        options = [];
-        }
-    }
-    if (this.emptyLabel) {
-        this.allowNone = false;
-        options.unshift(this.emptyLabel);
-    }
-    this.setOptions(options);
     },
     setEditorValue: function(inValue) {
-    if (!inValue && this.emptyLabel) {
-        this.inherited(arguments, [this.emptyLabel]);
-    } else {
-        this.inherited(arguments);
-    }
+        if (!inValue && this.emptyLabel) {
+            this.inherited(arguments, [this.emptyLabel]);
+        } else {
+            this.inherited(arguments);
+        }
     },
     setInitialValue: function() {
-    this.beginEditUpdate();
-    this.setEditorValue(this.dataValue);
-    this.endEditUpdate();
+        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
     }
-        
+
 });
 dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
     dataField: "dataValue",
@@ -413,43 +421,45 @@ dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
     allowNone: true,
     emptyLabel: "",
     updateOptions: function() {
-    this.inherited(arguments)
-    var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
-    var options;
-    if (ds) {
-        options = wm.typeManager.getSimplePropNames(ds._dataSchema);
-    } else {
-        options = [];
-    }
-    if (this.emptyLabel) {
-        this.allowNone = false;
-        options.unshift(this.emptyLabel);
-    }
-    this.setOptions(options);
+        this.inherited(arguments)
+        var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
+        var options;
+        if (ds) {
+            options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+        } else {
+            options = [];
+        }
+        if (this.emptyLabel) {
+            this.allowNone = false;
+            options.unshift(this.emptyLabel);
+        }
+        if (!wm.Array.equals(this.options,options)) {
+            this.setOptions(options);
+        }
     },
     setEditorValue: function(inValue) {
-    if (!inValue && this.emptyLabel) {
-        this.inherited(arguments, [this.emptyLabel]);
-    } else {
-        this.inherited(arguments);
-    }
+        if (!inValue && this.emptyLabel) {
+            this.inherited(arguments, [this.emptyLabel]);
+        } else {
+            this.inherited(arguments);
+        }
     },
     setInitialValue: function() {
-    this.beginEditUpdate();
-    this.setEditorValue(this.dataValue);
-    this.endEditUpdate();
+        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
     },
     reinspect: function() {
-    this.updateOptions();
-    return true;
+        this.updateOptions();
+        return true;
     }
-        
+
 });
 
 
 dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
     dataField: "dataValue",
-    displayField: "dataValue",    
+    displayField: "dataValue",
     relatedFields: false,
     insepected: null,
     allowNone: false,
@@ -475,7 +485,9 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
         } else {
         options = [];
         }
-    this.setOptions(options);
+        if (!wm.Array.equals(this.options,options)) {
+            this.setOptions(options);
+        }
     },
     getSchemaOptions: function(inSchema) {
         var result =  wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema, true);
@@ -489,7 +501,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
         }
         var fields = dataSet._dataSchema;
         var newresults = [];
-        for (var i = 0; i < result.length; i++) {           
+        for (var i = 0; i < result.length; i++) {
             if (fields[result[i]].isList && this.oneToMany || !fields[result[i]].isList && !this.oneToMany) {
             newresults.push(result[i]);
             }
@@ -507,7 +519,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
         }
         var fields = dataSet._dataSchema;
         var newresults = [];
-        for (var i = 0; i < result.length; i++) {           
+        for (var i = 0; i < result.length; i++) {
             var type = fields[result[i]].type;
             var typeDef = wm.typeManager.getType(type);
             if (!typeDef || !typeDef.liveService || this.relatedFields) {
@@ -529,8 +541,8 @@ dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {
     displayField: "dataValue",
     allowNone: true,
     updateOptions: function() {
-    this.inherited(arguments);
-    this.setOptions(studio.getImageLists());
+        this.inherited(arguments);
+        this.setOptions(studio.getImageLists());
     }
 });
 
@@ -543,94 +555,104 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
     excludeType: null,
     useOwner: null,
     updateOptions: function() {
-    if (this.widgetType && typeof this.widgetType == "string")
-        this.widgetType = dojo.getObject(this.widgetType);
-    if (this.excludeType && typeof this.excludeType == "string")
-        this.excludeType = dojo.getObject(this.excludeType);
+        if (this.widgetType && typeof this.widgetType == "string") this.widgetType = dojo.getObject(this.widgetType);
+        if (this.excludeType && typeof this.excludeType == "string") this.excludeType = dojo.getObject(this.excludeType);
 
-    this.inherited(arguments);
+        this.inherited(arguments);
 
-    var components = wm.listComponents([studio.getValueById(this.useOwner) || this.inspected.owner], this.widgetType);
-    var result = [];
-    if (this.excludeType) {
-        for (var i = 0; i < components.length; i++) {
-        if (wm.isInstanceType(components[i], this.excludeType) == false) {
-            result.push(components[i]);
+        var components = wm.listComponents([studio.getValueById(this.useOwner) || this.inspected.owner], this.widgetType);
+        var result = [];
+        if (this.excludeType) {
+            for (var i = 0; i < components.length; i++) {
+                if (wm.isInstanceType(components[i], this.excludeType) == false) {
+                    result.push(components[i]);
+                }
+            }
+        } else {
+            result = components;
         }
+        if (this.inspectedChildrenOnly) {
+            components = result;
+            result = [];
+            for (var i = 0; i < components.length; i++) {
+                if (components[i].isAncestor(this.inspected)) {
+                    result.push(components[i]);
+                }
+            }
         }
-    } else {
-        result = components;
-    }
-    if (this.inspectedChildrenOnly) {
-        components = result;
-        result = [];
-        for (var i = 0; i < components.length; i++) {
-        if (components[i].isAncestor(this.inspected)) {
-            result.push(components[i]);
+        var ids = [];
+        for (var i = 0; i < result.length; i++) {
+            ids.push(result[i].getId());
         }
-        }
-    }
-    var ids = [];
-    for (var i = 0; i < result.length; i++) {
-        ids.push(result[i].getId());
-    }
-    this.setOptions(ids);
+        this.setOptions(ids);
     }
 });
 
 dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
-    useLiterals:false,
+    useLiterals: false,
     liveTypes: false,
     includeLiveViews: false,
     addNewOption: false,
     updateOptions: function() {
-    this.inherited(arguments);
-    if (this.useLiterals) {
-        this.options = ["","String", "Number", "Date", "Boolean"];
-        this.values = ["", "String", "Number", "Date", "Boolean"];
-    } else {
-        this.options = [""];
-        this.values = [""];
-    }
-    if (this.addNewOption) {
-        wm.Array.insertElementAt(this.options, "New Type", 1);
-        wm.Array.insertElementAt(this.values, "New Type", 1);
-    }
-    if (this.includeLiveViews) {
-        this.options =this.options.concat(this.getLiveViews());
-        this.values =this.values.concat(this.getLiveViews());
-    }
-    this.addOptionValues(this.getDataTypes(), true);
+        this.inherited(arguments);
+        if (this.useLiterals) {
+            this.options = ["", "String", "Number", "Date", "Boolean"];
+            this.values = ["", "String", "Number", "Date", "Boolean"];
+        } else {
+            this.options = [""];
+            this.values = [""];
+        }
+        if (this.addNewOption) {
+            wm.Array.insertElementAt(this.options, "New Type", 1);
+            wm.Array.insertElementAt(this.values, "New Type", 1);
+        }
+        if (this.includeLiveViews) {
+            this.options = this.options.concat(this.getLiveViews());
+            this.values = this.values.concat(this.getLiveViews());
+        }
+        this.addOptionValues(this.getDataTypes(), true);
     },
     getLiveViews: function() {
         var
-            views = wm.listComponents([studio.application], wm.LiveView),
+        views = wm.listComponents([studio.application], wm.LiveView),
             lv = [];
         wm.forEach(views, dojo.hitch(this, function(v) {
-            var dt = v.dataType || "", k = dt ? " (" + dt.split('.').pop() + ")" : "";
+            var dt = v.dataType || "",
+                k = dt ? " (" + dt.split('.').pop() + ")" : "";
             lv.push(v.getId());
 
         }));
         return lv;
     },
     addOptionValues: function(inOptionValues, inSort) {
-            this.sort = inSort;
-        if (inSort)
-            inOptionValues.sort(function(a, b) { return wm.data.compare(a.option, b.option); });
-        this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) { return d.option; }));
-        this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) { return d.value; }));
+        this.sort = inSort;
+        if (inSort) inOptionValues.sort(function(a, b) {
+            return wm.data.compare(a.option, b.option);
+        });
+        this.options = (this.options || []).concat(dojo.map(inOptionValues, function(d) {
+            return d.option;
+        }));
+        this.values = (this.values || []).concat(dojo.map(inOptionValues, function(d) {
+            return d.value;
+        }));
     },
     getDataTypes: function() {
         var
-            types = this.liveTypes ? wm.typeManager.getLiveServiceTypes() : wm.typeManager.getPublicTypes(),
+        types = this.liveTypes ? wm.typeManager.getLiveServiceTypes() : wm.typeManager.getPublicTypes(),
             dt = [];
         for (var i in types) {
-        if (wm.defaultTypes[i]) {
-            //i = wm.defaultTypes[i].fields.dataValue.type;
-            dt.push({option: i, value: i});
-        } else {
-            dt.push({option: wm.getFriendlyTypeName(i), value: i});
-        }
+            if (wm.defaultTypes[i]) {
+                //i = wm.defaultTypes[i].fields.dataValue.type;
+                dt.push({
+                    option: i,
+                    value: i
+                });
+            } else {
+                dt.push({
+                    option: wm.getFriendlyTypeName(i),
+                    value: i
+                });
+            }
         }
         return dt;
     }
@@ -646,108 +668,123 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     borderColor: "#3F3F3F",
     margin: "0,0,4,0",
     init: function() {
-    this.inherited(arguments);
-    this.setLayoutKind("top-to-bottom");
-    var topPanel = new wm.Panel({owner: this,
-                   parent: this,
-                   width: "100%",
-                   height: "28px",
-                   layoutKind: "left-to-right",
-                   verticalAlign: "top",
-                   horizontalAlign: "left"});                    
-    this.title =new wm.Label({owner: this,
-                  name: "title",
-                  parent: topPanel,
-                  width: "100%",
-                  height: "20px",
-                  caption: this.propName});
-    this.plusButton = new wm.Label({owner: this,
-                    parent: topPanel,
-                    _classes: {domNode: ["wmPlusToolButton"]},
-                    caption: "+",
-                    showing: this.inspected instanceof wm.Page == false && this.inspected instanceof wm.Application == false,
-                    align: "center",
-                    width: "20px",
-                    height: "18px",
-                    padding: "0",
-                    showing: this.inspected instanceof wm.Application==false,
-                    onclick: dojo.hitch(this, function() {
-                        var index = this.editors[this.editors.length-1].propertyNumber+1;
-                        this.addEditor(index, "-");
-                        this.inspected.eventBindings[this.propName + index] = "-";
-                        this.inspected[this.propName + index] = function(){};
-                        this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
-                        this.setHeight(this.getPreferredFitToContentHeight() + "px");
-                        this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
-                    })
-                       });
-    this.helpButton = wm.Label({owner: this,
-                    caption: "",
-                    parent: topPanel,
-                    width: "20px",
-                    height: "20px",
-                    margin: "0",
-                    onclick: dojo.hitch(this, function() {
-                    studio.helpPopup = studio.inspector.getHelpDialog();
-                    studio.inspector.beginHelp(this.propDef.name, this.domNode, this.inspected.declaredClass);
-                    }),
-                    _classes: {domNode: ["EditorHelpIcon"]}});
+        this.inherited(arguments);
+        this.setLayoutKind("top-to-bottom");
+        var topPanel = new wm.Panel({
+            owner: this,
+            parent: this,
+            width: "100%",
+            height: "28px",
+            layoutKind: "left-to-right",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        this.title = new wm.Label({
+            owner: this,
+            name: "title",
+            parent: topPanel,
+            width: "100%",
+            height: "20px",
+            caption: this.propName
+        });
+        this.plusButton = new wm.Label({
+            owner: this,
+            parent: topPanel,
+            _classes: {
+                domNode: ["wmPlusToolButton"]
+            },
+            caption: "+",
+            showing: this.inspected instanceof wm.Page == false && this.inspected instanceof wm.Application == false,
+            align: "center",
+            width: "20px",
+            height: "18px",
+            padding: "0",
+            showing: this.inspected instanceof wm.Application == false,
+            onclick: dojo.hitch(this, function() {
+                var index = this.editors[this.editors.length - 1].propertyNumber + 1;
+                this.addEditor(index, "-");
+                this.inspected.eventBindings[this.propName + index] = "-";
+                this.inspected[this.propName + index] = function() {};
+                this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
+                this.setHeight(this.getPreferredFitToContentHeight() + "px");
+                this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
+            })
+        });
+        this.helpButton = wm.Label({
+            owner: this,
+            caption: "",
+            parent: topPanel,
+            width: "20px",
+            height: "20px",
+            margin: "0",
+            onclick: dojo.hitch(this, function() {
+                studio.helpPopup = studio.inspector.getHelpDialog();
+                studio.inspector.beginHelp(this.propDef.name, this.domNode, this.inspected.declaredClass);
+            }),
+            _classes: {
+                domNode: ["EditorHelpIcon"]
+            }
+        });
 
-    this.panel = new wm.Panel({owner: this,
-                   parent: this,
-                   width: "100%",
-                   height: "28px",
-                   layoutKind: "top-to-bottom",
-                   verticalAlign: "top",
-                   horizontalAlign: "left"});
-    this.addEditors();
+        this.panel = new wm.Panel({
+            owner: this,
+            parent: this,
+            width: "100%",
+            height: "28px",
+            layoutKind: "top-to-bottom",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        this.addEditors();
     },
     addEditors: function() {
-    dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
-    dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
-    this.editors = [];
-    var value;
-    if (this.inspected instanceof wm.Application == false) {
-        value = this.inspected.getProp(this.propName);
-    } else {
-        studio.generateAppSourceHtml();
-        var text = studio.appsourceHtml.getHtml();
-        text = text.replace(/.*?\>/,"").replace(/\<\/pre\>$/,"");
-        delete window[studio.project.projectName];
-        try {
-        eval(text);
-        eval(studio.appsourceEditor.getDataValue());
-        } catch(e) {}
-        var ctor = dojo.getObject(studio.project.projectName);
-        value =  (ctor && ctor.prototype[this.propName] && ctor.prototype[this.propName] != wm.Application.prototype[this.propName]) ? this.propName : "";
-    }
-
-
-    this.addEditor(0,value);
-    for (var i = 1; i < 20; i++) {
-        if (this.inspected.getProp(this.propName + i)) {
-        this.addEditor(i, this.inspected.getProp(this.propName + i));
+        dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
+        dojo.toggleClass(this.title.domNode, "isAdvancedProp", this.propDef.advanced ? true : false);
+        this.editors = [];
+        var value;
+        if (this.inspected instanceof wm.Application == false) {
+            value = this.inspected.getProp(this.propName);
+        } else {
+            studio.generateAppSourceHtml();
+            var text = studio.appsourceHtml.getHtml();
+            text = text.replace(/.*?\>/, "").replace(/\<\/pre\>$/, "");
+            delete window[studio.project.projectName];
+            try {
+                eval(text);
+                eval(studio.appsourceEditor.getDataValue());
+            } catch (e) {}
+            var ctor = dojo.getObject(studio.project.projectName);
+            value = (ctor && ctor.prototype[this.propName] && ctor.prototype[this.propName] != wm.Application.prototype[this.propName]) ? this.propName : "";
         }
-    }
-    this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
-    this.setHeight(this.getPreferredFitToContentHeight() + "px");
-    this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
+
+
+        this.addEditor(0, value);
+        for (var i = 1; i < 20; i++) {
+            if (this.inspected.getProp(this.propName + i)) {
+                this.addEditor(i, this.inspected.getProp(this.propName + i));
+            }
+        }
+        this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
+        this.setHeight(this.getPreferredFitToContentHeight() + "px");
+        this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
     },
     addEditor: function(inIndex, inValue) {
         var propertyName = this.propName + (inIndex == 0 ? "" : inIndex);
-        this.editors.push(new wm.prop.EventEditor({owner: this,
-                           parent: this.panel,
-                           name: "propEdit_" + this.propName + "_" + inIndex,
-                           propName: propertyName,
-                           propertyNumber: parseInt(inIndex),
-                           width: "100%",
-                           height: studio.inspector.defaultEditorHeight,
-                           captionSize: inIndex > 0 ? "60px" : "0px",
-                           caption: inIndex > 0 ? "And then" : "",
-                           captionPosition: "left",
-                           captionAlign: "left",
-                           dataValue: inValue,
-                           inspected: this.inspected}));
+        this.editors.push(new wm.prop.EventEditor({
+            owner: this,
+            parent: this.panel,
+            name: "propEdit_" + this.propName + "_" + inIndex,
+            propName: propertyName,
+            propertyNumber: parseInt(inIndex),
+            width: "100%",
+            height: studio.inspector.defaultEditorHeight,
+            captionSize: inIndex > 0 ? "60px" : "0px",
+            caption: inIndex > 0 ? "And then" : "",
+            captionPosition: "left",
+            captionAlign: "left",
+            dataValue: inValue,
+            inspected: this.inspected
+        }));
     },
 
     /* Needed when we have an eventHandler that is a required Property, such as for wm.Button; if one onclick editor changes, the
@@ -755,9 +792,9 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
      */
     reinspect: function() {
 
-    this.panel.removeAllControls();
-    this.addEditors();
-    return true;
+        this.panel.removeAllControls();
+        this.addEditors();
+        return true;
     }
 });
 dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDropDown], {
@@ -767,32 +804,36 @@ dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDrop
     openOnClick: true,
     templateString: dojo.cache("dijit.form", "templates/DropDownBox.html"),
     currentIndex: 0,
-    postMixInProperties: function(){
-    this.inherited(arguments);
-    this._messages = dojo.i18n.getLocalization("dijit.form", "ComboBox", this.lang);
+    postMixInProperties: function() {
+        this.inherited(arguments);
+        this._messages = dojo.i18n.getLocalization("dijit.form", "ComboBox", this.lang);
     },
 
     openDropDown: function(callback) {
-    if (!wm.prop.EventDijit.menu) {
-        wm.prop.EventDijit.menu = new wm.PopupMenu({owner: studio,
-                            _classes: {domNode: ["wmStudioEventMenu"]},
-                               name: "EventPicker"});
-    }
-    //wm.prop.EventDijit.menu.setFullStructure([{"label":"File","children":[{"label":"Save"},{"label":"Close"}]},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Help"}]);
-    this.structure = this.owner.getFullStructure();
-    wm.prop.EventDijit.menu.setFullStructure(this.structure);
-    wm.prop.EventDijit.menu.renderDojoObj();
-    var menuItems = wm.prop.EventDijit.menu._dijitHash;
-/*
+        if (!wm.prop.EventDijit.menu) {
+            wm.prop.EventDijit.menu = new wm.PopupMenu({
+                owner: studio,
+                _classes: {
+                    domNode: ["wmStudioEventMenu"]
+                },
+                name: "EventPicker"
+            });
+        }
+        //wm.prop.EventDijit.menu.setFullStructure([{"label":"File","children":[{"label":"Save"},{"label":"Close"}]},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Help"}]);
+        this.structure = this.owner.getFullStructure();
+        wm.prop.EventDijit.menu.setFullStructure(this.structure);
+        wm.prop.EventDijit.menu.renderDojoObj();
+        var menuItems = wm.prop.EventDijit.menu._dijitHash;
+        /*
     for (var itemName in menuItems) {
         if (itemName.indexOf(" - ") !=0 && !itemName.match(/\:$/) && itemName.indexOf("-- ") != 0) {
         dojo.addClass(menuItems[itemName].domNode, "studioIndentOption");
         }
     }
     */
-    wm.prop.EventDijit.menu.update(null, this.owner, true);
+        wm.prop.EventDijit.menu.update(null, this.owner, true);
     }
-/*
+    /*
     generateIndex: function(currentIndex) {
     this.currentIndex = currentIndex;
     var start = currentIndex;
@@ -825,7 +866,6 @@ dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDrop
     }
     */
 });
-
 dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     /*indentField: "indent",
     restrictValues: false,
@@ -843,7 +883,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     var e =  new wm.prop.EventDijit(this.getEditorProps(inNode, inProps));
     e.owner = this;
     return e;
-    },    
+    },
     constructor: function() {
     if (!wm.prop.EventEditor.eventActions) {
         wm.prop.EventEditor.eventActions =  {
@@ -886,7 +926,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     dialogList = dialogList.sort();
     if (wm.PopupMenu && this.inspected instanceof wm.PopupMenu)
         wm.Array.removeElement(dialogList, this.inspected);
-    
+
     //var layerList = wm.listComponents([studio.page], wm.Layer);
     var layerList = [];
     var mobileFoldingList = [];
@@ -898,7 +938,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     }, false);
     layerList = layerList.sort();
     mobileFoldingList = mobileFoldingList.sort();
-    
+
 
 
     var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
@@ -956,8 +996,8 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
             if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
             a = timers;
             break;
-        }   
-        
+        }
+
         if (a && a.length) {
             items.push({name: n, dataValue: n});
             dojo.forEach(a, function(obj) {
@@ -1183,14 +1223,14 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
             if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
             componentList = timers;
             break;
-        }   
-        
+        }
+
         if (componentList && componentList.length) {
 /*
             if (currentPageSize + componentList.length + 1 > maxPageSize && inPage == studio.page) {
             inStructure.push({pageBreak:true});
             currentPageSize = 1;
-            } else {            
+            } else {
             currentPageSize += 1 + componentList.length;
             }
 
@@ -1259,7 +1299,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
         }
         } else {
         if (inPage != studio.page) return;
-        if (eventSchema && eventSchema.events) 
+        if (eventSchema && eventSchema.events)
             switch(name) {
             case "noEvent":
             if ( dojo.indexOf(eventSchema.events, "disableNoEvent") != -1) return;
@@ -1303,7 +1343,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     else {
         this.inherited(arguments);
         this.inspected.setProp(this.propName, value);
-        if (this.inspected == studio.selected) 
+        if (this.inspected == studio.selected)
         studio.inspector.reinspect();
 
         else {
@@ -1419,7 +1459,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     this.editors = {};
 
     this.tabs = this.createComponents({
-        tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
+        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
         basicLayer: ["wm.Layer", {caption: "Basic", padding: "4"}, {
         }],
         styleLayer: ["wm.Layer", {caption: "Styles", padding: "4"}, {},{
@@ -1435,7 +1475,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
         dojo.cookie("wm.prop.StyleEditor.layerIndex", this.tabs.layerIndex);
     });
-    
+
     this.basicLayer = this.tabs.layers[0];
     this.styleLayer = this.tabs.layers[1];
     this.classListLayer = this.tabs.layers[2];
@@ -1621,7 +1661,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
                    parent: this,
                    owner: this
                   });
-         
+
     var nameEditor = new wm.Text({width: "100%",
                       height: "100%",
                       caption: "",
@@ -1680,7 +1720,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 
     // Make sure that our class list contains only unique items
     var classesHash = {dialogfooter: true};
-    dojo.forEach(matches1, function(className) {classesHash[className.substring(1)] = 1;}); 
+    dojo.forEach(matches1, function(className) {classesHash[className.substring(1)] = 1;});
     dojo.forEach(matches2, function(className) {classesHash[className.substring(1)] = 1;});
     wm.forEachProperty(classesHash, function(obj,name) {classListVar.addItem({dataValue: name});});
     classListVar.sort();
@@ -1733,7 +1773,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
     */
     var addPanel = new wm.Panel({owner: this,
                      parent: this,
-                     width: "100%", 
+                     width: "100%",
                      height: "30px",
                      layoutKind: "left-to-right",
                      verticalAlign: "top",
@@ -1747,7 +1787,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
                     _classes: {domNode: ["StudioButton"]},
                     width: "100px",
                     onclick: dojo.hitch(this, "addClass")});
-    new wm.Label({owner: this, 
+    new wm.Label({owner: this,
               parent: this,
               width: "100%",
               height: "32px",
@@ -1955,7 +1995,7 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
             this.dijits[0]._lastValueReported = false;
         } else if (this.dijits[0].checked) {
             this.hadEveryone = true;
-            for (var i = 1; i < this.dijits.length; i++) {      
+            for (var i = 1; i < this.dijits.length; i++) {
             this.dijits[i].set("checked", false, false);
             this.dijits[i]._lastValueReported = false;
             }
@@ -1970,7 +2010,7 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
 });
 
 
-dojo.declare("wm.prop.FieldGroupEditor", wm.Container, { 
+dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     showMainInput: true,
     multiLayer: true,
     height: "300px",
@@ -1983,7 +2023,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     this.inherited(arguments);
     if (this.multiLayer) {
         this.tabs = this.createComponents({
-        tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
+        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "100%", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
             bindLayer: ["wm.Layer", {caption: "Bindings", padding: "4", autoScroll: true}, {},{
             }],
             fieldLayer: ["wm.Layer", {caption: "Fields", padding: "4", autoScroll: true}, {},{
@@ -1999,7 +2039,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     } else {
         studio.inspector.addSubGroupIndicator("Inputs", this, true, false);
 /*
-        this.fieldsLabel = new wm.Label({_classes: {domNode: ["BindDescriptionHeader"]}, 
+        this.fieldsLabel = new wm.Label({_classes: {domNode: ["BindDescriptionHeader"]},
                          owner: this,
                          parent: this,
                          width: "100%",
@@ -2032,7 +2072,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     },
     generateEditors: function(c) {
     this.propDef.treeBindRoot = this.propDef.name;
-    var propDef = dojo.clone(this.propDef); 
+    var propDef = dojo.clone(this.propDef);
     propDef.advanced = false; // ComponentInspector's already taking care of this for us
     propDef.editor = "wm.prop.DataSetSelect";
     propDef.fullName = propDef.name;
@@ -2062,7 +2102,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     this.generateSubEditors();
     },
     generateSubEditors: function() {
-    var propDef = dojo.clone(this.propDef); 
+    var propDef = dojo.clone(this.propDef);
     if (!propDef.editorProps) {
         propDef.editorProps = {};
     }
@@ -2078,11 +2118,11 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     }
 
 
-    var isBound = studio.inspector.isPropBound(this.inspected, propDef); 
-    
-    
+    var isBound = studio.inspector.isPropBound(this.inspected, propDef);
+
+
     this.indent++;
-    
+
     var inspected = this.inspectedSubcomponent || this.inspected;
 
     var fields;
@@ -2092,7 +2132,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
         fields  = inspected.getValue(this.propDef.name)._dataSchema;
     }
     if (fields) {
-              
+
 /*
         this.fieldPanel =  panel = new wm.Panel({owner: this,
                              parent: this,
@@ -2128,7 +2168,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
             propDef.editorProps.widgetDataSets = true;
             propDef.editorProps.matchComponentType = true;
         }
-        
+
         e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
                             propDef, /* Property we are editing within the component */
                             this.fieldForm, /* Parent panel */
@@ -2158,7 +2198,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
              * 1. Naming the editor
              * 2. Calling getValue/setValue on the right property
              */
-            name: fieldName,            
+            name: fieldName,
 
             /* The type of the property we are editing; used by bind dialog to validate the type;
              * for literal types may be used to chose an editor widget for the property
@@ -2208,7 +2248,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
                             expression: wire.expression,
                             value: wire.owner.owner.getValue(wire.targetProperty)
                         }, "", false, true);
-                    }).onmouseover(function(e) {                        
+                    }).onmouseover(function(e) {
                             app.createToolTip("Delete Binding", this, e);
                     });
                     var dd = document.createElement("dd");
@@ -2233,7 +2273,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     reinspect: function() {
     this.updateBindDescription();
     var inspected = this.inspectedSubcomponent || this.inspected;
-     var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
+     var isBound = studio.inspector.isPropBound(inspected, this.propDef);
 
     /* TODO: fieldPanel does not appear to exist anymore */
     if (!isBound && this.fieldPanel && !this.fieldPanel.showing) {
@@ -2258,7 +2298,9 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
         }
         }
         this.generateSubEditors(inspected);
-        this.editors._ROOT.updateOptions();
+        if (this.editors._ROOT) {
+            this.editors._ROOT.updateOptions();
+        }
         //this.parent.setBestHeight();
     } else {
         /* Else call reinspectEditor on each editor */
@@ -2291,7 +2333,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 });
 
 
-dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, { 
+dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
     showMainInput: false,
     multiLayer: false,
     getPropDef: function(sourcePropDef, fieldName, fullName, type, isStructured) {
@@ -2309,13 +2351,13 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
         break;
     case "layer":
         propDef.editor = "wm.prop.WidgetSelect";
-        propDef.editorProps.widgetType = wm.Layer;      
+        propDef.editorProps.widgetType = wm.Layer;
         propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
         propDef.editorProps.createExpressionWire = false;
         break;
     case "layers":
         propDef.editor = "wm.prop.WidgetSelect";
-        propDef.editorProps.widgetType = wm.Layers;     
+        propDef.editorProps.widgetType = wm.Layers;
         propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
         propDef.editorProps.createExpressionWire = false;
         break;
@@ -2338,7 +2380,7 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
     default:
         propDef.editor = "";
         delete propDef.options;
-    } 
+    }
 
     return propDef;
     }
@@ -2369,7 +2411,7 @@ dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
     studio.inspector.props = props;
     this.setBestHeight();
     this.parent.setBestHeight();
-    }, 
+    },
     reinspect: function() {
     this.subinspected = this.inspected.getValue(this.propDef.name);
     if (!this.subinspected) {
@@ -2437,7 +2479,7 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
             this.dijits[0]._lastValueReported = false;
         } else if (this.dijits[0].checked) {
             this.hadAll = true;
-            for (var i = 1; i < this.dijits.length; i++) {      
+            for (var i = 1; i < this.dijits.length; i++) {
             this.dijits[i].set("checked", false, false);
             this.dijits[i]._lastValueReported = false;
             }
@@ -2458,9 +2500,9 @@ dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
 
     init: function() {
     this.inherited(arguments);
-  
+
     this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
-  
+
     this.displaySizes.setData([{name: "All",
                     dataValue: ""},
                    {name: ">= 1800px<div class='AllCheckboxSetNote'>1920px monitor; window almost full screen</div>", // NOTE: ipad in landscape mode is 1024px
@@ -2472,7 +2514,7 @@ dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
                    {name: "900px-1150px<div class='AllCheckboxSetNote'>Medium window, iPad in Landscape mode</div>",
                     dataValue: "900"},
                    {name: "650px-900px<div class='AllCheckboxSetNote'>medium desktop, iPad in Portrait mode</div>",
-                    dataValue: "650"},                 
+                    dataValue: "650"},
                    {name: "450px-650px<div class='AllCheckboxSetNote'>Large phone/Small tablet in Portrait mode</div>",
                     dataValue: "450"},
                    {name: "300px-450px<div class='AllCheckboxSetNote'>iPhone</div>",
@@ -2513,7 +2555,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
     this.editors = {};
     this.parent.setFitToContentHeight(true);
     this.tabs = this.createComponents({
-        tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
+        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs",  "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0"}, {}, {
         descLayer: ["wm.Layer", {caption: "Description"}, {},{
             descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}]
         }],
@@ -2574,8 +2616,8 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
     if (this.isAncestorHidden()) return;
     this.descHtml.setHtml(this.inspected.generateDocumentation());
     this.notesEditor.setDataValue(this.inspected.documentation || "");
-    
-    if (!this.docsHtml.isAncestorHidden()) {    
+
+    if (!this.docsHtml.isAncestorHidden()) {
         var url = studio.loadHelp(this.inspected.declaredClass, "", dojo.hitch(this, function(inData) {
         if (inData)
             this.docsHtml.setHtml(inData);

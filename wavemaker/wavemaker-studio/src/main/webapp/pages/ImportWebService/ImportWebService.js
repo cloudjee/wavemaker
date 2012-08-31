@@ -16,24 +16,25 @@ dojo.provide("wm.studio.pages.ImportWebService.ImportWebService");
 
 
 dojo.declare("ImportWebService", wm.Page, {
-        i18n: true,
+	i18n: true,
 	TYPE_SOAP: "SOAP",
 	TYPE_REST_WSDL: "REST (WSDL / WADL)",
-        TYPE_REST_BUILDER: null,
+	TYPE_REST_BUILDER: null,
 	TYPE_FEED: "Feed",
     TYPE_JSON: "XHR/JSON",
     //TYPE_SALESFORCE: "SOAP-Salesforce", //xxx
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
-	        this.TYPE_REST_BUILDER = this.getDictionaryItem("REST_BUILDER");
-	    this.updateSelect(this.typeInput, [this.TYPE_SOAP, this.TYPE_REST_WSDL, this.TYPE_REST_BUILDER, this.TYPE_JSON, this.TYPE_FEED/*, this.TYPE_SALESFORCE*/]); //xxx
-		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
+		this.TYPE_REST_BUILDER = this.getDictionaryItem("REST_BUILDER");
+		this.inputVar.setData([{name:this.TYPE_SOAP, dataValue:this.TYPE_SOAP},{name:this.TYPE_REST_WSDL, dataValue:this.TYPE_REST_WSDL},{name:this.TYPE_REST_BUILDER, dataValue:this.TYPE_REST_BUILDER},{name:this.TYPE_JSON, dataValue:this.TYPE_JSON},{name:this.TYPE_FEED, dataValue:this.TYPE_FEED}]);
+		this.typeInput.setDataSet(this.inputVar);	
+	    this.typeInput.setDataValue(this.TYPE_REST_BUILDER);
 		this.updateSelect(this.wsdlPathTypeInput, [this.IMPORT_TYPE_URL, this.IMPORT_TYPE_FILE]);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
 	},
 	reset: function() {
-		this.typeInput.setValue("displayValue", this.TYPE_SOAP);
+		this.typeInput.setValue("displayValue", this.this.TYPE_REST_BUILDER);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
 		this.wsdlUrlInput.clear();
 	        if (this.wsdlFileInput.fileNode)

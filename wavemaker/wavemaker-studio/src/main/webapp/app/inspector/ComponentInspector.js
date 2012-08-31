@@ -441,7 +441,7 @@
 	 if (inProp.writeonly || inProp.hidden) /* writeonly and hidden appear to be identical */
 	     return false;
 
-	 return true;
+         return true;
      },
      getProps: function(inComponent, isSubComponent, allProps) {
      	if (isSubComponent && (inComponent.declaredClass == "wm.Variable" || inComponent.declaredClass == "wm.ServiceInput")) {
@@ -548,7 +548,7 @@
 	     }
 	 }
      },
-/*
+     /*
      updateCaptionSizes: function() {
 
 
@@ -583,6 +583,7 @@
 	 this.updateCaptionSizes();
      },
      */
+
      generateButton: function(inComponent,inProp, inLayer) {
 	 var p = new wm.Panel({
 	     parent: inLayer,
@@ -681,13 +682,13 @@
 	     }
 	 }
 
-	     if (value instanceof wm.Component) {
-		 if (value === inComponent || value.isOwnedBy(inComponent)) {
-		      // don't show the value if the value is self or is something being managed internally; binding
-		     // is for connecting to a different component's properties.
-		     value = "";
-		 }
-	     }
+         if (value instanceof wm.Component) {
+             if (value === inComponent || value.isOwnedBy(inComponent)) {
+                 // don't show the value if the value is self or is something being managed internally; binding
+                 // is for connecting to a different component's properties.
+                 value = "";
+             }
+         }
 
 
 	 /**********************************************************
@@ -696,9 +697,9 @@
 	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel, hashId);
 	 editorProps.showing = !isBound || inProp.editor == "wm.prop.FieldGroupEditor";
 
-	 if (inProp.editorProps) {
-	     editorProps = dojo.mixin(editorProps, inProp.editorProps);
-	 }
+         if (inProp.editorProps) {
+             editorProps = dojo.mixin(editorProps, inProp.editorProps);
+         }
 
 	 /**********************************************************
 	  * Create the Editor Widget
@@ -729,30 +730,33 @@
 	 /* Cache a refernce to the editor so that reinspect can quickly find it */
 	 this.editorHash[hashId] = e;
 
+         /* Cache a refernce to the editor so that reinspect can quickly find it */
+         this.editorHash[hashId] = e;
 
-	 /**********************************************************
-	  * Create the readonly bind editor that shows the bound value
-	  **********************************************************/
-	 if ((inProp.bindable || inProp.bindTarget) && !e.noBindColumn) {
-	     this.createBindEditor(inProp, editorProps, e, isBound, inComponent,optionalAppendToHashName);
-	 } else if (!e.noBindColumn) {
-/*
-	     new wm.Spacer({owner:this,
-			    parent: panel,
-			    width: "20px",
-			    height: "20px"});
-			    */
-	 }
-	 var self = this;
-	 if (!e.noHelpButton) {
-	     this.createHelpButton(inComponent, inProp, panel, e.captionPosition == "top" ? parseInt(e.captionSize) : 0);
-	 }
-	 panel.setBestHeight();
 
-	 return e;
+         /**********************************************************
+          * Create the readonly bind editor that shows the bound value
+          **********************************************************/
+         if ((inProp.bindable || inProp.bindTarget) && !e.noBindColumn) {
+             this.createBindEditor(inProp, editorProps, e, isBound, inComponent, optionalAppendToHashName);
+         } else if (!e.noBindColumn) {
+             /*
+         new wm.Spacer({owner:this,
+                parent: panel,
+                width: "20px",
+                height: "20px"});
+                */
+         }
+         var self = this;
+         if (!e.noHelpButton) {
+             this.createHelpButton(inComponent, inProp, panel, e.captionPosition == "top" ? parseInt(e.captionSize) : 0);
+         }
+         panel.setBestHeight();
+
+         return e;
      },
 
-     /* When showing a bound value, get a pretty printed version of it */
+      /* When showing a bound value, get a pretty printed version of it */
      getFormattedBoundValue: function(inType, inSource, inExpr) {
 	var inValue = "";
 	 if (!inSource && !inExpr) {
@@ -801,25 +805,25 @@
       * when in fact you've bound the name data field
       **************************************************************************************/
      isPropBound: function(inComponent, inProp) {
-	 return Boolean((inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.fullName || inProp.name]);
+	    return Boolean((inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.fullName || inProp.name]);
      },
 
      /**************************************************************************************
       * Creates a help button that opens a dialog showing property docs
       **************************************************************************************/
      createHelpButton: function(inComponent, inProp, inPanel, captionHeight) {
-	 var self = this;
-	 wm.Label({owner: this,
-		   caption: "",
-		   parent: inPanel,
-		   width: "20px",
-		   height: "20px",//(20 + captionHeight) + "px",
-		   //margin: captionHeight + ",0,0,0",
-		   onclick: function() {
-		       studio.helpPopup = self.getHelpDialog();
-		       self.beginHelp(inProp.name, inPanel.domNode, inComponent.declaredClass);
-		   },
-		   _classes: {domNode: ["EditorHelpIcon"]}});
+    	 var self = this;
+    	 wm.Label({owner: this,
+    		   caption: "",
+    		   parent: inPanel,
+    		   width: "20px",
+    		   height: "20px",//(20 + captionHeight) + "px",
+    		   //margin: captionHeight + ",0,0,0",
+    		   onclick: function() {
+    		       studio.helpPopup = self.getHelpDialog();
+    		       self.beginHelp(inProp.name, inPanel.domNode, inComponent.declaredClass);
+    		   },
+    		   _classes: {domNode: ["EditorHelpIcon"]}});
      },
 
 
@@ -860,14 +864,14 @@
 	     e._updating = false;
 /*
 
-	     / * Clear causes onchange which causes reinspect which may destroy the editor * /
-	     if (!e.isDestroyed) {
-		 e.show();
-		 parent.setHeight(e.bounds.h + "px");
-		 this.reinspect();
-	     }
-	     */
-	 });
+         / * Clear causes onchange which causes reinspect which may destroy the editor * /
+         if (!e.isDestroyed) {
+         e.show();
+         parent.setHeight(e.bounds.h + "px");
+         this.reinspect();
+         }
+         */
+         });
 
 	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.fullName || inProp.name)] = bindableEditor;
 
@@ -936,7 +940,7 @@
 	     				source: inComponent.$.binding.wires[bindPropName].source,
 	     				expression: inComponent.$.binding.wires[bindPropName].expression,
 	     				value: inComponent.getValue(bindPropName)
-	     			} : {}, inDataValue, e.createExpressionWire);
+	     			} : {}, inDataValue, e.createExpressionWire, false, false);
 	     		}
 	     		if (index == componentCount-1) t.undoCount = componentCount;
 	     	} catch (e) {}
@@ -958,66 +962,66 @@
      },
 
      generateEditorFromProps: function(inProp, editorProps, value) {
-	 var ctor;
-	 if (inProp.editor) {
-	     ctor = dojo.getObject(inProp.editor);
-	     if (!inProp.editorProps || !inProp.editorProps.height) {
-		 this.adjustHeightProperty(editorProps, ctor);
-	     }
-	 } else if (inProp.options) {
-	     ctor = wm.SelectMenu;
-	     editorProps.options = inProp.options;
-	     editorProps.displayField = editorProps.dataField = "dataValue";
-	 } else {
-	     switch(String(inProp.type).toLowerCase() || typeof value) {
-	     case "java.lang.boolean":
-	     case "boolean":
-		 ctor = wm.Checkbox;
-		 editorProps.startChecked = Boolean(value);
-		 editorProps.captionSize = "100%";
-		 editorProps.captionPosition = "left";
-		 editorProps.emptyValue = "false";
-		 editorProps.dataType = "boolean";
-		 editorProps.checkedValue = true;
-		 editorProps.height = wm.Checkbox.prototype.height;
-		 break;
-	     case "java.lang.integer":
-	     case "java.lang.float":
-	     case "int":
-	     case "number":
-	     case "java.lang.long":
-	     case "java.lang.double":
-		 ctor = wm.Number;
-		 break;
-	     case "date":
-	     case "time":
-	     case "java.util.date":
-		 ctor = wm.DateTime;
-		 editorProps.dateMode = "Date";
-		 break;
-	     default:
-		 ctor = wm.Text;
-	     }
-	 }
-	 editorProps.dataValue = value;
-	 var e =  new ctor(editorProps);
-	 if (e.forceCaptionPositionTop) {
-	     e.setCaptionPosition("top");
-	     e.setCaptionSize("20px");
-	 }
-	 return e;
+         var ctor;
+         if (inProp.editor) {
+             ctor = dojo.getObject(inProp.editor);
+             if (!inProp.editorProps || !inProp.editorProps.height) {
+                 this.adjustHeightProperty(editorProps, ctor);
+             }
+         } else if (inProp.options) {
+             ctor = wm.SelectMenu;
+             editorProps.options = inProp.options;
+             editorProps.displayField = editorProps.dataField = "dataValue";
+         } else {
+             switch (String(inProp.type).toLowerCase() || typeof value) {
+             case "java.lang.boolean":
+             case "boolean":
+                 ctor = wm.Checkbox;
+                 editorProps.startChecked = Boolean(value);
+                 editorProps.captionSize = "100%";
+                 editorProps.captionPosition = "left";
+                 editorProps.emptyValue = "false";
+                 editorProps.dataType = "boolean";
+                 editorProps.checkedValue = true;
+                 editorProps.height = wm.Checkbox.prototype.height;
+                 break;
+             case "java.lang.integer":
+             case "java.lang.float":
+             case "int":
+             case "number":
+             case "java.lang.long":
+             case "java.lang.double":
+                 ctor = wm.Number;
+                 break;
+             case "date":
+             case "time":
+             case "java.util.date":
+                 ctor = wm.DateTime;
+                 editorProps.dateMode = "Date";
+                 break;
+             default:
+                 ctor = wm.Text;
+             }
+         }
+         editorProps.dataValue = value;
+         var e = new ctor(editorProps);
+         if (e.forceCaptionPositionTop) {
+             e.setCaptionPosition("top");
+             e.setCaptionSize("20px");
+         }
+         return e;
      },
-	      /* If the default height for the editor is larger than the default height of a regular
-	       * abstract editor, then our standard height will be too small and should be adjusted
-	       */
+     /* If the default height for the editor is larger than the default height of a regular
+      * abstract editor, then our standard height will be too small and should be adjusted
+      */
      adjustHeightProperty: function(editorProps, ctor) {
-	 if (ctor && ctor.prototype instanceof wm.Control) {
-	     var standardHeight = parseInt(wm.AbstractEditor.prototype.height);
-	     var ctorHeight = parseInt(ctor.prototype.height);
-	     if (ctorHeight > standardHeight) {
-		 editorProps.height = ctorHeight + "px";//(parseInt(editorProps.height) + ctorHeight-standardHeight) + "px";
-	     }
-	 }
+         if (ctor && ctor.prototype instanceof wm.Control) {
+             var standardHeight = parseInt(wm.AbstractEditor.prototype.height);
+             var ctorHeight = parseInt(ctor.prototype.height);
+             if (ctorHeight > standardHeight) {
+                 editorProps.height = ctorHeight + "px"; //(parseInt(editorProps.height) + ctorHeight-standardHeight) + "px";
+             }
+         }
      },
 /*
      generateSubcomponentEditors: function(inComponent, inProp, panel) {
@@ -1087,34 +1091,12 @@
 	 return inValue;
      },
      beginHelp: function(inPropName, inNode, inType, altText) {
-	       var bd = studio.helpPopup;
-	 if (inType) {
-	       bd.page.setHeader(inType,inPropName);
-	       bd.sourceNode = inNode;
-	       //bd.positionNode = inNode.parentNode;
-	       bd.fixPositionNode = inNode.parentNode;
-
-	 } else {
-	     bd.page.setHeader("Help");
-	     bd.fixPositionNode = inNode;
-	 }
-	       bd.corner = "tl";
-	     if (window.location.search.match(/editpropdoc/)) {
-		 var classList = [];
-		 studio.palette.forEachNode(function(node) {
-		     if (node.klass) {
-			 try {
-			     var prototype = dojo.getObject(node.klass).prototype;
-			     if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor]) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
-				 if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
-				     var name = node.klass.replace(/^.*\./,"");
-				     if (dojo.indexOf(classList, name) == -1)
-					 classList.push(name);
-				 }
-			     }
-			 } catch(e){}
-	     }
-		 });
+         var bd = studio.helpPopup;
+         if (inType) {
+             bd.page.setHeader(inType, inPropName);
+             bd.sourceNode = inNode;
+             //bd.positionNode = inNode.parentNode;
+             bd.fixPositionNode = inNode.parentNode;
 
 		 dojo.forEach(classList, function(className,i) {
 		     window.setTimeout(function() {
@@ -1176,12 +1158,64 @@
 			   console.log("HELP SYSTEM: Failed to load!");
 			   console.dir(ioArgs);
 
- }
-	       });
-	       */
-	       return true;
-	 },
+                     app.toastInfo("Testing " + className + "." + inPropName);
+                     studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
+                         if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
+                             window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {
+                                 studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+                             }) + className + "_" + inPropName + "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+                         }
+                     });
+                 }, i * 1300);
+             });
+         } else {
+             if (!inType) {
+                 bd.show();
+                 bd.page.setContent(altText);
+             } else {
+                 if (inType == studio.application.declaredClass) {
+                     inType = "wm.Application";
+                 } else if (inType == studio.project.pageName) {
+                     inType = "wm.Page";
+                 }
+                 var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
+                     studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1"),
+                     className: inType.replace(/^.*\./, "") + "_" + inPropName
+                 });
 
+                 // clear previous content before showing.
+                 bd.page.setContent("");
+                 this._loadingContent = true;
+                 bd.show();
+                 studio.loadHelp(inType, inPropName, function(inResponse) {
+                     wm.cancelJob("PropDoc");
+                     this._loadingContent = false;
+                     if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
+                     bd.page.setContent(inResponse);
+                 });
+
+                 //  And in case of proxy problems, show the link so the user can open it themselves
+                 wm.job("PropDoc", 1700, dojo.hitch(this, function() {
+                     if (this._loadingContent) bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page");
+                 }));
+             }
+         }
+         /*
+           dojo.xhrGet({
+             url: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/",
+             handleAs: "html",
+             load: function(response,ioArgs) {
+               alert("Loaded: " + response);
+             },
+             error: function(response,ioArgs) {
+               console.log("HELP SYSTEM: Failed to load!");
+               console.dir(ioArgs);
+
+ }
+           });
+           */
+         return true;
+     },
 
 	 getHelpDialog: function() {
 		 if (!studio.helpPopup) {
@@ -1195,7 +1229,9 @@
 			 noEscape: false,
 			 useContainerWidget: false,
 			 hideControls: true,
-			 corner: "tl"
+			 corner: "tl",
+             noTopBottomDocking: false,
+             noLeftRightDocking: false
 		     };
 		     var d = studio.helpPopup = new wm.PageDialog(props);
 		 }

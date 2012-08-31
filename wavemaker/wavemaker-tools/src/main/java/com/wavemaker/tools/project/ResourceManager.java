@@ -85,7 +85,6 @@ public class ResourceManager {
     public static Resource createZipFile(StudioFileSystem fileSystem, Resource f, Resource tmpDir) {
         try {
             Resource destFile = tmpDir.createRelative(f.getFilename() + ".zip");
-            fileSystem.createPath(tmpDir, f.getFilename() + ".zip");
             OutputStream dest = fileSystem.getOutputStream(destFile);
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
@@ -323,7 +322,7 @@ public class ResourceManager {
                 if (entry.isDirectory()) {
                     fileSystem.createPath(zipFolder, entry.getName() + "/");
                 } else {
-                    Resource outputFile = fileSystem.createPath(zipFolder, entry.getName());
+                    Resource outputFile = zipFolder.createRelative(entry.getName());
                     FileCopyUtils.copy(new NoCloseInputStream(zis), fileSystem.getOutputStream(outputFile));
                 }
             }

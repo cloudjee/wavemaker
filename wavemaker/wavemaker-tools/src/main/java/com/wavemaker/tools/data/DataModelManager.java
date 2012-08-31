@@ -101,6 +101,10 @@ public class DataModelManager {
         this.projectCompiler = projectCompiler;
     }
 
+    public ProjectCompiler getProjectCompiler() {
+        return  this.projectCompiler;
+    }
+
     public void setExporterFactory(ExporterFactory exporterFactory) {
         this.exporterFactory = exporterFactory;
     }
@@ -279,9 +283,7 @@ public class DataModelManager {
             if (tmpCfg != null) {
                 tmpCfg.dispose();
             }
-            // cftempfix - uncomment this line after solving the poroblem - Eclipse compiler locks the output
-            // files
-            // tmpServiceRootFolder.delete();
+            tmpServiceRootFolder.delete();
         }
 
     }
@@ -727,7 +729,6 @@ public class DataModelManager {
             throw new IllegalArgumentException("package must be set");
         }
 
-        packageName = packageName.toLowerCase();
         if (packageName.endsWith(".")) {
             if (packageName.length() == 1) {
                 throw new IllegalArgumentException("illegal package name " + packageName);

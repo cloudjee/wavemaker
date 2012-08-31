@@ -886,13 +886,24 @@ dojo.declare(
                                 this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
                     } else if (t == "JOSSO") {
                         var roles = this.roleList._data;
-                        studio.securityConfigService.requestSync("configJOSSO", [ this.secEnableInput.getChecked(), roles[0] ], dojo.hitch(this, "configJOSSOResult"));
-                        studio.application.loadServerComponents();
-                        studio.refreshServiceTree();
-                        return;
+                        if (roles.length == 1 || !this.secEnableInput.getChecked()) {
+                            studio.securityConfigService.requestSync("configJOSSO", 
+                                [ this.secEnableInput.getChecked(), roles[0] || "test"], 
+                                dojo.hitch(this, "configJOSSOResult"));
+                            studio.application.loadServerComponents();
+                            studio.refreshServiceTree();
+
+                        } else {
+                            app.alert(this.getDictionaryItem("ALERT_JOSSO_ONE_ROLE"));
+                            studio.progressDialog.hide();
+                            return;
+
+                        }
                     }
-                    this.saveRolesSetup();
-                    this.saveServicesSetup();
+                    if (t != "JOSSO") {
+                        this.saveRolesSetup();
+                        this.saveServicesSetup();
+                    }
                     studio.application.loadServerComponents();
                     studio.refreshServiceTree();
                     studio.project.saveApplication(); // Seems redundant but insures that securityEnabled and loginpageEnabled properties are updated and written

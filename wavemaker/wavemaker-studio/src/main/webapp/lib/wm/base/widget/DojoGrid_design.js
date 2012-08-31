@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.base.widget.DojoGrid_design");
 dojo.require("wm.base.widget.DojoGrid");
@@ -22,15 +22,15 @@ wm.DojoGrid.extend({
     themeableSharedStyles: ["-Even Rows", "Row-Background-Color","Row-Font-Color",
 			    "-Odd Rows","Row-Background-Odd-Color","Row-Font-Odd-Color",
 			    "-Hover Row", "Row-Background-Hover-Color","Row-Font-Hover-Color",
-			    "-Selected Row", "Row-Background-Selected-Color", "Row-Font-Selected-Color", 
-			    "-Misc", "Row-Border-Color", 
+			    "-Selected Row", "Row-Background-Selected-Color", "Row-Font-Selected-Color",
+			    "-Misc", "Row-Border-Color",
 			    "-Header Styles", "Header-Background-Color", "Header-Font-Color", "Header-Image", "Header-Image-Position","Header-Image-Repeat"],
 	afterPaletteDrop: function() {
 		this.caption = this.caption || this.name;
         this.singleClickEdit = true; // single click edit is the new default, but don't want to change existing projects
 		this.renderDojoObj();
 	},
-/* made obsolete by adding createWire to the property editor 
+/* made obsolete by adding createWire to the property editor
 	set_dataSet: function(inDataSet) {
 		// support setting dataSet via id from designer
 		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
@@ -48,7 +48,7 @@ wm.DojoGrid.extend({
 	listProperties: function() {
 	    var props = this.inherited(arguments);
 	    props.dataSet.type = "Object";// should be able to bind to ANY type of variable (as long as its a list); could not find where this value is set to the dataset's type, but I don't want that happening.
-	    
+
 	    props.onLiveEditBeforeInsert.ignoretmp = !this.liveEditing;
 	    props.onLiveEditBeforeUpdate.ignoretmp = !this.liveEditing;
 	    props.onLiveEditBeforeDelete.ignoretmp = !this.liveEditing;
@@ -63,7 +63,7 @@ wm.DojoGrid.extend({
 
 	    props.onLiveEditInsertResult.ignoretmp = !this.liveEditing;
 	    props.onLiveEditUpdateResult.ignoretmp = !this.liveEditing;
-	    props.onLiveEditDeleteResult.ignoretmp = !this.liveEditing; 
+	    props.onLiveEditDeleteResult.ignoretmp = !this.liveEditing;
 
 	    return props;
 	},
@@ -116,6 +116,8 @@ wm.DojoGrid.extend({
 	return this.showMenuDialog();
     },
 	updateNow: function() {
+        /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
+        if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);
 		var ds = this.getValueById((this.components.binding.wires["dataSet"] || 0).source);
 		wm.fire(ds, "update");
 	},
@@ -134,7 +136,7 @@ wm.DojoGrid.extend({
 		l[c.field] = c.title;
 	    }
 	    return l;
-	}	
+	}
     },
     deviceTypeChange: function() {
 	if (this.isDestroyed) return;
@@ -170,7 +172,7 @@ wm.DojoGrid.extend({
 		l[c.id] = c.title;
 	    }
 	    return l;
-	}	
+	}
     }
 /*
 	writeProps: function(){
@@ -243,7 +245,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     onCellRightClick: {advanced:1, order: 102},
     onGridButtonClick:{order:103},
     onHeaderClick:    {order:104,advanced:1},
-    
+
 
     /* Ignored group */
     addFormName: {hidden:1},
@@ -288,6 +290,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     getDataSet: {method:1, returns: "wm.Variable"},
     setDataSet: {method:1},
     showCSVData: {method:1},
+    toCSVData: {method:1},
     setSortIndex:{method:1},
     setSortField:{method:1},
     setQuery: {method:1},

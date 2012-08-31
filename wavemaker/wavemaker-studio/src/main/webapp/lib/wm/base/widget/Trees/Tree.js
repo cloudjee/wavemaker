@@ -18,7 +18,7 @@ dojo.provide("wm.base.widget.Trees.Tree");
 dojo.require("wm.base.Control");
 
 try {
-    document.execCommand("BackgroundImageCache", false, true);
+	document.execCommand("BackgroundImageCache", false, true);
 } catch(e) {
 };
 
@@ -75,70 +75,131 @@ wm.expandNode = function(n, step, accel, interval) {
 dojo.declare("wm.TreeNode", null, {
     images: { none: "tree_blank.gif", leaf: "tree_leaf.gif", closed: "tree_closed.gif", open: "tree_open.gif" },
         touchimages: { none: "tree_blank.gif", leaf: "tree_leaf.gif", closed: "touch_tree_closed.png", open: "touch_tree_open.png" },
-    classes: { leaf: "wmtree-leaf", lastLeaf: "wmtree-last-leaf", lastItem: "wmtree-last-item", content: "wmtree-content", selected: "wmtree-selected", rootLeaf: "wmtree-root-leaf", rootLastLeaf: "wmtree-root-last-leaf", open: "wmtree-open" },
-    closed: false,
-    canSelect: true,
-    constructor: function(inParent, inProps) {
-        this.addParent(inParent);
-        this.initProps(inProps);
-        this.placeInParent();
-        if (!this.tree._updating)
-            this.render();
-    },
-    destroy: function() {
-        this.forEachDescendant(function(n) {
-            n._destroy();
-        });
-        this._destroy();
-    },
-    destroy: function() {
-        if (this.isDestroyed) return;
-        this.isDestroyed = true;
-        this.removeChildren();
+	classes: { leaf: "wmtree-leaf", lastLeaf: "wmtree-last-leaf", lastItem: "wmtree-last-item", content: "wmtree-content", selected: "wmtree-selected", rootLeaf: "wmtree-root-leaf", rootLastLeaf: "wmtree-root-last-leaf", open: "wmtree-open" },
+	closed: false,
+	canSelect: true,
+	constructor: function(inParent, inProps) {
+		this.addParent(inParent);
+		this.initProps(inProps);
+		this.placeInParent();
+		if (!this.tree._updating)
+			this.render();
+	},
+	destroy: function() {
+		this.forEachDescendant(function(n) {
+			n._destroy();
+		});
+		this._destroy();
+	},
+	destroy: function() {
+	    if (this.isDestroyed) return;
+	    this.isDestroyed = true;
+	    this.removeChildren();
 
-        if (this.tree.nodes[this.id])
-            this.tree._removeNode(this);
-        if (this.parent) {
-        if (this.parent instanceof wm.TreeNode) {
-            this.parent.kids = wm.Array.removeElement(this.parent.kids, this);
-            delete this.parent;
-        }
-        wm.fire(this.parent, "_remove", [this]);
-        }
-        if (this != this.tree.root) {
-            var d = this.domNode;
-            dojo._destroyElement(d);
-        }
-    },
-    addParent: function(inParent) {
-        this.parent = inParent;
-        this.tree = inParent.tree;
-        this.tree._addNode(this);
-    },
-    initProps: function(inProps) {
-        inProps = inProps || {};
-        dojo.mixin(this, {
-            kids: [],
-            content: "",
-            data: {},
-            _data: {},
-            //_childrenRendered: this.closed,
-            imageRoot: this.tree._imageRoot
-        }, inProps);
-        // FIXME: wtf?
-        if (this.closed)
-            this._childrenRendered = false;
-    },
-    placeInParent: function() {
-        var i = this.parentIndex;
-        if (i !== undefined)
-            this.parent.kids.splice(i, 0, this);
-        else
-            this.parent.kids.push(this);
-    },
-    render: function() {
-        this.createNode();
-        this.domNode.nodeId = this.id;
+		if (this.tree.nodes[this.id])
+			this.tree._removeNode(this);
+	    if (this.parent) {
+		if (this.parent instanceof wm.TreeNode) {
+		    this.parent.kids = wm.Array.removeElement(this.parent.kids, this);
+		    delete this.parent;
+		}
+		wm.fire(this.parent, "_remove", [this]);
+	    }
+		if (this != this.tree.root) {
+			var d = this.domNode;
+			dojo._destroyElement(d);
+		}
+	},
+	addParent: function(inParent) {
+		this.parent = inParent;
+		this.tree = inParent.tree;
+		this.tree._addNode(this);
+	},
+	initProps: function(inProps) {
+		inProps = inProps || {};
+		dojo.mixin(this, {
+			kids: [],
+			content: "",
+			data: {},
+			_data: {},
+			//_childrenRendered: this.closed,
+			imageRoot: this.tree._imageRoot
+		}, inProps);
+		// FIXME: wtf?
+		if (this.closed)
+			this._childrenRendered = false;
+	},
+	placeInParent: function() {
+		var i = this.parentIndex;
+		if (i !== undefined)
+			this.parent.kids.splice(i, 0, this);
+		else
+			this.parent.kids.push(this);
+	},
+	render: function() {
+		this.createNode();
+		this.domNode.nodeId = this.id;
+
+		this.styleContent();
+		// Note: do as much as we can before adding to dom.
+		this.parent.renderChild(this);
+		if (this.selected)
+			this.tree.selected = this;
+		if (!this.closed)
+			this.initKids();
+	},
+	createKidsNode: function() {
+	    if (this.kidsNode) return this.kidsNode;
+		var n = this.kidsNode = document.createElement("ul")
+		n.style.display = (this.closed ? "none" : "");
+		return n;
+	},
+	formatImage: function(inImage, inImageSize) {
+	    inImage = inImage || this.image;
+	    inImageSize = inImageSize || this.imageSize || 16;
+	    if (!inImage || inImage.indexOf(".") != -1) {
+		return inImage ? ['<img src="', inImage, '" style="height: ', inImageSize, 'px; width: ', inImageSize, 'px;">&nbsp;'].join('') : "";
+	    } else {
+		return inImage ? ['<img src="lib/wm/base/widget/themes/default/images/blank.gif" class="', inImage, '" style="height: ', inImageSize, 'px; width: ', inImageSize, 'px;">&nbsp;'].join('') : "";
+	    }
+	},
+	formatContent: function() {
+		var i = this.formatImage();
+		return [i, i ? '&nbsp;' : '', this.content].join('');
+	},
+	createNode: function() {
+		var li = this.domNode = document.createElement("li");
+		li.innerHTML = "<img/><span>" + this.formatContent() + "</span>";
+		this.btnNode = li.firstChild;
+		this.contentNode = this.btnNode.nextSibling;
+	},
+	isLastChild: function() {
+		var k = this.parent.kids;
+		return this == k[k.length-1];
+	},
+	isRoot: function() {
+		return (this.parent == this.tree.root) && (this == this.tree.root.kids[0]);
+	},
+	isSelected: function() {
+		return this == this.tree.selected;
+	},
+	styleNode: function() {
+		var n=this.domNode, i=n.firstChild, isLast=this.isLastChild(), isRoot=this.isRoot();
+		if (!n)
+			return;
+		// img class (check if last or root)
+		var ic = (isLast ? this.classes.lastLeaf : this.classes.leaf);
+		if (isRoot)
+			ic = (isLast ? this.classes.rootLastLeaf : this.classes.rootLeaf);
+		if (i && i.className != ic)
+			i.className = ic;
+		// node class
+		var nc = (isLast ? this.classes.lastItem : "") + (this.closed ? "" : " " + this.classes.open);
+		if (n.className != nc)
+			n.className = nc;
+		// FIXME: not a good check for if we have unrendered children (might be lazy)
+		var hasChildren = !this._childrenRendered && (this.hasChildren || this._hasChildren || (this._data.children && this._data.children.length));
+		// img src
 
         this.styleContent();
         // Note: do as much as we can before adding to dom.
@@ -201,9 +262,6 @@ dojo.declare("wm.TreeNode", null, {
         var hasChildren = !this._childrenRendered && (this.hasChildren || this._hasChildren || (this._data.children && this._data.children.length));
         // img src
 
-/*      if (this.tree._touchScroll)
-        var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.touchimages.closed : this.touchimages.open);
-        else*/
         var img = !this.kids.length && !hasChildren ? this.images.none : (this.closed ? this.images.closed : this.images.open);
         var s = this.imageRoot + img;
 
@@ -380,40 +438,40 @@ dojo.declare("wm.TreeNode", null, {
 });
 
 dojo.declare("wm.TreeCheckNode", wm.TreeNode, {
-    checked: false,
-    render: function() {
-        this.inherited(arguments);
-        this.setChecked(this.checked);
-    },
-    createNode: function() {
-        var li = this.domNode = document.createElement("li");
-        li.innerHTML = [
-            '<img/><input type="checkbox" style="margin: 0 4px 0 0; padding:0;"',
-            this.checked ? ' checked="yes"' : "",
-            '><span>' + this.formatContent() + '</span>'
-        ].join("");
-        this.btnNode = li.firstChild;
-        this.checkboxNode = this.btnNode.nextSibling;
-        this.contentNode = this.checkboxNode.nextSibling;
-    },
-    click: function(e) {
-        if (e.target == this.checkboxNode)
-            this.checkboxClick(e);
-        else
-            this.inherited(arguments);
-    },
-    checkboxClick: function(e) {
-        this.tree.dispatchNodeEvent("Checkboxclick", this, e);
-    },
-    getChecked: function(inChecked) {
-        return this.checkboxNode ? this.checkboxNode.checked : this.checked;
-    },
-    setChecked: function(inChecked) {
-        this.checkboxNode.checked = inChecked;
-    },
-    toggleChecked: function() {
-        this.setChecked(!this.checkBoxNode.checked);
-    }
+	checked: false,
+	render: function() {
+		this.inherited(arguments);
+		this.setChecked(this.checked);
+	},
+	createNode: function() {
+		var li = this.domNode = document.createElement("li");
+		li.innerHTML = [
+			'<img/><input type="checkbox" style="margin: 0 4px 0 0; padding:0;"',
+			this.checked ? ' checked="yes"' : "",
+			'><span>' + this.formatContent() + '</span>'
+		].join("");
+		this.btnNode = li.firstChild;
+		this.checkboxNode = this.btnNode.nextSibling;
+		this.contentNode = this.checkboxNode.nextSibling;
+	},
+	click: function(e) {
+		if (e.target == this.checkboxNode)
+			this.checkboxClick(e);
+		else
+			this.inherited(arguments);
+	},
+	checkboxClick: function(e) {
+		this.tree.dispatchNodeEvent("Checkboxclick", this, e);
+	},
+	getChecked: function(inChecked) {
+		return this.checkboxNode ? this.checkboxNode.checked : this.checked;
+	},
+	setChecked: function(inChecked) {
+		this.checkboxNode.checked = inChecked;
+	},
+	toggleChecked: function() {
+		this.setChecked(!this.checkBoxNode.checked);
+	}
 });
 
 dojo.declare("wm.TreeRadioNode", wm.TreeCheckNode, {
@@ -454,35 +512,32 @@ dojo.declare("wm.TreeTextNode", wm.TreeNode, {
             this.inherited(arguments);
     },
 
-    createNode: function() {
-        var li = this.domNode = document.createElement("li");
-        li.innerHTML = [
-            '<img/>',
-            '<span>' + this.formatContent() + '</span>',
-            '<input type="text" style="margin: 0 4px 0 0; padding:0;" value="',
-            this.value,
-            '">'
-        ].join("");
-        this.btnNode = li.firstChild;
-        this.contentNode = this.btnNode.nextSibling;
-        this.inputNode = this.contentNode.nextSibling;
-        dojo.connect(this.inputNode, "onchange", this, "onChange");
-    },
-    getValue: function(inChecked) {
-        return this.inputNode ? this.inputNode.value : this.value;
-    },
-    setValue: function(inValue) {
-        this.inputNode.value = inValue;
-    },
+	createNode: function() {
+		var li = this.domNode = document.createElement("li");
+		li.innerHTML = [
+		    '<img/>',
+		    '<span>' + this.formatContent() + '</span>',
+		    '<input type="text" style="margin: 0 4px 0 0; padding:0;" value="',
+		    this.value,
+		    '">'
+		].join("");
+		this.btnNode = li.firstChild;
+		this.contentNode = this.btnNode.nextSibling;
+		this.inputNode = this.contentNode.nextSibling;
+	    dojo.connect(this.inputNode, "onchange", this, "onChange");
+	},
+	getValue: function(inChecked) {
+		return this.inputNode ? this.inputNode.value : this.value;
+	},
+	setValue: function(inValue) {
+		this.inputNode.value = inValue;
+	},
     onChange: function() {}
 });
 
 
 dojo.declare("wm.TreeRoot", wm.TreeNode, {
     render: function(inContent) {
-/*      if (this.tree._touchScroll)
-         this.domNode = this.tree._touchScroll.scrollers.inner;
-        else*/
         this.domNode = this.tree.domNode;
     },
     addParent: function(inTree) {
@@ -505,16 +560,7 @@ dojo.declare("wm.Tree", wm.Box, {
     init: function() {
         this.inherited(arguments);
         if (this.multiSelect) this.selected = [];
-/*
-        if (app._touchEnabled) {
-        wm.conditionalRequire("lib.github.touchscroll.touchscroll");
-        this._touchScroll = new TouchScroll(this.domNode, {/ *elastic:true, * /owner: this});
-        this._touchScroll.scrollers.outer.style.position = "absolute";
-        this._touchScroll.scrollers.outer.style.left = "0px";
-        this._touchScroll.scrollers.outer.style.top = "0px";
-        this.setConnectors(false);
-        }
-    */
+
         dojo.addClass(this.domNode, "wmtree");
         this.setConnectors(this.connectors);
         this._nodeId = 0;
@@ -543,10 +589,7 @@ dojo.declare("wm.Tree", wm.Box, {
         this._data = {};
         this._nodeId = 0;
         this.selected = this.multiSelect ? [] : null;
-/*
-            if (this._touchScroll)
-            this._touchScroll.scrollers.inner.innerHTML = "";
-            else*/
+
             this.domNode.innerHTML = "";
         this.nodes = [];
         this.root.destroy();

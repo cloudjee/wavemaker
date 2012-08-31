@@ -11,62 +11,63 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
 
-/* LOCALIZATION NOTES: 
- * This file is not localized at this time as we do not believe that localization of 
+
+/* LOCALIZATION NOTES:
+ * This file is not localized at this time as we do not believe that localization of
  * custom javascript code is likely to be supported.
  */
 dojo.provide("wm.studio.app.events");
 
 terminus = "_end: 0";
 pageScript = function(name, defaultFunctions) {
-	return [
-		'dojo.declare("' + name + '", wm.Page, {',
-		'    start: function() {',
-		'            ',
-		'    },',
-	         (defaultFunctions ? "    " + defaultFunctions + "," : ""),
-		'    ' + terminus,
-		'});'
-	].join('\n');
+    if (defaultFunctions && !defaultFunctions.match(/,\s*$/)) defaultFunctions += ",";
+    return [
+        'dojo.declare("' + name + '", wm.Page, {',
+        '    start: function() {',
+        '        ',
+        '    },',
+             (defaultFunctions ? "    " + defaultFunctions : ""),
+        '    ' + terminus,
+        '});'
+    ].join('\n');
 }
 
 getEvent = function(name, text) {
-	//var r = new RegExp(name + ":\\s+function\\(.*?},$", "m");
-	var r = new RegExp(name + ": function\\(", "");
-	var m = text.match(r)||[];
-	//console.log(r.source, m);
-	return (m[0]||'').replace(/\r/g, "");
+    //var r = new RegExp(name + ":\\s+function\\(.*?},$", "m");
+    var r = new RegExp(name + ": function\\(", "");
+    var m = text.match(r)||[];
+    //console.log(r.source, m);
+    return (m[0]||'').replace(/\r/g, "");
 }
 
 getArgs = function(ctrl, name) {
-	var fn = ctrl._designee.constructor.prototype[name], m = fn&&fn.toString().match(/function\s*\(([^)]*)/);
-	//return m&&m[1]&&(", " + m[1]) || " /*,args*/";
-	return !m&&" /*,args*/" || m[1]&&(", " + m[1]) || "";
+    var fn = ctrl._designee.constructor.prototype[name], m = fn&&fn.toString().match(/function\s*\(([^)]*)/);
+    //return m&&m[1]&&(", " + m[1]) || " /*,args*/";
+    return !m&&" /*,args*/" || m[1]&&(", " + m[1]) || "";
 }
 
 getEventCode = function(ctrl, name, value, code) {
     var a = getArgs(ctrl, name);
     if (wm.isInstanceType(ctrl, wm.Page))
-	a = a.substring(1);
+    a = a.substring(1);
     else
-	a = "inSender" + a;
-    return value + ": function(" + a + ") {\n        " + code + "\n      },\n    ";
+    a = "inSender" + a;
+    return value + ": function(" + a + ") {\n        " + code + "\n    },\n    ";
 
 }
 
 /* Does not appear to get called */
 writeCodeFragment = function(code) {
-	var t = studio.getScript();
-	studio.setScript(t.replace(terminus, code + terminus));
+    var t = studio.getScript();
+    studio.setScript(t.replace(terminus, code + terminus));
 }
 
 removeCodeFragment = function(start, end) {
-	var code = studio.getScript();
-	var re = new RegExp("\\/\\*\\s+" + start + "\\s+\\*\\/[\\S\\s]*\\/\\*\\s+" + end + "\\s+\\*\\/.*\n    ", "i");
-	code = code.replace(re, "");
-	studio.setScript(t);
+    var code = studio.getScript();
+    var re = new RegExp("\\/\\*\\s+" + start + "\\s+\\*\\/[\\S\\s]*\\/\\*\\s+" + end + "\\s+\\*\\/.*\n    ", "i");
+    code = code.replace(re, "");
+    studio.setScript(t);
 }
 
 
@@ -103,18 +104,18 @@ eventEdit = function(ctrl, name, value, noInSenderInArgs, optionalArgList) {
     var code = (appLevel) ? studio.getAppScript() : studio.getScript();
 
     if (wm.isInstanceType(ctrl, wm.Page))
-	value = name;
+    value = name;
     if (!getEvent( value, code)) {
-	var a = (optionalArgList) ? ", " + optionalArgList : getArgs(ctrl, name);
-	if (wm.isInstanceType(ctrl, wm.Page) || noInSenderInArgs)
-	    a = a.substring(1);
-	else
-	    a = "inSender" + a;
-	var code = code.replace(terminus, value + ": function(" + a + ") {\n      \n    },\n  " + terminus);
-	if (appLevel)
-	    studio.setAppScript(code);
-	else
-	    studio.setScript(code);
+    var a = (optionalArgList) ? ", " + optionalArgList : getArgs(ctrl, name);
+    if (wm.isInstanceType(ctrl, wm.Page) || noInSenderInArgs)
+        a = a.substring(1);
+    else
+        a = "inSender" + a;
+    code = code.replace(terminus, value + ": function(" + a + ") {\n        \n    },\n    " + terminus);
+    if (appLevel)
+        studio.setAppScript(code);
+    else
+        studio.setScript(code);
     }
 
     studio.navGotoSourceClick();
@@ -123,75 +124,75 @@ eventEdit = function(ctrl, name, value, noInSenderInArgs, optionalArgList) {
 }
 
 eventChange = function(editor, oldName, newName) {
-	if (oldName && newName && oldName!=newName) {
-	    var r  = new RegExp(oldName + ": function\\(", "m");
+    if (oldName && newName && oldName!=newName) {
+        var r  = new RegExp(oldName + ": function\\(", "m");
 
-	    var r2 = new RegExp("console.error\\('ERROR IN " + oldName + ": ", "m")
-	    var code = editor.getText();
-	    code = code.replace(r, newName + ": function(");
-	    code = code.replace(r2, "console.error('ERROR IN " + newName + ": ");
-	    editor.setText(code);
-	}
+        var r2 = new RegExp("console.error\\('ERROR IN " + oldName + ": ", "m");
+        var code = editor.getText();
+        code = code.replace(r, newName + ": function(");
+        code = code.replace(r2, "console.error('ERROR IN " + newName + ": ");
+        editor.setText(code);
+    }
 }
 
 eventCopy = function(editor,oldName, newName) {
-	if (oldName && newName && oldName!=newName) {
-		var r = new RegExp(oldName + ": function(\\(.*?\\))", "m");
-	        var code = editor.getText();
+    if (oldName && newName && oldName!=newName) {
+        var r = new RegExp(oldName + ": function(\\(.*?\\))", "m");
+            var code = editor.getText();
                 var match = code.match(r);
                 if (!match) return;
                 if (getEvent(newName, code)) return;
             var newcode = newName + ": function" + match[1] + " {\n      this." + oldName + match[1] + ";\n    },\n  ";
-	    editor.setText(code.replace(terminus,  newcode +  terminus));
-	}
+        editor.setText(code.replace(terminus,  newcode +  terminus));
+    }
 }
 
 
 caretToEvent = function(name, editor) {
-	var r = new RegExp("[\\s\\S]*" + name + ": function\\([\\s\\S]*?{[\\s\\S]*?\\n[^\\n\\r\\S]*", "m");
+    var r = new RegExp("[\\s\\S]*" + name + ": function\\([\\s\\S]*?{[\\s\\S]*?\\n[^\\n\\r\\S]*", "m");
 
-	var t = editor.getText();
-	var m = t.match(r);
-	if (m)
-	    editor.setCursorPositionInText(m[0].length);
+    var t = editor.getText();
+    var m = t.match(r);
+    if (m)
+        editor.setCursorPositionInText(m[0].length);
 }
 
 /*setCaretPosition = function(ctrl, pos){
-	if(ctrl.setSelectionRange){
-		ctrl.focus();
-		ctrl.setSelectionRange(pos,pos);
-	} else if (ctrl.createTextRange) {
-		var range = ctrl.createTextRange();
-		range.collapse(true);
-		range.moveEnd('character', pos);
-		range.moveStart('character', pos);
-		range.select();
-	} else return false;
+    if(ctrl.setSelectionRange){
+        ctrl.focus();
+        ctrl.setSelectionRange(pos,pos);
+    } else if (ctrl.createTextRange) {
+        var range = ctrl.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+    } else return false;
 }*/
 
 textareaTab = function(e) {
-	var t = e.target;
-	if (t && t.tagName=='TEXTAREA' && e.keyCode==dojo.keys.TAB) {
-		//IE
-		if(document.selection){
-			t.focus();
-			var sel = document.selection.createRange();
-			sel.text = "    ";
-		}
-		//Mozilla + Netscape
-		else if(t.selectionStart || t.selectionStart == "0"){
-			var scrollY = t.scrollTop, scrollX = t.scrollLeft, start = t.selectionStart, end = t.selectionEnd;
-			t.value = t.value.substring(0,start) + "    " + t.value.substring(end,t.value.length);
-			t.focus();
-			t.selectionStart = t.selectionEnd = start+1;
-			t.scrollTop = scrollY;
-			t.scrollLeft = scrollX;
-		}
-		else t.value += "    ";
-		dojo.stopEvent(e);
-	}
+    var t = e.target;
+    if (t && t.tagName=='TEXTAREA' && e.keyCode==dojo.keys.TAB) {
+        //IE
+        if(document.selection){
+            t.focus();
+            var sel = document.selection.createRange();
+            sel.text = "    ";
+        }
+        //Mozilla + Netscape
+        else if(t.selectionStart || t.selectionStart == "0"){
+            var scrollY = t.scrollTop, scrollX = t.scrollLeft, start = t.selectionStart, end = t.selectionEnd;
+            t.value = t.value.substring(0,start) + "    " + t.value.substring(end,t.value.length);
+            t.focus();
+            t.selectionStart = t.selectionEnd = start+1;
+            t.scrollTop = scrollY;
+            t.scrollLeft = scrollX;
+        }
+        else t.value += "    ";
+        dojo.stopEvent(e);
+    }
 }
 
 dojo.addOnLoad(function(){
-	dojo.connect(document, "keypress", textareaTab);
+    dojo.connect(document, "keypress", textareaTab);
 });

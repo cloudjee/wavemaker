@@ -18,13 +18,13 @@ dojo.require("wm.base.Component");
 dojo.declare("wm.TypeDefinitionField", wm.Component, {
     fieldType: "String", // options are "string/String", "Date", "Boolean", "any", "Number", as well as any more complex types.  Note that String/Number are not the same as StringType and NumberType; they are literals not objects.
     isObject: false, // boolean
-    isList: false, // boolean 
+    isList: false, // boolean
     fieldName: "",
 
     toTypeObj: function() {
         return {type: this.fieldType, isObject: this.isObject, isList: this.isList};
-    },
-    
+    }
+
 });
 
 dojo.declare("wm.TypeDefinition", wm.Component, {
@@ -33,27 +33,29 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
     fields: null,
     // not init; must wait for page loader to load all subcomponents (typedefinitionfields) which postInit waits for
     postInit: function() {
-	delete this.fields;
+        delete this.fields;
         this.doAddType();
     },
     doRemoveType: function() {
-	if (!this.internal)
-            wm.typeManager.removeType(this.name);
-	if (this._isDesignLoaded && studio.application && !studio.application._isDestroying) {
-	    studio.typesChanged();
-	}
+        if (!this.internal) wm.typeManager.removeType(this.name);
+        if (this._isDesignLoaded && studio.application && !studio.application._isDestroying) {
+            studio.typesChanged();
+        }
     },
     doAddType: function() {
         this.fieldsAsTypes = {};
         for (var i in this.$) {
             this.fieldsAsTypes[this.$[i].fieldName] = this.$[i].toTypeObj();
         }
-        wm.typeManager.addType(this.name, {internal: this.internal, fields: this.fieldsAsTypes});        
+        wm.typeManager.addType(this.name, {
+            internal: this.internal,
+            fields: this.fieldsAsTypes
+        });
         //dojo.publish("TypeChange-" + this.name);
-	if (this._isDesignLoaded && studio.application && !studio.application._isDestroying) {
-	    studio.typesChanged();
-	    studio.refreshComponentTree();
-	}
+        if (this._isDesignLoaded && studio.application && !studio.application._isDestroying) {
+            studio.typesChanged();
+            studio.refreshComponentTree();
+        }
     }
 });
 

@@ -1549,14 +1549,6 @@ public class DataModelConfiguration {
 
     private void generateWrapperType(DataServiceOperation op, boolean write) {
 
-        // make sure we have types with new name
-        // cftempfix
-        /*
-         * String oldPath = StringUtils.packageToSrcFilePath(DataServiceUtils.getOldOutputType(getDataPackage(),
-         * op.getName())) + StringUtils.JAVA_SRC_EXT; oldPath = getRelServicePath(oldPath); write = write || !new
-         * File(oldPath).exists();
-         */
-
         String fqName = DataServiceUtils.getOutputType(getDataPackage(), op.getName());
 
         if (write) {
@@ -1587,16 +1579,6 @@ public class DataModelConfiguration {
             String original = null;
             try {
                 original = this.fileService.readFile(path);
-                // cftempfix - Different exceptions are returned fro local file system and CF file system
-                // (ResourceException and
-                // IllegalStateException). So I am catching Exception right now but this should be fixed when the API is
-                // fixed to
-                // return a consistent exception.
-                /*
-                 * } catch (FileNotFoundException ex) { // if the original file doesn't exist (yet), then // we can't
-                 * back it up return; } catch (ResourceException ex) { // if the original file doesn't exist (yet), then
-                 * // we can't back it up return;
-                 */
             } catch (Exception ex) {
                 return;
             }

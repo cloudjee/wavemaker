@@ -11,16 +11,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 QueryEditor.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
 	layoutBox1: ["wm.Layout", {height: "100%", imageList: "smallToolbarImageList"}, {}, {
 	    editorToolbar: ["wm.Panel", {_classes: {domNode:["StudioToolBar"]}, border: "0", height: "29px", width: "100%", layoutKind: "left-to-right", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%", padding: "0,4"}, {}, {
-				saveQueryBtn: ["wm.ToolButton", {imageIndex: 8, width: "24px", height: "100%", margin: "0", border: "0", disabled: true, hint: "Save Query"}, {onclick: "saveQuery"}],
-				toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				newQueryBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "100%", margin: "0", border: "0", hint: "New Query"}, {onclick: "newQuery"}],
-				delQueryBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "100%",  margin: "0", border: "0", disabled: true, hint: "Delete Query"}, {onclick: "removeQuery"}]
+				saveQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 8,  disabled: true, hint: "Save Query"}, {onclick: "saveQuery"}],
+				toolbarspacer1: ["wm.studio.ToolbarSpacer", {}, {}],
+				newQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 25, hint: "New Query"}, {onclick: "newQuery"}],
+				delQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 0,  disabled: true, hint: "Delete Query"}, {onclick: "removeQuery"}]
 			}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
 		}],
@@ -42,8 +42,8 @@ QueryEditor.widgets = {
 					    helpContainer: ["wm.Panel", {border: "0,0,1,1", borderColor: "#959DAB", width: "100%", height: "100%", layoutKind: "top-to-bottom", margin: "0,0,0,30"}, {}, {
 						/*helpSectionLabel: ["wm.Label", {caption: "Usage Notes", border: "0", height: "18px", width: "100%", padding: "0,0,0,5"}],*/
 						helpPanel: ["wm.Panel", { width: "100%", height: "100%", margin: "0,5,0,0", layoutKind: "top-to-bottom"}, {}, {
-						    helpHtml: ["wm.Html", {width: "100%", height: "100%", html: "<ol><li>To use this query, insert a new wm.ServiceVariable</li><li>Use of LIMIT and OFFSET are not supported in HQL; Use your ServiceVariable's maxResults and firstRow properties</li><li>Upgraded projects read this: <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/WM64RelNotes#HSupportforLIMITandOFFSET' target='Doc'>6.4 Release Notes</a></li><li><a href='http://dev.wavemaker.com/wiki/bin/view/wmdoc_6.3/HqlTutorial' target='Doc'>Details on query syntax</a></li></ol>"}]
-							    
+						    helpHtml: ["wm.Html", {width: "100%", height: "100%", html: "<ol><li>To use this query, insert a new wm.ServiceVariable</li><li>Use of LIMIT and OFFSET are not supported in HQL; Use your ServiceVariable's maxResults and firstRow properties</li><li>Upgraded projects read this: <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/WM64RelNotes#HSupportforLIMITandOFFSET' target='Doc'>6.4 Release Notes</a></li><li><a href='${wmdoc}HqlTutorial' target='Doc'>Details on query syntax</a></li></ol>"}]
+
 							}]
 						}]
 					}],
@@ -71,13 +71,13 @@ QueryEditor.widgets = {
 		                            /*editorToolbar2: ["wm.Panel", {border: "0", height: "29px", width:"100%",layoutKind: "left-to-right", margin:"4,0,0"}, {}, {
 			                            toolbarBtnHolder2: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%", padding: "0,4"}, {}, {
 							addInputBtn: ["wm.ToolButton", {imageIndex: 25, width: "24px", height: "24px", margin: "0", border: "0"}, {onclick: "addBindParam"}],
-							deleteParamBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "24px",  margin: "0", border: "0"}, {onclick: "removeBindParam"}]                                                    
+							deleteParamBtn: ["wm.ToolButton", {imageIndex: 0, width: "24px", height: "24px",  margin: "0", border: "0"}, {onclick: "removeBindParam"}]
                                                     }]
                                                 }],*/
-                                        
+
 					    paramsPanel: ["wm.Panel", { border: "0", height: "100%", width:"100%", padding: "4"}, {}, {
 						queryInputsList: ["wm.List", {_classes: {domNode: ["StudioList"]}, height: "100%", width: "100%", border: "0"}, {onselect: "parmSelected"}],
-                                                            
+
 						addNewParamPanel: ["wm.Panel", {border: "0", height: "28px", width:"100%", layoutKind: "left-to-right", padding: "0", verticalAlign: "center", horizontalAlign: "left"}, {}, {
 								addBindParamLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Add bind parameter:", border: "0", height: "100%", width: "125px"}, {}, {
 								    format: ["wm.DataFormatter", {}, {}]
@@ -117,7 +117,8 @@ QueryEditor.widgets = {
 						editor: ["wm._NumberEditor", {}, {}]
 					    }],
 					    spacer15: ["wm.Spacer", {width: "30px"}, {}],
-					    runQueryBtn: ["wm.Button", {caption: "<img src=\"images/flash_16.png\"/>", margin: "0", width: "24px", border: "0", 
+                        runQueryBtn: ["wm.studio.ToolbarButton", {caption: "", iconUrl: "images/flash_16.png",
+					    /*runQueryBtn: ["wm.Button", {caption: "<img src=\"images/flash_16.png\"/>", margin: "0", width: "24px", border: "0", */
 								        disabled: true, hint: "Test Query"}, {onclick: "runQuery"}]
 					}],
 					emptyResultSetLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Empty Result Set", border: "0", width: "200px", showing: false}, {}, {

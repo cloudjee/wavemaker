@@ -20,7 +20,7 @@ ImportCloudFoundryDatabase.widgets = {
 	type: ["wm.TypeDefinitionField", {"fieldName":"type"}, {}],
 	vendor: ["wm.TypeDefinitionField", {"fieldName":"vendor"}, {}],
 	version: ["wm.TypeDefinitionField", {"fieldName":"version"}, {}]
-    }], 
+    }],
     "wm.studio.CloudFoundryService.meta": ["wm.TypeDefinition", {}, {}, {
 	created: ["wm.TypeDefinitionField", {"fieldName":"created","fieldType":"Number"}, {}],
 	version: ["wm.TypeDefinitionField", {"fieldName":"version","fieldType":"Number"}, {}]
@@ -29,13 +29,13 @@ ImportCloudFoundryDatabase.widgets = {
     serviceListVar: ["wm.Variable", {type: "wm.studio.CloudFoundryService", isList:true}],
     layoutBox1: ["wm.Layout", {height: "100%", width: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    tabs: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers","NoRightMarginOnTab"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
+	    tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "TransparentTabBar", "StudioDarkLayers","NoRightMarginOnTab"]}, height: "100%",clientBorder: "1",clientBorderColor: "#959DAB"}, {}, {
 		layer1: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "middle", padding: "10"}, {}, {
 		    instructions: ["wm.Html", {width: "100%", height: "30px", html: "Select a database service you have setup in CloudFoundry, or <a target='caldecott' href='http://docs.cloudfoundry.com/tools/vmc/caldecott.html'>Setup a new database service</a>"}],
-		    serviceList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%", 
+		    serviceList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", height: "100%",
 					      columns:[{show:true, field: "name", width: "100%", title: "Name"},
 						       {show:true, field: "vendor", width: "80px", title: "Type"},
-						       {show:true, field: "meta.created", width: "80px", title: "Created", "formatFunc":"wm_date_formatter"}]}, 
+						       {show:true, field: "meta.created", width: "80px", title: "Created", "formatFunc":"wm_date_formatter"}]},
 				  {onSelect: "selectedServiceChange", ondblclick: "importBtnClick"}, {
 							   binding: ["wm.Binding",{},{},{
 							       wire: ["wm.Wire", {source: "serviceListVar", targetProperty: "dataSet"}]
@@ -52,18 +52,19 @@ ImportCloudFoundryDatabase.widgets = {
 	    }]
 	}],
 	footer: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
-        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import Sample"}, {onclick: "importSampleBtnClick"}, {
+        importSampleBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import Sample", width: "160px", hint: "Import HRDB Sample DataBase"}, {onclick: "importSampleBtnClick"}, {
         }],
+		spacer1: ["wm.Spacer", {width: "100%"}, {}],
 		importBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Import", width: "96px", hint: "Import Database"}, {onclick: "importBtnClick"}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {targetProperty: "disabled", source: "panel1.invalid"}]
 		    }]
 		}],
+		spacer2: ["wm.Spacer", {width: "10px"}, {}],
 		cancelBtn: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Close", width: "96px"}, {onclick: "cancelBtnClick"}]
 	}]
 
     }]
 }
 
-		   
-    
+

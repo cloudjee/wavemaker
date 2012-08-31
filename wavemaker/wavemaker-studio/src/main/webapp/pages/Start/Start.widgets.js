@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 Start.widgets = {
     layoutBox1: ["wm.Layout", {_classes: {domNode:["StudioDarkPanel"]}, height: "100%", width: "100%", horizontalAlign: "center", autoScroll: false}, {}, {
 /*
@@ -21,7 +21,7 @@ Start.widgets = {
 		*/
 		panel5: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 			panel1: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-			    tabLayers1: ["wm.TabLayers", {_classes: {domNode: ["StudioTabs", "NoRightMarginOnTab","StudioTabsInverted"]}, margin: "4,8,8,8", clientBorder: "1", clientBorderColor: "#959DAB"}, {}, {
+			    tabLayers1: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "NoRightMarginOnTab","StudioTabsInverted"]}, margin: "4,8,8,8", clientBorder: "1", clientBorderColor: "#959DAB"}, {}, {
 					layer1: ["wm.Layer", {caption: "Welcome", horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {}, {
 						panel3: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left", borderColor: ""}, {}, {
 							welcomeTitleLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_TextAlign_Center"]}, height: "50px", width: "100%", caption: "Welcome to WaveMaker Studio", border: "0"}, {}, {
@@ -49,19 +49,19 @@ Start.widgets = {
 									}],
 									documentation: ["wm.Label", {height: "30px", width: "100%", caption: "Documentation", padding: "0,0,0,20"}, {onclick: "documentationClick"}, {
 										format: ["wm.DataFormatter", {}, {}]
-									}],									
+									}],
 									register: ["wm.Label", {height: "30px", width: "100%", caption: "Register", padding: "0,0,0,20"}, {onclick: "registerClick"}, {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
 							    iframe: ["wm.IFrame", {source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
-								}]
-							}]
+                            }]
+						}]
 					}],
 				    layer2: ["wm.Layer", {caption: "Projects", horizontalAlign: "left", verticalAlign: "top", padding: "8"}, {onShow: "projectsTabOnShow"}, {
 					projectSearch: ["wm.Text", {width: "100%", height: "24px", resetButton: true, placeHolder: "Search by Project Name", caption: "", changeOnKey: true, emptyValue: "emptyString"}, {onchange: "filterProjectList", onEnterKeyPress: "openFirstProject"}],
 						panel8: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-						    projlist: ["wm.Panel", {_classes: {domNode: []}, 
+						    projlist: ["wm.Panel", {_classes: {domNode: []},
 									    height: "100%", width: "100%", layoutKind: "left-to-right", padding: "0"}, {}, {
 							    existingProjectList: ["wm.List", {_classes: {domNode: ["StudioList"]}, width: "100%", border: "0,0,1,0", borderColor:"#687585"}, {onselect: "projectListSelect", ondeselect: "projectListDeselect", ondblclick: "openProject"}]
 							}],

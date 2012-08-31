@@ -23,31 +23,8 @@
    *              not affected by panel type... unless the developer wants to put in their own CSS
    ************************************************************************************************/
 .wm_template button.wmtablayers-tab {
-    /* wm.TabLayers-BorderStyle_Shadow */
-    -moz-box-shadow: 2px 0px 2px black; /* wm.TabLayers-BorderStyle_Shadow */
-    -webkit-box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
-    box-shadow: 2px 0px 2px black;  /* wm.TabLayers-BorderStyle_Shadow */
     height: 12px; /* wm.TabLayers-Button_Height */
     font-size: 12px; /* wm.TabLayers-Button_TextSize */
-}
-
-.wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
-    
-    /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: 1px 0px 1px #444444;  /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    -webkit-box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    box-shadow: 1px 0px 1px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
-}
-
-.wm_template .wmtablayers-tab.wmtablayers-selected,
-.wm_template .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_template .wmtablayers-tab.wmtablayers-selected:focus,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected:hover,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected:focus {
-    -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-Active-BorderStyle_Shadow */
-    -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
-    box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
 }
 
 
@@ -61,8 +38,8 @@
 	-moz-border-radius-topright: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-top-left-radius: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-top-right-radius: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
-	border-radius-topleft: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
-	border-radius-topright: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-top-left-radius: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
+    border-top-right-radius: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
 
 .wm_template button.wmtablayers-verticaltab {
@@ -75,13 +52,6 @@
     margin-left: 5%;
 }
 
-.wm_template .wmtablayers-verticaltab:hover, .wm_template .wmtablayers-verticaltab:focus {
-    /* wm.TabLayers-HoverShadow */
-    -moz-box-shadow: -2px 2px 2px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    -webkit-box-shadow: -2px 2px 2px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
-    box-shadow: -2px 2px 2px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
-}
-
 /* Spacing between each tab */
 .wm_template .wmtablayers-verticaltab.wmtablayers-selected,
 .wm_template .wmtablayers-verticaltab.wmtablayers-verticaltab {
@@ -91,8 +61,8 @@
 	-moz-border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-bottom-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-top-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
-	border-radius-bottomleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
-	border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-bottom-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+    border-top-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
 
 
@@ -109,16 +79,17 @@
   /**************************************************************************************************
    * TYPE:        Fancy Panel container
    *
-   * DESCRIPTION: top radius of the container should always be zero 
-   *              
+   * DESCRIPTION: top radius of the container should always be zero
+   *
    * TODO:        if no title, it should NOT be zero
    ************************************************************************************************/
 .wm_template .wmFancyPanel-containerWidget {
     -moz-border-radius-topright: 0px !important;
+    -moz-border-radius-topleft: 0px !important;
     -webkit-border-top-left-radius: 0px !important;
     -webkit-border-top-right-radius: 0px !important;
-    border-radius-topleft: 0px !important;
-    border-radius-topright: 0px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
     -moz-box-shadow: 0px 0px 0px black !important;
     -webkit-box-shadow: 0px 0px 0px black !important;
     box-shadow: 0px 0px 0px black !important;
@@ -146,7 +117,7 @@
 
 body.tundra.wm_template  div.wmheader,
 body.tundra .wm_template  div.wmheader,
-.wm_template  .wmTabLayers-client > .wmlayer, 
+.wm_template  .wmTabLayers-client > .wmlayer,
 .wm_template  .wmWizardLayers-client > .wmlayer {
     /* Borders-Panel_Border */
     -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
@@ -159,10 +130,10 @@ body.tundra .wm_template  div.wmheader,
     -moz-border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
     -webkit-border-bottom-left-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
     -webkit-border-bottom-right-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-bottomleft: 4px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-bottomright: 4px;/* Borders-Panel_BorderStyle_Radius */
+    border-bottom-left-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
+    border-bottom-right-radius: 4px;/* Borders-Panel_BorderStyle_Radius */
 
-}    
+}
 
 .wm_template .wmFancyPanel-labelWidget {
     /* Must always be 2-4px smaller than .wmfancypanel */
@@ -170,10 +141,10 @@ body.tundra .wm_template  div.wmheader,
     -moz-border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
     -webkit-border-top-left-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
     -webkit-border-top-right-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-topleft: 12px;/* Borders-Panel_BorderStyle_Radius */
-    border-radius-topright: 12px;/* Borders-Panel_BorderStyle_Radius */
+    border-top-left-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
+    border-top-right-radius: 12px;/* Borders-Panel_BorderStyle_Radius */
 
-}    
+}
 
 
     /* END Border Styles */
@@ -216,7 +187,7 @@ body.tundra .wm_template  div.wmheader,
    ************************************************************************************************/
 
 .wm_template  #wavemakerNode > div > .wmlayout,
-#studio_designer.wm_template > .wmlayout, 
+#studio_designer.wm_template > .wmlayout,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout {
     /* Document-Styles-Border */
     -moz-border-radius: 4px; /* Document-Styles-BorderStyle_Radius */
@@ -230,10 +201,10 @@ body.tundra .wm_template  div.wmheader,
 
 /* .Document is what the dialog gets when its mapped to the document style*/
 .wm_template  #wavemakerNode  > div > .wmlayout,
-#studio_designer.wm_template > .wmlayout, 
+#studio_designer.wm_template > .wmlayout,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wmlayout,
-.wm_template  #wavemakerNode  > .Document, 
-#studio_designer.wm_template > .Document, 
+.wm_template  #wavemakerNode  > .Document,
+#studio_designer.wm_template > .Document,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .Document {
     /* Document-Styles-Font */
     font-family: sans-serif; /* Document-Styles-Font_Family */
@@ -258,7 +229,7 @@ body.tundra .wm_template  div.wmheader,
     background-image: none !important;
 }
 
-#studio_designer.wm_template, 
+#studio_designer.wm_template,
 body.wm_template {
     background-color: #444444; /* Document-Styles-Background_Color */
 }
@@ -308,7 +279,7 @@ body.wm_template {
 	border-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
     }
 
-    .wm_template div.wmaccordion-header:hover, 
+    .wm_template div.wmaccordion-header:hover,
     .wm_template div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
 	/* Document-ClickablesHover-Font */
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
@@ -383,9 +354,9 @@ body.wm_template {
     }
 
 
-    .wm_template .wmtablayers-tab:hover, 
+    .wm_template .wmtablayers-tab:hover,
     .wm_template .wmtablayers-tab:focus,
-    .wm_template .wmtablayers-verticaltab:hover, 
+    .wm_template .wmtablayers-verticaltab:hover,
     .wm_template .wmtablayers-verticaltab:focus {
 	/* Document-ClickablesHover-Font */
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
@@ -481,7 +452,7 @@ body.wm_template {
     }
 
     .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxCloseNode {
-	background-position: 0px 0px; 
+	background-position: 0px 0px;
     }
     .wm_template .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxArrowDown {
 	margin-top: 1px;
@@ -579,7 +550,7 @@ body.wm_template {
 	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
     }
 
-    .wm_template .MainContent div.wmaccordion-header:hover, 
+    .wm_template .MainContent div.wmaccordion-header:hover,
     .wm_template .MainContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
 	/* MainContent-ClickablesHover-Font */
 	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
@@ -729,7 +700,7 @@ body.wm_template {
     font-weight: bold; /* EmphasizedContent-Styles-Font_Weight */
 
 
-       
+
     /* EmphasizedContent-Styles-Background */
     background-color: #444444; /* EmphasizedContent-Styles-Background_Color */
     background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-Styles-Background_Image */
@@ -791,7 +762,7 @@ body.wm_template {
 	border-radius: 4px; /* EmphasizedContent-ClickablesDefault-BorderStyle_Radius */
     }
 
-    .wm_template .EmphasizedContent div.wmaccordion-header:hover, 
+    .wm_template .EmphasizedContent div.wmaccordion-header:hover,
     .wm_template .EmphasizedContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
 	/* EmphasizedContent-ClickablesHover-Font */
 	color: #FFFFFF; /* EmphasizedContent-ClickablesHover-Font_Color */
@@ -1003,7 +974,7 @@ body.wm_template {
 	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
     }
 
-    .wm_template .HeaderContent div.wmaccordion-header:hover, 
+    .wm_template .HeaderContent div.wmaccordion-header:hover,
     .wm_template .HeaderContent div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
 	/* HeaderContent-ClickablesHover-Font */
 	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
@@ -1147,9 +1118,9 @@ body.wm_template {
     opacity: 1;
 }
 .wm_template #wmMinifiedDialogPanel .wmbutton {
-	-moz-border-radius: 0px !important; 
+	-moz-border-radius: 0px !important;
 	-webkit-border-radius: 0px !important;
 	border-radius: 0px !important;
         font-size: 8pt;
-    
+
 }

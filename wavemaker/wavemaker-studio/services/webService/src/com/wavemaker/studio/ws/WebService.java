@@ -15,7 +15,11 @@
 package com.wavemaker.studio.ws;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -122,13 +126,24 @@ public class WebService {
     }
 
     public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password) {
-        List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress, basicAuth, userName, password);
+		return invokeRestCall(endpointAddress, basicAuth, userName, password,
+				null);
+	}
+
+	public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password, Map<String, String> headers) {
+        List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress, basicAuth, userName, password, headers);
         return rtn;
     }
 
     public List<String> invokeRestCall(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
-        String userName, String password) {
-        return getWSToolsMgr().invokeRestCall(endpointAddress, method, contentType, postData, basicAuth, userName, password);
+	String userName, String password) {
+		return invokeRestCall(endpointAddress, method, contentType,
+				postData, basicAuth, userName, password, null);
+	}
+
+	public List<String> invokeRestCall(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
+        String userName, String password, Map<String, String> headers) {
+        return getWSToolsMgr().invokeRestCall(endpointAddress, method, contentType, postData, basicAuth, userName, password, headers);
     }
 
     public List<String> invokeRestCall(String endpointAddress) {
@@ -136,14 +151,14 @@ public class WebService {
         return rtn;
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password)
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password, Map<String, String> headers)
         throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth, userName, password);
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth, userName, password, headers);
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
-        String userName, String password) throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType, postData, basicAuth, userName, password);
+        String userName, String password, Map<String, String> headers) throws WebServiceException, IOException, XmlException {
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType, postData, basicAuth, userName, password, headers);
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress) throws WebServiceException, IOException, XmlException {

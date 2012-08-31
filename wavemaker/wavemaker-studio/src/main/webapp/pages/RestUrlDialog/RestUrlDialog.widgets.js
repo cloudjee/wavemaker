@@ -12,18 +12,20 @@
  *  limitations under the License.
  */
 RestUrlDialog.widgets = {
+    headersVar: ["wm.Variable", {"isList":true,"type":"EntryData"}, {}],
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%"}, {}, {
 	    dialog: ["wm.Panel", {border: "2", borderColor: "black", height: "100%", width: "100%", layoutKind: "top-to-bottom"}, {}, {
 		mainPanel: ["wm.Panel", {border: "0", height: "100%", width: "100%", padding: "10,0", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 		    spacer5: ["wm.Spacer", {height: "10px"}, {}],
 		    urlPanel: ["wm.Panel", {border: "0", height: "28px", width: "100%", verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right"}, {}, {
 			urlInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "URL", captionSize: "100px", width: "100%", layoutKind: "left-to-right"}],
-			advancedButton: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},captionDown: "Hide Settings", captionUp: "More Settings", width: "150px", height: "100%", margin: "2,4,6,4"}]
+			advancedButton: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},captionDown: "Hide Settings", captionUp: "More Settings", width: "150px", height: "100%", margin: "2,4,6,4"},{"onclick":"advancedBtnClick"}]
 		    }],
-		    rowTwoPanel: ["wm.Panel", {showing: "false",width: "100%", height: "140px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+		    SettingsPanel: ["wm.Panel", {showing: "false",width: "100%", height: "340px", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"targetProperty":"showing","expression":"${advancedButton.clicked}"}, {}]
 			    }],
+				rowTwoPanel: ["wm.Panel", {"height":"140px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			    authPanel: ["wm.Panel", {width: "250px", height: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
 				basicAuthCheckbox: ["wm.Checkbox", {caption: "HTTP Basic Auth", displayValue: "0", width: "100%", captionSize: "100px"}, {onchange: "basicAuthCheckboxChange"}],
 				userIdInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "User Id", captionSize: "100px", width: "100%", layoutKind: "left-to-right"}],
@@ -43,7 +45,21 @@ RestUrlDialog.widgets = {
 				}]
 			    }]
 			}],
+			headersLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Headers", height: "18px", border: "0"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],			headersGridPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+					headersGrid: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Header Name","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false},{"show":true,"field":"dataValue","title":"Header Value","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false}],"deleteColumn":true,"localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+					binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"expression":undefined,"source":"headersVar","targetProperty":"dataSet"}, {}]
+				}]
+		}],
+		    addHeaderButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Add Header","desktopHeight":"48px","height":"48px","margin":"4"}, {"onclick":"headersGrid.addEmptyRow"}]
+		}]
+		}],
 		    spacer61: ["wm.Spacer", {height: "10px"}, {}],
+			responseAreaLabel: ["wm.Label", {_classes: {domNode: ["wm_TextDecoration_Bold", "wm_FontColor_White"]}, caption: "Response", height: "18px", border: "0"}, {}, {
+				format: ["wm.DataFormatter", {}, {}]
+			}],
 		    responseTextArea: ["wm.LargeTextArea", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea"}],
 		    errorMessageTextArea: ["wm.LargeTextArea", {width: "100%", layoutKind: "left-to-right", padding: "0", height: "100%", singleLine: false, display: "TextArea", showing: false}]
 		}],

@@ -20,6 +20,7 @@ LogViewer.widgets = {
     }],
 	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 	    logArea: ["wm.Html", {height: "100%", width: "100%", border: "0", padding: "4, 0, 0, 4", scrollY: true}, {}],
+        logAreaCF: ["wm.Html", {showing: false,height: "100%", width: "100%", border: "0", padding: "4, 0, 0, 4", scrollY: true, html: "<p>To view logs for the CloudFoundry version of studio, you must  <a href='http://docs.cloudfoundry.com/tools/vmc/installing-vmc.html'>install VMC</a>.</p><p>To get logs for your project, you can type 'vmc logs TestRun'.</p><p>To get logs from studio, you can type 'vmc list' to get the exact name for your Studio application, and then 'vmc logs wavemaker-studio-xxx-xxx'.</p>"}, {}],
 	    panel1: ["wm.Panel", {height: "34px", width: "100%", border: "2,0,0,0", borderColor: "white", margin: "2", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "right"}, {}, {
 		button1: ["wm.Button", {_classes: {domNode: ["StudioButton"]},height: "100%", width: "70px", caption: "Clear"}, {onclick: "clearLog"}],
 		button2: ["wm.Button", {_classes: {domNode: ["StudioButton"]},height: "100%", width: "70px", caption: "Update"}, {onclick: "updateLog"}],

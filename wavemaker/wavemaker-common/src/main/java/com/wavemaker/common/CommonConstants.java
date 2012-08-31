@@ -41,6 +41,8 @@ public abstract class CommonConstants {
 
     public static final String SFLOGIN_SERVICE = "loginService";
 
+    public static final String COMMON_LIB = "common/lib";
+
     private CommonConstants() {
     }
 }

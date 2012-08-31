@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 /*[ Tab, Name, Class, Module, Image ]*/
 
 // built in wm widgets
@@ -39,7 +39,6 @@
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Spacer, "wm.Spacer", "wm.base.widget.Spacer", "Studio_paletteImageList_21", bundlePackage.descSpacer, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Splitter, "wm.Splitter", "wm.base.widget.Splitter", "Studio_paletteImageList_22", bundlePackage.descSplitter, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Bevel, "wm.Bevel", "wm.base.widget.Bevel", "Studio_paletteImageList_3", bundlePackage.descBevel, {}, false],
-//[ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "Studio_paletteImageList_7", bundlePackage.descContent, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.HTML, "wm.Html", "wm.base.widget.Html", "Studio_paletteImageList_7", bundlePackage.descHtml, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "Studio_paletteImageList_14", bundlePackage.descIFrame, {}, false],
 
@@ -163,7 +162,7 @@
 [ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "Studio_paletteImageList_26", bundlePackage.descTwitterFeed, {}, false],
 
 //[ bundlePackage.Web_Content, "Stocks", "wm.gadget.Stocks", "wm.base.widget.gadget.Stocks", "images/flash.png", "Stocks Google Gadget"],
-//[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", bundlePackage.descWeatherWidget, false]{}, 
+//[ bundlePackage.Web_Content, bundlePackage.Weather, "wm.gadget.Weather", "wm.base.widget.gadget.Weather", "images/flash.png", bundlePackage.descWeatherWidget, false]{},
 [ bundlePackage.Web_Content, bundlePackage.YouTube, "wm.gadget.YouTube", "wm.base.widget.gadget.YouTube", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, false],
 [ bundlePackage.Web_Content, bundlePackage.Fisheye, "wm.DojoFisheye", "wm.base.widget.DojoFisheye", "Studio_paletteImageList_34", bundlePackage.descFisheye, {}, true],
 [ bundlePackage.Web_Content, bundlePackage.Lightbox, "wm.DojoLightbox", "wm.base.widget.DojoLightbox", "Studio_paletteImageList_36", bundlePackage.descLightbox, {noPositioning:1}, true],
@@ -184,6 +183,7 @@
 [ bundlePackage.Deprecated, bundlePackage.Text, "wm.TextEditor", "wm.base.widget.Editor", "Studio_paletteImageList_9", "An editor for text", {}, false],
 [ bundlePackage.Deprecated, bundlePackage.TextArea, "wm.TextAreaEditor", "wm.base.widget.Editor", "Studio_paletteImageList_9", "An editor for multiline text", {}, false],
 [ bundlePackage.Deprecated, bundlePackage.Time, "wm.TimeEditor", "wm.base.widget.Editor", "Studio_paletteImageList_9",  "An editor for time", {}, false],
+[ bundlePackage.Deprecated, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "Studio_paletteImageList_7", bundlePackage.descContent, {}, false],
 
 /*
 [ "Non-Visual Components", "Composite Publisher", "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"],

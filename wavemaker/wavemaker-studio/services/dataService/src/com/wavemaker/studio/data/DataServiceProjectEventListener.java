@@ -14,6 +14,10 @@
 
 package com.wavemaker.studio.data;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectEventListener;
@@ -21,16 +25,30 @@ import com.wavemaker.tools.project.ProjectEventListener;
 /**
  * @author Simon Toens
  */
-public class DataServiceProjectEventListener implements ProjectEventListener {
+public class DataServiceProjectEventListener implements ProjectEventListener, ApplicationContextAware {
 
+    private ApplicationContext applicationContext;
+
+    /**
+     * DataModelManager is lazy-init to allow studio to start without hibernate jars, be careful not to break this.
+     */
     private DataModelManager dataModelManager = null;
 
-    public void setDataModelManager(DataModelManager dataModelManager) {
-        this.dataModelManager = dataModelManager;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     @Override
     public void closeProject(Project p) {
+        if (this.dataModelManager == null) {
+            try {
+                this.dataModelManager = this.applicationContext.getBean(DataModelManager.class);
+            } catch (Exception e) {
+                // Most likely because hibernate jars are missing, abort the listener
+                return;
+            }
+        }
         this.dataModelManager.dispose(p.getProjectName());
     }
 

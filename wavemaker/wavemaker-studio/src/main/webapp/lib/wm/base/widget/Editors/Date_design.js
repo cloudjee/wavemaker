@@ -29,7 +29,10 @@ wm.Object.extendSchema(wm.Date, {
 
     /* Editor group; validation subgroup */
     minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
-    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
+    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
+
+    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
+    formatLength: {ignore:1},
 
     /* Ignored Group */
     password: {ignore:1},
@@ -37,12 +40,14 @@ wm.Object.extendSchema(wm.Date, {
     maxChars: {ignore:1},
     changeOnKey: { ignore: 1 },
     resetButton: {ignore: 1},
-     selectOnClick: {ignore: 1}
+     selectOnClick: {ignore: 1},
+     dateMode: {ignore:1}
 });
 
 wm.Object.extendSchema(wm.Time, {
     /* Editor group; display subgroup */
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
+    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
 
     /* Ignored group */
     use24Time: {hidden:1},
@@ -59,7 +64,7 @@ wm.Object.extendSchema(wm.DateTime, {
 
     /* Editor group; display subgroup */
     use24Time: {group: "editor", subgroup: "display", order: 10, ignoreHint: "Only available if dateMode is not 'Date'", advanced: 1},
-    formatLength: {group: "editor", subgroup: "display", order: 3, options:["short", "medium", "long"]},
+    formatLength: {ignore:1},
 
     /* Editor group; value subgroup */
     dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
@@ -68,33 +73,29 @@ wm.Object.extendSchema(wm.DateTime, {
 
 wm.DateTime.extend({
     afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.flow();
+        this.inherited(arguments);
+        this.flow();
     },
-        makePropEdit: function(inName, inValue, inEditorProps) {
-	    switch (inName) {
-	    case "dataValue":
-	    case "defaultInsert":
-	    case "maximum":
-	    case "minimum":
-		return new wm.DateTime(dojo.mixin({dateMode: this.dateMode}, inEditorProps));
-	    }
-	    return this.inherited(arguments);
-	},
+    makePropEdit: function(inName, inValue, inEditorProps) {
+        switch (inName) {
+        case "dataValue":
+        case "defaultInsert":
+        case "maximum":
+        case "minimum":
+            return new wm.DateTime(dojo.mixin({
+                dateMode: this.dateMode
+            }, inEditorProps));
+        }
+        return this.inherited(arguments);
+    },
 
-    set_formatLength: function(inValue) {
-	// must get value before changing formatLength because formatLength determines how to parse the value
-	var value = this.getDataValue();
-	this.formatLength = inValue; 
-	this.setDataValue(value);
-    },
     set_use24Time: function(inValue) {
-	this.use24Time = inValue;
-	this.createEditor();
+        this.use24Time = inValue;
+        this.createEditor();
     },
     listProperties: function() {
-	var p = this.inherited(arguments);
-	p.use24Time.ignoretmp = this.dateMode == "Date";
-	return p;
+        var p = this.inherited(arguments);
+        p.use24Time.ignoretmp = this.dateMode == "Date";
+        return p;
     }
 });

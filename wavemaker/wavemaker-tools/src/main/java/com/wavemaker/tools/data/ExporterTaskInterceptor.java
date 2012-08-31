@@ -68,6 +68,8 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
         Folder folder = new LocalFolder(tempDestDir);
         folder.copyContentsTo(destDir);
 
+        IOUtils.deleteRecursive(tempDestDir);
+
         return rtn;
     }
 }

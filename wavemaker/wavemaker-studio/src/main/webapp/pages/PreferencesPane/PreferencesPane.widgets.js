@@ -11,13 +11,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 PreferencesPane.widgets = {
 	layoutBox1: ["wm.Layout", {height: "100%", width: "100%"}, {}, {
             mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
 		panel2: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left", layoutKind: "top-to-bottom"}, {}, {
 		    wavemakerFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "WaveMaker Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {}],
-		    demoFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
+		    demoFolderEditor: ["wm.Text", {showing: false, _classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
 		    }]
 		}]
 	    }],

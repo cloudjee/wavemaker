@@ -80,26 +80,30 @@ DeploymentDialog.widgets = {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your Cloud Foundry Account Info","padding":"4","width":"100%"}, {}],
-		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
-		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}],
-		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLoginOkClick"}]
+		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
+		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
+		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}]
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup", width: "100px", height: "100%"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cfLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cfLoginCancelClick"}],
-	    cfLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}]	    
+	    cfLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+					wire: ["wm.Wire", {"expression":"(${loginDialogTargetEditor.dataValue} === \"\" || ${loginDialogUserEditor.dataValue} === \"\" || ${loginDialogPasswordEditor.dataValue} === \"\")","targetProperty":"disabled"}, {}]
+				}]
+			}]	    
 	}]
     }],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
         mainPanel5: ["wm.studio.DialogMainPanel", {autoScroll:true, layoutKind: "left-to-right"},{}, {
 
 	    deploymentListPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"150px", margin: "0,10,0,0"}, {}, {
-		listButtonPanel: ["wm.Panel", {"border":"0","height":"25px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-		    addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","height":"100%","margin":"1","width":"40px"}, {"onclick":"addButtonClick"}],
-		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","height":"100%","margin":"1","width":"100%"}, {"onclick":"deleteButtonClick"}],
-		    copyButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Copy","height":"100%","margin":"1","width":"45px"}, {"onclick":"copyButtonClick"}]
+		listButtonPanel: ["wm.Panel", {"border":"0","height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+		    addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","height":"100%","margin":"2","width":"40px"}, {"onclick":"addButtonClick"}],
+		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","height":"100%","margin":"2","width":"100%"}, {"onclick":"deleteButtonClick"}],
+		    copyButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Copy","height":"100%","margin":"2","width":"45px"}, {"onclick":"copyButtonClick"}]
 		}],
 		deploymentList: ["wm.List", {_renderHiddenGrid:1,dataFields: "name", renderVisibleRowsOnly: false, headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect"/*, onRightClick: "deploymentListPopupMenuOpen"*/}, {
 		    binding: ["wm.Binding", {}, {}, {
@@ -136,7 +140,7 @@ DeploymentDialog.widgets = {
 				    cfHostEditor: ["wm.Text", {"border":"0","caption":"Cloud Foundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
 					cfUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%"}, {}, {
+				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%", required:1}, {}, {
 					binding: ["wm.Binding", {}, {}, {
                         wire: ["wm.Wire", {"expression":"\"http://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\")","source":false,"targetProperty":"dataValue"}, {}]
 					    /*wire: ["wm.Wire", {"expression":"${cfHostEditor.dataValue}.replace(/\:.*$/,\"\") + \"://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\")","source":false,"targetProperty":"dataValue"}, {}]*/

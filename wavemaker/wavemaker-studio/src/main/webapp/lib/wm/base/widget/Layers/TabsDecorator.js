@@ -28,7 +28,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	    if (this.tabsControl)
 		this.tabsControl.destroy();
 		this.tabsControl = new wm.TabsControl({
-			parent: this.decoree, 
+			parent: this.decoree,
 		        owner: this.decoree,
 		    padding: this.decoratorPadding,
 		    name: "tabsControl"
@@ -41,94 +41,97 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	    }
 
 	},
-	createTab: function(inCaption, inIndex, inLayer) {
-	    var b = this.btns[inIndex] = document.createElement("button");
-	    dojo.attr(b,"id", this.decoree.domNode.id + "_decorator_button" + this.btns.length);
-	    dojo.attr(b,"type", "button");
-	    dojo.attr(b,"type", "button");
-/*
-	    if (!this.decoree.verticalButtons && inLayer.borderExtents.t > 1) {
-		b.style.top = (inLayer.borderExtents.t - 1) + "px";
-		}
-		*/
-	    //b.style.outline = "none";
-	    b.style.display = inLayer.showing ? "" : "none";
-	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
-	    if (!wm.isMobile) {
-		this.decoree.connect(b, "onclick", dojo.hitch(this, "onTabClick",inLayer));
-	    } else {
-		this.addTouchListener(b);
-	    }
+    createTab: function(inCaption, inIndex, inLayer) {
+        var b = this.btns[inIndex] = document.createElement("button");
+        dojo.attr(b, "id", this.decoree.domNode.id + "_decorator_button" + this.btns.length);
+        dojo.attr(b, "type", "button");
+        dojo.attr(b, "type", "button");
+        /*
+        if (!this.decoree.verticalButtons && inLayer.borderExtents.t > 1) {
+        b.style.top = (inLayer.borderExtents.t - 1) + "px";
+        }
+        */
+        //b.style.outline = "none";
+        b.style.display = inLayer.showing ? "" : "none";
+        this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
+        if (!wm.isMobile) {
+            this.decoree.connect(b, "onclick", dojo.hitch(this, "onTabClick", inLayer));
+        } else {
+            this.addTouchListener(b);
+        }
 
-/*
-	    } else if (wm.isFakeMobile) {
-		this.decoree.connect(b,'onmousedown', dojo.hitch(this, "touchTabStart", inLayer));
-		this.decoree.connect(b,'onmousemove', dojo.hitch(this, "touchTabMove",  inLayer));
-		this.decoree.connect(b,'onmouseup',   dojo.hitch(this, "touchTabEnd",   inLayer));
-	    } else {
-		this.decoree.connect(b,'ontouchstart',dojo.hitch(this, "touchTabStart", inLayer));
-		this.decoree.connect(b,'ontouchmove', dojo.hitch(this, "touchTabMove",  inLayer));
-		this.decoree.connect(b,'ontouchend',  dojo.hitch(this, "touchTabEnd",   inLayer));
-	    }
-	    */
-	    var tabstyleName = (this.decoree.verticalButtons) ? "-verticaltab" : "-tab";
-	    b.className=this.decorationClass + tabstyleName +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
-	    if (!inCaption) b.style.display = "none";
-	    this.tabsControl.domNode.appendChild(b);
+        /*
+        } else if (wm.isFakeMobile) {
+        this.decoree.connect(b,'onmousedown', dojo.hitch(this, "touchTabStart", inLayer));
+        this.decoree.connect(b,'onmousemove', dojo.hitch(this, "touchTabMove",  inLayer));
+        this.decoree.connect(b,'onmouseup',   dojo.hitch(this, "touchTabEnd",   inLayer));
+        } else {
+        this.decoree.connect(b,'ontouchstart',dojo.hitch(this, "touchTabStart", inLayer));
+        this.decoree.connect(b,'ontouchmove', dojo.hitch(this, "touchTabMove",  inLayer));
+        this.decoree.connect(b,'ontouchend',  dojo.hitch(this, "touchTabEnd",   inLayer));
+        }
+        */
+        var tabstyleName = (this.decoree.verticalButtons) ? "-verticaltab" : "-tab";
+        b.className = this.decorationClass + tabstyleName + (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
+        if (!inCaption) b.style.display = "none";
+        this.tabsControl.domNode.appendChild(b);
 
-	    if (this.dndObj) {
-		this.dndObj.destroy()
-		dojo.disconnect(this.dndObjConnect);
-		dojo.addClass(b, "dojoDndItem");
-		dojo.attr(b, "dndType", this.decoree.dndTargetName || "designMoveLayers");
-    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
-		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
-	    }
-	},
+        if (this.dndObj) {
+            this.dndObj.destroy()
+            dojo.disconnect(this.dndObjConnect);
+            dojo.addClass(b, "dojoDndItem");
+            dojo.attr(b, "dndType", this.decoree.dndTargetName || "designMoveLayers");
+            this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {
+                accept: [this.decoree.dndTargetName || "designMoveLayers"]
+            });
+            this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
+        }
+    },
 
-		
-    onTabClick: function(inLayer,evt) {
-	// prevent designer click
-	if (this.decoree.isDesignLoaded())
-	    dojo.stopEvent(evt);
 
-	/* IE 8 does not gaurentee that evt will still have its properties after a delay, so 
-	 * we capture the event properties we need and pass that rather than the event object itself.
-	 * Other browsers don't require this, but it seems like a good practice regardless.
-	 */
-	if (evt.type == "submit") return;
-	var pseudoEvent = {target: evt.target,
-			   clientX: evt.clientX,
-			   clientY: evt.clientY};
-		
-	wm.onidle(this, function() {
-	    this.tabClicked(inLayer,pseudoEvent);
-	    pseudoEvent.target.style.borderWidth = "";
-	});
+
+    onTabClick: function(inLayer, evt) {
+        // prevent designer click
+        if (this.decoree.isDesignLoaded()) dojo.stopEvent(evt);
+
+        /* IE 8 does not gaurentee that evt will still have its properties after a delay, so
+         * we capture the event properties we need and pass that rather than the event object itself.
+         * Other browsers don't require this, but it seems like a good practice regardless.
+         */
+        if (evt.type == "submit") return;
+        var pseudoEvent = {
+            target: evt.target,
+            clientX: evt.clientX,
+            clientY: evt.clientY
+        };
+
+        wm.onidle(this, function() {
+            this.tabClicked(inLayer, pseudoEvent);
+            pseudoEvent.target.style.borderWidth = "";
+        });
     },
     onTouchStart: function(event) {
-	var target = event.target;
-	while (target.tagName != "BUTTON" && target.tagName != "BODY") {
-	    target = target.parentNode;
-	}
-	var index = dojo.indexOf(this.btns, target);
+        var target = event.target;
+        while (target.tagName != "BUTTON" && target.tagName != "BODY") {
+            target = target.parentNode;
+        }
+        var index = dojo.indexOf(this.btns, target);
 
-	if (index >= 0) {
-	    this._touchedLayer = this.decoree.layers[index];
-	}
+        if (index >= 0) {
+            this._touchedLayer = this.decoree.layers[index];
+        }
 
     },
-    onTouchMove: function(event,yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {},
-    onTouchEnd: function(event,isMove) {
-	if (!isMove) {
-	    this.tabClicked(this._touchedLayer, event);
-	}
-	delete this._touchedLayer;
+    onTouchMove: function(event, yPosition, yChangeFromInitial, yChangeFromLast, xPosition, xChangeFromInitial, xChangeFromLast) {},
+    onTouchEnd: function(event, isMove) {
+        if (!isMove) {
+            this.tabClicked(this._touchedLayer, event);
+        }
+        delete this._touchedLayer;
     },
     getRuntimeId: function() {
-	return this.decoree.getRuntimeId() + ".decorator";
+        return this.decoree.getRuntimeId() + ".decorator";
     },
-
 /*
     touchTabStart: function(inLayer,evt) {
 	if (!inLayer._touchStarted) {
@@ -173,7 +176,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 		 var selectedIndex = tabLayers.layerIndex;
 		 tabLayers.layerIndex = -1;
 		 tabLayers.setLayerIndex(tabLayers.layers.length > selectedIndex ? selectedIndex : tabLayers.layers.length-1);
-    
+
 		 var managedButtons = this.btns;
 		 var currentButtons = this.tabsControl.domNode.childNodes;
 		 if (indexIs == this.btns.length-1) {
@@ -254,7 +257,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 		var currentIndex = currentLayer.getIndex();
 		var parent = inLayer.parent;
 		parent.onCloseOrDestroy(inLayer);
-		if (inLayer.destroyable) 
+		if (inLayer.destroyable)
 		    inLayer.destroy();
 		else
 		    inLayer.hide();
@@ -264,7 +267,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 		    currentLayer.parent.layerIndex = dojo.indexOf(currentLayer.parent.layers, currentLayer);
 		} else if (currentIndex > 0) parent.setLayerIndex(currentIndex-1);
 		else parent.setLayerIndex(0);
-		    
+
 	    } else {
 		d.setLayer(inLayer);
 	    }
@@ -305,7 +308,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	} else {
 	    inBtn.style.display = "none";
 	}
-	
+
 	},
 	getBtn: function(inCaption) {
 		var d = this.decoree, i = d.indexOfLayerCaption(inCaption);
@@ -341,7 +344,7 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	    wm.Array.insertElementAt(this.btns, f, inToIndex);
 	}
 });
-
+dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {}); // backwards compatability
 /*
 dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 	decorateContainer: function() {
@@ -349,21 +352,21 @@ dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 		dojo.removeClass(this.tabsControl.domNode, "wmtablayers-tabbar");
 		dojo.addClass(this.tabsControl.domNode, "wmtablayers-roundedtabbar");
 		this.tabsControl.setPadding("0,0,0,15");
-		this.tabsControl.domNode.style.paddingTop = "0px";								
+		this.tabsControl.domNode.style.paddingTop = "0px";
 		this.tabsControl.domNode.style.paddingLeft = "15px";
 	},
 	createTab: function(inCaption, inIndex, inLayer) {
-		var b = this.btns[inIndex] = document.createElement("div");		
+		var b = this.btns[inIndex] = document.createElement("div");
 		b.style.display = inLayer.showing ? "" : "none";
-		
+
 		var divLeft = document.createElement("div");
 		var divCenter = document.createElement("div");
 		var divRight = document.createElement("div");
-		
+
 		divLeft.innerHTML = "&nbsp;";
 		divCenter.innerHTML = "&nbsp;";
 		divRight.innerHTML = "&nbsp;";
-		
+
 		this.setBtnText(divCenter, inCaption, inLayer.closable || inLayer.destroyable);
 		this.decoree.connect(b, "onclick", dojo.hitch(this, "tabClicked", inLayer));
 		this.decoree.connect(b, "onmouseover", dojo.hitch(this, "mouseoverout", inLayer, true));
@@ -377,7 +380,7 @@ dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 		b.appendChild(divLeft);
 		b.appendChild(divCenter);
 		b.appendChild(divRight);
-		
+
 		dojo.connect(b, "onselectstart", dojo, "stopEvent");
 		this.tabsControl.domNode.appendChild(b);
 	},
@@ -385,26 +388,26 @@ dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 		var b=this.btns[inLayer.getIndex()];
 		var divLeft = b.childNodes[0];
 		var divCenter = b.childNodes[1];
-		var divRight = b.childNodes[2];		
+		var divRight = b.childNodes[2];
 		if (b){
-			dojo.removeClass(divLeft, 'wmtablayers-roundedtab-left-hover');				
+			dojo.removeClass(divLeft, 'wmtablayers-roundedtab-left-hover');
 			dojo.removeClass(divCenter, 'wmtablayers-roundedtab-center-hover');
-			dojo.removeClass(divRight, 'wmtablayers-roundedtab-right-hover');			
+			dojo.removeClass(divRight, 'wmtablayers-roundedtab-right-hover');
 		}
-		this.inherited(arguments);					
+		this.inherited(arguments);
 	},
 	mouseoverout: function(inLayer, inActive){
-		var inIndex = inLayer.getIndex();		
+		var inIndex = inLayer.getIndex();
 		if(this.decoree.layerIndex != inIndex){ // user has put mouse over an inactive tab
 			var b=this.btns[inIndex];
 			var divLeft = b.childNodes[0];
 			var divCenter = b.childNodes[1];
 			var divRight = b.childNodes[2];
-			if (b){				
-				dojo[inActive ? "addClass" : "removeClass"](divLeft, 'wmtablayers-roundedtab-left-hover');				
+			if (b){
+				dojo[inActive ? "addClass" : "removeClass"](divLeft, 'wmtablayers-roundedtab-left-hover');
 				dojo[inActive ? "addClass" : "removeClass"](divCenter, 'wmtablayers-roundedtab-center-hover');
 				dojo[inActive ? "addClass" : "removeClass"](divRight, 'wmtablayers-roundedtab-right-hover');
-			}							
+			}
 		}
 	},
 	applyLayerCaption: function(inLayer) {
@@ -412,7 +415,7 @@ dojo.declare("wm.RoundedTabsDecorator", wm.TabsDecorator, {
 		if (i != -1)
 			this.setBtnText(this.btns[i].childNodes[1], inLayer.caption, inLayer.closable || inLayer.destroyable);
 	}
-	
+
 });
 */
 
@@ -430,7 +433,7 @@ dojo.declare("wm.TabsControl", wm.Control, {
 		    this.height = "100%";
 		    this.width = this.owner.headerWidth;
 		} else {
-		    this.height = this.owner.headerHeight;
+		    this.height = this.owner._headerHeight;
 		}
 	    }
 	    this.inherited(arguments);

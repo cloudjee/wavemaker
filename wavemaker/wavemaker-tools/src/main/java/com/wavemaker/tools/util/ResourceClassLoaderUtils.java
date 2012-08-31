@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.util;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,7 +22,6 @@ import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
@@ -36,26 +34,31 @@ import com.wavemaker.tools.io.ResourceURL;
 public class ResourceClassLoaderUtils {
 
     public static ClassLoader getClassLoaderForResources(Resource... resources) {
+        return getClassLoaderForResources(false, resources);
+    }
+
+    public static ClassLoader getClassLoaderForResources(boolean nonLocking, Resource... resources) {
         return getClassLoaderForResources(ClassLoaderUtils.getClassLoader(), resources);
     }
 
-    public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... resources) {
+    public static ClassLoader getClassLoaderForResources(final ClassLoader parent, Resource... resources) {
+        return getClassLoaderForResources(false, parent, resources);
+    }
+
+    public static ClassLoader getClassLoaderForResources(boolean nonLocking, final ClassLoader parent, Resource... resources) {
         try {
-            final ClassLoader parentF = parent;
-            final URL[] urls = ResourceURL.getForResources(Arrays.asList(resources)).toArray(new URL[resources.length]);
+            final URL[] urls = ResourceURL.getForResources(Arrays.asList(resources), nonLocking).toArray(new URL[resources.length]);
 
             URLClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
 
                 @Override
                 public URLClassLoader run() {
-                    return new URLClassLoader(urls, parentF);
+                    return new URLClassLoader(urls, parent);
                 }
             });
             return ret;
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
         }
     }
 
@@ -65,6 +68,10 @@ public class ResourceClassLoaderUtils {
 
     public static <V> V runInClassLoaderContext(Callable<V> callable, Folder... folders) {
         return runInClassLoaderContext(callable, getClassLoaderForResources(folders));
+    }
+
+    public static <V> V runInClassLoaderContext(boolean nonLocking, Callable<V> callable, Folder... folders) {
+        return runInClassLoaderContext(callable, getClassLoaderForResources(nonLocking, folders));
     }
 
     public static void runInClassLoaderContext(Runnable runnable, ClassLoader cl) {
@@ -96,5 +103,4 @@ public class ResourceClassLoaderUtils {
             }
         };
     }
-
 }

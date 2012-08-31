@@ -61,84 +61,74 @@ dojo.declare("wm.NotificationService", wm.Service, {
 			hint: "This operation displays a page in a dialog."
 		}
 	},
-	update: function() {
-		this[this.operation]();
-	},
-        invoke: function(inMethod, inArgs, inOwner) {
-	    var m = this[inMethod];
-	    var d;
-	    if (m) {
-		inArgs.push(inOwner);
-		var newd = m.apply(this, inArgs);
-		if (newd instanceof dojo.Deferred)
-		    d  = newd;
-	    } else {
-		this.onError();
-		/* TODO: Localize (probably not needed */
-		d.errback("operation: " + inMethod + " does not exist.");
-	    }
-	    this._deferred = d || new dojo.Deferred();
-	    return this._deferred;
-	},
+    update: function() {
+        this[this.operation]();
+    },
+    invoke: function(inMethod, inArgs, inOwner) {
+        var m = this[inMethod];
+        var d;
+        if (m) {
+            inArgs.push(inOwner);
+            var newd = m.apply(this, inArgs);
+            if (newd instanceof dojo.Deferred) d = newd;
+        } else {
+            this.onError(); /* TODO: Localize (probably not needed */
+            d.errback("operation: " + inMethod + " does not exist.");
+        }
+        this._deferred = d || new dojo.Deferred();
+        return this._deferred;
+    },
     alert: function(text) {
-	var d = new dojo.Deferred();
-	app.alert(text);
-	this.connectOnce(app.alertDialog, "onClose", function() {
-	    d.callback();
-	});
-	return d;
+        var d = new dojo.Deferred();
+        app.alert(text);
+        this.connectOnce(app.alertDialog, "onClose", function() {
+            d.callback();
+        });
+        return d;
     },
     confirm: function(text, OKButtonText, CancelButtonText) {
-	var d = new dojo.Deferred();
-	var ok = OKButtonText || wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK");
-	var cancel = CancelButtonText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL");
-	app.confirm(text, 
-		    false, 
-		    function() {
-			d.callback(true);
-		    },
-		    function() {
-			d.errback();
-		    },
-		    ok,
-		    cancel,
-		   false);
-	return d;
+        var d = new dojo.Deferred();
+        var ok = OKButtonText || wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK");
+        var cancel = CancelButtonText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL");
+        app.confirm(text, false, function() {
+            d.callback(true);
+        }, function() {
+            d.errback();
+        }, ok, cancel, false);
+        return d;
     },
     prompt: function(text, defaultValue, OKButtonText, CancelButtonText) {
-	var d = new dojo.Deferred();
-	var ok = OKButtonText || wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK");
-	var cancel = CancelButtonText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL");
-	app.prompt(text, 
-		    defaultValue,
-		    function(inText) {
-			d.callback(inText);
-		    },
-		    function() {
-			d.errback();
-		    },
-		    ok,
-		    cancel);
-	return d;
+        var d = new dojo.Deferred();
+        var ok = OKButtonText || wm.getDictionaryItem("wm.Application.CAPTION_ALERT_OK");
+        var cancel = CancelButtonText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL");
+        app.prompt(text, defaultValue, function(inText) {
+            d.callback(inText);
+        }, function() {
+            d.errback();
+        }, ok, cancel);
+        return d;
     },
     warnOnce: function(text, cookieName) {
-	var d = new dojo.Deferred();
-	if (!app.warnOnce(cookieName, text)) {
-	    d.callback();
-	} else {
-	    this.connectOnce(app.alertDialog, "onClose", function() {
-		d.callback();
-	    }) 
-	}
-	return d;
+        var d = new dojo.Deferred();
+        if (!app.warnOnce(cookieName, text)) {
+            d.callback();
+        } else {
+            this.connectOnce(app.alertDialog, "onClose", function() {
+                d.callback();
+            })
+        }
+        return d;
     },
     toast: function(text, inDuration, cssClasses, toastPosition) {
-	var d = new dojo.Deferred();
-	app.toastDialog.showToast(text, inDuration, cssClasses, toastPosition);
-	this.connectOnce(app.toastDialog, "onClose", function() {
-	    d.callback();
-	});
-	return d;
+        var d = new dojo.Deferred();
+        app.toastDialog.showToast(text, inDuration, cssClasses, toastPosition);
+        /*
+        this.connectOnce(app.toastDialog, "onClose", function() {
+            d.callback();
+        });
+*/
+        d.callback(); // toast invokation does not need to wait for the dialog to dismiss; doing so would prevent additional calls to this notification
+        return d;
     }
 
 });
@@ -151,20 +141,20 @@ dojo.declare("wm.NotificationCall", [wm.Component, wm.ServiceCall], {
 
     // this is called if the dialog dismisses normally
     processResult: function(inResult) {
-	switch(this.operation) {
-	case "alert":
-	case "confirm":
-	case "prompt":
-	case "warnOnce":
-	    this.onOk(inResult);
-	    break;
-	}
-	this.onClose();
+        switch (this.operation) {
+        case "alert":
+        case "confirm":
+        case "prompt":
+        case "warnOnce":
+            this.onOk(inResult);
+            break;
+        }
+        this.onClose();
     },
     // this is called if the user clicks cancel
     processError: function() {
-	this.onCancel();
-	this.onClose();
+        this.onCancel();
+        this.onClose();
     },
     onCancel: function() {},
     onOk: function(inResult) {},
@@ -181,7 +171,7 @@ wm.Object.extendSchema(wm.NotificationCall,{
     input: {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.NavigationGroupEditor"},
     inFlightBehavior: {ignore:1},
     autoUpdate: {ignore:1},
-    startUpdate: {ignore:1},    
+    startUpdate: {ignore:1},
     onError: {ignore:1},
     onSuccess: {ignore:1},
     onBeforeUpdate: {ignore:1},

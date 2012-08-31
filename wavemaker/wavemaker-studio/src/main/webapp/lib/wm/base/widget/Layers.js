@@ -16,7 +16,7 @@ dojo.provide("wm.base.widget.Layers");
 dojo.require("wm.base.widget.Container");
 dojo.require("wm.base.widget.Layers.Decorator");
 dojo.require("wm.base.widget.Layers.TabsDecorator");
-dojo.require("wm.base.widget.Layers.AccordionDecorator");
+//dojo.require("wm.base.widget.Layers.AccordionDecorator");
 
 dojo.declare("wm.Layer", wm.Container, {
     height: "100%",
@@ -31,8 +31,8 @@ dojo.declare("wm.Layer", wm.Container, {
         //console.info('layer destroy called');
         this._isLayerDestroying = true;
         var parent = this.parent;
-        if (parent && parent instanceof wm.Layers) 
-        parent.setCaptionMapLayer(this.caption, null);      
+        if (parent && parent instanceof wm.Layers)
+        parent.setCaptionMapLayer(this.caption, null);
         this.inherited(arguments);
         if (parent && parent.conditionalTabButtons && !parent.decorator.tabsControl.isDestroyed)
         parent.decorator.tabsControl.setShowing(parent.getVisibleLayerCount() > 1);
@@ -46,7 +46,7 @@ dojo.declare("wm.Layer", wm.Container, {
             delete this.title;
         }
         this.setCaption(this.caption);
-        
+
         if (!this.isRelativePositioned)
             dojo.addClass(this.domNode, "wmlayer");
     },
@@ -175,14 +175,14 @@ dojo.declare("wm.Layer", wm.Container, {
     generateStateUrl: function(stateObj) {
     if (this.active && !this._mobileFoldingGenerated) {
         var index = this.getIndex();
-        if (index == this.parent.defaultLayer || index === 0 && this.parent.defaultLayer === -1) return; 
+        if (index == this.parent.defaultLayer || index === 0 && this.parent.defaultLayer === -1) return;
         stateObj[this.getRuntimeId()] = 1;
     }
     },*/
     onTabDrop: function() {}
 });
 
-dojo.declare("wm.Layers", wm.Container, {    
+dojo.declare("wm.Layers", wm.Container, {
         manageHistory: true,
         manageURL: false,
         isMobileFoldingParent: false,
@@ -199,34 +199,24 @@ dojo.declare("wm.Layers", wm.Container, {
     destroy: function() {
         //console.info('LAYERS destroy called');
         this.inherited(arguments);
-        if (this.decorator) 
+        if (this.decorator)
         {
             this.decorator.destroy();
             this.decorator = null;
         }
-        
+
         this.layers = null;
         this.captionMap = null;
         this.client = null;
     },
     prepare: function() {
         this.layers = [];
-        this.captionMap =[];
+        this.captionMap = [];
         this.inherited(arguments);
 
         // needs to happen before build generates the tabsControl or other affected widget
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-        if (!isMobile) {
-        if (this.desktopHeaderHeight != null) {
-            this.headerHeight = this.desktopHeaderHeight;
-        } else if (this.headerHeight) {
-            this.desktopHeaderHeight = this.headerHeight;
-        }
-        } else {
-        if (this.mobileHeaderHeight) {
-            this.headerHeight = this.mobileHeaderHeight;
-        } 
-        }
+        this._headerHeight =  (isMobile && this.mobileHeaderHeight) ? this.mobileHeaderHeight || this.headerHeight : this.headerHeight;
     },
     build: function() {
         this.inherited(arguments);
@@ -237,29 +227,25 @@ dojo.declare("wm.Layers", wm.Container, {
 
         this.userDefHeaderHeight = this.headerHeight;
         if (!this.isRelativePositioned)
-        dojo.addClass(this.domNode, "wmlayers");
+            dojo.addClass(this.domNode, "wmlayers");
         else
-        this.setHeaderHeight('20px');
+            this.setHeaderHeight('20px'); // this case should never really come up as we don't use isRelativePositioned any more
             // vertical defaults to justified; once we get rid of justified, we can remove this property
-        this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, 
-                    border: "0", 
+        this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned,
+                    border: "0",
                     margin: "0",
                     padding: "0",
-                    name: "client", 
-                    parent: this, 
-                    owner: this, 
-                    height: "100%", 
-                    width: "100%", 
+                    name: "client",
+                    parent: this,
+                    owner: this,
+                    height: "100%",
+                    width: "100%",
                     verticalAlign: "top",
                     horizontalAlign: "left",
-                    flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
+                    flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector
         this.inherited(arguments);
             this._isDesign = this.isDesignLoaded();
-        if (this._isDesign) {
-        this.flags.noModelDrop = true;
-        }
 
-        
     },
     postInit: function() {
         this.inherited(arguments);
@@ -271,7 +257,7 @@ dojo.declare("wm.Layers", wm.Container, {
         // fire onshow when loaded
         if (wm.widgetIsShowing(this))
             this._fireLayerOnShow();
-        if (this.manageURL && this.owner.locationState) {       
+        if (this.manageURL && this.owner.locationState) {
         this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
         }
     },
@@ -364,7 +350,7 @@ dojo.declare("wm.Layers", wm.Container, {
             this.clientBorderColor = inBorderColor;
             for (var i = 0; i < this.layers.length; i++)
                 this.layers[i].setBorderColor(inBorderColor);
-        },    
+        },
     // public api for adding a layer
     addLayer: function(inCaption, doNotSelect) {
     var pg = this.createLayer(inCaption);
@@ -399,7 +385,7 @@ dojo.declare("wm.Layers", wm.Container, {
             this.decorator.undecorateLayer(inWidget, i);
             inWidget.active = false;
             inWidget.inFlow = false;
-            this.client.removeWidget(inWidget);            
+            this.client.removeWidget(inWidget);
             /*
             var found = false;
             for (j = 0; j < this.layers.length; j++) {
@@ -523,7 +509,28 @@ dojo.declare("wm.Layers", wm.Container, {
         }
         this._setLayerIndex(inIndex);
         if (fireEvents) {
-            l && l.onShow();
+            if (l) {
+                if (app.debugDialog && !this.isAncestor(app.debugDialog)) {
+                    var i = 0;
+                    var caller = arguments.callee.caller;
+                    var ignoreFunctions = ["setProp", "setLayer", "setLayerByName", "setLayerByCaption", "addLayer","activate","update"];
+                    while (caller && dojo.indexOf(ignoreFunctions, caller.nom) != -1 && i < 15) {
+                        caller = caller.caller;
+                        i++;
+                    }
+                    var eventId = app.debugDialog.newLogEvent({
+                                eventType: "layer",
+                                sourceDescription: (caller && caller.nom ? caller.nom + "()" : ""),
+                                resultDescription: "Activating Layer: " + l.getRuntimeId() + ".activate()",
+                                firingId: l.getRuntimeId(),
+                                affectedId: l.getRuntimeId(),
+                                method: "hide"
+                            });
+
+                }
+                l.onShow();
+                if (eventId) app.debugDialog.endLogEvent(eventId);
+            }
             oldLayer && oldLayer.onDeactivate();
         }
         if (fireEvents && this.lastLayerIndex != this.layerIndex) this.onchange(this.layerIndex);
@@ -681,41 +688,58 @@ dojo.declare("wm.Layers", wm.Container, {
     },
     // used only by Tabs
     headerHeight: "27px",
-        mobileHeaderHeight: "37px",
+    mobileHeaderHeight: "37px",
     setHeaderHeight: function(inHeight) {
         if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs" && this.layersType != "Wizard" && this.layersType != "Breadcrumb")
             return;
-        this.headerHeight = inHeight;
+        this._headerHeight = inHeight;
         this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
 
         delete this._lastTabHeight;
         this.renderBounds();
 
     },
-        renderBounds: function() {
+    renderBounds: function() {
         this.inherited(arguments);
-        if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
-        return;
-        if (!this.decorator || !this.decorator.tabsControl)
-        return;
-        if (this.decorator.tabsControl.isDestroyed)
-        return;
+        if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs") return;
+        if (!this.decorator || !this.decorator.tabsControl) return;
+        if (this.decorator.tabsControl.isDestroyed) return;
 
         wm.job(this.getRuntimeId() + ".renderBounds", 10, this, function() {
-        if (this.isDestroyed || this._lockHeaderHeight) return;
-        this.decorator.tabsControl.domNode.style.height = 'auto';
-        var newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this.headerHeight));
-        if (newheight != this.decorator.tabsControl.bounds.h) {
-            this.decorator.tabsControl.setHeight(newheight + "px");
-        } else {
-            this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
-        }
+            if (this.isDestroyed || this._lockHeaderHeight) return;
+            if (this.decorator.btns.length <= 1) return;
+            var originalHeight = this.decorator.tabsControl.bounds.h;
+            this.decorator.tabsControl.domNode.style.height = 'auto';
+            var newheight;
+            var lastShowingTab, firstShowingTab;
+            for (var i = this.decorator.btns.length - 1; i >= 1; i--) {
+                if (this.decorator.btns[i].style.display != "none") {
+                    if (!firstShowingTab) firstShowingTab = this.decorator.btns[i];
+                    lastShowingTab = this.decorator.btns[i];
+                    break;
+                }
+            }
+            /* Sometimes the buttons are a few px off, but we know they've wrapped to the next line of they are many pixels different in offsetTop */
+            if (lastShowingTab && Math.abs(firstShowingTab.offsetTop - lastShowingTab.offsetTop) > 4 ) {
+                if (this._headerHeight == this.decorator.tabsControl.height) {
+                    this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px";
+                } else {
+                    this.decorator.tabsControl.setHeight(this._headerHeight);
+                }
+            } else {
+                newheight = Math.max(this.decorator.tabsControl.domNode.clientHeight, parseInt(this._headerHeight));
+                if (newheight != this.decorator.tabsControl.bounds.h) {
+                    this.decorator.tabsControl.setHeight(newheight + "px");
+                } else {
+                    this.decorator.tabsControl.domNode.style.height = this.decorator.tabsControl.bounds.h + "px"; // clear the "auto"
+                }
+            }
         });
     },
         getMinHeightProp: function() {
             if (this.minHeight) return this.minHeight;
             var minHeight = 80;
-            if (this.layersType.match(/tabs/i)) minHeight += parseInt(this.headerHeight);
+            if (this.layersType.match(/tabs/i)) minHeight += parseInt(this._headerHeight);
             return minHeight;
         },
         getMinWidthProp: function() {

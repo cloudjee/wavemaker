@@ -19,13 +19,12 @@ DataObjectsEditor.widgets = {
     layoutBox: ["wm.Layout", {height: "1flex", layoutFlex: 1, width: "1flex", imageList: "smallToolbarImageList"}, {}, {
 	editorToolbar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, border: "0", height: "29px", layoutKind: "left-to-right", border: "0,0,1,0", borderColor: "#959DAB"}, {}, {
 	    toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", layoutFlex: 1, width: "100%", padding: "0,4"}, {}, {
-		saveButton1: ["wm.ToolButton", {imageIndex: 8, title: "Save Entity", width: "24px", height: "100%", border: "", margin: "", hint: "Save Entity"}, {onclick: "saveAll"}],
-		toolbarspacer1: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-		addEntityButton: ["wm.ToolButton", {imageIndex: 25, title: "New", width: "24px", height: "100%", border: "", margin: "", hint: "New"}, {onclick: "addButtonClick"}],
-		removeButton: ["wm.ToolButton", {imageIndex: 0, title: "Delete", width: "24px", height: "100%", border: "", margin: "", hint: "Delete"}, {onclick: "removeButtonClick"}],
-		toolbarspacer2: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-		importDBButton: ["wm.ToolButton", {imageIndex: 20, title: "Import Database", width: "24px", height: "100%", border: "", margin: "", hint: "Import Database"}, {onclick: "importDBButtonClick"}],
-		dbSettingsButton: ["wm.ToolButton", {imageIndex: 21, title: "Database Connections", width: "24px", height: "100%", border: "", margin: "", hint: "Database Connections"}, {onclick: "dbSettingsButtonClick"}]
+		saveButton1: ["wm.studio.ToolbarButton", {imageIndex: 8, title: "Save Entity", hint: "Save Entity"}, {onclick: "saveAll"}],
+		toolbarspacer1: ["wm.studio.ToolbarSpacer", {}, {}],
+		addEntityButton: ["wm.studio.ToolbarButton", {imageIndex: 25, title: "New", whint: "New"}, {onclick: "addButtonClick"}],
+		removeButton: ["wm.studio.ToolbarButton", {imageIndex: 0, title: "Delete",  hint: "Delete"}, {onclick: "removeButtonClick"}],
+		toolbarspacer2: ["wm.studio.ToolbarSpacer", {}, {}],
+		dbSettingsButton: ["wm.studio.ToolbarButton", {imageIndex: 21, title: "Database Connections",  hint: "Database Connections"}, {onclick: "dbSettingsButtonClick"}]
 	    }],
 	    logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
 	}],
@@ -44,7 +43,7 @@ DataObjectsEditor.widgets = {
 				    format: ["wm.DataFormatter", {}, {}]
 				}],
 				entityLabelSpacer: ["wm.Spacer", {height: "24px", border: "", width: "16px"}, {}],
-				saveButton: ["wm.ToolButton", {imageIndex: 8, title: "Save Entity", width: "24px", height: "100%", border: "", margin: "", hint: "Save Entity", showing: false}, {onclick: "saveAll"}],
+				saveButton: ["wm.studio.ToolbarButton", {imageIndex: 8, title: "Save Entity", hint: "Save Entity", showing: false}, {onclick: "saveAll"}],
 				dataModelChangedWarningLabel: ["wm.Label", {width: "1flex", caption: "Data Model has been modified, please export the Data Model for changes to take effect.", layoutFlex: 1, height: "1flex", showing: false}, {}, {
 				    format: ["wm.DataFormatter", {}, {}]
 				}]
@@ -70,8 +69,8 @@ DataObjectsEditor.widgets = {
 				    format: ["wm.DataFormatter", {}, {}]
 				}],
 				toolbarspacer3: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				addColButton: ["wm.ToolButton", {imageIndex: 25, title: "Add Column", width: "24px", height: "100%", border: "", margin: "", hint: "Add Column"}, {onclick: "addColButtonClick"}],
-				removeColButton: ["wm.ToolButton", {imageIndex: 0, title: "Delete Column", width: "24px", height: "100%", border: "", margin: "", hint: "Delete Column"}, {onclick: "removeCol"}]
+				addColButton: ["wm.studio.ToolbarButton", {imageIndex: 25, title: "Add Column", hint: "Add Column"}, {onclick: "addColButtonClick"}],
+				removeColButton: ["wm.studio.ToolbarButton", {imageIndex: 0, title: "Delete Column", hint: "Delete Column"}, {onclick: "removeCol"}]
 			    }],
 			    columnList: ["wm.DataGrid", {border: "", layoutFlex: 1}, {onCellClick: "columnsChange", onCanEdit: "columnListCanEdit"}, {
 				name1: ["wm.DataGridColumn", {field: "name", index: 1, columnWidth: "150px", caption: "Name", editor: dojox.grid.editors.input}, {}, {
@@ -107,8 +106,8 @@ DataObjectsEditor.widgets = {
 				    format: ["wm.DataFormatter", {}, {}]
 				}],
 				toolbarspacer4: ["wm.Spacer", {height: "24px", width: "12px", margin: "0,5"}, {}],
-				addRelButton: ["wm.ToolButton", {imageIndex: 25, title: "Add Relationship", width: "24px", height: "100%", border: "", margin: "", hint: "Add Relationship"}, {onclick: "addRel"}],
-				removeRelButton: ["wm.ToolButton", {imageIndex: 0, title: "Delete Relationship", width: "24px", height: "100%", border: "", margin: "", hint: "Delete Relationship"}, {onclick: "removeRel"}]
+				addRelButton: ["wm.studio.ToolbarButton", {imageIndex: 25, title: "Add Relationship", hint: "Add Relationship"}, {onclick: "addRel"}],
+				removeRelButton: ["wm.studio.ToolbarButton", {imageIndex: 0, title: "Delete Relationship", hint: "Delete Relationship"}, {onclick: "removeRel"}]
 			    }],
 			    relationshipsList: ["wm.DataGrid", {border: "", layoutFlex: 1}, {onCellClick: "relationshipsChange"}, {
 				name1: ["wm.DataGridColumn", {field: "name", index: 1, columnWidth: "150px", caption: "Name", editor: dojox.grid.editors.input}, {}, {

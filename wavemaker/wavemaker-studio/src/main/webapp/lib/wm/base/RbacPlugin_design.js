@@ -11,57 +11,55 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.base.RbacPlugin_design");
 dojo.require("wm.base.RbacPlugin");
 
 wm.Component.extend({
 	setRoles: function(inValue) {
-	    if (inValue === undefined || inValue === null)
-		inValue = [];
-	    var s = dojo.isArray(inValue) ? inValue : inValue.split(','), r=[];
-		for (var i=0, v, f; (f=s[i]); i++) {
+		if (inValue === undefined || inValue === null) inValue = [];
+		var s = dojo.isArray(inValue) ? inValue : inValue.split(','),
+			r = [];
+		for (var i = 0, v, f;
+		(f = s[i]); i++) {
 			v = dojo.trim(f);
-			if (v)
-				r.push(v);
+			if (v) r.push(v);
 		}
 		this.roles = r;
-	        if (this.setShowing)
-		    this.setShowing(true);
+		if (this.setShowing) this.setShowing(true);
 	},
-    set_deviceSizes: function(inSize) {
-	this.deviceSizes = inSize;
-	var found = false;
-	for (var i = 0; i < this._subscriptions.length; i++) {
-	    if (this._subscriptions[i][0] == "deviceSizeRecalc") {
-		found = true;
-		break;
-	    }
-	}
-	if (!found) {
-	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
-	}
-	this.reshowMobile();
-    },
-    set_deviceType: function(inType) {
-	this.deviceType = inType;
-	var deviceType = studio.currentDeviceType;
-	this.setShowing(this._mobileShowingRequested || this.showing);
+	set_deviceSizes: function(inSize) {
+		this.deviceSizes = inSize;
+		var found = false;
+		for (var i = 0; i < this._subscriptions.length; i++) {
+			if (this._subscriptions[i][0] == "deviceSizeRecalc") {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			this.subscribe("deviceSizeRecalc", this, "reshowMobile");
+		}
+		this.reshowMobile();
+	},
+	set_deviceType: function(inType) {
+		this.deviceType = inType;
+		var deviceType = studio.currentDeviceType;
+		this.setShowing(this._mobileShowingRequested || this.showing);
 
-	var found = false;
-	for (var i = 0; i < this._subscriptions.length; i++) {
-	    if (this._subscriptions[i][0] == "deviceSizeRecalc") {
-		found = true;
-		break;
-	    }
+		var found = false;
+		for (var i = 0; i < this._subscriptions.length; i++) {
+			if (this._subscriptions[i][0] == "deviceSizeRecalc") {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			this.subscribe("deviceSizeRecalc", this, "reshowMobile");
+		}
+		this.reshowMobile();
 	}
-	if (!found) {
-	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
-	}
-	this.reshowMobile();
-    }
 });
-
 
 
 

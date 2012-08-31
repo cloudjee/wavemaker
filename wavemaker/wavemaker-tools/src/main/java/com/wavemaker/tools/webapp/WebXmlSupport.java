@@ -79,10 +79,8 @@ public class WebXmlSupport {
     }
 
     public static void writeWebXml(WebAppType webapp, Writer os) throws JAXBException, IOException {
-
         ObjectFactory of = new ObjectFactory();
         JAXBElement<WebAppType> je = of.createWebApp(webapp);
-
         Marshaller marshaller = getJAXBContext().createMarshaller();
         marshaller.setProperty("jaxb.formatted.output", true);
         marshaller.setProperty("jaxb.schemaLocation", WEBAPP_SCHEMA_LOCATION);

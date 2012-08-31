@@ -322,6 +322,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 
     },
     endLog: function(eventType) {
+        if (!app.debugDialog) return;
         if (this.debugId && this.debugId.length) {
             var debugId = this.debugId.pop();
             if (debugId.eventType == eventType) {
@@ -334,32 +335,32 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     },
     inputChanged: function() {
         if (this.autoUpdate) {
-            if (djConfig.isDebug && app.debugDialog) this.log("autoUpdate");
+            if (app.debugDialog) this.log("autoUpdate");
             this.inherited(arguments);
-            if (djConfig.isDebug && app.debugDialog) this.endLog("autoUpdate");
+            if (app.debugDialog) this.endLog("autoUpdate");
         }
     },
     /* Add logging to doStartUpdate */
     doStartUpdate: function() {
         if (this.canStartUpdate()) {
-            if (djConfig.isDebug && app.debugDialog) this.log("start");
+            if (app.debugDialog) this.log("start");
             this.inherited(arguments);
-            if (djConfig.isDebug && app.debugDialog) this.endLog("start");
+            if (app.debugDialog) this.endLog("start");
         }
     },
     doAutoUpdate: function() {
         if (this.canAutoUpdate()) {
-            if (djConfig.isDebug && app.debugDialog && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");
+            if (app.debugDialog && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");
         
             this.inherited(arguments);
 
-            if (djConfig.isDebug && app.debugDialog) this.endLog("autoUpdateOnStart");
+            if (app.debugDialog) this.endLog("autoUpdateOnStart");
         }
     },
     request: function(inArgs, optionalOp, optionalDeferred) {
 
-        if (djConfig.isDebug && app.debugDialog && this._debug) this._debug.request = this.getDebugArgs();
-        if (djConfig.isDebug && app.debugDialog) {
+        if (app.debugDialog && this._debug) this._debug.request = this.getDebugArgs();
+        if (app.debugDialog) {
             this.log("serviceCall", null, optionalOp);
             this.endLog("serviceCall", null, optionalOp);
         }
@@ -430,7 +431,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
             }
         }
         var result = this.inherited(arguments);
-        if (app.debugDialog && djConfig.isDebug) this.endLog("serviceCallResponse");
+        if (app.debugDialog) this.endLog("serviceCallResponse");
         return inResult;
     },
 

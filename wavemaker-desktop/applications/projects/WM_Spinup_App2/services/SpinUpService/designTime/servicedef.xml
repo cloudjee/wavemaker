@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="SpinUpService" class="com.wavemaker.spinup.wmclient.SpinUpService" CRUDService="false" type="JavaService" springFile="SpinUpService.spring.xml">
+    <operation name="checkForUpdate">
+        <parameter name="key" typeRef="int" isList="false"/>
+    </operation>
+    <operation name="createKey">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="dailyLimit">
+        <return typeRef="java.lang.Boolean" isList="false"/>
+    </operation>
+    <operation name="launchStudio">
+        <return typeRef="java.util.Hashtable&lt;java.lang.String,java.lang.String&gt;" isList="false"/>
+    </operation>
+    <operation name="login">
+        <parameter name="username" typeRef="java.lang.String" isList="false"/>
+        <parameter name="password" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="recordUserLog">
+        <parameter name="userName" typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="setSpinupController">
+        <parameter name="spinupController" typeRef="com.wavemaker.spinup.web.SpinupController" isList="false"/>
+    </operation>
+    <operation name="setWavemakerStudioApplicationArchiveFactory">
+        <parameter name="wmApplicationArchiveFactory" typeRef="com.wavemaker.spinup.web.WavemakerStudioApplicationArchiveFactory" isList="false"/>
+    </operation>
+    <dataobjects>
+        <dataobject javaType="java.util.Hashtable&lt;java.lang.String,java.lang.String&gt;" name="Hashtable" supportsQuickData="false"/>
+        <dataobject javaType="com.wavemaker.spinup.web.SpinupController" name="SpinupController" supportsQuickData="false"/>
+        <dataobject javaType="com.wavemaker.spinup.web.WavemakerStudioApplicationArchiveFactory" name="WavemakerStudioApplicationArchiveFactory" supportsQuickData="false">
+            <element name="archive" typeRef="org.cloudfoundry.client.lib.archive.ApplicationArchive" isList="false" allowNull="false"/>
+        </dataobject>
+    </dataobjects>
+</service>

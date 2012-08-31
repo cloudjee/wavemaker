@@ -68,12 +68,12 @@ wm.Object.extendSchema(wm.List, {
 
     /* Display group; layout subgroup */
     headerVisible: {group: "display", subgroup: "layout", order: 1}, /* Or does this go in the style group? or in the widgetName group? */
-    
+
     /* Events group; flagged as advanced any event NOT compatable with DojoGrid */
     onSelectionChange: {order: 1, group: "events", advanced:1},
-    onselect: {order: 2, advanced:1, group: "events", hidden:1},   
+    onselect: {order: 2, advanced:1, group: "events", hidden:1},
     ondeselect: {order: 3, advanced:1, group: "events",hidden:1},
-    onSelect: {order: 2, advanced:0, group: "events"},   
+    onSelect: {order: 2, advanced:0, group: "events"},
     onDeselect: {order: 3, advanced:0, group: "events"},
     onclick: {order: 4, advanced:1, group: "events"},
     ondblclick: {order: 5, advanced:1, group: "events"},
@@ -86,7 +86,7 @@ wm.Object.extendSchema(wm.List, {
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
 
     /* Operations group */
-    updateNow: {group: "operation", operation:1},    
+    updateNow: {group: "operation", operation:1},
 
     /* Hidden/ignored group */
     columns: {hidden:1},
@@ -125,7 +125,7 @@ wm.List.extend({
 
         /* Setup some default columns */
         if (typeIs && typeIs != typeWas) {
-            this.updateColumnData();
+            this.updateColumnData(false);
             this.renderDojoObj();
         }
     },
@@ -140,13 +140,15 @@ wm.List.extend({
         this._render();
     },
     updateNow: function() {
+        /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
+        if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);
         this.update();
     },
     _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {},
     showMenuDialog: function(e) {
         if (!this.columns) {
             this.columns = [];
-            this.updateColumnData();
+            this.updateColumnData(false);
         }
         studio.gridDesignerDialog.show();
         studio.gridDesignerDialog.page.setGrid(this);
@@ -157,7 +159,7 @@ wm.List.extend({
         this.selectedItem.setIsList(inMode == "multiple");
         this._render();
     },
-    updateColumnData: function() {
+    updateColumnData: function(updating) {
         if (!dojo.isArray(this.columns)) {
             this.columns = [];
         }
@@ -204,7 +206,7 @@ wm.List.extend({
             }
 
             this.columns.push({
-                show: i < 15,
+                show: updating ? false : i < 15,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,
@@ -272,7 +274,7 @@ wm.Object.extendSchema(wm.FocusableList, {
 	hasFocus: {ignore:1},
 	focusOnStart: {type: "boolean"},
 	defaultFocusListIndex: {}
-	
+
 });
 
 wm.Object.extendSchema(wm.FocusablePanel, {

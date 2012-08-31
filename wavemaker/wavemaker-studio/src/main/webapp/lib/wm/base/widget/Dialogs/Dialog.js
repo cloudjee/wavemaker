@@ -63,7 +63,7 @@ wm.bgIframe = {
 		}
 		dojo.subscribe("window-resize", this, "size")
 	},
-        setShowing: function(inShowing,forceChange) {
+    setShowing: function(inShowing,forceChange) {
 		if (!this.domNode)
 			return;
 		if (forceChange || inShowing != this.showing) {
@@ -86,7 +86,7 @@ wm.bgIframe = {
 
 dojo.addOnLoad(function() {
 	// iframe covering required on IE6 and (wah) on FF2 Mac
-	if ((dojo.isIE && dojo.isIE < 7) || (dojo.isMoz && dojo.isMoz < 6 && navigator.userAgent.indexOf("Macintosh") != -1))
+	if ((dojo.isIE && dojo.isIE < 7) || (dojo.isFF && dojo.isFF < 4 && navigator.userAgent.indexOf("Macintosh") != -1))
 		wm.bgIframe.create();
 });
 
@@ -110,6 +110,7 @@ dojo.declare("wm.DialogResize", wm.MouseDrag, {
 dojo.declare("wm.Dialog", wm.Container, {
     manageHistory: true,
     manageURL: false,
+    enableTouchHeight: true,
     titlebarButtons: "",
     containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
@@ -157,7 +158,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}
 
 	if (!this.docked) {
-	    if (this._isDesignLoaded) 
+	    if (this._isDesignLoaded)
 		studio.designer.domNode.appendChild(this.domNode);
 	    else
 		app.appRoot.domNode.appendChild(this.domNode);
@@ -199,21 +200,21 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
             if (this.designWrapper)
                 this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
-	    if (!this.docked) 
-		this.domNode.style.display = "none";		
+	    if (!this.docked)
+		this.domNode.style.display = "none";
 	    this._connections.push(this.connect(document, "keydown", this, "keydown"));
 	    this._subscriptions.push(dojo.subscribe("window-resize", this, "windowResize"));
 
 	    this.setModal(this.modal);
 
-	    this.setTitlebarBorder(this.titlebarBorder); 
+	    this.setTitlebarBorder(this.titlebarBorder);
             this.setTitlebarBorderColor(this.titlebarBorderColor);
 
 
 	    var containerWidget, containerNode;
-	    
+
             // set the owner to wm.Page to allow othis to be written... IF its an instance not a subclass of wm.Dialog
-            var owner = (this.declaredClass == "wm.Dialog" || this._pageOwnsWidgets) ? this.owner : this; 
+            var owner = (this.declaredClass == "wm.Dialog" || this._pageOwnsWidgets) ? this.owner : this;
 
 
             // If the dialog has only a single widget inside of it, thats the titlebar, and the rest of it hasn't yet been created and needs creating.
@@ -226,11 +227,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (this.containerWidgetId) {
 		    containerWidget = this.owner.getValueById(this.containerWidgetId);
 		    containerNode = containerWidget.domNode;
-		} 
+		}
 	    } else if (this.c$.length == 1) {
 	        if (this.useContainerWidget) {
 	            containerWidget = this.containerWidget ||  new wm.Container({
-			_classes: {domNode: ["wmdialogcontainer", this.containerClass]}, 
+			_classes: {domNode: ["wmdialogcontainer", this.containerClass]},
 			name: owner.getUniqueName("containerWidget"),
 			parent: this,
 			owner: owner,
@@ -247,7 +248,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    containerNode = containerWidget.domNode;
 	        } else {
 		    containerNode = this.domNode;
-	        }		
+	        }
             } else {
 		containerWidget = this.c$[1]; // could be undefined
 	    }
@@ -261,7 +262,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 	    } else if (this.c$.length < 3) {
                 // use of buttonbar is only accepted if useContainerWidget is true
-               	if (this.useButtonBar && this.useContainerWidget) {		  
+               	if (this.useButtonBar && this.useContainerWidget) {
                     this.createButtonBar();
                 }
             } else {
@@ -296,7 +297,7 @@ dojo.declare("wm.Dialog", wm.Container, {
         }
     },
     createButtonBar: function() {
-        var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this; 
+        var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this;
 	this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
 				       name: "buttonBar",
 				       owner: owner,
@@ -336,70 +337,89 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 
     setModal: function(inModal) {
-	dojo[inModal ? "removeClass" : "addClass"](this.domNode, "nonmodaldialog");
-	this.modal = (inModal === undefined || inModal === null) ? true : inModal;
+        dojo[inModal ? "removeClass" : "addClass"](this.domNode, "nonmodaldialog");
+        this.modal = (inModal === undefined || inModal === null) ? true : inModal;
 
-	if (this.dojoMoveable) {
-	    this.dojoMoveable.destroy();
-	    this.dojoMoveable = null;
-	}
-	if (!inModal && !this.dojoMoveable) {
-	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
-	    this.connect(this.dojoMoveable, "onMouseDown", this, function() {
-		if (!this.modal) {
-		    if (this.docked) {
-			this._userSized = true;
-			this.setDocked(false);
-		    }
-		    var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
-		    this.domNode.style.zIndex = zindex;
-		}
-	    });
-	    this.connect(this.dojoMoveable, "onMoveStop", this, function() {
-		if (this._openingTitleBarMenu) return;
-		this._userSized = true;
-		this.bounds.l = parseInt(this.domNode.style.left);
-		this.bounds.t = parseInt(this.domNode.style.top);		
-		if (!this._maxified) {
-		    if (!this.insureDialogVisible(true)) {
-			if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t+this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking ||
-			    this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
-			    this.setDocked(true);
-			}
-		    } 
-		}
-		this.setBounds(this.bounds); // recalcualtes right and bottom borders
+        if (this.dojoMoveable) {
+            this.dojoMoveable.destroy();
+            this.dojoMoveable = null;
+        }
+        if (!inModal && !this.dojoMoveable) {
+            this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {
+                handle: this.titleLabel.domNode
+            });
+            this.connect(this.dojoMoveable, "onMouseDown", this, function() {
+                if (!this.modal) {
+                    if (this.docked) {
+                        this._userSized = true;
+                        this.setDocked(false);
+                    }
+                    var zindex = wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+                    this.domNode.style.zIndex = zindex;
+                }
+            });
+            this.connect(this.dojoMoveable, "onMoveStop", this, function() {
+                if (this._openingTitleBarMenu) return;
+                this._userSized = true;
+                this.bounds.l = parseInt(this.domNode.style.left);
+                this.bounds.t = parseInt(this.domNode.style.top);
+                if (!this._maxified) {
+                    if (!this.insureDialogVisible(true)) {
+                        if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t + this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking || this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
+                            this.setDocked(true);
+                        }
+                    }
+                }
+                this.setBounds(this.bounds); // recalcualtes right and bottom borders
 
-		/* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
-		if (!this.docked && this.bounds.t < 0) {
-		    var oldT = this.bounds.t;
-		    this.bounds.top = 0;
-		    this.renderBounds();
-		}	
-	    });
-	}
-	if (this.showing  && !this._isDesignLoaded) {
-	    this.dialogScrim.setShowing(this.modal);
-	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
-	}
-	this.titleButtonPanel.setShowing(!this.modal && (!this.docked || this.showTitleButtonsWhenDocked));
+                if (!this.docked) {
+                    var rerender = false;
+                     if (this.bounds.l > app.appRoot.bounds.r) {
+                                this.bounds.l = app.appRoot.bounds.r - 100;
+                                rerender = true;
+                            }
+                            if (this.bounds.r < 0) {
+                                this.bounds.l = - this.bounds.w + 100;
+                                rerender = true;
+                            }
+                            if (this.bounds.t > app.appRoot.bounds.b) {
+                                this.bounds.t = app.appRoot.bounds.b - 100;
+                                rerender = true;
+                            }
+                             /* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
+                            if (this.bounds.t < 0) {
+                                this.bounds.t = 0;
+                                rerender = true;
+                            }
+                            if (rerender) {
+                                this.setBounds(this.bounds);
+                                wm.Control.prototype.renderBounds.call(this);
+                            }
+                }
+            });
+        }
+        if (this.showing && !this._isDesignLoaded) {
+            this.dialogScrim.setShowing(this.modal);
+            wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
+        }
+        this.titleButtonPanel.setShowing(!this.modal && (!this.docked || this.showTitleButtonsWhenDocked));
     },
     setNoEscape: function(inNoEscape) {
-	this.noEscape = inNoEscape;
-	this.titleClose.setShowing(!this.modal && !this.noEscape  && !wm.isMobile);
-    },	
+        this.noEscape = inNoEscape;
+        this.titleClose.setShowing(!this.modal && !this.noEscape && !wm.isMobile);
+    },
     setDocked: function(inDock, optionalParent, optionalEdge) {
-	if (this._isDesignLoaded) return;
-	var wasDocked = this.docked
-	if (Boolean(wasDocked) == Boolean(inDock)) return;
-	this.docked = inDock;
-	if (inDock) {	    
-	    this._dock(optionalParent, optionalEdge);
-	    dojo.addClass(this.domNode, "Docked");
-	} else {
-	    this._undock();
-	    dojo.removeClass(this.domNode, "Docked");
-	}
+        if (this._isDesignLoaded) return;
+        var wasDocked = this.docked
+        if (Boolean(wasDocked) == Boolean(inDock)) return;
+        this.docked = inDock;
+        if (inDock) {
+            this._dock(optionalParent, optionalEdge);
+            dojo.addClass(this.domNode, "Docked");
+        } else {
+            this._undock();
+            dojo.removeClass(this.domNode, "Docked");
+        }
     },
     _dock: function(parent, edge) {
 	var border = this.border;
@@ -407,7 +427,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (!edge) {
 	    if (this.bounds.t < 0 && !this.noTopBottomDocking)
 		edge = "t";
-	    else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking) 
+	    else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking)
 		edge = "b";
 	    else if (this.bounds.l < 0 && !this.noLeftRightDocking)
 		edge = "l";
@@ -486,7 +506,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	delete this._dockData;
 	var parent = this.parent;
 	app.removeDockedDialog(this); // TODO
-	if (this._isDesignLoaded) 
+	if (this._isDesignLoaded)
 	    studio.designer.domNode.appendChild(this.domNode);
 	else
 	    app.appRoot.domNode.appendChild(this.domNode);
@@ -528,7 +548,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	delete this.minifiedLabel;
 	    app.wmMinifiedDialogPanel.reflow();
 	this._minified = false;
-	if (!dontCallSetShowing) 
+	if (!dontCallSetShowing)
 	    this.show();
     },
     maxify: function() {
@@ -676,11 +696,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 			}
 		    }
 /*
-		    if (this.isDesignedComponent()) 
+		    if (this.isDesignedComponent())
 			this.dialogScrim.size(studio.designer.domNode);
 			*/
 		    return this.inherited(arguments);
-		}            
+		}
 	},
         // This should be able to take both the human readable value "top right", and also the streamlined "tr" and have it work regardless.
     // Note that vertical axis must always come before horizontal axis
@@ -718,8 +738,8 @@ dojo.declare("wm.Dialog", wm.Container, {
             if (testOnly) return false;
             else this.bounds.l = 0;
         }
-        if (!testOnly)           
-	    wm.Control.prototype.renderBounds.call(this);        
+        if (!testOnly)
+	    wm.Control.prototype.renderBounds.call(this);
         return true;
     },
 
@@ -853,14 +873,14 @@ dojo.declare("wm.Dialog", wm.Container, {
     animEnd: function() {
         if (this.showing) {
             //this.domNode.style.opacity = 1; // needed for IE 9 beta
-            this.callOnShowParent();
+            //this.callOnShowParent();
         } else {
             if (this.docked) this.setDocked(false);
             this.domNode.style.display = "none";
         }
     },
     setShowing: function(inShowing, forceChange, skipOnClose) {
-
+        if (app.debugDialog) var ignoreFunctions = ["_setValue", "setProp","setValue"];
 
         /* Manage some global states; showingList and zIndexes */
         wm.Array.removeElement(wm.dialog.showingList, this);
@@ -913,7 +933,28 @@ dojo.declare("wm.Dialog", wm.Container, {
                 this.domNode.tabIndex = -1;
                 this.domNode.focus();
             }
+            if (app.debugDialog && this != app.debugDialog) {
+                var i = 0;
+                var caller = arguments.callee.caller;
+                ignoreFunctions.push("show");
+                while (caller && dojo.indexOf(ignoreFunctions, caller.nom) != -1 && i < 15) {
+                    caller = caller.caller;
+                    i++;
+                }
+                var eventId = app.debugDialog.newLogEvent({
+                            eventType: "dialog",
+                            sourceDescription: (caller && caller.nom ? caller.nom + "()" : ""),
+                            resultDescription: "Showing dialog: " + this.getRuntimeId() + ".setShowing(true)",
+                            firingId: this.getRuntimeId(),
+                            affectedId: this.getRuntimeId(),
+                            method: "show"
+                        });
+
+            }
+            this.callOnShowParent();
             this.onShow();
+            if (eventId) app.debugDialog.endLogEvent(eventId);
+
         } else if (!inShowing && showingChanging) {
             this.callOnHideParent();
             this.showing = Boolean(inShowing);
@@ -924,7 +965,28 @@ dojo.declare("wm.Dialog", wm.Container, {
                 this.animEnd();
             }
             this.showing = false;
+
+            if (app.debugDialog && this != app.debugDialog) {
+                var i = 0;
+                var caller = arguments.callee.caller;
+                ignoreFunctions.push("hide");
+                while (caller && dojo.indexOf(ignoreFunctions, caller.nom) != -1 && i < 15) {
+                    caller = caller.caller;
+                    i++;
+                }
+                var eventId = app.debugDialog.newLogEvent({
+                            eventType: "dialog",
+                            sourceDescription: (caller && caller.nom ? caller.nom + "()" : ""),
+                            resultDescription: "Hiding dialog: " + this.getRuntimeId() + ".setShowing(false)",
+                            firingId: this.getRuntimeId(),
+                            affectedId: this.getRuntimeId(),
+                            method: "hide"
+                        });
+
+            }
+
             if (!skipOnClose && !this._minified) this.onClose("");
+            if (eventId) app.debugDialog.endLogEvent(eventId);
         }
 
 
@@ -945,7 +1007,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
 /*
         setShowing: function(inShowing, forceChange, skipOnClose) {
-	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime; 
+	    var animationTime = (this._cupdating || this.showing == inShowing || this._noAnimation || this._showAnimation && this._showAnimation.status() == "playing") ? 0 : app.dialogAnimationTime;
 
 	    // First show/hide the scrim if we're modal
 	    if (inShowing != this.showing && this.modal && !this._isDesignLoaded)
@@ -1012,8 +1074,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 			if (app.debugDialog) {
 			    var eventChain = app.debugDialog.cacheEventChain();
 			}
-			this._showAnimation =  
-			    dojo.animateProperty({node: this.domNode, 
+			this._showAnimation =
+			    dojo.animateProperty({node: this.domNode,
 						  properties: {opacity: 1},
 						  duration: animationTime,
 						  onEnd: dojo.hitch(this, function() {
@@ -1040,8 +1102,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 			    var eventChain = app.debugDialog.cacheEventChain();
 			}
                         this._transitionToHiding = true;
-			this._hideAnimation = 
-			dojo.animateProperty({node: this.domNode, 
+			this._hideAnimation =
+			dojo.animateProperty({node: this.domNode,
 					      properties: {opacity: 0.01},
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
@@ -1052,7 +1114,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
 						  if (this.docked) this.setDocked(false);
                                                   delete this._transitionToHiding;
-						      if (!skipOnClose && !this._minified) 
+						      if (!skipOnClose && !this._minified)
 						          this.onClose("");
 						      delete this._hideAnimation; // has no destroy method
 						  if (eventChain) {
@@ -1062,9 +1124,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 			    this._hideAnimation.play();
 		    }
 		} else {
-		    this.inherited(arguments);		    
+		    this.inherited(arguments);
 		    if (this.docked) this.setDocked(false);
-		    if (!skipOnClose && !this._minified) 
+		    if (!skipOnClose && !this._minified)
 			this.onClose("");
 		}
 	    }
@@ -1154,13 +1216,14 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     createTitle: function() {
 	var border = (String(this.titlebarBorder).match(",")) ? this.titlebarBorder : "0,0," + this.titlebarBorder + ",0";
-	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]}, 
+	this.titleBar = new wm.Container({_classes: {domNode: ["dialogtitlebar"]},
 					  showing: this.title,
-					  name: "titleBar", 
+					  name: "titleBar",
 					  parent: this,
 					  owner: this,
 					  width: "100%",
-					  height: this.titlebarHeight + "px",
+					  desktopHeight: this.titlebarHeight + "px",
+                      mobileHeight: this.mobileTitlebarHeight + "px",
 					  margin: "0",
 					  padding: "0",
 					  border: border,
@@ -1171,7 +1234,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 /*
 	if (wm.isMobile) {
 	    if (!wm.Dialog.titlebarMenu) {
-		wm.Dialog.titlebarMenu = app.createComponents({	
+		wm.Dialog.titlebarMenu = app.createComponents({
 		    _dialogTitlebarMenu: ["wm.PopupMenu", {}]
 		},app)[0];
 	    }
@@ -1208,7 +1271,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 							 {"label":"Full Size","separator":undefined,"defaultLabel":"Full Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"maxify"),"children":[]},
 							 {"label":"Normal Size","separator":undefined,"defaultLabel":"Normal Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"maxify"),"children":[]}
 						     ]);
-						     wm.Dialog.titlebarMenu.renderDojoObj(); 
+						     wm.Dialog.titlebarMenu.renderDojoObj();
 						     wm.Dialog.titlebarMenu.setItemShowing("Close", !this.noEscape);
 						     wm.Dialog.titlebarMenu.setItemShowing("Minify", !this.noMinify);
 						     wm.Dialog.titlebarMenu.setItemShowing("Full Size", !this.noMaxify && !this._maxified);
@@ -1217,7 +1280,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 						     */
 						 })
 	    });
-						 
+
 
 	}
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
@@ -1239,7 +1302,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      margin: "3,0,0,3",
 					     parent: buttonPanel,
 					      owner: this,
-					      showing:  !this.noMinify  && !wm.isMobile});	
+					      showing:  !this.noMinify  && !wm.isMobile});
 
 	this.titleMaxify = new wm.ToolButton({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
@@ -1251,8 +1314,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      margin: "3,0,0,3",
 					     parent: buttonPanel,
 					      owner: this,
-					      showing: !this.noMaxify && !wm.isMobile});	
-    
+					      showing: !this.noMaxify && !wm.isMobile});
+
 	this.titleLabel = new wm.Label({
 					  noInspector: true,
 	                                name: "dialogTitleLabel",
@@ -1311,7 +1374,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (this.titleLabel) {
 	    this.titleLabel.setCaption(inTitle);
 	    this.titleLabel.setShowing(true);
-	}	
+	}
 	if (this.titleBar)
 	    this.titleBar.setShowing(Boolean(inTitle));
     },
@@ -1324,7 +1387,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.renderBounds();
 	if(this.designWrapper) {
 	    this.designWrapper.controlBoundsChange();
-	    this.designWrapper.renderBounds();			
+	    this.designWrapper.renderBounds();
 	}
         this.reflow();
     },
@@ -1344,103 +1407,103 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 
     /* Resizing */
-	mousedown: function(e) {
-	    if (!this.modal && !this.docked) {
-		var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
-		this.domNode.style.zIndex = zindex;
-	    }
+    mousedown: function(e) {
+        if (!this.modal && !this.docked) {
+            var zindex = wm.dialog.getNextZIndex(this._isDesignLoaded, this);
+            this.domNode.style.zIndex = zindex;
+        }
 
-	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
-	    /* noMaxify is taken to mean that the dialog isn't designed to be resized, either to max size or any custom size */
-	    if (!this.modal && !this.noMaxify && e.target == this.domNode) {
+        /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
+        /* noMaxify is taken to mean that the dialog isn't designed to be resized, either to max size or any custom size */
+        if (!this.modal && !this.noMaxify && e.target == this.domNode) {
 
-		this._initialPosition = dojo.clone(this.bounds);
+            this._initialPosition = dojo.clone(this.bounds);
 
-		var leftTarget = e.clientX - this.marginExtents.l - this.borderExtents.l;
-		var rightTarget = e.clientX;
-		var topTarget = e.clientY - this.marginExtents.t - this.borderExtents.t;
-		var bottomTarget = e.clientY;
+            var leftTarget = e.clientX - this.marginExtents.l - this.borderExtents.l;
+            var rightTarget = e.clientX;
+            var topTarget = e.clientY - this.marginExtents.t - this.borderExtents.t;
+            var bottomTarget = e.clientY;
 
-		if (leftTarget - 12 <= this.bounds.l && leftTarget + 12 >= this.bounds.l) {
-		    this._dragBorderX = "left";
-		} else if (rightTarget - 12 <= this.bounds.r && rightTarget + 12 >= this.bounds.r) {
-		    this._dragBorderX = "right";
-		} else {
-		    this._dragBorderX = "";
-		}
-		if (topTarget - 12 <= this.bounds.t && topTarget + 12 >= this.bounds.t) {
-		    this._dragBorderY = "top";
-		} else if (bottomTarget - 12 <= this.bounds.b && bottomTarget + 12 >= this.bounds.b) {
-		    this._dragBorderY = "bottom";
-		} else {
-		    this._dragBorderY = "";
-		}
-		switch(this._dragBorderX + this._dragBorderY) {
-		case "lefttop":
-		    wm.Dialog.resizer.setCursor("nw-resize");
-		    break;
-		case "leftbottom":
-		    wm.Dialog.resizer.setCursor("sw-resize");
-		    break;
-		case "righttop":
-		    wm.Dialog.resizer.setCursor("ne-resize");
-		    break;
-		case "rightbottom":
-		    wm.Dialog.resizer.setCursor("se-resize");
-		    break;
-		case "top":
-		    wm.Dialog.resizer.setCursor("n-resize");
-		    break;
-		case "bottom":
-		    wm.Dialog.resizer.setCursor("s-resize");
-		    break;
-		case "left":
-		    wm.Dialog.resizer.setCursor("w-resize");
-		    break;
-		case "right":
-		    wm.Dialog.resizer.setCursor("e-resize");
-		    break;
-		}
-		wm.Dialog.resizer.beginResize(e, this);
-	    }
-	},
-	drag: function(inDx, inDy) {
-	    this._userSized = true;
-	    if (this._dragBorderX == "left") {
-		this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
-	    } else if (this._dragBorderX == "right") {
-		this.setBounds(NaN, NaN, this._initialPosition.r - this._initialPosition.l + inDx, NaN);
-	    }
+            if (leftTarget - 12 <= this.bounds.l && leftTarget + 12 >= this.bounds.l) {
+                this._dragBorderX = "left";
+            } else if (rightTarget - 12 <= this.bounds.r && rightTarget + 12 >= this.bounds.r) {
+                this._dragBorderX = "right";
+            } else {
+                this._dragBorderX = "";
+            }
+            if (topTarget - 12 <= this.bounds.t && topTarget + 12 >= this.bounds.t) {
+                this._dragBorderY = "top";
+            } else if (bottomTarget - 12 <= this.bounds.b && bottomTarget + 12 >= this.bounds.b) {
+                this._dragBorderY = "bottom";
+            } else {
+                this._dragBorderY = "";
+            }
+            switch (this._dragBorderX + this._dragBorderY) {
+            case "lefttop":
+                wm.Dialog.resizer.setCursor("nw-resize");
+                break;
+            case "leftbottom":
+                wm.Dialog.resizer.setCursor("sw-resize");
+                break;
+            case "righttop":
+                wm.Dialog.resizer.setCursor("ne-resize");
+                break;
+            case "rightbottom":
+                wm.Dialog.resizer.setCursor("se-resize");
+                break;
+            case "top":
+                wm.Dialog.resizer.setCursor("n-resize");
+                break;
+            case "bottom":
+                wm.Dialog.resizer.setCursor("s-resize");
+                break;
+            case "left":
+                wm.Dialog.resizer.setCursor("w-resize");
+                break;
+            case "right":
+                wm.Dialog.resizer.setCursor("e-resize");
+                break;
+            }
+            wm.Dialog.resizer.beginResize(e, this);
+        }
+    },
+    drag: function(inDx, inDy) {
+        this._userSized = true;
+        if (this._dragBorderX == "left") {
+            this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
+        } else if (this._dragBorderX == "right") {
+            this.setBounds(NaN, NaN, this._initialPosition.r - this._initialPosition.l + inDx, NaN);
+        }
 
 
-	    if (this._dragBorderY == "top") {
-		this.setBounds(NaN, this._initialPosition.t + inDy, NaN, this._initialPosition.h - inDy, NaN);
-	    } else if (this._dragBorderY == "bottom") {
-		this.setBounds(NaN, NaN, NaN, this._initialPosition.b - this._initialPosition.t + inDy);
-	    }
+        if (this._dragBorderY == "top") {
+            this.setBounds(NaN, this._initialPosition.t + inDy, NaN, this._initialPosition.h - inDy, NaN);
+        } else if (this._dragBorderY == "bottom") {
+            this.setBounds(NaN, NaN, NaN, this._initialPosition.b - this._initialPosition.t + inDy);
+        }
 
-	    this.renderBounds();
-	    if (!dojo.isIE || dojo.isIE >= 9) {
-		if (this.docked) {
-		    app.reflow();
-		} else {
-		    this.reflow();
-		}
-	    }
+        this.renderBounds();
+        if (!dojo.isIE || dojo.isIE >= 9) {
+            if (this.docked) {
+                app.reflow();
+            } else {
+                this.reflow();
+            }
+        }
 
-	},
-	drop: function() {	    
-	    this.reflow();
-	},
+    },
+    drop: function() {
+        this.reflow();
+    },
     setPositionNear: function(inWidgetOrName) {
-	if (inWidgetOrName instanceof wm.Component) {
-	    this.positionNear = inWidgetOrName.getId();
-	    this.fixPositionNode = inWidgetOrName.domNode;
-	} else {
-	    this.positionNear = inWidgetOrName;
-	    var widget = this.owner.getValueById(inWidgetOrName);
-	    this.fixPositionNode = widget ? widget.domNode : null;
-	}
-	this.renderBounds();
+        if (inWidgetOrName instanceof wm.Component) {
+            this.positionNear = inWidgetOrName.getId();
+            this.fixPositionNode = inWidgetOrName.domNode;
+        } else {
+            this.positionNear = inWidgetOrName;
+            var widget = this.owner.getValueById(inWidgetOrName);
+            this.fixPositionNode = widget ? widget.domNode : null;
+        }
+        this.renderBounds();
     }
 });

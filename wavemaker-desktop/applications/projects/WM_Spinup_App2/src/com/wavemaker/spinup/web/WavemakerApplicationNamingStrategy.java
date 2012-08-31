@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
 import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
-import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategy;
 import com.wavemaker.tools.cloudfoundry.spinup.UsernameWithRandomApplicationNamingStrategy;
 
 /**

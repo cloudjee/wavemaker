@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.util.zip.ZipFile;
 import java.net.URL;
 
@@ -64,13 +63,11 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 		OutputStream out = null;
 		String path = null;
 		int ByteRead = 0;
-		int ByteWritten= 0;
 		try {
 			String uploadDirName = servletContext.getRealPath(SpinupConstants.STUDIOD_UPLOAD_DIR);
 			File uploadPath = new File(uploadDirName);
 			uploadPath.mkdirs();
 			File localStudioWar =  new File(uploadPath, SpinupConstants.STUDIO_FILE); 	
-			//Block deployments here
 			if(!localStudioWar.exists() || replaceExisting){
 				try{
 					byte[] buffer = new byte[5242880];  //5mb
@@ -91,9 +88,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 					out = new BufferedOutputStream(new FileOutputStream(localStudioWar));
 					while ((ByteRead = reader.read(buffer)) != -1) {
 						out.write(buffer, 0, ByteRead);
-						ByteWritten += ByteRead;
 					}
-					this.namingStrategy.getCurrentVersion(this.servletContext);
 				} catch (IOException e) {
 					e.printStackTrace();
 					throw new IllegalStateException(e);
@@ -114,6 +109,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
 				if (this.logger.isInfoEnabled()) {
 					this.logger.info("Using existing studio WAR");	
 			}}
+			this.namingStrategy.getCurrentVersion(this.servletContext);
 			this.studioWarFile = localStudioWar; 
 
 			Assert.state(studioWarFile.exists(), "Studio resource '" +  studioWarFile.getPath() + "' does not exist");

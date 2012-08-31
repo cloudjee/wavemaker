@@ -1,5 +1,7 @@
 dojo.declare("Main", wm.Page, {
+	"preferredDevice": "desktop",
     start: function() {            
+        this.UserName.focus();
     },
 
     DownloadButton1Click: function(inSender) {
@@ -13,6 +15,7 @@ dojo.declare("Main", wm.Page, {
     //  this.finishProgressBarTimer.startTimer();
     },    
   LoginSuccess: function(inSender, inDeprecated) {
+      this.endWait();
       this.LaunchStudioserviceVariable.update();
       this.progressBar1.setProgress(0);
       this.waitingLayer.activate();
@@ -21,12 +24,14 @@ dojo.declare("Main", wm.Page, {
       this._endTimerTime = this._startTimerTime + 1000 * 120;
     },
   LoginError: function(inSender, inError) {
+      this.endWait();
       if(!inError){inError = "The user name or password you entered is incorrect.";}
       this.labelWarning.setCaption(inError);
       this.labelWarning.setShowing(true);
       this.error_warning_spacer_1.setShowing(true);
       this.error_warning_spacer_2.setShowing(true);
       this.loginLayer.activate();
+      this.Password.focus();
     },
   progressBarTimerTimerFire: function(inSender) {
     var max = 1000 * 120;
@@ -63,27 +68,65 @@ dojo.declare("Main", wm.Page, {
     },
 
   LaunchStudioserviceVariableError: function(inSender, inError) {
+      this.endWait();
+      var error = inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue");
       this.labelError.setShowing(true);
-      this.labelError.setCaption(inError.length > 0 ? inError : "Unable to deploy Studio to your account");
+      this.labelError.setCaption(inError.toString() != "Error" && error.length > 0 ? error : "Unable to deploy Studio to your account");
       this.loginLayer.activate();      
     },
   LaunchStudioserviceVariableSuccess: function(inSender, inDeprecated) {
-      result = inDeprecated;
-      if (!result || result.ERROR) return this.LaunchStudioserviceVariableError(inSender, result.ERROR);
-      url = result.studio_url;
-      token = result.wavemaker_authentication_token;
-      cfdomain = result.domain;
+      this.endWait();
+      var result = inSender.getDataSet();
+      if (!result || result.query({name:"ERROR"}).getItem(0)) return this.LaunchStudioserviceVariableError(inSender, inSender);
+      token = result.query({name:"wavemaker_authentication_token"}).getItem(0).getValue("dataValue");
+      url =  result.query({name:"studio_url"}).getItem(0).getValue("dataValue");
+      cfdomain =  result.query({name:"domain"}).getItem(0).getValue("dataValue");
       var cookie_expire = new Date();  
       cookie_expire.setTime(cookie_expire.getTime() + 30000);
       dojo.cookie("wavemaker_authentication_token", token, {expires: cookie_expire.toGMTString(), domain: cfdomain});
       window.location = url;
     },
   LogInButtonClick: function(inSender) {
+      this.beginWait("Logging in");
       this.labelError.setShowing(false);
       this.labelWarning.setShowing(false);
       this.error_warning_spacer_1.setShowing(false);
       this.error_warning_spacer_2.setShowing(false);
       this.LoginServiceVariable.update();
+    },
+    beginWait: function(inMsg, inNoThrobber) {
+        if (!this.waitMsg) this.waitMsg = {};
+        if (!inMsg)
+            return;
+        this.dialog.setWidth("242px");
+        this.dialog.setHeight("115px");
+        this.dialog.containerNode.innerHTML = [
+            '<table class="wmWaitDialog"><tr><td>',
+                inNoThrobber ? '' : '<div class="wmWaitThrobber">&nbsp;</div>',
+                '<div class="wmWaitMessage">',
+                inMsg,
+                '</div>',
+                '<br />',
+            '</td></tr></table>',
+        ''].join('');
+        this.dialog.setShowing(true);
+                this.waitMsg[inMsg] = 1;
+    },
+    endWait: function(optionalMsg) {
+            if (optionalMsg)
+                   delete this.waitMsg[optionalMsg];
+                else
+                   this.waitMsg = {};
+
+                var firstMsg = "";
+                for (var msg in this.waitMsg) {
+                   firstMsg = msg;
+                   break;
+                }
+            if (firstMsg) 
+           this.beginWait(firstMsg);
+                else
+           this.dialog.setShowing(false);
     },
   _end: 0
 });

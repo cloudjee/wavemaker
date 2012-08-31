@@ -76,70 +76,76 @@ dojo.declare("wm.debug.BindPanel", wm.Layer, {
     },
     inspect: function(inComponent) {
 
-	this.selectedItem = inComponent;
-	this.bindingListVar.beginUpdate();
-	this.bindingListVar.clearData();
-	var b = this.selectedItem ? this.selectedItem.$.binding : null;
-	this.disconnectBindDebugConnections();
-	this._debugBindConnections = [];
-	if (b) {
-	    for (var name in b.wires) {
-		var w = b.wires[name];
-		var r = w.getRoot();
-		var dataValue = w.expression ? wm.expression.getValue(w.expression, r,r) : w.getValueById(w.source);
-		if (dataValue instanceof wm.Component)
-		    dataValue = dataValue.toString();
+        this.selectedItem = inComponent;
+        this.bindingListVar.beginUpdate();
+        this.bindingListVar.clearData();
+        var b = this.selectedItem ? this.selectedItem.$.binding : null;
+        this.disconnectBindDebugConnections();
+        this._debugBindConnections = [];
+        if (b) {
+            for (var name in b.wires) {
+                var w = b.wires[name];
+                var r = w.getRoot();
+                var dataValue = w.expression ? wm.expression.getValue(w.expression, r, r) : w.getValueById(w.source);
+                if (dataValue instanceof wm.Component) dataValue = dataValue.toString();
 
-		var validBinding = this.isValidBinding(w);
+                var validBinding = this.isValidBinding(w);
 
-		this.bindingListVar.addItem({fieldName: name,
-					     dataValue: dataValue,
-					     id: w.getRuntimeId(),
-					     boundTo: w.source,
-					     expression: w.expression,
-					     errors: !validBinding});
-		this._debugBindConnections.push(dojo.connect(w, "_sourceValueChanged", this, function() {
-		    wm.job(this.getRuntimeId() + ".refreshGrid", 10, dojo.hitch(this, function() {this.inspect(this.selectedItem);}));
-		}));
-	    }
-	}
+                this.bindingListVar.addItem({
+                    fieldName: name,
+                    dataValue: dataValue,
+                    id: w.getRuntimeId(),
+                    boundTo: w.source,
+                    expression: w.expression,
+                    errors: !validBinding
+                });
+                this._debugBindConnections.push(dojo.connect(w, "_sourceValueChanged", this, function() {
+                    wm.job(this.getRuntimeId() + ".refreshGrid", 10, dojo.hitch(this, function() {
+                        this.inspect(this.selectedItem);
+                    }));
+                }));
+            }
+        }
 
-	this.bindingListVar.endUpdate();	    
-	this.bindingListVar.notify();
-	this.setShowing(this.bindingListVar.getCount());
+        this.bindingListVar.endUpdate();
+        this.bindingListVar.notify();
+        this.setShowing(this.bindingListVar.getCount());
     },
 /* Not gaurenteed to get it right 100% of the time; doesn't even try to evaluate expressions. Mostly good for detecting bindings to things that no longer exist */
     isValidBinding: function(inWire) {
-	if (inWire.expression) return true;
-	var parts = inWire.source.split(/\./);
-	var r = inWire.getRoot();
-	while (parts.length) {
-	    if (!r) return true;
-	    var property = parts.shift();
-	    var newR = r[property];
-	    if (newR === undefined && property in r.constructor.prototype == false) {
-		return false;
-	    }
+        if (inWire.expression) return true;
+        var parts = inWire.source.split(/\./);
+        var r = inWire.getRoot();
+        while (parts.length) {
+            if (!r) return true;
+            var property = parts.shift();
+            var newR = r instanceof wm.Component ? r.getValue(property) :  r[property];            
+            if (newR === undefined && property in r.constructor.prototype == false) {
+                if (r instanceof wm.Variable && parts.length == 0) {
+                    return true; // its ok for the field of a Variable to be undefined, but if we're bound to a subfield, then there is a problem
+                } else {
+                    return false;  // if bound to page.x where x does not exist, then presumably x is a missing component
+                }
+            }
 
-	    r = newR;
-	}
-	return true;
+            r = newR;
+        }
+        return true;
     },
     fireBinding: function(inSender, fieldName, rowData, rowIndex) {
-	var id = rowData.id;
-	var wire = app.getValueById(id);
-	if(wire)
-	    wire.refreshValue();
+        var id = rowData.id;
+        var wire = app.getValueById(id);
+        if (wire) wire.refreshValue();
     },
     disconnectBindDebugConnections: function() {
-	if (this._debugBindConnections) {
-	    for (var i = 0; i < this._debugBindConnections.length; i++) {
-		dojo.disconnect(this._debugBindConnections[i]);
-	    }
-	}
+        if (this._debugBindConnections) {
+            for (var i = 0; i < this._debugBindConnections.length; i++) {
+                dojo.disconnect(this._debugBindConnections[i]);
+            }
+        }
     },
     destroy: function() {
-	this.disconnectBindDebugConnections();
-	this.inherited(arguments);
+        this.disconnectBindDebugConnections();
+        this.inherited(arguments);
     }
 });

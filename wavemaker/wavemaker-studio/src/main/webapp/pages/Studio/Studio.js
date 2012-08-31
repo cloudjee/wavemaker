@@ -57,25 +57,28 @@ dojo.declare("Studio", wm.Page, {
     // initialization
     //=========================================================================
     start: function(inBackState, inLocationState) {
-    this.subscribe("BrowserZoomed", this, "browserZoomed");
-    this.browserZoomed();
-    wm.applyFrameworkFixes();
-    this.progressDialog.titleButtonPanel.setShowing(true);
-    //this.progressDialog.titleClose.setShowing(true);
-    this.connect(this.navigationMenu, "renderDojoObj", this, function() {
-        this.disableMenuBar(!studio.application);
-    });
+        this.subscribe("BrowserZoomed", this, "browserZoomed");
+        this.browserZoomed();
+        wm.applyFrameworkFixes();
+        this.progressDialog.titleButtonPanel.setShowing(true);
+        //this.progressDialog.titleClose.setShowing(true);
+        this.connect(this.navigationMenu, "renderDojoObj", this, function() {
+            this.disableMenuBar(!studio.application);
+        });
         studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
-        wm.studioConfig.environment = inResult;
+            wm.studioConfig.environment = inResult;
+			if(studio.startPageDialog.page){
+				studio.startPageDialog.page.setCloudSplash();
+			}
         });
         if (dojo.isIE && dojo.isIE < 8) {
-        app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
-        app.alertDialog.setButton1Caption("");
-        return;
+            app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
+            app.alertDialog.setButton1Caption("");
+            return;
         }
 
         /* Create an empty patches file if there isn't one already */
-        studio.resourceManagerService.requestSync("writeFileIfDoesNotExist", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js", ""]);
+        studio.resourceManagerService.requestSync("writeFileIfDoesNotExist", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g, "") + "_patches.js", ""]);
 
         if (wm.EditArea && this.editArea instanceof wm.EditArea) {
             this.scriptPageCompletionsBtn.hide();
@@ -83,9 +86,9 @@ dojo.declare("Studio", wm.Page, {
             this.appsrcPageFormatBtn.hide();
         }
 
-         app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
+        app._page = this; // not sure why this was failing to set, but I don't have time to investigate...
         this.neededJars = {};
-    /*
+        /*
         try{
             this.documentationDialog = new wm.RichTextDialog({_classes: {domNode: ["studiodialog"]},
                                       owner: this,
@@ -97,10 +100,10 @@ dojo.declare("Studio", wm.Page, {
         }
         */
 
-            this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
+        this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/, "").substring(0, 8));
 
         this.project = new wm.studio.Project();
-/*
+        /*
         this.startEditor = studio.addEditor("Start");
         this.startEditor.connect(this.startEditor, "onStart", this, "startPageOnStart");
         */
@@ -114,21 +117,29 @@ dojo.declare("Studio", wm.Page, {
         this.initUserSettings();
 
         // FIXME: hack
-            //this.owner = app;
+        //this.owner = app;
 
-        this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
+        this.scrim = new wm.Scrim({
+            owner: this,
+            name: "studioScrim",
+            _classes: {
+                domNode: ["wmdialog-scrim"]
+            },
+            waitCursor: false,
+            _noAnimation: true
+        });
         // populate palettes
         loadPackages();
-    this.disableMenuBar(true);
+        this.disableMenuBar(true);
         // init some UI
         this.outlinedClick();
         if (this.getUserSetting('explode')) {
             this.explodedClick();
         }
-            var multiActiveProperties = this.getUserSetting("multiActive");
-            studio.inspector.preferredMultiActive =  multiActiveProperties;
-            studio.inspector.multiActive = studio.inspector.preferredMultiActive;
-        this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+        var multiActiveProperties = this.getUserSetting("multiActive");
+        studio.inspector.preferredMultiActive = multiActiveProperties;
+        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
+        this.togglePropertiesMultiactiveItem.set("checked", !this.inspector.multiActive);
 
 
         /*
@@ -142,8 +153,7 @@ dojo.declare("Studio", wm.Page, {
         //this.connect(document, "keydown", this, "keydown");
         this.connect(wm.inflight, "change", this, "inflightChange");
         // Unload protection
-        if (wm.studioConfig.preventUnloadWarning)
-            dojo.connect(window, "onbeforeunload", this, "windowUnload");
+        if (wm.studioConfig.preventUnloadWarning) dojo.connect(window, "onbeforeunload", this, "windowUnload");
         // Listen to some topics
         dojo.subscribe("wm-textsizechange", this, "reflow");
         dojo.subscribe("wmwidget-rename", this, "componentRenamed");
@@ -151,34 +161,40 @@ dojo.declare("Studio", wm.Page, {
         // FIXME: can't we do status updates via dojo.publish?
         //setInterval(dojo.hitch(this, "updateStatus"), 2000);
         //this.preloadImages();
-            if (this.isCloud()) {
+        if (this.isCloud()) {
             this.preferencesItem.domNode.style.display = "none";
             this.partnerServicesItem.domNode.style.display = "none";
         }
-    var reopenProject = this.getUserSetting("reopenProject");
-    if (reopenProject) {
-        this.setUserSettings({reopenProject: ""});
-        this.project.openProject(reopenProject);
-    } else if (inLocationState) {
-        this.restoreFromLocationHash(inLocationState);
-    } else {
-        studio.disableMenuBar(true);
-    }
+        var reopenProject = this.getUserSetting("reopenProject");
+        if (reopenProject) {
+            this.setUserSettings({
+                reopenProject: ""
+            });
+            this.project.openProject(reopenProject);
+        } else if (inLocationState) {
+            this.restoreFromLocationHash(inLocationState);
+        } else {
+            studio.disableMenuBar(true);
+        }
+
+        /*
         if (this.isCloud()) {
             this.navLogoutBtn.setShowing(true);
             this.navEditAccountBtn.setShowing(true);
             this.projectNameLabel.setShowing(false);
-        }
+        }*/
 
 
-                /* Removal of projects tab
+        /* Removal of projects tab
         this.updateProjectTree();
         */
         this.subscribe("session-expiration-servicecall", this, "handleSessionExpiration");
         this.subscribe("service-variable-error", this, "handleServiceVariableError");
 
-                this.loadThemeList();
-         this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+        this.loadThemeList();
+        this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {
+            studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+        }));
 
         this.helpDialog.containerWidget.c$[0].setPadding("0");
         this.helpDialog.containerWidget.c$[0].setBorder("10");
@@ -199,18 +215,25 @@ dojo.declare("Studio", wm.Page, {
 
         this._jarsMissing = {};
         this.jarListService.requestAsync("getMissingJars").addCallback(dojo.hitch(this, function(inResult) {
-        for (var i = 0; i < inResult.length; i++) {
-            this._jarsMissing[inResult[i]] = true;
-        }
-        if (this._jarsMissing["hibernate3.jar"]) {
-            app.confirm(this.getDictionaryItem("STUDIO_CONFIG_TOOL_NOT_RUN"), false,
+            for (var i = 0; i < inResult.length; i++) {
+                this._jarsMissing[inResult[i]] = true;
+            }
+            if (this._jarsMissing["hibernate3.jar"]) {
+                app.confirm(this.getDictionaryItem("STUDIO_CONFIG_TOOL_NOT_RUN"), false,
+
                 function() {
                     window.location = "/ConfigurationTool";
                 });
-        }
+            }
         }));
 
-/*
+        /* Do this test at the end so that the dialog will be at the top z-index */
+        if (dojo.isIE == 8) {
+            app.warnOnce("dontRunStudioInIE8", this.getDictionaryItem("DONT_RUN_IE8"));
+        }
+
+
+        /*
         this.pageSelect.setParent(null);
         this.tabs.decorator.tabsControl.domNode.appendChild(this.pageSelect.domNode)
         var s = this.pageSelect.domNode.style;
@@ -224,13 +247,13 @@ dojo.declare("Studio", wm.Page, {
         */
 
 
-    this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
-    this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
-    this.ribbon.setBestHeight();
+        this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
+        this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
+        this.ribbon.setBestHeight();
 
-    this.connect(this.webServiceSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.webServiceSubTab));
-    this.connect(this.databaseSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.databaseSubTab));
-    this.connect(this.JavaEditorSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.JavaEditorSubTab));
+        this.connect(this.webServiceSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.webServiceSubTab));
+        this.connect(this.databaseSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.databaseSubTab));
+        this.connect(this.JavaEditorSubTab, "_setLayerIndex", dojo.hitch(this, "updateServiceTabStyle", this.JavaEditorSubTab));
     },
     updateServiceTabStyle: function(inSender) {
     if (inSender.layers.length <= 1) {
@@ -267,34 +290,34 @@ dojo.declare("Studio", wm.Page, {
         }
 
     },
-     handleServiceVariableError: function(inServiceVar, inError) {
-       studio.endWait();  // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
-     },
+    handleServiceVariableError: function(inServiceVar, inError) {
+        studio.endWait(); // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
+    },
     handleSessionExpiration: function(serviceVar) {
         if (serviceVar.isDesignLoaded()) {
-        this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
-        var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
-        dojo.connect(node, "onmouseover", this, function(e) {
-            app.createToolTip(this.getDictionaryItem("TOOLTIP_SECURITY_ERROR"), node, e);
-        });
-        dojo.connect(node, "onmouseout", this, function() {
-            app.hideToolTip();
-        });
+            this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
+            var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
+            dojo.connect(node, "onmouseover", this, function(e) {
+                app.createToolTip(this.getDictionaryItem("TOOLTIP_SECURITY_ERROR"), node, e);
+            });
+            dojo.connect(node, "onmouseout", this, function() {
+                app.hideToolTip();
+            });
 
         } else {
-        if (!this.isLoginShowing()) {
-            if (!studio.getUserName()) {
-            wm.logout();
-            } else {
-            studio.navGoToLoginPage();
+            if (!this.isLoginShowing()) {
+                if (!studio.getUserName()) {
+                    wm.logout();
+                } else {
+                    studio.navGoToLoginPage();
+                }
             }
-        }
         }
     },
     isCloud: function() {
-            return wm.studioConfig.environment && wm.studioConfig.environment != "local";
+        return wm.studioConfig.environment && wm.studioConfig.environment != "local";
         //return  this.isModuleEnabled("cloud", "wm.cloud");
-        },
+    },
     preloadImages: function() {
         var p = "images/", t = "lib/wm/base/widget/themes/default/images/";
         wm.preloadImage(p + "loadingThrobber.gif");
@@ -309,17 +332,15 @@ dojo.declare("Studio", wm.Page, {
         wm.preloadImage(t + "tree_closed.gif");
     },
     windowUnload: function(e) {
-        if (this._isLogout)
-            return;
-            if (this._forceExit)
-            return;
+
+        if (this._isLogout) return;
+        if (this._forceExit) return;
         var
         u = this.getDictionaryItem("ALERT_UNSAVED_LOST"),
             s = this.getDictionaryItem("ALERT_NO_UNSAVED"),
             m = this.isProjectDirty() ? u : s;
         e.returnValue = m;
-        if (!m)
-            dojo.publish("wm-unload-app");
+        if (!m) dojo.publish("wm-unload-app");
         // safari requires value to be returned like this...
         return m;
     },
@@ -427,8 +448,9 @@ dojo.declare("Studio", wm.Page, {
                 // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources;
                 // at some point a cleanup of that code may be needed.
             /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
-                if (!wm.studioConfig.preventLiveData && inName != '' && studio.application)
-                            studio.deploy(null,"studioProjectCompile", true);
+
+                if (!wm.studioConfig.preventLiveData && inName != '' && studio.application && !this.isCloud())
+                    studio.deploy(null,"studioProjectCompile", true);
         }
 
         //this.disableCanvasSourceBtns(!b);
@@ -615,13 +637,13 @@ dojo.declare("Studio", wm.Page, {
         window.document.title = title.join(" - ");
     },
     updateFullServiceList: function() {
-    studio.updateServices();
-    studio.application.loadServerComponents();
-    studio.refreshServiceTree();
+        studio.updateServices();
+        studio.application.loadServerComponents();
+        studio.refreshServiceTree();
     },
     updateServices: function() {
         wm.typeManager.clearTypes();
-        this.setLiveLayoutReady(false);
+        if (this.isLiveLayoutReady()) this.setLiveLayoutReady(studio.isCloud() ? -1 : false);
         this.servicesService.requestSync("listTypes", [], dojo.hitch(this, "typesChanged"));
         this.servicesService.requestSync("listServicesWithType", [], dojo.hitch(this, "servicesDataChanged"));
             studio.refreshServiceTree();
@@ -691,6 +713,9 @@ dojo.declare("Studio", wm.Page, {
             });
         });
     },
+    /* if isCloud, this will return -1 (true but needs to be updated), 0 (false, redeploy), or 1 (true)
+     * if not isCloud this will return true or false (redeploy)
+     */
     isLiveLayoutReady: function(inWarn) {
         return this._liveLayoutReady;
     },
@@ -702,7 +727,7 @@ dojo.declare("Studio", wm.Page, {
         var application = this.application || this._application;
         if (application._deployStatus == "deploying") application._deployStatus = "deployed";
 
-        this.setLiveLayoutReady(true);
+        this.setLiveLayoutReady(studio.isCloud() ? 1 : true);
         var previewWindowOptions = this.getPreviewWindowOptions();
         if (this.previewWindow && this.previewWindowOptions != previewWindowOptions) this.previewWindow.close();
         this.previewWindowOptions = previewWindowOptions;
@@ -719,7 +744,7 @@ dojo.declare("Studio", wm.Page, {
         this._runRequested = false;
         this.updateStateWhileDeploying(true);
     },
-    allowDisablingOfServiceItems: false,
+    allowDisablingOfServiceItems: true,
     updateStateWhileDeploying: function(isDeployed) { /* Only if there is an app open */
         if (this.allowDisablingOfServiceItems && studio.application && this.isCloud()) {
              dojo.publish("testRunStateChange");
@@ -920,6 +945,7 @@ dojo.declare("Studio", wm.Page, {
         if (this.inspector && this.inspector.inspected && !forceRegen) {
          this.inspector.reinspect();
         } else if (this.inspector  && forceRegen) {
+
             var inspected = this.inspector.inspected;
             this.inspector.inspected = null;
             if (inspected)
@@ -956,6 +982,7 @@ dojo.declare("Studio", wm.Page, {
             inComponents =  dojo.filter(inComponents, function(c) {return !c.isDestroyed;});
 
             /* If the bind dialog is showing, then we aren't doing a bind selection rather than a regular studio select and inspect */
+
             if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
                 this.bindDialog.page.binderSource.searchBar.setDataValue("#" + inComponents[0].name);
                 this._lastBindSelect = inComponents[0];
@@ -1701,19 +1728,28 @@ dojo.declare("Studio", wm.Page, {
         var panels = [studio.page.root];
         wm.forEachProperty(studio.page.$, function(inComponent) {
             if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+            if (inComponent instanceof wm.Dialog) {
+                if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
+                if (inComponent.titleBar) inComponent.titleBar.resetDesignHeight();
+            }
         });
         wm.forEachProperty(studio.application.$, function(inComponent) {
             if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+            if (inComponent instanceof wm.Dialog) {
+                if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
+                if (inComponent.titleBar) inComponent.titleBar.resetDesignHeight();
+            }
         });
         var self = this;
         dojo.forEach(panels, function(panel) {
+
             wm.forEachWidget(panel, function(w) {
-                if (w._regenerateOnDeviceChange) {
+                if (w._regenerateOnDeviceChange && w.getParentPage() == studio.page) {
                     w = self.regenerateOnDeviceChange(w);
                     regenerated = true;
                 }
                 w.resetDesignHeight();
-            });
+            }, false);
             if (panel.parent && panel.parent instanceof wm.Dialog) panel.parent.reflow();
         });
 
@@ -1732,6 +1768,7 @@ dojo.declare("Studio", wm.Page, {
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.hide();
         this.currentDeviceType = "desktop";
+        this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.removeClass(this.designer.domNode, "wmmobile");
         if (studio.page) {
@@ -1756,6 +1793,7 @@ dojo.declare("Studio", wm.Page, {
         });
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.show();
+        this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.addClass(this.designer.domNode, "wmmobile");
         if (studio.page) {
@@ -1785,6 +1823,7 @@ dojo.declare("Studio", wm.Page, {
         });
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.show();
+        this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.addClass(this.designer.domNode, "wmmobile");
         if (studio.page) {
@@ -1799,46 +1838,44 @@ dojo.declare("Studio", wm.Page, {
         this.reinspect(); // some properties may change like height/minHeight
     },
     designMobileFoldingClick: function(inSender) {
-    this.designMobileFolding(false);
-    },
-    designMobileFolding: function(inSkipWarning) {
-    if (studio.page) {
-        this.designPhoneUI(true);
-        this.widgetsTree.dragEnabled = false;
-        studio.page.root.foldUI();
-        //studio.page.root.unfoldUI();
-        studio.page.root.reflow();
-        studio.refreshDesignTrees();
-        if (inSkipWarning !== true) {
-        app.warnOnce("mobileFoldingWarning", "Mobile Folding is a powerful but complicated feature which is in beta, and may not be supported in the future.  While in Mobile Folding view, you can not <li>Move widgets</li><li>Edit any layer objects that are generated</li></ol>You must leave the Mobile Folding view to perform these actions.");
-        }
+       this.designMobileFolding(false);
+   },
+   designMobileFolding: function(inSkipWarning) {
+       if (studio.page) {
+           this.designPhoneUI(true);
+           this.widgetsTree.dragEnabled = false;
+           studio.page.root.foldUI();
+           //studio.page.root.unfoldUI();
+           studio.page.root.reflow();
+           studio.refreshDesignTrees();
+           if (inSkipWarning !== true) {
+               app.warnOnce("mobileFoldingWarning", "Mobile Folding is a powerful but complicated feature which is in beta, and may not be supported in the future.  While in Mobile Folding view, you can not <li>Move widgets</li><li>Edit any layer objects that are generated</li></ol>You must leave the Mobile Folding view to perform these actions.");
+           }
 
-    }
-    },
-    regenerateOnDeviceChange: function(w) {
-    var json = "{" + w.write("") + "}";
-    var owner = w.owner;
-    var parent = w.parent;
-    var index = w.getIndexInParent();
-    w.destroy();
-    w = parent.createComponents(dojo.fromJson(json), owner)[0];
-    w.setIndexInParent(index);
-    return w;
-    },
+       }
+   },
+   regenerateOnDeviceChange: function(w) {
+       var json = "{" + w.write("") + "}";
+       var owner = w.owner;
+       var parent = w.parent;
+       var index = w.getIndexInParent();
+       w.destroy();
+       w = parent.createComponents(dojo.fromJson(json), owner)[0];
+       w.setIndexInParent(index);
+       return w;
+   },
     languageSelectChanged: function(inSender, optionalPageName) {
-    if (this._changingLanguage) return;
-    var lastValue = this.languageSelect._lastValue;
-    var newValue = this.languageSelect.getDisplayValue();
-    if (lastValue == newValue) return;
+        if (this._changingLanguage) return;
+        var lastValue = this.languageSelect._lastValue;
+        var newValue = this.languageSelect.getDisplayValue();
+        if (lastValue == newValue) return;
 
-        this.confirmSaveDialog.page.setup(
-        "",
-        /* User clicks save */
+        this.confirmSaveDialog.page.setup("", /* User clicks save */
         dojo.hitch(this, function() {
-            this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
-            delete this._designLanguage;
-            this.languageSelectChanged2();
-            dojo.disconnect(this._saveConnect);
+            this._saveConnect = dojo.connect(this, "saveProjectSuccess", this, function() {
+                delete this._designLanguage;
+                this.languageSelectChanged2();
+                dojo.disconnect(this._saveConnect);
             });
             this._designLanguage = lastValue;
             this.saveAll(studio.project);
@@ -1855,9 +1892,11 @@ dojo.declare("Studio", wm.Page, {
             this._changingLanguage = false;
         }),
 
+
         /* If project isn't dirty, just run don't save callback */
         !this.updateProjectDirty());
 /*
+
         app.confirm(this.getDictionaryItem("CONFIRM_SAVE_LANGUAGE"), false,
             dojo.hitch(this, function() {
                 this._saveConnect = dojo.connect(this,"saveProjectSuccess", this, function() {
@@ -1878,52 +1917,54 @@ dojo.declare("Studio", wm.Page, {
 
     },
     languageSelectChanged2: function() {
-    this.languageSelect.clearDirty();
-    var lang = this.languageSelect.getDisplayValue();
-    if (lang == "other") {
-        app.prompt("Enter code", "",
-               function(inResult) {
-               var options = studio.languageSelect.options.split(/,/);
-               options[options.length-1] = inResult;
-               options.push("other");
-               studio.languageSelect.setOptions(options.join(","));
-               studio.languageSelect.setDisplayValue(inResult);
-               },
-               function() {
-               studio.languageSelect.setDisplayValue("default");
-               });
-        return;
-    }
-    if (lang != "default") {
-        var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
-        try {
-        data = dojo.fromJson(data);
-        this.page.installDesignDictionary(data);
-        } catch(e){
-        console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
+        this.languageSelect.clearDirty();
+        var lang = this.languageSelect.getDisplayValue();
+        if (lang == "other") {
+            app.prompt("Enter code", "", function(inResult) {
+                var options = studio.languageSelect.options.split(/,/);
+                options[options.length - 1] = inResult;
+                options.push("other");
+                studio.languageSelect.setOptions(options.join(","));
+                studio.languageSelect.setDisplayValue(inResult);
+            }, function() {
+                studio.languageSelect.setDisplayValue("default");
+            });
+            return;
         }
-    } else {
-        this.page.installDesignDictionary({});
-    }
-    this.setCleanPage();
-    studio.inspector.reinspect();
+        if (lang != "default") {
+            var data = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
+            try {
+                data = dojo.fromJson(data);
+                this.page.installDesignDictionary(data);
+            } catch (e) {
+                console.error("Failed to load dictionary " + lang + "/" + studio.project.pageName);
+            }
+        } else {
+            this.page.installDesignDictionary({});
+        }
+        this.setCleanPage();
+        studio.inspector.reinspect();
     },
     pageSelectChanged: function(inSender, optionalPageName, inDataValue, inSetByCode) {
-    if (!studio.page || this.disabledPageSelectChanged || inSetByCode) return;
-    var page = optionalPageName || inSender.getDataValue();
-    if (page == this.project.pageName || !page) return;
 
-    var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: page, oldPage: this.project.pageName});
-        this.confirmPageChange(warnPage, page,
-                   dojo.hitch(this, function(noChanges) {
-                   this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
-                   }),
-                   dojo.hitch(this, function() {
-                   this.disabledPageSelectChanged = true;
-                   this.pageSelect.setDataValue(studio.project.pageName);
-                   this.disabledPageSelectChanged = false;
-                   }));
-    //this.project.openPage(pagename);
+        if (!studio.page || this.disabledPageSelectChanged || inSetByCode) return;
+        var page = optionalPageName || inSender.getDataValue();
+        if (page == this.project.pageName || !page) return;
+
+        var warnPage = this.getDictionaryItem("CONFIRM_OPEN_PAGE", {
+            newPage: page,
+            oldPage: this.project.pageName
+        });
+        this.confirmPageChange(warnPage, page, dojo.hitch(this, function(noChanges) {
+            this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {
+                pageName: page
+            }), dojo.hitch(this.project, "openPage", page, !noChanges));
+        }), dojo.hitch(this, function() {
+            this.disabledPageSelectChanged = true;
+            this.pageSelect.setDataValue(studio.project.pageName);
+            this.disabledPageSelectChanged = false;
+        }));
+        //this.project.openPage(pagename);
     },
 
     selectProperty: function(inSender, info, text) {
@@ -2154,16 +2195,15 @@ dojo.declare("Studio", wm.Page, {
         this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
         this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
     },
-    _lastAnalysis: 0,
-    analyzeProject: function(forceAnalysis) {
-        /*
-        var now = new Date().getTime();
-        if (now - this._lastAnalysis < 10 * 1000 * 60 && !forceAnalysis) return;
-        if (!studio.page) return;
-        this._lastAnalysis = now;
-        if (!this.projectIssuesDialog.page) this.projectIssuesDialog.setPage("projectIssuesDialog");
-        this.projectIssuesDialog.page.runAnalysis();
-        */
+    showProjectDesignWarnings: function(inSender, inEvent) {
+
+        var text = "The following errors were found in your project<ul>";
+        this.warningsListVar.forEach(function(item) {
+            text += "<li>" + item.getValue("name") + "</li>";
+        });
+        text += "</ul>";
+
+        app.alert(text);
     }
 });
 
@@ -2177,4 +2217,30 @@ dojo.declare("wm.studio.DialogButtonPanel", wm.Panel, {
     verticalAlign: "justified",
     height: "35px",
     width: "100%"
+});
+dojo.declare("wm.studio.ToolbarButton", wm.ToolButton, {
+    _classes: {domNode: ["StudioToolbarButton"]},
+    margin: "4",
+    padding: "0,3,0,3",
+    width: "30px",
+    height: "100%"
+});
+dojo.declare("wm.studio.ToolbarSpacer", wm.Spacer, {
+    _classes: {domNode: ["StudioToolbarSpacer"]},
+    height: "24px",
+    width: "12px",
+    margin: "0,5"
+});
+
+/* Added this widget mostly because headerHeight was getting trampled by the user's theme in mid-rerendering of the tabs */
+dojo.declare("wm.studio.TabLayers", wm.TabLayers, {
+    headerHeight: "31px",
+    "layersType": "Tabs",
+    "margin": "0",
+    "border": "0",
+    "borderColor": "#959DAB",
+    "clientBorder": "0",
+    "clientBorderColor": "#959DAB",
+    width: "100%",
+    height: "100%"
 });

@@ -506,6 +506,17 @@
                         <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M3.ProjSvcsUpgradeTask" />
                     </list>
                 </entry>
+                <entry key="0.52">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
+                            <property name="file" value="webapproot/WEB-INF/project-springapp.xml" />
+                        </bean>
+                        <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
+                            <property name="file" value="webapproot/WEB-INF/project-services.xml" />
+                        </bean>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M4.IE10XUAUpgradeTask"/>
+                    </list>
+                </entry>   
             </map>
         </property>
         <property name="deploymentManager">
@@ -530,6 +541,11 @@
                 </property>
             </bean>
         </property>
+    </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+    	<property name="eventListener">
+    		<bean class="com.wavemaker.studio.data.DataServiceProjectEventListener"/>
+    	</property>
     </bean>
 
 	<bean id="localExporterFactory" class="com.wavemaker.tools.data.LocalExporterFactory"
@@ -632,3 +648,4 @@
     </beans>
     
 </beans>
+	

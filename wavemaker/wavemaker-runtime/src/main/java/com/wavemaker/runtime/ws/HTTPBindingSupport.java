@@ -215,9 +215,15 @@ public class HTTPBindingSupport {
     }
 
     public static String getResponseString(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
-        DataSource postSource, BindingProperties bindingProperties) throws WebServiceException {
+	DataSource postSource, BindingProperties bindingProperties) throws WebServiceException {
+		return getResponseString(serviceQName, portQName, endpointAddress,
+				method, postSource, bindingProperties, null);
+	}
 
-        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class, null);
+	public static String getResponseString(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
+        DataSource postSource, BindingProperties bindingProperties, Map<String, Object> headerParams) throws WebServiceException {
+
+        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class, headerParams);
         try {
             InputStream inputStream = response.getInputStream();
             return convertStreamToString(inputStream);

@@ -17,7 +17,7 @@
 
 .PhoneGap * {
   -webkit-touch-callout: none; /* Disable menus for links the user touches and holds */
-  -webkit-text-size-adjust:none;    
+  -webkit-text-size-adjust:none;
 }
 /*
 .PhoneGap * {
@@ -41,8 +41,8 @@ button, body {
 
 
 /* button */
-.nonmodaldialog { 
- cursor: crosshair;   
+.nonmodaldialog {
+ cursor: crosshair;
 }
 .nonmodaldialog > div {
     cursor: default;
@@ -68,9 +68,9 @@ user-select: none;
 .wmbutton.wmbutton-disabled, .wmbutton-disabled {
         cursor: default;
     opacity: 0.7;
-    -moz-box-shadow: 0px 0px 0px black !important; 
+    -moz-box-shadow: 0px 0px 0px black !important;
     -webkit-box-shadow: 0px 0px 0px black !important;
-    box-shadow: 0px 0px 0px black !important;  
+    box-shadow: 0px 0px 0px black !important;
 }
 
 .wmtoolbutton {
@@ -96,7 +96,7 @@ user-select: none;
 .wmpopupmenu .dijitMenuItemLabel {
     padding-right: 2px;
     padding-left: 2px;
-    
+
 /*    width: 100%;*/
 }
 
@@ -182,8 +182,9 @@ th {
 user-select: none;
 }
 
-.wmtablayers-tab:focus:not(.wmtablayers-selected),
-.wmtablayers-tab:active:not(.wmtablayers-selected) {
+/* Attempt to give visual feedback despite the fact that the user's finger is blocking out the button */
+.wmmobile .wmtablayers-tab:focus:not(.wmtablayers-selected),
+.wmmobile .wmtablayers-tab:active:not(.wmtablayers-selected) {
     background-color: white !important;
 }
 
@@ -199,50 +200,50 @@ user-select: none;
 }
 
 
-.wmtree ul { 
-	margin: 0; 
-	padding: 0; 
-	list-style-type: none; 
-	background: url(images/treeimages.png) repeat-y; 
+.wmtree ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	background: url(images/treeimages.png) repeat-y;
         background-position: 0px 100%;
         width: 18px;
-} 
+}
 
-.wmtree img { 
+.wmtree img {
 	vertical-align: middle;
 }
 
-.wmtree li { 
-	margin: 0; 
-	padding: 0 0 0 20px; 
+.wmtree li {
+	margin: 0;
+	padding: 0 0 0 20px;
 	white-space: nowrap;
-} 
+}
 
-.wmtree-root-leaf, .wmtree-leaf, .wmtree-last-leaf, .wmtree-root-last-leaf { 
+.wmtree-root-leaf, .wmtree-leaf, .wmtree-last-leaf, .wmtree-root-last-leaf {
 	margin: 0 0 0 -20px;
 	padding-right: 2px;
 	vertical-align: middle;
 }
 
-.wmtree-root-leaf { 
+.wmtree-root-leaf {
         width: 18px;
-/*	background-image: url(images/treeimages.png); 
+/*	background-image: url(images/treeimages.png);
         background-position: -72px;
 	background-repeat:  no-repeat;*/
 }
 
 
-.wmtree-root-last-leaf { 
+.wmtree-root-last-leaf {
         width: 18px;
-	background-image: url(images/treeimages.png); 
+	background-image: url(images/treeimages.png);
         background-position: -104px 0px;
 /*	background-image: url(images/tree_leaf.gif);*/
 	background-repeat:  no-repeat;
 }
 
-.wmtree-last-item { 
+.wmtree-last-item {
         width: 12px;
-	background-image: url(images/treeimages.png); 
+	background-image: url(images/treeimages.png);
         background-position: -84px 0px;
 /*	background-image: url(images/tree_half_bar.gif);*/
 	background-repeat:  no-repeat;
@@ -255,7 +256,7 @@ user-select: none;
 
 .wmtree-leaf {
         width: 18px;
-	background-image: url(images/treeimages.png); 
+	background-image: url(images/treeimages.png);
         background-position: -104px 0px;
 	background-repeat:  no-repeat;
 /*	background: url(images/tree_leaf.gif) no-repeat;*/
@@ -267,26 +268,26 @@ user-select: none;
 .touchScroll .wmtree-content {
     font-size: 18px;
 }
-.touchScroll .wmtree-leaf { 
+.touchScroll .wmtree-leaf {
     background: url(images/touch_tree_leaf.gif) no-repeat;
 }
 
 
 
-.wmtree .wmtree-empty { 
+.wmtree .wmtree-empty {
 	background-image: none;
 }
 
-.wmtree-noconnectors, .wmtree-noconnectors ul, .wmtree-noconnectors ul .wmtree-leaf, .wmtree-noconnectors ul .wmtree-leaf .wmtree-root-leaf, .wmtree-noconnectors ul .wmtree-leaf .wmtree-root-last-leaf, .wmtree-noconnectors ul .wmtree-root-leaf, .wmtree-noconnectors ul .wmtree-last-item { 
+.wmtree-noconnectors, .wmtree-noconnectors ul, .wmtree-noconnectors ul .wmtree-leaf, .wmtree-noconnectors ul .wmtree-leaf .wmtree-root-leaf, .wmtree-noconnectors ul .wmtree-leaf .wmtree-root-last-leaf, .wmtree-noconnectors ul .wmtree-root-leaf, .wmtree-noconnectors ul .wmtree-last-item {
 	background: none;
 }
 
-.wmtree-empty { 
+.wmtree-empty {
 	background-image: none;
 	vertical-align: middle;
 }
 
-.wmtree img.wmtree-last-leaf, .wmtree img.wmtree-blank-leaf, .wmtree img.wmtree-root-leaf, .wmtree img.wmtree-root-last-leaf { 
+.wmtree img.wmtree-last-leaf, .wmtree img.wmtree-blank-leaf, .wmtree img.wmtree-root-leaf, .wmtree img.wmtree-root-last-leaf {
 	vertical-align: top;
 }
 
@@ -310,12 +311,15 @@ user-select: none;
     height: 100%;
 }
 
+/* IOS 5 doesn't respect overflow: hidden for hiding list items without this. */
+.dj_safari .wmlist-wrapper {
+    overflow: scroll;
+}
+
 .wmlist-list {
-    /*-webkit-overflow-scrolling: touch;  // unbelievable; no reliable onScroll events; no control of scrollTop on android 3/4 browsers
+    /*-webkit-overflow-scrolling: touch;  // unbelievable; no reliable onScroll events; no control of scrollTop on android 3, 4 browsers
 	overflow:auto;*/
         overflow: hidden;
-	/* cheat to hide IE scrollbar */
-	overflow-x: hidden;
 	position: relative; /* simplifies position calculations */
 }
 
@@ -335,7 +339,7 @@ user-select: none;
 
 .wmlist-cell {
 	padding: 0.2em 0.3em;
-	word-wrap: break-word; 
+	word-wrap: break-word;
 }
 
 .wmlist-header th {
@@ -438,7 +442,7 @@ user-select: none;
 
 /*
  .dialogtitlebar, .dialogfooter {
-    background-color: #555555;	   
+    background-color: #555555;
     color: white;
 }
 */
@@ -542,9 +546,9 @@ user-select: none;
 	background-color: transparent;
 	color: rgb(80,80,80);
 }
-.wmwizardlayers .wmwizardlayers-tab.done, 
+.wmwizardlayers .wmwizardlayers-tab.done,
 .wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected,
-.wmwizardlayers .wmwizardlayers-verticaltab.done, 
+.wmwizardlayers .wmwizardlayers-verticaltab.done,
 .wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
 	font-weight: bold;
 }
@@ -567,7 +571,7 @@ user-select: none;
 body.tundra div.wmtoast.wmtoastExtraSpecific {
     font-size: 12pt;
     background-color: rgb(40,40,40);
-    color: white;    
+    color: white;
     opacity: .88;
 
     -moz-border-radius: 8px;
@@ -636,8 +640,8 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 
 .dragAvatarCSS{
 	position: absolute;
-	z-index: 201; 
-	padding: 5px; 
+	z-index: 201;
+	padding: 5px;
 	color: #FFFFFF;
 	background-color: #424A5A;
 	font-family:Geneva,Arial,Helvetica,sans-serif;
@@ -651,13 +655,13 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 	border-top: 4px solid red;
 }
 
-.dialogclosebutton img, 
+.dialogclosebutton img,
 .dialogminifybutton img,
 .dialogmaxifybutton img {
     width: 100%;
     height: 100%;
 }
-.dialogclosebutton, 
+.dialogclosebutton,
 .dialogminifybutton,
 .dialogmaxifybutton {
 	cursor: pointer;
@@ -696,7 +700,7 @@ display:block;
     font-size: 0.9Em;
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
-    border-radius: 0px;    
+    border-radius: 0px;
      -moz-box-shadow: 0px 0px 0px #222; /* FF3.5+ */
      -webkit-box-shadow: 0px 0px 0px #222; /* Saf3.0+, Chrome */
      box-shadow: 0px 0px 0px #222; /* Opera 10.5, IE 9.0 */
@@ -704,16 +708,16 @@ display:block;
 }
 
 .wmeditor.wmreseteditor .dijitTextBox {
-     -moz-border-radius: 16px; 
+     -moz-border-radius: 16px;
      -webkit-border-radius: 16px;
-     border-radius: 16px;     
+     border-radius: 16px;
 }
 .wmeditor.wmreseteditor .dijitInputField {
     padding: 1px 20px 0px 5px !important;
 }
 
 /* WARNING: Changing the 3px requires a change to the LargeTextArea class in Text.js */
-.wmeditor .dijitInputField, 
+.wmeditor .dijitInputField,
 .wmeditor textarea {
     padding: 0px 3px 0px 3px !important;
 }
@@ -818,25 +822,25 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 
             background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#666666));
 	background: -moz-linear-gradient(top,  #CCCCCC,  #666666);
-	-moz-border-radius: 8px; 
+	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
 }
 .dj_ff3 .TabCloseIcon,
 .dj_ff4 .TabCloseIcon {
     left: 4px;
-    top: -5px;   
+    top: -5px;
 }
 .TabCloseIcon.DebuggerCloseButton {
 float: none;
 }
 .wmdatetimedialog,
 .wmdatetimedialog .dialogfooter {
-	-moz-border-radius: 0px !important; 
-	-webkit-border-radius: 0px !important; 
-	border-radius: 0px !important; 
+	-moz-border-radius: 0px !important;
+	-webkit-border-radius: 0px !important;
+	border-radius: 0px !important;
 }
-.dijitCalendarContainer td, 
+.dijitCalendarContainer td,
 .dijitCalendarContainer th {
     width: 14.28%;
 }
@@ -905,7 +909,7 @@ body .AppToolTip {
 	text-align: center;
      -moz-box-shadow: 2px 2px 4px black; /* FF3.5+ */
      -webkit-box-shadow: 2px 2px 4px black; /* Saf3.0+, Chrome */
-     box-shadow: 2px 2px 4px black; /* Opera 10.5, IE 9.0 */	
+     box-shadow: 2px 2px 4px black; /* Opera 10.5, IE 9.0 */
 }
 
 
@@ -1010,7 +1014,7 @@ body .wmmobile button.wmtablayers-tab {
 }
 .mblArrowContainer {
     width: 20px;
-    height: 20px;    
+    height: 20px;
 }
 .mblArrowContainer .mblRightArrow {
     position: static;
@@ -1027,7 +1031,7 @@ body .wmmobile button.wmtablayers-tab {
     height: 30px;
     line-height:30px;
     font-size: 14px;
-} 
+}
 */
 .wmmobile .dijitCalendarYearContainer {
     display:none;
@@ -1036,10 +1040,10 @@ body .wmmobile button.wmtablayers-tab {
     font-size: 9px !important;
 }
 
-.tundra.wmmobile .dijitCheckBox .wmcheckbox_x, 
+.tundra.wmmobile .dijitCheckBox .wmcheckbox_x,
 .tundra.wmmobile .dijitCheckBoxIcon .wmcheckbox_x,
 .tundra.wmmobile .dijitRadio .wmcheckbox_x,
-.tundra .wmmobile .dijitCheckBox .wmcheckbox_x, 
+.tundra .wmmobile .dijitCheckBox .wmcheckbox_x,
 .tundra .wmmobile .dijitCheckBoxIcon .wmcheckbox_x,
 .tundra .wmmobile .dijitRadio .wmcheckbox_x {
     font-size: 30px;
@@ -1053,10 +1057,10 @@ body .wmmobile button.wmtablayers-tab {
    top: -2px;
 }
 
-.tundra.wmmobile .dijitCheckBox, 
+.tundra.wmmobile .dijitCheckBox,
 .tundra.wmmobile .dijitCheckBoxIcon,
 .tundra.wmmobile .dijitRadio,
-.tundra .wmmobile .dijitCheckBox, 
+.tundra .wmmobile .dijitCheckBox,
 .tundra .wmmobile .dijitCheckBoxIcon,
 .tundra .wmmobile .dijitRadio {
     background-image: none;
@@ -1072,21 +1076,21 @@ body .wmmobile button.wmtablayers-tab {
     -webkit-border-radius: 16px;
     border-radius: 16px;
 }
-.tundra.wmmobile .dijitCheckBoxChecked, 
+.tundra.wmmobile .dijitCheckBoxChecked,
 .tundra.wmmobile .dijitToggleButtonChecked .dijitCheckBoxIcon,
-.tundra .wmmobile .dijitCheckBoxChecked, 
+.tundra .wmmobile .dijitCheckBoxChecked,
 .tundra .wmmobile .dijitToggleButtonChecked .dijitCheckBoxIcon {
     color: black;
 }
 .tundra.wmmobile .dijitRadioChecked,
 .tundra .wmmobile .dijitRadioChecked {
-    background-color: black;    
+    background-color: black;
 }
-.tundra.wmmobile .Disabled .dijitCheckBox, 
-.tundra.wmmobile .Disabled .dijitCheckBoxIcon, 
+.tundra.wmmobile .Disabled .dijitCheckBox,
+.tundra.wmmobile .Disabled .dijitCheckBoxIcon,
 .tundra.wmmobile .Disabled .dijitRadio,
-.tundra .wmmobile .Disabled .dijitCheckBox, 
-.tundra .wmmobile .Disabled .dijitCheckBoxIcon, 
+.tundra .wmmobile .Disabled .dijitCheckBox,
+.tundra .wmmobile .Disabled .dijitCheckBoxIcon,
 .tundra .wmmobile .Disabled .dijitRadio {
     border-color: #aaa;
 }
@@ -1102,7 +1106,7 @@ height: 32px;
 line-height:32px;
 border-bottom: solid 1px #999;
 }
- 
+
 .wmmobile .wmlist-content {
     min-height: 32px;
 }
@@ -1153,7 +1157,7 @@ font-size: 14px;
 .wmmobile .wmtree-content {
     font-size: 18px;
 }
-.wmmobile .wmtree-leaf { 
+.wmmobile .wmtree-leaf {
     background: url(images/touch_tree_leaf.gif) no-repeat;
 }
 .dijitComboBox .dijitInputContainer, .dijitComboBox .dijitInputContainer input {
@@ -1172,9 +1176,9 @@ height: 100%;
 
 
          border-bottom-left-radius: 0px !important;
-         border-bottom-right-radius: 0px !important;        
+         border-bottom-right-radius: 0px !important;
          border-top-left-radius: 8px !important;
-         border-top-right-radius: 8px !important;        
+         border-top-right-radius: 8px !important;
 }
 #app_DateTimePopup_pmButton {
         -moz-border-radius-bottomleft: 8px !important;
@@ -1189,9 +1193,9 @@ height: 100%;
 
 
          border-bottom-left-radius: 8px !important;
-         border-bottom-right-radius: 8px !important;        
+         border-bottom-right-radius: 8px !important;
          border-top-left-radius: 0px !important;
-         border-top-right-radius: 0px !important;        
+         border-top-right-radius: 0px !important;
 }
 #app_DateTimePopup_ampm {
        -moz-border-radius: 8px !important;
@@ -1218,14 +1222,14 @@ background-repeat:no-repeat;
 .dijitSliderV {
 height: 100%;
 }
-html .wm_default .dijitTimePickerItem, 
+html .wm_default .dijitTimePickerItem,
 html .wm_default .dijitTimePickerMarker.dijitTimePickerItemHover,
 html .wm_default .dijitTimePickerItem.dijitTimePickerItemHover {
     font-size: 1em;
     background-image: none;
     border-top: 0px;
-    border-bottom:solid 1px #ccc; 
-} 
+    border-bottom:solid 1px #ccc;
+}
 html .tundra .dijitTimePickerTick .dijitTimePickerItemInner,
 html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemInner {
     font-size: 0.9em;
