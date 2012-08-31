@@ -189,7 +189,8 @@ wm.Object.extendSchema(wm.Layers, {
     moveLayerIndex: {method:1},
     clear: {method:1},
     setClientBorder: {method:1},
-    setClientBorderColor: {method:1}
+    setClientBorderColor: {method:1},
+    addPageContainerLayer: {method:1, returns: "wm.Layer"}
 });
 
 wm.Layers.extend({
