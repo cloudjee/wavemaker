@@ -1029,30 +1029,36 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                _this.rendering = false;
         }, 0)
     },
-    dojoRenderer: function (){
-        if (!this.dojoObj)
-            return;
+    dojoRenderer: function() {
+        if (!this.dojoObj) return;
         this.dojoObj.startup();
-            this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
+        this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
         if (this._isDesignLoaded) {
-        var self = this;
-        wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
-            self.renderBounds();
-        });
+            var self = this;
+            wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
+                self.renderBounds();
+            });
+        }
+        wm.onidle(this, "_postDojoRenderer");
+    },
+    _postDojoRenderer: function() {
+        var v = this.dojoObj.views.views[0];
+        if (v && v.scrollboxNode.scrollHeight == v.scrollboxNode.clientHeight && v._hasVScroll) {
+            this.dojoObj.prerender();
         }
     },
-    onRenderData:function(){},
-        _onShowParent: function() {
+    onRenderData: function() {},
+    _onShowParent: function() {
         if (this._renderDojoObjSkipped) {
             wm.onidle(this, "renderDojoObj");
         }
-        },
+    },
     setShowing: function(inShowing) {
-    var wasShowing = this.showing;
-    this.inherited(arguments);
-    if (!wasShowing && inShowing) {
-        this._onShowParent();
-    }
+        var wasShowing = this.showing;
+        this.inherited(arguments);
+        if (!wasShowing && inShowing) {
+            this._onShowParent();
+        }
     },
     connectDojoEvents: function(){
         //dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
