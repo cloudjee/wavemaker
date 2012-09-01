@@ -64,7 +64,7 @@ wm.Object.extendSchema(wm.Checkbox, {
 
 wm.Object.extendSchema(wm.RadioButton, {
     radioGroup: { type: "string", group: "editor", subgroup: "value", order: 50},
-    groupValue: { ignore: 1, bindSource: 1, type: "any",simpleBindProp: true},
+    groupValue: { writeonly:1, bindable: 1, type: "any",simpleBindProp: true},
     dataValue: {ignore: 1, bindable: 1, type: "any"} // use getDataValue()
 });
 
