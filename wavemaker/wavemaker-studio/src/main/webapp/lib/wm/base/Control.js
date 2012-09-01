@@ -471,7 +471,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         this.inherited(arguments);
 
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-        if (!isMobile || !this.enableTouchHeight) {
+        if (this.height && String(this.height).match(/\%/)) {
+            this.mobileHeight = this.desktopHeight = this.height;
+        } else if (!isMobile || !this.enableTouchHeight) {
             if (this.desktopHeight != null) {
                 this.height = this.desktopHeight;
             } else if (this.height) {
