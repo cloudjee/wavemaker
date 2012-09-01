@@ -50,12 +50,12 @@ wm.Checkbox.extend({
 });
 
 wm.Object.extendSchema(wm.Checkbox, {
-    editorType: {options: ["wm.Checkbox", "wm.RadioButton"]},
+    editorType: {options: ["Checkbox", "RadioButton"]},
     dataValue:    {readonly: 1, type: "boolean"}, // for binding only; such as to a form's dataSet or a service variable's data
     startChecked: { group: "editor", subgroup: "value", order: 50, type: "Boolean"},
     dataType:     { group: "editor", subgroup: "value", order: 55, options: ["string", "boolean", "number"]},
     displayValue: {writeonly: 1},
-    checkedValue: {group: "editor", subgroup: "value",  bindTarget: 1,order: 40, type: "any", doc: 1},    
+    checkedValue: {group: "editor", subgroup: "value",  bindTarget: 1,order: 40, type: "any", doc: 1},
     checked: {ignore: 1, bindSource: 1},
     required: {ignore: 1},
     getChecked: {method:1, returns: "Boolean"},
