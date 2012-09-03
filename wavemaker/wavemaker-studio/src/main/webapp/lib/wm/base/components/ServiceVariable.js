@@ -125,7 +125,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         }
         return args;
     },
-    
+
     /* Extra info that the debugger wants about this call */
     getDebugArgs: function() {
         return this.input.getData();
@@ -184,7 +184,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
        });
        return this.inherited(arguments, [t]);
    },
-    
+
     log: function(eventType, /* autoUpdate, autoStart, eventHandler */
        callingMethod, /* optional; indicates who really called this */
        backlogObj, /* optional; used to provide an old eventChain */
@@ -241,7 +241,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 id: app.debugDialog.newLogEvent({
                     eventType: "start",
                     sourceDescription: "Owner has loaded",
-                    resultDescription: "Because startUpdate is set, " + this.getRuntimeId() + ".update() was called",                    
+                    resultDescription: "Because startUpdate is set, " + this.getRuntimeId() + ".update() was called",
                     method: "update",
                     affectedId: this.getRuntimeId(),
                     firingId: this.owner.getRuntimeId()
@@ -314,9 +314,22 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
             if (this._debug && this._debug.lastUpdate) {
                 this._debug.duration = new Date().getTime() - this._debug.lastUpdate.getTime();
             }
+        } else if (eventType == "disabled" || "onCanUpdate") {
+            this.debugId.push({
+                eventType: eventType,
+                id: app.debugDialog.newLogEvent({
+                    eventType: eventType,
+                    sourceDescription: "Update was prevented by " + (eventType == "disabled" ? "disabled property" : "onCanUpdate() call"),
+                    resultDescription: "Service did not fire",
+                    method: "update",
+                    affectedId: this.getRuntimeId(),
+                    firingId: ""
+                })
+            });
+
         }
 
-        if (eventType != "serviceCall" && eventType != "serviceCallResponse" && this._debug) {
+        if (eventType != "serviceCall" && eventType != "serviceCallResponse" && this._debug || this._debug && !this._debug.eventId) {
             this._debug.eventId = this.debugId[this.debugId.length - 1].id;
         }
 
@@ -351,7 +364,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     doAutoUpdate: function() {
         if (this.canAutoUpdate()) {
             if (app.debugDialog && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");
-        
+
             this.inherited(arguments);
 
             if (app.debugDialog) this.endLog("autoUpdateOnStart");
@@ -420,6 +433,14 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         }
     },
 
+    /* Called when an update call is blocked by disabled or onCanUpdate */
+    blocked: function(inMessage) {
+        this.log(this.disabled ? "disabled" : "onCanUpdate");
+        this.onBlocked();
+        this.endLog(this.disabled ? "disabled" : "onCanUpdate");
+    },
+    onBlocked: function(inMessage) {},
+
     /* Adds logging to result method */
     result: function(inResult) {
         delete this._lastError;
@@ -427,7 +448,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
             this.log("serviceCallResponse");
             if (this._jsonRpcServiceDeferred && this._jsonRpcServiceDeferred.xhr) {
                 var text = this._jsonRpcServiceDeferred.xhr.responseText;
-                this._lastResponse = (text || "").length > 1000 ? text.substring(0,1000) + "..." : text; 
+                this._lastResponse = (text || "").length > 1000 ? text.substring(0,1000) + "..." : text;
             }
         }
         var result = this.inherited(arguments);
@@ -435,7 +456,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         return inResult;
     },
 
- 
+
 
     /* Adds logging to the error method */
     error: function(inError) {

@@ -55,7 +55,7 @@ dojo.declare("wm.ServiceCall", null, {
     */
     operation: "",
     _operationInfo: {},
-
+    disabled: false,
     inFlightBehavior: "executeLast",
     destroy: function() {
         delete this._inFlightBacklog;
@@ -236,17 +236,22 @@ dojo.declare("wm.ServiceCall", null, {
 
     /* Internal version of update method; please only call update() or updateInternal() */
     _update: function() {
-        if (this._requester && !this._isDesignLoaded) {
-            var d = this.addToBacklog();
-            return d;
-        }
         if (this.canUpdate()) {
+            if (this._requester && !this._isDesignLoaded) {
+                var d = this.addToBacklog();
+                return d;
+            }
             this.onBeforeUpdate(this.input);
             wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
             return this.request();
         } else {
+            var error =  this.disabled ?  this.getRuntimeId() + " tried to fire but its disabled property prevented it" : this.getRuntimeId() + ".canUpdate() returns false";
+
+            this.blocked(error);
+
+            /* Return a deferred because the caller is expecting it.  This does not play any real role in how ServiceVariables work */
             var d = new dojo.Deferred();
-            d.errback("ServiceCall.canUpdate returns false");
+            d.errback(error);
             return d;
         }
     },
@@ -260,7 +265,7 @@ dojo.declare("wm.ServiceCall", null, {
 
     /* ServiceCall can not fire if there isn't a service or operation */
     _getCanUpdate: function() {
-        return this._service && this.operation;
+        return this._service && this.operation && !this.disabled;
     },
 
     /* Get the args from the input component. */
@@ -302,6 +307,10 @@ dojo.declare("wm.ServiceCall", null, {
         }
         return this.processRequest(d);
     },
+
+
+    /* Called when an update call is blocked by disabled or onCanUpdate */
+    blocked: function(inMessage) {},
 
     /* The service is fired, take care of misc post-firing tasks like tieing the deferred to our result and error methods */
     processRequest: function(inDeferred) {

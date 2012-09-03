@@ -15,8 +15,7 @@
 dojo.provide("wm.base.components.ServiceCall_design");
 dojo.require("wm.base.components.ServiceCall");
 
-
-wm.Object.extendSchema(wm.ServiceCall, {    
+wm.Object.extendSchema(wm.ServiceCall, {
     setService: {method:1},
     setOperation: {method:1},
     update: {method:1},
