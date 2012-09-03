@@ -1147,75 +1147,9 @@
 		     }));
 		 }
 	     }
-	       /*
-	       dojo.xhrGet({
-		     url: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/",
-		     handleAs: "html",
-		     load: function(response,ioArgs) {
-			   alert("Loaded: " + response);
-		     },
-		     error: function(response,ioArgs) {
-			   console.log("HELP SYSTEM: Failed to load!");
-			   console.dir(ioArgs);
+	       return true;
+       },
 
-                     app.toastInfo("Testing " + className + "." + inPropName);
-                     studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
-                         if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
-                             window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {
-                                 studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
-                             }) + className + "_" + inPropName + "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
-                         }
-                     });
-                 }, i * 1300);
-             });
-         } else {
-             if (!inType) {
-                 bd.show();
-                 bd.page.setContent(altText);
-             } else {
-                 if (inType == studio.application.declaredClass) {
-                     inType = "wm.Application";
-                 } else if (inType == studio.project.pageName) {
-                     inType = "wm.Page";
-                 }
-                 var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
-                     studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1"),
-                     className: inType.replace(/^.*\./, "") + "_" + inPropName
-                 });
-
-                 // clear previous content before showing.
-                 bd.page.setContent("");
-                 this._loadingContent = true;
-                 bd.show();
-                 studio.loadHelp(inType, inPropName, function(inResponse) {
-                     wm.cancelJob("PropDoc");
-                     this._loadingContent = false;
-                     if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
-                     bd.page.setContent(inResponse);
-                 });
-
-                 //  And in case of proxy problems, show the link so the user can open it themselves
-                 wm.job("PropDoc", 1700, dojo.hitch(this, function() {
-                     if (this._loadingContent) bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page");
-                 }));
-             }
-         }
-         /*
-           dojo.xhrGet({
-             url: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/",
-             handleAs: "html",
-             load: function(response,ioArgs) {
-               alert("Loaded: " + response);
-             },
-             error: function(response,ioArgs) {
-               console.log("HELP SYSTEM: Failed to load!");
-               console.dir(ioArgs);
-
- }
-           });
-           */
-         return true;
-     },
 
 	 getHelpDialog: function() {
 		 if (!studio.helpPopup) {

@@ -19,12 +19,12 @@ dojo.provide("wm.studio.app.binding");
 //===========================================================================
 
 wm.widgetIsBindSource = function(inWidget) {
-    inWidget._isBindSource = inWidget._isBindSource !== undefined ? inWidget._isBindSource : !wm.isEmpty(inWidget.listDataProperties("bindSource"))
+    inWidget._isBindSource = inWidget._isBindSource !== undefined ? inWidget._isBindSource : !wm.isEmpty(inWidget.listDataProperties("bindSource"));
     return inWidget._isBindSource;
 }
 
 wm.widgetIsBindTarget = function(inWidget) {
-    inWidget._isBindTarget = inWidget._isBindTarget !== undefined ? inWidget._isBindTarget : !wm.isEmpty(inWidget.listDataProperties("bindTarget"))
+    inWidget._isBindTarget = inWidget._isBindTarget !== undefined ? inWidget._isBindTarget : !wm.isEmpty(inWidget.listDataProperties("bindTarget"));
     return inWidget._isBindTarget;
 }
 
@@ -273,7 +273,7 @@ wm.convertForSimpleBind = function(inNodeProps, optionalSource) {
         inNodeProps._hasChildren = !wm.isEmpty(schema);
         return true;
     }
-}
+};
 
 wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetProps) {
     if (!inTargetType) return 0;
@@ -1118,7 +1118,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                 return;
             }
         }
-      }
+
 
 
       var tp = inTargetProps;
