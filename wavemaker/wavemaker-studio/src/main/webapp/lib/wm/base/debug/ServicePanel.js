@@ -34,7 +34,7 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
     postInit: function() {
 	this.inherited(arguments);
 
-	wm.conditionalRequire("lib.github.beautify", true); 
+	wm.conditionalRequire("lib.github.beautify", true);
 
 	this.connect(wm.inflight, "add", this, "newJsonEventStart");
 	this.connect(wm.inflight, "remove", this, "newJsonEventEnd");
@@ -77,11 +77,15 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 					  }],
 	    splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
 	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
-	},this);	
+	},this);
     },
     XClick: function() {
         this.serviceGrid.deselectAll();
-        this.showDataTabs(this.serviceGrid);
+        dojo.disconnect(this._requestConnect);
+        dojo.disconnect(this._resultConnect );
+        delete this._requestConnect;
+        delete this._resultConnect;
+        this.showDataTabs(this.serviceGrid  );
     },
     showDataCell: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {
         var data = rowObj.data;
@@ -110,10 +114,10 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
             this.inspector.hide();
             this.splitter.hide();
         }
-       
+
     },
     inspect: function(inSender) {
-                    this.selectedGridItem = inSender.selectedItem;
+            this.selectedGridItem = inSender.selectedItem;
             var eventId = inSender.selectedItem.getValue("eventId");
             if (eventId) {
                 var eventObj = wm.debug.EventsPanel.prototype.findEventById(eventId);
@@ -126,16 +130,16 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 
             if (this._requestConnect) {
                 dojo.disconnect(this._requestConnect);
-            }            
+            }
             if (this._resultConnect) {
                 dojo.disconnect(this._resultConnect);
-            }      
+            }
 
-            this._requestConnect = dojo.connect(this.selectedItem, "request", this, function() {   
+            this._requestConnect = dojo.connect(this.selectedItem, "request", this, function() {
                 this.serviceGrid.selectByQuery({id: this.selectedItem.getRuntimeId()});
                 this.inspect(this.serviceGrid);
             });
-            this._resultConnect = dojo.connect(this.selectedItem, "onResult", this, function() {   
+            this._resultConnect = dojo.connect(this.selectedItem, "onResult", this, function() {
                 this.serviceGrid.selectByQuery({id: this.selectedItem.getRuntimeId()});
                 this.inspect(this.serviceGrid);
             });
@@ -150,7 +154,7 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
               c.update();
 	  })();
       } catch(e) {
-      } 
+      }
   },
     */
     getLoadingIcon: function() {
