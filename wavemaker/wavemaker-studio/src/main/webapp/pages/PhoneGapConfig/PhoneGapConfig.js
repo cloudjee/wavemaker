@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.declare("PhoneGapConfig", wm.Page, {
     i18n:true,
@@ -59,11 +59,13 @@ dojo.declare("PhoneGapConfig", wm.Page, {
     d.addCallback(dojo.hitch(this, function(inHost) {
         var localhost = "http://" + inHost + ":" + location.port + "/" + studio.project.projectName;
         if (dojo.indexOf(this.jsonData.xhrpaths, localhost) == -1) wm.Array.insertElementAt(this.jsonData.xhrpaths, localhost,0);
-        
+
         var cfHost = "http://" + studio.project.projectName + ".cloudfoundry.com";
         if (dojo.indexOf(this.jsonData.xhrpaths, cfHost) == -1) this.jsonData.xhrpaths.push(cfHost);
 
-        this.xhrPath.setOptions(dojo.clone(this.jsonData.xhrpaths));
+        var options = dojo.clone(this.jsonData.xhrpaths);
+        if (options) options = dojo.filter(options, function(item) { return Boolean(item);}); // remove empty items
+        this.xhrPath.setOptions(options);
 
         this.jsonData.xhrPath = this.jsonData.xhrPath || localhost;
 
@@ -90,7 +92,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
     this.jsonData.otherIconListVar = [];
 
     var iconList = this.iosIconListVar.getData();
-    
+
     for (var i = 0; i < iconList.length; i++) {
         if (iconList[i].src) {
             images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
@@ -98,7 +100,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         this.jsonData.iosIconListVar.push(iconList[i]);
     }
      iconList = this.androidIconListVar.getData();
-    
+
     for (i = 0; i < iconList.length; i++) {
         if (iconList[i].src) {
             images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
@@ -106,7 +108,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         this.jsonData.androidIconListVar.push(iconList[i]);
     }
     iconList = this.otherIconListVar.getData();
-    
+
     for (i = 0; i < iconList.length; i++) {
         if (iconList[i].src) {
             images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
@@ -234,7 +236,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         var row = this.iosIconGrid.getSelectedIndex();
         if (row === -1) return;
         this.iosIconGrid.selectedItem.beginUpdate();
-        
+
 
         this.iosIconListVar.beginUpdate();
         this.iosIconListVar.getItem(row).setValue("width", this.iosWidthEditor.getDataValue());
@@ -249,7 +251,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         var row = this.androidIconGrid.getSelectedIndex();
         if (row === -1) return;
         this.androidIconGrid.selectedItem.beginUpdate();
-        
+
 
         this.androidIconListVar.beginUpdate();
         this.androidIconListVar.getItem(row).setValue("src", this.androidSrcEditor.getDataValue());
@@ -262,7 +264,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         var row = this.otherIconGrid.getSelectedIndex();
         if (row === -1) return;
         this.otherIconGrid.selectedItem.beginUpdate();
-        
+
 
         this.otherIconListVar.beginUpdate();
         this.otherIconListVar.getItem(row).setValue("src", this.otherSrcEditor.getDataValue());
