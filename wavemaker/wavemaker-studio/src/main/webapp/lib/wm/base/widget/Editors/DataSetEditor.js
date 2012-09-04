@@ -210,7 +210,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
         if (!this.options) return data;
         var opts = dojo.isArray(this.options) ? this.options :  this.options.split(',');
         for (var i=0, l=opts.length, d; i<l; i++) {
-            d = dojo.string.trim(opts[i]);
+            d = dojo.string.trim(String(opts[i]));
             data[i] = {name: d, dataValue: d };
         }
         return data;
@@ -420,7 +420,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     getEditorValue: function() {
         if (!this.selectedItem) return null;
         if (this._dataValueValid) return this.dataValue;
-        if (this.dataSet.getCount() == 0) return this.dataValue;
+        if (!this.dataSet || this.dataSet.getCount() == 0) return this.dataValue;
 
         var result = [];
         if (this.dataField) {
