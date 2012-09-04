@@ -26,7 +26,7 @@ dojo.declare("wm.Application", wm.Component, {
     touchToClickDelay: 500, // ms user must hold a touch for it to be treated as a click
     touchToRightClickDelay: 1500, // ms user must hold a touch for it to be treated as a right click
     eventDelay: wm.isMobile ? 100 : 0, // 100ms delay during which a user selection is highlighted and before the event is fired
-    manageURL: true,
+    manageURL: false,
     manageHistory: true,
     i18n: false,
     main: "Main",
@@ -796,34 +796,33 @@ dojo.declare("wm.Application", wm.Component, {
     loadPage: function(inName) {
         var firstPage = !Boolean(this.pageContainer.page);
         if (firstPage) {
-        var hash = window.location.hash;
-        if (hash.length > 1) {
-            try {
-            this.locationState = dojo.fromJson(hash.substring(1));
-            } catch(e){}
-        }
-        this._pageName = this.locationState && this.locationState.pageName ? this.locationState.pageName : inName;
+            var hash = window.location.hash;
+            if (hash.length > 1) {
+                try {
+                    this.locationState = dojo.fromJson(hash.substring(1));
+                } catch (e) {}
+            }
+            if (this.manageURL) {
+                this._pageName = this.locationState && this.locationState.pageName ? this.locationState.pageName : inName;
+            } else {
+                this._pageName = inName;
+            }
         } else {
-        this._pageName = inName;
+            this._pageName = inName;
         }
 
         //this._pageLoader.unloadSupport();
-        try
-        {
-            this.pageContainer.setPageName(this._pageName);//_pageLoader.loadPage(inName, inName.toLowerCase());
-        }
-        catch (e)
-        {
+        try {
+            this.pageContainer.setPageName(this._pageName); //_pageLoader.loadPage(inName, inName.toLowerCase());
+        } catch (e) {
             // do nothing
-          if (djConfig.isDebug)
-            console.error("loadPage error: " + e);
+            if (djConfig.isDebug) console.error("loadPage error: " + e);
         }
     },
-        // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
-        forceReloadPage: function() {
-            this.loadPage(this._pageName);
-        },
-    onPageChanged: function(inNewPage, inPreviousPage) {
+    // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
+    forceReloadPage: function() {
+        this.loadPage(this._pageName);
+    },    onPageChanged: function(inNewPage, inPreviousPage) {
     },
     onSessionExpiration: function() {
 
@@ -1329,10 +1328,12 @@ dojo.declare("wm.Application", wm.Component, {
     this._bottomDock.setShowing(this._bottomDock.c$.length > 1);
     },
 
-    addHistory: function(state) {
+    addHistory: function(state, noBack) {
     if (this.history && !this._handlingBack) {
         try {
-        this.history.push({id: state.id, options: state.options});
+            if (!noBack)
+                this.history.push({id: state.id, options: state.options});
+
         var currentState = {};
         this._handlingBack = true;
         this._generateStateUrl(currentState);

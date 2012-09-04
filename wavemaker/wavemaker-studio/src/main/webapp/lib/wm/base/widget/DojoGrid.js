@@ -336,19 +336,22 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }
 
         // values of the selectedItem must be updated, but do NOT call a selectionChange event, as its the same selected item, just different place the data is stored
-        var rowIdx = this.getSelectedIndex();
-        if (rowIdx != inRowIndex) {
-            this.setSelectedRow(inRowIndex, true);
-        } else {
-            this.updateSelectedItem(rowIdx);
-        }
+        if (this.selectionMode != "none") {
+            var rowIdx = this.getSelectedIndex();
+            if (rowIdx != inRowIndex) {
+                this.setSelectedRow(inRowIndex, true);
+            } else {
+                this.updateSelectedItem(rowIdx);
+            }
 
-        var allowLazyLoad = this.selectedItem._allowLazyLoad;
-        this.selectedItem._allowLazyLoad = false;
-        var oldValue = this.selectedItem.getValue(inFieldName);
-        this.selectedItem._allowLazyLoad = allowLazyLoad;
-        if (oldValue === inValue) return;
-        this.selectedItem.setValue(inFieldName, inValue);
+
+            var allowLazyLoad = this.selectedItem._allowLazyLoad;
+            this.selectedItem._allowLazyLoad = false;
+            var oldValue = this.selectedItem.getValue(inFieldName);
+            this.selectedItem._allowLazyLoad = allowLazyLoad;
+            if (oldValue === inValue) return;
+            this.selectedItem.setValue(inFieldName, inValue);
+        }
 
         // A bug in dojox.grid editting causes it to set "user.name" but read from "user: {name: currentname}" so we copy in the data to compenate
         if (inFieldName.indexOf(".") != -1) {
@@ -780,7 +783,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             var editCell = null;
             var newIndex, item;
             for (var i = 0; i < this.columns.length; i++) {
-                if (this.columns[i].fieldType) {
+                if (this.columns[i].fieldType && this.columns[i].fieldType != "dojox.grid.cells.Bool") {
                     editCell = this.columns[i];
                     break;
                 }
@@ -1029,30 +1032,36 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                _this.rendering = false;
         }, 0)
     },
-    dojoRenderer: function (){
-        if (!this.dojoObj)
-            return;
+    dojoRenderer: function() {
+        if (!this.dojoObj) return;
         this.dojoObj.startup();
-            this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
+        this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
         if (this._isDesignLoaded) {
-        var self = this;
-        wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
-            self.renderBounds();
-        });
+            var self = this;
+            wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
+                self.renderBounds();
+            });
+        }
+        wm.onidle(this, "_postDojoRenderer");
+    },
+    _postDojoRenderer: function() {
+        var v = this.dojoObj.views.views[0];
+        if (v && v.scrollboxNode.scrollHeight == v.scrollboxNode.clientHeight && v._hasVScroll) {
+            this.dojoObj.prerender();
         }
     },
-    onRenderData:function(){},
-        _onShowParent: function() {
+    onRenderData: function() {},
+    _onShowParent: function() {
         if (this._renderDojoObjSkipped) {
             wm.onidle(this, "renderDojoObj");
         }
-        },
+    },
     setShowing: function(inShowing) {
-    var wasShowing = this.showing;
-    this.inherited(arguments);
-    if (!wasShowing && inShowing) {
-        this._onShowParent();
-    }
+        var wasShowing = this.showing;
+        this.inherited(arguments);
+        if (!wasShowing && inShowing) {
+            this._onShowParent();
+        }
     },
     connectDojoEvents: function(){
         //dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');

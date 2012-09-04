@@ -29,6 +29,7 @@ wm.Object.extendSchema(wm.Number, {
 
     /* Editor group; display subgroup */
     places: {group: "editor", subgroup: "display", order: 2, type: "number"},
+    applyPlacesWhileTyping: {group: "editor", subgroup: "display", order: 3, type: "boolean"},
 
     /* Editor group; validation subgroup */
     minimum:  { group: "editor", subgroup: "validation", order: 3, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "unset"}},
@@ -87,6 +88,6 @@ wm.Object.extendSchema(wm.Slider, {
 
 wm.Object.extendSchema(wm.RangeSlider, {
     dataValue: {ignore: 1},
-    topValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"}, 
+    topValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"},
     bottomValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"}
  });

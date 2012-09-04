@@ -39,15 +39,6 @@ public class SpringService {
     private SpringService() {
     }
 
-    // TODO: API - must be uncommented and converted
-    /*
-     * public static DeprecatedServiceDefinition initialize(String cfg) {
-     * 
-     * return initialize(new ClassPathResource(cfg));
-     * 
-     * }
-     */
-
     public static DeprecatedServiceDefinition initialize(File f) {
 
         return getDataServiceDefinition(initAppCtx(f));
@@ -58,15 +49,6 @@ public class SpringService {
         return initQueryRunner(initAppCtx(cfg));
 
     }
-
-    // TODO: API - must be uncommented and converted
-    /*
-     * public static QueryRunner initQueryRunner(String cfg) {
-     * 
-     * Resource r = new ClassPathResource(cfg);
-     * 
-     * return initQueryRunner(initAppCtx(r)); }
-     */
 
     private static QueryRunner initQueryRunner(GenericApplicationContext ctx) {
 

@@ -125,7 +125,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         }
         return args;
     },
-    
+
     /* Extra info that the debugger wants about this call */
     getDebugArgs: function() {
         return this.input.getData();
@@ -184,7 +184,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
        });
        return this.inherited(arguments, [t]);
    },
-    
+
     log: function(eventType, /* autoUpdate, autoStart, eventHandler */
        callingMethod, /* optional; indicates who really called this */
        backlogObj, /* optional; used to provide an old eventChain */
@@ -241,7 +241,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
                 id: app.debugDialog.newLogEvent({
                     eventType: "start",
                     sourceDescription: "Owner has loaded",
-                    resultDescription: "Because startUpdate is set, " + this.getRuntimeId() + ".update() was called",                    
+                    resultDescription: "Because startUpdate is set, " + this.getRuntimeId() + ".update() was called",
                     method: "update",
                     affectedId: this.getRuntimeId(),
                     firingId: this.owner.getRuntimeId()
@@ -316,8 +316,8 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
             }
         }
 
-        if (eventType != "serviceCall" && eventType != "serviceCallResponse" && this._debug) {
-            this._debug.eventId = this.debugId[this.debugId.length - 1].id;
+        if (eventType != "serviceCall" && eventType != "serviceCallResponse" && this._debug || this._debug && !this._debug.eventId) {
+                this._debug.eventId = this.debugId[this.debugId.length - 1].id;
         }
 
     },
@@ -351,7 +351,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     doAutoUpdate: function() {
         if (this.canAutoUpdate()) {
             if (app.debugDialog && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");
-        
+
             this.inherited(arguments);
 
             if (app.debugDialog) this.endLog("autoUpdateOnStart");
@@ -427,7 +427,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
             this.log("serviceCallResponse");
             if (this._jsonRpcServiceDeferred && this._jsonRpcServiceDeferred.xhr) {
                 var text = this._jsonRpcServiceDeferred.xhr.responseText;
-                this._lastResponse = (text || "").length > 1000 ? text.substring(0,1000) + "..." : text; 
+                this._lastResponse = (text || "").length > 1000 ? text.substring(0,1000) + "..." : text;
             }
         }
         var result = this.inherited(arguments);
@@ -435,7 +435,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         return inResult;
     },
 
- 
+
 
     /* Adds logging to the error method */
     error: function(inError) {

@@ -275,38 +275,46 @@ dojo.declare("wm.Page", wm.Component, {
 		}
 		return this.inherited(arguments);
 	},
+	warnDroppedWidgets: function(inName, deviceType, inChildren, parentDropped) {
+      	if (parentDropped) {
+      		console.warn(inName + " was not loaded because its parent was not loaded");
+      	} else {
+      		console.warn(inName + " was not loaded because its deviceType property is " + deviceType + " and app is running as " + wm.device);
+      	}
+      	if (inChildren) {
+      		wm.forEachProperty(inChildren, dojo.hitch(this, function(w, inName) {
+      			if (inName != "binding") {
+      				this.warnDroppedWidgets(inName, deviceType, w[3], true);
+      			}
+      		}));
+      	}
+    },
 	loadComponent: function(inName, inParent, inType, inProps, inEvents, inChildren, isSecond) {
-	    if (!this._isDesignLoaded && inProps.deviceType && wm.device && dojo.indexOf(inProps.deviceType, wm.device) == -1)
-		return;
-
+		if (!this._isDesignLoaded && inProps.deviceType && wm.device && dojo.indexOf(inProps.deviceType, wm.device) == -1) {
+			if (djConfig.isDebug) this.warnDroppedWidgets(inName, inProps.deviceType.join(","), inChildren);
+			return;
+		}
 		// Some code for debugging performance; normally skipped
 		if (wm.debugPerformance) {
 			if (inType == "wm.Layout") {
-				if (dojo.isFF)
-					console.groupCollapsed("LOAD COMPONENT " + inType + ": " + inName);
-				else
-					console.group("LOAD COMPONENT " + inType + ": " + inName);
+				if (dojo.isFF) console.groupCollapsed("LOAD COMPONENT " + inType + ": " + inName);
+				else console.group("LOAD COMPONENT " + inType + ": " + inName);
 			}
 
-		    this.startTimerWithName("LoadComponent", inType);
-		    this.startTimerWithName("LoadPage", inType);
+			this.startTimerWithName("LoadComponent", inType);
+			this.startTimerWithName("LoadPage", inType);
 		}
 
 		var ctor = wm.getObject(inType);
-		if (!ctor)
-		{
-			try
-			{
+		if (!ctor) {
+			try {
 				wm.getComponentStructure(inType);
 				ctor = dojo.getObject(inType);
-			}
-			catch (e)
-			{
+			} catch (e) {
 				console.info('Error : Page.js trying to get component dynamically-------------> ' + e);
 			}
 
-			if (!ctor)
-			{
+			if (!ctor) {
 				console.debug('Component type "' + inType + '" is not available.');
 				ctor = wm.Box;
 			}
@@ -317,7 +325,7 @@ dojo.declare("wm.Page", wm.Component, {
 		// yuk
 		var props = {};
 		isWidget = (ctor.prototype instanceof wm.Control || ctor.prototype instanceof dijit._Widget);
-		if (isWidget){
+		if (isWidget) {
 			var parentNode = (inParent ? inParent.containerNode || inParent.domNode : this.domNode);
 			props = {
 				owner: this,
@@ -327,36 +335,33 @@ dojo.declare("wm.Page", wm.Component, {
 			};
 		}
 
-        // props.name should overwrite getUniqueName(inName), which should overwrite inProps.
-	    if (!props.owner) {
-		if (inParent && inParent instanceof wm.Layout)
-                    props.owner = inParent.owner;
-		else if (inParent)
-                    props.owner = inParent;
-		else
-                    props.owner = this;
-	    }
-        props = dojo.mixin({}, inProps, {
+		// props.name should overwrite getUniqueName(inName), which should overwrite inProps.
+		if (!props.owner) {
+			if (inParent && inParent instanceof wm.Layout) props.owner = inParent.owner;
+			else if (inParent) props.owner = inParent;
+			else props.owner = this;
+		}
+		props = dojo.mixin({}, inProps, {
 			name: props.owner.getUniqueName(inName),
 			_designer: this._designer,
 			_loading: true
 		}, props);
 
 
-		if (this.isRelativePositioned && inType == "wm.Layout"){
+		if (this.isRelativePositioned && inType == "wm.Layout") {
 			props.isRelativePositioned = true;
 		}
 
-	    // All custom methods should be page methods; page methods have not been evaled, so
-	    // can not be defined nor invoked at design time
-	    if (!this.isDesignLoaded()) {
-		for (var p in props) {
-		    if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p])) {
-			var owner = props.owner;
-			props[p] = dojo.hitch(owner, owner[props[p]]);
-		    }
+		// All custom methods should be page methods; page methods have not been evaled, so
+		// can not be defined nor invoked at design time
+		if (!this.isDesignLoaded()) {
+			for (var p in props) {
+				if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p])) {
+					var owner = props.owner;
+					props[p] = dojo.hitch(owner, owner[props[p]]);
+				}
+			}
 		}
-	    }
 
 
 
@@ -366,32 +371,29 @@ dojo.declare("wm.Page", wm.Component, {
 
 		// FIXME: this initialization should be in Component
 		// to remove the distinction between 'loading' and 'creating'
-			if (!inParent && isWidget) {
-				c.moveable = false;
-				this.root = c;
+		if (!inParent && isWidget) {
+			c.moveable = false;
+			this.root = c;
+		}
+
+		this.makeEvents(inEvents, c);
+		//if (!(c instanceof wm.Layer) || !c.deferLoading)
+		if (inChildren) this.loadComponents(inChildren, c);
+
+		c.loaded(); // Component.loaded calls postInit
+		var timeToLoad = this.stopTimerWithName("LoadComponent", inType);
+		if (wm.debugPerformance) {
+			if (inType == "wm.Layout") {
+				console.log(inType + ": " + inName + " TOOK " + timeToLoad + " ms");
+				console.groupEnd();
+				this.printPagePerformanceData();
+				console.log(inType + ": " + inName + " TOOK " + timeToLoad + " ms");
 			}
-
-			this.makeEvents(inEvents, c);
-			//if (!(c instanceof wm.Layer) || !c.deferLoading)
-
-			if (inChildren)
-				this.loadComponents(inChildren, c);
-
-			c.loaded(); // Component.loaded calls postInit
-
-	                var timeToLoad = this.stopTimerWithName("LoadComponent", inType);
-	        if (wm.debugPerformance) {
-		  if (inType == "wm.Layout") {
-		    console.log(inType + ": " + inName + " TOOK "+ timeToLoad + " ms");
-		    console.groupEnd();
-		    this.printPagePerformanceData();
-		    console.log(inType + ": " + inName + " TOOK "+ timeToLoad + " ms");
-		  }
- 		}
+		}
 
 		return c;
 	},
-	printPagePerformanceData: function() {
+		printPagePerformanceData: function() {
 	  var totalsByMethod = {};
 
 			    for (var componentType in wm.Component.timingByComponent) {
@@ -534,132 +536,128 @@ wm.Page.extend({
        4. Handle subcomponents
        */
     installDesignDictionary: function(inDictionary) {
-	var lang = studio.languageSelect.getDisplayValue();
-	var isDefaultLang = lang == "" || lang == "default"
+    	var lang = studio.languageSelect.getDisplayValue();
+    	var isDefaultLang = lang == "" || lang == "default"
 
-	this._editLanguage = lang
+    	this._editLanguage = lang
 
-	/* 1. Restore the default language so we're editting a fresh copy in the new language
-	 * 2. Create a new set of cache values to store the default language in
-	 */
-	    var compList = wm.listComponents([this], wm.Component, false);
-	    for (var i = 0; i < compList.length; i++) {
-		var c = compList[i];
-		var props = c.listWriteableProperties();
-		for (var prop in props) {
-		    var value = c.getProp(prop);
-		    // only do this for non-objects or for objects that aren't dojo objects nor domNodes
-		    // typeof null should NOT be "object" :-(
-		    if (value === null || typeof value != "object" || value.declaredClass === undefined && !wm.isNode(value)) {
-		    //if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
-			/* Restore the default values any time we change languages and clear the cache */
-			if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {
-			    c.setProp(prop, c["_original_i18n_" + prop]);
-			    value = c["_original_i18n_" + prop];
-			    delete c["_original_i18n_" + prop];
-			}
-			if (!isDefaultLang) {
-			    c["_original_i18n_" + prop] = (typeof value == "object") ? dojo.clone(value) : value;
-			}
-		    }
-		}
-	    }
+    	/* 1. Restore the default language so we're editting a fresh copy in the new language
+    	 * 2. Create a new set of cache values to store the default language in
+    	 */
+    	var compList = wm.listComponents([this], wm.Component, false);
+    	for (var i = 0; i < compList.length; i++) {
+    		var c = compList[i];
+    		var props = c.listWriteableProperties();
+    		for (var prop in props) {
+    			var value = c.getProp(prop);
+    			// only do this for non-objects or for objects that aren't dojo objects nor domNodes
+    			// typeof null should NOT be "object" :-(
+    			if (value === null || typeof value != "object" || value.declaredClass === undefined && !wm.isNode(value)) {
+    				//if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
+    				/* Restore the default values any time we change languages and clear the cache */
+    				if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {
+    					c.setProp(prop, c["_original_i18n_" + prop]);
+    					value = c["_original_i18n_" + prop];
+    					delete c["_original_i18n_" + prop];
+    				}
+    				if (!isDefaultLang) {
+    					c["_original_i18n_" + prop] = (typeof value == "object") ? dojo.clone(value) : value;
+    				}
+    			}
+    		}
+    	}
 
 
-	this._designDictionary = inDictionary;
-	console.log(inDictionary);
-	for (var component in inDictionary) {
-	    /* TODO: component may be a subcomponent, and we may have to parse out the "." */
-	    var c = this[component];
-	    if (c instanceof wm.Component) {
-		var compDesc = inDictionary[component];
-		for (var prop in compDesc) {
-		    c.setProp(prop, compDesc[prop]);
-		}
-	    }
-	}
+    	this._designDictionary = inDictionary;
+    	console.log(inDictionary);
+    	for (var component in inDictionary) { /* TODO: component may be a subcomponent, and we may have to parse out the "." */
+    		var c = this[component];
+    		if (c instanceof wm.Component) {
+    			var compDesc = inDictionary[component];
+    			for (var prop in compDesc) {
+    				c.setProp(prop, compDesc[prop]);
+    			}
+    		}
+    	}
     },
     getLanguageWidgets: function() {
-	var result = {};
-	var compList = wm.listComponents([this], wm.Component, false);
-	for (var i = 0; i < compList.length; i++) {
-	    var c = compList[i];
-	    var props = c.listWriteableProperties();
-	    for (var prop in props) {
-		if (c.hasLocalizedProp(prop)) {
-		    if (!result[c.name])
-			result[c.name] = {};
-		    result[c.name][prop] = c.getProp(prop);
-		}
-	    }
-	}
-	return result;
+    	var result = {};
+    	var compList = wm.listComponents([this], wm.Component, false);
+    	for (var i = 0; i < compList.length; i++) {
+    		var c = compList[i];
+    		var props = c.listWriteableProperties();
+    		for (var prop in props) {
+    			if (c.hasLocalizedProp(prop)) {
+    				if (!result[c.name]) result[c.name] = {};
+    				result[c.name][prop] = c.getProp(prop);
+    			}
+    		}
+    	}
+    	return result;
     },
     setPageProperty: function(inPropName, inValue) {
-	if (typeof inValue == "string")
-	    inValue = '"' + inValue + '"';
-	var text = studio.getScript();
-	var regex = new RegExp('"' + inPropName + '": .*,' );
-	if (text.match(regex)) {
-	    text = text.replace(regex, '"' + inPropName + '": ' + inValue + ",")
-	} else {
-	    text = text.replace(/\{(.*?)\n/, '{$1\n\t"' + inPropName + '": ' + inValue + ',\n');
-	}
-	studio.setScript(text);
+    	if (typeof inValue == "string") inValue = '"' + inValue + '"';
+    	var text = studio.getScript();
+    	var regex = new RegExp('"' + inPropName + '": .*,');
+    	if (text.match(regex)) {
+    		text = text.replace(regex, '"' + inPropName + '": ' + inValue + ",")
+    	} else {
+    		text = text.replace(/\{(.*?)\n/, '{$1\n\t"' + inPropName + '": ' + inValue + ',\n');
+    	}
+    	studio.setScript(text);
 
     },
     getPageProperty: function(inPropName) {
-	if (typeof inValue == "string")
-	    inValue = '"' + inValue + '"';
-	var text = studio.getScript();
-	var regex = new RegExp('"' + inPropName + '": (.*),' );
-	var matches = text.match(regex);
-	if (matches) {
-	    var result = matches[1];
-	    result = result.replace(/^\"/,"").replace(/\"$/,"");
-	    if (typeof this[inPropName] == "boolean") {
-		result = (result == "true");
-	    } else if (typeof this[inPropName] == "number") {
-		result = parseInt(result);
-	    }
-	    return result;
-	}
+    	if (typeof inValue == "string") inValue = '"' + inValue + '"';
+    	var text = studio.getScript();
+    	var regex = new RegExp('"' + inPropName + '": (.*),');
+    	var matches = text.match(regex);
+    	if (matches) {
+    		var result = matches[1];
+    		result = result.replace(/^\"/, "").replace(/\"$/, "");
+    		if (typeof this[inPropName] == "boolean") {
+    			result = (result == "true");
+    		} else if (typeof this[inPropName] == "number") {
+    			result = parseInt(result);
+    		}
+    		return result;
+    	}
     },
     setI18n: function(inValue) {
-	this.i18n = Boolean(inValue);
-	if (this._isDesignLoaded) {
-	    this.setPageProperty("i18n", this.i18n);
-	}
+    	this.i18n = Boolean(inValue);
+    	if (this._isDesignLoaded) {
+    		this.setPageProperty("i18n", this.i18n);
+    	}
     },
     getI18n: function() {
-	return this.getPageProperty("i18n");
+    	return this.getPageProperty("i18n");
     },
     setPreferredDevice: function(inType) {
-        this.preferredDevice = inType;
-        if (this._isDesignLoaded) {
-            this.setPageProperty("preferredDevice", this.preferredDevice);
-        }
+    	this.preferredDevice = inType;
+    	if (this._isDesignLoaded) {
+    		this.setPageProperty("preferredDevice", this.preferredDevice);
+    	}
     },
     getPreferredDevice: function() {
-    return this.getPageProperty("preferredDevice");
+    	return this.getPageProperty("preferredDevice");
     },
     setValidateVisibleOnly: function(inValue) {
-	this.validateVisibleOnly = Boolean(inValue);
-	if (this._isDesignLoaded) {
-	    this.setPageProperty("validateVisibleOnly", this.validateVisibleOnly);
-	}
+    	this.validateVisibleOnly = Boolean(inValue);
+    	if (this._isDesignLoaded) {
+    		this.setPageProperty("validateVisibleOnly", this.validateVisibleOnly);
+    	}
     },
     getValidateVisibleOnly: function() {
-	return this.getPageProperty("validateVisibleOnly");
+    	return this.getPageProperty("validateVisibleOnly");
     },
     set_enableMobileFolding: function(inFolding) {
-	this.enableMobileFolding = Boolean(inFolding);
-	if (this._isDesignLoaded) {
-	    this.setPageProperty("enableMobileFolding", this.enableMobileFolding);
-	    if (studio.currentDeviceType == "phone") {
-		studio.mobileFoldingToggleButton.setDisabled(!inFolding);
-	    }
-	}
+    	this.enableMobileFolding = Boolean(inFolding);
+    	if (this._isDesignLoaded) {
+    		this.setPageProperty("enableMobileFolding", this.enableMobileFolding);
+    		if (studio.currentDeviceType == "phone") {
+    			studio.mobileFoldingToggleButton.setDisabled(!inFolding);
+    		}
+    	}
     },
     onMobileFolding: function() {},
     onMobileUnfolding: function() {}
