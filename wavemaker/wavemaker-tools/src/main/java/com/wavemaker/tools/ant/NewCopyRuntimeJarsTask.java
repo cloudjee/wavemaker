@@ -184,7 +184,6 @@ public class NewCopyRuntimeJarsTask extends Task {
             file.copyToIfNewer(this.todir);
         }
 
-        // TODO:ant - copy pws files when supporting pws module
         copyPwsFiles(this.from, this.wmProject);
     }
 
