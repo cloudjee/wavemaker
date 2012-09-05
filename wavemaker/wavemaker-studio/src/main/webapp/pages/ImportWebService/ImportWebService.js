@@ -27,7 +27,7 @@ dojo.declare("ImportWebService", wm.Page, {
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
 		this.TYPE_REST_BUILDER = this.getDictionaryItem("REST_BUILDER");
-		this.inputVar.setData([{name:this.TYPE_SOAP, dataValue:this.TYPE_SOAP},{name:this.TYPE_REST_WSDL, dataValue:this.TYPE_REST_WSDL},{name:this.TYPE_REST_BUILDER, dataValue:this.TYPE_REST_BUILDER},{name:this.TYPE_JSON, dataValue:this.TYPE_JSON},{name:this.TYPE_FEED, dataValue:this.TYPE_FEED}]);
+		this.inputVar.setData([{name:this.TYPE_SOAP, dataValue:this.TYPE_SOAP},{name:this.TYPE_REST_BUILDER, dataValue:this.TYPE_REST_BUILDER},{name:this.TYPE_JSON, dataValue:this.TYPE_JSON},{name:this.TYPE_FEED, dataValue:this.TYPE_FEED}]);
 		this.typeInput.setDataSet(this.inputVar);	
 	    this.typeInput.setDataValue(this.TYPE_REST_BUILDER);
 		this.updateSelect(this.wsdlPathTypeInput, [this.IMPORT_TYPE_URL, this.IMPORT_TYPE_FILE]);
