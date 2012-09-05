@@ -115,11 +115,11 @@
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
 		</dependency>
-		<dependency>
+<!--	<dependency>
 			<groupId>org.jvnet.ws.wadl</groupId>
 			<artifactId>wadl-core</artifactId>
-		</dependency>
-		<dependency>
+		</dependency> 
+ -->	<dependency>
 			<groupId>net.java.dev.vcc.thirdparty</groupId>
 			<artifactId>collection-setter-injector</artifactId>
 		</dependency>
