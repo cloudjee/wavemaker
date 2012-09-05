@@ -9,10 +9,10 @@ Main.widgets = {
 			}]
 		}]
 	}],
-	loadingDialog1: ["wm.LoadingDialog", {"caption":"Downloading and Installing","captionWidth":"200px"}, {}, {
+	loadingDialog1: ["wm.LoadingDialog", {"caption":"Installing","captionWidth":"200px"}, {}, {
 		binding: ["wm.Binding", {}, {}, {
-			wire1: ["wm.Wire", {"source":"downloadAndInstallServiceVar","targetProperty":"serviceVariableToTrack"}, {}],
-			wire2: ["wm.Wire", {"source":"licenseHtml","targetProperty":"widgetToCover"}, {}]
+			wire: ["wm.Wire", {"expression":undefined,"source":"downloadAndInstallServiceVar","targetProperty":"serviceVariableToTrack"}, {}],
+			wire1: ["wm.Wire", {"expression":undefined,"source":"downloadButton","targetProperty":"widgetToCover"}, {}]
 		}]
 	}],
 	layoutBox: ["wm.Layout", {"horizontalAlign":"center"}, {}, {

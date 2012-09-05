@@ -16,7 +16,8 @@ dojo.declare("Main", wm.Page, {
 	"preferredDevice": "desktop",
 	"i18n": true,
     start: function() {
-    	
+    	this.loadingDialog1.containerWidget.setAutoScroll(false);
+        this.loadingDialog1.containerWidget.setMargin("0,0,0,60")
     },
     downloadAndInstallServiceVarSuccess: function(inSender, inDeprecated) {
       try {
