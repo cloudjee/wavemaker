@@ -30,16 +30,8 @@ dojo.declare("wm.Picture", wm.Control, {
 		this.img = this.linkNode.firstChild;
 		dojo.addClass(this.img, "wmpicture-image");
 		//this.connect(this.img, "load", this, "imageLoaded");
-	        this.connect(this.img, "click", this, function(evt) {
-		    dojo.stopEvent(evt);
-		    if (this.disabled) return;
-		    wm.onidle(this,"onclick"); // don't pass evt which after a delay will become undefined in some browsers
-		});
-	        this.connect(this.linkNode, "click", this, function(evt) {
-		    dojo.stopEvent(evt);
-		    if (this.disabled) return;
-		    wm.onidle(this,"onclick"); // don't pass evt which after a delay will become undefined in some browsers
-		});
+	    this.connect(this.img, "click", this, "_onclick");
+	    this.connect(this.linkNode, "click", this, "_onclick");
 		this.setSource(this.source);
 		this.setAspect(this.aspect);
 		this.setLink(this.link);
@@ -86,6 +78,26 @@ dojo.declare("wm.Picture", wm.Control, {
 	    /* Make it bindable */
 	    this.valueChanged("link", inLink);
 	},
+    _onclick: function(evt) {
+        dojo.stopEvent(evt);
+        if (this._disabled) return;
+        var pseudoEvt = dojo.isIE && inEvent ? {
+                    clientX: inEvent.clientX,
+                    clientY: inEvent.clientY,
+                    offsetX: inEvent.offsetX,
+                    offsetY: inEvent.offsetY,
+                    screenX: inEvent.screenX,
+                    screenY: inEvent.screenY,
+                    pageX: inEvent.pageX,
+                    pageY: inEvent.pageY,
+                    x: inEvent.x,
+                    y: inEvent.y,
+                    target: inEvent.target,
+                    currentTarget: inEvent.currentTarget,
+                    "type": inEvent.type
+                } : inEvent || {};
+        window.setTimeout(dojo.hitch(this, "onclick",pseudoEvt), 5);
+    },
 	onclick: function() {
 	},
 
