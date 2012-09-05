@@ -1351,6 +1351,13 @@ li {
     cursor: pointer;
 }
 
+
+.Disabled .wmlabel a, .Disabled.wmlabel a,
+.Disabled .wmlabel, .Disabled.wmlabel {
+    text-decoration: none !important;
+    cursor: default !important;
+}
+
 .wmlayout .wmtogglebuttonpanel .wmbutton {
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
