@@ -1347,13 +1347,16 @@ li {
 }
 
 .wmlabel.onClickEvent,
-.wmpicture.onClickEvent {
+.wmpicture.onClickEvent img,
+.wmpicture.onClickEvent a {
     cursor: pointer;
 }
 
 
 .Disabled .wmlabel a, .Disabled.wmlabel a,
-.Disabled .wmlabel, .Disabled.wmlabel {
+.Disabled .wmlabel, .Disabled.wmlabel,
+.Disabled .wmpicture.onClickEvent img, .Disabled .wmpicture.onClickEvent a ,
+.Disabled.wmpicture.onClickEvent img, .Disabled.wmpicture.onClickEvent a  {
     text-decoration: none !important;
     cursor: default !important;
 }
