@@ -1,7 +1,8 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * [PLEASE NOTE: VMWARE, INC. ELECTS TO USE AND DISTRIBUTE THIS COMPONENT UNDER THE TERMS OF THE LGPL 2.1. 
- * PLEASE SEE THE APPENDIX TO REVIEW THE FULL TEXT OF THE LGPL 2.1.]
- * 
+ * PLEASE SEE THE APPENDIX TO REVIEW THE FULL TEXT OF THE LGPL 2.1. 
+ * THE ORIGINAL LICENSE TERMS ARE REPRODUCED BELOW ONLY AS A REFERENCE.]
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -11,12 +12,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301.
- *
- * ORIGINAL LICENSE: 
+ * 
+ * Original License:
  *
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
