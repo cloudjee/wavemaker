@@ -61,7 +61,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     protected static final String WAVEMAKER_HOME = "wavemaker.home";
 
-    private static final ResourceFilter DEFAULT_EXCLUDES = FilterOn.antPattern("**/.svn/**");
+    public static final ResourceFilter DEFAULT_EXCLUDES = FilterOn.antPattern("**/.svn/**");
 
     protected void buildWar(LocalFolder projectDir, Folder buildDir, File warFile, boolean includeEar, StudioFileSystem fileSystem)
         throws WMRuntimeException { // projectDir: dplstaging //buildDir: fileutils

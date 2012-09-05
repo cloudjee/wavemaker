@@ -64,6 +64,7 @@ import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * DataService class generation.
@@ -433,7 +434,7 @@ public class DataServiceGenerator extends ServiceGenerator {
     }
 
     @Override
-    protected void afterClassGeneration(String path) throws GenerationException {
+    protected void afterClassGeneration(Folder path) throws GenerationException {
     }
 
     @Override
