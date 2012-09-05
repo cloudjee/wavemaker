@@ -78,8 +78,8 @@ dojo.declare("wm.Picture", wm.Control, {
 	    /* Make it bindable */
 	    this.valueChanged("link", inLink);
 	},
-    _onclick: function(evt) {
-        dojo.stopEvent(evt);
+    _onclick: function(inEvent) {
+        dojo.stopEvent(inEvent);
         if (this._disabled) return;
         var pseudoEvt = dojo.isIE && inEvent ? {
                     clientX: inEvent.clientX,
