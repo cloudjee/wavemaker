@@ -158,9 +158,13 @@ wm.LiveFormBase.extend({
 		}
 	},
 	removeEditors: function() {
-		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
-			    false,
-			    dojo.hitch(this, "_removeEditors"));
+        if (!this._noWarnRemoveEditors) {
+    		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
+    			    false,
+    			    dojo.hitch(this, "_removeEditors"));
+        } else {
+            this._removeEditors();
+        }
 	},
     _removeEditors: function() {
 				this.destroyEditors();
