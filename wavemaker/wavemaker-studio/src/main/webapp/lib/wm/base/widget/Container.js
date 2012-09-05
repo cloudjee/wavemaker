@@ -196,55 +196,48 @@ wm.define("wm.Container", wm.Control, {
     },
 
     postInit: function() {
-        if (this.isDesignLoaded())
-            this.setLock(this.lock);
+        if (this.isDesignLoaded()) this.setLock(this.lock);
         this.inherited(arguments);
         if (this.disabled) {
-        wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
-            w.setParentDisabled(this._disabled);
-        }));
+            wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
+                w.setParentDisabled(this._disabled);
+            }));
         }
     },
-        /* Called from Component.makeEvents or by end user*/
-        connectOnEnterKey: function() {
+    /* Called from Component.makeEvents or by end user*/
+    connectOnEnterKey: function() {
         this.connect(this.domNode, "onkeypress", this, "keypress");
     },
-        keypress: function(evt) {
+    keypress: function(evt) {
         var self = this;
         if (evt.keyCode == dojo.keys.ENTER && evt.target.tagName != "TEXTAREA") {
-        wm.job(this.getRuntimeId() + ".enterkeypress", 50, dojo.hitch(this, function() {
-            if (!this.isDestroyed)
-            this.onEnterKeyPress(evt);
-        }));
+            wm.job(this.getRuntimeId() + ".enterkeypress", 50, dojo.hitch(this, function() {
+                if (!this.isDestroyed) this.onEnterKeyPress(evt);
+            }));
         }
     },
-        setThemeStyleType: function(inType) {
+    setThemeStyleType: function(inType) {
         var oldType = this.getThemeStyleType();
-        if (oldType)
-        this.removeUserClass(oldType);
-        if (inType)
-        this.addUserClass(inType);
+        if (oldType) this.removeUserClass(oldType);
+        if (inType) this.addUserClass(inType);
     },
-        getThemeStyleType: function() {
+    getThemeStyleType: function() {
         var types = ["MainContent", "EmphasizedContent", "HeaderContent"];
-        if (this._classes && this._classes.domNode)
-        for (var i = 0; i < types.length; i++) {
+        if (this._classes && this._classes.domNode) for (var i = 0; i < types.length; i++) {
             if (dojo.indexOf(this._classes.domNode, types[i]) != -1) return types[i];
         }
     },
-    destroy: function()
-    {
+    destroy: function() {
         if (this.dockRight) {
-        delete app.dockRight;
+            delete app.dockRight;
         } else if (this.dockLeft) {
-        delete app.dockLeft;
+            delete app.dockLeft;
         } else if (this.dockTop) {
-        delete app.dockTop;
+            delete app.dockTop;
         } else if (this.dockBottom) {
-        delete app.dockBottom;
+            delete app.dockBottom;
         }
-        if (this.domNode && this.domNode.box)
-            delete this.domNode.box;
+        if (this.domNode && this.domNode.box) delete this.domNode.box;
         this.inherited(arguments);
     },
     bc: function() {
