@@ -38,6 +38,7 @@ dojo.declare("wm.Label", wm.Control, {
         this.domNode.appendChild(this.sizeNode);
     },
     _onclick: function(inEvent) {
+        if (this._disabled) return;
         var pseudoEvt = dojo.isIE && inEvent ? {
                     clientX: inEvent.clientX,
                     clientY: inEvent.clientY,
@@ -53,7 +54,7 @@ dojo.declare("wm.Label", wm.Control, {
                     currentTarget: inEvent.currentTarget,
                     "type": inEvent.type
                 } : inEvent || {};
-        window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);        
+        window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);
     },
     click: function(e) {
         this.onclick(e);
@@ -146,14 +147,14 @@ dojo.declare("wm.Label", wm.Control, {
         var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
         if (newHeight < this.minHeight) {
             newHeight = this.minHeight;
-        } 
+        }
 
         /* Account for space needed for scrollbars */
         if (contentWidth > this.bounds.w) {
             newHeight += 17;
         }
             this.bounds.h = newHeight;
-            this.height = newHeight + "px";     
+            this.height = newHeight + "px";
 /*
         if (setSize) {
             this.setHeight(newHeight + "px");
@@ -205,7 +206,7 @@ dojo.declare("wm.Label", wm.Control, {
         var oldLink = this.link;
         this.link = inLink;
         this.renderLabel();
-        
+
         /* Make it bindable */
         this.valueChanged("link", inLink);
     },
@@ -215,7 +216,7 @@ dojo.declare("wm.Label", wm.Control, {
             if (oldSingleLine != inSingleLine)
                 this.domNode.style.lineHeight = (inSingleLine) ? this.bounds.h + "px" : "normal";
         this.renderLabel();
-        if (inSingleLine && this.autoSizeHeight) 
+        if (inSingleLine && this.autoSizeHeight)
         this.autoSizeHeight = false;
 
         if (inSingleLine != oldSingleLine && (this.autoSizeHeight || this.autoSizeWidth)) {
