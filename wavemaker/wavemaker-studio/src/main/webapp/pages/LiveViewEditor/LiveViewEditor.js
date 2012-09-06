@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.pages.LiveViewEditor.LiveViewEditor");
 
 
@@ -53,13 +53,14 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	},
 	setLiveView: function(inLiveView) {
 		this.clientLiveView = inLiveView;
+		this.liveVariable.owner = studio.wip;
 		this.liveVariable.setLiveView(this.clientLiveView);
 		this.update();
 	    studio.reinspect();
 	},
 	update: function() {
 		// FIXME: grrr
-		this.liveVariable.owner = studio.wip;
+
 		this.nameEdit.beginEditUpdate();
 		this.nameEdit.setDataValue((this.clientLiveView || 0).name);
 		var noView = Boolean(!this.clientLiveView);
@@ -69,7 +70,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		if (noView) {
 			this.previewBox.setChecked(false);
 			this.dataGrid1.doClearColumns();
-			
+
 		}
 		this.previewBox.setDisabled(noView);
 		this.dataGrid1.setDataSet(this.liveVariable);
@@ -91,7 +92,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	},
 	accept: function() {
 		if (this.clientLiveView) {
-			this.clientLiveView.setProp("name", this.nameEdit.getDataValue());		    
+			this.clientLiveView.setProp("name", this.nameEdit.getDataValue());
 			this.clientLiveView.setFields(this.listRelated(), this.listFields());
 			this.clientLiveView.viewChanged();
 		}
@@ -230,7 +231,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		                this.accept();
                             }), dojo.hitch(this, function() {
 				inNode.setChecked(true);
-			    }));                                
+			    }));
 	    } else {
                 this._checkChildren(inNode, inCheck);
             }
@@ -264,8 +265,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			ctor = wm.TreeCheckNode;
 
 	    var isOpen = isRelated || isInView && Boolean(s);
-		var node = new ctor(inNode, { 
-			content: inName + (showRequired ? ' <span class="wmeditor-required">*</span>' : ''), 
+		var node = new ctor(inNode, {
+			content: inName + (showRequired ? ' <span class="wmeditor-required">*</span>' : ''),
 			as: wm.decapitalize(inName),
 			image: image ? "images/" + image : "",
 			name: inName,
@@ -324,7 +325,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		widthUnitsEdit: {name: "widthUnits", defaultValue: "px"},
 		requiredBox: {name: "required", defaultValue: true},
 		orderEdit: {name: "order"}/*,
-		
+
 
 		includedListsBox: {name: "includeLists", defaultValue: true},
 		includedFormsBox: {name: "includeForms", defaultValue: true}*/
@@ -334,7 +335,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	//
 	clearFieldForm: function() {
 		this.viewField = null;
-		wm.forAllEditors(this.liveForm1, 
+		wm.forAllEditors(this.liveForm1,
 			function(e) {
 				e.setDisabled(true);
 				e.setValue("dataValue", "");
@@ -447,16 +448,16 @@ dojo.declare("LiveViewEditor", wm.Page, {
 
     },
 
-    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can 
+    /* getDirty, save, saveComplete are all common methods all services should provide so that studio can
      * interact with them
      */
     dirty: false,
     getDirty: function() {
 	return this.dirty;
     },
-    save: function() {	
+    save: function() {
 	// handled by studio.saveAll but save is also CALLED by studio.saveAll so don't try calling studio.saveAll here
-	
+
 	this.saveComplete();
     },
     saveComplete: function() {
