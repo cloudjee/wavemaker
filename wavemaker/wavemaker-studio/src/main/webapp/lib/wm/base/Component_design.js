@@ -300,9 +300,11 @@ wm.Component.extend({
     get_owner: function() {
         return this.owner == (studio && studio.application) ? "Application" : "Page";
     },
-        setEvent: function(n, v, renameOk) {
+    setEvent: function(n, v, renameOk) {
         // events can be components, only update source if event is a function reference
-        var o = this.eventBindings[n], oc = this.getComponent(o), nc = this.getComponent(v);
+        var o = this.eventBindings[n]; // get the old Component ID to be invoked by this event
+        var oc = o ? this.getComponent(o) : null; // get the Component from its ID
+        var nc = this.getComponent(v); // get the new component from its id for this event
         if (renameOk && !(nc instanceof wm.Component || oc instanceof wm.Component) && v.indexOf(".") == -1)
             eventChange(this.owner instanceof wm.Page ? studio.editArea : studio.appsourceEditor, o, v);
 
