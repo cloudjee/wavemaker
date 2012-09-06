@@ -1158,9 +1158,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             // If we're in design mode, then subscribe to be notified if the type definition is changed;
             // also call updateColumnData in case the type definition was changed while editting some other page.
             // Only make this call if we have a new dataSet (inValue), we have an existing columns array, and its not a change in type from our current dataSet.
-            if (this._isDesignLoaded && this.columns.length && inValue && inValue.type && (!this.dataSet || !this.dataSet.type || this.dataSet.type == inValue.type)) {
+            if (this._isDesignLoaded && this.columns.length && inValue && inValue.type ) {
                 if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
-                this._typeChangedConnect = this.connect(this.variable, "typeChanged", this, function() {
+                this._typeChangedConnect = this.connect(inValue, "typeChanged", this, function() {
                     this.updateColumnData(); // if the type changes for this.variable, reapply this variable's new type info
                     this.setDojoStore();
                     this.renderDojoObj();
