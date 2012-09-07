@@ -1299,80 +1299,89 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                   queryOptions: this.dojoObj.queryOptions,
                   onComplete: onComplete});
     },
-    getStructure: function(){
+    getStructure: function() {
         var structure = [];
         var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
         var isMobileStyle = isMobile || (this._isDesignLoaded ? studio.currentDeviceType == "tablet" : wm.device == "tablet");
         if (this.deleteColumn) {
-        structure.push({hidden: false,
+            structure.push({
+                hidden: false,
                 name: "-",
                 width: "20px",
                 "get": dojo.hitch(this, 'getExpressionValue', "'<div class=\\'wmDeleteColumn\\'></div>'"),
-                field: "_deleteColumn"});
+                field: "_deleteColumn"
+            });
         }
 
         var useMobileColumn = false;
         if (isMobile) {
-        for (var i = 0; i < this.columns.length; i++) {
-            if (this.columns[i].mobileColumn) {
-            useMobileColumn = true;
-            break;
+            for (var i = 0; i < this.columns.length; i++) {
+                if (this.columns[i].mobileColumn) {
+                    useMobileColumn = true;
+                    break;
+                }
             }
-        }
         }
 
         /* IE 9 requires that widths be normalized */
         var totalPercentWidth = 0;
-        dojo.forEach(this.columns, function(col){
-        var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
-        if (show && col.width.indexOf("%") != -1) {
-            totalPercentWidth += parseInt(col.width);
-        }
+        dojo.forEach(this.columns, function(col) {
+            var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
+            if (show && col.width.indexOf("%") != -1) {
+                totalPercentWidth += parseInt(col.width);
+            }
         });
 
-        dojo.forEach(this.columns, function(col){
+        dojo.forEach(this.columns, function(col) {
             if (this._isDesignLoaded && studio.currentDeviceType == "phone" && useMobileColumn) {
                 ;
             } else if (col.field == "PHONE COLUMN" && !col.show) return; // don't even include this complicated column in the structure unless we're in design mode
-
             var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
             var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
             var width = col.width;
-        if (show && width.indexOf("%") != -1)
-            width = Math.floor((100*parseInt(width) / totalPercentWidth)) + "%";
-            var obj = { hidden:!show,
-                    field: col.field,
-                    constraint: col.constraints,
-                    name:col.title ? col.title : "-",
-                    width: width,
-                    fieldType:col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
-                    widgetProps: col.editorProps,
-                    options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
-                        editable:show && (col.editable || col.fieldType), // col.editable is obsolete.  While users may like to hide/show columns with editors, a hidden column of editors breaks tabbing from editor to editor.
-                    expression:col.expression,
-                    displayType:col.displayType};
-            if (obj.widgetProps) {
-            obj.widgetProps = dojo.mixin({owner:this}, obj.widgetProps);
-            if (obj.fieldType == "dojox.grid.cells.ComboBox") {
-                obj.fieldType = "wm.grid.cells.ComboBox";
-                obj.widgetProps.searchAttr = obj.widgetProps.displayField;
+            if (show && width.indexOf("%") != -1) {
+                width = Math.floor((100 * parseInt(width) / totalPercentWidth)) + "%";
             }
+            var obj = {
+                hidden: !show,
+                field: col.field,
+                constraint: col.constraints,
+                name: col.title ? col.title : "-",
+                width: width,
+                fieldType: col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
+                widgetProps: col.editorProps,
+                options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
+                editable: show && (col.editable || col.fieldType),
+                // col.editable is obsolete.  While users may like to hide/show columns with editors, a hidden column of editors breaks tabbing from editor to editor.
+                expression: col.expression,
+                displayType: col.displayType
+            };
+            if (obj.widgetProps) {
+                obj.widgetProps = dojo.mixin({
+                    owner: this
+                }, obj.widgetProps);
+                if (obj.fieldType == "dojox.grid.cells.ComboBox") {
+                    obj.fieldType = "wm.grid.cells.ComboBox";
+                    obj.widgetProps.searchAttr = obj.widgetProps.displayField;
+                }
             }
             if (obj.fieldType == "dojox.grid.cells.DateTextBox") {
-            obj.fieldType = "wm.grid.cells.DateTextBox";
+                obj.fieldType = "wm.grid.cells.DateTextBox";
             }
             if (obj.fieldType == "wm.grid.cells.DateTextBox") {
-            if (!obj.widgetProps) {
-                obj.widgetProps = {owner: this};
-            }
+                if (!obj.widgetProps) {
+                    obj.widgetProps = {
+                        owner: this
+                    };
+                }
             }
 
             if (col.editorProps && col.editorProps.selectDataSet && col.fieldType == "dojox.grid.cells.ComboBox") {
-            var selectDataSet = this.owner[col.editorProps.selectDataSet] || this.owner.getValueById(col.editorProps.selectDataSet);
-            if (selectDataSet) {
-                if (!selectDataSet.isEmpty()) {
-                obj.options =  wm.grid.cells.ComboBox.prototype.cleansComboBoxOptions(selectDataSet);
-/*
+                var selectDataSet = this.owner[col.editorProps.selectDataSet] || this.owner.getValueById(col.editorProps.selectDataSet);
+                if (selectDataSet) {
+                    if (!selectDataSet.isEmpty()) {
+                        obj.options = wm.grid.cells.ComboBox.prototype.cleansComboBoxOptions(selectDataSet);
+                        /*
                 var options = [];
                 var count = selectDataSet.getCount();
                 for (var i = 0; i < count; i++) {
@@ -1381,60 +1390,56 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
                 obj.options = options;
                 */
+                    }
+                    if (this["_connectOnSetData." + col.field]) dojo.disconnect(this["_connectOnSetData." + col.field]);
+                    this["_connectOnSetData." + col.field] = this.connect(selectDataSet, "onSetData", dojo.hitch(this, "updateEditorDataSet", selectDataSet, col.field)); // recalculate the columns/regen the grid each time our dataSet changes
                 }
-                if (this["_connectOnSetData." + col.field]) dojo.disconnect(this["_connectOnSetData." + col.field]);
-                this["_connectOnSetData." + col.field] = this.connect(selectDataSet, "onSetData", dojo.hitch(this, "updateEditorDataSet", selectDataSet, col.field)); // recalculate the columns/regen the grid each time our dataSet changes
-            }
             }
 
             /* TODO: Add more style options; a bold column? A column with a thick right border?  Let the user edit it as style... */
-            if (col.align && col.align != ''){
-                obj.styles = 'text-align:'+col.align + ';';
+            if (col.align && col.align != '') {
+                obj.styles = 'text-align:' + col.align + ';';
             }
 
-            if (col.formatFunc && col.formatFunc != '' || col.backgroundColor || col.textColor || col.cssClass) {
-                /* TODO: Localize? */
-                switch(col.formatFunc){
-                    case 'wm_date_formatter':
-                    case 'Date (WaveMaker)':
-                    obj.formatter = dojo.hitch(this, 'dateFormatter', col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_localdate_formatter':
-                    case 'Local Date (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'localDateFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_time_formatter':
-                    case 'Time (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'timeFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_number_formatter':
-                    case 'Number (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'numberFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_currency_formatter':
-                    case 'Currency (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'currencyFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_image_formatter':
-                    case 'Image (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'imageFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_link_formatter':
-                    case 'Link (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'linkFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-
-                    case 'wm_button_formatter':
-                                obj.formatter = dojo.hitch(this, 'buttonFormatter',  col.field, col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
+            if (col.formatFunc && col.formatFunc != '' || col.backgroundColor || col.textColor || col.cssClass) { /* TODO: Localize? */
+                switch (col.formatFunc) {
+                case 'wm_date_formatter':
+                case 'Date (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'dateFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_localdate_formatter':
+                case 'Local Date (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'localDateFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_time_formatter':
+                case 'Time (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'timeFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_number_formatter':
+                case 'Number (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'numberFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_currency_formatter':
+                case 'Currency (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'currencyFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_image_formatter':
+                case 'Image (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'imageFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_link_formatter':
+                case 'Link (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'linkFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_button_formatter':
+                    obj.formatter = dojo.hitch(this, 'buttonFormatter', col.field, col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                default:
+                    try {
+                        obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
+                    } catch (e) {}
 
                     break;
-                    default:
-                             try {
-                         obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
-                         } catch(e) {}
-
-                        break;
                 }
             }
 
@@ -1456,14 +1461,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 
         structure = [structure];
-        if (this.selectionMode == "checkbox")
-        structure.unshift({type: "dojox.grid._CheckBoxSelector", width: isMobileStyle ? "40px" : "20px"});
-        else if (this.selectionMode == "radio")
-        structure.unshift({type: "dojox.grid._RadioSelector", width: isMobileStyle ? "40px" : "20px"});
+        if (this.selectionMode == "checkbox") structure.unshift({
+            type: "dojox.grid._CheckBoxSelector",
+            width: isMobileStyle ? "40px" : "20px"
+        });
+        else if (this.selectionMode == "radio") structure.unshift({
+            type: "dojox.grid._RadioSelector",
+            width: isMobileStyle ? "40px" : "20px"
+        });
 
         return structure;
     },
-
     /* Hack to update the combobox editor items without rerendering the grid */
     updateEditorDataSet: function(dataSet, fieldId) {
         var cells = this.dojoObj.layout.cells;
