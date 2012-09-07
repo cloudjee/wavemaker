@@ -1,0 +1,12 @@
+{
+	"methods": [{
+		"name": "getInventoryById",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.sampledatadb.data.Inventory"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "sampledataDB.json"
+}
