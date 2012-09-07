@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.Address" table="address" dynamic-insert="false" dynamic-update="false">
+        <id name="addressId" type="integer">
+            <column name="ADDRESS_ID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="address" type="string">
+            <column name="ADDRESS" length="50" not-null="true"/>
+        </property>
+        <property name="address2" type="string">
+            <column name="ADDRESS2" length="50"/>
+        </property>
+        <property name="district" type="string">
+            <column name="DISTRICT" length="20" not-null="true"/>
+        </property>
+        <property name="postalCode" type="string">
+            <column name="POSTAL_CODE" length="10"/>
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="20" not-null="true"/>
+        </property>
+        <many-to-one name="city" class="com.sampledatadb.data.City" cascade="none">
+            <column name="CITY_ID"/>
+        </many-to-one>
+        <set name="customers" inverse="true">
+            <key>
+                <column name="ADDRESS_ID"/>
+            </key>
+            <one-to-many class="com.sampledatadb.data.Customer"/>
+        </set>
+        <set name="stores" inverse="true">
+            <key>
+                <column name="ADDRESS_ID" not-null="true"/>
+            </key>
+            <one-to-many class="com.sampledatadb.data.Store"/>
+        </set>
+    </class>
+</hibernate-mapping>
