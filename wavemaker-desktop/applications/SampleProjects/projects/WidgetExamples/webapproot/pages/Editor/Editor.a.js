@@ -40,7 +40,7 @@ label8: ["wm.Label", {"_classes":{"domNode":["SectionHeader"]},"autoSizeWidth":t
 format: ["wm.DataFormatter", {}, {}]
 }]
 }],
-tabLayers1: ["wm.TabLayers", {"width":"800px"}, {}, {
+tabLayers1: ["wm.TabLayers", {"manageURL":true}, {}, {
 text: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Text","horizontalAlign":"left","verticalAlign":"top"}, {}, {
 panel33: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 pageContainer4: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Text","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
@@ -52,17 +52,9 @@ pageContainer6: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Number
 radio: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Radio + Checkbox","horizontalAlign":"left","verticalAlign":"top"}, {}, {
 pageContainer2: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Radio","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
 }],
-basic: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Basic Editors","horizontalAlign":"left","verticalAlign":"top"}, {}, {
-pageContainer1: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Basic","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
-}],
 dates: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Dates","horizontalAlign":"left","verticalAlign":"top"}, {}, {
 panel16: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 pageContainer3: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Dates","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
-}]
-}],
-validation: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Validation","horizontalAlign":"left","verticalAlign":"top"}, {}, {
-panel49: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-pageContainer5: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Validation","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
 }]
 }]
 }]

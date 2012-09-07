@@ -1,90 +1,83 @@
 Editor_Dates.widgets = {
-	layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
 		panel6: ["wm.Panel", {"height":"571px","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 			panel22: ["wm.Panel", {"height":"50px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-				label13: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","DemoHeader"]},"autoSizeWidth":true,"border":"0","caption":"Date Editor Widgets","padding":"4","width":"168px"}, {}, {
+				label13: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","DemoHeader"]},"autoSizeWidth":true,"caption":"Date Editor Widgets","padding":"4","width":"142px"}, {}, {
 					format: ["wm.DataFormatter", {}, {}]
 				}]
 			}],
 			panel23: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0,0,0,10","verticalAlign":"top","width":"100%"}, {}, {
-				panel27: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"450px"}, {}, {
-					label52: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_16px","wm_BackgroundColor_LightGray"]},"border":"0","caption":"Try It!","height":"32px","padding":"4","width":"100%"}, {}, {
+				panel27: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+					label52: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_16px","wm_BackgroundColor_LightGray"]},"caption":"Try It!","height":"32px","padding":"4","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}],
-					label23: ["wm.Label", {"border":"0","caption":"<b>Directions:</b> enter data into editors. Note that editors have built-in validation.","height":"34px","padding":"4","width":"100%"}, {}, {
+					label23: ["wm.Label", {"caption":"<b>Directions:</b> enter data into editors. Note that editors have built-in validation.","height":"34px","padding":"4","width":"100%"}, {}, {
 						format: ["wm.DataFormatter", {}, {}]
 					}],
-					panel28: ["wm.Panel", {"height":"137px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
+					panel28: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 						panel29: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
-						panel30: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-							date2: ["wm.Date", {"caption":"Date","captionSize":"120px","displayValue":"","width":"345px"}, {}],
-							dateTime2: ["wm.DateTime", {"caption":"DateTime","captionSize":"120px","displayValue":"","width":"345px"}, {}],
-							date3: ["wm.Date", {"caption":"Date with default","captionSize":"120px","displayValue":"8/2/2011","width":"345px"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"expression":"new Date()","source":false,"targetProperty":"dataValue"}, {}]
+						formPanel1: ["wm.FormPanel", {"captionAlign":"left","captionPosition":"top","captionSize":"28px","editorHeight":"54px","height":"100%"}, {}, {
+							panel1: ["wm.Panel", {"height":"58px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
+								date1: ["wm.Date", {"caption":"wm.Date editor; with max and min values","captionAlign":"left","captionPosition":"top","captionSize":"28px","dataValue":undefined,"displayValue":"","height":"100%","helpText":"<li><b>minimum:</b> January 1, 2010</li><li><b>maximum:</b> July 15, 2013</li>","maximum":1373871600000,"minimum":1262332800000,"placeHolder":"min: January 1, 2010; max: July 15, 2013","singleLine":false,"width":"100%"}, {}],
+								label1: ["wm.Label", {"align":"center","caption":"=","padding":"4","width":"40px"}, {}],
+								label2: ["wm.Label", {"align":"left","display":"Date","padding":"4","width":"220px"}, {}, {
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":undefined,"source":"date1.dataValue","targetProperty":"caption"}, {}]
+									}],
+									format: ["wm.DateFormatter", {"formatLength":"full"}, {}]
 								}]
 							}],
-							label5: ["wm.Label", {"border":"0","caption":"Date with min = today, max = today + 1 month","padding":"4","width":"313px"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
+							panel2: ["wm.Panel", {"height":"58px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
+								date2: ["wm.DateTime", {"caption":"wm.DateTime editor; with max and min values","captionAlign":"left","captionPosition":"top","captionSize":"28px","displayValue":"","height":"100%","helpText":"<li><b>minimum:</b> January 1, 2010</li><li><b>maximum:</b> July 15, 2013</li>","maximum":1373871600824,"minimum":1262332800638,"singleLine":false,"width":"100%"}, {}],
+								label3: ["wm.Label", {"align":"center","caption":"=","padding":"4","width":"40px"}, {}],
+								label4: ["wm.Label", {"align":"left","display":"DateTime","padding":"4","width":"220px"}, {}, {
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":undefined,"source":"date2.dataValue","targetProperty":"caption"}, {}]
+									}],
+									format: ["wm.DateTimeFormatter", {}, {}]
+								}]
 							}],
-							dateMin: ["wm.Date", {"caption":"Date w validation","captionSize":"120px","displayValue":"","placeHolder":"Min = today, Max = today + 1 mo","width":"345px"}, {}]
-						}]
-					}],
-					label51: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_16px","wm_BackgroundColor_LightGray"]},"border":"0","caption":"Result","height":"32px","padding":"4","width":"100%"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
-					}],
-					panel31: ["wm.Panel", {"height":"148px","horizontalAlign":"left","padding":"0,0,0,100","verticalAlign":"top","width":"100%"}, {}, {
-						panel35: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-							label30: ["wm.Label", {"autoSizeWidth":true,"border":"0","caption":"Date is","padding":"4","width":"49px"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
+							panel3: ["wm.Panel", {"height":"58px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
+								date3: ["wm.Time", {"caption":"wm.Time editor","captionAlign":"left","captionPosition":"top","captionSize":"28px","dataValue":undefined,"displayValue":"","height":"100%","width":"100%"}, {}],
+								label5: ["wm.Label", {"align":"center","caption":"=","padding":"4","width":"40px"}, {}],
+								label6: ["wm.Label", {"align":"left","display":"Time","padding":"4","width":"220px"}, {}, {
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":undefined,"source":"date3.dataValue","targetProperty":"caption"}, {}]
+									}],
+									format: ["wm.TimeFormatter", {}, {}]
+								}]
 							}],
-							label31: ["wm.Label", {"border":"0","display":"Date","padding":"4","width":"111px"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"expression":false,"source":"date2.dataValue","targetProperty":"caption"}, {}]
+							label9: ["wm.Label", {"caption":"wm.Calendar editor with max and min values, default: 7/3/2013","padding":"4","width":"100%"}, {}],
+							panel4: ["wm.Panel", {"height":"160px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
+								calendar1: ["wm.dijit.Calendar", {"dateValue":1372834800000,"maximum":1373871600000,"minimum":1262332800000}, {}],
+								label7: ["wm.Label", {"align":"center","caption":"=","padding":"4","width":"40px"}, {}],
+								label8: ["wm.Label", {"align":"left","display":"Date","padding":"4","width":"220px"}, {}, {
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":undefined,"source":"calendar1.dateValue","targetProperty":"caption"}, {}]
+									}],
+									format: ["wm.DateFormatter", {"formatLength":"short"}, {}]
+								}]
+							}],
+							panel5: ["wm.Panel", {"height":"58px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
+								date4: ["wm.Date", {"caption":"wm.Date editor; value bound to calendar above","captionAlign":"left","captionPosition":"top","captionSize":"28px","displayValue":"7/3/2013","height":"100%","helpText":undefined,"maximum":1373871600000,"minimum":1262332800000,"placeHolder":undefined,"singleLine":false,"width":"100%"}, {}, {
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":undefined,"source":"calendar1.dateValue","targetProperty":"dataValue"}, {}]
+									}]
 								}],
-								format: ["wm.DateFormatter", {}, {}]
-							}]
-						}],
-						panel36: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-							label32: ["wm.Label", {"autoSizeWidth":true,"border":"0","caption":"Date time is","padding":"4","width":"78px"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							label33: ["wm.Label", {"border":"0","display":"DateTime","padding":"4","width":"177px"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"expression":false,"source":"dateTime2.dataValue","targetProperty":"caption"}, {}]
-								}],
-								format: ["wm.DateTimeFormatter", {}, {}]
-							}]
-						}],
-						panel39: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-							label34: ["wm.Label", {"autoSizeWidth":true,"border":"0","caption":"Date with default is","padding":"4","width":"119px"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							label35: ["wm.Label", {"autoSizeWidth":true,"border":"0","display":"Date","padding":"4","width":"101px"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"expression":false,"source":"date3.dataValue","targetProperty":"caption"}, {}]
-								}],
-								format: ["wm.DateFormatter", {}, {}]
-							}]
-						}],
-						panel66: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-							label43: ["wm.Label", {"autoSizeWidth":true,"border":"0","caption":"Date with validation is","padding":"4","width":"135px"}, {}, {
-								format: ["wm.DataFormatter", {}, {}]
-							}],
-							label59: ["wm.Label", {"border":"0","display":"Date","padding":"4","width":"149px"}, {}, {
-								binding: ["wm.Binding", {}, {}, {
-									wire: ["wm.Wire", {"expression":false,"source":"dateMin.dataValue","targetProperty":"caption"}, {}]
-								}],
-								format: ["wm.DateFormatter", {}, {}]
+								label10: ["wm.Label", {"align":"center","caption":"=","padding":"4","width":"40px"}, {}],
+								label11: ["wm.Label", {"align":"left","display":"Date","padding":"4","width":"220px"}, {}, {
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":undefined,"source":"date1.dataValue","targetProperty":"caption"}, {}]
+									}],
+									format: ["wm.DateFormatter", {"formatLength":"full"}, {}]
+								}]
 							}]
 						}]
 					}]
 				}],
-				panel71: ["wm.MainContentPanel", {"height":"734px","horizontalAlign":"left","margin":"0,0,0,10","verticalAlign":"top","width":"280px"}, {}, {
-					fancyPanel8: ["wm.FancyPanel", {"labelHeight":"36","title":"Description"}, {}, {
-						panel72: ["wm.EmphasizedContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-							html4: ["wm.Html", {"border":"0","height":"100%","html":"<p>Date editors provide a way to input calendar and time-based values.</p>\n<p>This example shows using date and date time editors to input validated information and was built using drag and drop development and no code!</p>\n<h3>Documentation</h3>\n<ul>\n<li><a href=\"http://dev.wavemaker.com/wiki/bin/wmjsref_6.4/Text\" target=\"_blank\">Text Widget</a></li>\n</ul>\n<h3>Related Examples</h3>\n<ul>\n<li><a href=\"http://widgetexamples.cloudfoundry.com/?page=select&amp;layer=list\" target=\"_blank\">Select Menu/Combo Boxes</a></li>\n</ul>","margin":"5","width":"100%"}, {}]
-						}]
+				fancyPanel8: ["wm.FancyPanel", {"labelHeight":"36","minWidth":280,"title":"Description","width":"50%"}, {}, {
+					panel72: ["wm.EmphasizedContentPanel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+						html4: ["wm.Html", {"height":"100%","html":"<p>Date editors provide a way to input calendar and time-based values.  There are four types of date editors.</p>\n<ul>\n<li><b>Calendar:</b> This is just a calendar on a page, and is the simplest way to ask a user to enter a date</li>\n<li><b>wm.Date: </b>An editor for entering only a date</li>\n<li><b>wm.Time: </b>An editor for entering only a time</li>\n<li><b>wm.DateTime: </b>This editor can be used to get both date and time, or just date or just time.  It reenvisions how a user can enter a Time, and can be used instead of wm.Time if you prefer this style of time entry.</li>\n</ul>\n<p>All Dates provide the following capabilities: </p>\n<ul>\n<li>A dataValue that can be given an initial value</li>\n<li>A dataValue that can be bound to another widget (see the bottom editor bound to the calendar)</li>\n<li>A dataValue that can be set by calling this.dateEditor.setDataValue(d)</li> <li>A maximum and minimum value that the user must enter a value between (Note: This applies to dates, but not to time)</li>\n</ul>\n<h3>Documentation</h3>\n<ul>\n<li><a href=\"http://dev.wavemaker.com/wiki/bin/wmjsref_6.5/Date\" target=\"_blank\">Date Editor</a></li>\n<li><a href=\"http://dev.wavemaker.com/wiki/bin/wmjsref_6.5/Time\" target=\"_blank\">Time Editor</a></li>\n<li><a href=\"http://dev.wavemaker.com/wiki/bin/wmjsref_6.5/DateTime\" target=\"_blank\">DateTime Editor</a></li>\n<li><a href=\"http://dev.wavemaker.com/wiki/bin/wmjsref_6.5/Calendar\" target=\"_blank\">Calendar</a></li>\n</ul>\n","margin":"5"}, {}]
 					}]
 				}]
 			}]

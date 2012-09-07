@@ -1468,7 +1468,7 @@ dojo.declare("WidgetExamples", wm.Application, {
 	"phoneMain": "", 
 	"projectSubVersion": 2, 
 	"projectVersion": "3", 
-	"saveCounter": 234, 
+	"saveCounter": 251, 
 	"showIOSPhoneGapBackButton": false, 
 	"studioVersion": "6.5.0.M4", 
 	"tabletMain": "", 
