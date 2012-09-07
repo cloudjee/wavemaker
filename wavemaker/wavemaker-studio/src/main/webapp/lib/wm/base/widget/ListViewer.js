@@ -208,6 +208,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
             variable[1].json = this._sample;
         }
     },
+    getPreferredFitToContentHeight: function() {
+        if (this._percEx.h) return "100px";
+        else return this.bounds.h;
+    },
     setPageName: function(inPage) {
 	if (inPage == "-New Page" && this.isDesignLoaded()) {
 	    if (!this.dataSet) {
