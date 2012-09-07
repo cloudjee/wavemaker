@@ -128,7 +128,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         for (var i = 0; inputsArray && i < inputsArray.length; i++) {
             var item = inputsArray[i];
             inputs[item.name] = {
-                transmitType: item.transmitType ? 1 : 0,
+                transmitType: item.transmitType,
                 type: item.type || "string"
             };
         }
@@ -166,7 +166,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
     addInputRow: function() {
         this.inputsGrid.addRow({
             type: "String",
-            transmitType: "parameter",
+            transmitType: "queryString",
             name: ""
         });
 

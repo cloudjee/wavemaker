@@ -17,9 +17,9 @@ XHRServiceEditor.widgets = {
     smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
     fixedHeadersVar: ["wm.Variable", {"isList":true,"type":"EntryData"}, {}],
     inputsType: ["wm.TypeDefinition", {internal: true},{}, {
-	inputNameField: ["wm.TypeDefinitionField", {fieldName: "name", fieldType: "string"}],
-	inputTypeField: ["wm.TypeDefinitionField", {fieldName: "type", fieldType: "string"}],
-	inputIsHeaderField: ["wm.TypeDefinitionField", {fieldName: "isHeader", fieldType: "boolean"}]
+    	inputNameField: ["wm.TypeDefinitionField", {fieldName: "name", fieldType: "string"}],
+    	inputTypeField: ["wm.TypeDefinitionField", {fieldName: "type", fieldType: "string"}],
+    	inputTransmitField: ["wm.TypeDefinitionField", {fieldName: "transmitType", fieldType: "string"}] // "header", "queryString", "path"
     }],
     inputsVar: ["wm.Variable", {"isList":true,"type":"inputsType"}, {}],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"},{}, {
@@ -52,8 +52,8 @@ XHRServiceEditor.widgets = {
 	    fancyPanel3: ["wm.FancyPanel", {"height":"250px","title":"Inputs"}, {}, {
 		inputsGridPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    inputsGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[{"show":true,"field":"name","title":"Input Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false, "fieldType": "dojox.grid.cells._Widget"},
-							    {"show":true,"field":"type","title":"Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Select","mobileColumn":false},
-							    {"show":true,"field":"isHeader","title":"Is Header","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool","mobileColumn":false}],
+							    {"show":true,"field":"type","title":"Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.ComboBox","mobileColumn":false},
+							    {"show":true,"field":"transmitType","title":"Input Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.ComboBox","mobileColumn":false, "editorProps":{"options":"queryString,header,path", isSimpleType:true, displayField: "transmitType"}}],
 						 "deleteColumn":true,"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
     binding: ["wm.Binding", {}, {}, {
 	wire: ["wm.Wire", {"expression":undefined,"source":"inputsVar","targetProperty":"dataSet"}, {}]

@@ -100,10 +100,13 @@ dojo.declare("wm.XhrService", wm.Service, {
 
             var inputs = {};
             wm.forEachProperty(op.parameters, function(parameterDef, parameterName) {
-                if (parameterDef.isHeader) {
-                headers[parameterName] = parameters[parameterName];
+                if (parameterDef.transmitType == "header") {
+                    headers[parameterName] = parameters[parameterName];
+                } else if (parameterDef.transmitType == "path") {
+                    if (!url.match(/\/$/)) url += "/";
+                    url += parameterName + "/" + parameters[parameterName];
                 } else if (parameters[parameterName] !== undefined) {
-                inputs[parameterName] =  parameters[parameterName];
+                    inputs[parameterName] =  parameters[parameterName];
                 }
             });
             return this._invokeBasicRequest(url, headers, requestType, contentType, useProxy, inputs, op.returnType, op, inOwner);
