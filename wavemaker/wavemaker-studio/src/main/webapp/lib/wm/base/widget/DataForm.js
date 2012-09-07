@@ -60,6 +60,7 @@ wm.getDataFormLiveView = function(inForm) {
  *       such as "enableFormProperties"
  *************************************************************************/
 dojo.declare("wm.FormPanel", wm.Container, {
+    type: "",
     margin: "0",
     padding: "2",
     enableTouchHeight: true,
@@ -76,6 +77,10 @@ dojo.declare("wm.FormPanel", wm.Container, {
     readonly: false,
     verticalAlign: "top",
     horizontalAlign: "left",
+    init: function() {
+        if (this.type == this.declaredClass) this.type = "";
+        this.inherited(arguments);
+    },
     postInit: function() {
         this.inherited(arguments);
         this.updateCaptionSizes();
