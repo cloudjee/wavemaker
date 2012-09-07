@@ -2273,11 +2273,17 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
     },
     generateStore: function(options, displayField) {
         var items = [];
+
         dojo.forEach(options, function(o,i) {
+            if (typeof o == "string") {
+                var tmp = {};
+                tmp[displayField] = o;
+                o = tmp;
+            }
             o.wmDojoStoreId = i;
             //items.push(o.dataValue);
             items.push(o);
-        });
+        }, this);
         var store = new dojo.data.ItemFileReadStore({
             data: {
                 identifier: "wmDojoStoreId",
