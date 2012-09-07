@@ -69,7 +69,7 @@ dojo.declare("Main", wm.Page, {
 
   LaunchStudioserviceVariableError: function(inSender, inError) {
       this.endWait();
-      var error = inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue");
+      var error = (inSender.getDataSet().query({name:"ERROR"}).getItem(0) === false) ? inError.message : inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue") 
       this.labelError.setShowing(true);
       this.labelError.setCaption(inError.toString() != "Error" && error.length > 0 ? error : "Unable to deploy Studio to your account");
       this.loginLayer.activate();      

@@ -404,9 +404,10 @@ wm.getValidJsName = function(inName) {
     var isInvalid = true;
     for (var i = 0; i < inName.length && isInvalid; i++) {
 	try {
-	    var result = eval(inName + " = 5");
+		/* Declare var inName in an inner function so it doesn't polute the window object's name space */
+		var result = eval("(function() {var " + inName + " = 5; return " + inName + ";})()")
 	    if (result == 5) {
-		isInvalid = false;
+			isInvalid = false;
 	    }
 	} catch(e) {};
 	if (isInvalid) {
@@ -586,40 +587,6 @@ wm.isInstanceType = function(obj, types){
 	return types && obj instanceof types;
     }
 }
-/* Obsolete with dojo 1.4
-wm.isClassInstanceType = function(inClass, type) {
-        //console.log("TEST " + inClass.prototype.declaredClass);
-
-        if (inClass.prototype === type.prototype) return true;
-
-        // its possible for a class to be redefined, which would cause prototypes NOT to be identical, but its still the same class
-        if (inClass.prototype.declaredClass && inClass.prototype.declaredClass == type.prototype.declaredClass) return true;
-
-        if (inClass.superclass) {
-                var class_names = inClass.superclass.declaredClass.split(/\B_/);
-                for (var i = 0; i < class_names.length; i++) {
-                        if (wm.isClassInstanceType(dojo.getObject(class_names[i]), type)) return true;
-                }
-        }
-        return false
-}
-
-wm.isInstanceType = function(obj, type){
-        try
-        {
-                if (!obj)
-                        return false;
-                if (obj instanceof type) return true;
-                return wm.isClassInstanceType(obj.constructor, type);
-        }
-        catch(e)
-        {
-                console.info('failed responding to instanceType query with obj = ', obj, ' and type = ', type);
-        }
-
-        return false;
-}
-*/
 
 
 wm.getWidgetByDomNode = function(element) {
@@ -803,6 +770,20 @@ wm.getBackgroundStyle = function(startColor, endColor, colorStop, direction, bro
 
     }
 
+
+ wm.getStyleFromNode = function(inNode, inStyle){
+	var result = "";
+	if(document.defaultView && document.defaultView.getComputedStyle){
+		result = document.defaultView.getComputedStyle(inNode, "").getPropertyValue(inStyle);
+	}
+	else if(inNode.currentStyle){
+		inStyle = inStyle.replace(/\-(\w)/g, function (ignore, dashLetter){
+			return dashLetter.toUpperCase();
+		});
+		result = inNode.currentStyle[inStyle];
+	}
+	return result;
+}
 
 /* Moved to here because both DataForm and LiveForm layers need these */
 wm.getParentForm = function(inWidget) {

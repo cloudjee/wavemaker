@@ -37,6 +37,7 @@ import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.RESTService;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
@@ -81,25 +82,17 @@ public class RESTServiceGenerator extends WebServiceGenerator {
     @Override
     protected void preGeneration() throws GenerationException {
         super.preGeneration();
-
-        // compile schema and generate JAXB Java files
-        List<String> wsdlFilePaths = new ArrayList<String>();
-        wsdlFilePaths.add(this.wsdl.getURI());
-        List<String> jaxbBindingFilePaths = new ArrayList<String>();
-        for (File jaxbBindingFile : this.jaxbBindingFiles) {
-            jaxbBindingFilePaths.add(jaxbBindingFile.toString());
-        }
         S2JJAXBModel model = ((JAXBTypeMapper) this.wsdl.getTypeMapper()).getJAXBModel();
         if (model != null) {
             XJCCompiler.generate(model, this.configuration.getOutputDirectory());
-            afterClassGeneration(jaxbBindingFilePaths.get(0));
+            afterClassGeneration(this.jaxbBindingFiles.get(0).getParent());
         }
     }
 
     // Extend this class and override this method if generated java classes need
     // to be customized.
     @Override
-    protected void afterClassGeneration(String path) throws GenerationException {
+    protected void afterClassGeneration(Folder path) throws GenerationException {
     }
 
     @Override

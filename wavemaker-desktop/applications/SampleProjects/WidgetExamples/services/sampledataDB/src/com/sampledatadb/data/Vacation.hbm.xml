@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.Vacation" table="vacation" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="integer">
+            <column name="ID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="startdate" type="date">
+            <column name="STARTDATE" length="10"/>
+        </property>
+        <property name="enddate" type="date">
+            <column name="ENDDATE" length="10"/>
+        </property>
+        <property name="tenantid" type="integer">
+            <column name="TENANTID"/>
+        </property>
+        <many-to-one name="employee" class="com.sampledatadb.data.Employee" cascade="none">
+            <column name="EMPID" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

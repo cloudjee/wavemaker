@@ -33,7 +33,7 @@ wm.componentList = {
         'wm.PopupMenu': ['build.Gzipped.wm_menus'],
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
 	'wm.DojoGauge': ['build.Gzipped.wm_charts'],
-	'wm.Dashboard':['build.Gzipped.wm_dashboard'],
+	'wm.Dashboard':['build.Gzipped.wm_editors', 'build.Gzipped.wm_dashboard'],
 	'wm.AccordionLayers':['build.Gzipped.wm_accordion'],
 	'wm.WizardLayers':['build.Gzipped.wm_wizardlayer'],
 	'wm.BreadcrumbLayers':['build.Gzipped.wm_breadcrumblayer'],
@@ -59,7 +59,7 @@ wm.componentList = {
 	'wm.gadget.TwitterFollowButton': ["wm.base.widget.gadget.TwitterGadgets"],
 	'wm.gadget.TwitterTweetButton': ["wm.base.widget.gadget.TwitterGadgets"],
 	'wm.gadget.TwitterList': ["wm.base.widget.gadget.TwitterGadgets"],
-    
+
 	'wm.RichText':['build.Gzipped.wm_editors','build.Gzipped.wm_richTextEditor'],
 
 	'wm.CheckBoxEditor':['build.Gzipped.wm_editors_old'],
@@ -99,13 +99,13 @@ wm.componentList = {
 
 	'wm.dijit.Dijit':['wm.base.widget.dijit.Dijit'],
 	'wm.dijit.ProgressBar':['build.Gzipped.wm_progressbar'],
-	'wm.RoundedButton':['wm.base.widget.Buttons.RoundedButton'],    
+	'wm.RoundedButton':['wm.base.widget.Buttons.RoundedButton'],
 	'wm.BusyButton':['wm.base.widget.Buttons.BusyButton'],
 	'wm.PopupMenuButton':['build.Gzipped.wm_menus'],
 	'wm.ToggleButton':['build.Gzipped.wm_editors'],   // currently in main build
 	'wm.ToggleButtonPanel':['build.Gzipped.wm_editors'],// currently in main build
 	'wm.Timer':['wm.base.components.Timer'],
-	
+
 	/* Old forms and related widgets */
     'wm.SimpleForm': ['build.Gzipped.wm_livepanel'],
     'wm.LiveForm': ['build.Gzipped.wm_livepanel'],
@@ -170,7 +170,7 @@ wm.getComponentStructure = function(inType){
     }
     var requireList = wm.componentList[inType];
 
-	// if we dont get the require list, then we assume that it is a composite widget 
+	// if we dont get the require list, then we assume that it is a composite widget
 	// so we will try to load it.
 	if (!requireList)
 	{

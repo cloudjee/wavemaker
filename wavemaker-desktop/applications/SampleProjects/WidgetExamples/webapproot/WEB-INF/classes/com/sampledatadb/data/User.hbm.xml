@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.User" table="user" dynamic-insert="false" dynamic-update="false">
+        <id name="userid" type="integer">
+            <column name="USERID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="username" type="string">
+            <column name="USERNAME" length="20"/>
+        </property>
+        <property name="password" type="string">
+            <column name="PASSWORD" length="20"/>
+        </property>
+        <property name="role" type="string">
+            <column name="ROLE" length="20"/>
+        </property>
+        <property name="tenantid" type="integer">
+            <column name="TENANTID"/>
+        </property>
+    </class>
+</hibernate-mapping>

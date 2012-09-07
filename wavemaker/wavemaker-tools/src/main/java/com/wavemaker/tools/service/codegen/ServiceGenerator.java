@@ -390,10 +390,10 @@ public abstract class ServiceGenerator {
      * Implement this method if any Java classes need to be modified after they are generated at the end of the partner
      * web service import process.
      * 
-     * @param path the full path pointing to the directory where generated Java classes reside
+     * @param path the folder pointing to the directory where generated Java classes reside
      * @throws GenerationException if any File IO error or other exceptions are encountered
      */
-    protected abstract void afterClassGeneration(String path) throws GenerationException;
+    protected abstract void afterClassGeneration(Folder path) throws GenerationException;
 
     /**
      * One of the most important artifacts generated during partner web service import is the service invocation class.

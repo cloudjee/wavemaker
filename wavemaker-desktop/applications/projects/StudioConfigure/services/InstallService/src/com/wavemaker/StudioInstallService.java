@@ -20,6 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.common.util.IOUtils;
@@ -65,11 +66,10 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
           File outputFile = new File(webapproot, "repo.zip");
           System.out.println("WRITE TO " + outputFile.toString());
           FileOutputStream fos = new FileOutputStream(outputFile);
-          int oneChar, count=0;
+          int oneChar;
           while ((oneChar=is.read()) != -1)
           {
              fos.write(oneChar);
-             count++;
           }
           is.close();
           fos.close();
@@ -77,17 +77,12 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
           if (!outputFile.exists())
             throw new IOException("Insufficient permissions to save zip file");
           File zipFolder = unzipFile(outputFile);
-          //if (!moveFiles(zipFolder, outputFile))
-          //  throw new IOException("Insufficient permissions to copy");;
-
             moveFiles(zipFolder, outputFile);
     }
-    //private boolean moveFiles(File zipFolder, File zipFile) throws IOException {
     private void moveFiles(File zipFolder, File zipFile) throws Exception {
-         boolean result = true;
          File versionFile = new File(zipFolder, "version.txt");         
          if (!versionFile.exists())
-            throw new IOException("This repo.zip file is from the wrong version of studio");
+            throw new IOException("This repo.zip file does not contain the correct version information.");
          String s = IOUtils.read(versionFile);
          if (s.indexOf("6.5") != 0)
             throw new IOException("This repo.zip file is from the wrong version of studio");
@@ -97,25 +92,21 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          File newAce = new File(webapproot, "../studio/app/lib/ace"); 
          ace.renameTo(newAce);
          if (!newAce.exists()) {
-            result = false;
             System.out.println("FAILED TO WRITE: " + newAce.getAbsolutePath());
          }            
             
          File h1 = new File(zipFolder, "hibernate-tools-3.2.4.GA.jar");
          if (!h1.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools-3.2.4.GA.jar"))) {
-            result = false;
              System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools.jar").getAbsolutePath());
          }
 
         File h2 = new File(zipFolder, "hibernate-3.2.4.sp1.jar");
          if (!h2.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate-3.2.4.sp1.jar"))) {
-            result = false;
             System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate3.jar").getAbsolutePath());
          }
          
          File jtds = new File(zipFolder, "jtds-1.2.1.jar");
          if (!jtds.renameTo(new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.1.jar"))) {
-            result = false;
                          System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.1.jar").getAbsolutePath());
          }
          
@@ -138,7 +129,8 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
      public FileUploadResponse uploadPackage(MultipartFile file) throws Exception
     {
         File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
-
+        FileOutputStream fos = null;
+        
         // Create our return object
         FileUploadResponse ret = new FileUploadResponse();
         try {
@@ -147,10 +139,8 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             if (outputFile.exists())
                 outputFile.delete();
             /* Write the file to the filesystem */
-            FileOutputStream fos = new FileOutputStream(outputFile);            
+            fos = new FileOutputStream(outputFile);            
             IOUtils.copy(file.getInputStream(), fos);
-            file.getInputStream().close();                          
-            fos.close();
             if (!outputFile.exists())
                 throw new IOException("Insufficient permissions to copy");
             File zipFolder = unzipFile(outputFile);
@@ -166,68 +156,72 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
         } catch(Exception e) {
             System.out.println("ERROR:" + e.getMessage() + " | " + e.toString());
             ret.setError(e.getMessage());
+        } finally {
+            file.getInputStream().close();                          
+            fos.close();        	
         }
+        
         return ret;
     }
 
     
-      public static File unzipFile(File zipfile) {
-    	   int BUFFER = 2048;
+     public static File unzipFile(File zipfile) {
+    	 int BUFFER = 2048;
 
 
-	      String zipname = zipfile.getName();
-          int extindex =  zipname.lastIndexOf(".") ;
-	    
-
-	      File zipFolder= new File(zipfile.getParentFile(), zipname.substring(0,extindex));
-          if (zipFolder.exists()) 
-            zipFolder.delete();
-	      zipFolder.mkdir();
+    	 String zipname = zipfile.getName();
+    	 int extindex =  zipname.lastIndexOf(".") ;
 
 
-	      File currentDir = zipFolder;
-	      //File currentDir = zipfile.getParentFile();
+    	 try {
+    		 File zipFolder= new File(zipfile.getParentFile(), zipname.substring(0,extindex));
+    		 if (zipFolder.exists()) 
+    			 org.apache.commons.io.FileUtils.deleteDirectory(zipFolder);
+    		 zipFolder.mkdir();
 
-		try {
-			BufferedOutputStream dest = null;
-			FileInputStream fis = new 
-			FileInputStream(zipfile.toString());
-			ZipInputStream zis = new 
-			ZipInputStream(new BufferedInputStream(fis));
-			ZipEntry entry;
-			while((entry = zis.getNextEntry()) != null) {
-			    //System.out.println("Extracting: " +entry);
-				if (entry.isDirectory()) {
-					File f = new File(currentDir, entry.getName());
-					if (f.exists()) f.delete(); // relevant if this is the top level folder
-					f.mkdir();
-				} else {
-					int count;
-					byte data[] = new byte[BUFFER];
-					// write the files to the disk
-					FileOutputStream fos = new 
-					FileOutputStream(currentDir.toString() + "/" + entry.getName());
-					dest = new 
-					BufferedOutputStream(fos, BUFFER);
-					while ((count = zis.read(data, 0, BUFFER)) 
-							!= -1) {
-						dest.write(data, 0, count);
-					}
-					dest.flush();
-					dest.close();
-				}
-			}
-			zis.close();
-                   
-			File[] currentDirFiles = currentDir.listFiles();
-		    
-			return currentDir;
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return (File)null;
 
-	}
+    		 File currentDir = zipFolder;
+    		 //File currentDir = zipfile.getParentFile();
+
+    		 BufferedOutputStream dest = null;
+    		 FileInputStream fis = new 
+    				 FileInputStream(zipfile.toString());
+    		 ZipInputStream zis = new 
+    				 ZipInputStream(new BufferedInputStream(fis));
+    		 ZipEntry entry;
+    		 while((entry = zis.getNextEntry()) != null) {
+    			 System.out.println("Extracting: " + entry);
+    			 if (entry.isDirectory()) {
+    				 File f = new File(currentDir, entry.getName());
+    				 if (f.exists()) f.delete(); // relevant if this is the top level folder
+    				 f.mkdir();
+    			 } else {
+    				 int count;
+    				 byte data[] = new byte[BUFFER];
+    				 //needed for non-dir file ace/ace.js created by 7zip
+    				 File destFile = new File(currentDir, entry.getName());
+    				 // write the files to the disk
+    				 FileOutputStream fos = new 
+    						 FileOutputStream(currentDir.toString() + "/" + entry.getName());
+    				 dest = new 
+    						 BufferedOutputStream(fos, BUFFER);
+    				 while ((count = zis.read(data, 0, BUFFER)) 
+    						 != -1) {
+    					 dest.write(data, 0, count);
+    				 }
+    				 dest.flush();
+    				 dest.close();
+    			 }
+    		 }
+    		 zis.close();
+
+    		 return currentDir;
+    	 } catch(Exception e) {
+    		 e.printStackTrace();
+    	 }
+    	 return (File)null;
+
+     }
 
 	@HideFromClient
     public void setDeploymentTargetManager(

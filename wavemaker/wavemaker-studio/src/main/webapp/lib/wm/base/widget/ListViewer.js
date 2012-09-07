@@ -26,7 +26,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
     width: "100%",
     height: "40px",
 /*
-    widgetsJson: {	
+    widgetsJson: {
 	label1: ["wm.Label", {width: "100px", height: "20px"}, {}, {
 	    binding: ["wm.Binding", {}, {}, {
 		wire: ["wm.Wire", {"targetProperty":"caption","source":"variable.dataValue.hey"}, {}]
@@ -50,7 +50,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
         this.domNode = this.replacementNode;
         this.dom.node = this.domNode;
         delete this.replacementNode;
-        
+
 	if (!this.variable.$.binding)
 	    new wm.Binding({name: "binding", owner: this.variable});
 
@@ -71,7 +71,11 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	    this.itemNumber.setData({dataValue: index+1});
 	    var widgetsJson = dojo.clone(this.owner._widgetsJson);
 	    this.fixWireIds(widgetsJson);
-	var root = this.createComponents(widgetsJson, this)[0];
+	var components = this.createComponents(widgetsJson, this);
+    var root;
+    dojo.forEach(components, function(c) {
+        if (c.declaredClass == "wm.Panel") root = c;
+    });
 	root._updating = true;
 	root.setWidth("100%");
 	root.setHeight("100%");
@@ -154,7 +158,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	      {hey: "there2", you: "guys2"},
 	      {hey: "there3", you: "guys3"}],
 	      */
-    // why use an object for this? So you can subclass it and change how 
+    // why use an object for this? So you can subclass it and change how
     // your row is generated. Is this needed? Too early in this exploration to know.
     rowRenderers: null,
     currentRenderer: null,
@@ -169,9 +173,9 @@ dojo.declare("wm.ListViewer", wm.Container, {
         this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
 	this.setDataSet(this.dataSet);
 
-        if (this.dataSet && this.dataSet._requester) 
+        if (this.dataSet && this.dataSet._requester)
             this.setLoadingImageShowing(true);
-        
+
 
         if (this.pageName)
 	    this.setPageName(this.pageName);
@@ -190,7 +194,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     },
     setBorderColor: function(inColor) {
         this.inherited(arguments);
-        dojo.forEach(this.rowRenderers, function(r) {r.setBorderColor(inColor);});        
+        dojo.forEach(this.rowRenderers, function(r) {r.setBorderColor(inColor);});
     },
     setRowBorder: function(inBorder) {
         this.rowBorder = inBorder;
@@ -203,6 +207,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
             variable[1].type = this._type;
             variable[1].json = this._sample;
         }
+    },
+    getPreferredFitToContentHeight: function() {
+        if (this._percEx.h) return "100px";
+        else return this.bounds.h;
     },
     setPageName: function(inPage) {
 	if (inPage == "-New Page" && this.isDesignLoaded()) {
@@ -234,22 +242,22 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    console.error(e);
 	    delete window[inPage]; // if we failed to assign it, the existence of this object will block project.findUniqueName from working. Especially if we're trying to recreate a page
 	}
-	
+
 	this.cleanupWidgets(this._widgetsJson);
-	this.renderRows(); 
+	this.renderRows();
     },
     cleanupWidgets: function(inComponents) {
 	for (var i in inComponents) {
 	    var c = inComponents[i];
 	    if (c[0] == "wm.Layout") {
 		c[0] = "wm.Panel";
-		if (!c[1].layoutKind) 
+		if (!c[1].layoutKind)
 		    c[1].layoutKind = "top-to-bottom"; // layout kind that is default for wm.Layout
 		c[1].height = "100px";
 		c[1].fitToContentHeight = true;
 		c[1].verticalAlign = "top";
 		c[1].horizontalAlign = "top";
-		
+
 	    } else if (i == "variable") {
 		delete inComponents[i]; // get rid of the "variable" as that will be created as part of the listviewer row
 	    }
@@ -287,10 +295,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
 		length = this.dataSet.getCount();
 
 
-            
+
 	    for (var i = 0; i < length; i++) {
 		if (!this.nodes[i]) {
-		    this.nodes[i] = document.createElement("div");		
+		    this.nodes[i] = document.createElement("div");
 		    var s = this.nodes[i].style;
 		    s.position = "absolute";
 		    s.top = (h * i) + "px";
@@ -325,7 +333,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     renderBounds: function() {
 	this.inherited(arguments);
 	this._hasBounds = true;
-	this.renderRows(); 
+	this.renderRows();
     },
     updateRowTops: function() {
         if (!this._renderingRows) {
@@ -337,7 +345,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
                 heightSum += r.bounds.h;
             }
         }
-            
+
     },
     scheduleRenderRows: function() {
         wm.job(this.getRuntimeId() + ".renderRows", 10, dojo.hitch(this, "renderRows"));
@@ -379,8 +387,8 @@ dojo.declare("wm.ListViewer", wm.Container, {
 	    for (var k = 0; k< this.dataSet.firstRow; k++) placeholder.push("");
 	    data = placeholder.concat(data);
 	}
-        this._renderingRows = true;	
-	
+        this._renderingRows = true;
+
 	var heightSum = 0;
         var realSum = 0;
 	var heightCount = 0;
@@ -391,17 +399,17 @@ dojo.declare("wm.ListViewer", wm.Container, {
         var lastRenderedRowIndex = 0;
 
 	var length;
-	if (this.manageLiveVar) 
+	if (this.manageLiveVar)
 	    length = this.dataSet.dataSetCount-1; // fix to this also in setDataSet
 	else
 	    length = this.dataSet.getCount();
 
         /* Iterate over every row, creating each row, and then rendering each one that is scrolled into view */
 	for (var i = 0; i < length; i++) {
-	    this.currentRenderer = this.rowRenderers[i];	    
+	    this.currentRenderer = this.rowRenderers[i];
 
-            /* If there is no rowRenderer, create one; so we'll have an empty rowRenderer for each row; row is empty until 
-             * we call renderRow and variable.setDataSet 
+            /* If there is no rowRenderer, create one; so we'll have an empty rowRenderer for each row; row is empty until
+             * we call renderRow and variable.setDataSet
              */
 	    if (!this.currentRenderer) {
 		var name = "rowRenderer" + i;

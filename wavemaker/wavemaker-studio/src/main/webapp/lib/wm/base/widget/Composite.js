@@ -40,12 +40,12 @@ wm.publishProperty = function(ctor, name, id, schema) {
 			this.getValue(target).setValue(property, this[name] = inValue);
 		}
 		*/
-	} else if (target) {		
+	} else if (target) {
         if (schema.type == "function") {return;} // not supported except in PageContainers
 
         // initialize value in prototype
         pt[name] = undefined;
-        
+
 		// build getter/setter
 		var capP = name.slice(0, 1).toUpperCase() + name.slice(1);
 		pt["get" + capP] = function(inValue) {
@@ -57,7 +57,14 @@ wm.publishProperty = function(ctor, name, id, schema) {
 		    }
 		}
 		pt["set" + capP] = function(inValue) {
-			this.getValue(target).setValue(property, this[name] = inValue);
+			var t = this.getValue(target);
+			if (t) {
+				t["_inSet" + capP] = true;
+				try {
+					this.getValue(target).setValue(property, this[name] = inValue);
+				} catch(e) {}
+				delete t["_inSet" + capP];
+			}
 		}
 		// build special setter to avoid circular connection between setter and wire
 		var pName = "source" + name;
@@ -65,8 +72,14 @@ wm.publishProperty = function(ctor, name, id, schema) {
 		pt["set" + pCapP] = function(inValue) {
 			var t = this.getValue(target);
 			if (t) {
-				t._setProp(property, this[name] = inValue);
-				this.valueChanged(name, inValue);
+				if (!t["_inSet" + capP]) {
+					t["_inSet" + capP] = true;
+					try {
+						t._setProp(property, this[name] = inValue);
+						this.valueChanged(name, inValue);
+					} catch(e) {}
+					delete t["_inSet" + capP];
+				}
 			}
 		}
 	}
@@ -89,7 +102,7 @@ wm.publish = function(inCtor, inProperties) {
 }
 
 // To be mixed in with a container widget to create a composite,
-// a custom widget which can own components and 
+// a custom widget which can own components and
 // exposes published component properties
 dojo.declare("wm.CompositeMixin", null, {
         scrim: true, // prevent the user from interacting with the contents of the composite in designer
@@ -247,7 +260,7 @@ wm.CompositeMixin.extend({
 			//console.log(this, ": forwarding makePropEdit for published [", inName, "] to ", p);
 			var e = p.comp.makePropEdit(p.property, inValue, inDefault);
 /* TODO: PROPINSPECTOR CHANGE: Need to fix this
-			if (dojo.isString(e)) 
+			if (dojo.isString(e))
 				return e.replace('name="' + p.property + '"', 'name="' + inName + '"');
 			else if (e) {
 				e.name = inName;
@@ -271,7 +284,7 @@ wm.CompositeMixin.extend({
 		var
 			s = [];
 			c = this.components.binding.write(inIndent);
-		if (c) 
+		if (c)
 			s.push(c);
 		return s;
 	}

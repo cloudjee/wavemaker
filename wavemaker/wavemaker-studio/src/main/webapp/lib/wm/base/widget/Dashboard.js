@@ -15,415 +15,424 @@
 dojo.provide("wm.base.widget.Dashboard");
 
 dojo.declare("wm.Dashboard", wm.Control, {
-	margin: 4,
-	width:'100%',
-	height:'100%',
-	dojoObj:null,
+    margin: 4,
+    width:'100%',
+    height:'100%',
+    dojoObj:null,
 
-	hasResizableColumns:false,
-	nbZones:3,
-	allowAutoScroll:true,
-	withHandles:true,
-	minChildWidth:200,
-	minColWidth:10,
+    hasResizableColumns:false,
+    nbZones:3,
+    allowAutoScroll:true,
+    withHandles:true,
+    minChildWidth:200,
+    minColWidth:10,
 
-	saveInCookie:true,
+    saveInCookie:true,
         portlets:null,
         dijitPortlets:null,
-	
-	init: function() {
-	        if (!this.portlets) 
-		    this.portlets = [];
-	        if (!this.dijitPortlets)
-		    this.dijitPortlets = [];
-		dojo.require("dojox.layout.GridContainer");
-		dojo.require("dojox.widget.Portlet");
-		dojo.require("dijit.TooltipDialog");
-		this.inherited(arguments);
+
+    init: function() {
+            if (!this.portlets)
+            this.portlets = [];
+            if (!this.dijitPortlets)
+            this.dijitPortlets = [];
+        dojo.require("dojox.layout.GridContainer");
+        dojo.require("dojox.widget.Portlet");
+        dojo.require("dijit.TooltipDialog");
+        this.inherited(arguments);
             //wm.requireCss("lib.dojo.dijit.layout.ContentPane");
             //wm.requireCss("lib.dojo.dijit.layout.BorderContainer");
                 wm.requireCss("lib.dojo.dojox.layout.resources.GridContainer");
                 wm.requireCss("lib.dojo.dojox.widget.Portlet.Portlet");
-	},
-	postInit: function() {
-		this.inherited(arguments);
-		this.initAddDialog();
-		this.bcPortlets(this.portlets);
-		this.portletsObj = {};
-		dojo.forEach(this.portlets, function(p){
-			this.portletsObj[p.id] = p;
-		}, this);
-	  dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
-	},
-	createAddDialog: function(){
-		this.addDialog = new dijit.TooltipDialog({});
-		this.addDialog.startup();
-		var dom = this.addDialog.containerNode;
-                dojo.require("wm.base.widget.Editors.Select");
-	    /* TODO: Localize */
-	    this.selectEditor = new wm.SelectMenu({owner: this, 
-						   "caption":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION"),
-						   "display":"Select",
-						   "readonly":false,
-						   "width":"250px", 
-						   captionSize:wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE"),
-						   required: true, 
-						   isRelativePositioned:true});
-		dom.appendChild(this.selectEditor.domNode);
-		var panel = dojo.create('div', {style:'text-align:center'}, dom);
-	    /* TODO: Localize */
-	    this.okButton = new wm.Button({owner: this, 
-					   "height":"100%",
-					   "width":"60px",
-					   "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_ADD_CAPTION"),
-					   isRelativePositioned:true}); //{"onclick":'onOkClick'}
-	    this.connect(this.selectEditor, "onEnterKeyPress", this, "_onOkClick");
-	    /* TODO: Localize */
-	    this.cancelButton = new wm.Button({owner: this,
-					       "height":"100%",
-					       "width":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_WIDTH"),
-					       "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION"),
-					       isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
-		panel.appendChild(this.okButton.domNode);
-		panel.appendChild(this.cancelButton.domNode);
-	},
-	initAddDialog: function(){
-		// Add Dialog should not be created when in Studio.
-		if (this.isDesignLoaded())
-			return;
+    },
+    postInit: function() {
+        this.inherited(arguments);
+        this.initAddDialog();
+        this.bcPortlets(this.portlets);
+        this.portletsObj = {};
+        dojo.forEach(this.portlets, function(p){
+            this.portletsObj[p.id] = p;
+        }, this);
+      dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
+    },
+    createAddDialog: function(){
+        this.addDialog = new wm.Dialog({owner: this,
+                                        useContainerWidget:true,
+                                        useButtonBar: true,
+                                        width: "350px",
+                                        height: "90px",
+                                        title: "",
+                                        modal: true,
+                                        corner: "tl"});
+        this.addDialog.containerWidget.setVerticalAlign("middle");
+
+        /* Class Loaded via componentList */
+        this.selectEditor = new wm.SelectMenu({owner: this,
+                            parent: this.addDialog.containerWidget,
+                           "caption":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION"),
+                           "display":"Select",
+                           "readonly":false,
+                           "width":"250px",
+                           captionSize:wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE"),
+                           required: true/*,
+                           isRelativePositioned:true*/
+                        });
+
+
+
+        this.okButton = new wm.Button({owner: this,
+                       "height":"100%",
+                       "width":"60px",
+                       "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_ADD_CAPTION"),
+                       parent: this.addDialog.buttonBar});
+        this.connect(this.selectEditor, "onEnterKeyPress", this, "_onOkClick");
+        /* TODO: Localize */
+        this.cancelButton = new wm.Button({owner: this,
+                           "height":"100%",
+                           "width":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_WIDTH"),
+                           "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION"),
+                           parent: this.addDialog.buttonBar}); //, {"onclick":'onCancelClick'});
+
+
+    },
+    initAddDialog: function(){
+        // Add Dialog should not be created when in Studio.
+        if (this.isDesignLoaded())
+            return;
     if (!this.addDialog)
-			this.createAddDialog();
+            this.createAddDialog();
 
-		var e = this.selectEditor;
-		var eData = [];
-		dojo.forEach(this.portlets, function(obj){
-			eData.push({name: obj.title,dataValue: obj});
-		});
-		
-	    var ds = e.dataSet = new wm.Variable({name: "optionsVar", owner: e, type: "EntryData" });
-		ds.setData(eData);
-		e.displayField = "name";
-		e.dataField = "dataValue";
-		e.createEditor();
-		dojo.connect(this.okButton, 'onclick', this, '_onOkClick');
-		dojo.connect(this.cancelButton, 'onclick', this, '_onCancelClick');
-	},
-	_onOkClick: function(){
-		var props = this.selectEditor.getDataValue();
-		props.isOpen = true;
-		if (props){
-			this.addPortlet(props);
-			this.updateClosedList(props.id, false);
-		}
-		
-		this.closeDialog();
-	},
-	_onCancelClick: function(){
-		this.closeDialog();
-	},
-	update: function(e){
-	    if (e && (e.currentTarget||e.target))
-			this.openDialog(e.currentTarget||e.target);
-	},
-	closeDialog: function(){
-		dijit.popup.close(this.addDialog);
-	},
-	openDialog: function(inNearDOM){
-		dijit.popup.open({popup: this.addDialog, around: inNearDOM})		
-	},
+        var e = this.selectEditor;
+        var eData = [];
+        dojo.forEach(this.portlets, function(obj){
+            eData.push({name: obj.title,dataValue: obj});
+        });
+
+        var ds = e.dataSet = new wm.Variable({name: "optionsVar", owner: e, type: "EntryData" });
+        ds.setData(eData);
+        e.displayField = "name";
+        e.dataField = "dataValue";
+        e.createEditor();
+        dojo.connect(this.okButton, 'onclick', this, '_onOkClick');
+        dojo.connect(this.cancelButton, 'onclick', this, '_onCancelClick');
+    },
+    _onOkClick: function(){
+        var props = this.selectEditor.getDataValue();
+        props.isOpen = true;
+        if (props){
+            this.addPortlet(props);
+            this.updateClosedList(props.id, false);
+        }
+
+        this.closeDialog();
+    },
+    _onCancelClick: function(){
+        this.closeDialog();
+    },
+    update: function(e){
+        if (e && (e.currentTarget||e.target))
+            this.openDialog(e.currentTarget||e.target);
+    },
+    closeDialog: function(){
+        this.addDialog.hide();
+    },
+    openDialog: function(inNearDOM){
+        this.addDialog.fixPositionNode = inNearDOM;
+        this.addDialog.show();
+    },
         renderBounds: function() {
-	    this.inherited(arguments);
-	    this.resizeDijit();
-	    this.updatePageContainerBounds();
-	},
+        this.inherited(arguments);
+        this.resizeDijit();
+        this.updatePageContainerBounds();
+    },
         updatePageContainerBounds: function() {
-	    wm.job(this.getRuntimeId() + ".updatePageContainerBounds", 10, dojo.hitch(this, function() {
-		for (var i = 0; i < this.dijitPortlets.length; i++) {
-		    var p = this.dijitPortlets[i];
-		    if (p.wm_pageContainer && p.wm_pageContainer.domNode && p.wm_pageContainer.domNode.parentNode) {
-			if (p.wm_pageContainer.page && p.wm_pageContainer.page.root) {
-			    if (String(p.wm_pageContainer.page.root.height).match(/\%/)) {
-				p.wm_pageContainer.page.root.setHeight("250px");
-			    }
-			    var c = dojo.coords(p.wm_pageContainer.domNode.parentNode);
-			    p.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);			    
-			    p.wm_pageContainer.reflow();
-			}
-		    }
-		}
-	    }));
-	},
-	resizeDijit: function() {
-		if (this.dojoObj)
-			this.dojoObj.resize(dojo.contentBox(this.domNode));
-	},
-	renderDojoObj: function() {
-		if (this.dojoObj != null){
-			this.dojoObj.destroy();
-		}
+        wm.job(this.getRuntimeId() + ".updatePageContainerBounds", 10, dojo.hitch(this, function() {
+        for (var i = 0; i < this.dijitPortlets.length; i++) {
+            var p = this.dijitPortlets[i];
+            if (p.wm_pageContainer && p.wm_pageContainer.domNode && p.wm_pageContainer.domNode.parentNode) {
+            if (p.wm_pageContainer.page && p.wm_pageContainer.page.root) {
+                if (String(p.wm_pageContainer.page.root.height).match(/\%/)) {
+                p.wm_pageContainer.page.root.setHeight("250px");
+                }
+                var c = dojo.coords(p.wm_pageContainer.domNode.parentNode);
+                p.wm_pageContainer.setBounds(null,null,c.w-2, c.h-4);
+                p.wm_pageContainer.reflow();
+            }
+            }
+        }
+        }));
+    },
+    resizeDijit: function() {
+        if (this.dojoObj)
+            this.dojoObj.resize(dojo.contentBox(this.domNode));
+    },
+    renderDojoObj: function() {
+        if (this.dojoObj != null){
+            this.dojoObj.destroy();
+        }
 
-		var props = {
-			acceptTypes:['Portlet'],
-			handleClasses:["dijitTitlePaneTitle"],
-			isAutoOrganized:false,
-			hasResizableColumns:this.hasResizableColumns,
-			nbZones:this.nbZones,
-			allowAutoScroll:this.allowAutoScroll,
-			withHandles:this.withHandles,
-			minChildWidth:this.minChildWidth,
-			minColWidth:this.minColWidth,
-			style:"width:100%;height:100%;"/*,
-			"class":"soria"*/
-		};
+        var props = {
+            acceptTypes:['Portlet'],
+            handleClasses:["dijitTitlePaneTitle"],
+            isAutoOrganized:false,
+            hasResizableColumns:this.hasResizableColumns,
+            nbZones:this.nbZones,
+            allowAutoScroll:this.allowAutoScroll,
+            withHandles:this.withHandles,
+            minChildWidth:this.minChildWidth,
+            minColWidth:this.minColWidth,
+            style:"width:100%;height:100%;"/*,
+            "class":"soria"*/
+        };
 
-		this.dojoObj = new dojox.layout.GridContainer(props, dojo.create('div', {style:"width:100%;height:100%;"}, this.domNode));
-		this.connectDojoEvents();
-		this.dojoRenderer();
-		this.renderPortlets();
-	},
-	dojoRenderer: function (){
-		if (!this.dojoObj)
-			return;
-		this.dojoObj.startup();
-	},
+        this.dojoObj = new dojox.layout.GridContainer(props, dojo.create('div', {style:"width:100%;height:100%;"}, this.domNode));
+        this.connectDojoEvents();
+        this.dojoRenderer();
+        this.renderPortlets();
+    },
+    dojoRenderer: function (){
+        if (!this.dojoObj)
+            return;
+        this.dojoObj.startup();
+    },
     customGetPortletsCookie: function() {
-	return dojo.cookie(this.getId() + '_portlets');
+    return dojo.cookie(this.getId() + '_portlets');
     },
     customSavePortletsCookie: function(data, options) {
-	dojo.cookie(this.getId() + '_portlets',data, options);
+    dojo.cookie(this.getId() + '_portlets',data, options);
     },
     customGetClosedPortletsCookie: function() {
-	return dojo.cookie(this.getId() + '_closed_portlets') || '[]';
+    return dojo.cookie(this.getId() + '_closed_portlets') || '[]';
     },
     customSaveClosedPortletsCookie: function(data, options) {
-	dojo.cookie(this.getId() + '_closed_portlets',data, options);
+    dojo.cookie(this.getId() + '_closed_portlets',data, options);
     },
-	renderPortlets: function(){
-		var visiblePortlets = {}, opened = [], closed = [];
-		dojo.forEach(this.portlets, function(p){
-			if (p.isOpen)
-				visiblePortlets[p.id] = p;
-		}, this);
+    renderPortlets: function(){
+        var visiblePortlets = {}, opened = [], closed = [];
+        dojo.forEach(this.portlets, function(p){
+            if (p.isOpen)
+                visiblePortlets[p.id] = p;
+        }, this);
 
-		if (!this.isDesignLoaded() && this.saveInCookie){
-		    var strPortletList = this.customGetPortletsCookie();
-			if (strPortletList && strPortletList != ''){
-				opened = dojo.fromJson(strPortletList);
-				this.bcPortlets(opened);
-				dojo.forEach(opened, function(p){
-					var validPortlet = this.portletsObj[p.id];
-					if (validPortlet){
-						visiblePortlets[p.id] = dojo.mixin({}, validPortlet, {x: p.x, y: p.y, isOpen:true});
-					}
-				}, this);
-			}
+        if (!this.isDesignLoaded() && this.saveInCookie){
+            var strPortletList = this.customGetPortletsCookie();
+            if (strPortletList && strPortletList != ''){
+                opened = dojo.fromJson(strPortletList);
+                this.bcPortlets(opened);
+                dojo.forEach(opened, function(p){
+                    var validPortlet = this.portletsObj[p.id];
+                    if (validPortlet){
+                        visiblePortlets[p.id] = dojo.mixin({}, validPortlet, {x: p.x, y: p.y, isOpen:true});
+                    }
+                }, this);
+            }
 
-		        var strClosedList = this.customGetClosedPortletsCookie();
-			if (strClosedList && strClosedList != ''){
-				closed = dojo.fromJson(strClosedList);
-				dojo.forEach(closed, function(pId){
-					var validPortlet = this.portletsObj[pId];
-					if (validPortlet){
-						visiblePortlets[pId] = dojo.mixin({}, validPortlet, {isOpen:false});
-					}
-				}, this);
-			}
-		}
+                var strClosedList = this.customGetClosedPortletsCookie();
+            if (strClosedList && strClosedList != ''){
+                closed = dojo.fromJson(strClosedList);
+                dojo.forEach(closed, function(pId){
+                    var validPortlet = this.portletsObj[pId];
+                    if (validPortlet){
+                        visiblePortlets[pId] = dojo.mixin({}, validPortlet, {isOpen:false});
+                    }
+                }, this);
+            }
+        }
 
-		var portletArray = [];
-		for (var i in visiblePortlets){
-			portletArray.push(visiblePortlets[i]);
-		}
-		
-		if (!this.isDesignLoaded())
-			this.onBeforeRenderPortlet(portletArray);
-		for (var i = 0; i < portletArray.length; i++){
-			this.addPortlet(portletArray[i]);
-		}
-	},
-	onBeforeRenderPortlet: function(portlets){
-	},
-	connectDojoEvents: function(){
-	},
+        var portletArray = [];
+        for (var i in visiblePortlets){
+            portletArray.push(visiblePortlets[i]);
+        }
+
+        if (!this.isDesignLoaded())
+            this.onBeforeRenderPortlet(portletArray);
+        for (var i = 0; i < portletArray.length; i++){
+            this.addPortlet(portletArray[i]);
+        }
+    },
+    onBeforeRenderPortlet: function(portlets){
+    },
+    connectDojoEvents: function(){
+    },
     addPortlet: function(props){
-	//props: {id:'portlet', title:'Portlet 1', page:'Page_widget_1', isOpen:true, isClosable:false, x:0, y:0}
-	if (!props.isOpen)
-	    return;
-	var portletProps = {'title':props.title, /*'class':'soria',*/ 'dndType': 'Portlet', 'closable':props.isClosable};
-	var portlet = new dojox.widget.Portlet(portletProps, dojo.create('div'));
-	portlet.wmProps = props;
-	if (this.isDesignLoaded()){
-	    props.portletId = portlet.id;
-	    portlet.closeIcon.style.display = props.isClosable ? 'block' : 'none';
-	}
-	
-	portlet.containerNode.style.padding = '0px';
-	this.dojoObj.addService(portlet,props.x || 0, props.y || 0);
-	portlet.wm_pageContainer = new wm.PageContainer({loadParentFirst: false, owner: this, parentNode: portlet.containerNode, isRelativePositioned:true});
-	if (props.page) {
-	    portlet.wm_pageContainer.setPageName(props.page);
-	    this.updatePageContainerBounds();
-   	}
+    //props: {id:'portlet', title:'Portlet 1', page:'Page_widget_1', isOpen:true, isClosable:false, x:0, y:0}
+    if (!props.isOpen)
+        return;
+    var portletProps = {'title':props.title, /*'class':'soria',*/ 'dndType': 'Portlet', 'closable':props.isClosable};
+    var portlet = new dojox.widget.Portlet(portletProps, dojo.create('div'));
+    portlet.wmProps = props;
+    if (this.isDesignLoaded()){
+        props.portletId = portlet.id;
+        portlet.closeIcon.style.display = props.isClosable ? 'block' : 'none';
+    }
 
-	if (!this.isDesignLoaded()){
-	    dojo.connect(portlet, 'onClose', this, 'portletClosed');
-	    portlet.subscribe("/dojox/mdnd/drop", dojo.hitch(this, '_onDashboardChange'));
-	    this._onDashboardChange();
-	}	
-	
-	this.dijitPortlets.push(portlet);		
-	return props;
+    portlet.containerNode.style.padding = '0px';
+    this.dojoObj.addService(portlet,props.x || 0, props.y || 0);
+    portlet.wm_pageContainer = new wm.PageContainer({loadParentFirst: false, owner: this, parentNode: portlet.containerNode, isRelativePositioned:true});
+    if (props.page) {
+        portlet.wm_pageContainer.setPageName(props.page);
+        this.updatePageContainerBounds();
+    }
+
+    if (!this.isDesignLoaded()){
+        dojo.connect(portlet, 'onClose', this, 'portletClosed');
+        portlet.subscribe("/dojox/mdnd/drop", dojo.hitch(this, '_onDashboardChange'));
+        this._onDashboardChange();
+    }
+
+    this.dijitPortlets.push(portlet);
+    return props;
     },
-	addNewPortlet: function(props){
-		props.id = this.getNewPortletId(props.id);
-		props.title = this.getPortletTitleFromId(props.id);
-		this.addPortlet(props);
-		return props;
-	},
-	getNewPortletId: function(inId){
-		inId = inId.toLowerCase().replace(/ /g, '_');
-		if (!this.pIds){
-			this.pIds = {};
-			dojo.forEach(this.portlets, function(p){
-				this.pIds[p.id] = true;
-			}, this);
-		}
+    addNewPortlet: function(props){
+        props.id = this.getNewPortletId(props.id);
+        props.title = this.getPortletTitleFromId(props.id);
+        this.addPortlet(props);
+        return props;
+    },
+    getNewPortletId: function(inId){
+        inId = inId.toLowerCase().replace(/ /g, '_');
+        if (!this.pIds){
+            this.pIds = {};
+            dojo.forEach(this.portlets, function(p){
+                this.pIds[p.id] = true;
+            }, this);
+        }
 
-		if (!this.pIds[inId]){
-			this.pIds[inId] = true;
-			return inId;
-		}
+        if (!this.pIds[inId]){
+            this.pIds[inId] = true;
+            return inId;
+        }
 
-		var c = 1;
-		while(this.pIds[inId + '_' + c]){
-			c++; 
-		}
-		
-		this.pIds[inId + '_' + c] = true;
-		return inId + '_' + c;
-	},
-	portletClosed: function(e){
-		var p = dijit.getEnclosingWidget(e.target);
-		if (p){
-			var wmProps = p.wmProps;
-			this.updateClosedList(wmProps.id, true);			
-		    if (p.wm_pageContainer)
-			p.wm_pageContainer.destroy();
-		    p.destroy();
-		}
-		this._onDashboardChange(e);
-	},
-	updateClosedList: function(id, isClosed){
-		if (!this.saveInCookie)
-			return;
-		if (!this.closedList){
-		        var strClosedList = this.customGetClosedPortletsCookie();
-			this.closedList = dojo.fromJson(strClosedList);
-		}
-	    if (!this.closedList)
-		this.closedList = [];
+        var c = 1;
+        while(this.pIds[inId + '_' + c]){
+            c++;
+        }
 
-	    if ( (isClosed && dojo.indexOf(this.closedList, id) != -1) || (!isClosed && dojo.indexOf(this.closedList,id) == -1))
-			return;
-		
-		if (isClosed){
-				this.closedList.push(id);
-		} else {
-		    while (dojo.indexOf(this.closedList,id) != -1){
-			var idx = dojo.indexOf(this.closedList,id);
-				this.closedList.splice(idx, 1);
-			}
-		}
-	    this.customSaveClosedPortletsCookie( dojo.toJson(this.closedList), {expires:5});
-	},
-	_onDashboardChange: function(e){
-	    var pList = this.updatePortletXY();
-	    console.info('saving in cookie....', pList);
-	    if (this.saveInCookie)
-		this.customSavePortletsCookie(dojo.toJson(pList), {expires:5});
-	    else
-		this.customSavePortletsCookie(null, {expires:-1});
-	    this.onDashboardChange(pList);
-	},
-	onDashboardChange: function(activePortlets){
-	},
-	_togglePortlet: function(evt){
-		var p = dijit.getEnclosingWidget(evt.originalTarget);
-		dojo.toggleDOM(p.containerNode);
-	},
-	destroyPortlet: function(props){
-		var p = dijit.byId(props.portletId);
-		delete props.portletId;
-		if (p)
-			p.destroy();
-	},
-	updatePortletXY: function(){
-		this.portletXY = {};
-		var _this = this;
-		var currentPortletList = [];
-	    dojo.forEach(this.dojoObj._grid, function(col, x){
-	      dojo.forEach(col.node.childNodes, function(domPort, y){
-	        var portlet = dijit.getEnclosingWidget(domPort);
-					var wmProps = portlet.wmProps;
-	        if (portlet){
-						_this.portletXY[portlet.id] = {x:x, y:y};
-						wmProps.x = x;
-						wmProps.y = y;
-						currentPortletList.push(wmProps);
-	        }
-	      });
-	    });
-		
-		return currentPortletList;
-	},
-	destroy: function(){
-		this.inherited(arguments);
-		if (this.addDialog){
-			this.addDialog.destroy();
-			delete this.addDialog;
-		}
-	},
-	
-	// Backward compatability: This function is written for dashboard portlets who does not have id's in portlet definition.
-	bcPortlets: function(pList){
-		dojo.forEach(pList, function(p){
-			if (p.id)
-				return;
-			p.id = this.getPortletIdFromTitle(p.title);
-		}, this);
-	},
-	getPortletIdFromTitle: function(inTitle){
-		if (!inTitle)
-			return '';
-		return inTitle.replace(/ /g, '_');
-	},
-	getPortletTitleFromId: function(pId){
-		return pId.replace(/_/g, ' ');
-	}
+        this.pIds[inId + '_' + c] = true;
+        return inId + '_' + c;
+    },
+    portletClosed: function(e){
+        var p = dijit.getEnclosingWidget(e.target);
+        if (p){
+            var wmProps = p.wmProps;
+            this.updateClosedList(wmProps.id, true);
+            if (p.wm_pageContainer)
+            p.wm_pageContainer.destroy();
+            p.destroy();
+        }
+        this._onDashboardChange(e);
+    },
+    updateClosedList: function(id, isClosed){
+        if (!this.saveInCookie)
+            return;
+        if (!this.closedList){
+                var strClosedList = this.customGetClosedPortletsCookie();
+            this.closedList = dojo.fromJson(strClosedList);
+        }
+        if (!this.closedList)
+        this.closedList = [];
+
+        if ( (isClosed && dojo.indexOf(this.closedList, id) != -1) || (!isClosed && dojo.indexOf(this.closedList,id) == -1))
+            return;
+
+        if (isClosed){
+                this.closedList.push(id);
+        } else {
+            while (dojo.indexOf(this.closedList,id) != -1){
+            var idx = dojo.indexOf(this.closedList,id);
+                this.closedList.splice(idx, 1);
+            }
+        }
+        this.customSaveClosedPortletsCookie( dojo.toJson(this.closedList), {expires:5});
+    },
+    _onDashboardChange: function(e){
+        var pList = this.updatePortletXY();
+        console.info('saving in cookie....', pList);
+        if (this.saveInCookie)
+        this.customSavePortletsCookie(dojo.toJson(pList), {expires:5});
+        else
+        this.customSavePortletsCookie(null, {expires:-1});
+        this.onDashboardChange(pList);
+    },
+    onDashboardChange: function(activePortlets){
+    },
+    _togglePortlet: function(evt){
+        var p = dijit.getEnclosingWidget(evt.originalTarget);
+        dojo.toggleDOM(p.containerNode);
+    },
+    destroyPortlet: function(props){
+        var p = dijit.byId(props.portletId);
+        delete props.portletId;
+        if (p)
+            p.destroy();
+    },
+    updatePortletXY: function(){
+        this.portletXY = {};
+        var _this = this;
+        var currentPortletList = [];
+        dojo.forEach(this.dojoObj._grid, function(col, x){
+          dojo.forEach(col.node.childNodes, function(domPort, y){
+            var portlet = dijit.getEnclosingWidget(domPort);
+                    var wmProps = portlet.wmProps;
+            if (portlet){
+                        _this.portletXY[portlet.id] = {x:x, y:y};
+                        wmProps.x = x;
+                        wmProps.y = y;
+                        currentPortletList.push(wmProps);
+            }
+          });
+        });
+
+        return currentPortletList;
+    },
+    destroy: function(){
+        this.inherited(arguments);
+        if (this.addDialog){
+            this.addDialog.destroy();
+            delete this.addDialog;
+        }
+    },
+
+    // Backward compatability: This function is written for dashboard portlets who does not have id's in portlet definition.
+    bcPortlets: function(pList){
+        dojo.forEach(pList, function(p){
+            if (p.id)
+                return;
+            p.id = this.getPortletIdFromTitle(p.title);
+        }, this);
+    },
+    getPortletIdFromTitle: function(inTitle){
+        if (!inTitle)
+            return '';
+        return inTitle.replace(/ /g, '_');
+    },
+    getPortletTitleFromId: function(pId){
+        return pId.replace(/_/g, ' ');
+    }
 });
 
 dojo.toggleDOM = function(domNode, animate){
-	// summary: 
-	//		Toggles the visibility of domNode.
-	var n = domNode;
-	if(dojo.style(n, "display") == "none"){
-		if (animate){
-			dojo.style(n, {"display": "block",	"height": "1px","width": "auto"});
-			dojo.fx.wipeIn({node: n}).play();
-		} else {
-			dojo.style(n, {"display": "block"});
-		}
+    // summary:
+    //      Toggles the visibility of domNode.
+    var n = domNode;
+    if(dojo.style(n, "display") == "none"){
+        if (animate){
+            dojo.style(n, {"display": "block",  "height": "1px","width": "auto"});
+            dojo.fx.wipeIn({node: n}).play();
+        } else {
+            dojo.style(n, {"display": "block"});
+        }
 
-	}else{
-		if (animate){
-			dojo.fx.wipeOut({
-				node: n,
-				onEnd: dojo.hitch(this, function(){
-					dojo.style(n,{"display": "none", "height": "", "width":""});
-				}
-			)}).play();
-		} else {
-			dojo.style(n, {"display": "none"});
-		}
-	}
+    }else{
+        if (animate){
+            dojo.fx.wipeOut({
+                node: n,
+                onEnd: dojo.hitch(this, function(){
+                    dojo.style(n,{"display": "none", "height": "", "width":""});
+                }
+            )}).play();
+        } else {
+            dojo.style(n, {"display": "none"});
+        }
+    }
 }

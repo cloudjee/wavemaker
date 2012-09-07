@@ -590,7 +590,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     //
     canSetDataSet: function(inDataSet) {
-        return Boolean(inDataSet && inDataSet.isList);
+        return Boolean(inDataSet);
     },
     // virtual binding target
     setDataSet: function(inDataSet) {
@@ -611,13 +611,15 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.scrollDownAddItems();
                 delete this._paging;
             } else {
-                 if (this._isDesignLoaded && this.columns && this.columns.length && inDataSet && inDataSet.type && (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type)) {
+                 if (this._isDesignLoaded && this.columns && this.columns.length && inDataSet && inDataSet.type) {
                      if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
-                     this._typeChangedConnect = this.connect(this.dataSet, "typeChanged", this, function() {
+                     this._typeChangedConnect = this.connect(inDataSet, "typeChanged", this, function() {
                          this.updateColumnData(true); // if the type changes for this.variable, reapply this variable's new type info
                          this._render();
                      });
-                     this.updateColumnData(true);
+                    if (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type) {
+                        this.updateColumnData(true);
+                    }
                  }
                 this.setSelectedItemType(t);
                 this.dataSetToSelectedItem(inDataSet);
