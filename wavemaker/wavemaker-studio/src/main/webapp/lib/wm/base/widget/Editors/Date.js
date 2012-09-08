@@ -420,10 +420,17 @@ dojo.declare("wm.DateTime", wm.Date, {
         }
         this.setDataValue(value);
     },
-
     _getReadonlyValue: function() {
-        return this.calcDisplayValue(this.getDataValue());
+        var d = this.getDataValue();
+        if (d) {
+            d = new Date(d);
+            if (!this.useLocalTime) {
+                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset);
+            }
+        }
+        return this.calcDisplayValue(d);
     },
+
     getDisplayValue: function() {
         var v = this.getDataValue();
         if (v === null || v === undefined) return "";
