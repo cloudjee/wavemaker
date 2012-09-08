@@ -199,7 +199,11 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
     },
     setDate: function(inValue) {
         var d = wm.convertValueToDate(inValue);
-        if (d && !this.useLocalTime) d.setHours(d.getHours() + wm.timezoneOffset);
+        if (d && !this.useLocalTime) {
+            /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+            d.setHours(d.getHours() + Math.floor(wm.timezoneOffset),
+                       d.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+        }
         this.dijit.set("value", d);
     },
     getDisplayDate: function() {

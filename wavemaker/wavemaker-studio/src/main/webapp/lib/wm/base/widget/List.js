@@ -1748,7 +1748,10 @@ wm.List.extend({
             return inValue;
         }
         if (!formatterProps.useLocalTime) {
-            inValue.setHours(inValue.getHours() + wm.timezoneOffset);
+            //inValue.setHours(inValue.getHours() + wm.timezoneOffset);
+             /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+            inValue.setHours(inValue.getHours() + Math.floor(wm.timezoneOffset),
+                             inValue.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
         }
         var constraints = {
             fullYear: true,

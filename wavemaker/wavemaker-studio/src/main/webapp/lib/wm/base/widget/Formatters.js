@@ -15,16 +15,16 @@
 dojo.provide("wm.base.widget.Formatters");
 
 // FIXME: need formatter registry
-wm.formatters = [ 
-    "Number", 
-    "Date", 
-    "Time", 
-    "DateTime", 
-    "Currency", 
+wm.formatters = [
+    "Number",
+    "Date",
+    "Time",
+    "DateTime",
+    "Currency",
     //"Link",
-    //"RegularExpression", 
+    //"RegularExpression",
     //"Evaluation",
-    //"Image", 
+    //"Image",
     "Percent"
 ];
 
@@ -107,8 +107,12 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 			locale: this.locale
 		}
 		var d = new Date(inDatum);
-		if (!this.useLocalTime)
-		    d.setHours(d.getHours() + wm.timezoneOffset);
+		if (!this.useLocalTime) {
+		    //d.setHours(d.getHours() + wm.timezoneOffset);
+             /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+            d.setHours(d.getHours() + Math.floor(wm.timezoneOffset),
+                       d.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+        }
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));
 		return (inDatum == undefined) || isNaN(d.getTime()) ? '-' : dojo.date.locale.format(d, opts);

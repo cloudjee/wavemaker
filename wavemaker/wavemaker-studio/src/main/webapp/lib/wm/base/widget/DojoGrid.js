@@ -2020,7 +2020,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         return inValue;
         }
         if (!formatterProps.useLocalTime) {
-        inValue.setHours(inValue.getHours() + wm.timezoneOffset);
+            /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+            inValue.setHours(inValue.getHours() + Math.floor(wm.timezoneOffset),
+                             inValue.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
         }
     var constraints = {fullYear: true, selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
         return dojo.date.locale.format(inValue, constraints);
@@ -2337,7 +2339,10 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         var useLocalTime = formatterProps && formatterProps.useLocalTime;
         var value = this.getValue(inRowIndex);
         if (!useLocalTime) {
-            value.setHours(-wm.timezoneOffset, 0, 0);
+            value.setHours(-Math.floor(wm.timezoneOffset),
+                           -60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)),
+                           0);
+            //value.setHours(-wm.timezoneOffset, 0, 0);
         }
         this.applyEdit(value, inRowIndex);
         this._finish(inRowIndex);

@@ -79,9 +79,13 @@ dojo.declare("wm.Date", wm.Text, {
         if (d) {
             if (!this.useLocalTime) {
                 if (this.dateMode == "Date") {
-                    d.setHours(-wm.timezoneOffset, 0, 0);
+                     /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+                    d.setHours(-Math.floor(wm.timezoneOffset),
+                             -60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+                    //d.setHours(-wm.timezoneOffset, 0, 0);
                 } else {
-                    d = dojo.date.add(d, "hour", -wm.timezoneOffset);
+                    /* Allow hours to be set */
+                    d = dojo.date.add(d, "minutes", -wm.timezoneOffset*60);
                 }
             }
             return d.getTime();
@@ -93,7 +97,10 @@ dojo.declare("wm.Date", wm.Text, {
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
         if (!this.useLocalTime && v) {
             v = new Date(v); // don't modify the source data as the called may still need it
-            v.setHours(v.getHours() + wm.timezoneOffset);
+             /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+            v.setHours(v.getHours() + Math.floor(wm.timezoneOffset),
+                             v.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+            //v.setHours(v.getHours() + wm.timezoneOffset);
         }
         this.inherited(arguments, [v]);
     },
@@ -231,7 +238,12 @@ dojo.declare("wm.Time", wm.Date, {
     getEditorValue: function() {
         var d = wm.Text.prototype.getEditorValue.call(this);
         if (d) {
-            if (!this.useLocalTime) d.setHours(d.getHours() - wm.timezoneOffset);
+            if (!this.useLocalTime) {
+                 /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+                d.setHours(d.getHours() + Math.floor(wm.timezoneOffset),
+                           d.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+                //d.setHours(d.getHours() - wm.timezoneOffset);
+            }
             return d.getTime();
         }
         return this.makeEmptyValue();
@@ -415,6 +427,8 @@ dojo.declare("wm.DateTime", wm.Date, {
         return this.calcDisplayValue(this.getDataValue());
     },
     getDisplayValue: function() {
+        var v = this.getDataValue();
+        if (v === null || v === undefined) return "";
         return this.calcDisplayValue(this.getDataValue());
     },
     setMaximum: function(inValue) {
