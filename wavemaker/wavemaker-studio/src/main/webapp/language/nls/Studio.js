@@ -204,6 +204,7 @@
     "wm.EditPanel.UPDATE_CAPTION": "Update",
     "wm.EditPanel.DELETE_CAPTION": "Delete",
 
+    "wm.FormPanel.CONFIRM_DELETE_EDITORS": "This operation will delete all editors currently in this form.  Continue?",
     "wm.ServiceForm.UPDATE_CAPTION": "Edit",
     "wm.DBForm.DIALOG_TITLE": "Setup Your Form",
     "wm.DBForm.RESET_CAPTION": "Reset",

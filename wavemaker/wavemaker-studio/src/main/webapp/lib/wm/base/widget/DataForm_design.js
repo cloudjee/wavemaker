@@ -44,9 +44,17 @@ wm.Object.extendSchema(wm.FormPanel, {
 
 wm.FormPanel.extend({
     set_type: function(inType) {
-	    this._removeEditors();
-	    this.type = inType;
-	    this.addEditors();
+        var f = dojo.hitch(this, function() {
+            this._removeEditors();
+            this.type = inType;
+            this.addEditors();
+        });
+        if (this.getEditorsArray()) {
+            app.confirm(studio.getDictionaryItem("wm.FormPanel.CONFIRM_DELETE_EDITORS"), false, f);
+        } else {
+            f();
+        }
+
     },
     set_autoSizeCaption: function(inValue) {
 	this.autoSizeCaption = inValue;
