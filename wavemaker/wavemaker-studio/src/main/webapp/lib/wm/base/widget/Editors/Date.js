@@ -80,8 +80,7 @@ dojo.declare("wm.Date", wm.Text, {
             if (!this.useLocalTime) {
                 if (this.dateMode == "Date") {
                      /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-                    d.setHours(-Math.floor(wm.timezoneOffset),
-                             -60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+                    d.setHours(0, -60*wm.timezoneOffset);
                     //d.setHours(-wm.timezoneOffset, 0, 0);
                 } else {
                     /* Allow hours to be set */
@@ -98,8 +97,7 @@ dojo.declare("wm.Date", wm.Text, {
         if (!this.useLocalTime && v) {
             v = new Date(v); // don't modify the source data as the called may still need it
              /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-            v.setHours(v.getHours() + Math.floor(wm.timezoneOffset),
-                             v.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset,0,0);
             //v.setHours(v.getHours() + wm.timezoneOffset);
         }
         this.inherited(arguments, [v]);
@@ -240,8 +238,7 @@ dojo.declare("wm.Time", wm.Date, {
         if (d) {
             if (!this.useLocalTime) {
                  /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-                d.setHours(d.getHours() + Math.floor(wm.timezoneOffset),
-                           d.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+                d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset,0);
                 //d.setHours(d.getHours() - wm.timezoneOffset);
             }
             return d.getTime();
@@ -385,6 +382,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             if (v) {
                 var datetmp = new Date(v);
                 d.setFullYear(datetmp.getFullYear(), datetmp.getMonth(), datetmp.getDate());
+                if (this.dateMode == "Date") d.setHours(0,0,0,0);
             } else {
                 return null;
             }

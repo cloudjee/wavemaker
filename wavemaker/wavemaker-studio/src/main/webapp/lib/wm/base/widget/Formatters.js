@@ -110,8 +110,7 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 		if (!this.useLocalTime) {
 		    //d.setHours(d.getHours() + wm.timezoneOffset);
              /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-            d.setHours(d.getHours() + Math.floor(wm.timezoneOffset),
-                       d.getMinutes() +60 * (wm.timezoneOffset - Math.floor(wm.timezoneOffset)));
+            d.setHours(0, 60*d.getHours() + d.getMinutes + 60*wm.timezoneOffset);
         }
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));
@@ -161,8 +160,8 @@ wm.Object.extendSchema(wm.DataFormatter, {
 });
 
 wm.Object.extendSchema(wm.DateTimeFormatter, {
-    formatLength: {options: ["short","medium","long","full"]},
-    useLocalTime: { ignore: 1 }
+    formatLength: {options: ["short","medium","long","full"]}/*,
+    useLocalTime: { ignore: 1 }*/
 });
 
 wm.Object.extendSchema(wm.DateFormatter, {
