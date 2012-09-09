@@ -61,7 +61,7 @@ dojo.declare("GridDesigner", wm.Page, {
         } else if (columns[i].mobileColumn) {
             hasPhoneColumn = true;
         } else {
-             columns[i].mobileColumn = false;         
+             columns[i].mobileColumn = false;
          }
      }
      var updateGrid = false;
@@ -82,7 +82,7 @@ dojo.declare("GridDesigner", wm.Page, {
      this.columnsVar.setData(columns);
      if (phoneIndex != -1) {
          this.phoneColumn = this.columnsVar.getItem(phoneIndex);
-     } 
+     }
      if (updateGrid) {
          this.updateGrid();
      } else {
@@ -112,26 +112,26 @@ dojo.declare("GridDesigner", wm.Page, {
                         case 'Date (WaveMaker)':
                         case 'wm_localdate_formatter':
                         case 'Local Date (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_number_formatter':
                         case 'Number (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_currency_formatter':
                         case 'Currency (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_image_formatter':
                         case 'Image (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_link_formatter':
                         case 'Link (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_button_formatter':
-                            value = "wm.DojoGrid.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
+                            value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
 /*                            var classList = formatProps.buttonclass ? formatProps.buttonclass  : "wmbutton";
                             value = "<button class='" + classList + "' onclick=\'${runtimeId}[\"gridButtonClicked\"](event,\"" + column.field + "\",${rowId})\'>" ;*/
                             break;
@@ -178,13 +178,13 @@ dojo.declare("GridDesigner", wm.Page, {
     this.columnsVar.addItem(item, selectedIndex+1);
     this.columnsVar.endUpdate();
     this.columnsVar.notify();
-    this.updateGrid();  
+    this.updateGrid();
     },
     addButtonClick: function(inSender) {
       try {
       var newName = "customField";
       for (var i = 0; this.getColumnByField(newName + i); i++) {}
-          
+
       app.prompt("Enter an ID/fieldName for this column; this must be a unique name",
              newName + i,
              dojo.hitch(this, function(inResult) {
@@ -204,8 +204,8 @@ dojo.declare("GridDesigner", wm.Page, {
              }
              }));
       } catch(e) {
-          console.error('ERROR IN addButtonClick: ' + e); 
-      } 
+          console.error('ERROR IN addButtonClick: ' + e);
+      }
     },
     deleteButtonClick: function(inSender) {
     var row = this.grid.getSelectedIndex();
@@ -301,7 +301,7 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         this.changeItem("align", inDataValue);
     }
     },
-   
+
     onFormatChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         var isCustom = false;
@@ -352,7 +352,7 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
             eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
             this.owner.owner.hide();
         }
-        
+
     }
     },
     onEditFieldChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
@@ -566,13 +566,13 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         }
         this.comboBoxDisplayFieldEditor.setOptions(options.join(","));
 
-    },    
+    },
     onDisplayFieldChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         this.changeItem("editorProps.displayField", inDataValue);
     }
     },
-    onIsSimpleTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) { 
+    onIsSimpleTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         this.updateRestrictValues();
         if (!inSetByCode) {
            this.changeItem("editorProps.isSimpleType", inSender.getChecked());
