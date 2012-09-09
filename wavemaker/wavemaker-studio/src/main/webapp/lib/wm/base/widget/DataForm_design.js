@@ -509,16 +509,15 @@ wm.DataForm.extend({
      * DESCRIPTION: Each time either the user or set_dataSet changes type, generate a new set of editors
      ***************/
     set_type: function(inType) {
-    if (inType != this.type) {
-        this.dataOutput.setType(inType);
-        this.dataSet.setType(inType);
-        this.inherited(arguments);
-        return true;
-    } else {
-        return false;
-    }
+        if (inType != this.type) {
+            this.dataOutput.setType(inType);
+            this.dataSet.setType(inType);
+            this.inherited(arguments);
+            return true;
+        } else {
+            return false;
+        }
     },
-
     /****************
      * METHOD: set_dataSet (DESIGN)
      * DESCRIPTION:
@@ -527,12 +526,11 @@ wm.DataForm.extend({
      *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
      ***************/
     set_dataSet: function(inDataSet) {
-    this.setDataSet(inDataSet);
-    if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
-        this.set_type(inDataSet.type);
-    }
+        this.setDataSet(inDataSet);
+        if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
+            this.set_type(inDataSet.type);
+        }
     },
-
 
     getFormSubDataSetNames: function(inForm) {
         var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
@@ -551,22 +549,27 @@ wm.DataForm.extend({
      * DESCRIPTION: Generates property editors
      ***************/
     makePropEdit: function(inName, inValue, inEditorProps) {
-    var prop = this.schema ? this.schema[inName] : null;
-    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+        var prop = this.schema ? this.schema[inName] : null;
+        var name = (prop && prop.shortname) ? prop.shortname : inName;
         switch (inName) {
         case "dataSet":
             var p = wm.getParentForm(this);
             if (p) {
-            return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+                return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {
+                    options: this.getFormSubDataSetNames(p)
+                }));
             } else {
-            return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true}));
+                return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {
+                    widgetDataSets: true,
+                    listMatch: undefined,
+                    noForms: true
+                }));
             }
         }
         return this.inherited(arguments);
     },
-
     getTypeSchema: function() {
-    return wm.typeManager.getTypeSchema(this.type);
+        return wm.typeManager.getTypeSchema(this.type);
     },
 
     /****************
@@ -574,66 +577,69 @@ wm.DataForm.extend({
      * DESCRIPTION: Entry point method for generating all editors needed for the current type
      ***************/
     addEditors: function() {
-    this._currentEditors = this.getEditorsArray();
-    // we don't want updates while making editors
-    this.makeEditors();
-    this.reformatForOneToManyEditors();
-    this.finishAddEditors();
-    this._currentEditors = null;
+        this._currentEditors = this.getEditorsArray();
+        // we don't want updates while making editors
+        this.makeEditors();
+        this.reformatForOneToManyEditors();
+        this.finishAddEditors();
+        this._currentEditors = null;
     },
     reformatForOneToManyEditors: function() {
-    var eds = this.getOneToManyEditorsArray();
-    if (!eds.length) return;
+        var eds = this.getOneToManyEditorsArray();
+        if (!eds.length) return;
 
-    // If there is a FormPanel within this form, then we've already been through this...
-    var panels = this.getFormPanelsArray();
-    if (panels.length) return;
+        // If there is a FormPanel within this form, then we've already been through this...
+        var panels = this.getFormPanelsArray();
+        if (panels.length) return;
 
-    var panel = new wm.FormPanel({width: "100%",
-                      height: "100%",
-                      parent: this,
-                      owner: this.owner,
-                      name: this.name + "EditorFormPanel",
-                      layoutKind: "top-to-bottom",
-                      captionSize: this.captionSize,
-                      captionPosition: this.captionPosition,
-                      editorHeight: this.editorHeight});
-    var oneToManyPanel = new wm.FormPanel({width: "200px",
-                           height: "100%",
-                           parent: this,
-                           owner: this.owner,
-                           name: this.name + "OneToManyFormPanel",
-                           layoutKind: "top-to-bottom",
-                           captionSize: "20px",
-                           captionPosition: "top",
-                           captionAlign: "left"});
+        var panel = new wm.FormPanel({
+            width: "100%",
+            height: "100%",
+            parent: this,
+            owner: this.owner,
+            name: this.name + "EditorFormPanel",
+            layoutKind: "top-to-bottom",
+            captionSize: this.captionSize,
+            captionPosition: this.captionPosition,
+            editorHeight: this.editorHeight
+        });
+        var oneToManyPanel = new wm.FormPanel({
+            width: "200px",
+            height: "100%",
+            parent: this,
+            owner: this.owner,
+            name: this.name + "OneToManyFormPanel",
+            layoutKind: "top-to-bottom",
+            captionSize: "20px",
+            captionPosition: "top",
+            captionAlign: "left"
+        });
 
-    this.moveControl(panel,0);
-    panel.designWrapper.controlParentChanged();
-    this.moveControl(oneToManyPanel,1);
-    oneToManyPanel.designWrapper.controlParentChanged();
-    for (var i = this.c$.length - 1; i >= 0; i--) {
-        var widget = this.c$[i];
-        if (wm.isInstanceType(widget, [ wm.AbstractEditor, wm.DataForm]) && !wm.isInstanceType(widget, wm.OneToMany) ||
-        widget == this.widgets.buttonPanel) {
-        widget.setParent(panel);
-        } else if (wm.isInstanceType(widget, wm.OneToMany)) {
-        widget.setParent(oneToManyPanel);
-        widget.setHeight("100%");
-        widget.setCaptionPosition("top");
-        widget.setCaptionSize("20px");
-        widget.setCaptionAlign("left");
+        this.moveControl(panel, 0);
+        panel.designWrapper.controlParentChanged();
+        this.moveControl(oneToManyPanel, 1);
+        oneToManyPanel.designWrapper.controlParentChanged();
+        for (var i = this.c$.length - 1; i >= 0; i--) {
+            var widget = this.c$[i];
+            if (wm.isInstanceType(widget, [wm.AbstractEditor, wm.DataForm]) && !wm.isInstanceType(widget, wm.OneToMany) || widget == this.widgets.buttonPanel) {
+                widget.setParent(panel);
+            } else if (wm.isInstanceType(widget, wm.OneToMany)) {
+                widget.setParent(oneToManyPanel);
+                widget.setHeight("100%");
+                widget.setCaptionPosition("top");
+                widget.setCaptionSize("20px");
+                widget.setCaptionAlign("left");
+            }
+            widget.designWrapper.controlParentChanged();
         }
-        widget.designWrapper.controlParentChanged();
-    }
-    this.setLayoutKind("left-to-right");
+        this.setLayoutKind("left-to-right");
     },
     makeBasicEditor: function(inFieldInfo, inFormField) {
-    var e = this.inherited(arguments);
-    if (e) {
-        this._bindEditor(e);
-    }
-    return e;
+        var e = this.inherited(arguments);
+        if (e) {
+            this._bindEditor(e);
+        }
+        return e;
     },
     destroyEditors: function() {
         var eds, e;
