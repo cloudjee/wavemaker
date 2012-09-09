@@ -551,7 +551,7 @@ wm.ServiceCall.extend({
                    methods = s && s.getOperationsList();
                if (!valueOk){
                    inValue = methods ? methods[0] : "";
-                   if (inValue)
+                   if (inValue && inValue != this.operation)
                        this.set_operation(inValue);
                }
                if (methods)
