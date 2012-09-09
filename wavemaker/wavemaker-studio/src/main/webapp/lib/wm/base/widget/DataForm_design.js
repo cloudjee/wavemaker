@@ -49,7 +49,7 @@ wm.FormPanel.extend({
             this.type = inType;
             this.addEditors();
         });
-        if (this.getEditorsArray()) {
+        if (this.getEditorsArray().length) {
             app.confirm(studio.getDictionaryItem("wm.FormPanel.CONFIRM_DELETE_EDITORS"), false, f);
         } else {
             f();
