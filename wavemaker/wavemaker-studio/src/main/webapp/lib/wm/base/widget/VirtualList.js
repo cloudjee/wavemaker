@@ -19,33 +19,37 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
     selected: false,
     className: 'wmlist-item',
     getRuntimeId: function() {
-    return this.list.getRuntimeId() + "." + this.index;
+        return this.list.getRuntimeId() + "." + this.index;
     },
-        constructor: function(inList, inText, inImage, inDomNode) {
+    constructor: function(inList, inText, inImage, inDomNode) {
         this.list = inList;
-            this.index = this.list._formatIndex;
+        this.index = this.list._formatIndex;
         this._connections = [];
         this._subscriptions = [];
-            this._debugSubscriptions = [];
+        this._debugSubscriptions = [];
         if (inDomNode) {
-        this.domNode = inDomNode;
+            this.domNode = inDomNode;
         } else {
-        this.create();
+            this.create();
         }
         this.setContent(inText, inImage);
     },
-        subscribe: function() {
+    subscribe: function() {
         wm.Component.prototype.subscribe.apply(this, arguments);
     },
     connect: function() {
         wm.Component.prototype.connect.apply(this, arguments);
     },
-        disconnectEvent: function() {
+    disconnectEvent: function() {
         wm.Component.prototype.disconnectEvent.apply(this, arguments);
     },
     destroy: function() {
-        dojo.forEach(this._connections, function(inConnect) { dojo.disconnect(inConnect) });
-        dojo.forEach(this._subscriptions, function(inSub) { dojo.unsubscribe(inSub) });
+        dojo.forEach(this._connections, function(inConnect) {
+            dojo.disconnect(inConnect);
+        });
+        dojo.forEach(this._subscriptions, function(inSub) {
+            dojo.unsubscribe(inSub);
+        });
     },
     create: function() {
         var n = this.domNode = document.createElement('div');
@@ -54,7 +58,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
     },
     makeConnections: function() {
         if (!wm.isMobile) {
-            this.connect(this.domNode, 'mouseover', this, 'mouseover'), this.connect(this.domNode, 'mouseout', this, 'mouseout')
+            this.connect(this.domNode, 'mouseover', this, 'mouseover'), this.connect(this.domNode, 'mouseout', this, 'mouseout');
 
             this.connect(this.domNode, 'click', this, function(evt) {
                 wm.onidle(this, 'click', {
@@ -127,21 +131,20 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
     },
     // events
     doOver: function() {
-        dojo.addClass(this.domNode, this.className +'-over');
+        dojo.addClass(this.domNode, this.className + '-over');
     },
     mouseover: function(e) {
-        if (e&&e.currentTarget == this.domNode) {
+        if (e && e.currentTarget == this.domNode) {
             this.list._onmouseover(e, this);
         }
     },
     mouseout: function(e) {
-        if (e.currentTarget == this.domNode)
-            dojo.removeClass(this.domNode, this.className +'-over');
+        if (e.currentTarget == this.domNode) dojo.removeClass(this.domNode, this.className + '-over');
     },
     click: function(e) {
         this.list.onclick(e, this);
     },
-        longClick: function() {
+    longClick: function() {
         this.list.onLongClick(this);
     },
     dblclick: function(e) {
@@ -151,15 +154,16 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
         if (!indicatorOnly) {
             this.selected = true;
         }
-        dojo.addClass(this.domNode, this.className +'-selected');
+        dojo.addClass(this.domNode, this.className + '-selected');
     },
     deselect: function(indicatorOnly) {
         if (!indicatorOnly) {
             this.selected = false;
         }
-        dojo.removeClass(this.domNode, this.className +'-selected');
+        dojo.removeClass(this.domNode, this.className + '-selected');
     }
 });
+
 
 dojo.declare("wm.VirtualList", wm.Control, {
         manageHistory: true,
