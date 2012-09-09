@@ -243,6 +243,7 @@ dojo.declare("wm.XhrDefinition", wm.Component, {
    },
    destroy: function() {
            wm.XhrService.prototype.removeOperation(this.name);
+           this.inherited(arguments);
    },
    initType: function() {
        if (this.url) {
