@@ -458,7 +458,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._dataFields = [];
 
             var useMobileColumn = false;
-            var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+            var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
             if (isMobile) {
                 for (var i = 0; i < this.columns.length; i++) {
                     var c = this.columns[i];
@@ -1531,7 +1531,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return this._data[inIndex];
     },
     _getColumnDef: function(inCol) {
-        var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
         var hasMobileColumn = dojo.some(this.columns, function(c) {
             return c.mobileColumn && !c.controller;
         });
