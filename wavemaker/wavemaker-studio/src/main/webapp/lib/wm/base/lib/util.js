@@ -298,85 +298,86 @@ wm.addRemoveClass = function(node, classn, addRemove) {
 
 // misc
 
-wm.onidle = function(/*hitch args*/) {
+wm.onidle = function( /*hitch args*/ ) {
     var args = [];
     for (var i = 0; i in arguments; i++) {
-	args.push(arguments[i]);
+        args.push(arguments[i]);
     }
     if (app && app.debugDialog) {
-	var eventChain = app.debugDialog.cacheEventChain();
+        var eventChain = app.debugDialog.cacheEventChain();
     }
     window.setTimeout(function() {
-	if (eventChain) {
-	    app.debugDialog.restoreEventChain(eventChain);
-	}
-	dojo.hitch.apply(null, args)();
-	if (eventChain) {
-	    app.debugDialog.clearEventChain();
-	}
-    },1);
+        if (eventChain) {
+            app.debugDialog.restoreEventChain(eventChain);
+        }
+        dojo.hitch.apply(null, args)();
+        if (eventChain) {
+            app.debugDialog.clearEventChain();
+        }
+    }, 1);
 }
 wm.onidleChain = function(functionList, stateObj) {
     if (!stateObj) stateObj = {};
     var f2 = function(methods) {
-	window.setTimeout(function() {
-	    var f = methods.shift();
-	    if (f) f();
-	    if (methods.length && !stateObj.canceled)
-		f2(methods);
-	}, 1);
-    }
-    if (!stateObj.canceled)
-        f2(functionList,stateObj);
+            window.setTimeout(function() {
+                var f = methods.shift();
+                if (f) f();
+                if (methods.length && !stateObj.canceled) f2(methods);
+            }, 1);
+        }
+    if (!stateObj.canceled) f2(functionList, stateObj);
 
 }
 wm.job = function(inName, inDelay, inJob1, inJob2) {
     var inJob;
     if (inJob1 && inJob2) {
-	inJob = dojo.hitch(inJob1, inJob2);
+        inJob = dojo.hitch(inJob1, inJob2);
     } else if (inJob2) {
-	inJob = inJob2;
+        inJob = inJob2;
     } else {
-	inJob = inJob1;
+        inJob = inJob1;
     }
     wm.cancelJob(inName);
     if (app && app.debugDialog) {
-	var eventChain = app.debugDialog.cacheEventChain();
+        var eventChain = app.debugDialog.cacheEventChain();
     }
     var job = function() {
-	delete wm._jobs[inName];
-	if (eventChain) {
-	    app.debugDialog.restoreEventChain(eventChain);
-	}
-	inJob();
-	if (eventChain) {
-	    app.debugDialog.clearEventChain();
-	}
-    }
+            delete wm._jobs[inName];
+            if (eventChain) {
+                app.debugDialog.restoreEventChain(eventChain);
+            }
+            inJob();
+            if (eventChain) {
+                app.debugDialog.clearEventChain();
+            }
+        }
     wm._jobs[inName] = setTimeout(job, inDelay);
 }
 wm.cancelJob = function(inName) {
-	clearTimeout(wm._jobs[inName]);
+    clearTimeout(wm._jobs[inName]);
 }
 wm._jobs = {};
 wm.hasJob = function(inName) {
     return Boolean(wm._jobs[inName]);
 }
 wm.connectEvents = function(inObject, inNode, inEvents) {
-	// FIXME: maybe remove this at some point
-	if (!dojo.isArray(inEvents)){throw("wm.connectEvents: event list must be an array (did you use variable args?)")};
-	var links = [];
-	for (var i=0, e; (e=inEvents[i]); i++) {
-		links.push(dojo.connect(inNode, 'on' + e, inObject, e));
-	}
-	return links;
+    // FIXME: maybe remove this at some point
+    if (!dojo.isArray(inEvents)) {
+        throw ("wm.connectEvents: event list must be an array (did you use variable args?)")
+    };
+    var links = [];
+    for (var i = 0, e;
+    (e = inEvents[i]); i++) {
+        links.push(dojo.connect(inNode, 'on' + e, inObject, e));
+    }
+    return links;
 }
 
 wm._isUniqueName = function(inName, inNameSpaces) {
-	for (var j=0, s; (s=inNameSpaces[j]); j++)
-		if (inName in s)
-			return false;
-	return true;
+    for (var j = 0, s;
+    (s = inNameSpaces[j]); j++)
+    if (inName in s) return false;
+    return true;
 }
 
 wm.findUniqueName = function(inName, inNameSpaces) {
@@ -395,30 +396,29 @@ wm.getValidJsName = function(inName) {
     var dc = "_";
     inName = inName.replace(new RegExp("[- ]", "g"), dc);
 
-	/*********************************************************
-	 * This used to be     inName = inName.replace(new RegExp("[^a-zA-Z0-9_]", "g"), "");
-	 * however this is unfriendly to valid unicode strings.  Instead
-	 * we now use an algorithm for determining if we have a valid name and if not, trimming
-	 * characters until we have a valid name
-	 */
+    /*********************************************************
+     * This used to be     inName = inName.replace(new RegExp("[^a-zA-Z0-9_]", "g"), "");
+     * however this is unfriendly to valid unicode strings.  Instead
+     * we now use an algorithm for determining if we have a valid name and if not, trimming
+     * characters until we have a valid name
+     */
     var isInvalid = true;
     for (var i = 0; i < inName.length && isInvalid; i++) {
-	try {
-		/* Declare var inName in an inner function so it doesn't polute the window object's name space */
-		var result = eval("(function() {var " + inName + " = 5; return " + inName + ";})()")
-	    if (result == 5) {
-			isInvalid = false;
-	    }
-	} catch(e) {};
-	if (isInvalid) {
-	    inName = inName.substring(0,i) + inName.substring(i,i+1).replace(/[^a-zA-Z0-9]+/g, '') + inName.substring(i+1);
-	}
+        try { /* Declare var inName in an inner function so it doesn't polute the window object's name space */
+            var result = eval("(function() {var " + inName + " = 5; return " + inName + ";})()")
+            if (result == 5) {
+                isInvalid = false;
+            }
+        } catch (e) {};
+        if (isInvalid) {
+            inName = inName.substring(0, i) + inName.substring(i, i + 1).replace(/[^a-zA-Z0-9]+/g, '') + inName.substring(i + 1);
+        }
     }
 
-/*
+    /*
     if (inName.match(new RegExp("^[0-9]")) || !inName)
-	inName = dc + inName;
-	*/
+    inName = dc + inName;
+    */
     if (inName == "_") inName = "";
     return inName;
 }
@@ -468,13 +468,12 @@ wm.forEachWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 // if inFunc returns false, do not call on its widgets; unlike wm.forEachWidgets though, it does NOT mean cancel calling on other subtrees
 wm.forEachVisibleWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
     var result;
-    if (inFunc && inWidget && !inWidget.isAncestorHidden())
-	result = inFunc(inWidget);
+    if (inFunc && inWidget && !inWidget.isAncestorHidden()) result = inFunc(inWidget);
 
     if (result !== false) {
-	for (var i=0, ws = inWidget.getOrderedWidgets(), r, w; w=ws[i]; i++) {
-	    w.forEachVisibleWidget && !inIgnoreBuiltin ? w.forEachVisibleWidget(inFunc) : wm.forEachVisibleWidget(w, inFunc, inIgnoreBuiltin);
-	}
+        for (var i = 0, ws = inWidget.getOrderedWidgets(), r, w; w = ws[i]; i++) {
+            w.forEachVisibleWidget && !inIgnoreBuiltin ? w.forEachVisibleWidget(inFunc) : wm.forEachVisibleWidget(w, inFunc, inIgnoreBuiltin);
+        }
     }
 }
 
@@ -499,44 +498,6 @@ wm.hideToolTip = function(inImmediate) {
 			dojo.style(tt.fadeOut.node, "opacity", 0);
 		}
 	}
-};
-
-/* Tested only for firefox; its not great, but better than nothing. */
-wm.printStackTrace = function(msg) {
-     console.group(msg);
-     var done = 0;
-     try {
-	aaaaaaa.aaaaa.aaaa++;
-     } catch(e) {
-	if (e.stack) { //Firefox
-		var lines = e.stack.split("\n");
-		for (var i=0, len=lines.length; i<len; i++) {
-				console.log(lines[i]);
-				done = 1;
-		}
-	} else if (window.opera && e.message) { //Opera
-		var lines = e.message.split("\n");
-		for (var i=0, len=lines.length; i<len; i++) {
-		   if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
-			console.log(lines[i]);
-			if (lines[i+1])
-			console.log("AT: " + lines[i+1]);
-			done = 1;
-		   }
-		i++;
-		}
-	}
-	if (!done) { //IE and Safari
-		var currentFunction = arguments.callee.caller;
-		while (currentFunction) {
-			var fn = currentFunction.toString();
-			var fname = fn.substring(fn.indexOf("function") + 8, fn.indexOf("(")) || "anonymous";
-			console.log(callstack.push(fname));
-			currentFunction = currentFunction.caller;
-		}
-	}
-	console.groupEnd();
-   }
 };
 
 wm.focusContainer = function(inContainer) {
