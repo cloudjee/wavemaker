@@ -378,7 +378,7 @@ dojo.declare("wm.DateTime", wm.Date, {
     getEditorValue: function(inValue) {
         var d = new Date();
         if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
-            var v = this.dateEditor.getDataValue()
+            var v = this.dateEditor.getDataValue();
             if (v) {
                 d = new Date(v);
             } else {
