@@ -378,11 +378,9 @@ dojo.declare("wm.DateTime", wm.Date, {
     getEditorValue: function(inValue) {
         var d = new Date();
         if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
-            var v = this.dateEditor.getDataValue(); // gets long
+            var v = this.dateEditor.getDataValue()
             if (v) {
-                var datetmp = new Date(v);
-                d.setFullYear(datetmp.getFullYear(), datetmp.getMonth(), datetmp.getDate());
-                if (this.dateMode == "Date") d.setHours(0,0,0,0);
+                d = new Date(v);
             } else {
                 return null;
             }
