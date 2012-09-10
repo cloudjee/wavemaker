@@ -98,10 +98,7 @@ public class WaveMakerService {
         String charset = "UTF-8";
         StringBuffer returnString = new StringBuffer();
         try {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("URL: " + remoteURL);
-            }
-            if (method.equals("PUT") || method.equals("POST") || params == null || params.equals("")) {
+            if (method.toLowerCase().equals("put") || method.toLowerCase().equals("post") || params == null || params.equals("")) {
             } else {
                 if (remoteURL.indexOf("?") != -1) {
                     remoteURL += "&" + params;
@@ -111,18 +108,16 @@ public class WaveMakerService {
             }
 
             URL url = new URL(remoteURL);
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Opening URL: " + url);
+            }
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod(method);
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("METHOD: " + method);
-            }
             connection.setDoInput(true);
             connection.setRequestProperty("Accept-Charset", "application/json");
             connection.setRequestProperty("Content-Type", contentType);
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Content-type: " + contentType);
-            }
+            connection.setRequestProperty("Accept-Encoding", "text/plain");
             connection.setRequestProperty("Content-Language", charset);
             connection.setUseCaches(false);
 
@@ -131,7 +126,7 @@ public class WaveMakerService {
             while (headerNames.hasMoreElements()) {
                 String name = headerNames.nextElement();
                 Enumeration<String> headers = request.getHeaders(name);
-                if (headers != null) {
+                if (headers != null && !name.toLowerCase().equals("accept-encoding") && !name.toLowerCase().equals("accept-charset") && !name.toLowerCase().equals("content-type")) {
                     while (headers.hasMoreElements()) {
                         String headerValue = headers.nextElement();
                         connection.setRequestProperty(name, headerValue);
@@ -144,9 +139,9 @@ public class WaveMakerService {
 
             // Re-wrap single quotes into double quotes
             String finalParams;
-            if (contentType == "application/json") {
+            if (contentType.toLowerCase().equals("application/json")) {
                 finalParams = params.replace("\'", "\"");
-                if (!method.equals("POST") && !method.equals("PUT") && method != null && !method.equals("")) {
+                if (!method.toLowerCase().equals("post") && !method.toLowerCase().equals("put") && method != null && !method.equals("")) {
                     URLEncoder.encode(finalParams, charset);
                 }
             } else {
@@ -156,7 +151,7 @@ public class WaveMakerService {
             connection.setRequestProperty("Content-Length", "" + Integer.toString(finalParams.getBytes().length));
 
             // set payload
-            if (method.equals("POST") || method.equals("PUT") || method == null || method.equals("")) {
+            if (method.toLowerCase().equals("post") || method.toLowerCase().equals("put") || method == null || method.equals("")) {
                 DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
                 writer.writeBytes(finalParams);
                 writer.flush();
@@ -165,27 +160,31 @@ public class WaveMakerService {
 
             InputStream response = connection.getInputStream();
             BufferedReader reader = null;
+            int responseLen = 0;
             try {
-            	reader = new BufferedReader(new InputStreamReader(response, charset));
-            	for (String line; (line = reader.readLine()) != null;) {
-            		returnString.append(line);
-            	}
             	int i = 0;
             	String field;
             	HttpServletResponse wmResponse = RuntimeAccess.getInstance().getResponse();
             	while((field = connection.getHeaderField(i)) != null) {
             		String key = connection.getHeaderFieldKey(i);
-            		if(key == null) {
-            			wmResponse.addHeader(key, "");
+            		if(key == null || field == null) {
             		}
             		else {
-            			if(key.equals("Content-Length") || key.equals("Content-Type") || key.equals("Proxy-Connection")|| key.equals("Expires")){
+            			if(key.toLowerCase().equals("proxy-connection")|| key.toLowerCase().equals("expires")){
             				logger.debug("Remote server returned header of: " + key + " " + field + " it was not forwarded");
+            			}
+            			if(key.toLowerCase().equals("content-length")){
+            				// do not use this length as return header value
+            				responseLen = new Integer(field);
             			}
             			else{
             				wmResponse.addHeader(key, field);
             			}}
             		i++;
+            	}
+            	reader = new BufferedReader(new InputStreamReader(response, charset));
+            	for (String line; (line = reader.readLine()) != null;) {
+            		returnString.append(line);
             	}
             } finally {
                 if (reader != null) {
@@ -198,6 +197,7 @@ public class WaveMakerService {
             connection.disconnect();
             return returnString.toString();
         } catch (Exception e) {
+        	e.printStackTrace();
             throw new WMRuntimeException(e);
         }
     }

@@ -49,7 +49,7 @@ wm.FormPanel.extend({
             this.type = inType;
             this.addEditors();
         });
-        if (this.getEditorsArray()) {
+        if (this.getEditorsArray().length) {
             app.confirm(studio.getDictionaryItem("wm.FormPanel.CONFIRM_DELETE_EDITORS"), false, f);
         } else {
             f();
@@ -57,69 +57,68 @@ wm.FormPanel.extend({
 
     },
     set_autoSizeCaption: function(inValue) {
-	this.autoSizeCaption = inValue;
-	if (inValue) {
-	    var editors = this.getEditorsArray();
-	    dojo.forEach(editors, function(e) {
-		if (e.captionPosition == "left") {
-		    e.captionNode.style.width = "";
-		}
-	    });
-	    this.updateCaptionSizes();
-	} else {
-	    var editors = this.getEditorsArray();
-	    dojo.forEach(editors, function(e) {
-		if (e.captionPosition == "left") {
-		    e.sizeEditor();
-		}
-	    });
-	}
+        this.autoSizeCaption = inValue;
+        if (inValue) {
+            var editors = this.getEditorsArray();
+            dojo.forEach(editors, function(e) {
+                if (e.captionPosition == "left") {
+                    e.captionNode.style.width = "";
+                }
+            });
+            this.updateCaptionSizes();
+        } else {
+            var editors = this.getEditorsArray();
+            dojo.forEach(editors, function(e) {
+                if (e.captionPosition == "left") {
+                    e.sizeEditor();
+                }
+            });
+        }
     },
     /****************
      * METHOD: addEditors (DESIGNTIME)
      * DESCRIPTION: Entry point method for generating all editors needed for the current type
      ***************/
     addEditors: function() {
-	this._currentEditors = this.getEditorsArray();
-	// we don't want updates while making editors
-	this.makeEditors();
-	this.finishAddEditors();
-	this._currentEditors = null;
+        this._currentEditors = this.getEditorsArray();
+        // we don't want updates while making editors
+        this.makeEditors();
+        this.finishAddEditors();
+        this._currentEditors = null;
     },
 
     removeEditors: function() {
-		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
-			    false,
-			    dojo.hitch(this, "_removeEditors"));
+        app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
+                    false, dojo.hitch(this, "_removeEditors"));
     },
     _removeEditors: function() {
-	this.destroyEditors();
-	this.setFitToContentHeight(false);
-	this.reflow();
-	wm.fire(this, "updateDesignTrees");
+        this.destroyEditors();
+        this.setFitToContentHeight(false);
+        this.reflow();
+        wm.fire(this, "updateDesignTrees");
     },
     destroyEditors: function() {
-	    var eds, e;
-	for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
-	    e.destroy();
-	}
+        var eds, e;
+        for (var i = 0, eds = this.getEditorsArray(), e;
+        (e = eds[i]); i++) {
+            e.destroy();
+        }
     },
     finishAddEditors: function() {
-	    this.reflow();
-	    studio.refreshDesignTrees();
+        this.reflow();
+        studio.refreshDesignTrees();
     },
 
     getOneToManyEditorsArray: function() {
-	return wm.getMatchingFormWidgets(this, function(w) {
-	    return (wm.isInstanceType(w, wm.OneToMany) && w.formField);
-	});
+        return wm.getMatchingFormWidgets(this, function(w) {
+            return (wm.isInstanceType(w, wm.OneToMany) && w.formField);
+        });
     },
     getFormPanelsArray: function() {
-	return wm.getMatchingFormWidgets(this, function(w) {
-	    return (wm.isInstanceType(w, wm.FormPanel) && !wm.isInstanceType(w, wm.DataForm) && w.formField);
-	});
+        return wm.getMatchingFormWidgets(this, function(w) {
+            return (wm.isInstanceType(w, wm.FormPanel) && !wm.isInstanceType(w, wm.DataForm) && w.formField);
+        });
     },
-
 
     /****************
      * METHOD: makeEditors (DESIGNTIME)
@@ -128,114 +127,111 @@ wm.FormPanel.extend({
      *              2. Iterate over each field of the new type and generate an editor if there isn't one already
      ***************/
     getTypeDef: function() {
-	return wm.typeManager.getType(this.type);
+        return wm.typeManager.getType(this.type);
     },
-	makeEditors: function() {
-	    var typeDef;
-	    var fields;
+    makeEditors: function() {
+        var typeDef;
+        var fields;
 
-	    typeDef = this.getTypeDef();
-	    if (typeDef) {
-		var dataSource = "object"; // either liveData, compositeKey or object
-		if (typeDef.liveService) {
-		    dataSource = "liveData";
-		} else {
-		    /* If there is a parent form and its a liveService and this subform's type is NOT liveSource then its a composite key */
-		    var parentForm = this.getParentForm();
-		    if (parentForm) {
-			var parentTypeDef = parentForm.getTypeDef();
-		    }
-		    if (parentTypeDef && parentTypeDef.liveService) {
-			var service = typeDef.service;
-			var serviceList = studio.application.getServerComponents();
-			for (var i = 0; i < serviceList.length; i++) {
-			    if (service == serviceList[i].name) {
-				dataSource = "compositeKey";
-				break;
-			    }
-			}
-		    }
-		}
+        typeDef = this.getTypeDef();
+        if (typeDef) {
+            var dataSource = "object"; // either liveData, compositeKey or object
+            if (typeDef.liveService) {
+                dataSource = "liveData";
+            } else { /* If there is a parent form and its a liveService and this subform's type is NOT liveSource then its a composite key */
+                var parentForm = this.getParentForm();
+                if (parentForm) {
+                    var parentTypeDef = parentForm.getTypeDef();
+                }
+                if (parentTypeDef && parentTypeDef.liveService) {
+                    var service = typeDef.service;
+                    var serviceList = studio.application.getServerComponents();
+                    for (var i = 0; i < serviceList.length; i++) {
+                        if (service == serviceList[i].name) {
+                            dataSource = "compositeKey";
+                            break;
+                        }
+                    }
+                }
+            }
 
-		fields = wm.typeManager.getFilteredPropNames(typeDef.fields);
-		this.isCompositeKey = dataSource == "compositeKey";
-		/* If its a composite key, see if there are any foreign keys, and change their types from int/string to the type of the foreign object */
-		if (dataSource == "compositeKey") {
+            fields = wm.typeManager.getFilteredPropNames(typeDef.fields);
+            this.isCompositeKey = dataSource == "compositeKey"; /* If its a composite key, see if there are any foreign keys, and change their types from int/string to the type of the foreign object */
+            if (dataSource == "compositeKey") {
 
-		    var def = studio.dataService.requestSync("getRelated", [service, parentForm.type.replace(/^.*\./,"")]);
-		    def.addCallback(dojo.hitch(this, function(inData) {
-			var relationshipsToDelete = [];
-			for (var i = 0; i < inData.length; i++) {
-			    var relationship = inData[i];
-			    for (var j = 0; j < relationship.columnNames.length; j++) {
-				relationshipsToDelete.push(relationship.name);
-				var fieldName = relationship.columnNames[j];
-				var fieldNameAlt = fieldName.replace(/_./g, function(inText) {
-				    return inText.charAt(1).toUpperCase();
-				});
-				if (typeDef.fields[fieldName]) {
-				    typeDef.fields[fieldName].type = relationship.fullyQualifiedType;
-				    typeDef.fields[fieldName].relationshipName = relationship.name;
-				} else if (typeDef.fields[fieldNameAlt]) {
-				    typeDef.fields[fieldNameAlt].type = relationship.fullyQualifiedType;
-				    typeDef.fields[fieldNameAlt].relationshipName = relationship.name;
-				}
-			    }
-			}
-			wm.onidle(this, function() {
-			    var form = this.getParentForm();
-			    var editors = form.getEditorsArray();
-			    for (var i = 0; i < editors.length; i++) {
-				if (dojo.indexOf(relationshipsToDelete, editors[i].formField) != -1) {
-				    editors[i].destroy();
-				}
-			    }
-			    form.reflow();
-			    studio.refreshDesignTrees();
-			});
-		    }));
+                var def = studio.dataService.requestSync("getRelated", [service, parentForm.type.replace(/^.*\./, "")]);
+                def.addCallback(dojo.hitch(this, function(inData) {
+                    var relationshipsToDelete = [];
+                    for (var i = 0; i < inData.length; i++) {
+                        var relationship = inData[i];
+                        for (var j = 0; j < relationship.columnNames.length; j++) {
+                            relationshipsToDelete.push(relationship.name);
+                            var fieldName = relationship.columnNames[j];
+                            var fieldNameAlt = fieldName.replace(/_./g, function(inText) {
+                                return inText.charAt(1).toUpperCase();
+                            });
+                            if (typeDef.fields[fieldName]) {
+                                typeDef.fields[fieldName].type = relationship.fullyQualifiedType;
+                                typeDef.fields[fieldName].relationshipName = relationship.name;
+                            } else if (typeDef.fields[fieldNameAlt]) {
+                                typeDef.fields[fieldNameAlt].type = relationship.fullyQualifiedType;
+                                typeDef.fields[fieldNameAlt].relationshipName = relationship.name;
+                            }
+                        }
+                    }
+                    wm.onidle(this, function() {
+                        var form = this.getParentForm();
+                        var editors = form.getEditorsArray();
+                        for (var i = 0; i < editors.length; i++) {
+                            if (dojo.indexOf(relationshipsToDelete, editors[i].formField) != -1) {
+                                editors[i].destroy();
+                            }
+                        }
+                        form.reflow();
+                        studio.refreshDesignTrees();
+                    });
+                }));
 
 
-		}
-	    }
+            }
+        }
 
 
-	    var editors = this.getEditorsArray();
+        var editors = this.getEditorsArray();
 
-	    for (var i = 0; i < editors.length; i++) {
-		if (editors[i].formField && dojo.indexOf(editors, editors[i].formField) == -1)
-		    editors[i].destroy();
-	    }
-	    if (fields) {
-		for (var i = 0; i < fields.length; i++) {
-		    var fieldName = fields[i];
-		    var fieldDef = typeDef.fields[fieldName];
-		    if (!fieldDef.nogen && !fieldDef.readonly) {
-			var e = this.makeEditor(fieldDef, fieldName);
-			if (e instanceof wm.Lookup && dataSource == "compositeKey") {
-			    e.dataField = e.formField;
-			    e.dataType = fieldDef.type;
-			    e.relationshipName = fieldDef.relationshipName; // TODO: If the user changes formField on this editor, the relationshipName won't by in sync, and the project will break
-			}
-		    }
-		}
-	    }
-	},
+        for (var i = 0; i < editors.length; i++) {
+            if (editors[i].formField && dojo.indexOf(editors, editors[i].formField) == -1) editors[i].destroy();
+        }
+        if (fields) {
+            for (var i = 0; i < fields.length; i++) {
+                var fieldName = fields[i];
+                var fieldDef = typeDef.fields[fieldName];
+                if (!fieldDef.nogen && !fieldDef.readonly) {
+                    var e = this.makeEditor(fieldDef, fieldName);
+                    if (e instanceof wm.Lookup && dataSource == "compositeKey") {
+                        e.dataField = e.formField;
+                        e.dataType = fieldDef.type;
+                        e.relationshipName = fieldDef.relationshipName; // TODO: If the user changes formField on this editor, the relationshipName won't by in sync, and the project will break
+                    }
+                }
+            }
+        }
+    },
 
     /****************
      * METHOD: makeEditor (DESIGNTIME)
      * DESCRIPTION: Figure out if we're creating a basic editor or related/lookup editor; and create the editor
      ***************/
     makeEditor: function(inFieldInfo, fieldName) {
-	var formField = this._getFormField(/*inFieldInfo.dataIndex */fieldName);
-	if (formField && !this._getEditorForField(formField)) {
-	    if (wm.typeManager.isStructuredType(inFieldInfo.type) || inFieldInfo.isList) {
-		if (inFieldInfo.isList && (this.formBehavior == 'insertOnly' || this.subFormOnly)) return;
-		return this.makeRelatedEditor(inFieldInfo, formField);
-	    } else {
-		return this.makeBasicEditor(inFieldInfo, formField);
-	    }
-	}
+        var formField = this._getFormField( /*inFieldInfo.dataIndex */ fieldName);
+        if (formField && !this._getEditorForField(formField)) {
+            if (wm.typeManager.isStructuredType(inFieldInfo.type) || inFieldInfo.isList) {
+                if (inFieldInfo.isList && (this.formBehavior == 'insertOnly' || this.subFormOnly)) return;
+                return this.makeRelatedEditor(inFieldInfo, formField);
+            } else {
+                return this.makeBasicEditor(inFieldInfo, formField);
+            }
+        }
     },
 
     /****************
@@ -243,18 +239,17 @@ wm.FormPanel.extend({
      * DESCRIPTION: Create a basic editor based on type information
      ***************/
     makeBasicEditor: function(inFieldInfo, inFormField) {
-	var props = dojo.mixin(this.getFormEditorProps() || {}, {
-	    formField: inFormField,
-	    readonly: this.readonly,
-	    name: wm.makeNameForProp(inFormField, "Editor")
-	});
+        var props = dojo.mixin(this.getFormEditorProps() || {}, {
+            formField: inFormField,
+            readonly: this.readonly,
+            name: wm.makeNameForProp(inFormField, "Editor")
+        });
 
-	var e = this.createEditor(inFieldInfo, props, {}, wm.getEditorClassName(inFieldInfo.displayType || inFieldInfo.type));
-	if (e) {
-	    if (!e.caption)
-		e.setCaption(wm.capitalize(inFormField));
-	}
-	return e;
+        var e = this.createEditor(inFieldInfo, props, {}, wm.getEditorClassName(inFieldInfo.displayType || inFieldInfo.type));
+        if (e) {
+            if (!e.caption) e.setCaption(wm.capitalize(inFormField));
+        }
+        return e;
     },
 
     /****************
@@ -262,140 +257,132 @@ wm.FormPanel.extend({
      * DESCRIPTION: Create a wm.Lookup or wm.RelatedEditor/Subform based on type information
      ***************/
     makeRelatedEditor: function(inFieldInfo, inFormField) {
-	var props = this.getFormEditorProps();
-	props.caption = wm.capitalize(inFormField);
-	props.formField = inFormField;
+        var props = this.getFormEditorProps();
+        props.caption = wm.capitalize(inFormField);
+        props.formField = inFormField;
         props.width = this.editorWidth;
 
-	var typeDef = this.getTypeDef();
-	if (typeDef)
-	    var fieldDef = typeDef.fields[inFormField];
-	if (fieldDef)
-	    var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
+        var typeDef = this.getTypeDef();
+        if (typeDef) var fieldDef = typeDef.fields[inFormField];
+        if (fieldDef) var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
 
-	if (relatedTypeDef) {
-	    /* If its a liveService and its not a list type, create a wm.Lookup */
-	    if (relatedTypeDef.liveService && !inFieldInfo.isList && !this.subFormOnly) {
-		props.name = wm.makeNameForProp(inFormField, "Lookup")
-		var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
-		var ff = e.formField && this.getViewDataIndex(e.formField || "");
-		this.addEditorToView(e, ff);
-	    }
+        if (relatedTypeDef) { /* If its a liveService and its not a list type, create a wm.Lookup */
+            if (relatedTypeDef.liveService && !inFieldInfo.isList && !this.subFormOnly) {
+                props.name = wm.makeNameForProp(inFormField, "Lookup")
+                var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
+                var ff = e.formField && this.getViewDataIndex(e.formField || "");
+                this.addEditorToView(e, ff);
+            }
 
-	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
-	    else if (/*relatedTypeDef.liveService && */inFieldInfo.isList ) {
-		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
-		/* don't automatically add grids
-		    props.editingMode = "readonly";
-		    var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);
-		e.set_type(fieldDef.type);
-		*/
-	    }
+            /* If its a liveService and it IS a list type, create a readonly grid related editor */
+            else if ( /*relatedTypeDef.liveService && */ inFieldInfo.isList) {
+                var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
+                /* don't automatically add grids
+            props.editingMode = "readonly";
+            var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);
+        e.set_type(fieldDef.type);
+        */
+            }
 
-	    /* Anything else, and  just get an editable subform for lack of a better idea */
-	    else {
-		props.editingMode = "one-to-one";
-		props.subFormOnly = this.subFormOnly;
-		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "SubForm"), this, "wm.SubForm", props);
-		e.set_type(fieldDef.type);
-	    }
+            /* Anything else, and  just get an editable subform for lack of a better idea */
+            else {
+                props.editingMode = "one-to-one";
+                props.subFormOnly = this.subFormOnly;
+                var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "SubForm"), this, "wm.SubForm", props);
+                e.set_type(fieldDef.type);
+            }
 
-	    if (e) {
-		this.placeEditor(e);
-	    }
-	}
-	return e;
+            if (e) {
+                this.placeEditor(e);
+            }
+        }
+        return e;
     },
-
     /****************
      * METHOD: createEditor (DESIGNTIME)
      * DESCRIPTION: Generates an editor based on info from makeBasicEditor; then sets up a few of its properties
      ***************/
-	createEditor: function(inFieldInfo, inProps, inEvents, inClass) {
-		var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
-		if (e) {
-		    this.placeEditor(e);
-		    if (wm.isInstanceType(e, wm.Number) || wm.isInstanceType(e, wm.Date) ||  wm.isInstanceType(e, wm.DateTime)) {
-			e.emptyValue = "zero";
-		    } else {
-			e.emptyValue = "emptyString";
-		    }
+    createEditor: function(inFieldInfo, inProps, inEvents, inClass) {
+        var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
+        if (e) {
+            this.placeEditor(e);
+            if (wm.isInstanceType(e, wm.Number) || wm.isInstanceType(e, wm.Date) ||  wm.isInstanceType(e, wm.DateTime)) {
+            e.emptyValue = "zero";
+            } else {
+            e.emptyValue = "emptyString";
+            }
 
-		    if (e.parent.horizontalAlign != "justified")
-			e.setWidth(this.editorWidth);
+            if (e.parent.horizontalAlign != "justified")
+            e.setWidth(this.editorWidth);
                     else
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 
-		    if (studio.currentDeviceType == "desktop") {
-			e.setHeight(this.editorHeight);
-		    } else {
-			e.desktopHeight = this.editorHeight;
-			if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
-			    e.setHeight(e.mobileHeight);
-			} else {
-			    e.setHeight(this.editorHeight);
-			}
-		    }
-		    //console.log(this.name, "createEditor", arguments, e);
-		    return e;
-		}
-	},
-    placeEditor: function(inEditor) {
-		    var editors = this.getEditorsArray(true); // getEditorsArray includes the newly created editor which screws with what should be obvious math...
-		    if (editors.length == 1) {
-			this.moveControl(inEditor,0);// in case it was put after the button panel
-		    } else {
-			for (var i = editors.length-1; i >= 0; i--) {
-			    if (editors[i] != inEditor) {
-				var parent = editors[i].parent;
-				if (parent != inEditor.parent) {
-				    inEditor.setParent(parent);
-				}
-				parent.moveControl(inEditor,i+1);
-				break;
-			    }
-			}
-		    }
+            if (studio.currentDeviceType == "desktop") {
+            e.setHeight(this.editorHeight);
+            } else {
+            e.desktopHeight = this.editorHeight;
+            if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
+                e.setHeight(e.mobileHeight);
+            } else {
+                e.setHeight(this.editorHeight);
+            }
+            }
+            //console.log(this.name, "createEditor", arguments, e);
+            return e;
+        }
     },
-    /****************
+    placeEditor: function(inEditor) {
+        var editors = this.getEditorsArray(true); // getEditorsArray includes the newly created editor which screws with what should be obvious math...
+        if (editors.length == 1) {
+            this.moveControl(inEditor, 0); // in case it was put after the button panel
+        } else {
+            for (var i = editors.length - 1; i >= 0; i--) {
+                if (editors[i] != inEditor) {
+                    var parent = editors[i].parent;
+                    if (parent != inEditor.parent) {
+                        inEditor.setParent(parent);
+                    }
+                    parent.moveControl(inEditor, i + 1);
+                    break;
+                }
+            }
+        }
+    },    /****************
      * METHOD: _getFormField (DESIGNTIME)
      * DESCRIPTION: This form can have this.firstname or this.manager, but can NOT have this.manager.firstname.
      *              Return valid formFields or return nothing.
      ***************/
     _getFormField: function(inFieldIndex, inFieldName) {
-	if (inFieldIndex === undefined)
-	    return inFieldName;
-	if (inFieldIndex.indexOf(".") == -1)
-	    return inFieldIndex;
-	},
-
+        if (inFieldIndex === undefined) return inFieldName;
+        if (inFieldIndex.indexOf(".") == -1) return inFieldIndex;
+    },
     /****************
      * METHOD: _getEditorForField (DESIGNTIME)
      * DESCRIPTION: Returns an editor for the specified formField. Used to determine if we need to create an editor for that field
      ***************/
-	_getEditorForField: function(inField) {
-		var editors = this._currentEditors = this.getEditorsArray();
-		for (var i=0, editors, e; (e=editors[i]); i++)
-			if (e.formField == inField) {
-				return e;
-			}
-	},
+    _getEditorForField: function(inField) {
+        var editors = this._currentEditors = this.getEditorsArray();
+        for (var i=0, editors, e; (e=editors[i]); i++)
+            if (e.formField == inField) {
+                return e;
+            }
+    },
 
     /****************
      * METHOD: _getFormEditorProps (DESIGNTIME)
      * DESCRIPTION: Returns the properties to use when initializing a new wm.AbstractEditor class
      ***************/
-	getFormEditorProps: function() {
-		return {
-			width: this.editorWidth,
-			height: this.editorHeight,
-			readonly: this.readonly,
-			captionSize: this.captionSize,
-			captionAlign: this.captionAlign,
-			captionPosition: this.captionPosition,
-		    changeOnKey: true
-		}
-	}
+    getFormEditorProps: function() {
+        return {
+            width: this.editorWidth,
+            height: this.editorHeight,
+            readonly: this.readonly,
+            captionSize: this.captionSize,
+            captionAlign: this.captionAlign,
+            captionPosition: this.captionPosition,
+            changeOnKey: true
+        }
+    }
 });
 
 wm.Object.extendSchema(wm.DataForm, {
@@ -484,7 +471,7 @@ wm.DataForm.extend({
      * DESCRIPTION:  Setup onEnterKeyPress event handler
      ***************/
     afterPaletteDrop: function() {
-	this.inherited(arguments);
+    this.inherited(arguments);
     },
     afterPaletteChildDrop: function(inWidget) {
         this.inherited(arguments);
@@ -522,16 +509,15 @@ wm.DataForm.extend({
      * DESCRIPTION: Each time either the user or set_dataSet changes type, generate a new set of editors
      ***************/
     set_type: function(inType) {
-	if (inType != this.type) {
-	    this.dataOutput.setType(inType);
-	    this.dataSet.setType(inType);
-	    this.inherited(arguments);
-	    return true;
-	} else {
-	    return false;
-	}
+        if (inType != this.type) {
+            this.dataOutput.setType(inType);
+            this.dataSet.setType(inType);
+            this.inherited(arguments);
+            return true;
+        } else {
+            return false;
+        }
     },
-
     /****************
      * METHOD: set_dataSet (DESIGN)
      * DESCRIPTION:
@@ -540,46 +526,50 @@ wm.DataForm.extend({
      *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
      ***************/
     set_dataSet: function(inDataSet) {
-	this.setDataSet(inDataSet);
-	if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
-		this.set_type(inDataSet.type);
-	}
+        this.setDataSet(inDataSet);
+        if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
+            this.set_type(inDataSet.type);
+        }
     },
 
-
-	getFormSubDataSetNames: function(inForm) {
-		var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
-		for (var i in schema) {
-			var ti = schema[i];
-			if (ti.isList) {
-			} else if (wm.typeManager.isStructuredType(ti.type)) {
-				ds.push(id + i);
-			}
-		}
-		return ds;
-	},
+    getFormSubDataSetNames: function(inForm) {
+        var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
+        for (var i in schema) {
+            var ti = schema[i];
+            if (ti.isList) {
+            } else if (wm.typeManager.isStructuredType(ti.type)) {
+                ds.push(id + i);
+            }
+        }
+        return ds;
+    },
 
     /****************
      * METHOD: makePropEdit (DESIGNTIME)
      * DESCRIPTION: Generates property editors
      ***************/
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	    switch (inName) {
-	    case "dataSet":
-		    var p = wm.getParentForm(this);
-		    if (p) {
-			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
-		    } else {
-			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true}));
-		    }
-	    }
-	    return this.inherited(arguments);
-	},
-
+    makePropEdit: function(inName, inValue, inEditorProps) {
+        var prop = this.schema ? this.schema[inName] : null;
+        var name = (prop && prop.shortname) ? prop.shortname : inName;
+        switch (inName) {
+        case "dataSet":
+            var p = wm.getParentForm(this);
+            if (p) {
+                return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {
+                    options: this.getFormSubDataSetNames(p)
+                }));
+            } else {
+                return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {
+                    widgetDataSets: true,
+                    listMatch: undefined,
+                    noForms: true
+                }));
+            }
+        }
+        return this.inherited(arguments);
+    },
     getTypeSchema: function() {
-	return wm.typeManager.getTypeSchema(this.type);
+        return wm.typeManager.getTypeSchema(this.type);
     },
 
     /****************
@@ -587,80 +577,83 @@ wm.DataForm.extend({
      * DESCRIPTION: Entry point method for generating all editors needed for the current type
      ***************/
     addEditors: function() {
-	this._currentEditors = this.getEditorsArray();
-	// we don't want updates while making editors
-	this.makeEditors();
-	this.reformatForOneToManyEditors();
-	this.finishAddEditors();
-	this._currentEditors = null;
+        this._currentEditors = this.getEditorsArray();
+        // we don't want updates while making editors
+        this.makeEditors();
+        this.reformatForOneToManyEditors();
+        this.finishAddEditors();
+        this._currentEditors = null;
     },
     reformatForOneToManyEditors: function() {
-	var eds = this.getOneToManyEditorsArray();
-	if (!eds.length) return;
+        var eds = this.getOneToManyEditorsArray();
+        if (!eds.length) return;
 
-	// If there is a FormPanel within this form, then we've already been through this...
-	var panels = this.getFormPanelsArray();
-	if (panels.length) return;
+        // If there is a FormPanel within this form, then we've already been through this...
+        var panels = this.getFormPanelsArray();
+        if (panels.length) return;
 
-	var panel = new wm.FormPanel({width: "100%",
-				      height: "100%",
-				      parent: this,
-				      owner: this.owner,
-				      name: this.name + "EditorFormPanel",
-				      layoutKind: "top-to-bottom",
-				      captionSize: this.captionSize,
-				      captionPosition: this.captionPosition,
-				      editorHeight: this.editorHeight});
-	var oneToManyPanel = new wm.FormPanel({width: "200px",
-					       height: "100%",
-					       parent: this,
-					       owner: this.owner,
-					       name: this.name + "OneToManyFormPanel",
-					       layoutKind: "top-to-bottom",
-					       captionSize: "20px",
-					       captionPosition: "top",
-					       captionAlign: "left"});
+        var panel = new wm.FormPanel({
+            width: "100%",
+            height: "100%",
+            parent: this,
+            owner: this.owner,
+            name: this.name + "EditorFormPanel",
+            layoutKind: "top-to-bottom",
+            captionSize: this.captionSize,
+            captionPosition: this.captionPosition,
+            editorHeight: this.editorHeight
+        });
+        var oneToManyPanel = new wm.FormPanel({
+            width: "200px",
+            height: "100%",
+            parent: this,
+            owner: this.owner,
+            name: this.name + "OneToManyFormPanel",
+            layoutKind: "top-to-bottom",
+            captionSize: "20px",
+            captionPosition: "top",
+            captionAlign: "left"
+        });
 
-	this.moveControl(panel,0);
-	panel.designWrapper.controlParentChanged();
-	this.moveControl(oneToManyPanel,1);
-	oneToManyPanel.designWrapper.controlParentChanged();
-	for (var i = this.c$.length - 1; i >= 0; i--) {
-	    var widget = this.c$[i];
-	    if (wm.isInstanceType(widget, [ wm.AbstractEditor, wm.DataForm]) && !wm.isInstanceType(widget, wm.OneToMany) ||
-		widget == this.widgets.buttonPanel) {
-		widget.setParent(panel);
-	    } else if (wm.isInstanceType(widget, wm.OneToMany)) {
-		widget.setParent(oneToManyPanel);
-		widget.setHeight("100%");
-		widget.setCaptionPosition("top");
-		widget.setCaptionSize("20px");
-		widget.setCaptionAlign("left");
-	    }
-	    widget.designWrapper.controlParentChanged();
-	}
-	this.setLayoutKind("left-to-right");
+        this.moveControl(panel, 0);
+        panel.designWrapper.controlParentChanged();
+        this.moveControl(oneToManyPanel, 1);
+        oneToManyPanel.designWrapper.controlParentChanged();
+        for (var i = this.c$.length - 1; i >= 0; i--) {
+            var widget = this.c$[i];
+            if (wm.isInstanceType(widget, [wm.AbstractEditor, wm.DataForm]) && !wm.isInstanceType(widget, wm.OneToMany) || widget == this.widgets.buttonPanel) {
+                widget.setParent(panel);
+            } else if (wm.isInstanceType(widget, wm.OneToMany)) {
+                widget.setParent(oneToManyPanel);
+                widget.setHeight("100%");
+                widget.setCaptionPosition("top");
+                widget.setCaptionSize("20px");
+                widget.setCaptionAlign("left");
+            }
+            widget.designWrapper.controlParentChanged();
+        }
+        this.setLayoutKind("left-to-right");
     },
     makeBasicEditor: function(inFieldInfo, inFormField) {
-	var e = this.inherited(arguments);
-	if (e) {
-	    this._bindEditor(e);
-	}
-	return e;
+        var e = this.inherited(arguments);
+        if (e) {
+            this._bindEditor(e);
+        }
+        return e;
     },
-	destroyEditors: function() {
-	    var eds, e;
-		this._currentEditors = null;
-		for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
-			this._removeBindingForEditor(e);
-			e.destroy();
-		}
+    destroyEditors: function() {
+        var eds, e;
+        this._currentEditors = null;
+        for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
+            this._removeBindingForEditor(e);
+            e.destroy();
+        }
 
-		for(var i=0, eds = this.getRelatedEditorsArray(), e; (e=eds[i]); i++) {
-			this._removeBindingForEditor(e);
-			e.destroy();
-		}
-	},
+        for(var i=0, eds = this.getRelatedEditorsArray(), e; (e=eds[i]); i++) {
+            this._removeBindingForEditor(e);
+            e.destroy();
+        }
+    },
 
 
     /****************
@@ -669,52 +662,52 @@ wm.DataForm.extend({
      *              and switch from fixed height (allows us to see the form) to autoHeight (now that the form is not empty).
      *              Finish by updating the model.
      ***************/
-	finishAddEditors: function() {
-	    var eds = this.getEditorsArray();
-	    if (!this.generateInputBindings) {
-		this.populateEditors();
-	    }
-	    this.setFitToContentHeight(true);
-	    this.inherited(arguments);
-	},
+    finishAddEditors: function() {
+        var eds = this.getEditorsArray();
+        if (!this.generateInputBindings) {
+        this.populateEditors();
+        }
+        this.setFitToContentHeight(true);
+        this.inherited(arguments);
+    },
 
 /* DESIGN TIME */
-	getViewDataIndex: function(inFormField) {
-		return inFormField;
-	},
+    getViewDataIndex: function(inFormField) {
+        return inFormField;
+    },
 
-	addEditorToForm: function(inEditor) {
-	    var e = inEditor;
-	    var ff = e.formField && this.getViewDataIndex(e.formField || "");
-		if (ff) {
+    addEditorToForm: function(inEditor) {
+        var e = inEditor;
+        var ff = e.formField && this.getViewDataIndex(e.formField || "");
+        if (ff) {
                     if (wm.isInstanceType(e, wm.DataForm))
-			var f = this.addEditorToView(e, ff);
-		    if (f)
-			wm.updateFieldEditorProps(e, f)
-		}
-		inEditor.setReadonly(this.readonly);
-		this._bindEditor(inEditor);
-		this.populateEditors();
-	},
+            var f = this.addEditorToView(e, ff);
+            if (f)
+            wm.updateFieldEditorProps(e, f)
+        }
+        inEditor.setReadonly(this.readonly);
+        this._bindEditor(inEditor);
+        this.populateEditors();
+    },
 /* DESIGN TIME; only relevant if the dataSet is a LiveVariable; ServiceVariables dont support LiveViews and must get
  * any extra data needed some other way.
  */
-	addEditorToView: function(inEditor, inField) {
-	    var lvar = this.findLiveVariable();
-	    var v = lvar && lvar.liveView;
+    addEditorToView: function(inEditor, inField) {
+        var lvar = this.findLiveVariable();
+        var v = lvar && lvar.liveView;
 
-		if (v) {
-		    if (wm.isInstanceType(inEditor, wm.Lookup) ||
-			wm.isInstanceType(inEditor, wm.DataForm)) {
-			v.addRelated(inField);
-			lvar.update();
-		    } else {
-			return v.addField(inField);
-		    }
-		}
-	},
+        if (v) {
+            if (wm.isInstanceType(inEditor, wm.Lookup) ||
+            wm.isInstanceType(inEditor, wm.DataForm)) {
+            v.addRelated(inField);
+            lvar.update();
+            } else {
+            return v.addField(inField);
+            }
+        }
+    },
     getLiveView: function() {
-	if (lvar) return lvar.liveView;
+    if (lvar) return lvar.liveView;
     },
 
 
@@ -726,115 +719,115 @@ wm.DataForm.extend({
      ***************/
 
     /* Called by designPasted to recheck/refresh bindings after pasting */
-	_checkBindings: function() {
-		var editors = this.getFormEditorsArray();
-		for (var i=0, ed; (ed=editors[i]); i++) {
-			if (!this._isOkOutputBinding(ed))
-				this._bindEditorOutput(ed);
-			if (!this._isOkInputBinding(ed))
-				this._bindEditorInput(ed);
-		}
-	},
-	_isOkInputBinding: function(inEditor) {
-		var
-			info = this._getInputBindInfo(inEditor),
-			b = inEditor && inEditor.components.binding,
-			wires = b && b.wires,
-			w = info && wires[info.targetProperty];
-		return !info || (w && (w.source == info.source));
-	},
-	_isOkOutputBinding: function(inEditor) {
-		var
-			info = this._getOutputBindInfo(inEditor),
-			b = this.components.binding,
-			wires = b.wires,
-			w = info && wires[info.targetProperty];
-		return !info || (w && (w.source == info.source));
-	},
+    _checkBindings: function() {
+        var editors = this.getFormEditorsArray();
+        for (var i=0, ed; (ed=editors[i]); i++) {
+            if (!this._isOkOutputBinding(ed))
+                this._bindEditorOutput(ed);
+            if (!this._isOkInputBinding(ed))
+                this._bindEditorInput(ed);
+        }
+    },
+    _isOkInputBinding: function(inEditor) {
+        var
+            info = this._getInputBindInfo(inEditor),
+            b = inEditor && inEditor.components.binding,
+            wires = b && b.wires,
+            w = info && wires[info.targetProperty];
+        return !info || (w && (w.source == info.source));
+    },
+    _isOkOutputBinding: function(inEditor) {
+        var
+            info = this._getOutputBindInfo(inEditor),
+            b = this.components.binding,
+            wires = b.wires,
+            w = info && wires[info.targetProperty];
+        return !info || (w && (w.source == info.source));
+    },
 
 
 
-	_removeBindingForEditor: function(inEditor) {
-		// unbind form
-		var
-			wire,
-			binding = this.components.binding,
-			wires = binding.wires,
-			name = inEditor && inEditor.getId();
+    _removeBindingForEditor: function(inEditor) {
+        // unbind form
+        var
+            wire,
+            binding = this.components.binding,
+            wires = binding.wires,
+            name = inEditor && inEditor.getId();
 
-	    /* Remove bindings from form to Editor */
-		if (name) {
-			for (var i in wires) {
-			    wire = wires[i];
-			    if (wire.source.indexOf(name + ".") == 0)
-				binding.removeWire(wire.getWireId());
-			}
-		}
+        /* Remove bindings from form to Editor */
+        if (name) {
+            for (var i in wires) {
+                wire = wires[i];
+                if (wire.source.indexOf(name + ".") == 0)
+                binding.removeWire(wire.getWireId());
+            }
+        }
 
-	    /* Remove bindings from Editor to form */
-	    var binding = inEditor.components.binding;
-	    if (binding) {
-		if (wm.isInstanceType(inEditor, [wm.DataForm, wm.OneToMany])) {
-		    binding.removeWire("dataSet");
-		} else if (inEditor instanceof wm.AbstractEditor) {
-		    binding.removeWire("dataValue");
-		}
-	    }
+        /* Remove bindings from Editor to form */
+        var binding = inEditor.components.binding;
+        if (binding) {
+        if (wm.isInstanceType(inEditor, [wm.DataForm, wm.OneToMany])) {
+            binding.removeWire("dataSet");
+        } else if (inEditor instanceof wm.AbstractEditor) {
+            binding.removeWire("dataValue");
+        }
+        }
 
-	},
+    },
 
-	// make binding from which editor gets data
-	// FIXME: remove knowledge of editor type
-	_getInputBindInfo: function(inEditor) {
-	    var formField = inEditor.formField;
-	    var targetProperty = null;
-	    if (wm.isInstanceType(inEditor, [wm.DataForm, wm.OneToMany])) {
-		targetProperty = "dataSet";
-	    } else if (inEditor instanceof wm.AbstractEditor) {
-		targetProperty =  "dataValue";
-	    }
-	    var dataSet = this.dataSet;
-	    var source = dataSet ? (dataSet.getId() + (formField ? "." + formField : "")) : "";
-	    if (source)
-		return formField !== undefined && targetProperty ? {targetProperty: targetProperty, source: source} : false;
-	},
-	_getOutputBindInfo: function(inEditor) {
-	    var formField = inEditor.formField;
-	    var targetProperty = "dataOutput" + (formField ? "." + formField : "");
-	    var sourceProp = null;
-	    if (inEditor instanceof wm.AbstractEditor) {
-		sourceProp =  "dataValue";
-	    } else if (wm.isInstanceType(inEditor, wm.DataForm)) {
-		sourceProp = "dataOutput" ;
-	    }
-	    var source = inEditor.getId() + (sourceProp ? "." + sourceProp : "");
-	    return formField !== undefined && sourceProp ? {targetProperty: targetProperty, source: source} : false;
-	},
-	_bindEditorInput: function(inEditor) {
-		var info = this._getInputBindInfo(inEditor);
-		if (info)
-			inEditor.$.binding.addWire("", info.targetProperty, info.source);
-	},
-	// push data from editor to form
-	_bindEditorOutput: function(inEditor) {
-	    var info = this._getOutputBindInfo(inEditor);
-	    if (info) {
-		this.components.binding.addWire("", info.targetProperty, info.source);
-		if (this.isComposite && inEditor instanceof wm.Lookup) {
-		    //this.getParentForm().components.binding.addWire("", fieldName, info.source);
-		}
-	    }
-	},
+    // make binding from which editor gets data
+    // FIXME: remove knowledge of editor type
+    _getInputBindInfo: function(inEditor) {
+        var formField = inEditor.formField;
+        var targetProperty = null;
+        if (wm.isInstanceType(inEditor, [wm.DataForm, wm.OneToMany])) {
+        targetProperty = "dataSet";
+        } else if (inEditor instanceof wm.AbstractEditor) {
+        targetProperty =  "dataValue";
+        }
+        var dataSet = this.dataSet;
+        var source = dataSet ? (dataSet.getId() + (formField ? "." + formField : "")) : "";
+        if (source)
+        return formField !== undefined && targetProperty ? {targetProperty: targetProperty, source: source} : false;
+    },
+    _getOutputBindInfo: function(inEditor) {
+        var formField = inEditor.formField;
+        var targetProperty = "dataOutput" + (formField ? "." + formField : "");
+        var sourceProp = null;
+        if (inEditor instanceof wm.AbstractEditor) {
+        sourceProp =  "dataValue";
+        } else if (wm.isInstanceType(inEditor, wm.DataForm)) {
+        sourceProp = "dataOutput" ;
+        }
+        var source = inEditor.getId() + (sourceProp ? "." + sourceProp : "");
+        return formField !== undefined && sourceProp ? {targetProperty: targetProperty, source: source} : false;
+    },
+    _bindEditorInput: function(inEditor) {
+        var info = this._getInputBindInfo(inEditor);
+        if (info)
+            inEditor.$.binding.addWire("", info.targetProperty, info.source);
+    },
+    // push data from editor to form
+    _bindEditorOutput: function(inEditor) {
+        var info = this._getOutputBindInfo(inEditor);
+        if (info) {
+        this.components.binding.addWire("", info.targetProperty, info.source);
+        if (this.isComposite && inEditor instanceof wm.Lookup) {
+            //this.getParentForm().components.binding.addWire("", fieldName, info.source);
+        }
+        }
+    },
     _bindEditor: function(inEditor) {
-	if (!inEditor)
-	    return;
-	this._removeBindingForEditor(inEditor);
-	if (inEditor.formField) {
-	    if (this.generateInputBindings)
-		this._bindEditorInput(inEditor);
-	    if (this.generateOutputBindings)
-		this._bindEditorOutput(inEditor);
-	}
+    if (!inEditor)
+        return;
+    this._removeBindingForEditor(inEditor);
+    if (inEditor.formField) {
+        if (this.generateInputBindings)
+        this._bindEditorInput(inEditor);
+        if (this.generateOutputBindings)
+        this._bindEditorOutput(inEditor);
+    }
     },
 
 
@@ -843,65 +836,65 @@ wm.DataForm.extend({
      * DESCRIPTION: Create a wm.Lookup or wm.RelatedEditor/Subform based on type information
      ***************/
     makeRelatedEditor: function(inFieldInfo, inFormField) {
-	var e = this.inherited(arguments);
-	if (e) {
-	    this._bindEditor(e);
-	}
-	return e;
+    var e = this.inherited(arguments);
+    if (e) {
+        this._bindEditor(e);
+    }
+    return e;
     },
     getFormPanel: function() {
-	for (var i = 0; i < this.c$.length; i++) {
-	    if (this.c$[i] instanceof wm.FormPanel) return this.c$[i];
-	}
+    for (var i = 0; i < this.c$.length; i++) {
+        if (this.c$[i] instanceof wm.FormPanel) return this.c$[i];
+    }
     },
     generateButtons: function() {
-	var parent = this.getFormPanel() || this;
-	var buttonPanel = new wm.Panel({
-	    owner: this.owner,
-	    name: this.owner.getUniqueName(this.name + "ButtonPanel"),
-	    parent: parent,
-	    layoutKind: "left-to-right",
-	    width: "100%",
-	    height: wm.Button.prototype.height,
-	    mobileHeight: wm.Button.prototype.mobileHeight,
-	    horizontalAlign: "right",
-	    verticalAlign: "top"});
+    var parent = this.getFormPanel() || this;
+    var buttonPanel = new wm.Panel({
+        owner: this.owner,
+        name: this.owner.getUniqueName(this.name + "ButtonPanel"),
+        parent: parent,
+        layoutKind: "left-to-right",
+        width: "100%",
+        height: wm.Button.prototype.height,
+        mobileHeight: wm.Button.prototype.mobileHeight,
+        horizontalAlign: "right",
+        verticalAlign: "top"});
 
-	var cancelButton = new wm.Button({owner: this.owner,
-					  name: studio.page.getUniqueName(this.name + "ExampleCancelButton"),
-					  parent: buttonPanel,
-					  showing: true,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					  width: "180px",
-					  caption: "cancelEdit()"});
-	cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
+    var cancelButton = new wm.Button({owner: this.owner,
+                      name: studio.page.getUniqueName(this.name + "ExampleCancelButton"),
+                      parent: buttonPanel,
+                      showing: true,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                      width: "180px",
+                      caption: "cancelEdit()"});
+    cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
 
-	var newButton = new wm.Button({owner: this.owner,
-				       name: studio.page.getUniqueName(this.name + "ExampleNewButton"),
-				       parent: buttonPanel,
-				       mobileHeight: wm.Button.prototype.mobileHeight,
-				       desktopHeight: wm.Button.prototype.height,
-				       width: "180px",
-				       caption: "editNewObject()"});
-	newButton.eventBindings.onclick = this.name + ".editNewObject";
+    var newButton = new wm.Button({owner: this.owner,
+                       name: studio.page.getUniqueName(this.name + "ExampleNewButton"),
+                       parent: buttonPanel,
+                       mobileHeight: wm.Button.prototype.mobileHeight,
+                       desktopHeight: wm.Button.prototype.height,
+                       width: "180px",
+                       caption: "editNewObject()"});
+    newButton.eventBindings.onclick = this.name + ".editNewObject";
 
-	var updateButton = new wm.Button({owner: this.owner,
-					  name: studio.page.getUniqueName(this.name + "ExampleUpdateButton"),
-					  parent: buttonPanel,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					  width: "180px",
-					  caption: "editCurrentObject()"});
-	updateButton.eventBindings.onclick = this.name + ".editCurrentObject";
-	updateButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
+    var updateButton = new wm.Button({owner: this.owner,
+                      name: studio.page.getUniqueName(this.name + "ExampleUpdateButton"),
+                      parent: buttonPanel,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                      width: "180px",
+                      caption: "editCurrentObject()"});
+    updateButton.eventBindings.onclick = this.name + ".editCurrentObject";
+    updateButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
 
 
 
-	this.setHeight(this.getPreferredFitToContentHeight() + "px");
-	    this.reflow();
-	    studio.refreshDesignTrees();
-	// reflow called by caller
+    this.setHeight(this.getPreferredFitToContentHeight() + "px");
+        this.reflow();
+        studio.refreshDesignTrees();
+    // reflow called by caller
     },
 
 
@@ -912,12 +905,12 @@ wm.DataForm.extend({
 wm.DBForm.extend({
 
     set_type: function(inType) {
-	var changed = this.inherited(arguments);
-	if (inType && changed) {
-	    this.serviceVariable.destroy();
-	    this.initServiceVariable();
-	}
-	return changed;
+    var changed = this.inherited(arguments);
+    if (inType && changed) {
+        this.serviceVariable.destroy();
+        this.initServiceVariable();
+    }
+    return changed;
     },
 
 
@@ -930,7 +923,7 @@ wm.DBForm.extend({
         this.inherited(arguments);
         if (!studio.newLiveFormDialog) {
             studio.newLiveFormDialog = new wm.PageDialog({
-		_classes: {domNode: ["studiodialog"]},
+        _classes: {domNode: ["studiodialog"]},
                 owner: studio,
                 name: "newLiveFormDialog",
                 pageName: "NewLiveFormDialog",
@@ -948,210 +941,210 @@ wm.DBForm.extend({
 
 
     set_readonlyManager: function(inValue) {
-	this.readonlyManager = Boolean(inValue);
-	if (this.readonlyManager) {
-	    this.setReadonly(true);
-	}
-	this.generateButtons(); /* This may cause problems if the user has modified their buttons */
+    this.readonlyManager = Boolean(inValue);
+    if (this.readonlyManager) {
+        this.setReadonly(true);
+    }
+    this.generateButtons(); /* This may cause problems if the user has modified their buttons */
     },
 
     set_formBehavior: function(inValue) {
-	this.formBehavior = inValue;
-	var buttonPanel = this._findButtonPanel();
-	if (buttonPanel.isAncestor(this)) {
-	    buttonPanel.destroy();
-	}
+    this.formBehavior = inValue;
+    var buttonPanel = this._findButtonPanel();
+    if (buttonPanel.isAncestor(this)) {
+        buttonPanel.destroy();
+    }
 
-	/* Buttons are still save and cancel if there is no readonly manager */
-	if (this.readonlyManager) {
-	    this.generateButtons(); /* This may cause problems if the user has modified their buttons */
-	}
+    /* Buttons are still save and cancel if there is no readonly manager */
+    if (this.readonlyManager) {
+        this.generateButtons(); /* This may cause problems if the user has modified their buttons */
+    }
     },
 
     /****************
      * METHOD: makePropEdit (DESIGNTIME)
      * DESCRIPTION: Generates property editors
      ***************/
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	    switch (inName) {
-	    case "dataSet":
-		    var p = wm.getParentForm(this);
-		    if (p) {
-			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
-		    } else {
-			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true, allowAllTypes: false, liveServicesOnly: true}));
-		    }
-	    }
-	    return this.inherited(arguments);
-	},
+    makePropEdit: function(inName, inValue, inEditorProps) {
+    var prop = this.schema ? this.schema[inName] : null;
+    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+        switch (inName) {
+        case "dataSet":
+            var p = wm.getParentForm(this);
+            if (p) {
+            return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+            } else {
+            return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true, allowAllTypes: false, liveServicesOnly: true}));
+            }
+        }
+        return this.inherited(arguments);
+    },
 
     listProperties: function() {
-	var props = this.inherited(arguments);
-	props.dataSet.ignoretmp = this.formBehavior == "insertOnly";
-	return props;
+    var props = this.inherited(arguments);
+    props.dataSet.ignoretmp = this.formBehavior == "insertOnly";
+    return props;
     },
 
     _findButtonPanel: function() {
-	var buttons = [this.cancelButton, this.newButton, this.deleteButton, this.editButton, this.saveButton];
-	for (var i = 0; i < buttons.length; i++) {
-	    if (buttons[i] && !buttons[i].isDestroyed && buttons[i].parent.isAncestor(this)) {
-		return buttons[i].parent;
-	    }
-	}
-	return this.parent;
+    var buttons = [this.cancelButton, this.newButton, this.deleteButton, this.editButton, this.saveButton];
+    for (var i = 0; i < buttons.length; i++) {
+        if (buttons[i] && !buttons[i].isDestroyed && buttons[i].parent.isAncestor(this)) {
+        return buttons[i].parent;
+        }
+    }
+    return this.parent;
     },
     generateCancelButton: function(buttonPanel, noRefresh) {
-	if (!buttonPanel) buttonPanel = this._findButtonPanel();
-	var cancelButton = new wm.Button({owner: this.owner,
-					  name: studio.page.getUniqueName(this.name + "CancelButton"),
-					  parent: buttonPanel,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					  showing: this.readonlyManager ? false : true,
-					  caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")});
-	cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
-	this.$.binding.addWire(null, "cancelButton", cancelButton.getId(), "");
-	if (!this.readonlyManager) {
-	    cancelButton.$.binding.addWire(null, "disabled", "", "!\${" + this.name + ".isDirty}");
-	}
-	if (!noRefresh) {
-	    buttonPanel.reflow();
-	    studio.refreshDesignTrees();
-	}
+    if (!buttonPanel) buttonPanel = this._findButtonPanel();
+    var cancelButton = new wm.Button({owner: this.owner,
+                      name: studio.page.getUniqueName(this.name + "CancelButton"),
+                      parent: buttonPanel,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                      showing: this.readonlyManager ? false : true,
+                      caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")});
+    cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
+    this.$.binding.addWire(null, "cancelButton", cancelButton.getId(), "");
+    if (!this.readonlyManager) {
+        cancelButton.$.binding.addWire(null, "disabled", "", "!\${" + this.name + ".isDirty}");
+    }
+    if (!noRefresh) {
+        buttonPanel.reflow();
+        studio.refreshDesignTrees();
+    }
     },
     generateNewButton: function(buttonPanel, noRefresh) {
-	if (!buttonPanel) buttonPanel = this._findButtonPanel();
-	var newButton = new wm.Button({owner: this.owner,
-				       name: studio.page.getUniqueName(this.name + "NewButton"),
-				       parent: buttonPanel,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-				       caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
-	newButton.eventBindings.onclick = this.name + ".editNewObject";
-	this.$.binding.addWire(null, "newButton", newButton.getId(), "");
+    if (!buttonPanel) buttonPanel = this._findButtonPanel();
+    var newButton = new wm.Button({owner: this.owner,
+                       name: studio.page.getUniqueName(this.name + "NewButton"),
+                       parent: buttonPanel,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                       caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
+    newButton.eventBindings.onclick = this.name + ".editNewObject";
+    this.$.binding.addWire(null, "newButton", newButton.getId(), "");
 
-	if (!noRefresh) {
-	    buttonPanel.reflow();
-	    studio.refreshDesignTrees();
-	}
+    if (!noRefresh) {
+        buttonPanel.reflow();
+        studio.refreshDesignTrees();
+    }
     },
     generateEditButton: function(buttonPanel, noRefresh) {
-	if (!buttonPanel) buttonPanel = this._findButtonPanel();
-	var editButton = new wm.Button({owner: this.owner,
-					  name: studio.page.getUniqueName(this.name + "EditButton"),
-					  parent: buttonPanel,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					  caption: studio.getDictionaryItem("wm.ServiceForm.UPDATE_CAPTION")});
-	editButton.eventBindings.onclick = this.name + ".editCurrentObject";
-	editButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
-	this.$.binding.addWire(null, "editButton", editButton.getId(), "");
+    if (!buttonPanel) buttonPanel = this._findButtonPanel();
+    var editButton = new wm.Button({owner: this.owner,
+                      name: studio.page.getUniqueName(this.name + "EditButton"),
+                      parent: buttonPanel,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                      caption: studio.getDictionaryItem("wm.ServiceForm.UPDATE_CAPTION")});
+    editButton.eventBindings.onclick = this.name + ".editCurrentObject";
+    editButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
+    this.$.binding.addWire(null, "editButton", editButton.getId(), "");
 
-	if (!noRefresh) {
-	    buttonPanel.reflow();
-	    studio.refreshDesignTrees();
-	}
+    if (!noRefresh) {
+        buttonPanel.reflow();
+        studio.refreshDesignTrees();
+    }
     },
     generateDeleteButton: function(buttonPanel, noRefresh) {
-	if (!buttonPanel) buttonPanel = this._findButtonPanel();
-	var deleteButton = new wm.Button({owner: this.owner,
-					  name: studio.page.getUniqueName(this.name + "DeleteButton"),
-					  parent: buttonPanel,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					  caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
-	deleteButton.eventBindings.onclick = this.name + ".deleteData";
-	deleteButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
-	this.$.binding.addWire(null, "deleteButton", deleteButton.getId(), "");
+    if (!buttonPanel) buttonPanel = this._findButtonPanel();
+    var deleteButton = new wm.Button({owner: this.owner,
+                      name: studio.page.getUniqueName(this.name + "DeleteButton"),
+                      parent: buttonPanel,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                      caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
+    deleteButton.eventBindings.onclick = this.name + ".deleteData";
+    deleteButton.$.binding.addWire(null, "disabled", this.name + ".noDataSet","");
+    this.$.binding.addWire(null, "deleteButton", deleteButton.getId(), "");
 
-	if (!noRefresh) {
-	    buttonPanel.reflow();
-	    studio.refreshDesignTrees();
-	}
+    if (!noRefresh) {
+        buttonPanel.reflow();
+        studio.refreshDesignTrees();
+    }
     },
     generateSaveButton: function(buttonPanel, noRefresh) {
-	if (!buttonPanel) buttonPanel = this._findButtonPanel();
-	var saveButton = new wm.Button({owner: this.owner,
-					name: studio.page.getUniqueName(this.name + "SaveButton"),
-					parent: buttonPanel,
-					showing: this.readonlyManager ? false : true,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")});
-	saveButton.eventBindings.onclick = this.name + ".saveData";
-	saveButton.$.binding.addWire(null, "disabled", "", "\${" + this.name + ".invalid} || !\${" + this.name + ".isDirty}");
-	this.$.binding.addWire(null, "saveButton", saveButton.getId(), "");
+    if (!buttonPanel) buttonPanel = this._findButtonPanel();
+    var saveButton = new wm.Button({owner: this.owner,
+                    name: studio.page.getUniqueName(this.name + "SaveButton"),
+                    parent: buttonPanel,
+                    showing: this.readonlyManager ? false : true,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                    caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")});
+    saveButton.eventBindings.onclick = this.name + ".saveData";
+    saveButton.$.binding.addWire(null, "disabled", "", "\${" + this.name + ".invalid} || !\${" + this.name + ".isDirty}");
+    this.$.binding.addWire(null, "saveButton", saveButton.getId(), "");
 
 
-	if (!noRefresh) {
-	    buttonPanel.reflow();
-	    studio.refreshDesignTrees();
-	}
+    if (!noRefresh) {
+        buttonPanel.reflow();
+        studio.refreshDesignTrees();
+    }
     },
     generateResetButton: function(buttonPanel, noRefresh) {
-	if (!buttonPanel) buttonPanel = this._findButtonPanel();
-	var resetButton = new wm.Button({owner: this.owner,
-					name: studio.page.getUniqueName(this.name + "ResetButton"),
-					parent: buttonPanel,
-					showing: this.readonlyManager ? false : true,
-					  mobileHeight: wm.Button.prototype.mobileHeight,
-					  desktopHeight: wm.Button.prototype.height,
-					 caption: studio.getDictionaryItem("wm.DBForm.RESET_CAPTION")});
-	resetButton.eventBindings.onclick = this.name + ".resetData";
-	resetButton.$.binding.addWire(null, "disabled", "", "!\${" + this.name + ".isDirty}");
-	this.$.binding.addWire(null, "resetButton", resetButton.getId(), "");
+    if (!buttonPanel) buttonPanel = this._findButtonPanel();
+    var resetButton = new wm.Button({owner: this.owner,
+                    name: studio.page.getUniqueName(this.name + "ResetButton"),
+                    parent: buttonPanel,
+                    showing: this.readonlyManager ? false : true,
+                      mobileHeight: wm.Button.prototype.mobileHeight,
+                      desktopHeight: wm.Button.prototype.height,
+                     caption: studio.getDictionaryItem("wm.DBForm.RESET_CAPTION")});
+    resetButton.eventBindings.onclick = this.name + ".resetData";
+    resetButton.$.binding.addWire(null, "disabled", "", "!\${" + this.name + ".isDirty}");
+    this.$.binding.addWire(null, "resetButton", resetButton.getId(), "");
 
 
-	if (!noRefresh) {
-	    buttonPanel.reflow();
-	    studio.refreshDesignTrees();
-	}
+    if (!noRefresh) {
+        buttonPanel.reflow();
+        studio.refreshDesignTrees();
+    }
     },
 
     generateButtons: function() {
-	if (this.buttonPanel) this.buttonPanel.destroy();
-	var parent = this.getFormPanel() || this;
-	var buttonPanel = new wm.Panel({
-	    owner: this.owner,
-	    name: this.owner.getUniqueName(this.name + "ButtonPanel"),
-	    parent: parent,
-	    layoutKind: "left-to-right",
-	    width: "100%",
-	    height: wm.Button.prototype.height,
-	    horizontalAlign: "right",
-	    verticalAlign: "top"});
-	this.$.binding.addWire(null, "buttonPanel", buttonPanel.getId(), "");
-	if (this.readonlyManager) {
-	    if (this.formBehavior != "updateOnly") {
-		this.generateNewButton(buttonPanel);
-	    }
-	    if (this.formBehavior != "insertOnly") {
-		this.generateEditButton(buttonPanel,true);
-	    }
-	    if (this.formBehavior == "standard") {
-		this.generateDeleteButton(buttonPanel,true);
-	    }
-	    this.generateCancelButton(buttonPanel, true);
-	    this.generateSaveButton(buttonPanel, true);
-	} else {
-	    if (this.formBehavior == "standard") {
-		this.generateDeleteButton(buttonPanel,true);
-	    }
-	    if (this.formBehavior == "standard") {
-		this.generateNewButton(buttonPanel, true);
-	    }
-	    this.generateSaveButton(buttonPanel, true);
-	    this.generateCancelButton(buttonPanel, true);
-	}
+    if (this.buttonPanel) this.buttonPanel.destroy();
+    var parent = this.getFormPanel() || this;
+    var buttonPanel = new wm.Panel({
+        owner: this.owner,
+        name: this.owner.getUniqueName(this.name + "ButtonPanel"),
+        parent: parent,
+        layoutKind: "left-to-right",
+        width: "100%",
+        height: wm.Button.prototype.height,
+        horizontalAlign: "right",
+        verticalAlign: "top"});
+    this.$.binding.addWire(null, "buttonPanel", buttonPanel.getId(), "");
+    if (this.readonlyManager) {
+        if (this.formBehavior != "updateOnly") {
+        this.generateNewButton(buttonPanel);
+        }
+        if (this.formBehavior != "insertOnly") {
+        this.generateEditButton(buttonPanel,true);
+        }
+        if (this.formBehavior == "standard") {
+        this.generateDeleteButton(buttonPanel,true);
+        }
+        this.generateCancelButton(buttonPanel, true);
+        this.generateSaveButton(buttonPanel, true);
+    } else {
+        if (this.formBehavior == "standard") {
+        this.generateDeleteButton(buttonPanel,true);
+        }
+        if (this.formBehavior == "standard") {
+        this.generateNewButton(buttonPanel, true);
+        }
+        this.generateSaveButton(buttonPanel, true);
+        this.generateCancelButton(buttonPanel, true);
+    }
 
 
 
-	this.reflow();
-	studio.refreshDesignTrees();
+    this.reflow();
+    studio.refreshDesignTrees();
 
-	// reflow called by caller
+    // reflow called by caller
     }
 
 });
@@ -1168,39 +1161,39 @@ wm.ServiceForm.extend({
      *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
      ***************/
     set_dataSet: function(inDataSet) {
-	this.inherited(arguments);
-	if (inDataSet.input) {
-	    this.service = inDataSet.service;
-	}
+    this.inherited(arguments);
+    if (inDataSet.input) {
+        this.service = inDataSet.service;
+    }
     },
     /****************
      * METHOD: makePropEdit (DESIGNTIME)
      * DESCRIPTION: Generates property editors
      ***************/
     makePropEdit: function(inName, inValue, inEditorProps) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	switch (inName) {
-	case "insertOp":
-	case "updateOp":
-	case "deleteOp":
-	    var service = this.serviceVariable._service;
-	    if (service) {
-		var valueOk = service && service.getOperation(inValue);
-		var methods = service && service.getOperationsList();
-	    } else {
-		methods = ["No dataSet selected"];
-	    }
-	    if (!valueOk){
-		inValue = methods ? methods[0] : "";
-	    }
-	    if (methods)
-		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
-	    break;
+    var prop = this.schema ? this.schema[inName] : null;
+    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+    switch (inName) {
+    case "insertOp":
+    case "updateOp":
+    case "deleteOp":
+        var service = this.serviceVariable._service;
+        if (service) {
+        var valueOk = service && service.getOperation(inValue);
+        var methods = service && service.getOperationsList();
+        } else {
+        methods = ["No dataSet selected"];
+        }
+        if (!valueOk){
+        inValue = methods ? methods[0] : "";
+        }
+        if (methods)
+        return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
+        break;
 
-	    }
-	    return this.inherited(arguments);
-	},
+        }
+        return this.inherited(arguments);
+    },
 
 
     _end: 0
@@ -1218,93 +1211,93 @@ wm.Object.extendSchema(wm.SubForm, {
 
 wm.SubForm.extend({
     afterPaletteDrop: function() {
-	this.inherited(arguments);
-	var f = this.getParentForm();
-	if (f) {
-	    /* TODO: These should use setters to generate the bindings unless formField isn't set until later */
-	    this.generateInputBindings = f.generateInputBindings;
-	    this.generateOutputBindings = f.generateOutputBindings;
+    this.inherited(arguments);
+    var f = this.getParentForm();
+    if (f) {
+        /* TODO: These should use setters to generate the bindings unless formField isn't set until later */
+        this.generateInputBindings = f.generateInputBindings;
+        this.generateOutputBindings = f.generateOutputBindings;
 
-	    this.setReadonly(f.readonly);
-	    this.setCaptionSize(f.captionSize);
-	    this.setCaptionPosition(f.captionPosition);
-	    this.setCaptionAlign(f.captionAlign);
-	    this.setEditorWidth(f.editorWidth);
-	    this.setEditorHeight(f.editorHeight);
-	}
+        this.setReadonly(f.readonly);
+        this.setCaptionSize(f.captionSize);
+        this.setCaptionPosition(f.captionPosition);
+        this.setCaptionAlign(f.captionAlign);
+        this.setEditorWidth(f.editorWidth);
+        this.setEditorHeight(f.editorHeight);
+    }
     },
 
-	postInit: function(){
-		this.inherited(arguments);
-		this.initializeFormField();
-	},
+    postInit: function(){
+        this.inherited(arguments);
+        this.initializeFormField();
+    },
         initializeFormField: function(){
-	    if (!this.formField)
-	    {
-		var ff = this.getUniqueFormField();
-		if (ff && ff != '')
-		    this.set_formField(ff);
-	    }
+        if (!this.formField)
+        {
+        var ff = this.getUniqueFormField();
+        if (ff && ff != '')
+            this.set_formField(ff);
+        }
 
-	},
-	getUniqueFormField: function(){
-			var lf = wm.getParentForm(this);
-			if (!lf)
-				return '';
-			var arr = this.getOptions();
-			if (arr.length < 2)
-				return arr[0];
-			for (var i = 1; i < arr.length; i++){
-				if (!lf.isFormFieldInForm(arr[i]))
-					return arr[i];
-			}
+    },
+    getUniqueFormField: function(){
+            var lf = wm.getParentForm(this);
+            if (!lf)
+                return '';
+            var arr = this.getOptions();
+            if (arr.length < 2)
+                return arr[0];
+            for (var i = 1; i < arr.length; i++){
+                if (!lf.isFormFieldInForm(arr[i]))
+                    return arr[i];
+            }
 
-			return arr[1];
-	},
-	set_formField: function(inFieldName) {
-		if (!inFieldName)
-			delete this.formField;
-		else
-			this.formField = inFieldName;
+            return arr[1];
+    },
+    set_formField: function(inFieldName) {
+        if (!inFieldName)
+            delete this.formField;
+        else
+            this.formField = inFieldName;
 
-	    this.removeAllControls();
-	    var f = this.getParentForm();
-	    if (f) {
-		f.addEditorToForm(this);
-	    }
+        this.removeAllControls();
+        var f = this.getParentForm();
+        if (f) {
+        f.addEditorToForm(this);
+        }
 
-	    if (inFieldName) {
-	        var fieldSchema = this._getFieldSchema();
-		this.type = fieldSchema.type;
-	        if (fieldSchema && fieldSchema.isList) {
-	            this.set_editingMode("one-to-many");
-	        } else {
-	            this.set_editingMode("one-to-one");
-	        }
-	    }
+        if (inFieldName) {
+            var fieldSchema = this._getFieldSchema();
+        this.type = fieldSchema.type;
+            if (fieldSchema && fieldSchema.isList) {
+                this.set_editingMode("one-to-many");
+            } else {
+                this.set_editingMode("one-to-one");
+            }
+        }
 
-	},
-	set_editingMode: function(inMode) {
-	    this.editingMode = inMode;
-	    if (this.editingMode == "one-to-one") {
-		this.addEditors();
-	    } else {
-		//TODO handle grid...
-		app.alert("Not yet implemented");
-	    }
+    },
+    set_editingMode: function(inMode) {
+        this.editingMode = inMode;
+        if (this.editingMode == "one-to-one") {
+        this.addEditors();
+        } else {
+        //TODO handle grid...
+        app.alert("Not yet implemented");
+        }
 
-	},
-	_getFieldSchema: function() {
-		var f = this.getParentForm();
-		if (!f) {
-			console.debug('RelatedEditor "' + this.name + '" is not inside a live form.');
-			return;
-		}
-	    var schema = f.getTypeSchema();
-		if (!schema)
-			return;
-		return wm.typeManager.getPropertyInfoFromSchema(schema, this.formField);
-	}
+    },
+    _getFieldSchema: function() {
+        var f = this.getParentForm();
+        if (!f) {
+            console.debug('RelatedEditor "' + this.name + '" is not inside a live form.');
+            return;
+        }
+        var schema = f.getTypeSchema();
+        if (!schema)
+            return;
+        return wm.typeManager.getPropertyInfoFromSchema(schema, this.formField);
+    }
 });
 
 
@@ -1328,29 +1321,29 @@ wm.Object.extendSchema(wm.ServiceInputForm, {
 wm.ServiceInputForm.extend({
     subFormOnly: true,
     getTypeSchema: function() {
-	return this.serviceVariable._dataSchema;
+    return this.serviceVariable._dataSchema;
     },
     set_serviceVariable: function(inVar) {
-	var oldVar = this.serviceVariable;
-	var oldType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
-	this.setServiceVariable(inVar);
-	if (!this._cupdating) {
-	    var newType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
+    var oldVar = this.serviceVariable;
+    var oldType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
+    this.setServiceVariable(inVar);
+    if (!this._cupdating) {
+        var newType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
 
-	    if (oldVar && oldVar != inVar && oldVar.$.binding && oldVar.$.binding.wires.input && oldVar.$.binding.wires.input.source == this.name+".dataOutput") {
-		oldVar.$.binding.removeWire("input");
-	    }
-	    if (inVar && newType != oldType) {
-		this._removeEditors();
-		this.addEditors();
-		var info = {targetProperty: "input", source: this.name + ".dataOutput"};
-		this.serviceVariable.components.binding.addWire("", info.targetProperty, info.source);
-	    } else if (!inVar) {
-		this._removeEditors();
-	    }
-	}
-	if (inVar)
-	    this.type = inVar.input.type;
+        if (oldVar && oldVar != inVar && oldVar.$.binding && oldVar.$.binding.wires.input && oldVar.$.binding.wires.input.source == this.name+".dataOutput") {
+        oldVar.$.binding.removeWire("input");
+        }
+        if (inVar && newType != oldType) {
+        this._removeEditors();
+        this.addEditors();
+        var info = {targetProperty: "input", source: this.name + ".dataOutput"};
+        this.serviceVariable.components.binding.addWire("", info.targetProperty, info.source);
+        } else if (!inVar) {
+        this._removeEditors();
+        }
+    }
+    if (inVar)
+        this.type = inVar.input.type;
     }
 });
 

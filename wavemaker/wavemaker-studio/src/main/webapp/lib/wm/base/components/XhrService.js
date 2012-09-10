@@ -137,6 +137,10 @@ dojo.declare("wm.XhrService", wm.Service, {
 
         /* Use the remoteRESTCall Proxy service */
         if (useProxy) {
+            if (this.jsonRpcService && !this.jsonRpcService._service) {
+                this.jsonRpcService.destroy();
+                delete this.jsonRpcService;
+            }
             if (!this.jsonRpcService) {
                 this.jsonRpcService = new wm.JsonRpcService({
                     owner: inOwner,
@@ -243,6 +247,7 @@ dojo.declare("wm.XhrDefinition", wm.Component, {
    },
    destroy: function() {
            wm.XhrService.prototype.removeOperation(this.name);
+           this.inherited(arguments);
    },
    initType: function() {
        if (this.url) {

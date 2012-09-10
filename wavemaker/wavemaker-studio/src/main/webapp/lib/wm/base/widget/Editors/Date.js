@@ -378,11 +378,9 @@ dojo.declare("wm.DateTime", wm.Date, {
     getEditorValue: function(inValue) {
         var d = new Date();
         if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
-            var v = this.dateEditor.getDataValue(); // gets long
+            var v = this.dateEditor.getDataValue();
             if (v) {
-                var datetmp = new Date(v);
-                d.setFullYear(datetmp.getFullYear(), datetmp.getMonth(), datetmp.getDate());
-                if (this.dateMode == "Date") d.setHours(0,0,0,0);
+                d = new Date(v);
             } else {
                 return null;
             }
@@ -420,10 +418,17 @@ dojo.declare("wm.DateTime", wm.Date, {
         }
         this.setDataValue(value);
     },
-
     _getReadonlyValue: function() {
-        return this.calcDisplayValue(this.getDataValue());
+        var d = this.getDataValue();
+        if (d) {
+            d = new Date(d);
+            if (!this.useLocalTime) {
+                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset);
+            }
+        }
+        return this.calcDisplayValue(d);
     },
+
     getDisplayValue: function() {
         var v = this.getDataValue();
         if (v === null || v === undefined) return "";

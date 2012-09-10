@@ -143,7 +143,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             if (!column.width) column.width = "100%";
             if (column.width.match(/\%/)) totalWidth += Number(column.width);
             if (column.field == "PHONE COLUMN" && !this._isDesignLoaded) {
-                column.expression = column.expression.replace(/\$\{runtimeId\}/g, this.getRuntimeId()).replace(/wm\.DojoGrid\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
+                column.expression = column.expression.replace(/\$\{runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
             }
         }
         if (!this.isDesignLoaded() && dojo.isIE <= 8) {
@@ -242,11 +242,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     init: function() {
+        this.inherited(arguments);
         this.setSelectionMode(this.selectionMode);
         if (this.noHeader) { // another grid property
             this.headerVisible = false;
         }
-        this.inherited(arguments);
         if (!this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "MobileListStyle") == -1)) {
              this.addUserClass("MobileListStyle");
         }
@@ -458,7 +458,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._dataFields = [];
 
             var useMobileColumn = false;
-            var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+            var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
             if (isMobile) {
                 for (var i = 0; i < this.columns.length; i++) {
                     var c = this.columns[i];
@@ -1531,7 +1531,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return this._data[inIndex];
     },
     _getColumnDef: function(inCol) {
-        var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
         var hasMobileColumn = dojo.some(this.columns, function(c) {
             return c.mobileColumn && !c.controller;
         });

@@ -256,7 +256,9 @@ dojo.declare("wm.Component", wm.Object, {
         },
     isDesignLoaded: function() {
         if (this._isDesignLoaded) return true;
-        if (!window.studio || !studio.page) return false;
+        if (!window.studio) return false;
+        if (this.owner == studio.application || this.owner == studio._application) return true; // must come before test for !studio.page
+        if (!studio.page) return false;
         if (!this.owner) return false;
         if (this.getParentPage() == studio.page) return true;
         if (this == studio.page) return true;
