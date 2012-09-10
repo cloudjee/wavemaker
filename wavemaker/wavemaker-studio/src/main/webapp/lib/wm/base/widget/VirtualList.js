@@ -77,7 +77,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 
 
     onTouchStart: function(evt) {
-        if (!this.list._disabled && !this.selected || this.list._selectionMode == "multiple") {
+        if (!this.list._disabled && !this.selected && this.list._selectionMode != "none"|| this.list._selectionMode == "multiple") {
             if (this.selected) {
                 this._deselectionIndicatorOnly = true;
                 this.deselect(true);
