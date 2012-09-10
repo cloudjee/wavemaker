@@ -338,7 +338,7 @@ wm.job = function(inName, inDelay, inJob1, inJob2) {
         inJob = inJob1;
     }
     wm.cancelJob(inName);
-    if (app && app.debugDialog) {
+    if (window["app"] && app.debugDialog) {
         var eventChain = app.debugDialog.cacheEventChain();
     }
     var job = function() {
