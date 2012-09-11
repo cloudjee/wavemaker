@@ -190,48 +190,42 @@ dojo.declare("QueryEditor", wm.Page, {
 	singleResultChanged: function(inSender) {
 		this.setDirty();
 	},
-	runQuery: function(inSender) {
-	    wm.onidle(this, function() {
-		//this.bindValue();
+    runQuery: function(inSender) {
+        wm.job("QueryEditor.runQuery", 20, this, function() {
+            //this.bindValue();
+            // if its all white space, then no query is here
+            if (!this._getQueryValue().match(/\S/)) {
+                app.alert(this.getDictionaryItem("ERROR_NO_QUERY"));
+                return;
+            }
+            if (!this.queryDataModelInput.getDataValue()) {
+                app.alert(this.getDictionaryItem("ERROR_NO_DATAMODEL"));
+                return;
+            }
+            this.emptyResultSetLabel.setShowing(false);
+            this.queryOutputList.setShowing(true);
+            for (var i in DML_OPERATIONS) {
+                var op = DML_OPERATIONS[i];
+                if (this._getQueryValue().toLowerCase().indexOf(op) == 0) {
+                    if (!confirm(this.getDictionaryItem("CONFIRM_RUN"))) {
+                        return;
+                    }
+                }
+            }
+            this.queryOutputList.clear();
+            var runQueryInput = [];
+            var bindParamValues = this._buildBindParms();
+            //var bindParamValues = null;
+            //if (this.bindParamInput.getDataValue()) {
+            //  bindParamValues = this.bindParamInput.getDataValue();
+            //}
+            runQueryInput = [
+            this.dataModelName, this._getQueryValue(), this._getQueryInputs(), bindParamValues, this.maxResultsInput.getDataValue()];
+            studio.beginWait(this.getDictionaryItem("WAIT_RUN"));
+            studio.dataService.requestAsync(RUN_QUERY_OP, runQueryInput, dojo.hitch(this, "_runQueryResult"), dojo.hitch(this, "_runQueryError"));
+        });
+    },
 
-	    // if its all white space, then no query is here
-	       if (!this._getQueryValue().match(/\S/)) {
-		    app.alert(this.getDictionaryItem("ERROR_NO_QUERY"));
-		    return;
-		}
-	        if (!this.queryDataModelInput.getDataValue()) {
-		    app.alert(this.getDictionaryItem("ERROR_NO_DATAMODEL"));
-		    return;
-		}
-		this.emptyResultSetLabel.setShowing(false);
-		this.queryOutputList.setShowing(true);
-		for (var i in DML_OPERATIONS) {
-			var op = DML_OPERATIONS[i];
-			if (this._getQueryValue().toLowerCase().indexOf(op) == 0) {
-			    if (!confirm(this.getDictionaryItem("CONFIRM_RUN"))) {
-					return;
-				}
-			}
-		}
-		this.queryOutputList.clear();
-		var runQueryInput = [];
-		var bindParamValues = this._buildBindParms();
-		//var bindParamValues = null;
-		//if (this.bindParamInput.getDataValue()) {
-		//	bindParamValues = this.bindParamInput.getDataValue();
-		//}
-		runQueryInput = [
-			this.dataModelName,
-			this._getQueryValue(),
-			this._getQueryInputs(),
-			bindParamValues,
-			this.maxResultsInput.getDataValue()];
-		studio.beginWait(this.getDictionaryItem("WAIT_RUN"));
-		studio.dataService.requestAsync(RUN_QUERY_OP, runQueryInput,
-			dojo.hitch(this, "_runQueryResult"),
-			dojo.hitch(this, "_runQueryError"));
-	    });
-	},
 	_buildBindParms: function() {
 		var parms = "";
 		for (var i = 0; i <	this.queryInputsList._data.length; i++) {
