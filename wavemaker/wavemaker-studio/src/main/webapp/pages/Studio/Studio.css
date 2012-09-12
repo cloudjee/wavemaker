@@ -204,7 +204,7 @@ body .StudioTabs .wmtablayers-tab:active:not(.wmtablayers-selected) {
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     position: relative;
-    top: 1px; /* Preferred by firefox; maybe IE as well? */
+    top: 2px; /* Preferred by firefox; maybe IE as well? */
 }
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
@@ -216,6 +216,7 @@ body .StudioTabs .wmtablayers-tab:active:not(.wmtablayers-selected) {
 }
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+    top: 1px;
 }
 /*
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer .StudioTabs.StudioDarkLayers > div > .wmlayer,
