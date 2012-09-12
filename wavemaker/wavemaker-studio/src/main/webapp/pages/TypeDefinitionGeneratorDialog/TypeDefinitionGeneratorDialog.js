@@ -76,9 +76,9 @@ dojo.declare("TypeDefinitionGeneratorDialog", wm.Page, {
          } else if (val === null || val === undefined) {
              type = isList ? "StringData" : "String";
          } else if (typeof val == "object") {
-             var typedef = new wm.TypeDefinition({owner: studio.application, name: inTypeDef.name + "." + inKey});
+             var typedef = new wm.TypeDefinition({owner: studio.application, name: inTypeDef.name + "_" + inKey});
              this.moreDefs[typedef.name] = typedef;
-             var field = new wm.TypeDefinitionField({owner: inTypeDef, name: inKey, fieldName: inKey, fieldType: (inTypeDef == this.typeDef ? this.typeName.getDataValue() : inTypeDef.name) + "." + inKey, isList: Boolean(isList)});
+             var field = new wm.TypeDefinitionField({owner: inTypeDef, name: inKey, fieldName: inKey, fieldType: (inTypeDef == this.typeDef ? this.typeName.getDataValue() : inTypeDef.name) + "_" + inKey, isList: Boolean(isList)});
              this.parseObj(val, typedef);
          }
          if (type)
