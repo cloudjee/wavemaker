@@ -1419,6 +1419,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 case 'Number (WaveMaker)':
                     obj.formatter = dojo.hitch(this, 'numberFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
                     break;
+                case 'wm_array_formatter':
+                    obj.formatter = dojo.hitch(this, 'arrayFormatter', col.field, col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+
                 case 'wm_currency_formatter':
                 case 'Currency (WaveMaker)':
                     obj.formatter = dojo.hitch(this, 'currencyFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
@@ -1871,6 +1875,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         case 'Number (WaveMaker)':
                             value = this.numberFormatter(col.formatProps || {}, "", "", "", value);
                             break;
+                        case 'wm_array_formatter':
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value);
+                            break;
                         case 'wm_currency_formatter':
                         case 'Currency (WaveMaker)':
                             value = this.currencyFormatter(col.formatProps || {}, "", "", "", value);
@@ -1959,6 +1966,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                             case 'Number (WaveMaker)':
                             value = this.numberFormatter(value);
                             break;
+                            /* TODO: Fix all formatters as they need parameters
+                        case 'wm_array_formatter':
+                            value = this.arrayFormatter(col.field,value);
+                            break;                            */
                         case 'wm_currency_formatter':
                             case 'Currency (WaveMaker)':
                             value = this.currencyFormatter(value);
@@ -2139,6 +2150,26 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         return '<a href="'+ linkValue +'" target="' + target + '">' + displayValue + "</a>";
         }
         return inValue;
+    },
+    arrayFormatter: function(field, formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
+        if (!formatterProps.joinFieldName) formatterProps.joinFieldName = "dataValue";
+        if (!formatterProps.separator) formatterProps.separator = ",";
+        var str = "";
+        var data = this.getRow(rowIdx);
+        if (data)
+            var wmvar = data._wmVariable;
+        if (wmvar)
+            var data = wmvar.getValue(field).getData();
+        if (data) {
+
+
+
+            dojo.forEach(data, function(item) {
+                if (str) str += formatterProps.separator + " ";
+                str += item[formatterProps.joinFieldName];
+            });
+        }
+        return str;
     },
     customFormatter: function(formatFunc, backgroundColorFunc, textColorFunc, cssClassFunc, inValue, rowIdx, cellObj) {
         try {

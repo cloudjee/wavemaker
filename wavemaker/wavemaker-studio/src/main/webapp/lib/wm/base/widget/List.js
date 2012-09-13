@@ -1706,6 +1706,9 @@ wm.List.extend({
                 case 'Number (WaveMaker)':
                     value = this.numberFormatter(col.formatProps || {}, null, null, null, value);
                     break;
+                case 'wm_array_formatter':
+                    value = this.arrayFormatter(col.field, col.formatProps || {}, null, null, null, value);
+                    break;
                 case 'wm_currency_formatter':
                 case 'Currency (WaveMaker)':
                     value = this.currencyFormatter(col.formatProps || {}, null, null, null, value);
@@ -1770,6 +1773,18 @@ wm.List.extend({
             type: formatterProps.numberType
         };
         return dojo.number.format(inValue, constraints);
+    },
+     arrayFormatter: function(inField, formatterProps, ignore1, ignore2, ignore3, inValue) {
+        if (!formatterProps.joinFieldName) formatterProps.joinFieldName = "dataValue";
+        if (!formatterProps.separator) formatterProps.separator = ",";
+        var str = "";
+        if (inValue) {
+            dojo.forEach(inValue, function(item) {
+                if (str) str += formatterProps.separator + " ";
+                str += item[formatterProps.joinFieldName];
+            });
+        }
+        return str;
     },
     currencyFormatter: function(formatterProps, ignore1, ignore2, ignore3, inValue) {
         var isDesignLoaded = false;

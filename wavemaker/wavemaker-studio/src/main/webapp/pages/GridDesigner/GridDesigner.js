@@ -130,6 +130,9 @@ dojo.declare("GridDesigner", wm.Page, {
                         case 'Link (WaveMaker)':
                             value = "wm.List.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
+                        case "wm_array_formatter":
+                            value = "wm.List.prototype.arrayFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ")";
+                            break;
                         case 'wm_button_formatter':
                             value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
 /*                            var classList = formatProps.buttonclass ? formatProps.buttonclass  : "wmbutton";
@@ -340,7 +343,9 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         case "wm_link_formatter":
         this.linkLayer.activate();
         break;
-
+        case "wm_array_formatter":
+        this.arrayLayer.activate();
+        break;
         case "wm_date_formatter":
         this.dateLayer.activate();
         if (!this.dateFormatLength.getDataValue())
@@ -521,6 +526,16 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
    onImageHeightChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
        if (!inSetByCode) {
            this.changeItem("formatProps.height", inDataValue);
+       }
+   },
+    onArraySeparatorChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.separator", inDataValue);
+       }
+   },
+    onArrayFieldNameChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.joinFieldName", inDataValue);
        }
    },
    onButtonClassChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
