@@ -79,9 +79,9 @@ dojo.declare("wm.Date", wm.Text, {
         if (d) {
             if (!this.useLocalTime) {
                 if (this.dateMode == "Date") {
-                     /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-                    d.setHours(0, -60*wm.timezoneOffset);
-                    //d.setHours(-wm.timezoneOffset, 0, 0);
+                    /* See WM-4490 to understand this calculation */
+                    var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
+                    d.setHours(0, -60 * wm.timezoneOffset + adjustSixHours,0,0);
                 } else {
                     /* Allow hours to be set */
                     d = dojo.date.add(d, "minutes", -wm.timezoneOffset*60);
@@ -95,10 +95,12 @@ dojo.declare("wm.Date", wm.Text, {
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
         if (!this.useLocalTime && v) {
-            v = new Date(v); // don't modify the source data as the called may still need it
-             /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset,0,0);
-            //v.setHours(v.getHours() + wm.timezoneOffset);
+            // don't modify the source data as the called may still need it
+            v = new Date(v);
+
+             /* See WM-4490 to understand this calculation. */
+            var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
+            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustSixHours,0,0);
         }
         this.inherited(arguments, [v]);
     },
@@ -237,7 +239,7 @@ dojo.declare("wm.Time", wm.Date, {
         var d = wm.Text.prototype.getEditorValue.call(this);
         if (d) {
             if (!this.useLocalTime) {
-                 /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+                 /* See WM-4490 to understand this calculation */
                 d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset,0);
                 //d.setHours(d.getHours() - wm.timezoneOffset);
             }
@@ -423,6 +425,7 @@ dojo.declare("wm.DateTime", wm.Date, {
         if (d) {
             d = new Date(d);
             if (!this.useLocalTime) {
+                /* See WM-4490 to understand this calculation */
                 d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset);
             }
         }

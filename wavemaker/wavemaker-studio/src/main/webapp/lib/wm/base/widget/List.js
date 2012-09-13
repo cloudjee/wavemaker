@@ -1747,14 +1747,15 @@ wm.List.extend({
         } else if (inValue instanceof Date == false) {
             return inValue;
         }
+        var dateType = formatterProps.dateType || 'date';
         if (!formatterProps.useLocalTime) {
-            //inValue.setHours(inValue.getHours() + wm.timezoneOffset);
-             /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes + 60*wm.timezoneOffset);
+            /* See WM-4490 to understand this calculation */
+            var adjustSixHours = dateType == "date" ? 360 : 0;
+            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes + 60*wm.timezoneOffset + adjustSixHours);
         }
         var constraints = {
             fullYear: true,
-            selector: formatterProps.dateType || 'date',
+            selector: dateType,
             formatLength: formatterProps.formatLength || 'short',
             locale: dojo.locale,
             datePattern: formatterProps.datePattern,
@@ -1880,8 +1881,8 @@ wm.List.extend({
         this.deselectAll();
         var count = items.getCount();
         for (var i = 0; i < count; i++) {
-            var item = items.data.list[i];
-            this.addToSelection(this.items[dojo.indexOf(this.dataSet.data.list, item)]);
+            var item = items.data._list[i];
+            this.addToSelection(this.items[dojo.indexOf(this.dataSet.data._list, item)]);
             if (this._selectionMode == "single") break;
         }
     },

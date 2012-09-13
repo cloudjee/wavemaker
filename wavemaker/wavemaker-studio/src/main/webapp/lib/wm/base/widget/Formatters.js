@@ -108,9 +108,9 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 		}
 		var d = new Date(inDatum);
 		if (!this.useLocalTime) {
-		    //d.setHours(d.getHours() + wm.timezoneOffset);
-             /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-            d.setHours(0, 60*d.getHours() + d.getMinutes + 60*wm.timezoneOffset);
+		    /* See WM-4490 to understand this calculation */
+            var adjustSixHours = this._selector == "date"  ? 360 : 0;
+            d.setHours(0, 60*d.getHours() + d.getMinutes + 60*wm.timezoneOffset + adjustSixHours);
         }
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));

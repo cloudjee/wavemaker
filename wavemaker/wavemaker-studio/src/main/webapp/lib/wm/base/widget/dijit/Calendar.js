@@ -200,7 +200,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
     setDate: function(inValue) {
         var d = wm.convertValueToDate(inValue);
         if (d && !this.useLocalTime) {
-            /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
+            /* See WM-4490 to understand this calculation */
             d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset);
         }
         this.dijit.set("value", d);
@@ -218,7 +218,9 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
         // dijit._Calendar doesn't have a getValue()
         var d = this.dijit.value;
         if (d instanceof Date) {
-            if (!this.useLocalTime) d.setHours(0,-60*wm.timezoneOffset, 0);
+            /* See WM-4490 to understand this calculation */
+            var adjustSixHours = 360;
+            if (!this.useLocalTime) d.setHours(0,-60*wm.timezoneOffset + adjustSixHours, 0);
             else d.setHours(0, 0, 0);
             return d.getTime();
         }

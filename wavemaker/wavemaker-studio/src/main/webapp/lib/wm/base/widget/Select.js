@@ -88,7 +88,7 @@ dojo.declare("wm.Select", wm.Box, {
 				return;
 			}
 	},
-	
+
 	// events
 	onchange: function(inValue) {
 	},
@@ -115,7 +115,7 @@ dojo.declare("wm.Select", wm.Box, {
 			data = [],
 			dataSet = this.dataSet,
 			f = this.dataField || this._getFirstDataField(),
-			l = dataSet && dataSet.data.list,
+			l = dataSet && dataSet.data._list,
 			count = l && l.length || 0;
 		for (var i=0, d; (i<count) && (d=dataSet.getItem(i)); i++)
 			data.push(f ? d.getValue(f) : d);

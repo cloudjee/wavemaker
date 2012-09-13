@@ -768,8 +768,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.updateSelectedItem(-1);
         var item = this.getRowData(rowIndex);
         this.dojoObj.store.deleteItem(item);
-        if (this.dataSet && this.dataSet.data && this.dataSet.data.list) {
-            var dataSetIndex = dojo.indexOf(this.dataSet.data.list, item._wmVariable[0]);
+        if (this.dataSet && this.dataSet.data && this.dataSet.data._list) {
+            var dataSetIndex = dojo.indexOf(this.dataSet.data._list, item._wmVariable[0]);
             if (dataSetIndex != -1) {
                 this.dataSet.beginUpdate();
                 this.dataSet.removeItem(dataSetIndex);
@@ -1284,7 +1284,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     this._storeFetch(dojo.hitch(this, function(inItems) {
                       this.deselectAll();
                       for(var i = 0; i < inItems.length; i++) {
-                      if (dojo.indexOf(items.data.list, inItems[i]._wmVariable[0]) != -1) {
+                      if (dojo.indexOf(items.data._list, inItems[i]._wmVariable[0]) != -1) {
                           this.dojoObj.selection.addToSelection(i);
                           if (this._selectionMode == "single") {
                           break;
@@ -2019,11 +2019,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         } else if (inValue instanceof Date == false) {
         return inValue;
         }
+
+        var dateType = formatterProps.dateType || 'date';
         if (!formatterProps.useLocalTime) {
-            /* the math here is used to handle wm.timezoneOffset of 12.5 as used in India */
-            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes() +wm.timezoneOffset);
+            /* See WM-4490 to understand this calculation */
+            var adjustSixHours = dateType == "date" ? 360 : 0;
+            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes() +wm.timezoneOffset * 60 + adjustSixHours);
         }
-    var constraints = {fullYear: true, selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
+    var constraints = {fullYear: true, selector: dateType, formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
         return dojo.date.locale.format(inValue, constraints);
     },
     /* DEPRECATED */
@@ -2339,7 +2342,7 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         var value = this.getValue(inRowIndex);
         if (!useLocalTime) {
             value.setHours(0,
-                           -60 * wm.timezoneOffset, // note, could be a value like -5.5 which doesn't work in the hours slot
+                           -60 * wm.timezoneOffset + 6, /* See WM-4490 to understand this calculation */
                            0);
             //value.setHours(-wm.timezoneOffset, 0, 0);
         }
