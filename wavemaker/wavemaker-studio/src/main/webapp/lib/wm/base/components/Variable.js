@@ -132,7 +132,7 @@ dojo.declare("wm.Variable", wm.Component, {
             }
         // don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should
         // not lose the user's isList setting
-        } else if (!(this.data && this.data.list) && !this._inPostInit)
+        } else if (!(this.data && this.data._list) && !this._inPostInit)
             this.isList = false;
 
             var hasChanged;
@@ -248,7 +248,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (!this.data)
             this.data = {};
         if (this.isList)
-            this.data = {list: []};
+            this.data = {_list: []};
         else {
             // maintain any subNards (to one depth anyways), but otherwise clear data
             var d;
@@ -334,7 +334,7 @@ dojo.declare("wm.Variable", wm.Component, {
     setIsList: function(isList) {
         if (isList && !this.isList) {
             this.isList = true;
-        if (this.json && !this.data.list)
+        if (this.json && !this.data._list)
             this.setJson("[" + this.json + "]");
         else if (wm.isEmpty(this.data))
             this._setArrayData([]);
@@ -346,7 +346,7 @@ dojo.declare("wm.Variable", wm.Component, {
         } else if (!isList && this.isList) {
         if (this.json) {
             this.setJson(dojo.toJson(this.getItem(0).getData()));
-        } else if (wm.isEmpty(this.data.list)) {
+        } else if (wm.isEmpty(this.data._list)) {
             this.setData(null); // this should change isList automatically
         } else {
             this.setData(this.getItem(0));// this should change isList automatically unless item(0) is itself a list
@@ -358,7 +358,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (wm.defaultTypes[this.type] && inArray.length && typeof inArray[0] != "object") {
             inArray = dojo.map(inArray, function(v) {return {dataValue: v};});
         }
-        this.data = { list: inArray };
+        this.data = { _list: inArray };
         this.isList = true;
         this._isNull = inArray.length == 0;
     },
@@ -366,8 +366,8 @@ dojo.declare("wm.Variable", wm.Component, {
         this.beginUpdate();
         this._clearData();
         this.isList = false;
-        if (!("list" in this._dataSchema))
-            delete this.data.list;
+
+        delete this.data._list;
         var d, v, nv, isNull = inObject === null, empty = wm.isEmpty(inObject);
         for (var i in this._dataSchema) {
             d = this.data[i];
@@ -410,11 +410,11 @@ dojo.declare("wm.Variable", wm.Component, {
             // if its a byte list merge it into a single string and change it to a nonlist
             if (this.type == "byte") {
                 try {
-                    if (this.data.list && this.data.list[0] instanceof wm.Variable) {
-                        this.data.list[0] = this.data.list[0].data.dataValue;
+                    if (this.data._list && this.data._list[0] instanceof wm.Variable) {
+                        this.data._list[0] = this.data._list[0].data.dataValue;
                     }
                     this.data = {
-                        dataValue: this.data.list.join("")
+                        dataValue: this.data._list.join("")
                     };
                 } catch (e) {
                     this.data = null;
@@ -422,7 +422,7 @@ dojo.declare("wm.Variable", wm.Component, {
                 this.isList = false;
 
                 return dojo.clone(this.data); // getData never returns pointers into the datastructure but only copies so that manipulating it doesn't corrupt the wm.Variable
-            } else if (wm.Variable.convertToHashMaps && this.data.list && wm.isHashMapType(this.type)) {
+            } else if (wm.Variable.convertToHashMaps && this.data._list && wm.isHashMapType(this.type)) {
                 var data = {};
                 for (var i = 0, l = this.getCount(), v; i < l; i++) {
                     v = (this.getItem(i) || 0).getData(flattenPrimitives);
@@ -528,7 +528,7 @@ dojo.declare("wm.Variable", wm.Component, {
     */
     getCount: function() {
       if (this._isNull) return 0;
-      if (this.isList) return (this.data && this.data.list) ? this.data.list.length : 0;
+      if (this.isList) return (this.data && this.data._list) ? this.data._list.length : 0;
       return 1;
     },
 
@@ -539,7 +539,7 @@ dojo.declare("wm.Variable", wm.Component, {
     isEmpty: function() {
         if (!this.data) return true;
 
-        if (this.data.list) return !Boolean(this.data.list.length);
+        if (this.data._list) return !Boolean(this.data._list.length);
 
         for (var propName in this.data) {
             if (this.data[propName] instanceof wm.Variable) {
@@ -566,7 +566,7 @@ dojo.declare("wm.Variable", wm.Component, {
     _needItem: function(inIndex, inData) {
         if (inIndex >= this.getCount() && inData === undefined) return null;
         // fetch the stored data object
-        var item = this.data.list[inIndex];
+        var item = this.data._list[inIndex];
         // optional raw data to initialize the object with
         var data = inData;
         if (!(item instanceof wm.Variable)) {
@@ -575,7 +575,7 @@ dojo.declare("wm.Variable", wm.Component, {
             data = inData || item;
             // create a new Variable to represent this data
             item = this.createVariable({/*name: "itemProxy",*/ type: this.type, _subNard: true, itemIndex: inIndex});
-            this.data.list[inIndex] = item;
+            this.data._list[inIndex] = item;
         }
         if (data !== undefined) {
             item.beginUpdate();
@@ -594,7 +594,7 @@ dojo.declare("wm.Variable", wm.Component, {
     },
     getItemData: function(inIndex) {
         if  (!this.isList) return;
-            var item = this.data.list[inIndex];
+            var item = this.data._list[inIndex];
             if (item instanceof wm.Variable)
                 return item.data;
             else
@@ -635,7 +635,7 @@ dojo.declare("wm.Variable", wm.Component, {
     // note: low level sort that requires a comparator function to be used.
     sort: function(inComparator) {
         this._populateItems();
-        var l = this.isList && this.data && this.data.list;
+        var l = this.isList && this.data && this.data._list;
         if (l) {
         if (typeof inComparator == "function") {
             l.sort(inComparator);
@@ -688,8 +688,8 @@ dojo.declare("wm.Variable", wm.Component, {
         this.setCursor(this.getCount()-1);
     },
     getIndexInOwner: function() {
-        if (this.owner instanceof wm.Variable && this.owner.data.list) {
-            return dojo.indexOf(this.owner.data.list, this);
+        if (this.owner instanceof wm.Variable && this.owner.data._list) {
+            return dojo.indexOf(this.owner.data._list, this);
         }
         return -1;
     },
@@ -729,7 +729,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (this.isList) {
             var c = this.getCount();
             if (inIndex >= 0 && inIndex < c)
-                this.data.list.splice(inIndex, 0, {});
+                this.data._list.splice(inIndex, 0, {});
             else
                 inIndex = this.getCount();
             this._setItem(inIndex, inData);
@@ -747,13 +747,13 @@ dojo.declare("wm.Variable", wm.Component, {
     },
     _removeItem: function(inIndex) {
         if (this.isList)
-            this.data.list.splice(inIndex, 1);
+            this.data._list.splice(inIndex, 1);
     },
     // should we store this for faster access? (items have itemIndex, but this is not maintained)
     getItemIndex: function(inVariable) {
         if (!this.isList)
             return -1;
-        var list = (this.data || 0).list || [];
+        var list = (this.data || 0)._list || [];
         for (var i=0, l = list.length; i < l; i++) {
             if (inVariable == list[i])
                 return i;
@@ -768,7 +768,7 @@ dojo.declare("wm.Variable", wm.Component, {
             obj = inVariable.getData();
         }
 
-        var list = (this.data || 0).list || [];
+        var list = (this.data || 0)._list || [];
         for (var i=0, l = list.length; i < l; i++) {
             obj2 = list[i] instanceof wm.Variable ? list[i].getData() : list[i];
             var isEqual = true;
@@ -1247,7 +1247,7 @@ dojo.declare("wm.Variable", wm.Component, {
                 return true;
             // stub if we're a list and there's no list data
             if (this.isList || this.hasList())
-                return !this.data.list || !this.data.list.length;
+                return !this.data._list || !this.data._list.length;
             // optionally treat as stub if there is any data v. if there is missing data
             // stub if dont' have data for any property not structured / list
             if (this._greedyLoadProps) {
