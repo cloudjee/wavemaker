@@ -21,6 +21,7 @@ wm.formatters = [
     "Time",
     "DateTime",
     "Currency",
+    "Array",
     //"Link",
     //"RegularExpression",
     //"Evaluation",
@@ -89,6 +90,30 @@ dojo.declare("wm.CurrencyFormatter", wm.NumberFormatter, {
 	}
 });
 
+dojo.declare("wm.ArrayFormatter", wm.DataFormatter, {
+	separator: ",",
+	joinField: "dataValue",
+
+	// NB: called in 'cell' context
+	format: function(inDatum) {
+		var str = "";
+		if (inDatum) {
+			if (inDatum instanceof wm.Variable) {
+				inDatum.forEach(dojo.hitch(this, function(item) {
+					if (str) str += this.separator + " ";
+					str += item.getValue(this.joinField);
+				}));
+			} else {
+				dojo.forEach(inDatum, function(item) {
+					if (str) str += this.separator + " ";
+					if (item instanceof wm.Variable) str += item.getValue(this.joinField);
+					else str += item[this.joinField];
+				}, this);
+			}
+		}
+		return str;
+	}
+});
 
 dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 	useLocalTime: true,
