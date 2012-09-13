@@ -391,7 +391,7 @@ wm.Object.extendSchema(wm.DataForm, {
 
     /* Editor group */
     dataOutput: {group: "dataSet",  order: 3, readonly: 1, bindable: 1, type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
-    dataSet:    {group: "widgetName", subgroup: "data", order: 2, readonly: 1, bindTarget: 1, requiredGroup: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+    dataSet:    {group: "widgetName", subgroup: "data", order: 2, readonly: 1, bindTarget: 1, bindSource: 1, requiredGroup: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
 
     /* Editor group; behavior subgroup */
     confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
