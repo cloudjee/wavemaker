@@ -185,7 +185,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
     format: {ignore: 1},
     formatter: {ignore: 1},
     displayType: {ignore:1},
-    emptyValue: {ignore: 1},
+    //emptyValue: {ignore: 1},
     optionsVar: {ignore:1},
 
     /* Methods */
