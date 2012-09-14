@@ -102,9 +102,9 @@ dojo.declare("wm.XhrService", wm.Service, {
                     headers[parameterName] = parameters[parameterName];
                 } else if (parameterDef.transmitType == "path") {
                     if (!url.match(/\/$/)) url += "/";
-                    url += parameterName + "/" + parameters[parameterName];
+                    url += parameterName + "/" + escape(parameters[parameterName]);
                 } else if (parameters[parameterName] !== undefined) {
-                    inputs[parameterName] = parameters[parameterName];
+                    inputs[parameterName] = escape(parameters[parameterName]);
                 }
             });
             return this._invokeBasicRequest(url, headers, requestType, contentType, useProxy, inputs, op.returnType, op, inOwner);
