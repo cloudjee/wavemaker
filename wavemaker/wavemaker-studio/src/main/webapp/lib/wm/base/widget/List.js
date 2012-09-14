@@ -1240,8 +1240,10 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.dataSet.setNextPage();
                 //});
                 this._paging = "inc";
-            } else if (this.onScrollToBottom()) {
-                if (this.dataSet._requester) {
+            } else {
+                this.onScrollToBottom();
+                var svar = !this.dataSet || this.dataSet instanceof wm.ServiceVariable ? this.dataSet : this.dataSet.isAncestorInstanceOf(wm.ServiceVariable);
+                if (svar && svar._requester) {
                     this._paging = "inc";
                 }
             }
