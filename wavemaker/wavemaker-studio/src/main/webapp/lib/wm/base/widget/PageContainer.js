@@ -140,40 +140,33 @@ dojo.declare("wm.PageContainer", wm.Control, {
         this._connections.push(this.connect(this._pageLoader, "onError", this, "onError"));
     },
     getMainPage: function() {
-      var owner = this.owner;
-      while(owner.owner) {
-        owner = owner.owner;
-      }
-      if (owner instanceof wm.Application)
-        return owner;
+        var owner = this.owner;
+        while (owner.owner) {
+            owner = owner.owner;
+        }
+        if (owner instanceof wm.Application) return owner;
     },
     /* Not sure if this gets called */
     destroy: function() {
-        if (this.isDestroyed)
-            return;
-      var owner = this.getMainPage();
-      if (owner) owner.subPageUnloaded(this.page);
-      try {
-        this.inherited(arguments);
-      } catch(e) {}
+        if (this.isDestroyed) return;
+        var owner = this.getMainPage();
+        if (owner) owner.subPageUnloaded(this.page);
+        try {
+            this.inherited(arguments);
+        } catch (e) {}
 
-      if (this._pageLoader)
-      {
-        this.destroyPreviousPage();
-        this._pageLoader.destroy();
-        this._pageLoader = null;
-      }
-      owner = null;
+        if (this._pageLoader) {
+            this.destroyPreviousPage();
+            this._pageLoader.destroy();
+            this._pageLoader = null;
+        }
+        owner = null;
     },
-    destroyPreviousPage: function(){
-        for (var i = 0; i < this.pageLoadedList.length; i++)
-        {
-            try
-            {
+    destroyPreviousPage: function() {
+        for (var i = 0; i < this.pageLoadedList.length; i++) {
+            try {
                 this._pageLoader.destroyPage(this.pageLoadedList[i]);
-            }
-            catch(e)
-            {
+            } catch (e) {
                 console.info('couldnt delete page <--------------');
             }
         }
@@ -181,8 +174,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         this.pageLoadedList = [];
     },
     pageChanged: function(inPage, inPreviousPage) {
-        try
-        {
+        try {
             // establish page reference
             this.destroyPreviousPage();
             this.pageLoadedList.push(inPage);
@@ -193,19 +185,17 @@ dojo.declare("wm.PageContainer", wm.Control, {
             if (owner) owner.subPageLoaded(this.page);
 
             // FIXME: parent required for layout
-            if (this.page.root)
-                this.page.root.parent = this;
+            if (this.page.root) this.page.root.parent = this;
             // change callback / event
-            if (this.pageLoadedDeferred)
-                this.pageLoadedDeferred.callback({page: inPage, previousPage: inPreviousPage});
+            if (this.pageLoadedDeferred) this.pageLoadedDeferred.callback({
+                page: inPage,
+                previousPage: inPreviousPage
+            });
             this.onPageChanged(inPage, inPreviousPage);
             // clean up previous page reference
             var o = (inPreviousPage || 0).name
-            if (o && this[o])
-                delete this[o];
-        }
-        catch(e)
-        {
+            if (o && this[o]) delete this[o];
+        } catch (e) {
             console.info('error in pageChanged in pagecontainer.js ......', e);
         }
     },
@@ -226,7 +216,8 @@ dojo.declare("wm.PageContainer", wm.Control, {
                     // Prevent this from being connected multiple times
                     if (!this._pageLoaderConnectedToOwnerStart) {
                         if (this._currentPageConnect) dojo.disconnect(this._currentPageConnect);
-                        this._currentPageConnect = this.owner.connect(this.owner, "onStart", dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
+                        this._currentPageConnect = this.owner.connect(this.owner, "onStart",
+                            dojo.hitch(this, 'pageLoaderOnOwnerStart', inName, pageName));
                         this._pageLoaderConnectedToOwnerStart = true;
                     }
                 } else {
@@ -249,65 +240,66 @@ dojo.declare("wm.PageContainer", wm.Control, {
     },
     onStart: function() {
         delete this._locationState;
-        if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w)
-        this.parent.reflow();
+        if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w) this.parent.reflow();
 
         if (this.subpageEventlist && this.page) {
-        for (var propName in this.subpageEventlist) {
-            var propComponent = this.page[propName];
-            if (propComponent && propComponent.isEvent && !this._isDesignLoaded) {
-            var componentName = propComponent.property.replace(/\..*?$/,"");
-            var eventName =  propComponent.property.replace(/^.*\./,"");
-            var component = this.page.getValue(componentName);
-            this.connect(component, eventName, this, propName);
+            for (var propName in this.subpageEventlist) {
+                var propComponent = this.page[propName];
+                if (propComponent && propComponent.isEvent && !this._isDesignLoaded) {
+                    var componentName = propComponent.property.replace(/\..*?$/, "");
+                    var eventName = propComponent.property.replace(/^.*\./, "");
+                    var component = this.page.getValue(componentName);
+                    this.connect(component, eventName, this, propName);
+                }
             }
-        }
         }
 
 
         if (this.subpageProplist) {
-        for (var propName in this.subpageProplist) {
-            var v = this[propName];
-            if (v !== undefined) {
-            this.setProp(propName, this[propName]);
+            for (var propName in this.subpageProplist) {
+                var v = this[propName];
+                if (v !== undefined) {
+                    this.setProp(propName, this[propName]);
+                }
             }
-        }
-        if (this.$.binding) this.$.binding.refresh(); // update all bound values
+            if (this.$.binding) this.$.binding.refresh(); // update all bound values
         }
 
-        if (this._restoringLocationState || (this.manageHistory || this.manageURL) && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
-            app.addHistory({id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
-                    options: this._backState,
-                    title: "Show " + this._pageName}, !this.manageHistory || this._restoringLocationState);
+        if (this._restoringLocationState ||
+            (this.manageHistory || this.manageURL) &&
+            this._lastPageName && this._lastPageName != this._pageName && !this._isDesignLoaded) {
+            app.addHistory({
+                id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
+                options: this._backState,
+                title: "Show " + this._pageName
+            }, !this.manageHistory || this._restoringLocationState);
             delete this._backState;
         }
         delete this._restoringLocationState;
     },
     handleBack: function(inOptions) {
-    if (!inOptions.pageName || inOptions.pageName == this._pageName)
-        return false;
-    this._restoreBackState = inOptions
-    this.setPageName(inOptions.pageName);
-    delete this._restoreBackState;
-    return true;
+        if (!inOptions.pageName || inOptions.pageName == this._pageName) return false;
+        this._restoreBackState = inOptions;
+        this.setPageName(inOptions.pageName);
+        delete this._restoreBackState;
+        return true;
     },
-/*
+    /*
     restoreFromLocationHash: function(inValue, state) {
     this._locationState = state;
     this.setPageName(inValue);
     },
     */
     generateStateUrl: function(stateObj) {
-    if (this.page && this._pageName !== this._initialPageName) {
-        stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
-        if (this.page.generateStateUrl) {
-        this.page.generateStateUrl(stateObj);
+        if (this.page && this._pageName !== this._initialPageName) {
+            stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
+            if (this.page.generateStateUrl) {
+                this.page.generateStateUrl(stateObj);
+            }
         }
-    }
     },
     forEachWidget: function(inFunc) {
-        if (this.page)
-            return this.page.forEachWidget(inFunc);
+        if (this.page) return this.page.forEachWidget(inFunc);
     },
     setPageName: function(inPageName, optionalInPageType) {
         if (this._pageLoading) return;
@@ -342,53 +334,47 @@ dojo.declare("wm.PageContainer", wm.Control, {
         delete window[pageName];
         this.setPageName(pageName);
     },
-    onPageChanged: function(inNewPage, inPreviousPage) {
-    },
+    onPageChanged: function(inNewPage, inPreviousPage) {},
     // optimization: page created when shown if doesn't exist.
     _onShowParent: function() {
         this.revealed();
     },
     revealed: function() {
-        if (!this.page)
-        this.loadPage(this._pageName);
+        if (!this.page) this.loadPage(this._pageName);
         else {
-        this.page.onShow();
-        this.page.root.callOnShowParent();
+            this.page.onShow();
+            this.page.root.callOnShowParent();
         }
     },
     flow: function() {
-        if (this._boundsDirty)
-            wm.fire(this.page, "reflow");
+        if (this._boundsDirty) wm.fire(this.page, "reflow");
     },
     reflow: function() {
         this._boundsDirty = true;
         this.flow();
     },
     hasPageLoaded: function(optionalPageName) {
-      if (!optionalPageName) return Boolean(this.page);
-      return Boolean(this.page && this.page.name == optionalPageName);
+        if (!optionalPageName) return Boolean(this.page);
+        return Boolean(this.page && this.page.name == optionalPageName);
     },
     toHtml: function() {
-    if (this.page && this.page.root)
-        return this.page.root.toHtml();
-    else
-        return "";
+        if (this.page && this.page.root) return this.page.root.toHtml();
+        else return "";
     },
     updateIsDirty: function() {
-    this.setValue("isDirty", this.getIsDirty());
-    wm.fire(this.parent, "updateIsDirty");
+        this.setValue("isDirty", this.getIsDirty());
+        wm.fire(this.parent, "updateIsDirty");
     },
     getIsDirty: function() {
-    if (this.page)
-        return this.page.root.getIsDirty();
+        if (this.page) return this.page.root.getIsDirty();
     },
     getOrderedWidgets: function() {
-    if (this._isDesignLoaded) return [];
-    if (this.page) {
-        return [this.page.root];
-    } else {
-        return [];
-    }
+        if (this._isDesignLoaded) return [];
+        if (this.page) {
+            return [this.page.root];
+        } else {
+            return [];
+        }
     }
 });
 
