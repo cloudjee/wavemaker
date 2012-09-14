@@ -94,6 +94,16 @@ dojo.declare("wm.PageContainer", wm.Control, {
             }));
         }
     },
+    setBoundProp: function(inName) {
+        if (this["_inSetBoundProp_" + inName]) return;
+        this["_inSetBoundProp_" + inName] = true;
+        try {
+            var value = this.getProp(inName);
+            this[inName] = value;
+            this.valueChanged(inName, value);
+        } catch(e) {}
+        delete this["_inSetBoundProp_" + inName];
+    },
     setProp: function(inName, inValue) {
         if (this.subpageProplist !== null && this.page && this.subpageProplist[inName]) {
             var prop = this.subpageProplist[inName];
@@ -260,6 +270,11 @@ dojo.declare("wm.PageContainer", wm.Control, {
                 var v = this[propName];
                 if (v !== undefined) {
                     this.setProp(propName, this[propName]);
+                }
+                var propDef = this.page[propName];
+                if (propDef.bindSource) {
+                    var target = this.page.getRuntimeId() + "." + propDef.property;
+                    this.subscribe(target + "-changed", dojo.hitch(this, "setBoundProp", propName));
                 }
             }
             if (this.$.binding) this.$.binding.refresh(); // update all bound values
