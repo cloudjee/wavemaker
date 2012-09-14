@@ -378,7 +378,7 @@ dojo.declare("wm.DateTime", wm.Date, {
 
     },
     getEditorValue: function(inValue) {
-        var d = new Date();
+        var d = new Date(0);
         if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
             var v = this.dateEditor.getDataValue();
             if (v) {
@@ -426,7 +426,9 @@ dojo.declare("wm.DateTime", wm.Date, {
             d = new Date(d);
             if (!this.useLocalTime) {
                 /* See WM-4490 to understand this calculation */
-                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset);
+                var adjustSixHours = (this.dateMode == "Date") ? 360 : 0;
+
+                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset + adjustSixHours);
             }
         }
         return this.calcDisplayValue(d);
