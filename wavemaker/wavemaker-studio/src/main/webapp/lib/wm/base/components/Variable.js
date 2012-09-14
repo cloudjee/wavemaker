@@ -957,6 +957,7 @@ dojo.declare("wm.Variable", wm.Component, {
             var matchStart = true;
             var a = inItem.getValue(key);
             var b = inSample[key];
+            if (typeof b == "function") return b(a);
             var stringB = String(b);
             if (stringB.charAt(0) == w) {
                 b = b.substring(1);
