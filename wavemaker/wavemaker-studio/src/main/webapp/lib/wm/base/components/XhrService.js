@@ -176,7 +176,11 @@ dojo.declare("wm.XhrService", wm.Service, {
     onResult: function(parameters, operation, deferred, inResult) {
         var result;
         try {
-            result = dojo.fromJson(inResult);
+            if (inResult && inResult.match(/^\s*\{/) {
+                result = dojo.fromJson(inResult);
+            } else {
+                result = {dataValue: inResult};
+            }
         } catch (e) {
             result = inResult;
         }
