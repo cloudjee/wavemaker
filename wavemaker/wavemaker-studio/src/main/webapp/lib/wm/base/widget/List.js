@@ -1471,6 +1471,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                     case 'wm_link_formatter':
                     case 'Link (WaveMaker)':
                         break;
+                    case 'wm_array_formatter':
+                        inItem[key] = this.arrayFormatter(key, col.formatProps, null, null, null, inItem[k]);
+                        break;
                     default:
                         if (!this.isDesignLoaded()) inItem[key] = dojo.hitch(this.owner, col.formatFunc)("", inRowIndex, dojo.indexOf(this.columns, col), key, {
                             customStyles: [],
@@ -1868,6 +1871,10 @@ wm.List.extend({
     },
     setSelectedItem: function(inData) {
         if (inData instanceof wm.Variable) inData = inData.getData();
+        if (!inData) {
+            this.deselectAll();
+            return;
+        }
         this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {
