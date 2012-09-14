@@ -309,18 +309,20 @@ dojo.declare("wm.Variable", wm.Component, {
         this.dataChanged();
         this.valueChanged("isEmpty", this.isEmpty());
         if (this.isList) {
-        this.valueChanged("count", this.getCount());
+            this.valueChanged("count", this.getCount());
         }
         if (this.queriedItems) {
-        this.setQuery(this._query);
+            this.setQuery(this._query);
         }
         this.updatePermanentMemory();
     },
     _setPrimitiveData: function(inValue) {
         if (inValue !== null && typeof inValue == "object") {
-        this.data = inValue;
+            this.data = inValue;
         } else {
-        this.data = { dataValue: inValue };
+            this.data = {
+                dataValue: inValue
+            };
         }
 
         this.isList = false;
@@ -334,23 +336,21 @@ dojo.declare("wm.Variable", wm.Component, {
     setIsList: function(isList) {
         if (isList && !this.isList) {
             this.isList = true;
-        if (this.json && !this.data._list)
-            this.setJson("[" + this.json + "]");
-        else if (wm.isEmpty(this.data))
-            this._setArrayData([]);
-        else {
-            var data = [];
-            data.push(this.getData());
-            this.setData(data);
-        }
+            if (this.json && !this.data._list) this.setJson("[" + this.json + "]");
+            else if (wm.isEmpty(this.data)) this._setArrayData([]);
+            else {
+                var data = [];
+                data.push(this.getData());
+                this.setData(data);
+            }
         } else if (!isList && this.isList) {
-        if (this.json) {
-            this.setJson(dojo.toJson(this.getItem(0).getData()));
-        } else if (wm.isEmpty(this.data._list)) {
-            this.setData(null); // this should change isList automatically
-        } else {
-            this.setData(this.getItem(0));// this should change isList automatically unless item(0) is itself a list
-        }
+            if (this.json) {
+                this.setJson(dojo.toJson(this.getItem(0).getData()));
+            } else if (wm.isEmpty(this.data._list)) {
+                this.setData(null); // this should change isList automatically
+            } else {
+                this.setData(this.getItem(0)); // this should change isList automatically unless item(0) is itself a list
+            }
 
         }
     },
@@ -951,145 +951,140 @@ dojo.declare("wm.Variable", wm.Component, {
     },
     */
     _queryItem: function(inItem, inSample, inIndex) {
-    var w = "*";
+        var w = "*";
 
-    for (var key in inSample) {
-        var matchStart = true;
-        var a = inItem.getValue(key);
-        var b = inSample[key];
-        var stringB = String(b);
-        if (stringB.charAt(0) == w) {
-        b = b.substring(1);
-        matchStart = false;
-        } else if (stringB.charAt(0) == ">") {
-        var orEqual = false;
-        if (stringB.charAt(1) == "=") {
-            orEqual = true;
-            b = b.substring(2);
-        } else {
-            b = b.substring(1);
+        for (var key in inSample) {
+            var matchStart = true;
+            var a = inItem.getValue(key);
+            var b = inSample[key];
+            var stringB = String(b);
+            if (stringB.charAt(0) == w) {
+                b = b.substring(1);
+                matchStart = false;
+            } else if (stringB.charAt(0) == ">") {
+                var orEqual = false;
+                if (stringB.charAt(1) == "=") {
+                    orEqual = true;
+                    b = b.substring(2);
+                } else {
+                    b = b.substring(1);
+                }
+                if (typeof a == "number") {
+                    b = Number(b);
+                } else if (typeof a == "string") {
+                    b = b.toLowerCase();
+                }
+                if (orEqual) {
+                    if (a < b) return false;
+                } else {
+                    if (a <= b) return false;
+                }
+                continue;
+            } else if (stringB.charAt(0) == "<") {
+                var orEqual = false;
+                if (stringB.charAt(1) == "=") {
+                    orEqual = true;
+                    b = b.substring(2);
+                } else {
+                    b = b.substring(1);
+                }
+                if (typeof a == "number") {
+                    b = Number(b);
+                } else if (typeof a == "string") {
+                    b = b.toLowerCase();
+                }
+                if (orEqual) {
+                    if (a > b) return false;
+                } else {
+                    if (a >= b) return false;
+                }
+                continue;
+            } else if (stringB.charAt(0) == "!") {
+                b = b.substring(1);
+                if (typeof a == "number") {
+                    b = Number(b);
+                } else if (typeof a == "string") {
+                    b = b.toLowerCase();
+                }
+                var invert = true;
+            }
+            if (b == w) {
+                if (invert) return false;
+                else continue;
+            }
+            if (dojo.isString(a) && dojo.isString(b)) {
+                if (b.charAt(b.length - 1) == w) b = b.slice(0, -1);
+                a = a.toLowerCase();
+                b = b.toLowerCase();
+                var matchIndex = a.indexOf(b);
+                if (matchIndex == -1 || matchIndex > 0 && matchStart) {
+                    if (!invert) return false;
+                } else if (invert) {
+                    return false;
+                }
+            } else if (a !== b) {
+                if (invert) continue;
+                else return false;
+            } else if (invert) {
+                return false;
+            }
         }
-        if (typeof a == "number") {
-            b = Number(b);
-        } else if (typeof a == "string") {
-            b = b.toLowerCase();
-        }
-        if (orEqual) {
-            if (a < b) return false;
-        } else {
-            if (a <= b) return false;
-        }
-        continue;
-        } else if (stringB.charAt(0) == "<") {
-        var orEqual = false;
-        if (stringB.charAt(1) == "=") {
-            orEqual = true;
-            b = b.substring(2);
-        } else {
-            b = b.substring(1);
-        }
-        if (typeof a == "number") {
-            b = Number(b);
-        } else if (typeof a == "string") {
-            b = b.toLowerCase();
-        }
-        if (orEqual) {
-            if (a > b) return false;
-        } else {
-            if (a >= b) return false;
-        }
-        continue;
-        } else if (stringB.charAt(0) == "!") {
-        b = b.substring(1);
-        if (typeof a == "number") {
-            b = Number(b);
-        } else if (typeof a == "string") {
-            b = b.toLowerCase();
-        }
-        var invert = true;
-        }
-        if (b == w) {
-        if (invert) return false;
-        else continue;
-        }
-        if (dojo.isString(a) && dojo.isString(b)) {
-        if (b.charAt(b.length-1) == w)
-            b = b.slice(0, -1);
-        a = a.toLowerCase();
-        b = b.toLowerCase();
-        var matchIndex = a.indexOf(b);
-        if (matchIndex == -1 ||
-            matchIndex > 0 && matchStart) {
-            if (!invert) return false;
-        } else if (invert) {
-            return false;
-        }
-        }
-        else if (a !== b) {
-        if (invert) continue;
-        else return false;
-        } else if (invert) {
-        return false;
-        }
-    }
-    return true;
+        return true;
     },
 
     //===========================================================================
     // Update Messaging
     //===========================================================================
-       dataRootChanged: function() {
-       if (this._subNard || !this.owner)
-           return;
-       // find first owner after root and send change message on that.
-       // this should trigger rule #3 for bindings.
-       var o = this.owner, p, root = this.getRoot();
-       while (o && o != root) {
-           p = o;
-           o = o && o.owner;
-       }
-       var n = p ? p.getRuntimeId() : this.getRuntimeId();
-       var topic = n + "-rootChanged";
-       wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
-       dojo.publish(topic, [n]);
+    dataRootChanged: function() {
+        if (this._subNard || !this.owner) return;
+        // find first owner after root and send change message on that.
+        // this should trigger rule #3 for bindings.
+        var o = this.owner,
+            p, root = this.getRoot();
+        while (o && o != root) {
+            p = o;
+            o = o && o.owner;
+        }
+        var n = p ? p.getRuntimeId() : this.getRuntimeId();
+        var topic = n + "-rootChanged";
+        wm.logging && console.group("<== ROOTCHANGED [", topic, "] published by Variable.dataRootChanged");
+        dojo.publish(topic, [n]);
 
-       var root = this.getRoot().getRuntimeId();
-       if (root && root.indexOf(".") && n.indexOf(root) == 0) {
-           var tmpn = n.substring(root.length);
-           tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
-           var topic2 = tmpn + "-rootChanged";
-           if (topic2 != topic) {
-           wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
-           dojo.publish(topic2, [n]);
-           }
-       }
-       wm.logging && console.groupEnd();
-       },
+        var root = this.getRoot().getRuntimeId();
+        if (root && root.indexOf(".") && n.indexOf(root) == 0) {
+            var tmpn = n.substring(root.length);
+            tmpn = root.substring(root.lastIndexOf(".") + 1) + tmpn;
+            var topic2 = tmpn + "-rootChanged";
+            if (topic2 != topic) {
+                wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
+                dojo.publish(topic2, [n]);
+            }
+        }
+        wm.logging && console.groupEnd();
+    },
     dataOwnerChanged: function() {
-        if (this._updating || !this.owner)
-            return;
+        if (this._updating || !this.owner) return;
         var n = this.getRuntimeId();
-            if (!n) return;
+        if (!n) return;
         var topic = n + "-ownerChanged";
         wm.logging && console.group("<== OWNERCHANGED [", topic, "] published by Variable.dataOwnerChanged");
         dojo.publish(topic, [n]);
 
-       var root = this.getRoot().getRuntimeId();
-       if (root && root.indexOf(".") && n.indexOf(root) == 0) {
-           var tmpn = n.substring(root.length);
-           tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
-           var topic2 = tmpn + "-ownerChanged";
-           if (topic2 != topic) {
-           wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
-           dojo.publish(topic2, [n]);
-           }
-       }
+        var root = this.getRoot().getRuntimeId();
+        if (root && root.indexOf(".") && n.indexOf(root) == 0) {
+            var tmpn = n.substring(root.length);
+            tmpn = root.substring(root.lastIndexOf(".") + 1) + tmpn;
+            var topic2 = tmpn + "-ownerChanged";
+            if (topic2 != topic) {
+                wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
+                dojo.publish(topic2, [n]);
+            }
+        }
 
         wm.logging && console.groupEnd();
         //
         // send root changed message
-        if (this._allowLazyLoad)
-            this.dataRootChanged();
+        if (this._allowLazyLoad) this.dataRootChanged();
         //
         var v = this.getCursorItem();
         for (var i in v.data) {
@@ -1097,49 +1092,46 @@ dojo.declare("wm.Variable", wm.Component, {
         }
     },
     dataChanged: function() {
-        if (this._updating || !this.owner)
-            return;
+        if (this._updating || !this.owner) return;
         var id = this.getRuntimeId();
-            if (!id) return;
+        if (!id) return;
 
-        var topic=[id, "-changed"].join('');
+        var topic = [id, "-changed"].join('');
         wm.logging && console.group("<== CHANGED [", topic, "] published by Variable.dataChanged");
         dojo.publish(topic, [this]);
 
         var root = this.getRoot();
-        if (root)
-         root = root.getRuntimeId();
+        if (root) root = root.getRuntimeId();
         if (root && root.indexOf(".") && id.indexOf(root) == 0) {
-           var tmpn = id.substring(root.length);
-           tmpn = root.substring(root.lastIndexOf(".")+1) + tmpn;
-        var topic2 = tmpn + "-changed";
-        if (topic2 != topic) {
-            wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
-            dojo.publish(topic2, [this]);
-        }
+            var tmpn = id.substring(root.length);
+            tmpn = root.substring(root.lastIndexOf(".") + 1) + tmpn;
+            var topic2 = tmpn + "-changed";
+            if (topic2 != topic) {
+                wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
+                dojo.publish(topic2, [this]);
+            }
         }
 
 
 
         // Rule: change notification is propagated up through owners
         // propagate change up only if this is a subNard.
-        if (this._subNard)
-            wm.fire(this.owner, "dataChanged");
+        if (this._subNard) wm.fire(this.owner, "dataChanged");
         wm.logging && console.groupEnd();
     },
     updatePermanentMemory: function() {
-    /* Don't update permanent memory with values set while loading the page; these
-     * are unlikely to be provided as a result of dynamic user or service based calls
-     */
-    var ownerPage = this.getParentPage();
-    if (ownerPage && ownerPage._loadingPage) return;
+        /* Don't update permanent memory with values set while loading the page; these
+         * are unlikely to be provided as a result of dynamic user or service based calls
+         */
+        var ownerPage = this.getParentPage();
+        if (ownerPage && ownerPage._loadingPage) return;
 
         if (window["PhoneGap"] && this.saveInPhonegap) {
-        var datatext = dojo.toJson(this.getData());
-        window.localStorage.setItem(this.getRuntimeId(), datatext);
+            var datatext = dojo.toJson(this.getData());
+            window.localStorage.setItem(this.getRuntimeId(), datatext);
         } else if (this.saveInCookie) {
-        var datatext = dojo.toJson(this.getData() );
-        dojo.cookie(this.getRuntimeId(), datatext);
+            var datatext = dojo.toJson(this.getData());
+            dojo.cookie(this.getRuntimeId(), datatext);
         }
     },
     // id-based notification
