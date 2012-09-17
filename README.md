@@ -35,19 +35,27 @@ In order to build WaveMaker you will need the following applications:
 * Java JDK 6 (http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 * Apache Maven 3.x (http://maven.apache.org/)
 
-To build the complete WaveMaker distribution run the maven from the root directory:
+To clone the WaveMaker repository, use git clone:
+
+<pre>
+ git clone https://github.com/SpringSource/wavemaker.git
+</pre>
+ 
+To build the complete WaveMaker distribution, including installer, run the maven from the root directory:
 
 <pre>
     mvn clean install
 </pre>
   
-To build only WaveMaker studio and required libraries:
+To build only WaveMaker studio and required libraries, build in the wavemaker sub folder:
 
 <pre>
     cd wavemaker
     mvn clean install
 </pre>  
-  
+
+The resultant WAR file can be deployed to your own tomcat, see also Inplace Deployment.
+ 
 If git is in the path of the build environment, the last commit SHA1 object name will be recorded in boot.js and the installer's version file.
   
 Dojo Build
@@ -69,6 +77,8 @@ The installer package built will be dependent on your operating system.  The fol
 Building the windows installer requires zip file of the jdk to be redistributed be available. This zip file can not be in the public repository and must be provided.
 Set BUILD_JDK_ZIP to the folder containing the zip file.
 e.g. set BUILD_JDK_ZIP=c:\downloads
+The file should be named 'jdk1.6.0_24.zip' and include the folder jdk-1.6.0_24 at the top level of the archive.
+
 
 Importing into Eclipse/STS
 --------------------------
