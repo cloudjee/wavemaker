@@ -87,9 +87,10 @@ public class PhoneGapService {
     		Transformer transformer = transformerFactory.newTransformer();
 
     		StreamSource source = new StreamSource(new StringReader(configxml));
-    		StreamResult result = new StreamResult(new StringWriter());
+    		StringWriter writer = new StringWriter();
+    		StreamResult result = new StreamResult(writer);
     		transformer.transform(source, result);
-    		getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(result.toString());
+    		getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(writer.toString());
     	}
     	catch (TransformerException tfe){
     		throw new WMRuntimeException("Invalid character in Phonegap Build Config field data. Remove and retry. " + tfe.getMessage());
