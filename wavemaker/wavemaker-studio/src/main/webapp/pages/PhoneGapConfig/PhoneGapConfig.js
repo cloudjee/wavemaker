@@ -80,6 +80,11 @@ dojo.declare("PhoneGapConfig", wm.Page, {
             }));
 
         }));
+        var foundXhrService = false;
+        wm.forEachProperty(studio.application.$, function(c) {
+            if (c instanceof wm.XhrDefinition) foundXhrService = true;
+        });
+        this.xhrServiceProxies.setShowing(foundXhrService);
     },
     xhrPathChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
 
@@ -173,6 +178,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         this.jsonData.appFullscreen = this.appFullscreen.getDataValue();
         this.jsonData.iosPrerenderedIcon = this.iosPrerenderedIcon.getDataValue();
         this.jsonData.iosStatusBarStyle = this.iosStatusBarStyle.getDataValue();
+        this.jsonData.xhrServiceProxies = this.xhrServiceProxies.getChecked();
 
         var xhrPath = this.xhrPath.getDataValue();
         if (dojo.indexOf(this.jsonData.xhrpaths, xhrPath) == -1) {
@@ -197,7 +203,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
                              });
 
         studio.beginWait("Generating");
-        var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath, studio.application.theme, xmlfile]);
+        var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath, studio.application.theme, xmlfile, this.xhrServiceProxies.getChecked()]);
         d.addCallbacks(
             dojo.hitch(this, function() {
                 app.alert("After the zip file has downloaded, login at https://build.phonegap.com and upload the zip file");

@@ -33,7 +33,7 @@ import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * Service for Phone Gap operations.
- * 
+ *
  * @author Michael Kantor
  */
 @HideFromClient
@@ -49,7 +49,7 @@ public class PhoneGapService {
 
     /**
      * Returns the default host to use when {@link #generateBuild(String, int, String) generating} phone gap builds.
-     * 
+     *
      * @return the default host
      */
     @ExposeToClient
@@ -59,24 +59,24 @@ public class PhoneGapService {
 
     /**
      * Generate a PhoneGap folder structure compatible with the PhoneGap build service.
-     * 
+     *
      * @param serverName the name of the server
      * @param portNumb the port number of the service
      * @param themeName the theme name
      */
     @ExposeToClient
-    public void generateBuild(String xhrPath, String themeName, String configxml) {
+    public void generateBuild(String xhrPath, String themeName, String configxml, boolean useProxy) {
         Project currentProject = this.projectManager.getCurrentProject();
         currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
         getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
         setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
-        updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName);
+        updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName,useProxy);
         getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(configxml);
     }
 
     /**
      * Download a previously {@link #generateBuild(String, int, String) generated} PhoneGap build folder.
-     * 
+     *
      * @return {@link Downloadable} zip file
      */
     @ExposeToClient
@@ -107,7 +107,7 @@ public class PhoneGapService {
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         for (FolderLayout layout : FolderLayout.values()) {
             if (layout != FolderLayout.PHONEGAP_BUILD_SERVICE) {
-                updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themeName);
+                updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themeName, false);
             }
         }
         fixupXCodeFilesFollowingUpdate();
@@ -211,7 +211,7 @@ public class PhoneGapService {
         themes.list().include(FilterOn.names().notMatching("default")).delete();
     }
 
-    private void updatePhonegapFiles(String url, FolderLayout layout, String themeName) {
+    private void updatePhonegapFiles(String url, FolderLayout layout, String themeName, boolean useProxy) {
         Folder phoneGapFolder = getPhoneGapFolder(layout);
         if (!phoneGapFolder.exists()) {
             return;
@@ -232,7 +232,7 @@ public class PhoneGapService {
         updateHtmlFile(phonegapName, phoneGapFolder.getFile("login.html"));
 
         // Combine boot.js and config.js
-        phoneGapFolder.getFile("config.js").getContent().write(combineBootAndConfig(url));
+        phoneGapFolder.getFile("config.js").getContent().write(combineBootAndConfig(url, useProxy));
 
         // Copy theme
         Folder theme = getThemeFolder(themeName);
@@ -268,13 +268,14 @@ public class PhoneGapService {
         file.getContent().write(content);
     }
 
-    private String combineBootAndConfig(String url) {
+    private String combineBootAndConfig(String url, boolean useProxy) {
         Folder projectRoot = this.projectManager.getCurrentProject().getRootFolder();
         String config = projectRoot.getFile("webapproot/config.js").getContent().asString();
         String boot = projectRoot.getFile("webapproot/boot.js").getContent().asString();
         config = config.replaceAll("/wavemaker/", "/");
         config = config.replace("wm.relativeLibPath = \"../lib/\";", "wm.relativeLibPath = \"lib/\";");
-        config = config + "\nwm.xhrPath = '" + url + "/';\n";
+        config = config + "\nwm.xhrPath = '" + url + "/';";
+        config = config + "\nwm.useProxyJsonServices = " + useProxy + ";\n";
         return config + boot;
     }
 

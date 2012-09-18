@@ -310,7 +310,24 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "helpText": "Enter the path that you want this application to use to send requests to your server",
                             "width": "100%",
+                            emptyValue: "null",
                             restrictValues: 0
+                        }, {
+                            onchange: "xhrPathChange"
+                        }],
+                        xhrServiceProxies: ["wm.Checkbox",
+                        {
+                            _classes: {
+                                domNode: ["StudioEditor"]
+                            },
+                            "caption": "Use Server Proxy",
+                            "captionAlign": "left",
+                            "captionSize": "140px",
+                            "dataValue": undefined,
+                            "displayValue": "",
+                            "helpText": "When you import a WebService of type XHR/JSON, you may have set the useProxy setting to true (default = true).  That means all requests go through your wavemaker server and your server forwards the request.  This is not needed in a phonegap application, and adds complications.  <ul><li><b>Check this</b>: If you want your xhr services to use your service definition's useProxy setting</li><li><b>Uncheck this</b>: If you want to send your requests directly from the phonegap application and ignore your service definition's useProxy setting.</li></ul>",
+                            "width": "100%",
+                            emptyValue: "false"
                         }, {
                             onchange: "xhrPathChange"
                         }],
@@ -1026,11 +1043,11 @@ PhoneGapConfig.widgets = {
                     "captionSize": "120px",
                     "dataField": "dataValue",
                     "dataValue": ["http://api.phonegap.com/1.0/network", "http://api.phonegap.com/1.0/notification", "http://api.phonegap.com/1.0/geolocation", "http://api.phonegap.com/1.0/camera", "http://api.phonegap.com/1.0/contacts"],
-                    "desktopHeight": "180px",
+                    "desktopHeight": "100%",
                     "displayField": "dataValue",
                     "displayValue": "http://api.phonegap.com/1.0/network, http://api.phonegap.com/1.0/notification, http://api.phonegap.com/1.0/geolocation, http://api.phonegap.com/1.0/camera, http://api.phonegap.com/1.0/contacts, http://api.phonegap.com/1.0/file",
                     "editorBorder": false,
-                    "height": "180px",
+                    "height": "100%",
                     "mobileHeight": "100%",
                     "options": "http://api.phonegap.com/1.0/network,http://api.phonegap.com/1.0/notification,http://api.phonegap.com/1.0/geolocation,http://api.phonegap.com/1.0/camera,http://api.phonegap.com/1.0/contacts,http://api.phonegap.com/1.0/file,http://api.phonegap.com/1.0/media,http://api.phonegap.com/1.0/battery",
                     "width": "100%"
