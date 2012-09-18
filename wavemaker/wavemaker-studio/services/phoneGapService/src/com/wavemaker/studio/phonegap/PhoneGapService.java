@@ -14,8 +14,18 @@
 
 package com.wavemaker.studio.phonegap;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+
 import org.springframework.util.Assert;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
@@ -65,13 +75,29 @@ public class PhoneGapService {
      * @param themeName the theme name
      */
     @ExposeToClient
+
     public void generateBuild(String xhrPath, String themeName, String configxml, boolean useProxy) {
-        Project currentProject = this.projectManager.getCurrentProject();
-        currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
-        getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
-        setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
-        updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName,useProxy);
-        getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(configxml);
+    	try{
+    		Project currentProject = this.projectManager.getCurrentProject();
+    		currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
+    		getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
+    		setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
+    		updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName, useProxy);
+
+    		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    		Transformer transformer = transformerFactory.newTransformer();
+
+    		StreamSource source = new StreamSource(new StringReader(configxml));
+    		StreamResult result = new StreamResult(new StringWriter());
+    		transformer.transform(source, result);
+    		getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(result.toString());
+    	}
+    	catch (TransformerException tfe){
+    		throw new WMRuntimeException("Invalid character in Phonegap Build Config field data. Remove and retry. " + tfe.getMessage());
+    	}
+    	catch (Exception e){
+    		throw new WMRuntimeException(e);
+    	}
     }
 
     /**
