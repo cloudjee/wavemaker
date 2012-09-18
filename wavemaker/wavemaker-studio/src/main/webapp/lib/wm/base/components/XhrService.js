@@ -113,6 +113,11 @@ dojo.declare("wm.XhrService", wm.Service, {
     _invokeBasicRequest: function(url, headers, requestType, contentType, useProxy, parameters, returnType, op, inOwner) {
         var d = new dojo.Deferred();
 
+        if (wm.useProxyJsonServices !== undefined) {
+            useProxy = wm.useProxyJsonServices;
+        }
+
+
         /* Turn the headers array into a headers hash */
 
         requestType = requestType.toUpperCase();

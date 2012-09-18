@@ -411,6 +411,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
         });
             var count = this.selection ? this.selection.length : 0;
         this.selection = [];
+        this.selected = this._selectionMode == "multiple" ? [] : null;
         if (!ignoreSelectedItem && count) {
             this._clearSelectedData();
             this.onSelectionChange();

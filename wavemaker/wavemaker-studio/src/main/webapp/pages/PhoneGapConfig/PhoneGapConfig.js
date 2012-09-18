@@ -43,82 +43,89 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         });
     },
     reset: function() {
-    this.requiredLayer.activate();
-    var jsonData = studio.project.loadProjectData("phonegapconfig.json");
-    try {
-        this.jsonData = dojo.fromJson(jsonData);
-    } catch(e) {
-    }
-    if (!this.jsonData) this.jsonData = {xhrpaths: []};
+        this.requiredLayer.activate();
+        var jsonData = studio.project.loadProjectData("phonegapconfig.json");
+        try {
+            this.jsonData = dojo.fromJson(jsonData);
+        } catch (e) {}
+        if (!this.jsonData) this.jsonData = {
+            xhrpaths: []
+        };
 
-    this.jsonData.appName = this.jsonData.appName || studio.project.projectName;
-    this.jsonData.appId   = this.jsonData.appId || "com.mycompany." + studio.project.projectName.toLowerCase();
-    this.jsonData.appVersion  = studio.application.getFullVersionNumber().replace(/[^0-9\.]/g,""); // windows only accepts numbers and "."
+        this.jsonData.appName = this.jsonData.appName || studio.project.projectName;
+        this.jsonData.appId = this.jsonData.appId || "com.mycompany." + studio.project.projectName.toLowerCase();
+        this.jsonData.appVersion = studio.application.getFullVersionNumber().replace(/[^0-9\.]/g, ""); // windows only accepts numbers and "."
+        var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
+        d.addCallback(dojo.hitch(this, function(inHost) {
+            var localhost = "http://" + inHost + ":" + location.port + "/" + studio.project.projectName;
+            if (dojo.indexOf(this.jsonData.xhrpaths, localhost) == -1) wm.Array.insertElementAt(this.jsonData.xhrpaths, localhost, 0);
 
-    var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
-    d.addCallback(dojo.hitch(this, function(inHost) {
-        var localhost = "http://" + inHost + ":" + location.port + "/" + studio.project.projectName;
-        if (dojo.indexOf(this.jsonData.xhrpaths, localhost) == -1) wm.Array.insertElementAt(this.jsonData.xhrpaths, localhost,0);
+            var cfHost = "http://" + studio.project.projectName + ".cloudfoundry.com";
+            if (dojo.indexOf(this.jsonData.xhrpaths, cfHost) == -1) this.jsonData.xhrpaths.push(cfHost);
 
-        var cfHost = "http://" + studio.project.projectName + ".cloudfoundry.com";
-        if (dojo.indexOf(this.jsonData.xhrpaths, cfHost) == -1) this.jsonData.xhrpaths.push(cfHost);
+            var options = dojo.clone(this.jsonData.xhrpaths);
+            if (options) options = dojo.filter(options, function(item) {
+                return Boolean(item);
+            }); // remove empty items
+            this.xhrPath.setOptions(options);
 
-        var options = dojo.clone(this.jsonData.xhrpaths);
-        if (options) options = dojo.filter(options, function(item) { return Boolean(item);}); // remove empty items
-        this.xhrPath.setOptions(options);
+            this.jsonData.xhrPath = this.jsonData.xhrPath || localhost;
 
-        this.jsonData.xhrPath = this.jsonData.xhrPath || localhost;
+            wm.forEachProperty(this.jsonData, dojo.hitch(this, function(value, key) {
+                if (this[key] instanceof wm.AbstractEditor) {
+                    this[key].setDataValue(value);
+                } else if (this[key] instanceof wm.Variable && value && value.length) {
+                    this[key].setData(value);
+                }
+            }));
 
-        wm.forEachProperty(this.jsonData, dojo.hitch(this, function(value, key) {
-        if (this[key] instanceof wm.AbstractEditor) {
-            this[key].setDataValue(value);
-        } else if (this[key] instanceof wm.Variable && value && value.length) {
-            this[key].setData(value);
-        }
         }));
-
-    }));
+        var foundXhrService = false;
+        wm.forEachProperty(studio.application.$, function(c) {
+            if (c instanceof wm.XhrDefinition) foundXhrService = true;
+        });
+        this.xhrServiceProxies.setShowing(foundXhrService);
     },
     xhrPathChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
 
     },
     cancelClick: function() {
-    this.owner.owner.hide();
+        this.owner.owner.hide();
     },
     okClick: function(inSender) {
-    var images = "";
-    this.jsonData.iosIconListVar = [];
-    this.jsonData.androidIconListVar = [];
-    this.jsonData.otherIconListVar = [];
+        var images = "";
+        this.jsonData.iosIconListVar = [];
+        this.jsonData.androidIconListVar = [];
+        this.jsonData.otherIconListVar = [];
 
-    var iconList = this.iosIconListVar.getData();
+        var iconList = this.iosIconListVar.getData();
 
-    for (var i = 0; i < iconList.length; i++) {
-        if (iconList[i].src) {
-            images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+        for (var i = 0; i < iconList.length; i++) {
+            if (iconList[i].src) {
+                images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+            }
+            this.jsonData.iosIconListVar.push(iconList[i]);
         }
-        this.jsonData.iosIconListVar.push(iconList[i]);
-    }
-     iconList = this.androidIconListVar.getData();
+        iconList = this.androidIconListVar.getData();
 
-    for (i = 0; i < iconList.length; i++) {
-        if (iconList[i].src) {
-            images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+        for (i = 0; i < iconList.length; i++) {
+            if (iconList[i].src) {
+                images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+            }
+            this.jsonData.androidIconListVar.push(iconList[i]);
         }
-        this.jsonData.androidIconListVar.push(iconList[i]);
-    }
-    iconList = this.otherIconListVar.getData();
+        iconList = this.otherIconListVar.getData();
 
-    for (i = 0; i < iconList.length; i++) {
-        if (iconList[i].src) {
-            images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+        for (i = 0; i < iconList.length; i++) {
+            if (iconList[i].src) {
+                images += "\t" + dojo.string.substitute(iconList[i].template, iconList[i]) + "\n";
+            }
+            this.jsonData.otherIconListVar.push(iconList[i]);
         }
-        this.jsonData.otherIconListVar.push(iconList[i]);
-    }
 
 
 
-    /*
+        /*
     var iconList = this.iconListVar.getData();
     this.jsonData.iconList = [];
     for (var i = 0; i < iconList.length; i++) {
@@ -140,15 +147,15 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         this.jsonData.splashList.push(splashList[i]);
     }
 */
-    var preferencesSet = this.features.getDataValue();
-    this.jsonData.features = dojo.clone(preferencesSet);
-    var preferences = "";
-    if (preferencesSet && preferencesSet.length) {
-        preferences = "<feature name=\"" + preferencesSet.join('"/>\n<feature name="') + '"/>';
-    }
+        var preferencesSet = this.features.getDataValue();
+        this.jsonData.features = dojo.clone(preferencesSet);
+        var preferences = "";
+        if (preferencesSet && preferencesSet.length) {
+            preferences = "<feature name=\"" + preferencesSet.join('"/>\n<feature name="') + '"/>';
+        }
 
 
-/*
+        /*
   // this.jsonData.???
     var domainList = this.domainsVar.getData();
     if (domainList.length) {
@@ -160,77 +167,78 @@ dojo.declare("PhoneGapConfig", wm.Page, {
     }
     */
 
-    this.jsonData.appId = this.appId.getDataValue();
-    this.jsonData.appVersion =  this.appVersion.getDataValue();
-    this.jsonData.appName = this.appName.getDataValue();
-    this.jsonData.appDescription = this.appDescription.getDataValue();
-    this.jsonData.appAuthorUrl = this.appAuthorUrl.getDataValue();
-    this.jsonData.appAuthorEmail = this.appAuthorEmail.getDataValue();
-    this.jsonData.appAuthorName = this.appAuthorName.getDataValue();
-    this.jsonData.appOrientation = this.appOrientation.getDataValue();
-    this.jsonData.appFullscreen = this.appFullscreen.getDataValue();
-    this.jsonData.iosPrerenderedIcon = this.iosPrerenderedIcon.getDataValue();
-    this.jsonData.iosStatusBarStyle = this.iosStatusBarStyle.getDataValue();
+        this.jsonData.appId = this.appId.getDataValue();
+        this.jsonData.appVersion = this.appVersion.getDataValue();
+        this.jsonData.appName = this.appName.getDataValue();
+        this.jsonData.appDescription = this.appDescription.getDataValue();
+        this.jsonData.appAuthorUrl = this.appAuthorUrl.getDataValue();
+        this.jsonData.appAuthorEmail = this.appAuthorEmail.getDataValue();
+        this.jsonData.appAuthorName = this.appAuthorName.getDataValue();
+        this.jsonData.appOrientation = this.appOrientation.getDataValue();
+        this.jsonData.appFullscreen = this.appFullscreen.getDataValue();
+        this.jsonData.iosPrerenderedIcon = this.iosPrerenderedIcon.getDataValue();
+        this.jsonData.iosStatusBarStyle = this.iosStatusBarStyle.getDataValue();
+        this.jsonData.xhrServiceProxies = this.xhrServiceProxies.getChecked();
 
-    var xhrPath = this.xhrPath.getDataValue();
-    if (dojo.indexOf(this.jsonData.xhrpaths, xhrPath) == -1) {
-         wm.Array.insertElementAt(this.jsonData.xhrpaths, xhrPath,0);
-    }
-    studio.studioService.requestAsync("writeWebFile", ["phonegapconfig.json", dojo.toJson(this.jsonData,true), false]);
-
-    var xmlfile = dojo.string.substitute(this.template,
-                         {
-                         id: this.appId.getDataValue(),
-                         version: this.appVersion.getDataValue(),
-                         name: this.appName.getDataValue(),
-                         description: this.appDescription.getDataValue(),
-                         images: images,
-                         authorUrl: this.appAuthorUrl.getDataValue(),
-                         authorEmail: this.appAuthorEmail.getDataValue(),
-                         authorName: this.appAuthorName.getDataValue(),
-                         preferences: preferences,
-                         orientation: this.appOrientation.getDataValue(),
-                         fullscreen: this.appFullscreen.getChecked(),
-                         prerenderedIcon: this.iosPrerenderedIcon.getChecked(),
-                         iosStatusBarStyle: this.iosStatusBarStyle.getDataValue()
-                         });
+        var xhrPath = this.xhrPath.getDataValue();
+        if (dojo.indexOf(this.jsonData.xhrpaths, xhrPath) == -1) {
+            wm.Array.insertElementAt(this.jsonData.xhrpaths, xhrPath, 0);
+        }
+        studio.studioService.requestAsync("writeWebFile", ["phonegapconfig.json", dojo.toJson(this.jsonData, true), false]);
+        var xmlfile = dojo.string.substitute(this.template,
+                             {
+                             id: this.appId.getDataValue(),
+                             version: this.appVersion.getDataValue(),
+                             name: this.appName.getDataValue(),
+                             description: this.appDescription.getDataValue(),
+                             images: images,
+                             authorUrl: this.appAuthorUrl.getDataValue(),
+                             authorEmail: this.appAuthorEmail.getDataValue(),
+                             authorName: this.appAuthorName.getDataValue(),
+                             preferences: preferences,
+                             orientation: this.appOrientation.getDataValue(),
+                             fullscreen: this.appFullscreen.getChecked(),
+                             prerenderedIcon: this.iosPrerenderedIcon.getChecked(),
+                             iosStatusBarStyle: this.iosStatusBarStyle.getDataValue()
+                             });
 
         studio.beginWait("Generating");
-            var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath,studio.application.theme, xmlfile]);
+        var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath, studio.application.theme, xmlfile, this.xhrServiceProxies.getChecked()]);
         d.addCallbacks(
             dojo.hitch(this, function() {
-            app.alert("After the zip file has downloaded, login at https://build.phonegap.com and upload the zip file");
-            studio.downloadInIFrame("services/phoneGapService.download?method=downloadBuild");
-            studio.endWait();
-            this.owner.owner.hide();
+                app.alert("After the zip file has downloaded, login at https://build.phonegap.com and upload the zip file");
+                studio.downloadInIFrame("services/phoneGapService.download?method=downloadBuild");
+                studio.endWait();
+                this.owner.owner.hide();
             }),
             dojo.hitch(this, function(inError) {
-            studio.endWait();
-            app.toastError(inError);
-            }));
+                studio.endWait();
+                app.toastError(inError);
+            })
+        );
 
     },
     onPermissionsChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    var hadFile, hadCamera;
-    if (this._lastPermissions) {
-        hadFile = dojo.indexOf(this._lastPermissions, "http://api.phonegap.com/1.0/file") != -1;
-        hadCamera = dojo.indexOf(this._lastPermissions, "http://api.phonegap.com/1.0/camera") != -1;
-    } else {
-        hadCamera = hadFile = true;
-    }
-
-    var nowFile, nowCamera;
-    if (!inSetByCode) {
-        nowFile = dojo.indexOf(inDataValue, "http://api.phonegap.com/1.0/file");
-        nowCamera = dojo.indexOf(inDataValue, "http://api.phonegap.com/1.0/camera");
-        if (nowFile == -1 && nowCamera != -1 && hadFile) {
-        wm.Array.removeElementAt(inDataValue, nowCamera);
-        } else if (nowFile == -1 && !hadFile && !hadCamera && nowCamera != -1) {
-        inDataValue.push( "http://api.phonegap.com/1.0/file");
+        var hadFile, hadCamera;
+        if (this._lastPermissions) {
+            hadFile = dojo.indexOf(this._lastPermissions, "http://api.phonegap.com/1.0/file") != -1;
+            hadCamera = dojo.indexOf(this._lastPermissions, "http://api.phonegap.com/1.0/camera") != -1;
+        } else {
+            hadCamera = hadFile = true;
         }
-        inSender.setDataValue(inDataValue);
-    }
-    this._lastPermissions = inDataValue;
+
+        var nowFile, nowCamera;
+        if (!inSetByCode) {
+            nowFile = dojo.indexOf(inDataValue, "http://api.phonegap.com/1.0/file");
+            nowCamera = dojo.indexOf(inDataValue, "http://api.phonegap.com/1.0/camera");
+            if (nowFile == -1 && nowCamera != -1 && hadFile) {
+                wm.Array.removeElementAt(inDataValue, nowCamera);
+            } else if (nowFile == -1 && !hadFile && !hadCamera && nowCamera != -1) {
+                inDataValue.push("http://api.phonegap.com/1.0/file");
+            }
+            inSender.setDataValue(inDataValue);
+        }
+        this._lastPermissions = inDataValue;
     },
     iosGraphicsChange: function() {
         var row = this.iosIconGrid.getSelectedIndex();

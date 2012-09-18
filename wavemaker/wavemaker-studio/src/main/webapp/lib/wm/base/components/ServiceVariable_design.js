@@ -96,6 +96,10 @@ wm.ServiceVariable.extend({
         p.designMaxResults.ignoretmp = !Boolean(operationType == "hqlquery");
 
         return p;
+    },
+    afterPaletteDrop: function() {
+        this.inherited(arguments);
+        this.inFlightBehavior = "executeLast";
     }
 
 });
