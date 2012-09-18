@@ -53,8 +53,8 @@ public class CloudFoundrySecurityFilter implements Filter {
             }
             chain.doFilter(request, response);
         } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Redirecting to spinup following security error", e);
+            if (log.isInfoEnabled()) {
+                log.info("Redirecting to spinup following security error", e);
             }
             redirectToSpinup(response);
         }

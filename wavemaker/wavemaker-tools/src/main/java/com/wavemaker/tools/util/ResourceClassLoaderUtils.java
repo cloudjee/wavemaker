@@ -38,7 +38,7 @@ public class ResourceClassLoaderUtils {
     }
 
     public static ClassLoader getClassLoaderForResources(boolean nonLocking, Resource... resources) {
-        return getClassLoaderForResources(ClassLoaderUtils.getClassLoader(), resources);
+        return getClassLoaderForResources(nonLocking, ClassLoaderUtils.getClassLoader(), resources);
     }
 
     public static ClassLoader getClassLoaderForResources(final ClassLoader parent, Resource... resources) {
