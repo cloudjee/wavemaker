@@ -699,29 +699,28 @@ dojo.declare("wm.Application", wm.Component, {
         setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
     },
     doRun: function() {
-            this.domNode = this.appRoot.domNode;
-            this.reflow()
-        /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
+        this.domNode = this.appRoot.domNode;
+        this.reflow() /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
         if (dojo.isIE <= 8) {
-        var button = document.createElement("BUTTON");
-        button.style.width = "1px";
-        button.style.height = "1px";
-        this.domNode.appendChild(button);
+            var button = document.createElement("BUTTON");
+            button.style.width = "1px";
+            button.style.height = "1px";
+            this.domNode.appendChild(button);
         }
         var main;
         if (wm.device == "tablet") {
-        main = this.tabletMain;
+            main = this.tabletMain;
         } else if (wm.device == "phone") {
-        main = this.phoneMain;
+            main = this.phoneMain;
         }
         if (!main) {
-        main = this.main;
+            main = this.main;
         }
         this.pageContainer._initialPageName = main;
         if (window["PhoneGap"] && this.isSecurityEnabled && this.isLoginPageEnabled && this.phoneGapLoginPage) {
-        this.loadPage(this.phoneGapLoginPage);
+            this.loadPage(this.phoneGapLoginPage);
         } else {
-        this.loadPage(main);
+            this.loadPage(main);
         }
         this.hideLoadingIndicator();
     },
