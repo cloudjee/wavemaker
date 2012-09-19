@@ -608,16 +608,22 @@ dojo.declare("wm.studio.Project", null, {
         var c = wm.studioConfig;
 
         var allProjectJS = "";
-        var projectName = this.projectName || stu
 
         /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or
          * losing a cookie by opening studio in another tab
          */
         var d = studio.studioService.requestAsync("openProject", [this.projectName]);
 
+        var dSaveTimeStamp = new dojo.Deferred();
+        d.addCallback(dojo.hitch(this, function() {
+            var dlocal = this.saveProjectData("timestamp.txt", new Date().getTime(), false, true);
+            dlocal.addCallback(dojo.hitch(this, function(inResult) {
+                dSaveTimeStamp.callback();
+            }));
+        }));
 
         var dSecurityCheck = new dojo.Deferred();
-        d.addCallback(dojo.hitch(this, function() {
+        dSaveTimeStamp.addCallback(dojo.hitch(this, function() {
             var dlocal = studio.securityConfigService.requestAsync("isSecurityEnabled", []);
             dlocal.addCallback(dojo.hitch(this, function(inResult) {
                 studio.application.isSecurityEnabled = inResult;
@@ -661,8 +667,7 @@ dojo.declare("wm.studio.Project", null, {
         var d2 = new dojo.Deferred();
         d1.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
-            studio.application.saveCounter = (studio.application.saveCounter || 0) + 1;
-            var src = this.generateApplicationSource()
+            var src = this.generateApplicationSource();
             studio.setSaveProgressBarMessage(this.projectName + ".js");
             allProjectJS += src;
 

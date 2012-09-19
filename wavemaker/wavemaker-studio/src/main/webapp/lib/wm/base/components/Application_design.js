@@ -187,7 +187,7 @@ wm.Object.extendSchema(wm.Application, {
     i18n: {group: "widgetName", type: "boolean", order: 6},
     theme: {group: "widgetName", type: "string", order: 7},
     currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
-    saveCounter: {writeonly: true},
+    saveCounter: {ignore:1},
     //IERoundedCorners: {ignore: true},
     disableDirtyEditorTracking: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 250},
     manageURL: {ignore:0},
