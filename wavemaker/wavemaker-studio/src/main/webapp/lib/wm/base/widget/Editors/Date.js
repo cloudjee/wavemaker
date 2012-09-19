@@ -78,14 +78,13 @@ dojo.declare("wm.Date", wm.Text, {
         var d = this.inherited(arguments);
         if (d) {
             if (!this.useLocalTime) {
-                if (this.dateMode == "Date") {
+
                     /* See WM-4490 to understand this calculation */
                     var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
+
+                    /* Zero out minutes/seconds which have no bearing on a date-only calc */
                     d.setHours(0, -60 * wm.timezoneOffset + adjustSixHours,0,0);
-                } else {
-                    /* Allow hours to be set */
-                    d = dojo.date.add(d, "minutes", -wm.timezoneOffset*60);
-                }
+
             }
             return d.getTime();
         }
@@ -238,7 +237,7 @@ dojo.declare("wm.Time", wm.Date, {
     getEditorValue: function() {
         var d = wm.Text.prototype.getEditorValue.call(this);
         if (d) {
-            if (!this.useLocalTime) {
+            if (!this.useLocalTime && (this.owner instanceof wm.DateTime === false)) {
                  /* See WM-4490 to understand this calculation */
                 d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset,0);
                 //d.setHours(d.getHours() - wm.timezoneOffset);
@@ -372,8 +371,10 @@ dojo.declare("wm.DateTime", wm.Date, {
                 timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
             });
         }
-        this.dateEditor.setDataValue(d);
+
         this.timeEditor.setDataValue(d);
+        this.dateEditor.setDataValue(d);
+
         this.updateReadonlyValue();
 
     },
@@ -391,8 +392,12 @@ dojo.declare("wm.DateTime", wm.Date, {
             var v = this.timeEditor.getDataValue(); // gets long
             if (v) {
                 var datetmp = new Date(v);
-                d.setHours(datetmp.getHours(), datetmp.getMinutes(), datetmp.getSeconds());
-            } else {
+                if (this.useLocalTime) {
+                    d.setHours(datetmp.getHours(), datetmp.getMinutes(), datetmp.getSeconds());
+                } else {
+                    d.setHours(0, (datetmp.getHours() + d.getHours()) * 60 + d.getMinutes() +  datetmp.getMinutes(), datetmp.getSeconds());
+                }
+            } else if (this.useLocalTime) {
                 d.setHours(0, 0, 0);
             }
         }
