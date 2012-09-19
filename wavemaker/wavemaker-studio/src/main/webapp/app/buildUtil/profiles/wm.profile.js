@@ -334,6 +334,9 @@ dependencies = {
 				
 			    "wm.base.widget.PageContainer",
 			    "wm.base.widget.Scrim",
+
+			    "wm.base.drag.drag",
+			    "dojo.dnd.Moveable",
 			    "wm.base.widget.Dialogs.Dialog",
 			    "wm.base.widget.Dialogs.Toast",
 			    "wm.base.widget.Dialogs.WidgetsJsDialog",
@@ -428,7 +431,6 @@ dependencies = {
 			    "wm.base.widget.Bevel",
 			    "wm.base.widget.Splitter",
 			    "wm.base.widget.Buttons.Button",
-			    "wm.base.widget.Buttons.ToggleButton",
 			    "wm.base.widget.Picture",
 
 			    "wm.base.widget.Html",
@@ -444,6 +446,7 @@ dependencies = {
 				
 			    "wm.base.widget.PageContainer",
 			    "wm.base.widget.Scrim",
+
 			    "wm.base.widget.Dialogs.Dialog",
 			    "wm.base.widget.Dialogs.Toast",
 			    "wm.base.widget.Dialogs.WidgetsJsDialog",
@@ -455,7 +458,117 @@ dependencies = {
 			    // Grid? Menu? Calendar? Editors? Layers?
 			]
 		},
+		{
+			name: "lib_build_phonegap.js",
+			resourceName: "wm",
+			layerDependencies: [
+			],
+			dependencies: [
+                            "wm.base.components.componentList",
 
+			    // wm utility libs
+			    "wm.base.lib.util",
+			    "wm.base.lib.date",
+			    "wm.base.lib.types",
+			    "wm.base.lib.data",
+			    "wm.base.data.expression",
+
+			    // base classes
+			    "wm.base.Object",
+			    "wm.base.Component",
+			    "wm.base.Control",
+			    "wm.base.Plugin",
+			    "wm.base.RbacPlugin",
+			    "wm.base.I18nPlugin",
+			    "wm.base.components.Application",
+			    "wm.base.components.JsonRpcService" /* needed because we access its cache in project.a.js */
+
+
+			    
+			    // Grid? Menu? Calendar? Editors? Layers?
+			]
+		},
+
+
+		{
+			name: "wm_phonegap_misc.js",
+			resourceName: "wm.compressed.wm_phonegap_misc",
+			layerDependencies: ["lib_build_phonegap.js"],
+			dependencies: [
+			    /* It goes in MISC if its not needed to run the Application object's constructor.  Everything else here can be loaded
+			     * after a short delay and before we call initialize the application object, and is most likely needed only for loading the page itself
+			     * even if it is the first page */
+
+			    /* Services */
+			    "wm.base.components.Service",
+			    "wm.base.components.NavigationService",
+			    "wm.base.components.NotificationService",
+			    "wm.base.components.ServiceCall",
+			    "wm.base.components.PhoneGapService",
+			    "wm.base.components.XhrService",
+			    "wm.base.components.PhoneGapService",
+
+			    /* Variables/ServiceVariables */
+			    "wm.base.components.Variable",
+			    "wm.base.components.ServiceVariable",
+
+
+			    // components
+			    "wm.base.components.Page",
+			    "wm.base.components.HtmlLoader",
+			    "wm.base.components.CssLoader",
+			    "wm.base.components.PageLoader",
+			    "wm.base.components.Property",
+			    "wm.base.components.ImageList",
+			    "wm.base.components.Binding",
+			    "wm.base.components.TypeDefinition",
+
+
+			    // component Utilities
+			    "wm.base.components.Security",
+
+			    // Layout rendering classes
+			    "wm.base.widget.layout.Layout",
+			    "wm.base.widget.layout.Box",
+
+			    // widgets
+			    "wm.base.widget.AppRoot",
+			    "wm.base.widget.Label",
+			    "wm.base.widget.Spacer",
+			    "wm.base.widget.Container",
+			    "wm.base.widget.Panel",
+			    "wm.base.widget.Layout",
+			    "wm.base.widget.Buttons.Button",
+			    "wm.base.widget.Buttons.ToggleButton",
+			    "wm.base.widget.Picture",
+			    "wm.base.widget.Layers.Decorator",
+			    "wm.base.widget.Layers",
+
+			    "wm.base.widget.PageContainer",
+			    "wm.base.widget.Scrim",
+			    "wm.base.widget.Buttons.ToggleButton",
+
+			    "wm.base.widget.Formatters",
+			    "wm.base.components.Timer",
+			    "wm.base.widget.Editors.AbstractEditor",
+        		    "wm.base.widget.Editors.dijit",
+			    "wm.base.widget.Editors.Text",
+			    "wm.base.widget.Layers.TabsDecorator",
+			    "wm.base.components.LiveView",
+			    "wm.base.components.LiveVariable",
+			    "wm.base.components.LogoutVariable",
+			    "wm.base.widget.Bevel",
+			    "wm.base.widget.Splitter",
+			    "wm.base.widget.Html",
+			    "wm.base.widget.Dialogs.Dialog",
+			    "wm.base.widget.Dialogs.LoadingDialog",
+			    "wm.base.widget.Dialogs.Toast",
+			    "wm.base.widget.Dialogs.WidgetsJsDialog",
+			    "wm.base.widget.Dialogs.GenericDialog",
+			    "wm.base.widget.Dialogs.PageDialog",
+			    "wm.base.widget.Dialogs.DesignableDialog"
+			]
+		},
 		{
 			name: "wm_charts.js",
 			resourceName: "wm.compressed.wm_charts",

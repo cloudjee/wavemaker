@@ -47,6 +47,7 @@
                     <mergemapper to="${build.webapproot.studio.dir}/wm_dojogrid.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/wm_datagrid.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/wm_fileupload.js"/>
+                    <mergemapper to="${build.webapproot.studio.dir}/wm_phonegap_misc.js"/>
                     <mergemapper to="${build.lib.webapproot.studio.dir}/lib_build.js"/>               
                 </compositemapper>  
             </mapper>
@@ -91,6 +92,7 @@
 							<mergemapper to="${build.webapproot.studio.dir}/wm_dojogrid.js"/>
 							<mergemapper to="${build.webapproot.studio.dir}/wm_datagrid.js"/>
 							<mergemapper to="${build.webapproot.studio.dir}/wm_fileupload.js"/>
+							<mergemapper to="${build.webapproot.studio.dir}/wm_phonegap_misc.js"/>
 							<mergemapper
 								to="${build.lib.webapproot.studio.dir}/lib_build.js" />
 						</compositemapper>
@@ -225,6 +227,46 @@
 
 
 
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_en.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_en.js,wm_editors_en.js,wm_editors_misc_en.js,wm_progressbar_en.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_en-us.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_en-us.js,wm_editors_en-us.js,wm_editors_misc_en-us.js,wm_progressbar_en-us.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_en-au.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_en-au.js,wm_editors_en-au.js,wm_editors_misc_en-au.js,wm_progressbar_en-au.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_en-gb.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_en-gb.js,wm_editors_en-gb.js,wm_editors_misc_en-gb.js,wm_progressbar_en-gb.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_ja.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_ja.js,wm_editors_ja.js,wm_editors_misc_ja.js,wm_progressbar_ja.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_ja-jp.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_ja-jp.js,wm_editors_ja-jp.js,wm_editors_misc_ja-jp.js,wm_progressbar_ja-jp.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_it.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_it.js,wm_editors_it.js,wm_editors_misc_it.js,wm_progressbar_it.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_it-it.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_it-it.js,wm_editors_it-it.js,wm_editors_misc_it-it.js,wm_progressbar_it-it.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_fr.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_fr.js,wm_editors_fr.js,wm_editors_misc_fr.js,wm_progressbar_fr.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_fr-fr.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_fr-fr.js,wm_editors_fr-fr.js,wm_editors_misc_fr-fr.js,wm_progressbar_fr-fr.js"/>
+	</concat>
+
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_es.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_es.js,wm_editors_es.js,wm_editors_misc_es.js,wm_progressbar_es.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_phonegap_es-es.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_phonegap_misc_es-es.js,wm_editors_es-es.js,wm_editors_misc_es-es.js,wm_progressbar_es-es.js"/>
+	</concat>
+
+
+
 				<!-- copy the runtime built files out to the temp directory -->
 				<mkdir dir="${dojo.release-temp.dir}/wm_build" />
 				<copy todir="${dojo.release-temp.dir}/wm_build">
@@ -232,6 +274,7 @@
 						<include name="dojo.js" />
 						<include name="lib_build.js" />
 						<include name="lib_build_mobile.js" />
+						<include name="lib_build_phonegap.js" />
 						<include name="nls/**" />
 					</fileset>
 					<fileset dir="${dojo.release.dir}/dojo/dijit">
@@ -245,6 +288,9 @@
 				<move
 					file="${dojo.release.dir}/dojo/dojo/lib_build_mobile.js.uncompressed.js"
 					tofile="${dojo.release-temp.dir}/wm_build/lib_build_mobile_uncompressed.js" />
+				<move
+					file="${dojo.release.dir}/dojo/dojo/lib_build_phonegap.js.uncompressed.js"
+					tofile="${dojo.release-temp.dir}/wm_build/lib_build_phonegap_uncompressed.js" />
 
 				<!-- copy the runtime built compressed modules to the compressed directory -->
 				<mkdir dir="${compressed.modules}" />
@@ -270,6 +316,7 @@
 						<include name="wm_livepanel.js" />
 						<include name="wm_richTextEditor.js" />
 						<include name="wm_gadgets.js" />
+						<include name="wm_phonegap_misc.js" />
 					</fileset>
 				</copy>
 
@@ -277,12 +324,18 @@
 				<mkdir dir="${dojo.release-temp.dir}/wm_build/Gzipped" />
 				<gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js.gz" />
+
 				<copy file="${dojo.release-temp.dir}/wm_build/lib_build_mobile.js"
 					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release-temp.dir}/wm_build/lib_build_mobile.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build_mobile.js.gz" />
-				<copy file="${dojo.release-temp.dir}/wm_build/lib_build_mobile.js"
+
+				<copy file="${dojo.release-temp.dir}/wm_build/lib_build_phonegap.js"
 					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+				<gzip src="${dojo.release-temp.dir}/wm_build/lib_build_phonegap.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build_phonegap.js.gz" />
+
+
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz" />
 				<copy file="${dojo.release.dir}/dojo/dojo/wm_charts.js"
@@ -375,6 +428,11 @@
 				<copy file="${dojo.release.dir}/dojo/dojo/wm_gadgets.js"
 					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_phonegap_misc.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_phonegap_misc.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_phonegap_misc.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
 
 				<!-- copy files in; required for the studio build -->
 				<mkdir dir="${lib.webapproot.studio.dir}/wm/studio" />
@@ -429,6 +487,7 @@
 						<include name="wm_dojogrid.js"/>
 						<include name="wm_datagrid.js"/>
 						<include name="wm_fileupload.js"/>
+						<include name="wm_phonegap_misc.js"/>
 						<include name="nls/**" />
 					</fileset>
 					<fileset dir="${dojo.release.dir}/dojo/dijit">
@@ -461,6 +520,8 @@
 				      destfile="${dojo.release-temp.dir}/build/wm_datagrid.js.gz"  />
 				<gzip src="${dojo.release-temp.dir}/build/wm_fileupload.js"
 				      destfile="${dojo.release-temp.dir}/build/wm_fileupload.js.gz"  />
+				<gzip src="${dojo.release-temp.dir}/build/wm_phonegap_misc.js"
+				      destfile="${dojo.release-temp.dir}/build/wm_phonegap_misc.js.gz"  />
 
 				<gzip src="${dojo.release-temp.dir}/build/studio.js"
 					destfile="${dojo.release-temp.dir}/build/studio.js.gz" />

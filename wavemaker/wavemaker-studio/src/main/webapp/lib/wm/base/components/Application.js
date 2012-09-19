@@ -122,26 +122,9 @@ dojo.declare("wm.Application", wm.Component, {
 
 
         this.$ = this.components = {};
-        this.createPageContainer();
+
 
         if (!this._isDesignLoaded) {
-            if (!this.debugDialog) {
-                if (this._overrideDebugDialog !== undefined) {
-                    if (this._overrideDebugDialog) this.createDebugDialog();
-                } else if  (djConfig.isDebug && (wm.device != "phone" || wm.isFakeMobile)) {
-                    this.createDebugDialog();
-                }
-            }
-
-            this.pageDialog = new wm.PageDialog({
-                name: "pageDialog",
-                owner: this
-            });
-
-            this.toastDialog = new wm.Toast({
-                name: "toastDialog",
-                owner: this
-            });
 
             if (wm.serverTimeOffset === undefined) {
                 this.getServerTimeOffset();
@@ -150,9 +133,6 @@ dojo.declare("wm.Application", wm.Component, {
             }
             window.setInterval(dojo.hitch(this, "_pollForTimezoneChange"), 10000); //3600000); // once per hour check to see if the timezone has changed
         }
-
-        /* Load all app-level components from project.js */
-        this.loadComponents(this.constructor.widgets || this.widgets);
 
         this._setupKeys();
     },
@@ -699,8 +679,35 @@ dojo.declare("wm.Application", wm.Component, {
         setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
     },
     doRun: function() {
+        if (wm.isPhonegap) {
+            dojo["require"]("build.Gzipped.wm_phonegap_misc", true);
+        }
+
+
+
+/* Load all app-level components from project.js */
+        this.loadComponents(this.constructor.widgets || this.widgets);
+
+        this.createPageContainer();
             this.domNode = this.appRoot.domNode;
-            this.reflow()
+            this.reflow();
+
+            if (!this.debugDialog) {
+                if (this._overrideDebugDialog !== undefined) {
+                    if (this._overrideDebugDialog) this.createDebugDialog();
+                } else if  (djConfig.isDebug && (wm.device != "phone" || wm.isFakeMobile)) {
+                    this.createDebugDialog();
+                }
+            }
+
+            if (!wm.isPhonegap) {
+                this.pageDialog = new wm.PageDialog({
+                    name: "pageDialog",
+                    owner: this
+                });
+            }
+
+
         /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
         if (dojo.isIE <= 8) {
         var button = document.createElement("BUTTON");
@@ -989,16 +996,28 @@ dojo.declare("wm.Application", wm.Component, {
         if (this.confirmCancelFunc)
             this.confirmCancelFunc();
     },
+    createToastDialog: function() {
+        if (!this.toastDialog) {
+            this.toastDialog = new wm.Toast({
+                name: "toastDialog",
+                owner: this
+            });
+        }
+    },
     toastError: function(inMsg, optionalDuration) {
+        this.createToastDialog();
         this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Error");
     },
     toastWarning: function(inMsg, optionalDuration) {
+        this.createToastDialog();
         this.toastDialog.showToast(inMsg, optionalDuration || 8000, "Warning");
     },
     toastSuccess: function(inMsg, optionalDuration) {
+        this.createToastDialog();
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Success");
     },
     toastInfo: function(inMsg, optionalDuration) {
+        this.createToastDialog();
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Info");
     },
 
