@@ -30,12 +30,12 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	decorateContainer: function() {
 	    this.inherited(arguments);
 	    if (!this.wrapperContainer) {
-	    this.wrapperContainer = new wm.Panel({owner: this.decoree, 
+	    this.wrapperContainer = new wm.Panel({owner: this.decoree,
 						  name: "wizardWrapper",
-						  width: "100%", 
-						  height: "100%", 
+						  width: "100%",
+						  height: "100%",
 						  layoutKind: "top-to-bottom",
-						  flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
+						  flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector
 
 	    if (this.decoree.client)
 		this.setupWrapperContainer();
@@ -78,7 +78,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 
 	    var self = this;
 	    dojo.forEach(customButtons, function(caption,i) {
-		var b = 
+		var b =
 		new wm.Button({name: "custom" + i,
 			       parent: self.buttonPanel,
 			       owner: self.decoree,
@@ -95,7 +95,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 			       owner: this.decoree,
 			       width: "100%"});
 	    }
-			       
+
 
 	    this.prevButton = new wm.Button({name: "prevButton",
 					     parent: this.buttonPanel,
@@ -110,7 +110,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 					     height: "100%",
 					     caption: this.nextCaption});
 	    dojo.connect(this.prevButton, "onclick", this, "backClick");
-	    dojo.connect(this.nextButton, "onclick", this, "nextClick");	
+	    dojo.connect(this.nextButton, "onclick", this, "nextClick");
 	},
 	setLayerActive: function(inLayer, inActive) {
 	    this.inherited(arguments);
@@ -145,7 +145,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	var layer = this.decoree.getActiveLayer();
 
 	// Mark as invalid before we start
-	//layer.layerHasBeenValidated = false; 
+	//layer.layerHasBeenValidated = false;
 	dojo.removeClass(this.btns[i], "done");
 
 	var invalidWidget = layer.getInvalidWidget();
@@ -155,6 +155,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    invalidWidget.focus();
 	    invalidWidget.editor.displayMessage(invalidWidget.invalidMessage || wm.getDictionaryItem("wm.TabDecorator.VALIDATION_INVALID_INPUT"), true);
 
+        app.createToastDialog();
 	    app.toastDialog.showToast(wm.getDictionaryItem("wm.WizardDecorator.TOAST_INVALID", {name: invalidWidget.caption || invalidWidget.name}), 3000, "Warning", "cc");
 	    return false;
 	}
@@ -164,7 +165,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	var result = {invalidMessage: null};
 	this.decoree.onLayerValidation(layer, result);
 	if (result.invalidMessage) {
-	    if (!noWarn) 
+	    if (!noWarn)
 		app.alert(result.invalidMessage);
 	    return false;
 	}
@@ -194,7 +195,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
     tabClicked: function(inLayer, e) {
 	if (this.decoree.isDesignLoaded()) return this.inherited(arguments);
 	var layer = this.decoree.getActiveLayer();
-        
+
         var oldindex = layer.getIndex();
 	var newindex = inLayer.getIndex();
 
@@ -212,10 +213,12 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
         // if all layers between oldindex and newindex are valid AND if they are all tagged as "Done".
         if (oldindex < newindex) {
             for (var i = oldindex + 1; i < newindex; i++) {
-	        if (this.decoree.layers[i].invalid) {                
+	        if (this.decoree.layers[i].invalid) {
+                app.createToastDialog();
 		    app.toastDialog.showToast(wm.getDictionaryItem("wm.WizardDecorator.TOAST_PLEASE_FILL", {name: this.decoree.layers[i].caption}), 3000, "Warning", "cc");
 		    return;
                 } else if (!dojo.hasClass(this.btns[i], "done")) {
+                    app.createToastDialog();
 		    app.toastDialog.showToast(wm.getDictionaryItem("wm.WizardDecorator.TOAST_SKIP_LAYER", {name:  this.decoree.layers[i].caption}), 3000, "Warning", "cc");
 		    return;
                 }
