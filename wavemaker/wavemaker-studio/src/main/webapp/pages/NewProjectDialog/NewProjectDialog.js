@@ -199,12 +199,13 @@ dojo.declare("NewProjectDialog", wm.Page, {
             var projects = studio.project.getProjectList();
             var l = {};
             dojo.forEach(projects, dojo.hitch(this, function(p) {
-                projectNames[p] = true;
+                projectNames[p.toLowerCase()] = true;
             }));
 
 
-            if (projectNames[this.projectName.getDataValue()]) {
-                var newname = wm.findUniqueName(this.projectName.getDataValue(), [projectNames]);
+            if (projectNames[this.projectName.getDataValue().toLowerCase()]) {
+                var newname = wm.findUniqueName(this.projectName.getDataValue().toLowerCase(), [projectNames]);
+                newname = wm.capitalize(newname);
                 app.createToastDialog();
                 app.toastDialog.showToast(this.getDictionaryItem("TOAST_NAME_TAKEN", {
                     oldName: this.projectName.getDataValue(),
