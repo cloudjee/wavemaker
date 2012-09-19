@@ -1425,24 +1425,24 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         {name: "borderColor", editor: "wm.ColorPicker", layerName: "basicLayer"},
         {name: "margin", editor: "wm.Text", layerName: "basicLayer"},
         {name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
-        {name: "backgroundColor", editor: "wm.ColorPicker"},
+        {name: "backgroundColor", editor: "wm.ColorPicker", editorProps: {placeHolder: "#abcdef"}},
         {name: "backgroundGradient", editor: "wm.ColorPicker", editorProps: {gradient:1}},
-        {name: "backgroundImage", editor: "wm.Text"},
+        {name: "backgroundImage", editor: "wm.Text", editorProps: {placeHolder: "resources/images/myimage.png"}},
         {name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
-        {name: "color", editor: "wm.ColorPicker"},
+        {name: "color", editor: "wm.ColorPicker", editorProps: {placeHolder: "#abcdef"}},
         {name: "fontWeight", editor: "wm.SelectMenu", editorProps: {options: ["normal","bold","bolder","lighter"]}},
-        {name: "fontSize", editor: "wm.Number", postFix: "px"},
+        {name: "fontSize", editor: "wm.Number", postFix: "px", editorProps: {placeHolder: "Integer from 4-100", minimum: 4, maximum: 100, spinnerButtons: 1}},
         {name: "textAlign", editor: "wm.SelectMenu", editorProps: {options: ["left","center","right"]}},
         {name: "verticalAlign", editor: "wm.SelectMenu", editorProps: {options: ["baseline","sub","super", "top","text-top","middle","bottom","text-bottom"]}, advanced:1},
         {name: "textDecoration", editor: "wm.SelectMenu", editorProps: {options: ["none", "underline", "overline", "line-through", "blink"]}},
         {name: "fontStyle", editor: "wm.SelectMenu", editorProps: {options: ["normal", "italic", "oblique"]}},
         {name: "fontVariant", editor: "wm.SelectMenu", editorProps: {options: ["normal", "small-caps"]},advanced:1},
-        {name: "fontFamily", editor: "wm.Text"},
+        {name: "fontFamily", editor: "wm.Text", editorProps: {placeHolder: "Arial, Geneva, Helvetica, sans-serif"}},
         {name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
         {name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
-        {name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1},advanced:1},
+        {name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1, placeHolder: "Number from 0-1"},advanced:1},
         {name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
-        {name: "zIndex", editor: "wm.Number",advanced:1}
+        {name: "zIndex", editor: "wm.Number",advanced:1, editorProps: {placeHolder: "Integer"}}
     ],
     search: function(inName) {
         var props = this.inspected.listProperties();
@@ -1527,7 +1527,8 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
             props.caption = styleProp.name;
             props.name = "style_" + styleProp.name;
             var e = new ctor(dojo.mixin(props, defaultProps, {
-                parent: parent
+                parent: parent,
+                helpText: null
             }));
             e.connect(e, "onClose", this, function() {
                 this.changed(e, e.getDisplayValue(), e.getDataValue(), false, e.editor.dropDown._initialValue || "");
@@ -1709,7 +1710,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
             }
         }
         var postFix = styleDef.postFix;
-        if (postFix) {
+        if (postFix && (inDataValue || inDataValue === 0)) {
             inDataValue += postFix;
         }
         //this.inspected.setStyle(styleName, inDataValue);
