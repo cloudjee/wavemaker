@@ -1421,28 +1421,28 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     inspected: null,
     /* name, editor, editorProps, postFix */
     commonStyles: [
-/*  {name: "border", editor: "wm.Number", layerName: "basicLayer"},
-    {name: "borderColor", editor: "wm.ColorPicker", layerName: "basicLayer"},
-    {name: "margin", editor: "wm.Text", layerName: "basicLayer"},
-    {name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
-    {name: "backgroundColor", editor: "wm.ColorPicker"},
-    {name: "backgroundGradient", editor: "wm.ColorPicker", editorProps: {gradient:1}},
-    {name: "backgroundImage", editor: "wm.Text"},
-    {name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
-    {name: "color", editor: "wm.ColorPicker"},
-    {name: "fontWeight", editor: "wm.SelectMenu", editorProps: {options: ["normal","bold","bolder","lighter"]}},
-    {name: "fontSize", editor: "wm.Number", postFix: "px"},
-    {name: "textAlign", editor: "wm.SelectMenu", editorProps: {options: ["left","center","right"]}},
-    {name: "verticalAlign", editor: "wm.SelectMenu", editorProps: {options: ["baseline","sub","super", "top","text-top","middle","bottom","text-bottom"]}, advanced:1},
-    {name: "textDecoration", editor: "wm.SelectMenu", editorProps: {options: ["none", "underline", "overline", "line-through", "blink"]}},
-    {name: "fontStyle", editor: "wm.SelectMenu", editorProps: {options: ["normal", "italic", "oblique"]}},
-    {name: "fontVariant", editor: "wm.SelectMenu", editorProps: {options: ["normal", "small-caps"]},advanced:1},
-    {name: "fontFamily", editor: "wm.Text"},
-    {name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
-    {name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
-    {name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1},advanced:1},
-    {name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
-    {name: "zIndex", editor: "wm.Number",advanced:1}
+    /*  {name: "border", editor: "wm.Number", layerName: "basicLayer"},
+        {name: "borderColor", editor: "wm.ColorPicker", layerName: "basicLayer"},
+        {name: "margin", editor: "wm.Text", layerName: "basicLayer"},
+        {name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
+        {name: "backgroundColor", editor: "wm.ColorPicker"},
+        {name: "backgroundGradient", editor: "wm.ColorPicker", editorProps: {gradient:1}},
+        {name: "backgroundImage", editor: "wm.Text"},
+        {name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
+        {name: "color", editor: "wm.ColorPicker"},
+        {name: "fontWeight", editor: "wm.SelectMenu", editorProps: {options: ["normal","bold","bolder","lighter"]}},
+        {name: "fontSize", editor: "wm.Number", postFix: "px"},
+        {name: "textAlign", editor: "wm.SelectMenu", editorProps: {options: ["left","center","right"]}},
+        {name: "verticalAlign", editor: "wm.SelectMenu", editorProps: {options: ["baseline","sub","super", "top","text-top","middle","bottom","text-bottom"]}, advanced:1},
+        {name: "textDecoration", editor: "wm.SelectMenu", editorProps: {options: ["none", "underline", "overline", "line-through", "blink"]}},
+        {name: "fontStyle", editor: "wm.SelectMenu", editorProps: {options: ["normal", "italic", "oblique"]}},
+        {name: "fontVariant", editor: "wm.SelectMenu", editorProps: {options: ["normal", "small-caps"]},advanced:1},
+        {name: "fontFamily", editor: "wm.Text"},
+        {name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
+        {name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
+        {name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1},advanced:1},
+        {name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
+        {name: "zIndex", editor: "wm.Number",advanced:1}
     ],
     search: function(inName) {
         var props = this.inspected.listProperties();
@@ -1455,203 +1455,222 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
        return result;
     },
     postInit: function() {
-    this.inherited(arguments);
-    this.editors = {};
+        this.inherited(arguments);
+        this.editors = {};
 
-    this.tabs = this.createComponents({
-        tabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]}, conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1",clientBorderColor: "", margin: "0,2,0,0", padding: "0", border: "0"}, {}, {
-        basicLayer: ["wm.Layer", {caption: "Basic", padding: "4"}, {
-        }],
-        styleLayer: ["wm.Layer", {caption: "Styles", padding: "4"}, {},{
-        }],
-        classLayer: ["wm.Layer", {caption: "Classes", padding: "4"}, {}, {
-            classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
-        }]
-        }]
-    },this)[0];
-    this.connect(this.tabs,"onchange",this, function() {
-        if (this.parent._isDestroying) return;
-        this.setHeight(this.getPreferredFitToContentHeight());
-        this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
-        dojo.cookie("wm.prop.StyleEditor.layerIndex", this.tabs.layerIndex);
-    });
-
-    this.basicLayer = this.tabs.layers[0];
-    this.styleLayer = this.tabs.layers[1];
-    this.classListLayer = this.tabs.layers[2];
-    this.classListEditor = this.classListLayer.c$[0];
-    this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
-
-    var form = new wm.FormPanel({owner: this,
-                     parent: this.styleLayer,
-                     width: "100%",
-                     height: "100%",
-                     autoSizeCaption: true});
-
-    var defaultProps = {
-        captionPosition: "left",
-        captionAlign: "left",
-        captionSize: "70px",
-        singleLine: false,
-        width: "100%",
-        height: studio.inspector.defaultEditorHeight,
-        allowNone: true,
-        owner: this,
-        parent: this,
-        helpText: true
-    };
-
-    dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
-        if (styleProp.advanced && !studio.inspector.isAdvancedMode()) return;
-        var parent;
-        if (styleProp.layerName) {
-        parent = this[styleProp.layerName];
-        } else {
-        parent = form;
-        }
-
-        var ctor = dojo.getObject(styleProp.editor);
-        var props = styleProp.editorProps || {};
-        props.caption = styleProp.name;
-        props.name = "style_" + styleProp.name;
-        var e = new ctor(dojo.mixin(props, defaultProps, {parent: parent}));
-        e.connect(e,"onClose", this, function() {
-        this.changed(e, e.getDisplayValue(), e.getDataValue(), false, e.editor.dropDown._initialValue || "");
+        this.tabs = this.createComponents({
+            tabs: ["wm.studio.TabLayers",
+            {
+                _classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers", "NoRightMarginOnTab"]},
+                conditionalTabButtons: 1,
+                width: "100%",
+                fitToContentHeight: true,
+                height: "100px",
+                clientBorder: "1",
+                clientBorderColor: "",
+                margin: "0,2,0,0",
+                padding: "0",
+                border: "0"
+            }, {}, {
+                basicLayer: ["wm.Layer", {caption: "Basic", padding: "4"}, {}],
+                styleLayer: ["wm.Layer",{caption: "Styles", padding: "4"}, {}, {}],
+                classLayer: ["wm.Layer",{caption: "Classes", padding: "4"}, {}, {
+                    classListEditor: ["wm.prop.ClassListEditor",{width: "100%", inspected: this.inspected}]
+                }]
+            }]
+        }, this)[0];
+        this.connect(this.tabs, "onchange", this, function() {
+            if (this.parent._isDestroying) return;
+            this.setHeight(this.getPreferredFitToContentHeight());
+            this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
+            dojo.cookie("wm.prop.StyleEditor.layerIndex", this.tabs.layerIndex);
         });
-        e.connect(e,"onchange", this, function(inDisplayValue, inDataValue, inSetByCode) {
-        this.changed(e, inDisplayValue, inDataValue, inSetByCode);
+
+        this.basicLayer = this.tabs.layers[0];
+        this.styleLayer = this.tabs.layers[1];
+        this.classListLayer = this.tabs.layers[2];
+        this.classListEditor = this.classListLayer.c$[0];
+        this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
+
+        var form = new wm.FormPanel({
+            owner: this,
+            parent: this.styleLayer,
+            width: "100%",
+            height: "100%",
+            autoSizeCaption: true
         });
-        e.connect(e,"onHelpClick", this, function() {
-        studio.helpPopup = studio.inspector.getHelpDialog();
-        studio.inspector.beginHelp(e.caption, e.domNode, this.inspected.declaredClass);
+
+        var defaultProps = {
+            captionPosition: "left",
+            captionAlign: "left",
+            captionSize: "70px",
+            singleLine: false,
+            width: "100%",
+            height: studio.inspector.defaultEditorHeight,
+            allowNone: true,
+            owner: this,
+            parent: this,
+            helpText: true
+        };
+
+        dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
+            if (styleProp.advanced && !studio.inspector.isAdvancedMode()) return;
+            var parent;
+            if (styleProp.layerName) {
+                parent = this[styleProp.layerName];
+            } else {
+                parent = form;
+            }
+
+            var ctor = dojo.getObject(styleProp.editor);
+            var props = styleProp.editorProps || {};
+            props.caption = styleProp.name;
+            props.name = "style_" + styleProp.name;
+            var e = new ctor(dojo.mixin(props, defaultProps, {
+                parent: parent
+            }));
+            e.connect(e, "onClose", this, function() {
+                this.changed(e, e.getDisplayValue(), e.getDataValue(), false, e.editor.dropDown._initialValue || "");
+            });
+            e.connect(e, "onchange", this, function(inDisplayValue, inDataValue, inSetByCode) {
+                this.changed(e, inDisplayValue, inDataValue, inSetByCode);
+            });
+            e.connect(e, "onHelpClick", this, function() {
+                studio.helpPopup = studio.inspector.getHelpDialog();
+                studio.inspector.beginHelp(e.caption, e.domNode, this.inspected.declaredClass);
+            });
+            this.editors[styleProp.name] = e;
+        }));
+        form.setBestHeight();
+
+        var propsHash = this.inspected.listProperties();
+        var propsArray = [];
+        wm.forEachProperty(propsHash, dojo.hitch(this, function(prop, propName) {
+            if (prop.group == "style" && !prop.ignore && !prop.hidden && prop.editor != "wm.prop.StyleEditor" && (!prop.advanced || studio.inspector.isAdvancedMode())) {
+                propsArray.push(dojo.mixin({
+                    name: propName
+                }, prop));
+            }
+        }));
+
+        var mysort = function(a, b) {
+                var o = a.order - b.order;
+                return o == 0 ? wm.compareStrings(a.name, b.name) : o;
+            };
+        propsArray.sort(mysort);
+
+
+        this.owner._generateEditors(this.inspected, this.basicLayer, propsArray);
+
+
+        var p = new wm.Panel({
+            owner: this,
+            parent: this.styleLayer,
+            width: "100%",
+            height: "40px",
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom"
         });
-        this.editors[styleProp.name] = e;
-    }));
-    form.setBestHeight();
-
-    var propsHash = this.inspected.listProperties();
-    var propsArray = [];
-    wm.forEachProperty(propsHash, dojo.hitch(this, function(prop,propName) {
-        if (prop.group == "style" && !prop.ignore && !prop.hidden && prop.editor != "wm.prop.StyleEditor" && (!prop.advanced || studio.inspector.isAdvancedMode())) {
-        propsArray.push(dojo.mixin({name: propName},prop));
-        }
-    }));
-
-         var mysort = function(a, b) {
-         var o = a.order - b.order;
-         return o == 0 ? wm.compareStrings(a.name, b.name) : o;
-         };
-    propsArray.sort(mysort);
-
-
-    this.owner._generateEditors(this.inspected, this.basicLayer, propsArray);
-
-
-    var p = new wm.Panel({
-         owner: this,
-         parent: this.styleLayer,
-         width: "100%",
-         height: "40px",
-        layoutKind: "left-to-right",
-        verticalAlign: "bottom"
-    });
-    var b = new wm.Button({
-        _classes: {domNode: ["StudioButton"]},
-         owner: this,
-         parent: p,
-         width: "100%",
-         height: "30px",
-        caption: "Create CSS Class",
-        //hint: "Creates a css class based on these styles",
-        hint: "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.",
-        onclick: dojo.hitch(this, "generateCssRule")
-    });
-/*
-     wm.Label({owner: this,
-           caption: "",
-           parent: p,
-           width: "20px",
-           height: "20px",
-           margin: "0",
-           onclick: function() {
-               studio.helpPopup = studio.inspector.getHelpDialog();
-               studio.inspector.beginHelp(null, p.domNode, null, "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.");
-           },
-           _classes: {domNode: ["StudioHelpIcon"]}});
-    */
+        var b = new wm.Button({
+            _classes: {domNode: ["StudioButton"]},
+            owner: this,
+            parent: p,
+            width: "100%",
+            height: "30px",
+            caption: "Create CSS Class",
+            //hint: "Creates a css class based on these styles",
+            hint: "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.",
+            onclick: dojo.hitch(this, "generateCssRule")
+        });
         /*
-    var b = new wm.Button({
-         owner: this,
-         parent: this,
-         width: "100%",
-         height: "30px",
-         caption: "Add Style"
-     });
-     b.connect(b, "onclick", this, function() {
-         this.addEditor("","");
-     });*/
+             wm.Label({owner: this,
+                   caption: "",
+                   parent: p,
+                   width: "20px",
+                   height: "20px",
+                   margin: "0",
+                   onclick: function() {
+                       studio.helpPopup = studio.inspector.getHelpDialog();
+                       studio.inspector.beginHelp(null, p.domNode, null, "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.");
+                   },
+                   _classes: {domNode: ["StudioHelpIcon"]}});
+            */
+        /*
+            var b = new wm.Button({
+                 owner: this,
+                 parent: this,
+                 width: "100%",
+                 height: "30px",
+                 caption: "Add Style"
+             });
+             b.connect(b, "onclick", this, function() {
+                 this.addEditor("","");
+             });*/
 
-    this.setHeight(this.getPreferredFitToContentHeight() + "px");
-    this.setDataValue(this.inspected.styles);
-    if (this.basicLayer.c$.length == 0)
-        this.basicLayer.hide();
+        this.setHeight(this.getPreferredFitToContentHeight() + "px");
+        this.setDataValue(this.inspected.styles);
+        if (this.basicLayer.c$.length == 0) this.basicLayer.hide();
     },
-    getDataValue: function() {return this.inspected.styles},
+    getDataValue: function() {
+        return this.inspected.styles
+    },
     reinspect: function() {
-    this.setDataValue(this.inspected.styles);
-    return true;
+        this.setDataValue(this.inspected.styles);
+        return true;
     },
     setDataValue: function(inValue) {
-    dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
-        var styleName = styleProp.name;
-        var e = this.editors[styleName];
-        if (styleProp.postFix && inValue) {
-        var value = this.inspected.getStyle(styleName);
-        value = value.replace(new RegExp(styleProp.postFix + "$"),"");
-        } else {
-        value = inValue[styleName];
-        }
-        if (this.editors[styleProp.name]) {
-        this.editors[styleProp.name].setDataValue(value);
-        }
-    }));
+        dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
+            var styleName = styleProp.name;
+            var e = this.editors[styleName];
+            if (styleProp.postFix && inValue) {
+                var value = this.inspected.getStyle(styleName);
+                value = value.replace(new RegExp(styleProp.postFix + "$"), "");
+            } else {
+                value = inValue[styleName];
+            }
+            if (this.editors[styleProp.name]) {
+                this.editors[styleProp.name].setDataValue(value);
+            }
+        }));
     },
     generateCssRule: function() {
-    app.prompt("<p>Enter a name for the CSS class you want to create.</p><p>A new CSS class will be created using the style currently specified for this widget.  Classes can be reused to apply the same styles to other widgets, and can be customized to add new styles.", this.inspected.name, dojo.hitch(this, function(inClassName) {
-        if (!inClassName) return;
-        var cssText = wm.prop.ClassListEditor.prototype.getClassRuleName(inClassName) + " {\n";
-        "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
+        app.prompt("<p>Enter a name for the CSS class you want to create.</p><p>A new CSS class will be created using the style currently specified for this widget.  Classes can be reused to apply the same styles to other widgets, and can be customized to add new styles.", this.inspected.name, dojo.hitch(this, function(inClassName) {
+            if (!inClassName) return;
+            var cssText = wm.prop.ClassListEditor.prototype.getClassRuleName(inClassName) + " {\n";
+            "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
 
-        if (this.inspected.styles) {
-        wm.forEachProperty(this.inspected.styles, dojo.hitch(this, function(styleValue, styleName) {
-            if (!styleValue) return;
-            if (styleName == "backgroundGradient") {
-            cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
-            cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
-            cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
-            cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
-            cssText += "filter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
-            } else {
-            cssText += styleName.replace(/([A-Z])/g, function(inText) {return "-" + inText.toLowerCase();}) + ": " + styleValue + ";\n";
+            if (this.inspected.styles) {
+                wm.forEachProperty(this.inspected.styles, dojo.hitch(this, function(styleValue, styleName) {
+                    if (!styleValue) return;
+                    if (styleName == "backgroundGradient") {
+                        cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
+                        cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
+                        cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
+                        cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
+                        cssText += "filter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+                    } else {
+                        cssText += styleName.replace(/([A-Z])/g, function(inText) {
+                            return "-" + inText.toLowerCase();
+                        }) + ": " + styleValue + ";\n";
+                    }
+                    delete this.inspected.styles[styleName];
+                }));
+                this.setDataValue(this.inspected.styles);
             }
-            delete this.inspected.styles[styleName];
-        }));
-        this.setDataValue(this.inspected.styles);
-        }
-        cssText += "\n}\n";
+            cssText += "\n}\n";
 
-        this.classLayer.activate();
-        // let the grid render if it hasn't already
-        wm.onidle(this, function() {
-        this.classListEditor.addClass(inClassName);
-        this.classListEditor.changed();
-        studio.appCssEditArea.setDataValue(studio.appCssEditArea.getDataValue() + "\n\n" + cssText);
-        studio.cssChanged();
-        this.classListEditor.editClass(inClassName);
-        });
-    }));
+            this.classLayer.activate();
+            // let the grid render if it hasn't already
+            wm.onidle(this, function() {
+                this.classListEditor.addClass(inClassName);
+                this.classListEditor.changed();
+                studio.appCssEditArea.setDataValue(studio.appCssEditArea.getDataValue() + "\n\n" + cssText);
+                studio.cssChanged();
+                this.classListEditor.editClass(inClassName);
+            });
+        }));
     },
-/*
+    /*
     addEditor: function(inStyleName, inStyleValue) {
          var p = new wm.Panel({width: "100%",
                    height: "30px",
@@ -1681,25 +1700,24 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     },
     */
     changed: function(inEditor, inDisplayValue, inDataValue, inSetByCode, optionalLastDataValue) {
-    var styleName = inEditor.name.replace(/^style_/,"")
-    var styleDef;
-    for (var i = 0; i < this.commonStyles.length; i++) {
-        if (this.commonStyles[i].name == styleName) {
-        styleDef = this.commonStyles[i];
-        break;
+        var styleName = inEditor.name.replace(/^style_/, "")
+        var styleDef;
+        for (var i = 0; i < this.commonStyles.length; i++) {
+            if (this.commonStyles[i].name == styleName) {
+                styleDef = this.commonStyles[i];
+                break;
+            }
         }
-    }
-    var postFix = styleDef.postFix;
-    if (postFix) {
-        inDataValue += postFix;
-    }
-    //this.inspected.setStyle(styleName, inDataValue);
-    if (!inSetByCode && (!inEditor.editor._opened)) {
-        /* Color pickers change the value but only trigger this onClose, so the lastValue must come from the colorPicker not from our current state */
-        new wm.SetPropTask(this.inspected, styleName, optionalLastDataValue !== undefined ? optionalLastDataValue : this.inspected.getStyle(styleName) ||"", inDataValue, true);
-    } else {
-        this.inspected.setStyle(styleName, inDataValue);
-    }
+        var postFix = styleDef.postFix;
+        if (postFix) {
+            inDataValue += postFix;
+        }
+        //this.inspected.setStyle(styleName, inDataValue);
+        if (!inSetByCode && (!inEditor.editor._opened)) { /* Color pickers change the value but only trigger this onClose, so the lastValue must come from the colorPicker not from our current state */
+            new wm.SetPropTask(this.inspected, styleName, optionalLastDataValue !== undefined ? optionalLastDataValue : this.inspected.getStyle(styleName) || "", inDataValue, true);
+        } else {
+            this.inspected.setStyle(styleName, inDataValue);
+        }
     },
     _end: 0
 });
