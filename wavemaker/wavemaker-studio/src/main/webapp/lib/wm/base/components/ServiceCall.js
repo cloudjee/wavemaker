@@ -56,7 +56,7 @@ dojo.declare("wm.ServiceCall", null, {
     operation: "",
     _operationInfo: {},
 
-    inFlightBehavior: "executeLast",
+    inFlightBehavior: "none",
     destroy: function() {
         delete this._inFlightBacklog;
         wm.fire(this._requester, "cancel");
