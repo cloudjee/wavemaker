@@ -101,7 +101,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 		var
 			d = this._deferred = new dojo.Deferred(),
 			m = this[inMethod];
-	       
+
 		if (m) {
 		       inArgs.push(inOwner);
 		       m.apply(this, inArgs);
@@ -224,6 +224,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 		app.pageDialog.showPage(inPageName, inHideControls, String(inWidth || 450) +"px", String(inHeight || 300) +"px", inTitle, Boolean(inModal));
 	},
         showToast: function(inContent, inDuration, cssClasses, toastPosition) {
+            app.createToastDialog();
 	    app.toastDialog.showToast(inContent, inDuration, cssClasses, toastPosition);
 	    this._deferred.callback(); // the action is now complete; fire any deferred code (clears this._requester)
 	}

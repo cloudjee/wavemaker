@@ -121,6 +121,7 @@ dojo.declare("wm.NotificationService", wm.Service, {
     },
     toast: function(text, inDuration, cssClasses, toastPosition) {
         var d = new dojo.Deferred();
+        app.createToastDialog();
         app.toastDialog.showToast(text, inDuration, cssClasses, toastPosition);
         /*
         this.connectOnce(app.toastDialog, "onClose", function() {

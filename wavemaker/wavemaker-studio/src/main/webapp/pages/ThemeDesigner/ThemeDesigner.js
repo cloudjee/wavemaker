@@ -1970,7 +1970,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
     },
     revertTheme: function() {
 	this.themeselectChange(this.themeSelect);
-        app.toastDialog.showToast("Reverted", 2000, "Success");
+        app.toastSuccess("Reverted");
         this.setDirty(false);
     },
     saveTheme: function() {
@@ -1985,10 +1985,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
             result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "Theme.js",dojo.toJson(this.themePrototype, true)]);
         studio.endWait("Saving...");
         if (!result) {
-            app.toastDialog.showToast("Error saving theme!", 10000, "Warning");
+            app.toastWarning("Error saving theme!");
             return;
         }
-        app.toastDialog.showToast("Theme '" + this.currentTheme + "' saved!", 5000, "Success");
+        app.toastSuccess("Theme '" + this.currentTheme + "' saved!");
         this.setDirty(false);
 
         // force an update in the applicaton's theme if we've modified its current theme
@@ -2108,7 +2108,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
             var d = studio.deploymentService.requestAsync("copyTheme", [selectedName, inText]);
             d.addCallback(dojo.hitch(this, function(inData) {
-                app.toastDialog.showToast(inText + " created from " + selectedName, 5000, "Success");
+                app.toastSuccess(inText + " created from " + selectedName);
                 studio.loadThemeList(dojo.hitch(this, function() {
                     this.themeSelect.setDataSet(studio.themesListVar);
                     this.themeSelect.setDataValue(inText);
@@ -2126,7 +2126,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 }));
             }));
             d.addErrback(dojo.hitch(this, function(result) {
-                app.toastDialog.showToast("Theme Copy Failed:" + result.message, 10000, "Warning");
+                app.toastWarning("Theme Copy Failed:" + result.message, 10000);
             }));
     },
     confirmNewBorderColor: function() {
@@ -2191,14 +2191,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     dojo.hitch(this, function() {
                         var d = studio.deploymentService.requestAsync("deleteTheme", [selectedName]);
                         d.addCallback(dojo.hitch(this, function(inData) {
-                            app.toastDialog.showToast("Theme Deleted!", 5000, "Success");
+                            app.toastSuccess("Theme Deleted!");
                             studio.loadThemeList(dojo.hitch(this, function() {
                                 this.themeSelect.setDataSet(studio.themesListVar);
                                 this.themeSelect.setDataValue(studio.themesListVar.getData()[0].dataValue);
                             }));
                         }));
                         d.addErrback(dojo.hitch(this, function(result) {
-                            app.toastDialog.showToast("Theme Delete Failed:" + result.message, 10000, "Warning");
+                            app.toastWarning("Theme Delete Failed:" + result.message, 10000);
                         }));
                     }), null, "Delete");
 /*

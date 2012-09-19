@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.declare("NewProjectDialog", wm.Page, {
     i18n: true,
@@ -21,7 +21,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
 
         var templates = wm.fullTemplates;
         var templateList = [];
-        var i = 0; 
+        var i = 0;
 
         var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.desktopTemplatesInsertPanel, owner: this, name: "templateRow" + i});
         var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate", "Selected"]}, layoutKind: "top-to-bottom", parent: panel, owner: this, name: "templatepanel_" , margin: "4", border: "1", borderColor: "#888888", width: "112px", height: "120px"});
@@ -31,14 +31,14 @@ dojo.declare("NewProjectDialog", wm.Page, {
         img.domNode.style.backgroundImage = "none";
 
         var label = new wm.Label({"width": "100%", height: "20px", parent: imgpanel, owner: this, name: "templatelabel" + i, caption: "None"});
-        i++;        
+        i++;
         var groupNames = [undefined];
         wm.forEachProperty(templates, function(template, templateName) {
             if (dojo.indexOf(groupNames, template.templateGroup) == -1) {
                 groupNames.push(template.templateGroup);
             }
         });
-        dojo.forEach(groupNames, function(groupName) {            
+        dojo.forEach(groupNames, function(groupName) {
             this.addTemplates(templates, panel, groupName, i);
             i = 0;
         }, this);
@@ -91,7 +91,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
     clearSelection: function() {
         if (this.selectedTemplate) {
             this.selectedTemplate.setBorderColor("#888888");
-            this.selectedTemplate.setBorder("1");       
+            this.selectedTemplate.setBorder("1");
             dojo.removeClass(this.selectedTemplate.domNode, "Selected");
             this.selectedTemplate = null;
         }
@@ -137,6 +137,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
 
             if (projectNames[this.projectName.getDataValue()]) {
                 var newname = wm.findUniqueName(this.projectName.getDataValue(), [projectNames]);
+                app.createToastDialog();
                 app.toastDialog.showToast(this.getDictionaryItem("TOAST_NAME_TAKEN", {oldName: this.projectName.getDataValue(), newName: newname}), 8000, "Warning", "tc");
                 this.projectName.setDataValue(newname);
             } else {

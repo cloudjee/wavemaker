@@ -762,7 +762,7 @@ dojo.declare("Studio", wm.Page, {
             return true;
         } else {
         this.updateStateWhileDeploying(true); /* Enable the service menu even though there may not be an app there */
-        if (result.dojoType != "cancel" && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
+        if (result.dojoType != "cancel" && app.toastDialog && (!app.toastDialog.showing || app.toastDialog._toastType != "Warning" && app.toastDialog._toastType != "Error"))
         app.toastError(this.getDictionaryItem("TOAST_RUN_FAILED", {error: result.message}));
         this._deploying = false; // obsolete?
         this._runRequested = false;

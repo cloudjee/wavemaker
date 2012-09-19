@@ -2084,6 +2084,7 @@ Studio.extend({
                    break;
                    }
                if (exists) {
+                                app.createToastDialog();
                                app.toastDialog.showToast(this.getDictionaryItem("TOAST_TARGET_EXISTS", {pageName: name, target: inTarget}),
                                                          5000, "Warning", "tc");
                    return wm.onidle(this, function() {
@@ -2093,6 +2094,7 @@ Studio.extend({
 
                /* I think this stopped being a problem once we required page names start with upper case */
                else if (window[name] || wm.getValidJsName(name) != name) {
+                                app.createToastDialog();
                                app.toastDialog.showToast(this.getDictionaryItem("TOAST_INVALID_TARGET_NAME", {target: inTarget, name: name}),
                                                          5000, "Warning", "tc");
                    return wm.onidle(this, function() {
