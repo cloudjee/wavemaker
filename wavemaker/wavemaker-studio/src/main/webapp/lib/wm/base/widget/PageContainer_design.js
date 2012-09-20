@@ -269,7 +269,6 @@ wm.PageContainer.extend({
                         var propDef = component.listProperties()[propertyName];
 
                         if (!propDef) {
-                            delete this.subpageProplist[p.name];
                             return;
                         }
 
@@ -289,6 +288,10 @@ wm.PageContainer.extend({
                             editorProps: propDef.editorProps
                         });
                     }
+                    if (!propDef) {
+                        return;
+                    }
+
                     if (propDef.operation) {
                         if (typeof propDef.operation == "string") {
                             this[p.name] = function() {
