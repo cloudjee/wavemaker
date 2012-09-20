@@ -58,6 +58,7 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
     var isSimpleView = inParent.tree.owner.simpleRb.getChecked();
     dojo.forEach(comps, function(c) {
         if (c != studio.selected) {
+            if ((!c.type || c.type == "any") && isSimpleView) return;
         var targetType = (studio.bindDialog.page.targetProps.propDef ? studio.bindDialog.page.targetProps.propDef.type || "" : "").toLowerCase();
         var isSimpleBind = false;
         try {
