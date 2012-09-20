@@ -125,6 +125,7 @@ wm.publish = function(inCtor, inProperties) {
 // a custom widget which can own components and
 // exposes published component properties
 dojo.declare("wm.CompositeMixin", null, {
+    _regenerateOnDeviceChange: 1,
         scrim: true, // prevent the user from interacting with the contents of the composite in designer
     lock: true, // prevent user from adding additional controls
     init: function() {
