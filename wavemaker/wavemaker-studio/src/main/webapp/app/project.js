@@ -436,54 +436,60 @@ dojo.declare("wm.studio.Project", null, {
         eval(this.projectData.js);
     },
     loadPage: function() {
-        var n = this.pageName, f = wm.pagesFolder + n + "/", p = f + n ;
+        var n = this.pageName,
+            f = wm.pagesFolder + n + "/",
+            p = f + n;
         this.pageData = {
             js: this.loadProjectData(p + ".js"),
             widgets: this.loadProjectData(p + ".widgets.js"),
             css: this.loadProjectData(p + ".css"),
-                html: this.loadProjectData(p + ".html"),
-                documentation: dojo.fromJson(this.loadProjectData(p + ".documentation.json"))
+            html: this.loadProjectData(p + ".html"),
+            documentation: dojo.fromJson(this.loadProjectData(p + ".documentation.json"))
         }
         var ctor;
         if (this.pageData.js) {
-        try {
-            eval(this.pageData.js);
-            ctor = dojo.getObject(n);
-        } catch(e) {
-        }
+            try {
+                eval(this.pageData.js);
+                ctor = dojo.getObject(n);
+            } catch (e) {}
         }
         if (!ctor) {
-        ctor = dojo.declare(n, wm.Page);
+            ctor = dojo.declare(n, wm.Page);
         }
         eval(this.pageData.widgets);
-        if (!this.htmlLoader)
-        this.htmlLoader = new wm.HtmlLoader({owner: app, name: "projectHtmlLoader", relativeUrl: false});
+        if (!this.htmlLoader) this.htmlLoader = new wm.HtmlLoader({
+            owner: app,
+            name: "projectHtmlLoader",
+            relativeUrl: false
+        });
         this.htmlLoader.setHtml(this.pageData.html);
     },
     makeApplication: function(inProps) {
-            inProps = inProps || {};
+        inProps = inProps || {};
         var ctor = dojo.getObject(this.projectName);
         if (ctor) {
-        studio.application = new ctor(dojo.mixin({ _designer: studio.designer }, inProps));
-        delete studio._application; // temporary property set in Application.init as placeholder for studio.application until the app has finished creating
-        for (var i in this.projectData.documentation) {
-                    if (studio.application.components[i])
-            studio.application.components[i].documentation = this.projectData.documentation[i];
-            else if (i == "__metaData")
-            studio.application._metaData = this.projectData.documentation[i];
-                    else
-                        console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
-        }
-        if (!studio.application._metaData)
-            studio.application._metaData = {};
-        studio.updatePagesMenu(); // now that we have a studio.application object
+            studio.application = new ctor(dojo.mixin({
+                _designer: studio.designer
+            }, inProps));
+            delete studio._application; // temporary property set in Application.init as placeholder for studio.application until the app has finished creating
+            for (var i in this.projectData.documentation) {
+                if (studio.application.components[i]) studio.application.components[i].documentation = this.projectData.documentation[i];
+                else if (i == "__metaData") studio.application._metaData = this.projectData.documentation[i];
+                else console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
+            }
+            if (!studio.application._metaData) studio.application._metaData = {};
+            studio.updatePagesMenu(); // now that we have a studio.application object
         }
     },
     makePage: function() {
         var ctor = dojo.getObject(this.pageName);
         if (ctor) {
-            studio.connectOnce(ctor.prototype, "init", function() { studio.page = this; });
-                studio.connectOnce(ctor.prototype, "start", function() { wm.fire(studio.application, "start"); });
+            studio.connectOnce(ctor.prototype, "init", function() {
+                studio.page = this;
+            });
+            studio.connectOnce(ctor.prototype, "start", function() {
+                wm.fire(studio.application, "start");
+            });
             studio.page = new ctor({
                 name: "wip",
                 domNode: studio.designer.domNode,
@@ -492,14 +498,14 @@ dojo.declare("wm.studio.Project", null, {
             });
             if (!studio.page.root) throw studio.getDictionaryItem("wm.studio.Project.THROW_INVALID_PAGE");
             studio.page.root.parent = studio.designer;
-                for (var i in this.pageData.documentation) {
-                            if (i == "wip") {
-                                studio.page.documentation = this.pageData.documentation[i];
-                            } else {
-                var c = studio.page.components[i];
-                if (c) {
+            for (var i in this.pageData.documentation) {
+                if (i == "wip") {
+                    studio.page.documentation = this.pageData.documentation[i];
+                } else {
+                    var c = studio.page.components[i];
+                    if (c) {
                         c.documentation = this.pageData.documentation[i];
-                }
+                    }
                 }
             }
             this.pageData.widgets = studio.getWidgets();
