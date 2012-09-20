@@ -512,28 +512,28 @@ dojo.declare("wm.studio.Project", null, {
     // Save
     //=========================================================================
     save: function() {
-    this.saveProject(false);
-    },
-    saveProject: function(isDeployment, onSave) {
-    var isFolded = studio.page && studio.page.root._mobileFolded;
-    if (isFolded) {
-        studio.page.root.unfoldUI();
-    }
-                this.deployingProject = isDeployment;
-        this.saveApplication(dojo.hitch(this, function() {
-        this.savePage(dojo.hitch(this, function() {
-                studio.setSaveProgressBarMessage("login.html");
-                studio.incrementSaveProgressBar(1);
-            this.saveComplete();
-            this.updatePhonegapFiles();
-            if (onSave) onSave();
-            if (isFolded) {
-            studio.page.root.foldUI();
-            }
+       this.saveProject(false);
+   },
+   saveProject: function(isDeployment, onSave) {
+       var isFolded = studio.page && studio.page.root._mobileFolded;
+       if (isFolded) {
+           studio.page.root.unfoldUI();
+       }
+       this.deployingProject = isDeployment;
+       this.saveApplication(dojo.hitch(this, function() {
+           this.savePage(dojo.hitch(this, function() {
+               studio.setSaveProgressBarMessage("login.html");
+               studio.incrementSaveProgressBar(1);
+               this.saveComplete();
+               this.updatePhonegapFiles();
+               if (onSave) onSave();
+               if (isFolded) {
+                   studio.page.root.foldUI();
+               }
 
-        }));
-        }));
-/*
+           }));
+       }));
+       /*
         studio.updatePagesMenu();
 
         // everything here is asynchronous; if we need to save all, then find all unsaved
@@ -560,10 +560,10 @@ dojo.declare("wm.studio.Project", null, {
         }
         */
 
-    },
-    updatePhonegapFiles: function() {
-    studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
-    },
+   },
+   updatePhonegapFiles: function() {
+       studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
+   },
 
     // finished saving the project files (but not necesarily the service files)
     saveComplete: function() {
