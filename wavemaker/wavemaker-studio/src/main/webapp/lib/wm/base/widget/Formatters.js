@@ -135,7 +135,7 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 		if (!this.useLocalTime) {
 		    /* See WM-4490 to understand this calculation */
             var adjustSixHours = this._selector == "date"  ? 360 : 0;
-            d.setHours(0, 60*d.getHours() + d.getMinutes + 60*wm.timezoneOffset + adjustSixHours);
+            d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset + adjustSixHours);
         }
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));
