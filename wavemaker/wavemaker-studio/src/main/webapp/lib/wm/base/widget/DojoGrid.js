@@ -1277,6 +1277,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     selectByQuery: function(inQuery) {
     if (!this.dojoObj || !this.dataSet) return;
 
+    if (!inQuery) {
+        this.deselectAll();
+        return;
+    }
+
     /* Step 1: Find all matching items from the dataset */
     var items = this.dataSet.query(inQuery);
 

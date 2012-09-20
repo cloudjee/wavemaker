@@ -811,7 +811,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
         this._scrollDirection = "down";
         if (this.renderVisibleRowsOnly && !this._isDesignLoaded) {
-            if (!this.isAncestorHidden() && !this._loading) {
+            if (!this.isAncestorHidden() && this.getListNodeHeight() > 0 && !this._loading) {
                 this.scrollDownAddItems(0);
                 this.avgHeight = this.getAverageItemHeight();
                 this.updateBottomSpacerHeight();
@@ -1085,7 +1085,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     getAverageItemHeight: function() {
-        return this.avgHeight;
+        return this.avgHeight || 20;
     },
     blockScrolling: function() {
         this.listNodeWrapper.scrollTop = 0;
@@ -1890,6 +1890,11 @@ wm.List.extend({
     /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
     selectByQuery: function(inQuery) {
         if (!this.dataSet) return;
+
+        if (!inQuery) {
+            this.deselectAll();
+            return;
+        }
 
         /* Step 1: Find all matching items from the dataset */
         var items = this.dataSet.query(inQuery);
