@@ -276,7 +276,34 @@ dojo.declare("GridDesigner", wm.Page, {
                 }
             }
         }
-        this.currentGrid.set_columns(columns);
+        this.setGridColumns(columns);
+    },
+    setGridColumns: function(inColumns) {
+        /* Standard grid */
+        if (this.currentGrid.isDesignLoaded() && !wm.isInstanceType(this.currentGrid.owner, wm.Composite)) {
+            this.currentGrid.set_columns(inColumns);
+        }
+
+        /* Composite */
+        else if (this.currentGrid.owner.isDesignLoaded() && wm.isInstanceType(this.currentGrid.owner, wm.Composite)) {
+            var composite = this.currentGrid.owner;
+            var publishedProps = composite.constructor.prototype.published;
+            wm.forEachProperty(publishedProps, dojo.hitch(this, function(schema, name) {
+                if (schema.target == this.currentGrid.name && schema.property == "columns") {
+                    this.currentGrid.owner["set" + wm.capitalize(schema.name)](inColumns);
+                }
+            }));
+        }
+
+        /* PageContainer property allows editing of grid columns */
+        else if (this.currentGrid.owner.owner.isDesignLoaded()) {
+            var p = this.currentGrid.owner.owner;
+            wm.forEachProperty(p.subpageProplist, dojo.hitch(this, function(propertyPath, propertyName) {
+                if (propertyPath == this.currentGrid.name + ".columns") {
+                    p.setProp(propertyName, inColumns);
+                }
+            }));
+        }
     },
     onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         if (!inSetByCode) {

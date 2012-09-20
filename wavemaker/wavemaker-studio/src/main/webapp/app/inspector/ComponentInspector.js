@@ -599,8 +599,14 @@
          });
          this.editorHash[this.getHashId(inComponent, inProp.name)] = b;
          b.connect(b, "onclick", this, function() {
-             inComponent[typeof inProp.operation == "string" ? inProp.operation : inProp.name]();
-             this.reinspect();
+            if (typeof inProp.operation == "function") {
+                // This is a function for published properties from PageContainers and Composites.
+                // Composites require the dojo.hitch as their operation functions have no this.
+                dojo.hitch(this.inspected, inProp.operation)();
+            } else {
+                inComponent[typeof inProp.operation == "string" ? inProp.operation : inProp.name]();
+            }
+            this.reinspect();
          });
      },
 

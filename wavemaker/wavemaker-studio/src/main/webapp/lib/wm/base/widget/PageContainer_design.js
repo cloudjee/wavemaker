@@ -238,6 +238,7 @@ wm.PageContainer.extend({
         this.subpageEventlist = {};
         this.subpageMethodlist = {};
         dojo.forEach(newprops, function(p, i) { /* Don't clobber any existing properties */
+            var propDef;
             if (props[p.name] === undefined || !props[p.name].group) {
                 if (p.isEvent) {
                     this.subpageEventlist[p.name] = p.property; //this.eventBindings[p.name];
@@ -266,7 +267,7 @@ wm.PageContainer.extend({
                     var propertyName = propertyPath.substring(propertyPath.lastIndexOf(".") + 1);
                     var component = p.owner.getValueById(componentId);
                     if (component && component instanceof wm.Component && propertyName) {
-                        var propDef = component.listProperties()[propertyName];
+                         propDef = dojo.clone(component.listProperties()[propertyName]);
 
                         if (!propDef) {
                             return;
@@ -292,17 +293,15 @@ wm.PageContainer.extend({
                         return;
                     }
 
-                    if (propDef.operation) {
-                        if (typeof propDef.operation == "string") {
-                            this[p.name] = function() {
-                                component[propDef.operation]();
-                            };
+                    if (props[p.name].operation) {
+                        if (typeof props[p.name].operation == "function") {
+                            // do nothing
+                            ;
+                        } else if (typeof props[p.name].operation == "string") {
+                            props[p.name].operation = dojo.hitch(component, propDef.operation);
                         } else {
-                            this[p.name] = function() {
-                                component[propertyName]();
-                            };
+                            props[p.name].operation = dojo.hitch(component, propertyName);
                         }
-                        props[p.name].operation = 1;
                     }
                 }
 
@@ -311,7 +310,7 @@ wm.PageContainer.extend({
 
         return props;
     }
-})
+});
 
 wm.Object.extendSchema(wm.PageContainer, {
     manageURL: {ignore:0},
