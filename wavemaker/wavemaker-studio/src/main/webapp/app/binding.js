@@ -1373,7 +1373,17 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
         this.initBindingProps(this.parent, props);
         var content;
         delete object.id;
-        content = object.getId();
+        var isSimpleView = this.tree.owner.simpleRb.getChecked();
+        if (isSimpleView && object.owner instanceof wm.Page && object.owner != studio.page) {
+            content = object.getId();
+            var o = object.owner;
+            while ((o.isOwnedBy(studio.page) || o.isOwnedBy(studio.application)) && o != studio.page && o != studio.application) {
+                if (o instanceof wm.PageContainer === false) content = o.name + "." + content;
+                o = o.owner;
+            }
+        } else {
+            content = object.getId();
+        }
         props.content = props.content || this.getNodeContent(content, object.type, object.isList, props);
 
     },
