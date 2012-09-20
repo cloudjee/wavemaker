@@ -29,16 +29,18 @@ XHRServiceEditor.widgets = {
                     delQueryBtn: ["wm.studio.ToolbarButton", {imageIndex: 0, hint: "Delete"}, {onclick: "onDeleteClick"}]
                 }]
             }],
-        mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:true, border: "0"},{}, {
+        mainPanel: ["wm.studio.DialogMainPanel", {height: "100%", autoScroll:false, border: "0"},{}, {
 	    fancyPanel1: ["wm.FancyPanel", {"height":"190px","title":"Service Settings"}, {}, {
     		formPanel1: ["wm.FormPanel", {"desktopHeight":"157px","height":"157px","type":"wm.FormPanel"}, {}, {
     		    serviceName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"Service Name","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Any component name is a valid name.  To control grouping of your XHR Services, you can also use dot notation: \"vmware.com.Login\"","required":true,"width":"100%"}, {}],
-    		    serviceUrl: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"URL","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Do not include any parameters in the url such as ?arg1=value1","required":true,"width":"100%"}, {}],
+    		    serviceUrl: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"URL","captionSize":"120px","dataValue":undefined,"desktopHeight":"26px","displayValue":"","height":"26px","helpText":"Do not include any parameters in the url such as ?arg1=value1","required":true,"width":"100%", changeOnKey:1, regExp: "[^?{}]*", invalidMessage: "No ?, { or } characters allowed"}, {onchange: "updateUrl"}],
     		    serviceContentType: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "caption":"Content Type","captionSize":"120px","dataValue":"application/x-www-form-urlencoded","desktopHeight":"26px","displayValue":"application/x-www-form-urlencoded","height":"26px","helpText":"Common values include<ul><li>application/x-www-form-urlencoded</li><li>application/json</li><ul>","required":true,"width":"100%"}, {}],
     		    serviceRequestType: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, "caption":"Request Type","captionSize":"120px","dataField":"dataValue","dataValue":"GET","desktopHeight":"26px","displayField":"dataValue","displayValue":"GET","height":"26px","options":"GET,POST,PUT,DELETE","required":true,"width":"200px"}, {}],
-    		    useProxyCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "caption":"useProxy","displayValue":true,"startChecked":true}, {}]
+    		    useProxyCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "caption":"useProxy","displayValue":true,"startChecked":true}, {}],
+                actualUrl: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "100%", captionSize: "120px", readonly:1, caption: "Actual URL"}]
     		}]
 	    }],
+        mainInnerPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", autoScroll: true}, {}, {
 	    fancyPanel2: ["wm.FancyPanel", {"height":"250px","title":"Fixed Headers"}, {}, {
 		fixedHeadersGridPanel: ["wm.Panel", {"height":"200px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    fixedHeadersGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[{"show":true,"field":"name","title":"Header Name","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false},{"show":true,"field":"dataValue","title":"Header Value","width":"100%","align":"left","formatFunc":"","fieldType":"dojox.grid.cells._Widget","constraints":null,"editorProps":null,"mobileColumn":false}],"deleteColumn":true,"localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
@@ -54,7 +56,7 @@ XHRServiceEditor.widgets = {
 		    inputsGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[{"show":true,"field":"name","title":"Input Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false, "fieldType": "dojox.grid.cells._Widget"},
 							    {"show":true,"field":"type","title":"Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.ComboBox","mobileColumn":false},
 							    {"show":true,"field":"transmitType","title":"Input Type","width":"90px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.ComboBox","mobileColumn":false, "editorProps":{"options":"queryString,header,path", isSimpleType:true, displayField: "transmitType"}}],
-						 "deleteColumn":true,"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+						 "deleteColumn":true,"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {onCellEdited: "updateUrl"}, {
     binding: ["wm.Binding", {}, {}, {
 	wire: ["wm.Wire", {"expression":undefined,"source":"inputsVar","targetProperty":"dataSet"}, {}]
     }]
@@ -76,4 +78,5 @@ XHRServiceEditor.widgets = {
 	    okButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Update Service","margin":"4","width":"172px"}, {"onclick":"okButtonClick"}]
 	}]*/
     }]
+}]
 }

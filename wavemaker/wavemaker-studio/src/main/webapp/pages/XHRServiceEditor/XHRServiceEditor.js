@@ -61,6 +61,7 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         });
         this.fixedHeadersVar.setData(headersArray);
         this.toolbar.show();
+        this.updateUrl();
     },
     onDeleteClick: function(inSender) {
         wm.XhrService.prototype.removeOperation(this.editService.name);
@@ -164,13 +165,28 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         this.dismiss();
         studio.project.save();
     },
+    updateUrl: function() {
+        var text = this.serviceUrl.getDataValue();
+        var queryString = "";
+        this.inputsVar.forEach(function(item) {
+            if (item.getValue("transmitType") == "path") {
+                text = text.replace(/\/$/,"");
+                text += "/" + item.getValue("name") + "/somevalue";
+            } else if (item.getValue("transmitType") == "queryString") {
+                if (queryString) queryString += "&";
+                queryString += item.getValue("name") + "=somevalue";
+            }
+        });
+        if (queryString) text += "?" + queryString;
+        this.actualUrl.setDataValue(text);
+
+    },
     addInputRow: function() {
         this.inputsGrid.addRow({
             type: "String",
             transmitType: "queryString",
             name: ""
         });
-
     },
     cancelClick: function() {
         this.dismiss();
