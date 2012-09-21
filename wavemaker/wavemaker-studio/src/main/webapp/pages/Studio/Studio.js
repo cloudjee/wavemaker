@@ -390,87 +390,87 @@ dojo.declare("Studio", wm.Page, {
             this.navGotoDesignerClick();
     },
     projectChanged: function(inName, inAppData) {
-            var b = this.application && this.page;
-            if (inName == this.project.projectName) {
+        var b = this.application && this.page;
+        if (inName == this.project.projectName) {
             this.projectNameLabel.setCaption(inName);
-             this.setUserSettings({defaultProject: inName});
-             this.setAppCss(inAppData.css || "");
+            this.setUserSettings({
+                defaultProject: inName
+            });
+            this.setAppCss(inAppData.css || "");
             this.setAppScript(inAppData.jscustom || "");
-             this.setCleanApp();
-             this.updateWindowTitle();
-             // open in designer
-             // switch to designer
-             if (b) {
-             studio.startPageDialog.hide();
-               this.navGotoDesignerClick();
-               this.mlpal.activate();
-             this.paletteSearch.focus(); // this is done to help FF contextual menus work; else we get crazy stupid errors
-             this.deploymentService.requestAsync("getDeploymentInfo", [], dojo.hitch(this, "getDeploymentInfoSuccess"));
-             var d = studio.pagesService.requestAsync("listDictionaries", [], dojo.hitch(this, function(inData) {
-                 var options = ["default", "en", "es", "ja", "fr", "it", "nl", "pt", "cn"];
-                 for (var i = 0; i < inData.length; i++) {
-                 if (dojo.indexOf(options, inData[i]) == -1) {
-                     options.push(inData[i]);
-                 }
-                 }
-                 options.push("other");
-                 this.languageSelect.setOptions(options.join(","));
-             }));
-             this.disableMenuBar(false);
-             if (this.currentDeviceType == "phone") {
-                 this.designPhoneUI(false);
-             } else if (this.currentDeviceType == "tablet") {
-                 this.designTabletUI(true);
-             }
-             } else if (!this.isLoginShowing()) {
-             if (!wm.isEmpty(this.project.projectData)) {
-                 if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
-                 app.alertDialog.show(); // insure the alert dialog is over the startPageDialog
-                 this.disableMenuBar(false);
-                 this.insertPopupBtn.set("disabled",true);
-                 this.servicesPopupBtn.set("disabled",true);
-                 this.pagePopupBtn.set("disabled",true);
-             } else {
-                 studio.startPageDialog.show();
-                 if (app.alertDialog && app.alertDialog.showing) app.alertDialog.show(); // raise it above the start page
-                 if (app.toastDialog && app.toastDialog.showing) app.toastDialog.show();
-                 this.disableMenuBar(true);
-             }
-             //this.startLayer.activate();
-               //this.projects.activate();
-
-             } else {
-                 this.disableMenuBar(true);
-             }
-
-                // mount project so live services and the resources folder can be accessed;
-                // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources;
-                // at some point a cleanup of that code may be needed.
+            this.setCleanApp();
+            this.updateWindowTitle();
+            // open in designer
+            // switch to designer
+            if (b) {
+                studio.startPageDialog.hide();
+                this.navGotoDesignerClick();
+                this.mlpal.activate();
+                this.paletteSearch.focus(); // this is done to help FF contextual menus work; else we get crazy stupid errors
+                this.deploymentService.requestAsync("getDeploymentInfo", [], dojo.hitch(this, "getDeploymentInfoSuccess"));
+                var d = studio.pagesService.requestAsync("listDictionaries", [], dojo.hitch(this, function(inData) {
+                    var options = ["default", "en", "es", "ja", "fr", "it", "nl", "pt", "cn"];
+                    for (var i = 0; i < inData.length; i++) {
+                        if (dojo.indexOf(options, inData[i]) == -1) {
+                            options.push(inData[i]);
+                        }
+                    }
+                    options.push("other");
+                    this.languageSelect.setOptions(options.join(","));
+                }));
+                this.disableMenuBar(false);
+                if (this.currentDeviceType == "phone") {
+                    this.designPhoneUI(false);
+                } else if (this.currentDeviceType == "tablet") {
+                    this.designTabletUI(true);
+                }
+            } else if (!this.isLoginShowing()) {
+                if (!wm.isEmpty(this.project.projectData)) {
+                    if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation) app.alertDialog.show(); // insure the alert dialog is over the startPageDialog
+                    this.disableMenuBar(false);
+                    this.insertPopupBtn.set("disabled", true);
+                    this.servicesPopupBtn.set("disabled", true);
+                    this.pagePopupBtn.set("disabled", true);
+                } else {
+                    studio.startPageDialog.show();
+                    if (app.alertDialog && app.alertDialog.showing) app.alertDialog.show(); // raise it above the start page
+                    if (app.toastDialog && app.toastDialog.showing) app.toastDialog.show();
+                    this.disableMenuBar(true);
+                }
+                //this.startLayer.activate();
+                //this.projects.activate();
+            } else {
+                this.disableMenuBar(true);
+            }
+            if (!b) {
+                studio.inspector.reset();
+            }
+            // mount project so live services and the resources folder can be accessed;
+            // somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources;
+            // at some point a cleanup of that code may be needed.
             /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
-                if (!wm.studioConfig.preventLiveData && inName != '' && studio.application && !this.isCloud())
-                    studio.deploy(null,"studioProjectCompile", true);
+            if (!wm.studioConfig.preventLiveData && inName != '' && studio.application && !this.isCloud()) studio.deploy(null, "studioProjectCompile", true);
         }
 
         //this.disableCanvasSourceBtns(!b);
-                /* Removal of projects tab
+        /* Removal of projects tab
         this.updateProjectTree();
         */
 
-      if (inName && inName != "") { // if project has closed, don't need to publish
-        if (inName == this.project.projectName) { // if project is changing, first call to this function will have different project name, only publish on second call
-            dojo.publish("wm-project-changed");
-          }
+        if (inName && inName != "") { // if project has closed, don't need to publish
+            if (inName == this.project.projectName) { // if project is changing, first call to this function will have different project name, only publish on second call
+                dojo.publish("wm-project-changed");
+            }
         }
 
         if (!djConfig.isDebug) {
-        this.setupDefaultContextMenu();
+            this.setupDefaultContextMenu();
         }
     },
     getDeploymentInfoSuccess: function(inResult) {
-    this._deploymentData = inResult;
-    this.updateDeploymentsMenu();
-    if (this.deploymentDialog.page)
-        this.deploymentDialog.page.reset();
+        this._deploymentData = inResult;
+        this.updateDeploymentsMenu();
+        if (this.deploymentDialog.page) this.deploymentDialog.page.reset();
     },
     setupDefaultContextMenu: function() {
     var f = function(e) {

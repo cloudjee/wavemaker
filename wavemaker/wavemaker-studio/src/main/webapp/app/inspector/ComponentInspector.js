@@ -88,6 +88,14 @@
              if (l.isActive() && l.propertyGroup) this._activeLayers.push(l.propertyGroup.equivalentName || l.propertyGroup.name);
          }, this);
      },
+     reset: function() {
+             while (this.layers.length) {
+                 this.layers[0].active = false;
+                 this.layers[0].destroy();
+             }
+             while (this.dataSets.length)
+                 this.dataSets[0].destroy();
+     },
      inspect: function(inComponent, forceInspect) {
          if (this.inspected == inComponent && !forceInspect) {
              return this.reinspect();
@@ -101,6 +109,7 @@
 
          try {
              this.inspected = inComponent;
+
              this.layerIndex = -1;
              if (this.layers.length) {
                  var l = this.getActiveLayer();
@@ -113,13 +122,7 @@
                  });
                  this.captionSize = captionSize;
              }
-             while (this.layers.length) {
-                 this.layers[0].active = false;
-                 this.layers[0].destroy();
-             }
-             while (this.dataSets.length)
-             this.dataSets[0].destroy();
-
+             this.reset();
              if (this.isRequiredMode()) {
                  var allprops = inComponent.listProperties();
                  var requiredCount = 0;

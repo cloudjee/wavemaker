@@ -884,7 +884,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
         /* Manage some global states; showingList and zIndexes */
         wm.Array.removeElement(wm.dialog.showingList, this);
-        if (inShowing && (!window["studio"] || this != window["studio"].dialog)) {
+        if (!this.docked && inShowing && (!window["studio"] || this != window["studio"].dialog)) {
             var zindex = wm.dialog.getNextZIndex(this._isDesignLoaded);
             wm.dialog.showingList.push(this);
             this.domNode.style.zIndex = zindex;
