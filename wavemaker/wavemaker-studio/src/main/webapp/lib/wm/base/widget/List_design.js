@@ -29,8 +29,8 @@ wm.Object.extendSchema(wm.VirtualList, {
 
 
     /* Behaviors */
-    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
-
+    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 200, advanced:1, editor: "wm.prop.FieldList"},
+    scrollToTopOnDataChange:{group: "widgetName", subgroup: "behavior", order: 201, advanced:1, type: "boolean", bindTarget:1},
 
     /* Ignored Group */
     box: { ignore: 1 },

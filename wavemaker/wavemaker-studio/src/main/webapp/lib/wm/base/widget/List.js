@@ -89,6 +89,7 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {
+    scrollToTopOnDataChange: false,
     _regenerateOnDeviceChange: 1,
     _scrollTop: 0,
     styleAsGrid: true,
@@ -615,6 +616,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                      if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
                      this._typeChangedConnect = this.connect(inDataSet, "typeChanged", this, function() {
                          this.updateColumnData(true); // if the type changes for this.variable, reapply this variable's new type info
+
                          this._render();
                      });
                     if (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type) {
@@ -798,6 +800,11 @@ dojo.declare("wm.List", wm.VirtualList, {
             var selectedData = this.selectedItem.getData();
         }
         this.clear(true);
+        if (this.scrollToTopOnDataChange) {
+            this._inScroll = true;
+            this.setScrollTop(0);
+            delete this._inScroll;
+        }
         this._data = inData;
         if (!this.dataFields) this._setDataFields();
         this.updateBuilder();
