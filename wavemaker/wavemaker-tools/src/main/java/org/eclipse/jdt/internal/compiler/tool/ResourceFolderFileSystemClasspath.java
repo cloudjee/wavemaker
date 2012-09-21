@@ -94,32 +94,33 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
 
     @Override
     public NameEnvironmentAnswer findClass(char[] typeName, String qualifiedPackageName, String qualifiedBinaryFileName, boolean asBinaryOnly) {
-        if (!isPackage(qualifiedPackageName)) {
-            return null;
-        }
-        String filename = new String(typeName);
-        File file = this.folder.getFile(normalizePath(qualifiedBinaryFileName));
-        if (file.exists()) {
-            InputStream inputStream = file.getContent().asInputStream();
-            try {
-                ClassFileReader reader = ClassFileReader.read(file.getContent().asInputStream(), qualifiedBinaryFileName);
-                String typeSearched = normalizePath(qualifiedPackageName) + "/" + filename;
-                if (!CharOperation.equals(reader.getName(), typeSearched.toCharArray())) {
-                    reader = null;
-                }
-                if (reader != null) {
-                    return new NameEnvironmentAnswer(reader, null);
-                }
-            } catch (ClassFormatException e) {
-            } catch (IOException e) {
-            } finally {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-        return null;
+    	if (!isPackage(qualifiedPackageName)) {
+    		return null;
+    	}
+    	String filename = new String(typeName);
+    	File file = this.folder.getFile(normalizePath(qualifiedBinaryFileName));
+    	if (file.exists()) {
+    		InputStream inputStream = file.getContent().asInputStream();
+    		try {
+    			ClassFileReader reader = ClassFileReader.read(file.getContent().asInputStream(), qualifiedBinaryFileName);
+    			String typeSearched = qualifiedPackageName.isEmpty() ? filename : normalizePath(qualifiedPackageName)
+    					+ "/" + filename;
+    			if (!CharOperation.equals(reader.getName(), typeSearched.toCharArray())) {
+    				reader = null;
+    			}
+    			if (reader != null) {
+    				return new NameEnvironmentAnswer(reader, null);
+    			}
+    		} catch (ClassFormatException e) {
+    		} catch (IOException e) {
+    		} finally {
+    			try {
+    				inputStream.close();
+    			} catch (IOException e) {
+    			}
+    		}
+    	}
+    	return null;
     }
 
     @Override
