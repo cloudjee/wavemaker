@@ -250,7 +250,7 @@ wm.addFrameworkFix = function(className, packageList, inFunc) {
 
 wm.applyFrameworkFixes = function() {
     for (var packageName in wm.componentFixList) {
-        var ctor = dojo.getObject(className);
+        var ctor = dojo.getObject(packageName);
         if (ctor) {
             var classFixes = wm.componentFixList[packageName];
             for (var i = 0; i < packageName.length; i++) {
