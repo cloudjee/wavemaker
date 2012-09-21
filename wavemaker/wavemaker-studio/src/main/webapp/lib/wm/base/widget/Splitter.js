@@ -124,6 +124,20 @@ dojo.declare("wm.Splitter", wm.Bevel, {
         this.initialPosition = this.getPosition();
         this.position = this.getPosition();
         wm.Splitter.resizer.beginResize(e, this);
+
+        switch (this.layout) {
+            case "top":
+            case "bottom":
+                this._boundsMax = this.sizeControl.parent.bounds.h - this.sizeControl.parent.getPreferredFitToContentHeight() + this.sizeControl.bounds.h;
+                this._boundsMin = this.sizeControl.getPreferredFitToContentHeight ? this.sizeControl.getPreferredFitToContentHeight() : this.sizeControl.getMinHeightProp();
+
+                break;
+            case "left":
+            case "right":
+                this._boundsMax = this.sizeControl.parent.bounds.w - this.sizeControl.parent.getPreferredFitToContentWidth() + this.sizeControl.bounds.w;
+                this._boundsMin = this.sizeControl.getPreferredFitToContentWidth ? this.sizeControl.getPreferredFitToContentWidth() : this.sizeControl.getMinWidthProp();
+                break;
+        }
     },
     drag: function(inDx, inDy) {
         if (this.vertical)
@@ -166,27 +180,10 @@ dojo.declare("wm.Splitter", wm.Bevel, {
         var x = inValue;
         if (this.minimum != -1) inValue = Math.max(this.minimum, inValue);
         if (this.maximum != -1) inValue = Math.min(this.maximum, inValue);
+        var parentBounds = widget.parent.getContentBounds();
 
-        switch (this.layout) {
-            case "top":
-                var min = this.sizeControl.getMinHeightProp();
-                var max = widget.parent.bounds.h - this.percentSizeControl.getMinHeightProp() - widget.bounds.h;
-                break;
-            case "bottom":
-                var min = this.percentSizeControl.getMinHeightProp();
-                var max = widget.parent.bounds.h - this.sizeControl.getMinHeightProp() - widget.bounds.h;
-                break;
-            case "left":
-                var min = this.sizeControl.getMinWidthProp();
-                var max = widget.parent.bounds.w - this.percentSizeControl.getMinWidthProp() - widget.bounds.w;
-                break;
-            case "right":
-                var min = this.percentSizeControl.getMinWidthProp();
-                var max = widget.parent.bounds.w - this.sizeControl.getMinWidthProp() - widget.bounds.w;
-                break;
-        }
-        if (inValue < min) inValue = min;
-        else if (inValue > max) inValue = max;
+        if (inValue < this._boundsMin) inValue = this._boundsMin;
+        else if (inValue > this._boundsMax) inValue = this._boundsMax;
 
         this.atLimit = (x != inValue);
         return inValue;
