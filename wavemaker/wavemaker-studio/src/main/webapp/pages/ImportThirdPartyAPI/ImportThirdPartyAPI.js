@@ -22,7 +22,8 @@ dojo.declare("ImportThirdPartyAPI", wm.Page, {
         dojo.addClass(this.layers.decorator.buttonPanel.domNode, "dialogfooter");
         this.layers.decorator.nextButton.addUserClass("StudioButton");
         this.layers.decorator.prevButton.addUserClass("StudioButton");
-    
+        dojo.addClass(this.fileUploader.button.domNode, "StudioButton");
+
         this.layers.decorator.doneCaption = this.getDictionaryItem("DONE_CAPTION");
         if (navigator.platform == "MacIntel") {
             this.adminWarningLabel.hide();
