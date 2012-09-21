@@ -2149,9 +2149,10 @@ Studio.extend({
     },
     getPreviewWindowOptions: function() {
         var invert = wm.deviceType != "desktop" && this.landscapeToggleButton.clicked;
+        var dimensions = studio.deviceSizeSelect.getDataValue();
 
-    var width = studio.deviceSizeSelect.getDataValue()[invert ? "height" : "width"];
-    var height= studio.deviceSizeSelect.getDataValue()[invert ? "width" : "height"]
+    var width = dimensions ? dimensions[invert ? "height" : "width"] : 700;
+    var height= dimensions ? dimensions[invert ? "width" : "height"] : 1000;
     var scrollbars = "scrollbars=" + (studio.deviceSizeSelect.getDataValue().deviceType == "desktop" ? 1 : 0);
     var widthStr = width.match(/px/) ? ",width=" + width.replace(/px/,"") : ",width=1000";
     var heightStr = height.match(/px/) ? ",height=" + height.replace(/px/,"") : ",height=700";
