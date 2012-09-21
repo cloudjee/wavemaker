@@ -38,20 +38,27 @@ dojo.declare("wm.WebService", wm.JavaService, {
         return true;
     },
     newWebServiceDialog: function(inSender) {
-/*
-        var d = this.getCreateWebServiceDialog();
-        if (d.page)
-            d.page.reset();
-        d.show();
-        */
-        studio.webServiceTab.setShowing(true);
-        studio.webServiceTab.activate();
-        var layer = studio.webServiceSubTab.addPageContainerLayer(this.pageName || "ImportWebService", "New Service", true);
-        layer.setDestroyable(true);
-        this.connect(layer.c$[0].page, "dismiss", this, function(inWhy, serviceName) {
-            if (inWhy == "Import")
-                this.completeNewWebService(serviceName);
-        });
+
+        var pageName = this.pageName || "ImportWebService";
+        if (pageName == "ImportWebService") {
+            studio.webServiceTab.setShowing(true);
+            studio.webServiceTab.activate();
+            var layer = studio.webServiceSubTab.addPageContainerLayer(pageName, "New Service", true);
+            layer.setDestroyable(true);
+            this.connect(layer.c$[0].page, "dismiss", this, function(inWhy, serviceName) {
+                if (inWhy == "Import")
+                    this.completeNewWebService(serviceName);
+            });
+        } else {
+            var d = this.getCreateWebServiceDialog();
+            if (d.page)
+                d.page.reset();
+            d.show();
+            this.connect(d.page, "dismiss", this, function(inWhy, serviceName) {
+                if (inWhy == "Import")
+                    this.completeNewWebService(serviceName);
+            });
+        }
     },
     getCreateWebServiceDialog: function() {
         var pageName = this.pageName || "";
