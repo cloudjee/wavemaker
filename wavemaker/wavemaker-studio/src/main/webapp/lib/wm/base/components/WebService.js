@@ -83,7 +83,7 @@ dojo.declare("wm.WebService", wm.JavaService, {
         if (p.serviceId) {
             var n = p.serviceId;
             */
-                    var n = serviceId;
+            var n = serviceId;
             var c = new wm.WebService({name: n, serviceId: n});
             studio.updateServices();
             studio.application.addServerComponent(c);
