@@ -451,6 +451,9 @@ dojo.declare("wm.DateTime", wm.Date, {
     setMinimum: function(inValue) {
         this.minimum = inValue;
         this.dateEditor.setMinimum(inValue);
+    },
+    getInvalid: function() {
+        return this.editor ? this.editor.getInvalid() : false;
     }
 
     /* OLD EDITOR
