@@ -1766,7 +1766,7 @@ wm.List.extend({
         if (!formatterProps.useLocalTime) {
             /* See WM-4490 to understand this calculation */
             var adjustSixHours = dateType == "date" ? 360 : 0;
-            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes + 60*wm.timezoneOffset + adjustSixHours);
+            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes() + 60*wm.timezoneOffset + adjustSixHours);
         }
         var constraints = {
             fullYear: true,
