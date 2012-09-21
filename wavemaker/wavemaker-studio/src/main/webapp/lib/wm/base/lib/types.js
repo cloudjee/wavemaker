@@ -52,7 +52,7 @@ wm.typeManager = {
         this.addDefaultTypes();
 
     },
-    
+
 	clearTypes: function() {
 		this._publicTypes = {};
 	        if (wm.dataSources) {
@@ -239,6 +239,7 @@ wm.typeManager = {
 	},
 	removeType: function(inName) {
 	    delete this._publicTypes[inName];
+        delete this.types[inName];
 	},
 	addDefaultTypes: function() {
 	    if (!this.initialized) {
@@ -282,7 +283,7 @@ wm.typeManager = {
 		    }
 		}
 	    }
-	    
+
 	    for (var fieldName in stringFields) {
 		var lowestFieldOrder = 100000;
 		var lowestFieldName;
@@ -290,8 +291,8 @@ wm.typeManager = {
 		    if (stringFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
 			lowestFieldName = fieldName;
 		    }
-		    else if (stringFields[fieldName].fieldOrder !== undefined && 
-			stringFields[fieldName].fieldOrder < lowestFieldOrder) 
+		    else if (stringFields[fieldName].fieldOrder !== undefined &&
+			stringFields[fieldName].fieldOrder < lowestFieldOrder)
 		    {
 			lowestFieldOrder = stringFields[fieldName].fieldOrder;
 			lowestFieldName = fieldName;
@@ -324,7 +325,7 @@ wm.typeManager = {
 		return fieldName;
 	    }
     }
-        
+
 };
 
 wm.defaultTypes = {

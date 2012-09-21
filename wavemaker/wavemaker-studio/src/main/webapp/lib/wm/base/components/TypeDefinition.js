@@ -56,6 +56,11 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
             studio.typesChanged();
             studio.refreshComponentTree();
         }
+    },
+    destroy: function() {
+        wm.typeManager.removeType(this.name);
+        this._isDestroying = true;
+        this.inherited(arguments);
     }
 });
 

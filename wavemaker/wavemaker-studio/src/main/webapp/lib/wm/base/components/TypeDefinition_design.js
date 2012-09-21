@@ -120,6 +120,7 @@ wm.TypeDefinition.extend({
 
     },
     removeComponent: function(inComponent) {
+        if (this._isDestroying) return;
         if (this.$[inComponent.name]) {
             this.inherited(arguments);
             if (!this.isDestroyed && !this._isDestroying || studio.application && studio.application._isDestroying) {
