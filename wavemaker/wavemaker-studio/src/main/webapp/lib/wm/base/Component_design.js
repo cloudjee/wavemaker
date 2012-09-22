@@ -589,7 +589,7 @@ wm.Component.extend({
 /*
             props[p].simpleBindTarget ||
             props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/)
-            this.addContextMenuItem(menuObj,p, props[p]);
+            this.addContextMenuItem(menuObj,props[p].shortname || p, props[p]);
         }
 
     if (this instanceof wm.Control) {
