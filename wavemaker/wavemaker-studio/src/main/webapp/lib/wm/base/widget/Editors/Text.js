@@ -27,11 +27,11 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	        if ((this.autoResizeHeight || this.autoResizeWidth) && !this._autoResizing)
 			this.scheduleAutoResize();
 
- 	        if (this.readOnlyNode) 
+ 	        if (this.readOnlyNode)
 			this.disruptChromeOverflow("readOnlyNode");
 	},
         */
-        getReadOnlyNodeLineHeight: function() {		
+        getReadOnlyNodeLineHeight: function() {
                 if (this.autoSizeHeight)
 			return "normal";
 		else
@@ -39,7 +39,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	},
         getReadOnlyNodeWhiteSpace: function() {
 		// if autoSizeWidth, all text goes on a single line
-		if (this.autoSizeWidth) 
+		if (this.autoSizeWidth)
 			return "nowrap";
 		// if autoReszieHeight, text must wrap
 		else if (this.autoSizeHeight)
@@ -52,7 +52,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		// doAutoResize adjusts this value
 		// scrollbars for a node less than 40px high is pretty much useless; even 40 is questionable
 	        if (dojo.marginBox(this.readOnlyNode).h < 40) return "hidden";
-		if (this.autoSizeHeight || this.autoSizeWidth) 
+		if (this.autoSizeHeight || this.autoSizeWidth)
 		    return (this._autoSizeNeedsOverflow) ? "auto" : "hidden";
 		else
 		        return "hidden";
@@ -97,7 +97,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		    this.autoSizeHeight = false;
 	    if (this.readOnlyNode) {
 		    this.updateReadOnlyNodeStyle();
-	 	    if (this.readOnlyNode && inValue && !noupdate && this.readonly) 
+	 	    if (this.readOnlyNode && inValue && !noupdate && this.readonly)
 			this.autoSize();
 	    }
  	    if (this.isDesignLoaded() && studio.inspector) wm.fire(studio.inspector, "reinspect");
@@ -135,7 +135,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 
   	    var s = divObj.style;
 	    s.position = "absolute";
-	    
+
 	    s.paddingRight = "5px";
 	    s.paddingTop =  "5px";
 
@@ -157,7 +157,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
                 if (this.caption)
                     if (this.captionPosition == "top" || this.captionPosition == "bottom")
                         newHeight += parseInt(this.captionNode.style.height) + wm.AbstractEditor.captionPaddingHeight;
-                
+
                 var minHeight = this.getMinHeightProp();
                 if (minHeight > newHeight) newHeight = minHeight;
 		// scrollbars for a node less than 40px high is pretty much useless; even 40 is questionable
@@ -187,18 +187,18 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		//this.domNode.style.width = maxWidth + "px"; // give it some room to work with
 		s.height = bases.height;
 		s.width = "";
-		
+
 		/*
 
 		var targetHeight = parseInt(bases.height);
 		s.height = "";
-		s.width = bases.width;		    
+		s.width = bases.width;
 
 		// STEP 0: Get the height of a single line
 		divObj.innerHTML = "a";
 		var lineHeight = divObj.clientHeight
 
-		divObj.innerHTML = this.readOnlyNode.innerHTML;		
+		divObj.innerHTML = this.readOnlyNode.innerHTML;
 		var dif = parseInt(divObj.clientHeight) - targetHeight;
 
 		// STEP 1: Make a coarse estimate
@@ -227,7 +227,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		    s.width = (parseInt(s.width) - 5) + "px";
 		    dif = parseInt(divObj.clientHeight) - targetHeight;
 		}
-		
+
 		// STEP 4: We probably overshot by 5px, in the optimize step; correct for that
 		if (diff > 0) s.width =  (parseInt(s.width) + 5) + "px";
 		*/
@@ -262,24 +262,16 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 
     setAutoSizeWidth: function(inValue) {
 	this.inherited(arguments);
-        if (this.readOnlyNode && this.readonly) 
+        if (this.readOnlyNode && this.readonly)
             this.updateReadOnlyNodeStyle();
     },
     setAutoSizeHeight: function(inValue) {
 	this.inherited(arguments);
-        if (this.readOnlyNode && this.readonly) 
+        if (this.readOnlyNode && this.readonly)
             this.updateReadOnlyNodeStyle();
     },
     setMaxHeight: function(newMax) {
-        if (this.isDesignLoaded()) {
-            if (newMax < this.minHeight) {
-                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
-                return;
-            } else if (newMax < this.getMinHeightProp()) {
-                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
-                return;
-            }
-        }
+
         this.inherited(arguments);
         if (!this.maxHeight && this.readOnlyNode) this.readOnlyNode.style.overflow = "hidden";
         if (this.readOnlyNode) {
@@ -287,7 +279,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
             this.doAutoSize(1,1);
         }
     },
-    // Any time the user changes the class for the label, recalculate autosize with the new styleing which may include font size changes	
+    // Any time the user changes the class for the label, recalculate autosize with the new styleing which may include font size changes
     addUserClass: function(inClass, inNodeName) {
 	this.inherited(arguments);
 	if ((this.autoSizeHeight || this.autoSizeWidth) && this.isDesignLoaded()) {
@@ -301,24 +293,24 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	if (inSize == "none") {
 	    if (this.autoSizeHeight) {
 		this.setAutoSizeHeight(false);
-	    } 
+	    }
 	    if (this.autoSizeWidth) {
 		this.setAutoSizeWidth(false);
-	    } 
+	    }
 	} else if (inSize == "width") {
 	    if (this.autoSizeHeight) {
 		this.setAutoSizeHeight(false);
-	    } 
+	    }
 	    if (!this.autoSizeWidth) {
 		this.setAutoSizeWidth(true);
-	    } 
+	    }
 	} else if (inSize == "height") {
 	    if (!this.autoSizeHeight) {
 		this.setAutoSizeHeight(true);
-	    } 
+	    }
 	    if (this.autoSizeWidth) {
 		this.setAutoSizeWidth(false);
-	    } 
+	    }
 	}
     }
 
@@ -363,7 +355,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		// this dijit supports setting password type at creation time only
 		if (this.password)
 			p.type = "password";
-		
+
 		// maxChar property should only be set if user sets a limit otherwise, textEditor and all its sub-class will not work in IE8(Compatible mode for IE7)
 		if(this.maxChars)
 			p.maxLength = this.maxChars;
@@ -419,11 +411,11 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 /* a way to create an html editor and transform it to a dijit onclick; this approach may still be desired at some point... for both performance and usability reasons.  Usability reasons though could be handled with a click to exit readonly mode
     __createEditor: function(node,inProps) {
 	    if (this.fakeEditor) {
-		dojo.destroy(this.fakeEditor);		
+		dojo.destroy(this.fakeEditor);
 		delete this.fakeEditor;
 		return this._createEditor2(node,inProps);
 	    }
-	  
+
 	    var input = dojo.create("input", {type: "text",
 					      id:    this.id + "_INPUT",
 					      className: "dijit dijitReset dijitLeft dijitTextBox",
@@ -489,7 +481,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	}
     },
         destroy: function() {
-	    if (this._resetButtonNode) 
+	    if (this._resetButtonNode)
 		dojo.destroy(this._resetButtonNode);
 	    if (this._resetButtonConnect)
 		dojo.disconnect(this._resetButtonConnect);

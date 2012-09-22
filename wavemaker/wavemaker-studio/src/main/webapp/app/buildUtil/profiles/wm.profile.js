@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 /* COMPLETE CLASS LIST/LIBRARY LIST:
 BASE:
 * Object.js
@@ -21,7 +21,7 @@ BASE:
 * I18nPlugin.js
 * RbacPlugin.js
 
-Everything in base is required for any application to run (the plugins could be removed, 
+Everything in base is required for any application to run (the plugins could be removed,
 but at this time we will assume that the functionality represented by them is required.
 
 DRAG:
@@ -56,7 +56,7 @@ COMPONENTS:
 * JsonRpcService: Required for any kind of client-server communication
 * LiveVariable: Required for most database apps. Assume every app needs it.
 * LiveVariable_design: Design-time only
-* LiveView: Required by Every LiveVariable 
+* LiveView: Required by Every LiveVariable
 * LiveView_design: Design-time only
 * LogoutVariable: This 50 line file is small and simple; Recommended for main build layer because many projects should use it and its a low cost. (NOTE: REVIEW NEEDED)
 * NavigationService: Define Navigation Services and a Navigation variable for using the service. Required.
@@ -72,7 +72,7 @@ COMPONENTS:
 * Service: Parent class of all services; Required
 * ServiceCall: Variable for calling a service; Required
 * ServiceCall_design: Design-time only
-* ServiceQueue: Built into every ServiceCall; required because ServiceCall is required.  Hopefully deprecated soon.  Ed and I have Axed this; 
+* ServiceQueue: Built into every ServiceCall; required because ServiceCall is required.  Hopefully deprecated soon.  Ed and I have Axed this;
 * ServiceVariable: ServiceVariable for calling server services. Required
 * Timer: Used in small % of projects; removed from main build layer; not part of any layers
 * TypeDefinition: Relatively few projects use this, but I am using it any time custom types are needed by studio and by components.
@@ -140,12 +140,12 @@ WIDGETS:
 
 WIDGET/LAYOUT:
 * Abs.js: Experimental absolute layoutKind renderer; not used
-* Box.js: left-to-right and top-to-bottom layoutKind renderer; required 
+* Box.js: left-to-right and top-to-bottom layoutKind renderer; required
 * Layout.js: Parent class of all layout classes; required
 
 
 WIDGET/GADGET: (NOTE: REVIEW NEEDED: Every one of these maybe should be in a standalone layer?) (Ed and MIchael have axed this layer)
-* Facebook: Gadgets build 
+* Facebook: Gadgets build
 * GoogleMap: Gadgets build
 * TwitterGadgets: Gadgets build
 * Weather: Gadgets build
@@ -167,7 +167,7 @@ WIDGET/TREES: Added new tree layer for all of these
 * DraggableTree: For the rare user needing drag and drop trees
 * JSObjTreeNode: Used by the old DebugTree; keeping it around but not currently used; not in a build layer
 
-WIDGET/DIALOGS: 
+WIDGET/DIALOGS:
 * ColorPickerDialog: Used by ColorPicker editor; put in colorpicker layer
 * DesignableDialog: While I expect most projects to have one or two of these, probably most login pages won't have these.  Currently part of the main build layer (TODO: REVIEW THIS)
 * Dialog: Required; part of every Application component
@@ -175,7 +175,7 @@ WIDGET/DIALOGS:
 * LoadingDialog: Currently part of main build layer.  Expected to see this in most projects, possibly even in login pages (TODO: REVIEW THIS) (Ed and Michael were exceptionally indecisive)
 * PageDialog: Currently part of Application component; if we remove app.pageDialog, we may move this out of main build layer; but still fairly common use.  Probably uncommon use for mobile design.
 * PopoutDialog: Obsolete
-* RichTextDialog: No build layer; rare use. 
+* RichTextDialog: No build layer; rare use.
 * Toast: Required; part of Application component. User may not use it... many users may not use it.  But don't want to load it when user calls app.toast. (TODO: REVIEW THIS) (Ed and Michael say "preload it")
 * WidgetsJsDialog: Parent class of Toast and GenericDialog; required.
 
@@ -198,7 +198,7 @@ WIDGET/EDITORS
 * Date: Very common but not required; wm_editors layer (TODO: REVIEW THIS)
 * Checkbox: not required; wm_editors layer
 
-* Radiobutton: not required; wm_editors layer; 
+* Radiobutton: not required; wm_editors layer;
 
 * Base: Parent class of all deprecated editors; wm_editors_old
 
@@ -331,9 +331,12 @@ dependencies = {
 			    "wm.base.widget.Layers.Decorator",
 			    "wm.base.widget.Layers.TabsDecorator",
 			    "wm.base.widget.Layers",
-				
+
 			    "wm.base.widget.PageContainer",
 			    "wm.base.widget.Scrim",
+
+			    "wm.base.drag.drag",
+			    "dojo.dnd.Moveable",
 			    "wm.base.widget.Dialogs.Dialog",
 			    "wm.base.widget.Dialogs.Toast",
 			    "wm.base.widget.Dialogs.WidgetsJsDialog",
@@ -428,7 +431,6 @@ dependencies = {
 			    "wm.base.widget.Bevel",
 			    "wm.base.widget.Splitter",
 			    "wm.base.widget.Buttons.Button",
-			    "wm.base.widget.Buttons.ToggleButton",
 			    "wm.base.widget.Picture",
 
 			    "wm.base.widget.Html",
@@ -441,9 +443,10 @@ dependencies = {
 			    "wm.base.widget.Layers.BreadcrumbDecorator",
 			    "wm.base.widget.Layers",
 			    "wm.base.widget.BreadcrumbLayers",
-				
+
 			    "wm.base.widget.PageContainer",
 			    "wm.base.widget.Scrim",
+
 			    "wm.base.widget.Dialogs.Dialog",
 			    "wm.base.widget.Dialogs.Toast",
 			    "wm.base.widget.Dialogs.WidgetsJsDialog",
@@ -451,11 +454,121 @@ dependencies = {
 			    "wm.base.widget.Dialogs.PageDialog",
 			    "wm.base.widget.Dialogs.DesignableDialog",
 			    "wm.base.widget.Dialogs.LoadingDialog",
-			    
+
+			    // Grid? Menu? Calendar? Editors? Layers?
+			]
+		},
+		{
+			name: "lib_build_phonegap.js",
+			resourceName: "wm",
+			layerDependencies: [
+			],
+			dependencies: [
+                "wm.base.components.componentList",
+
+			    // wm utility libs
+			    "wm.base.lib.util",
+			    "wm.base.lib.date",
+			    "wm.base.lib.types",
+			    "wm.base.lib.data",
+			    "wm.base.data.expression",
+
+			    // base classes
+			    "wm.base.Object",
+			    "wm.base.Component",
+			    "wm.base.Control",
+			    "wm.base.Plugin",
+			    "wm.base.RbacPlugin",
+			    "wm.base.I18nPlugin",
+			    "wm.base.components.Application",
+			    "wm.base.components.JsonRpcService" /* needed because we access its cache in project.a.js */
+
+
+
 			    // Grid? Menu? Calendar? Editors? Layers?
 			]
 		},
 
+
+		{
+			name: "wm_phonegap_misc.js",
+			resourceName: "wm.compressed.wm_phonegap_misc",
+			layerDependencies: ["lib_build_phonegap.js"],
+			dependencies: [
+			    /* It goes in MISC if its not needed to run the Application object's constructor.  Everything else here can be loaded
+			     * after a short delay and before we call initialize the application object, and is most likely needed only for loading the page itself
+			     * even if it is the first page */
+
+			    /* Services */
+			    "wm.base.components.Service",
+			    "wm.base.components.NavigationService",
+			    "wm.base.components.NotificationService",
+			    "wm.base.components.ServiceCall",
+			    "wm.base.components.PhoneGapService",
+			    "wm.base.components.XhrService",
+			    "wm.base.components.PhoneGapService",
+
+			    /* Variables/ServiceVariables */
+			    "wm.base.components.Variable",
+			    "wm.base.components.ServiceVariable",
+
+
+			    // components
+			    "wm.base.components.Page",
+			    "wm.base.components.HtmlLoader",
+			    "wm.base.components.CssLoader",
+			    "wm.base.components.PageLoader",
+			    "wm.base.components.Property",
+			    "wm.base.components.ImageList",
+			    "wm.base.components.Binding",
+			    "wm.base.components.TypeDefinition",
+
+
+			    // component Utilities
+			    "wm.base.components.Security",
+
+			    // Layout rendering classes
+			    "wm.base.widget.layout.Layout",
+			    "wm.base.widget.layout.Box",
+
+			    // widgets
+			    "wm.base.widget.AppRoot",
+			    "wm.base.widget.Label",
+			    "wm.base.widget.Spacer",
+			    "wm.base.widget.Container",
+			    "wm.base.widget.Panel",
+			    "wm.base.widget.Layout",
+			    "wm.base.widget.Buttons.Button",
+			    "wm.base.widget.Buttons.ToggleButton",
+			    "wm.base.widget.Picture",
+			    "wm.base.widget.Layers.Decorator",
+			    "wm.base.widget.Layers",
+
+			    "wm.base.widget.PageContainer",
+			    "wm.base.widget.Scrim",
+			    "wm.base.widget.Buttons.ToggleButton",
+
+			    "wm.base.widget.Formatters",
+			    "wm.base.components.Timer",
+			    "wm.base.widget.Editors.AbstractEditor",
+        		    "wm.base.widget.Editors.dijit",
+			    "wm.base.widget.Editors.Text",
+			    "wm.base.widget.Layers.TabsDecorator",
+			    "wm.base.components.LiveView",
+			    "wm.base.components.LiveVariable",
+			    "wm.base.components.LogoutVariable",
+			    "wm.base.widget.Bevel",
+			    "wm.base.widget.Splitter",
+			    "wm.base.widget.Html",
+			    "wm.base.widget.Dialogs.Dialog",
+			    "wm.base.widget.Dialogs.LoadingDialog",
+			    "wm.base.widget.Dialogs.Toast",
+			    "wm.base.widget.Dialogs.WidgetsJsDialog",
+			    "wm.base.widget.Dialogs.GenericDialog",
+			    "wm.base.widget.Dialogs.PageDialog",
+			    "wm.base.widget.Dialogs.DesignableDialog"
+			]
+		},
 		{
 			name: "wm_charts.js",
 			resourceName: "wm.compressed.wm_charts",
@@ -540,7 +653,7 @@ dependencies = {
 			"wm.base.widget.Editors.DataSetEditor",
 			"wm.base.data.SimpleStore", /* Used by Select */
 			"wm.base.widget.Editors.Select"
-			]		
+			]
 		},
 		{
 			name: "wm_editors_misc.js",
@@ -549,7 +662,7 @@ dependencies = {
 		    dependencies: [
 			"wm.base.widget.Editors.Radiobutton",
 			"wm.base.widget.Editors.Slider"
-			]		
+			]
 		},
 
 		{
@@ -566,7 +679,7 @@ dependencies = {
                "wm.base.widget.Editors._RadioButtonEditor",
                "wm.base.widget.Editors._SelectEditor",
 			    "wm.base.widget.Editors.Slider"
-			]		
+			]
 		},
 
 		{
@@ -581,7 +694,7 @@ dependencies = {
 			    "dijit._editor.plugins.LinkDialog",
 			    "dojox.editor.plugins.FindReplace",
 			    "dojox.editor.plugins.AutoUrlLink"
-			]		
+			]
 		},
 		{
 			name: "wm_dashboard.js",
@@ -589,7 +702,7 @@ dependencies = {
 			layerDependencies: ["lib_build.js", "wm_editors.js"],
 			dependencies: [
 			    "wm.base.widget.Dashboard"
-			]		
+			]
 		},
 		{
 			name: "wm_livepanel.js",
@@ -601,7 +714,7 @@ dependencies = {
                "wm.base.widget.LivePanel",
                "wm.base.widget.EditPanel",
                "wm.base.widget.DataNavigator"
-			]		
+			]
 		},
 		{
 			name: "wm_dataform.js",
@@ -610,7 +723,7 @@ dependencies = {
 			dependencies: [
                "wm.base.widget.DataForm",
                "wm.base.widget.Editors.OneToMany"
-			]		
+			]
 		},
 
 		{
@@ -624,8 +737,8 @@ dependencies = {
 				"wm.base.widget.gadget.YouTube",
 			        "wm.base.widget.gadget.Facebook",
 			        "wm.base.widget.gadget.TwitterGadgets",
-			        "wm.base.widget.gadget.GoogleMap"			    
-			]		
+			        "wm.base.widget.gadget.GoogleMap"
+			]
 		},
 		{
 			name: "wm_fileupload.js",
@@ -639,24 +752,24 @@ dependencies = {
 			    "wm.base.widget.DojoFlashFileUpload",
 			    "wm.base.widget.DojoFileUpload"
 			]
-		},				
+		},
     {
 			name: "wm_trees.js",
 			resourceName: "wm.compressed.wm_trees",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
-			    "wm.base.widget.Trees.Tree", 
-			    "wm.base.widget.Trees.ObjectTree", 
-			    "wm.base.widget.Trees.PropertyTree", 
+			    "wm.base.widget.Trees.Tree",
+			    "wm.base.widget.Trees.ObjectTree",
+			    "wm.base.widget.Trees.PropertyTree",
 			    "wm.base.widget.Trees.DraggableTree"
 			]
-		},		
+		},
 		{
 			name: "wm_accordion.js",
 			resourceName: "wm.compressed.wm_accordion",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
-			    "wm.base.widget.AccordionLayers", 
+			    "wm.base.widget.AccordionLayers",
 			    "wm.base.widget.Layers.AccordionDecorator"
 			]
 		},
@@ -665,7 +778,7 @@ dependencies = {
 			resourceName: "wm.compressed.wm_wizardlayer",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
-			    "wm.base.widget.WizardLayers", 
+			    "wm.base.widget.WizardLayers",
 			    "wm.base.widget.Layers.WizardDecorator"
 			]
 		},
@@ -674,7 +787,7 @@ dependencies = {
 			resourceName: "wm.compressed.wm_breadcrumblayer",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
-			    "wm.base.widget.BreadcrumbLayers", 
+			    "wm.base.widget.BreadcrumbLayers",
 			    "wm.base.widget.Layers.BreadcrumbDecorator"
 			]
 		},
@@ -684,7 +797,7 @@ dependencies = {
 		        layerDependencies: ["lib_build.js"],
 			dependencies: [
 			    "dijit.ProgressBar",
-			    "wm.base.widget.dijit.ProgressBar", 
+			    "wm.base.widget.dijit.ProgressBar",
 			    "wm.base.widget.Layers.BreadcrumbDecorator"
 			]
 		},
@@ -698,7 +811,7 @@ dependencies = {
 			"dojox.widget.ColorPicker"
 			]
 		},
-		
+
 	],
 
 	prefixes: [

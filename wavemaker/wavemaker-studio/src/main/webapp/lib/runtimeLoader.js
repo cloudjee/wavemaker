@@ -46,24 +46,25 @@ try
 	    ["wm.modules", wm.basePath + "modules/ep"],
 	    //["wm.language", wm.libPath + "/wm/language"],
 	    ["language", window.location.pathname.replace(/[^\/]*$/,"language")]
-	);	
-
+	);
 
 
 	// Load minified built version of libraries when not booting in debug mode
-	if (!djConfig.debugBoot) 
+	if (!djConfig.debugBoot)
 	{
 		// Register paths for compressed parts of dojo
 		dojo.registerModulePath("dojo.nls", wm.libPath + "/build/nls");
 	    //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 		dojo.registerModulePath("build", wm.libPath + "/build");
-	    if (wm.isMobile) {
-		dojo.require("build.Gzipped.lib_build_mobile", true);	
+        if (wm.isPhonegap) {
+            dojo.require("build.Gzipped.lib_build_phonegap", true);
+	    } else if (wm.isMobile) {
+		  dojo.require("build.Gzipped.lib_build_mobile", true);
 	    } else {
-		dojo.require("build.Gzipped.lib_build", true);	
+		  dojo.require("build.Gzipped.lib_build", true);
 	    }
 /*
-	    wm.loadLibs([ 
+	    wm.loadLibs([
 		wm.isMobile ? "css.dijit.themes.tundra.tmobile" :  "css.dijit.themes.tundra.t"
 	    ]);
 	    */
@@ -71,7 +72,7 @@ try
 	    wm.loadLibs(["css.wm.base.widget.themes.default." + (wm.isMobile ? "mtheme" : "theme")]);
 	    if (dojo.isIE)
 	    {
-		wm.loadLibs([ 
+		wm.loadLibs([
 	  "wm.base.lib.Silverlight"
 		]);
 	    }

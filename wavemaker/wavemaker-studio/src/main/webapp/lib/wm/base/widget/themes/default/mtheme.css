@@ -851,7 +851,12 @@ float: none;
 .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
         height: 50% !important;
 }
-
+.dijitSpinner .dijitDownArrowButton .dijitArrowButtonInner {
+    background-position-x: 0px;
+}
+.dijitSpinner .dijitUpArrowButton .dijitArrowButtonInner {
+    background-position-x: -21px;
+}
 
 .wmeditor .EditorHelpIcon {
     position: absolute;

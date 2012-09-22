@@ -138,26 +138,39 @@ public final class FileController extends AbstractController {
             OutputStream os = response.getOutputStream();
             InputStream is = new FileInputStream(sendFile);
             if (reqPath.contains(WM_CONFIG_URL)) {
-                String content = IOUtils.toString(is);
-                content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
-                content += "\r\n" + "wm.connectionTimeout = " + this.serviceResponse.getConnectionTimeout() + ";";
+                StringBuilder content = new StringBuilder(IOUtils.toString(is));
+                int offset = ServerUtils.getServerTimeOffset();
+                int timeout =  this.serviceResponse.getConnectionTimeout();
+                String timeStamp = "0";
+                File timeFile = new File(sendFile.getParent(), "timestamp.txt");
+                if (timeFile.exists()) {
+                    InputStream isTime = new FileInputStream(timeFile);
+                    timeStamp = IOUtils.toString(isTime);
+                    isTime.close();
+                } else {
+                    System.out.println("File timestamp.txt not found, using 0");
+                }
+                content.append("\r\nwm.serverTimeOffset = ").append(offset).append(";");
+                content.append("\r\nwm.connectionTimeout = ").append(timeout).append(";");
+                content.append("\r\nwm.saveTimestamp = ").append(timeStamp).append(";");       
+                
                 String language = request.getHeader("accept-language");
                 if (language != null && language.length() > 0) {
                     int index = language.indexOf(",");
                     language = index == -1 ? language : language.substring(0, index);
-                    content += "\r\n" + "wm.localeString = '" + language + "';";
+                    content.append("\r\nwm.localeString = '").append(language).append("';");
                 }
                 File bootFile = new File(sendFile.getParent(), "boot.js");
                 if (bootFile.exists()) {
                     InputStream is2 = new FileInputStream(bootFile);
                     String bootString = IOUtils.toString(is2);
                     bootString = bootString.substring(bootString.indexOf("*/") + 2);
-                    content += bootString;
+                    content.append(bootString);
                     is2.close();
                 } else {
                     System.out.println("Boot file not found");
                 }
-                IOUtils.write(content, os);
+                IOUtils.write(content.toString(), os);
             } else {
                 IOUtils.copy(is, os);
             }

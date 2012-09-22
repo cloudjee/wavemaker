@@ -9,9 +9,6 @@ window.open("http://wavemaker.com/downloads/", "self");
 LoginServiceVariableResult: function(inSender, inDeprecated) {
 var successString = 'SUCCESS';
 inSender.getData().dataValue.substring(0,successString.length) === successString ? this.LoginSuccess() : this.LoginError(inSender, inDeprecated);
-//  this.progressBarTimer.stopTimer();
-//  this._progressBarStopAt = this.progressBar1.getProgress();
-//  this.finishProgressBarTimer.startTimer();
 },
 LoginSuccess: function(inSender, inDeprecated) {
 this.endWait();

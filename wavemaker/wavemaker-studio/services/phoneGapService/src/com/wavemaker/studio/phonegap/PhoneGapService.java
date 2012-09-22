@@ -88,9 +88,10 @@ public class PhoneGapService {
     		Transformer transformer = transformerFactory.newTransformer();
 
     		StreamSource source = new StreamSource(new StringReader(configxml));
-    		StreamResult result = new StreamResult(new StringWriter());
+    		StringWriter writer = new StringWriter();
+    		StreamResult result = new StreamResult(writer);
     		transformer.transform(source, result);
-    		getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(result.toString());
+    		getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).getFile("config.xml").getContent().write(writer.toString());
     	}
     	catch (TransformerException tfe){
     		throw new WMRuntimeException("Invalid character in Phonegap Build Config field data. Remove and retry. " + tfe.getMessage());
@@ -181,11 +182,14 @@ public class PhoneGapService {
     private void purgeUnnecessarySetupFiles(Folder phoneGapLibFolder) {
         phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending(".gz")).delete();
         phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().ending("_grid.js")).delete();
+        phoneGapLibFolder.getFolder("build/Gzipped").list().files().include(FilterOn.names().starting("lib_build_mobile")).delete(); // use lib_build_phonegap instead
         phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_data_grid")).delete();
         phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_colorpicker")).delete();
         phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_dashboard")).delete();
         phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_dojo_grid")).delete();
         phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("wm_editors_old")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.names().starting("lib_build_mobile")).delete();
+        phoneGapLibFolder.getFolder("build/nls").list().files().include(FilterOn.antPattern("lib_build*")).exclude(FilterOn.names().starting("lib_build_phonegap")).delete();
         phoneGapLibFolder.getFolder("build/nls").list().folders().delete();
         phoneGapLibFolder.getFolder("build/themes").list().include(FilterOn.names().notEnding(".css").notMatching("tundra")).delete();
         phoneGapLibFolder.getFolder("build").list().files().include(FilterOn.names().ending(".js")).delete();
@@ -301,7 +305,8 @@ public class PhoneGapService {
         config = config.replaceAll("/wavemaker/", "/");
         config = config.replace("wm.relativeLibPath = \"../lib/\";", "wm.relativeLibPath = \"lib/\";");
         config = config + "\nwm.xhrPath = '" + url + "/';";
-        config = config + "\nwm.useProxyJsonServices = " + useProxy + ";\n";
+        config = config + "\nwm.useProxyJsonServices = " + useProxy + ";";
+        config = config + "\nwm.isPhonegap = true;\n";
         return config + boot;
     }
 

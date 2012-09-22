@@ -384,6 +384,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
             this._searchEditor = new wm.Text({owner: this,
                               parent: this._searchDialog.containerWidget,
                               name: "searchEditor",
+                              emptyValue: "emptyString",
                               caption: "Search",
                               captionSize: "100px",
                              captionAlign: "left",
@@ -419,6 +420,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
                               captionSize: "100px",
                              captionAlign: "left",
                                width: "100%",
+                               emptyValue: "emptyString",
                               onEnterKeyPress: dojo.hitch(this, "onReplaceClick")});
     /*
             var buttonPanel =  new wm.Panel({owner: this,

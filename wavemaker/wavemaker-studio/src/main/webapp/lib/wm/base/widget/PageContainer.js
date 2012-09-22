@@ -101,6 +101,10 @@ dojo.declare("wm.PageContainer", wm.Control, {
             var value = this.getProp(inName);
             this[inName] = value;
             this.valueChanged(inName, value);
+            if (value instanceof wm.Variable) {
+                var id = this.getRuntimeId(inName);
+                dojo.publish(id + "-ownerChanged");
+            }
         } catch(e) {}
         delete this["_inSetBoundProp_" + inName];
     },

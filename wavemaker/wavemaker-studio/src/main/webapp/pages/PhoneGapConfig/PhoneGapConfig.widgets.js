@@ -296,7 +296,8 @@ PhoneGapConfig.widgets = {
                             "height": "26px",
                             "helpText": "Enter the name you want users to see when looking at their device's home screen or application list",
                             "required": 1,
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         xhrPath: ["wm.SelectMenu",
                         {
@@ -311,7 +312,8 @@ PhoneGapConfig.widgets = {
                             "helpText": "Enter the path that you want this application to use to send requests to your server",
                             "width": "100%",
                             emptyValue: "null",
-                            restrictValues: 0
+                            restrictValues: 0,
+                            regExp: "[^&<>]*"
                         }, {
                             onchange: "xhrPathChange"
                         }],
@@ -374,7 +376,8 @@ PhoneGapConfig.widgets = {
                             "height": "26px",
                             "helpText": "Needs to be of the form com.mycompany.projectName",
                             "required": 1,
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appVersion: ["wm.Text",
                         {
@@ -389,7 +392,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appDescription: ["wm.LargeTextArea",
                         {
@@ -404,7 +408,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "100px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appAuthorName: ["wm.Text",
                         {
@@ -418,7 +423,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "A WaveMaker Studio User",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appAuthorUrl: ["wm.Text",
                         {
@@ -433,7 +439,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appAuthorEmail: ["wm.Text",
                         {
@@ -448,7 +455,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}]
                     }]
                 }],

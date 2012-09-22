@@ -16,8 +16,8 @@
 NewProjectDialog.widgets = {
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {_classes: {domNode:["StudioDarkPanel"]}, backgroundColor:""},{}, {
-            projectName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, selectOnClick: true, width: "100%", height: "24px", captionSize: "90px", caption: "Project Name", displayValue: "Project", regExp: '^[a-zA-Z][\\w\\d]+$', invalidMessage: "Only letters/numbers.  Must start with letter", tooltipDisplayTime: "6000"}, {"onEnterKeyPress":"onOkClick"}],
-            themeName: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, width: "100%", height: "24px",  captionSize: "90px", caption: "Theme", displayField: "dataValue", dataField: "dataValue" }, {"onEnterKeyPress":"onOkClick"}, {
+            projectName: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, emptyValue: "emptyString", selectOnClick: true, width: "100%", height: "24px", captionSize: "90px", caption: "Project Name", displayValue: "Project", regExp: '^[a-zA-Z][\\w\\d]+$', invalidMessage: "Only letters/numbers.  Must start with letter", tooltipDisplayTime: "6000"}, {"onEnterKeyPress":"onOkClick"}],
+            themeName: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, emptyValue: "emptyString", width: "100%", height: "24px",  captionSize: "90px", caption: "Theme", displayField: "dataValue", dataField: "dataValue" }, {"onEnterKeyPress":"onOkClick"}, {
         		binding: ["wm.Binding", {}, {}, {
         		    wire: ["wm.Wire", {"targetProperty":"dataSet","source":"studio.themesListVar"}, {}]
         		}]

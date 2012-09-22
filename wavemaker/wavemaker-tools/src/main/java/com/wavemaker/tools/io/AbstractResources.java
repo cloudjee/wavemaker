@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
 
 /**
  * Abstract base for {@link Resources} implementations.
- * 
+ *
  * @author Phillip Webb
  */
 public abstract class AbstractResources<T extends Resource> implements Resources<T> {
@@ -75,7 +75,8 @@ public abstract class AbstractResources<T extends Resource> implements Resources
 
     @Override
     public void delete() {
-        for (T resource : this) {
+        List<T> delete = fetchAll();
+        for (T resource : delete) {
             resource.delete();
         }
     }

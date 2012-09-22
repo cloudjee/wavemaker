@@ -20,179 +20,179 @@ wm.DojoGrid.extend({
 
     themeableStyles: [],
     themeableSharedStyles: ["-Even Rows", "Row-Background-Color","Row-Font-Color",
-			    "-Odd Rows","Row-Background-Odd-Color","Row-Font-Odd-Color",
-			    "-Hover Row", "Row-Background-Hover-Color","Row-Font-Hover-Color",
-			    "-Selected Row", "Row-Background-Selected-Color", "Row-Font-Selected-Color",
-			    "-Misc", "Row-Border-Color",
-			    "-Header Styles", "Header-Background-Color", "Header-Font-Color", "Header-Image", "Header-Image-Position","Header-Image-Repeat"],
-	afterPaletteDrop: function() {
-		this.caption = this.caption || this.name;
+                "-Odd Rows","Row-Background-Odd-Color","Row-Font-Odd-Color",
+                "-Hover Row", "Row-Background-Hover-Color","Row-Font-Hover-Color",
+                "-Selected Row", "Row-Background-Selected-Color", "Row-Font-Selected-Color",
+                "-Misc", "Row-Border-Color",
+                "-Header Styles", "Header-Background-Color", "Header-Font-Color", "Header-Image", "Header-Image-Position","Header-Image-Repeat"],
+    afterPaletteDrop: function() {
+        this.caption = this.caption || this.name;
         this.singleClickEdit = true; // single click edit is the new default, but don't want to change existing projects
-		this.renderDojoObj();
-	},
+        this.renderDojoObj();
+    },
 /* made obsolete by adding createWire to the property editor
-	set_dataSet: function(inDataSet) {
-		// support setting dataSet via id from designer
-		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-			var ds = this.getValueById(inDataSet);
-			if (ds)
-				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else if (!inDataSet && !this._cupdating) {
-		    this.components.binding.removeWireByProp("dataSet");
-		    this.setDataSet(inDataSet);
-		} else {
-		    this.setDataSet(inDataSet);
-		}
-	},
-	*/
-	listProperties: function() {
-	    var props = this.inherited(arguments);
-	    props.dataSet.type = "Object";// should be able to bind to ANY type of variable (as long as its a list); could not find where this value is set to the dataset's type, but I don't want that happening.
+    set_dataSet: function(inDataSet) {
+        // support setting dataSet via id from designer
+        if (inDataSet && !(inDataSet instanceof wm.Variable)) {
+            var ds = this.getValueById(inDataSet);
+            if (ds)
+                this.components.binding.addWire("", "dataSet", ds.getId());
+        } else if (!inDataSet && !this._cupdating) {
+            this.components.binding.removeWireByProp("dataSet");
+            this.setDataSet(inDataSet);
+        } else {
+            this.setDataSet(inDataSet);
+        }
+    },
+    */
+    listProperties: function() {
+        var props = this.inherited(arguments);
+        props.dataSet.type = "Object";// should be able to bind to ANY type of variable (as long as its a list); could not find where this value is set to the dataset's type, but I don't want that happening.
 
-	    props.onLiveEditBeforeInsert.ignoretmp = !this.liveEditing;
-	    props.onLiveEditBeforeUpdate.ignoretmp = !this.liveEditing;
-	    props.onLiveEditBeforeDelete.ignoretmp = !this.liveEditing;
+        props.onLiveEditBeforeInsert.ignoretmp = !this.liveEditing;
+        props.onLiveEditBeforeUpdate.ignoretmp = !this.liveEditing;
+        props.onLiveEditBeforeDelete.ignoretmp = !this.liveEditing;
 
-	    props.onLiveEditInsertSuccess.ignoretmp = !this.liveEditing;
-	    props.onLiveEditUpdateSuccess.ignoretmp = !this.liveEditing;
-	    props.onLiveEditDeleteSuccess.ignoretmp = !this.liveEditing;
+        props.onLiveEditInsertSuccess.ignoretmp = !this.liveEditing;
+        props.onLiveEditUpdateSuccess.ignoretmp = !this.liveEditing;
+        props.onLiveEditDeleteSuccess.ignoretmp = !this.liveEditing;
 
-	    props.onLiveEditInsertError.ignoretmp = !this.liveEditing;
-	    props.onLiveEditUpdateError.ignoretmp = !this.liveEditing;
-	    props.onLiveEditDeleteError.ignoretmp = !this.liveEditing;
+        props.onLiveEditInsertError.ignoretmp = !this.liveEditing;
+        props.onLiveEditUpdateError.ignoretmp = !this.liveEditing;
+        props.onLiveEditDeleteError.ignoretmp = !this.liveEditing;
 
-	    props.onLiveEditInsertResult.ignoretmp = !this.liveEditing;
-	    props.onLiveEditUpdateResult.ignoretmp = !this.liveEditing;
-	    props.onLiveEditDeleteResult.ignoretmp = !this.liveEditing;
+        props.onLiveEditInsertResult.ignoretmp = !this.liveEditing;
+        props.onLiveEditUpdateResult.ignoretmp = !this.liveEditing;
+        props.onLiveEditDeleteResult.ignoretmp = !this.liveEditing;
 
-	    return props;
-	},
-	designCreate: function() {
-		// if this is being created in studio, supply a default caption
-		if (this._studioCreating)
-			this.studioCreate();
-		this.inherited(arguments);
-	},
-	showMenuDialog: function(e){
-	    studio.gridDesignerDialog.show();
-	    studio.gridDesignerDialog.page.setGrid(this);
-	},
-	_formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
-	},
+        return props;
+    },
+    designCreate: function() {
+        // if this is being created in studio, supply a default caption
+        if (this._studioCreating)
+            this.studioCreate();
+        this.inherited(arguments);
+    },
+    showMenuDialog: function(e){
+        studio.gridDesignerDialog.show();
+        studio.gridDesignerDialog.page.setGrid(this);
+    },
+    _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+    },
 
-	setSingleClickEdit: function(inValue){
-		this.singleClickEdit = inValue;
-		if (this.dojoObj)
-			this.dojoObj.singleClickEdit = this.singleClickEdit;
-		this.dojoObj.render();
-	},
+    setSingleClickEdit: function(inValue){
+        this.singleClickEdit = inValue;
+        if (this.dojoObj)
+            this.dojoObj.singleClickEdit = this.singleClickEdit;
+        this.dojoObj.render();
+    },
         set_columns: function(inColumns){
-	    this.columns = inColumns;
-	    if (this.dojoObj) {
-		this.dojoObj.attr('structure', this.getStructure());
-		//this.dojoObj.render(); called by setting structure
-	    }
-	},
-	_onResizeColumn: function(idx, inDrag, delta){
-	        var sArray = this.columns;
-		sArray[idx].width = delta.w + 'px';
-	        if (this.contextMenu)
-		    this.contextMenu.setDataSet(sArray);
-		wm.fire(studio.inspector, "reinspect");
-	},
-	_onMoveColumn: function(arg1, arg2, oldPos, newPos){
-	    var sArray = this.columns;
-	    var tmp=sArray[oldPos];
-	    sArray.splice(oldPos,1);
-	    sArray.splice(newPos,0,tmp);
-	},
+        this.columns = inColumns;
+        if (this.dojoObj) {
+        this.dojoObj.attr('structure', this.getStructure());
+        //this.dojoObj.render(); called by setting structure
+        }
+    },
+    _onResizeColumn: function(idx, inDrag, delta){
+            var sArray = this.columns;
+        sArray[idx].width = delta.w + 'px';
+            if (this.contextMenu)
+            this.contextMenu.setDataSet(sArray);
+        wm.fire(studio.inspector, "reinspect");
+    },
+    _onMoveColumn: function(arg1, arg2, oldPos, newPos){
+        var sArray = this.columns;
+        var tmp=sArray[oldPos];
+        sArray.splice(oldPos,1);
+        sArray.splice(newPos,0,tmp);
+    },
 
     set_selectionMode: function(inMode) {
-	this.setSelectionMode(inMode);
-	this.renderDojoObj();
+    this.setSelectionMode(inMode);
+    this.renderDojoObj();
     },
 
     editColumns:function() {
-	return this.showMenuDialog();
+    return this.showMenuDialog();
     },
-	updateNow: function() {
+    updateNow: function() {
         /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
         if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);
-		var ds = this.getValueById((this.components.binding.wires["dataSet"] || 0).source);
-		wm.fire(ds, "update");
-	},
+        var ds = this.getValueById((this.components.binding.wires["dataSet"] || 0).source);
+        wm.fire(ds, "update");
+    },
 
     get_columns: function() {
-	return this.columns || [];
-	//return this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns || [];
+    return this.columns || [];
+    //return this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns || [];
     },
     get_localizationStructure: function() {
-	var l = this.localizationStructure = {};
-	if (studio.languageSelect.getDisplayValue() == "default") {
-	    return l;
-	} else {
-	    for (var i = 0; i < this.columns.length; i++) {
-		var c = this.columns[i];
-		l[c.field] = c.title;
-	    }
-	    return l;
-	}
+    var l = this.localizationStructure = {};
+    if (studio.languageSelect.getDisplayValue() == "default") {
+        return l;
+    } else {
+        for (var i = 0; i < this.columns.length; i++) {
+        var c = this.columns[i];
+        l[c.field] = c.title;
+        }
+        return l;
+    }
     },
     deviceTypeChange: function() {
-	if (this.isDestroyed) return;
-	var hasMobileColumn;
-	for (var i = 0; i < this.columns.length; i++) {
-	    var c = this.columns[i];
-	    if (c.mobileColumn && c.show) {
-		hasMobileColumn = true;
-		break;
-	    }
-	}
+    if (this.isDestroyed) return;
+    var hasMobileColumn;
+    for (var i = 0; i < this.columns.length; i++) {
+        var c = this.columns[i];
+        if (c.mobileColumn && c.show) {
+        hasMobileColumn = true;
+        break;
+        }
+    }
 
         dojo.toggleClass(this.domNode, "dojoGridNoHeader", this.noHeader || Boolean(hasMobileColumn && studio.currentDeviceType == "phone"));
-	this.renderDojoObj();
+    this.renderDojoObj();
     }
 /*
-	update: function() {
-		var ds = this.getValueById((this.components.binding.wires["dataSet"] || 0).source);
-		wm.fire(ds, "update");
-	},
+    update: function() {
+        var ds = this.getValueById((this.components.binding.wires["dataSet"] || 0).source);
+        wm.fire(ds, "update");
+    },
 
     get_columns: function() {
-	return this.columns || [];
-	//return this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns || [];
+    return this.columns || [];
+    //return this.contextMenu ? this.contextMenu.getUpdatedDataSet() : this.columns || [];
     },
     get_localizationStructure: function() {
-	var l = this.localizationStructure = {};
-	if (studio.languageSelect.getDisplayValue() == "default") {
-	    return l;
-	} else {
-	    for (var i = 0; i < this.columns.length; i++) {
-		var c = this.columns[i];
-		l[c.id] = c.title;
-	    }
-	    return l;
-	}
+    var l = this.localizationStructure = {};
+    if (studio.languageSelect.getDisplayValue() == "default") {
+        return l;
+    } else {
+        for (var i = 0; i < this.columns.length; i++) {
+        var c = this.columns[i];
+        l[c.id] = c.title;
+        }
+        return l;
+    }
     }
 /*
-	writeProps: function(){
-		try{
-		    var props = this.inherited(arguments);
-		    props.columns = this.contextMenu ? this.contextMenu.getUpdatedDataSet() : [];
-		    if (props.columns.length == 0)
-			props.columns = this.columns;
-		    return props;
-		} catch(e){
-			console.info('Error while saving dashboard data..............', e);
-		}
-	}
-	*/
+    writeProps: function(){
+        try{
+            var props = this.inherited(arguments);
+            props.columns = this.contextMenu ? this.contextMenu.getUpdatedDataSet() : [];
+            if (props.columns.length == 0)
+            props.columns = this.columns;
+            return props;
+        } catch(e){
+            console.info('Error while saving dashboard data..............', e);
+        }
+    }
+    */
 });
 
 wm.Object.extendSchema(wm.DojoGrid, {
     /* widgetName group */
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-    editColumns:       {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: 1},
+    columns:       {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: "editColumns", nonlocalizable: true},
     deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},
     caseSensitiveSort: {group: "widgetName", subgroup: "behavior", order: 40, advanced:1},
@@ -269,7 +269,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 /* TODO: Localize */
     rightClickTBody: {ignore:1},
     dsType:{hidden:true},
-    columns:{writeonly:1, nonlocalizable: true},
+
     localizationStructure: {hidden:true},
 
     /* Method group */

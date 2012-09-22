@@ -436,54 +436,62 @@ dojo.declare("wm.studio.Project", null, {
         eval(this.projectData.js);
     },
     loadPage: function() {
-        var n = this.pageName, f = wm.pagesFolder + n + "/", p = f + n ;
+        var n = this.pageName,
+            f = wm.pagesFolder + n + "/",
+            p = f + n;
         this.pageData = {
             js: this.loadProjectData(p + ".js"),
             widgets: this.loadProjectData(p + ".widgets.js"),
             css: this.loadProjectData(p + ".css"),
-                html: this.loadProjectData(p + ".html"),
-                documentation: dojo.fromJson(this.loadProjectData(p + ".documentation.json"))
+            html: this.loadProjectData(p + ".html"),
+            documentation: dojo.fromJson(this.loadProjectData(p + ".documentation.json"))
         }
         var ctor;
         if (this.pageData.js) {
-        try {
-            eval(this.pageData.js);
-            ctor = dojo.getObject(n);
-        } catch(e) {
-        }
+            try {
+                eval(this.pageData.js);
+                ctor = dojo.getObject(n);
+            } catch (e) {}
         }
         if (!ctor) {
-        ctor = dojo.declare(n, wm.Page);
+            ctor = dojo.declare(n, wm.Page);
         }
         eval(this.pageData.widgets);
-        if (!this.htmlLoader)
-        this.htmlLoader = new wm.HtmlLoader({owner: app, name: "projectHtmlLoader", relativeUrl: false});
+        if (!this.htmlLoader) this.htmlLoader = new wm.HtmlLoader({
+            owner: app,
+            name: "projectHtmlLoader",
+            relativeUrl: false
+        });
         this.htmlLoader.setHtml(this.pageData.html);
     },
     makeApplication: function(inProps) {
-            inProps = inProps || {};
+        inProps = inProps || {};
         var ctor = dojo.getObject(this.projectName);
         if (ctor) {
-        studio.application = new ctor(dojo.mixin({ _designer: studio.designer }, inProps));
-        delete studio._application; // temporary property set in Application.init as placeholder for studio.application until the app has finished creating
-        for (var i in this.projectData.documentation) {
-                    if (studio.application.components[i])
-            studio.application.components[i].documentation = this.projectData.documentation[i];
-            else if (i == "__metaData")
-            studio.application._metaData = this.projectData.documentation[i];
-                    else
-                        console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
-        }
-        if (!studio.application._metaData)
-            studio.application._metaData = {};
-        studio.updatePagesMenu(); // now that we have a studio.application object
+            studio.application = new ctor(dojo.mixin({
+                _designer: studio.designer
+            }, inProps));
+            studio.application.loadComponents(studio.application.constructor.widgets || studio.application.widgets); // loadComponents happens in doRun; we don't want to call doRun.
+
+            delete studio._application; // temporary property set in Application.init as placeholder for studio.application until the app has finished creating
+            for (var i in this.projectData.documentation) {
+                if (studio.application.components[i]) studio.application.components[i].documentation = this.projectData.documentation[i];
+                else if (i == "__metaData") studio.application._metaData = this.projectData.documentation[i];
+                else console.error("studio.application.components[" + i + "] not found for setting documentation: " + this.projectData.documentation[i]);
+            }
+            if (!studio.application._metaData) studio.application._metaData = {};
+            studio.updatePagesMenu(); // now that we have a studio.application object
         }
     },
     makePage: function() {
         var ctor = dojo.getObject(this.pageName);
         if (ctor) {
-            studio.connectOnce(ctor.prototype, "init", function() { studio.page = this; });
-                studio.connectOnce(ctor.prototype, "start", function() { wm.fire(studio.application, "start"); });
+            studio.connectOnce(ctor.prototype, "init", function() {
+                studio.page = this;
+            });
+            studio.connectOnce(ctor.prototype, "start", function() {
+                wm.fire(studio.application, "start");
+            });
             studio.page = new ctor({
                 name: "wip",
                 domNode: studio.designer.domNode,
@@ -492,14 +500,14 @@ dojo.declare("wm.studio.Project", null, {
             });
             if (!studio.page.root) throw studio.getDictionaryItem("wm.studio.Project.THROW_INVALID_PAGE");
             studio.page.root.parent = studio.designer;
-                for (var i in this.pageData.documentation) {
-                            if (i == "wip") {
-                                studio.page.documentation = this.pageData.documentation[i];
-                            } else {
-                var c = studio.page.components[i];
-                if (c) {
+            for (var i in this.pageData.documentation) {
+                if (i == "wip") {
+                    studio.page.documentation = this.pageData.documentation[i];
+                } else {
+                    var c = studio.page.components[i];
+                    if (c) {
                         c.documentation = this.pageData.documentation[i];
-                }
+                    }
                 }
             }
             this.pageData.widgets = studio.getWidgets();
@@ -512,28 +520,28 @@ dojo.declare("wm.studio.Project", null, {
     // Save
     //=========================================================================
     save: function() {
-    this.saveProject(false);
-    },
-    saveProject: function(isDeployment, onSave) {
-    var isFolded = studio.page && studio.page.root._mobileFolded;
-    if (isFolded) {
-        studio.page.root.unfoldUI();
-    }
-                this.deployingProject = isDeployment;
-        this.saveApplication(dojo.hitch(this, function() {
-        this.savePage(dojo.hitch(this, function() {
-                studio.setSaveProgressBarMessage("login.html");
-                studio.incrementSaveProgressBar(1);
-            this.saveComplete();
-            this.updatePhonegapFiles();
-            if (onSave) onSave();
-            if (isFolded) {
-            studio.page.root.foldUI();
-            }
+       this.saveProject(false);
+   },
+   saveProject: function(isDeployment, onSave) {
+       var isFolded = studio.page && studio.page.root._mobileFolded;
+       if (isFolded) {
+           studio.page.root.unfoldUI();
+       }
+       this.deployingProject = isDeployment;
+       this.saveApplication(dojo.hitch(this, function() {
+           this.savePage(dojo.hitch(this, function() {
+               studio.setSaveProgressBarMessage("login.html");
+               studio.incrementSaveProgressBar(1);
+               this.saveComplete();
+               this.updatePhonegapFiles();
+               if (onSave) onSave();
+               if (isFolded) {
+                   studio.page.root.foldUI();
+               }
 
-        }));
-        }));
-/*
+           }));
+       }));
+       /*
         studio.updatePagesMenu();
 
         // everything here is asynchronous; if we need to save all, then find all unsaved
@@ -560,10 +568,10 @@ dojo.declare("wm.studio.Project", null, {
         }
         */
 
-    },
-    updatePhonegapFiles: function() {
-    studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
-    },
+   },
+   updatePhonegapFiles: function() {
+       studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
+   },
 
     // finished saving the project files (but not necesarily the service files)
     saveComplete: function() {
@@ -608,16 +616,22 @@ dojo.declare("wm.studio.Project", null, {
         var c = wm.studioConfig;
 
         var allProjectJS = "";
-        var projectName = this.projectName || stu
 
         /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or
          * losing a cookie by opening studio in another tab
          */
         var d = studio.studioService.requestAsync("openProject", [this.projectName]);
 
+        var dSaveTimeStamp = new dojo.Deferred();
+        d.addCallback(dojo.hitch(this, function() {
+            var dlocal = this.saveProjectData("timestamp.txt", new Date().getTime(), false, true);
+            dlocal.addCallback(dojo.hitch(this, function(inResult) {
+                dSaveTimeStamp.callback();
+            }));
+        }));
 
         var dSecurityCheck = new dojo.Deferred();
-        d.addCallback(dojo.hitch(this, function() {
+        dSaveTimeStamp.addCallback(dojo.hitch(this, function() {
             var dlocal = studio.securityConfigService.requestAsync("isSecurityEnabled", []);
             dlocal.addCallback(dojo.hitch(this, function(inResult) {
                 studio.application.isSecurityEnabled = inResult;
@@ -661,8 +675,7 @@ dojo.declare("wm.studio.Project", null, {
         var d2 = new dojo.Deferred();
         d1.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
-            studio.application.saveCounter = (studio.application.saveCounter || 0) + 1;
-            var src = this.generateApplicationSource()
+            var src = this.generateApplicationSource();
             studio.setSaveProgressBarMessage(this.projectName + ".js");
             allProjectJS += src;
 
@@ -2084,6 +2097,7 @@ Studio.extend({
                    break;
                    }
                if (exists) {
+                                app.createToastDialog();
                                app.toastDialog.showToast(this.getDictionaryItem("TOAST_TARGET_EXISTS", {pageName: name, target: inTarget}),
                                                          5000, "Warning", "tc");
                    return wm.onidle(this, function() {
@@ -2093,6 +2107,7 @@ Studio.extend({
 
                /* I think this stopped being a problem once we required page names start with upper case */
                else if (window[name] || wm.getValidJsName(name) != name) {
+                                app.createToastDialog();
                                app.toastDialog.showToast(this.getDictionaryItem("TOAST_INVALID_TARGET_NAME", {target: inTarget, name: name}),
                                                          5000, "Warning", "tc");
                    return wm.onidle(this, function() {
@@ -2134,9 +2149,10 @@ Studio.extend({
     },
     getPreviewWindowOptions: function() {
         var invert = wm.deviceType != "desktop" && this.landscapeToggleButton.clicked;
+        var dimensions = studio.deviceSizeSelect.getDataValue();
 
-    var width = studio.deviceSizeSelect.getDataValue()[invert ? "height" : "width"];
-    var height= studio.deviceSizeSelect.getDataValue()[invert ? "width" : "height"]
+    var width = dimensions ? dimensions[invert ? "height" : "width"] : 700;
+    var height= dimensions ? dimensions[invert ? "width" : "height"] : 1000;
     var scrollbars = "scrollbars=" + (studio.deviceSizeSelect.getDataValue().deviceType == "desktop" ? 1 : 0);
     var widthStr = width.match(/px/) ? ",width=" + width.replace(/px/,"") : ",width=1000";
     var heightStr = height.match(/px/) ? ",height=" + height.replace(/px/,"") : ",height=700";

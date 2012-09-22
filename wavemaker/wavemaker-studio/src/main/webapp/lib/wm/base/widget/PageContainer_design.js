@@ -18,291 +18,299 @@ dojo.require("wm.base.components.Property_design");
 
 // design only
 wm.PageContainer.extend({
-        themeable: false,
-	scrim: true,
-	_isBindSource: true,
+    themeable: false,
+    scrim: true,
+    _isBindSource: true,
     createOpenPageButton: function() {
         if (this.openPageButton) {
             dojo.destroy(this.openPageButton);
             dojo.disconnect(this.openPageButtonConnect);
         }
-	var openPageButton = this.openPageButton = document.createElement("div");
-                
-	openPageButton.className = "openPageContainerDesignWrapperButton" + ((this.pageName) ? " hasPageName" : ""); 
-	openPageButton.innerHTML = (this.pageName) ? studio.getDictionaryItem("wm.PageContainer.OPEN_PAGE") : studio.getDictionaryItem("wm.PageContainer.NEW_PAGE");
-	this.designWrapper.domNode.appendChild(openPageButton);	
-	this._designerOpenPageButton = openPageButton;
-	this.openPageButtonConnect = dojo.connect(openPageButton, "onclick", this, function() {
+        var openPageButton = this.openPageButton = document.createElement("div");
+
+        openPageButton.className = "openPageContainerDesignWrapperButton" + ((this.pageName) ? " hasPageName" : "");
+        openPageButton.innerHTML = (this.pageName) ? studio.getDictionaryItem("wm.PageContainer.OPEN_PAGE") : studio.getDictionaryItem("wm.PageContainer.NEW_PAGE");
+        this.designWrapper.domNode.appendChild(openPageButton);
+        this._designerOpenPageButton = openPageButton;
+        this.openPageButtonConnect = dojo.connect(openPageButton, "onclick", this, function() {
             if (this.pageName) {
-		    var warnPage = studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {newPage: this.pageName, oldPage: studio.project.pageName});
-		    studio.confirmPageChange(warnPage, this.pageName, 
-					     /* onSave */
-					     dojo.hitch(this, function(noChanges) {
-						 studio.project.saveProject(false, dojo.hitch(this, function() {
-						     studio.project.openPage(this.pageName);
-						 }));
-					     }),
-					     /* onDontSave */
-					     dojo.hitch(this, function() {
-						     studio.project.openPage(this.pageName);
-					     }),
-					     null, /* onCance */
-					     !studio.isPageDirty() /* skip save */
-					     );
+                var warnPage = studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {
+                    newPage: this.pageName,
+                    oldPage: studio.project.pageName
+                });
+                studio.confirmPageChange(warnPage, this.pageName, /* onSave */
+                dojo.hitch(this, function(noChanges) {
+                    studio.project.saveProject(false, dojo.hitch(this, function() {
+                        studio.project.openPage(this.pageName);
+                    }));
+                }), /* onDontSave */
+                dojo.hitch(this, function() {
+                    studio.project.openPage(this.pageName);
+                }), null, /* onCance */ !studio.isPageDirty() /* skip save */ );
 
-/*
+                /*
 
-		    app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), false,
-				dojo.hitch(this,function() {
-				    this.connect(studio, "saveProjectComplete", this, function() {				
-					studio.project.openPage(this.pageName);
-				    });
-				    studio.saveAll(studio.project);
-				}),
-				dojo.hitch(this, function() {
-					studio.project.openPage(this.pageName);
-				}));
-				*/
+            app.confirm(studio.getDictionaryItem("wm.PageContainer.CONFIRM_SAVE_CHANGES"), false,
+                dojo.hitch(this,function() {
+                    this.connect(studio, "saveProjectComplete", this, function() {
+                    studio.project.openPage(this.pageName);
+                    });
+                    studio.saveAll(studio.project);
+                }),
+                dojo.hitch(this, function() {
+                    studio.project.openPage(this.pageName);
+                }));
+                */
             } else {
                 this.createNewPage();
             }
-	});
+        });
 
     },
 
     createNewPage: function(optionalInPageType) {
-	var pages = studio.project.getPageList();
-	var l = {};
-	dojo.forEach(pages, function(p) {
-	    l[p] = true;
-	});
-        studio.promptForName("page", wm.findUniqueName("Page", [l]), pages,
-                             dojo.hitch(this, function(n) {
-				 n = wm.capitalize(n);
-				 if (this.owner instanceof wm.PageDialog)
-				     this.owner[optionalInPageType || "pageName"] = n;
-				 else
-				     this[optionalInPageType || "pageName"] = n;
+        var pages = studio.project.getPageList();
+        var l = {};
+        dojo.forEach(pages, function(p) {
+            l[p] = true;
+        });
+        studio.promptForName("page", wm.findUniqueName("Page", [l]), pages, dojo.hitch(this, function(n) {
+            n = wm.capitalize(n);
+            if (this.owner instanceof wm.PageDialog) this.owner[optionalInPageType || "pageName"] = n;
+            else this[optionalInPageType || "pageName"] = n;
 
-				 var onSuccess = function() {
-				     switch (optionalInPageType) {
-					     case "phonePageName":
-						 studio.phoneToggleButton.click();
-						 break;
-					     case "tabletPageName":
-						 studio.tabletToggleButton.click();
-						 break;
-					     default:
-						 studio.desktopToggleButton.click();
-						 break;
-					     }
-				 };
-				 studio.confirmSaveDialog.page.setup(
-				     studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {oldPage: studio.project.pageName, newPage: this[optionalInPageType || "pageName"]}),
-				     /* onSave */
-				     dojo.hitch(this, function() {
-					 studio.project.saveProject(false, dojo.hitch(this, function() {
-					     studio.project.newPage(n);
-					     onSuccess();
-					 }));
-				     }),
-				     /* onDontSave */
-				     dojo.hitch(this, function() {
-					 studio.project.newPage(n);
-					 onSuccess();
-				     }),
-				     null, /* onCancel */
-				     !studio.isPageDirty()); /* skip save */
-			     }));
+            var onSuccess = function() {
+                    switch (optionalInPageType) {
+                        case "phonePageName":
+                            studio.phoneToggleButton.click();
+                            break;
+                        case "tabletPageName":
+                            studio.tabletToggleButton.click();
+                            break;
+                        default:
+                            studio.desktopToggleButton.click();
+                            break;
+                    }
+                };
+            studio.confirmSaveDialog.page.setup(
+            studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {
+                oldPage: studio.project.pageName,
+                newPage: this[optionalInPageType || "pageName"]
+            }), /* onSave */
+            dojo.hitch(this, function() {
+                studio.project.saveProject(false, dojo.hitch(this, function() {
+                    studio.project.newPage(n);
+                    onSuccess();
+                }));
+            }), /* onDontSave */
+            dojo.hitch(this, function() {
+                studio.project.newPage(n);
+                onSuccess();
+            }), null, /* onCancel */ !studio.isPageDirty()); /* skip save */
+        }));
     },
-	designCreate: function() {
-		this.inherited(arguments);
-		if (this.designWrapper)
-			dojo.addClass(this.designWrapper.domNode, "wmchrome-wrapper");
-	},
+    designCreate: function() {
+        this.inherited(arguments);
+        if (this.designWrapper) dojo.addClass(this.designWrapper.domNode, "wmchrome-wrapper");
+    },
     set_pageName: function(inName) {
-	if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    this.createNewPage("");
-	} else {
-	    this.setPageName(inName);
-	    studio.reinspect(true); // update the pagecontainer properties
-	}
+        if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+            this.createNewPage("");
+        } else {
+            this.setPageName(inName);
+            studio.reinspect(true); // update the pagecontainer properties
+        }
     },
     set_tabletPageName: function(inName) {
-	if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    this.createNewPage("tabletPageName");
-	} else {
-	    this.setPageName(inName, "tabletPageName");
-	    studio.reinspect(true); // update the pagecontainer properties
-	}
+        if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+            this.createNewPage("tabletPageName");
+        } else {
+            this.setPageName(inName, "tabletPageName");
+            studio.reinspect(true); // update the pagecontainer properties
+        }
     },
     set_phonePageName: function(inName) {
-	if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    this.createNewPage("phonePageName");
-	} else {
-	    this.setPageName(inName, "phonePageName");
-	    studio.reinspect(true); // update the pagecontainer properties
-	}
+        if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+            this.createNewPage("phonePageName");
+        } else {
+            this.setPageName(inName, "phonePageName");
+            studio.reinspect(true); // update the pagecontainer properties
+        }
     },
-	writeChildren: function() {
-		return [];
-	},
-	// write only binding.
-	writeComponents: function(inIndent) { /* Remove invalid bindings; typically caused by a wm.Property having been renamed or deleted */
-		var props = this.listProperties();
-		for (var propName in this.components.binding.wires) {
-			var componentName = propName.replace(/\..*$/, "");
-			if (!props[propName] && !props[componentName] && !this.subpageProplist[componentName]) {
-				this.components.binding.removeWire(propName);
-			}
-		}
+    writeChildren: function() {
+        return [];
+    },
+    // write only binding.
+    writeComponents: function(inIndent) { /* Remove invalid bindings; typically caused by a wm.Property having been renamed or deleted */
+        var props = this.listProperties();
+        for (var propName in this.components.binding.wires) {
+            var componentName = propName.replace(/\..*$/, "");
+            if (!props[propName] && !props[componentName] && !this.subpageProplist[componentName]) {
+                this.components.binding.removeWire(propName);
+            }
+        }
 
 
-		var
-		s = [];
-		c = this.components.binding.write(inIndent);
-		if (c) s.push(c);
-		return s;
-	},
-	
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	    if (this.page && this.subpageProplist[inName]) {
-		try {
-		    var pid = this.page[inName].property;
-		    var componentName = pid.replace(/\..*?$/,"");
-		    var c = this.page.getValueById(componentName);
-		    var editor =  c.makePropEdit(pid.replace(/^.*\./,""), inValue, inEditorProps);
-		    return editor;
-/* TODO: PROPINSPECTOR CHANGE: Need to fix this
-		    if (typeof editor == "string") 
-			return editor.replace(/studio_propinspect_.*?"/, "studio_propinspect_" + inName + '"');
-		    else {
-		    / * Use the prop editor that was geneated but update the property name and component to point to this * /
-			editor.name = inName;
-			editor.component = this;
-			return editor;
-		}*/
-		} catch(e) {}
-	    }		
-	    return this.inherited(arguments);
-	},
+        var
+        s = [];
+        c = this.components.binding.write(inIndent);
+        if (c) s.push(c);
+        return s;
+    },
 
-/* TODO: PROPINSPECTOR CHANGE: Need to fix this */
+    makePropEdit: function(inName, inValue, inEditorProps) {
+        if (this.page && this.subpageProplist[inName]) {
+            try {
+                var pid = this.page[inName].property;
+                var componentName = pid.replace(/\..*?$/, "");
+                var c = this.page.getValueById(componentName);
+                var editor = c.makePropEdit(pid.replace(/^.*\./, ""), inValue, inEditorProps);
+                return editor;
+                /* TODO: PROPINSPECTOR CHANGE: Need to fix this
+            if (typeof editor == "string")
+            return editor.replace(/studio_propinspect_.*?"/, "studio_propinspect_" + inName + '"');
+            else {
+            / * Use the prop editor that was geneated but update the property name and component to point to this * /
+            editor.name = inName;
+            editor.component = this;
+            return editor;
+        }*/
+            } catch (e) {}
+        }
+        return this.inherited(arguments);
+    },
+
+    /* TODO: PROPINSPECTOR CHANGE: Need to fix this */
     editProp: function(inName, inValue) {
-	if (this.page && this.subpageProplist[inName]) {
-	    try {
-		var pid = this.page[inName].property;
-		var componentName = pid.replace(/\..*?$/,"");
-		var c = this.page.getValueById(componentName);	    
-		c.editProp(pid.replace(/^.*\./,""), inValue);
-	    } catch(e) {return;}
-	} else {
-	    return this.inherited(arguments);
-	}
+        if (this.page && this.subpageProplist[inName]) {
+            try {
+                var pid = this.page[inName].property;
+                var componentName = pid.replace(/\..*?$/, "");
+                var c = this.page.getValueById(componentName);
+                c.editProp(pid.replace(/^.*\./, ""), inValue);
+            } catch (e) {
+                return;
+            }
+        } else {
+            return this.inherited(arguments);
+        }
     },
-	afterPaletteDrop: function() {
-		// change default so deferLoad is false
-		// this.inherited(arguments);
-		this.deferLoad = true;
-	},
+    afterPaletteDrop: function() {
+        // change default so deferLoad is false
+        // this.inherited(arguments);
+        this.deferLoad = true;
+    },
     createDesignContextMenu: function(menuObj) {
-	var pagelist = wm.getPageList(this.currentPageOK);
-	if (pagelist.length) {
-	    var data = {label: "Set PageName",
-			iconClass: "Studio_silkIconImageList_30",
-			children: []};
+        var pagelist = wm.getPageList(this.currentPageOK);
+        if (pagelist.length) {
+            var data = {
+                label: "Set PageName",
+                iconClass: "Studio_silkIconImageList_30",
+                children: []
+            };
 
-	    for (var i = 0; i < pagelist.length; i++) {
-		data.children.push(this.addPageToContextMenu(pagelist[i]));
-	    }
-	    var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
-	}
+            for (var i = 0; i < pagelist.length; i++) {
+                data.children.push(this.addPageToContextMenu(pagelist[i]));
+            }
+            var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
+        }
     },
     addPageToContextMenu: function(pagename) {
-	return 	{label:   pagename,
-		 onClick: dojo.hitch(this, function() {
-		     this.setPageName(pagename);
-		 })
-		};
+        return {
+            label: pagename,
+            onClick: dojo.hitch(this, function() {
+                this.setPageName(pagename);
+            })
+        };
     },
     isEventProp: function(n) {
-	if (this.subpageEventlist != null && n in this.subpageEventlist)
-	    return true;
-	return this.inherited(arguments);
+        if (this.subpageEventlist != null && n in this.subpageEventlist) return true;
+        return this.inherited(arguments);
     },
     listProperties: function() {
-	var props = this.inherited(arguments);
-	if (!this.page)
-	    return props;
-	props = dojo.clone(props);
-	var newprops = wm.listMatchingComponents([this.page], function(c) {return c instanceof wm.Property;});
-	this.subpageProplist = {};
-	this.subpageEventlist = {};
-	this.subpageMethodlist = {};
-	dojo.forEach(newprops, function(p,i){
-	    /* Don't clobber any existing properties */
-	    if (props[p.name] === undefined || !props[p.name].group) {
-		if (p.isEvent) {
-		    this.subpageEventlist[p.name] = p.property;//this.eventBindings[p.name];
-/*
-		    if (this[p.name] === undefined) {
-			this[p.name] = function(){};
-		    }
-		    */
-		
-		} else {
-		    this.subpageProplist[p.name] = p.property;
-		}
-		props[p.name] = {
-		    group: "subpageprops",
-		    name: p.name,
-		    type: p.type || "string",
-		    bindTarget: p.bindTarget,
-		    bindSource: p.bindSource,
-		    isEvent: p.isEvent,
-		    readonly: p.readonly,
-		    propertyId: p.property
-		};
-		var propertyPath = p.property;
-		if (propertyPath.indexOf(".") != -1) {
-		    var componentId = propertyPath.substring(0, propertyPath.lastIndexOf("."));		
-		    var propertyName = propertyPath.substring(propertyPath.lastIndexOf(".")+1);
-		    var component = p.owner.getValueById(componentId);		    
-		    if (component && component instanceof wm.Component && propertyName) {
-			var propDef = component.listProperties()[propertyName];
-			if (propDef.method) {
-				this.subpageMethodlist[p.name] = p.property;
-				delete this.subpageProplist[p.name];
-			}
-			dojo.mixin(props[p.name], {editor: propDef.editor,
-						   options: propDef.options,
-						   operation: propDef.operation,
-						   ignore: propDef.ignore, // these three used for bind-only properties
-						   hidden: propDef.hidden,
-						   writeonly: propDef.writeonly,
-						   method: propDef.method,
-						   editorProps: propDef.editorProps});
-		    }
-		    if (propDef.operation) {
-		    	if (typeof propDef.operation == "string") {		    				    		
-		    		this[p.name] = function() {
-		    			component[propDef.operation]();
-		    		};
-		    	} else {
-		    		this[p.name] = function() {
-		    			component[propertyName]();
-		    		};
-		    	}
-		    	props[p.name].operation = 1;
-		    }
-		}
+        var props = this.inherited(arguments);
+        if (!this.page) return props;
+        props = dojo.clone(props);
+        var newprops = wm.listMatchingComponents([this.page], function(c) {
+            return c instanceof wm.Property;
+        });
+        this.subpageProplist = {};
+        this.subpageEventlist = {};
+        this.subpageMethodlist = {};
+        dojo.forEach(newprops, function(p, i) { /* Don't clobber any existing properties */
+            var propDef;
+            if (props[p.name] === undefined || !props[p.name].group) {
+                if (p.isEvent) {
+                    this.subpageEventlist[p.name] = p.property; //this.eventBindings[p.name];
+                    /*
+            if (this[p.name] === undefined) {
+            this[p.name] = function(){};
+            }
+            */
 
-	    }
-	},this);
+                } else {
+                    this.subpageProplist[p.name] = p.property;
+                }
+                props[p.name] = {
+                    group: "subpageprops",
+                    name: p.name,
+                    type: p.type || "string",
+                    bindTarget: p.bindTarget,
+                    bindSource: p.bindSource,
+                    isEvent: p.isEvent,
+                    readonly: p.readonly,
+                    propertyId: p.property
+                };
+                var propertyPath = p.property;
+                if (propertyPath.indexOf(".") != -1) {
+                    var componentId = propertyPath.substring(0, propertyPath.lastIndexOf("."));
+                    var propertyName = propertyPath.substring(propertyPath.lastIndexOf(".") + 1);
+                    var component = p.owner.getValueById(componentId);
+                    if (component && component instanceof wm.Component && propertyName) {
+                         propDef = dojo.clone(component.listProperties()[propertyName]);
 
-	return props;
+                        if (!propDef) {
+                            return;
+                        }
+
+                        if (propDef.method) {
+                            this.subpageMethodlist[p.name] = p.property;
+                            delete this.subpageProplist[p.name];
+                        }
+                        dojo.mixin(props[p.name], {
+                            editor: propDef.editor,
+                            options: propDef.options,
+                            operation: propDef.operation,
+                            ignore: propDef.ignore,
+                            // these three used for bind-only properties
+                            hidden: propDef.hidden,
+                            writeonly: propDef.writeonly,
+                            method: propDef.method,
+                            editorProps: propDef.editorProps
+                        });
+                    }
+                    if (!propDef) {
+                        return;
+                    }
+
+                    if (props[p.name].operation) {
+                        if (typeof props[p.name].operation == "function") {
+                            // do nothing
+                            ;
+                        } else if (typeof props[p.name].operation == "string") {
+                            props[p.name].operation = dojo.hitch(component, propDef.operation);
+                        } else {
+                            props[p.name].operation = dojo.hitch(component, propertyName);
+                        }
+                    }
+                }
+
+            }
+        }, this);
+
+        return props;
     }
-})
+});
 
 wm.Object.extendSchema(wm.PageContainer, {
     manageURL: {ignore:0},

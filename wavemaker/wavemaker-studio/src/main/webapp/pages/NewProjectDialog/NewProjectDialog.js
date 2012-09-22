@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.declare("NewProjectDialog", wm.Page, {
     i18n: true,
@@ -21,24 +21,57 @@ dojo.declare("NewProjectDialog", wm.Page, {
 
         var templates = wm.fullTemplates;
         var templateList = [];
-        var i = 0; 
+        var i = 0;
 
-        var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.desktopTemplatesInsertPanel, owner: this, name: "templateRow" + i});
-        var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate", "Selected"]}, layoutKind: "top-to-bottom", parent: panel, owner: this, name: "templatepanel_" , margin: "4", border: "1", borderColor: "#888888", width: "112px", height: "120px"});
+        var panel = new wm.Panel({
+            width: "100%",
+            height: "128px",
+            layoutKind: "left-to-right",
+            parent: this.desktopTemplatesInsertPanel,
+            owner: this,
+            name: "templateRow" + i
+        });
+        var imgpanel = new wm.Panel({
+            _classes: {
+                domNode: ["SelectableTemplate", "Selected"]
+            },
+            layoutKind: "top-to-bottom",
+            parent: panel,
+            owner: this,
+            name: "templatepanel_",
+            margin: "4",
+            border: "1",
+            borderColor: "#888888",
+            width: "112px",
+            height: "120px"
+        });
         var firstimgpanel = imgpanel;
         this.noneTarget = imgpanel;
-        var img = new wm.Picture({width: "100%", height: "100px", parent: imgpanel, owner: this, name: "template"+ i });
+        var img = new wm.Picture({
+            width: "100%",
+            height: "100px",
+            parent: imgpanel,
+            owner: this,
+            name: "template" + i
+        });
         img.domNode.style.backgroundImage = "none";
 
-        var label = new wm.Label({"width": "100%", height: "20px", parent: imgpanel, owner: this, name: "templatelabel" + i, caption: "None"});
-        i++;        
+        var label = new wm.Label({
+            "width": "100%",
+            height: "20px",
+            parent: imgpanel,
+            owner: this,
+            name: "templatelabel" + i,
+            caption: "None"
+        });
+        i++;
         var groupNames = [undefined];
         wm.forEachProperty(templates, function(template, templateName) {
             if (dojo.indexOf(groupNames, template.templateGroup) == -1) {
                 groupNames.push(template.templateGroup);
             }
         });
-        dojo.forEach(groupNames, function(groupName) {            
+        dojo.forEach(groupNames, function(groupName) {
             this.addTemplates(templates, panel, groupName, i);
             i = 0;
         }, this);
@@ -55,43 +88,78 @@ dojo.declare("NewProjectDialog", wm.Page, {
             if (!templateGroup && !template.templateGroup || templateGroup == template.templateGroup) {
                 var layer = !templateGroup ? this.desktopTemplatesInsertLayer : this.tabs.getLayerByCaption(templateGroup);
                 if (!layer) {
-                    layer = this.tabs.addLayer(templateGroup,true);
+                    layer = this.tabs.addLayer(templateGroup, true);
                     layer.setPadding("8");
-                    new wm.Panel({owner: this,
-                                                parent: layer,
-                                                width: "100%",
-                                                height: "100%",
-                                                horizontalAlign: "left",
-                                                verticalAlign: "top"});
+                    new wm.Panel({
+                        owner: this,
+                        parent: layer,
+                        width: "100%",
+                        height: "100%",
+                        horizontalAlign: "left",
+                        verticalAlign: "top"
+                    });
                 }
                 var parent = layer.c$[0];
                 if (i % 3 === 0) {
-                    panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: parent, owner: this, name: "templateRow" + layer.name + i});
+                    panel = new wm.Panel({
+                        width: "100%",
+                        height: "128px",
+                        layoutKind: "left-to-right",
+                        parent: parent,
+                        owner: this,
+                        name: "templateRow" + layer.name + i
+                    });
                 }
-                var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, layoutKind: "top-to-bottom", parent: panel, owner: this, name: "templatepanel_" + layer.name + templateKey, margin: "4", border: "1", borderColor: "#888888", width: "112px", height: "120px"});
-                var img = new wm.Picture({width: "100%", height: "100px", parent: imgpanel, owner: this, name: "template"+ layer.name + i });
+                var imgpanel = new wm.Panel({
+                    _classes: {
+                        domNode: ["SelectableTemplate"]
+                    },
+                    layoutKind: "top-to-bottom",
+                    parent: panel,
+                    owner: this,
+                    name: "templatepanel_" + layer.name + templateKey,
+                    margin: "4",
+                    border: "1",
+                    borderColor: "#888888",
+                    width: "112px",
+                    height: "120px"
+                });
+                var img = new wm.Picture({
+                    width: "100%",
+                    height: "100px",
+                    parent: imgpanel,
+                    owner: this,
+                    name: "template" + layer.name + i
+                });
                 if (template.thumbnail) {
                     img.domNode.style.backgroundImage = "url(" + template.thumbnail + ")";
                 }
-                var label = new wm.Label({"width": "100%", height: "20px", parent: imgpanel, owner: this, name: "templatelabel" + layer.name + i, caption: template.displayName || templateKey});
+                var label = new wm.Label({
+                    "width": "100%",
+                    height: "20px",
+                    parent: imgpanel,
+                    owner: this,
+                    name: "templatelabel" + layer.name + i,
+                    caption: template.displayName || templateKey
+                });
                 i++;
             }
         }
     },
     reset: function() {
         var projectNames = {};
-    var projects = studio.startPageDialog.page.projectList;
-    var l={};
-    dojo.forEach(projects, dojo.hitch(this, function(p) {
-        projectNames[p] = true;
+        var projects = studio.startPageDialog.page.projectList;
+        var l = {};
+        dojo.forEach(projects, dojo.hitch(this, function(p) {
+            projectNames[p] = true;
         }));
-    var newname = wm.findUniqueName("Project", [projectNames]);
-    this.projectName.setDataValue(newname);
+        var newname = wm.findUniqueName("Project", [projectNames]);
+        this.projectName.setDataValue(newname);
     },
     clearSelection: function() {
         if (this.selectedTemplate) {
             this.selectedTemplate.setBorderColor("#888888");
-            this.selectedTemplate.setBorder("1");       
+            this.selectedTemplate.setBorder("1");
             dojo.removeClass(this.selectedTemplate.domNode, "Selected");
             this.selectedTemplate = null;
         }
@@ -128,23 +196,28 @@ dojo.declare("NewProjectDialog", wm.Page, {
         try {
 
             var projectNames = {};
-        var projects = studio.project.getProjectList();
-        var l={};
-        dojo.forEach(projects, dojo.hitch(this, function(p) {
-            projectNames[p] = true;
+            var projects = studio.project.getProjectList();
+            var l = {};
+            dojo.forEach(projects, dojo.hitch(this, function(p) {
+                projectNames[p.toLowerCase()] = true;
             }));
 
 
-            if (projectNames[this.projectName.getDataValue()]) {
-                var newname = wm.findUniqueName(this.projectName.getDataValue(), [projectNames]);
-                app.toastDialog.showToast(this.getDictionaryItem("TOAST_NAME_TAKEN", {oldName: this.projectName.getDataValue(), newName: newname}), 8000, "Warning", "tc");
+            if (projectNames[this.projectName.getDataValue().toLowerCase()]) {
+                var newname = wm.findUniqueName(this.projectName.getDataValue().toLowerCase(), [projectNames]);
+                newname = wm.capitalize(newname);
+                app.createToastDialog();
+                app.toastDialog.showToast(this.getDictionaryItem("TOAST_NAME_TAKEN", {
+                    oldName: this.projectName.getDataValue(),
+                    newName: newname
+                }), 8000, "Warning", "tc");
                 this.projectName.setDataValue(newname);
             } else {
                 this._onOkClick();
                 this.owner.owner.dismiss();
             }
 
-        } catch(e) {}
+        } catch (e) {}
     },
     _onOkClick: function() {
         var templateName = this.selectedTemplate.name;

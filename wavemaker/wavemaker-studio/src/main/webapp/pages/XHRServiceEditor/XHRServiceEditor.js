@@ -61,6 +61,9 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         });
         this.fixedHeadersVar.setData(headersArray);
         this.toolbar.show();
+        this.updateUrl();
+        this.isDirty = false;
+        studio.updateServicesDirtyTabIndicators();
     },
     onDeleteClick: function(inSender) {
         wm.XhrService.prototype.removeOperation(this.editService.name);
@@ -160,8 +163,27 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         c.initType();
         dojo.publish("wmtypes-changed");
         studio.refreshServiceTree();
-        app.toastSuccess("You can access the new service using a wm.ServiceVariable, set the service to \"xhrService\" and the operation to \"" + c.name + "\"");
-        this.dismiss();
+
+        if (!this._inStudioSave) {
+            app.toastSuccess("You can access the new service using a wm.ServiceVariable, set the service to \"xhrService\" and the operation to \"" + c.name + "\"");
+            this.dismiss();
+            studio.project.save();
+        }
+    },
+    updateUrl: function() {
+        var text = this.serviceUrl.getDataValue();
+        var queryString = "";
+        this.inputsVar.forEach(function(item) {
+            if (item.getValue("transmitType") == "path") {
+                text = text.replace(/\/$/,"");
+                text += "/" + item.getValue("name") + "/somevalue";
+            } else if (item.getValue("transmitType") == "queryString") {
+                if (queryString) queryString += "&";
+                queryString += item.getValue("name") + "=somevalue";
+            }
+        });
+        if (queryString) text += "?" + queryString;
+        this.actualUrl.setDataValue(text);
     },
     addInputRow: function() {
         this.inputsGrid.addRow({
@@ -169,7 +191,6 @@ dojo.declare("XHRServiceEditor", wm.Page, {
             transmitType: "queryString",
             name: ""
         });
-
     },
     cancelClick: function() {
         this.dismiss();
@@ -186,5 +207,32 @@ dojo.declare("XHRServiceEditor", wm.Page, {
             }
         }
     },
+    changed: function(inSender,inDisplayValue,inDataValue,inSetByCode) {
+        if (inSender instanceof wm.AbstractEditor && inSetByCode) return;
+        this.isDirty = true;
+        var layer = this.owner.parent;
+        if (layer instanceof wm.Layer) {
+            dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
+            studio.updateServicesDirtyTabIndicators();
+        }
+    },
+
+    /* Accessed from studio */
+    getDirty: function() {
+        return this.isDirty;
+    },
+    getProgressIncrement: function() {
+        return 0;
+    },
+    /* Called by studio; project already saved by the call that does this */
+    save: function() {
+        this._inStudioSave = true;
+        try {
+            this.okButtonClick();
+        } catch(e) {}
+        delete this._inStudioSave;
+        this.saveComplete();
+    },
+    saveComplete: function() {},// exists solely so studio can connect
     _end: 0
 });

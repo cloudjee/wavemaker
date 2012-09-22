@@ -425,6 +425,26 @@ dojo.declare("wm.Layers", wm.Container, {
             this.client.removeControl(inControl);
         }
     },
+    insertControl: function(inControl, inIndex) {
+        if (inControl instanceof wm.Layer) {
+            this.addControl(inControl);
+            this.moveLayerIndex(inControl, inIndex);
+        } else {
+            this.inherited(arguments);
+        }
+
+    },
+    moveControl: function(inControl, inIndex) {
+        if (inControl instanceof wm.Layer) {
+            if (dojo.indexOf(this.layers, inControl) != -1) {
+                this.moveLayerIndex(inControl, inIndex);
+            } else {
+
+            }
+        } else {
+            this.inherited(arguments);
+        }
+    },
     isWidgetTypeAllowed: function(inChildType) {
         return inChildType == "wm.Layer";
     },

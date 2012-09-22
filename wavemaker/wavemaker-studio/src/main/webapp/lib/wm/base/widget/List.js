@@ -89,6 +89,7 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {
+    scrollToTopOnDataChange: false,
     _regenerateOnDeviceChange: 1,
     _scrollTop: 0,
     styleAsGrid: true,
@@ -615,6 +616,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                      if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
                      this._typeChangedConnect = this.connect(inDataSet, "typeChanged", this, function() {
                          this.updateColumnData(true); // if the type changes for this.variable, reapply this variable's new type info
+
                          this._render();
                      });
                     if (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type) {
@@ -798,6 +800,11 @@ dojo.declare("wm.List", wm.VirtualList, {
             var selectedData = this.selectedItem.getData();
         }
         this.clear(true);
+        if (this.scrollToTopOnDataChange) {
+            this._inScroll = true;
+            this.setScrollTop(0);
+            delete this._inScroll;
+        }
         this._data = inData;
         if (!this.dataFields) this._setDataFields();
         this.updateBuilder();
@@ -811,7 +818,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
         this._scrollDirection = "down";
         if (this.renderVisibleRowsOnly && !this._isDesignLoaded) {
-            if (!this.isAncestorHidden() && !this._loading) {
+            if (!this.isAncestorHidden() && this.getListNodeHeight() > 0 && !this._loading) {
                 this.scrollDownAddItems(0);
                 this.avgHeight = this.getAverageItemHeight();
                 this.updateBottomSpacerHeight();
@@ -1085,7 +1092,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     getAverageItemHeight: function() {
-        return this.avgHeight;
+        return this.avgHeight || 20;
     },
     blockScrolling: function() {
         this.listNodeWrapper.scrollTop = 0;
@@ -1759,7 +1766,7 @@ wm.List.extend({
         if (!formatterProps.useLocalTime) {
             /* See WM-4490 to understand this calculation */
             var adjustSixHours = dateType == "date" ? 360 : 0;
-            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes + 60*wm.timezoneOffset + adjustSixHours);
+            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes() + 60*wm.timezoneOffset + adjustSixHours);
         }
         var constraints = {
             fullYear: true,
@@ -1890,6 +1897,11 @@ wm.List.extend({
     /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
     selectByQuery: function(inQuery) {
         if (!this.dataSet) return;
+
+        if (!inQuery) {
+            this.deselectAll();
+            return;
+        }
 
         /* Step 1: Find all matching items from the dataset */
         var items = this.dataSet.query(inQuery);

@@ -28,20 +28,20 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     button1Close: true,
     button2Close: true,
     postInit: function() {
-        this.widgets_data.genericInfoPanel[3].textInput = ["wm.FileUpload", 
+        this.widgets_data.genericInfoPanel[3].textInput = ["wm.FileUpload",
 							   {  caption: "",
                                                               uploadButton: false,
 							      padding: "0,20,0,20",
 							      width: "100%",
 							      height: "28px",
-							      captionSize: "100px",						   
+							      captionSize: "100px",
 							      captionAlign: "left",
 							      captionPosition: "left",
 							      uploadButtonPosition: "right",
 							      uploadButtonWidth: "100px",
 							      uploadButtonHeight: "30px",
 							      service: "",
-							      operation: ""}, 
+							      operation: ""},
 							   {  onUploadSuccess: "importClickCallback",
 							      onUploadError: "importClickError",
 							      onBegin:       "startImportClick"}, {}];
@@ -53,7 +53,7 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     startImportClick: function(inSender) {
         if (window["studio"])
 	    studio.beginWait("Importing File...");
-    },			  
+    },
     importClickCallback: function(inSource, inResponse) {
         if (window["studio"])
 	    studio.endWait();
@@ -62,6 +62,7 @@ dojo.declare("wm.FileUploadDialog", wm.GenericDialog, {
     importClickError: function(inSource,inError) {
         if (window["studio"])
 	    studio.endWait();
+        app.createToastDialog();
         app.toastDialog.showToast("Import failed!", 3000, "Warning");
 	// any notification to user must be done by the component that requested the file
     },

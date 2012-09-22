@@ -29,8 +29,8 @@ wm.Object.extendSchema(wm.VirtualList, {
 
 
     /* Behaviors */
-    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
-
+    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 200, advanced:1, editor: "wm.prop.FieldList"},
+    scrollToTopOnDataChange:{group: "widgetName", subgroup: "behavior", order: 201, advanced:1, type: "boolean", bindTarget:1},
 
     /* Ignored Group */
     box: { ignore: 1 },
@@ -58,7 +58,8 @@ wm.Object.extendSchema(wm.VirtualList, {
 // design-time only
 wm.Object.extendSchema(wm.List, {
     /* widgetName group; data subgroup */
-    editColumns:       {group: "widgetName", subgroup: "layout", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    columns:           {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: "editColumns", nonlocalizable: true},
+
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
     dataFields:        {group: "widgetName", subgroup: "data", order: 50, advanced:1},
     columnWidths:      {group: "widgetName", subgroup: "layout", order: 51, advanced:1},
@@ -89,7 +90,6 @@ wm.Object.extendSchema(wm.List, {
     updateNow: {group: "operation", operation:1},
 
     /* Hidden/ignored group */
-    columns: {hidden:1},
     nextRowId: {ignore:1},
     avgHeight: {ignore:1},
     isRowSelected: {ignore:1},

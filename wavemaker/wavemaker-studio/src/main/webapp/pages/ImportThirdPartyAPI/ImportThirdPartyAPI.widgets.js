@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 ImportThirdPartyAPI.widgets = {
     imageDialog: ["wm.DesignableDialog", {_classes: {domNode:["studiodialog"]}, width: "350px", height: "500px", title: "Run as Administrator", modal: false},{}, {
@@ -26,7 +26,8 @@ ImportThirdPartyAPI.widgets = {
 		    adminSpacer: ["wm.Spacer", {height:"100%"}],
 		    panel1: ["wm.Panel", {layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left", width:"100%",height:"50px"}, {}, {
 			label: ["wm.Label", {singleLine: false, width: "100%", autoSizeHeight: true, height: "100%", caption: "If you have a zip file for extending Studio's behaviors, upload it here"}],
-			fileUploader: ["wm.DojoFileUpload", {  width: "80px",
+			fileUploader: ["wm.DojoFileUpload", {
+                                   width: "80px",
 							       height: "35px",
 							       margin: "2",
 							       useList: false,

@@ -26,19 +26,3 @@
 }
 
 
-
-.HandleRequiredJars .wmbutton:hover,
-.HandleRequiredJars .wmDojoFileUpload-button:hover {
-    background-color: silver !important;
-    background-image:url(images/wmbutton_bg.png) !important;
-}
-
-
-.HandleRequiredJars .wmDojoFileUpload-button {
-    pointer: cursor;
-	background-image:url(images/dark_btn_bg.gif);
-	background-repeat:repeat-x;
-	color: #FFF;
-	font-weight:bold;
-	border: solid 1px #353a44;
-}
