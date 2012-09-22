@@ -79,7 +79,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 
 .DeleteBindButton {
     float: right;
-    width: 16px; 
+    width: 16px;
     height: 16px;
     cursor: pointer;
     border: solid 1px #aaa;
@@ -91,7 +91,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 
 /*
 .wminspector .wmbutton {
-	-moz-border-radius: 4px; 
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
         background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#707070));
@@ -298,7 +298,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 .wminspector-addevent {
     color: #FFF;
     font-weight: bold;
-    cursor: pointer;    
+    cursor: pointer;
     width: 16px;
     text-align: center;
 }
@@ -398,7 +398,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 	width: 96%;
 	padding: 0;
 
-	-moz-border-radius: 4px; 
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
         border: solid 2px #282828;
@@ -413,7 +413,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 .wminspector-prop-button:hover {
         background: -webkit-gradient(linear, left top, left bottom, from(#D0D0D0), to(#404040));
 	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');    
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');
         border: solid 1px #111111;
     padding-bottom: 1px;
 }
@@ -470,8 +470,8 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 	background-image: url(../../images/pi_ur.gif);
 }
 
-.Studio-inspectorLayers .wmtree-root-leaf, .Studio-inspectorLayers .wmtree-root-last-leaf, .Studio-inspectorLayers .wmtree-last-item { 
-	background-color: #fff; 
+.Studio-inspectorLayers .wmtree-root-leaf, .Studio-inspectorLayers .wmtree-root-last-leaf, .Studio-inspectorLayers .wmtree-last-item {
+	background-color: #fff;
 }
 */
 
@@ -496,4 +496,9 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 
 #studio_PIContents .wmhtml .wmSizeNode {
     width: 100%;
+}
+
+#app_DateTimePopup_ampm .toggleButtonDown {
+	background-color: #2B323D;
+	color: white;
 }
