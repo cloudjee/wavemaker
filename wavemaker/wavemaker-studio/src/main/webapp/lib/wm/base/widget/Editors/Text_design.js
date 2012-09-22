@@ -27,12 +27,25 @@ wm.Object.extendSchema(wm.ResizableEditor, {
     maxHeight:{type: "Number", group: "display", subgroup: "layout", order: 60, advanced: 1}
 });
 
+wm.ResizableEditor.extend({
+    set_maxHeight: function(newMax) {
+        if (newMax) {
+            if (newMax < this.minHeight) {
+                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
+                return;
+            } else if (newMax < this.getMinHeightProp()) {
+                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
+                return;
+            }
+        }
+        this.setMaxHeight(newMax);
+    }
+});
 
-    
 wm.Object.extendSchema(wm.Text, {
     /* DISPLAY GROUP */
-    //placeHolder: {group: "display", subgroup: "help"}, 
-    placeHolder: {group: "editor", subgroup: "help"}, 
+    //placeHolder: {group: "display", subgroup: "help"},
+    placeHolder: {group: "editor", subgroup: "help"},
 
     /* EDITOR GROUP */
     /* WidgetName subgroup */
@@ -48,7 +61,7 @@ wm.Object.extendSchema(wm.Text, {
     promptMessage: {group: "editor text", subgroup: "dojo tooltips", order: 10, advanced: 1},
     invalidMessage: {group: "editor text", subgroup: "dojo tooltips", order: 20, advanced: 1},
     tooltipDisplayTime: {group: "editor text", subgroup: "dojo tooltips", order: 30, advanced: 1},
-    
+
     /* Value display sugroup */
     password: {group: "widgetName", subgroup: "behavior", order: 5, doc: 1},
 
@@ -62,7 +75,7 @@ wm.Object.extendSchema(wm.Text, {
     setRegExp: {method:1},
     selectText: {method:1}
 
-    
+
 });
 
 
