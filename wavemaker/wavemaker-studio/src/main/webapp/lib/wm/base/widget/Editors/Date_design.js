@@ -48,6 +48,7 @@ wm.Object.extendSchema(wm.Time, {
     /* Editor group; display subgroup */
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
+    dataValue: {editor: "wm.Time"},
 
     /* Ignored group */
     use24Time: {hidden:1},
@@ -59,6 +60,7 @@ wm.Object.extendSchema(wm.Time, {
 
 
 wm.Object.extendSchema(wm.DateTime, {
+
     /* Editor group; behavior subgroup */
     editorType: {options: ["Date", "Time", "DateTime"]},
 
