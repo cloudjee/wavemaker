@@ -152,7 +152,7 @@ public class ServiceManager implements ApplicationContextAware {
 
         for (ServiceType st : this.serviceTypes) {
             if (st.getTypeName().equals(serviceType.getTypeName())) {
-                this.logger.warn("redefining ServiceType " + serviceType.getTypeName());
+                this.logger.info("redefining ServiceType " + serviceType.getTypeName());
                 return;
             }
         }
@@ -167,7 +167,7 @@ public class ServiceManager implements ApplicationContextAware {
             this.logger.info("Adding ServiceWire " + serviceWire);
             this.serviceWires.add(serviceWire);
         } else {
-            this.logger.warn("Attempt to re-add ServiceWire " + serviceWire);
+            this.logger.info("Attempt to re-add ServiceWire " + serviceWire);
             this.serviceWires.add(serviceWire);
         }
     }
