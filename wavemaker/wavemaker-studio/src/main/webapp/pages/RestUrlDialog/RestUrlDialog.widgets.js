@@ -29,7 +29,7 @@ RestUrlDialog.widgets = {
 			    authPanel: ["wm.Panel", {width: "250px", height: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "top-to-bottom"}, {}, {
 				basicAuthCheckbox: ["wm.Checkbox", {caption: "HTTP Basic Auth", displayValue: "0", width: "100%", captionSize: "100px"}, {onchange: "basicAuthCheckboxChange"}],
 				userIdInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, caption: "User Id", captionSize: "100px", width: "100%", layoutKind: "left-to-right"}],
-				passwordInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "100px", width: "100%", border: "0", caption: "Password"}]
+				passwordInput: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "100px", width: "100%", border: "0", caption: "Password","password":true}]
 			    }],
 			    contentTypePanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", padding: "0,0,0,10"}, {}, {
 				methodInput: ["wm.SelectMenu", {options: "GET,POST", caption: "Method", captionSize: "80px", width: "200px", dataValue: "GET", layoutKind: "left-to-right"}],
