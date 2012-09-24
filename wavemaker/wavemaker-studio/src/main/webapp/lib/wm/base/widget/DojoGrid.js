@@ -1580,7 +1580,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 formatFunc: formatFunc
             });
         }, this);
-
+        this.regenerateMobileColumn(this.columns);
     },
 
     // if the type changes, we need to adjust rather than regenerate our columns
@@ -1665,7 +1665,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             });
         }
         this.columns = newcolumns;
-
+        this.regenerateMobileColumn(this.columns);
         /*
     if (this.isDesignLoaded()) {
         if (!this.contextMenu) this.designCreate(); // special case from themedesigner

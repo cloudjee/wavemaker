@@ -115,6 +115,9 @@ wm.DojoGrid.extend({
     editColumns:function() {
     return this.showMenuDialog();
     },
+    regenerateMobileColumn: function(inColumns) {
+        return wm.List.prototype.regenerateMobileColumn(inColumns);
+    },
     updateNow: function() {
         /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
         if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);

@@ -64,6 +64,7 @@ dojo.declare("GridDesigner", wm.Page, {
                 columns[i].mobileColumn = false;
             }
         }
+        /* Only needed for upgraded projects from before we had PHONE COLUMN */
         var updateGrid = false;
         if (!hasPhoneColumn) {
             updateGrid = true;
@@ -93,6 +94,13 @@ dojo.declare("GridDesigner", wm.Page, {
     },
     regenerateMobileColumn: function() {
         if (!this.phoneColumn || this.phoneColumn.getValue("isCustomField")) return;
+        var data = this.columnsVar.getData();
+        wm.List.prototype.regenerateMobileColumn(data);
+
+        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
+        this.columnsVar.setData(data);
+        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
+/*
         var mobileExpr = "";
         var count = this.columnsVar.getCount();
 
@@ -135,8 +143,6 @@ dojo.declare("GridDesigner", wm.Page, {
                             break;
                         case 'wm_button_formatter':
                             value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
-/*                            var classList = formatProps.buttonclass ? formatProps.buttonclass  : "wmbutton";
-                            value = "<button class='" + classList + "' onclick=\'${runtimeId}[\"gridButtonClicked\"](event,\"" + column.field + "\",${rowId})\'>" ;*/
                             break;
                         }
                     }
@@ -150,10 +156,8 @@ dojo.declare("GridDesigner", wm.Page, {
                 }
             }
         }
+*/
 
-        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
-        this.phoneColumn.setValue("expression", mobileExpr);
-        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
     },
     getColumnByField: function(inName) {
         for (var i = 0; i < this.currentGrid.columns.length; i++) {
