@@ -24,16 +24,6 @@ public final class ConnectionUrl {
     public ConnectionUrl(String url) {
         this.url = url;
         this.rewrittenUrl = url;
-        if (this.isHsqldb()) {
-            ProjectManager projectManager = (ProjectManager) RuntimeAccess.getInstance().getSession().
-                            getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            LocalFolder hsqlDbRootFolder = (LocalFolder) projectManager.getCurrentProject().getWebAppRootFolder().getFolder("data");
-            try {
-                this.rewriteUrl(hsqlDbRootFolder.getLocalFile().getCanonicalPath());
-            } catch (IOException e) {
-                throw new WMRuntimeException(e);
-            }
-        }
     }
 
     public Properties rewriteProperties(Properties properties) {
