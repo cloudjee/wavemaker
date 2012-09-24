@@ -1313,8 +1313,9 @@ dojo.declare("wm.Application", wm.Component, {
     getDeviceSize: function() {
     return this.appRoot ? this.appRoot.deviceSize : "1000";
     },
+    /* Code from early in WM 6.5 mobile development that didn't make it to the end of WM 6.5:
     addMobileTab: function(inLayer, inCaption) {
-    /* Watch out for the case where _bottomDock was created when we had a wider display, but now we've switched to a phone UI due to orientation change and need a different sort of _bottomDock */
+    / * Watch out for the case where _bottomDock was created when we had a wider display, but now we've switched to a phone UI due to orientation change and need a different sort of _bottomDock * /
     if (this._bottomDock && this._bottomDock instanceof wm.ToggleButtonPanel == false) {
         this._bottomDock.destroy();
         delete this._bottomDock;
@@ -1362,7 +1363,7 @@ dojo.declare("wm.Application", wm.Component, {
     }
     this._bottomDock.setShowing(this._bottomDock.c$.length > 1);
     },
-
+*/
     addHistory: function(state, noBack) {
     if (this.history && !this._handlingBack) {
         try {
