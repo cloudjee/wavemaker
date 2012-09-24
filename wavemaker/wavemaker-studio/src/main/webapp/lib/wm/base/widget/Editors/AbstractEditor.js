@@ -650,15 +650,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     doOnchange: function() {
         if (this.editorChanged()) {
             var e = this.editor;
-            if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
-
-
-            this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
+            if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading()) {
+                this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
+            }
         }
     },
     onchange: function(inDisplayValue, inDataValue, inSetByCode) {},
     _getValidatorNode: function() {
-        var n = this.editor && this.editor.domNode.firstChild;
+        var n = this.editor && this.editor instanceof dijit._WidgetBase && this.editor.domNode.firstChild;
         if (!n)
         {
             return null;
@@ -705,7 +704,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
     setInvalid: function() {
         this._isValid = false;
-        this.editor.set("state","Error");
+        if (this.editor instanceof dijit._WidgetBase) {
+            this.editor.set("state","Error");
+        }
         this.editorValidated();
         this.valueChanged("invalid", this.getInvalid());
     },
@@ -977,13 +978,13 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     resetState: function() {
         this.invalidate();
         var e = this.editor;
-        if (e) {
+        if (e && e instanceof dijit._WidgetBase) {
             e._hasBeenBlurred = false;
-            wm.fire(e,"_hideTooltip");
+            wm.fire(e, "_hideTooltip");
             if (this.validatorNode && !this.getDisplayValue()) {
-            this.validatorNode.style.display = "none";
-            e.set("state", "Normal");
-            e._setStateClass();
+                this.validatorNode.style.display = "none";
+                e.set("state", "Normal");
+                e._setStateClass();
             }
         }
     },
