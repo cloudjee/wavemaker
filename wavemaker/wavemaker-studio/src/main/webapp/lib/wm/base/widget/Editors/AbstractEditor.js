@@ -272,7 +272,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
             }
         */
         /* this.editor.tagName is an IE safe way of doing this.editor instanceof Node */
-        this.editorNode = this.editor.tagName ? this.editor : this.editor.domNode;
+        this.editorNode = wm.isNode(this.editor) ? this.editor : this.editor.domNode;
         this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
         this.editorNode.style.padding = "0";
         this.stopTimerWithName("CreateDijit", this.declaredClass);
@@ -294,14 +294,15 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
             this.setReadonly(this.readonly);
         }
 
-        if (this.editor && this.editor.displayMessage) {
-            this.editor.displayMessage = dojo.hitch(this, function(message) {
-                if (!this.showMessages) return;
-                var o = dojo.getObject(this.editor.declaredClass);
-                if (o) o.prototype.displayMessage.apply(this.editor, arguments);
-            });
+        if (this.editor && this.editor.displayMessage && this.editor instanceof dijit._WidgetBase) {
+            this.editor.displayMessage = dojo.hitch(this, "_displayMessage");
         }
         return this.editor;
+    },
+    _displayMessage: function(message) {
+        if (!this.showMessages) return;
+        var o = dojo.getObject(this.editor.declaredClass);
+        if (o) o.prototype.displayMessage.apply(this.editor, arguments);
     },
     validationEnabled: function() { return true;},
     _createEditor: function(inNode, inProps) {
