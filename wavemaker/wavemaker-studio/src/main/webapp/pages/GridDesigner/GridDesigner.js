@@ -20,6 +20,8 @@ dojo.declare("GridDesigner", wm.Page, {
                 this._editors.push(w);
             }
         }));
+
+        this.subscribe("deviceSizeRecalc", this, "reselectGrid");
     },
     updateFormatterList: function(){
         this.fullFormattersVar.setData(this.formattersVar);
@@ -42,8 +44,16 @@ dojo.declare("GridDesigner", wm.Page, {
         });
         this.liveSourceVar.setData(list);
     },
+    /* Called when deviceType changes, triggering the selected grid to be destroyed, recreated, and our current grid to be destroyed and
+     * in need of reselection */
+    reselectGrid:function() {
+        wm.onidle(this, function() {
+            this.currentGrid = app.getValueById(this.currentGridOwnerId + "." + this.currentGrid.name);
+        });
+    },
     setGrid: function(inGrid) {
         this.currentGrid = inGrid;
+        this.currentGridOwnerId = inGrid.owner.getRuntimeId();
         this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
         this.currentDataSet = inGrid.dataSet;
         this.initialColumns = inGrid.columns;
@@ -630,7 +640,11 @@ dojo.declare("GridDesigner", wm.Page, {
         var isSimple = this.isSimpleDataValueEditor.getChecked();
         this.isRestrictDataValueEditor.setDisabled(!isSimple);
         var restrictValues = this.grid.selectedItem.getValue("editorProps.restrictValues");
-        this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
+
+        /* onidle needed because this can be fired in the middle of processing checking a show checkbox */
+        wm.onidle(this, function() {
+            this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
+        });
     },
     onMaximumChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
