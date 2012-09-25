@@ -182,9 +182,10 @@ public class WaveMakerService {
             connection.setRequestMethod(method);
             connection.setDoInput(true);
             connection.setRequestProperty("Accept-Charset", "application/json");
-            connection.setRequestProperty("Content-Type", contentType);
             connection.setRequestProperty("Accept-Encoding", "text/plain");
             connection.setRequestProperty("Content-Language", charset);
+            connection.setRequestProperty("Content-Type", contentType);
+            connection.setRequestProperty("Transfer-Encoding", "identity");
             connection.setUseCaches(false);
 
             HttpServletRequest request = RuntimeAccess.getInstance().getRequest();
