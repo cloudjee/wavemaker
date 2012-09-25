@@ -459,15 +459,17 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._dataFields = [];
 
             var useMobileColumn = false;
-            var isPhone = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
-            var isTablet = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
+            var isDesignLoaded = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page))
+            var isPhone =  isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+            var isTablet = isDesignLoaded ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
             var isAllPhoneCol = true;
             if (isPhone || isTablet) {
                 for (var i = 0; i < this.columns.length; i++) {
                     var c = this.columns[i];
                     if (c.mobileColumn && !c.controller) {
                         useMobileColumn = true;
-                    } else if (!c.controller) {
+                    }
+                    if (!c.controller && c.show) {
                         isAllPhoneCol = false;
                     }
                 }
@@ -475,7 +477,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             if (useMobileColumn && (isAllPhoneCol || isPhone || this.desktopWidthExcedesBounds())) {
                 this._useMobileColumn = useMobileColumn;
             } else {
-                useMobileColumn = false;
+                this._useMobileColumn = useMobileColumn = false;
             }
             /*
         if (useMobileColumn && !this._isDesignLoaded) {
@@ -719,6 +721,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         if (this._renderDojoObjSkipped && !this._headerRendered || this.spacerNodeTop.clientHeight) {
             wm.onidle(this, "_render");
         }
+        if (this.isNavigationMenu) this.deselectAll();
     },
     setShowing: function(inShowing) {
         var wasShowing = this.showing;
@@ -1565,7 +1568,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return this._data[inIndex];
     },
     _getColumnDef: function(inCol) {
-        var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isMobile = this._useMobileColumn;
         var hasMobileColumn = dojo.some(this.columns, function(c) {
             return c.mobileColumn && !c.controller;
         });

@@ -60,11 +60,15 @@ wm.Object.extendSchema(wm.List, {
     /* widgetName group; data subgroup */
     columns:           {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: "editColumns", nonlocalizable: true},
 
+
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
     dataFields:        {group: "widgetName", subgroup: "data", order: 50, advanced:1},
     columnWidths:      {group: "widgetName", subgroup: "layout", order: 51, advanced:1},
 
     renderVisibleRowsOnly: {group: "widgetName", subgroup: "behavior", type: "boolean", advanced: 1},
+    styleAsGrid:        {group: "widgetName", subgroup: "layout", type: "boolean"},
+    rightNavArrow:      {group: "widgetName", subgroup: "layout", type: "boolean"},
+    isNavigationMenu:   {group: "widgetName", subgroup: "behavior", type: "boolean"},
     autoSizeHeight:     {group: "widgetName", subgroup: "layout", type: "boolean", advanced: 1},
 
     /* Display group; layout subgroup */

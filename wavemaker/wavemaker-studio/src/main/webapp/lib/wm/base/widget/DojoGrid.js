@@ -1326,9 +1326,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         if (isPhone || isTablet) {
             for (var i = 0; i < this.columns.length; i++) {
                 var c = this.columns[i];
-                if (c.mobileColumn && !c.controller) {
+                if (c.mobileColumn) {
                     useMobileColumn = true;
-                } else {
+                }
+                if (c.show) {
                     isAllPhoneCol = false;
                 }
             }
