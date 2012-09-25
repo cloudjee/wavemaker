@@ -1695,9 +1695,11 @@ dojo.declare("Studio", wm.Page, {
         dojo.forEach(panels, function(panel) {
 
             wm.forEachWidget(panel, function(w) {
+                var selected = studio.selected === w;
                 if (w._regenerateOnDeviceChange && w.getParentPage() == studio.page && !w.owner.isAncestorInstanceOf(wm.Composite)) {
                     w = self.regenerateOnDeviceChange(w);
                     regenerated = true;
+                    if (selected) studio.select(w);
                 }
                 w.resetDesignHeight();
             }, false);
