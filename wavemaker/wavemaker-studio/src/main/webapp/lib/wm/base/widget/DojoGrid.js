@@ -1850,6 +1850,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
     },
     toHtml: function() {
+        if (this._renderDojoObjSkipped) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
+
         var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
         dojo.forEach(this.columns, function(col, idx) {
             if (!col.show) return;
@@ -1881,30 +1887,30 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         switch (col.formatFunc) {
                         case 'wm_date_formatter':
                         case 'Date (WaveMaker)':
-                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_localdate_formatter':
                         case 'Local Date (WaveMaker)':
-                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_time_formatter':
                         case 'Time (WaveMaker)':
-                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_number_formatter':
                         case 'Number (WaveMaker)':
-                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_array_formatter':
-                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value);
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_currency_formatter':
                         case 'Currency (WaveMaker)':
-                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_image_formatter':
                         case 'Image (WaveMaker)':
-                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_link_formatter':
                         case 'Link (WaveMaker)':
@@ -1933,6 +1939,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 
     toCSV: function(){
+        if (this._renderDojoObjSkipped) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
         var csvData = [];
         dojo.forEach(this.columns, function(col, idx){
             if (!col.show)
@@ -1969,47 +1980,50 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
                 if (col.formatFunc){
                     /* TODO FOR 6.5: Calls to formatters are missing some parameters; at least pass null if no parameter is needed */
-                    switch(col.formatFunc){
+                    if (col.formatFunc) {
+                        switch (col.formatFunc) {
                         case 'wm_date_formatter':
-                            case 'Date (WaveMaker)':
-                            value = this.dateFormatter(value);
+                        case 'Date (WaveMaker)':
+                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_localdate_formatter':
-                            case 'Local Date (WaveMaker)':
-                            value = this.localDateFormatter(value);
+                        case 'Local Date (WaveMaker)':
+                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_time_formatter':
-                            case 'Time (WaveMaker)':
-                            value = this.timeFormatter(value);
+                        case 'Time (WaveMaker)':
+                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_number_formatter':
-                            case 'Number (WaveMaker)':
-                            value = this.numberFormatter(value);
+                        case 'Number (WaveMaker)':
+                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
-                            /* TODO: Fix all formatters as they need parameters
                         case 'wm_array_formatter':
-                            value = this.arrayFormatter(col.field,value);
-                            break;                            */
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value, idx);
+                            break;
                         case 'wm_currency_formatter':
-                            case 'Currency (WaveMaker)':
-                            value = this.currencyFormatter(value);
+                        case 'Currency (WaveMaker)':
+                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_image_formatter':
-                            case 'Image (WaveMaker)':
-                        // spreadsheet shouldn't be given HTML
-                            //value = this.imageFormatter(value);
+                        case 'Image (WaveMaker)':
+                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_link_formatter':
-                            case 'Link (WaveMaker)':
-                        // spreadsheet shouldn't be given HTML
-                        //value = this.linkFormatter(value);
+                        case 'Link (WaveMaker)':
+                            // spreadsheet shouldn't be given HTML
+                            //value = this.linkFormatter(value);
                             break;
 
                         default:
-                            if (!this.isDesignLoaded())
-                                value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles:[], customClasses:[]}, obj);
+                            if (!this.isDesignLoaded()) value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {
+                                customStyles: [],
+                                customClasses: []
+                            }, obj);
                             break;
+                        }
                     }
+
                 }
                 } catch(e){value = "";}
                 this.addColumnToCSV(csvData, value);
