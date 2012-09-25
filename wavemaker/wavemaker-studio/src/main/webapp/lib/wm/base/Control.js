@@ -1681,6 +1681,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
 
     setStyle: function(inStyle, inValue) {
+        if (inValue === undefined || inValue === null) inValue = "";
         if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
             return this.setProp(inStyle, inValue);
         }
