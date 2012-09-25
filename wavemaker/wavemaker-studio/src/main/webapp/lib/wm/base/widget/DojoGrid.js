@@ -163,6 +163,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.dojoObj.scrollToRow(inRow);
         }
     },
+    /* TODO: This does not appear to support multi-select */
     setSelectedItem: function(inData) {
         if (inData instanceof wm.Variable) inData = inData.getData();
         this.selectByQuery(inData);
