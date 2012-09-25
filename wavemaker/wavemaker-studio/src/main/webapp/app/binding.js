@@ -27,7 +27,9 @@ wm.widgetIsBindTarget = function(inWidget) {
     inWidget._isBindTarget = inWidget._isBindTarget !== undefined ? inWidget._isBindTarget : !wm.isEmpty(inWidget.listDataProperties("bindTarget"))
     return inWidget._isBindTarget;
 }
-
+wm.getTypeHtml = function(inType, inIsList) {
+        return (inType && inType != "undefined") ? ': <span style="font-style: italic;">' +  wm.getFriendlyTypeName(inType, inIsList) +  "</span>" : "";
+};
 wm.hasBindableWidgets = function(inWidget, inExcludeWidget) {
     var
         b,
@@ -59,8 +61,17 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
     dojo.forEach(comps, function(c) {
         if (c != studio.selected) {
             if ((!c.type || c.type == "any") && isSimpleView) return;
+            var targetPropDef = studio.bindDialog.page.targetProps.propDef;
+            var targetType = "";
+            if (targetPropDef) {
+                if (targetPropDef.typeFunc) {
+                    targetType = studio.bindDialog.page.targetProps.object[targetPropDef.typeFunc]();
 
-            var targetType = (studio.bindDialog.page.targetProps.propDef ? studio.bindDialog.page.targetProps.propDef.type || "" : "").toLowerCase();
+                } else {
+                    targetType = targetPropDef.type;
+                }
+            }
+            targetType = (targetType || "").toLowerCase();
             var isSimpleBind = false;
             try {
                 var knownPrimitives = [null, undefined, "", "string", "number", "date", "boolean"];
@@ -130,7 +141,8 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
                 if (w instanceof wm.DataSetEditor == false && wm.isInstanceType(w, [wm.Editor, wm.AbstractEditor]) && !isBindable)
                 return;
             }
-            new wm.SimpleBindSourceTreeNode(inParent, {object: w, content: props.name, type: props.type, isValidBinding: isBindable});
+            var content = props.name + wm.getTypeHtml(props.type, props.isList);
+            new wm.SimpleBindSourceTreeNode(inParent, {object: w, content: content, type: props.type, isValidBinding: isBindable});
         }
     });
 }
@@ -288,53 +300,45 @@ wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetPr
     if (!inTargetType) return 0;
     var targetIsObject = inTargetType.isObject || inTargetType.type && inTargetType.type.toLowerCase() == "object";
 
-    if (!inProps.isSimpleBind && inProps.isObject && inProps.object instanceof wm.Control) {
+    if (!inProps.isSimpleBind && studio.bindDialog.page.binderSource.isSimpleTree() && inProps.isObject && inProps.object instanceof wm.Control) {
         return inProps.object.declaredClass == inTargetType.type ? 1 : 0;
     }
     var t = (!inProps.isSimpleBind && inType) || inProps.type || (inProps.object && inProps.object.type);
-        var originalT = t;
+    var originalT = t;
     t = wm.typeManager.getPrimitiveType(t) || t;
     var o = inProps.isSimpleBind ? inProps.isObject : wm.typeManager.isStructuredType(t);
-    if (!o)
-        t = wm.decapitalize(t);
-    if (!targetIsObject)
-        inTargetType.type = wm.decapitalize(inTargetType.type);
+    if (!o) t = wm.decapitalize(t);
+    if (!targetIsObject) inTargetType.type = wm.decapitalize(inTargetType.type);
 
-//  console.log("target: " + inTargetType.type + " isObject:" + inTargetType.isObject + " isList:" + inTargetType.isList);
-//  console.log("source: " + t + " isObject:" + o + " isLIst:" + inIsList);
-
+    //  console.log("target: " + inTargetType.type + " isObject:" + inTargetType.isObject + " isList:" + inTargetType.isList);
+    //  console.log("source: " + t + " isObject:" + o + " isLIst:" + inIsList);
 
     // If only one of them is an object, outright failure
-    if (Boolean(targetIsObject) != Boolean(inProps.isObject))
-    return 0;
+    if (Boolean(targetIsObject) != Boolean(inProps.isObject)) return 0;
 
-    if (inTargetType.type == "wm.Variable" && inProps.object instanceof wm.Variable)
-        ;
+    if (inTargetType.type == "wm.Variable" && inProps.object instanceof wm.Variable);
     // If we are matching objects and they have different types, outright failure
     // "object" and "wm.Variable" matches all objects...
-    else if (targetIsObject && t !=inTargetType.type && String(inTargetType.type).toLowerCase() != "object" )
-    return 0;
+    else if (targetIsObject && t != inTargetType.type && String(inTargetType.type).toLowerCase() != "object") return 0;
 
     // If we don't match on list, this could be a fluke, treat it as warning rather than failure
     // If its a liveform, then give it a pass
-    if (inTargetType.isList  && !inIsList || !inTargetType.isList && inIsList) {
-    if (wm.isInstanceType(inTargetProps.object, wm.LiveForm)) return 1;
-    else return 2;
+    if (inTargetType.isList && !inIsList || !inTargetType.isList && inIsList) {
+        if (wm.isInstanceType(inTargetProps.object, wm.LiveForm)) return 1;
+        else return 2;
     }
 
     // if the types are equal, then given that the list status has been passed, these are a match
-    if (t == inTargetType.type)
-    return 1;
+    if (t == inTargetType.type) return 1;
 
     // haven't reviewed this one
     if (inTargetType.type == "wm.Variable") {
         // there is either a structured type, or we're dealing with a primitive type only found in service variables -- exactly the data that getPrimitiveType is replacing "t" with.
-    return (wm.typeManager.isStructuredType(t) || (originalT != t && originalT)) ? 1 : 0;
+        return (wm.typeManager.isStructuredType(t) || (originalT != t && originalT)) ? 1 : 0;
     }
 
     // haven't reviewed this one
-    else if (inTargetType.isList && inIsList && (inTargetProps.object instanceof wm.DojoChart || inTargetProps.object instanceof wm.DojoGrid))
-    return 1;
+    else if (inTargetType.isList && inIsList && (inTargetProps.object instanceof wm.DojoChart || inTargetProps.object instanceof wm.DojoGrid)) return 1;
 
     // If it hasn't outright failed, and hasn't outright passed, consider it a warning rather than good/bad.
     return 2;
@@ -886,7 +890,30 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         }
     },
     _buildSearchTree: function(inParent) {
+        fIsBindable = dojo.hitch(this,
+            function(w) {
+                var props = {
+                    object: w
+                };
+                var object = props.object;
+                var schema = object.listDataProperties("bindSource");
+                var name = object.name || object.declaredClass;
 
+                dojo.mixin(props, {
+                    isObject: true,
+                    isList: object.isList,
+                    _hasChildren: !wm.isEmpty(schema),
+                    objectId: object.getId(),
+                    name: (w.owner == studio.page) ? name : (w.owner == studio.application) ? "app." + name : w.owner.name + "." + name,
+                    schema: schema,
+                    image: props.image || studio.getComponentImage(object)
+                });
+
+                //var b = wm.convertForSimpleBind(props);
+                var p = inParent.parent.owner; // bindSourceDialog
+                return wm.isNodeBindable(props.type, props, props.isList, p.targetType, p.targetProps);
+            }
+        );
         var search = this.searchBar.getDataValue();
         if (!search) {
             this.updateBindSourceUi(this.simpleRb.getGroupValue());
@@ -903,24 +930,33 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             addWidgetBinderNodes(inParent, appcomps);
             addWidgetBinderNodes(inParent, pagecomps);
             if (this.tree.root.kids.length <= 2) {
-                for (var i = 0; i < this.tree.root.kids.length; i++)
-                this.tree.root.kids[i].setOpen(true);
+                for (var i = 0; i < this.tree.root.kids.length; i++) {
+                    this.tree.root.kids[i].setOpen(true);
+                }
             }
         } else {
             var count = appcomps.length + pagecomps.length;
             dojo.forEach(appcomps, function(c) {
-                if (c != studio.selected) new wm.BindSourceTreeNode(inParent, {
-                    object: c,
-                    closed: count > 2
-                });
+                if (c != studio.selected) {
+                    var isBindable = fIsBindable(w);
+                    new wm.BindSourceTreeNode(inParent, {
+                        object: c,
+                        closed: count > 2,
+                        isValidBinding: isBindable
+                    });
+                }
             });
 
-            dojo.forEach(pagecomps, function(c) {
-                if (c != studio.selected) new wm.BindSourceTreeNode(inParent, {
-                    content: ((c.owner != studio.page) ? c.owner.name + "." : "") + c.name,
-                    object: c,
-                    closed: count > 2
-                });
+            dojo.forEach(pagecomps, function(w) {
+                if (w != studio.selected) {
+                    var isBindable = fIsBindable(w);
+                    new wm.BindSourceTreeNode(inParent, {
+                        content: ((w.owner != studio.page) ? w.owner.name + "." : "") + w.name,
+                        object: w,
+                        closed: count > 2,
+                        isValidBinding: isBindable
+                    });
+                }
             });
         }
         if (this.tree.root.kids.length == 1) {
@@ -989,7 +1025,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 
        studio.resourceManagerService.requestAsync("getFolder", ["webapproot/resources"],
             function(rootfolder) {
-               _cupdatingthis.resourceData = rootfolder;
+                this.resourceData = rootfolder;
                 addResourceBinderNodes(inParent, rootfolder, true, "webapproot/resources");
            }
         );
@@ -1524,9 +1560,10 @@ dojo.declare("wm.BindTreeNode", wm.TreeNode, {
         if (inProps.isSimpleBind)
             inType = inProps.type;
         var r = [inName];
-        r.push((inType && inType != "undefined") ? [': <span style="font-style: italic;">', wm.getFriendlyTypeName(inType, inIsList), "</span>"].join('') : "");
+        r.push(wm.getTypeHtml(inType, inIsList));
         return r.join('');
     },
+
     listDataProperties: function(inComponent) {
         var props;
         if (inComponent instanceof wm.Variable && !studio.bindDialog.page.binderSource.simpleRb.getChecked()) {

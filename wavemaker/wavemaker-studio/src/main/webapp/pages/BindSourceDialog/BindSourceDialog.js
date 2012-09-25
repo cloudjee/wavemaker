@@ -111,6 +111,10 @@ dojo.declare("BindSourceDialog", wm.Page, {
             isList = ti.isList;
         }
         type = type || tp.type;
+        if (!type) {
+            type = tp.propDef.typeFunc ? tp.object[tp.propDef.typeFunc]() : tp.propDef.type;
+            isList = tp.propDef.isList;
+        }
         type = wm.typeManager.getPrimitiveType(type) || type;
         isObject = type == "wm.Variable" || wm.typeManager.isStructuredType(type);
         return {
