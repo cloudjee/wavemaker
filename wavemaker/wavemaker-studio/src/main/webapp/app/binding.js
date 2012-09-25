@@ -47,7 +47,7 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
     if (!includePageContainers) {
         comps = wm.listComponents(owners, inClass, inStrict);
     } else {
-    var pages = wm.listAllPageContainers(owners);
+        var pages = wm.listAllPageContainers(owners);
         comps = wm.listComponents(pages, inClass, false);
 
     }
@@ -59,23 +59,31 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
     dojo.forEach(comps, function(c) {
         if (c != studio.selected) {
             if ((!c.type || c.type == "any") && isSimpleView) return;
-        var targetType = (studio.bindDialog.page.targetProps.propDef ? studio.bindDialog.page.targetProps.propDef.type || "" : "").toLowerCase();
-        var isSimpleBind = false;
-        try {
-            var knownPrimitives = [null,undefined,"","string","number","date","boolean"];
-            if (c instanceof wm.Variable && c.type && !c.isList) {
-            if (wm.defaultTypes[c.type] && c.type != "EntryData") {
-                isSimpleBind = true;
-            } else if (wm.typeManager.getType(c.type) && wm.typeManager.getType(c.type).primitiveType && (dojo.indexOf(knownPrimitives,targetType) != -1 || targetType.indexOf("java.lang.") == 0)) {
-                isSimpleBind = true;
+
+            var targetType = (studio.bindDialog.page.targetProps.propDef ? studio.bindDialog.page.targetProps.propDef.type || "" : "").toLowerCase();
+            var isSimpleBind = false;
+            try {
+                var knownPrimitives = [null, undefined, "", "string", "number", "date", "boolean"];
+                if (c instanceof wm.Variable && c.type && !c.isList) {
+                    if (wm.defaultTypes[c.type] && c.type != "EntryData") {
+                        isSimpleBind = true;
+                    } else if (wm.typeManager.getType(c.type) && wm.typeManager.getType(c.type).primitiveType && (dojo.indexOf(knownPrimitives, targetType) != -1 || targetType.indexOf("java.lang.") == 0)) {
+                        isSimpleBind = true;
+                    }
+                }
+            } catch (e) {}
+            if (isSimpleBind && isSimpleView) {
+                new wm.SimpleBindSourceTreeNode(inParent, {
+                    object: c,
+                    content: c.name,
+                    type: c.type,
+                    isValidBinding: 1
+                });
+            } else {
+                new wm.BindSourceTreeNode(inParent, {
+                    object: c
+                });
             }
-            }
-        } catch(e) {}
-        if (isSimpleBind && isSimpleView) {
-            new wm.SimpleBindSourceTreeNode(inParent, {object: c, content: c.name, type: c.type, isValidBinding: 1});
-        } else {
-            new wm.BindSourceTreeNode(inParent, {object: c});
-        }
         }
     });
 }
