@@ -463,7 +463,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
                     this.eventDeselect(inItem);
             }
         }
-        if (!this._isDesignLoaded && !this._handlingBack && this.manageHistory) {
+        if (!this._isDesignLoaded && !this._handlingBack && this.manageHistory && !this.isNavigationMenu) {
             app.addHistory({id: this.getRuntimeId(),
                     options: {selectedRow: selectedIndexWas},
                     title: "SelectionChange"});
