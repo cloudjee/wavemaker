@@ -151,14 +151,20 @@ wm.DataSetEditor.extend({
             props.selectedItem.simpleBindProp = false;
         }
         return props;
+    },
+    getDataValueType: function() {
+        if (this.dataSet) {
+            return this.dataSet.type;
+        } else {
+            return "any";
+        }
     }
-
-    });
+});
 
 wm.Object.extendSchema(wm.DataSetEditor, {
     /* Editor group; value subgroup */
-    defaultInsert:{type:'wm.Variable'},
-    dataValue: {type: "any"}, // use getDataValue()
+    defaultInsert:{typeFunc: "getDataValueType"},
+    dataValue: {typeFunc: "getDataValueType"}, // use getDataValue()
 
     /* Editor group; behavior subgroup */
     editorType: {options: ["ListSet", "SelectMenu", "RadioSet", "CheckboxSet"]},
