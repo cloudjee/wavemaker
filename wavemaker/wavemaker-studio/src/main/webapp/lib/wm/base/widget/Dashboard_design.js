@@ -58,6 +58,7 @@ wm.Dashboard.extend({
 		this.contextMenu.show();
 	},
 	portletPropChanged: function(Obj, prop, inValue, trObj){
+        var p = dijit.byId(Obj.portletId);
 		switch(prop){
 			case 'isOpen':
 				if (inValue){
@@ -67,19 +68,18 @@ wm.Dashboard.extend({
 				}
 				break;
 			case 'title':
-				var p = dijit.byId(Obj.portletId);
 				if (!p)
 					return;
 				p.attr('title', inValue);
 			  	break;
 			case 'page':
-				var p = dijit.byId(Obj.portletId);
 				if (!p)
 					return;
-				p.wm_pageContainer.setPageName(inValue);
+                var index = dojo.indexOf(this.dijitPortlets,p);
+                this.destroyPortlet(Obj);
+                this.addPortlet(Obj, index);
 			  	break;
 			case 'isClosable':
-				var p = dijit.byId(Obj.portletId);
 				if (!p)
 					return;
 				p.closeIcon.style.display = inValue ? 'block':'none';

@@ -254,7 +254,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
     },
     connectDojoEvents: function(){
     },
-    addPortlet: function(props) {
+    addPortlet: function(props, inIndex) {
         //props: {id:'portlet', title:'Portlet 1', page:'Page_widget_1', isOpen:true, isClosable:false, x:0, y:0}
         if (!props.isOpen) return;
         var portletProps = {
@@ -288,8 +288,11 @@ dojo.declare("wm.Dashboard", wm.Control, {
             portlet.subscribe("/dojox/mdnd/drop", dojo.hitch(this, '_onDashboardChange'));
             this._onDashboardChange();
         }
-
-        this.dijitPortlets.push(portlet);
+        if (inIndex !== undefined) {
+            wm.Array.insertElementAt(this.dijitPortlets, portlet, inIndex);
+        } else {
+            this.dijitPortlets.push(portlet);
+        }
         return props;
     },
     addNewPortlet: function(props){
