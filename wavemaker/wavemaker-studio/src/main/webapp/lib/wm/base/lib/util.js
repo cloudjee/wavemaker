@@ -470,9 +470,13 @@ wm.forEachVisibleWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
     var result;
     if (inFunc && inWidget && !inWidget.isAncestorHidden()) result = inFunc(inWidget);
 
-    if (result !== false) {
+    if (result !== false && (!inIgnoreBuiltin || (inWidget instanceof wm.PageContainer === false && inWidget instanceof wm.Composite === false))) {
         for (var i = 0, ws = inWidget.getOrderedWidgets(), r, w; w = ws[i]; i++) {
-            w.forEachVisibleWidget && !inIgnoreBuiltin ? w.forEachVisibleWidget(inFunc) : wm.forEachVisibleWidget(w, inFunc, inIgnoreBuiltin);
+            if (w.forEachVisibleWidget && !inIgnoreBuiltin) {
+                w.forEachVisibleWidget(inFunc);
+            } else {
+                 wm.forEachVisibleWidget(w, inFunc, inIgnoreBuiltin);
+            }
         }
     }
 }

@@ -665,7 +665,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 /* For public tooled detection use onShow; only call onShow if its been replaced with something other than
                  * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
                  */
-                else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
+                if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
                     w.onShow();
                 }
 
@@ -685,7 +685,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                     /* For public tooled detection use onHide; only call onHide if its been replaced with something other than
                      * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
                      */
-                    else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
+                    if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
                         w.onHide();
                     }
 
