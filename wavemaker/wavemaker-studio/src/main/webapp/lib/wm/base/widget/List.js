@@ -144,7 +144,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             if (!column.width) column.width = "100%";
             if (column.width.match(/\%/)) totalWidth += Number(column.width);
             if (column.field == "PHONE COLUMN" && !this._isDesignLoaded) {
-                column.expression = column.expression.replace(/\$\{runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
+                column.expression = column.expression.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
             }
         }
         if (!this.isDesignLoaded() && dojo.isIE <= 8) {
@@ -459,17 +459,24 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._dataFields = [];
 
             var useMobileColumn = false;
-            var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
-            if (isMobile) {
+            var isPhone = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
+            var isTablet = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
+            var isAllPhoneCol = true;
+            if (isPhone || isTablet) {
                 for (var i = 0; i < this.columns.length; i++) {
                     var c = this.columns[i];
                     if (c.mobileColumn && !c.controller) {
                         useMobileColumn = true;
-                        break;
+                    } else if (!c.controller) {
+                        isAllPhoneCol = false;
                     }
                 }
             }
-            this._useMobileColumn = useMobileColumn;
+            if (useMobileColumn && (isAllPhoneCol || isPhone || this.desktopWidthExcedesBounds())) {
+                this._useMobileColumn = useMobileColumn;
+            } else {
+                useMobileColumn = false;
+            }
             /*
         if (useMobileColumn && !this._isDesignLoaded) {
             this.headerVisible = false;
@@ -519,6 +526,21 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.trimDataSetObjectFields(d);
             this._dataFields = d;
         }
+    },
+    desktopWidthExcedesBounds: function() {
+        var width = 20; // give it a little buffer so we don't jump to phone design just because we're a couple pixels off
+        dojo.forEach(this.columns, function(column) {
+            if (column.show) {
+                var w = String(column.width);
+                if (w.indexOf("%") != -1) {
+                    width += 80;
+                } else {
+                    var value = parseInt(w);
+                    if (value) width += value;
+                }
+            }
+        });
+        return (width > this.bounds.w);
     },
     getDataSetObjectFields: function() {
         var o = {};
