@@ -1913,8 +1913,8 @@ wm.List.extend({
     },
     select: function(inItemOrIndex) {
         if (typeof inItemOrIndex != "object") {
-            this.deselectAll(true);
-            this.eventSelect(this.items[inItemOrIndex]);
+            this.selectByIndex(inItemOrIndex);
+            // TODO: need to set scrollTop here
         } else {
             this.inherited(arguments);
         }
@@ -2029,7 +2029,6 @@ wm.List.extend({
             this.dataSet.setData([inFields]);
             if (selectOnAdd) {
                 this.select(0);
-                this.selectionChange(); // needs committing
             }
             return;
         }

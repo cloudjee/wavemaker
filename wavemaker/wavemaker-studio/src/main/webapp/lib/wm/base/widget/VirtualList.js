@@ -503,8 +503,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
     },
     select: function(inItem) {
         if (inItem) {
-            this.deselectAll();
-            this.addToSelection(inItem);
+            if (this._selectionMode != "multiple") {
+                this.deselectAll();
+            }
+            this.eventSelect(inItem);
         }
     },
     selectByIndex: function(inIndex) {
