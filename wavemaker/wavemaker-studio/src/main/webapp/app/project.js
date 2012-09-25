@@ -659,8 +659,23 @@ dojo.declare("wm.studio.Project", null, {
             });
         }));
 
+		var dWhiteList = new dojo.Deferred();
+		loadSMDDeferred.addCallback(dojo.hitch(this, function() {
+			var URLs = "";
+			allComponents = studio.application.$;
+			wm.forEachProperty(allComponents, function(p){
+				if(p instanceof wm.XhrDefinition){
+					URLs = URLs.concat(p.url + "\n");
+					}
+			});
+			var dlocal = this.saveProjectData("WEB-INF/whitelist.txt", URLs, false, true);
+            dlocal.addCallback(function() {
+                dWhiteList.callback();
+            });
+		}));
+		
         var d1 = new dojo.Deferred();
-        loadSMDDeferred.addCallback(dojo.hitch(this, function() {
+        dWhiteList.addCallback(dojo.hitch(this, function() {
             if (!studio.isCloud()) {
                 studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
                 var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", []);

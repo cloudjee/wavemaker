@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,50 +56,63 @@ import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 @ExposeToClient
 public class WaveMakerService {
 
-	private static final String WHITELIST = "whitelist.txt";
-    
 	private final Log logger = LogFactory.getLog(getClass());
 
-    private TypeManager typeManager;
+	private TypeManager typeManager;
 
-    private ServiceManager serviceManager;
+	private ServiceManager serviceManager;
 
-    private ServiceEventNotifier serviceEventNotifier;
+	private ServiceEventNotifier serviceEventNotifier;
 
-    private InternalRuntime internalRuntime;
-     
-    private HashSet<String> hostSet;
-    
-    private HashSet<String> domainSet;
+	private InternalRuntime internalRuntime;
 
-    public WaveMakerService(){
-    	try {  
-    		hostSet = new HashSet<String>();
-    		domainSet = new HashSet<String>();
-    		String webinf = RuntimeAccess.getInstance().getSession().getServletContext().getRealPath("WEB-INF");
-    		String whiteFile = IOUtils.read(new java.io.File(webinf + File.separator + WHITELIST));
-    		String[] urlList = whiteFile.split("\\r?\\n");
+	private HashSet<String> hostSet;
 
-    		for(String urlString:urlList){
-    			URL url = new URL(urlString);
-    			String host = url.getHost();
-    			hostSet.add(host);					
-    			String domain = hostToDomain(host);
-    			if (domain!= null){
-    				domainSet.add(domain);
-    			}
-    		}
-    		logger.debug("Allowed hosts: " + hostSet.toString());
-    		logger.debug("Allowed domains: " + domainSet.toString());
+	private HashSet<String> domainSet;
 
-    	} catch (FileNotFoundException fne){
-    		logger.warn("*** whitelist.txt file not found, XHR proxy DISABLED ***");				
-    	}
-    	catch (IOException e) {
-    		logger.error(e.getMessage());
-    		throw new WMRuntimeException(e);
-    	}
-    }
+	private Boolean isStudio = false;
+
+	private static final String WHITELIST = "whitelist.txt";
+
+	private static final String STUDIO_SPRINGAPP = "studio-springapp.xml";
+	
+	/**
+	 * Builds whitelist tables and sets isStudio for proxy security
+	 */
+	public WaveMakerService(){
+		ServletContext context = RuntimeAccess.getInstance().getSession().getServletContext();
+		String webinf = context.getRealPath("WEB-INF");
+		try{
+			isStudio = new File(webinf + File.separator + STUDIO_SPRINGAPP).exists();
+		} catch (IllegalArgumentException iae) {
+			isStudio = false;
+		}
+
+		try {  
+			hostSet = new HashSet<String>();
+			domainSet = new HashSet<String>();
+			String whiteFile = IOUtils.read(new File(webinf + File.separator + WHITELIST));
+			String[] urlList = whiteFile.split("\\r?\\n");
+
+			for(String urlString:urlList){
+				URL url = new URL(urlString);
+				String host = url.getHost();
+				hostSet.add(host);					
+				String domain = hostToDomain(host);
+				if (domain!= null){
+					domainSet.add(domain);
+				}
+			}
+			logger.debug("Allowed hosts: " + hostSet.toString());
+			logger.debug("Allowed domains: " + domainSet.toString());
+
+		} catch (IOException ioe){
+			if(isStudio)
+				logger.warn("*** ONLY Studio XHR calls allowed ***");		
+			else	
+				logger.warn("*** " + WHITELIST + " file not found, XHR proxy DISABLED ***");				
+		}
+	}
 
     private String hostToDomain(String host){
     	Pattern p = Pattern.compile(".*?([^.]+\\.[^.]+)");
@@ -146,7 +160,7 @@ public class WaveMakerService {
      * "{'params':['string one','string two'],'method':'test','id':1}"]);
      */
     public String remoteRESTCall(String remoteURL, String params, String method, String contentType) {
-    	// proxyCheck(remoteURL);
+    	proxyCheck(remoteURL);
         String charset = "UTF-8";
         StringBuffer returnString = new StringBuffer();
         try {
@@ -254,19 +268,27 @@ public class WaveMakerService {
         }
     }
 
+    /*
+     * Checks a url against the whitelist. Throws if not allowed
+     * @remoteURl the url to check
+     */
     private void proxyCheck(String remoteURL) throws  WMRuntimeException {
     	logger.debug("Checking: "  + remoteURL);  	
     	try{
     		String host = new URL(remoteURL).getHost();
-    		if(hostSet.contains(new URL(remoteURL).getHost())){
+    		if(host != null && (hostSet.contains(new URL(remoteURL).getHost()))){
     			return;
     		}
     		String domain = hostToDomain(host);    		
-    		if((domain != null) && (domainSet.contains(domain))){
-    				return;
+    		if(domain != null && (domainSet.contains(domain))){
+    			return;
+    		}
+    		String referer = hostToDomain(new URL(RuntimeAccess.getInstance().getRequest().getHeader("referer")).getHost());
+    		if(referer != null && referer.equals(domain) && isStudio){
+    			return;
     		}
     		else{
-    			throw new WMRuntimeException("Remote URL not allowed for Proxy calls");
+    			throw new WMRuntimeException("Remote URL not allowed for Proxy call " + remoteURL);
     		}
     	}
     	catch(MalformedURLException e) {
