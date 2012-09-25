@@ -259,7 +259,7 @@ dojo.declare("wm.Component", wm.Object, {
 
         if (!window.studio || !this.owner) return false;
         if (this.owner == studio.application || this.owner == studio._application) return true; // must come before test for !studio.page
-        if (!studio.page) return false;
+        if (!studio.page && !studio.application && !studio._application) return false;
         if (!this.owner) return false;
         if (this.getParentPage() == studio.page || this.owner == studio.page) return true; // getParentPage() test failed for PageDialogs owned by studio
         if (this == studio.page) return true;
