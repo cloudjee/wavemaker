@@ -254,34 +254,43 @@ dojo.declare("wm.Dashboard", wm.Control, {
     },
     connectDojoEvents: function(){
     },
-    addPortlet: function(props){
-    //props: {id:'portlet', title:'Portlet 1', page:'Page_widget_1', isOpen:true, isClosable:false, x:0, y:0}
-    if (!props.isOpen)
-        return;
-    var portletProps = {'title':props.title, /*'class':'soria',*/ 'dndType': 'Portlet', 'closable':props.isClosable};
-    var portlet = new dojox.widget.Portlet(portletProps, dojo.create('div'));
-    portlet.wmProps = props;
-    if (this.isDesignLoaded()){
-        props.portletId = portlet.id;
-        portlet.closeIcon.style.display = props.isClosable ? 'block' : 'none';
-    }
+    addPortlet: function(props) {
+        //props: {id:'portlet', title:'Portlet 1', page:'Page_widget_1', isOpen:true, isClosable:false, x:0, y:0}
+        if (!props.isOpen) return;
+        var portletProps = {
+            'title': props.title,
+            /*'class':'soria',*/
+            'dndType': 'Portlet',
+            'closable': props.isClosable
+        };
+        var portlet = new dojox.widget.Portlet(portletProps, dojo.create('div'));
+        portlet.wmProps = props;
+        if (this.isDesignLoaded()) {
+            props.portletId = portlet.id;
+            portlet.closeIcon.style.display = props.isClosable ? 'block' : 'none';
+        }
 
-    portlet.containerNode.style.padding = '0px';
-    this.dojoObj.addService(portlet,props.x || 0, props.y || 0);
-    portlet.wm_pageContainer = new wm.PageContainer({loadParentFirst: false, owner: this, parentNode: portlet.containerNode, isRelativePositioned:true});
-    if (props.page) {
-        portlet.wm_pageContainer.setPageName(props.page);
-        this.updatePageContainerBounds();
-    }
+        portlet.containerNode.style.padding = '0px';
+        this.dojoObj.addService(portlet, props.x || 0, props.y || 0);
+        portlet.wm_pageContainer = new wm.PageContainer({
+            loadParentFirst: false,
+            owner: this,
+            parentNode: portlet.containerNode,
+            isRelativePositioned: true
+        });
+        if (props.page) {
+            portlet.wm_pageContainer.setPageName(props.page);
+            this.updatePageContainerBounds();
+        }
 
-    if (!this.isDesignLoaded()){
-        dojo.connect(portlet, 'onClose', this, 'portletClosed');
-        portlet.subscribe("/dojox/mdnd/drop", dojo.hitch(this, '_onDashboardChange'));
-        this._onDashboardChange();
-    }
+        if (!this.isDesignLoaded()) {
+            dojo.connect(portlet, 'onClose', this, 'portletClosed');
+            portlet.subscribe("/dojox/mdnd/drop", dojo.hitch(this, '_onDashboardChange'));
+            this._onDashboardChange();
+        }
 
-    this.dijitPortlets.push(portlet);
-    return props;
+        this.dijitPortlets.push(portlet);
+        return props;
     },
     addNewPortlet: function(props){
         props.id = this.getNewPortletId(props.id);
