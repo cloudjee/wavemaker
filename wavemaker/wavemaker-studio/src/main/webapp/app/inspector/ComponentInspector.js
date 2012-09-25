@@ -931,6 +931,8 @@
          if (!e.noReinspect) {
              this.reinspect();
          }
+         wm.job("studio.updateDirtyBit",10, studio, "updateProjectDirty");
+
      },
 
      generateEditorFromProps: function(inProp, editorProps, value) {

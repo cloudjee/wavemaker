@@ -45,6 +45,8 @@ wm.Object.extendSchema(wm.Date, {
 });
 
 wm.Object.extendSchema(wm.Time, {
+    dataValue: {editor: "wm.Time"},
+
     /* Editor group; display subgroup */
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},

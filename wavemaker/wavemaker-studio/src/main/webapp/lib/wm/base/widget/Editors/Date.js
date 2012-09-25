@@ -186,6 +186,7 @@ dojo.declare("wm.Date", wm.Text, {
 // Time Editor
 //===========================================================================
 dojo.declare("wm.Time", wm.Date, {
+    useLocalTime: true,
     use24Time: false,
     timePattern: 'hh:mm a',
     useWMDropDown: false,

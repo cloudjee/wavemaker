@@ -1535,6 +1535,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
             });
             e.connect(e, "onchange", this, function(inDisplayValue, inDataValue, inSetByCode) {
                 this.changed(e, inDisplayValue, inDataValue, inSetByCode);
+                wm.job("studio.updateDirtyBit",10, studio, "updateProjectDirty");
             });
             e.connect(e, "onHelpClick", this, function() {
                 studio.helpPopup = studio.inspector.getHelpDialog();
@@ -2598,6 +2599,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
     };
     this.notesEditor.connect(this.notesEditor, "onchange", this, dojo.hitch(this, function(inDataValue, inDisplayValue) {
         this.inspected.documentation = inDataValue;
+        wm.job("studio.updateDirtyBit",10, studio, "updateProjectDirty");
     }));
     this.tabs.connect(this.tabs, "onchange", this, function() {
         dojo.cookie("wm.prop.Diagnostics.layerIndex", this.tabs.layerIndex);
