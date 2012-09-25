@@ -60,16 +60,20 @@ border-top-left-radius: 4px !important;
 border-bottom-left-radius: 4px !important;
 }
 .wm_harrypotter .wmtogglebuttonpanel .wmbutton:last-child {
-border-radius-topright: 4px !important;
-border-radius-bottomright: 4px !important;
+-moz-border-radius-topright: 4px !important;
+-moz-border-radius-bottomright: 4px !important;
 -webkit-border-top-right-radius: 4px !important;
 -webkit-border-bottom-right-radius: 4px !important;
+border-top-right-radius: 4px !important;
+border-bottom-right-radius: 4px !important;
 }
 .wm_harrypotter .wmtogglebuttonpanel .wmbutton {
-border-radius-topright: 0px !important;
-border-radius-bottomright: 0px !important;
+-moz-border-radius-topright: 0px !important;
+-moz-border-radius-bottomright: 0px !important;
 -webkit-border-top-right-radius: 0px !important;
 -webkit-border-bottom-right-radius: 0px !important;
+border-top-right-radius: 0px !important;
+border-bottom-right-radius: 0px !important;
 }
 .wm_harrypotter .wmtogglebuttonpanel,
 .wm_harrypotter   .wmbutton,
@@ -810,6 +814,12 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_harrypotter div.dojoxGrid, .wm_harrypotter .wmlist {
+font-size: 8pt;
+}
+.wm_harrypotter .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
+font-size: 10pt;
+}
 .wm_harrypotter div.dojoxGrid-row,
 .wm_harrypotter div.dojoxGridRow,
 .wm_harrypotter .Disabled div.dojoxGridRow.dojoxGridRowOver,
@@ -817,7 +827,6 @@ background-repeat: no-repeat;
 .wm_harrypotter .Disabled div.wmlist-item.wmlist-item-over,
 .wm_harrypotter div.wmlist-item {
 font-family: Verdana;
-font-size: 8pt;
 color: #ffffff;
 font-weight: normal;
 background-color: #202020;
@@ -913,7 +922,6 @@ border-right-width: 1px;
 border-right-style: solid;
 border-right-color: #323232;
 font-family: Verdana;
-font-size: 10pt;
 color: #771502 !important;
 font-weight: bold;
 }

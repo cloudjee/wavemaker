@@ -431,6 +431,7 @@ dependencies = {
 			    "wm.base.widget.Bevel",
 			    "wm.base.widget.Splitter",
 			    "wm.base.widget.Buttons.Button",
+                "wm.base.widget.Buttons.ToggleButton",
 			    "wm.base.widget.Picture",
 
 			    "wm.base.widget.Html",

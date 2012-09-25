@@ -60,16 +60,20 @@ border-top-left-radius: 2px !important;
 border-bottom-left-radius: 2px !important;
 }
 .wm_wireframe .wmtogglebuttonpanel .wmbutton:last-child {
-border-radius-topright: 2px !important;
-border-radius-bottomright: 2px !important;
+-moz-border-radius-topright: 2px !important;
+-moz-border-radius-bottomright: 2px !important;
 -webkit-border-top-right-radius: 2px !important;
 -webkit-border-bottom-right-radius: 2px !important;
+border-top-right-radius: 2px !important;
+border-bottom-right-radius: 2px !important;
 }
 .wm_wireframe .wmtogglebuttonpanel .wmbutton {
-border-radius-topright: 0px !important;
-border-radius-bottomright: 0px !important;
+-moz-border-radius-topright: 0px !important;
+-moz-border-radius-bottomright: 0px !important;
 -webkit-border-top-right-radius: 0px !important;
 -webkit-border-bottom-right-radius: 0px !important;
+border-top-right-radius: 0px !important;
+border-bottom-right-radius: 0px !important;
 }
 .wm_wireframe .wmtogglebuttonpanel,
 .wm_wireframe   .wmbutton,
@@ -810,6 +814,12 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_wireframe div.dojoxGrid, .wm_wireframe .wmlist {
+font-size: 8pt;
+}
+.wm_wireframe .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
+font-size: 10pt;
+}
 .wm_wireframe div.dojoxGrid-row,
 .wm_wireframe div.dojoxGridRow,
 .wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOver,
@@ -817,7 +827,6 @@ background-repeat: no-repeat;
 .wm_wireframe .Disabled div.wmlist-item.wmlist-item-over,
 .wm_wireframe div.wmlist-item {
 font-family: Verdana;
-font-size: 8pt;
 color: #000000;
 font-weight: normal;
 background-color: #eeeeee;
@@ -913,7 +922,6 @@ border-right-width: 1px;
 border-right-style: solid;
 border-right-color: #cccccc;
 font-family: Verdana;
-font-size: 10pt;
 color: #000000 !important;
 font-weight: bold;
 }

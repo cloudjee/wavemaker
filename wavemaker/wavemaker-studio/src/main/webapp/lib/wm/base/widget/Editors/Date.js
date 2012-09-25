@@ -455,6 +455,12 @@ dojo.declare("wm.DateTime", wm.Date, {
     },
     getInvalid: function() {
         return this.editor ? this.editor.getInvalid() : false;
+    },
+    connectEditor: function() {
+        this.disconnectEditor();
+        this.timeEditor.onChange = this.dateEditor.onChange = dojo.hitch(this, "changed");
+        this.timeEditor.onblur = this.dateEditor.onblur = dojo.hitch(this, "onblur");
+        this.timeEditor.onfocus = this.dateEditor.onfocus = dojo.hitch(this, "onfocus");
     }
 
     /* OLD EDITOR

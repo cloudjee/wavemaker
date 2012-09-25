@@ -20,6 +20,8 @@ dojo.declare("GridDesigner", wm.Page, {
                 this._editors.push(w);
             }
         }));
+
+        this.subscribe("deviceSizeRecalc", this, "reselectGrid");
     },
     updateFormatterList: function(){
         this.fullFormattersVar.setData(this.formattersVar);
@@ -42,8 +44,16 @@ dojo.declare("GridDesigner", wm.Page, {
         });
         this.liveSourceVar.setData(list);
     },
+    /* Called when deviceType changes, triggering the selected grid to be destroyed, recreated, and our current grid to be destroyed and
+     * in need of reselection */
+    reselectGrid:function() {
+        wm.onidle(this, function() {
+            this.currentGrid = app.getValueById(this.currentGridOwnerId + "." + this.currentGrid.name);
+        });
+    },
     setGrid: function(inGrid) {
         this.currentGrid = inGrid;
+        this.currentGridOwnerId = inGrid.owner.getRuntimeId();
         this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
         this.currentDataSet = inGrid.dataSet;
         this.initialColumns = inGrid.columns;
@@ -64,6 +74,7 @@ dojo.declare("GridDesigner", wm.Page, {
                 columns[i].mobileColumn = false;
             }
         }
+        /* Only needed for upgraded projects from before we had PHONE COLUMN */
         var updateGrid = false;
         if (!hasPhoneColumn) {
             updateGrid = true;
@@ -93,6 +104,13 @@ dojo.declare("GridDesigner", wm.Page, {
     },
     regenerateMobileColumn: function() {
         if (!this.phoneColumn || this.phoneColumn.getValue("isCustomField")) return;
+        var data = this.columnsVar.getData();
+        wm.List.prototype.regenerateMobileColumn(data);
+
+        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
+        this.columnsVar.setData(data);
+        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
+/*
         var mobileExpr = "";
         var count = this.columnsVar.getCount();
 
@@ -135,8 +153,6 @@ dojo.declare("GridDesigner", wm.Page, {
                             break;
                         case 'wm_button_formatter':
                             value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
-/*                            var classList = formatProps.buttonclass ? formatProps.buttonclass  : "wmbutton";
-                            value = "<button class='" + classList + "' onclick=\'${runtimeId}[\"gridButtonClicked\"](event,\"" + column.field + "\",${rowId})\'>" ;*/
                             break;
                         }
                     }
@@ -150,10 +166,8 @@ dojo.declare("GridDesigner", wm.Page, {
                 }
             }
         }
+*/
 
-        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
-        this.phoneColumn.setValue("expression", mobileExpr);
-        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
     },
     getColumnByField: function(inName) {
         for (var i = 0; i < this.currentGrid.columns.length; i++) {
@@ -626,7 +640,11 @@ dojo.declare("GridDesigner", wm.Page, {
         var isSimple = this.isSimpleDataValueEditor.getChecked();
         this.isRestrictDataValueEditor.setDisabled(!isSimple);
         var restrictValues = this.grid.selectedItem.getValue("editorProps.restrictValues");
-        this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
+
+        /* onidle needed because this can be fired in the middle of processing checking a show checkbox */
+        wm.onidle(this, function() {
+            this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
+        });
     },
     onMaximumChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {

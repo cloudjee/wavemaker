@@ -70,7 +70,10 @@ wm.Object.extendSchema(wm.DateTime, {
 
     /* Editor group; value subgroup */
     dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
-    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1}
+    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
+
+    selectOnClick: {ignore: 1},
+    placeHolder: {ignore: 1}
 });
 
 wm.DateTime.extend({

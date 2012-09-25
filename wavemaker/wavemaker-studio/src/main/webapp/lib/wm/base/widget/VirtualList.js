@@ -166,14 +166,14 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
 
 
 dojo.declare("wm.VirtualList", wm.Control, {
-        manageHistory: true,
+    manageHistory: true,
     headerVisible: true,
     toggleSelect: false,
     width: "250px",
     height: "150px",
     box: "v",
     selectionMode: "single",
-        _selectionMode: "single",
+    _selectionMode: "single",
     className: "wmlist",
     selectedItem: null,
     init: function() {
@@ -192,10 +192,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
         this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
     },
     postSetupScroller: function() {
-    var touchScrollOuter = this._listTouchScroll.scroller ? this._listTouchScroll.scroller.outer : null;
-    if (touchScrollOuter) {
-        touchScrollOuter.style.width = "100%";
-    }
+        var touchScrollOuter = this._listTouchScroll.scroller ? this._listTouchScroll.scroller.outer : null;
+        if (touchScrollOuter) {
+            touchScrollOuter.style.width = "100%";
+        }
     },
     dataSetToSelectedItem: function(inDataSet) {
         this.selectedItem.setLiveView((inDataSet|| 0).liveView);
@@ -208,20 +208,20 @@ dojo.declare("wm.VirtualList", wm.Control, {
         return this.items[inIndex];
     },
     getItemByCallback: function(callback) {
-      for (var i= 0; i < this.getCount(); i++) {
-        var d = this.items[i].getData();
-        if (callback(d)) {
-          return this.items[i];
+        for (var i = 0; i < this.getCount(); i++) {
+            var d = this.items[i].getData();
+            if (callback(d)) {
+                return this.items[i];
+            }
         }
-      }
     },
     getItemByFieldName: function(inName, inValue) {
-      for (var i= 0; i < this.getCount(); i++) {
-        var d = this.items[i].getData();
-        if (d[inName] == inValue) {
-          return this.items[i];
+        for (var i = 0; i < this.getCount(); i++) {
+            var d = this.items[i].getData();
+            if (d[inName] == inValue) {
+                return this.items[i];
+            }
         }
-      }
     },
 
     // rendering
@@ -244,21 +244,23 @@ dojo.declare("wm.VirtualList", wm.Control, {
     },
 
     renderBounds: function() {
-    var result = this.inherited(arguments);
-    if (result) {
-        var hidden = this.isAncestorHidden();
-        if (this.headerVisible && !hidden) {
-        wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));
+        var result = this.inherited(arguments);
+        if (result) {
+            var hidden = this.isAncestorHidden();
+            if (this.headerVisible && !hidden) {
+                wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));
+            }
         }
-    }
-    return result;
+        return result;
     },
     postRenderBounds: function() {
-    if (!this.isAncestorHidden()) {
-        var coords = (this.noHeader || !this.headerVisible) ? {h:0} : dojo.marginBox(this.headerNode);
-        var bodyheight = this.getContentBounds().h - coords.h;
-        (this.listNodeWrapper || this.listNode).style.height = Math.max(0,bodyheight) + "px";
-    }
+        if (!this.isAncestorHidden()) {
+            var coords = (this.noHeader || !this.headerVisible) ? {
+                h: 0
+            } : dojo.marginBox(this.headerNode);
+            var bodyheight = this.getContentBounds().h - coords.h;
+            (this.listNodeWrapper || this.listNode).style.height = Math.max(0, bodyheight) + "px";
+        }
     },
 
     clear: function(noEvents) {
@@ -344,49 +346,46 @@ dojo.declare("wm.VirtualList", wm.Control, {
     },
     */
     _addSelectedData: function(inItem) {
-    if (this._selectionMode == "multiple") {
-        if (!dojo.isArray(this.selected))
-        this.selected = [];
-        if (inItem && dojo.indexOf(this.selected,inItem.index) == -1)
-        this.selected.push(inItem.index);
-        var data = [];
-        dojo.forEach(this.selected, dojo.hitch(this, function(index) {
-        var v = this.getItemData(index);
-        if (typeof v == "object") {
-            data.push(v);
-        } else {
-            data.push({dataValue: v});
-        }
-        }));
-        this.selectedItem.setData(data);
-        this.setValue("emptySelection", this.selected.length == 0);
-        this.setValue("isRowSelected", this.selected.length > 0);
-    } else {
-        this.selected = inItem;
-        var
-            d = this.selected ? this.selected.getData() : {},
-            s = this.selectedItem;
-        if (dojo.isObject(d) && !wm.typeManager.getType(s.type))
-            s.setDataSchema(d);
-        if (this.selected && dojo.isObject(d))
-            s.setData(d);
-        else
-            s.clearData();
-        this.setValue("emptySelection", Boolean(!this.selected));
-            this.setValue("isRowSelected", Boolean(this.selected));
-        }
-    },
+       if (this._selectionMode == "multiple") {
+           if (!dojo.isArray(this.selected)) this.selected = [];
+           if (inItem && dojo.indexOf(this.selected, inItem.index) == -1) this.selected.push(inItem.index);
+           var data = [];
+           dojo.forEach(this.selected, dojo.hitch(this, function(index) {
+               var v = this.getItemData(index);
+               if (typeof v == "object") {
+                   data.push(v);
+               } else {
+                   data.push({
+                       dataValue: v
+                   });
+               }
+           }));
+           this.selectedItem.setData(data);
+           this.setValue("emptySelection", this.selected.length == 0);
+           this.setValue("isRowSelected", this.selected.length > 0);
+       } else {
+           this.selected = inItem;
+           var
+           d = this.selected ? this.selected.getData() : {},
+               s = this.selectedItem;
+           if (dojo.isObject(d) && !wm.typeManager.getType(s.type)) s.setDataSchema(d);
+           if (this.selected && dojo.isObject(d)) s.setData(d);
+           else s.clearData();
+           this.setValue("emptySelection", Boolean(!this.selected));
+           this.setValue("isRowSelected", Boolean(this.selected));
+       }
+   },
     _removeSelectedData: function(inItem) {
-    if (this._selectionMode == "multiple") {
-        this.selected = wm.Array.removeElement(this.selected, inItem.index);
-    }
-    this._addSelectedData(null);
+        if (this._selectionMode == "multiple") {
+            this.selected = wm.Array.removeElement(this.selected, inItem.index);
+        }
+        this._addSelectedData(null);
     },
     _clearSelectedData: function() {
-    this.selected = this._selectionMode == "multiple" ? [] : null;
-    this.selectedItem.setData(null);
-    this.setValue("emptySelection", true);
-    this.setValue("isRowSelected", false);
+        this.selected = this._selectionMode == "multiple" ? [] : null;
+        this.selectedItem.setData(null);
+        this.setValue("emptySelection", true);
+        this.setValue("isRowSelected", false);
     },
 
     addToSelection: function(inItem) {
@@ -463,7 +462,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
                     this.eventDeselect(inItem);
             }
         }
-        if (!this._isDesignLoaded && !this._handlingBack && this.manageHistory) {
+        if (!this._isDesignLoaded && !this._handlingBack && this.manageHistory && !this.isNavigationMenu) {
             app.addHistory({id: this.getRuntimeId(),
                     options: {selectedRow: selectedIndexWas},
                     title: "SelectionChange"});
@@ -504,30 +503,30 @@ dojo.declare("wm.VirtualList", wm.Control, {
     },
     select: function(inItem) {
         if (inItem) {
-            this.deselectAll();
-            this.addToSelection(inItem);
+            if (this._selectionMode != "multiple") {
+                this.deselectAll();
+            }
+            this.eventSelect(inItem);
         }
     },
     selectByIndex: function(inIndex) {
         var i = this.getItem(inIndex);
         if (i) {
-        this.select(i);
+            this.select(i);
         }
     },
     getSelectedIndex: function() {
-        if (this._selectionMode == "multiple")
-        return this.selected;
-        else
-        return this.selected ? this.selected.index : -1;
+        if (this._selectionMode == "multiple") return this.selected;
+        else return this.selected ? this.selected.index : -1;
     },
     handleBack: function(inOptions) {
-    this._handlingBack = true;
-    try {
-        var selectedRow = inOptions.selectedRow;
-        this.select(selectedRow);
-    } catch(e) {}
-    delete  this._handlingBack;
-    return true;
+        this._handlingBack = true;
+        try {
+            var selectedRow = inOptions.selectedRow;
+            this.select(selectedRow);
+        } catch (e) {}
+        delete this._handlingBack;
+        return true;
     },
     // events
     _oncanmouseover: function(inEvent, inItem, inMouseOverInfo) {
@@ -564,19 +563,19 @@ dojo.declare("wm.VirtualList", wm.Control, {
     },
 
     _deleteItem: function(inItem) {
-    if (this.deleteConfirm) {
-        app.confirm(this.deleteConfirm, false, dojo.hitch(this, function() {
-        this.deleteItem(inItem);
-        }));
-    } else {
-        this.deleteItem(inItem);
-    }
+        if (this.deleteConfirm) {
+            app.confirm(this.deleteConfirm, false, dojo.hitch(this, function() {
+                this.deleteItem(inItem);
+            }));
+        } else {
+            this.deleteItem(inItem);
+        }
     },
     deleteItem: function(inItem) {
-    var index = dojo.indexOf(this.items, inItem);
-    wm.Array.removeElementAt(this.items, index);
-    dojo.destroy(inItem.domNode);
-    return index;
+        var index = dojo.indexOf(this.items, inItem);
+        wm.Array.removeElementAt(this.items, index);
+        dojo.destroy(inItem.domNode);
+        return index;
     },
     ondblclick: function(inEvent, inItem) {
     },

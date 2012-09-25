@@ -79,7 +79,10 @@ wm.DojoGrid.extend({
     },
     _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
     },
-
+    setStyle: function(inStyle, inValue) {
+        this.inherited(arguments);
+        if (inStyle == "fontSize") this.renderDojoObj();
+    },
     setSingleClickEdit: function(inValue){
         this.singleClickEdit = inValue;
         if (this.dojoObj)
@@ -114,6 +117,9 @@ wm.DojoGrid.extend({
 
     editColumns:function() {
     return this.showMenuDialog();
+    },
+    regenerateMobileColumn: function(inColumns) {
+        return wm.List.prototype.regenerateMobileColumn(inColumns);
     },
     updateNow: function() {
         /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */

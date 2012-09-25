@@ -90,6 +90,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         this.updateSelectedItem(-1);
         this.setSelectionMode(this.selectionMode);
+        if (!this.styles || !this.styles.fontSize)
+            dojo.addClass(this.domNode, "wmNoFontSize");
     },
 
     setNoHeader: function(inValue) {
@@ -1035,6 +1037,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     dojoRenderer: function() {
         if (!this.dojoObj) return;
         this.dojoObj.startup();
+        if (this.styles && this.styles.fontSize) this.dojoObj.domNode.style.fontSize = this.styles.fontSize;
         this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
         if (this._isDesignLoaded) {
             var self = this;
@@ -1318,14 +1321,26 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             });
         }
 
+        var designMode = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page));
         var useMobileColumn = false;
-        if (isMobile) {
+        var isPhone = designMode ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isTablet = designMode ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
+        var isAllPhoneCol = true;
+        if (isPhone || isTablet) {
             for (var i = 0; i < this.columns.length; i++) {
-                if (this.columns[i].mobileColumn) {
+                var c = this.columns[i];
+                if (c.mobileColumn) {
                     useMobileColumn = true;
-                    break;
+                }
+                if (c.show) {
+                    isAllPhoneCol = false;
                 }
             }
+        }
+        if (useMobileColumn && (isAllPhoneCol || designMode && wm.List.prototype.desktopWidthExcedesBounds.call(this))) {
+            ;
+        } else {
+            useMobileColumn = false;
         }
 
         /* IE 9 requires that widths be normalized */
@@ -1338,9 +1353,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         });
 
         dojo.forEach(this.columns, function(col) {
-            if (this._isDesignLoaded && studio.currentDeviceType == "phone" && useMobileColumn) {
-                ;
-            } else if (col.field == "PHONE COLUMN" && !col.show) return; // don't even include this complicated column in the structure unless we're in design mode
+            if (!useMobileColumn && col.field == "PHONE COLUMN" && !col.show) {
+                return; // don't even include this complicated column in the structure unless we're in design mode
+            }
             var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
             var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
             var width = col.width;
@@ -1580,7 +1595,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 formatFunc: formatFunc
             });
         }, this);
-
+        this.regenerateMobileColumn(this.columns);
     },
 
     // if the type changes, we need to adjust rather than regenerate our columns
@@ -1665,7 +1680,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             });
         }
         this.columns = newcolumns;
-
+        this.regenerateMobileColumn(this.columns);
         /*
     if (this.isDesignLoaded()) {
         if (!this.contextMenu) this.designCreate(); // special case from themedesigner
@@ -1835,6 +1850,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
     },
     toHtml: function() {
+        if (this._renderDojoObjSkipped) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
+
         var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
         dojo.forEach(this.columns, function(col, idx) {
             if (!col.show) return;
@@ -1866,30 +1887,30 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         switch (col.formatFunc) {
                         case 'wm_date_formatter':
                         case 'Date (WaveMaker)':
-                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_localdate_formatter':
                         case 'Local Date (WaveMaker)':
-                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_time_formatter':
                         case 'Time (WaveMaker)':
-                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_number_formatter':
                         case 'Number (WaveMaker)':
-                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_array_formatter':
-                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value);
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_currency_formatter':
                         case 'Currency (WaveMaker)':
-                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_image_formatter':
                         case 'Image (WaveMaker)':
-                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_link_formatter':
                         case 'Link (WaveMaker)':
@@ -1918,6 +1939,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 
     toCSV: function(){
+        if (this._renderDojoObjSkipped) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
         var csvData = [];
         dojo.forEach(this.columns, function(col, idx){
             if (!col.show)
@@ -1954,47 +1980,50 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
                 if (col.formatFunc){
                     /* TODO FOR 6.5: Calls to formatters are missing some parameters; at least pass null if no parameter is needed */
-                    switch(col.formatFunc){
+                    if (col.formatFunc) {
+                        switch (col.formatFunc) {
                         case 'wm_date_formatter':
-                            case 'Date (WaveMaker)':
-                            value = this.dateFormatter(value);
+                        case 'Date (WaveMaker)':
+                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_localdate_formatter':
-                            case 'Local Date (WaveMaker)':
-                            value = this.localDateFormatter(value);
+                        case 'Local Date (WaveMaker)':
+                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_time_formatter':
-                            case 'Time (WaveMaker)':
-                            value = this.timeFormatter(value);
+                        case 'Time (WaveMaker)':
+                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_number_formatter':
-                            case 'Number (WaveMaker)':
-                            value = this.numberFormatter(value);
+                        case 'Number (WaveMaker)':
+                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
-                            /* TODO: Fix all formatters as they need parameters
                         case 'wm_array_formatter':
-                            value = this.arrayFormatter(col.field,value);
-                            break;                            */
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value, idx);
+                            break;
                         case 'wm_currency_formatter':
-                            case 'Currency (WaveMaker)':
-                            value = this.currencyFormatter(value);
+                        case 'Currency (WaveMaker)':
+                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_image_formatter':
-                            case 'Image (WaveMaker)':
-                        // spreadsheet shouldn't be given HTML
-                            //value = this.imageFormatter(value);
+                        case 'Image (WaveMaker)':
+                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_link_formatter':
-                            case 'Link (WaveMaker)':
-                        // spreadsheet shouldn't be given HTML
-                        //value = this.linkFormatter(value);
+                        case 'Link (WaveMaker)':
+                            // spreadsheet shouldn't be given HTML
+                            //value = this.linkFormatter(value);
                             break;
 
                         default:
-                            if (!this.isDesignLoaded())
-                                value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles:[], customClasses:[]}, obj);
+                            if (!this.isDesignLoaded()) value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {
+                                customStyles: [],
+                                customClasses: []
+                            }, obj);
                             break;
+                        }
                     }
+
                 }
                 } catch(e){value = "";}
                 this.addColumnToCSV(csvData, value);
@@ -2248,7 +2277,7 @@ wm.DojoGrid.extend({
       if (item && store) {
         //Determine the attributes we need to process.
           var attributes = wm.isEmpty(item) ? [] : store.getAttributes(item);
-          attributes = dojo.filter(attributes, function(inValue) {return inValue.indexOf("_") == -1;})
+          attributes = dojo.filter(attributes, function(inValue) {return inValue.indexOf("_") !== 0;})
         if (attributes && attributes.length > 0) {
           var i;
           for (i = 0; i < attributes.length; i++) {

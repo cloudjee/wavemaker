@@ -295,7 +295,8 @@ wm.RelatedEditor.extend({
             g = this.owner.loadComponent("dataGrid1", p, "wm.DojoGrid", {height: "100px"}),
             dsId = (this.dataSet || 0).getId();
         if (g && dsId) {
-        g.$.binding.addWire("", "dataSet", dsId);
+            this.reflow();
+            g.$.binding.addWire("", "dataSet", dsId);
         }
     },
     removeGrid: function(){

@@ -144,7 +144,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             if (!column.width) column.width = "100%";
             if (column.width.match(/\%/)) totalWidth += Number(column.width);
             if (column.field == "PHONE COLUMN" && !this._isDesignLoaded) {
-                column.expression = column.expression.replace(/\$\{runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
+                column.expression = column.expression.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
             }
         }
         if (!this.isDesignLoaded() && dojo.isIE <= 8) {
@@ -459,17 +459,26 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._dataFields = [];
 
             var useMobileColumn = false;
-            var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
-            if (isMobile) {
+            var isDesignLoaded = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page))
+            var isPhone =  isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+            var isTablet = isDesignLoaded ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
+            var isAllPhoneCol = true;
+            if (isPhone || isTablet) {
                 for (var i = 0; i < this.columns.length; i++) {
                     var c = this.columns[i];
                     if (c.mobileColumn && !c.controller) {
                         useMobileColumn = true;
-                        break;
+                    }
+                    if (!c.controller && c.show) {
+                        isAllPhoneCol = false;
                     }
                 }
             }
-            this._useMobileColumn = useMobileColumn;
+            if (useMobileColumn && (isAllPhoneCol || isPhone || this.desktopWidthExcedesBounds())) {
+                this._useMobileColumn = useMobileColumn;
+            } else {
+                this._useMobileColumn = useMobileColumn = false;
+            }
             /*
         if (useMobileColumn && !this._isDesignLoaded) {
             this.headerVisible = false;
@@ -519,6 +528,21 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.trimDataSetObjectFields(d);
             this._dataFields = d;
         }
+    },
+    desktopWidthExcedesBounds: function() {
+        var width = 20; // give it a little buffer so we don't jump to phone design just because we're a couple pixels off
+        dojo.forEach(this.columns, function(column) {
+            if (column.show) {
+                var w = String(column.width);
+                if (w.indexOf("%") != -1) {
+                    width += 80;
+                } else {
+                    var value = parseInt(w);
+                    if (value) width += value;
+                }
+            }
+        });
+        return (width > this.bounds.w);
     },
     getDataSetObjectFields: function() {
         var o = {};
@@ -676,27 +700,14 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._doingAutoSize = false;
         }
     },
-    selectByIndex: function(inIndex) {
-        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5 && !this._isDesignLoaded) {
-            var renderHiddenGridWas = this._renderHiddenGrid;
-            this._renderHiddenGrid = true;
-            if (this.renderVisibleRowsOnly) {
-                this.renderVisibleRowsOnly = false;
-                this._render();
-                this.renderVisibleRowsOnly = true;
-            } else {
-                this._render();
-            }
-            this._renderHiddenGrid = renderHiddenGridWas;
-        }
-        this.inherited(arguments);
-    },
+
     _onShowParent: function() {
         // if spacerNodeTop has height, then calling _render insures that its height doesn't excede the current dataSet
         // TODO: Support a property for always going back to scrollTop = 0 any time its shown
         if (this._renderDojoObjSkipped && !this._headerRendered || this.spacerNodeTop.clientHeight) {
             wm.onidle(this, "_render");
         }
+        if (this.isNavigationMenu) this.deselectAll();
     },
     setShowing: function(inShowing) {
         var wasShowing = this.showing;
@@ -1543,7 +1554,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return this._data[inIndex];
     },
     _getColumnDef: function(inCol) {
-        var isMobile = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page)) ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isMobile = this._useMobileColumn;
         var hasMobileColumn = dojo.some(this.columns, function(c) {
             return c.mobileColumn && !c.controller;
         });
@@ -1887,12 +1898,37 @@ wm.List.extend({
         this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {
-        if (typeof inItemOrIndex != "object") {
-            this.deselectAll(true);
-            this.eventSelect(this.items[inItemOrIndex]);
+        var index;
+        var item;
+        if (inItemOrIndex === null) {
+            index = -1;
+            item = null;
+        } else if (typeof inItemOrIndex == "object") {
+            index = inItemOrIndex.index;
+            item = inItemOrIndex;
         } else {
-            this.inherited(arguments);
+            index = inItemOrIndex;
+            item = this.getItem(index);
         }
+
+        /* See if we need to render the list in order to perform the selection task */
+        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5 && !this._isDesignLoaded) {
+            var renderHiddenGridWas = this._renderHiddenGrid;
+            this._renderHiddenGrid = true;
+            if (this.renderVisibleRowsOnly) {
+                this.renderVisibleRowsOnly = false;
+                this._render();
+                this.renderVisibleRowsOnly = true;
+            } else {
+                this._render();
+            }
+            this._renderHiddenGrid = renderHiddenGridWas;
+            if (!item) item = this.getItem(index);
+        }
+        this.inherited(arguments, [item]);
+    },
+    selectByIndex: function(inIndex) {
+        this.select(inIndex);
     },
     /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
     selectByQuery: function(inQuery) {
@@ -2004,7 +2040,6 @@ wm.List.extend({
             this.dataSet.setData([inFields]);
             if (selectOnAdd) {
                 this.select(0);
-                this.selectionChange(); // needs committing
             }
             return;
         }

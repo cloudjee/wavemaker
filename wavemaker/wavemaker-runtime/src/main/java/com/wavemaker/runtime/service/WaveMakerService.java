@@ -17,14 +17,22 @@ package com.wavemaker.runtime.service;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.DownloadResponse;
@@ -47,17 +56,73 @@ import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 @ExposeToClient
 public class WaveMakerService {
 
-    private final Log logger = LogFactory.getLog(getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
-    private TypeManager typeManager;
+	private TypeManager typeManager;
 
-    private ServiceManager serviceManager;
+	private ServiceManager serviceManager;
 
-    private ServiceEventNotifier serviceEventNotifier;
+	private ServiceEventNotifier serviceEventNotifier;
 
-    private InternalRuntime internalRuntime;
+	private InternalRuntime internalRuntime;
 
-    private RuntimeAccess runtimeAccess;
+	private HashSet<String> hostSet;
+
+	private HashSet<String> domainSet;
+
+	private Boolean isStudio = false;
+
+	private static final String WHITELIST = "whitelist.txt";
+
+	private static final String STUDIO_SPRINGAPP = "studio-springapp.xml";
+	
+	/**
+	 * Builds whitelist tables and sets isStudio for proxy security
+	 */
+	public WaveMakerService(){
+		ServletContext context = RuntimeAccess.getInstance().getSession().getServletContext();
+		String webinf = context.getRealPath("WEB-INF");
+		try{
+			isStudio = new File(webinf + File.separator + STUDIO_SPRINGAPP).exists();
+		} catch (IllegalArgumentException iae) {
+			isStudio = false;
+		}
+
+		try {  
+			hostSet = new HashSet<String>();
+			domainSet = new HashSet<String>();
+			String whiteFile = IOUtils.read(new File(webinf + File.separator + WHITELIST));
+			String[] urlList = whiteFile.split("\\r?\\n");
+
+			for(String urlString:urlList){
+				URL url = new URL(urlString);
+				String host = url.getHost();
+				hostSet.add(host);					
+				String domain = hostToDomain(host);
+				if (domain!= null){
+					domainSet.add(domain);
+				}
+			}
+			logger.debug("Allowed hosts: " + hostSet.toString());
+			logger.debug("Allowed domains: " + domainSet.toString());
+
+		} catch (IOException ioe){
+			if(isStudio)
+				logger.warn("*** ONLY Studio XHR calls allowed ***");		
+			else	
+				logger.warn("*** " + WHITELIST + " file not found, XHR proxy DISABLED ***");				
+		}
+	}
+
+    private String hostToDomain(String host){
+    	Pattern p = Pattern.compile(".*?([^.]+\\.[^.]+)");
+    	Matcher m = p.matcher(host);
+    	if(m.matches()){
+    		return m.group(1);
+    	}
+    	else 
+    		return null;
+    }
 
     public String getLocalHostIP() {
         return SystemUtils.getIP();
@@ -95,6 +160,7 @@ public class WaveMakerService {
      * "{'params':['string one','string two'],'method':'test','id':1}"]);
      */
     public String remoteRESTCall(String remoteURL, String params, String method, String contentType) {
+    	proxyCheck(remoteURL);
         String charset = "UTF-8";
         StringBuffer returnString = new StringBuffer();
         try {
@@ -174,7 +240,7 @@ public class WaveMakerService {
             				logger.debug("Remote server returned header of: " + key + " " + field + " it was not forwarded");
             			}
             			if(key.toLowerCase().equals("content-length")){
-            				// do not use this length as return header value
+            				// do NOT use this length as return header value
             				responseLen = new Integer(field);
             			}
             			else{
@@ -197,12 +263,41 @@ public class WaveMakerService {
             connection.disconnect();
             return returnString.toString();
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error("ERROR in XHR proxy call: " + e.getMessage());
             throw new WMRuntimeException(e);
         }
     }
 
     /*
+     * Checks a url against the whitelist. Throws if not allowed
+     * @remoteURl the url to check
+     */
+    private void proxyCheck(String remoteURL) throws  WMRuntimeException {
+    	logger.debug("Checking: "  + remoteURL);  	
+    	try{
+    		String host = new URL(remoteURL).getHost();
+    		if(host != null && (hostSet.contains(new URL(remoteURL).getHost()))){
+    			return;
+    		}
+    		String domain = hostToDomain(host);    		
+    		if(domain != null && (domainSet.contains(domain))){
+    			return;
+    		}
+    		String referer = hostToDomain(new URL(RuntimeAccess.getInstance().getRequest().getHeader("referer")).getHost());
+    		if(referer != null && referer.equals(domain) && isStudio){
+    			return;
+    		}
+    		else{
+    			throw new WMRuntimeException("Remote URL not allowed for Proxy call " + remoteURL);
+    		}
+    	}
+    	catch(MalformedURLException e) {
+    		logger.error("ERROR: " + e.getMessage() + remoteURL);
+    		throw new WMRuntimeException("Malformed URL " + remoteURL);
+    	}
+    }
+
+	/*
      * Forward a request to a remote service, using POST
      * 
      * @remoteURl - The url to be invoked
@@ -291,11 +386,4 @@ public class WaveMakerService {
         this.internalRuntime = internalRuntime;
     }
 
-    public RuntimeAccess getRuntimeAccess() {
-        return this.runtimeAccess;
-    }
-
-    public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
-        this.runtimeAccess = runtimeAccess;
-    }
 }

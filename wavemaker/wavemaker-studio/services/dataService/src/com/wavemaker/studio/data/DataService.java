@@ -159,16 +159,16 @@ public class DataService {
 
     public void writeConnectionProperties(String dataModelName, Properties connectionProperties) {
         ConnectionUrl connectionUrl = new ConnectionUrl(connectionProperties.getProperty(DataServiceConstants.DB_URL_KEY));
-
-        ProjectManager projectManager = (ProjectManager) RuntimeAccess.getInstance().getSession().
-                        getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-        LocalFolder hsqlDbRootFolder = (LocalFolder) projectManager.getCurrentProject().getWebAppRootFolder().getFolder("data");
-        try {
-            connectionUrl.rewriteUrl(hsqlDbRootFolder.getLocalFile().getCanonicalPath());
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
+        if (connectionUrl.isHsqldb()) {
+            ProjectManager projectManager = (ProjectManager) RuntimeAccess.getInstance().getSession().
+                            getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
+            LocalFolder hsqlDbRootFolder = (LocalFolder) projectManager.getCurrentProject().getWebAppRootFolder().getFolder("data");
+            try {
+                connectionUrl.rewriteUrl(hsqlDbRootFolder.getLocalFile().getCanonicalPath());
+            } catch (IOException e) {
+                throw new WMRuntimeException(e);
+            }
         }
-
         this.dataModelMgr.getDataModel(dataModelName).writeConnectionProperties(connectionUrl.rewriteProperties(connectionProperties));
     }
 
