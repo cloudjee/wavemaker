@@ -20,8 +20,8 @@ dojo.require("wm.base.widget.Editors.Text_design"); /* Needs the parent schema *
 
 wm.Object.extendSchema(wm.Date, {
     /* Editor group; values subgroup*/
-    dataValue: {editor: "wm.Date"},
-    defaultInsert: { editor: "wm.Date"},
+    dataValue: {editor: "wm.Date", type: "Number"},
+    defaultInsert: { editor: "wm.Date", type: "Number"},
     editorType: {options: ["Date", "Time", "DateTime"]},
 
     /* Behavior subgroup */
@@ -45,7 +45,7 @@ wm.Object.extendSchema(wm.Date, {
 });
 
 wm.Object.extendSchema(wm.Time, {
-    dataValue: {editor: "wm.Time"},
+    dataValue: {editor: "wm.Time", type: "Number"},
 
     /* Editor group; display subgroup */
     timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
@@ -61,6 +61,9 @@ wm.Object.extendSchema(wm.Time, {
 
 
 wm.Object.extendSchema(wm.DateTime, {
+    dataValue: {type: "Number"}, // editor specified in makePropEdit
+    defaultInsert: {type: "Number"},
+
     /* Editor group; behavior subgroup */
     editorType: {options: ["Date", "Time", "DateTime"]},
 
