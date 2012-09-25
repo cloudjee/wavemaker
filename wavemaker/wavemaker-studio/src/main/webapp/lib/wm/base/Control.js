@@ -1667,56 +1667,57 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	   If ommitted, the default node is used.
 	   @example this.panel.removeUserClass("hilite-border");
 	*/
-	removeUserClass: function(inClass, inNodeName) {
-	    inNodeName = inNodeName || "domNode";
-	    var n = this[inNodeName];
-	    if (n)
-		dojo.removeClass(n, inClass);
-	    var cs = this._classes[inNodeName] || [];
-	    for (var i=0, c; c=cs[i]; i++)
-		if (c == inClass)
-		    cs.splice(i--, 1);
-	    if (!cs.length)
-		delete this._classes[inNodeName];
-	},
-
-	setStyle: function(inStyle, inValue) {
-	    if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
-		return this.setProp(inStyle, inValue);
-	    }
-
-	    if (!this.styles) {
-		this.styles = {};
-	    }
-	    if (inValue === null || inValue === undefined) {
-		delete this.styles[inStyle];
-	    } else {
-		this.styles[inStyle] = inValue;
-	    }
-	    if (inStyle == "backgroundGradient") {
-		if (inValue) {
-		    inValue = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
-		} else {
-		    inValue = "";
-		}
-		if (dojo.isIE < 10) {
-		    this.domNode.style.filter = inValue;
-		} else {
-		    this.domNode.style.background = inValue;
-		}
-	    } else {
-		this.domNode.style[inStyle] = inValue;
-	    }
-	},
-    getStyle: function(inStyle) {
-	if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
-	    return this.getProp(inStyle);
-	} else if (!this.styles) {
-	    return "";
-	} else {
-	    return this.styles[inStyle] !== undefined ? this.styles[inStyle] : "";
-	}
+    removeUserClass: function(inClass, inNodeName) {
+        inNodeName = inNodeName || "domNode";
+        var n = this[inNodeName];
+        if (n) dojo.removeClass(n, inClass);
+        var cs = this._classes[inNodeName] || [];
+        for (var i = 0, c; c = cs[i]; i++) {
+            if (c == inClass) {
+                cs.splice(i--, 1);
+            }
+        }
+        if (!cs.length) delete this._classes[inNodeName];
     },
+
+    setStyle: function(inStyle, inValue) {
+        if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
+            return this.setProp(inStyle, inValue);
+        }
+
+        if (!this.styles) {
+            this.styles = {};
+        }
+        if (inValue === null || inValue === undefined) {
+            delete this.styles[inStyle];
+        } else {
+            this.styles[inStyle] = inValue;
+        }
+        if (inStyle == "backgroundGradient") {
+            if (inValue) {
+                inValue = wm.getBackgroundStyle(inValue.startColor, inValue.endColor, inValue.colorStop, inValue.direction, "");
+            } else {
+                inValue = "";
+            }
+            if (dojo.isIE < 10) {
+                this.domNode.style.filter = inValue;
+            } else {
+                this.domNode.style.background = inValue;
+            }
+        } else {
+            this.domNode.style[inStyle] = inValue;
+        }
+    },
+    getStyle: function(inStyle) {
+        if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
+            return this.getProp(inStyle);
+        } else if (!this.styles) {
+            return "";
+        } else {
+            return this.styles[inStyle] !== undefined ? this.styles[inStyle] : "";
+        }
+    },
+
 	getOrderedWidgets: function() {
 	    return [];
 	},
