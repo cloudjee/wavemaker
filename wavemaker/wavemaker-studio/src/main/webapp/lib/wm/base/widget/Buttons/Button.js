@@ -58,20 +58,26 @@ dojo.declare("wm.IconButton", wm.Button, {
 
 dojo.declare("wm.MobileIconButton", wm.ToolButton, {
     direction: "down",
+    caption: "Back",
     height: "40px",
     build: function() {
-    this.inherited(arguments);
-    if (this.direction == "back") {
-        /* Copied from dojo 1.6.1: dojox.mobile._base  */
-        var btn = dojo.create("DIV", {className:"mblArrowBackButton"}, this.domNode, "first");
-        var head = dojo.create("DIV", {className:"mblArrowBackButtonHead"}, btn);
-        var body = dojo.create("DIV", {className:"mblArrowBackButtonBody mblArrowButtonText", innerHTML: "Back"}, btn);
-        dojo.addClass(this.domNode, "wmBackButton");
-    } else {
-        var icon = this.iconNode = document.createElement("div");
-        dojo.addClass(icon, "mblArrow " + "mbl" + wm.capitalize(this.direction) + "Arrow");
-        this.domNode.appendChild(icon);
-    }
+        this.inherited(arguments);
+        if (this.direction == "back") {
+            /* Copied from dojo 1.6.1: dojox.mobile._base  */
+            var btn = dojo.create("DIV", {className:"mblArrowBackButton"}, this.domNode, "first");
+            var head = dojo.create("DIV", {className:"mblArrowBackButtonHead"}, btn);
+            var body = dojo.create("DIV", {className:"mblArrowBackButtonBody mblArrowButtonText", innerHTML: this.caption}, btn);
+            this.captionNode = body;
+            dojo.addClass(this.domNode, "wmBackButton");
+        } else {
+            var icon = this.iconNode = document.createElement("div");
+            dojo.addClass(icon, "mblArrow " + "mbl" + wm.capitalize(this.direction) + "Arrow");
+            this.domNode.appendChild(icon);
+        }
+    },
+    setCaption: function(inCaption) {
+        this.caption = inCaption;
+        if (this.captionNode) this.captionNode.innerHTML = inCaption;
     },
     render: function(forceRender, noInherited) {
        wm.Control.prototype.render.call(this, forceRender);
