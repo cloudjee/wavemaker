@@ -1912,7 +1912,7 @@ wm.List.extend({
         }
 
         /* See if we need to render the list in order to perform the selection task */
-        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5 && !this._isDesignLoaded) {
+        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && index > 5 && !this._isDesignLoaded) {
             var renderHiddenGridWas = this._renderHiddenGrid;
             this._renderHiddenGrid = true;
             if (this.renderVisibleRowsOnly) {
