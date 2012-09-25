@@ -792,7 +792,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         this.displayExpressionEditor.setDataValue(inDisplayExpr);
     },
     updateBindSourceUi: function(gv) {
-      //var gv = this.simpleRb.getValue("groupValue"),
+        //var gv = this.simpleRb.getValue("groupValue"),
         this.previewPanel.setShowing(false);
         this.treeControlsPanel.show();
         this.searchBar.show();
@@ -801,80 +801,77 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         var r = t.root;
 
         var page;
-        if (this.pageSelect.getDataValue() == studio.project.pageName ||
-           gv == "simple")
-        page = studio.page;
+        if (this.pageSelect.getDataValue() == studio.project.pageName || gv == "simple") page = studio.page;
         else {
-        this.pageContainer.setPageName(this.pageSelect.getDataValue());
-        page = this.pageContainer.page;
+            this.pageContainer.setPageName(this.pageSelect.getDataValue());
+            page = this.pageContainer.page;
         }
         r.page = page;
-            var t2 = this.expressionTree;
-            t2.clear();
-            var r2 = t2.root;
-            r2.page = page;
+        var t2 = this.expressionTree;
+        t2.clear();
+        var r2 = t2.root;
+        r2.page = page;
 
-        if (gv != "resources" && this.searchBar.getDataValue())
-        gv = "search";
+        if (gv != "resources" && this.searchBar.getDataValue()) gv = "search";
 
-        switch(gv) {
-                case "search":
-            this.searchBar.setDisabled(false);
-            // give text time to finish being entered before rebuilding the tree
-            wm.onidle(this, function() {
-            this.treeLayer.activate();
-                this.pageSelect.setShowing(this.simpleRb.getGroupValue() == "expression" || this.simpleRb.getGroupValue() == "advanced");
-            if (this.simpleRb.getGroupValue() == "expression") {
-                this.expressionLayer.activate();
-                    this._buildSearchTree(this.expressionTree.root);
-                this.validLabel.setShowing(false);
-                this.invalidLabel.setShowing(false);
-            } else {
-                    this._buildSearchTree(r);
-            }
-            });
+        switch (gv) {
+            case "search":
+                this.searchBar.setDisabled(false);
+                // give text time to finish being entered before rebuilding the tree
+                wm.onidle(this, function() {
+                    this.treeLayer.activate();
+                    this.pageSelect.setShowing(this.simpleRb.getGroupValue() == "expression" || this.simpleRb.getGroupValue() == "advanced");
+                    if (this.simpleRb.getGroupValue() == "expression") {
+                        this.expressionLayer.activate();
+                        this._buildSearchTree(this.expressionTree.root);
+                        this.validLabel.setShowing(false);
+                        this.invalidLabel.setShowing(false);
+                    } else {
+                        this._buildSearchTree(r);
+                    }
+                });
                 break;
             case "simple":
-                        this.pageSelect.hide();
-                        this.searchBar.setDisabled(false);
+                this.pageSelect.hide();
+                this.searchBar.setDisabled(false);
                 this.treeLayer.activate();
-                        this.bindEditor.show();
+                this.bindEditor.show();
                 this._buildSimpleTree(r);
                 break;
             case "advanced":
-                        this.pageSelect.show();
-                        this.searchBar.setDisabled(false);
+                this.pageSelect.show();
+                this.searchBar.setDisabled(false);
                 this.treeLayer.activate();
-                        this.bindEditor.show();
+                this.bindEditor.show();
                 this._buildAdvancedTree(r);
                 break;
             case "expression":
-                        this.pageSelect.show();
-                        this.searchBar.setDisabled(false);
+                this.pageSelect.show();
+                this.searchBar.setDisabled(false);
                 this.expressionLayer.activate();
-                        this.bindEditor.hide();
+                this.bindEditor.hide();
                 this._buildAdvancedTree(this.expressionTree.root);
                 this.validLabel.setShowing(false);
                 this.invalidLabel.setShowing(false);
                 break;
             case "displayExpression":
-                        this.treeControlsPanel.hide();
-                        this.searchBar.hide();
-                        this.displayExpressionTree.clear();
-                        this.pageSelect.hide();
-                        this.searchBar.setDisabled(true);
+                this.treeControlsPanel.hide();
+                this.searchBar.hide();
+                this.displayExpressionTree.clear();
+                this.pageSelect.hide();
+                this.searchBar.setDisabled(true);
                 this.displayExpressionLayer.activate();
-                        this.bindEditor.hide();
+                this.bindEditor.hide();
                 this._buildDisplayExpressionTree(this.displayExpressionTree.root);
                 this.validLabel.setShowing(false);
                 this.invalidLabel.setShowing(false);
                 break;
 
             case "resources":
-                        this.pageSelect.hide();
-                        this.searchBar.setDisabled(true);
+                this.pageSelect.hide();
+                this.searchBar.setDisabled(true);
                 this.treeLayer.activate();
-                        this.bindEditor.show();
+                this.bindEditor.show();
                 this._buildResourceTree(r);
                 this.invalidLabel.setShowing(false);
                 break;
@@ -888,49 +885,53 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             return;
         }
         if (this.pageSelect.getDataValue() != studio.project.pageName && this.simpleRb.getGroupValue() != "simple") {
-        var pagecomps = this.doSearch(this.pageContainer.page);
-        var appcomps = [];
+            var pagecomps = this.doSearch(this.pageContainer.page);
+            var appcomps = [];
         } else {
-        var appcomps = this.doSearch(studio.application);
-        var pagecomps = this.doSearch(inParent.page);
+            var appcomps = this.doSearch(studio.application);
+            var pagecomps = this.doSearch(inParent.page);
         }
         if (this.simpleRb.getGroupValue() == "simple") {
-        addWidgetBinderNodes(inParent, appcomps);
-        addWidgetBinderNodes(inParent, pagecomps);
-        if (this.tree.root.kids.length <= 2) {
-            for (var i = 0; i < this.tree.root.kids.length; i++)
-            this.tree.root.kids[i].setOpen(true);
-        }
+            addWidgetBinderNodes(inParent, appcomps);
+            addWidgetBinderNodes(inParent, pagecomps);
+            if (this.tree.root.kids.length <= 2) {
+                for (var i = 0; i < this.tree.root.kids.length; i++)
+                this.tree.root.kids[i].setOpen(true);
+            }
         } else {
             var count = appcomps.length + pagecomps.length;
-        dojo.forEach(appcomps, function(c) {
-            if (c != studio.selected)
-            new wm.BindSourceTreeNode(inParent, {object: c, closed: count > 2});
-        });
+            dojo.forEach(appcomps, function(c) {
+                if (c != studio.selected) new wm.BindSourceTreeNode(inParent, {
+                    object: c,
+                    closed: count > 2
+                });
+            });
 
-        dojo.forEach(pagecomps, function(c) {
-            if (c != studio.selected)
-            new wm.BindSourceTreeNode(inParent, {content: ((c.owner != studio.page) ? c.owner.name + "." : "") + c.name, object: c, closed: count > 2});
-        });
+            dojo.forEach(pagecomps, function(c) {
+                if (c != studio.selected) new wm.BindSourceTreeNode(inParent, {
+                    content: ((c.owner != studio.page) ? c.owner.name + "." : "") + c.name,
+                    object: c,
+                    closed: count > 2
+                });
+            });
         }
-            if (this.tree.root.kids.length == 1) {
-                this.tree.select(this.tree.root.kids[0]);
-                if (this.simpleRb.getGroupValue() != "simple") {
-                    var props = this.tree.root.kids[0].object.listProperties();
-                    var simpleProp = "";
-                    for (var propName in props) {
-                        if (props[propName].simpleBindProp) {
-                            simpleProp = propName;
-                            break;
-                        }
-                    }
-                    var parent = this.tree.root.kids[0];
-                    for (var i = 0; i < parent.kids.length; i++) {
-                        if (parent.kids[i].name == simpleProp)
-                            this.tree.select(parent.kids[i]);
+        if (this.tree.root.kids.length == 1) {
+            this.tree.select(this.tree.root.kids[0]);
+            if (this.simpleRb.getGroupValue() != "simple") {
+                var props = this.tree.root.kids[0].object.listProperties();
+                var simpleProp = "";
+                for (var propName in props) {
+                    if (props[propName].simpleBindProp) {
+                        simpleProp = propName;
+                        break;
                     }
                 }
+                var parent = this.tree.root.kids[0];
+                for (var i = 0; i < parent.kids.length; i++) {
+                    if (parent.kids[i].name == simpleProp) this.tree.select(parent.kids[i]);
+                }
             }
+        }
     },
     _buildSimpleTree: function(inParent) {
         // servicecalls
@@ -962,7 +963,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                                 hasSchema: true,
                                 canSelect: false});
     },
-        _buildDisplayExpressionTree: function(inParent) {
+    _buildDisplayExpressionTree: function(inParent) {
         new wm.BindSourceTreeNode(inParent, {object: this.owner.targetProps.displayExpressionObject,
                          closed: false});
 /*
@@ -976,13 +977,15 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                               */
     },
     _buildResourceTree: function(inParent) {
-        var _this = this;
+       var _this = this;
 
-        studio.resourceManagerService.requestAsync("getFolder", ["webapproot/resources"], function(rootfolder) {
-        _this.resourceData = rootfolder;
-        addResourceBinderNodes(inParent, rootfolder,true,"webapproot/resources");
-        });
-    },
+       studio.resourceManagerService.requestAsync("getFolder", ["webapproot/resources"],
+            function(rootfolder) {
+               _cupdatingthis.resourceData = rootfolder;
+                addResourceBinderNodes(inParent, rootfolder, true, "webapproot/resources");
+           }
+        );
+   },
     // tree expanding
     expandBySource: function(inSource) {
         var
