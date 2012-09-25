@@ -700,21 +700,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._doingAutoSize = false;
         }
     },
-    selectByIndex: function(inIndex) {
-        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5 && !this._isDesignLoaded) {
-            var renderHiddenGridWas = this._renderHiddenGrid;
-            this._renderHiddenGrid = true;
-            if (this.renderVisibleRowsOnly) {
-                this.renderVisibleRowsOnly = false;
-                this._render();
-                this.renderVisibleRowsOnly = true;
-            } else {
-                this._render();
-            }
-            this._renderHiddenGrid = renderHiddenGridWas;
-        }
-        this.inherited(arguments);
-    },
+
     _onShowParent: function() {
         // if spacerNodeTop has height, then calling _render insures that its height doesn't excede the current dataSet
         // TODO: Support a property for always going back to scrollTop = 0 any time its shown
@@ -1912,12 +1898,37 @@ wm.List.extend({
         this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {
-        if (typeof inItemOrIndex != "object") {
-            this.selectByIndex(inItemOrIndex);
-            // TODO: need to set scrollTop here
+        var index;
+        var item;
+        if (inItemOrIndex === null) {
+            index = -1;
+            item = null;
+        } else if (typeof inItemOrIndex == "object") {
+            index = inItemOrIndex.index;
+            item = inItemOrIndex;
         } else {
-            this.inherited(arguments);
+            index = inItemOrIndex;
+            item = this.getItem(index);
         }
+
+        /* See if we need to render the list in order to perform the selection task */
+        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5 && !this._isDesignLoaded) {
+            var renderHiddenGridWas = this._renderHiddenGrid;
+            this._renderHiddenGrid = true;
+            if (this.renderVisibleRowsOnly) {
+                this.renderVisibleRowsOnly = false;
+                this._render();
+                this.renderVisibleRowsOnly = true;
+            } else {
+                this._render();
+            }
+            this._renderHiddenGrid = renderHiddenGridWas;
+            if (!item) item = this.getItem(index);
+        }
+        this.inherited(arguments, [item]);
+    },
+    selectByIndex: function(inIndex) {
+        this.select(inIndex);
     },
     /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
     selectByQuery: function(inQuery) {
