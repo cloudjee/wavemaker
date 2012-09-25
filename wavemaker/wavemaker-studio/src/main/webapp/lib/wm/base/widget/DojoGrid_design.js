@@ -79,7 +79,10 @@ wm.DojoGrid.extend({
     },
     _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
     },
-
+    setStyle: function(inStyle, inValue) {
+        this.inherited(arguments);
+        if (inStyle == "fontSize") this.renderDojoObj();
+    },
     setSingleClickEdit: function(inValue){
         this.singleClickEdit = inValue;
         if (this.dojoObj)

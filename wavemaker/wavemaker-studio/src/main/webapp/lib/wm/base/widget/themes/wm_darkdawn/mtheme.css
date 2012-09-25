@@ -514,9 +514,11 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_darkdawn div.dojoxGrid, .wm_darkdawn .wmlist {
+font-size: 10pt;
+}
 .wm_darkdawn div.wmlist-item {
 font-family: Arial;
-font-size: 10pt;
 color: #000000;
 font-weight: normal;
 background-color: #dddddd;

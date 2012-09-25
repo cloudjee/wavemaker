@@ -514,9 +514,11 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_harrypotter div.dojoxGrid, .wm_harrypotter .wmlist {
+font-size: 8pt;
+}
 .wm_harrypotter div.wmlist-item {
 font-family: Verdana;
-font-size: 8pt;
 color: #ffffff;
 font-weight: normal;
 background-color: #202020;

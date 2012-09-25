@@ -514,9 +514,11 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_wireframe div.dojoxGrid, .wm_wireframe .wmlist {
+font-size: 8pt;
+}
 .wm_wireframe div.wmlist-item {
 font-family: Verdana;
-font-size: 8pt;
 color: #000000;
 font-weight: normal;
 background-color: #eeeeee;

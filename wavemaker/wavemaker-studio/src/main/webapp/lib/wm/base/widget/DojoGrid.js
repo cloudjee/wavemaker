@@ -90,6 +90,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         this.updateSelectedItem(-1);
         this.setSelectionMode(this.selectionMode);
+        if (!this.styles || !this.styles.fontSize)
+            dojo.addClass(this.domNode, "wmNoFontSize");
     },
 
     setNoHeader: function(inValue) {
@@ -1035,6 +1037,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     dojoRenderer: function() {
         if (!this.dojoObj) return;
         this.dojoObj.startup();
+        if (this.styles && this.styles.fontSize) this.dojoObj.domNode.style.fontSize = this.styles.fontSize;
         this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
         if (this._isDesignLoaded) {
             var self = this;

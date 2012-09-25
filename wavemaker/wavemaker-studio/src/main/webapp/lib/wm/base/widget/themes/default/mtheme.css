@@ -1192,7 +1192,7 @@ border-bottom: solid 1px #999;
     min-height: 0px;
 }
 
-.wmmobile .wmlist-content, .wmmobile .dojoxGridRow {
+.wmlist {
 font-size: 14px;
 }
 

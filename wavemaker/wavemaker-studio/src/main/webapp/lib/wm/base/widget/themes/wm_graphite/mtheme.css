@@ -514,9 +514,11 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_graphite div.dojoxGrid, .wm_graphite .wmlist {
+font-size: 10pt;
+}
 .wm_graphite div.wmlist-item {
 font-family: Arial;
-font-size: 10pt;
 color: #000000;
 font-weight: normal;
 background-color: #dddddd;
