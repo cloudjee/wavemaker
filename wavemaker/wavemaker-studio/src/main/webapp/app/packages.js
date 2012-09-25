@@ -31,7 +31,7 @@
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButton, {}, false],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button_Panel, "wm.ToggleButtonPanel", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButtonPanel, {}, true],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.Buttons.BusyButton", "Studio_paletteImageList_4", bundlePackage.descBusyButton, {}, true],
-
+[  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.MobileBackButton, "wm.MobileIconButton", "wm.base.widget.Buttons.Button", "Studio_paletteImageList_4", bundlePackage.descMobileIconButton, {direction: "back"}, true],
 
 
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "Studio_paletteImageList_7", bundlePackage.descLabel, {}, false],

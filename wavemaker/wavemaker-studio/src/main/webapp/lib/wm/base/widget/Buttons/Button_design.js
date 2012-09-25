@@ -244,3 +244,10 @@ wm.Object.extendSchema(wm.ToggleButtonPanel, {
 
 
 });
+
+wm.MobileIconButton.extend({
+    afterPaletteDrop: function(){
+        this.inherited(arguments);
+        this.setEvent("onclick", "app._onBack");
+    }
+});
