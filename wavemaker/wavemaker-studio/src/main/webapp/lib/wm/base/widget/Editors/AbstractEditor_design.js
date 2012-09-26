@@ -83,10 +83,26 @@ wm.AbstractEditor.extend({
             dojo.removeClass(this.captionNode, inClass);
     },
     afterPaletteDrop: function() {
+        this.inherited(arguments);
         this.setCaption(this.name);
         var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
         if (liveform) {
-            this.setCaptionPosition(liveform.captionPosition);
+            this.adjustToForm(liveform);
+
+            var liveform2 = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.DataForm);
+            liveform2.afterPaletteChildDrop(this);
+        }
+    },
+    afterDragDrop: function() {
+        this.inherited(arguments);
+        var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.DataForm);
+        if (liveform) {
+            this.adjustToForm(liveform);
+            liveform.afterDragChildDrop(this);
+        }
+    },
+    adjustToForm: function(liveform) {
+        this.setCaptionPosition(liveform.captionPosition);
             this.setCaptionAlign(liveform.captionAlign);
             this.setCaptionSize(liveform.captionSize);
             if (this.height == wm.AbstractEditor.prototype.height)
@@ -102,8 +118,7 @@ wm.AbstractEditor.extend({
             if (this.constructor.prototype.width == wm.AbstractEditor.prototype.width)
                 this.setWidth(liveform.editorWidth);
             this.setReadonly(liveform.readonly);
-        }
-    },
+        },
     // adds ability to merge in editor properties intended to be presented in owner.
     // note: these editor properties must be serialized in the editor.
     listProperties: function() {
