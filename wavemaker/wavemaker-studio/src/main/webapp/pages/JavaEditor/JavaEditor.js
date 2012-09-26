@@ -159,7 +159,7 @@ dojo.declare("JavaEditor", wm.Page, {
                             }));
 	},
 	deleteServiceCallback: function(inData) {
-	    studio.application.removeServerComponent(this.javaService);
+	    studio.application.removeServerComponentByName(this.javaService.name, "wm.JavaService");
 	    studio.refreshServiceTree("");
 	    var pageContainer = this.owner;
 	    var subtablayer = pageContainer.parent;
