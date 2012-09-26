@@ -317,7 +317,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
         if (!c.name || c.name.indexOf("_") === 0) return false;
 
-        if (c.owner instanceof wm.LiveVariable && (c.name == "filter" || c.name == "sourceData"))
+        if (c.owner instanceof wm.LiveVariable && (c.name == "filter" || c.name == "sourceData" || c.name == "input"))
             return false;
 
         if (matchType) {
