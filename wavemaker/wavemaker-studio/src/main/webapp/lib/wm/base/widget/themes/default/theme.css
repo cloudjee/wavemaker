@@ -655,7 +655,9 @@ display: none; /* if shown, selecting 500 rows hangs even chrome */
 	background-color: white;
 	border-top: none;
 }
-
+.wmmobile .dojoxGridRow {
+    min-height: 32px;
+}
 .dojoxGrid-row-over {
 	border-top-color: #92b2eb;
 	border-bottom-color: #92b2eb;
