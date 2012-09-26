@@ -662,7 +662,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      ***************/
     getEditorsArray: function(includeRelated) {
 	return wm.getMatchingFormWidgets(this, function(w) {
-	    return (w instanceof wm.AbstractEditor || includeRelated && w instanceof wm.SubForm) && (w.formField !== undefined);
+	    return (w instanceof wm.AbstractEditor || includeRelated && wm.isInstanceType(w, [wm.SubForm, wm.OneToMany])) && (w.formField !== undefined);
 	});
     },
 
