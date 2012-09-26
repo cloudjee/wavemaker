@@ -105,7 +105,14 @@ wm.LiveFormBase.extend({
                     }
                 }
             }
+
         }, this);
+
+        wm.forEachWidget(this, dojo.hitch(this, function(e) {
+            if (wm.isInstanceType(e, [wm.SubForm, wm.OneToMany])) {
+                errors.push({name: this.name + " can not contain a wm.SubForm or wm.OneToMany editor such as " + e.name + "; these editors only work in wm.DataForm", dataValue: e.name});
+            }
+        }), true);
         return errors;
     },
 
