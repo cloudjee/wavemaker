@@ -224,6 +224,10 @@
     "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/${className}",
     "wm.Palette.TIP_DOCS": "Click for docs",
 
+    /* MISC WIDGETS */
+    "wm.ToggleButtonPanel.BUTTON_ONLY": "You can only add regular buttons to this panel, not ${name}",
+
+
     /* action.js/clipboard.js: undo/redo */
     "UNDO_MOUSEOVER_HINT": "Undo ${hint}",
     "UNDO_DELETE_HINT": "Delete ${className}",

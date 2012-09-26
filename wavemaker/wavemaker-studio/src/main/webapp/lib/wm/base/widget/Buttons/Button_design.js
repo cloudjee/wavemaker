@@ -217,6 +217,8 @@ wm.ToggleButtonPanel.extend({
         });
         this.reflow();
     },
+    afterPaletteChildDrop: function(inWidget) {
+    },
     set_buttonMargins: function(inMargin) {
         this.buttonMargins = inMargin;
         dojo.forEach(this._btns, function(b) {
@@ -224,10 +226,24 @@ wm.ToggleButtonPanel.extend({
         });
     },
     afterPaletteChildDrop: function(inButton) {
-        inButton.setWidth("100%");
-        inButton.setMargin("0");
-        inButton.setPadding("0");
-        inButton.setBorder("0,1,0,0");
+        if (inButton.declaredClass == "wm.Button") {
+            inButton.setWidth("100%");
+            inButton.setMargin("0");
+            inButton.setPadding("0");
+            inButton.setBorder("0,1,0,0");
+        } else {
+            app.toastWarning(studio.getDictionaryItem("wm.ToggleButtonPanel.BUTTON_ONLY", {name: inButton.declaredClass}));
+        }
+    },
+    _errorCheck: function() {
+        var errors = [];
+        for (var i = 0; i < this.c$.length; i++) {
+            if (this.c$[i].declaredClass != "wm.Button") {
+                errors.push({name: this.name + " should only have buttons in it, " + this.c$[i].name + " may cause problems", dataValue: this.name});
+                break;
+            }
+        }
+        return errors;
     }
 });
 
