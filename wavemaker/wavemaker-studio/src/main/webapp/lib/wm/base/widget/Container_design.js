@@ -63,8 +63,6 @@ wm.Object.extendSchema(wm.Container, {
     clearData: {method:1},
     resetData: {method:1},
     clearDirty: {method:1},
-    resetData: {method:1},
-    clearDirty: {method:1},
     setBestWidth: {method:1},
     setBestHeight:{method:1},
 
