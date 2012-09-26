@@ -239,7 +239,7 @@ wm.ToggleButtonPanel.extend({
         var errors = [];
         for (var i = 0; i < this.c$.length; i++) {
             if (this.c$[i].declaredClass != "wm.Button") {
-                errors.push({name: this.name + " should only have buttons in it, " + this.c$[i].name + " may cause problems", dataValue: this.name});
+                errors.push({name: this.name + " should only have standard buttons in it, " + this.c$[i].name + " of class " + this.c$[i].declaredClass + " may cause problems", dataValue: this.name});
                 break;
             }
         }
