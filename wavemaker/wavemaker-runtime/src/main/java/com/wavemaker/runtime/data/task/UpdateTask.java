@@ -37,21 +37,8 @@ public class UpdateTask extends BaseTask implements PreProcessor, Task {
         }
 
         Object o = input[0];
-
-        WMAppContext wmApp = WMAppContext.getInstance();
-        if (wmApp != null && wmApp.isMultiTenant()) {
-            Object rtn = loadIntoSession(o, session, dbName);
-
-            if (rtn != null) {
-                // session.update(o);
-                if (!session.contains(o)) {
-                    session.update(o);
-                }
-            }
-        } else {
-            if (!session.contains(o)) {
-                session.update(o);
-            }
+        if (session.contains(o)) {
+            session.update(o);
         }
 
         maybeRefreshEntity(o, session, dbName);
