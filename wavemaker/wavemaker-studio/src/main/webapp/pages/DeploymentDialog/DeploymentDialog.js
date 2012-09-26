@@ -111,8 +111,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     selectFirst: function() {
         this.initDeploymentListVar();
         if (this.deploymentListVar.getCount() > 0) {
-            this.deploymentList.selectByIndex(0);
-            this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(0), true);
+            this.deploymentList.select(0);
+            //this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(0), true);
         } else {
 
         }
@@ -300,7 +300,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
     data.deploymentId = inResult;
     this.deploymentListVar.setValue("dataValue", data);
     this.editPanel.clearDirty();
-    this.deploymentList.selectByIndex(selectedIndex);
+    this.deploymentList._cupdating = true;
+    this.deploymentList.select(selectedIndex);
+    this.deploymentList._cupdating = false;
     this.refreshStudioDeploymentsMenu();
 
     if (!deploying) {
@@ -389,8 +391,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.owner.owner.show();
         for (var i = 0; i < this.deploymentListVar.getCount(); i++) {
         if (this.deploymentListVar.getItem(i).getValue("dataValue").deploymentId == inData.deploymentId) {
-            this.deploymentList.selectByIndex(i);
-            this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(i),true);
+            this.deploymentList.select(i);
+            //this.deploymentListSelect(this.deploymentList, this.deploymentList.getItem(i),true);
         }
         }
     } else {
@@ -647,7 +649,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
               this.copyDeployment();
               if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId) {
                   this.deploymentListVar.removeItem(selectedIndex);
-                  this.deploymentList.selectByIndex(this.deploymentListVar.getCount()-1);
+                  this.deploymentList._cupdating = true;
+                  this.deploymentList.select(this.deploymentListVar.getCount()-1);
+                  this.deploymentList._cupdating = false;
               }
       });
           this.confirmSaveDialog.show();
@@ -848,7 +852,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
               var selectedIndex = this.deploymentList.getSelectedIndex();
               if (!this.deploymentListVar.getItem(selectedIndex).getValue("dataValue").deploymentId) {
                   this.deploymentListVar.removeItem(selectedIndex);
+                  this.deploymentList._cupdating = true;
                   this.deploymentList.selectByIndex(this.deploymentListVar.getCount()-1);
+                  this.deploymentList._cupdating = false;
               }
       });
           this.confirmSaveDialog.show();
@@ -980,8 +986,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 dataValue: deploymentDescriptor
             });
             this._selectingListItem = true;
-            this.deploymentList.selectByIndex(this.deploymentListVar.getCount() - 1);
+            this.deploymentList._cupdating = true;
+            this.deploymentList.select(this.deploymentListVar.getCount() - 1);
+            this.deploymentList._cupdating = false;
             this._currentDeploymentIndex = this.deploymentList.getSelectedIndex();
+
             delete this._selectingListItem;
             return inName;
         }
@@ -1244,7 +1253,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
                     this.openDeployment(inSender.selectedItem.getData().dataValue);
                     if (oldSelectedIndex >= 0 && !this.deploymentListVar.getItem(oldSelectedIndex).getValue("dataValue").deploymentId) {
                         this.deploymentListVar.removeItem(oldSelectedIndex);
-                        this.deploymentList.selectByIndex(this._currentDeploymentIndex);
+                        this.deploymentList._cupdating = true;
+                        this.deploymentList.select(this._currentDeploymentIndex);
+                        this.deploymentList._cupdating = false;
                     }
                 });
                 this.confirmSaveDialog.show();
@@ -1254,14 +1265,18 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 });
 
                 this.saveDialogCancelButton.onclick = dojo.hitch(this, function() {
-                    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
+                    this.deploymentList._cupdating = true;
+                    this.deploymentList.select(this._currentDeploymentIndex);
+                    this.deploymentList._cupdating = false;
                     this.confirmSaveDialog.hide();
                 });
 
                 this.saveDialogSaveButton.onclick = dojo.hitch(this, function() {
                     var c1 = dojo.connect(this, "saveSuccess", this, function() {
                         this.confirmSaveDialog.hide();
-                        this.deploymentList.selectByIndex(newIndex);
+                        this.deploymentList._cupdating = true;
+                        this.deploymentList.select(newIndex);
+                        this.deploymentList._cupdating = false
                         selectFunc();
                         dojo.disconnect(c1);
                         dojo.disconnect(c2);
@@ -1270,7 +1285,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
                         dojo.disconnect(c1);
                         dojo.disconnect(c2);
                     });
-                    this.deploymentList.selectByIndex(this._currentDeploymentIndex);
+                    this.deploymentList._cupdating = true;
+                    this.deploymentList.select(this._currentDeploymentIndex);
+                    this.deploymentList._cupdating = false
                     this.saveButtonClick();
                 });
             } else {
@@ -1304,7 +1321,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var i = this.deploymentList.getSelectedIndex();
         this.deploymentListVar.getItem(i).setValue("name", value);
         this._selectingListItem = true;
-        this.deploymentList.selectByIndex(i);
+        this.deploymentList._cupdating = true;
+        this.deploymentList.select(i);
+        this.deploymentList._cupdating = false;
         delete this._selectingListItem;
     },
 
