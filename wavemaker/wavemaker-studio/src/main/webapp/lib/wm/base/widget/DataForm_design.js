@@ -43,13 +43,14 @@ wm.Object.extendSchema(wm.FormPanel, {
 });
 
 wm.FormPanel.extend({
-    set_type: function(inType) {
+    set_type: function(inType, noPrompt) {
         var f = dojo.hitch(this, function() {
             this._removeEditors();
             this.type = inType;
             this.addEditors();
+            studio.reinspect();
         });
-        if (this.getEditorsArray().length) {
+        if (this.getEditorsArray().length && !noPrompt) {
             app.confirm(studio.getDictionaryItem("wm.FormPanel.CONFIRM_DELETE_EDITORS"), false, f);
         } else {
             f();
@@ -99,11 +100,19 @@ wm.FormPanel.extend({
     },
     destroyEditors: function() {
         var eds, e;
+                var parents = {};
+
         for (var i = 0, eds = this.getEditorsArray(), e;
         (e = eds[i]); i++) {
+            parents[e.parent.getRuntimeId()] = e.parent;
             e.destroy();
         }
+
+        wm.forEachProperty(parents, dojo.hitch(this, function(w) {
+            if (w.c$.length == 0 && w != this) w.destroy();
+        }));
     },
+
     finishAddEditors: function() {
         this.reflow();
         studio.refreshDesignTrees();
@@ -270,8 +279,10 @@ wm.FormPanel.extend({
             if (relatedTypeDef.liveService && !inFieldInfo.isList && !this.subFormOnly) {
                 props.name = wm.makeNameForProp(inFormField, "Lookup")
                 var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
-                var ff = e.formField && this.getViewDataIndex(e.formField || "");
-                this.addEditorToView(e, ff);
+                if (this instanceof wm.DataForm) {
+                    var ff = e.formField && this.getViewDataIndex(e.formField || "");
+                    this.addEditorToView(e, ff);
+                }
             }
 
             /* If its a liveService and it IS a list type, create a readonly grid related editor */
@@ -526,9 +537,16 @@ wm.DataForm.extend({
      *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
      ***************/
     set_dataSet: function(inDataSet) {
+        var hasType = Boolean(wm.typeManager.getType(this.type));
         this.setDataSet(inDataSet);
         if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
-            this.set_type(inDataSet.type);
+            if (hasType) {
+                app.confirm(studio.getDictionaryItem("wm.FormPanel.CONFIRM_DELETE_EDITORS_FROM_DATASET_CHANGE", {name: this.name}), false, dojo.hitch(this, function() {
+                    this.set_type(inDataSet.type, true);
+                }));
+            } else {
+                this.set_type(inDataSet.type, true);
+            }
         }
     },
 
@@ -643,16 +661,22 @@ wm.DataForm.extend({
     },
     destroyEditors: function() {
         var eds, e;
+        var parents = {};
         this._currentEditors = null;
         for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
             this._removeBindingForEditor(e);
+            parents[e.parent.getRuntimeId()] = e.parent;
             e.destroy();
         }
 
         for(var i=0, eds = this.getRelatedEditorsArray(), e; (e=eds[i]); i++) {
+            parents[e.parent.getRuntimeId()] = e.parent;
             this._removeBindingForEditor(e);
             e.destroy();
         }
+        wm.forEachProperty(parents, dojo.hitch(this,function(w) {
+            if (w.c$.length == 0 && w != this) w.destroy();
+        }));
     },
 
 

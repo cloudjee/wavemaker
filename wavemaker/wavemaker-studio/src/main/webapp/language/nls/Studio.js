@@ -204,7 +204,8 @@
     "wm.EditPanel.UPDATE_CAPTION": "Update",
     "wm.EditPanel.DELETE_CAPTION": "Delete",
 
-    "wm.FormPanel.CONFIRM_DELETE_EDITORS": "This operation will delete all editors currently in this form.  Continue?",
+    "wm.FormPanel.CONFIRM_DELETE_EDITORS": "Changing the type will This operation will delete all editors currently in this form.  Continue?",
+    "wm.FormPanel.CONFIRM_DELETE_EDITORS_FROM_DATASET_CHANGE": "You have changed the dataSet of ${name}; do you want to regenerate its editors to match this type?",
     "wm.ServiceForm.UPDATE_CAPTION": "Edit",
     "wm.DBForm.DIALOG_TITLE": "Setup Your Form",
     "wm.DBForm.RESET_CAPTION": "Reset",
