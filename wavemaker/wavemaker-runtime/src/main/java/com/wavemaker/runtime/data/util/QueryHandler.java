@@ -27,6 +27,8 @@ import org.hibernate.SQLQuery;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.mapping.PersistentClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -44,6 +46,8 @@ public class QueryHandler implements InvocationHandler {
     private boolean tenantAdded;
 
     private final Configuration cfg;
+
+    private final Log log = LogFactory.getLog(QueryHandler.class);
 
     public QueryHandler(Configuration cfg) {
         this.cfg = cfg;
@@ -119,9 +123,10 @@ public class QueryHandler implements InvocationHandler {
             if (tidExists) {
                 val = (Integer) getter.invoke(o);
                 if (tid != val) {
-                    System.out.println("*** Security Viloation - Tenant ID mismatch ***");
-                    System.out.println("*** Tenant ID passed = " + tid + ", Tenant ID of Target Record = " + val + " ***");
-                    return null;
+                    log.info("*** Security Viloation - Tenant ID mismatch ***");
+                    log.info("*** Tenant ID passed = " + val + ", Tenant ID of login user = " + tid + " ***");
+                    log.info("*** Tenant ID being replaced ***");
+                    return o;
                 }
             }
             return o;
