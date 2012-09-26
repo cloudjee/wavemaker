@@ -1029,6 +1029,7 @@ dojo.declare("Studio", wm.Page, {
             this.refreshServiceTree();
             this.refreshComponentTree();
         }
+        this.warningsButton.setShowing(false);
         this.statusBarLabel.setCaption("Editing " + inComponent.declaredClass);
         }
         try {
