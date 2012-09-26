@@ -1049,6 +1049,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         wm.onidle(this, "_postDojoRenderer");
     },
     _postDojoRenderer: function() {
+        if (!this.dojoObj) return; // destroyed after dojoRenderer finished
         var v = this.dojoObj.views.views[0];
         if (v && v.scrollboxNode.scrollHeight == v.scrollboxNode.clientHeight && v._hasVScroll) {
             this.dojoObj.prerender();
