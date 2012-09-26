@@ -470,7 +470,7 @@ wm.forEachVisibleWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
     var result;
     if (inFunc && inWidget && !inWidget.isAncestorHidden()) result = inFunc(inWidget);
 
-    if (result !== false && (!inIgnoreBuiltin || (inWidget instanceof wm.PageContainer === false && inWidget instanceof wm.Composite === false))) {
+    if (result !== false && (!inIgnoreBuiltin || !wm.isInstanceOf(inWidget, [wm.PageContainer, wm.Composite]))) {
         for (var i = 0, ws = inWidget.getOrderedWidgets(), r, w; w = ws[i]; i++) {
             if (w.forEachVisibleWidget && !inIgnoreBuiltin) {
                 w.forEachVisibleWidget(inFunc);
