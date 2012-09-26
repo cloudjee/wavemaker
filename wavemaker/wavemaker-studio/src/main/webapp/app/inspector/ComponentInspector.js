@@ -352,7 +352,7 @@
              } else if (e instanceof wm.Button) {
                  e.setShowing(!inProp.ignoretmp);
              } else if (inProp.advanced && !e._showAllClicked) {;
-             } else {
+             } else if (!e.parent._showAllClicked) {
                  e.parent.setShowing(!inProp.ignoretmp);
              }
 
