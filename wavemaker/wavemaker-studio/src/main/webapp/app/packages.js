@@ -70,11 +70,11 @@
 [ bundlePackage.FormsGroup, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm","Studio_paletteImageList_7", bundlePackage.descSimpleForm,{}, true],
 [ bundlePackage.FormsGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
 
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "DataForm", "wm.DataForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDataForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "DataForm", "wm.DataForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDataForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, true],
 
 
 [bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
