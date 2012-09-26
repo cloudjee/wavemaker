@@ -531,8 +531,10 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     desktopWidthExcedesBounds: function() {
         var width = 20; // give it a little buffer so we don't jump to phone design just because we're a couple pixels off
+        var colCount = 0;
         dojo.forEach(this.columns, function(column) {
             if (column.show) {
+                colCount++;
                 var w = String(column.width);
                 if (w.indexOf("%") != -1) {
                     width += 80;
@@ -542,7 +544,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                 }
             }
         });
-        return (width > this.bounds.w);
+        return (width > this.bounds.w) && colCount > 1;
     },
     getDataSetObjectFields: function() {
         var o = {};
