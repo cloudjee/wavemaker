@@ -66,7 +66,7 @@ wm.RelatedEditor.extend({
             if (arr.length < 2)
                 return arr[0];
             for (var i = 1; i < arr.length; i++){
-                if (!lf.isFormFieldInForm(arr[i]))
+                if (lf.isFormFieldInForm && lf.isFormFieldInForm(arr[i]))
                     return arr[i];
             }
 
@@ -239,7 +239,7 @@ wm.RelatedEditor.extend({
     },
     _getFieldSchema: function() {
         var f = wm.getParentForm(this);
-        if (!f) {
+        if (!f || wm.isInstanceType(f, wm.FormPanel)) {
             console.debug('RelatedEditor "' + this.name + '" is not inside a live form.');
             return;
         }
@@ -274,7 +274,7 @@ wm.RelatedEditor.extend({
     },
     hasGrid: function() {
         return wm.getMatchingFormWidgets(this, dojo.hitch(this, function(w) {
-            return ((w instanceof wm.DojoGrid) && w.getDataSet().getId() == this.dataSet.getId());
+            return ((w instanceof wm.DojoGrid) && w.getDataSet() && w.getDataSet().getId() == this.dataSet.getId());
             if (w instanceof wm.DojoGrid == false) return false;
             var dataSetId = w.$.binding.wires.dataSet.source;
             var formDataSetId = this.getParentForm().dataSet.getId();
