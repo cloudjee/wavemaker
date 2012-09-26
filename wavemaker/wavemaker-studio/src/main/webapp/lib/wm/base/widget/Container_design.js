@@ -65,8 +65,8 @@ wm.Object.extendSchema(wm.Container, {
     clearDirty: {method:1},
     resetData: {method:1},
     clearDirty: {method:1},
-    setBestWidth: {method:1}, 
-    setBestHeight:{method:1}, 
+    setBestWidth: {method:1},
+    setBestHeight:{method:1},
 
 
     /* Ignored group */
@@ -78,113 +78,106 @@ wm.Object.extendSchema(wm.Container, {
 
 
 wm.Container.extend({
-	// backward-compatibility fixups
-	afterPaletteDrop: function() {
-	        this.inherited(arguments);
-		if (this.verticalAlign == "justified")
-			this.verticalAlign = "top";
-		if (this.horizontalAlign == "justified")
-			this.horizontalAlign = "left";
-	},
+    // backward-compatibility fixups
+    afterPaletteDrop: function() {
+        this.inherited(arguments);
+        if (this.verticalAlign == "justified") this.verticalAlign = "top";
+        if (this.horizontalAlign == "justified") this.horizontalAlign = "left";
+    },
 
-	listProperties: function() {
-		var p = this.inherited(arguments);
-		p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
-	        p.resizeToFit.ignoretmp = this.percEx && this.percEx.w && this.percEx.h || this.fitToContent;
-		return p;
-	},
-	writeChildren: function(inNode, inIndent, inOptions) {
-		var s = [];
-		wm.forEach(this.getOrderedWidgets(), function(c) {
-			if (wm.isDesignable(c) && !c.flags.notStreamable)
-				s.push(c.write(inIndent, inOptions));
-		});
-		return s;
-	},
-	suggestDropRect: function(inControl, ioInfo) {
-		this.layout.suggest(this, inControl, ioInfo);
-	},
-	suggestSize: function(inControl, ioInfo) {
-		this.layout.suggestSize(this, inControl, ioInfo);
-	},
-	designMoveControl: function(inControl, inDropInfo) {
-		info = {l:inDropInfo.l, t:inDropInfo.t, i: inDropInfo.i};
-	        var container = this.containerWidget || this;
-		if (inControl.parent == container) {
-			// inDropInfo.index 'i' may be counting inControl
-			container.moveControl(inControl, info.i || 0);
-		} else {
-			var p = inControl.parent;
-			inControl.setParent(container);
-		    if (inControl.designWrapper)
-			inControl.designWrapper.controlParentChanged();
-			// inDropInfo.index 'i' is never counting inControl
-			container.removeControl(inControl);
-			container.insertControl(inControl, info.i || 0);
-			if (p)
-				p.reflow();
-		}
-		if (container.layout.insert) {
-			container.layout.insert(container, inControl, inDropInfo);
-			//return;
-		}
-		container.reflow();
-	},
+    listProperties: function() {
+        var p = this.inherited(arguments);
+        p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
+        p.resizeToFit.ignoretmp = this.percEx && this.percEx.w && this.percEx.h || this.fitToContent;
+        return p;
+    },
+    writeChildren: function(inNode, inIndent, inOptions) {
+        var s = [];
+        wm.forEach(this.getOrderedWidgets(), function(c) {
+            if (wm.isDesignable(c) && !c.flags.notStreamable) s.push(c.write(inIndent, inOptions));
+        });
+        return s;
+    },
+    suggestDropRect: function(inControl, ioInfo) {
+        this.layout.suggest(this, inControl, ioInfo);
+    },
+    suggestSize: function(inControl, ioInfo) {
+        this.layout.suggestSize(this, inControl, ioInfo);
+    },
+    designMoveControl: function(inControl, inDropInfo) {
+        info = {
+            l: inDropInfo.l,
+            t: inDropInfo.t,
+            i: inDropInfo.i
+        };
+        var container = this.containerWidget || this;
+        if (inControl.parent == container) {
+            // inDropInfo.index 'i' may be counting inControl
+            container.moveControl(inControl, info.i || 0);
+        } else {
+            var p = inControl.parent;
+            inControl.setParent(container);
+            if (inControl.designWrapper) inControl.designWrapper.controlParentChanged();
+            // inDropInfo.index 'i' is never counting inControl
+            container.removeControl(inControl);
+            container.insertControl(inControl, info.i || 0);
+            if (p) p.reflow();
+        }
+        if (container.layout.insert) {
+            container.layout.insert(container, inControl, inDropInfo);
+            //return;
+        }
+        container.reflow();
+    },
 
     resizeToFit: function() {
-	this.designResizeForNewChild("left-to-right", true);
-	this.designResizeForNewChild("top-to-bottom", true);
-	if (!this._percEx.h)
-	    this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
-	if (!this._percEx.w)
-	    this.setWidth(this.bounds.w + "px");
+        this.designResizeForNewChild("left-to-right", true);
+        this.designResizeForNewChild("top-to-bottom", true);
+        if (!this._percEx.h) this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
+        if (!this._percEx.w) this.setWidth(this.bounds.w + "px");
     },
-	resizeUpdate: function(inBounds) {
-		// update the boundary rectangle highlight only
-		this.designWrapper._setBounds(inBounds);
-	},
+    resizeUpdate: function(inBounds) {
+        // update the boundary rectangle highlight only
+        this.designWrapper._setBounds(inBounds);
+    },
     designResizeForNewChild: function(layoutKind, reduceSize) {
-	if (this.owner != studio.page) return;
-	if (!this.autoScroll && 
-	    !this.scrollX && 
-	    !this.scrollY && 
-	    !this.fitToContent) 
-	{
-	    if (!layoutKind) {
-		layoutKind = this.layoutKind;
-	    }
-	    if (layoutKind == "left-to-right") {
-		var preferredWidth = this.getPreferredFitToContentWidth();
-		var width = this.bounds.w;
-		if (preferredWidth > width) {
-		    if (!this._percEx.w) {
-			this.setWidth(preferredWidth + "px");
-		    } else {
-			if (this.parent && this.parent instanceof wm.Layout == false) {
-			    this.parent.designResizeForNewChild(layoutKind);
-			}
-		    }
-		} else if (reduceSize && !this._percEx.w) {
-		    this.setWidth(preferredWidth + "px");
-		}
-	    } else {
-		var preferredHeight = this.getPreferredFitToContentHeight();
-		var height = this.bounds.h;
-		if (preferredHeight > height) {
-		    if (!this._percEx.h) {
-			this.set_height(preferredHeight + "px");
-		    } else {
-			if (this.parent && this.parent instanceof wm.Container && this.parent instanceof wm.Layout == false) {
-			    this.parent.designResizeForNewChild(layoutKind);
-			}
-		    }
-		} else if (reduceSize && !this._percEx.h) {
-		    this.set_height(preferredHeight + "px");
-		}
+        if (this.owner != studio.page) return;
+        if (!this.autoScroll && !this.scrollX && !this.scrollY && !this.fitToContent) {
+            if (!layoutKind) {
+                layoutKind = this.layoutKind;
+            }
+            if (layoutKind == "left-to-right") {
+                var preferredWidth = this.getPreferredFitToContentWidth();
+                var width = this.bounds.w;
+                if (preferredWidth > width) {
+                    if (!this._percEx.w) {
+                        this.setWidth(preferredWidth + "px");
+                    } else {
+                        if (this.parent && this.parent instanceof wm.Layout == false) {
+                            this.parent.designResizeForNewChild(layoutKind);
+                        }
+                    }
+                } else if (reduceSize && !this._percEx.w) {
+                    this.setWidth(preferredWidth + "px");
+                }
+            } else {
+                var preferredHeight = this.getPreferredFitToContentHeight();
+                var height = this.bounds.h;
+                if (preferredHeight > height) {
+                    if (!this._percEx.h) {
+                        this.set_height(preferredHeight + "px");
+                    } else {
+                        if (this.parent && this.parent instanceof wm.Container && this.parent instanceof wm.Layout == false) {
+                            this.parent.designResizeForNewChild(layoutKind);
+                        }
+                    }
+                } else if (reduceSize && !this._percEx.h) {
+                    this.set_height(preferredHeight + "px");
+                }
 
 
-	    }
-	}
+            }
+        }
     },
-_end: 0
+    _end: 0
 });
