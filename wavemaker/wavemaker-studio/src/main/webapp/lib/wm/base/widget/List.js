@@ -140,7 +140,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         var totalWidth = 0;
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
-            this._columnsHash[column.field] = column;
+            this._columnsHash[column.field || column.id] = column;
             if (!column.width) column.width = "100%";
             if (column.width.match(/\%/)) totalWidth += Number(column.width);
             if (column.field == "PHONE COLUMN" && !this._isDesignLoaded) {
@@ -488,7 +488,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                 var c = this.columns[i];
                 var show = useMobileColumn && c.mobileColumn || !useMobileColumn && c.show || c.controller;
                 if (show) {
-                    this._dataFields.push(this.columns[i].field);
+                    this._dataFields.push(this.columns[i].field || this.columns[i].id);
                 }
             }
         } else {
@@ -1412,7 +1412,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
         var dateFields = [];
         dojo.forEach(this.columns, function(col) {
-            if (col.displayType == 'Date') dateFields.push(col.field);
+            if (col.displayType == 'Date') dateFields.push(col.field || col.id);
         });
 
 
@@ -1732,7 +1732,7 @@ wm.List.extend({
                     value = this.numberFormatter(col.formatProps || {}, null, null, null, value);
                     break;
                 case 'wm_array_formatter':
-                    value = this.arrayFormatter(col.field, col.formatProps || {}, null, null, null, value);
+                    value = this.arrayFormatter(col.field || col.id, col.formatProps || {}, null, null, null, value);
                     break;
                 case 'wm_currency_formatter':
                 case 'Currency (WaveMaker)':
@@ -2135,7 +2135,7 @@ wm.List.extend({
     },
     getColumnIndex: function(inFieldName) {
         for (var i = 0; i < this.columns.length; i++) {
-            if (this.columns[i].field == inFieldName) {
+            if (this.columns[i].field == inFieldName || this.columsn[i].id == inFieldName) {
                 return i;
             }
         }

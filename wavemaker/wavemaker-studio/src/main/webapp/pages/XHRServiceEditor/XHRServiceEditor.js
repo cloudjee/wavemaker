@@ -211,6 +211,9 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         if (inSender instanceof wm.AbstractEditor && inSetByCode) return;
         this.isDirty = true;
         var layer = this.owner.parent;
+        while (layer.owner != studio) {
+            layer = layer.parent.isAncestorInstanceOf(wm.Layer);
+        }
         if (layer instanceof wm.Layer) {
             dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
             studio.updateServicesDirtyTabIndicators();

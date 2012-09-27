@@ -34,12 +34,12 @@ dojo.declare("wm.gadget.TwitterFollowButton", wm.Gadget, {
 	dojo.attr(this.domNode, "allowtransparency", "true");
     },
     getSource: function() {
-	return "http://platform.twitter.com/widgets/follow_button.html?" + 
+	return "http://platform.twitter.com/widgets/follow_button.html?" +
 	    "screen_name=" + this.screenName +
-	    "&button=" + this.buttonColor + 
+	    "&button=" + this.buttonColor +
 	    (this.linkColor ? "&link_color=" + this.linkColor.substring(1) : "") +
 	    (this.textColor ? "&text_color=" + this.textColor.substring(1) : "") +
-	    "&show_count=" + this.showFollowerCount + 
+	    "&show_count=" + this.showFollowerCount +
 	    "&lang=" + dojo.locale;
     },
     setScreenName: function(inId) {
@@ -80,7 +80,7 @@ dojo.declare("wm.gadget.TwitterTweetButton", wm.Gadget, {
     autoScroll:false,
     width: "100px",
     height: "20px",
-    url: "http://dev.wavemaker.com/", 
+    url: "http://dev.wavemaker.com/",
     via: "",
     countPosition: "horizontal", // none, horizontal, vertical
     build: function() {
@@ -90,8 +90,8 @@ dojo.declare("wm.gadget.TwitterTweetButton", wm.Gadget, {
 	dojo.attr(this.domNode, "allowtransparency", "true");
     },
     getSource: function() {
-	return "http://platform.twitter.com/widgets/tweet_button.html?" + 
-	    "url=" + escape(this.url) + 
+	return "http://platform.twitter.com/widgets/tweet_button.html?" +
+	    "url=" + escape(this.url) +
 	    "&count=" + this.countPosition +
 	    (this.via ? "&via=" + this.via : "");
     },
@@ -131,12 +131,14 @@ wm.Object.extendSchema(wm.gadget.TwitterTweetButton, {
     countPosition: {group: "widgetName", subgroup: "layout", options: ["none", "horizontal", "vertical"]}
 });
 
+/* Twitter has deprecated this widget:
+https://dev.twitter.com/discussions/10910
 
 dojo.declare("wm.gadget.TwitterList", wm.Control, {
     scrim: true,
     width: "250px",
     height: "300px",
-    screenName: "WaveMakerDev", /* Bindable */
+    screenName: "WaveMakerDev", // Bindable
     title: "Your title",
     search: "WaveMaker",
     _version: 2,
@@ -149,7 +151,7 @@ dojo.declare("wm.gadget.TwitterList", wm.Control, {
     tweetBackground: "#000000",
     tweetLinkColor: "#4aed05",
     twitterScrollbar: true,
-    twitterLoop: false, /* Don't know what this does */
+    twitterLoop: false, // Don't know what this does
     twitterPollingEnabled: true,
     twitterBehavior: "all",
     build: function() {
@@ -296,10 +298,7 @@ var params = {
 	this.inherited(arguments);
 	if (this._twidget) {
 		this._twidget._fullScreenResize();
-/*
-	    this._twidget.setDimensions(this.bounds.w,this.bounds.h);
-	    this._twidget.render();
-	    */
+
 	}
     },
     destroy: function() {
@@ -331,3 +330,4 @@ wm.Object.extendSchema(wm.gadget.TwitterList, {
     tweetLinkColor: {group: "widgetName", subgroup: "style", editor: "wm.ColorPicker", order: 204},
     twitterBehavior: {ignore:1}
 });
+*/

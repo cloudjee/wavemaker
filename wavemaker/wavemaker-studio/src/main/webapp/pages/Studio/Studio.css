@@ -1838,7 +1838,7 @@ color: rgb(0,270,0);
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
     border-radius: 4px;
-
+}
 .Studio .AppToolTip .StudioWarningIcon {
     float: left;
     padding-right: 20px;
@@ -1846,8 +1846,16 @@ color: rgb(0,270,0);
     margin-top: 16px;
 }
 
+.Studio .AppToolTip dl {
+    text-align: left !important;
+}
 
-
+.Studio .AppToolTip dt {
+    font-weight: bold;
+}
+.Studio .AppToolTip dd {
+    margin: 5px 0px 5px 10px;
+}
 /* Waiting Dialog */
 #studio_dialog .StudioWaitingNotice {
     font-size: 0.8Em;

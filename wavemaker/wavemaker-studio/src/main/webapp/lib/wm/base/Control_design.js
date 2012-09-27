@@ -20,21 +20,24 @@ wm.isDesignable = function(inControl) {
     // warning: can't use inControl.owner == studio.application as studio.application may not have been set yet if we're still creating app level dialogs and components
     return inControl.owner && inControl.owner == studio.page || inControl.owner instanceof wm.Application && (inControl instanceof wm.Dialog || inControl.isAncestorInstanceOf(wm.DesignableDialog));
 }
-
 wm.Control.extend({
-        themeableProps: ["border", "borderColor"],
-        hint: "",
-        themeable: true,
+    themeableProps: ["border", "borderColor"],
+    hint: "",
+    themeable: true,
     //publishClass: '',
     scrim: false,
-        useDesignBorder: 1,
+    useDesignBorder: 1,
     sizeable: true,
     _defaultClasses: null,
     // design only
-        getNumTabbableWidgets: function() {return 1;},
+    getNumTabbableWidgets: function() {
+        return 1;
+    },
     designMove: function(inTarget, inMoveInfo) {
         inTarget.designMoveControl(this, inMoveInfo);
-        wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
+        this.afterDragDrop();
+        inTarget.afterDragChildDrop(this);
+        wm.job("studio.updateDirtyBit", 10, studio, "updateProjectDirty");
     },
     resizeUpdate: function(inBounds) {
         // update the boundary rectangle highlight only
@@ -53,33 +56,34 @@ wm.Control.extend({
         var domBox = dojo.marginBox(this.dom.node);
         if (domBox.w == inBounds.w) {
             delete inBounds.w;
-        } else
-                    this.autoSizeWidth = false; // turn off autosize if user wants to resize in that axis
+        } else {
+            this.autoSizeWidth = false; // turn off autosize if user wants to resize in that axis
+        }
         if (domBox.h == inBounds.h) {
             delete inBounds.h;
-        } else
-                    this.autoSizeHeight = false; // turn off autosize if user wants to resize in that axis
+        } else {
+            this.autoSizeHeight = false; // turn off autosize if user wants to resize in that axis
+        }
     },
     _sizeFromNode: function(inBounds) {
         var domBox = dojo.marginBox(this.dom.node);
-        if (("w" in inBounds) /*&& domBox.w != inBounds.w*/) {
-            if (!this.fitToContentWidth)
-                this.width = domBox.w + "px";
-                    this.autoSizeWidth = false;
+        if (("w" in inBounds) /*&& domBox.w != inBounds.w*/ ) {
+            if (!this.fitToContentWidth) this.width = domBox.w + "px";
+            this.autoSizeWidth = false;
         }
-        if (("h" in inBounds) /*&& domBox.h != inBounds.h*/) {
+        if (("h" in inBounds) /*&& domBox.h != inBounds.h*/ ) {
             if (!this.fitToContentHeight) {
-            this.set_height(domBox.h + "px");
+                this.set_height(domBox.h + "px");
             }
-                    this.autoSizeHeight = false;
+            this.autoSizeHeight = false;
         }
 
-            this._needsAutoResize = true;
+        this._needsAutoResize = true;
 
     },
     designResize: function(inBounds, isUndo) {
-            if (!isUndo) {
-                new wm.PropTask(this, "bounds", dojo.clone(this.bounds));
+        if (!isUndo) {
+            new wm.PropTask(this, "bounds", dojo.clone(this.bounds));
         }
         // Remove entries from inBounds that match DOM values
         this._removeStaticBounds(inBounds);
@@ -92,20 +96,22 @@ wm.Control.extend({
         // Update bounds from size (width/height) values
         this.updateBounds();
 
-            // If its autosize, then when reflowParent is called, it will get autoResized based on changes to one or the other axis size;
-            // Example: If I change the width, an autoSizeHeight widget needs to recalculate its height.
-                this._needsAutoSize = true;
+        // If its autosize, then when reflowParent is called, it will get autoResized based on changes to one or the other axis size;
+        // Example: If I change the width, an autoSizeHeight widget needs to recalculate its height.
+        this._needsAutoSize = true;
 
 
         // Update our parent's layout
         this.reflowParent();
         // IE6 has trouble refreshing inspector when it contains SELECT
         setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
-            wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
+        wm.job("studio.updateDirtyBit", 10, function() {
+            studio.updateProjectDirty();
+        });
 
-            if (this.parent && this.parent instanceof wm.Container) {
-                var parent = this.parent;
-                wm.job(parent.getRuntimeId() + ".designResize", 50, function() {
+        if (this.parent && this.parent instanceof wm.Container) {
+            var parent = this.parent;
+            wm.job(parent.getRuntimeId() + ".designResize", 50, function() {
                 parent.designResizeForNewChild();
             });
         }
@@ -121,10 +127,18 @@ wm.Control.extend({
     },
     set_owner: function() {
         this.inherited(arguments);
-        if (this.designWrapper)
+        if (this.designWrapper) {
             this.designWrapper.controlNameChanged();
+        }
     },
     afterPaletteChildDrop: function(inWidget) {
+    },
+    afterDragChildDrop: function(inWidget) {
+    },
+    afterDragDrop: function() {
+        if (this == studio.selected) {
+            studio.reinspect();
+        }
     },
     afterPaletteDrop: function() {
         this.inherited(arguments);
@@ -191,51 +205,52 @@ wm.Control.extend({
     */
     getDesignBorder: function(optionalBorder) {
         var useDesignBorder = studio.useDesignBorder && this.useDesignBorder && wm.isDesignable(this) && studio.selected != this;
-            //var border = this._parseExtents(this.runtimeBorder);
+        //var border = this._parseExtents(this.runtimeBorder);
         var border = this._parseExtents(optionalBorder || this.border);
 
-            if (useDesignBorder) {
-        this.designBorderState = {t: !Boolean(border.t),
-                   b: !Boolean(border.b),
-                   l: !Boolean(border.l),
-                   r: !Boolean(border.r)};
-/*
+        if (useDesignBorder) {
+            this.designBorderState = {
+                t: !Boolean(border.t),
+                b: !Boolean(border.b),
+                l: !Boolean(border.l),
+                r: !Boolean(border.r)
+            };
+            /*
                 if (!border.t) border.t = 1;
                 if (!border.b) border.b = 1;
                 if (!border.l) border.l = 1;
                 if (!border.r) border.r = 1;
                 return border.t + "," + border.r + "," + border.b + "," + border.l;
         */
-            } else {
-        delete this.designBorderState;
-                //return this.runtimeBorder; // What the???
-            }
+        } else {
+            delete this.designBorderState;
+            //return this.runtimeBorder; // What the???
+        }
         //return useDesignBorder ? (Number(this.runtimeBorder) ? this.runtimeBorder : "1") : this.runtimeBorder;
     },
-
     set_margin: function(inMargin) {
-        inMargin = dojo.trim(String(inMargin||0));
+        inMargin = dojo.trim(String(inMargin || 0));
         inMargin = inMargin.replace(/\s*,\s*/g, ",");
-        inMargin = inMargin.replace(/px/g,"");
-        inMargin = inMargin.replace(/\s+/g,",");
-    this.setMargin(inMargin);
+        inMargin = inMargin.replace(/px/g, "");
+        inMargin = inMargin.replace(/\s+/g, ",");
+        this.setMargin(inMargin);
     },
     set_padding: function(inPadding) {
-        inPadding = dojo.trim(String(inPadding||0));
+        inPadding = dojo.trim(String(inPadding || 0));
         inPadding = inPadding.replace(/\s*,\s*/g, ",");
-        inPadding = inPadding.replace(/px/g,"");
-        inPadding = inPadding.replace(/\s+/g,",");
-    this.setPadding(inPadding);
+        inPadding = inPadding.replace(/px/g, "");
+        inPadding = inPadding.replace(/\s+/g, ",");
+        this.setPadding(inPadding);
     },
     set_border: function(inBorder) {
-        inBorder = dojo.trim(String(inBorder||0));
+        inBorder = dojo.trim(String(inBorder || 0));
         inBorder = inBorder.replace(/\s*,\s*/g, ",");
-        inBorder = inBorder.replace(/px/g,"");
-        inBorder = inBorder.replace(/\s+/g,",");
+        inBorder = inBorder.replace(/px/g, "");
+        inBorder = inBorder.replace(/\s+/g, ",");
         if (this.isDesignLoaded()) {
-        //this.runtimeBorder = inBorder;
-        //inBorder = this.getDesignBorder();
-        this.getDesignBorder(inBorder); // calculates the designBorderState property
+            //this.runtimeBorder = inBorder;
+            //inBorder = this.getDesignBorder();
+            this.getDesignBorder(inBorder); // calculates the designBorderState property
         }
 
         this.setBorder(inBorder);

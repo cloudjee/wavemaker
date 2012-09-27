@@ -249,19 +249,18 @@ dojo.declare("wm.Layers", wm.Container, {
     },
     postInit: function() {
         this.inherited(arguments);
-/*
+        /*
         if (!this.getCount() && this._isDesignLoaded)
             this.addLayer();
             */
         this._initDefaultLayer();
         // fire onshow when loaded
-        if (wm.widgetIsShowing(this))
-            this._fireLayerOnShow();
+        if (wm.widgetIsShowing(this)) this._fireLayerOnShow();
         if (this.manageURL && this.owner.locationState) {
-        this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
+            this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
         }
     },
-/*
+    /*
     getPreferredFitToContentHeight: function() {
         return this.padBorderMargin.t + this.padBorderMargin.b + this.getActiveLayer().getPreferredFitToContentHeight();
     },
@@ -279,87 +278,95 @@ dojo.declare("wm.Layers", wm.Container, {
             d = this._getNextShownIndex(d);
             dl = this.getLayer(d);
         }
-        if (dl)
-            this._setLayerIndex(dl.getIndex());
+        if (dl) this._setLayerIndex(dl.getIndex());
     },
     getVisibleLayerCount: function() {
-    var count = 0;
-    for (var i = 0; i < this.layers.length; i++) {
-        if (this.layers[i].showing) {
-        count++;
+        var count = 0;
+        for (var i = 0; i < this.layers.length; i++) {
+            if (this.layers[i].showing) {
+                count++;
+            }
         }
-    }
-    return count;
+        return count;
     },
     createLayer: function(inCaption) {
         var caption = inCaption;
         if (!caption) {
-        caption = this.owner.getUniqueName("layer1");
+            caption = this.owner.getUniqueName("layer1");
         }
         var name = caption;
-        if (name)
-        name = name.replace(/\s/g,"_");
-        var
-        defName = this.owner.getUniqueName(name);
-        props = {width: "100%", height: "100%", caption: caption, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType, border: this.clientBorder, borderColor: this.clientBorderColor},
-            o = this.getRoot();
-        if (o)
-            return o.createComponent(defName, "wm.Layer", props);
+        if (name) name = name.replace(/\s/g, "_");
+        var defName = this.owner.getUniqueName(name);
+        var props = {
+            width: "100%",
+            height: "100%",
+            caption: caption,
+            parent: this,
+            horizontalAlign: "left",
+            verticalAlign: "top",
+            themeStyleType: this.themeStyleType,
+            border: this.clientBorder,
+            borderColor: this.clientBorderColor
+        };
+        var o = this.getRoot();
+        if (o) return o.createComponent(defName, "wm.Layer", props);
     },
     addPageContainerLayer: function(inPageName, inCaption, activate) {
-    var layer = this.getLayerByCaption(inCaption);
-    if (layer) {
+        var layer = this.getLayerByCaption(inCaption);
+        if (layer) {
+            if (activate || activate === undefined) layer.activate();
+            return layer;
+        }
+        layer = this.createLayer(inCaption);
+        new wm.PageContainer({
+            owner: this.owner,
+            parent: layer,
+            name: this.owner.getUniqueName(layer.name + "PageContainer"),
+            width: "100%",
+            height: "100%",
+            pageName: inPageName,
+            deferLoad: false
+        });
         if (activate || activate === undefined) layer.activate();
+
+        if (this.conditionalTabButtons) {
+            this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
+        }
+
         return layer;
-    }
-    layer = this.createLayer(inCaption);
-    new wm.PageContainer({owner: this.owner,
-                  parent: layer,
-                  name: this.owner.getUniqueName(layer.name + "PageContainer"),
-                  width: "100%",
-                  height: "100%",
-                  pageName: inPageName,
-                  deferLoad: false});
-    if (activate || activate === undefined)
-        layer.activate();
-
-    if (this.conditionalTabButtons) {
-        this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
-    }
-
-    return layer;
     },
 
-        themeStyleType: "",
-        setThemeStyleType: function(inMajor) {
+    themeStyleType: "",
+    setThemeStyleType: function(inMajor) {
         this.themeStyleType = inMajor;
-            for (var i = 0; i < this.layers.length; i++) {
+        for (var i = 0; i < this.layers.length; i++) {
             this.layers[i].setThemeStyleType(inMajor);
-            }
+        }
     },
 
-        setClientBorder: function(inBorder) {
-            this.clientBorder = inBorder;
+    setClientBorder: function(inBorder) {
+        this.clientBorder = inBorder;
         // in design mode, set_border updates the design borders
         var method = this.isDesignLoaded() ? "set_border" : "setBorder";
-            for (var i = 0; i < this.layers.length; i++) {
-        this.layers[i][method](inBorder);
+        for (var i = 0; i < this.layers.length; i++) {
+            this.layers[i][method](inBorder);
         }
-        },
-        setClientBorderColor: function(inBorderColor) {
-            this.clientBorderColor = inBorderColor;
-            for (var i = 0; i < this.layers.length; i++)
-                this.layers[i].setBorderColor(inBorderColor);
-        },
+    },
+    setClientBorderColor: function(inBorderColor) {
+        this.clientBorderColor = inBorderColor;
+        for (var i = 0; i < this.layers.length; i++) {
+            this.layers[i].setBorderColor(inBorderColor);
+        }
+    },
     // public api for adding a layer
     addLayer: function(inCaption, doNotSelect) {
-    var pg = this.createLayer(inCaption);
-    if (!doNotSelect) {
-        this._setLayerIndex(this.getCount()-1);
-    } else {
-        pg.active = false;
-    }
-    return pg;
+        var pg = this.createLayer(inCaption);
+        if (!doNotSelect) {
+            this._setLayerIndex(this.getCount() - 1);
+        } else {
+            pg.active = false;
+        }
+        return pg;
     },
     // called by owner automatically.
     addWidget: function(inWidget) {

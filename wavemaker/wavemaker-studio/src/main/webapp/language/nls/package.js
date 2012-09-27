@@ -289,7 +289,6 @@
     "descFaceBookActivityWidget": "A panel of facebook activity",
     "descTwitterFollowWidget": "A Twitter Follow button",
     "descTwitterTweetWidget": "A Twitter Tweet button",
-    "descTwitterListWidget": "Show Twitter search or profile results",
     "descMapsWidget": "Shows a map",
     "descFisheye": "Widget for zooming into images as the mouse moves over them",
     "descLightbox": "Popup for showing a set of photos",

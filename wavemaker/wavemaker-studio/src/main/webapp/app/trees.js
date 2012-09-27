@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.trees");
 
 
@@ -19,7 +19,7 @@ Studio.extend({
 	//=========================================================================
 	// Trees
 	//=========================================================================
-    
+
 	clearTrees: function() {
 		this.tree.clear();
 		this.widgetsTree.clear();
@@ -30,7 +30,7 @@ Studio.extend({
 		//this.refreshComponentsTree();
 		this.refreshWidgetsTree();
 		// re-select selected component
-	     
+
 	    this.selectInTree(this.selected && (this.selected.owner == studio.page || this.selected.owner == studio.application) ? this.selected : studio.page.root);
 
 	},
@@ -90,7 +90,7 @@ Studio.extend({
     },
 	    getTreeComponents: function(inComponents, inExcludeTypes, inIncludeTypes) {
 		var list = {}, c;
-		for (var i in inComponents) { 
+		for (var i in inComponents) {
 			c = inComponents[i];
 		    if (typeof(c) == "function") continue; // The ACE editor changed how IE sees some objects; must filter out non-properties
 			//if (!(inExcludeType && (c instanceof inExcludeType)))
@@ -115,7 +115,7 @@ Studio.extend({
 				break;
 			}
 		}
-		return ret;			
+		return ret;
 	},
     /*
 	systemComponentsToTree: function(inTree) {
@@ -180,7 +180,7 @@ Studio.extend({
 			     svrComps[name] = c;
 		    }
 		});
-			
+
 		var components = dojo.mixin({}, this.application.components, this.svrComps);
                 var svrComps = this.getTreeComponents(this.svrComps, this._searchText ? [] : this.excTypes);
 		if (this._searchText) {
@@ -207,7 +207,7 @@ Studio.extend({
 		}
 
 		    this.componentsToTree(n, svrComps);
- 
+
 	    }
 	},
 	appComponentsToTree: function(inTree) {
@@ -219,7 +219,7 @@ Studio.extend({
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox, wm.Property, wm.Service, wm.XhrDefinition, wm.TypeDefinition];
 		if (this.application) {
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
-		    		    
+
 		    if (this._searchText) {
 			var otherComps = {};
 			for (var name in this.otherComps) {
@@ -293,6 +293,9 @@ Studio.extend({
             parentComponent.designMoveControl(movedComponent, {
                 i: inIndexInParent
             });
+            movedComponent.afterDragDrop();
+            parentComponent.afterDragChildDrop(movedComponent);
+            wm.job("studio.updateDirtyBit", 10, studio, "updateProjectDirty");
         }
     },
     onCanDropNode: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent, inResponseInfo) {
@@ -303,7 +306,7 @@ Studio.extend({
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
 		    if (inWidget.flags.notInspectable || inWidget.isParentLocked && inWidget.isParentLocked())
-				return;		    
+				return;
 		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
 		    var n = (this._searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: inWidget instanceof wm.Dialog});
 		    if (inWidget instanceof wm.Dialog == false || inWidget instanceof wm.DesignableDialog)
@@ -325,7 +328,7 @@ Studio.extend({
     matchSearch: function(inSearch, inComponent) {
 	if (!inSearch) return true;
 	if (inComponent.name.toLowerCase().match(this.regex)) return true;
-	if (inComponent instanceof wm.ServiceVariable && 
+	if (inComponent instanceof wm.ServiceVariable &&
 	    (inComponent.operation && inComponent.operation.toLowerCase().match(this.regex) ||
 	     inComponent.service && inComponent.service.toLowerCase().match(this.regex) ||
 	     inComponent.liveSource && inComponent.liveSource.toLowerCase().match(this.regex)))
@@ -479,11 +482,11 @@ Studio.extend({
     buildTreeGroupContextMenu: function(inNode, inClassName) {
 	dojo.connect(inNode.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this, function(e) {
 		if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
-		dojo.stopEvent(e);		
+		dojo.stopEvent(e);
 	    var menuObj = studio.contextualMenu;
 	    menuObj.removeAllChildren();
-	    if (inClassName != "wm.DataModel") 
-	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+	    if (inClassName != "wm.DataModel")
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
 					    {label: this.getDictionaryItem("MODELTREE_CONTEXTMENU_NEW", {className: inClassName}),
 					     iconClass: "StudioAddIcon",
 					     onClick: dojo.hitch(this, function() {
@@ -514,9 +517,9 @@ Studio.extend({
 
 					     })
 					    });
-	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+	    menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
 					    {label: this.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inClassName}),
-						 iconClass: "StudioHelpIcon", 
+						 iconClass: "StudioHelpIcon",
 					     onClick: dojo.hitch(this, function() {
 						 window.open(this.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inClassName.replace(/^.*\./,"")}));
 					     })

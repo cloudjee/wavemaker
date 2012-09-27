@@ -570,90 +570,105 @@ wm.Component.extend({
 
     },
     editProp: function(inName, inValue) {
-        // otherwise an event
-        var n=inName, v = inValue || this.generateEventName(n);
-            this.setEvent(n, v, false);
-        eventEdit(this, n, v, c == studio.application);
-    },
+       // otherwise an event
+       var n = inName,
+           v = inValue || this.generateEventName(n);
+       this.setEvent(n, v, false);
+       eventEdit(this, n, v, c == studio.application);
+   },
 
-    createDesignContextMenu: function(menuObj) {},
-    showContextMenu: function(e) {
-        if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
-        dojo.stopEvent(e);
-        var menuObj = studio.contextualMenu;
-        menuObj.removeAllChildren();
-    this.createDesignContextMenu(menuObj);
-        var props = this.listProperties();
-        for (p in props) {
-            if (props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
-/*
+   createDesignContextMenu: function(menuObj) {},
+   showContextMenu: function(e) {
+       if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+       dojo.stopEvent(e);
+       var menuObj = studio.contextualMenu;
+       menuObj.removeAllChildren();
+       this.createDesignContextMenu(menuObj);
+       var props = this.listProperties();
+       for (p in props) {
+           if (!props[p].ignore && props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
+           /*
             props[p].simpleBindTarget ||
-            props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/)
-            this.addContextMenuItem(menuObj,props[p].shortname || p, props[p]);
-        }
+            props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/
+           ){
+                this.addContextMenuItem(menuObj, props[p].shortname || p, props[p]);
+            }
+       }
 
-    if (this instanceof wm.Control) {
-        var submenuOptions = {label: "Select",
-                  iconClass: "Studio_silkIconImageList_83",
-                  children: [{label: this.name,
-                          iconClass: wm.packageImages[this.declaredClass] || "Studio_paletteImageList_0",
-                          onClick: this._makeSelectComponentMethod(this)}]};
-        var parent = this.parent;
-        while(parent && parent != studio.designer) {
-        if (!parent.flags || !parent.flags.notInspectable && !parent.noInspector)
-            submenuOptions.children.push({label: parent.name,
-                          //iconClass: "Studio_silkIconImageList_83",
-                          iconClass: wm.packageImages[parent.declaredClass] || "Studio_paletteImageList_0",
-                          onClick: this._makeSelectComponentMethod(parent)});
+       if (this instanceof wm.Control) {
+           var submenuOptions = {
+               label: "Select",
+               iconClass: "Studio_silkIconImageList_83",
+               children: [{
+                   label: this.name,
+                   iconClass: wm.packageImages[this.declaredClass] || "Studio_paletteImageList_0",
+                   onClick: this._makeSelectComponentMethod(this)
+               }]
+           };
+           var parent = this.parent;
+           while (parent && parent != studio.designer) {
+               if (!parent.flags || !parent.flags.notInspectable && !parent.noInspector) submenuOptions.children.push({
+                   label: parent.name,
+                   //iconClass: "Studio_silkIconImageList_83",
+                   iconClass: wm.packageImages[parent.declaredClass] || "Studio_paletteImageList_0",
+                   onClick: this._makeSelectComponentMethod(parent)
+               });
 
-        if (parent instanceof wm.Layers) {
-            var layersOptions = {//iconClass: parent.declaredClass.toLowerCase().replace(/\./g,"_"),
-                             iconClass: "Studio_silkIconImageList_83",
-            label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {parentName: parent.name}),
-                     children: []};
-            parent.createDesignContextMenu(menuObj, layersOptions.children);
-            var layersMenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, layersOptions);
-        }
+               if (parent instanceof wm.Layers) {
+                   var layersOptions = { //iconClass: parent.declaredClass.toLowerCase().replace(/\./g,"_"),
+                       iconClass: "Studio_silkIconImageList_83",
+                       label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {
+                           parentName: parent.name
+                       }),
+                       children: []
+                   };
+                   parent.createDesignContextMenu(menuObj, layersOptions.children);
+                   var layersMenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, layersOptions);
+               }
 
-        parent = parent.parent;
-        }
-        if (submenuOptions.children.length > 1)
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
-    }
-
-
-    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "Studio_paletteImageList_0",
-                              label: "Publish Properties",
-                              onClick: dojo.hitch(this, function() {
-                                  studio.select(this);
-                                  studio.editPublishedProperties();
-                              })
-                             });
+               parent = parent.parent;
+           }
+           if (submenuOptions.children.length > 1) menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
+       }
 
 
+       menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {
+           iconClass: "Studio_paletteImageList_0",
+           label: "Publish Properties",
+           onClick: dojo.hitch(this, function() {
+               studio.select(this);
+               studio.editPublishedProperties();
+           })
+       });
 
-    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "StudioHelpIcon",
-                              label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_HELP", {"className": this.declaredClass}),
-                              onClick: dojo.hitch(this, function() {
-                                  var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: this.declaredClass.replace(/^.*\./,"")});
-                                  window.open(url);
-                              })
-                             });
 
-        menuObj.update(e, this.domNode);
-    },
-    _makeSelectComponentMethod: function(inComp) {
-        return dojo.hitch(this, function() {
-        studio.select(inComp);
-        });
-    },
-    addContextMenuItem: function(inMenu, inPropName, inProp) {
-    /* This menu does not appear to get added */
-        inMenu.addAdvancedMenuChildren(inMenu.dojoObj,
-                       {label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName,
-                        iconClass: "Studio_silkIconImageList_30",
-                        onClick: dojo.hitch(this, function() {
-/*
+
+       menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {
+           iconClass: "StudioHelpIcon",
+           label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_HELP", {
+               "className": this.declaredClass
+           }),
+           onClick: dojo.hitch(this, function() {
+               var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
+                   className: this.declaredClass.replace(/^.*\./, "")
+               });
+               window.open(url);
+           })
+       });
+
+       menuObj.update(e, this.domNode);
+   },
+   _makeSelectComponentMethod: function(inComp) {
+       return dojo.hitch(this, function() {
+           studio.select(inComp);
+       });
+   },
+   addContextMenuItem: function(inMenu, inPropName, inProp) { /* This menu does not appear to get added */
+       inMenu.addAdvancedMenuChildren(inMenu.dojoObj, {
+           label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName,
+           iconClass: "Studio_silkIconImageList_30",
+           onClick: dojo.hitch(this, function() {
+               /*
            if (inProp.simpleBindProp || inProp.simpleBindTarget) {
            studio.bindDialog.page.update(dojo.mixin({object: this,
                             targetProperty: inPropName,
@@ -661,11 +676,12 @@ wm.Component.extend({
            studio.bindDialog.show();
            } else
            */
-        this[typeof inProp.operation == "string" ? inProp.operation : inPropName]();
-       })});
-    },
-    hasLocalizedProp: function(inName) {
-    if (this.listProperties()[inName].nonlocalizable) return false;
-    return this["_original_i18n_" + inName] !== undefined && this["_original_i18n_" + inName] != this.getProp(inName);
-    }
+               this[typeof inProp.operation == "string" ? inProp.operation : inPropName]();
+           })
+       });
+   },
+   hasLocalizedProp: function(inName) {
+       if (this.listProperties()[inName].nonlocalizable) return false;
+       return this["_original_i18n_" + inName] !== undefined && this["_original_i18n_" + inName] != this.getProp(inName);
+   }
 });

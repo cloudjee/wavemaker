@@ -35,7 +35,7 @@ dojo.declare("wm.Designer", wm.Surface, {
 		this.connectEvents(this.domNode, ["mousedown"]);
 	},
 	// events
-	onselect: function(inControl) { 
+	onselect: function(inControl) {
 	},
 	ondelete: function(inControl) {
 	},
@@ -55,7 +55,7 @@ dojo.declare("wm.Designer", wm.Surface, {
 	},
 	/*
 	place: function(inControl, inTarget, inDropRect) {
-		var 
+		var
 			dr = inDropRect,
 			c = inControl, w = c.designWrapper,
 			t = inTarget, tn = t.containerNode || t.domNode;
@@ -87,19 +87,19 @@ dojo.declare("wm.Designer", wm.Surface, {
 		// if parent has changed
 		if (t != c.parent) {
 			// reflow original parent
-			if (c.parent) 
+			if (c.parent)
 				c.parent.reflow();
 			// reparent control
 			c.setParent(t);
 		}
 	},
 	*/
-    // called by redo I believe...
+	// called by redo I believe...
 	replace: function(inControl, inTarget, inBounds, inNextSibling) {
 		var c = inControl, t = inTarget, w = c.designWrapper;
 		// hide wrapper handles
 		w.showHideHandles(false);
-		// move control to target 
+		// move control to target
 		var i = inNextSibling ? t.indexOfControl(inNextSibling) : t.c$.length;
 		t.designMoveControl(c, {i: i});
 		// reassign control to wrapper
@@ -278,34 +278,34 @@ dojo.declare("wm.Designer", wm.Surface, {
 	},
 	*/
 	select: function(inControl) {
-	        if (inControl && !inControl.designWrapper || this._selecting) return;
-                try {
-                    this._selecting = true;
-		    if (this.selected) 
+			if (inControl && !inControl.designWrapper || this._selecting) return;
+				try {
+					this._selecting = true;
+			if (this.selected)
 			this.selected.designWrapper.ondeselected();
-		    this.selected = inControl;
-		    if (this.selected)
+			this.selected = inControl;
+			if (this.selected)
 			this.selected.designWrapper.onselected();
-		    this.onselect(inControl);
-		    // FIXME: no bueno on Safari, can't focus a DIV
-		    // FIXME: do we intend to focus on select()? why not only on mousedown or click events?
-		    try{this.domNode.focus();}catch(e){};
-                } finally {
-                    this._selecting = false;
-                }
+			this.onselect(inControl);
+			// FIXME: no bueno on Safari, can't focus a DIV
+			// FIXME: do we intend to focus on select()? why not only on mousedown or click events?
+			try{this.domNode.focus();}catch(e){};
+				} finally {
+					this._selecting = false;
+				}
 	},
 	selectParent: function(inControl) {
 		var p = inControl || this.selected;
 		p = p&&p.parent;
-	    if (p) {
-                    if (p.designWrapper) {
+		if (p) {
+					if (p.designWrapper) {
 			this.select(p);
-                    } else {
-                        this.selectParent(p);
-                    }
-	    } else if (studio.page.root) {
+					} else {
+						this.selectParent(p);
+					}
+		} else if (studio.page.root) {
 		this.select(studio.page.root);
-	    }
+		}
 	},
 	_deleted: function(inControl) {
 		// FIXME: name bad, called from Wrapper on destroy
@@ -343,17 +343,17 @@ dojo.declare("wm.Designer", wm.Surface, {
 		inControl.designMove(inDropInfo.target, inDropInfo);
 		this.onmove(inControl);
 	},
-        _onShowParent: function() {
-	    if (studio.page && studio.page.root)
+	_onShowParent: function() {
+		if (studio.page && studio.page.root)
 		studio.page.root.callOnShowParent();
 	},
-    renderBounds: function() {	
-	if (this.inherited(arguments)) {
-	    var deviceSize = this.deviceSize;
-	    this.deviceSize = app.appRoot.calcDeviceSize(this.bounds.w);
-	    if (deviceSize != this.deviceSize) {
-		dojo.publish("deviceSizeRecalc");
-	    }
+	renderBounds: function() {
+		if (this.inherited(arguments)) {
+			var deviceSize = this.deviceSize;
+			this.deviceSize = app.appRoot.calcDeviceSize(this.bounds.w);
+			if (deviceSize != this.deviceSize) {
+				dojo.publish("deviceSizeRecalc");
+			}
+		}
 	}
-    }
 });

@@ -1743,23 +1743,36 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 
     toHtml: function() {return "";},
+    toHtmlStyles: function() {
+        var style = ""; //"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+        if (this.styles) {
+            wm.forEachProperty(this.styles, function(value, name) {
+                if (style) style += ";";
+                style += name.replace(/([A-Z])/g, function(inLetter) {
+                    return "-" + inLetter.toLowerCase();
+                }) + ": " + value;
+            });
+            if (style) style = "style='" + style + "'";
+        }
+        return style;
+    },
     customToHtml: function(inWidth) {return "";},
     print: function() {
-	var html = this.toHtml(725); // 725px wide page
-	var csspath = dojo.moduleUrl("wm.base.widget.themes.default").path + "print.css";
-	var wavemakercsspath = dojo.moduleUrl("wm.base.styles").path + "wavemaker.css";
-	var page = this.getParentPage();
-	if (page) {
-	    var name = page.declaredClass;
-	    var css = wm.load("pages/" + name + "/" + name + ".css");
-	}
-	html = "<html><head><title>Printing " + app.declaredClass + "</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /><link rel='stylesheet' type='text/css' href='" + wavemakercsspath + "'/><link rel='stylesheet' href='print.css'/>" + (css ? "<style>" + css + "</style>" : "") + "</head><body onload='print()'>" + html + "</body><html>";
-	var win = window.open("", "Printing");
-	if (win) {
-	    win.document.open("text/html");
-	    win.document.write(html);
-	    win.document.close();
-	}
+        var html = this.toHtml(725); // 725px wide page
+        var csspath = dojo.moduleUrl("wm.base.widget.themes.default").path + "print.css";
+        var wavemakercsspath = dojo.moduleUrl("wm.base.styles").path + "wavemaker.css";
+        var page = this.getParentPage();
+        if (page) {
+            var name = page.declaredClass;
+            var css = wm.load("pages/" + name + "/" + name + ".css");
+        }
+        html = "<html><head><title>Printing " + app.declaredClass + "</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /><link rel='stylesheet' type='text/css' href='" + wavemakercsspath + "'/><link rel='stylesheet' href='print.css'/>" + (css ? "<style>" + css + "</style>" : "") + "</head><body onload='print()'>" + html + "</body><html>";
+        var win = window.open("", "Printing");
+        if (win) {
+            win.document.open("text/html");
+            win.document.write(html);
+            win.document.close();
+        }
     },
 
 	setHint: function(inHint) {

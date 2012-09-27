@@ -172,6 +172,12 @@ dojo.declare("wm.RangeSlider", wm.Slider, {
 	getBottomValue: function() {
 		return this.getEditorValue()[0];
 	},
+    setDisplayValue: function(inValue) {
+        if (typeof inValue == "string") {
+            inValue = inValue.split(/\s*,\s*/);
+        }
+        this.inherited(arguments, [inValue]);
+    },
 	setTopValue: function(inValue) {
 		this.setDataValue([this.getBottomValue(), inValue]);
 	},

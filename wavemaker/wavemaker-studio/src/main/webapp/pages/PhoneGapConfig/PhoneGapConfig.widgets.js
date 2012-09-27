@@ -309,7 +309,7 @@ PhoneGapConfig.widgets = {
                             "captionSize": "140px",
                             "dataValue": undefined,
                             "displayValue": "",
-                            "helpText": "Enter the path that you want this application to use to send requests to your server",
+                            "helpText": "Enter the path that you want this application to use to send requests to a WaveMaker server; you need this for LiveVariables, database services, java services and web services (except XHR/JSON services). Examples:<dl><dt>http://mylocalhostipaddress:8094/Project35</dt><dd>Use something like this if your phonegap app is talking to your development machine</dd><dt>http://project35.cloudfoundry.com</dt><dd>if your phonegap application is talking to a server you deployed to cloudfoundry</dd><dt>http://myserver.com/project35</dt><dd>if your phonegap application is talking to a server you deployed elsewhere</dd><dt>Leave blank</dt><dd>If your only using XHR Services and don't need a WaveMaker server</dd></dl>",
                             "width": "100%",
                             emptyValue: "null",
                             restrictValues: 0,
