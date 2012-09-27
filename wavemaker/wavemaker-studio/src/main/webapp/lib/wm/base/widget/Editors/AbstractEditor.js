@@ -1059,13 +1059,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         remainingWidth -= 2; // border for the editor
         var captionSize = 125;
         var topToBottomLayout = (remainingWidth - captionSize < 100 || this.captionPosition == "top" || this.captionPosition == "bottom");
+        var style = this.toHtmlStyles();
         if (this.caption && this.captionSize != "0px" && this.captionSize != "0%" && !topToBottomLayout) {
             var captionPadding = 4;
             var editorSize = remainingWidth - captionSize;
-            return "<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'><div class='wmeditor-label' style='width:" + (captionSize - captionPadding) + "px;padding-right:" + captionPadding + "px;display:inline-block;'>" + this.caption + "</div><div class='wmeditor-value' style='display: inline-block;width:" + editorSize + "px'>" + (this.getDisplayValue() || "&nbsp;") + "</div></div>";
+            return "<div " + style + " class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'><div class='wmeditor-label' style='width:" + (captionSize - captionPadding) + "px;padding-right:" + captionPadding + "px;display:inline-block;'>" + this.caption + "</div><div class='wmeditor-value' style='display: inline-block;width:" + editorSize + "px'>" + (this.getDisplayValue() || "&nbsp;") + "</div></div>";
         } else {
             var html = [];
-            html.push("<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'>");
+            html.push("<div " + style + " class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'>");
             if (this.caption && this.captionSize != "0px" && this.captionSize != "0%") {
                 html.push("<div class='wmeditor-label' >" + this.caption + "</div>");
             }

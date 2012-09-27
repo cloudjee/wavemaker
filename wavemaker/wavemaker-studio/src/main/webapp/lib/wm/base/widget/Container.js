@@ -978,7 +978,7 @@ wm.Container.extend({
                 if (hasContents[i]) {
                     var h = this.c$[i].toHtml(inWidth);
                     if (h) {
-                        var style = ""; //"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+                        var style = this.toHtmlStyles();
                         var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
                         classes = dojo.filter(classes, function(inClass) {
                             return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;

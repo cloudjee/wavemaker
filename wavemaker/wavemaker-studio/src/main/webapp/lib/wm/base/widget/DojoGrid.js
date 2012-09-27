@@ -1857,8 +1857,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.renderDojoObj();
             this._renderHiddenGrid = false;
         }
-
-        var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
+        var style = this.toHtmlStyles();
+        var html = "<table " + style + " border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
         dojo.forEach(this.columns, function(col, idx) {
             if (!col.show) return;
             html += "<th style='" + (col.width.match(/px/) ? col.width : "") + "'>" + col.title + "</th>";

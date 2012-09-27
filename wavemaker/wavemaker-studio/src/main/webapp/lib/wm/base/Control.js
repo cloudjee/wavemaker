@@ -1743,6 +1743,19 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 
     toHtml: function() {return "";},
+    toHtmlStyles: function() {
+        var style = ""; //"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+        if (this.styles) {
+            wm.forEachProperty(this.styles, function(value, name) {
+                if (style) style += ";";
+                style += name.replace(/([A-Z])/g, function(inLetter) {
+                    return "-" + inLetter.toLowerCase();
+                }) + ": " + value;
+            });
+            if (style) style = "style='" + style + "'";
+        }
+        return style;
+    },
     customToHtml: function(inWidth) {return "";},
     print: function() {
         var html = this.toHtml(725); // 725px wide page

@@ -110,7 +110,8 @@ dojo.declare("wm.Picture", wm.Control, {
 	    }
 	},
     toHtml: function() {
-	return "<img class='wmpicture' style='width:" + this.bounds.w + "px;height:" + this.bounds.h + "px' src='" + this.img.src + "'/>";
+        var style = this.toHtmlStyles();
+	   return "<img " + style + " class='wmpicture' style='width:" + this.bounds.w + "px;height:" + this.bounds.h + "px' src='" + this.img.src + "'/>";
     }
 });
 
