@@ -20,6 +20,12 @@ wm.Object.extendSchema(wm.dijit.Calendar, {
 
     /* widgetName group */
     specialDates: { group: "widgetName", subgroup: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch:1,allowAllTypes:1,widgetDataSets:0}, advanced:1},
+    dateField: {group: "widgetName", subgroup: "data", order: 1, editor:"wm.prop.FieldSelect", editorProps: {dataSetProp: "specialDates"}, advanced:1},
+    startDateField: {group: "widgetName", subgroup: "data", order: 2, editor:"wm.prop.FieldSelect", editorProps: {dataSetProp: "specialDates"}, advanced:1},
+    endDateField: {group: "widgetName", subgroup: "data", order: 3, editor:"wm.prop.FieldSelect", editorProps: {dataSetProp: "specialDates"}, advanced:1},
+    descriptionField: {group: "widgetName", subgroup: "data", order: 4, editor:"wm.prop.FieldSelect", editorProps: {dataSetProp: "specialDates"}, advanced:1},
+    cssClassField: {group: "widgetName", subgroup: "data", order: 5, editor:"wm.prop.FieldSelect", editorProps: {dataSetProp: "specialDates"}, advanced:1},
+
     useDialog: {group: "widgetName", subgroup: "selection", order: 1, type: "boolean",advanced:1},
 
     /* Editor group; value subgroup */
@@ -29,7 +35,7 @@ wm.Object.extendSchema(wm.dijit.Calendar, {
 
     /* Editor group; validation subgroup */
     minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
-    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
+    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
 
     /* Ignored group */
     disabled: {ignore: 1},
