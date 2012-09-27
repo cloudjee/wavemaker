@@ -142,6 +142,8 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
                     height: 160,
                     modal: false,
                     owner: this,
+                    corner: "cr",
+                    fixPositionNode: this.domNode,
                     widgets_data: {
                         startContainer: ["wm.Panel", {height: "20px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"},{},{
                             startHeading:  ["wm.Label", {width: "40px", height: "100%", caption: "FROM:"}],
@@ -263,10 +265,6 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
             this.dialog.setTitle(key);
             this.dialog.show();
 
-            //                var o = wm.positionAroundNode(dojo.query(".dijitCalendarSelectedDate", this.domNode)[0], "b");
-            var o = wm.positionAroundNode(this.domNode, "r");
-            this.dialog.domNode.style.left = o.x + "px";
-            this.dialog.domNode.style.top = o.y + "px";
             this.dialog.$.startContainer.setShowing(Boolean(data[this.startDateField]));
             this.dialog.$.endContainer.setShowing(Boolean(data[this.endDateField]));
             this.dialog.$.startDate.setCaption(wm.dijit.Calendar.getTime(data[this.startDateField]));
@@ -293,6 +291,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 
 
 wm.dijit.Calendar.getTime = function(date) {
+    if (date instanceof Date === false) date = new Date(date);
     var hour = date.getHours();
     var ampm = "am";
     if (hour == 0) {
