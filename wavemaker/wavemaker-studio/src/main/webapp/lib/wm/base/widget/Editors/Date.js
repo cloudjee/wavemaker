@@ -617,7 +617,7 @@ dojo.declare("wm.form.TimeTextBox", dijit.form.TimeTextBox, {
                 });
             }
             if (this.dropDown && this.dropDown._popupWrapper && !this.dropDown._popupWrapper.style.display) return;
-            var phoneSize = app.appRoot.deviceSize == "tiny" || Number(app.appRoot.deviceSize) <= 450;
+            var phoneSize = Number(app.appRoot.deviceSize) <= 450;
             this.dropDown = wm.TimePicker.dialog;
             this.dropDown._cupdating = true;
             this.dropDown.okButton.setCaption("OK"); // TODO: Localize
