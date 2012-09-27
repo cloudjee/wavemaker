@@ -13,8 +13,7 @@
  */
 
 
-dojo.provide("wm.base.widget.Editors.Text_design");
-dojo.require("wm.base.widget.Editors.Text");
+dojo.provide("wm.base.widget.Editors.Number_design");
 dojo.require("wm.base.widget.Editors.AbstractEditor_design");
 dojo.require("wm.base.widget.Editors.Number");
 
