@@ -152,10 +152,12 @@ dojo.declare("wm.ListViewer", wm.Container, {
     _selectedIndex: -1,
     selectedItem: null,
     allowRowSelection: false,
+    renderVisibleRowsOnly: false,
     lock: true,
     manageLiveVar: false,
     scrollX: false,
-    scrollY: true,
+    scrollY: false,
+    autoScroll: true,
     dataSet: null,
     pageName: "",
     width: "100%",
@@ -189,7 +191,9 @@ dojo.declare("wm.ListViewer", wm.Container, {
 
 
         if (this.pageName) this.setPageName(this.pageName);
-        this.connect(this.domNode, "onscroll", this, "scheduleRenderRows");
+        if (this.renderVisibleRowsOnly) {
+            this.connect(this.domNode, "onscroll", this, "scheduleRenderRows");
+        }
     },
     setLoadingImageShowing: function(inShowing) {
         if (inShowing) {
@@ -446,7 +450,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
             this.currentRenderer.bounds.w = bounds.w;
 
             // for each row that is visible, render it
-            if (this.isScrolledIntoView(heightSum, this.currentRenderer.bounds.h, bounds)) {
+            if (!this.renderVisibleRowsOnly || this.isScrolledIntoView(heightSum, this.currentRenderer.bounds.h, bounds)) {
 
                 // If there are no widgets in the rowRenderer, then it needs to be rendered.  If there's no data from the
                 // server, insure that we have data from the server and call setData on the renderer's wm.Variable.
@@ -511,6 +515,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
         this.setLoadingImageShowing(false);
         delete this._renderingRows;
 
+    },
+    _ontouchstart: function(e) {
+        if (this.domNode.clientHeight < this.domNode.scrollHeight) this._xscrollY = true;
+        this.inherited(arguments);
     },
     isScrolledIntoView: function(nodeTop, nodeHeight, bounds) {
         var top = this.domNode.scrollTop;
