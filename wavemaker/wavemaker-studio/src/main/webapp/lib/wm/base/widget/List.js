@@ -376,6 +376,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.listNode.style.MozTransform = "translate(0,-" + top + "px)";
             } else if (dojo.isOpera) {
                 this.listNode.style.OTransform = "translate(0,-" + top + "px)";
+            } else if (dojo.isIE == 8) {
+                this.listNodeWrapper.scrollTop = top;
+                console.log(this.listNodeWrapper.scrollTop);
             } else if (dojo.isIE) {
                 this.listNode.style.MsTransform = "translate(0,-" + top + "px)";
             }
