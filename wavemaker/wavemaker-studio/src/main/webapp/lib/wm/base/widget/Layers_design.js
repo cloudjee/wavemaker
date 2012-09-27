@@ -30,8 +30,9 @@ wm.Object.extendSchema(wm.Layer, {
     themeStyleType: {ignore: 0},
 
     /* Operations group */
-    moveNext: { group: "operation", order: 1, contextMenu: false, operation: 1 },
-    movePrevious: { group: "operation", order: 2, contextMenu: false, operation: 1 },
+    add:  { group: "operation", order: 1, contextMenu: true, operation: 1 },
+    moveNext: { group: "operation", order: 2, contextMenu: false, operation: 1 },
+    movePrevious: { group: "operation", order: 3, contextMenu: false, operation: 1 },
 
     /* Events/custom methods group */
     onDeactivate: {group:"events",order: 1},
@@ -82,19 +83,21 @@ wm.Layer.extend({
 		var l = this.parent, i = this.getIndex();
 		l.moveLayerIndex(this, i + inDelta);
 	},
-        moveNext: function() {
+    moveNext: function() {
 	    this.moveLayer(1);
 	    studio.refreshComponentOnTree(this.parent);
 	    studio.select(null);
 	    studio.select(this);
 	},
-        movePrevious: function() {
+    movePrevious: function() {
 	    this.moveLayer(-1);
 	    studio.refreshComponentOnTree(this.parent);
 	    studio.select(null);
 	    studio.select(this);
 	},
-
+    add: function() {
+        this.parent.add();
+    },/*
     createDesignContextMenu: function(menuObj) {
 	var data = {label: "Move Layer",
 		    iconClass: "Studio_silkIconImageList_30",
@@ -113,7 +116,7 @@ wm.Layer.extend({
 			    })
 			   });
 		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
-    },
+    },*/
 	listProperties: function() {
 	    var props = this.inherited(arguments);
 	    props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
@@ -309,11 +312,10 @@ wm.Layers.extend({
         return this.inherited(arguments);
     },
     add: function() {
-        this.addLayer();
+        var l = this.addLayer();
         // FIXME: need to refresh tree and select layer
         studio.refreshVisualTree();
-        studio.select(null);
-        studio.select(this);
+        studio.select(l);
     },
     listProperties: function() {
         var props = this.inherited(arguments);

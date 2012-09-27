@@ -585,7 +585,7 @@ wm.Component.extend({
     this.createDesignContextMenu(menuObj);
         var props = this.listProperties();
         for (p in props) {
-            if (props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
+            if (!props[p].ignore && props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
 /*
             props[p].simpleBindTarget ||
             props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/)
