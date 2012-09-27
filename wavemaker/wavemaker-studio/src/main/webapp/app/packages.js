@@ -157,7 +157,6 @@
 [ bundlePackage.Web_Content, bundlePackage.FacebookActivityFeed, "wm.gadget.FacebookActivityFeed", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descFaceBookActivityWidget, {}, true],
 [ bundlePackage.Web_Content, "Twitter Follow Button", "wm.gadget.TwitterFollowButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterFollowWidget, {}, true],
 [ bundlePackage.Web_Content, "Twitter Tweet Button", "wm.gadget.TwitterTweetButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterTweetWidget, {}, true],
-[ bundlePackage.Web_Content, "Twitter List", "wm.gadget.TwitterList", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterListWidget, {}, true],
 [ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", bundlePackage.descFeedList, {}, false],
 [ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "Studio_paletteImageList_26", bundlePackage.descTwitterFeed, {}, false],
 
