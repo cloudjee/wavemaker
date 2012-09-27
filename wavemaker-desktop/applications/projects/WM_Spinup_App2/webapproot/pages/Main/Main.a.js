@@ -263,7 +263,7 @@ explore5: ["wm.Label", {"caption":"<div style=\"color:white;\">Wiki<br><div styl
 }]
 }],
 FooterPanel: ["wm.Panel", {"height":"26px","horizontalAlign":"center","styles":{"backgroundGradient":{"direction":"vertical","startColor":"#6d83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"middle","width":"100%"}, {}, {
-label1: ["wm.Label", {"align":"center","caption":"WaveMaker  |  Copyright © 2011-2012 SpringSource, a division of VMware, Inc. All rights reserved.","height":"23px","padding":"4","singleLine":false,"styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
+label1: ["wm.Label", {"align":"center","caption":"WaveMaker  |  Copyright © 2011-2012 VMware, Inc. All rights reserved.","height":"23px","padding":"4","singleLine":false,"styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
 }]
 }]
 }]
