@@ -165,7 +165,7 @@ public class QueryHandler implements InvocationHandler {
                     val = (Integer) tidGetter.invoke(o);
                     if (tid != val) {
                         String err = "*** Security Viloation - Tenant ID mismatch ***";
-                        err = err + "*** Tenant ID of login user = " + tid + ", Tenant ID of target record = " + val + " ***";
+                        err = err + "*** You can only update records that belong to you ***";
                         throw new WMRuntimeException(err);
                     }
                 }
