@@ -953,79 +953,81 @@ wm.Container.extend({
 
 
     toHtml: function(inWidth) {
-    if (this.customToHtml != this.constructor.prototype.customToHtml)
-        return this.customToHtml();
-    var html = [];
-    var count = 0;
-    var hasContents = [];
-    for (var i = 0; i < this.c$.length; i++) {
-        var c = this.c$[i];
-        if (this.layout.inFlow(c) ) {
-        hasContents[i] = c.toHtml != wm.Control.prototype.toHtml;
-        if (hasContents[i] && c.customToHtml != c.constructor.prototype.customToHtml) {
-            var testContent = c.toHtml(inWidth);
-            if (testContent === "" || testContent === undefined || testContent === null)
-            hasContents[i] = false;
+        if (this.customToHtml != this.constructor.prototype.customToHtml) return this.customToHtml();
+        var html = [];
+        var count = 0;
+        var hasContents = [];
+        for (var i = 0; i < this.c$.length; i++) {
+            var c = this.c$[i];
+            if (this.layout.inFlow(c)) {
+                hasContents[i] = c.toHtml != wm.Control.prototype.toHtml;
+                if (hasContents[i] && c.customToHtml != c.constructor.prototype.customToHtml) {
+                    var testContent = c.toHtml(inWidth);
+                    if (testContent === "" || testContent === undefined || testContent === null) hasContents[i] = false;
+                }
+                if (hasContents[i]) {
+                    count++;
+                }
+            }
         }
-        if (hasContents[i]) {
-            count++;
-        }
-        }
-    }
 
 
-    if (this.layoutKind == "top-to-bottom" || count <= 1) {
-        html.push("<div id='" + this.domNode.id + "' class='wmPanelTopToBottom'>");
-        for (var i = 0; i < this.c$.length; i++) {
-        if (hasContents[i]) {
-            var h = this.c$[i].toHtml(inWidth);
-            if (h) {
-            var style = "";//"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
-            var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
-            classes = dojo.filter(classes, function(inClass) {return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;});
-            classes = classes.join(" ");
-            html.push("<div id='" + this.c$[i].domNode.id + "_Outer' " + style + " class='" + classes + "'>" + h + "</div>");
+        if (this.layoutKind == "top-to-bottom" || count <= 1) {
+            html.push("<div id='" + this.domNode.id + "' class='wmPanelTopToBottom'>");
+            for (var i = 0; i < this.c$.length; i++) {
+                if (hasContents[i]) {
+                    var h = this.c$[i].toHtml(inWidth);
+                    if (h) {
+                        var style = ""; //"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+                        var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
+                        classes = dojo.filter(classes, function(inClass) {
+                            return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;
+                        });
+                        classes = classes.join(" ");
+                        html.push("<div id='" + this.c$[i].domNode.id + "_Outer' " + style + " class='" + classes + "'>" + h + "</div>");
+                    }
+                }
+            }
+        } else {
+            var remainingWidth = inWidth - 4; // things start wrapping if we don't have at least 4 extra px space
+            var totalPercent = 0;
+            var widths = [];
+            for (var i = 0; i < this.c$.length; i++) {
+                if (hasContents[i]) {
+                    var c = this.c$[i];
+                    if (!c._percEx.w) {
+                        widths[i] = c.bounds.w;
+                        remainingWidth -= c.bounds.w;
+                    } else {
+                        totalPercent += c._percEx.w;
+                    }
+                }
+            }
+            for (var i = 0; i < this.c$.length; i++) {
+                if (hasContents[i]) {
+                    var c = this.c$[i];
+                    if (c._percEx.w) {
+                        var width = c._percEx.w / totalPercent * remainingWidth;
+                        widths[i] = width;
+                    }
+                }
+            }
+            html.push("<div id='" + this.domNode.id + "' class='wmPanelLeftToRight'>");
+            for (var i = 0; i < this.c$.length; i++) {
+                var h = this.c$[i].toHtml(widths[i])
+                if (h) {
+                    var style = ""; //"style='margin-top: " + this.marginExtents.t + "px;margin-bottom: " + this.marginExtents.b + "px;padding-top: " + this.paddingExtents.t + "px;padding-bottom: " + this.paddingExtents.b + "px;'";
+                    var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
+                    classes = dojo.filter(classes, function(inClass) {
+                        return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;
+                    });
+                    classes = classes.join(" ");
+                    html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;' " + style + " class='" + classes + "'>" + h + "</div>");
+                }
             }
         }
-        }
-    } else {
-        var remainingWidth = inWidth-4; // things start wrapping if we don't have at least 4 extra px space
-        var totalPercent = 0;
-        var widths = [];
-        for (var i = 0; i < this.c$.length; i++) {
-        if (hasContents[i]) {
-            var c = this.c$[i];
-            if (!c._percEx.w) {
-            widths[i] = c.bounds.w;
-            remainingWidth -= c.bounds.w;
-            } else {
-            totalPercent += c._percEx.w;
-            }
-        }
-        }
-        for (var i = 0; i < this.c$.length; i++) {
-        if (hasContents[i]) {
-            var c = this.c$[i];
-            if (c._percEx.w) {
-            var width = c._percEx.w/totalPercent * remainingWidth;
-            widths[i] = width;
-            }
-        }
-        }
-        html.push("<div id='" + this.domNode.id + "' class='wmPanelLeftToRight'>");
-        for (var i = 0; i < this.c$.length; i++) {
-        var h = this.c$[i].toHtml(widths[i])
-        if (h) {
-            var style = ""; //"style='margin-top: " + this.marginExtents.t + "px;margin-bottom: " + this.marginExtents.b + "px;padding-top: " + this.paddingExtents.t + "px;padding-bottom: " + this.paddingExtents.b + "px;'";
-            var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
-            classes = dojo.filter(classes, function(inClass) {return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;});
-            classes = classes.join(" ");
-            html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;' " + style + " class='"+classes+"'>" + h + "</div>");
-        }
-        }
-    }
-    html.push("</div>");
-    return html.join("");
+        html.push("</div>");
+        return html.join("");
     }
 });
 
