@@ -15,20 +15,26 @@
 dojo.provide("wm.studio.app.propertyEdit");
 
 dojo.declare("wm.SetPropTask", null, {
-        constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsStyle) {
-        dojo.mixin(this, { component: inComponent, propName: inPropName, oldValue: inOldValue, newValue: inNewValue, isStyle:inIsStyle});
+    constructor: function(inComponent, inPropName, inOldValue, inNewValue, inIsStyle) {
+        dojo.mixin(this, {
+            component: inComponent,
+            propName: inPropName,
+            oldValue: inOldValue,
+            newValue: inNewValue,
+            isStyle: inIsStyle
+        });
         this.hint = 'change "' + inPropName + '"';
         this.redo();
     },
     _do: function(inValue) {
         if (this.isStyle) {
-        this.component.setStyle(this.propName, inValue);
+            this.component.setStyle(this.propName, inValue);
         } else {
-        this.component.setProp(this.propName, inValue);
+            this.component.setProp(this.propName, inValue);
         }
         //projectMgr.setDirtyComponents(true);
         if (studio.selected == this.component) {
-        wm.onidle(studio.inspector, "reinspect");
+            wm.onidle(studio.inspector, "reinspect");
         }
     },
     redo: function() {
@@ -58,8 +64,7 @@ dojo.declare("wm.SetWireTask", null, {
         this.component.$.binding.removeWireByProp(this.propName);
         if (inValue) {
             if (type == "expr") {
-                if (!this.skipParseExpression)
-                    inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
+                if (!this.skipParseExpression) inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
                 this.component.$.binding.addWire("", this.propName, "", inValue);
             } else if (type == "source") {
                 this.component.$.binding.addWire("", this.propName, inValue);
@@ -92,7 +97,6 @@ dojo.declare("wm.SetWireTask", null, {
         }
     }
 });
-
 
 dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
     editorBorder: false,
