@@ -217,14 +217,14 @@ wm.ToggleButtonPanel.extend({
         });
         this.reflow();
     },
-    afterPaletteChildDrop: function(inWidget) {
-    },
+
     set_buttonMargins: function(inMargin) {
         this.buttonMargins = inMargin;
         dojo.forEach(this._btns, function(b) {
             b.setMargin(inMargin);
         });
     },
+    afterDragChildDrop: function(inButton) { this.afterPaletteChildDrop(inButton);},
     afterPaletteChildDrop: function(inButton) {
         if (inButton.declaredClass == "wm.Button") {
             inButton.setWidth("100%");

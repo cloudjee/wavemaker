@@ -481,9 +481,10 @@ wm.DataForm.extend({
      * METHODS: afterPaletteDrop
      * DESCRIPTION:  Setup onEnterKeyPress event handler
      ***************/
-    afterPaletteDrop: function() {
-    this.inherited(arguments);
-    },
+
+    /* These error checks do not fire if the user drops the editor/relatedEditor into a form within this container.
+     * More work is needed here. */
+    afterDragChildDrop: function(inButton) { this.afterPaletteChildDrop(inButton);},
     afterPaletteChildDrop: function(inWidget) {
         this.inherited(arguments);
         if (wm.isInstanceType(inWidget, wm.LiveFormBase)) {
