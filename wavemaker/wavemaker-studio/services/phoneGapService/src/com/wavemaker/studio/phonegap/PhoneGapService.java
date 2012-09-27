@@ -361,7 +361,7 @@ public class PhoneGapService {
 		case ECLIPSE:
 			return currentProject.getRootFolder().getFolder("phonegap/android/assets/www");
 		case PHONEGAP_BUILD_SERVICE:
-			return currentProject.getRootFolder().getFolder("phonegap/build");
+			return currentProject.getRootFolder().getFolder("phonegap/" + currentProject.getProjectName() + "_phonegap_build");
 		}
 		throw new IllegalStateException("Uknown phonegap layout " + layout);
 	}
