@@ -142,7 +142,7 @@ wm.fullTemplates.fancyTemplate = {
 			picture2: ["wm.Picture", {"border":"0","height":"20px","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"25px"}, {}],
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered By Wavemaker","height":"100%","width":"100%"}, {}, {
 			}],
-			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"300px"}, {}, {
+			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright 2012 [company name]","height":"100%","width":"300px"}, {}, {
 			}]
 		}]
 	}]}
@@ -184,7 +184,7 @@ wm.fullTemplates.sideMenuTemplate = {
 			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
 			}],
-			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
+			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright 2012 [company name]","height":"100%","width":"100%"}, {}, {
 			}]
 		}]
 	    }]
@@ -229,7 +229,7 @@ wm.fullTemplates.tabTemplate = {
 			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
 			}],
-			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
+			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright 2012 [company name]","height":"100%","width":"100%"}, {}, {
 			}]
 		}]
 	    }]
@@ -276,7 +276,7 @@ wm.fullTemplates.topMenuTemplate = {
 			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
 			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
 			}],
-			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
+			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright 2012 [company name]","height":"100%","width":"100%"}, {}, {
 			}]
 		}]
 	}]}
@@ -388,7 +388,7 @@ wm.fullTemplates.fancyCenteredTemplate = {
 			templateBottom: ["wm.Panel", {"_classes":{"domNode":["fancytemplate-bottom-center"]},"height":"100%","width":"100%","verticalAlign":"top","horizontalAlign":"left","freeze":true}, {}],
 			templateBottomRight: ["wm.Panel", {"_classes":{"domNode":["fancytemplate-bottom-right"]},"height":"100%","width":"24px","verticalAlign":"top","horizontalAlign":"left","freeze":true}, {}]
 		    }],
-		    panelFooter: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","height":"48px","width":"100%","caption":"Copyright 2010 VMware, Inc.<br>1000 Sansome Street, Suite 250 San Francisco, CA 94111","border":"0","padding":"10,20","margin":"0","singleLine":false}, {}, {}]
+		    panelFooter: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","height":"48px","width":"100%","caption":"Copyright 2012 [Company Name]","border":"0","padding":"10,20","margin":"0","singleLine":false}, {}, {}]
 		}]
 	    }]
         }]
@@ -410,7 +410,7 @@ wm.fullTemplates.CenteredPageContainerWithHeaderFooter = {
 				}],
 			pageContainer1: ["wm.PageContainer", {_classes: {domNode: ["wmcontentarea"]}, "height":"100%"}, {}],
 				Footer: ["wm.Template", {"_classes":{"domNode":["toolbar"]},"width":"100%","height":"36px","verticalAlign":"middle","horizontalAlign":"center","padding":"2"}, {}, {
-				    footerLabel: ["wm.Label", {align: "center", "caption":"Copyright 2010 ACME, Inc.","width":"100%","height":"100%"}, {}, {
+				    footerLabel: ["wm.Label", {align: "center", "caption":"Copyright 2012 [Company Name]","width":"100%","height":"100%"}, {}, {
 
 					}]
 				}]
@@ -601,7 +601,7 @@ wm.widgetTemplates.footer = {
 	horizontalAlign: "center",
 	_classes: {domNode: ["toolbar"]},
 	_template: {
-	    footerLabel: ["wm.Label", {align: "center", caption: "Copyright 2010 ACME, Inc.", width: "100%", height: "100%"}, {}, {
+	    footerLabel: ["wm.Label", {align: "center", caption: "Copyright 2012 [Company Name]", width: "100%", height: "100%"}, {}, {
 		}]
 	}
 }
