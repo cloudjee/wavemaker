@@ -35,9 +35,9 @@ wm.Control.extend({
     },
     designMove: function(inTarget, inMoveInfo) {
         inTarget.designMoveControl(this, inMoveInfo);
-        wm.job("studio.updateDirtyBit", 10, function() {
-            studio.updateProjectDirty();
-        });
+        this.afterDragDrop();
+        inTarget.afterDragChildDrop(this);
+        wm.job("studio.updateDirtyBit", 10, studio, "updateProjectDirty");
     },
     resizeUpdate: function(inBounds) {
         // update the boundary rectangle highlight only
@@ -132,6 +132,13 @@ wm.Control.extend({
         }
     },
     afterPaletteChildDrop: function(inWidget) {
+    },
+    afterDragChildDrop: function(inWidget) {
+    },
+    afterDragDrop: function() {
+        if (this == studio.selected) {
+            studio.reinspect();
+        }
     },
     afterPaletteDrop: function() {
         this.inherited(arguments);
