@@ -2376,6 +2376,19 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
                 if (displayValue === "") {
                     value = null;
                 } else {
+                    // if the item isn't set but the user has entered a value,
+                    // verify that there isn't a match.  Typically caused by
+                    // using the initial value rather than selecting a value
+                    if (!item && displayValue) {
+                        dojo.forEach(this.options, dojo.hitch(this, function(option) {
+                            try {
+                                if (option[this.widgetProps.displayField][0] == displayValue) {
+                                    this.widget.set("item", option);
+                                    item = option;
+                                }
+                            } catch(e) {}
+                        }));
+                    }
                     var value = this.widgetProps.owner.itemToJSONObject(store, item);
                     if (this.isSimpleType && typeof value == "object") {
                         value = value[this.widgetProps.displayField];
