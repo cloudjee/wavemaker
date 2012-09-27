@@ -62,7 +62,7 @@ dojo.declare("wm.SetWireTask", null, {
     },
     _do: function(inValue, type) {
         this.component.$.binding.removeWireByProp(this.propName);
-        if (inValue) {
+        if (inValue || inValue === 0) {
             if (type == "expr") {
                 if (!this.skipParseExpression) inValue = studio.inspector.parseExpressionForWire(inValue, this.skipValidation);
                 this.component.$.binding.addWire("", this.propName, "", inValue);
