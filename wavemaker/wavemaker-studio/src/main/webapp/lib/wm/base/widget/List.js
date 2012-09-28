@@ -393,6 +393,11 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.listNode.scrollTop = top ;
         }
     },
+    scrollToRow: function(inIndex) {
+        var item = this.getItem(inIndex);
+        var top = item.domNode.offsetTop;
+        this.setScrollTop(Math.max(0,top-15));
+    },
     createSelectedItem: function() {
         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
         this.selectedItem = new wm.Variable({
