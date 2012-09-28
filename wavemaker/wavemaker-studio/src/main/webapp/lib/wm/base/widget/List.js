@@ -95,6 +95,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     styleAsGrid: true,
     rightNavArrow: false,
     selectFirstRow: false,
+    scrollToSelection: false,
     renderVisibleRowsOnly: true,
     autoSizeHeight: false,
     nextRowId: 0,
@@ -249,7 +250,9 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.headerVisible = false;
         }
         if (!this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "MobileListStyle") == -1)) {
-             this.addUserClass("MobileListStyle");
+            this.addUserClass("MobileListStyle");
+        } else if (this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "GridListStyle") == -1)) {
+            this.addUserClass("GridListStyle");
         }
         var spacerNodeTop = this.spacerNodeTop = document.createElement('div');
         spacerNodeTop.className = "wmlist-spacer";
@@ -376,6 +379,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.listNode.style.MozTransform = "translate(0,-" + top + "px)";
             } else if (dojo.isOpera) {
                 this.listNode.style.OTransform = "translate(0,-" + top + "px)";
+            } else if (dojo.isIE == 8) {
+                this.listNodeWrapper.scrollTop = top;
+                console.log(this.listNodeWrapper.scrollTop);
             } else if (dojo.isIE) {
                 this.listNode.style.MsTransform = "translate(0,-" + top + "px)";
             }
@@ -387,6 +393,20 @@ dojo.declare("wm.List", wm.VirtualList, {
         } else {
             this.listNode.scrollTop = top ;
         }
+    },
+    scrollToRow: function(inIndex) {
+        var item = this.getItem(inIndex);
+        if (!item) {
+          /* TODO: This is terrible: this will render all 10,000 items if the developer calls select().  Fix this... */
+            this.renderVisibleRowsOnly = false;
+            this._render();
+            this.renderVisibleRowsOnly = true;
+            item = this.getItem(inIndex);
+        }
+        var top = item.domNode.offsetTop;
+        this._inScroll = true;
+        this.setScrollTop(Math.max(0,top-15));
+        this._inScroll = false;
     },
     createSelectedItem: function() {
         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
@@ -947,7 +967,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return parent.childNodes[1];
     },
     onStyleRow: function(inRow /* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */ , rowData) {},
-
+    _onStyleRowBeforeStart: 1,
     addItem: function(inContent, inIndex, optionalDomNode) {
         var item = this.createItem(inContent, optionalDomNode);
 
@@ -1914,10 +1934,11 @@ wm.List.extend({
         }
 
         /* See if we need to render the list in order to perform the selection task */
-        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && index > 5 && !this._isDesignLoaded) {
+        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && (!item || !item.domNode || !item.domNode.parentNode) && !this._isDesignLoaded) {
             var renderHiddenGridWas = this._renderHiddenGrid;
             this._renderHiddenGrid = true;
             if (this.renderVisibleRowsOnly) {
+                /* TODO: This is terrible: this will render all 10,000 items if the developer calls select().  Fix this... */
                 this.renderVisibleRowsOnly = false;
                 this._render();
                 this.renderVisibleRowsOnly = true;
@@ -1925,9 +1946,14 @@ wm.List.extend({
                 this._render();
             }
             this._renderHiddenGrid = renderHiddenGridWas;
-            if (!item) item = this.getItem(index);
+            item = this.getItem(index); // item may have been regenerated
         }
         this.inherited(arguments, [item]);
+        if (this.scrollToSelection) {
+            wm.onidle(this, function() {
+                this.scrollToRow(index);
+            });
+        }
     },
     selectByIndex: function(inIndex) {
         this.select(inIndex);

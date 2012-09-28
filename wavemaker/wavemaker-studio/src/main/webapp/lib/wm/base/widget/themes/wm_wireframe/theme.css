@@ -824,8 +824,8 @@ font-size: 10pt;
 .wm_wireframe div.dojoxGridRow,
 .wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOver,
 .wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
-.wm_wireframe .Disabled div.wmlist-item.wmlist-item-over,
-.wm_wireframe div.wmlist-item {
+.wm_wireframe .GridListStyle.Disabled div.wmlist-item.wmlist-item-over,
+.wm_wireframe .GridListStyle div.wmlist-item {
 font-family: Verdana;
 color: #000000;
 font-weight: normal;
@@ -835,8 +835,8 @@ background-color: #eeeeee;
 .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd,
 .wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
 .wm_wireframe .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
-.wm_wireframe .Disabled div.wmlist-item.Odd.wmlist-item-over,
-.wm_wireframe .wmlist-item.Odd {
+.wm_wireframe .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.wm_wireframe .GridListStyle .wmlist-item.Odd {
 color: #000000;
 background-color: #dddddd;
 }
@@ -846,19 +846,20 @@ background-color: #dddddd;
 .wm_wireframe .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
 .wm_wireframe .Disabled.MobileListStyle div.wmlist-item.Odd.wmlist-item-over,
 .wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
-background-color: #ffffff !important;
+background-color: #ffffff;
 color: #000000;
+font-family: Verdana;
 }
 .wm_wireframe .MobileListStyle div.wmlist-item.wmlist-item-over,
 .wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
-background-color: #ffffff !important;
+background-color: #ffffff;
 color: #000000;
 }
 .wm_wireframe .MobileListStyle div.wmlist-item.wmlist-item-selected,
 .wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
 .wm_wireframe .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
 .wm_wireframe .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
-background-color: #eeeeee !important;
+background-color: #eeeeee;
 color: #000000;
 }
 .wm_wireframe td.dojoxGrid-cell,
@@ -890,14 +891,14 @@ border-right-width: 0px;
 .wm_wireframe div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_wireframe .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
-.wm_wireframe .wmlist-item.wmlist-item-selected,
-.wm_wireframe .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_wireframe .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_wireframe .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_wireframe .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #eeeeee !important;
 color: #000000;
 }
-.wm_wireframe .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_wireframe .wmlist-item.wmlist-item-over,
+.wm_wireframe .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_wireframe .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_wireframe div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_wireframe .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_wireframe div.dojoxGridRow.dojoxGridRowOver,
@@ -958,14 +959,14 @@ background-image: none !important;
 .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-.wm_wireframe .MainContent .wmlist-item.wmlist-item-selected,
-.wm_wireframe .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_wireframe .MainContent .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_wireframe .MainContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_wireframe .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #b2b2b2 !important;
 color: #000000;
 }
-.wm_wireframe .MainContent .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_wireframe .MainContent .wmlist-item.wmlist-item-over,
+.wm_wireframe .MainContent .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_wireframe .MainContent .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_wireframe .MainContent div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_wireframe .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_wireframe .MainContent .dojoxGridRowOver,
@@ -991,14 +992,14 @@ border: 1px dashed transparent !important;
 .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-.wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-selected,
-.wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_wireframe .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_wireframe .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #b2b2b2 !important;
 color: #000000;
 }
-.wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-over,
+.wm_wireframe .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_wireframe .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_wireframe .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_wireframe .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_wireframe .EmphasizedContent .dojoxGridRowOver,
@@ -1023,14 +1024,14 @@ border: 1px dashed transparent !important;
 .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-.wm_wireframe .HeaderContent .wmlist-item.wmlist-item-selected,
-.wm_wireframe .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
-.dj_ie6 .wm_wireframe .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+.wm_wireframe .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_wireframe .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.dj_ie6 .wm_wireframe .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #b2b2b2 !important;
 color: #000000;
 }
-.wm_wireframe .HeaderContent .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_wireframe .HeaderContent .wmlist-item.wmlist-item-over,
+.wm_wireframe .HeaderContent .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_wireframe .HeaderContent .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_wireframe .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_wireframe .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_wireframe .HeaderContent .dojoxGridRowOver,

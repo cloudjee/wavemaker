@@ -33,15 +33,15 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     containerClass: "", // don't give the containerWidget any extra classes
 
     /* This is the widget that will be covered by this dialog */
-    widgetToCover: null, 
+    widgetToCover: null,
 
-    /* OPTIONAL: Rather than calling show/hide, you may instead specify a servicevariable; 
+    /* OPTIONAL: Rather than calling show/hide, you may instead specify a servicevariable;
      * when that variable is firing, this is showing, when its not firing, this is not showing
      */
     serviceVariableToTrack: null,
 
     /* Do not use dialog class and styles */
-    classNames: "wmloadingdialog wm_FontColor_White", 
+    classNames: "wmloadingdialog wm_FontColor_White",
 
     useContainerWidget: true,
 
@@ -106,7 +106,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	this._setImage(image);
     },
     _setImage: function(inUrl) {
-	
+
 	if (!this._picture) {
 	    this._picture = new wm.Picture({owner: this,
 					    parent: this.containerWidget,
@@ -117,7 +117,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	} else {
 	    this._picture.setSource(inUrl);
 	}
-    }, 
+    },
     setImageWidth: function(inWidth) {
 	this.imageWidth = inWidth;
 	if (this._picture) {
@@ -132,7 +132,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     },
     setCaption: function(inCaption) {
 	this.caption = inCaption;
-	if (!this.caption) 
+	if (!this.caption)
 	    return;
 	if (!this._label) {
 	    this._label = new wm.Label(
@@ -149,16 +149,19 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	} else {
 	    this._label.setCaption(this.caption);
 	}
-    }, 
+    },
     setShowing: function(inShowing, forceChange, skipOnClose) {
 	this.inherited(arguments);
 	if (inShowing) {
 	    this._getWidgetToCover();
 	    if (this.widgetToCover) {
 		var node = this.widgetToCover.domNode;
-		var computedStyle = window.getComputedStyle(node);
-		var roundedStyle = computedStyle.getPropertyValue("border-radius") || computedStyle.getPropertyValue("-webkit-border-radius") || computedStyle.getPropertyValue("-moz-border-radius");
-		this.domNode.style.borderRadius = roundedStyle;
+		var roundedStyle;
+        if (window.getComputedStyle) {
+            var computedStyle = window.getComputedStyle(node);
+		    roundedStyle = computedStyle.getPropertyValue("border-radius") || computedStyle.getPropertyValue("-webkit-border-radius") || computedStyle.getPropertyValue("-moz-border-radius");
+		    this.domNode.style.borderRadius = roundedStyle;
+        }
 		if (dojo.isWebKit) {
 		    this.domNode.style.WebkitBorderRadius = roundedStyle;
 		} else if (dojo.isFF) {
@@ -177,7 +180,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     },
     _getWidgetToCover: function() {
 	if (this.widgetToCover) {
-	    if (dojo.isString(this.widgetToCover)) 
+	    if (dojo.isString(this.widgetToCover))
 		this.widgetToCover = this.owner.getValueById(this.widgetToCover);
 	}
 	return this.widgetToCover;
