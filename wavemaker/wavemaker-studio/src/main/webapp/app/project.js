@@ -221,7 +221,7 @@ dojo.declare("wm.studio.Project", null, {
         } else {
             studio.studioService.requestAsync("copyProject", [inProjectName, newProjectName],
                               dojo.hitch(this, function() {
-                              this.openProject1(newProjectName, inPageName, deferred);
+                              this.openProject1(newProjectName, inPageName, deferred, true);
                               }),
                               dojo.hitch(this, function(e) {
                               deferred.errback(e);
@@ -236,7 +236,7 @@ dojo.declare("wm.studio.Project", null, {
         }
     );
     },
-    openProject1: function(inProjectName, inPageName, deferred) {
+    openProject1: function(inProjectName, inPageName, deferred, skipUpgrade) {
 
         studio.studioService.requestAsync("openProject", [inProjectName],
                               dojo.hitch(this, function(o) {
@@ -285,7 +285,7 @@ dojo.declare("wm.studio.Project", null, {
                                       }
                                   }
                                   };
-                                  if (o.upgradeMessages) {
+                                  if (o.upgradeMessages && !skipUpgrade) {
                                   this.showUpgradeMessage(o.upgradeMessages);
                                   app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
                                   } else {
