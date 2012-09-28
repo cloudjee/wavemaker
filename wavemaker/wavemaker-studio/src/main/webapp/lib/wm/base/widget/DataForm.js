@@ -195,10 +195,19 @@ dojo.declare("wm.FormPanel", wm.Container, {
      * DESCRIPTION: Changes size of the caption measured in "px"
      ***************/
     setCaptionSize: function(inSize) {
+        var oldval = this.captionSize;
         this.captionSize = inSize;
         dojo.forEach(this.getEditorsArray(), function(e) {
+            /* User probably isn't trying to change the caption size of editors whose captionPosition is top/bottom */
+            if ((e.captionPosition == "top" || e.captionPosition == "bottom") && inSize > 40) return;
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
             e.setCaptionSize(inSize);
-        });
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel && c.captionSize === oldval && c.captionPosition == this.captionPosition) {
+                c.setCaptionSize(inSize);
+            }
+        }), true);
     },
     /****************
      * METHOD: setCaptionAlign (PUBLIC)
@@ -207,8 +216,14 @@ dojo.declare("wm.FormPanel", wm.Container, {
     setCaptionAlign: function(inAlign) {
         this.captionAlign = inAlign;
         dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
             e.setCaptionAlign(inAlign);
-        });
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+        if (c != this && c instanceof wm.FormPanel && c.captionSize === this.captionSize && c.captionPosition == this.captionPosition) {
+                c.setCaptionAlign(inAlign);
+            }
+        }), true);
     },
     /****************
      * METHOD: setCaptionPosition (PUBLIC)
@@ -216,6 +231,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
      ***************/
     setCaptionPosition: function(pos) {
         var oldPos = this.captionPosition;
+        var oldSize = this.captionSize;
         this.captionPosition = pos;
 
         if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
@@ -231,8 +247,14 @@ dojo.declare("wm.FormPanel", wm.Container, {
 
 
         dojo.forEach(this.getEditorsArray(), function(e) {
-            e.setCaptionPositionLF(pos);
-        });
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
+            e.setCaptionPositionLF(pos, this);
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel && c.captionSize === oldSize && c.captionPosition == oldPos) {
+                    c.setCaptionPosition(pos);
+                }
+        }), true);
     },
 
     /****************
@@ -242,8 +264,14 @@ dojo.declare("wm.FormPanel", wm.Container, {
     setEditorWidth: function(inEditorWidth) {
         this.editorWidth = inEditorWidth;
         dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
             if (e.parent.horizontalAlign != "justified") e.setWidth(inEditorWidth);
-        });
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel) {
+                c.setEditorWidth(inEditorWidth);
+            }
+        }), true);
     },
     /****************
      * METHOD: setEditorHeight (PUBLIC)
@@ -252,8 +280,14 @@ dojo.declare("wm.FormPanel", wm.Container, {
     setEditorHeight: function(inEditorHeight) {
         this.editorHeight = inEditorHeight;
         dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
             e.setValue("height", inEditorHeight);
-        });
+        }, this);
+        wm.forEachWidget(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel) {
+                c.setEditorHeight(inEditorHeight);
+            }
+        }, true);
     },
     // don't really need this...
 	getEditorParent: function() {

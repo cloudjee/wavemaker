@@ -59,15 +59,15 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
     //validateBeforeSave: false,
 	/**
 		The dataSet the LiveForm uses for source data.
-		
+
 		Typically dataSet is bound to a grid's <i>selectedItem</i> (where the grid is showing the output of a liveVariable) or directly to a liveVariable.
-		
+
 		When dataSet uses a LiveView, LiveForm generates editors for each of the fields in its related liveView.
 		When dataSet uses a LiveTable, a default view is created which contains all top level properties in the data type (not including composite key fields).
-		
+
 		Although it is possible to setup a LiveForm to do automatic CRUD operations when using a LiveTable, it's easiest
 		to set up a LiveView instead.
-		
+
 		@type Variable
 	*/
 	dataSet: null,
@@ -93,7 +93,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	setDataSet: function(inDataSet) {
 
 		if (this.parent && this.parent.operation && this.editingMode != "lookup") {
-			return;	
+			return;
 		}
 
 		this.beginEditUpdate();
@@ -141,7 +141,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// currently does not check for subNards that may be part of a dataSet
     findLiveVariable: function() {
 		// Not sure why we were not checking for liveVariable instance in the object itself,
-		// before digging deep and trying to find liveVariable elsewhere. 
+		// before digging deep and trying to find liveVariable elsewhere.
 		/*
 		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
 			return this.liveVariable;
@@ -151,7 +151,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			o = s && s.owner,
 			ds = null;
 		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
-			
+
 			if (o){
 				try{
 				    if (wm.isInstanceType(o, wm.DojoGrid)) {
@@ -165,7 +165,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 				}
 			}
 			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
-	        
+
 			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
 				return ds;
 		}
@@ -207,7 +207,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor management
 	//===========================================================================
 	populateEditors: function() {
-     
+
 		var i = this.getItemData(), data = i ? i.getData() : null;
 	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
@@ -221,11 +221,11 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 				e.setDataSet(i.getValue(e.formField));
 			    }
 			} else {
-                            if (wm.isInstanceType(e,wm.Lookup) && (!e.dataSet || !e.dataSet.type)) 
+                            if (wm.isInstanceType(e,wm.Lookup) && (!e.dataSet || !e.dataSet.type))
                                 e.setAutoDataSet(e.autoDataSet);
 
 			    wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
-			} 
+			}
 		        }));
 	},
     updateDataOutputType: function () {
@@ -273,7 +273,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	},
 	/**
 		Clear all editors.
-		As usual, the data clear is a change propagated via 
+		As usual, the data clear is a change propagated via
 		bindings. So, typically, <i>dataOutput</i> is cleared too.
 	*/
 	clearData: function() {
@@ -376,7 +376,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 		dojo.forEach(this.getEditorsArray(), function(e) {
 			e.setCaptionSize(inSize);
 		});
-		
+
 		dojo.forEach(this.getRelatedEditorsArray(), function(e) {
 			e.setCaptionSize(inSize);
 		});
@@ -404,7 +404,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	    } else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
 		if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) >= 48)
 		    this.editorHeight = wm.AbstractEditor.prototype.height;
-	    
+
 		if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
 		    this.captionSize = "100px";
 		}
@@ -412,8 +412,8 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 
 
 		dojo.forEach(this.getEditorsArray(), function(e) {
-		    e.setCaptionPositionLF(pos);
-		});
+		    e.setCaptionPositionLF(pos, this);
+		}, this);
 	},
 	setEditorWidth: function(inEditorWidth) {
 		this.editorWidth = inEditorWidth;
@@ -448,7 +448,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	   var widget = this.getInvalidWidget();
 	   if (!widget) return true;
 	   app.alert(wm.getDictionaryItem("wm.LiveForm.INVALID_EDITOR", {caption: widget.caption}));
-	       
+
 	   return true;
        },
 	//===========================================================================
@@ -523,9 +523,9 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	_controlSubForms: false,
 	destroy: function() {
 		this._cancelOnEnterKey();
-		this.inherited(arguments);	    
+		this.inherited(arguments);
 	},
-	init: function() {	    
+	init: function() {
 		this.connect(this.domNode, "keypress", this, "formkeypress");
 		// bc
 		this.canBeginEdit = this.hasEditableData;
@@ -574,7 +574,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 
 	    if (!this.readonly) {
 		wm.getMatchingFormWidgets(this, function(w) {
-		    if (wm.isInstanceType(w, wm.Editor) || 
+		    if (wm.isInstanceType(w, wm.Editor) ||
 			wm.isInstanceType(w, wm.AbstractEditor) ||
 			wm.isInstanceType(w, wm.RelatedEditor)) {
 			w.validate();
@@ -659,10 +659,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 				ops = inOperations;
 			if (!f)
 				return true;
-			// NOTE: if an editor should be excluded or not changed 
+			// NOTE: if an editor should be excluded or not changed
 			// for given operation then it should remain read only.
 			//
-			// NOTE: exclude is use for inserts only so 
+			// NOTE: exclude is use for inserts only so
 			// we can simply leave it read only since the editor will be blank
 			var
 				// this field should not be changed for the given operations
@@ -692,7 +692,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		d.callback(true);
 		return d;
 	},
-		 
+
     saveDataIfValid: function() {
 	if (this.getInvalid()) return;
 	return this.saveData();
@@ -700,9 +700,9 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	saveData: function() {
 /* please use saveDataIfValid instead of validateBeforeSave
  	        if (this.validateBeforeSave)
-		  if (!this.validateData()) 
+		  if (!this.validateData())
 		    return;
-		    */  
+		    */
 		if (this.operation == "insert")
 			return this.insertData();
 		if (this.operation == "update")
@@ -726,7 +726,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
         var eventId = this.debugForm("updateData");
         var result = this.doOperation("update");
         if (eventId) app.debugDialog.endLogEvent(eventId);
-        return result;	
+        return result;
     },
 	/**
 		Performs a delete operation based on the data in the
@@ -815,7 +815,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			// Therefore, there's no need to call an extra notify.
 			if (item != this.dataSet)
 				wm.fire(this.dataSet, "notify");
-			
+
 			//dojo.publish(this.dataSet.getRuntimeId()+'-liveform-'+op, [inResult]);
 		}
 		//
@@ -864,7 +864,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		this.inherited(arguments);
 		if (this._controlSubForms)
 			dojo.forEach(this.getSubFormsArray(), function(f) {
-				f.setReadonly(inReadonly);			    
+				f.setReadonly(inReadonly);
 			});
 	},
 	//===========================================================================
@@ -878,11 +878,11 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
         formkeypress: function(e) {
 		// don't process enter for textareas
-		if (e.keyCode == dojo.keys.ENTER && e.target.tagName != "TEXTAREA") {  
+		if (e.keyCode == dojo.keys.ENTER && e.target.tagName != "TEXTAREA") {
 		    this._onEnterKeyHandle = setTimeout(dojo.hitch(this, function() {
 			this._onEnterKeyHandle = null;
 			this._doOnEnterKey();
-		    }), 50); 
+		    }), 50);
 		}
 	},
 	_doOnEnterKey: function() {
@@ -932,17 +932,17 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 				var val = e.getDataValue();
 				targets[e.formField] = val;
 			}
-		});	
+		});
 
 		if (!wm.isEmpty(targets)) {
 			var page = this.getParentPage();
 			try {
-				page.sforceRuntimeService.requestSync("getPickLists", [this.liveDataSourceClass, targets], 
+				page.sforceRuntimeService.requestSync("getPickLists", [this.liveDataSourceClass, targets],
 											dojo.hitch(this, "updatePickList", targetElements),
-											dojo.hitch(this, "sforceRuntimeServiceError"));         
+											dojo.hitch(this, "sforceRuntimeServiceError"));
 			} catch(e) {
-				console.error('ERROR IN populatePickList: ' + e); 
-			} 			
+				console.error('ERROR IN populatePickList: ' + e);
+			}
 		}
 	},
 
@@ -960,7 +960,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	    /* TODO: Localize this... though probably not accessable to users */
 	    app.alert("sforceRuntimeServiceError error = " + inError);
 	},
-	
+
 	//===========================================================================
 	// Events
 	//===========================================================================
