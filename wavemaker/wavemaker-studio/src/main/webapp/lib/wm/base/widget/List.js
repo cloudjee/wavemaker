@@ -249,7 +249,9 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.headerVisible = false;
         }
         if (!this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "MobileListStyle") == -1)) {
-             this.addUserClass("MobileListStyle");
+            this.addUserClass("MobileListStyle");
+        } else if (this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "GridListStyle") == -1)) {
+            this.addUserClass("GridListStyle");
         }
         var spacerNodeTop = this.spacerNodeTop = document.createElement('div');
         spacerNodeTop.className = "wmlist-spacer";
@@ -950,7 +952,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return parent.childNodes[1];
     },
     onStyleRow: function(inRow /* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */ , rowData) {},
-
+    _onStyleRowBeforeStart: 1,
     addItem: function(inContent, inIndex, optionalDomNode) {
         var item = this.createItem(inContent, optionalDomNode);
 
