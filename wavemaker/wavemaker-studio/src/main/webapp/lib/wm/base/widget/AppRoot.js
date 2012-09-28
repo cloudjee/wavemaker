@@ -13,7 +13,6 @@
  */
 
 dojo.provide("wm.base.widget.AppRoot");
-
 dojo.declare("wm.AppRoot", wm.Container, {
     // useful properties
     classNames: '',
@@ -22,7 +21,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
         deviceSize: "",
     create: function() {
         this.inherited(arguments);
-        this.deviceSize = wm.deviceSize || this.calcDeviceSize(window.innerWidth);
+        this.deviceSize = wm.deviceSize || this.calcDeviceSize(window.innerWidth || document.documentElement.clientWidth);
         app.valueChanged("deviceSize",this.deviceSize); // bindable event
     },
     build: function() {
@@ -117,14 +116,14 @@ dojo.declare("wm.AppRoot", wm.Container, {
             height = min;
         } else {
             height = Math.max(window.innerHeight, window.innerWidth); // don't assume width and height have updated since the last orientation change, just figure out width and height based on window.orientation = 0
-            width = Math.min(window.innerHeight, window.innerWidth); 
+            width = Math.min(window.innerHeight, window.innerWidth);
         }
         //pn.style.height = (height + 100) + "px"; // without that extra height, setting scrollTop will fail
         this.domNode.style.position = "relative";
         } else if (wm.device == "phone") {
 
         } else if (wm.isMobile) {
-        pn.style.height = "100%";       
+        pn.style.height = "100%";
         }
 
         if (wm.isMobile) {
@@ -176,7 +175,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
                     }
                 });
                 });
-            });                 
+            });
             }
 
             this.domNode.style.borderRight = "solid 0px transparent";
@@ -192,7 +191,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
         }
         */
     },
-    calcDeviceSize: function(width) {   
+    calcDeviceSize: function(width) {
     if (width >= 1800) {
         return "1800";
     } else if (width >= 1400) {
@@ -202,7 +201,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
     } else if (width >= 900) {
         return "900";
     } else if (width >= 650) {
-        return "650";   
+        return "650";
     } else if (width >= 450) {
         return "450";
     } else if (width >= 300) {

@@ -292,6 +292,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex, "_wmVariable").getValue(inFieldName));
             } catch (e) {}
             return;
+        } else if (inValue && typeof inValue == "object" && inValue instanceof Date === false && this.dojoObj.edit.info.cell.widget.store) {
+            /* We need to work with an object that lacks the wm.DojoStoreId because we're using dojo.toJson for comparing values */
+            inValue = this.itemToJSONObject(this.dojoObj.edit.info.cell.widget.store, inValue)
+            delete inValue.wmDojoStoreId;
         }
 
 
@@ -335,6 +339,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             wmvar._allowLazyLoad = false;
             var oldValue = wmvar.getValue(inFieldName);
             wmvar._allowLazyLoad = allowLazyLoad;
+            if (oldValue instanceof wm.Variable) oldValue = oldValue.getData();
+            if (typeof oldValue == "object" && typeof inValue == "object" &&  dojo.toJson(oldValue) == dojo.toJson(inValue)) return;
             if (oldValue === inValue) return;
         }
 
@@ -352,6 +358,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.selectedItem._allowLazyLoad = false;
             var oldValue = this.selectedItem.getValue(inFieldName);
             this.selectedItem._allowLazyLoad = allowLazyLoad;
+            if (oldValue instanceof wm.Variable) oldValue = oldValue.getData();
+            if (typeof oldValue == "object" && typeof inValue == "object" &&  dojo.toJson(oldValue) == dojo.toJson(inValue)) return;
             if (oldValue === inValue) return;
             this.selectedItem.setValue(inFieldName, inValue);
         }
@@ -379,11 +387,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.writeSelectedItem(); /* Without onidle, we are adding class to the cell with the editor rather than the cell that replaces the editor when editing is done */
             wm.onidle(this, function() {
                 if (this.selectedItem.getValue(inFieldName) instanceof wm.Variable == false) {
-                    dojo.addClass(this.getCellNode(rowIdx, inFieldName), "dirty");
+                    dojo.addClass(this.getCellNode(inRowIndex, inFieldName), "dirty");
                 } else {
                     for (var i = 0; i < this.columns.length; i++) {
                         if (this.columns[i].field.indexOf(inFieldName + ".") == 0) {
-                            var cell = this.getCellNode(rowIdx, this.columns[i].field);
+                            var cell = this.getCellNode(inRowIndex, this.columns[i].field);
                             if (cell) dojo.addClass(cell, "dirty");
                         }
                     }
@@ -553,7 +561,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 dojo.query("td.dirty",parentNode).forEach(dojo.hitch(this, function(cell) {
                     var field = this.columns[dojo.attr(cell, "idx")].field;
                     var gridValue = this.getCell(rowIndex, field);
-                    if (gridValue == result[field]) {
+                    var resultFieldValue = field.indexOf(".") == -1 ? result[field] : wm.expression.getValue("${" + field + "}", result);
+                    if (gridValue == resultFieldValue) {
                         dojo.removeClass(cell, "dirty saveFailed");
                         dojo.addClass(cell, "saved");
                     }
@@ -2398,6 +2407,7 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
                         value = this.widget.get("value");
                     }
                 }
+                if (value && !this.isSimpleType) value = item;
                 this.grid.doApplyCellEdit(value, inRowIndex, objName);
             }
         }

@@ -913,7 +913,9 @@ this.panel1.createComponent("custom", "wm.Panel", {
                 };
 
             /* Events should not be fired until the owner has finished loading, as the event may require components that aren't yet generated */
-            if (self instanceof wm.Page && self._loadingPage) {
+            if (inComponent && eventName && inComponent["_" + eventName + "BeforeStart"]) {
+                dojo.hitch(this,f)();
+            } else if (self instanceof wm.Page && self._loadingPage) {
                 self.connectOnce(self, "start", this, f);
             } else if (self._loading) {
                 self.connectOnce(self, "postInit", this, f);

@@ -517,17 +517,17 @@ background-repeat: no-repeat;
 .wm_harrypotter div.dojoxGrid, .wm_harrypotter .wmlist {
 font-size: 8pt;
 }
-.wm_harrypotter div.wmlist-item {
+.wm_harrypotter .GridListStyle div.wmlist-item {
 font-family: Verdana;
 color: #ffffff;
 font-weight: normal;
 background-color: #202020;
 }
-.wm_harrypotter .wmlist-item.Odd {
+.wm_harrypotter .GridListStyle .wmlist-item.Odd {
 color: #ffffff;
 background-color: #282828;
 }
-.wm_harrypotter .wmlist-cell {
+.wm_harrypotter .GridListStyle .wmlist-cell {
 border-style: solid;
 border-color: #323232;
 border-left-width: 0px;
@@ -564,6 +564,7 @@ color: #ffffff;
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
 background-color: #fe9603 !important;
 color: #232323;
+font-family: Verdana;
 }
 .wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected,
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,

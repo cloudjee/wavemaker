@@ -179,8 +179,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         }
         this.sizeEditor();
     },
-    setCaptionPositionLF: function(inPosition) {
-        var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
+    setCaptionPositionLF: function(inPosition, liveform) {
+        if (!liveform) {
+            liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
+        }
         if (liveform) {
             this.setCaptionPosition(liveform.captionPosition);
             this.setCaptionSize(liveform.captionSize);

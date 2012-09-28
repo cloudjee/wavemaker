@@ -1251,7 +1251,13 @@ wm.SubForm.extend({
         this.setEditorHeight(f.editorHeight);
     }
     },
-
+    getOptions: function() {
+        var f = wm.getParentForm(this), ds = f && f.dataSet;
+        return ds && ds.type ? this.getSchemaOptions(ds._dataSchema) : [""];
+    },
+    getSchemaOptions: function(inSchema) {
+        return [""].concat(wm.typeManager["getStructuredPropNames"](inSchema));
+    },
     postInit: function(){
         this.inherited(arguments);
         this.initializeFormField();
@@ -1267,14 +1273,16 @@ wm.SubForm.extend({
     },
     getUniqueFormField: function(){
             var lf = wm.getParentForm(this);
-            if (!lf)
+            if (!lf || !lf.type)
                 return '';
             var arr = this.getOptions();
             if (arr.length < 2)
                 return arr[0];
             for (var i = 1; i < arr.length; i++){
-                if (!lf.isFormFieldInForm(arr[i]))
+                var schema = wm.typeManager.getType(lf.type).fields;
+                if (!(arr[i] in schema)) {
                     return arr[i];
+                }
             }
 
             return arr[1];

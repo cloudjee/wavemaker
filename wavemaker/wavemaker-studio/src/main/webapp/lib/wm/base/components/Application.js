@@ -33,7 +33,6 @@ dojo.declare("wm.Application", wm.Component, {
     tabletMain: "",
     phoneMain: "",
     isSecurityEnabled: false,
-    showIOSPhoneGapBackButton: false,
     phoneGapLoginPage: "Login",
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
@@ -46,9 +45,8 @@ dojo.declare("wm.Application", wm.Component, {
     //IERoundedCorners: false,
     init: function() {
 
-        /* Add in a handler for the back button if the browser supports this, else no back functionality. */
+        this.history = [];
         if (window["onpopstate"] !== undefined) {
-            this.history = [];
             this._initializingBack = true;
             this.connect(window, "onpopstate", this, "_onBack");
         }
@@ -558,36 +556,7 @@ dojo.declare("wm.Application", wm.Component, {
         if (wm.isMobile) {
             dojo.addClass(document.body, "wmmobile")
         }
-        if (window["PhoneGap"] && navigator.userAgent.match(/(iphone|ipad)/i) && app.showIOSPhoneGapBackButton) {
-            this.appTitleBar = new wm.Panel({
-                         owner: this,
-                         parent: this.appRoot,
-                         name: "appTitleBar",
-                         width: "100%",
-                         height: "35px",
-                         layoutKind: "left-to-right",
-                         verticalAlign: "middle",
-                         horizontalAlign: "left"});
-            this.backButton = new wm.MobileIconButton({owner: this,
-                                   parent: this.appTitleBar,
-                                   name: "backButton",
-                                   direction: "left",
-                                   height: "100%",
-                                   width: "28px",
-                                   disabled: true,
-                         onclick: dojo.hitch(this, function() {
-                         delete this._initializingBack;
-                         this._onBack();
-                         })});
-            new wm.Label({owner: this,
-                  parent: this.appTitleBar,
-                  name: "appTitleLabel",
-                  align: "center",
-                  width: "100%",
-                  height: "100%",
-                  caption: this.declaredClass});
 
-        }
         this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory, manageURL: this.manageURL, owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
         this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
         this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onPageChanged", this, "pageChanged");
@@ -1391,9 +1360,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
         */
 
-        if (this.backButton) {
-            this.backButton.setDisabled(this.history.length == 0);
-        }
+
         } catch(e) {}
     }
     },
@@ -1423,9 +1390,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
         }
     } catch(e) {}
-    if (this.backButton) {
-        this.backButton.setDisabled(this.history.length == 0);
-    }
+
     }
 });
 

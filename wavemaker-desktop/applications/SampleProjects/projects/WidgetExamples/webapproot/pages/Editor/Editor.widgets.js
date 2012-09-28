@@ -49,6 +49,11 @@ Editor.widgets = {
 				panel16: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 					pageContainer3: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Dates","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
 				}]
+			}],
+			miscLayer: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Misc Editors","horizontalAlign":"left","verticalAlign":"top"}, {}, {
+				panel34: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+					pageContainer5: ["wm.PageContainer", {"deferLoad":true,"pageName":"Editor_Misc","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{}}, {}]
+				}]
 			}]
 		}]
 	}]
