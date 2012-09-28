@@ -152,12 +152,12 @@ dojo.declare("wm.ListViewer", wm.Container, {
     _selectedIndex: -1,
     selectedItem: null,
     allowRowSelection: false,
-    renderVisibleRowsOnly: false,
+    renderVisibleRowsOnly: true,
     lock: true,
     manageLiveVar: false,
     scrollX: false,
     scrollY: false,
-    autoScroll: true,
+    autoScroll: false,
     dataSet: null,
     pageName: "",
     width: "100%",
@@ -175,6 +175,10 @@ dojo.declare("wm.ListViewer", wm.Container, {
     currentRenderer: null,
     nodes: null,
     init: function() {
+        if (this.renderVisibleRowsOnly) {
+            this.autoScroll = true;
+            this.scrollY = false;
+        }
         this.inherited(arguments);
         this._wireRegex = new RegExp("\\$\\{(variable|itemNumber)", "g");
 
