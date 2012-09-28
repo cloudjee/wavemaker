@@ -370,9 +370,23 @@ dojo.declare("wm.ListViewer", wm.Container, {
         wm.job(this.getRuntimeId() + ".renderRows", 10, dojo.hitch(this, "renderRows"));
     },
     addOnClickHandler: function(i) {
-        this.connect(this.nodes[i], "onclick", this, function() {
-            this.setSelectedIndex(i);
-        });
+        if (!wm.isMobile) {
+            this.connect(this.nodes[i], "onclick", this, function() {
+                this.setSelectedIndex(i);
+            });
+        }
+    },
+    _ontouchend: function(e) {
+        if (!app._touchY.moved) {
+            var target = event.target;
+            while (target && (String(target.id).indexOf(this.getId() + ".rowRenderer") != 0 || !String(target.id).match(/_row\d+$/))) {
+                target = target.parentNode;
+            }
+            if (target && String(target.id).indexOf(this.getId()) == 0 && this.allowRowSelection) {
+                this.setSelectedIndex(parseInt(target.id.replace(/^.*_row/,"")));
+            }
+        }
+        this.inherited(arguments);
     },
     setSelectedIndex: function(i) {
         if (this._selectedIndex != -1) {
