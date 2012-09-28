@@ -1706,6 +1706,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         this._formatIndex = inIndex;
         return this.builder.generateHtml(inData);
     },
+    _onformatBeforeStart: 1,
     onformat: function(ioData, inColumn, inData, inHeader, inVariable) {},
     onsetdata: function(inData) {}
 });
