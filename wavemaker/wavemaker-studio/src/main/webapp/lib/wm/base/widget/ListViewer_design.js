@@ -64,7 +64,7 @@ wm.ListViewer.extend({
 				     dojo.hitch(this,function() {
 					 studio.project.newPage(n,"wm.ListViewerRow", {template: wm.widgetSpecificTemplate.ListViewerRow, editTemplate: dojo.hitch(this, "editTemplate")});
 				     }));
-			     }));						 
+			     }));
     }
 });
 
@@ -72,8 +72,12 @@ wm.Object.extendSchema(wm.ListViewer, {
     /* Display group; layout subgroup */
     avgHeight: {group: "widgetName", subgroup: "layout", type: "Number"},
 
+
+
     /* Data group; data subgroup */
     dataSet: { readonly: true, group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", isList: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+
+	renderVisibleRowsOnly: {group: "widgetName", subgroup: "behavior", order: 1},
     manageLiveVar: {group: "widgetName", subgroup: "behavior"},
 
     /* Display group; misc subgroup */
@@ -84,7 +88,7 @@ wm.Object.extendSchema(wm.ListViewer, {
     allowRowSelection: {group: "widgetName", subgroup: "selection"},
 
     /* Ignored bindSource group */
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },    
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
 
     /* Ignored group */
     layoutKind:         {ignore: true},
