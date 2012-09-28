@@ -138,7 +138,7 @@ addWidgetBinderNodes = function(inParent, optionalWidgets) {
             p.targetType,
             p.targetProps);
             if (b) {
-                if (w instanceof wm.DataSetEditor == false && wm.isInstanceType(w, [wm.Editor, wm.AbstractEditor]) && !isBindable)
+                if (!wm.isInstanceType(w, wm.DataSetEditor) && wm.isInstanceType(w, [wm.Editor, wm.AbstractEditor]) && !isBindable)
                 return;
             }
             var content = props.name + wm.getTypeHtml(props.type, props.isList);
@@ -338,7 +338,7 @@ wm.isNodeBindable = function(inType, inProps, inIsList, inTargetType, inTargetPr
     }
 
     // haven't reviewed this one
-    else if (inTargetType.isList && inIsList && (inTargetProps.object instanceof wm.DojoChart || inTargetProps.object instanceof wm.DojoGrid)) return 1;
+    else if (inTargetType.isList && inIsList && (wm.isInstanceType(inTargetProps.object, [wm.DojoChart, wm.DojoGrid]))) return 1;
 
     // If it hasn't outright failed, and hasn't outright passed, consider it a warning rather than good/bad.
     return 2;
