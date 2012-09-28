@@ -90,6 +90,12 @@ dojo.declare("wm.Date", wm.Text, {
         }
         return this.makeEmptyValue();
     },
+    setDisplayValue: function(inValue) {
+        var tmp = this.useLocalTime;
+        this.useLocalTime = true;
+        this.setEditorValue(inValue);
+        this.useLocalTime = tmp;
+    },
     setEditorValue: function(inValue) {
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
@@ -378,6 +384,16 @@ dojo.declare("wm.DateTime", wm.Date, {
 
         this.updateReadonlyValue();
 
+    },
+    setDisplayValue: function(inValue) {
+        var tmp = this.useLocalTime;
+        this.useLocalTime = true;
+        this.dateEditor.useLocalTime = true;
+        this.timeEditor.useLocalTime = true;
+        this.setEditorValue(inValue);
+        this.useLocalTime = tmp;
+        this.dateEditor.useLocalTime = tmp;
+        this.timeEditor.useLocalTime = tmp;
     },
     getEditorValue: function(inValue) {
         var d = new Date(0);
