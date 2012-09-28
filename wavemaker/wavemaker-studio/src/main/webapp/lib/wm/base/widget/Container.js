@@ -100,9 +100,11 @@ wm.define("wm.Container", wm.Control, {
 
         app._touchY = {
             y: y,
+            initialY: y,
             targetNode: targetNode,
             targetWidget: this,
-            time: new Date().getTime()
+            time: new Date().getTime(),
+            moved: false
         };
         this.connect(node, wm.isFakeMobile ? "mousemove" : "touchmove", this, "_ontouchmove");
         this.connect(node, wm.isFakeMobile ? "mouseup" : "touchend", this, "_ontouchend");
@@ -157,6 +159,7 @@ wm.define("wm.Container", wm.Control, {
         app._touchY.y = y;
         app._touchY.velocity = delta / deltaTime;
         app._touchY.time = new Date().getTime();
+        if (Math.abs(y-app._touchY.initialY) > 5) app._touchY.moved = true;
         /*
     app._touchY = {y: y, // last y position changes as a result of scrolling
             targetNode: touch.target,
