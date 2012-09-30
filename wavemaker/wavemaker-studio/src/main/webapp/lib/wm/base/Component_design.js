@@ -591,6 +591,7 @@ wm.Component.extend({
             props[p].simpleBindTarget ||
             props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/
            ){
+                props[p].name = p;
                 this.addContextMenuItem(menuObj, props[p].shortname || p, props[p]);
             }
        }
@@ -676,7 +677,7 @@ wm.Component.extend({
            studio.bindDialog.show();
            } else
            */
-               this[typeof inProp.operation == "string" ? inProp.operation : inPropName]();
+               this[typeof inProp.operation == "string" ? inProp.operation : inProp.name]();
            })
        });
    },
