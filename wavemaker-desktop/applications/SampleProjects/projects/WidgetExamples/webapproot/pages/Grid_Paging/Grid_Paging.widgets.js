@@ -1,5 +1,5 @@
 Grid_Paging.widgets = {
-	filmLiveVar: ["wm.LiveVariable", {"autoUpdate":false,"liveSource":"com.sampledatadb.data.Film","maxResults":10,"type":"com.sampledatadb.data.Film"}, {"onSuccess":"toastNewData"}],
+	filmLiveVar: ["wm.LiveVariable", {"autoUpdate":false,"liveSource":"com.sampledatadb.data.Film","maxResults":10,"type":"com.sampledatadb.data.Film"}, {}],
 	toastNewData: ["wm.NotificationCall", {"operation":"toast"}, {}, {
 		input: ["wm.ServiceInput", {"type":"toastInputs"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
@@ -32,7 +32,7 @@ Grid_Paging.widgets = {
 								}]
 							}],
 							panel39: ["wm.Panel", {"height":"236px","horizontalAlign":"left","verticalAlign":"middle","width":"100%"}, {}, {
-								dojoGrid4: ["wm.DojoGrid", {"columns":[{"show":false,"title":"FilmId","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"filmId"},{"show":true,"title":"Title","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"title"},{"show":false,"title":"Description","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"description"},{"show":true,"title":"ReleaseYear","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"releaseYear"},{"show":false,"title":"RentalDuration","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"rentalDuration"},{"show":false,"title":"RentalRate","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"rentalRate"},{"show":true,"title":"Length","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"length"},{"show":false,"title":"ReplacementCost","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"replacementCost"},{"show":false,"title":"Rating","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"rating"},{"show":false,"title":"SpecialFeatures","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"specialFeatures"},{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":false,"title":"-","width":"100%","expression":"'<div class=\"MobileRowTitle\">FilmId: ' + ${filmId} + '</div>'"}],"height":"100%","margin":"4","minDesktopHeight":60}, {}, {
+								dojoGrid4: ["wm.DojoGrid", {"columns":[{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":true,"title":"-","width":"100%","expression":""}],"height":"100%","margin":"4","minDesktopHeight":60}, {}, {
 									binding: ["wm.Binding", {}, {}, {
 										wire: ["wm.Wire", {"expression":undefined,"source":"filmLiveVar","targetProperty":"dataSet"}, {}]
 									}]
@@ -42,7 +42,7 @@ Grid_Paging.widgets = {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
 							panel41: ["wm.Panel", {"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,0,0,100","verticalAlign":"middle","width":"100%"}, {}, {
-								label32: ["wm.Label", {"autoSizeWidth":true,"caption":"You selected","padding":"4","width":"75px"}, {}, {
+								label32: ["wm.Label", {"autoSizeWidth":true,"caption":"You selected","padding":"4","width":"80px"}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
 								gridLabel1: ["wm.Label", {"padding":"4"}, {}, {
@@ -71,7 +71,7 @@ Grid_Paging.widgets = {
 							label34: ["wm.Label", {"caption":"<b>Directions:</b> The Mobile List supports automatic paging, and will load more data as you scroll.","height":"34px","padding":"4","singleLine":false,"width":"100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							list1: ["wm.List", {"_classes":{"domNode":["MobileListStyle"]},"border":"0","columns":[{"show":false,"field":"filmId","title":"FilmId","width":"80px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"title","title":"Title","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"releaseYear","title":"ReleaseYear","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"rentalDuration","title":"RentalDuration","width":"80px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"rentalRate","title":"RentalRate","width":"80px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"length","title":"Length","width":"80px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"replacementCost","title":"ReplacementCost","width":"80px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"rating","title":"Rating","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"specialFeatures","title":"SpecialFeatures","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Title: \" + ${title} + \"</div>\"\n+ \"<div class='MobileRow'>ReleaseYear: \" + ${releaseYear} + \"</div>\"\n+ \"<div class='MobileRow'>Length: \" + ${length} + \"</div>\"\n","mobileColumn":true},{"show":true,"controller":"rightarrow","width":"20px","title":"-","field":"_rightArrow","mobileColumn":true}],"headerVisible":false,"margin":"0","minDesktopHeight":60,"rightNavArrow":true,"styleAsGrid":false}, {}, {
+							list1: ["wm.List", {"_classes":{"domNode":["MobileListStyle"]},"border":"0","columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"","mobileColumn":true},{"show":false,"field":"dataValue","title":"DataValue","width":"100%","displayType":"String","align":"left","formatFunc":""},{"show":true,"controller":"rightarrow","width":"20px","title":"-","field":"_rightArrow","mobileColumn":true}],"headerVisible":false,"margin":"0","minDesktopHeight":60,"rightNavArrow":true,"styleAsGrid":false}, {}, {
 								binding: ["wm.Binding", {}, {}, {
 									wire: ["wm.Wire", {"expression":undefined,"source":"filmLiveVar","targetProperty":"dataSet"}, {}]
 								}]
@@ -79,9 +79,20 @@ Grid_Paging.widgets = {
 							label35: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_16px","wm_BackgroundColor_LightGray"]},"caption":"Result","height":"32px","padding":"4","width":"100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							panel43: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,0,0,100","verticalAlign":"top","width":"100%"}, {}, {
+							panel44: ["wm.Panel", {"height":"39px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,0,0,100","verticalAlign":"top","width":"100%"}, {}, {
 								jsonStatus1: ["wm.JsonStatus", {}, {}],
-								label36: ["wm.Label", {"autoSizeWidth":true,"caption":"You selected","padding":"4","width":"75px"}, {}, {
+								label37: ["wm.Label", {"caption":"Page","padding":"4","width":"56px"}, {}, {
+									format: ["wm.DataFormatter", {}, {}]
+								}],
+								gridLabel3: ["wm.Label", {"height":"100%","padding":"4","singleLine":false,"width":"100%"}, {}, {
+									format: ["wm.DataFormatter", {}, {}],
+									binding: ["wm.Binding", {}, {}, {
+										wire: ["wm.Wire", {"expression":"${filmLiveVar.page}","targetProperty":"caption"}, {}]
+									}]
+								}]
+							}],
+							panel43: ["wm.Panel", {"height":"100px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,0,0,100","verticalAlign":"top","width":"100%"}, {}, {
+								label36: ["wm.Label", {"caption":"You selected","padding":"4","width":"80px"}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
 								gridLabel2: ["wm.Label", {"height":"100%","padding":"4","singleLine":false,"width":"100%"}, {}, {
