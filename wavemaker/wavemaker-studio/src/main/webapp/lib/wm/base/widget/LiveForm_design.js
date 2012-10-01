@@ -544,6 +544,7 @@ wm.LiveFormBase.extend({
 	    var dialog =
 		this._generateButtonsDialog =
 		new wm.GenericDialog({modal: true,
+            _classes: {domNode: ["studiodialog"]},
 				      footerBorder: "0",
 				      title: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_TITLE"),
 				      userPrompt: studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_PROMPT"),
@@ -557,7 +558,10 @@ wm.LiveFormBase.extend({
 				      button3Close: true,
 				      owner: studio,
 				      name: this.name + "_GenerateLiveFormButtonsDialog"});
-	    dialog.connect(dialog, "onButton1Click", this, function() {
+	    dialog.button1.addUserClass("StudioButton");
+        dialog.button2.addUserClass("StudioButton");
+        dialog.button3.addUserClass("StudioButton");
+        dialog.connect(dialog, "onButton1Click", this, function() {
 /*
 		if (this.editPanelStyle == "none")
 		    this.editPanelStyle = "wm.Button";
@@ -715,8 +719,10 @@ wm.LiveForm.extend({
 			} catch(e) {
 			    this.finishAddEditors(); // LiveFormBase.addEditors	calls this as well
 			}
-		        if (this.fitToContentHeight)
-                            this.set_height("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+	        if (this.fitToContentHeight) {
+                this.designResizeForNewChild("top-to-bottom", true);
+            }
+
 			studio.select(null);
 			studio.select(this);
 
@@ -801,7 +807,7 @@ wm.LiveForm.extend({
 		    e.set_liveForm(this.getId());
 		}
 	    }
-            this.set_height("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+        this.setBestHeight();
 
 	},
 	isFormFieldInForm: function(ff){
