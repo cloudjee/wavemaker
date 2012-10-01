@@ -196,7 +196,7 @@
 				<ref bean="runtimeAccess"/>
 			</property>
 			<!-- Set this value to your environment's connection timeout. Setting this value to zero means "no timeout" -->
-			<property name="connectionTimeout" value="30"/>
+			<property name="connectionTimeout" value="60"/>
 		</bean>
 	</beans>
 	<beans profile="cloud-test">
@@ -205,7 +205,7 @@
 				<ref bean="runtimeAccess"/>
 			</property>
 			<!-- Set this value to your environment's connection timeout. Setting this value to zero means "no timeout" -->
-			<property name="connectionTimeout" value="30"/>
+			<property name="connectionTimeout" value="60"/>
 		</bean>
 	</beans>
 </beans>
