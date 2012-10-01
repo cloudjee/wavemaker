@@ -1860,7 +1860,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
         }
         studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
             var editArea;
-            if (cssText == studio.cssEditArea.getDataValue()) {
+            if (cssText && cssText == studio.cssEditArea.getDataValue()) {
                 editArea = studio.cssEditArea;
             } else if (cssText == studio.appCssEditArea.getDataValue()) {
                 editArea = studio.appCssEditArea;
@@ -1868,7 +1868,8 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
             // if either editor has somehow changed, this edit is invalidated
             if (editArea) {
                 if (startAndEndList.length == 0) {
-                    cssText += inCode;
+                    if (cssText) cssText += "\n\n";
+                    cssText += inCode.replace(/^\s*/m,"");
                 } else if (startAndEndList.length > 1) {
                     /* If there are multiple places showing the selected class, the chance of us doing a good job updating
                      * the right ones is pretty slim; the user may have added a new rule, removed an old rule, maintaining
@@ -1880,7 +1881,8 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
                     }
                     while (startAndEndList.length > 1) startAndEndList.pop();
                     startAndEndList[0].start = cssText.length;
-                    cssText += inCode;
+                    if (cssText) cssText += "\n\n";
+                    cssText += inCode.replace(/^\s*/m,"");
                     startAndEndList[0].end = cssText.length + inCode.length;
                 } else {
                     cssText = cssText.substring(0, startAndEndList[0].start) + inCode + cssText.substring(startAndEndList[0].end);
