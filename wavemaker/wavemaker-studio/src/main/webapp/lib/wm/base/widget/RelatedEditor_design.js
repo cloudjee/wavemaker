@@ -81,6 +81,7 @@ wm.RelatedEditor.extend({
         return props;
     },
     set_formField: function(inFieldName) {
+        if (inFieldName == this.formField) return;
         if (!inFieldName)
             delete this.formField;
         else
@@ -90,6 +91,13 @@ wm.RelatedEditor.extend({
             this.removeGrid();
         else
             this._removeEditors();
+
+        var fieldSchema = this._getFieldSchema();
+        if (fieldSchema && fieldSchema.isList) {
+            this.editingMode = "readonly";
+        } else if (this.editingMode != "editable subform") {
+            this.editingMode = "lookup";
+        }
 
         var f = wm.getParentForm(this);
         f.addEditorToForm(this);
@@ -150,9 +158,9 @@ wm.RelatedEditor.extend({
     makeEditors: function() {
         try{
             var fieldSchema = this._getFieldSchema();
-            if (fieldSchema && fieldSchema.isList)
+            if (fieldSchema && fieldSchema.isList) {
                 this.makeGrid();
-            else {
+            } else {
                 var lookupAdded = null;
                 if (this.editingMode == "lookup")
                     lookupAdded = this.makeLookup(fieldSchema);
