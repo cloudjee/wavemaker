@@ -27,8 +27,11 @@ panel19: ["wm.Panel", {"height":"29px","horizontalAlign":"left","layoutKind":"le
 label21: ["wm.Label", {"caption":"Selected item = ","padding":"4","width":"116px"}, {}, {
 format: ["wm.DataFormatter", {}, {}]
 }],
-popupLabel: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"border":"1","caption":"","padding":"4","width":"64px"}, {}, {
-format: ["wm.DataFormatter", {}, {}]
+popupLabel: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"border":"1","padding":"4","width":"64px"}, {}, {
+format: ["wm.DataFormatter", {}, {}],
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"popupMenuButton1.caption","targetProperty":"caption"}, {}]
+}]
 }]
 }]
 }],
@@ -52,7 +55,7 @@ label34: ["wm.Label", {"caption":"<b>Directions:</b> click on arrow to select op
 format: ["wm.DataFormatter", {}, {}]
 }],
 panel36: ["wm.Panel", {"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,0,0,20","verticalAlign":"middle","width":"100%"}, {}, {
-popupMenuButton1: ["wm.PopupMenuButton", {"caption":"Save","iconClass":"app_silkIconList_41","margin":"4","rememberWithCookie":false}, {"onclick":"popupMenuButton1Click"}]
+popupMenuButton1: ["wm.PopupMenuButton", {"caption":"Save","fullStructure":[{"label":"Save","separator":undefined,"defaultLabel":"Save","iconClass":"app_silkIconList_41","imageList":"app.silkIconList","idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]},{"label":"Print","separator":undefined,"defaultLabel":"Print","iconClass":"app_silkIconList_77","imageList":"app.silkIconList","idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]},{"label":undefined,"separator":true,"defaultLabel":"Separator","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":undefined,"onClick":undefined,"children":[]},{"label":"Delete","separator":undefined,"defaultLabel":"Delete","iconClass":"app_silkIconList_21","imageList":"app.silkIconList","idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]}],"iconClass":"app_silkIconList_41","margin":"4"}, {"onclick":"popupButtonDialog.show"}]
 }],
 label31: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_16px","wm_BackgroundColor_LightGray"]},"caption":"Result","height":"32px","padding":"4","width":"100%"}, {}, {
 format: ["wm.DataFormatter", {}, {}]

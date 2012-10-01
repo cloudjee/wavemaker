@@ -707,6 +707,7 @@ dojo.declare("wm.Layers", wm.Container, {
         this.domNode.innerHTML = "";
     },
     // events
+   _oncanchangeBeforeStart: 1,
     oncanchange: function(inChangeInfo) {
         var l = this.getLayer(inChangeInfo.newIndex);
         inChangeInfo.canChange =  (l && l.showing);

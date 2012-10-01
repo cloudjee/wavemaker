@@ -368,6 +368,7 @@ dojo.declare("wm.ServiceCall", null, {
         Setting this flag to false will prevent the service from updating.
         @event
     */
+    _onCanUpdateBeforeStart: 1,
     onCanUpdate: function(ioUpdate) {
     },
     /**
