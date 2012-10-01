@@ -2555,7 +2555,7 @@ dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
 dojo.declare("wm.prop.DeviceListEditor", wm.prop.AllCheckboxSet, {
     noBindColumn: true,
     noReinspect: true,
-    height: "110px",
+    height: "130px",
     init: function() {
     this.inherited(arguments);
     this.deviceList = new wm.Variable({owner: this, type: "EntryData", isList:1});
