@@ -128,11 +128,37 @@ wm.Container.extend({
         container.reflow();
     },
 
+    set_height: function(inHeight) {
+        if (this.fitToContentHeight && !this._inDesignResize) {
+            app.confirm(studio.getDictionaryItem("wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_HEIGHT"), false,
+                dojo.hitch(this,function() {
+                    this.fitToContentHeight = false;
+                    wm.Control.prototype.set_height.call(this, inHeight);
+                })
+            );
+        } else {
+            this.inherited(arguments);
+        }
+    },
+    set_width: function(inWidth) {
+        if (this.fitToContentWidth && !this._inDesignResize) {
+            app.confirm(studio.getDictionaryItem("wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_WIDTH"), false,
+                dojo.hitch(this, function() {
+                    this.fitToContentWidth = false;
+                    this.setWidth(inWidth);
+                })
+            );
+        } else {
+            this.setWidth(inWidth);
+        }
+    },
     resizeToFit: function() {
         this.designResizeForNewChild("left-to-right", true);
         this.designResizeForNewChild("top-to-bottom", true);
+        this._inDesignResize = true;
         if (!this._percEx.h) this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
         if (!this._percEx.w) this.setWidth(this.bounds.w + "px");
+        delete this._inDesignResize;
     },
     resizeUpdate: function(inBounds) {
         // update the boundary rectangle highlight only
@@ -163,14 +189,18 @@ wm.Container.extend({
                 var height = this.bounds.h;
                 if (preferredHeight > height) {
                     if (!this._percEx.h) {
+                        this._inDesignResize = true;
                         this.set_height(preferredHeight + "px");
+                        delete this._inDesignResize;
                     } else {
                         if (this.parent && this.parent instanceof wm.Container && this.parent instanceof wm.Layout == false) {
                             this.parent.designResizeForNewChild(layoutKind);
                         }
                     }
                 } else if (reduceSize && !this._percEx.h) {
+                    this._inDesignResize = true;
                     this.set_height(preferredHeight + "px");
+                    delete this._inDesignResize;
                 }
 
 

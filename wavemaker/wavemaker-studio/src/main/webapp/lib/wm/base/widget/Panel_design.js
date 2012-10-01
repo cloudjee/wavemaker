@@ -35,13 +35,13 @@ wm.Panel.extend({
 		if (pv)
 			this.setWidth("100%");
 		else
-			this.set_height("100%");                 
+			this.set_height("100%");
 	//        this.setIsRounded(true);
 	}
 
 });
 
- 
+
 wm.FancyPanel.extend({
     themeable: true,
     themeableProps: ["innerBorder","borderColor","labelHeight"],
@@ -59,7 +59,7 @@ wm.Object.extendSchema(wm.FancyPanel, {
     /* Display group; text subgroup */
     title:       {group: "widgetName", subgroup: "text", order: 10, requiredGroup: true, type: "String", bindTarget: 1},
     labelHeight: {group: "widgetName", subgroup: "text", order: 20, advanced: 1},
-    
+
     /* Display group; layout subgroup */
     innerLayoutKind:      {group: "display", subgroup: "layout", order: 100, shortname: "layoutKind", options: ["top-to-bottom", "left-to-right"], requiredGroup:1},
     innerHorizontalAlign: {group: "display", subgroup: "layout", order: 101, shortname: "horizontalAlign", options: ["left", "center", "right"/*, "justified"*/]},
