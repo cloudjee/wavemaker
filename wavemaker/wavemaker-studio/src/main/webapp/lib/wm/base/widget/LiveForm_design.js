@@ -129,11 +129,12 @@ wm.LiveFormBase.extend({
 	// Form initialization
 	//===========================================================================
 	set_dataSet: function(inDataSet) {
+        var typeWas = this.dataSet ? this.dataSet.type : "";
 		if (inDataSet instanceof wm.Variable) {
 		    this.setDataSet(inDataSet);
 
-		    if (this.canAddEditors(inDataSet)) {
-			this.addEditors();
+		    if (typeWas != inDataSet.type && this.canAddEditors(inDataSet)) {
+			    this.addEditors();
 		    }
 		// set via drop down or cleared
 		} else {

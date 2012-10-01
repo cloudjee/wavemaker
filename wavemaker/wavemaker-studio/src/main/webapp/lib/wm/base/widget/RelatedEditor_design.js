@@ -80,6 +80,13 @@ wm.RelatedEditor.extend({
             props.ignoreParentReadonly.ignoretmp = (this.editingMode != "editable subform");
         return props;
     },
+    canAddEditors: function(inDataSet) {
+        if (this.editingMode == "readonly" && !this._loading) {
+            return  !this.hasGrid();
+        } else {
+            return this.inherited(arguments);
+        }
+    },
     set_formField: function(inFieldName) {
         if (inFieldName == this.formField) return;
         if (!inFieldName)
