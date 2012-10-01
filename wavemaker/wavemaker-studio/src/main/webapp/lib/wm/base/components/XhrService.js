@@ -167,12 +167,22 @@ dojo.declare("wm.XhrService", wm.Service, {
                 contentType: contentType,
                 url: url
             };
-            switch (contentType) {
-            case "application/json":
+            if (requestType == "GET") {
+                var query = "";
+                wm.forEachProperty(parameters, function(value, name) {
+                    if (value !== null && value !== undefined) {
+                        if (query) query += "&";
+                        query += name + "=" + value;
+                    }
+                });
+                if (query && url.match(/\?/)) {
+                    url += "&" + query;
+                } else {
+                    url += "?" + query;
+                }
+                xhrArgs.url = url;
+            } else {
                 xhrArgs.postData = dojo.toJson(parameters);
-                break;
-            default:
-                xhrArgs.content = parameters;
             }
             var dInternal = this._deferred = dojo.xhr(requestType, xhrArgs);
         }
