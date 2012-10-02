@@ -58,7 +58,7 @@ public class SpinUpService extends JavaServiceSuperClass {
              return("The user name or password you entered is incorrect.");
         }
 		username = username.toLowerCase();
-		log(INFO, "Processing: " + username);
+		log(INFO, "Logging in: " + username);
 		try {
 		  if(!username.contains("@")){		  
             log(ERROR, "User: " + username + " NOT email");
@@ -86,13 +86,15 @@ public class SpinUpService extends JavaServiceSuperClass {
     	if(spinupController.isNewDeployment(loginCredentials)){
     		if(dailyLimit()){
     			result.put("ERROR", "Sorry, we have reached the preview limit for today.<BR>Please try back again tomorrow.");
+                log(ERROR, "DAILY LIMIT REACHED: " + dailyCounter + " limit is: " +  dailyLimit);
     			return result;
     		}
     	}
     	
        try {
-          log(DEBUG, "performing spinup for: " + loginCredentials.getUsername()); 
-          result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse(), false); 
+          log(INFO, "Performing DEV spinup for: " + loginCredentials.getUsername()); 
+          this.wmApplicationArchiveFactory.checkForUpdate();
+          result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse(), true); 
           recordUserLog(loginCredentials.getUsername());
           log(INFO, "Counter now: " + ++counter);          
        } 
