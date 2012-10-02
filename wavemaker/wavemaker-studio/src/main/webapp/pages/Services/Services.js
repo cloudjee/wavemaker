@@ -223,6 +223,9 @@ dojo.declare("Services", wm.Page, {
         this._cachedData = this.getCachedData();
         this.setDirty();
         this.saveComplete();
+        studio.webService.requestAsync("getWSDL", [this.tree.serviceId],
+            dojo.hitch(this, "getWSDLCallback"));
+
     },
     setBindingPropertiesErrorCallback: function(inError) {
     },
