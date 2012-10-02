@@ -509,6 +509,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         return "normal";
     },
     adjustCaptionPositionForMobile: function() {
+        if (this.isAncestorHidden()) return;
         if (this.captionPosition == "left" || this.captionPosition == "right") {
             // see if we need to switch to top
             var minWidth = this.getMinWidthProp();
