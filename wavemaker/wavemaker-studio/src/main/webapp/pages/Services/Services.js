@@ -90,7 +90,8 @@ dojo.declare("Services", wm.Page, {
 					httpBasicAuthUsername: this.authUsernameInput.getValue("dataValue"),
 					httpBasicAuthPassword: this.authPasswordInput.getValue("dataValue"),
 					connectionTimeout: ct,
-					requestTimeout: rt}
+					requestTimeout: rt,
+					endpointAddress: this.endpointAddressInput.getValue("dataValue"),}
 				],
 				dojo.hitch(this, "setBindingPropertiesCallback"), dojo.hitch(this, "setBindingPropertiesErrorCallback"));
 		}
@@ -160,6 +161,7 @@ dojo.declare("Services", wm.Page, {
 		this.authPasswordInput.setShowing(!isFeedSrv);
 		this.wsConnectionTimeoutInput.setShowing(!isFeedSrv);
 		this.wsRequestTimeoutInput.setShowing(!isFeedSrv);
+		this.endpointAddressInput.setShowing(!isFeedSrv);
 		this.wsdlSpacing.setShowing(!isFeedSrv);
 		this.feedDescInput.setShowing(isFeedSrv);
 		this.setDirty();
@@ -173,7 +175,7 @@ dojo.declare("Services", wm.Page, {
 	getBindingPropertiesCallback: function(inData) {
 		if (inData) {
 			this.authUsernameInput.beginEditUpdate();
-		        this.authUsernameInput.setValue("dataValue", inData.httpBasicAuthUsername);
+		    this.authUsernameInput.setValue("dataValue", inData.httpBasicAuthUsername);
 			this.authUsernameInput.endEditUpdate();
 			this.authPasswordInput.beginEditUpdate();
 			this.authPasswordInput.setValue("dataValue", inData.httpBasicAuthPassword);
@@ -192,11 +194,16 @@ dojo.declare("Services", wm.Page, {
 			this.wsRequestTimeoutInput.beginEditUpdate();
 			this.wsRequestTimeoutInput.setValue("dataValue", rt);
 			this.wsRequestTimeoutInput.endEditUpdate();
+			this.endpointAddressInput.beginEditUpdate();
+		    this.endpointAddressInput.setValue("dataValue", inData.endpointAddress);
+			this.endpointAddressInput.endEditUpdate();
 		    this._cachedData = this.getCachedData();
 		}
 	},
     getCachedData: function() {
-	return this.serviceNameInput.getDataValue() + "|" + this.authUsernameInput.getDataValue() + "|" + this.authPasswordInput.getDataValue() + "|" + this.wsConnectionTimeoutInput.getDataValue() + "|" + this.wsRequestTimeoutInput.getDataValue();
+	return this.serviceNameInput.getDataValue() + "|" + this.authUsernameInput.getDataValue() + 
+		"|" + this.authPasswordInput.getDataValue() + "|" + this.wsConnectionTimeoutInput.getDataValue() + 
+		"|" + this.wsRequestTimeoutInput.getDataValue() + "|" + this.endpointAddressInput.getDataValue();
     },
 	getWSDLCallback: function(inData) {
 		if (inData.indexOf("services") == 0) {
@@ -229,6 +236,7 @@ dojo.declare("Services", wm.Page, {
 		this.authPasswordInput.clear();
 		this.wsConnectionTimeoutInput.clear();
 		this.wsRequestTimeoutInput.clear();
+		this.endpointAddressInput.clear();
 		this.wsdlCodeEditor.setShowing(true);
 		this.wsdlLink.setShowing(false);
 	},
