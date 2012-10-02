@@ -156,7 +156,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
     lock: true,
     manageLiveVar: false,
     scrollX: false,
-    scrollY: false,
+    scrollY: true,
     autoScroll: false,
     dataSet: null,
     pageName: "",
