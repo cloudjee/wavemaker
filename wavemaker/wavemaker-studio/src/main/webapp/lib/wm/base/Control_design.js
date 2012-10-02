@@ -181,9 +181,9 @@ wm.Control.extend({
     },
     resetDesignHeight: function() {
         this._doingAutoSize = true;
-        this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight || this.height : this.desktopHeight || this.height);
+        this.setHeight(studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.mobileHeight || this.desktopHeight || this.height : this.desktopHeight || this.height);
         this._doingAutoSize = false;
-        this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
+        this.setMinHeight(studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
     },
     // Begin design border
     /*
