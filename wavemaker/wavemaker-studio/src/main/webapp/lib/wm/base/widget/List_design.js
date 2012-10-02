@@ -188,9 +188,34 @@ wm.List.extend({
         });
     }
     */
+
+        var newcolumns = [];
+        dojo.forEach(this.columns, dojo.hitch(this, function(col) {
+            // we don't update custom fields
+            if (col.isCustomField || col.field == "PHONE COLUMN") {
+                newcolumns.push(col);
+                return;
+            }
+            // If the column is still in the viewFields after whatever change happened, add it to newcolumns
+            if (dojo.some(viewFields, dojo.hitch(this, function(field) {
+                return field.dataIndex == col.field;
+            }))) {
+                newcolumns.push(col);
+                return;
+            }
+
+            // col is no longer relevant
+            return;
+        }));
+
+        var hasShowingColumn = false;
+        dojo.forEach(newcolumns, function(col) {
+            if (col.show) hasShowingColumn = true;
+        });
+
         dojo.forEach(viewFields, function(f, i) {
             // if the column already exists, skip it
-            if (dojo.some(this.columns, function(item) {
+            if (dojo.some(newcolumns, function(item) {
                 return item.field == f.dataIndex;
             })) return;
 
@@ -209,8 +234,8 @@ wm.List.extend({
                 formatFunc = 'wm_date_formatter';
             }
 
-            this.columns.push({
-                show: updating ? false : i < 15,
+            newcolumns.push({
+                show: updating && hasShowingColumn ? false : i < 15,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,
@@ -220,24 +245,7 @@ wm.List.extend({
             });
         }, this);
 
-        var newcolumns = [];
-        dojo.forEach(this.columns, dojo.hitch(this, function(col) {
-            // we don't update custom fields
-            if (col.isCustomField || col.field == "PHONE COLUMN") {
-                newcolumns.push(col);
-                return;
-            }
-            // If the column is still in the viewFields after whatever change happened, then do nothing
-            if (dojo.some(viewFields, dojo.hitch(this, function(field) {
-                return field.dataIndex == col.field;
-            }))) {
-                newcolumns.push(col);
-                return;
-            }
 
-            // col is no longer relevant
-            return;
-        }));
         this.columns = newcolumns;
         this.regenerateMobileColumn(this.columns);
         this.setColumns(this.columns);

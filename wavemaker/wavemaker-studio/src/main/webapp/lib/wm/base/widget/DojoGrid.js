@@ -1651,10 +1651,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             });
         }, this);
 
-        /* If there are no showing columns, make them all show */
-        if (dojo.every(this.columns, function(col) {return !col.show;})) {
-            dojo.forEach(this.columns, function(col) {col.show = true;});
-        }
 
         var newcolumns = [];
         var hasMobileColumn = false;
@@ -1690,6 +1686,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 expression: "'<div class=\"MobileRowTitle\">" + newcolumns[0].title + ": ' + \${" + newcolumns[0].field + "} + '</div>'"
 
             });
+        }
+          /* If there are no showing columns, make them all show */
+        if (dojo.every(newcolumns, function(col) {return !col.show;})) {
+            var maxColumns = Math.max(1,Math.round(this.bounds.w / 80));
+            dojo.forEach(newcolumns, function(col,i) { if (i < maxColumns && col.field != "PHONE COLUMN") col.show = true;});
         }
         this.columns = newcolumns;
         if (this._isDesignLoaded) this.regenerateMobileColumn(this.columns);
