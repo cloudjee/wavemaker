@@ -284,7 +284,13 @@ dojo.declare("wm.ServiceCall", null, {
 
     /* inArgs optional too... typically provided by calls from the request backlog/inflight queue*/
     request: function(inArgs, optionalOp, optionalDeferred) {
-        var args = inArgs || this.getArgs();
+        var args;
+        try {
+            args = inArgs || this.getArgs();
+        } catch(e) {
+            console.error("Unable to fire " + this.toString() + ": " + e.toString());
+            return;
+        }
 
         /* Tell the Service component to fire */
         var d = this._requester = this._service.invoke(optionalOp || this.operation, args, this.owner, this);
