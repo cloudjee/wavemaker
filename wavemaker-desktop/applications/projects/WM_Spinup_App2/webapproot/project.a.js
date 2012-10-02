@@ -213,11 +213,6 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		"parameters": null,
 		"returnType": "java.lang.String"
 	}, {
-		"name": "getRuntimeAccess",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.RuntimeAccess"
-	}, {
 		"name": "getServerTimeOffset",
 		"operationType": null,
 		"parameters": null,
@@ -254,6 +249,22 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		"parameters": null,
 		"returnType": "com.wavemaker.runtime.service.TypeManager"
 	}, {
+		"name": "hostToDomain",
+		"operationType": null,
+		"parameters": [{
+			"name": "host",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.String"
+	}, {
+		"name": "proxyCheck",
+		"operationType": null,
+		"parameters": [{
+			"name": "remoteURL",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
+	}, {
 		"name": "remoteRESTCall",
 		"operationType": null,
 		"parameters": [{
@@ -273,14 +284,6 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		"parameters": [{
 			"name": "internalRuntime",
 			"type": "com.wavemaker.runtime.server.InternalRuntime"
-		}],
-		"returnType": null
-	}, {
-		"name": "setRuntimeAccess",
-		"operationType": null,
-		"parameters": [{
-			"name": "runtimeAccess",
-			"type": "com.wavemaker.runtime.RuntimeAccess"
 		}],
 		"returnType": null
 	}, {
@@ -492,7 +495,7 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha68", 
+	"projectSubVersion": "Alpha77", 
 	"projectVersion": 1, 
 	"showIOSPhoneGapBackButton": false, 
 	"studioVersion": "6.5.0.RC1", 

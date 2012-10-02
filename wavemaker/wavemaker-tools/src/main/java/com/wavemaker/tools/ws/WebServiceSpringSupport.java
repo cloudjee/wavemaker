@@ -180,16 +180,16 @@ public class WebServiceSpringSupport {
         }
 
         String str;
-        if (svcHelper.isRest) {
-            File serviceClass = svcHelper.getServiceClass();
-            str = serviceClass.getContent().asString();
-            String oldEndpointAddress = getEndpointAddress(svcHelper);
-            str = str.replaceAll(oldEndpointAddress, endpointAddress);
-            serviceClass.getContent().write(str);
-        } else {
+
+        File serviceClass = svcHelper.getServiceClass();
+        str = serviceClass.getContent().asString();
+        String oldEndpointAddress = getEndpointAddress(svcHelper);
+        str = str.replaceAll(oldEndpointAddress, endpointAddress);
+        serviceClass.getContent().write(str);
+
+        if (svcHelper.wsdlExists()) {
             File wadl = svcHelper.getWsdl();
             str = wadl.getContent().asString();
-            String oldEndpointAddress = getEndpointAddress(svcHelper);
             str = str.replaceAll(oldEndpointAddress, endpointAddress);
             wadl.getContent().write(str);
         }
@@ -330,7 +330,7 @@ public class WebServiceSpringSupport {
             return isRest;
         }
 
-        public boolean wadlExists() {
+        public boolean wsdlExists() {
             return this.wsdlExists;
         }
 
