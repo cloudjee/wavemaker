@@ -288,7 +288,7 @@ dojo.declare("wm.ServiceCall", null, {
         try {
             args = inArgs || this.getArgs();
         } catch(e) {
-            console.error("Unable to fire " + this.toString() + ": " + e.toString());
+            this.error(e);
             return;
         }
 
