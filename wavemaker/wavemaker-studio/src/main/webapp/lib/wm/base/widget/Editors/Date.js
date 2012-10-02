@@ -365,7 +365,10 @@ dojo.declare("wm.DateTime", wm.Date, {
         return null;
     },
     setEditorValue: function(inValue) {
-        if (!this.editor) return;
+        if (!this.editor) {
+            this.dataValue = inValue;
+            return;
+        }
         var d;
         if (inValue instanceof Date) {
             d = new Date(inValue); // else our date calculations modify the input object which can cause ugly side effects
