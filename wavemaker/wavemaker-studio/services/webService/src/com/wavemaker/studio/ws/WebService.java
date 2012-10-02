@@ -177,11 +177,11 @@ public class WebService {
         return getWSToolsMgr().downloadWSDL(serviceId);
     }
 
-    public BindingProperties getBindingProperties(String serviceId) throws JAXBException, IOException {
+    public BindingProperties getBindingProperties(String serviceId) throws Exception {
         return getWSToolsMgr().getBindingProperties(serviceId);
     }
 
-    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws JAXBException, IOException {
+    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws Exception {
         getWSToolsMgr().setBindingProperties(serviceId, bindingProperties);
     }
 }

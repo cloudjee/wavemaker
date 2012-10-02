@@ -45,6 +45,8 @@ Services.widgets = {
 								wsConnectionTimeoutInput: ["wm.Number", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, changeOnKey: true, showing: false, caption: "Connection Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {
 								}],
 								wsRequestTimeoutInput: ["wm.Number", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, changeOnKey: true, showing: false, caption: "Request Timeout (milliseconds)", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {									
+								}],
+								endpointAddressInput: ["wm.Text", {_classes: {domNode: ["StudioLabel", "StudioEditor"]}, changeOnKey: true, showing: false, caption: "Endpoint Address", captionSize: "240px", height: "24px", emptyValue: "null", layoutKind: "left-to-right", display: "Number"}, {onchange: "editorChange"}, {									
 								}]
 							}]
 						}]

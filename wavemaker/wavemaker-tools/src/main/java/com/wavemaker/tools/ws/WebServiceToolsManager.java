@@ -922,11 +922,11 @@ public class WebServiceToolsManager {
         return types;
     }
 
-    public BindingProperties getBindingProperties(String serviceId) throws JAXBException, IOException {
+    public BindingProperties getBindingProperties(String serviceId) throws Exception {
         return WebServiceSpringSupport.getBindingProperties(this.designServiceMgr, serviceId);
     }
 
-    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws JAXBException, IOException {
+    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws Exception {
         WebServiceSpringSupport.setBindingProperties(this.designServiceMgr, serviceId, bindingProperties);
     }
 

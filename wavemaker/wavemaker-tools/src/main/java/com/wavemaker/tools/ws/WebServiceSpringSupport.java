@@ -15,17 +15,32 @@
 package com.wavemaker.tools.ws;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.Property;
+import com.wavemaker.common.util.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
+import org.xml.sax.SAXException;
 
 /**
  * Utility methods for managing web service spring file.
@@ -53,8 +68,10 @@ public class WebServiceSpringSupport {
      * @return The binding properties.
      * @throws JAXBException
      * @throws IOException
+     * @throws ParserConfigurationException
      */
-    public static BindingProperties getBindingProperties(DesignServiceManager designServiceMgr, String serviceId) throws JAXBException, IOException {
+    public static BindingProperties getBindingProperties(DesignServiceManager designServiceMgr, String serviceId)
+            throws JAXBException, IOException, ParserConfigurationException, SAXException {
         Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
         Service service = designServiceMgr.getService(serviceId);
         com.wavemaker.tools.io.File springFile = serviceRuntimeDirectory.getFile(service.getSpringFile());
@@ -83,6 +100,8 @@ public class WebServiceSpringSupport {
                     bindingProperties.setRequestTimeout(Integer.parseInt(prop4.getValue()));
                 }
             }
+            bindingProperties.setEndpointAddress(getEndpointAddress(serviceRuntimeDirectory, bean));
+
             return bindingProperties;
         }
         return null;
@@ -98,7 +117,7 @@ public class WebServiceSpringSupport {
      * @throws IOException
      */
     public static void setBindingProperties(DesignServiceManager designServiceMgr, String serviceId, BindingProperties bindingProperties)
-        throws JAXBException, IOException {
+        throws JAXBException, IOException, SAXException, ParserConfigurationException {
         if (bindingProperties != null) {
             Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
             Service service = designServiceMgr.getService(serviceId);
@@ -147,6 +166,180 @@ public class WebServiceSpringSupport {
             property.setBean(bindingPropsBean);
 
             SpringConfigSupport.writeBeans(beans, springFile);
+
+            updateEndpointAddress(bindingProperties, serviceRuntimeDirectory, bean);
+        }
+    }
+
+    private static void updateEndpointAddress(BindingProperties bindingProperties, Folder serviceFolder, Bean bean)
+         throws SAXException, IOException, ParserConfigurationException{
+        ServiceHelper svcHelper = new ServiceHelper(serviceFolder, bean);
+        String endpointAddress = bindingProperties.getEndpointAddress();
+        if (!org.springframework.util.StringUtils.hasText(endpointAddress)) {
+            return;
+        }
+
+        String str;
+        if (svcHelper.isRest) {
+            File serviceClass = svcHelper.getServiceClass();
+            str = serviceClass.getContent().asString();
+            String oldEndpointAddress = getEndpointAddress(svcHelper);
+            str = str.replaceAll(oldEndpointAddress, endpointAddress);
+            serviceClass.getContent().write(str);
+        } else {
+            File wadl = svcHelper.getWsdl();
+            str = wadl.getContent().asString();
+            String oldEndpointAddress = getEndpointAddress(svcHelper);
+            str = str.replaceAll(oldEndpointAddress, endpointAddress);
+            wadl.getContent().write(str);
+        }
+    }
+
+    private static String getEndpointAddress(Folder serviceFolder, Bean bean)
+        throws SAXException, IOException, ParserConfigurationException {
+        ServiceHelper svcHelper = new ServiceHelper(serviceFolder, bean);
+        return getEndpointAddress(svcHelper);
+    }
+
+    private static String getEndpointAddress(ServiceHelper svcHelper)
+            throws SAXException, IOException, ParserConfigurationException {
+        String address;
+        String str;
+
+        if (svcHelper.isRest()) {
+            str = svcHelper.getServiceClass().getContent().asString();
+            Pattern p = Pattern.compile("\\bnew\\b\\s\\s*QName\\s*\\(\\s*\"");
+            Matcher m = p.matcher(str);
+            if (m.find()) {
+                str = str.substring(m.end());
+            } else {
+                return null;
+            }
+            p = Pattern.compile("\"");
+            m = p.matcher(str);
+            if (m.find()) {
+                address = str.substring(0, m.end()-1);
+            } else {
+                return null;
+            }
+
+            return address;
+        }
+
+        //SOAP service from here
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+        Document doc = docBuilder.parse(svcHelper.getWsdl().getContent().asInputStream());
+        String nodeName;
+
+        NodeList listRoot = doc.getElementsByTagNameNS("*", "service");
+
+        if (listRoot == null || listRoot.getLength() == 0) {
+            return null;
+        }
+
+        Node nodeSvc = listRoot.item(0); // assumes there is only once service
+                                         // name defined in a WSDL
+
+        NodeList listSvc = nodeSvc.getChildNodes();
+        if (listSvc == null || listSvc.getLength() == 0) {
+            return null;
+        }
+
+        Node nodePort = null, node;
+        for (int i=0; i<listSvc.getLength(); i++) {
+            node = listSvc.item(i);
+            nodeName = listSvc.item(i).getNodeName();
+            if (nodeName.equals("port") || nodeName.endsWith(":port")) {
+                nodePort = node;
+                break;
+            }
+        }
+
+        if (nodePort == null) {
+            return null;
+        }
+
+        Node nodeAddress = null;
+        NodeList listPort = nodePort.getChildNodes();
+        if (listPort == null || listPort.getLength() == 0) {
+            return null;
+        }
+        for (int j=0; j<listPort.getLength(); j++) {
+            node = listPort.item(j);
+            nodeName = node.getNodeName();
+            if (nodeName.equals("address") || nodeName.endsWith(":address")) {
+                nodeAddress = node;
+                break;
+            }
+        }
+
+        if (nodeAddress == null) {
+            return null;
+        }
+
+        NamedNodeMap nMap = nodeAddress.getAttributes();
+
+        if (nMap == null || nMap.getLength() == 0) {
+            return null;
+        }
+
+        Node attrLocation = null;
+        for (int k=0; k<nMap.getLength(); k++) {
+            Node attr = nMap.item(k);
+            if (attr.getNodeName().equals("location")) {
+                attrLocation = attr;
+                break;
+            }
+        }
+
+        if (attrLocation == null) {
+            return null;
+        }
+
+        return attrLocation.getNodeValue();
+    }
+
+    private static class ServiceHelper {
+        private Folder serviceFolder;
+        private Bean bean;
+        private boolean isRest;
+        private File wsdl = null;
+        private boolean wsdlExists;
+        private File serviceClass;
+
+        public ServiceHelper(Folder serviceFolder, Bean bean) {
+            this.serviceFolder = serviceFolder;
+            this.bean = bean;
+
+            this.serviceClass = this.serviceFolder.getFile(StringUtils.classNameToSrcFilePath(this.bean.getClazz()));
+            Folder classFolder = serviceClass.getParent();
+            List<Resource> wsdls = classFolder.list().include(FilterOn.names().ending(".wsdl")).fetchAll();
+            this.wsdlExists = !(wsdls == null || wsdls.size() == 0);
+            if (wsdlExists) {
+                this.wsdl = (File)wsdls.get(0);
+                this.isRest = !(wsdl.getContent().asString().contains("soapAction"));
+            } else {
+                this.isRest = true;
+            }
+        }
+
+        public boolean isRest() {
+            return isRest;
+        }
+
+        public boolean wadlExists() {
+            return this.wsdlExists;
+        }
+
+        public File getWsdl() {
+            return this.wsdl;
+        }
+
+        public File getServiceClass() {
+            return this.serviceClass;
         }
     }
 }
