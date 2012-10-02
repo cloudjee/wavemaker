@@ -431,7 +431,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     createNewLiveVariable: function() {
     var lvar = new wm.LiveVariable({owner: this,
                     operation: "update",
-                    backlogBehavior: "executeAll",
+                    inFlightBehavior: "executeAll",
                     name: "liveVar",
                     type: this.dataSet.type,
                     liveSource: this.getDataSet().liveSource,
