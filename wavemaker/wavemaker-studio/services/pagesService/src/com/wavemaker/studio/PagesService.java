@@ -88,8 +88,7 @@ public class PagesService {
      * @throws FileAccessException
      */
     @ExposeToClient
-    public SortedSet<String> listDictionaries() throws FileAccessException {
-
+    public SortedSet<String> listDictionaries() throws FileAccessException, IOException {
         return this.pagesManager.listDictionaries();
     }
 

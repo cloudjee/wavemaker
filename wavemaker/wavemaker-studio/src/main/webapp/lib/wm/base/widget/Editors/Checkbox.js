@@ -28,6 +28,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	startChecked: false,
         checkedValue: true,
     touchStart: function() {
+        if (this._disabled) return;
 		    this._touched = true;
 		    this.editorNode.style.backgroundColor = "black";
 		    if (this.getChecked()) {
@@ -64,7 +65,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		a.className = "wmcheckbox_x";
 		a.innerHTML = "X"
 		e.domNode.appendChild(a);
-		dojo.connect(this.domNode, wm.isFakeMobile ? "onmousedown" : "ontouchstart", this, "touchStart");		
+		dojo.connect(this.domNode, wm.isFakeMobile ? "onmousedown" : "ontouchstart", this, "touchStart");
 		dojo.connect(this.domNode, wm.isFakeMobile ? "onmousemove" : "ontouchmove", this, "touchMove");
 		dojo.connect(this.domNode, wm.isFakeMobile ? "onmouseup" : "ontouchend", this, "touchEnd");
 /*
@@ -121,11 +122,11 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	if (this.inherited(arguments)) {
 	    this.valueChanged("checked", this.getChecked());
 	    return true;
-	} 
+	}
 	return false;
     },
     changed: function() {
-	if (this.editor) 
+	if (this.editor)
             this.editor._lastValueReported = this.getChecked();
         this.inherited(arguments);
 	this.valueChanged("checked", this.getChecked());
@@ -177,7 +178,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		switch (this.dataType) {
 			case "string":
 				// return "" for all false values but 0 which is "0"
-		    if (v === false) 
+		    if (v === false)
 			v = "false";
 		    else if (v === 0)
 			v = "0";
@@ -186,7 +187,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		    else
 			v = String(v);
 		    return v;
-			case "number": 
+			case "number":
 				// if not a number, return number value of boolean value
 				var n = Number(v);
 				return isNaN(n) ? Number(Boolean(v)) : n;
@@ -252,7 +253,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	setReadonly: function(inReadonly) {
 	    this.readonly = inReadonly;
 	    if (!this.editor) return;
-	    if (!this.readOnlyNode) this.readOnlyNode = this.editor;	    
+	    if (!this.readOnlyNode) this.readOnlyNode = this.editor;
 	    this.editor.set("disabled",this.readonly || this._disabled);
 	},
 	getMinWidthProp: function() {

@@ -295,7 +295,18 @@ public class ProjectManager {
                 indexHtmlStr = indexHtmlStr.replace("new " + shortSourceName + "(", "new " + shortDestName + "(");
                 destProject.writeFile(indexHtml, indexHtmlStr);
             }
-
+            
+            // update the login.html
+            com.wavemaker.tools.io.File loginHtml = destProject.getWebAppRootFolder().getFile(ProjectConstants.LOGIN_HTML);
+            if (loginHtml.exists()) {
+                String loginHtmlStr = destProject.readFile(loginHtml);
+                loginHtmlStr = loginHtmlStr.replace(": " + shortSourceName + "<", ": " + shortDestName + "<");
+                loginHtmlStr = loginHtmlStr.replace(">" + shortSourceName + "<", ">" + shortDestName + "<");
+                loginHtmlStr = loginHtmlStr.replace("- " + shortSourceName + " -", "- " + shortDestName + " -");
+                loginHtmlStr = loginHtmlStr.replace("name:\"" + shortSourceName + "\"", "name:\"" + shortDestName + "\"");
+                loginHtmlStr = loginHtmlStr.replace("\"" + shortSourceName + ".js\"", "\"" + shortDestName + ".js\"");
+                destProject.writeFile(loginHtml, loginHtmlStr);
+            }
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }

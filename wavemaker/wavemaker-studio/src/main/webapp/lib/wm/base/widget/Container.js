@@ -849,10 +849,14 @@ wm.Container.extend({
         return Math.max(result, wm.Control.prototype.getMinHeightProp.call(this));
     },
     setBestWidth: function() {
-    this.setWidth(this.getPreferredFitToContentWidth() + "px");
+        this._inDesignResize = true;
+        this.setWidth(this.getPreferredFitToContentWidth() + "px");
+        delete this._inDesignResize;
     },
     setBestHeight: function() {
-    this[this._isDesignLoaded ? "set_height" : "setHeight"](this.getPreferredFitToContentHeight() + "px");
+        this._inDesignResize = true;
+        this[this._isDesignLoaded ? "set_height" : "setHeight"](this.getPreferredFitToContentHeight() + "px");
+        delete this._inDesignResize;
     },
     getMinWidthProp: function() {
             if (this.fitToContentWidth)

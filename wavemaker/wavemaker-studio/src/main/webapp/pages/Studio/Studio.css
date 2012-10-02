@@ -1861,3 +1861,10 @@ color: rgb(0,270,0);
     font-size: 0.8Em;
     margin-top: 8px;
 }
+
+/* Candidate for theme.css, but as a last minute fix, did not want to test for all possible use cases */
+.dijitMenuPopup {
+    max-height: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

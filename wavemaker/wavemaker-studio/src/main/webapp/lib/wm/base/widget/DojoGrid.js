@@ -142,6 +142,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     if (onSuccess) onSuccess();
                 });
             } else {
+                if (this._selectionMode == "multiple" && dojo.indexOf(this.getSelectedIndex(), rowIndex) != -1) return;
                 this.dojoObj.selection.select(rowIndex);
                 if (!this._cupdating) {
                     this.onSelectionChange();

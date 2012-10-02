@@ -502,3 +502,7 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 	background-color: #2B323D;
 	color: white;
 }
+
+.AllCheckboxSetNote {
+    white-space: normal;
+}

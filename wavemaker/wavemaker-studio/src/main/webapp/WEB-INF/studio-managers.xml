@@ -516,7 +516,14 @@
                         </bean>
                         <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_M4.IE10XUAUpgradeTask"/>
                     </list>
-                </entry>   
+                </entry>  
+                <entry key="0.53">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_RC1.IndexHtmlUpgradeTask" >
+                            <property name="indexFile" value="webapproot/index.html" />
+                        </bean>
+                    </list>
+                </entry> 
             </map>
         </property>
         <property name="deploymentManager">
