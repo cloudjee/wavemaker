@@ -481,6 +481,7 @@ dependencies = {
 			    "wm.base.Plugin",
 			    "wm.base.RbacPlugin",
 			    "wm.base.I18nPlugin",
+			    "wm.base.components.CssLoader",
 			    "wm.base.components.Application",
 			    "wm.base.components.JsonRpcService" /* needed because we access its cache in project.a.js */
 
@@ -517,7 +518,6 @@ dependencies = {
 			    // components
 			    "wm.base.components.Page",
 			    "wm.base.components.HtmlLoader",
-			    "wm.base.components.CssLoader",
 			    "wm.base.components.PageLoader",
 			    "wm.base.components.Property",
 			    "wm.base.components.ImageList",
