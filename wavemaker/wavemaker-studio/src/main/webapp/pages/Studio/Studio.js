@@ -368,6 +368,7 @@ dojo.declare("Studio", wm.Page, {
     //=========================================================================
     projectChanging: function() {
         this.clearProjectPages();
+        this.setLiveLayoutReady(this.isCloud() ? 0 : false);
         if (this.application) {
             var c = this.application.declaredClass;
             wm.fire(this.application, "destroy");
