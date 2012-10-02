@@ -5,7 +5,7 @@ package com.sampledatadb.data;
 
 /**
  *  sampledataDB.Inventory
- *  09/15/2011 08:52:09
+ *  10/02/2012 15:19:54
  * 
  */
 public class Inventory {

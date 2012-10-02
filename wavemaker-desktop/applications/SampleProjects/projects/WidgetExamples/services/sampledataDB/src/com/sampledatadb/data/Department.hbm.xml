@@ -32,7 +32,7 @@
         <property name="tenantid" type="integer">
             <column name="TENANTID"/>
         </property>
-        <set name="employees" inverse="true">
+        <set name="employees" inverse="true" cascade="">
             <key>
                 <column name="DEPTID"/>
             </key>

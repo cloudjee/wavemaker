@@ -20,20 +20,14 @@
         <property name="phone" type="string">
             <column name="PHONE" length="20" not-null="true"/>
         </property>
-        <many-to-one name="city" class="com.sampledatadb.data.City" cascade="none">
+        <many-to-one name="city" class="com.sampledatadb.data.City">
             <column name="CITY_ID"/>
         </many-to-one>
-        <set name="customers" inverse="true">
+        <set name="customers" inverse="true" cascade="">
             <key>
                 <column name="ADDRESS_ID"/>
             </key>
             <one-to-many class="com.sampledatadb.data.Customer"/>
-        </set>
-        <set name="stores" inverse="true">
-            <key>
-                <column name="ADDRESS_ID" not-null="true"/>
-            </key>
-            <one-to-many class="com.sampledatadb.data.Store"/>
         </set>
     </class>
 </hibernate-mapping>

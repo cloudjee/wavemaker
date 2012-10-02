@@ -11,7 +11,7 @@
         <property name="lastName" type="string">
             <column name="LAST_NAME" length="45" not-null="true"/>
         </property>
-        <set name="filmActors" inverse="true">
+        <set name="filmActors" inverse="true" cascade="">
             <key>
                 <column name="ACTOR_ID" not-null="true"/>
             </key>

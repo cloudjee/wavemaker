@@ -8,10 +8,10 @@
         <property name="city" type="string">
             <column name="CITY" length="50" not-null="true"/>
         </property>
-        <many-to-one name="country" class="com.sampledatadb.data.Country" cascade="none">
+        <property name="countryId" type="integer">
             <column name="COUNTRY_ID" not-null="true"/>
-        </many-to-one>
-        <set name="addresses" inverse="true">
+        </property>
+        <set name="addresses" inverse="true" cascade="">
             <key>
                 <column name="CITY_ID"/>
             </key>

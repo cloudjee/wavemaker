@@ -14,7 +14,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  *  Operations for service "sampledataDB"
- *  09/15/2011 14:48:25
+ *  10/02/2012 15:20:21
  * 
  */
 @SuppressWarnings("unchecked")
@@ -25,8 +25,8 @@ public class SampledataDB
     private DataServiceManager dsMgr;
     private TaskManager taskMgr;
 
-    public com.sampledatadb.data.Inventory getInventoryById(Integer id) {
-        List<com.sampledatadb.data.Inventory> rtn = ((List<com.sampledatadb.data.Inventory> ) dsMgr.invoke(taskMgr.getQueryTask(), (SampledataDBConstants.getInventoryByIdQueryName), id));
+    public com.sampledatadb.data.Inventory getInventoryById(Integer id, PagingOptions pagingOptions) {
+        List<com.sampledatadb.data.Inventory> rtn = ((List<com.sampledatadb.data.Inventory> ) dsMgr.invoke(taskMgr.getQueryTask(), (SampledataDBConstants.getInventoryByIdQueryName), id, pagingOptions));
         if (rtn.isEmpty()) {
             return null;
         } else {

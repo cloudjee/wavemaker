@@ -14,8 +14,7 @@
             class="com.sampledatadb.data.Actor"
             update="false"
             insert="false"
-            fetch="select"
-            cascade="none">
+            fetch="select">
             <column name="ACTOR_ID" not-null="true"/>
         </many-to-one>
         <many-to-one
@@ -23,8 +22,7 @@
             class="com.sampledatadb.data.Film"
             update="false"
             insert="false"
-            fetch="select"
-            cascade="none">
+            fetch="select">
             <column name="FILM_ID" not-null="true"/>
         </many-to-one>
     </class>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- Generated 09/15/2011 08:52:07
+<!-- Generated 10/02/2012 15:19:52
 
 Configuration for 'sampledataDB' database service
 
@@ -83,6 +83,7 @@ Configuration for 'sampledataDB' database service
                     org.hibernate.transaction.JDBCTransactionFactory
                 </prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
+                
             </props> 
         </property>
 

@@ -5,16 +5,16 @@
             <column name="STORE_ID"/>
             <generator class="identity"/>
         </id>
-        <many-to-one name="address" class="com.sampledatadb.data.Address" cascade="none">
+        <property name="addressId" type="integer">
             <column name="ADDRESS_ID" not-null="true"/>
-        </many-to-one>
-        <set name="customers" inverse="true">
+        </property>
+        <set name="customers" inverse="true" cascade="">
             <key>
                 <column name="STORE_ID"/>
             </key>
             <one-to-many class="com.sampledatadb.data.Customer"/>
         </set>
-        <set name="inventories" inverse="true">
+        <set name="inventories" inverse="true" cascade="">
             <key>
                 <column name="STORE_ID" not-null="true"/>
             </key>

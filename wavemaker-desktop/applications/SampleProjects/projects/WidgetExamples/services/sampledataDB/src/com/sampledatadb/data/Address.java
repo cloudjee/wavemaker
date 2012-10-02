@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  *  sampledataDB.Address
- *  09/15/2011 08:52:09
+ *  10/02/2012 15:19:54
  * 
  */
 public class Address {
@@ -20,7 +20,6 @@ public class Address {
     private String postalCode;
     private String phone;
     private Set<com.sampledatadb.data.Customer> customers = new HashSet<com.sampledatadb.data.Customer>();
-    private Set<com.sampledatadb.data.Store> stores = new HashSet<com.sampledatadb.data.Store>();
 
     public Integer getAddressId() {
         return addressId;
@@ -84,14 +83,6 @@ public class Address {
 
     public void setCustomers(Set<com.sampledatadb.data.Customer> customers) {
         this.customers = customers;
-    }
-
-    public Set<com.sampledatadb.data.Store> getStores() {
-        return stores;
-    }
-
-    public void setStores(Set<com.sampledatadb.data.Store> stores) {
-        this.stores = stores;
     }
 
 }

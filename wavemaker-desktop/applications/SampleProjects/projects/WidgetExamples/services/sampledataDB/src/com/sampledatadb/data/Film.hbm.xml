@@ -32,13 +32,13 @@
         <property name="specialFeatures" type="string">
             <column name="SPECIAL_FEATURES" length="20"/>
         </property>
-        <set name="filmActors" inverse="true">
+        <set name="filmActors" inverse="true" cascade="">
             <key>
                 <column name="FILM_ID" not-null="true"/>
             </key>
             <one-to-many class="com.sampledatadb.data.FilmActor"/>
         </set>
-        <set name="inventories" inverse="true">
+        <set name="inventories" inverse="true" cascade="">
             <key>
                 <column name="FILM_ID" not-null="true"/>
             </key>

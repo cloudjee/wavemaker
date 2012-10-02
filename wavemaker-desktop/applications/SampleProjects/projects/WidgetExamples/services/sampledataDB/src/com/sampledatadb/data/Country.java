@@ -1,20 +1,17 @@
 
 package com.sampledatadb.data;
 
-import java.util.HashSet;
-import java.util.Set;
 
 
 /**
  *  sampledataDB.Country
- *  09/15/2011 08:52:09
+ *  10/02/2012 15:19:54
  * 
  */
 public class Country {
 
     private Integer countryId;
     private String country;
-    private Set<com.sampledatadb.data.City> cities = new HashSet<com.sampledatadb.data.City>();
 
     public Integer getCountryId() {
         return countryId;
@@ -30,14 +27,6 @@ public class Country {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public Set<com.sampledatadb.data.City> getCities() {
-        return cities;
-    }
-
-    public void setCities(Set<com.sampledatadb.data.City> cities) {
-        this.cities = cities;
     }
 
 }

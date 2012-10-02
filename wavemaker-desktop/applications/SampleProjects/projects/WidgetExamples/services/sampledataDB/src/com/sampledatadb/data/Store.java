@@ -7,13 +7,13 @@ import java.util.Set;
 
 /**
  *  sampledataDB.Store
- *  09/15/2011 08:52:08
+ *  10/02/2012 15:19:54
  * 
  */
 public class Store {
 
     private Integer storeId;
-    private Address address;
+    private Integer addressId;
     private Set<com.sampledatadb.data.Customer> customers = new HashSet<com.sampledatadb.data.Customer>();
     private Set<com.sampledatadb.data.Inventory> inventories = new HashSet<com.sampledatadb.data.Inventory>();
 
@@ -25,12 +25,12 @@ public class Store {
         this.storeId = storeId;
     }
 
-    public Address getAddress() {
-        return address;
+    public Integer getAddressId() {
+        return addressId;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
     }
 
     public Set<com.sampledatadb.data.Customer> getCustomers() {

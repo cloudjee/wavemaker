@@ -35,19 +35,19 @@
         <property name="tenantid" type="integer">
             <column name="TENANTID"/>
         </property>
-        <many-to-one name="employee" class="com.sampledatadb.data.Employee" cascade="none">
+        <many-to-one name="employee" class="com.sampledatadb.data.Employee">
             <column name="MANAGERID"/>
         </many-to-one>
-        <many-to-one name="department" class="com.sampledatadb.data.Department" cascade="none">
+        <many-to-one name="department" class="com.sampledatadb.data.Department">
             <column name="DEPTID"/>
         </many-to-one>
-        <set name="vacations" inverse="true">
+        <set name="vacations" inverse="true" cascade="">
             <key>
                 <column name="EMPID" not-null="true"/>
             </key>
             <one-to-many class="com.sampledatadb.data.Vacation"/>
         </set>
-        <set name="employees" inverse="true">
+        <set name="employees" inverse="true" cascade="">
             <key>
                 <column name="MANAGERID"/>
             </key>
