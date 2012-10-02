@@ -510,53 +510,53 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     },
     adjustCaptionPositionForMobile: function() {
         if (this.captionPosition == "left" || this.captionPosition == "right") {
-        // see if we need to switch to top
-        var minWidth = this.getMinWidthProp();
+            // see if we need to switch to top
+            var minWidth = this.getMinWidthProp();
 
-        if (minWidth > this.parent.getContentBounds().w) {
-            this._captionPosition = this.captionPosition;
-            this._captionAlign = this.captionAlign;
-            this._captionSize = this.captionSize;
-            this._editorHeight = this.height;
-            this.captionPosition = "top";
-            this.setCaptionAlign("left");
-            var height = parseInt(this.height); // we know height is in px
-            this.captionSize =  "20px";
-            this.bounds.h = height+20;
-            this.setBounds(this.bounds);
-            wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
-            if (!this.isDestroyed) {
-                this.setBestHeight();
-                this._heightAdjustedForMobileCaption = true;
-                if (this.bounds.h > this.parent.bounds.h) {
-                this.setAutoScroll(true);
-                }
+            if (minWidth > this.parent.getContentBounds().w) {
+                this._captionPosition = this.captionPosition;
+                this._captionAlign = this.captionAlign;
+                this._captionSize = this.captionSize;
+                this._editorHeight = this.height;
+                this.captionPosition = "top";
+                this.setCaptionAlign("left");
+                var height = parseInt(this.height); // we know height is in px
+                this.captionSize = "20px";
+                this.bounds.h = height + 20;
+                this.setBounds(this.bounds);
+                wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+                    if (!this.isDestroyed) {
+                        this.setBestHeight();
+                        this._heightAdjustedForMobileCaption = true;
+                        if (this.bounds.h > this.parent.bounds.h) {
+                            this.setAutoScroll(true);
+                        }
+                    }
+                });
             }
-            });
-        }
         } else if (this._captionPosition) {
-        this.captionPosition = this._captionPosition;
-        var captionSizeWas = this.captionSize;
-        this.captionSize = this._captionSize;
-        var minWidth = this.getMinWidthProp(true);
-        this.captionPosition = "top";
-        this.captionSize = captionSizeWas;
-        if (minWidth <= this.parent.getContentBounds().w) {
             this.captionPosition = this._captionPosition;
-            delete this._captionPosition;
-            this.setCaptionAlign(this._captionAlign);
-            delete this._captionAlign;
+            var captionSizeWas = this.captionSize;
             this.captionSize = this._captionSize;
-            delete this._captionSize;
-            this.bounds.h = this._editorHeight;
-            delete this._editorHeight;
-            this.setBounds(this.bounds);
-            wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
-            if (!this.isDestroyed && this._heightAdjustedForMobileCaption) {
-                this.setBestHeight();
+            var minWidth = this.getMinWidthProp(true);
+            this.captionPosition = "top";
+            this.captionSize = captionSizeWas;
+            if (minWidth <= this.parent.getContentBounds().w) {
+                this.captionPosition = this._captionPosition;
+                delete this._captionPosition;
+                this.setCaptionAlign(this._captionAlign);
+                delete this._captionAlign;
+                this.captionSize = this._captionSize;
+                delete this._captionSize;
+                this.bounds.h = this._editorHeight;
+                delete this._editorHeight;
+                this.setBounds(this.bounds);
+                wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+                    if (!this.isDestroyed && this._heightAdjustedForMobileCaption) {
+                        this.setBestHeight();
+                    }
+                });
             }
-            });
-        }
         }
     },
 
