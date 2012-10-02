@@ -1,14 +1,5 @@
 Grid_Paging.widgets = {
 	filmLiveVar: ["wm.LiveVariable", {"autoUpdate":false,"liveSource":"com.sampledatadb.data.Film","maxResults":10,"type":"com.sampledatadb.data.Film"}, {}],
-	toastNewData: ["wm.NotificationCall", {"operation":"toast"}, {}, {
-		input: ["wm.ServiceInput", {"type":"toastInputs"}, {}, {
-			binding: ["wm.Binding", {}, {}, {
-				wire: ["wm.Wire", {"expression":"\"Loaded page \" + ${filmLiveVar.page} + \" of films\"","targetProperty":"text"}, {}],
-				wire1: ["wm.Wire", {"expression":"\"Success\"","targetProperty":"cssClasses"}, {}],
-				wire2: ["wm.Wire", {"expression":"\"bottom right\"","targetProperty":"dialogPosition"}, {}]
-			}]
-		}]
-	}],
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","verticalAlign":"top"}, {}, {
 		panel34: ["wm.Panel", {"height":"571px","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
 			panel35: ["wm.Panel", {"height":"50px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
@@ -16,7 +7,7 @@ Grid_Paging.widgets = {
 					format: ["wm.DataFormatter", {}, {}]
 				}]
 			}],
-			tabLayers1: ["wm.TabLayers", {}, {}, {
+			tabLayers1: ["wm.TabLayers", {"manageURL":true}, {}, {
 				layer1: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Data Navigator","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
 					panel36: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0,0,0,10","verticalAlign":"top","width":"100%"}, {}, {
 						panel38: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"450px"}, {}, {
@@ -32,7 +23,7 @@ Grid_Paging.widgets = {
 								}]
 							}],
 							panel39: ["wm.Panel", {"height":"236px","horizontalAlign":"left","verticalAlign":"middle","width":"100%"}, {}, {
-								dojoGrid4: ["wm.DojoGrid", {"columns":[{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":true,"title":"-","width":"100%","expression":""}],"height":"100%","margin":"4","minDesktopHeight":60}, {}, {
+								dojoGrid4: ["wm.DojoGrid", {"columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Title: \" + ${title} + \"</div>\"\n+ \"<div class='MobileRow'>ReleaseYear: \" + ${releaseYear} + \"</div>\"\n+ \"<div class='MobileRow'>Rating: \" + ${rating} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"filmId","title":"FilmId","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":true,"field":"title","title":"Title","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"releaseYear","title":"ReleaseYear","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"rentalDuration","title":"RentalDuration","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":false,"field":"rentalRate","title":"RentalRate","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":false,"field":"length","title":"Length","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":false,"field":"replacementCost","title":"ReplacementCost","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":true,"field":"rating","title":"Rating","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"specialFeatures","title":"SpecialFeatures","width":"100%","align":"left","formatFunc":"","mobileColumn":false}],"height":"100%","margin":"4","minDesktopHeight":60}, {}, {
 									binding: ["wm.Binding", {}, {}, {
 										wire: ["wm.Wire", {"expression":undefined,"source":"filmLiveVar","targetProperty":"dataSet"}, {}]
 									}]
@@ -42,7 +33,7 @@ Grid_Paging.widgets = {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
 							panel41: ["wm.Panel", {"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,0,0,100","verticalAlign":"middle","width":"100%"}, {}, {
-								label32: ["wm.Label", {"autoSizeWidth":true,"caption":"You selected","padding":"4","width":"80px"}, {}, {
+								label32: ["wm.Label", {"autoSizeWidth":true,"caption":"You selected","padding":"4","width":"75px"}, {}, {
 									format: ["wm.DataFormatter", {}, {}]
 								}],
 								gridLabel1: ["wm.Label", {"padding":"4"}, {}, {
@@ -71,7 +62,7 @@ Grid_Paging.widgets = {
 							label34: ["wm.Label", {"caption":"<b>Directions:</b> The Mobile List supports automatic paging, and will load more data as you scroll.","height":"34px","padding":"4","singleLine":false,"width":"100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							list1: ["wm.List", {"_classes":{"domNode":["MobileListStyle"]},"border":"0","columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"","mobileColumn":true},{"show":false,"field":"dataValue","title":"DataValue","width":"100%","displayType":"String","align":"left","formatFunc":""},{"show":true,"controller":"rightarrow","width":"20px","title":"-","field":"_rightArrow","mobileColumn":true}],"headerVisible":false,"margin":"0","minDesktopHeight":60,"rightNavArrow":true,"styleAsGrid":false}, {}, {
+							list1: ["wm.List", {"_classes":{"domNode":["MobileListStyle"]},"border":"0","columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Title: \" + ${title} + \"</div>\"\n+ \"<div class='MobileRow'>ReleaseYear: \" + ${releaseYear} + \"</div>\"\n+ \"<div class='MobileRow'>Rating: \" + ${rating} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"filmId","title":"FilmId","width":"80px","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"title","title":"Title","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"releaseYear","title":"ReleaseYear","width":"60px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"rentalDuration","title":"RentalDuration","width":"80px","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"rentalRate","title":"RentalRate","width":"80px","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"length","title":"Length","width":"80px","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"replacementCost","title":"ReplacementCost","width":"80px","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"rating","title":"Rating","width":"60px","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"specialFeatures","title":"SpecialFeatures","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"controller":"rightarrow","width":"20px","title":"-","field":"_rightArrow","mobileColumn":true}],"headerVisible":false,"margin":"0","minDesktopHeight":60,"rightNavArrow":true,"styleAsGrid":false}, {}, {
 								binding: ["wm.Binding", {}, {}, {
 									wire: ["wm.Wire", {"expression":undefined,"source":"filmLiveVar","targetProperty":"dataSet"}, {}]
 								}]

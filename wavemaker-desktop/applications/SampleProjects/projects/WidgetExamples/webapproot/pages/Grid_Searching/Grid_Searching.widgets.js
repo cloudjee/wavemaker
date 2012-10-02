@@ -27,7 +27,7 @@ Grid_Searching.widgets = {
 							}],
 							panel46: ["wm.Panel", {"height":"200px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 								panel47: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
-								dojoGrid5: ["wm.DojoGrid", {"columns":[{"show":true,"title":"CountryId","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"countryId"},{"show":true,"title":"Country","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"country"},{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":false,"title":"-","width":"100%","expression":"'<div class=\"MobileRowTitle\">CountryId: ' + ${countryId} + '</div>'"}],"localizationStructure":{},"margin":"4","minDesktopHeight":60}, {}, {
+								dojoGrid5: ["wm.DojoGrid", {"columns":[{"show":true,"title":"CountryId","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"countryId"},{"show":true,"title":"Country","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"country"},{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":false,"title":"-","width":"100%","expression":"\"<div class='MobileRowTitle'>CountryId: \" + ${countryId} + \"</div>\"\n+ \"<div class='MobileRow'>Country: \" + ${country} + \"</div>\"\n"}],"localizationStructure":{},"margin":"4","minDesktopHeight":60}, {}, {
 									binding: ["wm.Binding", {}, {}, {
 										wire: ["wm.Wire", {"expression":undefined,"source":"countryLiveVar","targetProperty":"dataSet"}, {}]
 									}]
@@ -67,12 +67,12 @@ Grid_Searching.widgets = {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
 							panel3: ["wm.Panel", {"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0,0,0,100","verticalAlign":"middle","width":"100%"}, {}, {
-								searchText1: ["wm.Text", {"changeOnKey":true,"dataValue":undefined,"displayValue":"","emptyValue":"emptyString","placeHolder":"Enter name to search","resetButton":true,"width":"163px"}, {"onchange":"searchText1Change"}],
-								searchNumber: ["wm.Number", {"caption":undefined,"dataValue":undefined,"displayValue":"","emptyValue":"zero","placeHolder":"countryId > than","width":"100%"}, {"onchange":"searchNumberChange"}]
+								searchText1: ["wm.Text", {"changeOnKey":true,"dataValue":"","displayValue":"","emptyValue":"emptyString","placeHolder":"Enter name to search","resetButton":true,"width":"163px"}, {"onchange":"searchText1Change"}],
+								searchNumber: ["wm.Number", {"caption":undefined,"changeOnKey":true,"dataValue":0,"displayValue":"","emptyValue":"zero","placeHolder":"countryId > than","width":"100%"}, {"onchange":"searchNumberChange"}]
 							}],
 							panel50: ["wm.Panel", {"height":"200px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 								panel51: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
-								dojoGrid6: ["wm.DojoGrid", {"columns":[{"show":true,"title":"CountryId","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"countryId"},{"show":true,"title":"Country","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"country"},{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":false,"title":"-","width":"100%","expression":"'<div class=\"MobileRowTitle\">CountryId: ' + ${countryId} + '</div>'"}],"localizationStructure":{},"margin":"4","minDesktopHeight":60}, {}, {
+								dojoGrid6: ["wm.DojoGrid", {"columns":[{"show":true,"title":"CountryId","width":"80px","displayType":"Number","noDelete":true,"align":"right","formatFunc":"","field":"countryId"},{"show":true,"title":"Country","width":"100%","displayType":"Text","noDelete":true,"align":"left","formatFunc":"","field":"country"},{"mobileColumn":true,"align":"left","field":"PHONE COLUMN","show":false,"title":"-","width":"100%","expression":"\"<div class='MobileRowTitle'>CountryId: \" + ${countryId} + \"</div>\"\n+ \"<div class='MobileRow'>Country: \" + ${country} + \"</div>\"\n"}],"localizationStructure":{},"margin":"4","minDesktopHeight":60}, {}, {
 									binding: ["wm.Binding", {}, {}, {
 										wire: ["wm.Wire", {"expression":undefined,"source":"countryLiveVar1.queriedItems","targetProperty":"dataSet"}, {}]
 									}]
