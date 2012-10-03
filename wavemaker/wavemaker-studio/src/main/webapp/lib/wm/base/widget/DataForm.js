@@ -1011,7 +1011,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     postInit: function() {
 	this.inherited(arguments);
-	if (!this.readonlyManager) {
+	if (!this.readonlyManager && this.servicevariable) {
 	    this._editSomeObject();
 	}
 	if (this.useLoadingDialog) {
@@ -1231,7 +1231,14 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		return;
 	    }
 	}
-
+    switch(this.formBehavior) {
+        case "insertOnly":
+            this.operation = "insert";
+            break;
+        case "updateOnly":
+            this.operation = "update";
+            break;
+    }
 	if (this.operation != this.insertOp && this.operation != this.updateOp) {
 	    if (djConfig.isDebug) {
 		app.toastError("Operation of '" + this.operation + "' is not valid");

@@ -932,7 +932,7 @@ wm.DBForm.extend({
     set_type: function(inType) {
     var changed = this.inherited(arguments);
     if (inType && changed) {
-        this.serviceVariable.destroy();
+        if (this.serviceVariable) this.serviceVariable.destroy();
         this.initServiceVariable();
     }
     return changed;
