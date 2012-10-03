@@ -662,7 +662,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
                 width: "100%",
                 isCustomField: Boolean(this.displayExpression),
                 mobileColumn: true,
-                field: this.displayExpression ? "_name" : this.displayField,
+                field: this.displayExpression ? "_name" : this.displayField || "_name",
                 expression: this.displayExpression
             }]);
             this.grid.renderDojoObj();
@@ -787,8 +787,8 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
             width: "100%",
             isCustomField: Boolean(this.displayExpression),
             mobileColumn: true,
-            field: this.displayExpression ? "_name" : this.displayField,
-            formatFunc: this.displayType ? "wm_" + this.displayType.toLowerCase() + "_formatter" : "",
+            field: this.displayExpression ? "_name" : this.displayField || "_name",
+            formatFunc: this.displayType != "Text" ? "wm_" + this.displayType.toLowerCase() + "_formatter" : "",
             expression: this.displayExpression
         }]);
         if (this.dataSet) {
