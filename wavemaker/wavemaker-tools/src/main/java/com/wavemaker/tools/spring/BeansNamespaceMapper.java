@@ -27,6 +27,8 @@ public class BeansNamespaceMapper extends NamespacePrefixMapper {
             return "";
         } else if ("http://www.w3.org/2001/XMLSchema-instance".equals(namespaceUri)) {
             return "xsi";
+        } else if ("http://schema.cloudfoundry.org/spring".equals(namespaceUri)) {
+            return "cloud";
         } else {
             return null;
         }

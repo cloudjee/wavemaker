@@ -34,7 +34,7 @@ import com.wavemaker.tools.spring.beans.Beans;
  */
 public class SpringConfigSupport {
 
-    public static final String SPRING_SCHEMA_LOCATION = "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd";
+    public static final String SPRING_SCHEMA_LOCATION = "http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd";
 
     public static final String SPRING_BEANS_PACKAGE = "com.wavemaker.tools.spring.beans";
 
