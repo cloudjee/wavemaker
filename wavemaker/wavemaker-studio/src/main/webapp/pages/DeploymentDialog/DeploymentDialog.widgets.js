@@ -86,7 +86,7 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup", width: "100px", height: "100%"}],
+	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup/cfwavemaker", width: "100px", height: "100%"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cfLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cfLoginCancelClick"}],
 	    cfLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}, {
