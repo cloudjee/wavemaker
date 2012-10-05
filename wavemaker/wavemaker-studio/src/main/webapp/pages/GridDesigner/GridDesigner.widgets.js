@@ -166,7 +166,7 @@
                         wire: ["wm.Wire", {"expression":"parseInt(${grid.selectedItem.width})","targetProperty":"dataValue"}, {}]
                     }]
                     }],
-                    widthTypeEditor: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "dataField":"dataValue","displayField":"dataValue","displayValue":"%","helpText":"Set the width of the column","options":"px,%,auto","width":"70px"}, {onchange: "onWidthChange"}, {
+                    widthTypeEditor: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, changeOnSetData: false, "dataField":"dataValue","displayField":"dataValue","displayValue":"%","helpText":"Set the width of the column","options":"px,%","width":"70px"}, {onchange: "onWidthChange"}, {
                     binding: ["wm.Binding", {}, {}, {
                         wire: ["wm.Wire", {"expression":"${grid.selectedItem.width}.replace(/\\d*/,'')","targetProperty":"dataValue"}, {}]
                     }]
