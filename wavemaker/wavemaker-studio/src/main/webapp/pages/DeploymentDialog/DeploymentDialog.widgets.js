@@ -169,7 +169,7 @@ DeploymentDialog.widgets = {
 		    wire: ["wm.Wire", {"source":"editPanel.invalid","targetProperty":"disabled"}, {}]
 		}]
 	    }],
-	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage CloudFoundry Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudFoundryButtonClick"}],
+	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage Cloud Foundry Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudFoundryButtonClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
