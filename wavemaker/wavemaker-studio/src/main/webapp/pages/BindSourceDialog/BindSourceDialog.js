@@ -111,7 +111,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
             isList = ti.isList;
         }
         type = type || tp.type;
-        if (!type) {
+        if (!type && tp.propDef) {
             type = tp.propDef.typeFunc ? tp.object[tp.propDef.typeFunc]() : tp.propDef.type;
             isList = tp.propDef.isList;
         }
