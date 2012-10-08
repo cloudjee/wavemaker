@@ -2139,6 +2139,9 @@ dojo.declare("Studio", wm.Page, {
     showDeviceBarHelp: function() {
         window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "MobileDevelopment");
     },
+    gridDesignerHelp: function() {
+        window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "GridDesigner");
+    },
     browserZoomed: function() {
         var isZoomed = Boolean(app._currentZoomLevel);
         this.editAreaZoomWarningLabel.setShowing(isZoomed);
