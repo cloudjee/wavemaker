@@ -2522,7 +2522,7 @@ dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
 dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
     noBindColumn: true,
     noReinspect: true,
-    height: "380px",
+    height: "390px",
 
     init: function() {
     this.inherited(arguments);

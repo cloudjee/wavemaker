@@ -1179,6 +1179,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var targetName = this.setUniqueDeploymentName("CloudFoundry 1", this.cfDeploymentNameEditor, this.CF_DEPLOY);
         this.cfHostEditor.setDataValue("https://api.cloudfoundry.com");
         this.cfNameEditor.setDataValue(studio.project.projectName);
+        this.cfUrlEditor.setDataValue("http://" + studio.project.projectName + "." + this.cfHostEditor.getDataValue().replace(/^.*?api\./,""));
 
         var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -1213,7 +1214,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cfDeploymentTypeEditor.setDataValue("CloudFoundry");
         this.cfNameEditor.setDataValue(inData.applicationName);
         this.cfHostEditor.setDataValue(inData.target);
-
+        this.cfUrlEditor.setDataValue(inData.deploymentUrl);
         var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;

@@ -64,6 +64,10 @@ public class DataServiceSpringConfiguration {
 
     public static final String JNDI_NAME_PROPERTY = "jndiName";
 
+    private static final String HIBERNATE_DIALECT = "hibernate.dialect";
+    private static final String MSSQL_INNODB = "org.hibernate.dialect.MySQLInnoDBDialect";
+    private static final String MYSQL_DIALECT = "com.wavemaker.runtime.data.dialect.MySQLDialect";
+
     private final String rootPath;
 
     private final String path;
@@ -324,7 +328,7 @@ public class DataServiceSpringConfiguration {
     /**
      * @param dbName
      */
-    void configureDbAlias(String dbName) {
+    void configureDbAlias(String dbName, DeploymentType type) {
         if (!hasText(dbName)) {
             return;
         }
@@ -336,7 +340,11 @@ public class DataServiceSpringConfiguration {
         }
 
         Bean ds = l.get(0);
-        if (!ds.getId().equals(dbName + "DataSource")) {
+
+        if (type == DeploymentType.CLOUD_FOUNDRY) {
+            String id = ds.getId();
+            this.beans.removeBeanById(id);
+        } else if (!ds.getId().equals(dbName + "DataSource")) {
             Alias dsAlias = new Alias();
             dsAlias.setName(ds.getId());
             dsAlias.setAlias(dbName);
@@ -345,7 +353,7 @@ public class DataServiceSpringConfiguration {
         }
     }
 
-    void configureHibernateSchemaUpdate(String updateSchema) {
+    void configureHibernateSchemaUpdate(String dbName, String updateSchema) {
         if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
 
             List<Bean> l = this.beans.getBeansByType(ConfigurationAndSessionFactoryBean.class);
@@ -364,7 +372,35 @@ public class DataServiceSpringConfiguration {
                 ddlProp.setContent(Arrays.asList(value));
                 propValues.getProps().add(ddlProp);
                 this.isDirty = true;
+
+                updateDialect(dbName, propValues);
             }
+        }
+    }
+
+    private void updateDialect(String dbName, Props propValues) {
+        Properties properties = readProperties(false);
+        if (!properties.get(dbName + ".dialect").equals(MYSQL_DIALECT)) {
+            return;
+        }
+        
+        boolean dialectFound = false;
+        for (Prop prop : propValues.getProps()) {
+            if (prop.getKey().equals(HIBERNATE_DIALECT)) {
+                dialectFound = true;
+                List<String> val = new ArrayList<String>();
+                val.add(MSSQL_INNODB);
+                prop.setContent(val);
+                break;
+            }
+        }
+        if (!dialectFound) {
+            Prop prop = new Prop();
+            prop.setKey(HIBERNATE_DIALECT);
+            List<String> val = new ArrayList<String>();
+            val.add(MSSQL_INNODB);
+            prop.setContent(val);
+            propValues.getProps().add(prop);
         }
     }
 

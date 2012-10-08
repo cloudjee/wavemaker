@@ -650,6 +650,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             this._setRbEditorChecked(this.simpleRb);
             this.searchBar.setDataValue("");
             this.updateBindSourceUi("simple");
+        } else {
+            this.updateBindSourceUi(this.simpleRb.getGroupValue());
         }
 
         if (this.owner.targetProps) {
