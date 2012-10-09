@@ -611,6 +611,9 @@
             }
             this.reinspect();
          });
+
+        this.createHelpButton(inComponent, inProp, p, 0);
+
      },
 
      generatePanelForEditor: function(inParent, inName) {
@@ -1108,7 +1111,7 @@
                              }) + className + "_" + inPropName + "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
                          }
                      });
-                 }, i * 1300);
+                 }, i * 1600);
              });
          } else {
              if (!inType) {
