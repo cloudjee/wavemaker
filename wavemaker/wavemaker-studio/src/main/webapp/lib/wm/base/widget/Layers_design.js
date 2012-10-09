@@ -97,26 +97,7 @@ wm.Layer.extend({
     },
     add: function() {
         this.parent.add();
-    },/*
-    createDesignContextMenu: function(menuObj) {
-    var data = {label: "Move Layer",
-            iconClass: "Studio_silkIconImageList_30",
-            children: []};
-
-    data.children.push({label: "Previous",
-                iconClass: "Studio_silkIconImageList_30",
-                onClick: dojo.hitch(this, function() {
-                this.editProp("movePrevious");
-                })
-               });
-    data.children.push({label: "Next",
-                iconClass: "Studio_silkIconImageList_30",
-                onClick: dojo.hitch(this, function() {
-                this.editProp("moveNext");
-                })
-               });
-        var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
-    },*/
+    },
     listProperties: function() {
         var props = this.inherited(arguments);
         props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
@@ -327,29 +308,17 @@ wm.Layers.extend({
     getOrderedWidgets: function() {
         return this.layers;
     },
-    createDesignContextMenu: function(menuObj, optionalSubmenuArray) {
+    createDesignContextMenu: function(children) {
         if (this.layers.length) {
             var data = {
                 label: "Show Layer",
                 iconClass: "Studio_silkIconImageList_95",
                 children: []
             };
-
+            children.push(data);
             for (var i = 0; i < this.layers.length; i++) {
                 if (!this.layers[i].isActive()) data.children.push(this.addLayerToContextMenu(i));
             }
-            if (optionalSubmenuArray) {
-                optionalSubmenuArray.push({
-                    label: "add",
-                    iconClass: "Studio_silkIconImageList_30",
-                    onClick: dojo.hitch(this, function() {
-                        this.addLayer();
-                    })
-                });
-                dojo.forEach(data.children, function(i) {
-                    optionalSubmenuArray.push(i);
-                });
-            } else var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
         }
     },
     addLayerToContextMenu: function(i) {

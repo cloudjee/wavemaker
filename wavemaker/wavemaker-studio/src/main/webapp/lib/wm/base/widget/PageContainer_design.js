@@ -200,7 +200,7 @@ wm.PageContainer.extend({
         // this.inherited(arguments);
         this.deferLoad = true;
     },
-    createDesignContextMenu: function(menuObj) {
+    createDesignContextMenu: function(children) {
         var pagelist = wm.getPageList(this.currentPageOK);
         if (pagelist.length) {
             var data = {
@@ -212,7 +212,7 @@ wm.PageContainer.extend({
             for (var i = 0; i < pagelist.length; i++) {
                 data.children.push(this.addPageToContextMenu(pagelist[i]));
             }
-            var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
+            children.push(data);
         }
     },
     addPageToContextMenu: function(pagename) {

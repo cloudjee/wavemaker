@@ -577,63 +577,64 @@ wm.Component.extend({
        eventEdit(this, n, v, c == studio.application);
    },
 
-   createDesignContextMenu: function(menuObj) {},
+   createDesignContextMenu: function(children) {},
    showContextMenu: function(e) {
-       if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+       if(dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
        dojo.stopEvent(e);
-       var menuObj = studio.contextualMenu;
-       menuObj.removeAllChildren();
-       this.createDesignContextMenu(menuObj);
-       var props = this.listProperties();
-       for (p in props) {
-           if (!props[p].ignore && props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
+       menuObj = studio.contextualMenu;
+        menuObj.removeAllChildren();
+
+        var children = [];
+
+       this.createDesignContextMenu(children);
+       this._showContextMenu(children);
+
+       if(this instanceof wm.Control) {
+           children.push({
+               separator: true
+           });
+           var parent = this.parent;
+           while(parent && parent != studio.designer) {
+               if(!parent.flags || !parent.flags.notInspectable && !parent.noInspector) {
+                   children.push({
+                       label: parent.name,
+                       //iconClass: "Studio_silkIconImageList_83",
+                       iconClass: wm.packageImages[parent.declaredClass] || "Studio_paletteImageList_0",
+                       children: []
+                       //onClick: this._makeSelectComponentMethod(parent)
+                   });
+                   parent._showContextMenu(children[children.length-1].children);
+               }
+                parent = parent.parent;
+           }
+       }
+       menuObj.setFullStructure(children);
+       menuObj.renderDojoObj();
+       menuObj.update(e, this.domNode);
+   },
+   _showContextMenu: function(children) {
+           this.createDesignContextMenu(children);
+           children.push({label: "Cut",
+                          iconClass: "Studio_canvasToolbarImageList16_2",
+                          onClick: dojo.hitch(this, function() {
+                            studio.cutControl([this]);
+                          })
+                      });
+
+          var props = this.listProperties();
+       for(p in props) {
+           if(!props[p].ignore && props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
            /*
             props[p].simpleBindTarget ||
             props[p].simpleBindProp && (props[p].bindable || props[p].bindTarget)*/
-           ){
-                props[p].name = p;
-                this.addContextMenuItem(menuObj, props[p].shortname || p, props[p]);
-            }
-       }
-
-       if (this instanceof wm.Control) {
-           var submenuOptions = {
-               label: "Select",
-               iconClass: "Studio_silkIconImageList_83",
-               children: [{
-                   label: this.name,
-                   iconClass: wm.packageImages[this.declaredClass] || "Studio_paletteImageList_0",
-                   onClick: this._makeSelectComponentMethod(this)
-               }]
-           };
-           var parent = this.parent;
-           while (parent && parent != studio.designer) {
-               if (!parent.flags || !parent.flags.notInspectable && !parent.noInspector) submenuOptions.children.push({
-                   label: parent.name,
-                   //iconClass: "Studio_silkIconImageList_83",
-                   iconClass: wm.packageImages[parent.declaredClass] || "Studio_paletteImageList_0",
-                   onClick: this._makeSelectComponentMethod(parent)
-               });
-
-               if (parent instanceof wm.Layers) {
-                   var layersOptions = { //iconClass: parent.declaredClass.toLowerCase().replace(/\./g,"_"),
-                       iconClass: "Studio_silkIconImageList_83",
-                       label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_LAYERS", {
-                           parentName: parent.name
-                       }),
-                       children: []
-                   };
-                   parent.createDesignContextMenu(menuObj, layersOptions.children);
-                   var layersMenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, layersOptions);
-               }
-
-               parent = parent.parent;
+           ) {
+               props[p].name = p;
+               this.addContextMenuItem(children, props[p].shortname || p, props[p]);
            }
-           if (submenuOptions.children.length > 1) menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
        }
 
 
-       menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {
+       children.push({
            iconClass: "Studio_paletteImageList_0",
            label: "Publish Properties",
            onClick: dojo.hitch(this, function() {
@@ -644,7 +645,7 @@ wm.Component.extend({
 
 
 
-       menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {
+       children.push({
            iconClass: "StudioHelpIcon",
            label: studio.getDictionaryItem("wm.Component.CONTEXT_MENU_HELP", {
                "className": this.declaredClass
@@ -656,16 +657,14 @@ wm.Component.extend({
                window.open(url);
            })
        });
-
-       menuObj.update(e, this.domNode);
-   },
+    },
    _makeSelectComponentMethod: function(inComp) {
        return dojo.hitch(this, function() {
            studio.select(inComp);
        });
    },
-   addContextMenuItem: function(inMenu, inPropName, inProp) { /* This menu does not appear to get added */
-       inMenu.addAdvancedMenuChildren(inMenu.dojoObj, {
+   addContextMenuItem: function(children, inPropName, inProp) { /* This menu does not appear to get added */
+       children.push({
            label: inProp.simpleBindProp ? "Bind " + inPropName : inPropName,
            iconClass: "Studio_silkIconImageList_30",
            onClick: dojo.hitch(this, function() {
