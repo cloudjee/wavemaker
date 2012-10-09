@@ -31,7 +31,7 @@ Studio.extend({
         var components = inControls || this.selected;
         if (!components || !components.length)
             return;
-        new wm.DeleteTask({cutAction: true});
+        new wm.DeleteTask({cutAction: true, components: components});
         this.copyControl(components);
         this._deleteControl(components);
     },
