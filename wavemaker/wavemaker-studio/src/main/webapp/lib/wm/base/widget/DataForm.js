@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 
-/* 
+/*
  * TODO: Determine when to generate a wm.Lookup and when a wm.SubForm
 
  */
@@ -60,6 +60,7 @@ wm.getDataFormLiveView = function(inForm) {
  *       such as "enableFormProperties"
  *************************************************************************/
 dojo.declare("wm.FormPanel", wm.Container, {
+    type: "",
     margin: "0",
     padding: "2",
     enableTouchHeight: true,
@@ -76,83 +77,84 @@ dojo.declare("wm.FormPanel", wm.Container, {
     readonly: false,
     verticalAlign: "top",
     horizontalAlign: "left",
+    init: function() {
+        if (this.type == this.declaredClass) this.type = "";
+        this.inherited(arguments);
+    },
     postInit: function() {
-	this.inherited(arguments);
-	this.updateCaptionSizes();	
+        this.inherited(arguments);
+        this.updateCaptionSizes();
     },
     updateCaptionSizes: function() {
-	if (this.autoSizeCaption) {
-	    wm.job(this.getRuntimeId() + ".updateCaptionSizes", 10, this, "_updateCaptionSizes");
-	}
+        if (this.autoSizeCaption) {
+            wm.job(this.getRuntimeId() + ".updateCaptionSizes", 10, this, "_updateCaptionSizes");
+        }
     },
     renderBounds: function() {
-	if (this.inherited(arguments)) {
-	    var editors = this.getEditorsArray();
-	    dojo.forEach(editors, function(e) {
-		e.captionNode.style.maxWidth = "";
-	    });
+        if (this.inherited(arguments)) {
+            var editors = this.getEditorsArray();
+            dojo.forEach(editors, function(e) {
+                e.captionNode.style.maxWidth = "";
+            });
 
-	    this.updateCaptionSizes();
-	}
+            this.updateCaptionSizes();
+        }
     },
     _updateCaptionSizes: function() {
-	if (this._isDestroyed) return;
-	var editors = this.getEditorsArray();
-	var max = 0;
-	var maxEditor;
-	dojo.forEach(editors, function(e) {
-	    // test of parent is mostly for property panel, could replace with isAncestoryHidden call but would be a little slower
-	    if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%" && e.captionPosition == "left") {
-		var w = Math.min(e.captionNode.clientWidth, e.bounds.w - this._minEditorSizeForAutoSize);
-		if (w > max) {
-		    max = w; 
-		    maxEditor = e;
-		}
-	    }
-	},this);
+        if (this._isDestroyed) return;
+        var editors = this.getEditorsArray();
+        var max = 0;
+        var maxEditor;
+        dojo.forEach(editors, function(e) {
+            // test of parent is mostly for property panel, could replace with isAncestoryHidden call but would be a little slower
+            if (e.showing && e.parent.showing && e.captionNode && e.captionSize != "100%" && e.captionPosition == "left") {
+                var w = Math.min(e.captionNode.clientWidth, e.bounds.w - this._minEditorSizeForAutoSize);
+                if (w > max) {
+                    max = w;
+                    maxEditor = e;
+                }
+            }
+        }, this);
 
-	max += 5; // 5px space before editor for nicer look
+        max += 5; // 5px space before editor for nicer look
+        // If Don't let the caption size excede a captionSize=50%
+        if (max > this.bounds.w / 2) {
+            max = Math.floor(this.bounds.w / 2);
+        }
 
-	// If Don't let the caption size excede a captionSize=50%
-	if (max > this.bounds.w/2) {
-	    max = Math.floor(this.bounds.w/2);
-	}
-	
-	// Update the captionSize and apply it
-	this.captionSize = max + "px";
-	dojo.forEach(editors, dojo.hitch(this,function(e) {
-	    if (e.captionSize != "100%" && e.captionPosition == "left") {
-		e.setCaptionSize(this.captionSize);
-		if (e.captionNode.clientWidth > max) {
-		    e.captionNode.style.maxWidth = max + "px";		    
-		}
-		e._isMaxEditor = maxEditor ? (e == maxEditor) : undefined;
-	    }
-	}));
+        // Update the captionSize and apply it
+        this.captionSize = max + "px";
+        dojo.forEach(editors, dojo.hitch(this, function(e) {
+            if (e.captionSize != "100%" && e.captionPosition == "left") {
+                e.setCaptionSize(this.captionSize);
+                if (e.captionNode.clientWidth > max) {
+                    e.captionNode.style.maxWidth = max + "px";
+                }
+                e._isMaxEditor = maxEditor ? (e == maxEditor) : undefined;
+            }
+        }));
     },
-    addWidget: function(inWidget){
-	this.inherited(arguments);
-	if (inWidget instanceof wm.AbstractEditor) {
-	    this.updateCaptionSizes();
-	}
+    addWidget: function(inWidget) {
+        this.inherited(arguments);
+        if (inWidget instanceof wm.AbstractEditor) {
+            this.updateCaptionSizes();
+        }
     },
     removeControl: function(inWidget) {
-	this.inherited(arguments);
-	if (inWidget instanceof wm.AbstractEditor) {
-	    this.updateCaptionSizes();
-	}
-    },
-    /****************
+        this.inherited(arguments);
+        if (inWidget instanceof wm.AbstractEditor) {
+            this.updateCaptionSizes();
+        }
+    },    /****************
      * METHOD: getEditorsArray (PUBLIC)
      * DESCRIPTION: Returns an array of all editors inside of this form.
      * NOTE: Subclasses may override this method to only return editors with formFields
      ***************/
     getEditorsArray: function() {
-	return wm.getMatchingFormWidgets(this, function(w) {
-	    return w instanceof wm.AbstractEditor;
-	});
+        return wm.getMatchingFormWidgets(this, function(w) {
+            return w instanceof wm.AbstractEditor;
+        });
     },
-
     /****************
      * METHOD: canChangeEditorReadonly (PRIVATE)
      * DESCRIPTION: Returns true if the Form is allowed to change the readonly state of the editor.
@@ -160,84 +162,99 @@ dojo.declare("wm.FormPanel", wm.Container, {
      *              Else returns value of inCanChangeFunc if provided
      ***************/
     canChangeEditorReadonly: function(inEditor, inReadonly, inCanChangeFunc) {
-	if (inEditor.ignoreParentReadonly) return false;
-	var c = dojo.isFunction(inCanChangeFunc);
-	return !c || inCanChangeFunc(inEditor, this, inReadonly);
+        if (inEditor.ignoreParentReadonly) return false;
+        var c = dojo.isFunction(inCanChangeFunc);
+        return !c || inCanChangeFunc(inEditor, this, inReadonly);
     },
-
     /****************
      * METHOD: _setReadonly (PRIVATE)
      * DESCRIPTION: Changes the readonly state for all editors in the form
      ***************/
-    	_setReadonly: function(inReadonly, inCanChangeFunc) {
-		dojo.forEach(this.getEditorsArray(), function(e) {
-		    if (!e.ignoreParentReadonly) {
-			if (this.canChangeEditorReadonly(e, inReadonly, inCanChangeFunc)) {
-			    e.setReadonly(inReadonly);
-			} else {
-			    e.setReadonly(!inReadonly); // if its not allowed to change it to inReadonly, then presumably its supposed to be !inReadonly
-			}
-		    }
-		}, this);
-	},
-
+    _setReadonly: function(inReadonly, inCanChangeFunc) {
+        dojo.forEach(this.getEditorsArray(), function(e) {
+            if (!e.ignoreParentReadonly) {
+                if (this.canChangeEditorReadonly(e, inReadonly, inCanChangeFunc)) {
+                    e.setReadonly(inReadonly);
+                } else {
+                    e.setReadonly(!inReadonly); // if its not allowed to change it to inReadonly, then presumably its supposed to be !inReadonly
+                }
+            }
+        }, this);
+    },
     /****************
      * METHOD: setReadonly (PUBLIC)
      * DESCRIPTION: Changes the readonly state for all editors in the form
      ***************/
     setReadonly: function(inReadonly) {
-	this.readonly = inReadonly;
-	this._setReadonly(inReadonly);
+        this.readonly = inReadonly;
+        this._setReadonly(inReadonly);
     },
-
 
     /****************
      * METHOD: setCaptionSize (PUBLIC)
      * DESCRIPTION: Changes size of the caption measured in "px"
      ***************/
     setCaptionSize: function(inSize) {
-	this.captionSize = inSize;
-	dojo.forEach(this.getEditorsArray(), function(e) {
-	    e.setCaptionSize(inSize);
-	});
+        var oldval = this.captionSize;
+        this.captionSize = inSize;
+        dojo.forEach(this.getEditorsArray(), function(e) {
+            /* User probably isn't trying to change the caption size of editors whose captionPosition is top/bottom */
+            if ((e.captionPosition == "top" || e.captionPosition == "bottom") && inSize > 40) return;
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
+            e.setCaptionSize(inSize);
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel && c.captionSize === oldval && c.captionPosition == this.captionPosition) {
+                c.setCaptionSize(inSize);
+            }
+        }), true);
     },
-
     /****************
      * METHOD: setCaptionAlign (PUBLIC)
      * DESCRIPTION: Changes horizontal alignment of the caption
      ***************/
     setCaptionAlign: function(inAlign) {
-	this.captionAlign = inAlign;
-	dojo.forEach(this.getEditorsArray(), function(e) {
-	    e.setCaptionAlign(inAlign);
-	});
+        this.captionAlign = inAlign;
+        dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
+            e.setCaptionAlign(inAlign);
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+        if (c != this && c instanceof wm.FormPanel && c.captionSize === this.captionSize && c.captionPosition == this.captionPosition) {
+                c.setCaptionAlign(inAlign);
+            }
+        }), true);
     },
-
     /****************
      * METHOD: setCaptionPosition (PUBLIC)
      * DESCRIPTION: Changes caption position to top, bottom, left, right
      ***************/
     setCaptionPosition: function(pos) {
-	var oldPos = this.captionPosition;
-	this.captionPosition = pos;
+        var oldPos = this.captionPosition;
+        var oldSize = this.captionSize;
+        this.captionPosition = pos;
 
-	if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
-	    if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) < 54)
-		this.editorHeight = "54px";
-	    this.captionSize = "28px";
-	} else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
-	    if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) >= 54)
-		this.editorHeight = wm.AbstractEditor.prototype.height;
-	    
-	    if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
-		this.captionSize = "100px";
-	    }
-	}
+        if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
+            if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) < 54) this.editorHeight = "54px";
+            this.captionSize = "28px";
+        } else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
+            if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) >= 54) this.editorHeight = wm.AbstractEditor.prototype.height;
+
+            if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
+                this.captionSize = "100px";
+            }
+        }
 
 
-	dojo.forEach(this.getEditorsArray(), function(e) {
-	    e.setCaptionPositionLF(pos);
-	});
+        dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
+            e.setCaptionPositionLF(pos, this);
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel && c.captionSize === oldSize && c.captionPosition == oldPos) {
+                    c.setCaptionPosition(pos);
+                }
+        }), true);
     },
 
     /****************
@@ -245,29 +262,38 @@ dojo.declare("wm.FormPanel", wm.Container, {
      * DESCRIPTION: Changes width of every editor
      ***************/
     setEditorWidth: function(inEditorWidth) {
-	this.editorWidth = inEditorWidth;
-	dojo.forEach(this.getEditorsArray(), function(e) {
-            if (e.parent.horizontalAlign != "justified")
-		e.setWidth(inEditorWidth);
-	});
+        this.editorWidth = inEditorWidth;
+        dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
+            if (e.parent.horizontalAlign != "justified") e.setWidth(inEditorWidth);
+        }, this);
+        wm.forEachWidget(this, dojo.hitch(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel) {
+                c.setEditorWidth(inEditorWidth);
+            }
+        }), true);
     },
-
     /****************
      * METHOD: setEditorHeight (PUBLIC)
      * DESCRIPTION: Changes height of every editor
      ***************/
     setEditorHeight: function(inEditorHeight) {
-	this.editorHeight = inEditorHeight;
-	dojo.forEach(this.getEditorsArray(), function(e) {
-	    e.setValue("height",inEditorHeight);
-	});
+        this.editorHeight = inEditorHeight;
+        dojo.forEach(this.getEditorsArray(), function(e) {
+            if (e.isAncestorInstanceOf(wm.FormPanel) != this) return;
+            e.setValue("height", inEditorHeight);
+        }, this);
+        wm.forEachWidget(this, function(c) {
+            if (c != this && c instanceof wm.FormPanel) {
+                c.setEditorHeight(inEditorHeight);
+            }
+        }, true);
     },
-
     // don't really need this...
 	getEditorParent: function() {
 		return this;
 	},
-    
+
     _end: 0
 });
 
@@ -285,7 +311,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
  *             also causes all editors to be populated with values from the dataSet
  *             any time the dataSet changes.  Developer can bind a dataSet to pass in new data.
  *    3. dataOutput: The Form has a dataOutput value corresponding to the current
- *             value of the form fields. Developer can bind dataOutput to Service/Live Vars 
+ *             value of the form fields. Developer can bind dataOutput to Service/Live Vars
  *             for easy passing of form data to the server.  Currently requires a call
  *             to getDataOutput to update the dataOutput with latest values so binding
  *             doesn't get fired onChange but does simplify making connections.
@@ -302,14 +328,14 @@ dojo.declare("wm.FormPanel", wm.Container, {
  *
  * USE CASES:
  *    1. A user wants to edit a database entry, but wants to control the LiveVariable that is used
- *       to insert/update/delete.  This Form provides a dataSet bound to a source wm.Variable or 
+ *       to insert/update/delete.  This Form provides a dataSet bound to a source wm.Variable or
  *       LiveVar for passing in values and a dataOutput for binding to your insert/update/delete Variable.
  *    2. A user wants a form with some typing information, but may not have a dataSet
  *
- * Essentially, this form class is designed to be our most flexible class for users who do not want to be 
- * constrained or do not want to figure out a lot of confusing properties.  The user must manage all client/server 
+ * Essentially, this form class is designed to be our most flexible class for users who do not want to be
+ * constrained or do not want to figure out a lot of confusing properties.  The user must manage all client/server
  * communication.
- *    
+ *
  *************************************************************************/
 
 dojo.declare("wm.DataForm", wm.FormPanel, {
@@ -324,7 +350,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      * these are writeonly properties that advanced users can change, but are more commonly
      * going to be changed by subclassing.
      * Defaults chosen as follows:
-     * generateInputBindings: The input bindings mean that the editor's are bound to the dataSet.  
+     * generateInputBindings: The input bindings mean that the editor's are bound to the dataSet.
      *   PROS: Using bindings means that the developer can easily manipulate these
      *   CONS: Each time a selected item changes, we fire every dataSet binding once, and because editor values change, we fire every dataOutput binding once as well. Populate method is more efficient
      *   CONS: Can't block changing editor values when in the middle of editing when the dataSet changes
@@ -333,12 +359,12 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      *   Default value: true
      *
      *
-     * generateOutputBindings: The output bindings mean that the editors are bound to dataOutput, 
+     * generateOutputBindings: The output bindings mean that the editors are bound to dataOutput,
      *                         and don't depend upon populateDataOutput methods.
      * PROS: Users expect the form value to update any time an editor value changes.
      * CONS: Each time the dataSet changes, we have many bindings that must fire
      *
-     * PERFORMANCE: analysis of running wi generateInputBindings and generateOutputBindings on a first generation ipad and 
+     * PERFORMANCE: analysis of running wi generateInputBindings and generateOutputBindings on a first generation ipad and
      * an ICS Assus tablet:
      * generateBindings:
      *     IPAD:
@@ -350,7 +376,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      *          312, 188, 234, 218ms
      *     ASUS:
      *          150, 129,148, 164
-     * 
+     *
      *  CONCLUSION: This kind of performance drop is unacceptable,
      *              especially given that the bigger the app/form/etc the larger
      *              this difference will become. Therefore we need to
@@ -361,7 +387,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 
     /****************
      * METHOD: Init (PRIVATE)
-     * DESCRIPTION: 
+     * DESCRIPTION:
      *         Create our dataOutput wm.Variable.  Note that we don't create the dataSet wm.Variable;
      *         thats just a pointer to a source var owned by someone else
      ***************/
@@ -376,7 +402,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      * METHOD: postInit (PRIVATE)
      * DESCRIPTION: When the form is loaded at runtime, populate the editors with their dataSet.
      *              postInit is called AFTER any bindings owned by this form are evaluated, so dataSet
-     *              may well have been called already. 
+     *              may well have been called already.
      * TODO: Check if setDataSet call from binding makes calling populateEditors unnecessary.
      ***************/
     postInit: function() {
@@ -438,7 +464,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	/* I don't know what this test is for, but something to do with RelatedEditors testing
 	 * to see if they are in a parent form with its own operation.  Probably not needed
 	 if (this.parent && this.parent.operation){
-	 return;	
+	 return;
 	 }*/
 
 	this._inDataSet = true;
@@ -450,7 +476,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 		this.onDataSetChanging(inDataSet.getCursorItem().getData());
 	    }
 
-	    /* It used to be we'd pass in the entire dataSet, and then the developer could use the cursor to edit different items 
+	    /* It used to be we'd pass in the entire dataSet, and then the developer could use the cursor to edit different items
 	     * in the dataSet.  But that was when this.dataSet == page.liveVariable1; instead we are copying all of the data from
 	     * page.liveVariable1 INTO this.dataSet, and we don't need to copy 500 items to edit just the one item.
 	     */
@@ -460,7 +486,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 
 	    /* Get the current wm.Variable item */
 	    var d = this.dataSet;
-	    
+
 	    /* Disable binding and onchange events, put data in the editors and then reenable bindings/change events */
 	    if (!this.generateInputBindings) {
 		this.beginEditUpdate();
@@ -468,7 +494,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 		this.endEditUpdate();
 		this.liveFormChanged();
 	    }
-	    
+
 	    /* The outputData is the value of all of the editors; at the time of setDataSet, the outputData is either the same
 	     * as inDataSet, or its an item from inDataSet... until the user starts making changes
 	     */
@@ -524,7 +550,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	this._skipChangeOnDirty = false;
     },
 
-/*    
+/*
 	_getDataType: function() {
 	    if (wm.typeManager.isStructuredType(this.type))
 		return t;
@@ -580,11 +606,11 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    if (wm.OneToMany && e instanceof wm.OneToMany) {
 		e.setDataSet(this.dataSet.getValue(e.formField));
 	    } else {
-		if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
+		if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type))
                     e.setAutoDataSet(e.autoDataSet);
 		wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
 	    }
-	    
+
 	}));
 	dojo.forEach(this.getRelatedEditorsArray(), dojo.hitch(this, function(e) {
 	    if (!this._operationSucceeded) {
@@ -666,19 +692,19 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 
     /****************
      * METHOD: getEditorsArray (PRIVATE)
-     * DESCRIPTION: Overrides getEditorsArray to only return editors in this form with formFields that are set 
+     * DESCRIPTION: Overrides getEditorsArray to only return editors in this form with formFields that are set
      ***************/
     getEditorsArray: function(includeRelated) {
 	return wm.getMatchingFormWidgets(this, function(w) {
-	    return (w instanceof wm.AbstractEditor || includeRelated && w instanceof wm.SubForm) && (w.formField !== undefined);
+	    return (w instanceof wm.AbstractEditor || includeRelated && wm.isInstanceType(w, [wm.SubForm, wm.OneToMany])) && (w.formField !== undefined);
 	});
     },
 
 
     /****************
      * METHOD: getRelatedEditorsArray (PRIVATE)
-     * DESCRIPTION: Get all of the RelatedEditors 
-     ***************/ 
+     * DESCRIPTION: Get all of the RelatedEditors
+     ***************/
     getRelatedEditorsArray: function() {
 	return wm.getMatchingFormWidgets(this, function(w) {
 	    return (wm.isInstanceType(w, wm.SubForm) && w.formField);
@@ -691,7 +717,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      *       disallow change messages from being called on our variable properties;
      *       they send these messages themselves when they change...
      * TODO: I really have no clue if this does anything anymore; should investigate some day...
-     ***************/ 
+     ***************/
     valueChanged: function(inProp, inValue) {
 	if (this[inProp] instanceof wm.Variable) {
 	    return;
@@ -770,15 +796,15 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    if (typeDef) {
 		var schema = typeDef.fields;
 	    }
-	    
+
 	    var propertyInfo = wm.typeManager.getPropertyInfoFromSchema(schema, formField);
 	    var ops = inOperations;
 	    if (!formField)
 		return true;
-	    // NOTE: if an editor should be excluded or not changed 
+	    // NOTE: if an editor should be excluded or not changed
 	    // for given operation then it should remain read only.
 	    //
-	    // NOTE: exclude is use for inserts only so 
+	    // NOTE: exclude is use for inserts only so
 	    // we can simply leave it read only since the editor will be blank
 	    var
 	    // this field should not be changed for the given operations
@@ -813,7 +839,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     },
 	findLiveVariable: function() {
 		// Not sure why we were not checking for liveVariable instance in the object itself,
-		// before digging deep and trying to find liveVariable elsewhere. 
+		// before digging deep and trying to find liveVariable elsewhere.
 		/*
 		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
 			return this.liveVariable;
@@ -829,7 +855,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 		var o = s && s.owner;
 		var ds = null;
 		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
-			
+
 			if (o){
 				try{
 				    if (wm.isInstanceType(o, wm.DojoGrid)) {
@@ -843,7 +869,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 				}
 			}
 			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
-	        
+
 			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
 				return ds;
 		}
@@ -892,7 +918,7 @@ dojo.declare("wm.SubForm", wm.DataForm, {
 		var r =  this._getRootFormField();
 		return (r ? r + "." : "") + inField;
 	}
-    
+
 });
 
 
@@ -908,7 +934,7 @@ dojo.declare("wm.SubForm", wm.DataForm, {
  *    3. Developer calls editNewObject; gets callback of onEditNewObject (a new button is automatically setup to do this)
  *    4. Developer calls editCurrentObject; gets callback of onEditCurrentObject (an edit button is automatically setup to do this)
  *    5. Developer calls saveData; if there is an invalid editor, calls onSaveInvalidated, else it procedes to save (a save button is automatically setup to do this)
- *    6. Developer calls deleteData; if the user cancels, calls onCancelDelete 
+ *    6. Developer calls deleteData; if the user cancels, calls onCancelDelete
  *    7. onBeforeInsertCall/onBeforeUpdateCall/onBeforeDeleteCall gives developers chance to modify what is sent to the server
  *    8. onInsertSuccess/onUpdateSuccess/onDeleteSuccess/onSuccess gives developer chance to handle different success events
  *    9. NOTE: The default value of the generateOutputBindings = false property means that things run more efficiently, but it also means that removing an editor from the form that contains it will cause it not to be used when updating the dataOutput property and sending it to the server.  You can change generateOutputBindings to true to reduce performance and improve control/flexability.  Typically, you should tinker with dataOutput on DataForm where you are the one consuming the data in dataOutput, and leave it alone in DBForm where its intended to be consumed internally by the form's own LiveVariable.
@@ -925,7 +951,7 @@ dojo.declare("wm.SubForm", wm.DataForm, {
  *       c. Go to the model and find your buttons; delete the Update and Delete buttons
  *       d. If you want the form to start off ready for the user to start entering a new value, you can call this.dbForm1.editNewObject() in your start method
  *       e. If the user will only ever add a single entry, and you called editNewObject() you can delete the new button
- *       f. Using the form's onInsertSuccess event handler, you can navigate away from this form, change its readonly state to true, 
+ *       f. Using the form's onInsertSuccess event handler, you can navigate away from this form, change its readonly state to true,
  *          disable it, or perform some other action to prevent the user from editing this form any further.
  *       g. If you use the readonlyManager property, the form automatically becomes readonly after the save completes.
  *       h. If you want your user to enter a series of entries in the form, then you can use the onInsertSuccess to call editNewObject()
@@ -950,13 +976,13 @@ dojo.declare("wm.SubForm", wm.DataForm, {
  *             should be updated.
  *       f. After a successful save, the buttons should be automatically changed from save/cancel to update.
  *       g. If you have readonlyManager enabled, then after a save the form will automatically change to readonly.
- *       h. If you do not have readonlyManager enabled AND you do not have readonly on, then your form will appear to be 
- *          editable before the user clicks on the Edit button, this will cause confusion.  If you want your form to be 
+ *       h. If you do not have readonlyManager enabled AND you do not have readonly on, then your form will appear to be
+ *          editable before the user clicks on the Edit button, this will cause confusion.  If you want your form to be
  *          immediately editable, you need to call editCurrentObject().  For example, use the onDataSetChanged event
  *          to call editCurrentObject().
- *   
+ *
  *    3. Creating a full CRUD Form (insert/update/delete): Follow the steps in #2 but skip the deletion of buttons
- *       
+ *
  *    MY NOTES:
  *       USAGE TYPES:
  *       1. insert, update, CRUD (affects buttons available)
@@ -976,7 +1002,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     /****************
      * METHOD: init (Lifecycle)
-     * DESCRIPTION: Initialize the subcomponents 
+     * DESCRIPTION: Initialize the subcomponents
      ***************/
     init: function() {
 	this.inherited(arguments);
@@ -985,7 +1011,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     postInit: function() {
 	this.inherited(arguments);
-	if (!this.readonlyManager) {
+	if (!this.readonlyManager && this.servicevariable) {
 	    this._editSomeObject();
 	}
 	if (this.useLoadingDialog) {
@@ -1011,7 +1037,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    this.serviceVariable.setLiveSource(inDataSet.liveSource);
 	}
 
-	if (!this.readonlyManager && !this._isDesignLoaded) { 
+	if (!this.readonlyManager && !this._isDesignLoaded) {
 	    this._editSomeObject();
 	}
     },
@@ -1049,10 +1075,10 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     /****************
      * METHOD: getSourceLiveView (PRIVATE)
-     * DESCRIPTION: Sometimes its useful to get the dataSet for more information. 
-     *              Unfortunately, the dataSet is often something like a selectedItem 
-     *              which lacks the full richness of data sometimes available in the 
-     *              original serviceVariable. So we dig and see what the best possible 
+     * DESCRIPTION: Sometimes its useful to get the dataSet for more information.
+     *              Unfortunately, the dataSet is often something like a selectedItem
+     *              which lacks the full richness of data sometimes available in the
+     *              original serviceVariable. So we dig and see what the best possible
      *              dataSet we can find is.
      ***************/
     getSourceLiveView: function() {
@@ -1061,7 +1087,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	var owner = this.dataSet;
 
 	/* Iterate through the owner and dataSet properties until we find a ServiceVariable or give up */
-	while (owner && (owner.owner instanceof wm.Variable && owner.owner instanceof wm.LiveVariable == false || 
+	while (owner && (owner.owner instanceof wm.Variable && owner.owner instanceof wm.LiveVariable == false ||
 			 owner.owner instanceof wm.Control) )
 	{
 	    if (owner == this) {
@@ -1083,7 +1109,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     /****************
      * METHOD: cancelEdit (PUBLIC)
-     * DESCRIPTION: Called by developer or cancel button to reset editor values and if using the readonlyManager, 
+     * DESCRIPTION: Called by developer or cancel button to reset editor values and if using the readonlyManager,
      *              resets the readonly state (all work done in parent method and in endEdit)
     ****************/
     cancelEdit: function() {
@@ -1116,7 +1142,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     /****************
      * METHOD: editNewObject (PUBLIC)
-     * DESCRIPTION: Call this when your user is going to start editing a new object.  
+     * DESCRIPTION: Call this when your user is going to start editing a new object.
      *         This does no service calls, it just:
      *         1. insures readonly is true/false as needed
      *         2. sets the operation
@@ -1128,14 +1154,14 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	this.serviceVariable.setOperation(this.operation);
 
 	this.inherited(arguments);
-	this.updateButtonShowingState(true);	
+	this.updateButtonShowingState(true);
 	return true;
     },
 
 
     /****************
      * METHOD: editCurrentObject (PUBLIC)
-     * DESCRIPTION: Call this when your user is going to start editing the current object in dataSet.  
+     * DESCRIPTION: Call this when your user is going to start editing the current object in dataSet.
      *         This does no service calls, it just:
      *         1. insures readonly is true/false as needed
      *         2. sets the operation
@@ -1145,7 +1171,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	this.operation = this.updateOp;
 	this.serviceVariable.setOperation(this.operation);
 	this.inherited(arguments);
-	this.updateButtonShowingState(true);	
+	this.updateButtonShowingState(true);
 	return true;
     },
 
@@ -1205,13 +1231,20 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		return;
 	    }
 	}
-
+    switch(this.formBehavior) {
+        case "insertOnly":
+            this.operation = "insert";
+            break;
+        case "updateOnly":
+            this.operation = "update";
+            break;
+    }
 	if (this.operation != this.insertOp && this.operation != this.updateOp) {
 	    if (djConfig.isDebug) {
 		app.toastError("Operation of '" + this.operation + "' is not valid");
 		return;
 	    }
-	} 
+	}
 
 /*
 	if (this.operation != this.insertOp && this.operation != this.updateOp) {
@@ -1241,7 +1274,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
     /****************
      * METHOD: deleteData (PUBLIC)
      * DESCRIPTION: When the user hits the delete button, call deleteData
-     *       If deleteConfirmation exists, ask the user to confirm deletion; 
+     *       If deleteConfirmation exists, ask the user to confirm deletion;
      *       developers can clear deleteConfirmation and reset it if they need a quick delete.
      *       If user cancels deletion, an onCancelDelete event is called
      ***************/
@@ -1313,9 +1346,9 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    this._disableEventHandling = true;
 	    this.serviceVariable.setOperation("delete");
 	    this.serviceVariable.sourceData.setData(this.dataSet); // delete the original dataset
-	    var def = this.serviceVariable.update();	    
+	    var def = this.serviceVariable.update();
 	    def.addCallbacks(
-		dojo.hitch(this, function() {		    
+		dojo.hitch(this, function() {
 		    this.setServerParams(data); // onsuccess insert the new data values
 		    this.serviceVariable.setOperation("insert");
 		    this.serviceVariable.update();
@@ -1355,8 +1388,8 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	/* To be certain of what the serviceVariable just did, get its operation */
 	var op = this.serviceVariable.operation;
 
-	/* LiveVariable insert/update returns the object.  ServiceVariable could return absolutely anything. 
-	 * Reflect upon the type information and see if the result can be passed into an item and into a form 
+	/* LiveVariable insert/update returns the object.  ServiceVariable could return absolutely anything.
+	 * Reflect upon the type information and see if the result can be passed into an item and into a form
 	 * or if the result is not a relevant type */
 	var useReturnData = this.canApplyReturnedData();
 
@@ -1387,7 +1420,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	return true;
     },
     applyReturnedData: function(inItem, inResult) {
-	/* NOTE: inResult comes without any related items.  
+	/* NOTE: inResult comes without any related items.
 	 *       Bindings from editors to the dataSet means that related editors will be calling getValue and trigger lazy load.
 	 *       This means that once setData has finished all the lazy load side-effects, this.dataSet will have all related
 	 *       objects, making it more complete than inResult; dont use inResult after this call.
@@ -1438,7 +1471,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 			this._updating = false;
 		    }
 		    /* Now see if the object bound to our dataSet has an owner with its own dataSet (grid.selectedItem has grid.dataSet). */
-		    if (originalDataSet.owner && 
+		    if (originalDataSet.owner &&
 			originalDataSet.owner instanceof wm.Control && /* Right now, this logic only applies to widgets  */
 			originalDataSet.owner.dataSet instanceof wm.Variable && /* and the widgets must have a dataSet */
 			originalDataSet != originalDataSet.owner.dataSet) { /* And that dataSet can't be what we're already bound to */
@@ -1506,7 +1539,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    this.clearData();
 	    this.onDeleteError(inError);
 	    break;
-	}	
+	}
 	this.onError(inError);
     },
     onInsertError: function(inError) {},
@@ -1521,8 +1554,8 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
 
 
-    /* TODO: 1. When a LiveVariable changes its type; we need to kill the old LiveView and create a new one 
-     *       2. When a Lookup/Related editor is added to a form, we need to add that field to the View; 
+    /* TODO: 1. When a LiveVariable changes its type; we need to kill the old LiveView and create a new one
+     *       2. When a Lookup/Related editor is added to a form, we need to add that field to the View;
      *       3. We need to figure out when/if to automatically add lookup/related editors: I say always add Lookup; only add required related.
      */
 
@@ -1546,7 +1579,7 @@ dojo.declare("wm.ServiceForm", wm.DBForm, {
 	    if (djConfig.isDebug) {
 		app.toastError("Operation of '" + this.operation + "' is not valid");
 	    }
-	} 
+	}
 	this.doOperation(this.operation);
     },
 

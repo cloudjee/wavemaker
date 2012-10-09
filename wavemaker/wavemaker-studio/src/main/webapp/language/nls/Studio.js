@@ -204,6 +204,8 @@
     "wm.EditPanel.UPDATE_CAPTION": "Update",
     "wm.EditPanel.DELETE_CAPTION": "Delete",
 
+    "wm.FormPanel.CONFIRM_DELETE_EDITORS": "Changing the type will This operation will delete all editors currently in this form.  Continue?",
+    "wm.FormPanel.CONFIRM_DELETE_EDITORS_FROM_DATASET_CHANGE": "You have changed the dataSet of ${name}; do you want to regenerate its editors to match this type?",
     "wm.ServiceForm.UPDATE_CAPTION": "Edit",
     "wm.DBForm.DIALOG_TITLE": "Setup Your Form",
     "wm.DBForm.RESET_CAPTION": "Reset",
@@ -222,6 +224,15 @@
     "wm.Palette.MENU_ITEM_DOCS": "${className} docs...",
     "wm.Palette.URL_CLASS_DOCS": "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/${className}",
     "wm.Palette.TIP_DOCS": "Click for docs",
+
+    /* MISC WIDGETS */
+    "wm.ToggleButtonPanel.BUTTON_ONLY": "You can only add regular buttons to this panel, not ${name}",
+
+
+    /* Containers */
+    "wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_HEIGHT": "This operation will turn off auto size height (fitToContentHeight) for this widget.  Continue?",
+    "wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_WIDTH": "This operation will turn off auto size width (fitToContentWidth) for this widget.  Continue?",
+
 
     /* action.js/clipboard.js: undo/redo */
     "UNDO_MOUSEOVER_HINT": "Undo ${hint}",

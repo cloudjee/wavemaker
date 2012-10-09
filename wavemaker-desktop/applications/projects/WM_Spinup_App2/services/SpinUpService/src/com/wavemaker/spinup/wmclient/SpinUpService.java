@@ -31,7 +31,7 @@ public class SpinUpService extends JavaServiceSuperClass {
        private SpinupController spinupController;
        private WavemakerStudioApplicationArchiveFactory wmApplicationArchiveFactory;
        private LoginCredentialsBean loginCredentials;
-       private static int counter;
+       private static int counter = 0;
        private static int dailyCounter;
        private static int dailyLimit = 500;
        private static int DOY = 0;
@@ -58,7 +58,7 @@ public class SpinUpService extends JavaServiceSuperClass {
              return("The user name or password you entered is incorrect.");
         }
 		username = username.toLowerCase();
-		log(INFO, "Processing: " + username);
+		log(INFO, "Logging in: " + username);
 		try {
 		  if(!username.contains("@")){		  
             log(ERROR, "User: " + username + " NOT email");
@@ -76,7 +76,7 @@ public class SpinUpService extends JavaServiceSuperClass {
              return("Unable able to authenticate. Problem getting token and/or secret.");
           }
        } catch(Exception e) {
-          log(ERROR, "Login has failed" + e.getMessage());
+          log(ERROR, "Login has failed " + e.getMessage());
           return("The user name or password you entered is incorrect.");
        }
 	}
@@ -86,12 +86,13 @@ public class SpinUpService extends JavaServiceSuperClass {
     	if(spinupController.isNewDeployment(loginCredentials)){
     		if(dailyLimit()){
     			result.put("ERROR", "Sorry, we have reached the preview limit for today.<BR>Please try back again tomorrow.");
+                log(ERROR, "DAILY LIMIT REACHED: " + dailyCounter + " limit is: " +  dailyLimit);
     			return result;
     		}
     	}
     	
        try {
-          log(DEBUG, "performing spinup for: " + loginCredentials.getUsername()); 
+          log(INFO, "Performing spinup for: " + loginCredentials.getUsername()); 
           result = spinupController.performSpinup(loginCredentials, secret, transportToken, RuntimeAccess.getInstance().getResponse(), false); 
           recordUserLog(loginCredentials.getUsername());
           log(INFO, "Counter now: " + ++counter);          
@@ -154,7 +155,7 @@ public class SpinUpService extends JavaServiceSuperClass {
     }
     
     public String createKey(){
-         Random rand = new Random(); 
+         Random rand = new Random(counter); 
          this.randKey = rand.nextInt(2147483646);
          log(INFO, "Key is now: " + this.randKey);
          return ("OK. Now get the key from logs");

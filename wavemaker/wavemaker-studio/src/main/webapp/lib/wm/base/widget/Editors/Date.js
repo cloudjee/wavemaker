@@ -78,22 +78,34 @@ dojo.declare("wm.Date", wm.Text, {
         var d = this.inherited(arguments);
         if (d) {
             if (!this.useLocalTime) {
-                if (this.dateMode == "Date") {
-                    d.setHours(-wm.timezoneOffset, 0, 0);
-                } else {
-                    d = dojo.date.add(d, "hour", -wm.timezoneOffset);
-                }
+
+                    /* See WM-4490 to understand this calculation */
+                    var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
+
+                    /* Zero out minutes/seconds which have no bearing on a date-only calc */
+                    d.setHours(0, -60 * wm.timezoneOffset + adjustSixHours,0,0);
+
             }
             return d.getTime();
         }
         return this.makeEmptyValue();
     },
+    setDisplayValue: function(inValue) {
+        var tmp = this.useLocalTime;
+        this.useLocalTime = true;
+        this.setEditorValue(inValue);
+        this.useLocalTime = tmp;
+    },
     setEditorValue: function(inValue) {
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
         if (!this.useLocalTime && v) {
-            v = new Date(v); // don't modify the source data as the called may still need it
-            v.setHours(v.getHours() + wm.timezoneOffset);
+            // don't modify the source data as the called may still need it
+            v = new Date(v);
+
+             /* See WM-4490 to understand this calculation. */
+            var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
+            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustSixHours,0,0);
         }
         this.inherited(arguments, [v]);
     },
@@ -180,6 +192,7 @@ dojo.declare("wm.Date", wm.Text, {
 // Time Editor
 //===========================================================================
 dojo.declare("wm.Time", wm.Date, {
+    useLocalTime: true,
     use24Time: false,
     timePattern: 'hh:mm a',
     useWMDropDown: false,
@@ -231,7 +244,11 @@ dojo.declare("wm.Time", wm.Date, {
     getEditorValue: function() {
         var d = wm.Text.prototype.getEditorValue.call(this);
         if (d) {
-            if (!this.useLocalTime) d.setHours(d.getHours() - wm.timezoneOffset);
+            if (!this.useLocalTime && (this.owner instanceof wm.DateTime === false)) {
+                 /* See WM-4490 to understand this calculation */
+                d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset,0);
+                //d.setHours(d.getHours() - wm.timezoneOffset);
+            }
             return d.getTime();
         }
         return this.makeEmptyValue();
@@ -348,7 +365,10 @@ dojo.declare("wm.DateTime", wm.Date, {
         return null;
     },
     setEditorValue: function(inValue) {
-        if (!this.editor) return;
+        if (!this.editor) {
+            this.dataValue = inValue;
+            return;
+        }
         var d;
         if (inValue instanceof Date) {
             d = new Date(inValue); // else our date calculations modify the input object which can cause ugly side effects
@@ -361,18 +381,29 @@ dojo.declare("wm.DateTime", wm.Date, {
                 timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
             });
         }
-        this.dateEditor.setDataValue(d);
+
         this.timeEditor.setDataValue(d);
+        this.dateEditor.setDataValue(d);
+
         this.updateReadonlyValue();
 
     },
+    setDisplayValue: function(inValue) {
+        var tmp = this.useLocalTime;
+        this.useLocalTime = true;
+        this.dateEditor.useLocalTime = true;
+        this.timeEditor.useLocalTime = true;
+        this.setEditorValue(inValue);
+        this.useLocalTime = tmp;
+        this.dateEditor.useLocalTime = tmp;
+        this.timeEditor.useLocalTime = tmp;
+    },
     getEditorValue: function(inValue) {
-        var d = new Date();
+        var d = new Date(0);
         if (this.dateMode == "Date" || this.dateMode == "Date and Time") {
-            var v = this.dateEditor.getDataValue(); // gets long
+            var v = this.dateEditor.getDataValue();
             if (v) {
-                var datetmp = new Date(v);
-                d.setFullYear(datetmp.getFullYear(), datetmp.getMonth(), datetmp.getDate());
+                d = new Date(v);
             } else {
                 return null;
             }
@@ -381,8 +412,12 @@ dojo.declare("wm.DateTime", wm.Date, {
             var v = this.timeEditor.getDataValue(); // gets long
             if (v) {
                 var datetmp = new Date(v);
-                d.setHours(datetmp.getHours(), datetmp.getMinutes(), datetmp.getSeconds());
-            } else {
+                if (this.useLocalTime) {
+                    d.setHours(datetmp.getHours(), datetmp.getMinutes(), datetmp.getSeconds());
+                } else {
+                    d.setHours(0, (datetmp.getHours() + d.getHours()) * 60 + d.getMinutes() +  datetmp.getMinutes(), datetmp.getSeconds());
+                }
+            } else if (this.useLocalTime) {
                 d.setHours(0, 0, 0);
             }
         }
@@ -410,11 +445,23 @@ dojo.declare("wm.DateTime", wm.Date, {
         }
         this.setDataValue(value);
     },
-
     _getReadonlyValue: function() {
-        return this.calcDisplayValue(this.getDataValue());
+        var d = this.getDataValue();
+        if (d) {
+            d = new Date(d);
+            if (!this.useLocalTime) {
+                /* See WM-4490 to understand this calculation */
+                var adjustSixHours = (this.dateMode == "Date") ? 360 : 0;
+
+                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset + adjustSixHours);
+            }
+        }
+        return this.calcDisplayValue(d);
     },
+
     getDisplayValue: function() {
+        var v = this.getDataValue();
+        if (v === null || v === undefined) return "";
         return this.calcDisplayValue(this.getDataValue());
     },
     setMaximum: function(inValue) {
@@ -424,6 +471,15 @@ dojo.declare("wm.DateTime", wm.Date, {
     setMinimum: function(inValue) {
         this.minimum = inValue;
         this.dateEditor.setMinimum(inValue);
+    },
+    getInvalid: function() {
+        return this.editor ? this.editor.getInvalid() : false;
+    },
+    connectEditor: function() {
+        this.disconnectEditor();
+        this.timeEditor.onChange = this.dateEditor.onChange = dojo.hitch(this, "changed");
+        this.timeEditor.onblur = this.dateEditor.onblur = dojo.hitch(this, "onblur");
+        this.timeEditor.onfocus = this.dateEditor.onfocus = dojo.hitch(this, "onfocus");
     }
 
     /* OLD EDITOR
@@ -580,7 +636,7 @@ dojo.declare("wm.form.TimeTextBox", dijit.form.TimeTextBox, {
                 });
             }
             if (this.dropDown && this.dropDown._popupWrapper && !this.dropDown._popupWrapper.style.display) return;
-            var phoneSize = app.appRoot.deviceSize == "tiny" || Number(app.appRoot.deviceSize) <= 450;
+            var phoneSize = Number(app.appRoot.deviceSize) <= 450;
             this.dropDown = wm.TimePicker.dialog;
             this.dropDown._cupdating = true;
             this.dropDown.okButton.setCaption("OK"); // TODO: Localize

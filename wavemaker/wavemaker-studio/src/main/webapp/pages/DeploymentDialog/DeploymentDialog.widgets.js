@@ -80,20 +80,20 @@ DeploymentDialog.widgets = {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your Cloud Foundry Account Info","padding":"4","width":"100%"}, {}],
-		loginDialogTargetEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
-		loginDialogUserEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
-		loginDialogPasswordEditor: ["wm.Text", {captionSize: "150px", "emptyValue":"emptyString", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}]
+		loginDialogTargetEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Cloud Foundry target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
+		loginDialogUserEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}],
+		loginDialogPasswordEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cfLogonOkButton.click"}]
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup", width: "100px", height: "100%"}],
+	    cloudFoundryRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup/cfwavemaker", width: "100px", height: "100%"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cfLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cfLoginCancelClick"}],
 	    cfLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cfLoginOkClick"}, {
 				binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"expression":"(${loginDialogTargetEditor.dataValue} === \"\" || ${loginDialogUserEditor.dataValue} === \"\" || ${loginDialogPasswordEditor.dataValue} === \"\")","targetProperty":"disabled"}, {}]
 				}]
-			}]	    
+			}]
 	}]
     }],
     layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
@@ -127,10 +127,10 @@ DeploymentDialog.widgets = {
 				    tcPortEditor: ["wm.Text", {"border":"0","caption":"Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"80","width":"100%", required: true}, {}],
 				    tcNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
 				    tcUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://localhost:80/","readonly":true,"width":"100%"}, {}, {
-					binding: ["wm.Binding", {}, {}, {
-					    wire: ["wm.Wire", {"expression":"\"http://\" + ${tcHostEditor.dataValue} + \":\" + ${tcPortEditor.dataValue} + \"/\" + ${tcNameEditor.dataValue}","source":false,"targetProperty":"dataValue"}, {}]
-					}]
-				    }],
+						binding: ["wm.Binding", {}, {}, {
+						    wire: ["wm.Wire", {"expression":"\"http://\" + ${tcHostEditor.dataValue} + \":\" + ${tcPortEditor.dataValue} + \"/\" + ${tcNameEditor.dataValue}","source":false,"targetProperty":"dataValue"}, {}]
+						}]
+					    }],
 				    tcUserEditor: ["wm.Text", {"border":"0","caption":"User name","captionAlign":"left","captionSize":"140px","displayValue":"","width":"100%", required: true}, {}],
 				    tcPasswordEditor: ["wm.Text", {"border":"0","caption":"Password","captionAlign":"left","captionSize":"140px","displayValue":"","width":"100%", required: true, password: true}, {}]
 				}],
@@ -141,10 +141,7 @@ DeploymentDialog.widgets = {
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
 					cfUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%", required:1}, {}, {
-					binding: ["wm.Binding", {}, {}, {
-                        wire: ["wm.Wire", {"expression":"\"http://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\")","source":false,"targetProperty":"dataValue"}, {}]
-					    /*wire: ["wm.Wire", {"expression":"${cfHostEditor.dataValue}.replace(/\:.*$/,\"\") + \"://\" + ${cfNameEditor.dataValue} + \".\" + ${cfHostEditor.dataValue}.replace(/^.*?api\\./,\"\")","source":false,"targetProperty":"dataValue"}, {}]*/
-					}]
+
 				    }],
 					cfGetUrlbutton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"hint":"\"Generate a URL using the project name and a random number\"", "caption":"Generate URL","margin":"4,4,4,8", "width": "112px"}, {"onclick":"cfGetUrlbuttonClick"}]
 					}]
@@ -172,7 +169,7 @@ DeploymentDialog.widgets = {
 		    wire: ["wm.Wire", {"source":"editPanel.invalid","targetProperty":"disabled"}, {}]
 		}]
 	    }],
-	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage CloudFoundry Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudFoundryButtonClick"}],
+	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage Cloud Foundry Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudFoundryButtonClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {

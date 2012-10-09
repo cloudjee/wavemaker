@@ -514,18 +514,20 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
-.wm_graphite div.wmlist-item {
-font-family: Arial;
+.wm_graphite div.dojoxGrid, .wm_graphite .wmlist {
 font-size: 10pt;
+}
+.wm_graphite .GridListStyle div.wmlist-item {
+font-family: Arial;
 color: #000000;
 font-weight: normal;
 background-color: #dddddd;
 }
-.wm_graphite .wmlist-item.Odd {
+.wm_graphite .GridListStyle .wmlist-item.Odd {
 color: #000000;
 background-color: #eeeeee;
 }
-.wm_graphite .wmlist-cell {
+.wm_graphite .GridListStyle .wmlist-cell {
 border-style: solid;
 border-color: #aaaaaa;
 border-left-width: 0px;
@@ -562,6 +564,7 @@ color: #FFFFFF;
 .wm_graphite .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
 background-color: #555555 !important;
 color: #ffffff;
+font-family: Arial;
 }
 .wm_graphite .MobileListStyle div.wmlist-item.wmlist-item-selected,
 .wm_graphite .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,

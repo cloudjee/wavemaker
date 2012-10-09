@@ -10,9 +10,6 @@ dojo.declare("Main", wm.Page, {
   LoginServiceVariableResult: function(inSender, inDeprecated) {
      var successString = 'SUCCESS';
      inSender.getData().dataValue.substring(0,successString.length) === successString ? this.LoginSuccess() : this.LoginError(inSender, inDeprecated);
-    //  this.progressBarTimer.stopTimer();
-    //  this._progressBarStopAt = this.progressBar1.getProgress();
-    //  this.finishProgressBarTimer.startTimer();
     },    
   LoginSuccess: function(inSender, inDeprecated) {
       this.endWait();
@@ -69,7 +66,7 @@ dojo.declare("Main", wm.Page, {
 
   LaunchStudioserviceVariableError: function(inSender, inError) {
       this.endWait();
-      var error = inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue");
+      var error = (inSender.getDataSet().query({name:"ERROR"}).getItem(0) === false) ? inError.message : inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue") 
       this.labelError.setShowing(true);
       this.labelError.setCaption(inError.toString() != "Error" && error.length > 0 ? error : "Unable to deploy Studio to your account");
       this.loginLayer.activate();      

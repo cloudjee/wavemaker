@@ -41,19 +41,25 @@
     }
 
     .wm_template .wmtogglebuttonpanel .wmbutton:last-child {
-	border-radius-topright: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
-	border-radius-bottomright: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topright: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomright: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
 
 	-webkit-border-top-right-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
 	-webkit-border-bottom-right-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+
+    border-top-right-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+    border-bottom-right-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
     }
 
     .wm_template .wmtogglebuttonpanel .wmbutton {
-	border-radius-topright: 0px !important;
-	border-radius-bottomright: 0px !important;
+	-moz-border-radius-topright: 0px !important;
+	-moz-border-radius-bottomright: 0px !important;
 
 	-webkit-border-top-right-radius: 0px !important;
 	-webkit-border-bottom-right-radius: 0px !important;
+
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
     }
 
     .wm_template .wmtogglebuttonpanel,

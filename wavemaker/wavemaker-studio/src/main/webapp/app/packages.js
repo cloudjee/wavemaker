@@ -31,7 +31,7 @@
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButton, {}, false],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button_Panel, "wm.ToggleButtonPanel", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButtonPanel, {}, true],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.Buttons.BusyButton", "Studio_paletteImageList_4", bundlePackage.descBusyButton, {}, true],
-
+[  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.MobileBackButton, "wm.MobileIconButton", "wm.base.widget.Buttons.Button", "Studio_paletteImageList_4", bundlePackage.descMobileIconButton, {direction: "back"}, true],
 
 
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "Studio_paletteImageList_7", bundlePackage.descLabel, {}, false],
@@ -70,11 +70,11 @@
 [ bundlePackage.FormsGroup, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm","Studio_paletteImageList_7", bundlePackage.descSimpleForm,{}, true],
 [ bundlePackage.FormsGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
 
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "DataForm", "wm.DataForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDataForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "DataForm", "wm.DataForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDataForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, true],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, true],
 
 
 [bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
@@ -157,7 +157,6 @@
 [ bundlePackage.Web_Content, bundlePackage.FacebookActivityFeed, "wm.gadget.FacebookActivityFeed", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descFaceBookActivityWidget, {}, true],
 [ bundlePackage.Web_Content, "Twitter Follow Button", "wm.gadget.TwitterFollowButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterFollowWidget, {}, true],
 [ bundlePackage.Web_Content, "Twitter Tweet Button", "wm.gadget.TwitterTweetButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterTweetWidget, {}, true],
-[ bundlePackage.Web_Content, "Twitter List", "wm.gadget.TwitterList", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterListWidget, {}, true],
 [ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", bundlePackage.descFeedList, {}, false],
 [ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "Studio_paletteImageList_26", bundlePackage.descTwitterFeed, {}, false],
 

@@ -1,17 +1,16 @@
 /*
- *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
+* Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* http://www.apache.org/licenses/LICENSE-2.0
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 dojo.provide("wm.base.widget.Label");
 dojo.require("wm.base.widget.Formatters");
 
@@ -29,7 +28,7 @@ dojo.declare("wm.Label", wm.Control, {
         dojo.addClass(this.domNode, "wmlabel");
         this.inherited(arguments);
         this.connect(this.domNode, "onclick", this, "_onclick");
-        // this.connectEvents(this.domNode, ["dblclick"]);  WAVEMAKER: Uncomment this if we find a good use for this...
+        // this.connectEvents(this.domNode, ["dblclick"]); WAVEMAKER: Uncomment this if we find a good use for this...
     },
     build: function() {
         this.inherited(arguments);
@@ -38,32 +37,33 @@ dojo.declare("wm.Label", wm.Control, {
         this.domNode.appendChild(this.sizeNode);
     },
     _onclick: function(inEvent) {
+        if (this._disabled) return;
         var pseudoEvt = dojo.isIE && inEvent ? {
-                    clientX: inEvent.clientX,
-                    clientY: inEvent.clientY,
-                    offsetX: inEvent.offsetX,
-                    offsetY: inEvent.offsetY,
-                    screenX: inEvent.screenX,
-                    screenY: inEvent.screenY,
-                    pageX: inEvent.pageX,
-                    pageY: inEvent.pageY,
-                    x: inEvent.x,
-                    y: inEvent.y,
-                    target: inEvent.target,
-                    currentTarget: inEvent.currentTarget,
-                    "type": inEvent.type
-                } : inEvent || {};
-        window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);        
+            clientX: inEvent.clientX,
+            clientY: inEvent.clientY,
+            offsetX: inEvent.offsetX,
+            offsetY: inEvent.offsetY,
+            screenX: inEvent.screenX,
+            screenY: inEvent.screenY,
+            pageX: inEvent.pageX,
+            pageY: inEvent.pageY,
+            x: inEvent.x,
+            y: inEvent.y,
+            target: inEvent.target,
+            currentTarget: inEvent.currentTarget,
+            "type": inEvent.type
+        } : inEvent || {};
+        window.setTimeout(dojo.hitch(this, "click", pseudoEvt), 5);
     },
     click: function(e) {
         this.onclick(e);
     },
     /* Uncomment this if/when we find a good use for it
-    dblclick: function(e) {
-        this.ondblclick(e);
-    },
-    ondblclick: function(inEvent) {
-    }, */
+dblclick: function(e) {
+this.ondblclick(e);
+},
+ondblclick: function(inEvent) {
+}, */
     postInit: function() {
         this.inherited(arguments);
         this.caption = this.label || this.content || this.caption;
@@ -74,31 +74,27 @@ dojo.declare("wm.Label", wm.Control, {
         this.valueChanged("caption", this.caption);
         this.valueChanged("link", this.link);
         if (this.onclick != this.constructor.prototype.onclick) {
-        dojo.addClass(this.domNode, "onClickEvent");
+            dojo.addClass(this.domNode, "onClickEvent");
         }
     },
     renderLabel: function() {
-        if (this._loading)
-            return;
+        if (this._loading) return;
 
         var c = this.caption;
         if (this.$.format) {
-        c = this.$.format.format(c);
+            c = this.$.format.format(c);
         } else if (this.display && dojo.isFunction(this.owner[this.display])) {
-        try {
-            c = this.owner[this.display](this, c);
-        } catch(e) {
-            console.error("Formatter error in " + this.toString() + ": " + e);
-        }
+            try {
+                c = this.owner[this.display](this, c);
+            } catch (e) {
+                console.error("Formatter error in " + this.toString() + ": " + e);
+            }
         }
 
-        if (this.link)
-            c = ['<a ', (this.link.indexOf("#") == -1 && this.link.indexOf("javascript") == -1)? 'target="_blank" ' : '', 'href="', this.link, '">', c, '</a>'].join('');
-        if (this.domNode.innerHTML != c)
-            this.sizeNode.innerHTML = c;
+        if (this.link) c = ['<a ', (this.link.indexOf("#") == -1 && this.link.indexOf("javascript") == -1) ? 'target="_blank" ' : '', 'href="', this.link, '">', c, '</a>'].join('');
+        if (this.domNode.innerHTML != c) this.sizeNode.innerHTML = c;
         var whitespace = (this.singleLine || this.autoSizeWidth) ? "nowrap" : "normal";
-        if (this.domNode.style.whiteSpace != whitespace)
-                this.domNode.style.whiteSpace = whitespace;
+        if (this.domNode.style.whiteSpace != whitespace) this.domNode.style.whiteSpace = whitespace;
         var align = (this.align == "none") ? "" : this.align;
         if (this._align != align && (!this.styles || !this.styles.textAlign)) {
             this.domNode.style.textAlign = align;
@@ -109,16 +105,17 @@ dojo.declare("wm.Label", wm.Control, {
     },
     setCaption: function(inCaption) {
         if (inCaption == undefined) inCaption = "";
-            var innerHTML = this.sizeNode.innerHTML;
-        if (inCaption && dojo.isArray(inCaption))
-        inCaption = inCaption.join(', ');
-        else if (inCaption && dojo.isObject(inCaption))
-        inCaption = "";
+        var innerHTML = this.sizeNode.innerHTML;
+        if (inCaption && dojo.isArray(inCaption)) {
+            inCaption = inCaption.join(', ');
+        } else if (inCaption && dojo.isObject(inCaption) && (!this.$.format || this.$.format instanceof wm.ArrayFormatter === false)) {
+            inCaption = "";
+        }
         this.caption = inCaption;
         this.renderLabel();
-            if ( innerHTML != this.sizeNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
-        this.scheduleAutoSize();
-            }
+        if (innerHTML != this.sizeNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
+            this.scheduleAutoSize();
+        }
 
         /* Make it bindable */
         this.valueChanged("caption", inCaption);
@@ -126,80 +123,80 @@ dojo.declare("wm.Label", wm.Control, {
 
     scheduleAutoSize: function() {
         this._needsAutoSize = true;
-        return wm.job(this.getRuntimeId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,false);}));
+        return wm.job(this.getRuntimeId() + ": doAutoSize", 10, dojo.hitch(this, function() {
+            this.doAutoSize(true, false);
+        }));
     },
-        doAutoSize: function(setSize, force) {
-            if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
+    doAutoSize: function(setSize, force) {
+        if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
         if (!force && !this._needsAutoSize) return;
 
         if (this.isAncestorHidden()) {
-        return;
+            return;
         }
 
-            this._doingAutoSize = true;
+        this._doingAutoSize = true;
         this._needsAutoSize = false;
 
         var sizeNode = this.sizeNode;
         var contentHeight = sizeNode.offsetHeight;
         var contentWidth = sizeNode.offsetWidth;
         if (this.autoSizeHeight) {
-        var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
-        if (newHeight < this.minHeight) {
-            newHeight = this.minHeight;
-        }
+            var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
+            if (newHeight < this.minHeight) {
+                newHeight = this.minHeight;
+            }
 
-        /* Account for space needed for scrollbars */
-        if (contentWidth > this.bounds.w) {
-            newHeight += 17;
-        }
+            /* Account for space needed for scrollbars */
+            if (contentWidth > this.bounds.w) {
+                newHeight += 17;
+            }
             this.bounds.h = newHeight;
             this.height = newHeight + "px";
-/*
-        if (setSize) {
-            this.setHeight(newHeight + "px");
-        } else {
-            this.bounds.h = newHeight;
-            this.height = newHeight + "px";
-        }
-        */
+            /*
+if (setSize) {
+this.setHeight(newHeight + "px");
+} else {
+this.bounds.h = newHeight;
+this.height = newHeight + "px";
+}
+*/
 
-        var p = this.parent;
-        while (p.parent && (p.autoSizeHeight || p.fitToContentHeight)) {
-            p = p.parent;
-        }
-        p.delayedReflow();
+            var p = this.parent;
+            while (p.parent && (p.autoSizeHeight || p.fitToContentHeight)) {
+                p = p.parent;
+            }
+            p.delayedReflow();
 
         }
         if (this.autoSizeWidth) {
 
-        var newWidth = contentWidth + this.padBorderMargin.l + this.padBorderMargin.r;
-        /* Account for space needed for scrollbars */
-        if (contentHeight > this.bounds.h) {
-            newWidth += 17;
-        }
+            var newWidth = contentWidth + this.padBorderMargin.l + this.padBorderMargin.r; /* Account for space needed for scrollbars */
+            if (contentHeight > this.bounds.h) {
+                newWidth += 17;
+            }
             this.bounds.w = newWidth;
             this.width = newWidth + "px";
-/*
-        if (setSize) {
-            this.setWidth(newWidth + "px");
-        } else {
-            this.bounds.w = newWidth;
-            this.width = newWidth + "px";
-        }
-        */
-        var p = this.parent;
-        while (p.parent && (p.autoSizeWidth || p.fitToContentWidth)) {
-            p = p.parent;
-        }
-        p.delayedReflow();
+            /*
+if (setSize) {
+this.setWidth(newWidth + "px");
+} else {
+this.bounds.w = newWidth;
+this.width = newWidth + "px";
+}
+*/
+            var p = this.parent;
+            while (p.parent && (p.autoSizeWidth || p.fitToContentWidth)) {
+                p = p.parent;
+            }
+            p.delayedReflow();
         }
 
 
         // the line underneath updates panel's width property. Therefore only required for studio.
         if (this.isDesignLoaded() && dojo.indexOf(studio.designer.selected, this) != -1)
             studio.inspector.reinspect();
-
-            this._doingAutoSize = false;
+        this._doingAutoSize = false;
     },
     setLink: function(inLink) {
         var oldLink = this.link;
@@ -210,30 +207,28 @@ dojo.declare("wm.Label", wm.Control, {
         this.valueChanged("link", inLink);
     },
     setSingleLine: function(inSingleLine) {
-            var oldSingleLine = this.singleLine;
+        var oldSingleLine = this.singleLine;
         this.singleLine = inSingleLine;
-            if (oldSingleLine != inSingleLine)
-                this.domNode.style.lineHeight = (inSingleLine) ? this.bounds.h + "px" : "normal";
+        if (oldSingleLine != inSingleLine) this.domNode.style.lineHeight = (inSingleLine) ? this.bounds.h + "px" : "normal";
         this.renderLabel();
-        if (inSingleLine && this.autoSizeHeight)
-        this.autoSizeHeight = false;
+        if (inSingleLine && this.autoSizeHeight) this.autoSizeHeight = false;
 
         if (inSingleLine != oldSingleLine && (this.autoSizeHeight || this.autoSizeWidth)) {
-        this.scheduleAutoSize();
-            }
+            this.scheduleAutoSize();
+        }
     },
     setAlign: function(inAlign) {
         this.align = inAlign;
-            this.renderLabel();
+        this.renderLabel();
     },
     formatChanged: function() {
         this.renderLabel();
     },
-    onclick: function(inEvent) {
-    },
+    onclick: function(inEvent) {},
 
     toHtml: function() {
-    return "<div style='text-align:" + (this.align || "left") + ";' id='" + this.domNode.id + "'>" + (this.sizeNode.innerHTML) + "</div>";
+        var style = this.toHtmlStyles();
+        return "<div " + style + " style='text-align:" + (this.align || "left") + ";' id='" + this.domNode.id + "'>" + (this.sizeNode.innerHTML) + "</div>";
     }
 });
 

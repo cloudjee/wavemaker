@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<!-- - Server application context definition for "springapp" DispatcherServlet. -->
+<beans>
+  <import resource="classpath:**/*.spring.xml"/>
+  <import resource="classpath:springapp.xml"/>
+  <import resource="project-config.xml"/>
+  <import resource="project-services.xml"/>
+  <import resource="project-managers.xml"/>
+  <import resource="project-security.xml"/>
+  <import resource="project-spring.xml"/>
+  <import resource="project-partner-beans.xml"/>
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" id="urlMapping">
+    <property name="mappings">
+      <value>
+                /**/*.json=agJSONController
+				/**/*.download=agFileDownloadController
+                                /**/*.flashUploader=agFlashFileUploadController
+				/**/*.upload=agFileUploadController
+				/modules/**=wmModuleController
+				/lib/build/Gzipped/*=fileController
+				/lib/build/themes/**=fileController
+				/lib/wm/base/widget/themes/**=fileController
+				/lib/dojo/**=fileController
+				/lib/runtimeLoader.js=fileController
+				/lib/boot/boot.js=fileController
+				/resources/images/**=fileController
+				/resources/gzipped/**=fileController
+				/config.js=fileController</value>
+    </property>
+    <property name="alwaysUseFullPath" value="true"/>
+  </bean>
+</beans>

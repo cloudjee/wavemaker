@@ -1,0 +1,29 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.FilmActor" table="film_actor" dynamic-insert="false" dynamic-update="false">
+        <composite-id name="id" class="com.sampledatadb.data.FilmActorId">
+            <key-property name="actorId" type="integer">
+                <column name="ACTOR_ID"/>
+            </key-property>
+            <key-property name="filmId" type="integer">
+                <column name="FILM_ID"/>
+            </key-property>
+        </composite-id>
+        <many-to-one
+            name="actor"
+            class="com.sampledatadb.data.Actor"
+            update="false"
+            insert="false"
+            fetch="select">
+            <column name="ACTOR_ID" not-null="true"/>
+        </many-to-one>
+        <many-to-one
+            name="film"
+            class="com.sampledatadb.data.Film"
+            update="false"
+            insert="false"
+            fetch="select">
+            <column name="FILM_ID" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

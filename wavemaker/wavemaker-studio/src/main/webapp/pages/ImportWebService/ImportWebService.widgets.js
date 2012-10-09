@@ -19,7 +19,7 @@ ImportWebService.widgets = {
 			panel: ["wm.Panel", {height: "100%", border: "0"}, {}, {
 				typePanel: ["wm.Panel", {height: "30px", border: "0", padding: "4,0,4,0"}, {}, {
 					panel4: ["wm.Panel", {height: "24px", border: "0", layoutKind: "left-to-right", contentAlign: "center", horizontalAlign: "center"}, {}, {
-						typeInput: ["wm.SelectMenu", {displayField: "dataValue", dataField: "dataValue", "caption":"Select the type of web service to import:", "captionSize":"300px", "dataValue":undefined,"displayValue":"","helpText":"SOAP - Import a SOAP Service WSDL file <BR>WADL - REST services that have a WADL or WSDL file <BR>BUILD-A-Service - REST services that return XML<BR>XHR/JSON - REST Services that return JSON and direct server calls<BR>Feed - RSS Feeds","width":"470px"}, {"onchange":"typeInputChange"}]
+						typeInput: ["wm.SelectMenu", {displayField: "dataValue", dataField: "dataValue", "caption":"Select the type of web service to import:", "captionSize":"300px", "dataValue":undefined,"displayValue":"","helpText":"SOAP - Import a SOAP Service WSDL file <BR>BUILD-A-Service - REST services that return XML<BR>XHR/JSON - REST Services that return JSON and direct server calls<BR>Feed - RSS Feeds","width":"470px"}, {"onchange":"typeInputChange"}]
 					}]
 				}],
 				layersSpacerPanel: ["wm.Panel", {_classes: {domNode: ["wm_Padding_8px"]}, height: "100%", border: "0"}, {}, {

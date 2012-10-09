@@ -1,0 +1,23 @@
+{
+	"methods": [{
+		"name": "sampleJavaOperation",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
+		"name": "waitOperation",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
+		"name": "waiting",
+		"operationType": null,
+		"parameters": [{
+			"name": "n",
+			"type": "int"
+		}],
+		"returnType": null
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "demohelper.json"
+}

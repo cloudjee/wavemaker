@@ -204,7 +204,7 @@ body .StudioTabs .wmtablayers-tab:active:not(.wmtablayers-selected) {
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
     position: relative;
-    top: 1px; /* Preferred by firefox; maybe IE as well? */
+    top: 2px; /* Preferred by firefox; maybe IE as well? */
 }
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
@@ -216,6 +216,7 @@ body .StudioTabs .wmtablayers-tab:active:not(.wmtablayers-selected) {
 }
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .dj_webkit .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+    top: 1px;
 }
 /*
 .StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer .StudioTabs.StudioDarkLayers > div > .wmlayer,
@@ -1837,7 +1838,7 @@ color: rgb(0,270,0);
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
     border-radius: 4px;
-
+}
 .Studio .AppToolTip .StudioWarningIcon {
     float: left;
     padding-right: 20px;
@@ -1845,10 +1846,25 @@ color: rgb(0,270,0);
     margin-top: 16px;
 }
 
+.Studio .AppToolTip dl {
+    text-align: left !important;
+}
 
-
+.Studio .AppToolTip dt {
+    font-weight: bold;
+}
+.Studio .AppToolTip dd {
+    margin: 5px 0px 5px 10px;
+}
 /* Waiting Dialog */
 #studio_dialog .StudioWaitingNotice {
     font-size: 0.8Em;
     margin-top: 8px;
+}
+
+/* Candidate for theme.css, but as a last minute fix, did not want to test for all possible use cases */
+.dijitMenuPopup {
+    max-height: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

@@ -15,16 +15,17 @@
 dojo.provide("wm.base.widget.Formatters");
 
 // FIXME: need formatter registry
-wm.formatters = [ 
-    "Number", 
-    "Date", 
-    "Time", 
-    "DateTime", 
-    "Currency", 
+wm.formatters = [
+    "Number",
+    "Date",
+    "Time",
+    "DateTime",
+    "Currency",
+    "Array",
     //"Link",
-    //"RegularExpression", 
+    //"RegularExpression",
     //"Evaluation",
-    //"Image", 
+    //"Image",
     "Percent"
 ];
 
@@ -89,6 +90,30 @@ dojo.declare("wm.CurrencyFormatter", wm.NumberFormatter, {
 	}
 });
 
+dojo.declare("wm.ArrayFormatter", wm.DataFormatter, {
+	separator: ",",
+	joinField: "dataValue",
+
+	// NB: called in 'cell' context
+	format: function(inDatum) {
+		var str = "";
+		if (inDatum) {
+			if (inDatum instanceof wm.Variable) {
+				inDatum.forEach(dojo.hitch(this, function(item) {
+					if (str) str += this.separator + " ";
+					str += item.getValue(this.joinField);
+				}));
+			} else {
+				dojo.forEach(inDatum, function(item) {
+					if (str) str += this.separator + " ";
+					if (item instanceof wm.Variable) str += item.getValue(this.joinField);
+					else str += item[this.joinField];
+				}, this);
+			}
+		}
+		return str;
+	}
+});
 
 dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 	useLocalTime: true,
@@ -107,8 +132,11 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 			locale: this.locale
 		}
 		var d = new Date(inDatum);
-		if (!this.useLocalTime)
-		    d.setHours(d.getHours() + wm.timezoneOffset);
+		if (!this.useLocalTime) {
+		    /* See WM-4490 to understand this calculation */
+            var adjustSixHours = this._selector == "date"  ? 360 : 0;
+            d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset + adjustSixHours);
+        }
 		if (isNaN(d.getTime()))
 			d = new Date(Number(inDatum));
 		return (inDatum == undefined) || isNaN(d.getTime()) ? '-' : dojo.date.locale.format(d, opts);
@@ -157,8 +185,8 @@ wm.Object.extendSchema(wm.DataFormatter, {
 });
 
 wm.Object.extendSchema(wm.DateTimeFormatter, {
-    formatLength: {options: ["short","medium","long","full"]},
-    useLocalTime: { ignore: 1 }
+    formatLength: {options: ["short","medium","long","full"]}/*,
+    useLocalTime: { ignore: 1 }*/
 });
 
 wm.Object.extendSchema(wm.DateFormatter, {

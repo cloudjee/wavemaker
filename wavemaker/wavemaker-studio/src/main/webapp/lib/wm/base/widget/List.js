@@ -89,11 +89,13 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {
+    scrollToTopOnDataChange: false,
     _regenerateOnDeviceChange: 1,
     _scrollTop: 0,
     styleAsGrid: true,
     rightNavArrow: false,
     selectFirstRow: false,
+    scrollToSelection: false,
     renderVisibleRowsOnly: true,
     autoSizeHeight: false,
     nextRowId: 0,
@@ -139,11 +141,11 @@ dojo.declare("wm.List", wm.VirtualList, {
         var totalWidth = 0;
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
-            this._columnsHash[column.field] = column;
+            this._columnsHash[column.field || column.id] = column;
             if (!column.width) column.width = "100%";
             if (column.width.match(/\%/)) totalWidth += Number(column.width);
             if (column.field == "PHONE COLUMN" && !this._isDesignLoaded) {
-                column.expression = column.expression.replace(/\$\{runtimeId\}/g, this.getRuntimeId()).replace(/wm\.DojoGrid\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
+                column.expression = column.expression.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
             }
         }
         if (!this.isDesignLoaded() && dojo.isIE <= 8) {
@@ -242,13 +244,15 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     init: function() {
+        this.inherited(arguments);
         this.setSelectionMode(this.selectionMode);
         if (this.noHeader) { // another grid property
             this.headerVisible = false;
         }
-        this.inherited(arguments);
         if (!this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "MobileListStyle") == -1)) {
-             this.addUserClass("MobileListStyle");
+            this.addUserClass("MobileListStyle");
+        } else if (this.styleAsGrid && (!this._classes || !this._classes.domNode || dojo.indexOf(this._classes.domNode, "GridListStyle") == -1)) {
+            this.addUserClass("GridListStyle");
         }
         var spacerNodeTop = this.spacerNodeTop = document.createElement('div');
         spacerNodeTop.className = "wmlist-spacer";
@@ -375,6 +379,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.listNode.style.MozTransform = "translate(0,-" + top + "px)";
             } else if (dojo.isOpera) {
                 this.listNode.style.OTransform = "translate(0,-" + top + "px)";
+            } else if (dojo.isIE == 8) {
+                this.listNodeWrapper.scrollTop = top;
+                console.log(this.listNodeWrapper.scrollTop);
             } else if (dojo.isIE) {
                 this.listNode.style.MsTransform = "translate(0,-" + top + "px)";
             }
@@ -386,6 +393,20 @@ dojo.declare("wm.List", wm.VirtualList, {
         } else {
             this.listNode.scrollTop = top ;
         }
+    },
+    scrollToRow: function(inIndex) {
+        var item = this.getItem(inIndex);
+        if (!item) {
+          /* TODO: This is terrible: this will render all 10,000 items if the developer calls select().  Fix this... */
+            this.renderVisibleRowsOnly = false;
+            this._render();
+            this.renderVisibleRowsOnly = true;
+            item = this.getItem(inIndex);
+        }
+        var top = item.domNode.offsetTop;
+        this._inScroll = true;
+        this.setScrollTop(Math.max(0,top-15));
+        this._inScroll = false;
     },
     createSelectedItem: function() {
         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
@@ -458,17 +479,26 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._dataFields = [];
 
             var useMobileColumn = false;
-            var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
-            if (isMobile) {
+            var isDesignLoaded = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page))
+            var isPhone =  isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+            var isTablet = isDesignLoaded ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
+            var isAllPhoneCol = true;
+            if (isPhone || isTablet) {
                 for (var i = 0; i < this.columns.length; i++) {
                     var c = this.columns[i];
                     if (c.mobileColumn && !c.controller) {
                         useMobileColumn = true;
-                        break;
+                    }
+                    if (!c.controller && c.show) {
+                        isAllPhoneCol = false;
                     }
                 }
             }
-            this._useMobileColumn = useMobileColumn;
+            if (useMobileColumn && (isAllPhoneCol || isPhone || this.desktopWidthExcedesBounds())) {
+                this._useMobileColumn = useMobileColumn;
+            } else {
+                this._useMobileColumn = useMobileColumn = false;
+            }
             /*
         if (useMobileColumn && !this._isDesignLoaded) {
             this.headerVisible = false;
@@ -478,7 +508,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                 var c = this.columns[i];
                 var show = useMobileColumn && c.mobileColumn || !useMobileColumn && c.show || c.controller;
                 if (show) {
-                    this._dataFields.push(this.columns[i].field);
+                    this._dataFields.push(this.columns[i].field || this.columns[i].id);
                 }
             }
         } else {
@@ -518,6 +548,23 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.trimDataSetObjectFields(d);
             this._dataFields = d;
         }
+    },
+    desktopWidthExcedesBounds: function() {
+        var width = 20; // give it a little buffer so we don't jump to phone design just because we're a couple pixels off
+        var colCount = 0;
+        dojo.forEach(this.columns, function(column) {
+            if (column.show) {
+                colCount++;
+                var w = String(column.width);
+                if (w.indexOf("%") != -1) {
+                    width += 80;
+                } else {
+                    var value = parseInt(w);
+                    if (value) width += value;
+                }
+            }
+        });
+        return (width > this.bounds.w) && colCount > 1;
     },
     getDataSetObjectFields: function() {
         var o = {};
@@ -590,7 +637,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     //
     canSetDataSet: function(inDataSet) {
-        return Boolean(inDataSet && inDataSet.isList);
+        return Boolean(inDataSet);
     },
     // virtual binding target
     setDataSet: function(inDataSet) {
@@ -611,13 +658,16 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.scrollDownAddItems();
                 delete this._paging;
             } else {
-                 if (this._isDesignLoaded && this.columns && this.columns.length && inDataSet && inDataSet.type && (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type)) {
+                 if (this._isDesignLoaded && this.columns && this.columns.length && inDataSet && inDataSet.type) {
                      if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
-                     this._typeChangedConnect = this.connect(this.dataSet, "typeChanged", this, function() {
+                     this._typeChangedConnect = this.connect(inDataSet, "typeChanged", this, function() {
                          this.updateColumnData(true); // if the type changes for this.variable, reapply this variable's new type info
+
                          this._render();
                      });
-                     this.updateColumnData(true);
+                    if (!oldDataSet || !oldDataSet.type || oldDataSet.type == inDataSet.type) {
+                        this.updateColumnData(true);
+                    }
                  }
                 this.setSelectedItemType(t);
                 this.dataSetToSelectedItem(inDataSet);
@@ -672,27 +722,14 @@ dojo.declare("wm.List", wm.VirtualList, {
             this._doingAutoSize = false;
         }
     },
-    selectByIndex: function(inIndex) {
-        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && inIndex > 5 && !this._isDesignLoaded) {
-            var renderHiddenGridWas = this._renderHiddenGrid;
-            this._renderHiddenGrid = true;
-            if (this.renderVisibleRowsOnly) {
-                this.renderVisibleRowsOnly = false;
-                this._render();
-                this.renderVisibleRowsOnly = true;
-            } else {
-                this._render();
-            }
-            this._renderHiddenGrid = renderHiddenGridWas;
-        }
-        this.inherited(arguments);
-    },
+
     _onShowParent: function() {
         // if spacerNodeTop has height, then calling _render insures that its height doesn't excede the current dataSet
         // TODO: Support a property for always going back to scrollTop = 0 any time its shown
         if (this._renderDojoObjSkipped && !this._headerRendered || this.spacerNodeTop.clientHeight) {
             wm.onidle(this, "_render");
         }
+        if (this.isNavigationMenu) this.deselectAll();
     },
     setShowing: function(inShowing) {
         var wasShowing = this.showing;
@@ -796,6 +833,11 @@ dojo.declare("wm.List", wm.VirtualList, {
             var selectedData = this.selectedItem.getData();
         }
         this.clear(true);
+        if (this.scrollToTopOnDataChange) {
+            this._inScroll = true;
+            this.setScrollTop(0);
+            delete this._inScroll;
+        }
         this._data = inData;
         if (!this.dataFields) this._setDataFields();
         this.updateBuilder();
@@ -809,7 +851,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
         this._scrollDirection = "down";
         if (this.renderVisibleRowsOnly && !this._isDesignLoaded) {
-            if (!this.isAncestorHidden() && !this._loading) {
+            if (!this.isAncestorHidden() && this.getListNodeHeight() > 0 && !this._loading) {
                 this.scrollDownAddItems(0);
                 this.avgHeight = this.getAverageItemHeight();
                 this.updateBottomSpacerHeight();
@@ -925,7 +967,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return parent.childNodes[1];
     },
     onStyleRow: function(inRow /* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */ , rowData) {},
-
+    _onStyleRowBeforeStart: 1,
     addItem: function(inContent, inIndex, optionalDomNode) {
         var item = this.createItem(inContent, optionalDomNode);
 
@@ -1083,7 +1125,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     getAverageItemHeight: function() {
-        return this.avgHeight;
+        return this.avgHeight || 20;
     },
     blockScrolling: function() {
         this.listNodeWrapper.scrollTop = 0;
@@ -1238,8 +1280,10 @@ dojo.declare("wm.List", wm.VirtualList, {
                 this.dataSet.setNextPage();
                 //});
                 this._paging = "inc";
-            } else if (this.onScrollToBottom()) {
-                if (this.dataSet._requester) {
+            } else {
+                this.onScrollToBottom();
+                var svar = !this.dataSet || this.dataSet instanceof wm.ServiceVariable ? this.dataSet : this.dataSet.isAncestorInstanceOf(wm.ServiceVariable);
+                if (svar && svar._requester) {
                     this._paging = "inc";
                 }
             }
@@ -1388,7 +1432,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
         var dateFields = [];
         dojo.forEach(this.columns, function(col) {
-            if (col.displayType == 'Date') dateFields.push(col.field);
+            if (col.displayType == 'Date') dateFields.push(col.field || col.id);
         });
 
 
@@ -1469,6 +1513,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                     case 'wm_link_formatter':
                     case 'Link (WaveMaker)':
                         break;
+                    case 'wm_array_formatter':
+                        inItem[key] = this.arrayFormatter(key, col.formatProps, null, null, null, inItem[k]);
+                        break;
                     default:
                         if (!this.isDesignLoaded()) inItem[key] = dojo.hitch(this.owner, col.formatFunc)("", inRowIndex, dojo.indexOf(this.columns, col), key, {
                             customStyles: [],
@@ -1529,7 +1576,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         return this._data[inIndex];
     },
     _getColumnDef: function(inCol) {
-        var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isMobile = this._useMobileColumn;
         var hasMobileColumn = dojo.some(this.columns, function(c) {
             return c.mobileColumn && !c.controller;
         });
@@ -1659,6 +1706,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         this._formatIndex = inIndex;
         return this.builder.generateHtml(inData);
     },
+    _onformatBeforeStart: 1,
     onformat: function(ioData, inColumn, inData, inHeader, inVariable) {},
     onsetdata: function(inData) {}
 });
@@ -1704,6 +1752,9 @@ wm.List.extend({
                 case 'Number (WaveMaker)':
                     value = this.numberFormatter(col.formatProps || {}, null, null, null, value);
                     break;
+                case 'wm_array_formatter':
+                    value = this.arrayFormatter(col.field || col.id, col.formatProps || {}, null, null, null, value);
+                    break;
                 case 'wm_currency_formatter':
                 case 'Currency (WaveMaker)':
                     value = this.currencyFormatter(col.formatProps || {}, null, null, null, value);
@@ -1745,12 +1796,15 @@ wm.List.extend({
         } else if (inValue instanceof Date == false) {
             return inValue;
         }
+        var dateType = formatterProps.dateType || 'date';
         if (!formatterProps.useLocalTime) {
-            inValue.setHours(inValue.getHours() + wm.timezoneOffset);
+            /* See WM-4490 to understand this calculation */
+            var adjustSixHours = dateType == "date" ? 360 : 0;
+            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes() + 60*wm.timezoneOffset + adjustSixHours);
         }
         var constraints = {
             fullYear: true,
-            selector: formatterProps.dateType || 'date',
+            selector: dateType,
             formatLength: formatterProps.formatLength || 'short',
             locale: dojo.locale,
             datePattern: formatterProps.datePattern,
@@ -1765,6 +1819,18 @@ wm.List.extend({
             type: formatterProps.numberType
         };
         return dojo.number.format(inValue, constraints);
+    },
+     arrayFormatter: function(inField, formatterProps, ignore1, ignore2, ignore3, inValue) {
+        if (!formatterProps.joinFieldName) formatterProps.joinFieldName = "dataValue";
+        if (!formatterProps.separator) formatterProps.separator = ",";
+        var str = "";
+        if (inValue) {
+            dojo.forEach(inValue, function(item) {
+                if (str) str += formatterProps.separator + " ";
+                str += item[formatterProps.joinFieldName];
+            });
+        }
+        return str;
     },
     currencyFormatter: function(formatterProps, ignore1, ignore2, ignore3, inValue) {
         var isDesignLoaded = false;
@@ -1848,19 +1914,59 @@ wm.List.extend({
     },
     setSelectedItem: function(inData) {
         if (inData instanceof wm.Variable) inData = inData.getData();
+        if (!inData) {
+            this.deselectAll();
+            return;
+        }
         this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {
-        if (typeof inItemOrIndex != "object") {
-            this.deselectAll(true);
-            this.eventSelect(this.items[inItemOrIndex]);
+        var index;
+        var item;
+        if (inItemOrIndex === null) {
+            index = -1;
+            item = null;
+        } else if (typeof inItemOrIndex == "object") {
+            index = inItemOrIndex.index;
+            item = inItemOrIndex;
         } else {
-            this.inherited(arguments);
+            index = inItemOrIndex;
+            item = this.getItem(index);
         }
+
+        /* See if we need to render the list in order to perform the selection task */
+        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && (!item || !item.domNode || !item.domNode.parentNode) && !this._isDesignLoaded) {
+            var renderHiddenGridWas = this._renderHiddenGrid;
+            this._renderHiddenGrid = true;
+            if (this.renderVisibleRowsOnly) {
+                /* TODO: This is terrible: this will render all 10,000 items if the developer calls select().  Fix this... */
+                this.renderVisibleRowsOnly = false;
+                this._render();
+                this.renderVisibleRowsOnly = true;
+            } else {
+                this._render();
+            }
+            this._renderHiddenGrid = renderHiddenGridWas;
+            item = this.getItem(index); // item may have been regenerated
+        }
+        this.inherited(arguments, [item]);
+        if (this.scrollToSelection) {
+            wm.onidle(this, function() {
+                this.scrollToRow(index);
+            });
+        }
+    },
+    selectByIndex: function(inIndex) {
+        this.select(inIndex);
     },
     /* WARNING: This uses wm.Variable query syntax, not dojo store's query syntax */
     selectByQuery: function(inQuery) {
         if (!this.dataSet) return;
+
+        if (!inQuery) {
+            this.deselectAll();
+            return;
+        }
 
         /* Step 1: Find all matching items from the dataset */
         var items = this.dataSet.query(inQuery);
@@ -1876,8 +1982,8 @@ wm.List.extend({
         this.deselectAll();
         var count = items.getCount();
         for (var i = 0; i < count; i++) {
-            var item = items.data.list[i];
-            this.addToSelection(this.items[dojo.indexOf(this.dataSet.data.list, item)]);
+            var item = items.data._list[i];
+            this.addToSelection(this.items[dojo.indexOf(this.dataSet.data._list, item)]);
             if (this._selectionMode == "single") break;
         }
     },
@@ -1963,7 +2069,6 @@ wm.List.extend({
             this.dataSet.setData([inFields]);
             if (selectOnAdd) {
                 this.select(0);
-                this.selectionChange(); // needs committing
             }
             return;
         }
@@ -2057,7 +2162,7 @@ wm.List.extend({
     },
     getColumnIndex: function(inFieldName) {
         for (var i = 0; i < this.columns.length; i++) {
-            if (this.columns[i].field == inFieldName) {
+            if (this.columns[i].field == inFieldName || this.columsn[i].id == inFieldName) {
                 return i;
             }
         }

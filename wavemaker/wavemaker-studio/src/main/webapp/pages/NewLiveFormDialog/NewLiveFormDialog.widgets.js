@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 NewLiveFormDialog.widgets = {
     behaviorsVar: ["wm.Variable", {type: "EntryData", isList: true, json: "[{name: 'Standard', dataValue: 'standard'}, {name: 'Insert Only', dataValue: 'insertOnly'},{name: 'Update Only', dataValue: 'updateOnly'}]"}],
@@ -23,12 +23,12 @@ NewLiveFormDialog.widgets = {
 		    wire: ["wm.Wire", {source: "typesVar", targetProperty: "dataSet"}]
 		}]
 	    }],
-	    formBehavior: ["wm.RadioSet", {editorBorder: 0, width: "100%", captionSize: "130px", captionAlign: "left", dataValue: "standard", dataField: "dataValue", displayField: "name", height: "70px",caption: "Form Behavior", helpText: "<ul><li><b>Standard</b>: Sets up your form as full CRUD form with insert, update and delete; this is the standard form</li><li><b>insertOnly</b>: Sets up your form to only do inserts.  NOTE: insertOnly form with no readonly manager will immediately clear the form and prepare for another insert onSuccess. Examples: Registration pages typically only do an insert; forum pages typically only do an insert;</li><li><b>updateOnly</b>: Sets up your form to only do updates.  Examples: A page to edit account information should never do inserts; forms for reviewing other peoples entries should never do inserts</li></ul>"}, {}, {
+	    formBehavior: ["wm.RadioSet", {editorBorder: 0, width: "100%", captionSize: "130px", captionAlign: "left", dataValue: "standard", dataField: "dataValue", displayField: "name", height: "80px",caption: "Form Behavior", helpText: "<ul><li><b>Standard</b>: Sets up your form as full CRUD form with insert, update and delete; this is the standard form</li><li><b>insertOnly</b>: Sets up your form to only do inserts.  NOTE: insertOnly form with no readonly manager will immediately clear the form and prepare for another insert onSuccess. Examples: Registration pages typically only do an insert; forum pages typically only do an insert;</li><li><b>updateOnly</b>: Sets up your form to only do updates.  Examples: A page to edit account information should never do inserts; forms for reviewing other peoples entries should never do inserts</li></ul>"}, {}, {
 		binding: ["wm.Binding", {},{},{
 		    wire: ["wm.Wire", {source: "behaviorsVar", targetProperty: "dataSet"}]
 		}]
 	    }],
-	    readonlyManager: ["wm.RadioSet", {editorBorder: 0, width: "100%", captionSize: "130px", captionAlign: "left",  dataValue: true, dataField: "dataValue", displayField: "name", height: "50px",caption: "Readonly Manager", helpText: "<ul><li><b>Readonly Manager</b>: Your form is uneditable until the user clicks the New or Edit buttons</li><li><b>Always Editable</b>: Your form is always editable and ready to do an insert or update operation.  Note that you can still programatically call setReadonly(true/false)</li></ul>"}, {}, {
+	    readonlyManager: ["wm.RadioSet", {editorBorder: 0, width: "100%", captionSize: "130px", captionAlign: "left",  dataValue: true, dataField: "dataValue", displayField: "name", height: "60px",caption: "Readonly Manager", helpText: "<ul><li><b>Readonly Manager</b>: Your form is uneditable until the user clicks the New or Edit buttons</li><li><b>Always Editable</b>: Your form is always editable and ready to do an insert or update operation.  Note that you can still programatically call setReadonly(true/false)</li></ul>"}, {}, {
 		binding: ["wm.Binding", {},{},{
 		    wire: ["wm.Wire", {source: "readonlyManagerVar", targetProperty: "dataSet"}]
 		}]

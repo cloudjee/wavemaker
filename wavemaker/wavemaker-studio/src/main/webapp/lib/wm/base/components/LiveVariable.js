@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 
 dojo.provide("wm.base.components.LiveVariable");
 dojo.require("wm.base.components.ServiceVariable");
-dojo.require("wm.base.components.LiveView"); 
+dojo.require("wm.base.components.LiveView");
 
 /**
 	Component that marshalls a LiveView and can perform all data operations: read, insert, update, delete.
@@ -42,7 +42,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 
 	/** LiveView or LiveTable from which this LiveVariable gets its field information; can use a liveView or liveTable */
 	liveSource: null,  /* LiveSource is now deprecated; TODO: Hide liveSource unless its an old LIveVar already pointing to an app.liveview */
-    
+
     refireOnDbChange: false,
 
 	/** Maximum number of results to return */
@@ -61,7 +61,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    this.setupSubscriptions();
 	    // default assumption is that its a list until we have some actual
 	    // data to tell us otherwise
-	    if (this.isList === undefined && this.operation == "read") 
+	    if (this.isList === undefined && this.operation == "read")
 		this.isList = true;
 	},
     setupSubscriptions: function() {
@@ -149,7 +149,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 			    if (inSourceData.liveView && inSourceData.liveView.getId().match(/^app\./)) {
 				this.setLiveSource(this.sourceData.type);
 			    } else {
-				if (!this.liveView) 
+				if (!this.liveView)
 				    this.liveView = this.createLiveView();
 				this.liveView.setDataType(inSourceData.liveView.dataType);
 				this.liveView.related = dojo.clone(inSourceData.liveView.related);
@@ -226,7 +226,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 
 	    this.filter.setType(this.type);
 	    this.sourceData.setType(this.type);
-	    
+
 	    if (this.liveView && this.liveView.dataType != this.type && this.liveView.owner == this) {
 		this.liveView.setDataType(this.type);
 		this.liveView.createDefaultView();
@@ -274,7 +274,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 
 		// note: runtime service only available when application is deployed
 		// so must wait until here to set it.
-		//The following lines for checking designTime flag are not being used now.  They may be used in the future to differenciate requests from 
+		//The following lines for checking designTime flag are not being used now.  They may be used in the future to differenciate requests from
 		//Studio from requests deployed application.
 		if (this._designTime)
 			this._service = wm.getRuntimeServiceDesignTime(this);
@@ -336,10 +336,10 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		}
 	},
 	processResult: function(inResult) {
-	        this.dataSetCount = this._service.fullResult ? this._service.fullResult.dataSetSize : 0;
+	    this.dataSetCount = this._service.fullResult ? this._service.fullResult.dataSetSize : 0;
 	    if (this._appendData) {
-		inResult = this.data.list.concat(inResult);
-		delete this._appendData;
+    		inResult = this.data._list.concat(inResult);
+    		delete this._appendData;
 	    }
 		this.inherited(arguments);
 	        if (this.operation != "read") {

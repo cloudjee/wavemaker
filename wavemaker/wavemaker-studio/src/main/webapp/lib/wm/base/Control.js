@@ -471,7 +471,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         this.inherited(arguments);
 
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-        if (!isMobile || !this.enableTouchHeight) {
+        if (this.height && String(this.height).match(/\%/)) {
+            this.mobileHeight = this.desktopHeight = this.height;
+        } else if (!isMobile || !this.enableTouchHeight) {
             if (this.desktopHeight != null) {
                 this.height = this.desktopHeight;
             } else if (this.height) {
@@ -657,7 +659,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 /* For public tooled detection use onShow; only call onShow if its been replaced with something other than
                  * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
                  */
-                else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
+                if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
                     w.onShow();
                 }
 
@@ -677,7 +679,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                     /* For public tooled detection use onHide; only call onHide if its been replaced with something other than
                      * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
                      */
-                    else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
+                    if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
                         w.onHide();
                     }
 
@@ -699,34 +701,35 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         var dialogs = []; // should only be 0 or 1 dialogs, but arrays work nicely no matter how many elements
         var parentObj = this;
         while (parentObj && (!app._page || parentObj != app._page.root)) {
-            if (parentObj instanceof wm.Layer)
-                layers.push(parentObj);
-            else if (parentObj instanceof wm.Dialog)
-                dialogs.push(parentObj);
-            if (parentObj.parent)
-                parentObj = parentObj.parent;
-            else if (parentObj.owner instanceof wm.Page && parentObj.owner.owner instanceof wm.Control)
-                parentObj = parentObj.owner.owner;
-            else
-                parentObj = null;
+            if (parentObj instanceof wm.Layer) layers.push(parentObj);
+            else if (parentObj instanceof wm.Dialog) dialogs.push(parentObj);
+            if (parentObj.parent) parentObj = parentObj.parent;
+            else if (parentObj.owner instanceof wm.Page && parentObj.owner.owner instanceof wm.Control) parentObj = parentObj.owner.owner;
+            else parentObj = null;
         }
 
-        var f = dojo.hitch(obj,callback);
-	this._layerConnections = [];
-        dojo.forEach(layers, dojo.hitch(this,function(l) {
+        var f = dojo.hitch(obj, callback);
+        this._layerConnections = [];
+        dojo.forEach(layers, dojo.hitch(this, function(l) {
             this._layerConnections.push(this.connect(l, "onShow", this, function() {
-                if (dojo.every(layers, function(l2) {return l2.isActive();}) &&
-                    dojo.every(dialogs, function(l2) {return l2.showing;})) {
+                if (dojo.every(layers, function(l2) {
+                    return l2.isActive();
+                }) && dojo.every(dialogs, function(l2) {
+                    return l2.showing;
+                })) {
                     f();
                 }
             }));
         }));
 
-        dojo.forEach(dialogs, dojo.hitch(this,function(d) {
+        dojo.forEach(dialogs, dojo.hitch(this, function(d) {
             this._layerConnections.push(this.connect(d, "setShowing", this, function() {
                 if (d.showing && !d._transitionToHiding) { // transition handles case where showing is true, but animation is running that will have it hidden very soon
-                    if (dojo.every(layers, function(l2) {return l2.isActive();}) &&
-                        dojo.every(dialogs, function(l2) {return l2.showing;})) {
+                    if (dojo.every(layers, function(l2) {
+                        return l2.isActive();
+                    }) && dojo.every(dialogs, function(l2) {
+                        return l2.showing;
+                    })) {
                         f();
                     }
                 }
@@ -735,98 +738,97 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
     },
     disconnectFromAllLayers: function() {
-	dojo.forEach(this._layerConnections, dojo.hitch(this, function(c) {
-	    dojo.disconnect(c);
-	    this._connections = wm.Array.removeElement(this._connections, c);
-	}));
-	delete this._layerConnections;
+        dojo.forEach(this._layerConnections, dojo.hitch(this, function(c) {
+            dojo.disconnect(c);
+            this._connections = wm.Array.removeElement(this._connections, c);
+        }));
+        delete this._layerConnections;
     },
     isAncestor: function(inParent) {
-	var o = this.parent;
-	while (o && o != inParent) {
-	    o = o.parent;
-	}
-	return (o == inParent);
+        var o = this.parent;
+        while (o && o != inParent) {
+            o = o.parent;
+        }
+        return (o == inParent);
     },
 
     //===========================================================================
     // Name & Id
     //===========================================================================
     updateId: function() {
-	this.inherited(arguments);
-	if (this.domNode) {
-	    var rid = this.getRuntimeId();
-	    this.domNode.rid = rid;
-	    this.domNode.id = rid.replace(/\./g, "_");
-	}
+        this.inherited(arguments);
+        if (this.domNode) {
+            var rid = this.getRuntimeId();
+            this.domNode.rid = rid;
+            this.domNode.id = rid.replace(/\./g, "_");
+        }
     },
     //===========================================================================
     // Ownership
     //===========================================================================
     getUniqueName: function(inName) {
-	return wm.findUniqueName(inName, [this, this.components, this.widgets]);
+        return wm.findUniqueName(inName, [this, this.components, this.widgets]);
     },
     //===========================================================================
     // Parentage
     //===========================================================================
     setName: function(inName) {
-	if (!inName)
-	    return;
-	if (this.parent)
-	    this.parent.removeWidget(this);
-	this.addRemoveDefaultCssClass(false);
-	this.inherited(arguments);
-	if (this.parent)
-	    this.parent.addWidget(this);
-	this.addRemoveDefaultCssClass(true);
+        if (!inName) return;
+        if (this.parent) this.parent.removeWidget(this);
+        this.addRemoveDefaultCssClass(false);
+        this.inherited(arguments);
+        if (this.parent) this.parent.addWidget(this);
+        this.addRemoveDefaultCssClass(true);
     },
-    addWidget: function(inWidget){
-	this.widgets[inWidget.name] = inWidget;
-	var p = this.containerNode || this.domNode;
-  	if (inWidget.domNode.parentNode != p) {
-	    p.appendChild(inWidget.domNode);
-	}
+    addWidget: function(inWidget) {
+        this.widgets[inWidget.name] = inWidget;
+        var p = this.containerNode || this.domNode;
+        if (inWidget.domNode.parentNode != p) {
+            p.appendChild(inWidget.domNode);
+        }
     },
     /* NOTE: I don't see this called anywhere */
     insertDomNodes: function() {
-	wm.forEachProperty(this.widgets, function(w, name) {
-	    w.insertDomNodes();
-	});
+        wm.forEachProperty(this.widgets, function(w, name) {
+            w.insertDomNodes();
+        });
 
-	var parentPage = this.getParentPage();
-	try {
-	    var a= 1;
-	    if ((!parentPage || parentPage._disableRendering) && this.invalidCss) {
-		this.renderCss();
-		this.invalidCss = false;
-	    }
+        var parentPage = this.getParentPage();
+        try {
+            var a = 1;
+            if ((!parentPage || parentPage._disableRendering) && this.invalidCss) {
+                this.renderCss();
+                this.invalidCss = false;
+            }
 
-	    var p = this.containerNode || this.parentNode || this.parent.domNode;
-  	    if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body)
-		p.appendChild(this.domNode);
-	} catch (e) {
-	    console.log("ERROR INSERTING DOM NODES FOR " + this.name );
-	}
-	//	}
+            var p = this.containerNode || this.parentNode || this.parent.domNode;
+            if (this.domNode.parentNode != p && this.domNode.parentNode != window.document.body) {
+                p.appendChild(this.domNode);
+            }
+        } catch (e) {
+            console.log("ERROR INSERTING DOM NODES FOR " + this.name);
+        }
+        //  }
     },
     leafFirstRenderCss: function() {
-	wm.forEachProperty(this.widgets, function(w,name) {
-	    w.leafFirstRenderCss();
-	});
-	if (this.invalidCss) {
-	    this.render(1);
-	}
+        wm.forEachProperty(this.widgets, function(w, name) {
+            w.leafFirstRenderCss();
+        });
+        if (this.invalidCss) {
+            this.render(1);
+        }
     },
-    removeWidget: function(inWidget){
-	if (this.widgets)
-	    delete this.widgets[inWidget.name];
+    removeWidget: function(inWidget) {
+        if (this.widgets) delete this.widgets[inWidget.name];
     },
     adjustChildProps: function(inCtor, inProps) {
-	if (wm.isClassInstanceType(inCtor, wm.Control))
-            // assignChildrenToOwner allows a widget to be owned by a container, the container is owned by the page, and that widget's children are also owned by the page
-	    dojo.mixin(inProps, {owner: this._assignChildrenToOwner || this.owner, parent: this});
-	else
-	    this.inherited(arguments);
+        if (wm.isClassInstanceType(inCtor, wm.Control))
+        // assignChildrenToOwner allows a widget to be owned by a container, the container is owned by the page, and that widget's children are also owned by the page
+        dojo.mixin(inProps, {
+            owner: this._assignChildrenToOwner || this.owner,
+            parent: this
+        });
+        else this.inherited(arguments);
     },
 
 
@@ -835,31 +837,38 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     //===========================================================================
     // BC -->
     doSetSizeBc: function() {
-	/*if (!this.width) {
-	  this.setSizeProp("width", "100%");
-	  }
-	  if (!this.height) {
-	  this.setSizeProp("height", "100%");
-	  }*/
-	if (this.sizeUnits == "flex") {
-	    this.setFlex(this.size);
-	} else if (this.sizeUnits) {
-	    var b = this.getParentBox(), p = {v: "height", h: "width"}[b];
-	    this.setSizeProp(p, this.size + this.sizeUnits);
-	} else if (this.flex) {
-	    this.setFlex(this.flex);
-	}
+        /*if (!this.width) {
+      this.setSizeProp("width", "100%");
+      }
+      if (!this.height) {
+      this.setSizeProp("height", "100%");
+      }*/
+        if (this.sizeUnits == "flex") {
+            this.setFlex(this.size);
+        } else if (this.sizeUnits) {
+            var b = this.getParentBox(),
+                p = {
+                    v: "height",
+                    h: "width"
+                }[b];
+            this.setSizeProp(p, this.size + this.sizeUnits);
+        } else if (this.flex) {
+            this.setFlex(this.flex);
+        }
     },
     setFlex: function(inFlex) {
-	var box = this.getParentBox();
-	if (box) {
-	    var ex = {h: "width", v: "height"}[box];
-	    this.setSizeProp(ex, inFlex*100 + "%");
-	    this._boundsDirty = true;
-	} else {
-	    this.setSizeProp("width", inFlex*100 + "%");
-	    this.setSizeProp("height", inFlex*100 + "%");
-	}
+        var box = this.getParentBox();
+        if (box) {
+            var ex = {
+                h: "width",
+                v: "height"
+            }[box];
+            this.setSizeProp(ex, inFlex * 100 + "%");
+            this._boundsDirty = true;
+        } else {
+            this.setSizeProp("width", inFlex * 100 + "%");
+            this.setSizeProp("height", inFlex * 100 + "%");
+        }
     },
     /* mkantor: Commented out 4/14/2010; presumed WM 4.x only
        isFlex: function() {
@@ -872,195 +881,201 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     */
     // <-- BC
     getScrollMargins: function() {
-	if (wm.isMobile) {
-	    return {w: (this.scrollY || this._xscrollY) ? 2 : 0, h: (this.scrollX || this._xscrollX) ? 2 : 0};
-	} else {
-	    return {w: (this.scrollY || this._xscrollY) ? 17 : 0, h: (this.scrollX || this._xscrollX) ? 17 : 0};
-	}
-	/*
-	  if (!this.autoScroll) {
-	  return {w: (this.scrollY) ? 17 : 0, h: (this.scrollX) ? 17 : 0};
-	  } else {
-	  return {w: (this._xscrollY || this.domNode.style.overflow == "auto") ? 17 : 0, h: (this._xscrollX || this.domNode.style.overflow == "auto") ? 17 : 0};
-	  }
-	*/
+        if (wm.isMobile) {
+            return {
+                w: (this.scrollY || this._xscrollY) ? 2 : 0,
+                h: (this.scrollX || this._xscrollX) ? 2 : 0
+            };
+        } else {
+            return {
+                w: (this.scrollY || this._xscrollY) ? 17 : 0,
+                h: (this.scrollX || this._xscrollX) ? 17 : 0
+            };
+        }
+        /*
+      if (!this.autoScroll) {
+      return {w: (this.scrollY) ? 17 : 0, h: (this.scrollX) ? 17 : 0};
+      } else {
+      return {w: (this._xscrollY || this.domNode.style.overflow == "auto") ? 17 : 0, h: (this._xscrollX || this.domNode.style.overflow == "auto") ? 17 : 0};
+      }
+    */
     },
     isReflowEnabled: function() {
-	if (this._cupdating) return false;
-	if (this.owner) {
-	    if (wm.isInstanceType(this.owner, wm.Control))
-		return this.owner.isReflowEnabled();
-	    else {
-		return !this.owner._loadingPage;
-	    }
-	}
-	return true;
+        if (this._cupdating) return false;
+        if (this.owner) {
+            if (wm.isInstanceType(this.owner, wm.Control)) return this.owner.isReflowEnabled();
+            else {
+                return !this.owner._loadingPage;
+            }
+        }
+        return true;
     },
     padBorderMarginChanged: function() {
-	this.inherited(arguments);
+        this.inherited(arguments);
 
-        if (!this._doingAutoSize)
-	    this._needsAutoSize = true;
+        if (!this._doingAutoSize) this._needsAutoSize = true;
 
-	if (this.isReflowEnabled()) {
-	    if (this.parent)
-		this.parent.reflow();
-	    else {
-		this.render();
-		wm.fire(this, "flow");
-	    }
-	}
+        if (this.isReflowEnabled()) {
+            if (this.parent) this.parent.reflow();
+            else {
+                this.render();
+                wm.fire(this, "flow");
+            }
+        }
     },
     /**
        Update width and height properties after bounds change.
     */
     boundsResized: function() {
-	var box = dojo.marginBox(this.dom.node);
-	if (this.bounds.w != box.w) {
-	    this.width = this.bounds.w + "px";
-	}
-	if (this.bounds.h != box.h) {
-	    this.height = this.bounds.h + "px";
-	}
-	this.updateBounds();
+        var box = dojo.marginBox(this.dom.node);
+        if (this.bounds.w != box.w) {
+            this.width = this.bounds.w + "px";
+        }
+        if (this.bounds.h != box.h) {
+            this.height = this.bounds.h + "px";
+        }
+        this.updateBounds();
     },
     /**
        Update bounds and flex properties based on width/height properties
     */
     updateBounds: function() {
-	//this.domNode.flex = 0;
-	//this.fluidSize = 0;
-	this._percEx = {w:0, h: 0};
-	//
-	//var pd = this.getParentBox();
-	//
-	var su = wm.splitUnits(this.width);
-	var w = su.value;
-	switch (su.units) {
-	    // FIXME: 'flex' and 'em' are deprecated, probably this should be in BC block
-	case "flex":
-	    w *= 100;
-	    this._percEx.w = w;
-	    this.width = w + "%";
-	    w = NaN;
-	    break;
-	case "em":
-	    w *= 18;
-	    this.width = w + "px";
-	    break;
-	case "%":
-	    this._percEx.w = w;
-	    w = NaN;
-	    break;
-	}
-	//
-	su = wm.splitUnits(this.height);
-	var h = su.value;
-	switch (su.units) {
-	    // FIXME: 'flex' and 'em' are deprecated, probably this should be in BC block
-	case "flex":
-	    h *= 100;
-	    this._percEx.h = h;
-	    this.height = h + "%";
-	    h = NaN;
-	    break;
-	case "em":
-	    h *= h * 18;
-	    this.height = h + "px";
-	    break;
-	case "%":
-	    this._percEx.h = h;
-	    h = NaN;
-	    break;
-	}
+        //this.domNode.flex = 0;
+        //this.fluidSize = 0;
+        this._percEx = {
+            w: 0,
+            h: 0
+        };
+        //
+        //var pd = this.getParentBox();
+        //
+        var su = wm.splitUnits(this.width);
+        var w = su.value;
+        switch (su.units) {
+            // FIXME: 'flex' and 'em' are deprecated, probably this should be in BC block
+        case "flex":
+            w *= 100;
+            this._percEx.w = w;
+            this.width = w + "%";
+            w = NaN;
+            break;
+        case "em":
+            w *= 18;
+            this.width = w + "px";
+            break;
+        case "%":
+            this._percEx.w = w;
+            w = NaN;
+            break;
+        }
+        //
+        su = wm.splitUnits(this.height);
+        var h = su.value;
+        switch (su.units) {
+            // FIXME: 'flex' and 'em' are deprecated, probably this should be in BC block
+        case "flex":
+            h *= 100;
+            this._percEx.h = h;
+            this.height = h + "%";
+            h = NaN;
+            break;
+        case "em":
+            h *= h * 18;
+            this.height = h + "px";
+            break;
+        case "%":
+            this._percEx.h = h;
+            h = NaN;
+            break;
+        }
 
-	this.setBounds(NaN, NaN, w, h);
-	//this.setBounds(this.left, this.top, w, h);
+        this.setBounds(NaN, NaN, w, h);
+        //this.setBounds(this.left, this.top, w, h);
     },
     // return the 'box' setting of our parentNode
     getParentBox: function() {
-	var n = (this.domNode || 0).parentNode;
-	return n && (n.box || (n.getAttribute && n.getAttribute("box"))) || (this.parent||0).box || '';
+        var n = (this.domNode || 0).parentNode;
+        return n && (n.box || (n.getAttribute && n.getAttribute("box"))) || (this.parent || 0).box || '';
     },
 
-    adjustSetSizeProp: function(n,v) {return v;},
+    adjustSetSizeProp: function(n, v) {
+        return v;
+    },
     setSizeProp: function(n, v, inMinSize) {
-	// We either have a minSize passed in from user set properties, or we let the widget itself decide what its minimum size should be.
-	var minName = "min"    + wm.capitalize(n);
-	var getMin  = "getMin" + wm.capitalize(n) + "Prop";
-	var minSize = !wm.isMobile && inMinSize  || this[getMin]();
+        // We either have a minSize passed in from user set properties, or we let the widget itself decide what its minimum size should be.
+        var minName = "min" + wm.capitalize(n);
+        var getMin = "getMin" + wm.capitalize(n) + "Prop";
+        var minSize = !wm.isMobile && inMinSize || this[getMin]();
 
-	v = this.adjustSetSizeProp(n,v);
+        v = this.adjustSetSizeProp(n, v);
 
-	if (this[n] == v && this[minName] == inMinSize) {
-	    if (v.match(/px/) && parseInt(v) != this.bounds[(n=="height") ? "h" : "w"]) {
-		;
-	    } else {
-		return;
-	    }
-	}
+        if (this[n] == v && this[minName] == inMinSize) {
+            if (v.match(/px/) && parseInt(v) != this.bounds[(n == "height") ? "h" : "w"]) {;
+            } else {
+                return;
+            }
+        }
 
-	this[n] = v;
-	this[minName] = inMinSize;
+        this[n] = v;
+        this[minName] = inMinSize;
 
         // If widget suppports resizing, and isn't in the middle of doing an autoSize, then it now needs to be autoResized as its width or height have changed
         if (!this._doingAutoSize) {
-	    this._needsAutoSize = true;
+            this._needsAutoSize = true;
 
             // A setSize call that is not made while doing autoSize means we are no longer an autosize widget
             if (this.autoSizeHeight && n == "height") this.autoSizeHeight = false;
             if (this.autoSizeWidth && n == "width") this.autoSizeWidth = false;
         }
 
-	// MK: One line fix added Feb 18 2010:
-	// Because the domNode of the designWrapper is not getting updated, we need to set invalidCss to true.  May prove unnecessary.
-	if(this.designWrapper) this.designWrapper.invalidCss = true;
+        // MK: One line fix added Feb 18 2010:
+        // Because the domNode of the designWrapper is not getting updated, we need to set invalidCss to true.  May prove unnecessary.
+        if (this.designWrapper) this.designWrapper.invalidCss = true;
 
-	if (!this._loading)
-	    this.updateBounds();
-	if (this.isReflowEnabled() && this.showing) {
-	    this.reflowParent();
-	    if (this._isDesignLoaded && this.parent instanceof wm.Container) {
-		var parent = this.parent
-		wm.job(parent.getRuntimeId() + ".designResize", 50, function() {
-		    parent.designResizeForNewChild();
-		});
-	    }
-	}
+        if (!this._loading) this.updateBounds();
+        if (this.isReflowEnabled() && this.showing) {
+            this.reflowParent();
+            if (this._isDesignLoaded && this.parent instanceof wm.Container) {
+                var parent = this.parent
+                wm.job(parent.getRuntimeId() + ".designResize", 50, function() {
+                    parent.designResizeForNewChild();
+                });
+            }
+        }
     },
     setWidth: function(inWidth) {
-	this.setSizeProp("width", inWidth, this.minWidth);
+        this.setSizeProp("width", inWidth, this.minWidth);
     },
     setHeight: function(inHeight) {
-	this.setSizeProp("height", inHeight, this.minHeight);
+        this.setSizeProp("height", inHeight, this.minHeight);
     },
     setMinWidth: function(inMinWidth) {
-	inMinWidth = (inMinWidth) ? parseInt(inMinWidth) : 0;
-/*
-	if (inMinWidth > this.bounds.w) {
-	    this.width = inMinWidth + "px";
-	}
-	*/
-	this.setSizeProp("width", this.width, inMinWidth);
+        inMinWidth = (inMinWidth) ? parseInt(inMinWidth) : 0;
+        /*
+    if (inMinWidth > this.bounds.w) {
+        this.width = inMinWidth + "px";
+    }
+    */
+        this.setSizeProp("width", this.width, inMinWidth);
     },
     setMinHeight: function(inMinHeight) {
-	inMinHeight = (inMinHeight) ? parseInt(inMinHeight) : 0;
-/*
-	if (inMinHeight > this.bounds.h) {
-	    this.height = inMinHeight + "px";
-	}
-	*/
-	this.setSizeProp("height", this.height, inMinHeight);
+        inMinHeight = (inMinHeight) ? parseInt(inMinHeight) : 0;
+        /*
+    if (inMinHeight > this.bounds.h) {
+        this.height = inMinHeight + "px";
+    }
+    */
+        this.setSizeProp("height", this.height, inMinHeight);
     },
 
     // this method is related to set/getMinWidth/Height, but whereas set/getMinWidth/Height are basic setters/getters of the minWidth/minHeight property,
     // these methods are designed to allow each object to calculate at runtime what its preferred minimum is... unless one has been specified by the user.
     // NOTE: minWidth/minHeight are ignored if size is set in px instead of %.  minHeight/minWidth may also kick in for fitToContent containers.
     getMinWidthProp: function() {
-	return parseInt(this.minWidth) || 30;
+        return parseInt(this.minWidth) || 30;
     },
     getMinHeightProp: function() {
-	return parseInt(this.minHeight) || 15;
+        return parseInt(this.minHeight) || 15;
     },
     /*
       setMaxWidth: function(inMaxWidth) {
@@ -1069,34 +1084,33 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
       },
     */
     setMaxHeight: function(inMaxHeight) {
-	inMaxHeight = parseInt(inMaxHeight) || 0;
-	this.maxHeight = inMaxHeight;
-        if (inMaxHeight > this.bounds.h)
-            this.reflowParent();
+        inMaxHeight = parseInt(inMaxHeight) || 0;
+        this.maxHeight = inMaxHeight;
+        if (inMaxHeight > this.bounds.h) this.reflowParent();
     },
 
 
     getDomHeight: function() {
-	return dojo.coords(this.domNode,false).h;
+        return dojo.coords(this.domNode, false).h;
     },
 
     // Returns integer value in pixels
     getDomWidth: function() {
-	return dojo.coords(this.domNode,false).w;
+        return dojo.coords(this.domNode, false).w;
     },
 
     /* This should work, but risks the UI being rather jumpy, so best to provide custom method for each widget where possible */
     doAutoSize: function(setSize, force) {
         if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
-	if (!force && !this._needsAutoSize) return;
+        if (!force && !this._needsAutoSize) return;
 
-	if (this.isAncestorHidden()) {
-	    return;
-	}
+        if (this.isAncestorHidden()) {
+            return;
+        }
 
 
         this._doingAutoSize = true;
-	this._needsAutoSize = false;
+        this._needsAutoSize = false;
 
         if (this.autoSizeWidth) {
             this.domNode.style.width = "";
@@ -1121,176 +1135,172 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 this.domNode.style.height = newh + "px";
             }
         }
-	if (this.isDesignLoaded() && studio.designer.selected == this)
-	    setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
+        if (this.isDesignLoaded() && studio.designer.selected == this) setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
         this._doingAutoSize = false;
     },
 
     setAutoSizeWidth: function(inAutoSize) {
-	this.autoSizeWidth = inAutoSize;
-	if (this.autoSizeWidth) {
+        this.autoSizeWidth = inAutoSize;
+        if (this.autoSizeWidth) {
             if (this._percEx.w) {
                 this.width = this.bounds.w + "px";
                 this._percEx.w = 0;
             }
-	    this.doAutoSize(1,1);
+            this.doAutoSize(1, 1);
         }
     },
     setAutoSizeHeight: function(inAutoSize) {
-	this.autoSizeHeight = inAutoSize;
-	if (this.autoSizeHeight) {
+        this.autoSizeHeight = inAutoSize;
+        if (this.autoSizeHeight) {
             if (this._percEx.h) {
                 this.height = this.bounds.h + "px";
                 this._percEx.h = 0;
             }
-	    this.doAutoSize(1,1);
+            this.doAutoSize(1, 1);
         }
     },
 
     // If its chrome, overflow needs to be turned off, then on again for autoScrolling to be enabled but for the scrollbars to be hidden.
     // Insure that only one onidle is queued per node.
     // appears to be fixed in chrome 11
-    disruptChromeOverflow: function(propName) {
-    },
+    disruptChromeOverflow: function(propName) {},
     //===========================================================================
     // Rendering; forceRender is a way to skip the isReflowEnabled test
     //===========================================================================
     render: function(forceRender) {
-	if (forceRender || this.isReflowEnabled()) {
-	    this.renderCss();
-	} else {
-	    this.invalidCss = true;
-	}
-	return true;
+        if (forceRender || this.isReflowEnabled()) {
+            this.renderCss();
+        } else {
+            this.invalidCss = true;
+        }
+        return true;
     },
 
     renderCss: function() {
-	if (!this.invalidCss) return;
-	this.invalidCss = false;
+        if (!this.invalidCss) return;
+        this.invalidCss = false;
 
-	// these should be called only once per object
-	var cssObj = this.buildCssSetterObj();
-	// some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.
-	if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
-	    this.setCssViaCssText(cssObj);
-	    this.renderedOnce = 1;
-	} else {
-	    this.setCssViaDom(cssObj);
-	}
+        // these should be called only once per object
+        var cssObj = this.buildCssSetterObj();
+        // some browsers are faster to set via cssText... but its NOT faster to reset them via cssText using our method of appending to the css string after an initial set of values have been stored.
+        if (!this.renderedOnce && (dojo.isFF || dojo.isSafari || dojo.isChrome)) {
+            this.setCssViaCssText(cssObj);
+            this.renderedOnce = 1;
+        } else {
+            this.setCssViaDom(cssObj);
+        }
 
-	// handles special case where a call to render bounds neesd to call render which calls renderCss which should NOT
-  	// then call renderBounds again.
-	if (!this.noRenderBounds)
-	    this.renderBounds();
+        // handles special case where a call to render bounds neesd to call render which calls renderCss which should NOT
+        // then call renderBounds again.
+        if (!this.noRenderBounds) this.renderBounds();
     },
     buildCssSetterObj: function() {
-	if (!this._appliedStyles) {
-	    this._appliedStyles = {};
-	}
+        if (!this._appliedStyles) {
+            this._appliedStyles = {};
+        }
 
-	var marginSplitter = this.getCssSplitter(this.margin);
-	var paddingSplitter = this.getCssSplitter(this.padding);
-	var borderSplitter = this.getCssSplitter(this.border);
-
-
-	if (this.margin.indexOf(",") == -1 && this.margin.indexOf(" ") != -1)
-	{
-	    marginSplitter = " ";
-	}
-
-	var paddArr = this.padding.split(paddingSplitter);
-	var overflow =   ((this.autoScroll || this._xscrollX || this._xscrollY) && (!wm.isFakeMobile || this instanceof wm.Container == false) ? "auto" : "hidden");
-	var stylesObj;
-
-	var margins = (this.margin||"0").split(marginSplitter);
-	var borders = (this.border||"0").split(borderSplitter);
-	var paddings = (this.padding||"0").split(paddingSplitter);
+        var marginSplitter = this.getCssSplitter(this.margin);
+        var paddingSplitter = this.getCssSplitter(this.padding);
+        var borderSplitter = this.getCssSplitter(this.border);
 
 
-	    if (margins.length == 1) {
-		margins[1] = margins[2] = margins[3] = margins[0];
-	    } else if (margins.length == 2) {
-		margins[2] = margins[0];
-		margins[3] = margins[1];
-	    }
+        if (this.margin.indexOf(",") == -1 && this.margin.indexOf(" ") != -1) {
+            marginSplitter = " ";
+        }
 
-	    if (borders.length == 1) {
-		borders[1] = borders[2] = borders[3] = borders[0];
-	    } else if (borders.length == 2) {
-		borders[2] = borders[0];
-		borders[3] = borders[1];
-	    }
+        var paddArr = this.padding.split(paddingSplitter);
+        var overflow = ((this.autoScroll || this._xscrollX || this._xscrollY) && (!wm.isFakeMobile || this instanceof wm.Container == false) ? "auto" : "hidden");
+        var stylesObj;
 
-	    if (paddings.length == 1) {
-		paddings[1] = paddings[2] = paddings[3] = paddings[0];
-	    } else if (paddings.length == 2) {
-		paddings[2] = paddings[0];
-		paddings[3] = paddings[1];
-	    }
-	/* When the user zooms the browser, border, margin and padding get mucked up, and ruin all of our calculations.
-	 * Use the ratio in _currentZoomLevel to alter padding/margin/border so that they result in the desired number of pixels.
-	 * Widths of 10px are NOT altered.  Calculations break down for zoomLevel > 1.4.  High enough zoom level and browsers
-	 * stop mucking with pixels
-	 */
-	if (app._currentZoomLevel && app._currentZoomLevel > 1 && app._currentZoomLevel < 1.4) {
-	    for (var i = 0; i < margins.length; i++) {
-		if (margins[i] % 10) {
-		    margins[i] *= app._currentZoomLevel;
-		}
-	    }
-	    for (var i = 0; i < paddings.length; i++) {
-		if (paddings[i] % 10) {
-		    paddings[i] *= app._currentZoomLevel;
-		}
-	    }
-	    for (var i = 0; i < borders.length; i++) {
-		if (borders[i] % 10) {
-		    borders[i] *= app._currentZoomLevel;
-		}
-	    }
-	}
+        var margins = (this.margin || "0").split(marginSplitter);
+        var borders = (this.border || "0").split(borderSplitter);
+        var paddings = (this.padding || "0").split(paddingSplitter);
 
 
-	if (this.designBorderState) {
-	    stylesObj = {
-		margin:  (margins.join("px ") || 0) + "px",
-		padding: (paddings.join("px ") || 0) + "px",
-		borderLeftStyle: (this.designBorderState && this.designBorderState.l) ? "dashed" : "solid",
-		borderRightStyle: (this.designBorderState && this.designBorderState.r) ? "dashed" : "solid",
-		borderTopStyle: (this.designBorderState && this.designBorderState.t) ? "dashed" :  "solid",
-		borderBottomStyle: (this.designBorderState && this.designBorderState.b) ? "dashed" : "solid" ,
-		borderLeftColor: (this.designBorderState && this.designBorderState.l) ? "#C1C1C1" : this.borderColor,
-		borderRightColor: (this.designBorderState && this.designBorderState.r) ? "#C1C1C1" : this.borderColor,
-		borderTopColor: (this.designBorderState && this.designBorderState.t) ? "#C1C1C1" :  this.borderColor,
-		borderBottomColor: (this.designBorderState && this.designBorderState.b) ? "#C1C1C1" : this.borderColor,
-		borderLeftWidth:  ((this.designBorderState && this.designBorderState.l) ? "1" : this.borderExtents.l) + "px",
-		borderRightWidth:  ((this.designBorderState && this.designBorderState.r) ? "1" : this.borderExtents.r) + "px",
-		borderTopWidth: ((this.designBorderState && this.designBorderState.t) ? "1" : this.borderExtents.t) + "px",
-		borderBottomWidth: ((this.designBorderState && this.designBorderState.b) ? "1" : this.borderExtents.b) + "px",
-		backgroundColor: this.backgroundColor,
+        if (margins.length == 1) {
+            margins[1] = margins[2] = margins[3] = margins[0];
+        } else if (margins.length == 2) {
+            margins[2] = margins[0];
+            margins[3] = margins[1];
+        }
 
-		overflowX: this.scrollX ? "auto" : overflow,
-		overflowY: this.scrollY ? "auto" : overflow
-	    };
+        if (borders.length == 1) {
+            borders[1] = borders[2] = borders[3] = borders[0];
+        } else if (borders.length == 2) {
+            borders[2] = borders[0];
+            borders[3] = borders[1];
+        }
 
-	} else {
-	    stylesObj = {
-		margin:  (margins.join("px ") || 0) + "px",
-		padding: (paddings.join("px ") || 0) + "px",
-		borderStyle:  "solid",
-		borderWidth:  (borders.join("px ") || 0) + "px",
-		borderColor:  this.borderColor,
-		backgroundColor: this.backgroundColor,
-		overflowX: this.scrollX ? "auto" : overflow,
-		overflowY: this.scrollY ? "auto" : overflow
-	    }
-	}
+        if (paddings.length == 1) {
+            paddings[1] = paddings[2] = paddings[3] = paddings[0];
+        } else if (paddings.length == 2) {
+            paddings[2] = paddings[0];
+            paddings[3] = paddings[1];
+        }
+        /* When the user zooms the browser, border, margin and padding get mucked up, and ruin all of our calculations.
+         * Use the ratio in _currentZoomLevel to alter padding/margin/border so that they result in the desired number of pixels.
+         * Widths of 10px are NOT altered.  Calculations break down for zoomLevel > 1.4.  High enough zoom level and browsers
+         * stop mucking with pixels
+         */
+        if (app._currentZoomLevel && app._currentZoomLevel > 1 && app._currentZoomLevel < 1.4) {
+            for (var i = 0; i < margins.length; i++) {
+                if (margins[i] % 10) {
+                    margins[i] *= app._currentZoomLevel;
+                }
+            }
+            for (var i = 0; i < paddings.length; i++) {
+                if (paddings[i] % 10) {
+                    paddings[i] *= app._currentZoomLevel;
+                }
+            }
+            for (var i = 0; i < borders.length; i++) {
+                if (borders[i] % 10) {
+                    borders[i] *= app._currentZoomLevel;
+                }
+            }
+        }
 
-	    if (this.styles && !wm.isEmpty(this.styles)) {
-		stylesObj = dojo.mixin(stylesObj,this.styles);
-	    }
-	    return stylesObj;
-	},
+
+        if (this.designBorderState) {
+            stylesObj = {
+                margin: (margins.join("px ") || 0) + "px",
+                padding: (paddings.join("px ") || 0) + "px",
+                borderLeftStyle: (this.designBorderState && this.designBorderState.l) ? "dashed" : "solid",
+                borderRightStyle: (this.designBorderState && this.designBorderState.r) ? "dashed" : "solid",
+                borderTopStyle: (this.designBorderState && this.designBorderState.t) ? "dashed" : "solid",
+                borderBottomStyle: (this.designBorderState && this.designBorderState.b) ? "dashed" : "solid",
+                borderLeftColor: (this.designBorderState && this.designBorderState.l) ? "#C1C1C1" : this.borderColor,
+                borderRightColor: (this.designBorderState && this.designBorderState.r) ? "#C1C1C1" : this.borderColor,
+                borderTopColor: (this.designBorderState && this.designBorderState.t) ? "#C1C1C1" : this.borderColor,
+                borderBottomColor: (this.designBorderState && this.designBorderState.b) ? "#C1C1C1" : this.borderColor,
+                borderLeftWidth: ((this.designBorderState && this.designBorderState.l) ? "1" : this.borderExtents.l) + "px",
+                borderRightWidth: ((this.designBorderState && this.designBorderState.r) ? "1" : this.borderExtents.r) + "px",
+                borderTopWidth: ((this.designBorderState && this.designBorderState.t) ? "1" : this.borderExtents.t) + "px",
+                borderBottomWidth: ((this.designBorderState && this.designBorderState.b) ? "1" : this.borderExtents.b) + "px",
+                backgroundColor: this.backgroundColor,
+
+                overflowX: this.scrollX ? "auto" : overflow,
+                overflowY: this.scrollY ? "auto" : overflow
+            };
+
+        } else {
+            stylesObj = {
+                margin: (margins.join("px ") || 0) + "px",
+                padding: (paddings.join("px ") || 0) + "px",
+                borderStyle: "solid",
+                borderWidth: (borders.join("px ") || 0) + "px",
+                borderColor: this.borderColor,
+                backgroundColor: this.backgroundColor,
+                overflowX: this.scrollX ? "auto" : overflow,
+                overflowY: this.scrollY ? "auto" : overflow
+            }
+        }
+
+        if (this.styles && !wm.isEmpty(this.styles)) {
+            stylesObj = dojo.mixin(stylesObj, this.styles);
+        }
+        return stylesObj;
+    },
     setCssViaCssText: function(cssObj) {
         if (!this.domNode) return;
 
@@ -1660,56 +1670,58 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	   If ommitted, the default node is used.
 	   @example this.panel.removeUserClass("hilite-border");
 	*/
-	removeUserClass: function(inClass, inNodeName) {
-	    inNodeName = inNodeName || "domNode";
-	    var n = this[inNodeName];
-	    if (n)
-		dojo.removeClass(n, inClass);
-	    var cs = this._classes[inNodeName] || [];
-	    for (var i=0, c; c=cs[i]; i++)
-		if (c == inClass)
-		    cs.splice(i--, 1);
-	    if (!cs.length)
-		delete this._classes[inNodeName];
-	},
-
-	setStyle: function(inStyle, inValue) {
-	    if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
-		return this.setProp(inStyle, inValue);
-	    }
-
-	    if (!this.styles) {
-		this.styles = {};
-	    }
-	    if (inValue === null || inValue === undefined) {
-		delete this.styles[inStyle];
-	    } else {
-		this.styles[inStyle] = inValue;
-	    }
-	    if (inStyle == "backgroundGradient") {
-		if (inValue) {
-		    inValue = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
-		} else {
-		    inValue = "";
-		}
-		if (dojo.isIE < 10) {
-		    this.domNode.style.filter = inValue;
-		} else {
-		    this.domNode.style.background = inValue;
-		}
-	    } else {
-		this.domNode.style[inStyle] = inValue;
-	    }
-	},
-    getStyle: function(inStyle) {
-	if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
-	    return this.getProp(inStyle);
-	} else if (!this.styles) {
-	    return "";
-	} else {
-	    return this.styles[inStyle] !== undefined ? this.styles[inStyle] : "";
-	}
+    removeUserClass: function(inClass, inNodeName) {
+        inNodeName = inNodeName || "domNode";
+        var n = this[inNodeName];
+        if (n) dojo.removeClass(n, inClass);
+        var cs = this._classes[inNodeName] || [];
+        for (var i = 0, c; c = cs[i]; i++) {
+            if (c == inClass) {
+                cs.splice(i--, 1);
+            }
+        }
+        if (!cs.length) delete this._classes[inNodeName];
     },
+
+    setStyle: function(inStyle, inValue) {
+        if (inValue === undefined || inValue === null) inValue = "";
+        if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
+            return this.setProp(inStyle, inValue);
+        }
+
+        if (!this.styles) {
+            this.styles = {};
+        }
+        if (inValue === null || inValue === undefined) {
+            delete this.styles[inStyle];
+        } else {
+            this.styles[inStyle] = inValue;
+        }
+        if (inStyle == "backgroundGradient") {
+            if (inValue) {
+                inValue = wm.getBackgroundStyle(inValue.startColor, inValue.endColor, inValue.colorStop, inValue.direction, "");
+            } else {
+                inValue = "";
+            }
+            if (dojo.isIE < 10) {
+                this.domNode.style.filter = inValue;
+            } else {
+                this.domNode.style.background = inValue;
+            }
+        } else {
+            this.domNode.style[inStyle] = inValue;
+        }
+    },
+    getStyle: function(inStyle) {
+        if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {
+            return this.getProp(inStyle);
+        } else if (!this.styles) {
+            return "";
+        } else {
+            return this.styles[inStyle] !== undefined ? this.styles[inStyle] : "";
+        }
+    },
+
 	getOrderedWidgets: function() {
 	    return [];
 	},
@@ -1726,23 +1738,36 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
 
     toHtml: function() {return "";},
+    toHtmlStyles: function() {
+        var style = ""; //"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+        if (this.styles) {
+            wm.forEachProperty(this.styles, function(value, name) {
+                if (style) style += ";";
+                style += name.replace(/([A-Z])/g, function(inLetter) {
+                    return "-" + inLetter.toLowerCase();
+                }) + ": " + value;
+            });
+            if (style) style = "style='" + style + "'";
+        }
+        return style;
+    },
     customToHtml: function(inWidth) {return "";},
     print: function() {
-	var html = this.toHtml(725); // 725px wide page
-	var csspath = dojo.moduleUrl("wm.base.widget.themes.default").path + "print.css";
-	var wavemakercsspath = dojo.moduleUrl("wm.base.styles").path + "wavemaker.css";
-	var page = this.getParentPage();
-	if (page) {
-	    var name = page.declaredClass;
-	    var css = wm.load("pages/" + name + "/" + name + ".css");
-	}
-	html = "<html><head><title>Printing " + app.declaredClass + "</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /><link rel='stylesheet' type='text/css' href='" + wavemakercsspath + "'/><link rel='stylesheet' href='print.css'/>" + (css ? "<style>" + css + "</style>" : "") + "</head><body onload='print()'>" + html + "</body><html>";
-	var win = window.open("", "Printing");
-	if (win) {
-	    win.document.open("text/html");
-	    win.document.write(html);
-	    win.document.close();
-	}
+        var html = this.toHtml(725); // 725px wide page
+        var csspath = dojo.moduleUrl("wm.base.widget.themes.default").path + "print.css";
+        var wavemakercsspath = dojo.moduleUrl("wm.base.styles").path + "wavemaker.css";
+        var page = this.getParentPage();
+        if (page) {
+            var name = page.declaredClass;
+            var css = wm.load("pages/" + name + "/" + name + ".css");
+        }
+        html = "<html><head><title>Printing " + app.declaredClass + "</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /><link rel='stylesheet' type='text/css' href='" + wavemakercsspath + "'/><link rel='stylesheet' href='print.css'/>" + (css ? "<style>" + css + "</style>" : "") + "</head><body onload='print()'>" + html + "</body><html>";
+        var win = window.open("", "Printing");
+        if (win) {
+            win.document.open("text/html");
+            win.document.write(html);
+            win.document.close();
+        }
     },
 
 	setHint: function(inHint) {

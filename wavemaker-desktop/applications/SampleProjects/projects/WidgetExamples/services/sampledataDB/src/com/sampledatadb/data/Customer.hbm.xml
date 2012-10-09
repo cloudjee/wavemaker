@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.Customer" table="customer" dynamic-insert="false" dynamic-update="false">
+        <id name="customerId" type="integer">
+            <column name="CUSTOMER_ID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="45"/>
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="45"/>
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="50"/>
+        </property>
+        <property name="active" type="integer">
+            <column name="ACTIVE"/>
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="CREATE_DATE" length="19"/>
+        </property>
+        <many-to-one name="address" class="com.sampledatadb.data.Address">
+            <column name="ADDRESS_ID"/>
+        </many-to-one>
+        <many-to-one name="store" class="com.sampledatadb.data.Store">
+            <column name="STORE_ID"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

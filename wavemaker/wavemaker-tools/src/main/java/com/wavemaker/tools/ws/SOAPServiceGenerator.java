@@ -237,7 +237,7 @@ public class SOAPServiceGenerator extends WebServiceGenerator {
     }
 
     @Override
-    protected void afterClassGeneration(String path) throws GenerationException {
+    protected void afterClassGeneration(Folder path) throws GenerationException {
     }
 
     @Override

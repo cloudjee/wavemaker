@@ -639,14 +639,12 @@ public class DataModelConfiguration {
         String oldPkgName = StringUtils.packageToSrcFilePath(ei.getPackageName()) + "/" + entityName + DataServiceConstants.HBM_EXT;
         String newPkgName = StringUtils.packageToSrcFilePath(ei.getPackageName()) + "/" + newEntityName + DataServiceConstants.HBM_EXT;
         File oldf = getProjectRootFolder().getFile(getRelServicePath(oldPkgName));
-        File newf = getProjectRootFolder().getFile(getRelServicePath(newPkgName));
 
-        oldf.rename(newf.toString());
+        File newf = oldf.rename(newEntityName + DataServiceConstants.HBM_EXT);
 
         String content = newf.getContent().asString();
 
         content = content.replace(entityName, newEntityName);
-        // FileUtils.writeStringToFile(newf, content, ServerConstants.DEFAULT_ENCODING);
         newf.getContent().write(content);
 
         removeMappingFromSpringFile(oldPkgName);

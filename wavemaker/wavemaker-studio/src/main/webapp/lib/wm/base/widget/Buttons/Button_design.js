@@ -27,16 +27,16 @@ wm.Object.extendSchema(wm.ToolButton, {
     iconUrl:    {group: "display", subgroup: "visual", order: 100, bindTarget: true, type: "String", subtype: "File", advanced:1}, // resource manager
     iconWidth:  {group: "display", subgroup: "visual", order: 101, editor: "wm.prop.SizeEditor", advanced:1},
     iconHeight: {group: "display", subgroup: "visual", order: 102, editor: "wm.prop.SizeEditor", advanced:1},
-    iconMargin: {group: "display", subgroup: "visual", order: 103, type: "String", advanced:1}, 
+    iconMargin: {group: "display", subgroup: "visual", order: 103, type: "String", advanced:1},
     */
 
     iconUrl:    {group: "widgetName", subgroup: "graphics", order: 100, bindTarget: true, type: "String", subtype: "File", advanced:1}, // resource manager
     iconWidth:  {group: "widgetName", subgroup: "graphics", order: 101, editor: "wm.prop.SizeEditor", advanced:1},
     iconHeight: {group: "widgetName", subgroup: "graphics", order: 102, editor: "wm.prop.SizeEditor", advanced:1},
-    iconMargin: {group: "widgetName", subgroup: "graphics", order: 103, type: "String", advanced:1}, 
+    iconMargin: {group: "widgetName", subgroup: "graphics", order: 103, type: "String", advanced:1},
 
     /* Events group */
-    onclick: {requiredGroup: 1, order: 50}, 
+    onclick: {requiredGroup: 1, order: 50},
 
     /* Ignored Group */
     imageIndex: {ignore:0, advanced:1},
@@ -120,7 +120,7 @@ wm.PopupMenuButton.extend({
 wm.Object.extendSchema(wm.PopupMenuButton, {
     /* Display group; text subgroup */
     caption: { bindSource:1 },
-    editMenuItems: {group: "widgetName", subgroup: "text", operation: 1, order: 30, requiredGroup: true},    
+    editMenuItems: {group: "widgetName", subgroup: "text", operation: 1, order: 30, requiredGroup: true},
     rememberWithCookie: {group: "widgetName", subgroup: "behavior", order: 40},
 
     /* Events group */
@@ -136,89 +136,115 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
 
     /* Method group */
     setIconClass: {method:1}
-});   
+});
 
 
 wm.PopupMenuButton.extend({
     editMenuItems: "(Edit Menu Items)",
     afterPaletteDrop: function() {
-	this.inherited(arguments);
-	this.set_fullStructure(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
+        this.inherited(arguments);
+        this.set_fullStructure(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
     },
 
     set_fullStructure: function(inObj) {
-	this.fullStructure = inObj;
-	this.setFullStructure(inObj);
+        this.fullStructure = inObj;
+        this.setFullStructure(inObj);
     },
 
     set_caption: function(inCaption) {
-	var list = this.buildCaptionList(this.dojoMenu.fullStructure, true);
-	for (var i = 0; i < list.length; i++) {
-	    if (!inCaption || inCaption == list[i].label) {
-		this.setIconClass(list[i].iconClass);
-		return this.setCaption(inCaption);
-	    }
-	}
+        var list = this.buildCaptionList(this.dojoMenu.fullStructure, true);
+        for (var i = 0; i < list.length; i++) {
+            if (!inCaption || inCaption == list[i].label) {
+                this.setIconClass(list[i].iconClass);
+                return this.setCaption(inCaption);
+            }
+        }
     },
     buildCaptionList: function(inNode, returnObj) {
-	var list = [];
-	dojo.forEach(inNode, dojo.hitch(this, function(struct) {
-	    if (struct.children && struct.children.length) {
-		list = list.concat(this.buildCaptionList(struct.children, returnObj));
-	    } else {
-		list.push(returnObj ? struct : struct.label);
-	    }
-	}));
-	return list;
+        var list = [];
+        dojo.forEach(inNode, dojo.hitch(this, function(struct) {
+            if (struct.children && struct.children.length) {
+                list = list.concat(this.buildCaptionList(struct.children, returnObj));
+            } else {
+                list.push(returnObj ? struct : struct.label);
+            }
+        }));
+        return list;
     },
     makePropEdit: function(inName, inValue, inEditorProps) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	switch (inName) {
-	case "caption":
-	    var list = this.buildCaptionList(this.dojoMenu.fullStructure, false);
-	    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: list}));
-	}
-	return this.inherited(arguments);
+        var prop = this.schema ? this.schema[inName] : null;
+        var name = (prop && prop.shortname) ? prop.shortname : inName;
+        switch (inName) {
+        case "caption":
+            var list = this.buildCaptionList(this.dojoMenu.fullStructure, false);
+            return new wm.SelectMenu(dojo.mixin(inEditorProps, {
+                options: list
+            }));
+        }
+        return this.inherited(arguments);
     },
 
     editMenuItems: function() {
-	if (!studio.menuDesignerDialog) {
-	    studio.menuDesignerDialog = new wm.PageDialog({pageName: "MenuDesigner", 
-							   name: "MenuDesignerDialog",
-							   title: studio.getDictionaryItem("wm.PopupMenuButton.MENU_DESIGNER_TITLE"),
-							   hideControls: true,
-							   owner: studio,
-							   width: "250px",
-							   height: "350px"});
-	}
-	studio.menuDesignerDialog.page.setMenu(this,{content: this.caption,
-						     iconClass: this.iconClass},true);
-	studio.menuDesignerDialog.show();
+        if (!studio.menuDesignerDialog) {
+            studio.menuDesignerDialog = new wm.PageDialog({
+                _classes: {domNode: ["studiodialog"]},
+                pageName: "MenuDesigner",
+                name: "MenuDesignerDialog",
+                title: studio.getDictionaryItem("wm.PopupMenuButton.MENU_DESIGNER_TITLE"),
+                hideControls: true,
+                owner: studio,
+                width: "250px",
+                height: "350px"
+            });
+        }
+        studio.menuDesignerDialog.page.setMenu(this, {
+            content: this.caption,
+            iconClass: this.iconClass
+        }, true);
+        studio.menuDesignerDialog.show();
     }
 });
 
 wm.ToggleButtonPanel.extend({
-        afterPaletteDrop: function(){
-	    this.inherited(arguments);
-	    new wm.Button({owner: this.owner,
-			   parent: this,
-			   name: "togglePanelButton1",
-			   caption: "Toggle1",
-			   height: "100%",
-			   width: "100%"
-			  });
-	    this.reflow();
-	},
-    set_buttonMargins: function(inMargin) {
-	this.buttonMargins = inMargin;
-	dojo.forEach(this._btns, function(b) {b.setMargin(inMargin);});
+    afterPaletteDrop: function() {
+        this.inherited(arguments);
+        new wm.Button({
+            owner: this.owner,
+            parent: this,
+            name: "togglePanelButton1",
+            caption: "Toggle1",
+            height: "100%",
+            width: "100%"
+        });
+        this.reflow();
     },
+
+    set_buttonMargins: function(inMargin) {
+        this.buttonMargins = inMargin;
+        dojo.forEach(this._btns, function(b) {
+            b.setMargin(inMargin);
+        });
+    },
+    afterDragChildDrop: function(inButton) { this.afterPaletteChildDrop(inButton);},
     afterPaletteChildDrop: function(inButton) {
-	inButton.setWidth("100%");
-	inButton.setMargin("0");
-	inButton.setPadding("0");
-	inButton.setBorder("0,1,0,0");
+        if (inButton.declaredClass == "wm.Button") {
+            inButton.setWidth("100%");
+            inButton.setMargin("0");
+            inButton.setPadding("0");
+            inButton.setBorder("0,1,0,0");
+        } else {
+            app.toastWarning(studio.getDictionaryItem("wm.ToggleButtonPanel.BUTTON_ONLY", {name: inButton.declaredClass}));
+        }
+    },
+    _errorCheck: function() {
+        var errors = [];
+        for (var i = 0; i < this.c$.length; i++) {
+            if (this.c$[i].declaredClass != "wm.Button") {
+                errors.push({name: this.name + " should only have standard buttons in it, " + this.c$[i].name + " of class " + this.c$[i].declaredClass + " may cause problems", dataValue: this.name});
+                break;
+            }
+        }
+        return errors;
     }
 });
 
@@ -230,8 +256,15 @@ wm.Object.extendSchema(wm.ToggleButtonPanel, {
     currentButtonName: {ignore:1,bindSource:true, doc:1},
     currentButtonCaption: {ignore:1,bindSource:true, doc:1},
     themeStyleType: {group: "style", order: 150},
-    
-    setCurrentButton: {method:1}
-    
 
+    setCurrentButton: {method:1}
+
+
+});
+
+wm.MobileIconButton.extend({
+    afterPaletteDrop: function(){
+        this.inherited(arguments);
+        this.setEvent("onclick", "app._onBack");
+    }
 });

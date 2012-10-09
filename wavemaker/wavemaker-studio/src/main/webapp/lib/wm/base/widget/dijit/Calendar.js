@@ -21,12 +21,16 @@ dojo.require("dojo.date.locale");
 dojo.extend(dijit.Calendar, {
     specialDates: null,
     getClassForDate: function(date) {
-        if (!this.specialDates) return;
+        if (!this.specialDatesHash) return;
+        var classField = this.owner.cssClassField;
         var key = wm.dijit.Calendar.getDateKey(date);
-        if (this.specialDates && this.specialDates[key]) {
+        if (this.specialDatesHash && this.specialDatesHash[key]) {
             var classes = "";
-            for (var i = 0; i < this.specialDates[key].length; i++) 
-                classes += ((classes) ? " " : "") + this.specialDates[key][i].dateClass;
+            for (var i = 0; i < this.specialDatesHash[key].length; i++) {
+                var newclass = this.specialDatesHash[key][i][classField];
+                if (typeof newclass == "number") newclass = "class" + newclass;
+                classes += ((classes) ? " " : "") + newclass;
+            }
             return classes;
         }
     }
@@ -36,233 +40,258 @@ dojo.extend(dijit.Calendar, {
 dojo.declare("wm.dijit.Calendar", wm.Dijit, {
     minimum: "",
     maximum: "",
-        useLocalTime: false,
-	displayDate: "",
-	dijitClass: dijit.Calendar,
-	width: "360px",
-	height: "160px",
+    useLocalTime: false,
+    displayDate: "",
+    dijitClass: dijit.Calendar,
+    width: "360px",
+    height: "160px",
     mobileHeight: "210px",
-        enableTouchHeight: true,
-        dialog: null,
-        useDialog: true,
+    enableTouchHeight: true,
+    dialog: null,
+    useDialog: true,
     // inDates is expected to be an array; but we'll need to turn it into a hash
-        specialDates: null,
-        setSpecialDates: function(inDataSet) {
-            if (!inDataSet) {
-                this.specialDates = {};
-                this.refreshCalendar();
-                return;
-            }
-            var dates = {};
-
-            if (this.isDesignLoaded()) {
-	        if (!(inDataSet instanceof wm.Variable)) {
-		    var ds = this.getValueById(inDataSet);
-		    if (ds) {
-		        this.components.binding.addWire("", "specialDates", ds.getId());
-                        return; // binding will recall setSpecialDates
-                    }
-	        }
-            }
-
-            if (dojo.isString(inDataSet))
-                inDataSet = this.owner.getValue(inDataSet);
-            if (inDataSet instanceof wm.Variable)
-                inDataSet = inDataSet.getData();
-            for (var i = 0; i < inDataSet.length; i++) {
-                var data = inDataSet[i];
-                if (!data.date && data.dataValue)
-                    data = data.dataValue;
-                var date = data.date;
-                var key = wm.dijit.Calendar.getDateKey(date);
-                if (!dates[key]) dates[key] = [];
-                dates[key].push(data);
-            }
-            this.specialDates = dates;
+    specialDates: null,
+    dateField: null,
+    startDateField: null,
+    endDateField: null,
+    cssClassField: null,
+    desciptionField: null,
+    setSpecialDates: function(inDataSet) {
+        if (!inDataSet) {
+            this.specialDates = null;
+            this.specialDatesHash = {};
             this.refreshCalendar();
-        },
+            return;
+        }
+        var dates = {};
+
+        if (this.isDesignLoaded()) {
+            if (!(inDataSet instanceof wm.Variable)) {
+                var ds = this.getValueById(inDataSet);
+                if (ds) {
+                    this.components.binding.addWire("", "specialDates", ds.getId());
+                    return; // binding will recall setSpecialDates
+                }
+            }
+        }
+
+        if (dojo.isString(inDataSet)) inDataSet = this.owner.getValue(inDataSet);
+        this.specialDates = inDataSet;
+
+        if (inDataSet instanceof wm.Variable) inDataSet = inDataSet.getData();
+        for (var i = 0; i < inDataSet.length; i++) {
+            var data = inDataSet[i];
+            if (!data.date && data.dataValue) data = data.dataValue;
+            var date = data[this.dateField];
+            if (date instanceof Date === false) date = new Date(date);
+            var key = wm.dijit.Calendar.getDateKey(date);
+            if (!dates[key]) dates[key] = [];
+            dates[key].push(data);
+        }
+        this.specialDatesHash = dates;
+        this.refreshCalendar();
+    },
+    getProperties: function() {
+        var result = this.inherited(arguments);
+        result.owner = this;
+        if (this.dateValue) {
+            result.currentFocus = result.value = new Date(this.dateValue);
+        }
+        return result;
+    },
     renderBounds: function() {
-	this.inherited(arguments);
-        this.dijit._setStyleAttr({width: this.bounds.w + "px", height: this.bounds.h + "px"})	
+        this.inherited(arguments);
+        this.dijit._setStyleAttr({
+            width: this.bounds.w + "px",
+            height: this.bounds.h + "px"
+        })
     },
     focus: function() {
-	this.dijit.focus();
+        this.dijit.focus();
     },
     refreshCalendar: function() {
-            this.dijitProps.specialDates = this.specialDates;
-            if (this.dijit) {
-                this.dijit.destroy();
-                this.initDijit(this.domNode);
-                this.dijit._setStyleAttr({width: this.bounds.w + "px", height: this.bounds.h + "px"})
-            }
+        this.dijitProps.specialDatesHash = this.specialDatesHash;
+        if (this.dijit) {
+            this.dijit.destroy();
+            this.initDijit(this.domNode);
+            this.dijit._setStyleAttr({
+                width: this.bounds.w + "px",
+                height: this.bounds.h + "px"
+            })
+        }
     },
-        prepare: function() {
-            this.inherited(arguments);
-            if (this.specialDates) {
-                this.setSpecialDates(this.specialDates);
+    prepare: function() {
+        this.inherited(arguments);
+        if (this.specialDates) {
+            this.setSpecialDates(this.specialDates);
 
-            } 
+        }
 
-        },
+    },
     init: function() {
-	this.dijitProps.isDisabledDate = dojo.hitch(this, "isDisabledDate");
-	this.setMinimum(this.minimum);
-	this.setMaximum(this.maximum);
+        this.dijitProps.isDisabledDate = dojo.hitch(this, "isDisabledDate");
+        this.setMinimum(this.minimum);
+        this.setMaximum(this.maximum);
 
         this.inherited(arguments);
-	if (this.dateValue)
-	    this.setDateValue(this.dateValue);
-        if (this.useDialog) {
-            this.dialog = new wm.WidgetsJsDialog({
-                width: 200,
-                height: 160,
-                modal: false,
-                owner: this,
-                widgets_data: {
-                    startContainer: ["wm.Panel", {height: "20px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"},{},{
-                        startHeading:  ["wm.Label", {width: "40px", height: "100%", caption: "FROM:"}],
-                        startDate:  ["wm.Label", {width: "100%", height: "100%"}]
-                    }],
-                    endContainer: ["wm.Panel", {height: "20px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"},{},{
-                        endHeading:  ["wm.Label", {width: "40px", height: "100%", caption: "TO:"}],
-                        endDate:  ["wm.Label", {width: "100%", height: "100%"}]
-                    }],
-                    description: ["wm.Label", {width: "100%", height: "20px", autoSizeHeight: true, singleLine: false}]}
-            });    
-            this.dialog.titleMinify.hide();
-            this.dialog.titleMaxify.hide();
-	}
+        if (this.dateValue)
+            this.setDateValue(this.dateValue);
+            if (this.useDialog) {
+                this.dialog = new wm.WidgetsJsDialog({
+                    width: 200,
+                    height: 160,
+                    modal: false,
+                    owner: this,
+                    corner: "cr",
+                    fixPositionNode: this.domNode,
+                    widgets_data: {
+                        startContainer: ["wm.Panel", {height: "20px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"},{},{
+                            startHeading:  ["wm.Label", {width: "40px", height: "100%", caption: "FROM:"}],
+                            startDate:  ["wm.Label", {width: "100%", height: "100%"}]
+                        }],
+                        endContainer: ["wm.Panel", {height: "20px", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"},{},{
+                            endHeading:  ["wm.Label", {width: "40px", height: "100%", caption: "TO:"}],
+                            endDate:  ["wm.Label", {width: "100%", height: "100%"}]
+                        }],
+                        description: ["wm.Label", {width: "100%", height: "20px", autoSizeHeight: true, singleLine: false}]}
+                });
+                this.dialog.titleMinify.hide();
+                this.dialog.titleMaxify.hide();
+        }
     },
     setMinimum: function(inValue) {
-	if (this._isDesignLoaded) {
-	    if (inValue instanceof Date) {
-		this.minimum = inValue.getTime();
-	    } else if (!inValue) {
-		this.minimum = "";
-	    } else {
-		this.minimum = inValue;
-	    }
-	} else {
-	    if (inValue instanceof Date) {
-		this.minimum = inValue;
-	    } else if (!inValue) {
-		this.minimum = "";
-	    } else {
-		this.minimum = wm.convertValueToDate(inValue);
-	    }
-	    if (this.dijit) {
-		var value = this.dijit.value;
-		var currentFocus = this.dijit.currentFocus;
-		this.dijit.destroy();
-		this.initDijit(this.domNode);
-		this.renderBounds();
-		this.dijit.set("currentFocus", currentFocus);
-		this.setDate(value);
-	    }
-	}
+        if (this._isDesignLoaded) {
+            if (inValue instanceof Date) {
+                this.minimum = inValue.getTime();
+            } else if (!inValue) {
+                this.minimum = "";
+            } else {
+                this.minimum = inValue;
+            }
+        } else {
+            if (inValue instanceof Date) {
+                this.minimum = inValue;
+            } else if (!inValue) {
+                this.minimum = "";
+            } else {
+                this.minimum = wm.convertValueToDate(inValue);
+            }
+            if (this.dijit) {
+                var value = this.dijit.value;
+                var currentFocus = this.dijit.currentFocus;
+                this.dijit.destroy();
+                this.initDijit(this.domNode);
+                this.renderBounds();
+                this.dijit.set("currentFocus", currentFocus);
+                this.setDate(value);
+            }
+        }
     },
     setMaximum: function(inValue) {
-	if (this._isDesignLoaded) {
-	    if (inValue instanceof Date) {
-		this.maximum = inValue.getTime();
-	    } else if (!inValue) {
-		this.maximum = "";
-	    } else {
-		this.maximum = inValue;
-	    }
-	} else {
-	    if (inValue instanceof Date) {
-		this.maximum = inValue;
-	    } else if (!inValue) {
-		this.maximum = "";
-	    } else {
-		this.maximum =  wm.convertValueToDate(inValue);
-	    }
-	    if (this.dijit) {
-		var value =  this.dijit.value;
-		var currentFocus = this.dijit.currentFocus;
-		this.dijit.destroy();
-		this.initDijit(this.domNode);
-		this.renderBounds();
-		this.dijit.set("currentFocus", currentFocus);
-		this.setDate(value);
-	    }
-	}
+        if (this._isDesignLoaded) {
+            if (inValue instanceof Date) {
+                this.maximum = inValue.getTime();
+            } else if (!inValue) {
+                this.maximum = "";
+            } else {
+                this.maximum = inValue;
+            }
+        } else {
+            if (inValue instanceof Date) {
+                this.maximum = inValue;
+            } else if (!inValue) {
+                this.maximum = "";
+            } else {
+                this.maximum = wm.convertValueToDate(inValue);
+            }
+            if (this.dijit) {
+                var value = this.dijit.value;
+                var currentFocus = this.dijit.currentFocus;
+                this.dijit.destroy();
+                this.initDijit(this.domNode);
+                this.renderBounds();
+                this.dijit.set("currentFocus", currentFocus);
+                this.setDate(value);
+            }
+        }
     },
-	setDomNode: function() {
-		this.inherited(arguments);
-		var s = this.dijit.domNode.style;
-		s.width = s.height = "100%";
-	},
-	setDate: function(inValue) {
-	    var d = wm.convertValueToDate(inValue);
-	    if (d && !this.useLocalTime) 
-		d.setHours(d.getHours() + wm.timezoneOffset);
-	    this.dijit.set("value",d);
-	},
-	getDisplayDate: function() {
-	    if (!this.dijit || this.dijit.value instanceof Date == false)
-		return "";
-	    return dojo.date.locale.format(this.dijit.value, { selector: "date"});
-	},
-	setDisplayDate: function(inValue) {
-		this.setDate(inValue);
-	},
-	getDateValue: function() {
-		// dijit._Calendar doesn't have a getValue()
-		var d = this.dijit.value;
-	    if (d instanceof Date) {
-		if (!this.useLocalTime)
-		    d.setHours(-wm.timezoneOffset,0,0);
-		else
-		    d.setHours(0,0,0);
-		return d.getTime();
-	    }
-	    return null;
-	},
-	setDateValue: function(inValue) {
-		this.setDate(inValue);
-	},
-	onValueSelected: function(inDate) {
-            var key = wm.dijit.Calendar.getDateKey(inDate);
-            if (this.useDialog && this.specialDates && this.specialDates[key]) {
+    setDomNode: function() {
+        this.inherited(arguments);
+        var s = this.dijit.domNode.style;
+        s.width = s.height = "100%";
+    },
+    setDate: function(inValue) {
+        var d = wm.convertValueToDate(inValue);
+        if (d && !this.useLocalTime) {
+            /* See WM-4490 to understand this calculation */
+            d.setHours(0, 60*d.getHours() + d.getMinutes() + 60*wm.timezoneOffset);
+        }
+        this.dijit.set("value", d);
+    },
+    getDisplayDate: function() {
+        if (!this.dijit || this.dijit.value instanceof Date == false) return "";
+        return dojo.date.locale.format(this.dijit.value, {
+            selector: "date"
+        });
+    },
+    setDisplayDate: function(inValue) {
+        this.setDate(inValue);
+    },
+    getDateValue: function() {
+        // dijit._Calendar doesn't have a getValue()
+        var d = this.dijit.value;
+        if (d instanceof Date) {
+            /* See WM-4490 to understand this calculation */
+            var adjustSixHours = 360;
+            if (!this.useLocalTime) d.setHours(0,-60*wm.timezoneOffset + adjustSixHours, 0);
+            else d.setHours(0, 0, 0);
+            return d.getTime();
+        }
+        return null;
+    },
+    setDateValue: function(inValue) {
+        this.setDate(inValue);
+    },
+    _onValueSelected: function(inDate) {
+        if (this._cupdating) return;
+        this.onValueSelected(inDate);
+    },
+    onValueSelected: function(inDate) {
+        var key = wm.dijit.Calendar.getDateKey(inDate);
+        if (this.useDialog && this.specialDatesHash && this.specialDatesHash[key]) {
 
-                // TODO: Handle additional entries for this date
-                var data = this.specialDates[key][0];
-                this.dialog.setTitle(key);
-                this.dialog.show();
+            // TODO: Handle additional entries for this date
+            var data = this.specialDatesHash[key][0];
+            this.dialog.setTitle(key);
+            this.dialog.show();
 
-//                var o = wm.positionAroundNode(dojo.query(".dijitCalendarSelectedDate", this.domNode)[0], "b");
-                var o = wm.positionAroundNode(this.domNode, "r");
-                this.dialog.domNode.style.left = o.x + "px";
-                this.dialog.domNode.style.top = o.y + "px";
-                this.dialog.$.startContainer.setShowing(Boolean(data.startDate));
-                this.dialog.$.endContainer.setShowing(Boolean(data.endDate)); 
-                this.dialog.$.startDate.setCaption(wm.dijit.Calendar.getTime(data.startDate));
-                this.dialog.$.endDate.setCaption(wm.dijit.Calendar.getTime(data.endDate));
-                this.dialog.$.description.setCaption(data.description);
-            } else if (this.useDialog && this.dialog.showing)
-                this.dialog.dismiss();
-	    this.valueChanged("dateValue", inDate instanceof Date ? inDate.getTime() : null);
-	},
+            this.dialog.$.startContainer.setShowing(Boolean(data[this.startDateField]));
+            this.dialog.$.endContainer.setShowing(Boolean(data[this.endDateField]));
+            this.dialog.$.startDate.setCaption(wm.dijit.Calendar.getTime(data[this.startDateField]));
+            this.dialog.$.endDate.setCaption(wm.dijit.Calendar.getTime(data[this.endDateField]));
+            this.dialog.$.description.setCaption(data[this.descriptionField]);
+        } else if (this.useDialog && this.dialog.showing) this.dialog.dismiss();
+        this.valueChanged("dateValue", inDate instanceof Date ? inDate.getTime() : null);
+    },
     isDisabledDate: function(date) {
-	if (this.minimum) {
-	    if (dojo.date.compare(date, this.minimum, "date") < 0) {
-		return true;
-	    }
-	}
-	if (this.maximum) {
-	    if (dojo.date.compare(date, this.maximum, "date") > 0) {
-		return true;
-	    }
-	}
-	return false;
+        if (this.minimum) {
+            if (dojo.date.compare(date, this.minimum, "date") < 0) {
+                return true;
+            }
+        }
+        if (this.maximum) {
+            if (dojo.date.compare(date, this.maximum, "date") > 0) {
+                return true;
+            }
+        }
+        return false;
     }
-    
+
 });
 
 
 wm.dijit.Calendar.getTime = function(date) {
+    if (date instanceof Date === false) date = new Date(date);
     var hour = date.getHours();
     var ampm = "am";
     if (hour == 0) {
@@ -273,7 +302,7 @@ wm.dijit.Calendar.getTime = function(date) {
         hour = hour % 12;
         ampm = "pm";
     }
-    
+
     return hour + ":" + date.getMinutes() + " " + ampm;
 };
 

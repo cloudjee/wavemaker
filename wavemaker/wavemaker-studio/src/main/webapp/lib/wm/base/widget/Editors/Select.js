@@ -638,7 +638,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
         /* item may still be set in the dijit even though the displayed value no longer matches it; */
         else if (item && displayedValue == item.name) {
             index = item.id;
-            var result = this.dataSet.getItem(index);
+            var result = this.dataSet ? this.dataSet.getItem(index) : null;
             this.selectedItem.setData(result);
         } else {
             this.selectedItem.setData(null);

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="demohelper" class="waitabit" CRUDService="false" type="JavaService" springFile="demohelper.spring.xml">
+    <operation name="sampleJavaOperation">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="waitOperation">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="waiting">
+        <parameter name="n" typeRef="int" isList="false"/>
+    </operation>
+    <dataobjects/>
+</service>

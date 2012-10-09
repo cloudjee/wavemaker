@@ -21,16 +21,23 @@
    *              Even rows are set by specifying the style for all rows; odd row styles override
    *              the style for all rows.  Only vary the font and background-color.
    ************************************************************************************************/
+.wm_template div.dojoxGrid, .wm_template .wmlist {
+    font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
+}
+.wm_template .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
+    font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
+}
+
 .wm_template div.dojoxGrid-row,
 .wm_template div.dojoxGridRow,
 .wm_template .Disabled div.dojoxGridRow.dojoxGridRowOver,
 .wm_template .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
-.wm_template .Disabled div.wmlist-item.wmlist-item-over,
-.wm_template div.wmlist-item {
+.wm_template .GridListStyle.Disabled div.wmlist-item.wmlist-item-over,
+.wm_template .GridListStyle div.wmlist-item {
 
     /* Tables-EvenRows-Font */
     font-family: sans-serif; /* Tables-EvenRows-Font_Family */
-    font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
+
     color: #FFFFFF; /* Tables-EvenRows-Font_Color */
     font-weight: bold; /* Tables-EvenRows-Font_Weight */
 
@@ -44,8 +51,8 @@
 .wm_template div.dojoxGridRow.dojoxGridRowOdd,
 .wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
 .wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
-.wm_template .Disabled div.wmlist-item.Odd.wmlist-item-over,
-.wm_template .wmlist-item.Odd {
+.wm_template .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.wm_template .GridListStyle .wmlist-item.Odd {
     /* Tables-OddRows-Font */
     color: #FFFFFF; /* Tables-OddRows-Font_Color */
 
@@ -59,14 +66,17 @@
 .wm_template .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
 .wm_template .Disabled.MobileListStyle div.wmlist-item.Odd.wmlist-item-over,
 .wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
-	background-color: #333333 !important; /* Document-ClickablesDefault-Background_Color */
+	background-color: #333333; /* Document-ClickablesDefault-Background_Color */
 
 	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+
 }
 
 .wm_template .MobileListStyle div.wmlist-item.wmlist-item-over,
 .wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
-	background-color: #333333 !important; /* Document-ClickablesHover-Background_Color */
+	background-color: #333333; /* Document-ClickablesHover-Background_Color */
 
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 }
@@ -75,7 +85,7 @@
 .wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
 .wm_template .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
 .wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
-	background-color: #333333 !important; /* Document-ClickablesActive-Background_Color */
+	background-color: #333333; /* Document-ClickablesActive-Background_Color */
 
 	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
 }
@@ -87,7 +97,7 @@
    *              Basically, we leave top/bottom border to the alternating even/odd row background color,
    *              and we don't need a right and left border (would double the border size between two cells)
    *              so just use the border-right-width: 1px, and let the user control the color of that border.
-   * 
+   *
    * TODO:        These settings are not well tested.
    ************************************************************************************************/
 .wm_template td.dojoxGrid-cell,
@@ -96,12 +106,12 @@
     border-top-width: 0px;
     border-bottom-width: 0px;
     border-right-width: 1px !important; /* Tables-EvenRows-Border_BorderSize */
-    border-style: solid;   
+    border-style: solid;
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 }
 
 .wm_template .wmlist-cell {
-    border-style: solid;   
+    border-style: solid;
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
@@ -115,23 +125,23 @@
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles
    *
-   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my 
+   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my
    *              TOC, its going to look/feel different in its hover/selection/header than
    *              a DojoGrid in my EmphasizedContent.
    ************************************************************************************************/
-@media screen { /* Document-Level */ 
+@media screen { /* Document-Level */
 
     /* Selected color for rows: uses Clickables-Active */
-    .wm_template div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template div.dojoxGrid-row.dojoxGrid-row-selected,
+    .wm_template div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over,
     .wm_template div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template div.dojoxGridRow.dojoxGridRowSelected,
     .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
-    .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,    
+    .wm_template div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
+    .wm_template div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
-    .wm_template .wmlist-item.wmlist-item-selected,
-    .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .wm_template .GridListStyle .wmlist-item.wmlist-item-selected,
+    .wm_template .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* Document-ClickablesActive-Background */
 	background-color: #333333 !important; /* Document-ClickablesActive-Background_Color */
@@ -141,11 +151,11 @@
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .wmlist-item.wmlist-item-over,
-    .dj_ie6 .wm_template .wmlist-item.wmlist-item-over,
-    .wm_template div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .GridListStyle .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .GridListStyle .wmlist-item.wmlist-item-over,
+    .wm_template div.dojoxGrid-row.dojoxGrid-row-over,
     .wm_template .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template div.dojoxGridRow.dojoxGridRowOver, 
+    .wm_template div.dojoxGridRow.dojoxGridRowOver,
     .wm_template .dojoxGridRowOdd.dojoxGridRowOver,
     .wm_template #wavemakerNode .wmlayout .dojoxGridRowOdd.dojoxGridRowOver a,
     .wm_template .dojoxGridRowOver td.dojoxGridCell
@@ -178,7 +188,7 @@
 
 	/* Tables-HeaderRow-Font */
 	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
-	font-size: 12pt; /* Tables-HeaderRow-Font_TextSize */
+
 	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
 	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
     }
@@ -191,14 +201,14 @@
     }
 
     /* Header-Row-Background */
-    body.tundra .wm_template .dojoxGrid-header, 
+    body.tundra .wm_template .dojoxGrid-header,
     body.tundra .wm_template .dojoxGridHeader,
     body.tundra .wm_template .wmlist-header,
-    body.tundra.wm_template .dojoxGrid-header, 
+    body.tundra.wm_template .dojoxGrid-header,
     body.tundra.wm_template .dojoxGridHeader,
     body.tundra.wm_template .wmlist-header,
-    .dj_ie7 .wm_template .dojoxGridHeader .dojoxGridCell, 
-    .dj_ie6 .wm_template .dojoxGridHeader .dojoxGridCell { 
+    .dj_ie7 .wm_template .dojoxGridHeader .dojoxGridCell,
+    .dj_ie6 .wm_template .dojoxGridHeader .dojoxGridCell {
 	background-color: #444444; /* Tables-HeaderRow-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
 	background-position: left top;     /* Tables-HeaderRow_Image-Position */
@@ -214,17 +224,17 @@
 
 }
 
-@media screen { /* MainContent-Level */ 
+@media screen { /* MainContent-Level */
     /* Selected color for rows: uses Clickables-Active */
-    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected,
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over,
     .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected,
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-    .wm_template .MainContent .wmlist-item.wmlist-item-selected,
-    .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
+    .wm_template .MainContent .GridListStyle .wmlist-item.wmlist-item-selected,
+    .wm_template .MainContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
 	background-color: #333333 !important; /* MainContent-ClickablesActive-Background_Color */
@@ -234,12 +244,12 @@
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .MainContent .wmlist-item.wmlist-item-over,
-    .dj_ie6 .wm_template .MainContent .wmlist-item.wmlist-item-over,
-    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .MainContent .GridListStyle .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .MainContent .GridListStyle .wmlist-item.wmlist-item-over,
+    .wm_template .MainContent div.dojoxGrid-row.dojoxGrid-row-over,
     .wm_template .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .MainContent .dojoxGridRowOver, 
-    .wm_template #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a, 
+    .wm_template .MainContent .dojoxGridRowOver,
+    .wm_template #wavemakerNode .wmlayout .MainContent .dojoxGridRowOver a,
     .wm_template .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
@@ -262,17 +272,17 @@
 
 
 
-@media screen { /* EmphasizedContent-Level */ 
+@media screen { /* EmphasizedContent-Level */
     /* Selected color for rows: uses Clickables-Active */
-    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected,
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over,
     .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected,
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected,
-    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .wm_template .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-selected,
+    .wm_template .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* EmphasizedContent-ClickablesActive-Background */
 	background-color: #333333 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
@@ -282,11 +292,11 @@
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
-    .dj_ie6 .wm_template .EmphasizedContent .wmlist-item.wmlist-item-over,
-    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-over,
+    .wm_template .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over,
     .wm_template .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .EmphasizedContent .dojoxGridRowOver, 
+    .wm_template .EmphasizedContent .dojoxGridRowOver,
     .wm_template .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
@@ -309,18 +319,18 @@
 
 
 
-@media screen { /* HeaderContent-Level */ 
+@media screen { /* HeaderContent-Level */
     /* Selected color for rows: uses Clickables-Active */
-    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected, 
-    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over, 
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected,
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-selected.dojoxGrid-row-over,
     .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
-    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
+    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected,
     .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
-    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_template .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-    .wm_template .HeaderContent .wmlist-item.wmlist-item-selected,
-    .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
-    .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+    .wm_template .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected,
+    .wm_template .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
+    .dj_ie6 .wm_template .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* HeaderContent-ClickablesActive-Background */
 	background-color: #333333 !important; /* HeaderContent-ClickablesActive-Background_Color */
 
@@ -329,11 +339,11 @@
     }
 
     /* Custom mouse-over color for rows */
-    .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
-    .dj_ie6 .wm_template .HeaderContent .wmlist-item.wmlist-item-over,
-    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over, 
+    .wm_template .HeaderContent .GridListStyle .wmlist-item.wmlist-item-over,
+    .dj_ie6 .wm_template .HeaderContent .GridListStyle .wmlist-item.wmlist-item-over,
+    .wm_template .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over,
     .wm_template .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
-    .wm_template .HeaderContent .dojoxGridRowOver, 
+    .wm_template .HeaderContent .dojoxGridRowOver,
     .wm_template .HeaderContent .dojoxGridRowOdd.dojoxGridRowOver,
     .wm_template #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
@@ -381,10 +391,10 @@
     }
 
     /* Header-Row-Background */
-    .wm_template .HeaderContent .dojoxGrid-header, 
+    .wm_template .HeaderContent .dojoxGrid-header,
     .wm_template .HeaderContent .dojoxGridHeader,
     .wm_template .HeaderContent .wmlist-header,
-    .dj_ie7 .wm_template .HeaderContent .dojoxGridHeader .dojoxGridCell, 
+    .dj_ie7 .wm_template .HeaderContent .dojoxGridHeader .dojoxGridCell,
     .dj_ie6 .wm_template .HeaderContent .dojoxGridHeader .dojoxGridCell {
 	color: #FFFFFF;	/* HeaderContent-ClickablesDefault-Font_Color */
 	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */

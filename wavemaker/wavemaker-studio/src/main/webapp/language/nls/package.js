@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 {
 
@@ -69,7 +69,7 @@
 	"TextArea" : "TextArea",
 	"Time" : "Time",
 	"RichText" : "RichText",
-	
+
 	"Dialogs" : "Dialogs",
 	"GenericDialog" : "GenericDialog",
 	"PageDialog" : "PageDialog",
@@ -140,13 +140,14 @@
 	"FacebookLikeButton" : "FacebookLikeButton",
 	"FacebookActivityFeed" : "FacebookActivityFeed",
          BasicWidgets: "Basic Widgets",
- 
+
 	"Beta" : "Beta",
         "betaGroup": "Beta Widgets",
 	"ColorPicker" : "ColorPicker",
 	"BusyButton" : "BusyButton",
+    "MobileBackButton": "Mobile Back Button",
 	"Ticker" : "Ticker",
-	
+
 	"Advanced" : "Advanced",
 	"Variables" : "Prebuilt Variables",
 	"Tree" : "Tree",
@@ -174,14 +175,14 @@
 	"Composite_Publisher" : "Composite Publisher",
 	"Property" : "Property",
 	"Template_Publisher" : "Template Publisher",
- 
+
 	"Services" : "Services",
     "DataWidget": "Data Widgets",
     DataWidgetSingle: "Single Data Point",
     DataWidgetMultiple: "Multiple Data Points",
     "Database": "Database Widgets",
 	"Database_Service" : "Import Database",
-	"Database_Design" : "Design Database", 
+	"Database_Design" : "Design Database",
 	"Java_Service" : "Java Service",
 	"LiveView" : "LiveView",
 	"Query" : "Query",
@@ -199,6 +200,7 @@
     "descToggleButton": "A button that stays clicked until clicked again",
     "descToggleButtonPanel": "A panel that manages the toggled state of its buttons (use wm.Button not wm.ToggleButton)",
     "descBusyButton": "A button with a status indicator",
+    "descMobileIconButton": "A button that shows a back indicator, and can be used to show arrows as well",
 
     "descLabel": "Basic text on page",
     "descPicture":  "A picture from a url",
@@ -211,7 +213,7 @@
 
     "descMenu": "A menu bar on top or left of page",
     "descPopupMenu": "A menu that appears under the mouse",
-    
+
     "descPanel":  "Container for other widgets",
     "descDashboard": "Advanced widget for displaying and moving page containers",
     "descFancyPanel": "A Panel with a titlebar and rounded corners",
@@ -264,13 +266,13 @@
     "descPropertyTree": "Builds a tree from a LiveVariable",
     "descPropertyObjectTree": "Builds a tree from a javascript hash",
     "descDraggableTree": "Builds a tree where nodes can be moved by the user",
-    
+
     "descFancyTemplate": "Premade page for showing how a number of widgets can work together",
     "descSideMenuTemplate": "A 800px wide centered page container with header and footer and menu on the left",
     "descTabsTemplate": "Premade page with tabs to navigate between its major sections",
     "descTopMenuTemplate": "Premade page with menubar on top for navigation",
     "descTabletTemplate": "Premade page designed for tablets",
-    
+
     "descSecurityTemplate": "Logout button and label for showing 'Welcome ' + user's name",
     "descTitleBarTemplate": "One way to structure a title bar for your page",
     "descFooterTemplate": "One way to structure the footer for your page",
@@ -287,7 +289,6 @@
     "descFaceBookActivityWidget": "A panel of facebook activity",
     "descTwitterFollowWidget": "A Twitter Follow button",
     "descTwitterTweetWidget": "A Twitter Tweet button",
-    "descTwitterListWidget": "Show Twitter search or profile results",
     "descMapsWidget": "Shows a map",
     "descFisheye": "Widget for zooming into images as the mouse moves over them",
     "descLightbox": "Popup for showing a set of photos",

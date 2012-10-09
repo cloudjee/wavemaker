@@ -547,7 +547,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
         this.tree.renderDataNode(p, inData);
     },
     selectRow: function(list, value) {
-        for (var i = 0; i < list.dataSet.data.list.length; i++) {
+        for (var i = 0; i < list.dataSet.data._list.length; i++) {
             var it = list.dataSet.getItem(i);
             if (it.getValue("name") == value) {
                 list.dijit.selection.select(i);
@@ -662,7 +662,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
                     "the owning type " + l[i].relatedType);
                 return;
             }*/
-            this.relationshipsListVar.data.list.splice(i, 1);
+            this.relationshipsListVar.data._list.splice(i, 1);
             this.relationshipsList.setDataSet(this.relationshipsListVar);
             this.relationshipsChange();
         }
@@ -1061,7 +1061,7 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             app.alert(this.getDictionaryItem("ALERT_REMOVE_COLUMN_DELETE_FIRST"))
             return;
         }
-        this.columnListVar.data.list.splice(i, 1);
+        this.columnListVar.data._list.splice(i, 1);
         this.columnList.setDataSet(this.columnListVar);
         this.columnsChange();
     },

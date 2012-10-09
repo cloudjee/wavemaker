@@ -74,10 +74,10 @@ wm.DojoMenu.extend({
 
     editMenuItems: function() {
 		    if (!studio.menuDesignerDialog) {
-			studio.menuDesignerDialog = 
+			studio.menuDesignerDialog =
 			    new wm.PageDialog({
 				_classes: {domNode: ["studiodialog"]},
-				pageName: "MenuDesigner", 
+				pageName: "MenuDesigner",
 					       name: "MenuDesignerDialog",
 					       title: studio.getDictionaryItem("wm.DojoMenu.MENU_DESIGNER_TITLE"),
 					       hideControls: true,
@@ -93,12 +93,12 @@ wm.DojoMenu.extend({
 		this.openOnHover = inValue;
     if (this.dojoObj)
 		  this.dojoObj.openOnHover = this.openOnHover;
-			
+
     if (this.openOnHover && !this.vertical){
-      this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');  
+      this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');
     } else {
       if (this.hoverConnect)
-			 dojo.disconnect(this.hoverConnect);  
+			 dojo.disconnect(this.hoverConnect);
 		}
 	},
 
@@ -176,7 +176,7 @@ wm.DojoMenu.extend({
 				return this.eventList[i];
 			}
 		}
-		
+
 		return null;
 	},
 	setVertical: function (inValue){
@@ -207,12 +207,15 @@ wm.DojoMenu.extend({
 	setProp: function(inProp, inValue){
 	    var prop = inProp.replace(/\d+$/,"");
 	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
-	    if (evtObj != null) 
+	    if (evtObj != null)
 			this.updatingEvent(inProp, inValue);
 		else
 			this.inherited(arguments);
 	},
 	getCleanText: function(text) {
+        if (!this._cleanTextHash) this._cleanTextHash = {};
+        if (text in this._cleanTextHash) return this._cleanTextHash[text];
+        var initialText = text;
 	    text = text.replace(/\s+/g,"_");
 	    text = text.replace(/\-/g,"_");
 	    var isInvalid = true;
@@ -227,11 +230,12 @@ wm.DojoMenu.extend({
 		    text = text.substring(0,i) + text.substring(i,i+1).replace(/[^a-zA-Z0-9]+/g, '_') + text.substring(i+1);
 		}
 	    }
+        this._cleanTextHash[initialText] = text;
 	    return text;
 	    //return text.replace(/[^a-zA-Z0-9]+/g, '_');
 	},
 	getEventName: function(label){
-		return 'on' + this.getCleanText(label) + 'Click';	
+		return 'on' + this.getCleanText(label) + 'Click';
 
 	},
         getSharedEventLookupName: function(inProp) {

@@ -76,7 +76,7 @@ dojo.declare("ResourceEditor", wm.Page, {
         this.editor.showSearch();
     },
     refreshScriptClick: function() {
-        this.editor.reset();
+        this.setItem(this.item);
     },
     formatScriptClick: function() {
         studio.formatScript(this.editor);

@@ -256,9 +256,13 @@ dojo.declare("wm.Component", wm.Object, {
         },
     isDesignLoaded: function() {
         if (this._isDesignLoaded) return true;
-        if (!window.studio || !studio.page) return false;
+
+        if (!window.studio || !this.owner) return false;
+        if (this.owner == studio.application || this.owner == studio._application) return true; // must come before test for !studio.page
+        if (!studio.page && !studio.application && !studio._application) return false;
         if (!this.owner) return false;
-        if (this.getParentPage() == studio.page) return true;
+        var pp = this.getParentPage();
+        if (pp && pp == studio.page || this.owner == studio.page) return true; // getParentPage() test failed for PageDialogs owned by studio
         if (this == studio.page) return true;
         if (this.isOwnedBy(studio.application)) return true;
         if (window["app"] && !this.isOwnedBy(window["app"]) && window["app"] != this) return true;
@@ -909,7 +913,9 @@ this.panel1.createComponent("custom", "wm.Panel", {
                 };
 
             /* Events should not be fired until the owner has finished loading, as the event may require components that aren't yet generated */
-            if (self instanceof wm.Page && self._loadingPage) {
+            if (inComponent && eventName && inComponent["_" + eventName + "BeforeStart"]) {
+                dojo.hitch(this,f)();
+            } else if (self instanceof wm.Page && self._loadingPage) {
                 self.connectOnce(self, "start", this, f);
             } else if (self._loading) {
                 self.connectOnce(self, "postInit", this, f);

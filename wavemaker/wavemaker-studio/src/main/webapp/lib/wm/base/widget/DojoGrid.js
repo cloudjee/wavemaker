@@ -90,6 +90,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         this.updateSelectedItem(-1);
         this.setSelectionMode(this.selectionMode);
+        if (!this.styles || !this.styles.fontSize)
+            dojo.addClass(this.domNode, "wmNoFontSize");
     },
 
     setNoHeader: function(inValue) {
@@ -140,6 +142,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     if (onSuccess) onSuccess();
                 });
             } else {
+                if (this._selectionMode == "multiple" && dojo.indexOf(this.getSelectedIndex(), rowIndex) != -1) return;
                 this.dojoObj.selection.select(rowIndex);
                 if (!this._cupdating) {
                     this.onSelectionChange();
@@ -161,6 +164,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.dojoObj.scrollToRow(inRow);
         }
     },
+    /* TODO: This does not appear to support multi-select */
     setSelectedItem: function(inData) {
         if (inData instanceof wm.Variable) inData = inData.getData();
         this.selectByQuery(inData);
@@ -289,6 +293,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex, "_wmVariable").getValue(inFieldName));
             } catch (e) {}
             return;
+        } else if (inValue && typeof inValue == "object" && inValue instanceof Date === false && this.dojoObj.edit.info.cell.widget.store) {
+            /* We need to work with an object that lacks the wm.DojoStoreId because we're using dojo.toJson for comparing values */
+            inValue = this.itemToJSONObject(this.dojoObj.edit.info.cell.widget.store, inValue)
+            delete inValue.wmDojoStoreId;
         }
 
 
@@ -332,6 +340,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             wmvar._allowLazyLoad = false;
             var oldValue = wmvar.getValue(inFieldName);
             wmvar._allowLazyLoad = allowLazyLoad;
+            if (oldValue instanceof wm.Variable) oldValue = oldValue.getData();
+            if (typeof oldValue == "object" && typeof inValue == "object" &&  dojo.toJson(oldValue) == dojo.toJson(inValue)) return;
             if (oldValue === inValue) return;
         }
 
@@ -349,6 +359,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.selectedItem._allowLazyLoad = false;
             var oldValue = this.selectedItem.getValue(inFieldName);
             this.selectedItem._allowLazyLoad = allowLazyLoad;
+            if (oldValue instanceof wm.Variable) oldValue = oldValue.getData();
+            if (typeof oldValue == "object" && typeof inValue == "object" &&  dojo.toJson(oldValue) == dojo.toJson(inValue)) return;
             if (oldValue === inValue) return;
             this.selectedItem.setValue(inFieldName, inValue);
         }
@@ -376,11 +388,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.writeSelectedItem(); /* Without onidle, we are adding class to the cell with the editor rather than the cell that replaces the editor when editing is done */
             wm.onidle(this, function() {
                 if (this.selectedItem.getValue(inFieldName) instanceof wm.Variable == false) {
-                    dojo.addClass(this.getCellNode(rowIdx, inFieldName), "dirty");
+                    dojo.addClass(this.getCellNode(inRowIndex, inFieldName), "dirty");
                 } else {
                     for (var i = 0; i < this.columns.length; i++) {
                         if (this.columns[i].field.indexOf(inFieldName + ".") == 0) {
-                            var cell = this.getCellNode(rowIdx, this.columns[i].field);
+                            var cell = this.getCellNode(inRowIndex, this.columns[i].field);
                             if (cell) dojo.addClass(cell, "dirty");
                         }
                     }
@@ -419,7 +431,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     createNewLiveVariable: function() {
     var lvar = new wm.LiveVariable({owner: this,
                     operation: "update",
-                    backlogBehavior: "executeAll",
+                    inFlightBehavior: "executeAll",
                     name: "liveVar",
                     type: this.dataSet.type,
                     liveSource: this.getDataSet().liveSource,
@@ -550,7 +562,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 dojo.query("td.dirty",parentNode).forEach(dojo.hitch(this, function(cell) {
                     var field = this.columns[dojo.attr(cell, "idx")].field;
                     var gridValue = this.getCell(rowIndex, field);
-                    if (gridValue == result[field]) {
+                    var resultFieldValue = field.indexOf(".") == -1 ? result[field] : wm.expression.getValue("${" + field + "}", result);
+                    if (gridValue == resultFieldValue) {
                         dojo.removeClass(cell, "dirty saveFailed");
                         dojo.addClass(cell, "saved");
                     }
@@ -768,8 +781,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.updateSelectedItem(-1);
         var item = this.getRowData(rowIndex);
         this.dojoObj.store.deleteItem(item);
-        if (this.dataSet && this.dataSet.data && this.dataSet.data.list) {
-            var dataSetIndex = dojo.indexOf(this.dataSet.data.list, item._wmVariable[0]);
+        if (this.dataSet && this.dataSet.data && this.dataSet.data._list) {
+            var dataSetIndex = dojo.indexOf(this.dataSet.data._list, item._wmVariable[0]);
             if (dataSetIndex != -1) {
                 this.dataSet.beginUpdate();
                 this.dataSet.removeItem(dataSetIndex);
@@ -783,7 +796,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             var editCell = null;
             var newIndex, item;
             for (var i = 0; i < this.columns.length; i++) {
-                if (this.columns[i].fieldType) {
+                if (this.columns[i].fieldType && this.columns[i].fieldType != "dojox.grid.cells.Bool") {
                     editCell = this.columns[i];
                     break;
                 }
@@ -1035,6 +1048,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     dojoRenderer: function() {
         if (!this.dojoObj) return;
         this.dojoObj.startup();
+        if (this.styles && this.styles.fontSize) this.dojoObj.domNode.style.fontSize = this.styles.fontSize;
         this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
         if (this._isDesignLoaded) {
             var self = this;
@@ -1045,6 +1059,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         wm.onidle(this, "_postDojoRenderer");
     },
     _postDojoRenderer: function() {
+        if (!this.dojoObj) return; // destroyed after dojoRenderer finished
         var v = this.dojoObj.views.views[0];
         if (v && v.scrollboxNode.scrollHeight == v.scrollboxNode.clientHeight && v._hasVScroll) {
             this.dojoObj.prerender();
@@ -1158,9 +1173,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             // If we're in design mode, then subscribe to be notified if the type definition is changed;
             // also call updateColumnData in case the type definition was changed while editting some other page.
             // Only make this call if we have a new dataSet (inValue), we have an existing columns array, and its not a change in type from our current dataSet.
-            if (this._isDesignLoaded && this.columns.length && inValue && inValue.type && (!this.dataSet || !this.dataSet.type || this.dataSet.type == inValue.type)) {
+            if (this._isDesignLoaded && this.columns.length && inValue && inValue.type ) {
                 if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
-                this._typeChangedConnect = this.connect(this.variable, "typeChanged", this, function() {
+                this._typeChangedConnect = this.connect(inValue, "typeChanged", this, function() {
                     this.updateColumnData(); // if the type changes for this.variable, reapply this variable's new type info
                     this.setDojoStore();
                     this.renderDojoObj();
@@ -1277,6 +1292,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     selectByQuery: function(inQuery) {
     if (!this.dojoObj || !this.dataSet) return;
 
+    if (!inQuery) {
+        this.deselectAll();
+        return;
+    }
+
     /* Step 1: Find all matching items from the dataset */
     var items = this.dataSet.query(inQuery);
 
@@ -1284,7 +1304,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     this._storeFetch(dojo.hitch(this, function(inItems) {
                       this.deselectAll();
                       for(var i = 0; i < inItems.length; i++) {
-                      if (dojo.indexOf(items.data.list, inItems[i]._wmVariable[0]) != -1) {
+                      if (dojo.indexOf(items.data._list, inItems[i]._wmVariable[0]) != -1) {
                           this.dojoObj.selection.addToSelection(i);
                           if (this._selectionMode == "single") {
                           break;
@@ -1299,80 +1319,101 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                   queryOptions: this.dojoObj.queryOptions,
                   onComplete: onComplete});
     },
-    getStructure: function(){
+    getStructure: function() {
         var structure = [];
         var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
         var isMobileStyle = isMobile || (this._isDesignLoaded ? studio.currentDeviceType == "tablet" : wm.device == "tablet");
         if (this.deleteColumn) {
-        structure.push({hidden: false,
+            structure.push({
+                hidden: false,
                 name: "-",
                 width: "20px",
                 "get": dojo.hitch(this, 'getExpressionValue', "'<div class=\\'wmDeleteColumn\\'></div>'"),
-                field: "_deleteColumn"});
+                field: "_deleteColumn"
+            });
         }
 
+        var designMode = (this._isDesignLoaded || window["studio"] && this.isOwnedBy(studio.page));
         var useMobileColumn = false;
-        if (isMobile) {
-        for (var i = 0; i < this.columns.length; i++) {
-            if (this.columns[i].mobileColumn) {
-            useMobileColumn = true;
-            break;
+        var isPhone = designMode ? studio.currentDeviceType == "phone" : wm.device == "phone";
+        var isTablet = designMode ? studio.currentDeviceType == "tablet" : wm.device == "tablet";
+        var isAllPhoneCol = true;
+        if (isPhone || isTablet) {
+            for (var i = 0; i < this.columns.length; i++) {
+                var c = this.columns[i];
+                if (c.mobileColumn) {
+                    useMobileColumn = true;
+                }
+                if (c.show) {
+                    isAllPhoneCol = false;
+                }
             }
         }
+        if (useMobileColumn && (isAllPhoneCol || designMode && wm.List.prototype.desktopWidthExcedesBounds.call(this))) {
+            ;
+        } else {
+            useMobileColumn = false;
         }
 
         /* IE 9 requires that widths be normalized */
         var totalPercentWidth = 0;
-        dojo.forEach(this.columns, function(col){
-        var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
-        if (show && col.width.indexOf("%") != -1) {
-            totalPercentWidth += parseInt(col.width);
-        }
+        dojo.forEach(this.columns, function(col) {
+            var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
+            if (show && col.width.indexOf("%") != -1) {
+                totalPercentWidth += parseInt(col.width);
+            }
         });
 
-        dojo.forEach(this.columns, function(col){
-            if (this._isDesignLoaded && studio.currentDeviceType == "phone" && useMobileColumn) {
-                ;
-            } else if (col.field == "PHONE COLUMN" && !col.show) return; // don't even include this complicated column in the structure unless we're in design mode
-
+        dojo.forEach(this.columns, function(col) {
+            if (!useMobileColumn && col.field == "PHONE COLUMN" && !col.show) {
+                return; // don't even include this complicated column in the structure unless we're in design mode
+            }
             var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
             var show = useMobileColumn && col.mobileColumn || !useMobileColumn && col.show;
             var width = col.width;
-        if (show && width.indexOf("%") != -1)
-            width = Math.floor((100*parseInt(width) / totalPercentWidth)) + "%";
-            var obj = { hidden:!show,
-                    field: col.field,
-                    constraint: col.constraints,
-                    name:col.title ? col.title : "-",
-                    width: width,
-                    fieldType:col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
-                    widgetProps: col.editorProps,
-                    options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
-                        editable:show && (col.editable || col.fieldType), // col.editable is obsolete.  While users may like to hide/show columns with editors, a hidden column of editors breaks tabbing from editor to editor.
-                    expression:col.expression,
-                    displayType:col.displayType};
-            if (obj.widgetProps) {
-            obj.widgetProps = dojo.mixin({owner:this}, obj.widgetProps);
-            if (obj.fieldType == "dojox.grid.cells.ComboBox") {
-                obj.fieldType = "wm.grid.cells.ComboBox";
-                obj.widgetProps.searchAttr = obj.widgetProps.displayField;
+            if (show && width.indexOf("%") != -1) {
+                width = Math.floor((100 * parseInt(width) / totalPercentWidth)) + "%";
             }
+            var obj = {
+                hidden: !show,
+                field: col.field,
+                constraint: col.constraints,
+                name: col.title ? col.title : "-",
+                width: width,
+                fieldType: col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
+                widgetProps: col.editorProps,
+                options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
+                editable: show && (col.editable || col.fieldType),
+                // col.editable is obsolete.  While users may like to hide/show columns with editors, a hidden column of editors breaks tabbing from editor to editor.
+                expression: col.expression,
+                displayType: col.displayType
+            };
+            if (obj.widgetProps) {
+                obj.widgetProps = dojo.mixin({
+                    owner: this
+                }, obj.widgetProps);
+                if (obj.fieldType == "dojox.grid.cells.ComboBox") {
+                    obj.fieldType = "wm.grid.cells.ComboBox";
+                    obj.widgetProps.searchAttr = obj.widgetProps.displayField;
+                }
             }
             if (obj.fieldType == "dojox.grid.cells.DateTextBox") {
-            obj.fieldType = "wm.grid.cells.DateTextBox";
+                obj.fieldType = "wm.grid.cells.DateTextBox";
             }
             if (obj.fieldType == "wm.grid.cells.DateTextBox") {
-            if (!obj.widgetProps) {
-                obj.widgetProps = {owner: this};
-            }
+                if (!obj.widgetProps) {
+                    obj.widgetProps = {
+                        owner: this
+                    };
+                }
             }
 
             if (col.editorProps && col.editorProps.selectDataSet && col.fieldType == "dojox.grid.cells.ComboBox") {
-            var selectDataSet = this.owner[col.editorProps.selectDataSet] || this.owner.getValueById(col.editorProps.selectDataSet);
-            if (selectDataSet) {
-                if (!selectDataSet.isEmpty()) {
-                obj.options =  wm.grid.cells.ComboBox.prototype.cleansComboBoxOptions(selectDataSet);
-/*
+                var selectDataSet = this.owner[col.editorProps.selectDataSet] || this.owner.getValueById(col.editorProps.selectDataSet);
+                if (selectDataSet) {
+                    if (!selectDataSet.isEmpty()) {
+                        obj.options = wm.grid.cells.ComboBox.prototype.cleansComboBoxOptions(selectDataSet);
+                        /*
                 var options = [];
                 var count = selectDataSet.getCount();
                 for (var i = 0; i < count; i++) {
@@ -1381,60 +1422,60 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
                 obj.options = options;
                 */
+                    }
+                    if (this["_connectOnSetData." + col.field]) dojo.disconnect(this["_connectOnSetData." + col.field]);
+                    this["_connectOnSetData." + col.field] = this.connect(selectDataSet, "onSetData", dojo.hitch(this, "updateEditorDataSet", selectDataSet, col.field)); // recalculate the columns/regen the grid each time our dataSet changes
                 }
-                if (this["_connectOnSetData." + col.field]) dojo.disconnect(this["_connectOnSetData." + col.field]);
-                this["_connectOnSetData." + col.field] = this.connect(selectDataSet, "onSetData", dojo.hitch(this, "updateEditorDataSet", selectDataSet, col.field)); // recalculate the columns/regen the grid each time our dataSet changes
-            }
             }
 
             /* TODO: Add more style options; a bold column? A column with a thick right border?  Let the user edit it as style... */
-            if (col.align && col.align != ''){
-                obj.styles = 'text-align:'+col.align + ';';
+            if (col.align && col.align != '') {
+                obj.styles = 'text-align:' + col.align + ';';
             }
 
-            if (col.formatFunc && col.formatFunc != '' || col.backgroundColor || col.textColor || col.cssClass) {
-                /* TODO: Localize? */
-                switch(col.formatFunc){
-                    case 'wm_date_formatter':
-                    case 'Date (WaveMaker)':
-                    obj.formatter = dojo.hitch(this, 'dateFormatter', col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_localdate_formatter':
-                    case 'Local Date (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'localDateFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_time_formatter':
-                    case 'Time (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'timeFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_number_formatter':
-                    case 'Number (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'numberFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_currency_formatter':
-                    case 'Currency (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'currencyFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_image_formatter':
-                    case 'Image (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'imageFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
-                    case 'wm_link_formatter':
-                    case 'Link (WaveMaker)':
-                        obj.formatter = dojo.hitch(this, 'linkFormatter',  col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
+            if (col.formatFunc && col.formatFunc != '' || col.backgroundColor || col.textColor || col.cssClass) { /* TODO: Localize? */
+                switch (col.formatFunc) {
+                case 'wm_date_formatter':
+                case 'Date (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'dateFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_localdate_formatter':
+                case 'Local Date (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'localDateFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_time_formatter':
+                case 'Time (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'timeFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_number_formatter':
+                case 'Number (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'numberFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_array_formatter':
+                    obj.formatter = dojo.hitch(this, 'arrayFormatter', col.field, col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
 
-                    case 'wm_button_formatter':
-                                obj.formatter = dojo.hitch(this, 'buttonFormatter',  col.field, col.formatProps||{}, col.backgroundColor, col.textColor, col.cssClass);
-                        break;
+                case 'wm_currency_formatter':
+                case 'Currency (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'currencyFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_image_formatter':
+                case 'Image (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'imageFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_link_formatter':
+                case 'Link (WaveMaker)':
+                    obj.formatter = dojo.hitch(this, 'linkFormatter', col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                case 'wm_button_formatter':
+                    obj.formatter = dojo.hitch(this, 'buttonFormatter', col.field, col.formatProps || {}, col.backgroundColor, col.textColor, col.cssClass);
+                    break;
+                default:
+                    try {
+                        obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
+                    } catch (e) {}
 
                     break;
-                    default:
-                             try {
-                         obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
-                         } catch(e) {}
-
-                        break;
                 }
             }
 
@@ -1456,14 +1497,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 
         structure = [structure];
-        if (this.selectionMode == "checkbox")
-        structure.unshift({type: "dojox.grid._CheckBoxSelector", width: isMobileStyle ? "40px" : "20px"});
-        else if (this.selectionMode == "radio")
-        structure.unshift({type: "dojox.grid._RadioSelector", width: isMobileStyle ? "40px" : "20px"});
+        if (this.selectionMode == "checkbox") structure.unshift({
+            type: "dojox.grid._CheckBoxSelector",
+            width: isMobileStyle ? "40px" : "20px"
+        });
+        else if (this.selectionMode == "radio") structure.unshift({
+            type: "dojox.grid._RadioSelector",
+            width: isMobileStyle ? "40px" : "20px"
+        });
 
         return structure;
     },
-
     /* Hack to update the combobox editor items without rerendering the grid */
     updateEditorDataSet: function(dataSet, fieldId) {
         var cells = this.dojoObj.layout.cells;
@@ -1563,7 +1607,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 formatFunc: formatFunc
             });
         }, this);
-
+        if (this._isDesignLoaded) this.regenerateMobileColumn(this.columns);
     },
 
     // if the type changes, we need to adjust rather than regenerate our columns
@@ -1607,10 +1651,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             });
         }, this);
 
-        /* If there are no showing columns, make them all show */
-        if (dojo.every(this.columns, function(col) {return !col.show;})) {
-            dojo.forEach(this.columns, function(col) {col.show = true;});
-        }
 
         var newcolumns = [];
         var hasMobileColumn = false;
@@ -1647,8 +1687,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
             });
         }
+          /* If there are no showing columns, make them all show */
+        if (dojo.every(newcolumns, function(col) {return !col.show;})) {
+            var maxColumns = Math.max(1,Math.round(this.bounds.w / 80));
+            dojo.forEach(newcolumns, function(col,i) { if (i < maxColumns && col.field != "PHONE COLUMN") col.show = true;});
+        }
         this.columns = newcolumns;
-
+        if (this._isDesignLoaded) this.regenerateMobileColumn(this.columns);
         /*
     if (this.isDesignLoaded()) {
         if (!this.contextMenu) this.designCreate(); // special case from themedesigner
@@ -1818,7 +1863,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
     },
     toHtml: function() {
-        var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
+        if (this._renderDojoObjSkipped) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
+        var style = this.toHtmlStyles();
+        var html = "<table " + style + " border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
         dojo.forEach(this.columns, function(col, idx) {
             if (!col.show) return;
             html += "<th style='" + (col.width.match(/px/) ? col.width : "") + "'>" + col.title + "</th>";
@@ -1849,27 +1900,30 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         switch (col.formatFunc) {
                         case 'wm_date_formatter':
                         case 'Date (WaveMaker)':
-                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_localdate_formatter':
                         case 'Local Date (WaveMaker)':
-                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_time_formatter':
                         case 'Time (WaveMaker)':
-                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_number_formatter':
                         case 'Number (WaveMaker)':
-                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value, idx);
+                            break;
+                        case 'wm_array_formatter':
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_currency_formatter':
                         case 'Currency (WaveMaker)':
-                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_image_formatter':
                         case 'Image (WaveMaker)':
-                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value);
+                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_link_formatter':
                         case 'Link (WaveMaker)':
@@ -1898,6 +1952,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 
     toCSV: function(){
+        if (this._renderDojoObjSkipped) {
+            this._renderHiddenGrid = true;
+            this.renderDojoObj();
+            this._renderHiddenGrid = false;
+        }
         var csvData = [];
         dojo.forEach(this.columns, function(col, idx){
             if (!col.show)
@@ -1934,43 +1993,50 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
                 if (col.formatFunc){
                     /* TODO FOR 6.5: Calls to formatters are missing some parameters; at least pass null if no parameter is needed */
-                    switch(col.formatFunc){
+                    if (col.formatFunc) {
+                        switch (col.formatFunc) {
                         case 'wm_date_formatter':
-                            case 'Date (WaveMaker)':
-                            value = this.dateFormatter(value);
+                        case 'Date (WaveMaker)':
+                            value = this.dateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_localdate_formatter':
-                            case 'Local Date (WaveMaker)':
-                            value = this.localDateFormatter(value);
+                        case 'Local Date (WaveMaker)':
+                            value = this.localDateFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_time_formatter':
-                            case 'Time (WaveMaker)':
-                            value = this.timeFormatter(value);
+                        case 'Time (WaveMaker)':
+                            value = this.timeFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_number_formatter':
-                            case 'Number (WaveMaker)':
-                            value = this.numberFormatter(value);
+                        case 'Number (WaveMaker)':
+                            value = this.numberFormatter(col.formatProps || {}, "", "", "", value, idx);
+                            break;
+                        case 'wm_array_formatter':
+                            value = this.arrayFormatter(col.field, col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_currency_formatter':
-                            case 'Currency (WaveMaker)':
-                            value = this.currencyFormatter(value);
+                        case 'Currency (WaveMaker)':
+                            value = this.currencyFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_image_formatter':
-                            case 'Image (WaveMaker)':
-                        // spreadsheet shouldn't be given HTML
-                            //value = this.imageFormatter(value);
+                        case 'Image (WaveMaker)':
+                            value = this.imageFormatter(col.formatProps || {}, "", "", "", value, idx);
                             break;
                         case 'wm_link_formatter':
-                            case 'Link (WaveMaker)':
-                        // spreadsheet shouldn't be given HTML
-                        //value = this.linkFormatter(value);
+                        case 'Link (WaveMaker)':
+                            // spreadsheet shouldn't be given HTML
+                            //value = this.linkFormatter(value);
                             break;
 
                         default:
-                            if (!this.isDesignLoaded())
-                                value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles:[], customClasses:[]}, obj);
+                            if (!this.isDesignLoaded()) value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {
+                                customStyles: [],
+                                customClasses: []
+                            }, obj);
                             break;
+                        }
                     }
+
                 }
                 } catch(e){value = "";}
                 this.addColumnToCSV(csvData, value);
@@ -2011,10 +2077,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         } else if (inValue instanceof Date == false) {
         return inValue;
         }
+
+        var dateType = formatterProps.dateType || 'date';
         if (!formatterProps.useLocalTime) {
-        inValue.setHours(inValue.getHours() + wm.timezoneOffset);
+            /* See WM-4490 to understand this calculation */
+            var adjustSixHours = dateType == "date" ? 360 : 0;
+            inValue.setHours(0, 60*inValue.getHours() + inValue.getMinutes() +wm.timezoneOffset * 60 + adjustSixHours);
         }
-    var constraints = {fullYear: true, selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
+    var constraints = {fullYear: true, selector: dateType, formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
         return dojo.date.locale.format(inValue, constraints);
     },
     /* DEPRECATED */
@@ -2128,6 +2198,26 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }
         return inValue;
     },
+    arrayFormatter: function(field, formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
+        if (!formatterProps.joinFieldName) formatterProps.joinFieldName = "dataValue";
+        if (!formatterProps.separator) formatterProps.separator = ",";
+        var str = "";
+        var data = this.getRow(rowIdx);
+        if (data)
+            var wmvar = data._wmVariable;
+        if (wmvar)
+            var data = wmvar.getValue(field).getData();
+        if (data) {
+
+
+
+            dojo.forEach(data, function(item) {
+                if (str) str += formatterProps.separator + " ";
+                str += item[formatterProps.joinFieldName];
+            });
+        }
+        return str;
+    },
     customFormatter: function(formatFunc, backgroundColorFunc, textColorFunc, cssClassFunc, inValue, rowIdx, cellObj) {
         try {
             var rowObj = this.getRow(rowIdx);
@@ -2200,7 +2290,7 @@ wm.DojoGrid.extend({
       if (item && store) {
         //Determine the attributes we need to process.
           var attributes = wm.isEmpty(item) ? [] : store.getAttributes(item);
-          attributes = dojo.filter(attributes, function(inValue) {return inValue.indexOf("_") == -1;})
+          attributes = dojo.filter(attributes, function(inValue) {return inValue.indexOf("_") !== 0;})
         if (attributes && attributes.length > 0) {
           var i;
           for (i = 0; i < attributes.length; i++) {
@@ -2265,11 +2355,17 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
     },
     generateStore: function(options, displayField) {
         var items = [];
+
         dojo.forEach(options, function(o,i) {
+            if (typeof o == "string") {
+                var tmp = {};
+                tmp[displayField] = o;
+                o = tmp;
+            }
             o.wmDojoStoreId = i;
             //items.push(o.dataValue);
             items.push(o);
-        });
+        }, this);
         var store = new dojo.data.ItemFileReadStore({
             data: {
                 identifier: "wmDojoStoreId",
@@ -2291,6 +2387,19 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
                 if (displayValue === "") {
                     value = null;
                 } else {
+                    // if the item isn't set but the user has entered a value,
+                    // verify that there isn't a match.  Typically caused by
+                    // using the initial value rather than selecting a value
+                    if (!item && displayValue) {
+                        dojo.forEach(this.options, dojo.hitch(this, function(option) {
+                            try {
+                                if (option[this.widgetProps.displayField][0] == displayValue) {
+                                    this.widget.set("item", option);
+                                    item = option;
+                                }
+                            } catch(e) {}
+                        }));
+                    }
                     var value = this.widgetProps.owner.itemToJSONObject(store, item);
                     if (this.isSimpleType && typeof value == "object") {
                         value = value[this.widgetProps.displayField];
@@ -2300,6 +2409,7 @@ dojo.declare("wm.grid.cells.ComboBox", dojox.grid.cells._Widget, {
                         value = this.widget.get("value");
                     }
                 }
+                if (value && !this.isSimpleType) value = item;
                 this.grid.doApplyCellEdit(value, inRowIndex, objName);
             }
         }
@@ -2323,7 +2433,10 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         var useLocalTime = formatterProps && formatterProps.useLocalTime;
         var value = this.getValue(inRowIndex);
         if (!useLocalTime) {
-            value.setHours(-wm.timezoneOffset, 0, 0);
+            value.setHours(0,
+                           -60 * wm.timezoneOffset + 6, /* See WM-4490 to understand this calculation */
+                           0);
+            //value.setHours(-wm.timezoneOffset, 0, 0);
         }
         this.applyEdit(value, inRowIndex);
         this._finish(inRowIndex);

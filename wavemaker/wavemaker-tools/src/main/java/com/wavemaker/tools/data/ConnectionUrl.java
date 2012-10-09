@@ -2,10 +2,14 @@
 package com.wavemaker.tools.data;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.*;
 
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.common.WMRuntimeException;
 
 public final class ConnectionUrl {
 
@@ -38,7 +42,8 @@ public final class ConnectionUrl {
     }
 
     private String extractHsqlDBFileName() {
-        int n = toString().indexOf("/data") + 6;
+        String s = File.separator + "data";
+        int n = toString().indexOf(s) + 6;
         String partialCxn = toString().substring(n);
         int k = partialCxn.indexOf(';');
         return partialCxn.substring(0, k);
@@ -54,6 +59,10 @@ public final class ConnectionUrl {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public void rewriteUrl(String hsqlDbRootFolder) {
+        this.rewrittenUrl =  rewrite(hsqlDbRootFolder);   
     }
 
     private String rewrite(String hsqlDbRootFolder) {

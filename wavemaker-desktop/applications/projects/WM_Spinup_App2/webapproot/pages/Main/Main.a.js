@@ -9,9 +9,6 @@ window.open("http://wavemaker.com/downloads/", "self");
 LoginServiceVariableResult: function(inSender, inDeprecated) {
 var successString = 'SUCCESS';
 inSender.getData().dataValue.substring(0,successString.length) === successString ? this.LoginSuccess() : this.LoginError(inSender, inDeprecated);
-//  this.progressBarTimer.stopTimer();
-//  this._progressBarStopAt = this.progressBar1.getProgress();
-//  this.finishProgressBarTimer.startTimer();
 },
 LoginSuccess: function(inSender, inDeprecated) {
 this.endWait();
@@ -67,7 +64,7 @@ duration: 1500
 },
 LaunchStudioserviceVariableError: function(inSender, inError) {
 this.endWait();
-var error = inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue");
+var error = (inSender.getDataSet().query({name:"ERROR"}).getItem(0) === false) ? inError.message : inSender.getDataSet().query({name:"ERROR"}).getItem(0).getValue("dataValue")
 this.labelError.setShowing(true);
 this.labelError.setCaption(inError.toString() != "Error" && error.length > 0 ? error : "Unable to deploy Studio to your account");
 this.loginLayer.activate();
@@ -175,12 +172,12 @@ error_warning_spacer_1: ["wm.Spacer", {"height":"16px","showing":false,"width":"
 labelError: ["wm.Label", {"_classes":{"domNode":["labelError"]},"autoSizeHeight":true,"border":"2","borderColor":"#cc0000","caption":"Unkown Error ","height":"36px","padding":"6","showing":false,"singleLine":false,"styles":{"fontSize":"undefinedpx","backgroundColor":""},"width":"78%"}, {}],
 labelWarning: ["wm.Label", {"_classes":{"domNode":["labelError"]},"autoSizeHeight":true,"border":"2","borderColor":"#ffb505","caption":"Unkown Error ","height":"36px","padding":"6","showing":false,"singleLine":false,"styles":{"fontSize":"undefinedpx","backgroundColor":"#ffffdd"},"width":"78%"}, {}],
 error_warning_spacer_2: ["wm.Spacer", {"height":"4px","showing":false,"width":"96px"}, {}],
-LoginPanel: ["wm.Panel", {"fitToContentHeight":true,"height":"142px","horizontalAlign":"left","margin":"15,0,0,0","verticalAlign":"top","width":"100%"}, {"onEnterKeyPress":"LoginServiceVariable"}, {
+LoginPanel: ["wm.Panel", {"fitToContentHeight":true,"height":"142px","horizontalAlign":"left","margin":"15,0,0,0","verticalAlign":"top","width":"100%"}, {}, {
 label2: ["wm.Label", {"autoSizeHeight":true,"caption":"Cloud Foundry Username","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
-UserName: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","emptyValue":"null","height":"32px","minDesktopHeight":96,"padding":"0","required":true,"showMessages":false,"styles":{"backgroundColor":"","fontSize":"undefinedpx"}}, {}],
+UserName: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","desktopHeight":"32px","displayValue":"","emptyValue":"null","height":"32px","minDesktopHeight":96,"padding":"0","required":true,"showMessages":false,"styles":{"backgroundColor":"","fontSize":"undefinedpx"}}, {}],
 spacer1: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
 label3: ["wm.Label", {"autoSizeHeight":true,"caption":"Cloud Foundry Password","padding":"4","singleLine":false,"styles":{"fontSize":"undefinedpx"},"width":"100%"}, {}],
-Password: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","dataValue":undefined,"desktopHeight":"32px","displayValue":"","emptyValue":"null","height":"32px","maxHeight":0,"minDesktopHeight":96,"padding":"0","password":true,"required":true,"showMessages":false}, {}]
+Password: ["wm.Text", {"_classes":{"domNode":["LoginInputs"]},"borderColor":"#bcbdbd","caption":undefined,"captionAlign":"left","captionPosition":"top","captionSize":"0px","desktopHeight":"32px","displayValue":"","emptyValue":"null","height":"32px","maxHeight":0,"minDesktopHeight":96,"padding":"0","password":true,"required":true,"showMessages":false}, {}]
 }],
 spacer3: ["wm.Spacer", {"height":"15px","width":"96px"}, {}],
 panel7: ["wm.Panel", {"fitToContentHeight":true,"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -266,7 +263,7 @@ explore5: ["wm.Label", {"caption":"<div style=\"color:white;\">Wiki<br><div styl
 }]
 }],
 FooterPanel: ["wm.Panel", {"height":"26px","horizontalAlign":"center","styles":{"backgroundGradient":{"direction":"vertical","startColor":"#6d83a5","endColor":"#546d8e","colorStop":50}},"verticalAlign":"middle","width":"100%"}, {}, {
-label1: ["wm.Label", {"align":"center","caption":"WaveMaker  |  Copyright © 2011-2012 SpringSource, a division of VMware, Inc. All rights reserved.","height":"23px","padding":"4","singleLine":false,"styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
+label1: ["wm.Label", {"align":"center","caption":"WaveMaker  |  Copyright © 2011-2012 VMware, Inc. All rights reserved.","height":"23px","padding":"4","singleLine":false,"styles":{"color":"#ffffff","fontSize":"9px"},"width":"100%"}, {}]
 }]
 }]
 }]

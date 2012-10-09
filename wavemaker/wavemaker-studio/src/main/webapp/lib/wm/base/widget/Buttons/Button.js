@@ -18,55 +18,69 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.Button", wm.ToolButton, {
-	desktopHeight: "32px",
-    height: "32px",    
-	border: 1,
-	borderColor: "#ABB8CF",
-	margin: 4,
+    desktopHeight: "32px",
+    height: "32px",
+    border: 1,
+    borderColor: "#ABB8CF",
+    margin: 4,
     /* TODO: Localize This */
-	caption: "Button",
+    caption: "Button",
     classNames: "wmbutton"
 });
 
 dojo.declare("wm.IconButton", wm.Button, {
     build: function() {
-	this.inherited(arguments);
-	var html = "<table class='dijitMenuTable' style='width:100%'><tbody class='dijitReset'><tr class='dijitMenuItem dijitReset'><td class='dijitReset dijitMenuItemIconCell' style='width:"+(parseInt(this.iconWidth)+4) + "px;'><" + (this._useIconUrl ? "img":"div") + " style='display:none;width:"+this.iconWidth + ";height:"+this.iconHeight+";'/></td><td class='dijitReset dijitMenuItemLabel'>"+this.caption + "</td><td class='dijitReset dijitMenuArrow'><div class='popupIcon'/></td></tr></tbody></table>";
-	this.domNode.innerHTML = html;
+        this.inherited(arguments);
+        var html = "<table class='dijitMenuTable' style='width:100%'><tbody class='dijitReset'><tr class='dijitMenuItem dijitReset'><td class='dijitReset dijitMenuItemIconCell' style='width:" + (parseInt(this.iconWidth) + 4) + "px;'><" + (this._useIconUrl ? "img" : "div") + " style='display:none;width:" + this.iconWidth + ";height:" + this.iconHeight + ";'/></td><td class='dijitReset dijitMenuItemLabel'>" + this.caption + "</td><td class='dijitReset dijitMenuArrow'><div class='popupIcon'/></td></tr></tbody></table>";
+        this.domNode.innerHTML = html;
     },
-    // TODO: I want code that will change how we render a button and its icon if there is an icon... 
+    // TODO: I want code that will change how we render a button and its icon if there is an icon...
     render: function(forceRender) {
-	if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
-	wm.Control.prototype.render.call(this, forceRender);
-	dojo.query(".dijitMenuItemLabel",this.domNode)[0].innerHTML = this.caption;
-	var img = this._iconImage = dojo.query(".dijitMenuItemIconCell " + (this._useIconUrl ? "img":"div"),this.domNode)[0];
-	img.style.width = this.iconWidth;
-	img.style.height = this.iconHeight;
-	if (this.iconUrl) {
-	    img.src = this.iconUrl;
-	}
-	img.style.display = this.iconUrl || this.iconClass ? "block" : "none";
-	var width = parseInt(this.iconWidth) || 0;
-	img.parentNode.style.width = (width+4) + "px";
-/*
-	var height = parseInt(this.iconHeight) || 0;
-	img.parentNode.style.height = (height+4) + "px";
-	*/
+        if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
+        wm.Control.prototype.render.call(this, forceRender);
+        dojo.query(".dijitMenuItemLabel", this.domNode)[0].innerHTML = this.caption;
+        var img = this._iconImage = dojo.query(".dijitMenuItemIconCell " + (this._useIconUrl ? "img" : "div"), this.domNode)[0];
+        img.style.width = this.iconWidth;
+        img.style.height = this.iconHeight;
+        if (this.iconUrl) {
+            img.src = this.iconUrl;
+        }
+        img.style.display = this.iconUrl || this.iconClass ? "block" : "none";
+        var width = parseInt(this.iconWidth) || 0;
+        img.parentNode.style.width = (width + 4) + "px";
+        /*
+    var height = parseInt(this.iconHeight) || 0;
+    img.parentNode.style.height = (height+4) + "px";
+    */
     }
 
 });
 
 dojo.declare("wm.MobileIconButton", wm.ToolButton, {
     direction: "down",
+    caption: "Back",
     height: "40px",
     build: function() {
-	this.inherited(arguments);
-	var icon = this.iconNode = document.createElement("div");
-	dojo.addClass(icon, "mblArrow " + "mbl" + wm.capitalize(this.direction) + "Arrow");
-	this.domNode.appendChild(icon);
+        this.inherited(arguments);
+        if (this.direction == "back") {
+            /* Copied from dojo 1.6.1: dojox.mobile._base  */
+            var btn = dojo.create("DIV", {className:"mblArrowBackButton"}, this.domNode, "first");
+            var head = dojo.create("DIV", {className:"mblArrowBackButtonHead"}, btn);
+            var body = dojo.create("DIV", {className:"mblArrowBackButtonBody mblArrowButtonText", innerHTML: this.caption}, btn);
+            this.captionNode = body;
+            dojo.addClass(this.domNode, "wmBackButton");
+        } else {
+            var icon = this.iconNode = document.createElement("div");
+            dojo.addClass(icon, "mblArrow " + "mbl" + wm.capitalize(this.direction) + "Arrow");
+            this.domNode.appendChild(icon);
+        }
+    },
+    setCaption: function(inCaption) {
+        this.caption = inCaption;
+        if (this.captionNode) this.captionNode.innerHTML = inCaption;
     },
     render: function(forceRender, noInherited) {
-	wm.Control.prototype.render.call(this, forceRender);
+       wm.Control.prototype.render.call(this, forceRender);
     }
 
 });

@@ -655,7 +655,9 @@ display: none; /* if shown, selecting 500 rows hangs even chrome */
 	background-color: white;
 	border-top: none;
 }
-
+.wmmobile .dojoxGridRow {
+    min-height: 32px;
+}
 .dojoxGrid-row-over {
 	border-top-color: #92b2eb;
 	border-bottom-color: #92b2eb;
@@ -1149,7 +1151,12 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
         height: 50% !important;
 }
-
+.dijitSpinner .dijitDownArrowButton .dijitArrowButtonInner {
+    background-position-x: 0px;
+}
+.dijitSpinner .dijitUpArrowButton .dijitArrowButtonInner {
+    background-position-x: -21px;
+}
 .dojoxGridHeader th.dojoxGridCell {
     border-top: 0px;
     border-left: 0px;
@@ -1347,8 +1354,18 @@ li {
 }
 
 .wmlabel.onClickEvent,
-.wmpicture.onClickEvent {
+.wmpicture.onClickEvent img,
+.wmpicture.onClickEvent a {
     cursor: pointer;
+}
+
+
+.Disabled .wmlabel a, .Disabled.wmlabel a,
+.Disabled .wmlabel, .Disabled.wmlabel,
+.Disabled .wmpicture.onClickEvent img, .Disabled .wmpicture.onClickEvent a ,
+.Disabled.wmpicture.onClickEvent img, .Disabled.wmpicture.onClickEvent a  {
+    text-decoration: none !important;
+    cursor: default !important;
 }
 
 .wmlayout .wmtogglebuttonpanel .wmbutton {
@@ -1492,3 +1509,76 @@ height: 16px;
 .NoWrap, .NoWrap .wmSizeNode {
     white-space: nowrap;
 }
+
+/* Back Button Should only be used in mobile, but don't want it failing to render on desktop */
+.wmBackButton {
+    background-color: transparent !important;
+}
+.mblArrowBackButton {
+        position: relative;
+        float: left;
+        height: 25px;
+        margin-right: 6px;
+}
+.mblArrowBackButtonHead {
+        position: absolute;
+        top: 3px;
+        left: 9px;
+        width: 15px;
+        height: 16px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #3F3E3E;
+        -webkit-transform: scale(.8,1) rotate(45deg);
+        -moz-transform: scale(.8,1) rotate(45deg);
+        transform: scale(.8,1) rotate(45deg);
+        background: -webkit-gradient(linear, left top, left bottom, from(#E5E5E5), to(#7F7F7F), color-stop(0.5, #ADADAD), color-stop(0.5, #909090));
+        background-color: #909090;
+
+}
+.mblArrowBackButtonBody {
+        position: absolute;
+        top: 0px;
+        left: 18px;
+        padding: 0px 10px 0px 3px;
+        height: 23px;
+        border-width: 1px 1px 1px 0px;
+        border-style: inset;
+        border-color: #3F3E3E;
+        font-family: Helvetica;
+        font-size: 13px;
+        color: white;
+        line-height: 23px;
+        cursor: pointer;
+        -webkit-border-top-right-radius: 5px;
+        -webkit-border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background-color: #ADADAD;
+        background: -webkit-gradient(linear, left top, left bottom, from(#E5E5E5), to(#7F7F7F), color-stop(0.5, #ADADAD), color-stop(0.5, #909090));
+        background-color: #909090;
+        -webkit-tap-highlight-color: transparent;
+}
+.mblArrowBackButtonNeck {
+        position: absolute;
+        top: 0px;
+        left: 19px;
+        width: 4px;
+        height: 23px;
+        border-width: 1px 0px 1px 0px;
+        border-style: inset;
+        border-color: #3F3E3E;
+        background: -webkit-gradient(linear, left top, left bottom, from(#E5E5E5), to(#7F7F7F), color-stop(0.5, #ADADAD), color-stop(0.5, #909090));
+        background-color: #909090;
+}
+.mblArrowBackButton.Active .mblArrowBackButtonHead {
+        background: -webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700));
+        background-color: #EFFC700;
+}
+.mblArrowBackButton.Active .mblArrowBackButtonBody, .mblArrowBackButton.Active .mblArrowBackButtonNeck {
+        background-color: #FFC700;
+        background: -webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700));
+}
+/* End back button */

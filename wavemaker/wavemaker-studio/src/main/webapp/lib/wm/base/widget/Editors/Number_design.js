@@ -13,8 +13,7 @@
  */
 
 
-dojo.provide("wm.base.widget.Editors.Text_design");
-dojo.require("wm.base.widget.Editors.Text");
+dojo.provide("wm.base.widget.Editors.Number_design");
 dojo.require("wm.base.widget.Editors.AbstractEditor_design");
 dojo.require("wm.base.widget.Editors.Number");
 
@@ -32,8 +31,8 @@ wm.Object.extendSchema(wm.Number, {
     applyPlacesWhileTyping: {group: "editor", subgroup: "display", order: 3, type: "boolean"},
 
     /* Editor group; validation subgroup */
-    minimum:  { group: "editor", subgroup: "validation", order: 3, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "unset"}},
-    maximum: { group: "editor",  subgroup: "validation", order: 4, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "unset"}},
+    minimum:  { group: "editor", subgroup: "validation", order: 3, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "emptyString"}},
+    maximum: { group: "editor",  subgroup: "validation", order: 4, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "emptyString"}},
 
 
     /* Editor group; dojo tooltips subgroup */

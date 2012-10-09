@@ -29,8 +29,8 @@ wm.Object.extendSchema(wm.VirtualList, {
 
 
     /* Behaviors */
-    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
-
+    primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 200, advanced:1, editor: "wm.prop.FieldList"},
+    scrollToTopOnDataChange:{group: "widgetName", subgroup: "behavior", order: 201, advanced:1, type: "boolean", bindTarget:1},
 
     /* Ignored Group */
     box: { ignore: 1 },
@@ -58,12 +58,17 @@ wm.Object.extendSchema(wm.VirtualList, {
 // design-time only
 wm.Object.extendSchema(wm.List, {
     /* widgetName group; data subgroup */
-    editColumns:       {group: "widgetName", subgroup: "layout", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
-    dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    columns:           {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: "editColumns", nonlocalizable: true},
+
+
+    dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, type: "wm.Variable", editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
     dataFields:        {group: "widgetName", subgroup: "data", order: 50, advanced:1},
     columnWidths:      {group: "widgetName", subgroup: "layout", order: 51, advanced:1},
 
     renderVisibleRowsOnly: {group: "widgetName", subgroup: "behavior", type: "boolean", advanced: 1},
+    styleAsGrid:        {group: "widgetName", subgroup: "layout", type: "boolean"},
+    rightNavArrow:      {group: "widgetName", subgroup: "layout", type: "boolean"},
+    isNavigationMenu:   {group: "widgetName", subgroup: "behavior", type: "boolean"},
     autoSizeHeight:     {group: "widgetName", subgroup: "layout", type: "boolean", advanced: 1},
 
     /* Display group; layout subgroup */
@@ -89,7 +94,6 @@ wm.Object.extendSchema(wm.List, {
     updateNow: {group: "operation", operation:1},
 
     /* Hidden/ignored group */
-    columns: {hidden:1},
     nextRowId: {ignore:1},
     avgHeight: {ignore:1},
     isRowSelected: {ignore:1},
@@ -184,9 +188,34 @@ wm.List.extend({
         });
     }
     */
+
+        var newcolumns = [];
+        dojo.forEach(this.columns, dojo.hitch(this, function(col) {
+            // we don't update custom fields
+            if (col.isCustomField || col.field == "PHONE COLUMN") {
+                newcolumns.push(col);
+                return;
+            }
+            // If the column is still in the viewFields after whatever change happened, add it to newcolumns
+            if (dojo.some(viewFields, dojo.hitch(this, function(field) {
+                return field.dataIndex == col.field;
+            }))) {
+                newcolumns.push(col);
+                return;
+            }
+
+            // col is no longer relevant
+            return;
+        }));
+
+        var hasShowingColumn = false;
+        dojo.forEach(newcolumns, function(col) {
+            if (col.show) hasShowingColumn = true;
+        });
+
         dojo.forEach(viewFields, function(f, i) {
             // if the column already exists, skip it
-            if (dojo.some(this.columns, function(item) {
+            if (dojo.some(newcolumns, function(item) {
                 return item.field == f.dataIndex;
             })) return;
 
@@ -205,8 +234,8 @@ wm.List.extend({
                 formatFunc = 'wm_date_formatter';
             }
 
-            this.columns.push({
-                show: updating ? false : i < 15,
+            newcolumns.push({
+                show: updating && hasShowingColumn ? false : i < 15,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,
@@ -216,25 +245,9 @@ wm.List.extend({
             });
         }, this);
 
-        var newcolumns = [];
-        dojo.forEach(this.columns, dojo.hitch(this, function(col) {
-            // we don't update custom fields
-            if (col.isCustomField || col.field == "PHONE COLUMN") {
-                newcolumns.push(col);
-                return;
-            }
-            // If the column is still in the viewFields after whatever change happened, then do nothing
-            if (dojo.some(viewFields, dojo.hitch(this, function(field) {
-                return field.dataIndex == col.field;
-            }))) {
-                newcolumns.push(col);
-                return;
-            }
 
-            // col is no longer relevant
-            return;
-        }));
         this.columns = newcolumns;
+        this.regenerateMobileColumn(this.columns);
         this.setColumns(this.columns);
     },
     getViewFields: function() {
@@ -263,7 +276,96 @@ wm.List.extend({
             props.columns.shift();
         }
         return props;
-    }
+    },
+    regenerateMobileColumn: function(inColumns) {
+
+        /* STEP 1: Make sure that there IS a phone column */
+        var hasPhoneColumn = false;
+        var phoneIndex = -1;
+        for (var i = 0; i < inColumns.length; i++) {
+            if (inColumns[i].field == "PHONE COLUMN") {
+                hasPhoneColumn = true;
+                phoneIndex = i;
+            } else if (inColumns[i].mobileColumn) {
+                hasPhoneColumn = true;
+            }
+        }
+        if (!hasPhoneColumn) {
+            inColumns.push({
+                show: false,
+                // does NOT show on desktop
+                field: "PHONE COLUMN",
+                title: "-",
+                width: "100%",
+                align: "left",
+                expression: "",
+                mobileColumn: true
+            });
+            phoneIndex = inColumns.length-1;
+        }
+
+        // user has configured some other column to be their phone column, or has taken charge of editing the PHONE COLUMN
+        if (phoneIndex == -1 || inColumns[phoneIndex].isCustomField) return;
+
+        var mobileExpr = "";
+        dojo.forEach(inColumns, function(column, i) {
+            if (column.mobileColumn || !column.show) return;
+            var rowText = "";
+            var value;
+            if (column.expression) {
+                // TODO: Handling this can't be done inline because there could be name space conflicts or other types of errors to randomly combine a bunch of display
+                // expressions. Making matters worse, there is no clear return statement, so can't just stick these in anonymous functions.
+                // only option is something like ${wm.runtimeId}.getCellContent(null, i, false) and then make it work in DojoGrid at designTime.
+            } else {
+                value = "\${" + column.field + "}";
+                var formatProps = column.formatProps ? dojo.toJson(column.formatProps) : "{}";
+                if (column.formatFunc) {
+                    switch (column.formatFunc) {
+                    case "wm_date_formatter":
+                    case 'Date (WaveMaker)':
+                    case 'wm_localdate_formatter':
+                    case 'Local Date (WaveMaker)':
+                        value = "wm.List.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
+                        break;
+                    case 'wm_number_formatter':
+                    case 'Number (WaveMaker)':
+                        value = "wm.List.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
+                        break;
+                    case 'wm_currency_formatter':
+                    case 'Currency (WaveMaker)':
+                        value = "wm.List.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
+                        break;
+                    case 'wm_image_formatter':
+                    case 'Image (WaveMaker)':
+                        value = "wm.List.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
+                        break;
+                    case 'wm_link_formatter':
+                    case 'Link (WaveMaker)':
+                        value = "wm.List.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
+                        break;
+                    case "wm_array_formatter":
+                        value = "wm.List.prototype.arrayFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ")";
+                        break;
+                    case 'wm_button_formatter':
+                        value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
+                        break;
+                    }
+                }
+            }
+            if (value) {
+                if (!mobileExpr) {
+                    mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
+                } else {
+                    mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
+                }
+            }
+
+        });
+        inColumns[phoneIndex].expression = mobileExpr;
+        return inColumns;
+
+        }
+
 });
 
 

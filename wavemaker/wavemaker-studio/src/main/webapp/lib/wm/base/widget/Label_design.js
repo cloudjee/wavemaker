@@ -94,6 +94,23 @@ wm.Label.extend({
 		this.renderLabel();
 	    }
 	},
+	writeComponents: function(inIndent, inOptinos) {
+		var s = this.inherited(arguments);
+		// formatter must come before binding
+		var index = -1;
+		for (var i = 0; i < s.length; i++) {
+			if (s[i].match(/^\s*format\:/)) {
+				index = i;
+				break;
+			}
+		}
+		if (index > 0) {
+			var format = s[index];
+			wm.Array.removeElementAt(s,index);
+			s.unshift(format);
+		}
+		return s;
+	},
 /*
 	resizeLabel: function(){
 		var divObj = dojo.doc.createElement('span');
@@ -106,7 +123,7 @@ wm.Label.extend({
 		this.setWidth(captionWidth + 'px');
 		// the line underneath updates panel's width property. Therefore only required for studio.
 		if (this.isDesignLoaded())
-			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
+			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
 	},
         */
 	makePropEdit: function(inName, inValue, inEditorProps) {
@@ -160,7 +177,7 @@ wm.Label.extend({
         }
     },
 
-    // Any time the user changes the class for the label, recalculate autosize with the new styleing which may include font size changes	
+    // Any time the user changes the class for the label, recalculate autosize with the new styleing which may include font size changes
     addUserClass: function(inClass, inNodeName) {
 	this.inherited(arguments);
         if (this.autoSizeHeight || this.autoSizeWidth) {

@@ -293,6 +293,9 @@ Studio.extend({
             parentComponent.designMoveControl(movedComponent, {
                 i: inIndexInParent
             });
+            movedComponent.afterDragDrop();
+            parentComponent.afterDragChildDrop(movedComponent);
+            wm.job("studio.updateDirtyBit", 10, studio, "updateProjectDirty");
         }
     },
     onCanDropNode: function(inSender, inMovedNode, inNewParentNode, inIndexInParent, inOldParent, inResponseInfo) {

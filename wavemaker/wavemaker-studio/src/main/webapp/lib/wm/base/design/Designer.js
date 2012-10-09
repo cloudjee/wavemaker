@@ -26,7 +26,7 @@ dojo.declare("wm.Designer", wm.Surface, {
     init: function() {
         this.selected = [];
         this.inherited(arguments);
-        if (this.isDesignLoaded()) {
+        if(this.isDesignLoaded()) {
             this.flow = function() {};
             return;
         }
@@ -37,33 +37,28 @@ dojo.declare("wm.Designer", wm.Surface, {
     },
     // events
     onselect: function(inControl) {
-        this.selected = this.selected.sort(function(a,b) {
+        this.selected = this.selected.sort(function(a, b) {
             /* The only thing we really care about here is that mutiple items of the same parent are always sorted
              * according to their position in the parent so that when we operate upon them as a list, the operation
              * is clean and undoable.
              */
-            if (a.parent && a.parent == b.parent) {
+            if(a.parent && a.parent == b.parent) {
                 return wm.data.compareNumbers(a.getIndexInParent(), b.getIndexInParent());
             } else {
                 return wm.data.compareNumbers(a._studioSelectionTime, b._studioSelectionTime);
             }
         });
     },
-    ondelete: function(inControl) {
-    },
-    onmove: function(inControl) {
-    },
+    ondelete: function(inControl) {},
+    onmove: function(inControl) {},
     //
-    keypress: function(e) {
-    },
+    keypress: function(e) {},
     mousedown: function(e) {
-        if (e.target == this.domNode)
-            this.select([]);
+        if(e.target == this.domNode) this.select([]);
     },
     showHideHandles: function(inShowHide) {
         dojo.forEach(this.selected || [], function(s) {
-            if (s && !s.isDestroyed)
-                s.designWrapper.showHideHandles(inShowHide);
+            if(s && !s.isDestroyed) s.designWrapper.showHideHandles(inShowHide);
         });
     },
     /*
@@ -109,12 +104,16 @@ dojo.declare("wm.Designer", wm.Surface, {
     */
     // called by redo I believe...
     replace: function(inControl, inTarget, inBounds, inNextSibling) {
-        var c = inControl, t = inTarget, w = c.designWrapper;
+        var c = inControl,
+            t = inTarget,
+            w = c.designWrapper;
         // hide wrapper handles
         w.showHideHandles(false);
         // move control to target
         var i = inNextSibling ? t.indexOfControl(inNextSibling) : t.c$.length;
-        t.designMoveControl(c, {i: i});
+        t.designMoveControl(c, {
+            i: i
+        });
 
         // reassign control to wrapper
         w.setDesignNode(c.domNode);
@@ -291,16 +290,15 @@ dojo.declare("wm.Designer", wm.Surface, {
         d.target = t;
     },
     */
-    select: function(inControl, shiftKey, metaKey) {
-        /* Abort if the control doesn't have a designWrapper or we're in the middle of a select task */
-        if (inControl && !inControl.designWrapper || this._selecting) return;
+    select: function(inControl, shiftKey, metaKey) { /* Abort if the control doesn't have a designWrapper or we're in the middle of a select task */
+        if(inControl && !inControl.designWrapper || this._selecting) return;
 
         /* If the specified control was already selected, then do nothing... unless shift or meta are held, in which case deselect */
         var index = dojo.indexOf(this.selected || [], inControl);
-        if (index != -1) {
-            if (!shiftKey && !metaKey) return;
+        if(index != -1) {
+            if(!shiftKey && !metaKey) return;
             inControl.designWrapper.ondeselected();
-            wm.Array.removeElementAt(this.selected,index);
+            wm.Array.removeElementAt(this.selected, index);
             this.onselect(this.selected);
             return;
         }
@@ -310,21 +308,21 @@ dojo.declare("wm.Designer", wm.Surface, {
             this._selecting = true;
 
             /* Meta key: add the control to the list of selected widgets */
-            if (metaKey) {
+            if(metaKey) {
                 this.selected.push(inControl);
             }
 
             /* Shift key: Select everything between the last selected control and this control IF they have
              * the same parent, else just do the same as metaKey
              */
-            else if (shiftKey) {
-                var lastSelection = this.selected.length ? this.selected[this.selected.length-1] : null;
-                if (lastSelection && lastSelection.parent == inControl.parent) {
+            else if(shiftKey) {
+                var lastSelection = this.selected.length ? this.selected[this.selected.length - 1] : null;
+                if(lastSelection && lastSelection.parent == inControl.parent) {
                     var startIndex = lastSelection.getIndexInParent();
                     var endIndex = inControl.getIndexInParent();
-                    for (var i = Math.min(startIndex,endIndex); i <= Math.max(startIndex,endIndex); i++) {
+                    for(var i = Math.min(startIndex, endIndex); i <= Math.max(startIndex, endIndex); i++) {
                         var c = inControl.parent.c$[i];
-                        if (c.designWrapper && dojo.indexOf(this.selected, c) == -1) {
+                        if(c.designWrapper && dojo.indexOf(this.selected, c) == -1) {
                             this.selected.push(c);
                             c.designWrapper.onselected();
                         }
@@ -337,29 +335,32 @@ dojo.declare("wm.Designer", wm.Surface, {
 
             /* Else no shift OR meta key */
             else {
-                dojo.forEach(this.selected, function(c) {c.designWrapper.ondeselected();});
+                dojo.forEach(this.selected, function(c) {
+                    c.designWrapper.ondeselected();
+                });
                 this.selected = [inControl];
             }
             inControl.designWrapper.onselected();
-            this.selected = dojo.filter(this.selected, function(c) {return !c.isDestroyed;});
+            this.selected = dojo.filter(this.selected, function(c) {
+                return !c.isDestroyed;
+            });
             this.onselect(this.selected);
             // FIXME: no bueno on Safari, can't focus a DIV
             // FIXME: do we intend to focus on select()? why not only on mousedown or click events?
             try {
                 this.domNode.focus();
-            } catch (e) {}
+            } catch(e) {}
         } finally {
             this._selecting = false;
         }
     },
     selectFromStudio: function(inControls) {
         dojo.forEach(this.selected, function(c) {
-            if (c.designWrapper)
-                c.designWrapper.ondeselected();
+            if(c.designWrapper) c.designWrapper.ondeselected();
         });
         this.selected = [];
         dojo.forEach(inControls, function(c) {
-            if (c.designWrapper) {
+            if(c.designWrapper) {
                 this.selected.push(c);
                 c.designWrapper.onselected();
             }
@@ -368,13 +369,13 @@ dojo.declare("wm.Designer", wm.Surface, {
     selectParent: function(inControl) {
         var p = inControl || this.selected[0];
         p = p && p.parent;
-        if (p) {
-            if (p.designWrapper) {
+        if(p) {
+            if(p.designWrapper) {
                 this.select(p);
             } else {
                 this.selectParent(p);
             }
-        } else if (studio.page.root) {
+        } else if(studio.page.root) {
             this.select(studio.page.root);
         }
     },
@@ -405,7 +406,7 @@ dojo.declare("wm.Designer", wm.Surface, {
         this.flow();
     },
     flow: function() {
-        if (this._boundsDirty) {
+        if(this._boundsDirty) {
             wm.fire(studio.wip, "reflow");
             this._boundsDirty = false;
         }
@@ -414,17 +415,17 @@ dojo.declare("wm.Designer", wm.Surface, {
         inControl.designMove(inDropInfo.target, inDropInfo);
         this.onmove(inControl);
     },
-        _onShowParent: function() {
-        if (studio.page && studio.page.root)
-        studio.page.root.callOnShowParent();
+    _onShowParent: function() {
+        if(studio.page && studio.page.root) studio.page.root.callOnShowParent();
     },
     renderBounds: function() {
-    if (this.inherited(arguments)) {
-        var deviceSize = this.deviceSize;
-        this.deviceSize = app.appRoot.calcDeviceSize(this.bounds.w);
-        if (deviceSize != this.deviceSize) {
-        dojo.publish("deviceSizeRecalc");
+        if(this.inherited(arguments)) {
+            var deviceSize = this.deviceSize;
+            this.deviceSize = app.appRoot.calcDeviceSize(this.bounds.w);
+            if(deviceSize != this.deviceSize) {
+                dojo.publish("deviceSizeRecalc");
+            }
         }
     }
-    }
+
 });

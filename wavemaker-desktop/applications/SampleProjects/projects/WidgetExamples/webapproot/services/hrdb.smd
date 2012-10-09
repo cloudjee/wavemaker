@@ -1,0 +1,13 @@
+{
+	"methods": [{
+		"name": "getDepartmentById",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.hrdb.data.Department"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "hrdb.json"
+}

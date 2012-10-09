@@ -41,9 +41,9 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		this.info = inInfo || this.info;
 	    if (this.info && this.info.control && (wm.isInstanceType(this.info.control,  [wm.AbstractEditor, wm.EditPanel]))) {
 		var parentForm = this.info.control.getParentForm();
-		this.info.parentForm = wm.isInstanceType(parentForm, wm.LiveFormBase) ? parentForm : null;	
+		this.info.parentForm = wm.isInstanceType(parentForm, wm.LiveFormBase) ? parentForm : null;
 	    }
-		
+
 	    this.mousedown(inEvent);
 	},
 	initNodes: function() {
@@ -87,7 +87,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		    var designerBounds = dojo.coords(studio.designer.domNode);
 		    kit._setMarginBox(this.markNode, r.l,r.t,/*r.l + this.targetOff.x, r.t + this.targetOff.y, */
 				      Math.min(r.w, designerBounds.x+designerBounds.w - r.l),
-				      Math.min(r.h, designerBounds.y+designerBounds.h - r.t));		    
+				      Math.min(r.h, designerBounds.y+designerBounds.h - r.t));
 		    //console.log("MARKER: Width:" + r.w + "; designerBounds.x:"+designerBounds.x +  "; designerBounds.w:"+designerBounds.w + " - r.l: " + r.l + " = " + this.markNode.style.width);
 			// position the snap markers
 			wm.showHideNode(this.hSnapNode, Boolean(r.hSnap));
@@ -104,7 +104,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 			}
 			// cache drop position
 			this.dropRect = r;
-		} 
+		}
 
 	},
 	drop: function(e) {
@@ -168,7 +168,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		this.showHideAvatar(true);
 		var contentNode = this.info.obj ? this.info.obj.contentNode : '' ;
 		var contentHTML = contentNode != '' ? '<span>' + contentNode.innerHTML + '</span>' : this.info.caption;
-		if (this.target) 
+		if (this.target)
 		{
 			var dn = this.designable ? this.target.name : this.root.owner.type;
 			this.setAvatarContent(contentHTML + " -> <b>" + dn + "</b>");
@@ -191,7 +191,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		inHit.l -= studio.designer.marginExtents.l;
 		if (this.targetInRoot(inHit)) {
 		    t = (this.designable ? this._findTarget(inHit, this.root, 0) : this.root);
-		} 
+		}
 	    }
 	    if (!t) {
 		kit._setMarginBox(this.markNode, 0, 0, 0, 0);
@@ -220,7 +220,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 		var sl = dn.scrollLeft, st = dn.scrollTop;
 	        var ws = inWidget.getOrderedWidgets();
 		var m = inMargin || 0;
-	    
+
 	    for (var i = 0; i < ws.length; i++) {
 		var w = ws[i];
 			if (w != this.info.control && w.container && !w.getLock()) {
@@ -248,19 +248,19 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 				if (w.domNode.parentNode != inWidget.domNode){
 					// offset from target rect to hit frame
 					o = wm.calcOffset(w.domNode.parentNode, inWidget.domNode);
-					b.l += o.x; 
+					b.l += o.x;
 					b.t += o.y;
 				} else {
-					b.l -= sl; 
+					b.l -= sl;
 					b.t -= st;
 				}
 
 				// must be well inside
-				b.r = b.l + b.w; 
+				b.r = b.l + b.w;
 				b.b = b.t + b.h;
 
 				if (h.l-b.l>m && b.r-h.l>m && h.t-b.t>m && b.b-h.t>m) {
-				    h.l -= b.l + w.marginExtents.l + w.borderExtents.l; 
+				    h.l -= b.l + w.marginExtents.l + w.borderExtents.l;
 				    h.t -= b.t + w.marginExtents.t + w.borderExtents.t;
 				    return true;
 				}
@@ -274,7 +274,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
         parentOK = false;
 			}
 		}
-		
+
 		return parentOK && inWidget.container && !inWidget.flags.notInspectable && !inWidget.getFreeze();
 	},
 	targetInRoot: function(inHit) {
@@ -302,20 +302,21 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    }
 	    return;
 	},
-	isDesignable: function() {
-	    var c = this.info.control;
-	    if (!c) {
-		var ctor = dojo.getObject(this.info.type);
-		if (ctor) {
-			c = ctor.prototype;
-		}
-	    }
-	    if (c) {
-		return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity;
-	    } else {
-		return !this.info.props || !this.info.props.noPositioning;
-	    }
-	}
+    isDesignable: function() {
+        var c = this.info.control;
+        if (!c) {
+            var ctor = dojo.getObject(this.info.type);
+            if (ctor) {
+                c = ctor.prototype;
+            }
+        }
+        if (c) {
+            return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity ||
+                c instanceof wm.Security && this.info.node && this.info.node.content == "logout";
+        } else {
+            return !this.info.props || !this.info.props.noPositioning;
+        }
+    }
 });
 
 /**
@@ -351,7 +352,7 @@ dojo.declare("wm.design.Resizer", wm.DragDropper, {
 			this.target.layout.removeEdges(this.target);
 	},
 	applyMouseDelta: function() {
-		with (this.info.rect) 
+		with (this.info.rect)
 			this.dropRect = { l: l, t: t, w: w, h: h };
 		with (wm.design.handles) {
 			switch (this.info.handleId) {
@@ -363,7 +364,7 @@ dojo.declare("wm.design.Resizer", wm.DragDropper, {
 					break;
 				case leftBottom:
 				case middleBottom:
-				case rightBottom: 
+				case rightBottom:
 					this.dropRect.h += this.dy;
 					break;
 			}
@@ -390,7 +391,7 @@ dojo.declare("wm.design.Resizer", wm.DragDropper, {
 				case rightTop:
 				case leftBottom:
 				case middleBottom:
-				case rightBottom: 
+				case rightBottom:
 					inRect.h = this.snap(inRect.h);
 					break;
 				case leftTop:

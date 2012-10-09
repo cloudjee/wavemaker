@@ -95,7 +95,7 @@ public class DefaultSpinupService implements SpinupService {
     			String appName = application.getName();
     			if(appName.contains(STUDIO_APP_NAME)){
     	            if (log.isInfoEnabled()) {
-    	                log.info("Found exisiting studio: " + appName + " " + "for " + credentials.getUsername());
+    	                log.info("Exisiting studio: " + appName + " " + "for " + credentials.getUsername());
     	            }
     				return true;
     			}
@@ -314,21 +314,16 @@ public class DefaultSpinupService implements SpinupService {
             }
             addMissingServices();
             ApplicationDetails applicationDetails = createApplicationWithUniqueUrl();
-
-            if (log.isTraceEnabled()) {
-                log.trace("Uploading application " + applicationDetails.getName());
-            }
             uploadApplication(applicationDetails.getName());
             if (log.isDebugEnabled()) {
-                log.debug("Uploaded application " + applicationDetails.getName());
+                log.debug("Uploaded " + applicationDetails.getName());
+                log.debug("Setting env var: " + CLOUD_CONTROLLER_VARIABLE_NAME);
             }
-
-            log.debug("Setting environment variable: " + CLOUD_CONTROLLER_VARIABLE_NAME);
             CloudApplication application = this.cloudFoundryClient.getApplication(applicationDetails.getName());
             Map<String, String> env = new HashMap<String, String>(application.getEnvAsMap());
             env.put(CLOUD_CONTROLLER_VARIABLE_NAME, getControllerUrl());
             this.cloudFoundryClient.updateApplicationEnv(applicationDetails.getName(), env);
-            log.debug("Application deployment complete");
+            log.debug("Deployment complete");
             return applicationDetails;
         }
 

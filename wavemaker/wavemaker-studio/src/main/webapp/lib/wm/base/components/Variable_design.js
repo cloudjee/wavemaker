@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,7 +48,7 @@ wm.Object.extendSchema(wm.Variable, {
     /* Hidden group */
     json: {hidden:1, group: "data", order: 5},
 
-    /* Ignored group */ 
+    /* Ignored group */
     data: { ignore: 1 },
     cursor: { ignore: 1},
     isPrimitive: { ignore: 1},
@@ -86,5 +86,10 @@ wm.Variable.extend({
     },
     isListBindable: function() {
         return this.isList;
+    },
+    /* Called whe user uses the property panel to set type */
+    set_type: function(inType) {
+        this.setType(inType);
+        if (this.json) this.setJson(this.json);
     }
 });

@@ -12,12 +12,11 @@
 *  limitations under the License.
 */
 dojo.declare("Main", wm.Page, {
+"preferredDevice": "desktop",
 "i18n": true,
 start: function() {
-var d = dojo.xhrGet({url: "resources/dependency_bundle_open_source_licenses.txt", sync: false , preventCache: true});
-d.addCallback(dojo.hitch(this, function(inResult) {
-this.licenseHtml.setHtml(inResult.replace(/\</g, "&lt;"));
-}));
+this.loadingDialog1.containerWidget.setAutoScroll(false);
+this.loadingDialog1.containerWidget.setMargin("0,0,0,60")
 },
 downloadAndInstallServiceVarSuccess: function(inSender, inDeprecated) {
 try {
@@ -88,6 +87,12 @@ this.downloadAndInstallServiceVarError(inSender,{message:inErrorMsg});
 console.error('ERROR IN dojoFileUpload1Error: ' + e);
 }
 },
+licenseCheckbox1Change: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+if (inSender.getChecked()) {
+app.alert("Some features of WaveMaker are not available without the System Dependency Bundle installed.  Your WaveMaker Studio behavior will be limited until the System Dependency Bundle is installed.");
+app.alertDialog.button1.addUserClass("StudioButton");
+}
+},
 _end: 0
 });
 
@@ -102,25 +107,31 @@ wire: ["wm.Wire", {"source":"layer1","targetProperty":"layer"}, {}]
 }]
 }]
 }],
-loadingDialog1: ["wm.LoadingDialog", {"caption":"Downloading and Installing","captionWidth":"200px"}, {}, {
+loadingDialog1: ["wm.LoadingDialog", {"caption":"Installing","captionWidth":"200px"}, {}, {
 binding: ["wm.Binding", {}, {}, {
-wire1: ["wm.Wire", {"source":"downloadAndInstallServiceVar","targetProperty":"serviceVariableToTrack"}, {}],
-wire2: ["wm.Wire", {"source":"licenseHtml","targetProperty":"widgetToCover"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"downloadAndInstallServiceVar","targetProperty":"serviceVariableToTrack"}, {}],
+wire1: ["wm.Wire", {"expression":undefined,"source":"downloadButton","targetProperty":"widgetToCover"}, {}]
 }]
 }],
 layoutBox: ["wm.Layout", {"horizontalAlign":"center"}, {}, {
 panel5: ["wm.Panel", {"_classes":{"domNode":["wm_Attribution_new"]},"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"266px"}, {}],
 loginMainPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"center","padding":"20","verticalAlign":"middle","width":"100%"}, {}, {
-wmTitle: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","wm_TextDecoration_Bold"]},"align":"center","caption":"Complete Installation","height":"20px","padding":"4","width":"350px"}, {}, {
+wmTitle: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","wm_TextDecoration_Bold"]},"align":"center","caption":"Complete Installation","height":"29px","padding":"4","styles":{"color":"#ffffff"},"width":"350px"}, {}, {
 format: ["wm.DataFormatter", {}, {}]
 }],
-loginInputPanel: ["wm.EmphasizedContentPanel", {"_classes":{"domNode":["wm_BorderTopStyle_Curved8px","wm_BorderBottomStyle_Curved8px"]},"border":"2","height":"500px","horizontalAlign":"center","verticalAlign":"center","width":"948px"}, {}, {
+loginInputPanel: ["wm.EmphasizedContentPanel", {"_classes":{"domNode":["wm_BorderTopStyle_Curved8px","wm_BorderBottomStyle_Curved8px"]},"border":"2","height":"350px","horizontalAlign":"center","verticalAlign":"center","width":"948px"}, {}, {
 layers1: ["wm.Layers", {"margin":"20","transition":"fade"}, {}, {
 layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"right","verticalAlign":"top"}, {}, {
-html2: ["wm.Html", {"autoScroll":false,"height":"88px","html":"<p>NOTE: If it takes more than a minute for the install button to run, click on <a href='#' onclick='main.manualLabelClick()'>Proxy Problems?</a>.</p><p>WaveMaker has identified missing system requirements.  These dependencies can be resolved by downloading the WaveMaker System Requirements Bundle.  The WaveMaker System Requirements Bundle includes open source packages.  Your use of the WaveMaker System Requirements Bundle is subject to the following open source license(s):</p>","margin":"0,20","minDesktopHeight":15}, {}],
-licenseHtml: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"height":"100%","minDesktopHeight":15,"padding":"10"}, {}],
+html2: ["wm.Html", {"autoScroll":false,"height":"119px","html":"<p>NOTE: If it takes more than a minute for the install button to run, click on \"Proxy Problems?\" next to the Download button.</p><p>WaveMaker has identified missing system requirements.  These dependencies can be resolved by downloading the WaveMaker System Requirements Bundle.  The WaveMaker System Requirements Bundle includes open source packages.  Your use of the WaveMaker System Requirements Bundle is subject to open source license(s). \n</p><p>\n<a target=\"_blank\" href=\"https://raw.github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/6.5/license.txt\">View Licenses</a>\n</p>\n","margin":"0,20","minDesktopHeight":15}, {}],
+panel6: ["wm.Panel", {"height":"100%","horizontalAlign":"left","margin":"0,0,0,80","verticalAlign":"middle","width":"100%"}, {}, {
+licenseCheckbox: ["wm.RadioButton", {"_classes":{"domNode":["StudioEditor"]},"caption":"I accept these licenses","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"yes","desktopHeight":"35px","displayValue":"","groupValue":true,"height":"35px","radioGroup":"license","width":"100%"}, {}],
+licenseCheckbox1: ["wm.RadioButton", {"_classes":{"domNode":["StudioEditor"]},"caption":"I do not accept these licenses","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"no","desktopHeight":"35px","displayValue":"","groupValue":true,"height":"35px","radioGroup":"license","width":"100%"}, {"onchange":"licenseCheckbox1Change"}]
+}],
 panel3: ["wm.Panel", {"height":"48px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-spacer1: ["wm.Spacer", {"height":"50px","width":"326px"}, {}],
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":"!${licenseCheckbox.checked}","targetProperty":"disabled"}, {}]
+}],
+spacer1: ["wm.Spacer", {"height":"48px","width":"328px"}, {}],
 downloadButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Download and Install","desktopHeight":"34px","height":"34px","margin":"4","width":"200px"}, {"onclick":"downloadAndInstallServiceVar"}],
 manualLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontColor_White"]},"align":"right","caption":"Proxy Problems?","link":"#","padding":"4","width":"100%"}, {"onclick":"manualLabelClick"}, {
 format: ["wm.DataFormatter", {}, {}]
@@ -190,6 +201,24 @@ color: black !important;\
 }\
 body.tundra .Main .wmlayout .Main-licenseHtml {\
 white-space: pre-wrap;\
+}\
+.wmdialog  .dialogfooter {\
+background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#798597", endColorstr="#636F80",GradientType=0);\
+padding: 4px;\
+}\
+.dialogtitlebar {\
+background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);\
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#798597", endColorstr="#636F80",GradientType=0);\
+color: #FFF;\
+font-size: 120%;\
+text-align: center;\
 }\
 ';
 Main.prototype._htmlText = '<div id="sample">Sample Markup</div>\

@@ -296,7 +296,8 @@ PhoneGapConfig.widgets = {
                             "height": "26px",
                             "helpText": "Enter the name you want users to see when looking at their device's home screen or application list",
                             "required": 1,
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         xhrPath: ["wm.SelectMenu",
                         {
@@ -308,9 +309,27 @@ PhoneGapConfig.widgets = {
                             "captionSize": "140px",
                             "dataValue": undefined,
                             "displayValue": "",
-                            "helpText": "Enter the path that you want this application to use to send requests to your server",
+                            "helpText": "Enter the path that you want this application to use to send requests to a WaveMaker server; you need this for LiveVariables, database services, java services and web services (except XHR/JSON services). Examples:<dl><dt>http://mylocalhostipaddress:8094/Project35</dt><dd>Use something like this if your phonegap app is talking to your development machine</dd><dt>http://project35.cloudfoundry.com</dt><dd>if your phonegap application is talking to a server you deployed to cloudfoundry</dd><dt>http://myserver.com/project35</dt><dd>if your phonegap application is talking to a server you deployed elsewhere</dd><dt>Leave blank</dt><dd>If your only using XHR Services and don't need a WaveMaker server</dd></dl>",
                             "width": "100%",
-                            restrictValues: 0
+                            emptyValue: "null",
+                            restrictValues: 0,
+                            regExp: "[^&<>]*"
+                        }, {
+                            onchange: "xhrPathChange"
+                        }],
+                        xhrServiceProxies: ["wm.Checkbox",
+                        {
+                            _classes: {
+                                domNode: ["StudioEditor"]
+                            },
+                            "caption": "Use Server Proxy",
+                            "captionAlign": "left",
+                            "captionSize": "140px",
+                            "dataValue": undefined,
+                            "displayValue": "",
+                            "helpText": "When you import a WebService of type XHR/JSON, you may have set the useProxy setting to true (default = true).  That means all requests go through your wavemaker server and your server forwards the request.  This is not needed in a phonegap application, and adds complications.  <ul><li><b>Check this</b>: If you want your xhr services to use your service definition's useProxy setting</li><li><b>Uncheck this</b>: If you want to send your requests directly from the phonegap application and ignore your service definition's useProxy setting.</li></ul>",
+                            "width": "100%",
+                            emptyValue: "false"
                         }, {
                             onchange: "xhrPathChange"
                         }],
@@ -357,7 +376,8 @@ PhoneGapConfig.widgets = {
                             "height": "26px",
                             "helpText": "Needs to be of the form com.mycompany.projectName",
                             "required": 1,
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appVersion: ["wm.Text",
                         {
@@ -372,7 +392,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appDescription: ["wm.LargeTextArea",
                         {
@@ -387,7 +408,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "100px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appAuthorName: ["wm.Text",
                         {
@@ -401,7 +423,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "A WaveMaker Studio User",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appAuthorUrl: ["wm.Text",
                         {
@@ -416,7 +439,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}],
                         appAuthorEmail: ["wm.Text",
                         {
@@ -431,7 +455,8 @@ PhoneGapConfig.widgets = {
                             "displayValue": "",
                             "emptyValue": "emptyString",
                             "height": "26px",
-                            "width": "100%"
+                            "width": "100%",
+                            regExp: "[^&<>]*"
                         }, {}]
                     }]
                 }],
@@ -1026,11 +1051,11 @@ PhoneGapConfig.widgets = {
                     "captionSize": "120px",
                     "dataField": "dataValue",
                     "dataValue": ["http://api.phonegap.com/1.0/network", "http://api.phonegap.com/1.0/notification", "http://api.phonegap.com/1.0/geolocation", "http://api.phonegap.com/1.0/camera", "http://api.phonegap.com/1.0/contacts"],
-                    "desktopHeight": "180px",
+                    "desktopHeight": "100%",
                     "displayField": "dataValue",
                     "displayValue": "http://api.phonegap.com/1.0/network, http://api.phonegap.com/1.0/notification, http://api.phonegap.com/1.0/geolocation, http://api.phonegap.com/1.0/camera, http://api.phonegap.com/1.0/contacts, http://api.phonegap.com/1.0/file",
                     "editorBorder": false,
-                    "height": "180px",
+                    "height": "100%",
                     "mobileHeight": "100%",
                     "options": "http://api.phonegap.com/1.0/network,http://api.phonegap.com/1.0/notification,http://api.phonegap.com/1.0/geolocation,http://api.phonegap.com/1.0/camera,http://api.phonegap.com/1.0/contacts,http://api.phonegap.com/1.0/file,http://api.phonegap.com/1.0/media,http://api.phonegap.com/1.0/battery",
                     "width": "100%"

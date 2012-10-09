@@ -85,7 +85,8 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
         dojo.disconnect(this._resultConnect );
         delete this._requestConnect;
         delete this._resultConnect;
-        this.showDataTabs(this.serviceGrid  );
+
+        this.showDataTabs(this.serviceGrid);
     },
     showDataCell: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {
         var data = rowObj.data;

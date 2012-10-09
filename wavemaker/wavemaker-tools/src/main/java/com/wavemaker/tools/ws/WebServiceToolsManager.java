@@ -46,6 +46,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
@@ -793,19 +794,20 @@ public class WebServiceToolsManager {
     }
 
     private static java.io.File generateWsdlFromWadl(String wadlPath, java.io.File outDir) {
-        String wadlUri = null;
-        if (wadlPath.startsWith("http")) {
-            wadlUri = wadlPath;
-        } else {
-            java.io.File file = new java.io.File(wadlPath);
-            wadlUri = file.toURI().toString();
-        }
-        try {
-            Wadl2Wsdl wadl2Wsdl = new Wadl2Wsdl(new URI(wadlUri));
-            return wadl2Wsdl.generateWSDL(outDir);
-        } catch (Exception e) {
-            throw new ConfigurationException(e);
-        }
+    	throw new NotImplementedException();
+//        String wadlUri = null;
+//        if (wadlPath.startsWith("http")) {
+//            wadlUri = wadlPath;
+//        } else {
+//            java.io.File file = new java.io.File(wadlPath);
+//            wadlUri = file.toURI().toString();
+//        }
+//        try {
+//            Wadl2Wsdl wadl2Wsdl = new Wadl2Wsdl(new URI(wadlUri));
+//            return wadl2Wsdl.generateWSDL(outDir);
+//        } catch (Exception e) {
+//            throw new ConfigurationException(e);
+//        }
     }
 
     /**
@@ -920,11 +922,11 @@ public class WebServiceToolsManager {
         return types;
     }
 
-    public BindingProperties getBindingProperties(String serviceId) throws JAXBException, IOException {
+    public BindingProperties getBindingProperties(String serviceId) throws Exception {
         return WebServiceSpringSupport.getBindingProperties(this.designServiceMgr, serviceId);
     }
 
-    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws JAXBException, IOException {
+    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws Exception {
         WebServiceSpringSupport.setBindingProperties(this.designServiceMgr, serviceId, bindingProperties);
     }
 

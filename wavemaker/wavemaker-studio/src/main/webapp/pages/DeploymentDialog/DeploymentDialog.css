@@ -32,7 +32,7 @@
 	opacity:0.5;
 }
 
-.DeploymentDialog-cloudFoundryAppList .wmlist-list .wmlist-cell, 
+.DeploymentDialog-cloudFoundryAppList .wmlist-list .wmlist-cell,
 .DeploymentDialog .wmlist-list .wmlist-cell {
     border-bottom: solid 1px #AAA;
     white-space:nowrap;
@@ -84,6 +84,7 @@ color: white;
     background-color: rgb(255,200,200);
 }
 
-.DeploymentDialog .DeploymentDialog-confirmSaveDialogHtml1 {
+.DeploymentDialog-confirmSaveDialogHtml1 {
     text-align: center;
+    color: white;
 }

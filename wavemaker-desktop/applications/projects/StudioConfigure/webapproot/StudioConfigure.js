@@ -12,7 +12,7 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"phoneMain": "", 
 	"projectSubVersion": 139, 
 	"projectVersion": 1, 
-	"saveCounter": 16, 
+	"saveCounter": 47, 
 	"showIOSPhoneGapBackButton": false, 
 	"studioVersion": "6.5.0.M4", 
 	"tabletMain": "", 

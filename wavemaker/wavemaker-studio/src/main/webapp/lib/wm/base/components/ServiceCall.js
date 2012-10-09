@@ -56,7 +56,8 @@ dojo.declare("wm.ServiceCall", null, {
     operation: "",
     _operationInfo: {},
     disabled: false,
-    inFlightBehavior: "executeLast",
+    inFlightBehavior: "none",
+
     destroy: function() {
         delete this._inFlightBacklog;
         wm.fire(this._requester, "cancel");
@@ -289,7 +290,13 @@ dojo.declare("wm.ServiceCall", null, {
 
     /* inArgs optional too... typically provided by calls from the request backlog/inflight queue*/
     request: function(inArgs, optionalOp, optionalDeferred) {
-        var args = inArgs || this.getArgs();
+        var args;
+        try {
+            args = inArgs || this.getArgs();
+        } catch(e) {
+            this.error(e);
+            return;
+        }
 
         /* Tell the Service component to fire */
         var d = this._requester = this._service.invoke(optionalOp || this.operation, args, this.owner, this);
@@ -377,6 +384,7 @@ dojo.declare("wm.ServiceCall", null, {
         Setting this flag to false will prevent the service from updating.
         @event
     */
+    _onCanUpdateBeforeStart: 1,
     onCanUpdate: function(ioUpdate) {
     },
     /**
@@ -560,7 +568,7 @@ wm.ServiceCall.extend({
                    methods = s && s.getOperationsList();
                if (!valueOk){
                    inValue = methods ? methods[0] : "";
-                   if (inValue)
+                   if (inValue && inValue != this.operation)
                        this.set_operation(inValue);
                }
                if (methods)

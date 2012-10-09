@@ -30,8 +30,9 @@ wm.Object.extendSchema(wm.Layer, {
     themeStyleType: {ignore: 0},
 
     /* Operations group */
-    moveNext: { group: "operation", order: 1, contextMenu: false, operation: 1 },
-    movePrevious: { group: "operation", order: 2, contextMenu: false, operation: 1 },
+    add:  { group: "operation", order: 1, contextMenu: true, operation: 1 },
+    moveNext: { group: "operation", order: 2, contextMenu: false, operation: 1 },
+    movePrevious: { group: "operation", order: 3, contextMenu: false, operation: 1 },
 
     /* Events/custom methods group */
     onDeactivate: {group:"events",order: 1},
@@ -66,62 +67,64 @@ wm.Object.extendSchema(wm.Layer, {
 
 wm.Layer.extend({
     themeable: false,
-        sizeable: false,
-	moveable: false,
-	designCreate: function() {
-		this.inherited(arguments);
-		if (this.designWrapper && !studio.selected == this)
-			this.designWrapper.setShowing(false);
-	},
-	domNodeShowingChanged: function(inShowing) {
-		var dw = this.designWrapper;
-		if (dw && inShowing != dw.showing)
-			dw.setShowing(inShowing);
-	},
-	moveLayer: function(inDelta) {
-		var l = this.parent, i = this.getIndex();
-		l.moveLayerIndex(this, i + inDelta);
-	},
-        moveNext: function() {
-	    this.moveLayer(1);
-	    studio.refreshComponentOnTree(this.parent);
-	    studio.select(null);
-	    studio.select(this);
-	},
-        movePrevious: function() {
-	    this.moveLayer(-1);
-	    studio.refreshComponentOnTree(this.parent);
-	    studio.select(null);
-	    studio.select(this);
-	},
-
-    createDesignContextMenu: function(menuObj) {
-	var data = {label: "Move Layer",
-		    iconClass: "Studio_silkIconImageList_30",
-		    children: []};
-
-	data.children.push({label: "Previous",
-			    iconClass: "Studio_silkIconImageList_30",
-			    onClick: dojo.hitch(this, function() {
-				this.editProp("movePrevious");
-			    })
-			   });
-	data.children.push({label: "Next",
-			    iconClass: "Studio_silkIconImageList_30",
-			    onClick: dojo.hitch(this, function() {
-				this.editProp("moveNext");
-			    })
-			   });
-		var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
+    sizeable: false,
+    moveable: false,
+    designCreate: function() {
+        this.inherited(arguments);
+        if (this.designWrapper && !studio.selected == this)
+            this.designWrapper.setShowing(false);
     },
-	listProperties: function() {
-	    var props = this.inherited(arguments);
-	    props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
-	    props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
-	    props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
-	    props.caption.requiredGroup = (dojo.indexOf(["Tabs","Wizard","Breadcrumb"], this.parent.layersType) != -1);
-	    return props;
-	}
+    domNodeShowingChanged: function(inShowing) {
+        var dw = this.designWrapper;
+        if (dw && inShowing != dw.showing)
+            dw.setShowing(inShowing);
+    },
+    moveLayer: function(inDelta) {
+        var l = this.parent, i = this.getIndex();
+        l.moveLayerIndex(this, i + inDelta);
+    },
+    moveNext: function() {
+        this.moveLayer(1);
+        studio.refreshComponentOnTree(this.parent);
+        studio.select(null);
+        studio.select(this);
+    },
+    movePrevious: function() {
+        this.moveLayer(-1);
+        studio.refreshComponentOnTree(this.parent);
+        studio.select(null);
+        studio.select(this);
+    },
+    add: function() {
+        this.parent.add();
+    },/*
+    createDesignContextMenu: function(menuObj) {
+    var data = {label: "Move Layer",
+            iconClass: "Studio_silkIconImageList_30",
+            children: []};
+
+    data.children.push({label: "Previous",
+                iconClass: "Studio_silkIconImageList_30",
+                onClick: dojo.hitch(this, function() {
+                this.editProp("movePrevious");
+                })
+               });
+    data.children.push({label: "Next",
+                iconClass: "Studio_silkIconImageList_30",
+                onClick: dojo.hitch(this, function() {
+                this.editProp("moveNext");
+                })
+               });
+        var submenu = menuObj.addAdvancedMenuChildren(menuObj.dojoObj, data);
+    },*/
+    listProperties: function() {
+        var props = this.inherited(arguments);
+        props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
+        props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
+        props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
+        props.caption.requiredGroup = (dojo.indexOf(["Tabs","Wizard","Breadcrumb"], this.parent.layersType) != -1);
+        return props;
+    }
 });
 
 wm.Object.extendSchema(wm.Layers, {
@@ -158,17 +161,17 @@ wm.Object.extendSchema(wm.Layers, {
     customCloseOrDestroy: {advanced:1},
 
     /* Ignored group */
-	lock: {ignore: 1},
-	freeze: {ignore: 1},
-	box: {ignore: 1},
-	boxPosition: { ignore: 1},
-	layoutKind: { ignore: 1},
-	horizontalAlign: { ignore: 1},
-	verticalAlign: { ignore: 1},
-	layerIndex: {ignore: 1},
-	lastLayerIndex: {ignore: 1},
-	userDefHeaderHeight: {ignore:1},
-	fitToContent: { ignore: 1},
+    lock: {ignore: 1},
+    freeze: {ignore: 1},
+    box: {ignore: 1},
+    boxPosition: { ignore: 1},
+    layoutKind: { ignore: 1},
+    horizontalAlign: { ignore: 1},
+    verticalAlign: { ignore: 1},
+    layerIndex: {ignore: 1},
+    lastLayerIndex: {ignore: 1},
+    userDefHeaderHeight: {ignore:1},
+    fitToContent: { ignore: 1},
         autoScroll: {ignore: 1}, // wm.Layer should have scrolling set, not the wm.Layers/TabLayers.  Accordion is an exception
     scrollX: {ignore: 1},
     scrollY: {ignore: 1},
@@ -189,7 +192,8 @@ wm.Object.extendSchema(wm.Layers, {
     moveLayerIndex: {method:1},
     clear: {method:1},
     setClientBorder: {method:1},
-    setClientBorderColor: {method:1}
+    setClientBorderColor: {method:1},
+    addPageContainerLayer: {method:1, returns: "wm.Layer"}
 });
 
 wm.Layers.extend({
@@ -308,11 +312,10 @@ wm.Layers.extend({
         return this.inherited(arguments);
     },
     add: function() {
-        this.addLayer();
+        var l = this.addLayer();
         // FIXME: need to refresh tree and select layer
         studio.refreshVisualTree();
-        studio.select(null);
-        studio.select(this);
+        studio.select(l);
     },
     listProperties: function() {
         var props = this.inherited(arguments);
@@ -365,7 +368,7 @@ wm.AccordionLayers.extend({
     themeable: true,
     themeableProps: ["border","borderColor","layerBorder","captionHeight"],
     themeableStyles: [{name: "wm.AccordionLayers-Open_Image", displayName: "Open Arrow Icon"},
-		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
+              {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
 });
 wm.Object.extendSchema(wm.AccordionLayers, {
     /* Display group; scrolling subgroup */

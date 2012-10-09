@@ -62,8 +62,12 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
     private static final String DEFAULT_RESOURCE_SHARING_SCOPE = "Shareable";
 
+    private static final String CLOUD_DATA_SOURCE = "cloud:data-source";
+
     // do we already have constants for the web-app xml elements?
     private static final String WEB_XML_INSERT_BEFORE = "</web-app>";
+
+    private static final String CONIG_FILE_INSERT_BEFORE = "</beans>";
 
     @Override
     public void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx,
@@ -83,7 +87,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             modifyWebSphereBindings(mgr, jndiName, indx);
             configureResourceRef(mgr, jndiName);
         } else {
-            configureDeploymentProperties(cfg, properties, type);
+            configureDeploymentProperties(mgr, cfg, properties, type);
         }
     }
 
@@ -129,17 +133,39 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.writeProperties(newProps, false);
     }
 
-    private void configureDeploymentProperties(DataServiceSpringConfiguration cfg, Map<String, String> deploymentProperties,
-                                               DeploymentType type) {
+    private void configureDeploymentProperties(DesignServiceManager mgr, DataServiceSpringConfiguration cfg,
+                                               Map<String, String> deploymentProperties, DeploymentType type) {
         Properties existingProps = cfg.readProperties(true);
         for (Entry<String, String> prop : deploymentProperties.entrySet()) {
             existingProps.setProperty(prop.getKey(), prop.getValue());
         }
         cfg.writeProperties(existingProps, true);
-        cfg.configureDbAlias(existingProps.getProperty(DB_ALIAS_PROPERTY));
-        cfg.configureHibernateSchemaUpdate(existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
+        String dbName = existingProps.getProperty(DB_ALIAS_PROPERTY);
+        cfg.configureDbAlias(dbName, type);
+        cfg.configureHibernateSchemaUpdate(dbName, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
+        if (type == DeploymentType.CLOUD_FOUNDRY) {
+            addCloudDataSource(mgr, cfg, dbName);
+        }
+    }
+
+    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String dbName) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        XMLWriter writer = XMLUtils.newXMLWriter(pw);
+        writer.setStartIndent(4);
+        writer.addAttribute();
+        writer.addElement(CLOUD_DATA_SOURCE, "id", dbName + "DataSource");
+        writer.finish();
+        File cfgFile = mgr.getProjectManager().getCurrentProject().getRootFolder().getFile(cfg.getPath());
+        String s = cfgFile.getContent().asString();
+        int i = s.indexOf(CONIG_FILE_INSERT_BEFORE);
+        if (i == -1) {
+            throw new AssertionError("Could not find marker in spring config file: " + CONIG_FILE_INSERT_BEFORE);
+        }
+        s = s.substring(0, i) + writer.getLineSep() + sw.toString() + writer.getLineSep() + s.substring(i);
+        cfgFile.getContent().write(s);
     }
 
     private void configureResourceRef(DesignServiceManager mgr, String jndiName) {

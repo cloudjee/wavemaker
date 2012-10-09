@@ -13,13 +13,15 @@
  */
 dojo.declare("GridDesigner", wm.Page, {
     start: function() {
-    wm.typeManager.types.gridDefinitionType.fields.field.include = ["update"];
-    this._editors = [];
-    wm.forEachWidget(this.root, dojo.hitch(this, function(w) {
-        if (w instanceof wm.AbstractEditor) {
-        this._editors.push(w);
-        }
-    }));
+        wm.typeManager.types.gridDefinitionType.fields.field.include = ["update"];
+        this._editors = [];
+        wm.forEachWidget(this.root, dojo.hitch(this, function(w) {
+            if (w instanceof wm.AbstractEditor) {
+                this._editors.push(w);
+            }
+        }));
+
+        this.subscribe("deviceSizeRecalc", this, "reselectGrid");
     },
     updateFormatterList: function(){
         this.fullFormattersVar.setData(this.formattersVar);
@@ -42,57 +44,73 @@ dojo.declare("GridDesigner", wm.Page, {
         });
         this.liveSourceVar.setData(list);
     },
- setGrid: function(inGrid) {
-     this.currentGrid = inGrid;
-     this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
-     this.currentDataSet = inGrid.dataSet;
-     this.initialColumns = inGrid.columns;
+    /* Called when deviceType changes, triggering the selected grid to be destroyed, recreated, and our current grid to be destroyed and
+     * in need of reselection */
+    reselectGrid:function() {
+        wm.onidle(this, function() {
+            this.currentGrid = app.getValueById(this.currentGridOwnerId + "." + this.currentGrid.name);
+        });
+    },
+    setGrid: function(inGrid) {
+        this.currentGrid = inGrid;
+        this.currentGridOwnerId = inGrid.owner.getRuntimeId();
+        this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
+        this.currentDataSet = inGrid.dataSet;
+        this.initialColumns = inGrid.columns;
 
-     var columns = dojo.clone(inGrid.columns);
-     columns = dojo.filter(columns, function(col) {
-         return !col.controller;
-     });
-     var phoneIndex = -1;
-     var hasPhoneColumn = false;
-     for (var i = 0; i < columns.length; i++) {
-        if (columns[i].field == "PHONE COLUMN") {
-            phoneIndex = i;
-            hasPhoneColumn = true;
-        } else if (columns[i].mobileColumn) {
-            hasPhoneColumn = true;
+        var columns = dojo.clone(inGrid.columns);
+        columns = dojo.filter(columns, function(col) {
+            return !col.controller;
+        });
+        var phoneIndex = -1;
+        var hasPhoneColumn = false;
+        for (var i = 0; i < columns.length; i++) {
+            if (columns[i].field == "PHONE COLUMN") {
+                phoneIndex = i;
+                hasPhoneColumn = true;
+            } else if (columns[i].mobileColumn) {
+                hasPhoneColumn = true;
+            } else {
+                columns[i].mobileColumn = false;
+            }
+        }
+        /* Only needed for upgraded projects from before we had PHONE COLUMN */
+        var updateGrid = false;
+        if (!hasPhoneColumn) {
+            updateGrid = true;
+            columns.push({
+                show: false,
+                // does NOT show on desktop
+                field: "PHONE COLUMN",
+                title: "-",
+                width: "100%",
+                align: "left",
+                expression: "",
+                mobileColumn: true
+            }); // DOES show on phone
+            phoneIndex = columns.length - 1;
+        }
+        this.columnsVar.setData(columns);
+        if (phoneIndex != -1) {
+            this.phoneColumn = this.columnsVar.getItem(phoneIndex);
+        }
+        if (updateGrid) {
+            this.updateGrid();
         } else {
-             columns[i].mobileColumn = false;         
-         }
-     }
-     var updateGrid = false;
-     if (!hasPhoneColumn) {
-         updateGrid = true;
-         columns.push({
-             show: false,
-             // does NOT show on desktop
-             field: "PHONE COLUMN",
-             title: "-",
-             width: "100%",
-             align: "left",
-             expression: "",
-             mobileColumn: true
-         }); // DOES show on phone
-         phoneIndex = columns.length - 1;
-     }
-     this.columnsVar.setData(columns);
-     if (phoneIndex != -1) {
-         this.phoneColumn = this.columnsVar.getItem(phoneIndex);
-     } 
-     if (updateGrid) {
-         this.updateGrid();
-     } else {
-         this.regenerateMobileColumn();
-     }
-     this.updateFormatterList();
-     this.updateDataSets();
+            this.regenerateMobileColumn();
+        }
+        this.updateFormatterList();
+        this.updateDataSets();
     },
     regenerateMobileColumn: function() {
         if (!this.phoneColumn || this.phoneColumn.getValue("isCustomField")) return;
+        var data = this.columnsVar.getData();
+        wm.List.prototype.regenerateMobileColumn(data);
+
+        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
+        this.columnsVar.setData(data);
+        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
+/*
         var mobileExpr = "";
         var count = this.columnsVar.getCount();
 
@@ -112,28 +130,29 @@ dojo.declare("GridDesigner", wm.Page, {
                         case 'Date (WaveMaker)':
                         case 'wm_localdate_formatter':
                         case 'Local Date (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_number_formatter':
                         case 'Number (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_currency_formatter':
                         case 'Currency (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_image_formatter':
                         case 'Image (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_link_formatter':
                         case 'Link (WaveMaker)':
-                            value = "wm.DojoGrid.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            value = "wm.List.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
+                            break;
+                        case "wm_array_formatter":
+                            value = "wm.List.prototype.arrayFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ")";
                             break;
                         case 'wm_button_formatter':
-                            value = "wm.DojoGrid.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
-/*                            var classList = formatProps.buttonclass ? formatProps.buttonclass  : "wmbutton";
-                            value = "<button class='" + classList + "' onclick=\'${runtimeId}[\"gridButtonClicked\"](event,\"" + column.field + "\",${rowId})\'>" ;*/
+                            value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
                             break;
                         }
                     }
@@ -147,213 +166,237 @@ dojo.declare("GridDesigner", wm.Page, {
                 }
             }
         }
+*/
 
-        if (studio.currentDeviceType != "phone") this.phoneColumn.beginUpdate();
-        this.phoneColumn.setValue("expression", mobileExpr);
-        if (studio.currentDeviceType != "phone") this.phoneColumn.endUpdate();
     },
     getColumnByField: function(inName) {
-    for (var i = 0; i < this.currentGrid.columns.length; i++) {
-        if (this.currentGrid.columns[i].field == inName)
-        return this.currentGrid.columns[i];
-    }
+        for (var i = 0; i < this.currentGrid.columns.length; i++) {
+            if (this.currentGrid.columns[i].field == inName) return this.currentGrid.columns[i];
+        }
     },
     moveUp: function(inSender) {
-    var item = this.grid.selectedItem.getData();
-    var selectedIndex = this.grid.getSelectedIndex();
-    if (selectedIndex <= 0) return;
-    this.columnsVar.beginUpdate();
-    this.columnsVar.removeItem(selectedIndex);
-    this.columnsVar.addItem(item, selectedIndex-1);
-    this.columnsVar.endUpdate();
-    this.columnsVar.notify();
-    this.updateGrid();
+        var item = this.grid.selectedItem.getData();
+        var selectedIndex = this.grid.getSelectedIndex();
+        if (selectedIndex <= 0) return;
+        this.columnsVar.beginUpdate();
+        this.columnsVar.removeItem(selectedIndex);
+        this.columnsVar.addItem(item, selectedIndex - 1);
+        this.columnsVar.endUpdate();
+        this.columnsVar.notify();
+        this.updateGrid();
     },
     moveDown: function(inSender) {
-    var item = this.grid.selectedItem.getData();
-    var selectedIndex = this.grid.getSelectedIndex();
-    if (selectedIndex == -1 || selectedIndex >= this.columnsVar.getCount()) return;
-    this.columnsVar.beginUpdate();
-    this.columnsVar.removeItem(selectedIndex);
-    this.columnsVar.addItem(item, selectedIndex+1);
-    this.columnsVar.endUpdate();
-    this.columnsVar.notify();
-    this.updateGrid();  
+        var item = this.grid.selectedItem.getData();
+        var selectedIndex = this.grid.getSelectedIndex();
+        if (selectedIndex == -1 || selectedIndex >= this.columnsVar.getCount()) return;
+        this.columnsVar.beginUpdate();
+        this.columnsVar.removeItem(selectedIndex);
+        this.columnsVar.addItem(item, selectedIndex + 1);
+        this.columnsVar.endUpdate();
+        this.columnsVar.notify();
+        this.updateGrid();
     },
     addButtonClick: function(inSender) {
-      try {
-      var newName = "customField";
-      for (var i = 0; this.getColumnByField(newName + i); i++) {}
-          
-      app.prompt("Enter an ID/fieldName for this column; this must be a unique name",
-             newName + i,
-             dojo.hitch(this, function(inResult) {
-             if (inResult && !this.getColumnByField(inResult)) {
-                 this.grid.deselectAll();
-                 this.grid.selectedItem.setDataSet(null);
-                 this.columnsVar.addItem({field: inResult,
-                              width: "100%",
-                              title: wm.capitalize(inResult),
-                              align: "left",
-                              isCustomField: true,
-                              show: true});
-                 this.updateGrid();
-                 window.setTimeout(dojo.hitch(this, function() {
-                 this.grid.select(this.grid.getRowCount() - 1);
-                 }), 1000);
-             }
-             }));
-      } catch(e) {
-          console.error('ERROR IN addButtonClick: ' + e); 
-      } 
+        try {
+            var newName = "customField";
+            for (var i = 0; this.getColumnByField(newName + i); i++) {}
+
+            app.prompt("Enter an ID/fieldName for this column; this must be a unique name", newName + i, dojo.hitch(this, function(inResult) {
+                if (inResult && !this.getColumnByField(inResult)) {
+                    this.grid.deselectAll();
+                    this.grid.selectedItem.setDataSet(null);
+                    this.columnsVar.addItem({
+                        field: inResult,
+                        width: "100%",
+                        title: wm.capitalize(inResult),
+                        align: "left",
+                        isCustomField: true,
+                        show: true
+                    });
+                    this.updateGrid();
+                    window.setTimeout(dojo.hitch(this, function() {
+                        this.grid.select(this.grid.getRowCount() - 1);
+                    }), 1000);
+                }
+            }));
+        } catch (e) {
+            console.error('ERROR IN addButtonClick: ' + e);
+        }
     },
     deleteButtonClick: function(inSender) {
-    var row = this.grid.getSelectedIndex();
-    if (row == -1) return;
-    this.columnsVar.removeItem(row);
-    this.updateGrid();
-    window.setTimeout(dojo.hitch(this, function() {
-        this.grid.select(0);
-    }), 10);
+        var row = this.grid.getSelectedIndex();
+        if (row == -1) return;
+        this.columnsVar.removeItem(row);
+        this.updateGrid();
+        window.setTimeout(dojo.hitch(this, function() {
+            this.grid.select(0);
+        }), 10);
 
-},
-onColumnSelect: function(inSender) {
-    this.onFormatChange(this.formatEditor, this.formatEditor.getDisplayValue(), this.formatEditor.getDataValue(), true);
-    this.onEditFieldChange(this.editorSelector, this.editorSelector.getDisplayValue(), this.editorSelector.getDataValue(), true);
-    this.updateRestrictValues();
-},
-changeItem: function(inName, inValue, optionalRowIndex) {
-    if (this.columnsVar.isEmpty()) return;
-    var row = (optionalRowIndex === undefined) ? this.grid.getSelectedIndex() : optionalRowIndex;
-    if (row == -1) return;
+    },
+    onColumnSelect: function(inSender) {
+        this.onFormatChange(this.formatEditor, this.formatEditor.getDisplayValue(), this.formatEditor.getDataValue(), true);
+        this.onEditFieldChange(this.editorSelector, this.editorSelector.getDisplayValue(), this.editorSelector.getDataValue(), true);
+        this.updateRestrictValues();
+    },
+    changeItem: function(inName, inValue, optionalRowIndex) {
+        if (this.columnsVar.isEmpty()) return;
+        var row = (optionalRowIndex === undefined) ? this.grid.getSelectedIndex() : optionalRowIndex;
+        if (row == -1) return;
 
-    var item = this.columnsVar.getItem(row);
+        var item = this.columnsVar.getItem(row);
 
-    if (item.getValue("field") == "PHONE COLUMN" && inName == "expression") {
-        item.beginUpdate();
-        item.setValue("isCustomField", true);
-        item.endUpdate();
-    }
-
-    if (item.getValue(inName) != inValue) {
-        item.beginUpdate(); // we don't need to regenerate the grid when this item changes
-        this.grid.selectedItem.beginUpdate();
-        item.setValue(inName, inValue);
-        this.grid.selectedItem.setValue(inName, inValue);
-        item.endUpdate();
-        this.grid.selectedItem.endUpdate();
-
-        if (item.getValue("field") != "PHONE COLUMN") {
-            this.regenerateMobileColumn();
+        if (item.getValue("field") == "PHONE COLUMN" && inName == "expression") {
+            item.beginUpdate();
+            item.setValue("isCustomField", true);
+            item.endUpdate();
         }
 
-        this.updateGrid(row);
+        if (item.getValue(inName) != inValue) {
+            item.beginUpdate(); // we don't need to regenerate the grid when this item changes
+            this.grid.selectedItem.beginUpdate();
+            item.setValue(inName, inValue);
+            this.grid.selectedItem.setValue(inName, inValue);
+            item.endUpdate();
+            this.grid.selectedItem.endUpdate();
 
-        return true;
-    }
-    return false;
-},
-updateGrid: function() {
-    this.regenerateMobileColumn();
-    var columns = this.columnsVar.getData();
-    for (var i = 0; i < columns.length; i++) {
-        var col = columns[i];
-        if (col.editorProps) {
-            for (var name in col.editorProps) {
-                if (col.editorProps[name] === null) delete col.editorProps[name];
+            if (item.getValue("field") != "PHONE COLUMN") {
+                this.regenerateMobileColumn();
+            }
+
+            this.updateGrid(row);
+
+            return true;
+        }
+        return false;
+    },
+    updateGrid: function() {
+        this.regenerateMobileColumn();
+        var columns = this.columnsVar.getData();
+        for (var i = 0; i < columns.length; i++) {
+            var col = columns[i];
+            if (col.editorProps) {
+                for (var name in col.editorProps) {
+                    if (col.editorProps[name] === null) delete col.editorProps[name];
+                }
+            }
+            if (col.constraints) {
+                for (var name in col.constraints) {
+                    if (col.constraints[name] === null) delete col.constraints[name];
+                }
+            }
+            if (col.formatProps) {
+                for (var name in col.formatProps) {
+                    if (col.formatProps[name] === null) delete col.formatProps[name];
+                }
             }
         }
-        if (col.constraints) {
-            for (var name in col.constraints) {
-                if (col.constraints[name] === null) delete col.constraints[name];
-            }
+        this.setGridColumns(columns);
+    },
+    setGridColumns: function(inColumns) {
+        /* Standard grid */
+        if (this.currentGrid.isDesignLoaded() && !wm.isInstanceType(this.currentGrid.owner, wm.Composite)) {
+            this.currentGrid.set_columns(inColumns);
         }
-        if (col.formatProps) {
-            for (var name in col.formatProps) {
-                if (col.formatProps[name] === null) delete col.formatProps[name];
-            }
+
+        /* Composite */
+        else if (this.currentGrid.owner.isDesignLoaded() && wm.isInstanceType(this.currentGrid.owner, wm.Composite)) {
+            var composite = this.currentGrid.owner;
+            var publishedProps = composite.constructor.prototype.published;
+            wm.forEachProperty(publishedProps, dojo.hitch(this, function(schema, name) {
+                if (schema.target == this.currentGrid.name && schema.property == "columns") {
+                    this.currentGrid.owner["set" + wm.capitalize(schema.name)](inColumns);
+                }
+            }));
         }
-    }
-    this.currentGrid.set_columns(columns);
-},
-onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("title", inDataValue);
-    }
-},
+
+        /* PageContainer property allows editing of grid columns */
+        else if (this.currentGrid.owner.owner.isDesignLoaded()) {
+            var p = this.currentGrid.owner.owner;
+            wm.forEachProperty(p.subpageProplist, dojo.hitch(this, function(propertyPath, propertyName) {
+                if (propertyPath == this.currentGrid.name + ".columns") {
+                    p.setProp(propertyName, inColumns);
+                }
+            }));
+        }
+    },
+    onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (!inSetByCode) {
+            this.changeItem("title", inDataValue);
+        }
+    },
     onWidthChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        var displayValue = this.widthSizeEditor.getDisplayValue();
-        var w;
-        if (displayValue.indexOf("p") != -1 ||
-            displayValue.indexOf("%") != -1) {
-            w = displayValue;
-            this.widthSizeEditor.setDataValue(parseInt(displayValue));
-            this.widthTypeEditor.setDataValue(displayValue.indexOf("p") != -1 ? "px" : "%");
-        } else {
-            w = displayValue + (this.widthTypeEditor.getDataValue() || "%");
+        if (!inSetByCode) {
+            var displayValue = this.widthSizeEditor.getDisplayValue();
+            var w;
+            if (displayValue.indexOf("p") != -1 || displayValue.indexOf("%") != -1) {
+                w = displayValue;
+                this.widthSizeEditor.setDataValue(parseInt(displayValue));
+                this.widthTypeEditor.setDataValue(displayValue.indexOf("p") != -1 ? "px" : "%");
+            } else {
+                w = displayValue + (this.widthTypeEditor.getDataValue() || "%");
+            }
+            this.changeItem("width", w);
         }
-        this.changeItem("width", w);
-    }
     },
     onAlignChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        this.changeItem("align", inDataValue);
-    }
+        if (!inSetByCode) {
+            this.changeItem("align", inDataValue);
+        }
     },
-   
+
     onFormatChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
-    if (!inSetByCode) {
-        var isCustom = false;
-        if (inDataValue == "- Add Formatter") {
-        inDataValue = wm.getValidJsName(this.currentGrid.name + wm.getValidJsName(wm.capitalize(this.grid.selectedItem.getValue("field"))) + 'Format');
-        isCustom = true;
+        if (!inSetByCode) {
+            var isCustom = false;
+            if (inDataValue == "- Add Formatter") {
+                inDataValue = wm.getValidJsName(this.currentGrid.name + wm.getValidJsName(wm.capitalize(this.grid.selectedItem.getValue("field"))) + 'Format');
+                isCustom = true;
+            }
+            if (this.changeItem("formatFunc", inDataValue)) {
+                var row = this.grid.getSelectedIndex();
+                var item = this.columnsVar.getItem(row);
+                var formatProps = item.getValue("formatProps");
+                formatProps.beginUpdate();
+                formatProps.clearData();
+                formatProps.endUpdate();
+                formatProps = this.form.dataSet.getValue("formatProps");
+                formatProps.beginUpdate();
+                formatProps.clearData();
+                formatProps.endUpdate();
+                this.formatSubForm.setDataSet(formatProps);
+            }
         }
-        if (this.changeItem("formatFunc", inDataValue)) {
-        var row = this.grid.getSelectedIndex();
-        var item = this.columnsVar.getItem(row);
-        var formatProps = item.getValue("formatProps");
-        formatProps.beginUpdate();
-        formatProps.clearData();
-        formatProps.endUpdate();
-        formatProps = this.form.dataSet.getValue("formatProps");
-        formatProps.beginUpdate();
-        formatProps.clearData();
-        formatProps.endUpdate();
-        this.formatSubForm.setDataSet(formatProps);
-        }
-    }
-        switch(inDataValue) {
+        switch (inDataValue) {
         case "wm_currency_formatter":
-        this.currencyLayer.activate();
-        break;
+            this.currencyLayer.activate();
+            break;
         case "wm_number_formatter":
-        this.numberLayer.activate();
-        break;
+            this.numberLayer.activate();
+            break;
         case "wm_image_formatter":
-        this.imageLayer.activate();
-        break;
+            this.imageLayer.activate();
+            break;
 
         case "wm_button_formatter":
-        this.buttonLayer.activate();
-        break;
+            this.buttonLayer.activate();
+            break;
         case "wm_link_formatter":
-        this.linkLayer.activate();
-        break;
-
+            this.linkLayer.activate();
+            break;
+        case "wm_array_formatter":
+            this.arrayLayer.activate();
+            break;
         case "wm_date_formatter":
-        this.dateLayer.activate();
-        if (!this.dateFormatLength.getDataValue())
-            this.dateFormatLength.setDataValue("short");
-        break;
+            this.dateLayer.activate();
+            if (!this.dateFormatLength.getDataValue()) this.dateFormatLength.setDataValue("short");
+            break;
         default:
-        this.formatBlankLayer.activate();
-        if (isCustom) {
-            eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
-            this.owner.owner.hide();
+            this.formatBlankLayer.activate();
+            if (isCustom) {
+                eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
+                this.owner.owner.hide();
+            }
+
         }
-        
-    }
     },
     onEditFieldChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         if (!inSetByCode) {
@@ -523,6 +566,16 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
            this.changeItem("formatProps.height", inDataValue);
        }
    },
+    onArraySeparatorChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.separator", inDataValue);
+       }
+   },
+    onArrayFieldNameChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+       if (!inSetByCode) {
+           this.changeItem("formatProps.joinFieldName", inDataValue);
+       }
+   },
    onButtonClassChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
        if (!inSetByCode) {
            this.changeItem("formatProps.buttonclass", inDataValue);
@@ -566,13 +619,13 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         }
         this.comboBoxDisplayFieldEditor.setOptions(options.join(","));
 
-    },    
+    },
     onDisplayFieldChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {
         this.changeItem("editorProps.displayField", inDataValue);
     }
     },
-    onIsSimpleTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) { 
+    onIsSimpleTypeChange:function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         this.updateRestrictValues();
         if (!inSetByCode) {
            this.changeItem("editorProps.isSimpleType", inSender.getChecked());
@@ -587,7 +640,11 @@ onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
         var isSimple = this.isSimpleDataValueEditor.getChecked();
         this.isRestrictDataValueEditor.setDisabled(!isSimple);
         var restrictValues = this.grid.selectedItem.getValue("editorProps.restrictValues");
-        this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
+
+        /* onidle needed because this can be fired in the middle of processing checking a show checkbox */
+        wm.onidle(this, function() {
+            this.isRestrictDataValueEditor.setChecked(restrictValues === undefined || restrictValues);
+        });
     },
     onMaximumChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
     if (!inSetByCode) {

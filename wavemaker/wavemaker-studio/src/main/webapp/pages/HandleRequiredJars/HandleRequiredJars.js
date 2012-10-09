@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.studio.pages.HandleRequiredJars.HandleRequiredJars");
 
@@ -26,6 +26,10 @@ dojo.declare("HandleRequiredJars", wm.Page, {
 	this.layers.decorator.doneCaption = this.getDictionaryItem("DONE_CAPTION");
     this.layers.decorator.nextButton.addUserClass("StudioButton");
     this.layers.decorator.prevButton.addUserClass("StudioButton");
+        dojo.addClass(this.fileUploader.button.domNode, "StudioButton");
+        dojo.addClass(this.fileUploader2.button.domNode, "StudioButton");
+        dojo.addClass(this.fileUploader3.button.domNode, "StudioButton");
+
     this.layers.decorator.buttonPanel.addUserClass("wmDialogFooter");
     },
     onShow: function() {

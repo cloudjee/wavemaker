@@ -270,11 +270,4 @@ public abstract class SystemUtils {
         return System.getProperty("os.name").toLowerCase().startsWith("mac os x");
     }
 
-    public static String getWavemakerRoot() {
-        String jdkPath = System.getProperty("java.home");
-        String wmRoot = new File(jdkPath).getParentFile().getParentFile().getAbsolutePath();
-
-        return wmRoot;
-    }
-
 }

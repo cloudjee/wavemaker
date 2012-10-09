@@ -21,14 +21,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.beans.PropertyDescriptor;
+import java.beans.Introspector;
+import java.beans.IntrospectionException;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.mapping.PersistentClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 
@@ -44,6 +50,8 @@ public class QueryHandler implements InvocationHandler {
     private boolean tenantAdded;
 
     private final Configuration cfg;
+
+    private final Log log = LogFactory.getLog(QueryHandler.class);
 
     public QueryHandler(Configuration cfg) {
         this.cfg = cfg;
@@ -62,7 +70,7 @@ public class QueryHandler implements InvocationHandler {
             return null;
         }
 
-        if (!methodName.equals("save") && !methodName.equals("update") && !methodName.equals("delete") && !methodName.equals("contains")
+        if (!methodName.equals("save") && !methodName.equals("update") && !methodName.equals("delete")
             && !methodName.equals("getNamedQuery") && !methodName.equals("get") && !methodName.equals("createQuery")
             && !methodName.equals("createSQLQuery")) {
             return m.invoke(this.target, args);
@@ -107,25 +115,64 @@ public class QueryHandler implements InvocationHandler {
         } else if (methodName.equalsIgnoreCase("get")) {
             Object o = m.invoke(this.target, args);
             Class<?> cls = o.getClass();
+            Object no = cls.newInstance();
+            cloneObject(o, no, cls);
             String t = tFldName.substring(0, 1).toUpperCase();
             String getterName = "get" + t + tFldName.substring(1);
-            Method getter = null;
+            Method tidGetter = null;
             int val;
             try {
-                getter = cls.getMethod(getterName);
+                tidGetter = cls.getMethod(getterName);
             } catch (NoSuchMethodException ne) {
                 tidExists = false;
             }
             if (tidExists) {
-                val = (Integer) getter.invoke(o);
+                val = (Integer) tidGetter.invoke(o);
                 if (tid != val) {
-                    System.out.println("*** Security Viloation - Tenant ID mismatch ***");
-                    System.out.println("*** Tenant ID passed = " + tid + ", Tenant ID of Target Record = " + val + " ***");
-                    return null;
+                    String err = "*** Security Viloation - Tenant ID mismatch ***";
+                    err = err + "*** Tenant ID passed = " + val + ", Tenant ID of login user = " + tid + " ***";
+                    throw new WMRuntimeException(err);
                 }
             }
+            cloneObject(no, o, cls);
             return o;
-        } else { // save, update, delete, contains
+        } else if (methodName.equalsIgnoreCase("update")) {
+            Object o = args[0];
+            Class<?> cls = o.getClass();
+            String t = tFldName.substring(0, 1).toUpperCase();
+            String getterName = "get" + t + tFldName.substring(1);
+            Method tidGetter = null;
+            Object no;
+            int val;
+            try {
+                tidGetter = cls.getMethod(getterName);
+            } catch (NoSuchMethodException ne) {
+                tidExists = false;
+            }
+
+            if (tidExists) {
+                val = (Integer) tidGetter.invoke(o);
+                if (tid != val) {
+                    String err = "*** Security Viloation - Tenant ID mismatch ***";
+                    err = err + "*** Tenant ID passed = " + val + ", Tenant ID of login user = " + tid + " ***";
+                    throw new WMRuntimeException(err);
+                } else {
+                    no = cls.newInstance();
+                    cloneObject(o, no, cls);
+                    Class tcls = this.target.getClass();
+                    Method rm = tcls.getMethod("refresh", Object.class);
+                    rm.invoke(this.target, o);
+                    val = (Integer) tidGetter.invoke(o);
+                    if (tid != val) {
+                        String err = "*** Security Viloation - Tenant ID mismatch ***";
+                        err = err + "*** You can only update records that belong to you ***";
+                        throw new WMRuntimeException(err);
+                    }
+                }
+                cloneObject(no, o, cls);
+            }
+            return m.invoke(this.target, args);
+        } else { // save, delete, contains
             Object o = args[0];
             Class<?> cls = o.getClass();
             String s = tFldName.substring(0, 1).toUpperCase();
@@ -142,6 +189,26 @@ public class QueryHandler implements InvocationHandler {
 
             return m.invoke(this.target, args);
         }
+    }
+
+    private Object cloneObject(Object oldObj, Object newObj, Class cls) {
+        PropertyDescriptor[] beanProps;
+        try {
+            beanProps = Introspector.getBeanInfo(cls).getPropertyDescriptors();
+            for(PropertyDescriptor propertyDescriptor : beanProps){
+                if (propertyDescriptor.getName().equals("class")) {
+                    continue;
+                }
+                Method getter = propertyDescriptor.getReadMethod();
+                Method setter = propertyDescriptor.getWriteMethod();
+                Object val = getter.invoke(oldObj);
+                setter.invoke(newObj, val);
+            }
+        } catch (Exception ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        return newObj;
     }
 
     public static List<String> parseSQL(String qryStr) {

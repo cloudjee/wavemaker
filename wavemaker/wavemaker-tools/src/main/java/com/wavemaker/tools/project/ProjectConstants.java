@@ -51,6 +51,8 @@ public class ProjectConstants {
     public static final String USER_WEB_XML = "user-web.xml";
 
     public static final String INDEX_HTML = "index.html";
+    
+    public static final String LOGIN_HTML = "login.html";
 
     public static final String POM_XML = "pom.xml";
 

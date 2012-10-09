@@ -28,13 +28,12 @@ import org.apache.tools.ant.Task;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.io.FilterOn;
-import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.*;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
+import com.wavemaker.tools.project.StageDeploymentManager;
 
 public class NewCopyRuntimeJarsTask extends Task {
 
@@ -185,8 +184,29 @@ public class NewCopyRuntimeJarsTask extends Task {
             file.copyToIfNewer(this.todir);
         }
 
-        // TODO:ant - copy pws files when supporting pws module
-        // copyPwsFiles(this.from, this.wmProject);
+        copyPwsFiles(this.from, this.wmProject);
+    }
+
+    private void copyPwsFiles(Folder libDir, Project wmproject) {
+        com.wavemaker.tools.io.Folder pwsNode = libDir.getParent().getParent().getFolder("app/templates/pws");
+        com.wavemaker.tools.io.Folder pwsWebInfNode = pwsNode.getFolder("WEB-INF");
+
+        com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern("**/*.*");
+        pwsWebInfNode.find().include(included).exclude(StageDeploymentManager.DEFAULT_EXCLUDES).files().copyTo(this.todir.getParent());
+
+        Resources<Resource> partnerNodeList = pwsNode.list();
+
+        if (partnerNodeList == null || partnerNodeList.fetchAll().size() == 0) return;
+
+        for (com.wavemaker.tools.io.Resource partnerNodeName : partnerNodeList) {
+            com.wavemaker.tools.io.Folder partnerWebInfNode = pwsNode.getFolder(partnerNodeName + "/WEB-INF");
+            if (!partnerWebInfNode.exists()) {
+                continue;
+            }
+
+            included = FilterOn.antPattern("**/*.*");
+            partnerWebInfNode.find().include(included).exclude(StageDeploymentManager.DEFAULT_EXCLUDES).files().copyTo(this.todir.getParent());
+        }
     }
 
     public void setProjectRoot(File projectRoot) {

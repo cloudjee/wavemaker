@@ -56,7 +56,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
     },
     getRuntimeId: function(inId) {
         inId = this.name + (inId ? "." + inId : "");
-        return this.owner != app.pageContainer ? this.owner.getRuntimeId(inId) : inId;
+        return this.owner && this.owner != app.pageContainer ? this.owner.getRuntimeId(inId) : inId;
     },
     getId: function(inName) {
         return inName;
@@ -66,7 +66,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 
     postInit: function() {
         this.inherited(arguments);
-        
+
         this.commands = [];
         this.containerWidget.createComponents({
             tabLayers: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "0", margin: "0"}, {}, {
@@ -302,7 +302,7 @@ dojo.declare("wm.debug.Inspector", wm.Container, {
             tabs: ["wm.TabLayers", {_classes: {domNode:["wmClosablePanel"]}, width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0"}, {}, {
             eventsPanel: ["wm.debug.EventDetailsPanel",{}],
             propertiesPanel: ["wm.debug.PropertyPanel", {},{},{}],
-            bindPanel: ["wm.debug.BindPanel", {}],      
+            bindPanel: ["wm.debug.BindPanel", {}],
             presentationPanel: ["wm.debug.StylePanel", {},{},{}],
             dataPanel: ["wm.debug.DataPanel", {},{},{}],
             requestPanel: ["wm.debug.RequestPanel", {},{},{}]

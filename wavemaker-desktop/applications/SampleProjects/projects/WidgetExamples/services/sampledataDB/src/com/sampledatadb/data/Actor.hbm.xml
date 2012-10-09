@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.Actor" table="actor" dynamic-insert="false" dynamic-update="false">
+        <id name="actorId" type="integer">
+            <column name="ACTOR_ID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="45" not-null="true"/>
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="45" not-null="true"/>
+        </property>
+        <set name="filmActors" inverse="true" cascade="">
+            <key>
+                <column name="ACTOR_ID" not-null="true"/>
+            </key>
+            <one-to-many class="com.sampledatadb.data.FilmActor"/>
+        </set>
+    </class>
+</hibernate-mapping>

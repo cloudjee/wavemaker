@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wavemaker-desktop</artifactId>
-		<version>6.5.0.M4</version>
+		<version>6.5.0.RC1</version>
 	</parent>
 	<artifactId>wavemaker-installer</artifactId>
 	<packaging>pom</packaging>
@@ -73,6 +73,7 @@
 											<exclude name="**/db2jcc.jar" />
 											<exclude name="**/ojdbc*.jar" />
 											<exclude name="**/wsdl4j*.jar" />
+											<exclude name="**/dojo/util/**" />
 										</patternset>
 									</unzip>
 								<copy todir="${buildroot}/studioConfig">
@@ -84,9 +85,10 @@
 											<exclude name="**/db2jcc.jar" />
 											<exclude name="**/ojdbc*.jar" />
 											<exclude name="**/wsdl4j*.jar" />
+											<exclude name="**/dojo/util/**" />
 										</fileset>	
 									</copy>								
-								<!-- Licence -->
+								<!-- License -->
 								<copy todir="${project.build.directory}">
 									<fileset
 										dir="${basedir}/../../build-infrastructure/supporting-files"/> 

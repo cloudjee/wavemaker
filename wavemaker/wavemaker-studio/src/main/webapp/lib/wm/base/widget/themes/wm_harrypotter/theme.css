@@ -60,16 +60,20 @@ border-top-left-radius: 4px !important;
 border-bottom-left-radius: 4px !important;
 }
 .wm_harrypotter .wmtogglebuttonpanel .wmbutton:last-child {
-border-radius-topright: 4px !important;
-border-radius-bottomright: 4px !important;
+-moz-border-radius-topright: 4px !important;
+-moz-border-radius-bottomright: 4px !important;
 -webkit-border-top-right-radius: 4px !important;
 -webkit-border-bottom-right-radius: 4px !important;
+border-top-right-radius: 4px !important;
+border-bottom-right-radius: 4px !important;
 }
 .wm_harrypotter .wmtogglebuttonpanel .wmbutton {
-border-radius-topright: 0px !important;
-border-radius-bottomright: 0px !important;
+-moz-border-radius-topright: 0px !important;
+-moz-border-radius-bottomright: 0px !important;
 -webkit-border-top-right-radius: 0px !important;
 -webkit-border-bottom-right-radius: 0px !important;
+border-top-right-radius: 0px !important;
+border-bottom-right-radius: 0px !important;
 }
 .wm_harrypotter .wmtogglebuttonpanel,
 .wm_harrypotter   .wmbutton,
@@ -810,14 +814,19 @@ background-position: top left;
 background-repeat: no-repeat;
 }
 }
+.wm_harrypotter div.dojoxGrid, .wm_harrypotter .wmlist {
+font-size: 8pt;
+}
+.wm_harrypotter .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
+font-size: 10pt;
+}
 .wm_harrypotter div.dojoxGrid-row,
 .wm_harrypotter div.dojoxGridRow,
 .wm_harrypotter .Disabled div.dojoxGridRow.dojoxGridRowOver,
 .wm_harrypotter .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
-.wm_harrypotter .Disabled div.wmlist-item.wmlist-item-over,
-.wm_harrypotter div.wmlist-item {
+.wm_harrypotter .GridListStyle.Disabled div.wmlist-item.wmlist-item-over,
+.wm_harrypotter .GridListStyle div.wmlist-item {
 font-family: Verdana;
-font-size: 8pt;
 color: #ffffff;
 font-weight: normal;
 background-color: #202020;
@@ -826,8 +835,8 @@ background-color: #202020;
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowOdd,
 .wm_harrypotter .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
 .wm_harrypotter .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
-.wm_harrypotter .Disabled div.wmlist-item.Odd.wmlist-item-over,
-.wm_harrypotter .wmlist-item.Odd {
+.wm_harrypotter .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.wm_harrypotter .GridListStyle .wmlist-item.Odd {
 color: #ffffff;
 background-color: #282828;
 }
@@ -837,19 +846,20 @@ background-color: #282828;
 .wm_harrypotter .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
 .wm_harrypotter .Disabled.MobileListStyle div.wmlist-item.Odd.wmlist-item-over,
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
-background-color: #b30000 !important;
+background-color: #b30000;
 color: #ffffff;
+font-family: Verdana;
 }
 .wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-over,
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
-background-color: #fe9603 !important;
+background-color: #fe9603;
 color: #232323;
 }
 .wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected,
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
 .wm_harrypotter .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
 .wm_harrypotter .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
-background-color: #161616 !important;
+background-color: #161616;
 color: #fdd949;
 }
 .wm_harrypotter td.dojoxGrid-cell,
@@ -881,14 +891,14 @@ border-right-width: 0px;
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_harrypotter .dojoxGridRowSelected.dojoxGridRowOver td.dojoxGridCell,
-.wm_harrypotter .wmlist-item.wmlist-item-selected,
-.wm_harrypotter .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_harrypotter .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_harrypotter .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_harrypotter .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #161616 !important;
 color: #fdd949;
 }
-.wm_harrypotter .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_harrypotter .wmlist-item.wmlist-item-over,
+.wm_harrypotter .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_harrypotter .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_harrypotter div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_harrypotter .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_harrypotter div.dojoxGridRow.dojoxGridRowOver,
@@ -913,7 +923,6 @@ border-right-width: 1px;
 border-right-style: solid;
 border-right-color: #323232;
 font-family: Verdana;
-font-size: 10pt;
 color: #771502 !important;
 font-weight: bold;
 }
@@ -950,14 +959,14 @@ background-image: none !important;
 .wm_harrypotter .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_harrypotter .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_harrypotter .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-.wm_harrypotter .MainContent .wmlist-item.wmlist-item-selected,
-.wm_harrypotter .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_harrypotter .MainContent .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_harrypotter .MainContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_harrypotter .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #161616 !important;
 color: #f7d053;
 }
-.wm_harrypotter .MainContent .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_harrypotter .MainContent .wmlist-item.wmlist-item-over,
+.wm_harrypotter .MainContent .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_harrypotter .MainContent .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_harrypotter .MainContent div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_harrypotter .MainContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_harrypotter .MainContent .dojoxGridRowOver,
@@ -983,14 +992,14 @@ border: 1px dashed transparent !important;
 .wm_harrypotter .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_harrypotter .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_harrypotter .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-.wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-selected,
-.wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_harrypotter .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_harrypotter .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
 .dj_ie6 .wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #dd321c !important;
 color: #fcf098;
 }
-.wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_harrypotter .EmphasizedContent .wmlist-item.wmlist-item-over,
+.wm_harrypotter .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_harrypotter .EmphasizedContent .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_harrypotter .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_harrypotter .EmphasizedContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_harrypotter .EmphasizedContent .dojoxGridRowOver,
@@ -1015,14 +1024,14 @@ border: 1px dashed transparent !important;
 .wm_harrypotter .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
 .wm_harrypotter .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver,
 .wm_harrypotter .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
-.wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-selected,
-.wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
-.dj_ie6 .wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
+.wm_harrypotter .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_harrypotter .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over,
+.dj_ie6 .wm_harrypotter .HeaderContent .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over {
 background-color: #264a59 !important;
 color: #fcf892;
 }
-.wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-over,
-.dj_ie6 .wm_harrypotter .HeaderContent .wmlist-item.wmlist-item-over,
+.wm_harrypotter .HeaderContent .GridListStyle .wmlist-item.wmlist-item-over,
+.dj_ie6 .wm_harrypotter .HeaderContent .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_harrypotter .HeaderContent div.dojoxGrid-row.dojoxGrid-row-over,
 .wm_harrypotter .HeaderContent .dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-over,
 .wm_harrypotter .HeaderContent .dojoxGridRowOver,

@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.pages.PreferencesPane.PreferencesPane");
 
 dojo.declare("PreferencesPane", wm.Page, {
@@ -32,6 +32,12 @@ dojo.declare("PreferencesPane", wm.Page, {
     */
   },
   getPreferencesCallBack: function(inResult) {
+    var cookie = dojo.cookie("wavemakerHome");
+    var currentWaveMakerHome = inResult['wavemakerHome'];
+    var options =  cookie ? cookie.split(",") : [];
+    var exists = dojo.some(options, function(item) {return item === currentWaveMakerHome;}, this);
+    if (!exists)  options.unshift(currentWaveMakerHome);
+    this.wavemakerFolderEditor.setOptions(options);
     this.wavemakerFolderEditor.setDataValue(inResult['wavemakerHome']);
     this.demoFolderEditor.setDataValue(inResult['demoHome']);
   },
@@ -41,11 +47,18 @@ dojo.declare("PreferencesPane", wm.Page, {
         'demoHome': this.demoFolderEditor.getDataValue()
       }], dojo.hitch(this, "okButtonClickResult"),
       dojo.hitch(this, "okButtonClickError"));
-      if (studio.startPageDialog.page)
-	  studio.startPageDialog.page.refreshProjectList();
+
   },
   okButtonClickResult: function(inSender) {
     wm.fire(this.owner, "dismiss", ["OK"]);
+    if (studio.startPageDialog.page)
+        studio.startPageDialog.page.refreshProjectList();
+    var exists = dojo.some(this.wavemakerFolderEditor.options, function(item) {return item === this.wavemakerFolderEditor.getDataValue();}, this);
+    if (!exists) {
+        while (this.wavemakerFolderEditor.options.length > 4) this.wavemakerFolderEditor.options.pop(); // bring it down to 4 items before we add a new item. Max of 5 item history (cookie memory space is small)
+        var options = this.wavemakerFolderEditor.getDataValue() + "," + this.wavemakerFolderEditor.options.join(",")
+        dojo.cookie("wavemakerHome", options);
+    }
   },
   okButtonClickError: function(inSender) {
     app.alert("Error: "+inSender.message);

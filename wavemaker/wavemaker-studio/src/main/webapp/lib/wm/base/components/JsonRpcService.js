@@ -148,7 +148,7 @@ errorCallback: function(/* dojo.Deferred */ deferredRequestHandler){
         return function(data){
             deferredRequestHandler.errback(data);
         };
-    },
+    }
 });
 
 dojo.declare("wm.JsonRpcService", wm.Service, {

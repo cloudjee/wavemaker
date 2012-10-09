@@ -10,7 +10,7 @@ dojo.declare(
 	// handle: DOMNode
 	//		The node on which the user clicks to drag the main node.
 	handle: null,
-	
+
 	// skip: Boolean
 	// 		A flag to control a drag action if a form element has been focused.
 	//		If true, the drag action is not executed.
@@ -20,7 +20,7 @@ dojo.declare(
 	//		The user clicks on the handle, but the drag action will really begin
 	//		if he tracks the main node to more than 3 pixels.
 	dragDistance: 3,
-	
+
 	constructor: function(/*Object*/params, /*DOMNode*/node){
 		// summary:
 		// 		Configure parameters and listen to mousedown events from handle
@@ -32,9 +32,9 @@ dojo.declare(
 
 		//console.log("dojox.mdnd.Moveable ::: constructor");
 		this.node = dojo.byId(node);
-		
+
 		this.d = this.node.ownerDocument;
-		
+
 		if(!params){ params = {}; }
 		this.handle = params.handle ? dojo.byId(params.handle) : null;
 		if(!this.handle){ this.handle = this.node; }
@@ -45,9 +45,9 @@ dojo.declare(
 		if(dojox.mdnd.autoScroll){
 			this.autoScroll = dojox.mdnd.autoScroll;
 		}
-		
+
 	},
-	
+
 	isFormElement: function(/*DOMEvent*/ e){
 		// summary:
 		//		identify the type of target node associated with a DOM event.
@@ -63,7 +63,7 @@ dojo.declare(
 		}
 		return " a button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
 	},
-	
+
 	onMouseDown: function(/*DOMEvent*/e){
 		// summary:
 		//		Occurs when the user clicks on the handle node.
@@ -81,6 +81,18 @@ dojo.declare(
 			return;
 		}
 		if(this.skip && this.isFormElement(e)){ return; }
+
+
+	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+     * WaveMaker: Adds test to see if the user has clicked on vertical scrollbar.  Clicks on scrollbars
+     * don't generate reliable mouseup events, and simply should not start a dnd event. */
+		var coords = dojo.coords(e.target);
+		var overflowY = wm.getStyleFromNode(e.target, "overflow-y") || wm.getStyleFromNode(e.target, "overflow");
+		var overflowX = wm.getStyleFromNode(e.target, "overflow-x") || wm.getStyleFromNode(e.target, "overflow");
+		if ((overflowY == "auto" || overflowY == "scroll") && coords.w < 17 + e.offsetX) {return;}
+		if ((overflowX == "auto" || overflowX == "scroll") && coords.h < 17 + e.offsetY) {return;}
+    /* END VMWARE Addition */
+
 		if(this.autoScroll){
 			this.autoScroll.setAutoScrollNode(this.node);
 			this.autoScroll.setAutoScrollMaxPage();
@@ -92,8 +104,9 @@ dojo.declare(
 		this._firstY = e.clientY;
 		dojo.stopEvent(e);
 	},
-	
+
 	onFirstMove: function(/*DOMEvent*/e){
+		console.log("MOVE");
 		// summary:
 		//		Occurs when the user moves the mouse after clicking on the
 		//		handle.
@@ -116,7 +129,7 @@ dojo.declare(
 			this.events.push(dojo.connect(this.d, "onmousemove", this, "onMove"));
 		}
 	},
-	
+
 	initOffsetDrag: function(/*DOMEvent*/e){
 		// summary:
 		//		Initialize the gap between main node coordinates and the clicked point.
@@ -144,7 +157,7 @@ dojo.declare(
 		// method to catch
 		this.onDragStart(this.node, coords, this.size);
 	},
-	
+
 	onMove: function(/*DOMEvent*/e){
 		// summary:
 		//		Occurs when the user moves the mouse.
@@ -170,15 +183,16 @@ dojo.declare(
 		var s = this.node.style;
 		s.left = coords.x + "px";
 		s.top = coords.y + "px";
-		
+
 		// method to catch
 		this.onDrag(this.node, coords, this.size, {'x':e.pageX, 'y':e.pageY});
 		if(dojo.isIE == 8){
 			this.date = new Date();
 		}
 	},
-	
+
 	onMouseUp: function(/*DOMEvent*/e){
+		console.log("MOUSE UP");
 		// summary:
 		//		Occurs when the user releases the mouse
 		//		Calls the onDragEnd method.
@@ -198,7 +212,7 @@ dojo.declare(
 		dojo.disconnect(this.events.pop());
 		dojo.disconnect(this.events.pop());
 	},
-	
+
 	onDragStart: function(/*DOMNode*/node, /*Object*/coords, /*Object*/size){
 		// summary:
 		//		Stub function.
@@ -213,7 +227,7 @@ dojo.declare(
 		//		callback
 
 	},
-	
+
 	onDragEnd: function(/*DOMNode*/node){
 		// summary:
 		//		Stub function
@@ -224,7 +238,7 @@ dojo.declare(
 		//		callback
 
 	},
-	
+
 	onDrag: function(/*DOMNode*/node, /*Object*/coords, /*Object*/size, /*Object*/mousePosition){
 		// summary:
 		//		Stub function.

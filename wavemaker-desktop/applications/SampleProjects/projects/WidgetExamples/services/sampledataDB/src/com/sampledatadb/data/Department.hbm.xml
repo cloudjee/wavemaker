@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.sampledatadb.data.Department" table="department" dynamic-insert="false" dynamic-update="false">
+        <id name="deptid" type="integer">
+            <column name="DEPTID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string">
+            <column name="NAME"/>
+        </property>
+        <property name="budget" type="integer">
+            <column name="BUDGET"/>
+        </property>
+        <property name="q1" type="integer">
+            <column name="Q1"/>
+        </property>
+        <property name="q2" type="integer">
+            <column name="Q2"/>
+        </property>
+        <property name="q3" type="integer">
+            <column name="Q3"/>
+        </property>
+        <property name="q4" type="integer">
+            <column name="Q4"/>
+        </property>
+        <property name="deptcode" type="string">
+            <column name="DEPTCODE" length="20"/>
+        </property>
+        <property name="location" type="string">
+            <column name="LOCATION"/>
+        </property>
+        <property name="tenantid" type="integer">
+            <column name="TENANTID"/>
+        </property>
+        <set name="employees" inverse="true" cascade="">
+            <key>
+                <column name="DEPTID"/>
+            </key>
+            <one-to-many class="com.sampledatadb.data.Employee"/>
+        </set>
+    </class>
+</hibernate-mapping>

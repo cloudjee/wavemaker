@@ -12,7 +12,9 @@
  *  limitations under the License.
  */
 
-
+.wm_template div.dojoxGrid, .wm_template .wmlist {
+    font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
+}
 
   /**************************************************************************************************
    * TYPE:        Grid rows (Even rows and odd rows)
@@ -21,11 +23,10 @@
    *              Even rows are set by specifying the style for all rows; odd row styles override
    *              the style for all rows.  Only vary the font and background-color.
    ************************************************************************************************/
-.wm_template div.wmlist-item {
+.wm_template .GridListStyle div.wmlist-item {
 
     /* Tables-EvenRows-Font */
     font-family: sans-serif; /* Tables-EvenRows-Font_Family */
-    font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
     color: #FFFFFF; /* Tables-EvenRows-Font_Color */
     font-weight: bold; /* Tables-EvenRows-Font_Weight */
 
@@ -34,7 +35,7 @@
 }
 
 /* Grid/List Odd rows: uses Tables-OddRows */
-.wm_template .wmlist-item.Odd {
+.wm_template .GridListStyle .wmlist-item.Odd {
     /* Tables-OddRows-Font */
     color: #FFFFFF; /* Tables-OddRows-Font_Color */
 
@@ -49,11 +50,11 @@
    *              Basically, we leave top/bottom border to the alternating even/odd row background color,
    *              and we don't need a right and left border (would double the border size between two cells)
    *              so just use the border-right-width: 1px, and let the user control the color of that border.
-   * 
+   *
    * TODO:        These settings are not well tested.
    ************************************************************************************************/
-.wm_template .wmlist-cell {
-    border-style: solid;   
+.wm_template .GridListStyle .wmlist-cell {
+    border-style: solid;
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
@@ -67,12 +68,12 @@
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles
    *
-   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my 
+   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my
    *              TOC, its going to look/feel different in its hover/selection/header than
    *              a DojoGrid in my EmphasizedContent.
    ************************************************************************************************/
 
-@media screen { /* MainContent-Level */ 
+@media screen { /* MainContent-Level */
 
     /* Selected color for rows: uses Clickables-Active */
     .wm_template .wmlist-item.wmlist-item-selected {
@@ -113,6 +114,8 @@
 	background-color: #333333 !important; /* Document-ClickablesHover-Background_Color */
 
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
+
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
 }
 
 .wm_template .MobileListStyle div.wmlist-item.wmlist-item-selected,

@@ -13,12 +13,11 @@
  */
  
 dojo.declare("Main", wm.Page, {
+	"preferredDevice": "desktop",
 	"i18n": true,
     start: function() {
-	var d = dojo.xhrGet({url: "resources/dependency_bundle_open_source_licenses.txt", sync: false , preventCache: true});
-	d.addCallback(dojo.hitch(this, function(inResult) {
-	    this.licenseHtml.setHtml(inResult.replace(/\</g, "&lt;"));
-	}));
+    	this.loadingDialog1.containerWidget.setAutoScroll(false);
+        this.loadingDialog1.containerWidget.setMargin("0,0,0,60")
     },
     downloadAndInstallServiceVarSuccess: function(inSender, inDeprecated) {
       try {
@@ -97,5 +96,12 @@ dojo.declare("Main", wm.Page, {
           console.error('ERROR IN dojoFileUpload1Error: ' + e); 
       }
    },
-  _end: 0
+  licenseCheckbox1Change: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (inSender.getChecked()) {
+            app.alert("Some features of WaveMaker are not available without the System Dependency Bundle installed.  Your WaveMaker Studio behavior will be limited until the System Dependency Bundle is installed.");
+            app.alertDialog.button1.addUserClass("StudioButton");
+            
+        }
+    },
+    _end: 0
 });

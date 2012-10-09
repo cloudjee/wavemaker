@@ -90,7 +90,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 		this.click(evt, true);
 	},
 	click: function(inEvent, useDelay) {
-		if (!this.disabled) {
+		if (!this._disabled) {
 			if (!this.clicked) {
 				this.setProp("clicked", true);
 			}
@@ -201,7 +201,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 		if (this.declaredClass != "wm.ToolButton") {
 			return this.inherited(arguments);
 		} else {
-			if (this.disabled) return this.imageIndex + this._imageList.colCount * 2;
+			if (this._disabled) return this.imageIndex + this._imageList.colCount * 2;
 			if (this.selected) return this.imageIndex + this._imageList.colCount;
 		}
 		return this.imageIndex;
