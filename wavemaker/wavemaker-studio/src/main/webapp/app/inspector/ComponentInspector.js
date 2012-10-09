@@ -291,7 +291,6 @@
         this.reflow();
      },
      reinspectEditor: function(inComponent, e, binde, inProp, optionalAppendToHashName) {
-<<<<<<< HEAD
         var propName = inProp.name;
         var propPath = inProp.fullName || inProp.name;
         var skipSetEditor = false;
@@ -379,7 +378,7 @@
             } else if (e instanceof wm.Button) {
                 e.setShowing(!inProp.ignoretmp);
             } else if (inProp.advanced && !e._showAllClicked) {;
-            } else {
+             } else if (!e.parent._showAllClicked) {
                 e.parent.setShowing(!inProp.ignoretmp);
             }
 
@@ -392,185 +391,7 @@
                 binde.setDataValue(wire ? this.getFormattedBoundValue(inProp.type, wire.source, wire.expression) : "");
             }
         }
-        /*
-     if (inProp.subcomponent) {
-         var subcomponent = inComponent.$[propName];
-         if (this.subcomponents[subcomponent.getId()] &&
-         this.subcomponents[subcomponent.getId()].className == subcomponent.declaredClass) {
-         this.reinspect(subcomponent);
-         } else if (this.subcomponents[subcomponent.getId()]) {
-         var subComponentParent = this.subcomponents[subcomponent.getId()].parent;
-         delete this.subcomponents[subcomponent.getId()];
 
-         subComponentParent.removeAllControls();
-         for (var name in this.editorHash) {
-             var componentid = name.replace(/\.[^\.]*$/,"");
-             if (componentid == subcomponent.getId()) {
-             delete this.editorHash[name];
-             }
-         };
-         var props = this.props;
-         this.props = this.getProps(subcomponent,true);
-         this.generateEditors(subcomponent, "", subComponentParent);
-         this.props = props;
-
-         this.subcomponents[subcomponent.getId()] = {className: subcomponent.declaredClass,
-                                 parent: subComponentParent};
-         } else {
-         var currentLayer;
-         dojo.forEach(this.layers, function(l) {if (l.propertyGroup.name == inProp.group) currentLayer = l;});
-         if (!currentLayer) {
-             alert("INVESTIGATE THIS CONDITION");
-             var y = this.addLayer(g.displayName);
-             y.header.setMargin("0,2,2,2");
-             y.header.setBorder("1");
-             y.header.setBorderColor("#333");
-             currentLayer._groupName = inProp.group;
-             this.generateLayer = currentLayer;
-         }
-=======
-         var propName = inProp.name;
-         var propPath = inProp.fullName || inProp.name;
-         var skipSetEditor = false;
-         if (!binde) binde = this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") + this.getHashId(inComponent, propPath)];
-
-         /* If its a wm.prop.SelectMenu then call its reinspect method to update its dataset */
-         if (e instanceof wm.prop.SelectMenu) {
-             e.updateOptions();
-         }
-
-         /* If the editor provides its own reinspect method, then run it.  This happens in the following cases:
-          * 1. A wm.SelectMenu editor, provisioned through a call to inComponent.makePropEdit, gets a reinspect method
-          *    added by makePropEdit (up to the developer to write this)
-          * 2. Some of the more complex editors in propertyEdit.js need to do their own reinspect
-          * NOTE: if reinspect returns true, then we skip the local reinpsect code entirely;
-          *       if it returns false, then it only updated the dataSet or set of editors or configuration
-          *       and still needs the reinpsect code below to be called.
-          */
-         else if (e.reinspect) {
-             skipSetEditor = e.reinspect();
-         }
-
-         /* Else if its a wm.SelectMenu, and not one generated from propertyDef options array (which
-          * would mean the options were static and no new dataSet needed), then
-          * the only way we have of insuring its dataSet is up to date is to regenerate it entirely.
-          */
-         else if (e instanceof wm.SelectMenu && !inProp.options) {
-             var parent = e.parent;
-             parent.removeAllControls();
-             e = this.generateEditor(inComponent, inProp, parent.parent, parent);
-             this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") + this.getHashId(inComponent, propPath)] = e;
-
-             /* If the editor was regenerated, it already shows the latest value; no need to set the editor here */
-             skipSetEditor = true;
-         }
-
-
-         if (!skipSetEditor) {
-
-             /* Find the current value of the property, which may be a binding */
-             var newVal;
-             var isBound = this.isPropBound(inComponent, inProp);
-             if (isBound) {
-                 var wire = inComponent.$.binding.wires[propPath];
-                 newVal = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
-             } else if (!e.bindValuesOnly) {
-                 if (inProp.treeBindRoot) {
-                     newVal = inComponent.getValue(propPath);
-                 } else {
-                     newVal = inComponent.getProp(propPath);
-                 }
-                 if (newVal instanceof wm.Component) {
-                     if (newVal === inComponent || newVal.isOwnedBy(inComponent)) {
-                         // don't show the value if the value is self or is something being managed internally; binding
-                         // is for connecting to a different component's properties.
-                         newVal = "";
-                     }
-                 }
-             }
-
-             // if you call getDataValue on a NumberEditor whose displayValue is a bind expression, you get back undefined
-             // because its not a number
-             if (e instanceof wm.AbstractEditor && !isBound) {
-                 var oldVal = e.showing ? e.getDataValue() : binde && binde.showing ? binde.getDataValue() : e.getDataValue();
-
-                 // If the value has changed, update it.
-                 if (newVal !== oldVal) {
-                     e.setDataValue(newVal);
-                 }
-
-                 /* If the dataValue is an object, only the editor can figure out whether its really changed or not,
-                  * just call setDataValue and let it sort things out
-                  */
-                 else if (typeof newVal == "object" && newVal !== null) {
-                     e.setDataValue(newVal); // make sure the editor sees the updated hash or array
-                 }
-             }
-
-             /* In advanced mode we disable editors that aren't applicable and set a mouseover hint to explain why its disabled.
-              * In basic mode, just hide the editor
-              */
-             e.setDisabled(inProp.ignoretmp || e.alwaysDisabled); // make sure though to change the disabled property if ignoretmp changed...
-             if (this.isAdvancedMode()) {
-                 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix + inProp.ignoreHint : "");
-             } else if (e instanceof wm.Button) {
-                 e.setShowing(!inProp.ignoretmp);
-             } else if (inProp.advanced && !e._showAllClicked) {;
-             } else if (!e.parent._showAllClicked) {
-                 e.parent.setShowing(!inProp.ignoretmp);
-             }
-
-             /* If its a bindable property, update whether the bindeditor or regular editor is showing and update the bindeditor's value. */
-             if (inProp.bindable || inProp.bindTarget) {
-                 e.setShowing(!isBound);
-                 binde.setShowing(Boolean(isBound));
-                 e.parent.setHeight((isBound ? binde.bounds.h : e.bounds.h) + "px");
-                 var wire = inComponent.$.binding && inComponent.$.binding.wires[propPath];
-                 binde.setDataValue(wire ? this.getFormattedBoundValue(inProp.type, wire.source, wire.expression) : "");
-             }
-         }
-         /*
-     if (inProp.subcomponent) {
-         var subcomponent = inComponent.$[propName];
-         if (this.subcomponents[subcomponent.getId()] &&
-         this.subcomponents[subcomponent.getId()].className == subcomponent.declaredClass) {
-         this.reinspect(subcomponent);
-         } else if (this.subcomponents[subcomponent.getId()]) {
-         var subComponentParent = this.subcomponents[subcomponent.getId()].parent;
-         delete this.subcomponents[subcomponent.getId()];
-
-         subComponentParent.removeAllControls();
-         for (var name in this.editorHash) {
-             var componentid = name.replace(/\.[^\.]*$/,"");
-             if (componentid == subcomponent.getId()) {
-             delete this.editorHash[name];
-             }
-         };
-         var props = this.props;
-         this.props = this.getProps(subcomponent,true);
-         this.generateEditors(subcomponent, "", subComponentParent);
-         this.props = props;
-
-         this.subcomponents[subcomponent.getId()] = {className: subcomponent.declaredClass,
-                                 parent: subComponentParent};
-         } else {
-         var currentLayer;
-         dojo.forEach(this.layers, function(l) {if (l.propertyGroup.name == inProp.group) currentLayer = l;});
-         if (!currentLayer) {
-             alert("INVESTIGATE THIS CONDITION");
-             var y = this.addLayer(g.displayName);
-             y.header.setMargin("0,2,2,2");
-             y.header.setBorder("1");
-             y.header.setBorderColor("#333");
-             currentLayer._groupName = inProp.group;
-             this.generateLayer = currentLayer;
-         }
->>>>>>> master
-
-         this.generateEditors(subcomponent, inProp.group, currentLayer);
-         }
-     }
-     */
      },
      isEditableProp: function(inProp, allowStyleInspector, skipIsAdvanced) {
      if (!skipIsAdvanced && (inProp.advanced && !this.isAdvancedMode() ||
@@ -732,7 +553,6 @@
      },
      */
 
-<<<<<<< HEAD
      generateButton: function(inComponent,inProp, inLayer) {
      var p = new wm.Panel({
          parent: inLayer,
@@ -768,17 +588,7 @@
                 owner: this
                    });
      this.editorHash[this.getHashId(inComponent,inProp.name)] = b;
-     b.connect(b, "onclick", this, function() {
-         inComponent[typeof inProp.operation == "string" ? inProp.operation : inProp.name]();
-         this.reinspect();
-     });
-=======
-         var s = new wm.Spacer({
-             width: "20px",
-             parent: p,
-             owner: this
-         });
-         this.editorHash[this.getHashId(inComponent, inProp.name)] = b;
+
          b.connect(b, "onclick", this, function() {
             if (typeof inProp.operation == "function") {
                 // This is a function for published properties from PageContainers and Composites.
@@ -791,8 +601,6 @@
          });
 
         this.createHelpButton(inComponent, inProp, p, 0);
-
->>>>>>> master
      },
 
      generatePanelForEditor: function(inParent, inName) {
@@ -1116,7 +924,6 @@
             } catch (e) {}
          });
 
-<<<<<<< HEAD
         /************************************************************************************************************
          * Adding a wire calls inComponent.setValue(propName, valueOfTheSourceOrExpression);
          * sometimes a widget simply destroys itself and creates a replacement copy;
@@ -1130,36 +937,8 @@
         if (!e.noReinspect) {
             this.reinspect();
         }
-=======
-             /* Else we need to create a wm.Wire for the new value */
-             else {
-                 /* editor that uses the bindTarget property can control what the target of the binding is; typically though,
-                  * we're just binding to inProp.name.  bindTarget is used by wm.prop.FieldGroupEditor.
-                  */
-                 var bindPropName = e.bindTarget || inProp.fullName || inProp.name;
-                 new wm.SetWireTask(inComponent, bindPropName, inComponent.$.binding && inComponent.$.binding.wires[bindPropName] ? {
-                     source: inComponent.$.binding.wires[bindPropName].source,
-                     expression: inComponent.$.binding.wires[bindPropName].expression,
-                     value: inComponent.getValue(bindPropName)
-                 } : {}, inDataValue, e.createExpressionWire, false, false);
-             }
-         } catch (e) {}
+        wm.job("studio.updateDirtyBit",10, studio, "updateProjectDirty");
 
-         /************************************************************************************************************
-          * Adding a wire calls inComponent.setValue(propName, valueOfTheSourceOrExpression);
-          * sometimes a widget simply destroys itself and creates a replacement copy;
-          * for example, when I change editorType my text editor is destroyed and a number editor is created.
-          * If that happens, we don't want to reinpsect...
-          ************************************************************************************************************/
-         if (inComponent.isDestroyed) return;
-
-         /* Sometimes an editor knows reinspecting is not needed or will cause side-effects; The Roles editor uses this */
-         if (!e.noReinspect) {
-             this.reinspect();
-         }
-         wm.job("studio.updateDirtyBit",10, studio, "updateProjectDirty");
-
->>>>>>> master
      },
 
      generateEditorFromProps: function(inProp, editorProps, value) {
@@ -1351,67 +1130,7 @@
            return true;
        },
 
-<<<<<<< HEAD
-=======
-                     app.toastInfo("Testing " + className + "." + inPropName);
-                     studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
-                         if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
-                             window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {
-                                 studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
-                             }) + className + "_" + inPropName + "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
-                         }
-                     });
-                 }, i * 1600);
-             });
-         } else {
-             if (!inType) {
-                 bd.show();
-                 bd.page.setContent(altText);
-             } else {
-                 if (inType == studio.application.declaredClass) {
-                     inType = "wm.Application";
-                 } else if (inType == studio.project.pageName) {
-                     inType = "wm.Page";
-                 }
-                 var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
-                     studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1"),
-                     className: inType.replace(/^.*\./, "") + "_" + inPropName
-                 });
 
-                 // clear previous content before showing.
-                 bd.page.setContent("");
-                 this._loadingContent = true;
-                 bd.show();
-                 studio.loadHelp(inType, inPropName, function(inResponse) {
-                     wm.cancelJob("PropDoc");
-                     this._loadingContent = false;
-                     if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
-                     bd.page.setContent(inResponse);
-                 });
-
-                 //  And in case of proxy problems, show the link so the user can open it themselves
-                 wm.job("PropDoc", 1700, dojo.hitch(this, function() {
-                     if (this._loadingContent) bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page");
-                 }));
-             }
-         }
-         /*
-           dojo.xhrGet({
-             url: "http://dev.wavemaker.com/wiki/bin/view/WM5_Documentation/",
-             handleAs: "html",
-             load: function(response,ioArgs) {
-               alert("Loaded: " + response);
-             },
-             error: function(response,ioArgs) {
-               console.log("HELP SYSTEM: Failed to load!");
-               console.dir(ioArgs);
-
- }
-           });
-           */
-         return true;
-     },
->>>>>>> master
 
      getHelpDialog: function() {
          if (!studio.helpPopup) {
