@@ -16,6 +16,7 @@ package com.wavemaker.tools.apt;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.lang.model.type.DeclaredType;
 
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.json.type.TypeState;
@@ -23,6 +24,7 @@ import com.wavemaker.json.type.TypeState;
 public class CompileTypeState implements TypeState {
 
     private final Map<String, TypeDefinition> knownTypes = new HashMap<String, TypeDefinition>();
+    private String baseClassName;
 
     @Override
     public void addType(TypeDefinition typeDefinition) {
@@ -43,5 +45,15 @@ public class CompileTypeState implements TypeState {
     public boolean isTypeKnown(String typeName) {
 
         return this.knownTypes.containsKey(typeName);
+    }
+
+    @Override
+    public String getBaseClassName() {
+        return this.baseClassName;
+    }
+
+    @Override
+    public void setBaseClassName(String baseClassName) {
+        this.baseClassName = baseClassName;
     }
 }
