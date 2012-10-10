@@ -23,8 +23,14 @@ import java.util.Properties;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.*;
-import javax.lang.model.util.*;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementKindVisitor6;
+import javax.lang.model.util.ElementScanner6;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import org.springframework.util.StringUtils;
 
@@ -159,110 +165,8 @@ public class CompileTypeUtils {
         def.setTypeName(type.toString());
         def.setShortName(type.asElement().getSimpleName().toString());
         typeState.addType(def);
-        typeState.setBaseClassName(type.toString());
         type.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
-        typeDefForParentBeans(processingEnv, typeState, type);
         return def;
-    }
-
-    private static void typeDefForParentBeans(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {
-
-        List<DeclaredType> allParentTypes = retrieveAllParentTypes(processingEnv, type);
-        for (TypeMirror typeMirror : allParentTypes) {
-            DeclaredType dt = (DeclaredType) typeMirror;
-            dt.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
-        }
-    }
-
-    private static List<DeclaredType> retrieveAllParentTypes(ProcessingEnvironment processingEnv, DeclaredType type) {
-        List<DeclaredType> allParentTypes = new ArrayList<DeclaredType>();
-        List<? extends TypeMirror> directSupertypes = processingEnv.getTypeUtils().directSupertypes(type);
-        for (TypeMirror typeMirror : directSupertypes) {
-            DeclaredType dt = (DeclaredType) typeMirror;
-            allParentTypes.add(dt);
-            allParentTypes.addAll(retrieveAllParentTypes(processingEnv, dt));
-        }
-        return allParentTypes;
-    }
-
-    private static class ParentJavaBeanScanner extends ElementScanner6<TypeState, TypeState> {
-
-        private final ProcessingEnvironment processingEnv;
-
-        public ParentJavaBeanScanner(ProcessingEnvironment processingEnv) {
-            this.processingEnv = processingEnv;
-        }
-
-        @Override
-        public TypeState scan(Element element, TypeState typeState) {
-            return element.accept(new ParentJavaBeanVisitor(this.processingEnv), typeState);
-        }
-
-    }
-
-    private static class ParentJavaBeanVisitor extends ElementKindVisitor6<TypeState, TypeState> {
-
-        private final ProcessingEnvironment processingEnv;
-
-        public ParentJavaBeanVisitor(ProcessingEnvironment processingEnv) {
-            this.processingEnv = processingEnv;
-        }
-
-        @Override
-        public TypeState visitExecutableAsMethod(ExecutableElement method, TypeState typeState) {
-
-            if (!method.getSimpleName().toString().endsWith("Class")) {
-
-                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(typeState.getBaseClassName());
-                if (def != null) {
-                    String propName = getPropertyName(method);
-                    if (!def.getFields().containsKey(propName)) {
-                        if (isGetter(method)) {
-                            def.getFields().put(propName,
-                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getReturnType(), propName));
-                        } else if (isSetter(method)) {
-                            def.getFields().put(
-                                propName,
-                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getParameters().get(0).asType(), propName));
-                        }
-                    }
-                }
-            }
-            return typeState;
-        }
-
-        private boolean isGetter(ExecutableElement method) {
-            String name = method.getSimpleName().toString();
-            if (!name.startsWith("is") && !name.startsWith("get")) {
-                return false;
-            } else if (name.startsWith("is") && name.length() > 2 && method.getReturnType().getKind() != TypeKind.BOOLEAN) {
-                return false;
-            } else if (name.startsWith("get") && name.length() > 3 && method.getReturnType().getKind() == TypeKind.VOID) {
-                return false;
-            }
-            return method.getParameters().size() == 0;
-        }
-
-        private boolean isSetter(ExecutableElement method) {
-            String name = method.getSimpleName().toString();
-            if (!name.startsWith("set") || name.length() <= 3) {
-                return false;
-            } else if (method.getReturnType().getKind() == TypeKind.VOID) {
-                return false;
-            }
-            return method.getParameters().size() == 1;
-        }
-
-        private String getPropertyName(ExecutableElement method) {
-            String name = method.getSimpleName().toString();
-            if (name.startsWith("is") && name.length() > 2) {
-                return StringUtils.uncapitalize(name.substring(2));
-            } else if ((name.startsWith("get") || name.startsWith("set")) && name.length() > 3) {
-                return StringUtils.uncapitalize(name.substring(3));
-            } else {
-                return "";
-            }
-        }
     }
 
     public static TypeDefinition typeDefForEnum(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {
@@ -388,7 +292,7 @@ public class CompileTypeUtils {
 
             if (!method.getSimpleName().toString().endsWith("Class")) {
 
-                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(typeState.getBaseClassName());
+                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(method.getEnclosingElement().asType().toString());
                 if (def != null) {
                     String propName = getPropertyName(method);
                     if (!def.getFields().containsKey(propName)) {
