@@ -611,6 +611,9 @@
             }
             this.reinspect();
          });
+
+        this.createHelpButton(inComponent, inProp, p, 0);
+
      },
 
      generatePanelForEditor: function(inParent, inName) {

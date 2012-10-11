@@ -24,6 +24,8 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.json.type.TypeState;
 
+import javax.lang.model.type.DeclaredType;
+
 /**
  * @author Matt Small
  */
@@ -68,5 +70,14 @@ public class ReflectTypeState implements TypeState {
 
     public Map<String, TypeDefinition> getKnownTypes() {
         return this.knownTypes;
+    }
+
+    @Override
+    public String getBaseClassName() {
+        return null;
+    }
+
+    @Override
+    public void setBaseClassName(String baseClassName) {
     }
 }
