@@ -14,6 +14,8 @@
 
 package com.wavemaker.json.type;
 
+import javax.lang.model.type.DeclaredType;
+
 /**
  * Holds the state of current types, and knows how to discover new types (associated with the individual type of this
  * TypeState).
@@ -45,4 +47,21 @@ public interface TypeState {
      * @param typeDefinition The TypeDefinition to add.
      */
     public void addType(TypeDefinition typeDefinition);
+
+    /**
+     * Get the base bean class name. Base bean class is the lowest level bean class that is directly referenced
+     * in the java service class. Retrieval of properties defined all super calsses start from the base bean class.
+     *
+     * @return The corresponding TypeDefinition.
+     */
+    public String getBaseClassName();
+
+
+    /**
+     * Set the base bean class name. Base bean class is the lowest level bean class that is directly referenced
+     * in the java service class. Retrieval of properties defined all super calsses start from the base bean class.
+     *
+     * @param baseClassName The base bean class name
+     */
+    public void setBaseClassName(String baseClassName);
 }
