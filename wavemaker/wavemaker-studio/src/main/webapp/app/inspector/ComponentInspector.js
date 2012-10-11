@@ -1077,20 +1077,30 @@
          }
          bd.corner = "tl";
          if (window.location.search.match(/editpropdoc/)) {
-             var classList = [];
-             studio.palette.forEachNode(function(node) {
-                 if (node.klass) {
-                     try {
-                         var prototype = dojo.getObject(node.klass).prototype;
-                         if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor]) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
-                             if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
-                                 var name = node.klass.replace(/^.*\./, "");
-                                 if (dojo.indexOf(classList, name) == -1) classList.push(name);
-                             }
-                         }
-                     } catch (e) {}
-                 }
-             });
+            var propNames = [];
+            if (window.location.search.match(/editpropdocall/)) {
+              this.props.forEach(function(p) {
+                if (!p.name.match(/mobileFold/) && p.name != "styles") propNames.push(p.name);
+              });
+            } else {
+              propNames.push(inPropName);
+            }
+            var counter = 0;
+            propNames.forEach(function(inPropName) {
+               var classList = ["DataSetEditor"];
+               studio.palette.forEachNode(function(node) {
+                   if (node.klass) {
+                       try {
+                           var prototype = dojo.getObject(node.klass).prototype;
+                           if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor]) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
+                               if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
+                                   var name = node.klass.replace(/^.*\./, "");
+                                   if (dojo.indexOf(classList, name) == -1) classList.push(name);
+                               }
+                           }
+                       } catch (e) {}
+                   }
+               });
 
              dojo.forEach(classList, function(className, i) {
                  window.setTimeout(function() {
@@ -1108,8 +1118,10 @@
                              }) + className + "_" + inPropName + "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
                          }
                      });
-                 }, i * 1300);
+                 }, counter * 1300);
+                counter++;
              });
+});
          } else {
              if (!inType) {
                  bd.show();
