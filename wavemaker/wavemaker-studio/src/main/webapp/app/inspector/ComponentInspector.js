@@ -23,13 +23,14 @@
   * hidden, writeonly: both mean that the user doesn't see them.  writeonly though shows if its bindable/bindTarget. Both are written whether visible or not.
   * ignoretmp: This property is ignored for its current state; currently we disable/enable the disabled property editor; previously hidden/shown as needed
   * ignoreHint: Hint to give to property editors shown as disabled due to ignoretmp
+  * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
   * options: array of options for a wm.SelectMenu
   * bindSource: Shows up in the bind dialog as something that can be bound to
   * bindTarget: Has a bind button next to it and can be bound to other values
   * bindable: both bindTarget and bindSource are true
-  * contextMenu: Property (presumably an operation) shows up in the context menu for the widget
   * shortname: Alternate name to show instead of the real name; used for localization and for human readable prop names
   * operation: Show a button instead of an editor; component must have a method with the same name as the property name. If boolean, calls this.propertyName(); if a string it calls this[prop.operation]()
+  * contextMenu: Property (presumably an operation) shows up in the context menu for the widget
   * method: treat a property as a method, there only for property documentation and autocompletion
   * pageProperty: Used by the bind dialog to determine the property to use to find the subpage and let the user browse the subpage's properties
   * editor: Name of an editor class; typically an editor from propertyEdit.js which knows how to setup its own options
@@ -43,7 +44,6 @@
   * categoryProps.component: inspector will inspect this[categoryProps.component] (i.e. this.dataOutput)
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
-  * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
   * doNotPublish: property is not publishable (i.e. can't be exposed to parent pagecontainer)  hidden, ignored and writeonly properties are already skipped
   *
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
