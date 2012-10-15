@@ -1,0 +1,109 @@
+-- MySQL dump 10.13  Distrib 5.5.18, for Win64 (x86)
+--
+-- Host: localhost    Database: crazyeddb
+-- ------------------------------------------------------
+-- Server version	5.5.18
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `inventory`
+--
+
+DROP TABLE IF EXISTS `inventory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inventory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quantity` int(11) DEFAULT NULL,
+  `store_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK8790195C6FF1883` (`product_id`),
+  KEY `FK8790195CDC297183` (`store_id`),
+  CONSTRAINT `FK8790195CDC297183` FOREIGN KEY (`store_id`) REFERENCES `store` (`id`),
+  CONSTRAINT `FK8790195C6FF1883` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inventory`
+--
+
+LOCK TABLES `inventory` WRITE;
+/*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+INSERT INTO `inventory` VALUES (1,50,1,1);
+/*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text,
+  `image_url` varchar(255) DEFAULT NULL,
+  `price` float DEFAULT NULL,
+  `special_instructions` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product`
+--
+
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (1,'LG 60PA6500 60-Inch 1080p 600Hz Plasma HDTV','LG 60 \" Black 1080p Plasma HDTV - 60PA6500/ Full HD 1080p (1920x1080) Resolution/ Triple XD Engine/ 3000000:1 Dynamic Contrast Ratio/ Protective Skin Glass/ 600Hz Max Sub Field Driving/ Resolution Upscaler/ Intelligent Sensor Mode/ xvYCC/ Super Black Panel/ ISFccc Ready/ Built-In ATSC/NTSC/Clear QAM Tuner/ Black Finish','http://content.abt.com/media/images/products/BDP_Images/big_60PA6500.jpg',999,''),(2,'Panasonic PC-P50UT50','Plasma Panasonic Viera TC-P50UT50 1080p 16:9 50\" Class (49.9\" Diag.) G15 Progressive Full-HD Plasma','http://images10.newegg.com/ProductImageCompressAll300/89-187-248-02.jpg',989,''),(4,'Corsair - Force Gt Cssd-f120gbgt-bk 120 Gb Internal Solid State Drive','120 GB2.5\"2.82 oz3 Year515 MBps555 MBpsCE FCC C-TickForce GT Solid State Drive 3.5\" Storage Bay adapterYou probably already know that solid-state drives are fast. With up to 85000 IOPS and read speeds of up to 555Mb/s, Force Series GT is on another level. There\'s fast, and then there\'s fast. Force Series 3 SSDs have even quicker read and write times when they\'re installed in PCs that use the latest SATA 3 6Gb/s interface.CSSD-F120GBGT-BKCorsairCorsair MemoryForce GTForce GT Solid State DriveInternalMacPCS.MARTSATA/600Solid State DriveTRIM CommandWEEEYeswww.corsairmicro.com','http://images.bestbuy.com/BestBuy_US/images/mp/products/3772/3772225_sc.jpg',125,''),(5,'SanDisk 240GB Extreme Series Solid State Drive (SSD): SDSSDX-240G-G','240GB EXTREME SSD SATA III 2.5IN INT','http://images.frys.com/art/product/box_shots/6989047.box.GIF',189,''),(6,'Intel 330 120GB Solid State Drive - 120GB, SATA 6Gb/s, Read-500 MB/s','Intel 330 120GB Solid State Drive</b> For outstanding storage performance, choose the Intel 330 120GB Solid State Drive. This solid state drive enables you to store digital data such as multimedia files, important documents, applications, and programs with its 120GB storage capacity. Just install it to your laptop through the SATA interface and enjoy up to 450MB/s write speed and up to 500MB/s read speed. And because it has no moving parts, it is less susceptible to physical shock and is more silent than the traditional hard drive. Order the Intel 330 120GB Solid State Drive today! What It Is And Why You Need It: 120GB storage capacity; provides enough room to store numerous digital data such as multimedia files, important documents, applications, and programs SATA interface; enjoy up to 450MB/s write speed and up to 500MB/s read speed No moving parts; less susceptible to physical shock and is more silent than traditional hard drives.','http://images.highspeedbackbone.net/SKUimages/medium/I69-7032_chiclet01_aa_2372751.jpg',115,''),(7,'Samsung 830 Series 256GB 2.5\" SATA III Solid State Drive (SSD)','Outstanding Performance in Multi-TaskingSamsung\'s fast random read speeds (up to 80000 IOPS) maximize performance* when it matters most. A Samsung SSD is the ideal solution for your everyday computing needs, such as web browsing, document creation, viewing or editing multimedia files, playing PC games, etc.Lightning Fast Speed. At Your Command The 830 Series\' 520MB/s sequential read speed provides lightning fast access to your files, loading large multimedia files quickly and smoothly.Sustained Performance and Unrivaled Reliability Samsung SSDs are designed and build completely in-house. The Samsung SSD 830 Series is optimized for exceptional, sustained performance and unrivaled reliability through its specially- engineered wear-leveling and garbage collection algorithms.A Complete, User-Friendly Solution The Samsung SSD 830 series is available with a user-friendly installation kit, including a full version of Norton Ghost, an interactive installation guide, and premium installation t ','http://ak.buy.com/PI/0/500/228721725.jpg',222,''),(8,'OCZ Used 128GB Synapse Cache SATA III 2.5\" Solid State Drive','The <b>OCZ 128GB Synapse Cache SATA III 2.5 Solid State Drive (SSD)</b> is optimized for caching applications. It uses Dataplex cache software to simultaneously manage the Synapse SSD and your standard hard disk drives (HDDs). Working in conjunction with your HDD the Synapse SSD provides users with SSD-level performance over the full capacity of the HDD. It\'s able to provide superior storage performance without sacrificing hard drive capacity. When combined with the cache software the Synapse SSD is able to afford the performance advantages of a solid state drive combined with the high capacities associated with hard disk drives. The SSD is compatible with Windows 7 (32-bit/64-bit) and features a capacity of 128GB and a cache capacity of 64GB. It supports read speeds up to 550 MB/s and write speeds up to 510 MB/s. 128GB Synapse Cache SATA III 2.5&quot; Solid State Drive (SSD) ','http://www.bhphotovideo.com/images/items/847424.jpg',149,''),(9,'Lg - 60\" Class - Plasma - 1080p - 600hz - Hdtv','Enjoy movies, TV shows and more in stunning detail with this <b>LG 60PA6500 60&quot; HDTV</b> that features a Triple XD engine and 600Hz response time for clear, detailed images. Two 10W speakers provide a lush soundscape. ','http://images.bestbuy.com/BestBuy_US/images/products/4846/4846756_sc.jpg',1125,''),(10,'Lg - 50\" Class - Plasma - 1080p - 600hz - Hdtv','Watch your favorite movies, TV shows and more in stunning detail with this <b>LG 50PA5500 plasma HDTV</b> that features 1080p resolution for crisp images and 600Hz Max Sub Field Driving technology for intense clarity in fast-paced action scenes. ','http://images.bestbuy.com/BestBuy_US/images/products/5377/5377281_sc.jpg',630,''),(11,'Samsung PN60E550 60\" 1080p 3D plasma HDTV with Wi-Fi','Samsung PN60E550 60\" 1080p 3D plasma HDTV with Wi-Fi','http://a248.e.akamai.net/pix.crutchfield.com/products/2012/17/305/h30560P550-F.jpeg',1399,''),(12,'Samsung PN51E550 51\" Class 3D Full HD Slim Plasma HDT','Samsung delivers the connected power of Smart TV, along with amazing 3D in the Plasma 5 Series. Samsung Smart TV is your portal to online content, sharing and chatting with friends, plus Streaming movies, Music - and so much more. The attractive picture quality of full HD 1080p Resolution teams up with improved black levels and Cinema Smooth technology. With Samsung\'s immersive active full HD 3D experience, entertainment can go beyond your wildest expectations. --Never miss a moment with Samsung Smart TV. Watch your favorite movies while you browse the Web or explore the Smart Hub. Find more content you love by searching for shows, movies, and videos across vudu, Hulu Plus, YouTube, and other Digital content providers. Movies are handpicked for you through recommendations based on your viewing history and ratings. Access all your APPS and Download new ones such as Netflix, Facebook, YouTube, Hulu Plus, and Twitter! Browse the web while you watch movies and TV shows, and enjoy TV while you chat with friends and family online, all on one screen. With Samsung Social TV, you can use Twitter, Facebook, and Google Talk to make comments, crack jokes, and share all the fun.-Accessories: Standard Remote, Two Pairs of Active 3D Glasses, Documentation-Features-Real Black Panel-Cinema Smooth-Wide Color Enhancer Plus-600Hz Subfield Motion-Smart TV-Smart Content with Signature Services - Family Story, Fitness &amp; Kids Story-Apps built for TV-Web Browser &amp; Search All-Smart Hub-WiFi built-in-AllShare Play-Full HD 2D or 3D with 3D HyperReal Engine-Skype-compatible-ConnectShare Movie-Your Video (movie recommendations)-Swivel stand-Eco Sensor-+1 design-Specifications-Screen Size: 50.7&quot; Diagonal-Panel: Real Black Panel-Resolution: 1080p (1920 x 1080)-Refresh Rate: 600Hz Subfield Motion-Full HD: 2D &amp; 3D-Audio: 10W x 2 with Dolby Digital Plus/Dolby Pulse &amp; SRS TheaterSoundHD-Connections: 3 HDMI, 2 USB, 1 Ethernet, 1 Component, 1 Composite, 1 Optical, DVI audio in, Anynet+ (HDMI-CEC)-VESA Size: 400 x 400-Dimensions (WxHxD): 47.1 x 31.0 x 12.0 Inches (47.1 x 28.2 x 2.2 inches Without Stand)- Features:-Aged Bronze with Leaf Design Provides More Atmosphere -Easy Tending and Cleaning -Easy Lift Spark Guard -Simple Assembly-1 year Limited Warranty ','http://images.jr.com/productimages/SAMPN51E550.PNG?WID=150&CVT=JPEG',999,''),(13,'Panasonic Viera TC-P65ST50 65\" 3D Plasma HDTV 1080p 600Hz','Active Shutter Progressive 3D Method The display alternately shows images for the left and right eyes. The left and right lenses of the eyewear open and close in sync with this display timing to show separate images to the left and right eyes. By repeating this action at high speed, the brain perceives 3D images. And because this method displays FULL HD 3D images just as they are, both eyes receive 3D images in high, full-HD quality.Vivid Color Creation The brightness, saturation, contrast and sharpness of colors are finely compensated in each scene. Highly vivid colors are produced with hardly any mutual interference. People\'s faces are also detected, and skin tones are beautifully corrected to ensure soft, natural complexions. <br />plasma<br /> ','http://ak.buy.com/PI/0/500/228474910.jpg',2499,''),(14,'Samsung PN64D8000 64in. 3D 1080p Plasma TV - 16:9 - HDTV 1080p - 600 Hz','Only a television like the 64-inch Samsung PN64D8000 Plasma TV can deliver larger than life entertainment. A special Samsung Plasma Plus One Design means there\'s even more screen space compared to similarly sized models so you can enjoy the most picture. Samsung PN64D8000 64in. 3D 1080p Plasma TV - 16:9 - HDTV 1080p - 600 Hz is one of many 3-D TVs available through Office Depot. Made by Samsung. ','http://www.officedepot.com/pictures/us/od/sk/lg/686317_sk_lg.jpg',2745,''),(15,'Nest 1st Generation T100577','Nest Learning Thermostat - 1st Generation T100577 ','http://ak.buy.com/PI/0/500/231364960.jpg',319.99,''),(16,'Onkyo TX-NR616 7.2-Channel THX Select2 Plus Certified Network A/V Receiver','Onkyo TX-NR616 Escape into THX®-Certified Surround Sound. Movie, music, and gaming enthusiasts can now step up to realistic THX® Select2 Plus™-certified surround sound for less money down with the new TX-NR616 Network A/V Receiver.','http://i.ebayimg.com/00/s/OTQzWDEwMDA=/%24%28KGrHqZHJBwE-d,bnSpvBPySwtiWqQ~~60_1.JPG?set_id=8800005007',349.99,''),(17,'VIZIO E601i-A3 60-Inch 1080p 120Hz LED HDTV','This season, go big with VIZIO! The E-Series 60” Class LED Smart TV is shattering the mold in a way only VIZIO can, with high-quality design and picture at the best value. Enjoy crystal-clear action and eye-popping images in 1080p Full HD resolution with 120Hz refresh rate with smooth motion. A slim frame design with ultra thin profile makes this a stunning entertainment centerpiece in any living space. VIZIO Internet Apps® with built-in Wi-Fi gives you instant access to a world of streaming movies, TV shows, music, and more – all at the push of a button on the smart remote with keyboard. This 60\" Class LED Smart TV gives you more of what you love about TV with all the brilliant picture quality and world-class you’d expect from America’s #1 LCD HDTV Company.','http://i.ebayimg.com/00/s/NTAwWDUwMA==/%24T2eC16J,%21zQE9s3sr%21YLBQc1J5N%21L%21~~60_1.JPG?set_id=8800005007',1099.99,''),(18,'Sony BDP-S590 3D Blu-ray Disc Player with Wi-Fi (Black)','Sony BDP-S590 3D Blu-ray Disc Full HD 1080p playback. Built-in Wi-Fi. Sony Entertainment Network: Netflix®, YouTube™, Pandora®, Hulu Plus™& more.','http://s.shld.net/is/image/Sears/spin_prod_671086301',69.99,'NEW - NOT refurbished'),(19,'Canon EOS Rebel T4i 18.0 MP CMOS Digital SLR Camera Body','Canon is proud to introduce its most sophisticated Rebel ever—the EOS Rebel T4i DSLR!','http://www.bhphotovideo.com/images/images345x345/870175.jpg',699.99,'BODY ONLY'),(20,'ASUS Taichi 21-DH71 11.6-Inch Convertible Touch Ultrabook','Taichi21-DH71, Silver Aluminum, 11.6 -inch IPS FHD (1920 x 1080) + 10 Finger Touch (Tablet), Intel Core i7-3517U (1.9GHz), 4GB DDR3, Intel GMA HD, 256G SSD, N/A, W8 Home Premium (64bit), 802.11AGN, HD Camera, 1YR Global/1YR Accidental Damage/30-Day Zero Bright Dot/2-way','http://ecx.images-amazon.com/images/I/41FEpd6FZyL._SL500_AA300_.jpg',1599,''),(21,'Canon EOS Rebel T3 Digital SLR with Lens','Canon EOS Rebel T3 Digital SLR Body + 18-55mm lens The Canon 5157B002 includes the EOS Rebel T3 Digital SLR Camera and the EF-S 18-55mm f/3.5-5.6 IS type II Lens. This camera and lens is perfect for photographers ready to make the move to digital SLR photography. The EOS Rebel T3 delivers beautiful photos and video, speed, simplicity and fun. It features a 12.2 Megapixel CMOS Image Sensor and Canon DIGIC 4 Image Processor for richly detailed images and quick camera response. It has Canon\'s amazing 63-zone, dual-layer metering for accurate exposures and features Canon\'s Basic+ function, HD video recording and Live View shooting, plus a convenient in-camera Feature Guide.','http://ecx.images-amazon.com/images/I/51HgYVS2ZXL._AA300_PIbundle-1,TopRight,0,0_AA280_SH20.jpg',470,' Includes 18-55mm lens');
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `store`
+--
+
+DROP TABLE IF EXISTS `store`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `store` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `location` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `store`
+--
+
+LOCK TABLES `store` WRITE;
+/*!40000 ALTER TABLE `store` DISABLE KEYS */;
+INSERT INTO `store` VALUES (1,'Washington DC'),(2,'San Francisco'),(3,'Palo Alto'),(4,'New York'),(5,'Semi arid Livermore');
+/*!40000 ALTER TABLE `store` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2012-10-13  7:46:53

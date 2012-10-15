@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.crazyeddb.data.Product" table="product" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="integer">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string">
+            <column name="name"/>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="imageUrl" type="string">
+            <column name="image_url"/>
+        </property>
+        <property name="price" type="float">
+            <column name="price" precision="12"/>
+        </property>
+        <property name="specialInstructions" type="string">
+            <column name="special_instructions"/>
+        </property>
+        <set name="inventories" inverse="true" cascade="">
+            <key>
+                <column name="product_id" not-null="true"/>
+            </key>
+            <one-to-many class="com.crazyeddb.data.Inventory"/>
+        </set>
+    </class>
+</hibernate-mapping>

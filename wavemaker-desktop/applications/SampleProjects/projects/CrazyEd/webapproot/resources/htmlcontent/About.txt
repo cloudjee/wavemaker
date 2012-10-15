@@ -1,0 +1,2 @@
+This app was built using <a href="http://wavemaker.com>WaveMaker">WaveMaker</a> version 6.5.<BR>
+Source code is available on <a href="http://github.com/SpringSource/WaveMaker">GitHub </a>

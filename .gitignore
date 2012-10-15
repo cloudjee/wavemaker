@@ -38,3 +38,7 @@ wavemaker-desktop/applications/common/
 !wavemaker-desktop/applications/projects/StudioConfigure/webapproot/WEB-INF/classes/com/wavemaker/*.class
 wavemaker-desktop/applications/projects/WM_Spinup_App2/webapproot/WEB-INF/lib
 wavemaker-desktop/applications/projects/WM_Spinup_App2/webapproot/resources/studioWars
+wavemaker-desktop/applications/SampleProjects/projects/CrazyEd/scripted.log
+wavemaker-desktop/applications/SampleProjects/projects/CrazyEd/webapproot/export/*
+wavemaker-desktop/applications/SampleProjects/projects/CrazyEd/webapproot/WEB-INF/lib/*
+wavemaker-desktop/applications/SampleProjects/projects/CrazyEd/webapproot/WEB-INF/classes/*
