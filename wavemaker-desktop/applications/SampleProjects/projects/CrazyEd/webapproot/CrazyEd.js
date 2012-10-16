@@ -9,7 +9,7 @@ dojo.declare("CrazyEd", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha2", 
+	"projectSubVersion": "Alpha3", 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.0.RELEASE", 
 	"tabletMain": "", 
