@@ -666,12 +666,14 @@ dojo.declare("wm.Application", wm.Component, {
 
 
 
-        /* Load all app-level components from project.js */
-        this.loadComponents(this.constructor.widgets || this.widgets);
 
         this.createPageContainer();
         this.domNode = this.appRoot.domNode;
         this.reflow();
+
+        /* Load all app-level components from project.js */
+        this.loadComponents(this.constructor.widgets || this.widgets);
+
 
         if (!this.debugDialog) {
             if (this._overrideDebugDialog !== undefined) {
