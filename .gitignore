@@ -45,6 +45,7 @@ wavemaker-desktop/applications/SampleProjects/projects/*/scripted.log
 wavemaker-desktop/applications/SampleProjects/projects/*/webapproot/export
 wavemaker-desktop/applications/SampleProjects/projects/*/webapproot/timestamp.txt
 wavemaker-desktop/applications/SampleProjects/projects/*/dist/
+wavemaker-desktop/applications/SampleProjects/projects/*/export/
 wavemaker-desktop/applications/SampleProjects/projects/*/phonegap
 wavemaker-desktop/applications/SampleProjects/projects/*/webapproot/WEB-INF/lib/*
 wavemaker-desktop/applications/SampleProjects/projects/*/webapproot/WEB-INF/classes/*
