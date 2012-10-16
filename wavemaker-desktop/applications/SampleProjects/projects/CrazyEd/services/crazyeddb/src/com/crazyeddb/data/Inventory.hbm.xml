@@ -1,0 +1,18 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.crazyeddb.data.Inventory" table="inventory" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="integer">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="quantity" type="integer">
+            <column name="quantity"/>
+        </property>
+        <many-to-one name="store" class="com.crazyeddb.data.Store">
+            <column name="store_id" not-null="true"/>
+        </many-to-one>
+        <many-to-one name="product" class="com.crazyeddb.data.Product">
+            <column name="product_id" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

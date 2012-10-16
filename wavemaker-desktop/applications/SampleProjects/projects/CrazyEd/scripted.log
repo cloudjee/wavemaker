@@ -1,0 +1,25 @@
+=================================================== 
+launching node again: Sun 10/14/2012  9:18:46.04 
+Starting scripted.js... 
+Registering a servlet for path: /ls
+Creating servlet handler for function: config
+SKIPPED: Not a function: config
+Creating servlet handler for function: getContents
+Registering a servlet for path: /jsdepend/getContents
+Creating servlet handler for function: getDependencies
+Registering a servlet for path: /jsdepend/getDependencies
+Creating servlet handler for function: getTransitiveDependencies
+Registering a servlet for path: /jsdepend/getTransitiveDependencies
+Creating servlet handler for function: getDGraph
+Registering a servlet for path: /jsdepend/getDGraph
+Creating servlet handler for function: findFileNamesContaining
+Registering a servlet for path: /jsdepend/findFileNamesContaining
+Registering a servlet for path: /exec
+Registering a servlet for path: /kill
+Registering a servlet for path: /get
+Registering a servlet for path: /put
+Registering a servlet for path: /fs_list
+SockJS v0.3.1 bound to "/echo"
+SockJS v0.3.1 bound to "/isearch"
+SockJS v0.3.1 bound to "/ifsearch"
+Server has started.
