@@ -246,7 +246,7 @@ dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     newPage: true,
     currentPageOK: false,
     updateOptions: function() {
-        this.inherited(arguments)
+        this.inherited(arguments);
         var pagelist = wm.getPageList(this.currentPageOK);
         if (this.newPage) pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
         this.setOptions(pagelist);
@@ -274,10 +274,10 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     noForms: false,
     showInputs: false,
     updateOptions: function() {
-        this.inherited(arguments)
+        this.inherited(arguments);
         var matchType = "";
         if (this.matchComponentType) {
-            var value = this.inspected.getValue(this.propDef.fullName)
+            var value = this.inspected.getValue(this.propDef.fullName);
             if (value) matchType = value.type;
         }
         var sp = studio.page;
@@ -370,7 +370,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     allowNone: true,
     emptyLabel: "",
     updateOptions: function() {
-        this.inherited(arguments)
+        this.inherited(arguments);
         var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
         var options;
         if (!ds && this.inspected.formField) {
@@ -384,7 +384,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
                     var typeDef = wm.typeManager.getType(type);
                 }
                 if (typeDef) {
-                    options = wm.typeManager.getSimplePropNames(typeDef.fields)
+                    options = wm.typeManager.getSimplePropNames(typeDef.fields);
                 }
             }
         }
@@ -425,7 +425,7 @@ dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
     allowNone: true,
     emptyLabel: "",
     updateOptions: function() {
-        this.inherited(arguments)
+        this.inherited(arguments);
         var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
         var options;
         if (ds) {
@@ -1444,6 +1444,10 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         {name: "fontFamily", editor: "wm.Text", editorProps: {placeHolder: "Arial, Geneva, Helvetica, sans-serif"}},
         {name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
         {name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
+        {name: "borderRadius", editor: "wm.Text", editorProps:{options: {placeHolder: "8 or 8 8 4 4"}}},
+        /*{name: "borderTopLeftRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},
+        {name: "borderBottomRightRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},
+        {name: "borderBottomLeftRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},        */
         {name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1, placeHolder: "Number from 0-1"},advanced:1},
         {name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
         {name: "zIndex", editor: "wm.Number",advanced:1, editorProps: {placeHolder: "Integer"}}
@@ -1654,6 +1658,34 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
                         cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
                         cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
                         cssText += "filter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+					} else if (styleName == "borderRadius") {
+						var values = String(styleValue).split(/\s+/);
+			        
+						for (var i = 0; i < values.length; i++) {
+							if (values[i].match(/^\d+$/)) values[i] += "px";
+						}
+						if (values.length == 1) values[1] = values[2] = values[3] = values[0];
+						if (values.length == 2) {
+							values[3] = values[0];
+							values[2] = values[1];
+						}
+						if (values.length == 3) {
+							values[3] = "0px";
+						}				
+						dojo.forEach(["-webkit-","-moz-","-ms-","-o-",""], function(prefix) {
+							if (values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
+								cssText += prefix + "border-radius: " + values[0] + ";\n";
+							} else {
+								dojo.forEach(["border-top-left-radius", "border-top-right-radius","border-bottom-left-radius", "border-bottom-right-radius"],
+									function(styleName,i) {
+										cssText += prefix + styleName + ": " + values[i] + ";\n";
+									}
+								);
+								cssText += "\n";
+							}
+						});
+					
+					
                     } else {
                         cssText += styleName.replace(/([A-Z])/g, function(inText) {
                             return "-" + inText.toLowerCase();

@@ -1320,12 +1320,42 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		                cssTextItems.push("filter: " + inValue);
 		            } else {
 		                cssTextItems.push("background: " + inValue);
-		            }
-		        } else {
-		            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
-		                return "-" + inLetter.toLowerCase();
-		            }) + ":" + styleValue);
-		        }
+		            }		        
+		        
+		        } else if (styleName == "borderRadius") {
+					var prefix = "";
+			   		   		if (dojo.isWebKit) {
+								prefix = "-webkit-";
+			   		   		} else if (dojo.isFF) {
+			   		   			prefix = "-moz-" ;
+			   		   		} else if (dojo.isIE) {
+			   		   			prefix = "-ms-" ;
+				   		   	} else if (dojo.isOpera) {
+			   		   			prefix = "-o-";
+				   		   	}
+				   		   	
+				   		   	var values = String(styleValue).split(/\s+/);
+				           	inValue = "";
+							for (var i = 0; i < values.length; i++) {
+								if (values[i].match(/^\d+$/)) values[i] += "px";
+							}
+							if (values.length == 1) values[1] = values[2] = values[3] = values[0];
+							if (values.length == 2) {
+								values[3] = values[0];
+								values[2] = values[1];
+							}
+							if (values.length == 3) {
+								values[3] = "0px";
+							}				
+							cssTextItems.push(prefix + "border-top-left-radius: " + values[0]);
+							cssTextItems.push(prefix + "border-top-right-radius: " + values[1]);
+							cssTextItems.push(prefix + "border-bottom-left-radius: " + values[2]);
+							cssTextItems.push(prefix + "border-bottom-right-radius: " + values[3]);							
+				   	} else {
+			            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
+			                return "-" + inLetter.toLowerCase();
+			            }) + ":" + styleValue);
+			        }
 		        this._appliedStyles[styleName] = styleValue;
 	        }
         }));
@@ -1372,12 +1402,42 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		    } else if (this._appliedStyles[styleName] != styleValue) {
 			if (styleName == "backgroundGradient") {
 			    var gradient = cssObj[styleName];
-			    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+			    var inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
 			    if (dojo.isIE < 10) {
 				s.filter = inValue;
 			    } else {
 				s.background = inValue;
 			    }
+			 } else if (styleName == "borderRadius") {
+					var prefix = "";
+			   		   		if (dojo.isWebKit) {
+								prefix = "Webkit";
+			   		   		} else if (dojo.isFF) {
+			   		   			prefix = "Moz" ;
+			   		   		} else if (dojo.isIE) {
+			   		   			prefix = "Ms" ;
+				   		   	} else if (dojo.isOpera) {
+			   		   			prefix = "O";
+				   		   	}
+				   		   	
+				   		   	var values = String(styleValue).split(/\s+/);
+				           	inValue = "";
+							for (var i = 0; i < values.length; i++) {
+								if (values[i].match(/^\d+$/)) values[i] += "px";
+							}
+							if (values.length == 1) values[1] = values[2] = values[3] = values[0];
+							if (values.length == 2) {
+								values[3] = values[0];
+								values[2] = values[1];
+							}
+							if (values.length == 3) {
+								values[3] = "0px";
+							}				
+							s[prefix + "BorderTopLeftRadius"] = values[0];
+							s[prefix + "BorderTopRightRadius"] = values[1];
+							s[prefix + "BorderBottomLeftRadius"] = values[2];
+							s[prefix + "BorderBottomRightRadius"] = values[3];
+							this._appliedStyles[styleName] = styleValue;
 			} else {
 			    s[styleName] = styleValue;
 			    this._appliedStyles[styleName] = styleValue;
@@ -1697,19 +1757,51 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         } else {
             this.styles[inStyle] = inValue;
         }
-        if (inStyle == "backgroundGradient") {
-            if (inValue) {
-                inValue = wm.getBackgroundStyle(inValue.startColor, inValue.endColor, inValue.colorStop, inValue.direction, "");
-            } else {
-                inValue = "";
-            }
-            if (dojo.isIE < 10) {
-                this.domNode.style.filter = inValue;
-            } else {
-                this.domNode.style.background = inValue;
-            }
-        } else {
-            this.domNode.style[inStyle] = inValue;
+        switch(inStyle) {
+	        case "backgroundGradient":
+
+	            if (inValue) {
+	                inValue = wm.getBackgroundStyle(inValue.startColor, inValue.endColor, inValue.colorStop, inValue.direction, "");
+	            } else {
+	                inValue = "";
+	            }
+	            if (dojo.isIE < 10) {
+	                this.domNode.style.filter = inValue;
+	            } else {
+	                this.domNode.style.background = inValue;
+	            }
+	            break;
+		   case "borderRadius":	   
+				var prefix;		   
+   		   		if (dojo.isWebKit) {
+   		   			prefix = "Webkit";
+   		   		} else if (dojo.isFF) {
+   		   			prefix = "Moz";
+   		   		} else if (dojo.isIE) {
+	   		   		prefix = "Ms" ;
+	   		   	} else if (dojo.isOpera) {
+	   		   		prefix = "O";
+	   		   	}
+	           	var values = String(inValue).split(/\s+/);
+	           	inValue = "";
+				for (var i = 0; i < values.length; i++) {
+					if (values[i].match(/^\d+$/)) values[i] += "px";
+				}
+				if (values.length == 1) values[1] = values[2] = values[3] = values[0];
+				if (values.length == 2) {
+					values[3] = values[0];
+					values[2] = values[1];
+				}
+				if (values.length == 3) {
+					values[3] = "0px";
+				}				
+		   		 this.domNode.style[prefix + "BorderTopLeftRadius"] = values[0];
+		   		 this.domNode.style[prefix + "BorderTopRightRadius"] = values[1];
+		   		 this.domNode.style[prefix + "BorderBottomLeftRadius"] = values[2];
+		   		 this.domNode.style[prefix + "BorderBottomRightRadius"] = values[3];		   		 
+		   		 break;
+           default:
+	            this.domNode.style[inStyle] = inValue;
         }
     },
     getStyle: function(inStyle) {
