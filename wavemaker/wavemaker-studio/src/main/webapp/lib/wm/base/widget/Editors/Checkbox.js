@@ -21,12 +21,15 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     _captionTagName: "label", // using this allows clicking the label to toggle the editor
 
     /* Formating */
-    classNames: "wmeditor wmeditor-cbeditor",
 	width: "180px",
 
 	dataType: "boolean", /* TODO: WARNING, this may cause upgrade problems changing this from string to boolean */
 	startChecked: false,
         checkedValue: true,
+        init: function() {
+            this.classNames += " wmeditor-cbeditor",
+            this.inherited(arguments);
+        },
     touchStart: function() {
         if (this._disabled) return;
 		    this._touched = true;

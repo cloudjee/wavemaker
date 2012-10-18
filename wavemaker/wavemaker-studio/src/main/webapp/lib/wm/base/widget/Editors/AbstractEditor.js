@@ -39,7 +39,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     // we should use "label", but using label causes the editor to receive events from the label node.  This means accidentlly clicking on a label
     //  while touch scrolling can cause an editor to focus, its popup to popup and all manner of unintended consequences.
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
-    classNames: "wmeditor",
+
 
     // default is to only evaluate bindings on the dataValue when in a form when doing an insert operation
     // but designer can also can it to be reevaluated when doing an update operation
@@ -112,6 +112,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         }
     },
     createCaption: function() {
+        if (wm.flexboxSupport) {
+            var container = this.captionWrapperNode = document.createElement("div");
+            container.className = "wmCaptionWrapper wmContainerNode wmLayoutKindLeftRight wmBoxAlignLeft wmBoxAlignTop";
+        }
         var labeldiv = document.createElement(this._captionTagName);
         var s = labeldiv.style;
         s.padding = "0px";
@@ -120,7 +124,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         dojo.addClass(labeldiv, "wmeditor-caption");
         dojo.addClass(labeldiv, "wmlabel");
         labeldiv.innerHTML = this.caption;
-        this.domNode.appendChild(labeldiv);
+        if (container) {
+            container.appendChild(labeldiv);
+            this.domNode.appendChild(container);
+        } else {
+            this.domNode.appendChild(labeldiv);
+        }
         this.captionNode = labeldiv;
         this.setCaptionAlign(this.captionAlign);
         this.setSingleLine(this.singleLine);
@@ -129,7 +138,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         this.createEditor();
         this.inherited(arguments);
         wm.fire(this, "ownerLoaded"); // TODO: Replace this with call in SelectEditor.postInit
-        if (this.captionPosition != "left") this.setCaptionPosition(this.captionPosition);
+        if (this.captionPosition != "left" || wm.flexboxSupport)
+          this.setCaptionPosition(this.captionPosition);
         this._inPostInit = true;
         this.displayValue = this.getDisplayValue();
         this.dataValue = this.getDataValue();
@@ -140,57 +150,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     },
 
 
-    setCaption: function(inCaption) {
-        var oldCap = this.caption;
-        this.caption = inCaption;
-        if (!this.captionNode) return;
-        var cap = inCaption + ((this.required && !this.readonly) ? '&nbsp;<span class="wmeditor-required">*</span>' : "");
-        this.captionNode.innerHTML = cap;
-        if (oldCap && !inCaption || !oldCap && inCaption) {
-            dojo.style(this.captionNode, "display", (inCaption) ? "block" : "none");
-            this.sizeEditor();
-        }
-    },
-    setCaptionSize: function(inCaptionSize) {
-        this.captionSize = inCaptionSize;
-        this.sizeEditor();
-    },
-    setCaptionAlign: function(inCaptionAlign) {
-        this.captionAlign = inCaptionAlign;
-        if (this.captionNode) {
-        dojo.style(this.captionNode, "textAlign", this.captionAlign);
-        }
-    },
-    setCaptionPosition: function(pos) {
-        var oldPos = this.captionPosition;
-        this.captionPosition = pos;
-        if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
-            if (this.height.match(/px/) && parseInt(this.height) < 48) {
-                this.setValue("height", "48px");
-            }
-            this.captionSize = "28px";
-        } else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
-            if (this.bounds.h >= 48) {
-                this.setValue("height", this.constructor.prototype.height);
-            }
-            if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
-                this.captionSize = "100px";
-            }
-        }
-        this.sizeEditor();
-    },
-    setCaptionPositionLF: function(inPosition, liveform) {
-        if (!liveform) {
-            liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
-        }
-        if (liveform) {
-            this.setCaptionPosition(liveform.captionPosition);
-            this.setCaptionSize(liveform.captionSize);
-            this.setCaptionAlign(liveform.captionAlign);
-            if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height) this.setValue("height", liveform.editorHeight); // don't set height for large text areas/richtext areas based on editorHeight.
-        }
-        this.sizeEditor();
-    },
+
     setSingleLine: function(inSingleLine) {
         this.singleLine = inSingleLine;
         var s = this.captionNode.style;
@@ -218,9 +178,16 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         this.inherited(arguments);
     },
     createHelpNode: function() {
+        var parentNode;
+        if (!wm.flexboxSupport || this.captionPosition == "left" || this.captionPosition == "right") {
+            parentNode = this.domNode;
+        } else {
+            parentNode = this.captionWrapperNode;
+        }
+
         this.helpNode = dojo.create("div", {
             className: "EditorHelpIcon"
-        }, this.domNode);
+        }, parentNode);
         if (typeof this.helpText == "string") {
             this._helpTextOverConnect = this.connect(this.helpNode, "onmouseover", this, function(e) {
                 wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
@@ -252,6 +219,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
     },
     createEditor: function(inProps) {
+
         // Its possible for createEditor to be called before postInit where createCaption is called,
         // and we need it for styleEditor to work correctly.
         if (!this.captionNode) this.createCaption();
@@ -260,7 +228,17 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         }
         this.destroyEditor();
         var n = document.createElement('div');
-        this.domNode.appendChild(n);
+        if (wm.flexboxSupport) {
+            if (this.captionPosition == "right" || this.captionPosition == "bottom") {
+                this.domNode.insertBefore(n, this.captionWrapperNode);
+            } else if (this.helpNode && this.captionPosition == "left") {
+                this.domNode.insertBefore(n, this.helpNode);
+            } else {
+                this.domNode.appendChild(n);
+            }
+        } else {
+            this.domNode.appendChild(n);
+        }
         this.startTimerWithName("CreateDijit", this.declaredClass);
         this.editor = this._createEditor(n, inProps);
         dojo.attr(this.captionNode, "for", this.editor.id);
@@ -277,6 +255,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         this.editorNode = wm.isNode(this.editor) ? this.editor : this.editor.domNode;
         this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
         this.editorNode.style.padding = "0";
+
         this.stopTimerWithName("CreateDijit", this.declaredClass);
         // If using html widgets and replacing them with dijits use  "if (this.editor && this.editor.declaredClass) "
         if (this.editor) {
@@ -315,159 +294,43 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         wm.fire(this.editor, "destroy");
         this.editor = null;
     },
-    styleEditor: function() {
-        if (this.isRelativePositioned){
-            if (this.captionNode)
-                dojo.addClass(this.captionNode, 'wmInlineDiv');
-            return;
-        }
-        dojo.style(this.editorNode, {position: "absolute"});
-        if (this.captionNode)
-            dojo.style(this.captionNode, {position: "absolute"});
-    },
 
-    sizeEditor: function() {
-        if (this._cupdating) return;
-        var e = (this.readonly) ? this.readOnlyNode : this.editor;
-        if (e) {
-            var bounds = this.getContentBounds();
-            var position = this.captionPosition;
-            var captionEditorSpacing = (position == "left" || position == "right") ? wm.AbstractEditor.captionPaddingWidth : wm.AbstractEditor.captionPaddingHeight;
-            var w = bounds.w;
-            var h = bounds.h;
-            var labelWidth;
-            var editorWidth;
-            var height = bounds.h; //bounds.h ? bounds.h - ((bounds.h > 20) ? Math.floor(bounds.h * 0.1) : 2) : "";
-            var labelHeight;
-            var editorHeight;
-            var helpIconSize = 16;
-            var helpIconMargin = 4;
-            var allocateHelpIconSpace = Boolean(this.helpText);
-            if (!this.caption) {
-                labelWidth = 0;
-                editorWidth = w;
-                editorHeight = h;
-            } else if (position == "left" || position == "right") {
-                var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w / 100);
-                if (w - tmpWidth < (this.minEditorWidth || 16)) {
-                    editorWidth = this.minEditorWidth || 16;
-                    labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
-                    allocateHelpIconSpace = false;
-                } else {
-                    labelWidth = tmpWidth;
-                    editorWidth = w - labelWidth;
-                }
-                //          if (labelWidth) editorWidth -=  18; // TODO: number 18 is a random number that worked out in FF, but needs testing elsewhere
-                labelHeight = (height) ? height : "";
-                editorHeight = labelHeight;
-            } else {
-                labelHeight = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * height / 100);
-                if (labelHeight > height) {
-                    labelHeight = height - 16;
-                    if (this.captionSize.match(/px/)) this.captionSize = labelHeight + "px";
-                }
-                editorHeight = (height - labelHeight);
-                labelWidth = (w) ? w : "";
-                editorWidth = labelWidth;
-                if (this.helpText) labelWidth -= helpIconSize + helpIconMargin;
+        setCaption: function(inCaption) {
+            var oldCap = this.caption;
+            this.caption = inCaption;
+            if(!this.captionNode) return;
+            var cap = inCaption + ((this.required && !this.readonly) ? '&nbsp;<span class="wmeditor-required">*</span>' : "");
+            this.captionNode.innerHTML = cap;
+            if(oldCap && !inCaption || !oldCap && inCaption) {
+                dojo.style(this.captionWrapperNode || this.captionNode, "display", (inCaption) ? "block" : "none");
+                this.sizeEditor();
             }
+        },
 
-            labelWidth = Math.round(labelWidth);
-            editorWidth = Math.round(editorWidth);
-            if (allocateHelpIconSpace) {
-                if (this.captionPosition == "left" || !this.caption) {
-                    editorWidth -= helpIconSize + helpIconMargin;
-                } else {
-                    labelWidth -= helpIconSize + helpIconMargin;
-                }
+        setCaptionSize: function(inCaptionSize) {
+            this.captionSize = inCaptionSize;
+            this.sizeEditor();
+        },
+        setCaptionAlign: function(inCaptionAlign) {
+            this.captionAlign = inCaptionAlign;
+            if(this.captionNode) {
+                dojo.style(this.captionNode, "textAlign", this.captionAlign);
             }
-            if (this._editorPaddingLeft && labelWidth) editorWidth -= this._editorPaddingLeft;
-            if (this._editorPaddingRight && labelWidth) editorWidth -= this._editorPaddingRight;
-            var s = this.captionNode.style;
-            var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
-            labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
-            if (labelWidthWithSpacing < 0) labelWidthWithSpacing = 0;
-            var form = wm.FormPanel && this.isAncestorInstanceOf(wm.FormPanel);
-            if (!this.maxCaptionWidth && (!form || !form.autoSizeCaption || form.autoSizeCaption && this._isMaxEditor === false)) {
-                s.width = labelWidthWithSpacing + "px";
-            } else {
-                s.display = "inline-block";
+        },
+                setCaptionPositionLF: function(inPosition, liveform) {
+            if(!liveform) {
+                liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
             }
-            s.height = ((labelHeight && labelHeight > 0) ? labelHeight : 0) + "px";
-
-            // if height changes, then lineHeight may have to change
-            s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
-            var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing) : bounds.l;
-            if (position == "right" && allocateHelpIconSpace) captionLeft -= helpIconSize + helpIconMargin;
-            s.left = captionLeft + "px";
-            s.top = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px";
-
-            var b = {
-                w: editorWidth,
-                h: editorHeight,
-                l: ((position == "left" && labelWidth) ? labelWidth : 0) + bounds.l,
-                t: ((position == "top" && labelHeight) ? labelHeight : 0) + bounds.t
-            };
-            /*
-            if (this instanceof wm.Checkbox) {
-            b.w = "16";
-            b.h = "16";
+            if(liveform) {
+                this.setCaptionPosition(liveform.captionPosition);
+                this.setCaptionSize(liveform.captionSize);
+                this.setCaptionAlign(liveform.captionAlign);
+                if(this.constructor.prototype.height == wm.AbstractEditor.prototype.height) this.setValue("height", liveform.editorHeight); // don't set height for large text areas/richtext areas based on editorHeight.
             }
-            */
-
-            if (!b.w || b.w < 0) b.w = 0;
-            if (!b.h || b.h < 0) b.h = 0;
-
-            if (e instanceof wm.Control) {
-                var oldUpdatingValue = e._cupdating;
-                e._cupdating = true; // make sure that we call render only once; setBorder should not call render.
-                e.setBorder((this.editorBorder) ? "1" : "0");
-                e.setBounds(b);
-                e._cupdating = oldUpdatingValue;
-                if (e.invalidCss) e.render();
-                else e.renderBounds();
-                e.reflow();
-
-            } else {
-                var setnode = (e["domNode"]) ? e.domNode : e;
-
-                var s = setnode.style;
-
-                if (this.editorBorder && b.w && b.h) {
-                    s.borderWidth = "1px";
-                    if (!this._editorBackgroundColor) s.backgroundColor = "";
-                    s.backgroundImage = "";
-                    b.w -= 2;
-                    b.h -= 2;
-                    if (s.lineHeight != "normal") s.lineHeight = (b.h) + "px"
-                } else {
-                    s.borderWidth = "0px";
-                    if (!this._editorBackgroundColor) s.backgroundColor = "transparent";
-                    s.backgroundImage = "none";
-                    if (s.lineHeight != "normal" && b.h) s.lineHeight = b.h + "px"
-                }
-                s.width = b.w + "px";
-                s.height = b.h + "px";
-                s.left = b.l + "px";
-                s.top = b.t + "px";
-                /*
-                        dojo.style(this.editorNode, {width:  b.w + "px",
-                                                     height: b.h + "px",
-                                                     left:   b.l + "px",
-                                                     top:    b.t + "px"});
-                             */
+            if (!wm.flexboxSupport) {
+                this.sizeEditor();
             }
-            if (e == this.readOnlyNode) this.updateReadOnlyNodeStyle(b.h);
-
-            this._editorHeight = b.h;
-            this._editorWidth = b.w;
-        }
-        if (this.helpText && this.helpNode) {
-            var s = this.helpNode.style;
-            s.top = (this.caption) ? (parseInt(this.captionNode.style.top) + (this.captionPosition == "bottom" ? 5 : 0)) + "px" : b.t + "px";
-            s.left = (this.getContentBounds().w - 16) + "px";
-        }
-    },
+        },
     setHelpText: function(inText) {
         var formerText = this.helpText;
         this.helpText = inText;
@@ -508,58 +371,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     getReadOnlyNodeWordWrap: function() {
         return "normal";
     },
-    adjustCaptionPositionForMobile: function() {
-        if (this.isAncestorHidden()) return;
-        if (this.captionPosition == "left" || this.captionPosition == "right") {
-            // see if we need to switch to top
-            var minWidth = this.getMinWidthProp();
-
-            if (minWidth > this.parent.getContentBounds().w) {
-                this._captionPosition = this.captionPosition;
-                this._captionAlign = this.captionAlign;
-                this._captionSize = this.captionSize;
-                this._editorHeight = this.height;
-                this.captionPosition = "top";
-                this.setCaptionAlign("left");
-                var height = parseInt(this.height); // we know height is in px
-                this.captionSize = "20px";
-                this.bounds.h = height + 20;
-                this.setBounds(this.bounds);
-                wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
-                    if (!this.isDestroyed) {
-                        this.setBestHeight();
-                        this._heightAdjustedForMobileCaption = true;
-                        if (this.bounds.h > this.parent.bounds.h) {
-                            this.setAutoScroll(true);
-                        }
-                    }
-                });
-            }
-        } else if (this._captionPosition) {
-            this.captionPosition = this._captionPosition;
-            var captionSizeWas = this.captionSize;
-            this.captionSize = this._captionSize;
-            var minWidth = this.getMinWidthProp(true);
-            this.captionPosition = "top";
-            this.captionSize = captionSizeWas;
-            if (minWidth <= this.parent.getContentBounds().w) {
-                this.captionPosition = this._captionPosition;
-                delete this._captionPosition;
-                this.setCaptionAlign(this._captionAlign);
-                delete this._captionAlign;
-                this.captionSize = this._captionSize;
-                delete this._captionSize;
-                this.bounds.h = this._editorHeight;
-                delete this._editorHeight;
-                this.setBounds(this.bounds);
-                wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
-                    if (!this.isDestroyed && this._heightAdjustedForMobileCaption) {
-                        this.setBestHeight();
-                    }
-                });
-            }
-        }
-    },
 
     renderBounds: function() {
         if (!this._initializing && wm.device == "phone" && this.parent.layoutKind == "top-to-bottom" && !this._percEx.h) {
@@ -569,11 +380,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         this.inherited(arguments);
         this.sizeEditor();
     },
-    // TODO: Changing this from true to false works, changing from false to true does not; this was true back when wm.Editor was in use as well.
-    setEditorBorder: function(inEditorBorder) {
-        this.editorBorder = inEditorBorder;
-            this.sizeEditor();
-    },
+
     addEditorConnect: function(inConnect) {
         this._editorConnects.push(dojo.connect.apply(dojo, arguments));
     },
@@ -1081,6 +888,417 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 });
 
+
+/* Methods for sizing and laying out the editor */
+if(!wm.flexboxSupport) {
+    wm.AbstractEditor.extend({
+        classNames: "wmeditor",
+
+        setCaptionPosition: function(pos) {
+            var oldPos = this.captionPosition;
+            this.captionPosition = pos;
+            i
+                if((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
+                    if(this.height.match(/px/) && parseInt(this.height) < 48) this.setValue("height", "48px");
+                    this.captionSize = "28px";
+                } else if((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
+                    if(this.bounds.h >= 48) {
+                        this.setValue("height", this.constructor.prototype.height);
+                    }
+                    if(this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
+                        this.captionSize = "100px";
+                    }
+                }
+
+            this.sizeEditor();
+        },
+
+
+
+
+        // TODO: Changing this from true to false works, changing from false to true does not; this was true back when wm.Editor was in use as well.
+        setEditorBorder: function(inEditorBorder) {
+            this.editorBorder = inEditorBorder;
+            this.sizeEditor();
+        },
+        styleEditor: function() {
+            if(this.isRelativePositioned) {
+                if(this.captionNode) dojo.addClass(this.captionNode, 'wmInlineDiv');
+                return;
+            }
+            if(!wm.flexboxSupport) {
+                dojo.style(this.editorNode, {
+                    position: "absolute"
+                });
+                if(this.captionNode) dojo.style(this.captionNode, {
+                    position: "absolute"
+                });
+            }
+        },
+
+        sizeEditor: function() {
+            if(this._cupdating) return;
+            var e = (this.readonly) ? this.readOnlyNode : this.editor;
+            if(e) { /* TODO: This only handles captionPosition=left for flexbox */
+
+
+                var bounds = this.getContentBounds();
+                var position = this.captionPosition;
+                var captionEditorSpacing = (position == "left" || position == "right") ? wm.AbstractEditor.captionPaddingWidth : wm.AbstractEditor.captionPaddingHeight;
+                var w = bounds.w;
+                var h = bounds.h;
+                var labelWidth;
+                var editorWidth;
+                var height = bounds.h; //bounds.h ? bounds.h - ((bounds.h > 20) ? Math.floor(bounds.h * 0.1) : 2) : "";
+                var labelHeight;
+                var editorHeight;
+                var helpIconSize = 16;
+                var helpIconMargin = 4;
+                var allocateHelpIconSpace = Boolean(this.helpText);
+                if(!this.caption) {
+                    labelWidth = 0;
+                    editorWidth = w;
+                    editorHeight = h;
+                } else if(position == "left" || position == "right") {
+                    var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w / 100);
+                    if(w - tmpWidth < (this.minEditorWidth || 16)) {
+                        editorWidth = this.minEditorWidth || 16;
+                        labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
+                        allocateHelpIconSpace = false;
+                    } else {
+                        labelWidth = tmpWidth;
+                        editorWidth = w - labelWidth;
+                    }
+                    //          if (labelWidth) editorWidth -=  18; // TODO: number 18 is a random number that worked out in FF, but needs testing elsewhere
+                    labelHeight = (height) ? height : "";
+                    editorHeight = labelHeight;
+                } else {
+                    labelHeight = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * height / 100);
+                    if(labelHeight > height) {
+                        labelHeight = height - 16;
+                        if(this.captionSize.match(/px/)) this.captionSize = labelHeight + "px";
+                    }
+                    editorHeight = (height - labelHeight);
+                    labelWidth = (w) ? w : "";
+                    editorWidth = labelWidth;
+                    if(this.helpText) labelWidth -= helpIconSize + helpIconMargin;
+                }
+
+                labelWidth = Math.round(labelWidth);
+                editorWidth = Math.round(editorWidth);
+                if(allocateHelpIconSpace) {
+                    if(this.captionPosition == "left" || !this.caption) {
+                        editorWidth -= helpIconSize + helpIconMargin;
+                    } else {
+                        labelWidth -= helpIconSize + helpIconMargin;
+                    }
+                }
+                if(this._editorPaddingLeft && labelWidth) editorWidth -= this._editorPaddingLeft;
+                if(this._editorPaddingRight && labelWidth) editorWidth -= this._editorPaddingRight;
+                var s = this.captionNode.style;
+                var labelWidthWithSpacing = (labelWidth - ((position == "right" || position == "left") ? captionEditorSpacing : 0));
+                labelWidthWithSpacing = (labelWidthWithSpacing) ? labelWidthWithSpacing : 0;
+                if(labelWidthWithSpacing < 0) labelWidthWithSpacing = 0;
+                var form = wm.FormPanel && this.isAncestorInstanceOf(wm.FormPanel);
+                if(!this.maxCaptionWidth && (!form || !form.autoSizeCaption || form.autoSizeCaption && this._isMaxEditor === false)) {
+                    s.width = labelWidthWithSpacing + "px";
+                } else {
+                    s.display = "inline-block";
+                }
+                s.height = ((labelHeight && labelHeight > 0) ? labelHeight : 0) + "px";
+
+                // if height changes, then lineHeight may have to change
+                s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
+                var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing) : bounds.l;
+                if(position == "right" && allocateHelpIconSpace) captionLeft -= helpIconSize + helpIconMargin;
+                s.left = captionLeft + "px";
+                s.top = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px";
+
+                var b = {
+                    w: editorWidth,
+                    h: editorHeight,
+                    l: ((position == "left" && labelWidth) ? labelWidth : 0) + bounds.l,
+                    t: ((position == "top" && labelHeight) ? labelHeight : 0) + bounds.t
+                };
+                /*
+            if (this instanceof wm.Checkbox) {
+            b.w = "16";
+            b.h = "16";
+            }
+            */
+
+                if(!b.w || b.w < 0) b.w = 0;
+                if(!b.h || b.h < 0) b.h = 0;
+
+                if(e instanceof wm.Control) {
+                    var oldUpdatingValue = e._cupdating;
+                    e._cupdating = true; // make sure that we call render only once; setBorder should not call render.
+                    e.setBorder((this.editorBorder) ? "1" : "0");
+                    e.setBounds(b);
+                    e._cupdating = oldUpdatingValue;
+                    if(e.invalidCss) e.render();
+                    else e.renderBounds();
+                    e.reflow();
+
+                } else {
+                    var setnode = (e["domNode"]) ? e.domNode : e;
+
+                    var s = setnode.style;
+
+                    if(this.editorBorder && b.w && b.h) {
+                        s.borderWidth = "1px";
+                        if(!this._editorBackgroundColor) s.backgroundColor = "";
+                        s.backgroundImage = "";
+                        b.w -= 2;
+                        b.h -= 2;
+                        if(s.lineHeight != "normal") s.lineHeight = (b.h) + "px"
+                    } else {
+                        s.borderWidth = "0px";
+                        if(!this._editorBackgroundColor) s.backgroundColor = "transparent";
+                        s.backgroundImage = "none";
+                        if(s.lineHeight != "normal" && b.h) s.lineHeight = b.h + "px"
+                    }
+                    s.width = b.w + "px";
+                    s.height = b.h + "px";
+                    s.left = b.l + "px";
+                    s.top = b.t + "px";
+                    /*
+                        dojo.style(this.editorNode, {width:  b.w + "px",
+                                                     height: b.h + "px",
+                                                     left:   b.l + "px",
+                                                     top:    b.t + "px"});
+                             */
+                }
+                if(e == this.readOnlyNode) this.updateReadOnlyNodeStyle(b.h);
+
+                this._editorHeight = b.h;
+                this._editorWidth = b.w;
+            }
+            if(this.helpText && this.helpNode) {
+                var s = this.helpNode.style;
+                s.top = (this.caption) ? (parseInt(this.captionNode.style.top) + (this.captionPosition == "bottom" ? 5 : 0)) + "px" : b.t + "px";
+                s.left = (this.getContentBounds().w - 16) + "px";
+            }
+        },
+        adjustCaptionPositionForMobile: function() {
+            if(this.isAncestorHidden()) return;
+            if(this.captionPosition == "left" || this.captionPosition == "right") {
+                // see if we need to switch to top
+                var minWidth = this.getMinWidthProp();
+
+                if(minWidth > this.parent.getContentBounds().w) {
+                    this._captionPosition = this.captionPosition;
+                    this._captionAlign = this.captionAlign;
+                    this._captionSize = this.captionSize;
+                    this._editorHeight = this.height;
+                    this.captionPosition = "top";
+                    this.setCaptionAlign("left");
+                    var height = parseInt(this.height); // we know height is in px
+                    this.captionSize = "20px";
+                    this.bounds.h = height + 20;
+                    this.setBounds(this.bounds);
+                    wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+                        if(!this.isDestroyed) {
+                            this.setBestHeight();
+                            this._heightAdjustedForMobileCaption = true;
+                            if(this.bounds.h > this.parent.bounds.h) {
+                                this.setAutoScroll(true);
+                            }
+                        }
+                    });
+                }
+            } else if(this._captionPosition) {
+                this.captionPosition = this._captionPosition;
+                var captionSizeWas = this.captionSize;
+                this.captionSize = this._captionSize;
+                var minWidth = this.getMinWidthProp(true);
+                this.captionPosition = "top";
+                this.captionSize = captionSizeWas;
+                if(minWidth <= this.parent.getContentBounds().w) {
+                    this.captionPosition = this._captionPosition;
+                    delete this._captionPosition;
+                    this.setCaptionAlign(this._captionAlign);
+                    delete this._captionAlign;
+                    this.captionSize = this._captionSize;
+                    delete this._captionSize;
+                    this.bounds.h = this._editorHeight;
+                    delete this._editorHeight;
+                    this.setBounds(this.bounds);
+                    wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+                        if(!this.isDestroyed && this._heightAdjustedForMobileCaption) {
+                            this.setBestHeight();
+                        }
+                    });
+                }
+            }
+        }
+
+
+
+    });
+} else {
+    wm.AbstractEditor.extend({
+        classNames: "wmeditor wmContainerNode wmLayoutKindLeftRight wmBoxAlignLeft wmBoxAlignVJustify",
+        /*build: function() {
+            this.inherited(arguments);
+            this.containerNode = document.createElement('div');
+            this.containerNode.className = "wmContainerNode wmEditorLayoutNode wmBoxAlignVJustify wmBoxAlignHJustify" ;
+            this.domNode.appendChild(this.containerNode);
+        },*/
+        setCaptionPosition: function(pos) {
+            var oldPos = this.captionPosition;
+            this.captionPosition = pos;
+                if((oldPos == "left" || oldPos == "top") && (pos == "bottom" || pos == "right")) {
+                    this.domNode.appendChild(this.captionWrapperNode); // moves it to the last child
+                } else if(this.editorNode && (oldPos == "right" || oldPos == "bottom") && (pos == "left" || pos == "top")) {
+                    this.domNode.insertBefore(this.captionWrapperNode, this.editorNode);
+                }
+
+                if ((oldPos == "left" || oldPos == "right" || this._initializing) && (pos == "top" || pos == "bottom")) {
+                    if (!this._initializing) {
+                        dojo.removeClass(this.domNode, "wmLayoutKindLeftRight");
+                    }
+                    dojo.addClass(this.domNode, "wmLayoutKindTopBottom");
+                    this.setCaptionSize(this.captionSize);
+                } else if ((oldPos == "top" || oldPos == "bottom" || this._initializing) && (pos == "left" || pos == "right")) {
+                    if (!this._initializing) {
+                        dojo.removeClass(this.domNode, "wmLayoutKindTopBottom");
+                    }
+                    dojo.addClass(this.domNode, "wmLayoutKindLeftRight");
+                    this.setCaptionSize(this.captionSize);
+                }
+
+        },
+
+
+        // TODO: Changing this from true to false works, changing from false to true does not; this was true back when wm.Editor was in use as well.
+        setEditorBorder: function(inEditorBorder) {
+            this.editorBorder = inEditorBorder;
+            this.editorNode.style.borderWidth = inEditorBorder ? 1 : 0;
+        },
+        styleEditor: function() {
+
+        },
+
+        sizeEditor: function() {
+            var e = (this.readonly) ? this.readOnlyNode : this.editor;
+            if(e) {
+                    var s = this.captionWrapperNode.style;
+                    var setnode = (e["domNode"]) ? e.domNode : e;
+                    var editorPercent = 100;
+                    if(this.caption) {
+                            if(this.captionSize.match(/%/)) {
+                                editorPercent -= parseInt(this.captionSize);
+                                s.WebkitBoxFlex = parseInt(this.captionSize) || 0.000001;
+                                s.MozBoxFlex = parseInt(this.captionSize);
+                                s.width = "";
+                                s.height = "";
+                                setnode.style.webkitBoxFlex = editorPercent || 0.000001;
+                                setnode.style.MozBoxFlex = editorPercent;
+                            } else {
+                                if (this.captionPosition == "left" || this.captionPosition == "right") {
+                                    s.width = this.captionSize;
+                                    s.height = "";
+                                } else {
+                                    s.height = this.captionSize;
+                                    s.width = "";
+                                }
+                                s.webkitBoxFlex = "0";
+                                s.MozBoxFlex = "0";
+
+                                setnode.style.webkitBoxFlex = 100;
+                                setnode.style.MozBoxFlex = 100;
+                            }
+
+                            s.verticalAlign = "middle";
+                            switch(this.captionPosition) {
+                                case "left":
+                                    setnode.style.marginLeft = "10px";
+                                    break;
+                                case "right":
+                                    setnode.style.marginRight = "10px";
+                                    break;
+                                case "top":
+                                    setnode.style.marginTop = "4px";
+                                    break;
+                                case "bottom":
+                                    setnode.style.marginBottom = "4px";
+                                    break;
+                            }
+
+                            if (this.helpNode) {
+                                if (this.helpNode.parentNode == this.domNode && (this.captionPosition == "top" || this.captionPosition == "bottom")) {
+                                    this.captionWrapperNode.appendChild(this.helpNode);
+                                } else if (this.helpNode.parentNode == this.captionWrapperNode &&  (this.captionPosition == "left" || this.captionPosition == "right")) {
+                                    this.domNode.appendChild(this.helpNode);
+                                }
+                        }
+
+
+                    } else {
+                        if (this.helpNode && this.helpNode.parentNode != this.domNode) {
+                            this.domNode.appendChild(this.helpNode);
+                        }
+                    }
+                }
+                if (this.editor && this.editor.hasDownArrow) wm.adjustHeight(dojo.query(".dijitArrowButton", this.editor.domNode)[0], "height");
+        },
+        adjustCaptionPositionForMobile: function() {
+            if(this.isAncestorHidden()) return;
+            if(this.captionPosition == "left" || this.captionPosition == "right") {
+                // see if we need to switch to top
+                var minWidth = this.getMinWidthProp();
+
+                if(minWidth > this.parent.getContentBounds().w) {
+                    this._captionPosition = this.captionPosition;
+                    this._captionAlign = this.captionAlign;
+                    this._captionSize = this.captionSize;
+                    this._editorHeight = this.height;
+                    this.captionPosition = "top";
+                    this.setCaptionAlign("left");
+                    var height = parseInt(this.height); // we know height is in px
+                    this.captionSize = "20px";
+                    this.bounds.h = height + 20;
+                    this.setBounds(this.bounds);
+                    wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+                        if(!this.isDestroyed) {
+                            this.setBestHeight();
+                            this._heightAdjustedForMobileCaption = true;
+                            if(this.bounds.h > this.parent.bounds.h) {
+                                this.setAutoScroll(true);
+                            }
+                        }
+                    });
+                }
+            } else if(this._captionPosition) {
+                this.captionPosition = this._captionPosition;
+                var captionSizeWas = this.captionSize;
+                this.captionSize = this._captionSize;
+                var minWidth = this.getMinWidthProp(true);
+                this.captionPosition = "top";
+                this.captionSize = captionSizeWas;
+                if(minWidth <= this.parent.getContentBounds().w) {
+                    this.captionPosition = this._captionPosition;
+                    delete this._captionPosition;
+                    this.setCaptionAlign(this._captionAlign);
+                    delete this._captionAlign;
+                    this.captionSize = this._captionSize;
+                    delete this._captionSize;
+                    this.bounds.h = this._editorHeight;
+                    delete this._editorHeight;
+                    this.setBounds(this.bounds);
+                    wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+                        if(!this.isDestroyed && this._heightAdjustedForMobileCaption) {
+                            this.setBestHeight();
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+
+}
 wm.AbstractEditor.captionPaddingWidth = 8;
 wm.AbstractEditor.captionPaddingHeight = 2;
 

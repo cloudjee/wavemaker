@@ -22,7 +22,6 @@ wm.isDesignable = function(inControl) {
 }
 wm.Control.extend({
 
-
     themeableProps: ["border", "borderColor"],
     hint: "",
     themeable: true,
@@ -564,6 +563,8 @@ wm.Object.extendSchema(wm.Control, {
     mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
     mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
 
+    isPrintable: {group: "widgetName", subgroup: "behavior", order: 50, type: "Boolean"},
+
     onTouchStart: {ignore:1},
     onTouchMove: {ignore:1},
     onTouchEnd: {ignore:1},
@@ -574,6 +575,7 @@ wm.Object.extendSchema(wm.Control, {
     widgets: { ignore: 1 },
     showing: { bindTarget: true, /*group: "common",*/ group: "widgetName", subgroup: "behavior", order: 30, doc: 1, type: "Boolean"},
     disabled: { bindTarget: true, type: "Boolean", /* group: "common"*/ group: "widgetName", subgroup: "behavior", order: 40, doc: 1},
+    isPrintable: {group: "widgetName", subgroup: "behavior", order: 50, type: "Boolean"},
     size: { ignore: true },
         sizeUnits: { ignore: true },
     hint: {group: "common", order: 1000, type: "String", bindTarget: true, advanced: true},

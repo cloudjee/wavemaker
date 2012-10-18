@@ -626,12 +626,28 @@ dojo.declare("wm.Tree", wm.Box, {
             n = inNode.domNode,
                 d = this.domNode,
                 fc = n.firstChild;
-            if (n && d && fc) {
-                var
-                isAbove = (n.offsetTop < d.scrollTop),
-                    isBelow = (n.offsetTop + fc.offsetHeight > d.scrollTop + d.offsetHeight);
-                    if ((isAbove || isBelow) && wm.widgetIsShowing(this)) n.scrollIntoView(false);
+            if (!wm.isDomShowing(d)) {
+                var parent = inNode.parent;
+                while (parent && parent != this.root) {
+                    if (parent.closed) parent.setOpen(true);
+                    parent = parent.parent;
+                }
             }
+
+            /* TODO: Replace with wm.job that insures all selected items are selected rather than doing them one at a time */
+            wm.onidle(this, function() {
+                if (n && d && fc) {
+                    var offsetTop = n.offsetTop;
+                    var scrollTop = d.scrollTop;
+
+                    var offsetHeight = d.offsetHeight;
+
+                    var isAbove = (offsetTop < scrollTop);
+
+                    var isBelow = (offsetTop + fc.offsetHeight > scrollTop + offsetHeight);
+                        if ((isAbove || isBelow) && wm.widgetIsShowing(this)) n.scrollIntoView(false);
+                }
+            });
         }
     },
     _deselect: function(inNode) {
@@ -666,6 +682,7 @@ dojo.declare("wm.Tree", wm.Box, {
         this.ondeselect(optionalNode || this.selected,shiftClick);
     },
     select: function(inNode, addToSelection) {
+        var time = new Date().getTime();
         if (!this.multiSelect) {
             if (this.selected != inNode) {
                 this.deselect();
@@ -676,16 +693,21 @@ dojo.declare("wm.Tree", wm.Box, {
                 this.selected.styleContent();
             }
         } else {
+            console.log("A " + (new Date().getTime() - time));
             if (!addToSelection) {
                 this.deselect();
             }
+            console.log("B " + (new Date().getTime() - time));
 
             var index = dojo.indexOf(this.selected, inNode);
             if (addToSelection && index != -1) {
                 this.deselect(inNode, addToSelection);
+                console.log("C " + (new Date().getTime() - time));
             } else if (index == -1) {
                 this.addToSelection(inNode);
+                console.log("D " + (new Date().getTime() - time));
                 this.onselect(inNode, addToSelection);
+                console.log("E " + (new Date().getTime() - time));
             }
         }
     },

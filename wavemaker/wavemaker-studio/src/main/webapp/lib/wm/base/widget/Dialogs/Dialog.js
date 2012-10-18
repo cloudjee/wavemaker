@@ -161,7 +161,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    if (this._isDesignLoaded)
 		studio.designer.domNode.appendChild(this.domNode);
 	    else
-		app.appRoot.domNode.appendChild(this.domNode);
+		//app.appRoot.domNode.appendChild(this.domNode);
+        document.body.appendChild(this.domNode);
 	}
 	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 
@@ -558,8 +559,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (this._maxified) {
 	    this._maxified = false;
 	    //this.titleMaxify.setCaption(" ");
-	    this.bounds.h = parseInt(this.height);
-	    this.bounds.w = parseInt(this.width);
+
+	    this.bounds.h = this._percEx.height ? this._percEx.height * this.domNode.parentNode.clientHeight/100 : parseInt(this.height);
+	    this.bounds.w = this._percEx.width ? this._percEx.width * this.domNode.parentNode.clientWidth/100 : parseInt(this.width);
 	} else {
 	    this._maxified = true;
 	    //this.titleMaxify.setCaption("O");
@@ -647,6 +649,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}));
     },
     renderBounds: function() {
+        if (this._inRenderBounds) return;
+        this._inRenderBounds = true;
+        try {
 	    if (this.docked)
 		return this.inherited(arguments);
 
@@ -699,8 +704,14 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    if (this.isDesignedComponent())
 			this.dialogScrim.size(studio.designer.domNode);
 			*/
-		    return this.inherited(arguments);
+		    var result = this.inherited(arguments);
+            if (this.fitToContentHeight) this.domNode.style.height = "";
+            if (this.fitToContentWidth) this.domNode.style.width = "";
+            return result;
 		}
+    } finally {
+        delete this._inRenderBounds;
+    }
 	},
         // This should be able to take both the human readable value "top right", and also the streamlined "tr" and have it work regardless.
     // Note that vertical axis must always come before horizontal axis

@@ -75,6 +75,7 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 
 	_createEditor: function(inNode, inProps) {
 		var div = dojo.create('div');
+        div.className = "wmDijitSlider";
 		var dijitObj;
 		if (this.verticalSlider) {
 			dijitObj = new dijit.form.VerticalSlider(this.getEditorProps(inNode, inProps));

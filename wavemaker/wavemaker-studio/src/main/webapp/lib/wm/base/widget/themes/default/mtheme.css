@@ -14,6 +14,7 @@
  */
 
 @import url("anim.css");
+@import url("flexbox.css");
 
 .PhoneGap * {
   -webkit-touch-callout: none; /* Disable menus for links the user touches and holds */

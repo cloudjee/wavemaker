@@ -93,7 +93,7 @@ dojo.declare("wm.Application", wm.Component, {
         /* All Apps get a .WMApp parent class except for studio; this gives us extra hooks for styling apps without touching studio */
         var node = this._isDesignLoaded ? null : document.body.parentNode;
         if (node) {
-            dojo.addClass(node, "WMApp");
+            dojo.addClass(node, "WMApp" + (wm.flexboxSupport ? " wmFlexBox" : "wmJSRender"));
         }
 
         /* Load the theme */
@@ -855,6 +855,15 @@ dojo.declare("wm.Application", wm.Component, {
         this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
         this.echoFileService.update();
     },
+    print: function() {
+        this._page._preparePrint();
+        wm.job("WaitToPrint", 100, this, function() {
+            window.print();
+            wm.job("RestoreFromPrint", 2000, this, function() {
+                this._page._restoreFromPrint();
+            });
+        });
+    },
     showLoadingDialog: function(inMessage, inMessageWidth, optionalInTarget) {
         if (!this.loadingDialog) {
             this.loadingDialog = new wm.LoadingDialog({
@@ -1075,7 +1084,10 @@ dojo.declare("wm.Application", wm.Component, {
             this.toolTipDialog.setFitToContentHeight(true);
             dojo.removeClass(this.toolTipDialog.domNode, "NoWrap");
         }
-
+        if (wm.flexboxSupport ){
+            this.toolTipDialog.fitToContentHeight = true;
+            this.toolTipDialog.fitToContentWidth = true;
+        }
         var self = this;
         if (this._testHintConnect) dojo.disconnect(this._testHintConnect);
 

@@ -41,6 +41,12 @@ dojo.declare("wm.Bevel", wm.Widget, {
 		this.addOrientation();
 		this.updateSize();
 	},
+    getMinWidthProp: function() {
+        return this.bevelSize;
+    },
+    getMinHeightProp: function() {
+        return this.bevelSize;
+    },
     toHtml: function() {
 	return "<hr/>";
     }

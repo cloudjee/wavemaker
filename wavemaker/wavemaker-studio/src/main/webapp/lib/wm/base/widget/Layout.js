@@ -23,6 +23,8 @@ dojo.declare("wm.Layout", wm.Container, {
 	width: "100%",
 	height: "100%",
         _mobileFolded: false,
+    verticalAlign: "justified",
+    horizontalAlign: "left",
 	create: function() {
 		this.inherited(arguments);
 	},
@@ -93,11 +95,11 @@ dojo.declare("wm.Layout", wm.Container, {
 		var animation = parentLayers.transition;
 		parentLayers.transition = "none";
 		parentLayers._cupdating = true;
-		layers = layers.sort(function(a,b) { 
+		layers = layers.sort(function(a,b) {
 		    if (a.mobileFoldingIndex === b.mobileFoldingIndex ||
 			a.mobileFoldingIndex > b.mobileFoldingIndex)
 			return 1;
-		    else 
+		    else
 			return -1;
 		});
 
@@ -137,7 +139,7 @@ dojo.declare("wm.Layout", wm.Container, {
 			layers[i].setParent(l);
 			layers[i].setWidth("100%");
 			layers[i].setHeight("100%");
-			l._mobileFoldingGenerated = true;			
+			l._mobileFoldingGenerated = true;
 		    } else if (layers[i].parent != parentLayers) {/*currentParentLayers) {*/
 			var l = layers[i];
 			layers[i].setParent(parentLayers);//currentParentLayers);
@@ -213,7 +215,7 @@ dojo.declare("wm.Layout", wm.Container, {
 		if (w._mobileFoldingGenerated) {
 		    generatedTabs.push(w);
 		}
-	    }, true);	
+	    }, true);
 	var newLayerIndex;
 	var layers;
 	dojo.forEach(generatedTabs, function(w) {

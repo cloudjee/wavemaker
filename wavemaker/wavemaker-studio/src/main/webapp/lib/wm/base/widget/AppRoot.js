@@ -25,7 +25,10 @@ dojo.declare("wm.AppRoot", wm.Container, {
         app.valueChanged("deviceSize",this.deviceSize); // bindable event
     },
     build: function() {
-        this.domNode = this.owner.domNode = dojo.byId(this.owner.domNode) || document.body;
+        this.inherited(arguments);
+        var parentNode =  dojo.byId(this.owner.domNode) || document.body;
+        parentNode.appendChild(this.domNode);
+        this.owner.domNode = this.domNode;
         this.domNode.style.cssText += this.style + "overflow: hidden; position: relative;";
     },
     init: function() {
@@ -99,6 +102,13 @@ dojo.declare("wm.AppRoot", wm.Container, {
         this._inResize = false;
     },
     updateBounds: function() {
+        /* TODO: work out flexbox printing:
+         * 1. All % heights become min-height percents; height itself should become auto
+         * 2. Set all grid.dojoObj.rowsPerPage = 10000, and remove all fixed heights from the grid
+         * 3. Reset everything when printing is complete
+         * 4. Set body to be scrollable
+         */
+        if (wm.flexboxSupport && app.isPrinting) return;
         this._percEx = {w:100, h: 100};
         var pn = this.domNode.parentNode;
         var width,height;

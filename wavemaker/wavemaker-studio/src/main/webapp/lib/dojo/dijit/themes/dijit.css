@@ -343,7 +343,9 @@ DIV.dijitArrowButton {
 .dijitTextBox {
 	border: solid black 1px;
 	#overflow: hidden; /* #6027, #6067 */
-	width: 15em;	/* need to set default size on outer node since inner nodes say <input style="width:100%"> and <td width=100%>.  user can override */
+/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+ * WaveMaker: Only widget controls width
+	width: 15em;	/ * need to set default size on outer node since inner nodes say <input style="width:100%"> and <td width=100%>.  user can override */
 	vertical-align: middle;
 }
 
@@ -372,10 +374,12 @@ DIV.dijitArrowButton {
 	#filter: ""; /* make this showup in IE6 after the rendering of the widget */
 }
 
+/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+ * WaveMaker: Only widget controls width
 .dijitTimeTextBox {
 	width: 8em;
 }
-
+ */
 /* rules for webkit to deal with fuzzy blue focus border */
 .dijitTextBox INPUT:focus {
 	outline: none;	/* blue fuzzy line looks wrong on combobox or something w/validation icon showing */

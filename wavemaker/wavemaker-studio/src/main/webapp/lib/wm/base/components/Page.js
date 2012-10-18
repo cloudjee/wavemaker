@@ -430,6 +430,32 @@ dojo.declare("wm.Page", wm.Component, {
 			}
 		}
 	},
+    _restoreFromPrint: function() {
+        this._restoreFromPrint2(this.root);
+        wm.forEachProperty(dojo.hitch(this, function(inComponent, inName) {
+            if (inComponent instanceof wm.Dialog && inComponent.showing) {
+                this._restoreFromPrint2(inComponent);
+            }
+        }));
+    },
+    _restoreFromPrint2: function(inWidget) {
+        wm.forEachVisibleWidget(inWidget, function(inWidget) {
+            inWidget._restoreFromPrint();
+        }, false);
+    },
+    _preparePrint: function() {
+        this._preparePrint2(this.root);
+        wm.forEachProperty(dojo.hitch(this, function(inComponent, inName) {
+            if (inComponent instanceof wm.Dialog && inComponent.showing) {
+                this._preparePrint2(inComponent);
+            }
+        }));
+    },
+    _preparePrint2: function(inWidget) {
+        wm.forEachVisibleWidget(inWidget, function(inWidget) {
+            inWidget._preparePrint();
+        }, false);
+    },
 	onShow: function() {
 	},
 	onStart: function(inPage) {

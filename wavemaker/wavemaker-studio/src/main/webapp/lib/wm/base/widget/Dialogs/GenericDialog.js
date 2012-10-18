@@ -38,23 +38,24 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     showInput: false,
     prepare: function() {
         this.inherited(arguments);
+        if (wm.flexboxSupport) this.fitToContentHeight = true;
 	if ("enterKeyIsButton1" in this) {
 	    this.enterKeyIsButton = this.enterKeyIsButton1 ? 1 : 0;
 	    delete this.enterKeyIsButton1;
 	}
         this.widgets_data = {
-	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom", 
-					    width: "100%", 
-					    height: "100%", 
-					    horizontalAlign: "left", 
-					    verticalAlign: "top", 
-					    autoScroll: true, 
-					    fitToContentHeight: true, 
+	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom",
+					    width: "100%",
+					    height: "100%",
+					    horizontalAlign: "left",
+					    verticalAlign: "top",
+					    autoScroll: true,
+					    fitToContentHeight: true,
 					    padding: "10,5,10,5"}, {},
 			       {
-				   userQuestionLabel: ["wm.Html", {autoScroll: false, 
+				   userQuestionLabel: ["wm.Html", {autoScroll: false,
 								   "height":"25px",
-								   autoSizeHeight: true, 
+								   autoSizeHeight: true,
 								   "width":"100%",
 								   html: ""}],
 				   textInput: ["wm.Text", {"width":"100%",
@@ -68,7 +69,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	    button2: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}],
 	    button1: ["wm.Button", {"width":"130px","showing":false}, {"onclick":"buttonClick"}]
 	};
-    
+
 
 
     },
@@ -117,6 +118,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     // handle fitToContentHeight adjustments
     reflow: function() {
         try {
+            if (wm.flexboxSupport) return;
 	    if (this._userSized) {
                 return this.inherited(arguments);
 	    } else if (!this._settingHeight) {
@@ -129,7 +131,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
                 this.inherited(arguments);
             }
         } catch(e) {this._settingHeight = false;}
-        
+
     },
     setShowing: function(inShowing,forceChange) {
         this.inherited(arguments);
@@ -169,7 +171,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     setButton2Caption: function(inCap) {this.setButtonCaption(2,inCap);},
     setButton3Caption: function(inCap) {this.setButtonCaption(3,inCap);},
     setButton4Caption: function(inCap) {this.setButtonCaption(4,inCap);},
-    
+
     setButtonCaption: function(inButtonNumber, inButtonCaption) {
 	var button = this.$["button" + inButtonNumber];
 	this["button" + inButtonNumber + "Caption"] = inButtonCaption;
@@ -179,7 +181,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	    button.show();
 	} else {
 	    button.hide();
-	}	
+	}
         if (this.buttonBar)
 	    this.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },

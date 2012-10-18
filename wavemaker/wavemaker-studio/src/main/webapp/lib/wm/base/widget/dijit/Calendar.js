@@ -101,9 +101,13 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
     },
     renderBounds: function() {
         this.inherited(arguments);
+        wm.job(this.getRuntimeId() + ".renderCalendarBounds",1, this, "_renderBounds");
+    },
+    _renderBounds: function() {
+        var coords = dojo.coords(this.domNode);
         this.dijit._setStyleAttr({
-            width: this.bounds.w + "px",
-            height: this.bounds.h + "px"
+            width: coords.w + "px",
+            height: coords.h + "px"
         })
     },
     focus: function() {

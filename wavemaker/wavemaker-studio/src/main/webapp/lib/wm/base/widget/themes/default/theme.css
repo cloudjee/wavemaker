@@ -13,7 +13,7 @@
  */
 
 @import url("anim.css");
-
+@import url("flexbox.css");
 body, html {
 	height: 100%;
 	overflow: hidden;
@@ -29,6 +29,19 @@ button, body {
 }
 
 
+/* END FLEXBOX */
+
+.wmreseteditor.wmContainerNode .dijitTextBox {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+}
+.wmreseteditor.wmContainerNode .dijitTextBox img {
+    position: static !important;
+}
 /* button */
 .nonmodaldialog {
  cursor: crosshair;
@@ -1238,7 +1251,9 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     height: 16px;
     background-image: url(images/grayhelp.png);
 }
-
+.wmeditor.wmContainerNode .EditorHelpIcon {
+    position: static;
+}
 
 .wmloadingdialog {
     opacity: 0.7;

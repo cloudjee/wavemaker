@@ -526,7 +526,7 @@ border-radius-topright: 2px;
 }
 .wm_default .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_default .wmeditor .dijitSelect .dijitArrowButton {
-height: 100% !important;
+height: 100%;
 }
 .wm_default .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
 height: 100% !important;

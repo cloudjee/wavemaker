@@ -61,7 +61,12 @@ if (matches) {
 if (location.search.match(/(\?|\&)wmdevicesize=(\d+)/)) {
     wm.deviceSize = location.search.match(/(\?|\&)wmdevicesize=(\d+)/)[2];
 }
-
+wm.flexboxSupport = document.createElement("div");
+wm.flexboxSupport = wm.flexboxSupport.style.webkitBoxOrient !== undefined ||
+                            wm.flexboxSupport.style.MozBoxOrient !== undefined ||
+                            wm.flexboxSupport.style.MsBoxOrient !== undefined ||
+                            wm.flexboxSupport.style.OBoxOrient !== undefined ||
+            wm.flexboxSupport.style.boxOrient !== undefined;
 
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {

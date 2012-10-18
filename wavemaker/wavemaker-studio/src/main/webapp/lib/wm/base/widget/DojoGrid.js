@@ -24,7 +24,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     width:'100%',
     height:'200px',
     minWidth: 150,
-    minHeight: 60,
+    minHeight: 80,
     variable:null,
     dataSet:null,
     dsType:null,
@@ -965,9 +965,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     getIsRowSelected: function(){
         return !this.getEmptySelection();
     },
-        renderBounds: function() {
+    renderBounds: function() {
         this.inherited(arguments);
-        this.resizeDijit();
+        if (this.domNode) {
+            var width = this.domNode.clientWidth;
+            var height = this.domNode.clientHeight;
+            if (!this._lastWidth || this._lastWidth != width || !this._lastHeight || this._lastHeight != height) {
+                this._lastWidth = width;
+                this._lastHeight = height;
+                this.resizeDijit();
+            }
+        }
     },
     resizeDijit: function() {
         if (this.dojoObj)
@@ -1000,7 +1008,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         var structure = this.getStructure();
         if (structure[0].length == 0)
             structure = {};
-        var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, queryOptions: this.queryOptions, query: this.query || {}, updateDelay: 0};
+        var props = {fitTo: "parent", escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, queryOptions: this.queryOptions, query: this.query || {}, updateDelay: 0};
         this.addDojoProps(props);
         this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%', disabled: this._disabled}, this.domNode));
         this.connectDojoEvents();
@@ -2272,6 +2280,22 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         if (rowData._wmVariable)
         json._wmVariable = rowData._wmVariable[0];
         return json;
+    },
+
+
+    _preparePrint: function() {
+        this.dojoObj.rowsPerPage = this.dataSet ? this.dataSet.getCount() : 25;
+        this.dojoObj.render();
+        dojo.query(".dojoxGridContent, .dojoxGridContent > div, .dojoxGridScrollbox, .dojoxGridMasterView .dojoxGridView, .dojoxGrid, .dojoxGridRowTable, .dojoxGridRow").forEach(function(inNode) {
+                inNode.style.height = "auto";
+                inNode.style.width = "100%";
+                inNode.style.position = "static";
+            }
+        )
+
+    },
+    _restoreFromPrint: function() {
+        this.renderDojoObj();
     }
 
     /* Helper functions for developers */

@@ -69,11 +69,14 @@ dojo.declare("wm.Bounds", null, {
 	    this._boundsDirty = true;
 	}
 
-	// If b.l, b.w, b.t or b.h is a string like "100", it should be changed to integer before adding.
-	// To ensure that we multiple it by 1.
-	b.r = b.l*1 + b.w*1;
-	b.b = b.t*1 + b.h*1;
-	return b;
+        // If b.l, b.w, b.t or b.h is a string like "100", it should be changed to integer before adding.
+        // To ensure that we multiple it by 1.
+        b.r = b.l * 1 + b.w * 1;
+        b.b = b.t * 1 + b.h * 1;
+        if (wm.flexboxSupport) {
+            this.renderBounds();
+        }
+        return b;
     },
     setContentBounds: function(inBox) {
 	var b= {};
@@ -314,6 +317,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     mobileFoldingIndex: "",
     mobileFoldingCaption: "",
 
+    isPrintable: true,
+
     imageList: "",
     imageIndex: -1,
     renderedOnce: 0,
@@ -459,21 +464,15 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     initDomNode: function() {
         if (!this.dom) {
             this.dom = new wm.DomNode(this.domNode, this.isRelativePositioned);
-            if (!this.isRelativePositioned) this.domNode.style.position = "absolute";
-            else this.domNode.style.position = "relative";
+            /*if (!this.isRelativePositioned) this.domNode.style.position = "absolute";
+            else this.domNode.style.position = "relative";*/
             this.setParent(this.parent);
             this.setDomNode(this.domNode);
         }
     },
-    init: function() {
-
-        this.initDomNode();
-        this.inherited(arguments);
-
-        var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-        if (this.height && String(this.height).match(/\%/)) {
-            this.mobileHeight = this.desktopHeight = this.height;
-        } else if (!isMobile || !this.enableTouchHeight) {
+    initMobileHeight: function() {
+      var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
+        if (!isMobile || !this.enableTouchHeight) {
             if (this.desktopHeight != null) {
                 this.height = this.desktopHeight;
             } else if (this.height) {
@@ -508,6 +507,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
             }
         }
+    },
+    init: function() {
+
+        this.initDomNode();
+        this.inherited(arguments);
+        this.initMobileHeight();
 
         //if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
         this.bc(); // mostly in here to support wm.Container's bc method
@@ -622,7 +627,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         this.updateId();
         // classes
         var cNames = this.classNames + (this.owner ? ' ' + this.owner.declaredClass.replace(/\./g, "") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
-        dojo.addClass(n, cNames);
+        dojo.addClass(n, "wmNode " + (this.isPrintable ? "" : "NotPrintable ") + (wm.isInstanceType(this, [wm.Container]) ? "wmContainerNode " : "") + cNames);
         this.initUserClasses();
         //this.updateBounds();
     },
@@ -1344,8 +1349,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             cssTextItems.push("border-color:" + cssObj.borderColor);
         }
         if (cssObj.backgroundColor) cssTextItems.push("background-color:" + cssObj.backgroundColor);
-        cssTextItems.push("overflow-x:" + cssObj.overflowX);
-        cssTextItems.push("overflow-y:" + cssObj.overflowY);
+        if (wm.flexboxSupport && dojo.isFF && this instanceof wm.Container) {
+            ;
+        } else {
+            cssTextItems.push("overflow-x:" + cssObj.overflowX);
+            cssTextItems.push("overflow-y:" + cssObj.overflowY);
+        }
         if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto" || cssObj.overflowY == "scroll")) {
             cssTextItems.push("-webkit-overflow-scrolling: touch");
         }
@@ -1370,7 +1379,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
 			}
 		    } else if (this._appliedStyles[styleName] != styleValue) {
-			if (styleName == "backgroundGradient") {
+            if (wm.flexboxSupport && styleName.indexOf("overflow") == 0 && dojo.isFF) {
+                ;
+            } else if (styleName == "backgroundGradient") {
 			    var gradient = cssObj[styleName];
 			    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
 			    if (dojo.isIE < 10) {
@@ -1405,8 +1416,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	renderBounds: function() {
 	    var isChanged = false;
 	    if (this.dom) {
-		var b = this.getStyleBounds();
-		isChanged = this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
+            if (wm.flexboxSupport && !wm.isInstanceType(this, [wm.AppRoot,wm.Scrim,wm.DesignWrapper]) && (!wm.isInstanceType(this, wm.Dialog) || this.docked)) {
+                this._flexboxRendered = true;
+                isChanged = this.renderFlexboxBounds();
+            } else {
+        		var b = this.getStyleBounds();
+        		isChanged = this.dom.setBox(b, wm.AbstractEditor && this.singleLine && this instanceof wm.AbstractEditor == false);
+	        }
 	    }
 	    // bc
 	    if (this.designWrapper) {
@@ -1415,6 +1431,69 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	    return isChanged;
 	},
+    renderFlexboxBounds: function() {
+        var isChanged = false;
+        var s = this.domNode.style;
+        var parent = this.parent || this.owner;
+        if (this.autoSizeWidth || this.fitToContentWidth) {
+            if (s.width) s.width = "";
+            if (!this.parent.fitToContentWidth) {
+                wm.job(this.getRuntimeId() + ".setAutoWidthMaxWidth", 1,this, function() {
+                    s.maxWidth = (this.parent.domNode.clientWidth - (this.parent.getPreferredFitToContentWidth() - this.domNode.clientWidth)) + "px";
+                });
+            }
+        } else if (this._percEx.w) {
+            if (parent.layoutKind == "left-to-right") {
+                //if (s.width !== "0px") s.width = "0px";
+                s.webkitBoxFlex = this._percEx.w;
+                s.MozBoxFlex = this._percEx.w;
+
+            } else {
+                s.width = this._percEx.w + "%";
+            }
+        } else {
+            if (parent.layoutKind == "left-to-right") {
+                s.webkitBoxFlex = 0.00000001;
+                s.MozBoxFlex = 0;
+            }
+            if (this.parent.layoutKind == "top-to-bottom" && this.parent.verticalAlign == "justified") {
+                s.width = "";
+            } else {
+                s.width = (parseInt(this.width) - this.marginExtents.l - this.marginExtents.r) + "px";
+            }
+        }
+        var minWidth = (this._percEx.w ? this.getMinWidthProp() + "px" : this.width);
+
+        var minHeight = this.getMinHeightProp() + "px";
+        if (this.autoSizeHeight || this.fitToContentHeight) {
+            if (s.height) s.height = "";
+        } else if (this._percEx.h) {
+            if (parent.layoutKind == "top-to-bottom") {
+                //if (s.height !== "0px") s.height = "0px";
+                s.webkitBoxFlex = this._percEx.h;
+                s.MozBoxFlex = this._percEx.h;
+
+            } else {
+                //minHeight = this._percEx.h + "%";
+                s.height = "";
+            }
+        } else {
+            if (parent.layoutKind == "top-to-bottom") {
+                s.webkitBoxFlex = 0.00000001;
+                s.MozBoxFlex = 0;
+            }
+            if (this.parent.layoutKind == "left-to-right" && this.parent.verticalAlign == "justified") {
+                s.height = "";
+            } else {
+                s.height = (parseInt(this.height) - this.marginExtents.t - this.marginExtents.b ) + "px";
+            }
+        }
+        s.minHeight = minHeight;
+
+        return isChanged;
+
+
+    },
 	//===========================================================================
 	// Flow
 	//===========================================================================
@@ -1866,7 +1945,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (this.parent) {
 		this.parent.update();
 	    }
-	}
+	},
+    _preparePrint: function() {},
+    _restoreFromPrint: function() {}
 
     });
 

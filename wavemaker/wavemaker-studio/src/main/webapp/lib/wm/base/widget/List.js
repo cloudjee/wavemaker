@@ -564,7 +564,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                 }
             }
         });
-        return (width > this.bounds.w) && colCount > 1;
+        return (width > this.domNode.clientWidth) && colCount > 1;
     },
     getDataSetObjectFields: function() {
         var o = {};
@@ -813,7 +813,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     renderBounds: function() {
-        var h = parseInt(this.domNode.style.height);
+        var h = this.domNode.clientHeight; //parseInt(this.domNode.style.height);
         if (this.inherited(arguments) && this.renderVisibleRowsOnly && !this._isDesignLoaded) {
             if (this._renderDojoObjSkipped) {
                 this._render();
@@ -2208,6 +2208,12 @@ wm.List.extend({
             }
         }
         return "";
+    },
+    _preparePrint: function() {
+        var was = this.renderVisibleRowsOnly;
+        this.renderVisibleRowsOnly = false;
+        this._render();
+        this.renderVisibleRowsOnly = was;
     }
 });
 

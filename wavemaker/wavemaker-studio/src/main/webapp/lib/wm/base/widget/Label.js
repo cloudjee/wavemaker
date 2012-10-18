@@ -32,9 +32,11 @@ dojo.declare("wm.Label", wm.Control, {
     },
     build: function() {
         this.inherited(arguments);
-        this.sizeNode = document.createElement("div");
-        dojo.addClass(this.sizeNode, "wmSizeNode");
-        this.domNode.appendChild(this.sizeNode);
+        if (!wm.flexboxSupport) {
+            this.sizeNode = document.createElement("div");
+            dojo.addClass(this.sizeNode, "wmSizeNode");
+            this.domNode.appendChild(this.sizeNode);
+        }
     },
     _onclick: function(inEvent) {
         if (this._disabled) return;
@@ -92,7 +94,7 @@ ondblclick: function(inEvent) {
         }
 
         if (this.link) c = ['<a ', (this.link.indexOf("#") == -1 && this.link.indexOf("javascript") == -1) ? 'target="_blank" ' : '', 'href="', this.link, '">', c, '</a>'].join('');
-        if (this.domNode.innerHTML != c) this.sizeNode.innerHTML = c;
+        if (this.domNode.innerHTML != c) this[this.sizeNode ? "sizeNode" : "domNode"].innerHTML = c;
         var whitespace = (this.singleLine || this.autoSizeWidth) ? "nowrap" : "normal";
         if (this.domNode.style.whiteSpace != whitespace) this.domNode.style.whiteSpace = whitespace;
         var align = (this.align == "none") ? "" : this.align;
@@ -100,12 +102,13 @@ ondblclick: function(inEvent) {
             this.domNode.style.textAlign = align;
             this._align = align;
         }
+        if (this.singleLine) wm.adjustHeight(this.domNode);
         //this.reflowParent();
         //this.doAutoSize();
     },
     setCaption: function(inCaption) {
         if (inCaption == undefined) inCaption = "";
-        var innerHTML = this.sizeNode.innerHTML;
+        var innerHTML = this[this.sizeNode ? "sizeNode" : "domNode"].innerHTML;
         if (inCaption && dojo.isArray(inCaption)) {
             inCaption = inCaption.join(', ');
         } else if (inCaption && dojo.isObject(inCaption) && (!this.$.format || this.$.format instanceof wm.ArrayFormatter === false)) {
@@ -113,7 +116,7 @@ ondblclick: function(inEvent) {
         }
         this.caption = inCaption;
         this.renderLabel();
-        if (innerHTML != this.sizeNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
+        if (innerHTML != this[this.sizeNode ? "sizeNode" : "domNode"].innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
             this.scheduleAutoSize();
         }
 
@@ -122,12 +125,15 @@ ondblclick: function(inEvent) {
     },
 
     scheduleAutoSize: function() {
+        if (wm.flexboxSupport) return;
         this._needsAutoSize = true;
         return wm.job(this.getRuntimeId() + ": doAutoSize", 10, dojo.hitch(this, function() {
             this.doAutoSize(true, false);
         }));
     },
     doAutoSize: function(setSize, force) {
+        /* TODO: Sort out what flexbox should do here */
+        if (wm.flexboxSupport) return;
         if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
         if (!force && !this._needsAutoSize) return;
 
@@ -209,7 +215,17 @@ this.width = newWidth + "px";
     setSingleLine: function(inSingleLine) {
         var oldSingleLine = this.singleLine;
         this.singleLine = inSingleLine;
-        if (oldSingleLine != inSingleLine) this.domNode.style.lineHeight = (inSingleLine) ? this.bounds.h + "px" : "normal";
+        if (oldSingleLine != inSingleLine) {
+            if (wm.flexboxSupport) {
+                if (inSingleLine) {
+                    wm.adjustHeight(this.domNode);
+                } else {
+                    this.domNode.style.lineHeight = "normal";
+                }
+            } else {
+                this.domNode.style.lineHeight = (inSingleLine) ? this.bounds.h + "px" : "normal";
+            }
+        }
         this.renderLabel();
         if (inSingleLine && this.autoSizeHeight) this.autoSizeHeight = false;
 

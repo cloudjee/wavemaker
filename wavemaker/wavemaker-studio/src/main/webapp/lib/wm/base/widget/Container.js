@@ -76,6 +76,8 @@ wm.define("wm.Container", wm.Control, {
 
         this.inherited(arguments);
         this.setLayoutKind(this.layoutKind);
+        this.setHorizontalAlign(this.horizontalAlign);
+        this.setVerticalAlign(this.verticalAlign);
         this.domNode.box = this.box = "";
         this._needsFitToContent = this.fitToContent = this.fitToContentWidth || this.fitToContentHeight;
     },
@@ -393,25 +395,30 @@ wm.define("wm.Container", wm.Control, {
     // Flow
     //
     reflow: function() {
-        this._boundsDirty = true;
-        if (!this.isReflowEnabled())
-        return;
-        /* If this widget is fitToContent, then we'll need to update this container's width/height to fit its contents; and that means the parent will need to reflow.
-         * If the parent is fitToContent, (TODO: Is this still needed?) then any we'll need to call this.parent.reflow() which will cause the parent to flow its children,
-         * (of which this container is one), and the children to flow their children of which this is one.
-         *  After this is done, this too will call calcFitToContent.
-         */
-        if (this.parent && (this.fitToContent || this.parent.fitToContent)) {
-            if (this._needsFitToContent) delete this._needsFitToContent;
-            this.parent.reflow();
-                    /*
-            if (this.fitToContent) {
-                this.calcFitToContent();
-            }
-                        */
-        } else {
-            this.flow();
-        }
+    	if (this._flexboxRendered) {
+    		; // do nothing
+
+    	} else {
+	        this._boundsDirty = true;
+	        if (!this.isReflowEnabled())
+	        return;
+	        /* If this widget is fitToContent, then we'll need to update this container's width/height to fit its contents; and that means the parent will need to reflow.
+	         * If the parent is fitToContent, (TODO: Is this still needed?) then any we'll need to call this.parent.reflow() which will cause the parent to flow its children,
+	         * (of which this container is one), and the children to flow their children of which this is one.
+	         *  After this is done, this too will call calcFitToContent.
+	         */
+	        if (this.parent && (this.fitToContent || this.parent.fitToContent)) {
+	            if (this._needsFitToContent) delete this._needsFitToContent;
+	            this.parent.reflow();
+	                    /*
+	            if (this.fitToContent) {
+	                this.calcFitToContent();
+	            }
+	                        */
+	        } else {
+	            this.flow();
+	        }
+	    }
     },
     adjustFlowForMobile: function() {
     if (this.autoScroll || this.fitToContentHeight  || studio.currentDeviceType == "desktop" || this._percEx.h) return;
@@ -767,7 +774,7 @@ wm.Container.extend({
                    ) {
                     v =  c.getPreferredFitToContentWidth();
                 } else if (!c._percEx.w) {
-                    v =  c.bounds.w;
+                    v =  wm.flexboxSupport ? c.domNode.clientWidth : c.bounds.w;
                 } else {
                     v = parseInt(c.minWidth) || c.getMinWidthProp();
                     if (c.bounds.w > v || this.c$.length == 1) {
@@ -826,7 +833,7 @@ wm.Container.extend({
                    ) {
                     v = c.getPreferredFitToContentHeight();
                 } else if (!c._percEx.h) {
-                    v = c.bounds.h;
+                    v =  wm.flexboxSupport ? c.domNode.clientHeight : c.bounds.h;
                 } else {
                     v =  c.getMinHeightProp();
                     if (c.bounds.h > v || this.c$.length == 1) {
@@ -907,6 +914,7 @@ wm.Container.extend({
     //horizontalAlign: "left",
     //verticalAlign: "top",
     setLayoutKind: function(inLayoutKind) {
+        var valueWas = this.layoutKind;
         if (this.layoutKind != inLayoutKind || !this.layout) {
           /*
             var ctor = wm.layout.registry[inLayoutKind];
@@ -923,14 +931,49 @@ wm.Container.extend({
             // KANA: for the JobDesigner
         if (this.isDesignLoaded())
             dojo.publish("LayoutKindChanged", [this]);
-        this.reflow();
+
+        if (wm.flexboxSupport) {
+            dojo.removeClass(this.domNode, "wmLayoutKind" + (valueWas == "left-to-right" ? "LeftRight" : "TopBottom"));
+            dojo.addClass(this.domNode, "wmLayoutKind" + (this.layoutKind == "left-to-right" ? "LeftRight" : "TopBottom"));
+        } else {
+            this.reflow();
+        }
+
+    },
+    getBoxAlignClass: function(inAlign, inAxis) {
+        switch(inAlign) {
+            case "top":
+                return "Top";
+            case "left":
+                return "Left";
+            case "middle":
+                return "VCenter";
+            case "center":
+                return "HCenter";
+            case "right":
+                return "Right";
+            case "bottom":
+                return "Bottom";
+            case "justified":
+                return inAxis.toUpperCase() + "Justify";
+        }
     },
     setHorizontalAlign: function(inHorizAlign) {
+        var valueWas = this.horizontalAlign;
         this.horizontalAlign = inHorizAlign;
+        if (this.layoutKind == "left-to-right") {
+            dojo.removeClass(this.domNode, "wmBoxAlign" +  this.getBoxAlignClass(valueWas, "h"));
+            dojo.addClass(this.domNode, "wmBoxAlign" +  this.getBoxAlignClass(this.horizontalAlign,"h"));
+        }
         this.reflow();
     },
     setVerticalAlign: function(inVertAlign) {
+        var valueWas = this.verticalAlign;
         this.verticalAlign = inVertAlign;
+        if (this.layoutKind == "top-to-bottom") {
+            dojo.removeClass(this.domNode, "wmBoxAlign" +  this.getBoxAlignClass(valueWas, "v"));
+            dojo.addClass(this.domNode, "wmBoxAlign" +  this.getBoxAlignClass(this.verticalAlign, "v"));
+        }
         this.reflow();
     },
     setFitToContentWidth: function(inFitToContent) {

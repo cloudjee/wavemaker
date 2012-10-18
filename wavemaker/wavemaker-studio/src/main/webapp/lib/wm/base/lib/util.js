@@ -777,3 +777,20 @@ wm.getFormField = function(inWidget) {
 	}
 	return a.join('.');
 }
+
+wm._adjustHeightList = [];
+wm.adjustHeight = function(inNode, styleName) {
+    wm._adjustHeightList.push({node: inNode, styleName: styleName || "lineHeight"});
+    if (!wm.hasJob("adjustAllLineHeights")) {
+        wm.job("adjustAllLineHeights", 10, wm._doHeightAdjustments);
+    }
+};
+wm._doHeightAdjustments = function() {
+    while (wm._adjustHeightList.length) {
+        var item = wm._adjustHeightList.shift();
+        var height = (item.styleName == "lineHeight") ? item.node.clientHeight - item.node.marginTop - item.node.marginBottom : item.node.parentNode.clientHeight;
+        item.node.style[item.styleName] = height + "px";
+    }
+};
+
+

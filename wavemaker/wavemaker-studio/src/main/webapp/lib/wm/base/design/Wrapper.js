@@ -274,7 +274,16 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
         this.controlBoundsChange();
     },
     controlBoundsChange: function() {
-        this._setBounds(this.control.bounds);
+        wm.job(this.control.getRuntimeId() + ".wrapperBoundsChange", 1, this, function() {
+            if (wm.flexboxSupport) {
+                var node = this.control.domNode;
+                if (node) {
+                    this._setBounds({l: node.offsetLeft, t: node.offsetTop, w: node.clientWidth, h: node.clientHeight});
+                }
+            } else {
+                this._setBounds(this.control.bounds);
+            }
+        });
         //if (this.designNode)
         //  this._setBounds(dojo._getMarginBox(this.designNode));
     },
@@ -293,7 +302,11 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
         this.label.innerHTML = (b.h > 22 && b.w > 64) ? this.control.getId() : ".";
         //this.label.parentNode.style.display = (b.h > 22 && b.w > 64) ? '' : 'none';
         //this.label.style.width = b.w > 200 ? 64 + (b.w / 4) + "px" : "";
-        wm.onidle(this, "setLabelPosition");
+        if (wm.flexboxSupport) {
+            this.setLabelPosition();
+        } else {
+            wm.onidle(this, "setLabelPosition");
+        }
         b.l = b.t = 0;
         //this.marker.setBounds(b);
     },
@@ -397,7 +410,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
         wm.onidle(this, function() {
         this.control.getDesignBorder();
         this.control.invalidCss = true;
-        this.control.render();
+        if (!wm.flexboxSupport) this.control.render();
         this.setLabelPosition();
         });
 
@@ -408,7 +421,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
                 if (this.control.isDestroyed) return;
         this.control.getDesignBorder();
         this.control.invalidCss = true;
-        this.control.render();
+        if (!wm.flexboxSupport) this.control.render();
         this.setLabelPosition();
         });
     },

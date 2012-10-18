@@ -292,7 +292,7 @@ dojo.declare("wm.Designer", wm.Surface, {
     */
     select: function(inControl, shiftKey, metaKey) { /* Abort if the control doesn't have a designWrapper or we're in the middle of a select task */
         if(inControl && !inControl.designWrapper || this._selecting) return;
-
+        var time = new Date().getTime();
         /* If the specified control was already selected, then do nothing... unless shift or meta are held, in which case deselect */
         var index = dojo.indexOf(this.selected || [], inControl);
         if(index != -1) {
@@ -302,7 +302,7 @@ dojo.declare("wm.Designer", wm.Surface, {
             this.onselect(this.selected);
             return;
         }
-
+        console.log("SELECT A: " + (new Date().getTime() - time));
 
         try {
             this._selecting = true;
@@ -340,27 +340,37 @@ dojo.declare("wm.Designer", wm.Surface, {
                 });
                 this.selected = [inControl];
             }
+            console.log("SELECT B: " + (new Date().getTime() - time));
             inControl.designWrapper.onselected();
+            console.log("SELECT C: " + (new Date().getTime() - time));
             this.selected = dojo.filter(this.selected, function(c) {
                 return !c.isDestroyed;
             });
+            console.log("SELECT D: " + (new Date().getTime() - time));
             this.onselect(this.selected);
-            // FIXME: no bueno on Safari, can't focus a DIV
-            // FIXME: do we intend to focus on select()? why not only on mousedown or click events?
-            try {
-                this.domNode.focus();
-            } catch(e) {}
+            console.log("SELECT E: " + (new Date().getTime() - time));
+            console.profile();
+
         } finally {
             this._selecting = false;
+            console.profileEnd()
+            console.log("SELECT F: " + (new Date().getTime() - time));
         }
     },
     selectFromStudio: function(inControls) {
+        var selected = [];
         dojo.forEach(this.selected, function(c) {
-            if(c.designWrapper) c.designWrapper.ondeselected();
-        });
-        this.selected = [];
-        dojo.forEach(inControls, function(c) {
             if(c.designWrapper) {
+                if (dojo.indexOf(inControls,c) == -1) {
+                    c.designWrapper.ondeselected();
+                } else {
+                    selected.push(c);
+                }
+            }
+        });
+        this.selected = selected;
+        dojo.forEach(inControls, function(c) {
+            if(c.designWrapper && dojo.indexOf(this.selected, c) == -1) {
                 this.selected.push(c);
                 c.designWrapper.onselected();
             }

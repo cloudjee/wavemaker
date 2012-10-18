@@ -78,6 +78,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
             if (this.dataValue)
                 this.setDataValue(this.dataValue);
             this.connect(dojo.query("textarea",this.domNode)[0], "oncontextmenu", this, "_onContextMenu");
+
         } else {
             window.setTimeout(dojo.hitch(this, "waitForLibraryLoad"), 100);
         }
@@ -124,6 +125,10 @@ dojo.declare("wm.AceEditor", wm.Control, {
     },
     renderBounds: function() {
         this.inherited(arguments);
+        if (this._editor)
+            this._editor.resize();
+    },
+    _onShowParent: function() {
         if (this._editor)
             this._editor.resize();
     },

@@ -83,7 +83,7 @@
 }
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton,
 .wm_template .wmeditor .dijitSelect .dijitArrowButton {
-    height: 100% !important;
+    height: 100%;
 }
 
 .wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {

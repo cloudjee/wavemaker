@@ -44,7 +44,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     postInit: function() {
 	this.inherited(arguments);
 	this.containerWidget.setLayoutKind("left-to-right");
-	this.containerWidget.setPadding("4");	
+	this.containerWidget.setPadding("4");
         this.img = this.containerWidget.c$[0];
         this.title = this.containerWidget.c$[1].c$[0];
         this.message = this.containerWidget.c$[1].c$[1];
@@ -70,7 +70,13 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	}
     },
     renderBounds: function() {
-        this.renderBoundsByCorner();
+        if (this._inRenderBounds) return;
+        try {
+            this._inRenderBounds = true;
+            this.renderBoundsByCorner();
+        } finally {
+            delete this._inRenderBounds;
+        }
     },
     setContent: function(inContent) {
 	this.content = inContent;

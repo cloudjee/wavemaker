@@ -30,9 +30,13 @@ dojo.declare("wm.Html", wm.Control, {
 	},
     build: function() {
 	this.inherited(arguments);
-	this.sizeNode = document.createElement("div");
-	dojo.addClass(this.sizeNode, "wmSizeNode");
-	this.domNode.appendChild(this.sizeNode);
+    if (!wm.flexboxSupport) {
+    	this.sizeNode = document.createElement("div");
+    	dojo.addClass(this.sizeNode, "wmSizeNode");
+    	this.domNode.appendChild(this.sizeNode);
+    } else {
+        this.sizeNode = this.domNode;
+    }
     },
 	getHtml: function() {
 		return this.sizeNode.innerHTML;
@@ -64,6 +68,7 @@ dojo.declare("wm.Html", wm.Control, {
                 }
 	},
     scheduleAutoSize: function() {
+        if (wm.flexboxSupport) return;
         this._needsAutoSize = true;
         return wm.job(this.getRuntimeId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,true);}));
     },

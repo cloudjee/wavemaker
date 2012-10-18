@@ -324,9 +324,11 @@ div .StudioGrid td,
     background-color:#344455 !important;
 }
 */
+/*
 .StudioToolbarButton {
     margin: 0 20% 0 20%;
 }
+*/
 .StudioToolbarButton:hover {
         background-image:url(images/dark_toolbar_btn_sm_on.gif);
         background-repeat: no-repeat;
@@ -409,8 +411,10 @@ div .StudioGrid td,
     -webkit-border-radius: 4px;
     border-radius: 4px;
 }
-.Studio .Inspector .wmeditor .dijitArrowButton {
+.wmJSRender .Studio .Inspector .wmeditor .dijitArrowButton {
     height: 100% !important;
+}
+.Studio .Inspector .wmeditor .dijitArrowButton {
     -webkit-border-bottom-right-radius: 4px;
     -webkit-border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -1867,4 +1871,7 @@ color: rgb(0,270,0);
     max-height: 80%;
     overflow-y: auto;
     overflow-x: hidden;
+}
+body .ace_editor {
+    position:relative;
 }
