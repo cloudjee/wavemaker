@@ -1751,11 +1751,15 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
             inDataValue += postFix;
         }
         //this.inspected.setStyle(styleName, inDataValue);
-        if (!inSetByCode && (!inEditor.editor._opened)) { /* Color pickers change the value but only trigger this onClose, so the lastValue must come from the colorPicker not from our current state */
-            new wm.SetPropTask(this.inspected, styleName, optionalLastDataValue !== undefined ? optionalLastDataValue : this.inspected.getStyle(styleName) || "", inDataValue, true);
-        } else {
-            this.inspected.setStyle(styleName, inDataValue);
-        }
+        for (var i = 0; i < studio.selected.length; i++) {
+	        if (!inSetByCode && (!inEditor.editor._opened)) { /* Color pickers change the value but only trigger this onClose, so the lastValue must come from the colorPicker not from our current state */
+	            var t = new wm.SetPropTask(studio.selected[i], styleName, 
+	            studio.selected[i].getStyle(styleName) || "", inDataValue, true);
+	        } else {
+	            studio.selected[i].setStyle(styleName, inDataValue);
+	        }
+	     }
+	     if (t) t.undoCount = studio.selected.length;
     },
     _end: 0
 });
