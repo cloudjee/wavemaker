@@ -1,0 +1,20 @@
+body {
+    width: 800px !important;
+    height: auto !important;
+}
+#wavemakerNode {
+    width: 800px !important;
+}
+.wmContainerNode {
+    height: auto !important;
+    overflow: hidden;
+}
+
+.NotPrintable {
+    display: none !important;
+}
+
+/* wm.List */
+.wmlist-spacer {
+    display:none;
+}

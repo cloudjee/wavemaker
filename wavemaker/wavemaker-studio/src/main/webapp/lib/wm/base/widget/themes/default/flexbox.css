@@ -1,0 +1,172 @@
+/* FLEXBOX RULES for flexbox spec as of chrome 21; not supported for FF 15
+    // Enable flexbox sizing
+    display: flex | -webkit-flex | -moz-flex;
+
+    // Controls the axis on which nodes flow
+    flex-direction | -webkit-flex-direction | -moz-flex-direction: row | column | row-reverse | column-reverse
+
+    // Controls alignment along the axis of flow
+    justify-content | -webkit-justify-content | -moz-justify-content: flex-start | flex-end | center | space-between | space-around
+
+    // Controls alignment along opposite axis of flow
+    align-items | -webkit-align-items | -moz-align-items: center | flex-start | flex-end | baseline | stretch
+
+    // Width of individual nodes
+    flex | -webkit-flex | -moz-flex: <integer>
+
+
+*/
+
+/* FLEXBOX RULES for original flexbox spec
+    // Enable flexbox sizing
+    display: box | -webkit-box | -moz-box;
+
+    // COntrols axis on which nodes flow
+    box-orient | -webkit-box-orient | -moz-box-orient: horizontal | vertical
+
+    // Controls alignment along axis of flow
+    box-pack | -webkit-box-pack | -moz-box-pack: start | end | center | justify
+
+    // Controls alignment on opposite axis of flow
+    box-align | -webkit-box-align | -moz-box-align: start | end | center | baseline | stretch
+
+    // Width of individual nodes
+    box-flex | -webkit-box-flex | -moz-box-flex: <integer>
+
+     // QUIRKS
+    1. Changing -webkit-flex to 0 has no effect, it simply maintains the current size;
+       changing it to 0.0001 causes the flex ratio to be applied, and if its less than width (100px) then the width is applied instead
+    2. WebKit nodes MUST have display: block or -webkit-flex to be properly managed by flexbox sizing.  inline-block will NOT be resized.
+    3. According to https://developer.mozilla.org/en-US/docs/CSS/-moz-box-pack; the pack syntax has the following quirk:
+      "The space is divided evenly in-between each child, with none of the extra space placed before the first child or after the last child. If there is only one child, treat the pack value as if it were start."
+       Justify does not make the widgets inside it wider, but rather distributes them across the canvas while maintaining their width'
+    4. overflow:hidden kills any use of box-pack for FireFox.
+
+*/
+.wmNode {
+        box-sizing: border-box;
+}
+.wmContainerNode, .wmtablayers-tabbar, .wmpagecontainer {
+    display:box;
+    display:-webkit-box;
+    display:-moz-box;
+    position: relative;
+    -webkit-box-pack: start;
+}
+
+.wmpagecontainer {
+    -webkit-box-flex:1;
+    -moz-box-flex:1;
+    box-flex: 1;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+}
+.wmlayout {
+    -webkit-box-flex:1;
+    -moz-box-flex:1;
+    box-flex: 1;
+    height: 100%;
+}
+
+.wmLayoutKindLeftRight {
+    box-orient: horizontal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-box-align: stretch;
+}
+.wmLayoutKindTopBottom {
+    box-orient: vertical;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-box-align: start;
+}
+.dj_ff .wmLayoutKindLeftRight > .wmNode {
+    width: 0px;
+}
+.wmLayoutKindTopBottom > .wmNode, .wmLayoutKindTopBottom > .wmNode.wmdialog.Docked {
+    height: 100%;
+}
+.wmLayoutKindTopBottom > .wmNode.wmdialog {
+    height: auto;
+}
+.wmLayoutKindLeftRight.wmBoxAlignLeft,
+.wmLayoutKindTopBottom.wmBoxAlignTop {
+    box-pack: start;
+    -webkit-box-pack: start;
+    -moz-box-pack: start;
+}
+.wmLayoutKindLeftRight.wmBoxAlignRight,
+.wmLayoutKindTopBottom.wmBoxAlignBottom {
+    box-pack: end;
+    -webkit-box-pack: end;
+    -moz-box-pack: end;
+}
+.wmLayoutKindLeftRight.wmBoxAlignHCenter,
+.wmLayoutKindTopBottom.wmBoxAlignVCenter {
+    box-pack: center;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+}
+.wmLayoutKindLeftRight.wmBoxAlignHJustify,
+.wmLayoutKindTopBottom.wmBoxAlignVJustify {
+    box-pack: justify;
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+}
+
+
+.wmLayoutKindLeftRight.wmBoxAlignTop,
+.wmLayoutKindTopBottom.wmBoxAlignLeft {
+    box-align: start;
+    -webkit-box-align: start;
+    -moz-box-align: start;
+}
+.wmLayoutKindLeftRight.wmBoxAlignBottom,
+.wmLayoutKindTopBottom.wmBoxAlignRight {
+    box-align: end;
+    -webkit-box-align: end;
+    -moz-box-align: end;
+}
+.wmLayoutKindLeftRight.wmBoxAlignVCenter,
+.wmLayoutKindTopBottom.wmBoxAlignHCenter {
+    box-align: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+}
+.wmLayoutKindLeftRight.wmBoxAlignVJustify,
+.wmLayoutKindTopBottom.wmBoxAlignHJustify {
+    box-align: stretch;
+    -webkit-box-align: stretch;
+    -moz-box-align: stretch;
+}
+
+.wmEditorLayoutNode,.wmCaptionWrapper .wmeditor-caption {
+    -webkit-box-flex:1;
+    -moz-box-flex:1;
+}
+.wmCaptionWrapper .wmeditor-caption {
+    display: block;
+}
+.wmNode .dijitTextBox {
+    display:block; /* dojo's inline-block doesn't work with flexbox */
+}
+
+.wmNode .wmDijitSlider {
+    width:0px;
+}
+
+/* Flexbox wm.List */
+.wmlist {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+}
+.wmlist > .wmlist-list, .wmlist > .wmlist-wrapper {
+    -webkit-box-flex: 1;
+}
+
+.wmNode.wmbutton {
+    display: block; /* inline-block is applied to buttons by webkit default stylesheets which just doesn't work */
+}
