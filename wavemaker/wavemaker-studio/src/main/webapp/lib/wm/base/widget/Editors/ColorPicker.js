@@ -24,7 +24,8 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     colorPickerDialog: null,
     cancelValue: null,
     _empty: true,
-    regExp: "\#[0-9a-fA-F]{6}|\{.*\}",
+    regExp: "\\s*(\#[0-9a-fA-F]{6}|\{.*\}|\#[0-9a-fA-F]{3}|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow|rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\))\\s*",
+    regExpOptions: "i",
     // could use a more precise regex for gradients
     showMessages: false,
     // seems to mess up our color picker dialog when both are showing
@@ -51,8 +52,12 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         }
         return result;
     },
-    setEditorValue: function(inValue) {
-        if (this.gradient && inValue && typeof inValue == "object") inValue = dojo.toJson(inValue);
+    setEditorValue: function(inValue) {    	
+        if (this.gradient && inValue && typeof inValue === "object") {
+        	inValue = dojo.toJson(inValue);
+        } else if (!this.gradient) {
+	        inValue = String(inValue).toLowerCase();
+        }
         this.inherited(arguments);
     },
     /*    doChangeOnKey: function(inEvent) {
@@ -64,13 +69,36 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     onchange: function(inValue) {
         this.updateEditorColors(inValue);
     },
+    changed: function() {
+    	if (!this.gradient) {
+	    	var newValue = this.editor.get('value') || "";
+            if (newValue.match(/[A-Z]/)) {
+            	this.editor.set('value', newValue.toLowerCase(), false);
+			}
+    	}
+    	this.inherited(arguments);
+    },
     updateEditorColors: function(inValue) {
         if (this._inColorChange) return;
         this._inColorChange = true;
         if (!this.gradient) {
             if (inValue) {
+            	var v1,v2,v3;
                 this.editorNode.style.backgroundColor = inValue;
-                var v1,v2,v3;
+                if (inValue.match(/^\#/)) {
+                	;
+                } else {
+                	var matches = inValue.match(/rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)/);
+                	if (matches) {
+                		inValue = "#" + parseInt(matches[1],16) + parseInt(matches[2],16) + parseInt(matches[3],16);                		
+                	} else {
+                		var colorObj = dojox.color.fromString(inValue);
+                		if (colorObj) {
+                			inValue = colorObj.toHex();
+                		}
+                	}
+                }
+
                 if (inValue.length > 5) {
                     v1 = parseInt(inValue.substr(1, 2), 16);
                     v2 = parseInt(inValue.substr(3, 2), 16);
