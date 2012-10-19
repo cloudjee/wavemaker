@@ -201,13 +201,16 @@ dojo.declare("wm.PageContainer", wm.Control, {
             // FIXME: parent required for layout
             if (this.page.root) this.page.root.parent = this;
             // change callback / event
-            if (this.pageLoadedDeferred) this.pageLoadedDeferred.callback({
-                page: inPage,
-                previousPage: inPreviousPage
-            });
+            if (this.pageLoadedDeferred) {
+	            this.pageLoadedDeferred.callback({
+	                page: inPage,
+	                previousPage: inPreviousPage
+	            });
+	            delete this.pageLoadedDeferred;
+	        }
             this.onPageChanged(inPage, inPreviousPage);
             // clean up previous page reference
-            var o = (inPreviousPage || 0).name
+            var o = (inPreviousPage || 0).name;
             if (o && this[o]) delete this[o];
         } catch (e) {
             console.info('error in pageChanged in pagecontainer.js ......', e);
@@ -215,6 +218,9 @@ dojo.declare("wm.PageContainer", wm.Control, {
     },
     loadPage: function(inName) {
         try {
+			if (!this.pageLoadedDeferred) {
+                this.pageLoadedDeferred = new dojo.Deferred();
+            }
             var d = this.isDesignLoaded(),
                 s = wm.studioConfig;
             if (d && s && s.preventSubPages) return;
