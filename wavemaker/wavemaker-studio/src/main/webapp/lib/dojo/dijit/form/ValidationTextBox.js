@@ -92,7 +92,10 @@ dojo.declare(
 			//		Overridable function used to validate the text input against the regular expression.
 			// tags:
 			//		protected
-			return (new RegExp("^(?:" + this.regExpGen(constraints) + ")"+(this.required?"":"?")+"$")).test(value) &&
+			/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			 * WM-4642: WaveMaker added the regExpOptions.
+			 */
+			return (new RegExp("^(?:" + this.regExpGen(constraints) + ")"+(this.required?"":"?")+"$", constraints.regExpOptions || "")).test(value) &&
 				(!this.required || !this._isEmpty(value)) &&
 				(this._isEmpty(value) || this.parse(value, constraints) !== undefined); // Boolean
 		},

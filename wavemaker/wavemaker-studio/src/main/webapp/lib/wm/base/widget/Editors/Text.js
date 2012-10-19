@@ -332,6 +332,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
             invalidMessage: this.invalidMessage || "$_unset_$",
             placeHolder: this.placeHolder,
             regExp: this.regExp,
+            constraints: {regExpOptions: this.regExpOptions},
             value: this.displayValue,
             required: this.required,
             tooltipDisplayTime: this.tooltipDisplayTime
