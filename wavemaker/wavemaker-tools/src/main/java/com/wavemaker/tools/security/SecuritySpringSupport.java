@@ -581,11 +581,13 @@ public class SecuritySpringSupport {
                     options.setGroupSearchFilter(getPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER));
                     options.setRoleModel(getPropertyValueString(authzBean, LDAP_ROLE_MODEL));
 
-                    // GD: Get the table name and strip away any schema prefixes
+                    //Get the table name and, if any, strip away any schema prefixes
                     String tableName = getPropertyValueString(authzBean, LDAP_ROLE_TABLE);
-                    int hasSchemaPrefix = tableName.indexOf('.');
-                    if (hasSchemaPrefix > -1) {
-                        tableName = tableName.substring(hasSchemaPrefix + 1);
+                    if (tableName != null) { 
+                    	int hasSchemaPrefix = tableName.indexOf('.');
+                    	if (hasSchemaPrefix > -1) {
+                    		tableName = tableName.substring(hasSchemaPrefix + 1);
+                    	}
                     }
                     options.setRoleTable(tableName);
 
