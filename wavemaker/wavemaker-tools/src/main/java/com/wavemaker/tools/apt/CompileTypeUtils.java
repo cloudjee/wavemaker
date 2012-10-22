@@ -306,7 +306,8 @@ public class CompileTypeUtils {
         @Override
         public TypeState visitExecutableAsMethod(ExecutableElement method, TypeState typeState) {
 
-            if (!method.getSimpleName().toString().endsWith("Class")) {
+            if (!method.getSimpleName().toString().endsWith("Class") &&
+                    method.getEnclosingElement().toString().equals("java.lang.reflect.TypeVariable")) {
 
                 ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(typeState.getBaseClassName());
                 if (def != null) {
