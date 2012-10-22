@@ -35,7 +35,6 @@ dojo.declare("wm.Picture", wm.Control, {
 		this.setSource(this.source);
 		this.setAspect(this.aspect);
 		this.setLink(this.link);
-		this.setHint(this.hint);
 	        if (this.imageList)
 		    this.imageListChanged();
 	},
@@ -59,9 +58,7 @@ dojo.declare("wm.Picture", wm.Control, {
 	    }
 		this.img.src = root + this.source;
 	},
-	setHint: function(inHint) {
-		this.domNode.title = this.hint = inHint;
-	},
+
 	setAspect: function(inAspect) {
 		var s=this.img.style, w="width", h="height", a=this.aspect=inAspect;
 		s.width = (a=="v" ? "100%" : "");
