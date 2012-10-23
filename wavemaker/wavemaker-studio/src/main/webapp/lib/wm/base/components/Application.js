@@ -656,6 +656,10 @@ dojo.declare("wm.Application", wm.Component, {
     },
     doRun: function() {
         if (wm.isPhonegap) {
+            if (!window["PhoneGap"]) {
+                wm.job("doRun", 100, this, "doRun");
+                return;
+            }
             dojo["require"]("build.Gzipped.wm_phonegap_misc", true);
             dojo.forEach(wm.componentFixList._phonegap, function(fix) {
                 try {
