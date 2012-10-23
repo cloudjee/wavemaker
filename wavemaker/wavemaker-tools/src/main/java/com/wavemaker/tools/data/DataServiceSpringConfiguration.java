@@ -380,7 +380,7 @@ public class DataServiceSpringConfiguration {
 
     private void updateDialect(String dbName, Props propValues) {
         Properties properties = readProperties(false);
-        if (!properties.get(dbName + ".dialect").equals(MYSQL_DIALECT)) {
+        if (properties.get(dbName + ".dialect") != null && !properties.get(dbName + ".dialect").equals(MYSQL_DIALECT)) {
             return;
         }
         
