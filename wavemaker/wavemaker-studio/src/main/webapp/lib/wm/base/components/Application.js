@@ -920,7 +920,7 @@ dojo.declare("wm.Application", wm.Component, {
                 userPrompt: ""
             });
             this.alertDialog.domNode.style.zIndex = 45;
-
+            dojo.attr(this.alertDialog.domNode, "role", "alertdialog");
         }
 
         if (this.alertDialog.width != "400px") this.alertDialog.setWidth("400px"); // reset any width changes made by users
@@ -952,6 +952,7 @@ dojo.declare("wm.Application", wm.Component, {
             this.confirmDialog.connect(this.confirmDialog, "onButton1Click", this, "confirmDialogOKClick");
             this.confirmDialog.connect(this.confirmDialog, "onButton2Click", this, "confirmDialogCancelClick");
             this.confirmDialog.connect(this.confirmDialog, "_onEsc", this, "confirmDialogCancelClick");
+            dojo.attr(this.confirmDialog.domNode, "role", "alertdialog");
         }
         nonmodal = Boolean(nonmodal);
         this.confirmDialog.setUserPrompt(inText);

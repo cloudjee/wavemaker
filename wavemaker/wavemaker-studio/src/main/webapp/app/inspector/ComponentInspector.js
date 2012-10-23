@@ -1940,6 +1940,8 @@ wm.addPropertyGroups({
     roles: {displayName: "Roles", order: 110, layer: true},
     /* Confirmed */
     devices: {displayName: "Devices", order: 120, layer: true},
+    aria: {displayName: "ARIA/Accessibility", order: 140, layer: true},
+
     /* Confirmed */
     operation: {displayName: "Operations", order: 200, layer: true},
     /* Confirmed */

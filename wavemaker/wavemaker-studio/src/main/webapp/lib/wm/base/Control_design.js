@@ -545,6 +545,7 @@ wm.Object.extendSchema(wm.Control, {
     onMouseOver: {group: "events", order: 2001, advanced: 1},
     onMouseOut: {group: "events", order: 2002, advanced: 1},
     customToHtml: {advanced: 1},
+    ariaRole: {group: "aria", order: 1, advanced:1},
 
     //runtimeBorder: { ignore: 1 },
     width: { group: "display", subgroup: "layout", order: 20, doc: 1, editor: "wm.prop.SizeEditor"},

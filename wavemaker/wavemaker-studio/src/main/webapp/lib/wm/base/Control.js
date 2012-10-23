@@ -469,6 +469,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
         this.initDomNode();
         this.inherited(arguments);
+        if (this.ariaRole) dojo.attr(this.domNode, "role", this.ariaRole);
 
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
         if (this.height && String(this.height).match(/\%/)) {
