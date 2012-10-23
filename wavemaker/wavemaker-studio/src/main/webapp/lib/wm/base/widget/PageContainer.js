@@ -358,6 +358,12 @@ dojo.declare("wm.PageContainer", wm.Control, {
     _onShowParent: function() {
         this.revealed();
     },
+    _onHideParent: function() {
+        if (this.page) {
+            wm.fire(this.page, "onHide");
+            this.page.root.callOnHideParent();
+        }
+    },
     revealed: function() {
         if (!this.page) this.loadPage(this._pageName);
         else {
