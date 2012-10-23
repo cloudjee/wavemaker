@@ -203,11 +203,6 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		}],
 		"returnType": "com.wavemaker.runtime.server.DownloadResponse"
 	}, {
-		"name": "getInternalRuntime",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.server.InternalRuntime"
-	}, {
 		"name": "getLocalHostIP",
 		"operationType": null,
 		"parameters": null,
@@ -218,36 +213,10 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		"parameters": null,
 		"returnType": "int"
 	}, {
-		"name": "getServiceEventNotifier",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.service.events.ServiceEventNotifier"
-	}, {
-		"name": "getServiceManager",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.service.ServiceManager"
-	}, {
-		"name": "getServiceWire",
-		"operationType": null,
-		"parameters": [{
-			"name": "serviceName",
-			"type": "java.lang.String"
-		}, {
-			"name": "typeName",
-			"type": "java.lang.String"
-		}],
-		"returnType": "com.wavemaker.runtime.service.ServiceWire"
-	}, {
 		"name": "getSessionId",
 		"operationType": null,
 		"parameters": null,
 		"returnType": "java.lang.String"
-	}, {
-		"name": "getTypeManager",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.service.TypeManager"
 	}, {
 		"name": "hostToDomain",
 		"operationType": null,
@@ -278,38 +247,6 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 			"type": "java.lang.String"
 		}],
 		"returnType": "java.lang.String"
-	}, {
-		"name": "setInternalRuntime",
-		"operationType": null,
-		"parameters": [{
-			"name": "internalRuntime",
-			"type": "com.wavemaker.runtime.server.InternalRuntime"
-		}],
-		"returnType": null
-	}, {
-		"name": "setServiceEventNotifier",
-		"operationType": null,
-		"parameters": [{
-			"name": "serviceEventNotifier",
-			"type": "com.wavemaker.runtime.service.events.ServiceEventNotifier"
-		}],
-		"returnType": null
-	}, {
-		"name": "setServiceManager",
-		"operationType": null,
-		"parameters": [{
-			"name": "serviceManager",
-			"type": "com.wavemaker.runtime.service.ServiceManager"
-		}],
-		"returnType": null
-	}, {
-		"name": "setTypeManager",
-		"operationType": null,
-		"parameters": [{
-			"name": "typeManager",
-			"type": "com.wavemaker.runtime.service.TypeManager"
-		}],
-		"returnType": null
 	}],
 	"serviceType": "JSON-RPC",
 	"serviceURL": "waveMakerService.json"
@@ -495,10 +432,10 @@ dojo.declare("WM_Spinup_App2", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "Alpha77", 
+	"projectSubVersion": "Alpha72", 
 	"projectVersion": 1, 
 	"showIOSPhoneGapBackButton": false, 
-	"studioVersion": "6.5.0.RC1", 
+	"studioVersion": "6.5.1.M0-BUILD-SNAPSHOT", 
 	"tabletMain": "", 
 	"theme": "wm_default", 
 	"toastPosition": "br", 
