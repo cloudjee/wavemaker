@@ -349,8 +349,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                 editorHeight = h;
             } else if (position == "left" || position == "right") {
                 var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w / 100);
-                if (w - tmpWidth < (this.minEditorWidth || 16)) {
-                    editorWidth = this.minEditorWidth || 16;
+                var minEditorWidth = this.minEditorWidth || (wm.isMobile ? 32 : 16);
+                if (w - tmpWidth < (this.minEditorWidth || minEditorWidth)) {
+                    editorWidth = this.minEditorWidth || minEditorWidth;
                     labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
                     allocateHelpIconSpace = false;
                 } else {
@@ -719,6 +720,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     createReadOnlyNode: function() {
         var node = dojo.create("div");
         dojo.addClass(node, "wmeditor-readonlyNode");
+		dojo.attr(node, "role", "textbox");
+		dojo.attr(node, "aria-readonly", true);
+		dojo.attr(node, "aria-labelledby", this.domNode.id);
         var readstyle = node.style;
         readstyle.lineHeight = "normal";
         readstyle.position = "absolute";
