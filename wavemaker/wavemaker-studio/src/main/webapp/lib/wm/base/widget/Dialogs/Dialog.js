@@ -1505,5 +1505,6 @@ dojo.declare("wm.Dialog", wm.Container, {
             this.fixPositionNode = widget ? widget.domNode : null;
         }
         this.renderBounds();
-    }
+    },
+    adjustFlowForMobile: function() {}
 });
