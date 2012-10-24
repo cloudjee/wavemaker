@@ -119,18 +119,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
 
 
-        this.$ = this.components = {};
-
-
-        if (!this._isDesignLoaded) {
-
-            if (wm.serverTimeOffset === undefined) {
-                this.getServerTimeOffset();
-            } else {
-                wm.currentTimeZone = new Date().getTimezoneOffset();
-            }
-            window.setInterval(dojo.hitch(this, "_pollForTimezoneChange"), 10000); //3600000); // once per hour check to see if the timezone has changed
-        }
+        this.$ = this.components = {};        
 
         this._setupKeys();
     },
@@ -668,8 +657,16 @@ dojo.declare("wm.Application", wm.Component, {
             });
         }
 
+		/* Needs to be here rather than postInit because wm.ServiceVariable not loaded in phonegap build until this point */
+		if (!this._isDesignLoaded) {
 
-
+            if (wm.serverTimeOffset === undefined) {
+                this.getServerTimeOffset();
+            } else {
+                wm.currentTimeZone = new Date().getTimezoneOffset();
+            }
+            window.setInterval(dojo.hitch(this, "_pollForTimezoneChange"), 10000); //3600000); // once per hour check to see if the timezone has changed
+        }
 
         this.createPageContainer();
         this.domNode = this.appRoot.domNode;
