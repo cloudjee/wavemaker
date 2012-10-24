@@ -1009,29 +1009,25 @@ dojo.declare("Studio", wm.Page, {
         if (dialog1 && dialog1 != dialog2)
             dialog1.dismiss();
         }
-        if (studio.selected && this.selected.deactivate)
-        this.selected.deactivate();
+        if (studio.selected && this.selected.deactivate) {
+	        this.selected.deactivate();
+	    }
 
-        while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
+        while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked()) {
             inComponent = inComponent.parent;
-
+		}
         if (inComponent) {
-        if (isNew && !this.inspector.isRequiredMode()) {
-            this.inspector.toggleRequiredProperties();
-        } else if (!isNew && this.inspector.isRequiredMode()) {
-            this.inspector.toggleAdvancedPropertiesSome();
-        }
-        if (this.treeSearch.getDataValue()) {
-            this.treeSearch.setDataValue("");
-            this.refreshVisualTree();
-        }
-        if (this.compTreeSearch.getDataValue()) {
-            this.compTreeSearch.setDataValue("");
-            this.refreshServiceTree();
-            this.refreshComponentTree();
-        }
-        this.warningsButton.setShowing(false);
-        this.statusBarLabel.setCaption("Editing " + inComponent.declaredClass);
+            if (this.treeSearch.getDataValue()) {
+                this.treeSearch.setDataValue("");
+                this.refreshVisualTree();
+            }
+            if (this.compTreeSearch.getDataValue()) {
+                this.compTreeSearch.setDataValue("");
+                this.refreshServiceTree();
+                this.refreshComponentTree();
+            }
+            this.warningsButton.setShowing(false);
+            this.statusBarLabel.setCaption("Editing " + inComponent.declaredClass);
         }
         try {
             var s = this.selected = inComponent;
