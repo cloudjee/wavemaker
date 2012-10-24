@@ -627,7 +627,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             }));
         } else if (inResult.match(/^ERROR.*The URI.*has already been taken or reserved/)) {
             app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {
-                name: inData.applicationName
+                name: inData.deploymentUrl
             }));
             this.cfUrlEditor.setInvalid();
         } else {

@@ -31,7 +31,7 @@ ALERT_DEPLOY_SUCCESS: "<center>Project deployed to<br/><br/><a target='_NewWindo
 ALERT_FILE_DEPLOY_SUCCESS: "<center>Project files written to ${projectName}/dist.  If you need to download, use the button below.<br/><br/><b>Version</b>: ${version}",
 TOAST_DEPLOY_FAILED: "Error deploying: ${error}",
 WAIT_LOGGING_IN: "Logging in...",
-ALERT_CF_NAME_TAKEN:  "${name} is already in use by another user; please pick a new name",
+ALERT_CF_NAME_TAKEN:  "${name} is already in use by another user; please pick a new url",
 ALERT_INVALID_DB_TYPE: "Deployment of ${name} databases to Cloud Foundry is not supported",
 DELETING: "Deleting...",
 INVALID_USER_PASS: "The username or password was invalid",
