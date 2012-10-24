@@ -368,7 +368,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (!this.page) this.loadPage(this._pageName);
         else {
             this.page.onShow();
-            this.page.root.callOnShowParent();
+            if (this.page.root) this.page.root.callOnShowParent();
         }
     },
     flow: function() {
