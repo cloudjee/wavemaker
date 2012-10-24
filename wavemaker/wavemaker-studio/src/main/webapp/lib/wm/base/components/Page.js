@@ -158,6 +158,7 @@ dojo.declare("wm.Page", wm.Component, {
 			ds.left = previousStyleLeft;
                     if (!this.root.isAncestorHidden())
 			this.onShow();
+			this.root.callOnShowParent();
 		    //alert("Page rendered in " + ( new Date().getTime() - startTime) + " ms");
 		    //console.timeEnd('renderTime ');
 		    //console.info('postInitCalled = ' + postInitCalled);
