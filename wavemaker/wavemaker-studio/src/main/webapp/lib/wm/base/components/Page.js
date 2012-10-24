@@ -527,6 +527,24 @@ wm.Page.extend({
 		return (getEvent(n,studio.getScript())) ? n : "";
 	    return this.inherited(arguments);
 	},
+	
+	writeComponents: function() {
+        var result = this.inherited(arguments);
+        var nonvisual = [];
+        var visual = [];
+        dojo.forEach(result, function(item) {
+            var	startIndex = item.indexOf('"')+1;
+            var	endIndex = item.indexOf('"', startIndex);
+            var className = item.substring(startIndex, endIndex);
+            var obj = dojo.getObject(className);
+            if (obj && obj.prototype instanceof wm.Control) {
+                visual.push(item);
+            } else {
+                nonvisual.push(item);
+            }
+        });
+        return nonvisual.concat(visual);
+    },
 
     /* LOCALIZATION TODO:
        1. If there's a dictionary being written, the page must be set to i18n: true
