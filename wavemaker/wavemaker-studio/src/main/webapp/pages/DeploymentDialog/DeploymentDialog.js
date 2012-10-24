@@ -1378,6 +1378,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.deploymentLoadingDialog.show();
         this.cloudFoundryService.requestAsync("listApps", [token,this.loginDialogTargetEditor.getDataValue()],
                           dojo.hitch(this, function(inResult) {
+
                               this.populateCloudFoundryAppList(inResult, optionalCallback);
                           }),
                           dojo.hitch(this, function(inError) {
@@ -1389,7 +1390,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     populateCloudFoundryAppList: function(inResult, optionalCallback) {
     var results = [];
     for (var i = 0; i < inResult.length; i++) {
-        results.push({id: inResult[i].name, name: "<a href='http://" + inResult[i].name + this.loginDialogTargetEditor.getDataValue().replace(/^.*?api/,"") +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
+        results.push({id: inResult[i].name, name: "<a href='http://" + inResult[i].uris[0] +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
     }
     this.cachedCloudFoundryDeploymentList = inResult;
     this.cloudFoundryAppList.renderData(results);
