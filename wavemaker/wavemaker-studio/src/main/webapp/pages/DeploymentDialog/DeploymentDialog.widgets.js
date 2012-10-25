@@ -17,9 +17,9 @@ DeploymentDialog.widgets = {
 
     cloudFoundryService: ["wm.JsonRpcService", {service: "cloudFoundryService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
-    cloudFoundryAppListDialog: ["wm.DesignableDialog", {"title":"Cloud Foundry Applications", _classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "500px", height: "500px"}, {}, {
+    cloudFoundryAppListDialog: ["wm.DesignableDialog", {"title":"Cloud Foundry Applications", _classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "650px", height: "500px"}, {}, {
         mainPanel1: ["wm.studio.DialogMainPanel", {},{}, {
-	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", dataFields: "name,state,services"}, {}],
+	    cloudFoundryAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", columns:[{field:"name",show:true,title: "App Name", width:"100%"},{field:"state",show:true,title: "Status",width:"80px"},{field:"services",show:true,title: "Services",width:"120%"}]}, {}],
 	    deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: false, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
 	}],
 	buttonBar5: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
