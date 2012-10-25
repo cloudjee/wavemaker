@@ -152,6 +152,8 @@ dojo.declare("wm.studio.Project", null, {
             var text = "";
             if (argHash && argHash.template && argHash.template && argHash.template.preferredDevice) {
                 text += "\"preferredDevice\": \"" + argHash.template.preferredDevice + "\",\n";
+            } else {
+            	text += "\"preferredDevice\": \"" + studio.currentDeviceType + "\",\n";
             }
 
           // NOTE: could present list of choices here
