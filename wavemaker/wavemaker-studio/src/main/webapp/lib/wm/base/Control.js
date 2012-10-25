@@ -68,7 +68,7 @@ dojo.declare("wm.Bounds", null, {
 	    b.h = inH;
 	    this._boundsDirty = true;
 	}
-
+	
 	// If b.l, b.w, b.t or b.h is a string like "100", it should be changed to integer before adding.
 	// To ensure that we multiple it by 1.
 	b.r = b.l*1 + b.w*1;
@@ -161,11 +161,12 @@ dojo.declare("wm.Bounds", null, {
     */
     _edges: {l:1, t:1, r:1, b:1},
     calcPadBorderMargin: function() {
-	var pbm = this.padBorderMargin;
-	for(var e in this._edges)
-	    pbm[e] = this.borderExtents[e] + this.paddingExtents[e] + this.marginExtents[e];
-	pbm.w = pbm.l + pbm.r;
-	pbm.h = pbm.t + pbm.b;
+		var pbm = this.padBorderMargin;	
+		for(var e in this._edges)
+		    pbm[e] = this.borderExtents[e] + this.paddingExtents[e] + this.marginExtents[e];
+		if (this._isDesignLoaded && studio.useDesignBorder && wm.isDesignable(this) && (!this.border || this.border === "0")) {pbm.t++;pbm.b++;pbm.r++;pbm.l++;}
+		pbm.w = pbm.l + pbm.r;
+		pbm.h = pbm.t + pbm.b;
     },
     getScrollMargins: function() {
 	return {w:0, h:0};
@@ -193,23 +194,23 @@ dojo.declare("wm.Bounds", null, {
 	return b;
     },
     getStyleBounds: function() {
-	if (this.isRelativePositioned){
-	    return {w: this.width, h: this.height};
-	}
+		if (this.isRelativePositioned){
+		    return {w: this.width, h: this.height};
+		}
 
-	var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
-	    var b = {
-		l: this.bounds.l,
-		t: this.bounds.t,
-		w: this.bounds.w - pbm.w,
-		h: this.bounds.h - pbm.h
-	    };
+		var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
+		    var b = {
+			l: this.bounds.l,
+			t: this.bounds.t,
+			w: this.bounds.w - pbm.w,
+			h: this.bounds.h - pbm.h
+		    };
 
- 	if (b.w < 0) b.w = 0;
- 	if (b.h < 0) b.h = 0;
-	b.r = b.l + b.w;
-	b.b = b.t + b.h;
-	return b;
+	 	if (b.w < 0) b.w = 0;
+	 	if (b.h < 0) b.h = 0;
+		b.r = b.l + b.w;
+		b.b = b.t + b.h;
+		return b;
     },
     cloneBounds: function() {
 	with (this.bounds) {
@@ -1272,24 +1273,51 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             stylesObj = {
                 margin: (margins.join("px ") || 0) + "px",
                 padding: (paddings.join("px ") || 0) + "px",
-                borderLeftStyle: (this.designBorderState && this.designBorderState.l) ? "dashed" : "solid",
-                borderRightStyle: (this.designBorderState && this.designBorderState.r) ? "dashed" : "solid",
-                borderTopStyle: (this.designBorderState && this.designBorderState.t) ? "dashed" : "solid",
-                borderBottomStyle: (this.designBorderState && this.designBorderState.b) ? "dashed" : "solid",
-                borderLeftColor: (this.designBorderState && this.designBorderState.l) ? "#C1C1C1" : this.borderColor,
-                borderRightColor: (this.designBorderState && this.designBorderState.r) ? "#C1C1C1" : this.borderColor,
-                borderTopColor: (this.designBorderState && this.designBorderState.t) ? "#C1C1C1" : this.borderColor,
-                borderBottomColor: (this.designBorderState && this.designBorderState.b) ? "#C1C1C1" : this.borderColor,
-                borderLeftWidth: ((this.designBorderState && this.designBorderState.l) ? "1" : this.borderExtents.l) + "px",
-                borderRightWidth: ((this.designBorderState && this.designBorderState.r) ? "1" : this.borderExtents.r) + "px",
-                borderTopWidth: ((this.designBorderState && this.designBorderState.t) ? "1" : this.borderExtents.t) + "px",
-                borderBottomWidth: ((this.designBorderState && this.designBorderState.b) ? "1" : this.borderExtents.b) + "px",
                 backgroundColor: this.backgroundColor,
 
                 overflowX: this.scrollX ? "auto" : overflow,
                 overflowY: this.scrollY ? "auto" : overflow
             };
-
+            var bordersWidth = "", bordersStyle = "", bordersColor = "";            
+            if (this.designBorderState.t) {
+            	bordersWidth += "1px ";
+            	bordersStyle += "dashed ";
+            	bordersColor += "#C1C1C1 ";
+            } else {
+            	bordersWidth += this.borderExtents.t + "px ";
+            	bordersStyle += "solid ";
+            	bordersColor += this.borderColor + " ";
+            }
+            if (this.designBorderState.r) {
+            	bordersWidth += "1px ";
+            	bordersStyle += "dashed ";
+            	bordersColor += "#C1C1C1 ";
+            } else {
+            	bordersWidth += this.borderExtents.r + "px ";
+            	bordersStyle += "solid ";
+            	bordersColor += this.borderColor + " ";
+            }
+            if (this.designBorderState.b) {
+            	bordersWidth += "1px ";
+            	bordersStyle += "dashed ";
+            	bordersColor += "#C1C1C1 ";
+            } else {
+            	bordersWidth += this.borderExtents.b + "px ";
+            	bordersStyle += "solid ";
+            	bordersColor += this.borderColor + " ";
+            }            
+            if (this.designBorderState.l) {
+            	bordersWidth += "1px";
+            	bordersStyle += "dashed";
+            	bordersColor += "#C1C1C1";
+            } else {
+            	bordersWidth += this.borderExtents.l + "px";
+            	bordersStyle += "solid";
+            	bordersColor += this.borderColor;
+            }
+            stylesObj.borderStyle = bordersStyle;
+            stylesObj.borderColor = bordersColor;
+            stylesObj.borderWidth = bordersWidth;
         } else {
             stylesObj = {
                 margin: (margins.join("px ") || 0) + "px",
@@ -1298,7 +1326,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 borderWidth: (borders.join("px ") || 0) + "px",
                 borderColor: this.borderColor,
                 backgroundColor: this.backgroundColor,
-                overflowX: this.scrollX ? "auto" : overflow,
+                overflowX: this.currentDeviceType != "desktop" ? "hidden" : this.scrollX ? "auto" : overflow,
                 overflowY: this.scrollY ? "auto" : overflow
             }
         }
@@ -1340,16 +1368,17 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         /* margin/padding/border all affect the layout and sizing of widgets and can't be left to stylesheets */
         cssTextItems.push("margin:" + cssObj.margin);
         cssTextItems.push("padding:" + cssObj.padding);
+        /*
         if (this.designBorderState) {
             cssTextItems.push("border-top:" + cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor);
             cssTextItems.push("border-bottom:" + cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor);
             cssTextItems.push("border-left:" + cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor);
             cssTextItems.push("border-right:" + cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor);
-        } else {
+        } else {*/
             cssTextItems.push("border-style:" + cssObj.borderStyle);
             cssTextItems.push("border-width:" + cssObj.borderWidth);
             cssTextItems.push("border-color:" + cssObj.borderColor);
-        }
+//        }
         if (cssObj.backgroundColor) cssTextItems.push("background-color:" + cssObj.backgroundColor);
         cssTextItems.push("overflow-x:" + cssObj.overflowX);
         cssTextItems.push("overflow-y:" + cssObj.overflowY);
@@ -1368,27 +1397,29 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    var borderSet = false;
 	    wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
 		try {
+/*
 		    if (this.designBorderState && styleName.match(/^border/)) {
-			if (!borderSet) {
-			    borderSet = true;
-			    s.borderLeft = cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor;
-			    s.borderRight = cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor;
-			    s.borderTop = cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor;
-			    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
-			}
-		    } else if (this._appliedStyles[styleName] != styleValue) {
-			if (styleName == "backgroundGradient") {
-			    var gradient = cssObj[styleName];
-			    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
-			    if (dojo.isIE < 10) {
-				s.filter = inValue;
-			    } else {
-				s.background = inValue;
-			    }
-			} else {
-			    s[styleName] = styleValue;
-			    this._appliedStyles[styleName] = styleValue;
-			}
+				if (!borderSet) {
+				    borderSet = true;
+				    s.borderLeft = cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor;
+				    s.borderRight = cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor;
+				    s.borderTop = cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor;
+				    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
+				}
+		    } else */
+		    if (this._appliedStyles[styleName] != styleValue) {
+				if (styleName == "backgroundGradient") {
+				    var gradient = cssObj[styleName];
+				    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+				    if (dojo.isIE < 10) {
+					s.filter = inValue;
+				    } else {
+					s.background = inValue;
+				    }
+				} else {
+				    s[styleName] = styleValue;
+				    this._appliedStyles[styleName] = styleValue;
+				}
 		    }
 		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
 			    s.WebkitOverflowScrolling = "touch";

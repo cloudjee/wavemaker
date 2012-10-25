@@ -1542,10 +1542,24 @@ dojo.declare("Studio", wm.Page, {
                 if (w.owner == studio.page) {
                     //w.designWrapper.setBorder(on ? "1" : "0");
                                 w.getDesignBorder();
+                                w.calcPadBorderMargin();
                                 w.invalidCss = true;
                                 w.renderCss();
                             }
             });
+            wm.forEachProperty(studio.page.$, function(d) {
+            	if (d instanceof wm.Dialog) {
+		            wm.forEachWidget(d, function(w) {
+		                if (w.owner == studio.page) {
+		                    //w.designWrapper.setBorder(on ? "1" : "0");
+                            w.getDesignBorder();
+                            w.calcPadBorderMargin();
+                            w.invalidCss = true;
+                            w.renderCss();
+                        }
+	                });
+				}		           
+            });            
         }
         wm.fire(this.page, "reflow");
 
@@ -1730,7 +1744,8 @@ dojo.declare("Studio", wm.Page, {
             }
         }
         this.reinspect(); // some properties may change like height/minHeight
-    },
+        if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "auto"
+    },    	
     designTabletUI: function() {
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded) {
@@ -1757,6 +1772,7 @@ dojo.declare("Studio", wm.Page, {
             }
         }
         this.reinspect(); // some properties may change like height/minHeight
+        if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "hidden"
     },
     designPhoneUIClick: function(inSender) {
         this.designPhoneUI(false);
@@ -1787,6 +1803,7 @@ dojo.declare("Studio", wm.Page, {
             }
         }
         this.reinspect(); // some properties may change like height/minHeight
+        if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "hidden"
     },
     designMobileFoldingClick: function(inSender) {
        this.designMobileFolding(false);
