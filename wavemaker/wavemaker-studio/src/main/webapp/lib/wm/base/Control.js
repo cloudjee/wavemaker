@@ -1355,8 +1355,14 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		                cssTextItems.push("filter: " + inValue);
 		            } else {
 		                cssTextItems.push("background: " + inValue);
-		            }
+		            }		       
 		        } else {
+			        if (styleName == "backgroundImage") {
+			        	if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {
+							styleValue = this.getPath() + styleValue;
+						}
+			        	if (styleValue.indexOf("url") != 0) styleValue = "url(" + styleValue + ")";
+			        }
 		            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
 		                return "-" + inLetter.toLowerCase();
 		            }) + ":" + styleValue);
@@ -1417,6 +1423,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 					s.background = inValue;
 				    }
 				} else {
+					if (styleName == "backgroundImage") {
+						if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {
+							styleValue = this.getPath() + styleValue;
+						}
+			        	if (styleValue.indexOf("url") != 0) styleValue = "url(" + styleValue + ")";
+			        }
 				    s[styleName] = styleValue;
 				    this._appliedStyles[styleName] = styleValue;
 				}
@@ -1746,6 +1758,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 this.domNode.style.background = inValue;
             }
         } else {
+        	if (inStyle == "backgroundImage") {
+        		if (this._isDesignLoaded && (inValue.indexOf("url") != 0 && inValue.indexOf("http") !=0 && inValue.indexOf("/") != 0)) {
+					inValue = this.getPath() + inValue;
+				}
+	        	if (inValue.indexOf("url") != 0) inValue = "url(" + inValue + ")";
+	        }
             this.domNode.style[inStyle] = inValue;
         }
     },
