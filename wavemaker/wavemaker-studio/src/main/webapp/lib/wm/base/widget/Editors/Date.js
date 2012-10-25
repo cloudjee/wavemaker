@@ -29,6 +29,7 @@ dojo.declare("wm.Date", wm.Text, {
     maximum: "",
     dateMode: "Date",
     formatLength: "short",
+    datePattern: "",
     //locale: '',
     validationEnabled: function() {
         return true;
@@ -37,6 +38,8 @@ dojo.declare("wm.Date", wm.Text, {
         var constraints = {};
         if (this.minimum) constraints.min = this.convertValue(this.minimum);
         if (this.maximum) constraints.max = this.convertValue(this.maximum);
+        if (this.datePattern) constraints.datePattern = this.datePattern;
+        if (this.timePattern) constraints.timePattern = this.timePattern;        
         return constraints;
     },
     getEditorProps: function(inNode, inProps) {
@@ -71,7 +74,8 @@ dojo.declare("wm.Date", wm.Text, {
         return wm.convertValueToDate(inValue, {
             selector: this.dateMode.toLowerCase(),
             formatLength: this.formatLength,
-            timePattern: this.use24Time ? "HH:mm" : "hh:mm a"
+            timePattern: this.use24Time ? "HH:mm" : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
     },
     getEditorValue: function() {
@@ -123,7 +127,8 @@ dojo.declare("wm.Date", wm.Text, {
             formatLength: this.formatLength,
             fullYear: true,
             selector: this.dateMode.toLowerCase(),
-            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
 
     },
@@ -175,12 +180,14 @@ dojo.declare("wm.Date", wm.Text, {
         val1 = dojo.date.locale.format(val1, {
             formatLength: this.formatLength || "short",
             selector: this.dateMode.toLowerCase(),
-            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
         val2 = dojo.date.locale.format(val2, {
             formatLength: this.formatLength || "short",
             selector: this.dateMode.toLowerCase(),
-            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
 
         return val1 != val2;
@@ -312,6 +319,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             openOnClick: this.openOnClick,
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
+            datePattern: this.datePattern,
             maximum: this.maximum,
             minimum: this.minimum,
             onchange: dojo.hitch(this, "changed")
@@ -329,6 +337,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
             use24Time: this.use24Time,
+            timePattern: this.timePattern,
             onchange: dojo.hitch(this, "changed")
         });
         if (this._disabled) this.setDisabled(this.disabled);
@@ -378,7 +387,8 @@ dojo.declare("wm.DateTime", wm.Date, {
             d = wm.convertValueToDate(inValue, {
                 formatLength: this.formatLength,
                 selector: this.dateMode.toLowerCase(),
-                timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+                timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+                datePattern: this.datePattern || undefined
             });
         }
 

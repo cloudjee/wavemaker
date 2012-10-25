@@ -18,6 +18,16 @@ dojo.require("wm.base.widget.Editors.Date");
 dojo.require("wm.base.widget.Editors.Text_design"); /* Needs the parent schema */
 
 
+wm.Date.extend({
+	set_datePattern: function(inPattern) {
+		this.datePattern = inPattern;
+		this.createEditor();
+	},
+	set_timePattern: function(inPattern) {
+		this.timePattern = inPattern;
+		this.createEditor();
+	}
+});
 wm.Object.extendSchema(wm.Date, {
     /* Editor group; values subgroup*/
     dataValue: {editor: "wm.Date", type: "Number"},
@@ -32,6 +42,10 @@ wm.Object.extendSchema(wm.Date, {
     maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
 
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
+    
+    datePattern:{group: "editor", subgroup: "display", order: 4},
+    
+    
     formatLength: {ignore:1},
 
     /* Ignored Group */
@@ -48,11 +62,12 @@ wm.Object.extendSchema(wm.Time, {
     dataValue: {editor: "wm.Time", type: "Number"},
 
     /* Editor group; display subgroup */
-    timePattern:{group: "editor", subgroup: "display", order: 4,  doc: 1,options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]},
+    timePattern:{group: "editor", subgroup: "display", order: 4,editor: "wm.SelectMenu", editorProps: {restrictValues: false, options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]}},
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
 
     /* Ignored group */
     use24Time: {hidden:1},
+    datePattern: {ignore:1},
     useWMDropDown: {hidden:1},
     minimum: { ignore: 1},
     maximum: { ignore: 1}
@@ -70,6 +85,7 @@ wm.Object.extendSchema(wm.DateTime, {
     /* Editor group; display subgroup */
     use24Time: {group: "editor", subgroup: "display", order: 10, ignoreHint: "Only available if dateMode is not 'Date'", advanced: 1},
     formatLength: {ignore:1},
+    timePattern:{group: "editor", subgroup: "display", order: 4,editor: "wm.SelectMenu", editorProps: {restrictValues: false, options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]}},
 
     /* Editor group; value subgroup */
     dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
