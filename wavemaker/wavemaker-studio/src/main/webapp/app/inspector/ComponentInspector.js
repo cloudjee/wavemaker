@@ -1247,6 +1247,11 @@
 	 var groups = this.initGroups(this.props);
 	 dojo.forEach(groups, function(g) {
 	     if (g.layer) {
+          var props = g.props;
+          var hasVisibleProp = dojo.some(props, function(prop) {
+            return this.isEditableProp(prop) && (!prop.ignoretmp || this.isAdvancedMode());
+          }, this) || g.subgroups.length;
+          if (!hasVisibleProp) return;
 		 var layer = this.addLayer(g.displayName,true);
 		 layer.propertyGroup = g;
 	     //layer.header.setMargin("2,0,2,0");
