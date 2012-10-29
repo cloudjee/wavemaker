@@ -17,6 +17,11 @@ dojo.require("wm.base.components.Service");
 dojo.require("dojo.rpc.JsonService");
 dojo.require("dojox.uuid.generateRandomUuid");
 
+dojo.rpc.JsonService.extend({
+	lastSubmissionId: Math.floor(Math.random(new Date().getTime()) * 1000000)
+});
+
+
 wm.inflight = {
     _inflight: [],
     _inflightNames: [],
