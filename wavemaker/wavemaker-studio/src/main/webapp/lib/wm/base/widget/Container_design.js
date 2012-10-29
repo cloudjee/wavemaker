@@ -153,11 +153,23 @@ wm.Container.extend({
         }
     },
     resizeToFit: function() {
+    	var w = this.width;
+    	var h = this.height;
         this.designResizeForNewChild("left-to-right", true);
         this.designResizeForNewChild("top-to-bottom", true);
         this._inDesignResize = true;
-        if (!this._percEx.h) this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
-        if (!this._percEx.w) this.setWidth(this.bounds.w + "px");
+        var changed = false;
+        if (!this._percEx.h && this.height != h) {
+        	this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
+        	changed = true;
+        }
+        if (!this._percEx.w && this.width != w) {
+        	this.setWidth(this.bounds.w + "px");
+        	changed = true;
+        }
+		if (!changed && (this._percEx.w || this._percEx.h)) {
+			app.toastWarning(studio.getDictionaryItem("wm.Container.RESIZE_TO_FIT_PERCENT_SIZE"));
+		}
         delete this._inDesignResize;
     },
     resizeUpdate: function(inBounds) {
