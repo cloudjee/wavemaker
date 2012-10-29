@@ -1138,6 +1138,7 @@ dojo.declare("Studio", wm.Page, {
         html += "</table>";
         html = "<div class='KeyboardShortcutDialog'>" + html + "</div>";
         this.helpDialog.setUserPrompt(html);
+        this.helpDialog.button1.addUserClass("StudioButton")
         this.helpDialog.show();
 
     },
