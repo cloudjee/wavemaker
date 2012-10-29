@@ -448,7 +448,10 @@ dojo.declare("wm.Variable", wm.Component, {
                 var v = this.data[i];
                 if (wm.getDataConvertDates && v instanceof Date) {
                     v = v.getTime();
+                } else if (props[i] && props[i].type == "Date" && typeof v === "string") {
+                	v = this.data[i] = new Date(v).getTime();
                 }
+                
                 // we may not always want all related junk
                 if (v !== undefined) {
                     if (v instanceof wm.Variable) {
@@ -480,6 +483,13 @@ dojo.declare("wm.Variable", wm.Component, {
         // FIXME: Encountered a project where _isVariableProp(n) was true, but v was a string
         if (this._isVariableProp(n) && (!v || (v._isStub && v._isStub())) && !noMarshal) {
             v = d[n] = (f || this).marshallVariable(n, typeInfo, v);
+        } else if (typeInfo && typeInfo.type == "Date") {
+        	v = d[n];
+        	if (typeof v == "string") {
+				try {
+	        		v = d[n] = new Date(v).getTime();
+	        	} catch(e) {}
+        	}
         }
         return v;
     },
