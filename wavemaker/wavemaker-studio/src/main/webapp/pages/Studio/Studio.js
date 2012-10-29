@@ -1688,6 +1688,7 @@ dojo.declare("Studio", wm.Page, {
     },
     */
     regenerateOrUpdateWidgetsForDevice: function() {
+        studio.page._loadingPage = true;
         var regenerated = false;
         var panels = [studio.page.root];
         wm.forEachProperty(studio.page.$, function(inComponent) {
@@ -1718,7 +1719,7 @@ dojo.declare("Studio", wm.Page, {
             }, false);
             if (panel.parent && panel.parent instanceof wm.Dialog) panel.parent.reflow();
         });
-
+        studio.page._loadingPage = false;
         return regenerated;
     },
     designDesktopUI: function() {
@@ -1766,7 +1767,6 @@ dojo.declare("Studio", wm.Page, {
         if (studio.page) {
             var self = this;
             var regenerated = this.regenerateOrUpdateWidgetsForDevice();
-
             if (regenerated) {
                 this.refreshVisualTree();
                 this.page.reflow();
