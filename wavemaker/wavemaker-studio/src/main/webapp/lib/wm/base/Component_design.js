@@ -78,15 +78,21 @@ wm.Component.extend({
     },
     listProperties: function() {
         var props = this.inherited(arguments);
-        if (this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
-                props = dojo.clone(props);
-        if (props.owner) props.owner.ignoretmp = 1;
-        else props.owner = {ignoretmp: 1};
-            }
-
-        if (this.deletionDisabled) {
-                props = dojo.clone(props);
-        props.name = {hidden: 1};
+        if(this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
+            props = dojo.clone(props);
+            if(props.owner) props.owner.ignoretmp = 1;
+            else props.owner = {
+                ignoretmp: 1
+            };
+        }
+        if (this._isDesignLoaded && props.roles) {
+            props.roles.ignoretmp = !wm.roles || wm.roles.length == 0;
+        }
+        if(this.deletionDisabled) {
+            props = dojo.clone(props);
+            props.name = {
+                hidden: 1
+            };
         }
         return props;
     },

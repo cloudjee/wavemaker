@@ -957,57 +957,96 @@ dojo.declare("wm.Variable", wm.Component, {
             var matchStart = true;
             var a = inItem.getValue(key);
             var b = inSample[key];
-            if (typeof b == "function") return b(a);
-            var stringB = String(b);
-            if (stringB.charAt(0) == w) {
-                b = b.substring(1);
-                matchStart = false;
-            } else if (stringB.charAt(0) == ">") {
-                var orEqual = false;
-                if (stringB.charAt(1) == "=") {
-                    orEqual = true;
-                    b = b.substring(2);
-                } else {
+            if (typeof b == "function") {
+                return b(a);
+            } else if (b && wm.typeManager.isStructuredType(inItem._dataSchema[key].type)) {
+                // figure out if we Really want to compare this object automatically fail
+                // or skip this test
+                var type = this._dataSchema[key].type;
+                if (type) {
+                    var typeDef = wm.typeManager.getType(type);
+                }
+
+                /* LiveView depth can be quite deep, and we could be querying on a selectedItem where every field is populated;
+                 * this means too many tests for good performance.  We may allow this later on, but for now, skip testing
+                 * liveSource subvariables
+                 */
+                if (typeDef && typeDef.liveService) {
+                    continue;
+                }
+
+                /* This is another ambiguous situation: if inSample contains an object and inItem doesn't have a value,
+                 * does that mean its not a match, or that inSample just contains too much detail?
+                 * For now, we're going to skip this test as well.
+                 */
+                else if (a === null || a === undefined) {
+                    continue;
+                }
+
+                /* Don't even TRY to compare isList subvariables */
+                else if (a instanceof wm.Variable && a.isList) {
+                    continue;
+                }
+
+                else {
+                    var submatch = this._queryItem(a, b, 0);
+                    if (!submatch) return false;
+                    continue;
+                }
+
+
+            } else {
+                var stringB = String(b);
+                if (stringB.charAt(0) == w) {
                     b = b.substring(1);
-                }
-                if (typeof a == "number") {
-                    b = Number(b);
-                } else if (typeof a == "string") {
-                    b = b.toLowerCase();
-                }
-                if (orEqual) {
-                    if (a < b) return false;
-                } else {
-                    if (a <= b) return false;
-                }
-                continue;
-            } else if (stringB.charAt(0) == "<") {
-                var orEqual = false;
-                if (stringB.charAt(1) == "=") {
-                    orEqual = true;
-                    b = b.substring(2);
-                } else {
+                    matchStart = false;
+                } else if (stringB.charAt(0) == ">") {
+                    var orEqual = false;
+                    if (stringB.charAt(1) == "=") {
+                        orEqual = true;
+                        b = b.substring(2);
+                    } else {
+                        b = b.substring(1);
+                    }
+                    if (typeof a == "number") {
+                        b = Number(b);
+                    } else if (typeof a == "string") {
+                        b = b.toLowerCase();
+                    }
+                    if (orEqual) {
+                        if (a < b) return false;
+                    } else {
+                        if (a <= b) return false;
+                    }
+                    continue;
+                } else if (stringB.charAt(0) == "<") {
+                    var orEqual = false;
+                    if (stringB.charAt(1) == "=") {
+                        orEqual = true;
+                        b = b.substring(2);
+                    } else {
+                        b = b.substring(1);
+                    }
+                    if (typeof a == "number") {
+                        b = Number(b);
+                    } else if (typeof a == "string") {
+                        b = b.toLowerCase();
+                    }
+                    if (orEqual) {
+                        if (a > b) return false;
+                    } else {
+                        if (a >= b) return false;
+                    }
+                    continue;
+                } else if (stringB.charAt(0) == "!") {
                     b = b.substring(1);
+                    if (typeof a == "number") {
+                        b = Number(b);
+                    } else if (typeof a == "string") {
+                        b = b.toLowerCase();
+                    }
+                    var invert = true;
                 }
-                if (typeof a == "number") {
-                    b = Number(b);
-                } else if (typeof a == "string") {
-                    b = b.toLowerCase();
-                }
-                if (orEqual) {
-                    if (a > b) return false;
-                } else {
-                    if (a >= b) return false;
-                }
-                continue;
-            } else if (stringB.charAt(0) == "!") {
-                b = b.substring(1);
-                if (typeof a == "number") {
-                    b = Number(b);
-                } else if (typeof a == "string") {
-                    b = b.toLowerCase();
-                }
-                var invert = true;
             }
             if (b == w) {
                 if (invert) return false;

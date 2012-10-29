@@ -481,9 +481,9 @@ wm.define("wm.Container", wm.Control, {
         delete  wm.Container.delayedReflowWidgets[this.getRuntimeId()];
         newParents.push(this.parent);
         } else if (this.isAncestor(widget)) {
-        delete wm.Container.delayedReflowWidgets[widgetid];
+            delete  wm.Container.delayedReflowWidgets[this.getRuntimeId()];
         } else if (widget.isAncestor(this)) {
-        delete  wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+            delete wm.Container.delayedReflowWidgets[widgetid];
         }
         }));
     } catch(e) {}

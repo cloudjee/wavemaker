@@ -65,7 +65,7 @@ wm.Component.extend({
 
 
 wm.Object.extendSchema(wm.Control, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1},
+    roles: {group: "roles", editor: "wm.prop.RolesEditor"},
     deviceSizes: {group: "mobile", subgroup: "devices", shortname: "showForDeviceSizes", editor: "wm.prop.DeviceSizeEditor", order: 101},
     deviceType: {group: "mobile",  subgroup: "devices", editor: "wm.prop.DeviceListEditor",  order: 100}
 }, true);
