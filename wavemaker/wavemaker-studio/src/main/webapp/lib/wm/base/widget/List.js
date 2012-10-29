@@ -1849,7 +1849,10 @@ wm.List.extend({
         if (inValue && inValue != '') {
             var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
             var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
-            if (formatterProps.prefix) inValue = formatterProps.prefix + inValue;
+            if (formatterProps.prefix) {
+            	if (formatterProps.prefix.match(/\/$/) && inValue.indexOf("/") == 0) inValue = inValue.substring(1);
+            	inValue = formatterProps.prefix + inValue;
+            }
 
             if (formatterProps.postfix) inValue = inValue + formatterProps.postfix;
 

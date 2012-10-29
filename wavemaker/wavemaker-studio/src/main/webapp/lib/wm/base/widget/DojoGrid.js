@@ -2154,9 +2154,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         if (inValue && inValue != '') {
         var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
         var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
-        if (formatterProps.prefix)
+        if (formatterProps.prefix) {
+           	if (formatterProps.prefix.match(/\/$/) && inValue.indexOf("/") == 0) inValue = inValue.substring(1);
             inValue = formatterProps.prefix + inValue;
-
+		}
         if (formatterProps.postfix)
             inValue = inValue + formatterProps.postfix;
 
