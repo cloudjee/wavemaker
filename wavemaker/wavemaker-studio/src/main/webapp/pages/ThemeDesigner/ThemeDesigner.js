@@ -174,8 +174,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                         {borderClass: "wm.RichTextDialog", borderProperty: "border"},
                                         {borderClass: "wm.FileUploadDialog", borderProperty: "border"},
                                         {borderClass: "wm.PageDialog", borderProperty: "border"},
-                                        {borderClass: "wm.DesignableDialog", borderProperty: "border"},
-                                        {borderClass: "wm.ColorPickerDialog", borderProperty: "border"}
+                                        {borderClass: "wm.DesignableDialog", borderProperty: "border"}
                                        ]},
                              "Background",
                              "Font"],
