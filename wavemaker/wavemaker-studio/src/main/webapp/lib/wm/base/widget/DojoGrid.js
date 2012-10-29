@@ -113,6 +113,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     },
 
     dataSetToSelectedItem: function() {
+    	this.selectedItem.dataSet = "";
         this.selectedItem.setLiveView((this.variable|| 0).liveView);
         this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
     },

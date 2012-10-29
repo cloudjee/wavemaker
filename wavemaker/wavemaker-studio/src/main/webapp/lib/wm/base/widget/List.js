@@ -680,6 +680,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
     },
     setSelectedItemType: function(inType) {
+    	this.selectedItem.dataSet = "";
         this.selectedItem.setType(inType);
     },
     update: function() {
