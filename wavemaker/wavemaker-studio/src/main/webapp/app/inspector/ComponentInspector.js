@@ -1027,44 +1027,15 @@
      /* Called by propertyEdit's wm.SetWireTask */
      parseExpressionForWire: function(inValue, skipValidation) {
          // A bind wire expression must be a string
-         if (typeof inValue == "number") {
+         if (typeof inValue == "number" || inValue.match(/^\d+$/)) {
              return String(inValue);
-         } else if (typeof inValue == "boolean") {
+         } else if (typeof inValue == "boolean" || inValue === "true" || inValue === "false") {
              return String(inValue);
          } else if (typeof inValue == "object") {
              return inValue; // may need to handle this some day... but this shouldn't ever happen
-         } else if (inValue == "true" || inValue == "false" || inValue.match(/^\d+$/) || inValue.match(/\"/) || inValue.match(/\$\{.*\}/) || inValue.match(/(\+|\-|\*|\/|\w\.\w)/)) {; // its an expression, no need to quote it
          } else {
              return '"' + inValue + '"'; // its a string; quote it.
          }
-
-         // Still here? Must be an expression; lets attempt to validate the expression
-         if (!skipValidation) {
-             try {
-                 var tmp = inValue;
-                 tmp = tmp.replace(/\$\{.*?\}/g, "''"); // remove the crazy stuff that we dont want to try evaluating right now (probably ok to evaluate it at design time, but its not needed to see if this will compile)
-                 // if its undefined, then presumably it failed to compile
-                 var tmp2 = function() {
-                         return eval(tmp);
-                     }.call(this.inspected.owner || this.inspected);
-                 //var tmp2 = eval(tmp);
-                 /* TODO: In 6.4 we openned the bind dialog so they could edit their bind expression in a larger area */
-                 if (tmp2 === undefined) {
-                     //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
-                     //studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
-                     //studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
-                     app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
-                     throw "Invalid Bind Expression";
-                 }
-             } catch (e) {
-                 //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
-                 //studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
-                 //studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
-                 app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
-                 throw "Invalid Bind Expression";
-             }
-         }
-         return inValue;
      },
      beginHelp: function(inPropName, inNode, inType, altText) {
          var bd = studio.helpPopup;
