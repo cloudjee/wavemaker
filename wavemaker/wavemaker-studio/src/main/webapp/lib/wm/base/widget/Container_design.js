@@ -87,6 +87,8 @@ wm.Container.extend({
         var p = this.inherited(arguments);
         p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
         p.resizeToFit.ignoretmp = this.percEx && this.percEx.w && this.percEx.h || this.fitToContent;
+        p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.fitToContentWidth); // minWidth only applies if width is % or autosize is on
+        p.minHeight.ignoretmp = !this.schema.minHeight || this.schema.minHeight.ignore || (!this._percEx.h && !this.fitToContentHeight); // minWidth only applies if width is % or autosize is on
         return p;
     },
     writeChildren: function(inNode, inIndent, inOptions) {
