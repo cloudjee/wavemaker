@@ -416,7 +416,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             }]
             }]
             }],
-            bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "65px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
+            bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "75px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
         }]
         }]
     },
