@@ -152,16 +152,21 @@ dojo.declare("wm.Component", wm.Object, {
         }
 
             if (!this._temporaryComponent)
-                dojo.addOnWindowUnload(this, 'destroy');
+                dojo.addOnWindowUnload(this, '_unload');
         if (wm.debugPerformance) this.stopTimerWithName("create",this.declaredClass);
     } catch (e) {
         console.error("Error thrown; failed to create " + this.toString() + ": " + e);
     }
     },
+    _unload: function() {
+    	if (this.owner) this.owner._isUnloading = true;
+    	this.destroy();
+    },
     /**
         Remove this component from the system and clean up
         all resources.
     */
+
     destroy: function() {
         if (this.isDestroyed)
             return;
