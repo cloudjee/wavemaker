@@ -32,7 +32,7 @@ EditVariable.widgets = {
 		    }]
 		}],
 		textLayer: ["wm.Layer", {caption: "Text Editor"}, {onShow: "updateText"}, {
-		    text: ["wm.AceEditor", {width: "100%", height: "100%"}, {onChange: "onAceChange"}]
+		    text: ["wm.AceEditor", {syntax: "json", width: "100%", height: "100%"}, {onChange: "onAceChange"}]
 		}]
 	    }]
 	}],

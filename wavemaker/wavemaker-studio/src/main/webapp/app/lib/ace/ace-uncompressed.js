@@ -9785,6 +9785,8 @@ var Tokenizer = function(rules) {
                     type: type,
                     value: value
                 };
+	    } else if (value === "") {
+		break;
             } else {
                 token.value += value;
             }
@@ -14135,7 +14137,7 @@ var VirtualRenderer = function(container, theme) {
         // if the last row is unknown -> redraw everything
         if (lastRow === Infinity) {
             this.showGutter && this.$gutterLayer.update(layerConfig);
-            this.$textLayer.update(layerConfig);
+            //this.$textLayer.update(layerConfig);
             return;
         }
 

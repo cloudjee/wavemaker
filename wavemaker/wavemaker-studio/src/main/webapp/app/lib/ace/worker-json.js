@@ -291,7 +291,8 @@ defineace("ace/json/json_parse", ["requireace", "exports", "module"], function(r
                     return object;   // empty object
                 }
                 while (ch) {
-                    key = stringLikeToken();
+                    //key = stringLikeToken();
+		    key = string();
                     white();
                     next(':');
                     if (Object.hasOwnProperty.call(object, key)) {
