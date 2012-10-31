@@ -3134,6 +3134,7 @@ EventEmitter._dispatchEvent = function(eventName, e) {
 
 EventEmitter.on =
 EventEmitter.addEventListener = function(eventName, callback) {
+    if (!eventName || !callback) debugger;
     this._eventRegistry = this._eventRegistry || {};
 
     var listeners = this._eventRegistry[eventName];
@@ -11431,6 +11432,7 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -11610,6 +11612,692 @@ oop.inherits(JavaScriptHighlightRules, TextHighlightRules);
 
 exports.JavaScriptHighlightRules = JavaScriptHighlightRules;
 });
+
+/* ***** BEGIN LICENSE BLOCK *****
+ * Distributed under the BSD license:
+ *
+ * Copyright (c) 2010, Ajax.org B.V.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Ajax.org B.V. nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+defineace('ace/mode/json', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/json_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/mode/behaviour/cstyle', 'ace/mode/folding/cstyle', 'ace/worker/worker_client'], function(require, exports, module) {
+
+
+    var oop = requireace('pilot/oop');
+    var TextMode = requireace("ace/mode/text").Mode;
+    var Tokenizer = requireace("ace/tokenizer").Tokenizer;
+    var HighlightRules = requireace("ace/mode/json_highlight_rules").JsonHighlightRules;
+    var MatchingBraceOutdent = requireace("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
+    var CstyleBehaviour = requireace("ace/mode/behaviour/cstyle").CstyleBehaviour;
+    var CStyleFoldMode = requireace("ace/mode/folding/cstyle").FoldMode;
+    var WorkerClient = requireace("ace/worker/worker_client").WorkerClient;
+
+    var Mode = function() {
+	this.$tokenizer = new Tokenizer(new HighlightRules().getRules());
+	this.$outdent = new MatchingBraceOutdent();
+	this.$behaviour = new CstyleBehaviour();
+	this.foldingRules = new CStyleFoldMode();
+    };
+    oop.inherits(Mode, TextMode);
+
+    (function() {
+
+	this.getNextLineIndent = function(state, line, tab) {
+            var indent = this.$getIndent(line);
+
+            if (state == "start") {
+		var match = line.match(/^.*[\{\(\[]\s*$/);
+		if (match) {
+                    indent += tab;
+		}
+            }
+
+            return indent;
+	};
+
+	this.checkOutdent = function(state, line, input) {
+            return this.$outdent.checkOutdent(line, input);
+	};
+
+	this.autoOutdent = function(state, doc, row) {
+            this.$outdent.autoOutdent(doc, row);
+	};
+
+	this.createWorker = function(session) {
+            var doc = session.getDocument();
+            var worker = new WorkerClient(["ace", "pilot"], "worker-json.js", "ace/mode/json_worker", "JsonWorker");
+            worker.call("setValue", [doc.getValue()]);
+        doc.on("change", function(e) {
+            e.range = {
+                start: e.data.range.start,
+                end: e.data.range.end
+            };
+            worker.emit("change", e);
+        });
+
+
+            worker.on("error", function(e) {
+		session.setAnnotations([e.data]);
+            });
+
+            worker.on("ok", function() {
+		session.clearAnnotations();
+            });
+
+            return worker;
+	};
+
+
+    }).call(Mode.prototype);
+
+    exports.Mode = Mode;
+});
+	 
+defineace('ace/mode/json_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+
+
+    var oop = requireace("pilot/oop");
+    var TextHighlightRules = requireace("ace/mode/text_highlight_rules").TextHighlightRules;
+
+    var JsonHighlightRules = function() {
+
+    // regexp must not have capturing parentheses. Use (?:) instead.
+    // regexps are ordered -> the first match is used
+	this.$rules = {
+            "start" : [
+		{
+                    token : "variable", // single line
+                    regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]\\s*(?=:)'
+		}, {
+                    token : "string", // single line
+                    regex : '"',
+                    next  : "string"
+		}, {
+                    token : "constant.numeric", // hex
+                    regex : "0[xX][0-9a-fA-F]+\\b"
+		}, {
+                    token : "constant.numeric", // float
+                    regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+		}, {
+                    token : "constant.language.boolean",
+                    regex : "(?:true|false)\\b"
+		}, {
+                    token : "invalid.illegal", // single quoted strings are not allowed
+                    regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+		}, {
+                    token : "invalid.illegal", // comments are not allowed
+                    regex : "\\/\\/.*$"
+		}, {
+                    token : "paren.lparen",
+                    regex : "[[({]"
+		}, {
+                    token : "paren.rparen",
+                    regex : "[\\])}]"
+		}, {
+                    token : "text",
+                    regex : "\\s+"
+		}
+            ],
+            "string" : [
+		{
+                    token : "constant.language.escape",
+                    regex : /\\(?:x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|["\\\/bfnrt])/
+            }, {
+                token : "string",
+regex : '[^"\\\\]+',
+                merge : true
+            }, {
+                token : "string",
+                regex : '"',
+                next  : "start",
+                merge : true
+            }, {
+                token : "string",
+                regex : "",
+                next  : "start",
+                merge : true
+            }
+        ]
+    };
+    
+};
+
+oop.inherits(JsonHighlightRules, TextHighlightRules);
+
+exports.JsonHighlightRules = JsonHighlightRules;
+});
+
+defineace('ace/mode/matching_brace_outdent', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+
+
+    var Range = requireace("ace/range").Range;
+
+    var MatchingBraceOutdent = function() {};
+
+    (function() {
+
+	this.checkOutdent = function(line, input) {
+            if (! /^\s+$/.test(line))
+		return false;
+
+            return /^\s*\}/.test(input);
+	};
+
+	this.autoOutdent = function(doc, row) {
+            var line = doc.getLine(row);
+            var match = line.match(/^(\s*\})/);
+
+            if (!match) return 0;
+
+            var column = match[1].length;
+            var openBracePos = doc.findMatchingBracket({row: row, column: column});
+
+            if (!openBracePos || openBracePos.row == row) return 0;
+
+            var indent = this.$getIndent(doc.getLine(openBracePos.row));
+            doc.replace(new Range(row, 0, row, column-1), indent);
+	};
+
+	this.$getIndent = function(line) {
+            var match = line.match(/^(\s+)/);
+            if (match) {
+		return match[1];
+            }
+
+            return "";
+	};
+
+    }).call(MatchingBraceOutdent.prototype);
+
+    exports.MatchingBraceOutdent = MatchingBraceOutdent;
+});
+
+/* ***** BEGIN LICENSE BLOCK *****
+ * Distributed under the BSD license:
+ *
+ * Copyright (c) 2010, Ajax.org B.V.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Ajax.org B.V. nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+defineace('ace/mode/behaviour', ['require', 'exports', 'module'], function(require, exports, module) {
+"use strict";
+
+var Behaviour = function() {
+   this.$behaviours = {};
+};
+
+(function () {
+
+    this.add = function (name, action, callback) {
+        switch (undefined) {
+          case this.$behaviours:
+              this.$behaviours = {};
+          case this.$behaviours[name]:
+              this.$behaviours[name] = {};
+        }
+        this.$behaviours[name][action] = callback;
+    }
+    
+    this.addBehaviours = function (behaviours) {
+        for (var key in behaviours) {
+            for (var action in behaviours[key]) {
+                this.add(key, action, behaviours[key][action]);
+            }
+        }
+    }
+    
+    this.remove = function (name) {
+        if (this.$behaviours && this.$behaviours[name]) {
+            delete this.$behaviours[name];
+        }
+    }
+    
+    this.inherit = function (mode, filter) {
+        if (typeof mode === "function") {
+            var behaviours = new mode().getBehaviours(filter);
+        } else {
+            var behaviours = mode.getBehaviours(filter);
+        }
+        this.addBehaviours(behaviours);
+    }
+    
+    this.getBehaviours = function (filter) {
+        if (!filter) {
+            return this.$behaviours;
+        } else {
+            var ret = {}
+            for (var i = 0; i < filter.length; i++) {
+                if (this.$behaviours[filter[i]]) {
+                    ret[filter[i]] = this.$behaviours[filter[i]];
+                }
+            }
+            return ret;
+        }
+    }
+
+}).call(Behaviour.prototype);
+
+exports.Behaviour = Behaviour;
+});
+
+
+defineace('ace/mode/behaviour/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/behaviour'], function(require, exports, module) {
+
+
+    var oop = requireace("pilot/oop");
+    var Behaviour = requireace("ace/mode/behaviour").Behaviour;
+
+    var CstyleBehaviour = function () {
+
+	this.add("braces", "insertion", function (state, action, editor, session, text) {
+            if (text == '{') {
+		var selection = editor.getSelectionRange();
+		var selected = session.doc.getTextRange(selection);
+		if (selected !== "") {
+                    return {
+			text: '{' + selected + '}',
+			selection: false
+                    };
+		} else {
+                    return {
+			text: '{}',
+			selection: [1, 1]
+                    };
+		}
+            } else if (text == '}') {
+		var cursor = editor.getCursorPosition();
+		var line = session.doc.getLine(cursor.row);
+		var rightChar = line.substring(cursor.column, cursor.column + 1);
+		if (rightChar == '}') {
+                    var matching = session.$findOpeningBracket('}', {column: cursor.column + 1, row: cursor.row});
+                    if (matching !== null) {
+			return {
+                            text: '',
+                            selection: [1, 1]
+			};
+                    }
+		}
+            } else if (text == "\n") {
+		var cursor = editor.getCursorPosition();
+		var line = session.doc.getLine(cursor.row);
+		var rightChar = line.substring(cursor.column, cursor.column + 1);
+		if (rightChar == '}') {
+                    var openBracePos = session.findMatchingBracket({row: cursor.row, column: cursor.column + 1});
+                    if (!openBracePos)
+			return null;
+
+                    var indent = this.getNextLineIndent(state, line.substring(0, line.length - 1), session.getTabString());
+                    var next_indent = this.$getIndent(session.doc.getLine(openBracePos.row));
+
+                    return {
+			text: '\n' + indent + '\n' + next_indent,
+			selection: [1, indent.length, 1, indent.length]
+                    };
+		}
+            }
+	});
+
+	this.add("braces", "deletion", function (state, action, editor, session, range) {
+            var selected = session.doc.getTextRange(range);
+            if (!range.isMultiLine() && selected == '{') {
+		var line = session.doc.getLine(range.start.row);
+		var rightChar = line.substring(range.end.column, range.end.column + 1);
+		if (rightChar == '}') {
+                    range.end.column++;
+                    return range;
+		}
+            }
+	});
+
+	this.add("parens", "insertion", function (state, action, editor, session, text) {
+            if (text == '(') {
+		var selection = editor.getSelectionRange();
+		var selected = session.doc.getTextRange(selection);
+		if (selected !== "") {
+                    return {
+			text: '(' + selected + ')',
+			selection: false
+                    };
+		} else {
+                    return {
+			text: '()',
+			selection: [1, 1]
+                    };
+		}
+            } else if (text == ')') {
+		var cursor = editor.getCursorPosition();
+		var line = session.doc.getLine(cursor.row);
+		var rightChar = line.substring(cursor.column, cursor.column + 1);
+		if (rightChar == ')') {
+                    var matching = session.$findOpeningBracket(')', {column: cursor.column + 1, row: cursor.row});
+                    if (matching !== null) {
+			return {
+                            text: '',
+                            selection: [1, 1]
+			};
+                    }
+		}
+            }
+	});
+
+	this.add("parens", "deletion", function (state, action, editor, session, range) {
+            var selected = session.doc.getTextRange(range);
+            if (!range.isMultiLine() && selected == '(') {
+		var line = session.doc.getLine(range.start.row);
+		var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+		if (rightChar == ')') {
+                    range.end.column++;
+                    return range;
+		}
+            }
+	});
+
+	this.add("brackets", "insertion", function (state, action, editor, session, text) {
+            if (text == '[') {
+		var selection = editor.getSelectionRange();
+		var selected = session.doc.getTextRange(selection);
+		if (selected !== "") {
+                    return {
+			text: '[' + selected + ']',
+			selection: false
+                    };
+		} else {
+                    return {
+			text: '[]',
+			selection: [1, 1]
+                    };
+		}
+            } else if (text == ']') {
+		var cursor = editor.getCursorPosition();
+		var line = session.doc.getLine(cursor.row);
+		var rightChar = line.substring(cursor.column, cursor.column + 1);
+		if (rightChar == ']') {
+                    var matching = session.$findOpeningBracket(']', {column: cursor.column + 1, row: cursor.row});
+                    if (matching !== null) {
+			return {
+                            text: '',
+                            selection: [1, 1]
+			};
+                    }
+		}
+            }
+	});
+
+	this.add("brackets", "deletion", function (state, action, editor, session, range) {
+            var selected = session.doc.getTextRange(range);
+            if (!range.isMultiLine() && selected == '[') {
+		var line = session.doc.getLine(range.start.row);
+		var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+		if (rightChar == ']') {
+                    range.end.column++;
+                    return range;
+		}
+            }
+	});
+
+	this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
+            if (text == '"' || text == "'") {
+		var quote = text;
+		var selection = editor.getSelectionRange();
+		var selected = session.doc.getTextRange(selection);
+		if (selected !== "") {
+                    return {
+			text: quote + selected + quote,
+			selection: false
+                    };
+		} else {
+                    var cursor = editor.getCursorPosition();
+                    var line = session.doc.getLine(cursor.row);
+                    var leftChar = line.substring(cursor.column-1, cursor.column);
+
+                // We're escaped.
+                    if (leftChar == '\\') {
+			return null;
+                    }
+
+                // Find what token we're inside.
+                    var tokens = session.getTokens(selection.start.row);
+                    var col = 0, token;
+                    var quotepos = -1; // Track whether we're inside an open quote.
+
+                    for (var x = 0; x < tokens.length; x++) {
+			token = tokens[x];
+			if (token.type == "string") {
+			    quotepos = -1;
+			} else if (quotepos < 0) {
+			    quotepos = token.value.indexOf(quote);
+			}
+			if ((token.value.length + col) > selection.start.column) {
+                            break;
+			}
+			col += tokens[x].value.length;
+                    }
+
+                // Try and be smart about when we auto insert.
+                    if (!token || (quotepos < 0 && token.type !== "comment" && (token.type !== "string" || ((selection.start.column !== token.value.length+col-1) && token.value.lastIndexOf(quote) === token.value.length-1)))) {
+			return {
+                            text: quote + quote,
+                            selection: [1,1]
+			};
+                    } else if (token && token.type === "string") {
+                    // Ignore input and move right one if we're typing over the closing quote.
+			var rightChar = line.substring(cursor.column, cursor.column + 1);
+			if (rightChar == quote) {
+                            return {
+				text: '',
+				selection: [1, 1]
+                            };
+			}
+                    }
+		}
+            }
+	});
+
+	this.add("string_dquotes", "deletion", function (state, action, editor, session, range) {
+            var selected = session.doc.getTextRange(range);
+            if (!range.isMultiLine() && (selected == '"' || selected == "'")) {
+		var line = session.doc.getLine(range.start.row);
+		var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+		if (rightChar == '"') {
+                    range.end.column++;
+                    return range;
+		}
+            }
+	});
+
+    };
+
+    oop.inherits(CstyleBehaviour, Behaviour);
+
+    exports.CstyleBehaviour = CstyleBehaviour;
+});
+
+
+defineace('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/range', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
+
+
+var oop = requireace('pilot/oop');
+    var Range = requireace("ace/range").Range;
+    var BaseFoldMode = requireace("ace/mode/folding/fold_mode").FoldMode;
+
+    var FoldMode = exports.FoldMode = function() {};
+    oop.inherits(FoldMode, BaseFoldMode);
+
+    (function() {
+
+	this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
+	this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
+    
+	this.getFoldWidgetRange = function(session, foldStyle, row) {
+            var line = session.getLine(row);
+            var match = line.match(this.foldingStartMarker);
+            if (match) {
+		var i = match.index;
+
+		if (match[1])
+                    return this.openingBracketBlock(session, match[1], row, i);
+
+		var range = session.getCommentFoldRange(row, i + match[0].length);
+		range.end.column -= 2;
+		return range;
+            }
+
+            if (foldStyle !== "markbeginend")
+		return;
+            
+            var match = line.match(this.foldingStopMarker);
+            if (match) {
+		var i = match.index + match[0].length;
+
+		if (match[2]) {
+                    var range = session.getCommentFoldRange(row, i);
+                    range.end.column -= 2;
+                    return range;
+		}
+
+		var end = {row: row, column: i};
+		var start = session.$findOpeningBracket(match[1], end);
+            
+		if (!start)
+                    return;
+
+		start.column++;
+		end.column--;
+
+		return  Range.fromPoints(start, end);
+            }
+	};
+    
+    }).call(FoldMode.prototype);
+
+});
+
+defineace('ace/mode/folding/fold_mode', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+
+
+    var Range = requireace("ace/range").Range;
+
+    var FoldMode = exports.FoldMode = function() {};
+
+    (function() {
+
+	this.foldingStartMarker = null;
+	this.foldingStopMarker = null;
+
+    // must return "" if there's no fold, to enable caching
+	this.getFoldWidget = function(session, foldStyle, row) {
+            var line = session.getLine(row);
+            if (this.foldingStartMarker.test(line))
+		return "start";
+            if (foldStyle == "markbeginend"
+                && this.foldingStopMarker
+                && this.foldingStopMarker.test(line))
+		return "end";
+            return "";
+	};
+
+	this.getFoldWidgetRange = function(session, foldStyle, row) {
+            return null;
+	};
+
+	this.indentationBlock = function(session, row, column) {
+            var re = /\S/;
+            var line = session.getLine(row);
+            var startLevel = line.search(re);
+            if (startLevel == -1)
+		return;
+
+            var startColumn = column || line.length;
+            var maxRow = session.getLength();
+            var startRow = row;
+            var endRow = row;
+
+            while (++row < maxRow) {
+		var level = session.getLine(row).search(re);
+
+		if (level == -1)
+                    continue;
+
+		if (level <= startLevel)
+                    break;
+
+		endRow = row;
+            }
+
+            if (endRow > startRow) {
+		var endColumn = session.getLine(endRow).length;
+		return new Range(startRow, startColumn, endRow, endColumn);
+            }
+	};
+
+	this.openingBracketBlock = function(session, bracket, row, column, typeRe) {
+            var start = {row: row, column: column + 1};
+            var end = session.$findClosingBracket(bracket, start, typeRe);
+            if (!end)
+		return;
+
+            var fw = session.foldWidgets[end.row];
+            if (fw == null)
+		fw = this.getFoldWidget(session, end.row);
+
+            if (fw == "start" && end.row > start.row) {
+		end.row --;
+		end.column = session.getLine(end.row).length;
+            }
+            return Range.fromPoints(start, end);
+	};
+
+    }).call(FoldMode.prototype);
+
+});
+
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -11808,6 +12496,8 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
         }
     }
 
+
+
     this.$worker.postMessage({
         init : true,
         tlns: tlns,
@@ -11866,6 +12556,15 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
         }
         return "";
     };
+
+	  this.attachToDocument = function(doc) {
+              if(this.$doc)
+		  this.terminate();
+
+              this.$doc = doc;
+              this.call("setValue", [doc.getValue()]);
+              doc.on("change", this.changeListener);
+	  };
 
     this.terminate = function() {
         this._dispatchEvent("terminate", {});
