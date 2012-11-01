@@ -18,7 +18,7 @@ wm.registerPaths(
 	["wm", wm.libPath + "/wm"]
 );
 
-wm.loadLibs([ 
+wm.loadLibs([
 	// Dijit
 	"css.dijit.themes.tundra.tundra",
         //"css.dijit.themes.soria.soria",
@@ -26,7 +26,7 @@ wm.loadLibs([
 	"css.dojox.grid.resources.tundraGrid",
 	"css.dojox.widget.Portlet.Portlet",
 	"css.dojox.layout.resources.GridContainer",
-	
+
 	"dijit.form.ValidationTextBox",
 	"dijit.form.ComboBox",
 	"dijit.form.FilteringSelect",
@@ -37,7 +37,7 @@ wm.loadLibs([
 	"css.wm.base.styles.progressBar",
 	"css.dojox.widget.FisheyeList.FisheyeList",
 	"css.dojox.image.resources.image",
-	
+
 	"dijit.form._FormWidget",
 	"dijit._Container",
 	// wm utility libs
@@ -55,7 +55,7 @@ wm.loadLibs([
 	"wm.base.Control",
 	"wm.base.Plugin",
 	"wm.base.widget.VirtualList",
-	"wm.base.widget.List", 
+	"wm.base.widget.List",
     wm.isMobile ? "" : "wm.base.widget.DojoGrid",
 	"wm.base.widget.DojoChart",
 	"wm.base.widget.DojoGauge",
@@ -188,7 +188,6 @@ wm.loadLibs([
 	"wm.base.widget.Dialogs.GenericDialog",
 	"wm.base.widget.Dialogs.PageDialog",
 	"wm.base.widget.Dialogs.Toast",
-	"wm.base.widget.Dialogs.ColorPickerDialog",
 	"wm.base.widget.Editor",
 	"wm.base.widget.Editors.RichText",
 	"wm.base.widget.RelatedEditor",
@@ -217,10 +216,10 @@ wm.loadLibs([
 	"wm.base.widget.DataGrid",
 	"dojo.data.ItemFileWriteStore",
 	//"wm.base.widget.Toolbar",
-	"wm.base.components.componentList",	
+	"wm.base.components.componentList",
 
 	"wm.base.widget.ContextMenuDialog",
-	
+
 	// Silverlight for Dojo chart, gfx.
 	"wm.base.lib.Silverlight",
 	// Ext

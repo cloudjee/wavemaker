@@ -53,6 +53,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    return owner;
 	},
 	destroy: function() {
+    	this._isUnloading = true;
 	    wm.Page.deregisterPage(this);
 	  	var owner = this.getMainPage();
 	  	if (owner)

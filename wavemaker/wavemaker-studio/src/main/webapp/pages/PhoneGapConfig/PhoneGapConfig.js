@@ -58,7 +58,13 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
         d.addCallback(dojo.hitch(this, function(inHost) {
             var localhost = "http://" + inHost + ":" + location.port + "/" + studio.project.projectName;
-            if (dojo.indexOf(this.jsonData.xhrpaths, localhost) == -1) wm.Array.insertElementAt(this.jsonData.xhrpaths, localhost, 0);
+            if (dojo.indexOf(this.jsonData.xhrpaths, localhost) == -1) {
+				if (this.jsonData.xhrpaths.length) {
+	            	wm.Array.insertElementAt(this.jsonData.xhrpaths, localhost, 1);
+	            } else {
+		            this.jsonData.xhrpaths.push(localhost);
+	            }
+            }
 
             var cfHost = "http://" + studio.project.projectName + ".cloudfoundry.com";
             if (dojo.indexOf(this.jsonData.xhrpaths, cfHost) == -1) this.jsonData.xhrpaths.push(cfHost);
@@ -69,7 +75,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
             }); // remove empty items
             this.xhrPath.setOptions(options);
 
-            this.jsonData.xhrPath = this.jsonData.xhrPath || localhost;
+            this.jsonData.xhrPath = options[0]; // this sets the editor using the loop below
 
             wm.forEachProperty(this.jsonData, dojo.hitch(this, function(value, key) {
                 if (this[key] instanceof wm.AbstractEditor) {

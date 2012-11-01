@@ -291,7 +291,7 @@ dojo.declare("ResourceManager", wm.Page, {
 
 
         if (!this.isBlocked(this.selectedItem) && (
-        this.selectedItem instanceof wm.HTMLResourceItem || this.selectedItem instanceof wm.ImageResourceItem || this.selectedItem instanceof wm.XMLResourceItem || this.selectedItem instanceof wm.MiscResourceItem || this.selectedItem instanceof wm.CSSResourceItem || this.selectedItem instanceof wm.JSResourceItem)) {
+        this.selectedItem instanceof wm.HTMLResourceItem || this.selectedItem instanceof wm.ImageResourceItem || this.selectedItem instanceof wm.XMLResourceItem || this.selectedItem instanceof wm.MiscResourceItem || this.selectedItem instanceof wm.CSSResourceItem || this.selectedItem instanceof wm.JSResourceItem || this.selectedItem instanceof wm.JSONResourceItem)) {
 
             this.editorTabs.show();
             var layer = this.editorTabs.addPageContainerLayer("ResourceEditor", itemName);
@@ -788,10 +788,16 @@ wm.FolderResourceItem.extend({
 
         var newFile;
         switch (inName.replace(/^.*\./, "")) {
+			case "json":
+				newFile = new wm.JSONResourceItem({
+					itemName: inName
+				});
+				break;
             case "js":
                 newFile = new wm.JSResourceItem({
                     itemName: inName
                 });
+            
                 break;
             case "css":
                 newFile = new wm.CSSResourceItem({

@@ -743,7 +743,6 @@ dojo.declare("wm.Dialog", wm.Container, {
         return true;
     },
 
-    // TODO: Update colorpickerdialog to use this
     // TODO: Add property to control whether dialog goes below, above, left or right
     renderBoundsByPositionNode: function() {
         if (!this.fixPositionNode) return;

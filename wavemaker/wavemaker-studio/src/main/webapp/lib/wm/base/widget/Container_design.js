@@ -87,6 +87,8 @@ wm.Container.extend({
         var p = this.inherited(arguments);
         p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
         p.resizeToFit.ignoretmp = this.percEx && this.percEx.w && this.percEx.h || this.fitToContent;
+        p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.fitToContentWidth); // minWidth only applies if width is % or autosize is on
+        p.minHeight.ignoretmp = !this.schema.minHeight || this.schema.minHeight.ignore || (!this._percEx.h && !this.fitToContentHeight); // minWidth only applies if width is % or autosize is on
         return p;
     },
     writeChildren: function(inNode, inIndent, inOptions) {
@@ -153,11 +155,23 @@ wm.Container.extend({
         }
     },
     resizeToFit: function() {
+    	var w = this.width;
+    	var h = this.height;
         this.designResizeForNewChild("left-to-right", true);
         this.designResizeForNewChild("top-to-bottom", true);
         this._inDesignResize = true;
-        if (!this._percEx.h) this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
-        if (!this._percEx.w) this.setWidth(this.bounds.w + "px");
+        var changed = false;
+        if (!this._percEx.h && this.height != h) {
+        	this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
+        	changed = true;
+        }
+        if (!this._percEx.w && this.width != w) {
+        	this.setWidth(this.bounds.w + "px");
+        	changed = true;
+        }
+		if (!changed && (this._percEx.w || this._percEx.h)) {
+			app.toastWarning(studio.getDictionaryItem("wm.Container.RESIZE_TO_FIT_PERCENT_SIZE"));
+		}
         delete this._inDesignResize;
     },
     resizeUpdate: function(inBounds) {

@@ -168,7 +168,6 @@ WIDGET/TREES: Added new tree layer for all of these
 * JSObjTreeNode: Used by the old DebugTree; keeping it around but not currently used; not in a build layer
 
 WIDGET/DIALOGS:
-* ColorPickerDialog: Used by ColorPicker editor; put in colorpicker layer
 * DesignableDialog: While I expect most projects to have one or two of these, probably most login pages won't have these.  Currently part of the main build layer (TODO: REVIEW THIS)
 * Dialog: Required; part of every Application component
 * GenericDialog: Used for app.alert/app.confirm/app.prompt. Required unless we load it when developer calls app.alert.
@@ -808,7 +807,6 @@ dependencies = {
 		    layerDependencies: ["lib_build.js", "wm_editors"],
 			dependencies: [
 			"wm.base.widget.Editors.ColorPicker",
-			"wm.base.widget.Dialogs.ColorPickerDialog",
 			"dojox.widget.ColorPicker"
 			]
 		},

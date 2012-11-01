@@ -66,9 +66,10 @@ XHRServiceEditor.widgets = {
 	    }],
 	    fancyPanel4: ["wm.FancyPanel", {"height":"350px","title":"Return Type"}, {}, {
 		serviceResponseType: ["wm.prop.DataTypeSelect", {_classes: {domNode: ["StudioEditor"]}, useLiterals: true, addNewOption: true, "caption":"Return Type","captionAlign":"left","dataField":"dataValue","dataValue":"","displayField":"dataValue","displayValue":"","width":"293px"}, {onchange: "changed"}],
-		returnedJSONEditor: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "caption":"Enter sample JSON response","dataValue":undefined,"displayValue":"","height":"100%","width":"100%"}, {}, {
+		returnedJSONLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, "caption":"Enter sample JSON response", width: "100%"}],
+		returnedJSONEditor: ["wm.AceEditor", {_classes: {domNode: ["StudioEditor"]}, syntax: "json","dataValue":"","height":"100%","width":"100%"}, {}, {
 		    binding: ["wm.Binding", {}, {}, {
-			wire: ["wm.Wire", {"expression":"${serviceResponseType.dataValue} != \"New Type\"","targetProperty":"disabled"}, {}]
+			wire: ["wm.Wire", {"expression":"${serviceResponseType.dataValue} == \"New Type\"","targetProperty":"showing"}, {}]
 		    }]
 		}]
 	    }]

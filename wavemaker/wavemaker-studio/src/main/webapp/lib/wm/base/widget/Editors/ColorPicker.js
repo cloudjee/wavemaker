@@ -21,7 +21,6 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     className: "wmeditor wmcolorpickereditor",
     _editorBackgroundColor: true,
     defaultColor: "",
-    colorPickerDialog: null,
     cancelValue: null,
     _empty: true,
     regExp: "\#[0-9a-fA-F]{6}|\{.*\}",
@@ -78,7 +77,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 } else {
                     v1 = parseInt(inValue.substr(1, 1), 16);
                     v2 = parseInt(inValue.substr(2, 1), 16);
-                    v3 = parseInt(inValue.substr(3, 1), 16);                    
+                    v3 = parseInt(inValue.substr(3, 1), 16);
                 }
 
                 this.editorNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1 + v2 + v3 < 250) ? "white" : "black";
@@ -86,7 +85,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 this.editorNode.style.backgroundColor = "";
                 this.editorNode.style.color = "";
             }
-        } else {            
+        } else {
             if (typeof inValue == "string" && inValue.length) {
                 inValue = dojo.fromJson(inValue);
             }
@@ -120,7 +119,7 @@ dojo.declare(
 	// hasDownArrow: [const] Boolean
 	//		Set this textbox to display a down arrow button, to open the drop down list.
 	hasDownArrow: true,
-	
+
 	// openOnClick: [const] Boolean
 	//		Set to true to open drop down upon clicking anywhere on the textbox.
 	openOnClick: true,
@@ -139,7 +138,7 @@ dojo.declare(
 					     destroyRecursive: function() {if (!this.isDestroyed) this.destroy();} // this === this.dropDown
 					    })
 	    } else {
-		this.dropDown = 
+		this.dropDown =
 		    new wm.ColorPickerPanel({owner: this.owner,
 					     destroyRecursive: function() {if (!this.isDestroyed) this.destroy();} // this === this.dropDown
 					    });
@@ -153,7 +152,7 @@ dojo.declare(
 			this.set("value", inValue);
 		    } else {
 			this.set("value", dojo.toJson(inValue));
-		    }		    
+		    }
 		}
 		this.onChange(inValue);
             });
@@ -185,7 +184,7 @@ dojo.declare(
 
 dojo.declare("wm.ColorPickerPanel", wm.Container, {
 
-    colorPicker: null,  
+    colorPicker: null,
     colorPickerSet: false,
     border: "0",
     borderColor: "#888888",
@@ -209,12 +208,12 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
             wm.ColorPickerPanel.cssLoaded = true;
         }
         this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "170px", owner: this, parent: this});
-        this.colorPicker = new dojox.widget.ColorPicker({animatePoint: true, 
-							 showHsv: false, 
-							 showRtb: true, 
-							 webSave: false, 
+        this.colorPicker = new dojox.widget.ColorPicker({animatePoint: true,
+							 showHsv: false,
+							 showRtb: true,
+							 webSave: false,
 							 onChange: dojo.hitch(this, "valueChange")},
-							this.colorPickerControl.domNode);       
+							this.colorPickerControl.domNode);
 	wm.onidle(this, function() {
 	    this.colorPicker.startup();
 	    this.connect(dojo.query(".OKButton", this.domNode)[0], "onclick", this, "onOKClick");
@@ -231,9 +230,9 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
 /*
         this.textPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "26px", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "center"});
 
-        this.BrightenButton = new wm.Button({caption: "Bright",//studio.getDictionaryItem("wm.ColorPickerPanel.BRIGHTEN"), 
+        this.BrightenButton = new wm.Button({caption: "Bright",//studio.getDictionaryItem("wm.ColorPickerPanel.BRIGHTEN"),
 					     width: "75px", height: "100%", parent: this.textPanel, owner: this});
-        this.DarkenButton = new wm.Button({caption: "Dark",//studio.getDictionaryItem("wm.ColorPickerPanel.DARKEN"), 
+        this.DarkenButton = new wm.Button({caption: "Dark",//studio.getDictionaryItem("wm.ColorPickerPanel.DARKEN"),
 					   width: "75px", height: "100%", parent: this.textPanel, owner: this});
 
 	this.text = new wm.Text({
@@ -252,9 +251,9 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
 
         this.buttonPanel = new wm.Panel({_classes: {domNode: ["dialogfooter"]}, name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "right"});
 
-        this.CancelButton = new wm.Button({caption: "Cancel",//studio.getDictionaryItem("wm.ColorPickerDialog.CANCEL"), 
+        this.CancelButton = new wm.Button({caption: "Cancel",//studio.getDictionaryItem("wm.ColorPickerDialog.CANCEL"),
 					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
-        this.OKButton = new wm.Button({caption: "OK",//studio.getDictionaryItem("wm.ColorPickerDialog.OK"), 
+        this.OKButton = new wm.Button({caption: "OK",//studio.getDictionaryItem("wm.ColorPickerDialog.OK"),
 				       width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
 
         this.connect(this.BrightenButton, "onclick", this, "brighten");
@@ -275,7 +274,7 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
     },
 
     reset: function() {
-	if (this.getValue() != this.owner.getDataValue()) {	    
+	if (this.getValue() != this.owner.getDataValue()) {
 	    this.setDijitValue(this.owner.getDataValue());
 	}
 	this._initialValue = this.getValue();
@@ -298,10 +297,10 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
 	if (this.text && inValue != this.text.getDataValue()) {
 	    this.text.setDataValue(inValue);
 	}
-	
+
     },
-    
-    valueChange: function(inValue) {        
+
+    valueChange: function(inValue) {
         this._changed = true;
 	//this.text.setDataValue(inValue);
         this.onChange(inValue);
@@ -336,7 +335,7 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
             minValue = 40;
         for (var i = 0; i < 3; i++) {
             values[i] = Math.max(minValue,Math.min(255,Math.floor(values[i] * 1.2)));
-            var str = values[i].toString(16);            
+            var str = values[i].toString(16);
             if (str.length < 2) str = "0" + str;
             result += str;
         }
@@ -367,7 +366,7 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
             this.colorPicker.destroyRecursive();
         this.inherited(arguments);
     }
-    
+
 
 });
 
@@ -402,7 +401,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	    this._cupdating = true;
 	    this._onChange();
 	    this._cupdating = false;
-	});	
+	});
     },
     onOKClick: function() {
 	this.owner.editor.closeDropDown();
@@ -437,7 +436,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 		this.colorStop.setHeight("100%");
 		this.colorStop.setWidth("30px");
 		this.colorStop.setDataValue(90);
-	    } 
+	    }
 	} else {
 	    if (this.bottomPanel.layoutKind == "left-to-right") {
 		this.bottomPanel.setLayoutKind("top-to-bottom");
@@ -445,7 +444,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 		this.colorStop.setWidth("100%");
 		this.colorStop.setHeight("30px");
 		this.colorStop.setDataValue(10);
-	    } 
+	    }
 	}
 	this._onChange();
     },
@@ -455,7 +454,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	var colorStop = direction == "vertical" ? 100 - this.colorStop.getDataValue() : this.colorStop.getDataValue();
 	var startColor = this.startColor.getDataValue();
 	var endColor = this.endColor.getDataValue();
-	
+
 	var result = wm.getBackgroundStyle(startColor,endColor,colorStop,direction, "");
 	if (dojo.isIE < 10) {
 	    this.html.domNode.style.filter = result;
@@ -488,7 +487,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
             minValue = 40;
         for (var i = 0; i < 3; i++) {
             values[i] = Math.max(minValue,Math.min(255,Math.floor(values[i] * 1.2)));
-            var str = values[i].toString(16);            
+            var str = values[i].toString(16);
             if (str.length < 2) str = "0" + str;
             result += str;
         }
@@ -519,7 +518,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
             this.colorPicker.destroyRecursive();
         this.inherited(arguments);
     }
-    
+
 
 });
 

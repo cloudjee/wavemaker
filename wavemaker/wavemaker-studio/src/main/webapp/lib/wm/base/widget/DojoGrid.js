@@ -113,6 +113,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     },
 
     dataSetToSelectedItem: function() {
+    	this.selectedItem.dataSet = "";
         this.selectedItem.setLiveView((this.variable|| 0).liveView);
         this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
     },
@@ -1176,9 +1177,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             if (this._isDesignLoaded && this.columns.length && inValue && inValue.type ) {
                 if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
                 this._typeChangedConnect = this.connect(inValue, "typeChanged", this, function() {
-                    this.updateColumnData(); // if the type changes for this.variable, reapply this variable's new type info
-                    this.setDojoStore();
-                    this.renderDojoObj();
+                	wm.job(this.getRuntimeId() + ".typeChanged", this, function() {
+	                    this.updateColumnData(); // if the type changes for this.variable, reapply this variable's new type info
+	                    this.setDojoStore();
+	                    this.renderDojoObj();
+	                });
                 });
                 this.updateColumnData();
                 updatedColumns = true;
@@ -1349,7 +1352,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
             }
         }
-        if (useMobileColumn && (isAllPhoneCol || designMode && wm.List.prototype.desktopWidthExcedesBounds.call(this))) {
+        if (useMobileColumn && (isAllPhoneCol || designMode && !this.owner._loadingPage && wm.List.prototype.desktopWidthExcedesBounds.call(this))) {
             ;
         } else {
             useMobileColumn = false;
@@ -2153,9 +2156,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         if (inValue && inValue != '') {
         var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
         var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
-        if (formatterProps.prefix)
+        if (formatterProps.prefix) {
+           	if (formatterProps.prefix.match(/\/$/) && inValue.indexOf("/") == 0) inValue = inValue.substring(1);
             inValue = formatterProps.prefix + inValue;
-
+		}
         if (formatterProps.postfix)
             inValue = inValue + formatterProps.postfix;
 

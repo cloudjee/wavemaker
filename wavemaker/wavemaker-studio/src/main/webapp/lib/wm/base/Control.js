@@ -657,6 +657,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
 
     callOnShowParent: function() {
+    	if (this.owner && this.owner._isUnloading) return;
         var self = this;
         wm.forEachVisibleWidget(this, function(w) {
             if (self != w) { /* For internal widget detection of changes to showing state, use _onShowParent */
