@@ -1922,6 +1922,9 @@ wm.List.extend({
             this.deselectAll();
             return;
         }
+        wm.forEachProperty(inData, function(inValue, inKey) {
+            if (typeof inValue == "object") delete inData[inKey];
+        });
         this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {

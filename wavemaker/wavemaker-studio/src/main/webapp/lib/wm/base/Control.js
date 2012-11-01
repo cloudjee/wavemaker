@@ -68,7 +68,7 @@ dojo.declare("wm.Bounds", null, {
 	    b.h = inH;
 	    this._boundsDirty = true;
 	}
-	
+
 	// If b.l, b.w, b.t or b.h is a string like "100", it should be changed to integer before adding.
 	// To ensure that we multiple it by 1.
 	b.r = b.l*1 + b.w*1;
@@ -161,7 +161,7 @@ dojo.declare("wm.Bounds", null, {
     */
     _edges: {l:1, t:1, r:1, b:1},
     calcPadBorderMargin: function() {
-		var pbm = this.padBorderMargin;	
+		var pbm = this.padBorderMargin;
 		for(var e in this._edges)
 		    pbm[e] = this.borderExtents[e] + this.paddingExtents[e] + this.marginExtents[e];
 		if (this._isDesignLoaded && studio.useDesignBorder && wm.isDesignable(this) && (!this.border || this.border === "0")) {pbm.t++;pbm.b++;pbm.r++;pbm.l++;}
@@ -1279,7 +1279,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 overflowX: this.scrollX ? "auto" : overflow,
                 overflowY: this.scrollY ? "auto" : overflow
             };
-            var bordersWidth = "", bordersStyle = "", bordersColor = "";            
+            var bordersWidth = "", bordersStyle = "", bordersColor = "";
             if (this.designBorderState.t) {
             	bordersWidth += "1px ";
             	bordersStyle += "dashed ";
@@ -1306,7 +1306,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             	bordersWidth += this.borderExtents.b + "px ";
             	bordersStyle += "solid ";
             	bordersColor += this.borderColor + " ";
-            }            
+            }
             if (this.designBorderState.l) {
             	bordersWidth += "1px";
             	bordersStyle += "dashed";
@@ -1320,6 +1320,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             stylesObj.borderColor = bordersColor;
             stylesObj.borderWidth = bordersWidth;
         } else {
+            var device = this._isDesignLoaded ? studio.currentDeviceType : wm.device;
             stylesObj = {
                 margin: (margins.join("px ") || 0) + "px",
                 padding: (paddings.join("px ") || 0) + "px",
@@ -1327,7 +1328,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 borderWidth: (borders.join("px ") || 0) + "px",
                 borderColor: this.borderColor,
                 backgroundColor: this.backgroundColor,
-                overflowX: this.currentDeviceType != "desktop" ? "hidden" : this.scrollX ? "auto" : overflow,
+                overflowX: device != "desktop" ? "hidden" : this.scrollX ? "auto" : overflow,
                 overflowY: this.scrollY ? "auto" : overflow
             }
         }
@@ -1356,7 +1357,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		                cssTextItems.push("filter: " + inValue);
 		            } else {
 		                cssTextItems.push("background: " + inValue);
-		            }		       
+		            }
 		        } else {
 			        if (styleName == "backgroundImage") {
 			        	if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {

@@ -346,7 +346,7 @@ wm.LiveFormBase.extend({
 			    e.setWidth(this.editorWidth);
                         else
                             e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-		    if (studio.currentDevice == "desktop") {
+		    if (studio.currentDeviceType == "desktop") {
 			e.setHeight(this.editorHeight);
 		    } else {
 			e.desktopHeight = this.editorHeight;

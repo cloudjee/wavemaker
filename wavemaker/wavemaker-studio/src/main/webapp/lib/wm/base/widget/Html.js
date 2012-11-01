@@ -51,8 +51,8 @@ dojo.declare("wm.Html", wm.Control, {
 		            this.scheduleAutoSize();
                         }
 			return;
-		}	
-			
+		}
+
 		if (inHtml && dojo.isArray(inHtml))
 			inHtml = inHtml.join('');
 		if (inHtml && inHtml.value)
@@ -67,7 +67,12 @@ dojo.declare("wm.Html", wm.Control, {
         this._needsAutoSize = true;
         return wm.job(this.getRuntimeId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,true);}));
     },
-        doAutoSize: function(setSize, force) {
+ _onShowParent: function() {
+        if (this._needsAutoSize) {
+            this.scheduleAutoSize();
+        }
+    },
+     doAutoSize: function(setSize, force) {
             if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
 	    if (!force && !this._needsAutoSize) return;
 
@@ -85,14 +90,14 @@ dojo.declare("wm.Html", wm.Control, {
 		var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
 		if (newHeight < this.minHeight) {
 		    newHeight = this.minHeight;
-		} 
+		}
 
 		/* Account for space needed for scrollbars */
 		if (contentWidth > this.bounds.w) {
 		    newHeight += 17;
 		}
 		    this.bounds.h = newHeight;
-		    this.height = newHeight + "px";		
+		    this.height = newHeight + "px";
 /*
 		if (setSize) {
 		    this.setHeight(newHeight + "px");
@@ -155,7 +160,7 @@ dojo.declare("wm.Html", wm.Control, {
 	    this.inherited(arguments);
 	    if (this.isDesignLoaded())
                 if (this.autoSizeHeight || this.autoSizeWidth)
-	            this.doAutoSize(1,1);	
+	            this.doAutoSize(1,1);
         },
     getAutoSize: function() {
 	if (this.autoSizeWidth) return "width";

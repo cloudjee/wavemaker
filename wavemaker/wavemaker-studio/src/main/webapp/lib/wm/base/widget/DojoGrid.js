@@ -168,6 +168,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     /* TODO: This does not appear to support multi-select */
     setSelectedItem: function(inData) {
         if (inData instanceof wm.Variable) inData = inData.getData();
+        if (!inData) {
+            this.deselectAll();
+            return;
+        }
+        wm.forEachProperty(inData, function(inValue, inKey) {
+            if (typeof inValue == "object") delete inData[inKey];
+        });
         this.selectByQuery(inData);
     },
     selectItemOnGrid: function(obj, pkList) {
