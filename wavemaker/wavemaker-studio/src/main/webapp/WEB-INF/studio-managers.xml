@@ -174,15 +174,8 @@
                     <list />
                 </entry>
                 <entry key="0.2">
-                    <list>
-                        <bean
-                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.AddManifestToCommonStudioUpgradeTask">
-                            <property name="fileSystem">
-                                <ref bean="fileSystem" />
-                            </property>
-                        </bean>
-                    </list>
-                </entry>
+                    <list />
+                 </entry>
             </map>
         </property>
         <property name="upgrades">
