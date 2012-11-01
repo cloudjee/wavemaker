@@ -649,6 +649,10 @@ dojo.declare("wm.Application", wm.Component, {
                 wm.job("doRun", 100, this, "doRun");
                 return;
             }
+            /* IFrame added by phonegap build server seems to disrupt touch events */
+            if (document.body.nextSibling && document.body.nextSibling.tagName == "IFRAME") {
+                dojo.destroy(document.body.nextSibling);
+            }
             dojo["require"]("build.Gzipped.wm_phonegap_misc", true);
             dojo.forEach(wm.componentFixList._phonegap, function(fix) {
                 try {
