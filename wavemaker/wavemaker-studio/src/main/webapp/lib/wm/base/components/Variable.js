@@ -451,7 +451,7 @@ dojo.declare("wm.Variable", wm.Component, {
                 } else if (props[i] && props[i].type == "Date" && typeof v === "string") {
                 	v = this.data[i] = new Date(v).getTime();
                 }
-                
+
                 // we may not always want all related junk
                 if (v !== undefined) {
                     if (v instanceof wm.Variable) {
@@ -969,32 +969,14 @@ dojo.declare("wm.Variable", wm.Component, {
             var b = inSample[key];
             if (typeof b == "function") {
                 return b(a);
-            } else if (b && wm.typeManager.isStructuredType(inItem._dataSchema[key].type)) {
-                // figure out if we Really want to compare this object automatically fail
-                // or skip this test
-                var type = this._dataSchema[key].type;
-                if (type) {
-                    var typeDef = wm.typeManager.getType(type);
-                }
-
-                /* LiveView depth can be quite deep, and we could be querying on a selectedItem where every field is populated;
-                 * this means too many tests for good performance.  We may allow this later on, but for now, skip testing
-                 * liveSource subvariables
-                 */
-                if (typeDef && typeDef.liveService) {
-                    continue;
-                }
-
-                /* This is another ambiguous situation: if inSample contains an object and inItem doesn't have a value,
-                 * does that mean its not a match, or that inSample just contains too much detail?
-                 * For now, we're going to skip this test as well.
-                 */
-                else if (a === null || a === undefined) {
-                    continue;
-                }
+            } else if (b !== null && typeof b == "object" && wm.typeManager.isStructuredType(inItem._dataSchema[key].type)) {
+                var aempty = (!a || a instanceof wm.Variable && a.isEmpty() || a instanceof wm.Variable === false && wm.isEmpty(a));
+                var bempty = (!b || b instanceof wm.Variable && b.isEmpty() || b instanceof wm.Variable === false && wm.isEmpty(b));
+                if (aempty != bempty) return false;
+                if (aempty && bempty) continue;
 
                 /* Don't even TRY to compare isList subvariables */
-                else if (a instanceof wm.Variable && a.isList) {
+                if (a instanceof wm.Variable && a.isList) {
                     continue;
                 }
 
