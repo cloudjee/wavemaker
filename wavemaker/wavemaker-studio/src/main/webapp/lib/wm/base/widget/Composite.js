@@ -125,6 +125,7 @@ wm.publish = function(inCtor, inProperties) {
 // a custom widget which can own components and
 // exposes published component properties
 dojo.declare("wm.CompositeMixin", null, {
+    _hasCustomPath: true,
     _regenerateOnDeviceChange: 1,
         scrim: true, // prevent the user from interacting with the contents of the composite in designer
     lock: true, // prevent user from adding additional controls
@@ -158,8 +159,16 @@ dojo.declare("wm.CompositeMixin", null, {
             }
         }
 
-                this.start(); // this is created from a wm.Page where startup code goes in start method
-                this.onStart();
+        var cssText = this.constructor.prototype._cssText;
+        if (cssText) {
+            this.cssLoader = new wm.CssLoader({
+                owner: this,
+                relativeUrl: false
+            });
+            this.cssLoader.setCss(cssText);
+        }
+        this.start(); // this is created from a wm.Page where startup code goes in start method
+        this.onStart();
     },
     start: function() {}, // meant to be overridden by the end user's composite
     onStart: function() {}, // meant to be overriden as standard event handler

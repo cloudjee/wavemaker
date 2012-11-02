@@ -629,7 +629,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         // id
         this.updateId();
         // classes
-        var cNames = this.classNames + (this.owner ? ' ' + this.owner.declaredClass.replace(/\./g, "") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
+        var cNames = this.classNames + (this.owner ? ' ' + (this.owner._appendCssClassName || this.owner.declaredClass).replace(/\./g, "") + '-' + this.name : '') + (this.isRelativePositioned && this.parent && this.parent.layoutKind == 'left-to-right' ? ' wmInlineDiv' : '');
         dojo.addClass(n, cNames);
         this.initUserClasses();
         //this.updateBounds();
