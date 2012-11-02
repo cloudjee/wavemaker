@@ -57,29 +57,16 @@ wm.flattenObject = function(inObj, keepOld) {
 }
 
 wm.requireCss = function(modulepath) {
+    var stylenode = dojo.byId("CSS_" + modulepath.replace(/\./g,"_"));
+    if (stylenode) return;
 
-    var replaceSubstr = 'lib/dojo/dojo/../../../lib';
-    if (modulepath.indexOf(replaceSubstr) == 0) {
-    	modulepath = "lib" + modulepath.substring(replaceSubstr.length);
-    }
-    modulepath = ((modulepath.charAt(0) == "/" || modulepath.match(/^\w+:/)) ? "" : dojo.baseUrl) + modulepath;
-	while (modulepath.match(/[^\/]\/\.\.\//)) {
-        modulepath = modulepath.replace(/[^\/]*\/\.\.\/+/, "");
-    }
     var parts = modulepath.split(".");
     var filename = parts.pop();
     var path = parts.join(".");
     path = dojo.moduleUrl(path).path.replace(/lib\/\//, "lib/") + filename + ".css";
-    wm.requireCssPath(path);
-}
-wm.requireCssPath = function(path) {
-	var styleNodeId = "CSS_" + path.replace(/\./g,"_").replace(/\//g,"_");
-    var stylenode = dojo.byId(styleNodeId);
-    if (stylenode) return;
-
     stylenode = document.createElement("link");
     stylenode.rel = "stylesheet";
-    stylenode.id = styleNodeId;
+    stylenode.id = "CSS_"+modulepath.replace(/\./g,"_");
     stylenode.type="text/css";
     stylenode.href = path;
     document.getElementsByTagName("head")[0].appendChild(stylenode);

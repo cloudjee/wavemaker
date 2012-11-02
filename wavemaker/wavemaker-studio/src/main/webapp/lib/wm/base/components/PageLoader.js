@@ -14,18 +14,14 @@
 
 dojo.provide("wm.base.components.PageLoader");
 
-wm.load = function(inFile, allowCache,asyncCallback) {
+wm.load = function(inFile, allowCache,async) {
     if (djConfig.isDebug && !dojo.isFF) {
-	   console.info("wm.load: " + inFile);
+	console.info("wm.load: " + inFile);
     }
-    if (asyncCallback) {
-        var d = dojo.xhrGet({url: inFile, sync: false , preventCache: !allowCache});
-        if (typeof asyncCallback == "function") {
-            d.addCallback(asyncCallback);
-        }
-        return d;
+    if (async) {
+	return dojo.xhrGet({url: inFile, sync: false , preventCache: !allowCache});
     } else {
-        return dojo.xhrGet({url: inFile, sync: true , preventCache: !allowCache}).results[0];
+	return dojo.xhrGet({url: inFile, sync: !Boolean(async) , preventCache: !allowCache}).results[0];
     }
 }
 

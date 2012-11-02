@@ -276,9 +276,7 @@ dojo.declare("wm.Component", wm.Object, {
     getPath: function() {
         // FIXME: hack, at least move studio awareness to design-only code
         var p = '';
-        if (this.owner && this.owner._hasCustomPath) {
-            return this.owner.getPath();
-        } else if (this.isDesignLoaded() && studio.project) {
+        if (this.isDesignLoaded() && studio.project) {
             p = "projects/" + studio.project.getProjectPath() + "/";
         }
 
