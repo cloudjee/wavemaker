@@ -46,6 +46,8 @@ public class UpgradeManager implements InitializingBean {
 
     private StudioConfiguration studioConfiguration;
 
+    private static double oldestSupportedVersion = 0.43;
+    
     /**
      * Perform the upgrades; this will run through the list of potential upgrades iteratively until the project is at
      * the current version.
@@ -61,7 +63,10 @@ public class UpgradeManager implements InitializingBean {
 
         if (projectVersion > projectMaxVersion) {
             throw new WMRuntimeException(MessageResource.PROJECT_NEWER_THAN_STUDIO, project.getProjectName(), projectVersion, projectMaxVersion);
-        } else if (projectVersion < projectMaxVersion) {
+        } else if(projectVersion < oldestSupportedVersion){
+        	throw new WMRuntimeException(MessageResource.PROJECT_TOO_OLD_FOR_UPGRADE, project.getProjectName(), projectVersion);
+        }
+        else if (projectVersion < projectMaxVersion) {
             UpgradeInfo ret = new UpgradeInfo();
             String exportName = project.getProjectName() + "-upgrade-" + projectVersion + ".zip";
             String backupExportFile = this.deploymentManager.exportProject(exportName);

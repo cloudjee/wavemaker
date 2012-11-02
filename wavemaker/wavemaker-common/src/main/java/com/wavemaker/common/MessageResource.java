@@ -240,7 +240,7 @@ public class MessageResource {
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
     public static final MessageResource PROJECT_NEWER_THAN_STUDIO = new MessageResource("com.wavemaker.tools$ProjectNewerThanStudio");
-
+     
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
     public static final MessageResource NO_DATA_SERVICE_MGR_BEAN_FOUND = new MessageResource("com.wavemaker.tools$NoDataServiceMgrBeanFound");
 
@@ -252,6 +252,9 @@ public class MessageResource {
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
     public static final MessageResource PROJECT_TOO_MANY_SERVICE_WIRES = new MessageResource("com.wavemaker.tools.project$TooManyServiceWires");
+    
+    @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
+    public static final MessageResource PROJECT_TOO_OLD_FOR_UPGRADE = new MessageResource("com.wavemaker.tools$ProjectTooOldForUpgrade");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
     public static final MessageResource UTIL_FILEUTILS_PATHDNE = new MessageResource("com.wavemaker.common.util$FileUtils_PathDNE");
