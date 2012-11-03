@@ -223,6 +223,7 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
     colorPickerControl: null,
     init: function() {
 	this.inherited(arguments);
+		dojo.require("dojox.color");
         dojo.require("dojox.widget.ColorPicker");
     },
     postInit: function() {
