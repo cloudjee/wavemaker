@@ -19,20 +19,20 @@ dojo.require('wm.base.lib.util');
 	Base class that supports property inspection and binding.
 	<br/><br/>
 	Almost all objects in WaveMaker are instances of <i>wm.Object</i>.
-	In particular, all Components and Widgets descend from <i>wm.Object</i> 
+	In particular, all Components and Widgets descend from <i>wm.Object</i>
 	<br/><br/>
 	<i>wm.Object</i> supports a generalized property system: in order to
 	access or modify properties on a <i>wm.Object</i> use the
 	<a href="#getValue">getValue</a>/<a href="#setValue">setValue</a> API.
 	<br/><br/>
-	<a href="#getValue">getValue</a> takes the name of the property to examine. 
-	<a href="#setValue">setValue</a> takes 
-	the name of the property and the value to set. 
+	<a href="#getValue">getValue</a> takes the name of the property to examine.
+	<a href="#setValue">setValue</a> takes
+	the name of the property and the value to set.
 	<a href="#getValue">getValue</a>/<a href="#setValue">setValue</a> support dot notation.
 	<br/><br/>
 	For all objects that descend from <i>wm.Object</i>.use the
 	<a href="#getValue">getValue</a>/<a href="#setValue">setValue</a>
-	API to access documented properties 
+	API to access documented properties
 	<br/><br/>
 	Examples
 	@example
@@ -44,7 +44,7 @@ dojo.require('wm.base.lib.util');
 	<br/>
 	//"panel1" contains an object named "label1"
 	this.panel1.setValue("label1.caption", "hello world");
-	
+
 	@name wm.Object
 	@class
 */
@@ -118,12 +118,12 @@ dojo.declare("wm.Object", null, {
 	},
 	/**
 		Get the value of a named property.
-		
-		Supports dot notation, e.g. 
+
+		Supports dot notation, e.g.
 		@example this.getValue("customer.name.first")
-		
+
 		@param {String} inName Name of property
-		
+
 		@see <a href="#setValue">setValue</a>
 	*/
 	getValue: function(inName) {
@@ -136,7 +136,7 @@ dojo.declare("wm.Object", null, {
 		// Replace all [\d+] with .[\d+] so that split will work properly and separate out array index substrings
 	    var parts = dojo.isString(inName) ? inName.replace(/([^\.])\[/g, "$1.[").split('.') : inName;
 
-	    // if we get something stupid like "studio.wip.widgetname" thats not going to be resolvable by this object as this object won't 
+	    // if we get something stupid like "studio.wip.widgetname" thats not going to be resolvable by this object as this object won't
 	    // know what studio is.  window does know what studio is...
 	    var o = (parts[0] == "studio" && this instanceof wm.Application) ? window : this;
 	    var p;
@@ -164,15 +164,15 @@ dojo.declare("wm.Object", null, {
 		return o._getValue ? o._getValue(p) : o[p];
 	},
 	/**
-		Set the value of a named property. 
+		Set the value of a named property.
 		Using this method to set properties is <b>required</b> to support binding.
-		
-		Supports dot notation, e.g. 
+
+		Supports dot notation, e.g.
 		@example this.setValue("customer.name.first", "Harry")
-		
+
 		@param {String} inName Name of property
 		@param {Any} inValue Value to set on property
-		
+
 		@see <a href="#setValue">getValue</a>
 	*/
 	setValue: function(inName, inValue) {
@@ -201,13 +201,13 @@ dojo.mixin(wm.Object, {
 	/**
 		@private
 		Object metadata (aka "schema") is stored using function prototypes
-		(aka classes) to take advantage of built-in copy-on-write 
+		(aka classes) to take advantage of built-in copy-on-write
 		prototype chaining.
 		Schema class is stored in a class-property called "schemaClass",
-		and an instance of it is made available in the related class prototype 
+		and an instance of it is made available in the related class prototype
 		as "schema".
 	*/
-	//FIXME: have I confused myself into using a overly complex mechanism? 
+	//FIXME: have I confused myself into using a overly complex mechanism?
 	makeSchema: function(inClass) {
 		//console.info("makeSchema:", inClass.prototype);
 		// make an empty function so we get a prototype
@@ -221,7 +221,7 @@ dojo.mixin(wm.Object, {
 		catch(e){
 			// do nothing.
 		}
-		
+
 		// if we have a superclass, chain to it's schema
 		if (superClass) {
 			var ctor = this.getSchemaClass(superClass.constructor);
@@ -238,10 +238,10 @@ dojo.mixin(wm.Object, {
 	/**
 		Add entries to a class schema.
 		Note that "inClass" is a class (function), not a class-name (string).
-		
+
 		@param {Function} inClass Add schema entries to this class.
 		@param {Object} inSchema Schema entries in object notation.
-		
+
 		@example
 wm.Object.extendSchema(wm.MyButton, {
 	confirmPrompt: { writeonly: 1} // configure flags for confirmPrompt property
@@ -252,7 +252,7 @@ wm.Object.extendSchema(wm.MyButton, {
 	    var className = inClass.prototype.declaredClass;
 	    if (wm.extendSchemaDictionary) {
 		var dictionary = wm.extendSchemaDictionary[className];
-		if (dictionary) {		    
+		if (dictionary) {
 		    for (var i in dictionary) {
 			if (inSchema[i]) {
 			    inSchema[i].shortname = dictionary[i];
@@ -344,9 +344,9 @@ wm.Object.extend({
 		for (var p in inSchema) {
 			if (p == 'inherited'){
 				//console.info('ignoring inherited function here..... for id = ', inSchema.id);
-				continue;	
+				continue;
 			}
-			
+
 			if (!(p in ioProps) && !(p in op)) {
 				var t = getInfo.call(this, p);
 				if (!t.noprop)
@@ -367,7 +367,8 @@ wm.Object.extend({
 		Return memoized list of property information records.
 	*/
 	listProperties: function() {
-		return this.constructor._publishedProps || (this.constructor._publishedProps = this._listProperties());
+		var props = this.constructor._publishedProps || (this.constructor._publishedProps = this._listProperties());
+		return dojo.clone(props);
 	},
 	/**
 		Return memoized list of value information records.
