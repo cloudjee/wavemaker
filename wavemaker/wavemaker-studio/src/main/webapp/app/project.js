@@ -675,7 +675,7 @@ dojo.declare("wm.studio.Project", null, {
                 dWhiteList.callback();
             });
 		}));
-		
+
         var d1 = new dojo.Deferred();
         dWhiteList.addCallback(dojo.hitch(this, function() {
             if (!studio.isCloud()) {
@@ -692,8 +692,8 @@ dojo.declare("wm.studio.Project", null, {
         var d2 = new dojo.Deferred();
         d1.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
-            var src = this.generateApplicationSource();
             studio.setSaveProgressBarMessage(this.projectName + ".js");
+            var src = this.generateApplicationSource();
             allProjectJS += src;
 
             var dlocal = this.saveProjectData(this.projectName + ".js", src, false, true);
