@@ -35,8 +35,8 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 	deploy: function() {
 		wm.Property.deploy = true;
 		try {
-			var json = this.getComponentJson();
-			studio.deployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, json);
+		    var json = this.getComponentJson();
+		    studio.deployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, json);
 		} finally {
 			wm.Property.deploy = false;
 		}
@@ -83,70 +83,100 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 
 
 dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
-	getComponentJson: function() {
-		if (!this.publishName || !studio.page)
-			return;
-		//
-		var klass = this.namespace ? this.namespace + '.' + this.publishName : this.publishName;
-		var pageComponents = studio.page.writeComponents(sourcer_tab);
-		var root = studio.page.root;
-		var rootWidgets = root.writeComponents(sourcer_tab);
-		var components = pageComponents.concat(rootWidgets).join(",\n");
-		
-		
-		var widgets = klass + ".components = {" + sourcer_nl + components /*source_body(studio.page)*/ + "}";
-		var css = studio.getCss();
-		var html = studio.getMarkup();
-		//
-		var resource = 'common.packages.' + klass;
-		var group = this.group || "Published";
-		var image = "images/wm/widget.png";
-		var displayName = this.displayName || this.publishName;
-		//
-		// FIXME: hackalicious
-		var js = studio.getScript();
-		js = js.split("\n");
-		js.shift();
-		// stream box properties specially
-		var rootProps = ["layoutKind", "verticalAlign", "horizontalAlign"];
-		dojo.forEach(rootProps, function(p) {
-			if (root[p])
-				js.unshift("  " + p + ": \"" + root[p] + "\",");
-		});
-		//
-		js.unshift('dojo.declare("' + klass + '", wm.Composite, {');
-		js = js.join("\n");
-		//
-		var reg = 'wm.registerPackage(["' +
-			group + '", ' +
-			'"' + displayName + '", ' +
-			'"' + klass + '", ' +
-			'"' + resource + '", ' +
-			'"' + image + '", ' +
-			'"' + this.description + '", ' +
-			'{width: "' + this.width + '", height: "' + this.height + '"},' + 
-		        "false" + 
-		']);';
-		//
-		var c, props = [];
-		for (var n in studio.page.$) {
-			c = studio.page.$[n];
-			if (c instanceof wm.Property) {
-				props.push(c.publish());
-			}
+
+	deploy: function() {
+		wm.Property.deploy = true;
+		try {
+		    var json = this.getComponentJson();
+		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json);
+		} finally {
+			wm.Property.deploy = false;
 		}
-		props = props.length ? 'wm.publish(' + klass + ', [\n\t' + props.join(',\n\t') + '\n]);\n \n' : "";
-		//
-		return [
-			'dojo.provide("' + resource + '");', '\n \n',
-			js, '\n \n',
-			widgets, '\n \n',
-			props,
-//		    css ? klass + '.css = "' + escape(css) + '";' + '\n \n' : '',
-//		    html ? klass + '.html = "' + escape(html) + '";' + '\n \n' : '',
-			reg
-		].join('');
+	},
+
+    getComponentJson: function() {
+	if (!this.publishName || !studio.page)
+	    return;
+	//
+	var klass = this.namespace ? this.namespace + '.' + this.publishName : this.publishName;
+	var pageComponents = studio.page.writeComponents(sourcer_tab);
+	var root = studio.page.root;
+	var rootWidgets = root.writeComponents(sourcer_tab);
+	var components = pageComponents.concat(rootWidgets).join(",\n");
+
+
+	var widgets = klass + ".components = {" + sourcer_nl + components /*source_body(studio.page)*/ + "}";
+	var css = studio.getCss();
+	var html = studio.getMarkup();
+	//
+	var resource = 'common.packages.' + klass + "." + klass.replace(/^.*\./,"");
+	var group = this.group || "Published";
+	var image = "images/wm/widget.png";
+	var displayName = this.displayName || this.publishName;
+	//
+	// FIXME: hackalicious
+	var js = studio.getScript();
+	js = js.split("\n");
+	js.shift();
+
+	/* Enables pictures to get images from the Composite's folder */
+	js.unshift("  getPath: function() {return dojo.moduleUrl('common.packages." + klass + "').uri;},");
+
+	/* Enables the CSS designed for widgets in this page to affect the the widgets in the composite as well */
+	js.unshift("  _appendCssClassName: '" + studio.project.pageName + "',");
+	// stream box properties specially
+	var rootProps = ["layoutKind", "verticalAlign", "horizontalAlign"];
+	dojo.forEach(rootProps, function(p) {
+	    if (root[p])
+		js.unshift("  " + p + ": \"" + root[p] + "\",");
+	});
+	//
+	js.unshift('dojo.declare("' + klass + '", wm.Composite, {');
+	js = js.join("\n");
+	//
+	var reg = 'wm.registerPackage(["' +
+	    group + '", ' +
+	    '"' + displayName + '", ' +
+	    '"' + klass + '", ' +
+	    '"' + resource + '", ' +
+	    '"' + image + '", ' +
+	    '"' + this.description + '", ' +
+	    '{width: "' + this.width + '", height: "' + this.height + '"},' +
+	    "false" +
+	    ']);';
+	//
+	var c, props = [];
+	for (var n in studio.page.$) {
+	    c = studio.page.$[n];
+	    if (c instanceof wm.Property) {
+		props.push(c.publish());
+	    }
 	}
+	props = props.length ? 'wm.publish(' + klass + ', [\n\t' + props.join(',\n\t') + '\n]);\n \n' : "";
+
+
+	var css = dojo.trim(studio.getCss());
+        var jscss = klass + ".prototype._cssText = '";
+        var cssArray = [];
+        dojo.forEach(css.split(/\n/), function(line) {
+            if (line.match(/\S/))
+		cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + "\\\n");
+        });
+        jscss += cssArray.join("") + "';\n\n";
+
+
+	//
+	return [
+	    'dojo.provide("' + resource + '");', '\n \n',
+	    js, '\n \n',
+	    widgets, '\n \n',
+	    props,
+	    jscss,
+	    //    css ? klass + '.css = "' + escape(css) + '";' + '\n \n' : '',
+	    //    html ? klass + '.html = "' + escape(html) + '";' + '\n \n' : '',
+	    reg
+	].join('');
+    }
 });
 
 /*

@@ -41,5 +41,11 @@ wm.Html.extend({
     themeable: false,
     getAutoSize: function() {
 	return (this.autoSizeHeight ? "height" : (this.autoSizeWidth ? "width" : ""));
+    },
+    set_html: function(inHtml) {
+	if (inHtml && String(inHtml).indexOf('resources/') === 0) {
+	    this._htmlIsResource = 1;
+	}
+    	this.setHtml(inHtml);    
     }
 });

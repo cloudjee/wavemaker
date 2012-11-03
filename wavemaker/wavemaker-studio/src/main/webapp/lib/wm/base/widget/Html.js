@@ -19,6 +19,7 @@ dojo.declare("wm.Html", wm.Control, {
     width: "100%",
     height: "200px",
 	html: "",
+	_htmlIsResource: 0,
         autoScroll: true,
 	init: function() {
 		dojo.addClass(this.domNode, "wmhtml");
@@ -26,6 +27,9 @@ dojo.declare("wm.Html", wm.Control, {
 	    this.connect(this.domNode, "onclick", this, function(evt) {
 		wm.onidle(this, "onclick", evt);
 	    });
+	    if (this.html && String(this.html).indexOf('resources/') === 0) {
+	    	this._htmlIsResource = 1;
+	    }
 	    this.setHtml(this.html);
 	},
     build: function() {
@@ -39,7 +43,7 @@ dojo.declare("wm.Html", wm.Control, {
 	},
 	setHtml: function(inHtml) {
                 var innerHTML = this.sizeNode.innerHTML;
-	        if (inHtml && String(inHtml).indexOf('resources/') == 0)
+	        if (inHtml && this._htmlIsResource)
 		{
 			if (!this.htmlLoader)
 				this.htmlLoader = new wm.HtmlLoader({owner: this, relativeUrl: true});
