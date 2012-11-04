@@ -29,7 +29,7 @@ wm.Object.extendSchema(wm.Component, {
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
         deletionDisabled: {ignore: 1},
-    components: { ignore: 1 },
+    components: { ignore: 1, type: "Object" },
     designWrapper: { ignore: 1 },
     eventBindings: { ignore: 1 },
     id: { ignore: 1 },
@@ -48,7 +48,7 @@ wm.Object.extendSchema(wm.Component, {
     toString: {method:1, doc: 1, returns: "String"},
     getId: {method:1, doc: 1, returns: "String"},
     getRuntimeId: {method:1, doc: 1, returns: "String"},
-    $: {ignore: true,doc: 1},
+    "$": {ignore: true,doc: 1, type: "Object"},
     localizedDeclaredClass: {ignore:1}
 });
 
