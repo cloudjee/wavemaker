@@ -205,8 +205,15 @@ Studio.extend({
                                 undefined, dojo.hitch(this, function() {
 	                            this.project.closeProject();
                                     //this.importFileDialog = this.getImportFileDialog().show();
-				    this.getImportProjectDialog().show();
-                                }));
+							    var d = this.getImportProjectDialog();
+							    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_PROJECT"));
+							    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function() {
+								    d.dismiss();
+									this.project.openProject(d.page.getPath());									
+							    });
+							    d.page.setService("deploymentService", "uploadProjectZipFile");
+							    d.show();
+                            }));
       } else
 	  this.getImportProjectDialog().show();
           //this.importFileDialog = this.getImportFileDialog().show();
@@ -284,7 +291,16 @@ Studio.extend({
 	    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED2", {error: inError}));
 
 	},
-
+	importComponent: function() {
+		var d = this.getImportProjectDialog();
+	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_COMPONENT"));
+	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inResponse) {
+		    d.dismiss();
+			this.deployComponentCallback(inResponse.module, inResponse.displayName, inResponse.group, inResponse);
+	    });
+	    d.page.setService("deploymentService", "uploadClientComponent");
+	    d.show();		
+	},
 
 
     /* Methods added here are new for the 6.4 deployment dialog */

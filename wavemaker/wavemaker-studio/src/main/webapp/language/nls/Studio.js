@@ -253,6 +253,7 @@
     ALERT_BUILDING_WAR_SUCCESS: "Successfully generated WAR file: <ul><li>${inResponse}</li></ul>",
     ALERT_BUILDING_WAR_FAILED: "Error occurred while building WAR FILE!<br/>${error}",
     TITLE_IMPORT_PROJECT: "Import Project",
+    TITLE_IMPORT_COMPONENT: "Import Component",    
     TITLE_CREATE_LIVE_VIEW: "New LiveView",
     //TOAST_IMPORT_PROJECT: "Successfully imported project ${inResponse}",
     //ALERT_IMPORT_PROJECT_FAILED: "Error occurred while importing project!\n${error}",

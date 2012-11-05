@@ -195,7 +195,10 @@ height: "29px", width: "420px",
 								   onClick: "uploadStudioPatches"},
 								  {"defaultLabel": "Import Partner Services...",
 								    idInPage: "partnerServicesItem",
-								   onClick: "importPartnerService"}
+								   onClick: "importPartnerService"},
+								   {"defaultLabel": "Import Component...",
+								    idInPage: "importComponentItem",
+								   onClick: "importComponent"}
 							      ]
 							     }
 							 ]},

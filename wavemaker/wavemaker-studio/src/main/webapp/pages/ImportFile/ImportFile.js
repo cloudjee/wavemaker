@@ -24,9 +24,21 @@ dojo.declare("ImportFile", wm.Page, {
     onShow: function() {
 	this.filename.setDataValue("");
     },
+    onHide: function() {
+    	if (this._onSuccessConnect) dojo.disconnect(this._onSuccessConnect);
+    },
+    /*
     openProject: function() {
 	this.owner.dismiss();
 	studio.project.openProject(this.fileUploader.variable.getData()[0].path);
+    },
+    */
+    setService: function(inService, inOperation) {
+		this.fileUploader._serviceVariable.setService(inService);
+		this.fileUploader._serviceVariable.setOperation(inOperation);
+    },
+    getPath: function() {
+    	return this.fileUploader.variable.getData()[0].path;
     },
     selectLastItem: function() {
 	wm.onidle(this, function() {
@@ -43,7 +55,7 @@ dojo.declare("ImportFile", wm.Page, {
 	
     },
     onSuccess: function() {
-	    this.openProject();
+	    //this.openProject();
     },
     _end: 0
 });
