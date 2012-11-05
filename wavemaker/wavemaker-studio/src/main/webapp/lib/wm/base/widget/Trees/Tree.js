@@ -145,8 +145,19 @@ dojo.declare("wm.TreeNode", null, {
 		this.parent.renderChild(this);
 		if (this.selected)
 			this.tree.selected = this;
-		if (!this.closed)
+		if (!this.closed) {
 			this.initKids();
+		}
+		dojo.forEach(this.kids, dojo.hitch(function(child, i) {
+			var index = child.parentIndex;
+			if (index !== undefined && index !== i) {
+				if (index >= this.domNode.childNodes.length) {
+					this.domNode.appendChild(child.domNode);
+				} else {
+					dojo.place(child.domNode, this.domNode, "index");
+				}
+			}	
+		}));
 	},
 	createKidsNode: function() {
 	    if (this.kidsNode) return this.kidsNode;
@@ -294,7 +305,9 @@ dojo.declare("wm.TreeNode", null, {
             var c = this.kids[this.kids.length-2];
             // slight speed bump to style when node outside dom.
             c.styleNodeNoDom();
-        } else ;
+        } else {
+        	;
+        }
         inChild.styleNode();
         dojo.setSelectable(inChild.domNode, false);
         if (i == this.kids.length-1)

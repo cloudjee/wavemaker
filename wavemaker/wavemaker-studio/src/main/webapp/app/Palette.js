@@ -223,8 +223,11 @@ dojo.declare("wm.Palette", wm.Tree, {
 		if (inTab){
 			var p = this.findItemByName(inTab) || this.makeGroup(inTab);
 			wm.fire(this.findItemByName(inName, p), "destroy");
+			var parentIndex = inProps.indexInParent;
+			delete inProps.indexInParent;
 			var n = new wm.TreeNode(p, {
 					name: inName,
+				parentIndex: parentIndex,
 			    content: inName + (isBeta ? " " + bundlePackage.isBeta : ""),
 			                data: {description: inDescription,
 					       klass: inClass},
