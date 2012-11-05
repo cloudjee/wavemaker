@@ -34,8 +34,9 @@ dojo.declare("ImportFile", wm.Page, {
     },
     */
     setService: function(inService, inOperation) {
-		this.fileUploader._serviceVariable.setService(inService);
-		this.fileUploader._serviceVariable.setOperation(inOperation);
+		this.fileUploader.service = inService;
+		this.fileUploader.operation = inOperation;
+		this.fileUploader.createDijit();
     },
     getPath: function() {
     	return this.fileUploader.variable.getData()[0].path;
