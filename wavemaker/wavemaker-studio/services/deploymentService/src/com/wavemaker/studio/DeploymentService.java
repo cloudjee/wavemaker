@@ -19,7 +19,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.zip.ZipArchive;
+import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +44,9 @@ import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Deployment Service used by WaveMaker to manage and deploy projects to various deployment targets.
@@ -49,11 +59,15 @@ public class DeploymentService {
 
     private static final String SUCCESS = "SUCCESS";
 
+    private static final String CLIENT_COMPONENTS_STAGE = "stage";
+
     private DeploymentManager deploymentManager;
 
     private DeploymentTargetManager deploymentTargetManager;
 
     private ServiceDeploymentManager serviceDeploymentManager;
+
+    private StudioFileSystem fileSystem;
 
     public String getRequestId() {
         UUID uuid = UUID.randomUUID();
@@ -292,6 +306,24 @@ public class DeploymentService {
         return this.deploymentManager.listThemeImages(themename);
     }
 
+    public FileUploadResponse uploadClientComponent(MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        String className = fileName.substring(0, fileName.lastIndexOf(".zip"));
+        FileUploadResponse ret = new FileUploadResponse();
+        Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(CLIENT_COMPONENTS_STAGE);
+        ZipArchive.unpack(file.getInputStream(), componentStage);
+        com.wavemaker.tools.io.File jsFile = componentStage.getFile(className + "/" + className + ".js");
+
+        String str = getClientComponentPackageString(jsFile);
+        String packageStr = str.substring(0, str.lastIndexOf("." + className));
+
+        Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder(StringUtils.packageToSrcFilePath(packageStr));
+        componentFolder.createIfMissing();
+
+        ret.setError("Folders successfully created");
+        return ret;
+    }
+
     @HideFromClient
     public void setDeploymentManager(DeploymentManager deploymentManager) {
         this.deploymentManager = deploymentManager;
@@ -305,5 +337,33 @@ public class DeploymentService {
     @HideFromClient
     public void setDeploymentTargetManager(DeploymentTargetManager deploymentTargetManager) {
         this.deploymentTargetManager = deploymentTargetManager;
+    }
+
+    @HideFromClient
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    private static String getClientComponentPackageString(com.wavemaker.tools.io.File file)
+    {
+        String rtn;
+
+        String str = file.getContent().asString();
+        Pattern p = Pattern.compile("\\s*dojo\\.provide\\s*\\(\\s*\"");
+        Matcher m = p.matcher(str);
+        if (m.find()) {
+            str = str.substring(m.end());
+        } else {
+            return null;
+        }
+        p = Pattern.compile("\"");
+        m = p.matcher(str);
+        if (m.find()) {
+            rtn = str.substring(0, m.end()-1);
+        } else {
+            return null;
+        }
+
+        return rtn;
     }
 }
