@@ -56,6 +56,7 @@ import com.wavemaker.tools.data.parser.HbmWriter;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
@@ -941,6 +942,7 @@ public class DataModelConfiguration {
             if (compile) {
                 this.projectCompiler.compile();
             }
+            reloadModifiedClasses();
             updateService(callback);
         }
     }
@@ -1329,8 +1331,6 @@ public class DataModelConfiguration {
             if (generateJavaTypes) {
                 writeJavaType(ei, backup);
             }
-
-            this.modifiedEntityInfos.remove(ei);
         }
 
     }
@@ -1948,6 +1948,27 @@ public class DataModelConfiguration {
 
         if (includeNullValues || !ObjectUtils.isNullOrEmpty(values)) {
             queryRunner.addBindParameters(names, types, values, isList);
+        }
+    }
+
+    private void reloadModifiedClasses() {
+        if (this.modifiedEntityInfos == null || this.modifiedEntityInfos.size() <= 0) {
+            return;
+        }
+
+        List<Folder> classesFolder = new ArrayList<Folder>();
+        classesFolder.add(getProjectRootFolder().getFolder("webapproot/WEB-INF/classes"));
+        ClassLoader cl = ResourceClassLoaderUtils.getClassLoaderForResources(Thread.currentThread().getContextClassLoader(),
+                classesFolder.toArray(new Resource[1]));
+        Thread.currentThread().setContextClassLoader(cl);
+
+        for (EntityInfo ei : new HashSet<EntityInfo>(this.modifiedEntityInfos)) {
+            try {
+                cl.loadClass(this.dataPackage + "." + ei.getEntityName());
+            } catch (ClassNotFoundException ex) {
+                throw new WMRuntimeException(ex);
+            }
+            this.modifiedEntityInfos.remove(ei);
         }
     }
 }
