@@ -1958,7 +1958,7 @@ public class DataModelConfiguration {
 
         List<Folder> classesFolder = new ArrayList<Folder>();
         classesFolder.add(getProjectRootFolder().getFolder("webapproot/WEB-INF/classes"));
-        ClassLoader cl = ResourceClassLoaderUtils.getClassLoaderForResources(Thread.currentThread().getContextClassLoader(),
+        ClassLoader cl = ResourceClassLoaderUtils.getClassLoaderForResources(true, Thread.currentThread().getContextClassLoader(),
                 classesFolder.toArray(new Resource[1]));
         Thread.currentThread().setContextClassLoader(cl);
 
