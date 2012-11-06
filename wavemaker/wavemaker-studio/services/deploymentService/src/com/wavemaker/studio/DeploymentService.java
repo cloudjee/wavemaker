@@ -319,10 +319,41 @@ public class DeploymentService {
 
         Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder(StringUtils.packageToSrcFilePath(packageStr));
         componentFolder.createIfMissing();
-
-        ret.setError("Folders successfully created");
+	componentFolder.list().delete(); // delete older version of the composite
+	Folder zipFolder = componentStage.getFolder(className);
+	zipFolder.copyContentsTo(componentFolder);
+	this.deploymentManager.writeModuleToLibJs(packageStr + "." + className);
+	componentStage.delete();
+        ret.setPath(packageStr + "." + className);
         return ret;
     }
+    public String copyComponentServices(String path) {
+	Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(path);
+	com.wavemaker.tools.io.Folder componentServicesFolder = componentFolder.getFolder("services");
+	com.wavemaker.tools.io.Folder projectServicesFolder = this.serviceDeploymentManager.getProjectManager().getCurrentProject().getRootFolder().getFolder("services");
+	String responseInclude = "";
+	String responseExclude = "";
+	if (componentServicesFolder.exists()) {
+	    com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> componentServiceFolders =  componentServicesFolder.list().folders();
+	    System.out.println("componentServiceFolders:" + componentServicesFolder.toString());
+	    for (com.wavemaker.tools.io.Folder f : componentServiceFolders) {
+		String name = f.getName();
+		com.wavemaker.tools.io.Folder projectServiceFolder = projectServicesFolder.getFolder(name);
+		System.out.println("Service:" + f.toString() + " | " + projectServiceFolder.exists());
+		if (!projectServiceFolder.exists()) {
+		    projectServiceFolder.createIfMissing();
+		    f.copyContentsTo(projectServiceFolder);
+		    if (responseInclude.equals("") == false) responseInclude += ", ";
+		    responseInclude += "'" + name + "'";
+		} else {
+		    if (responseExclude.equals("") == false) responseExclude += ", ";
+		    responseExclude += "'" + name + "'";
+		}
+	    }
+	}
+	return "{servicesAdded: [" + responseInclude + "], servicesSkipped: [" + responseExclude + "]}";
+    }
+
 
     @HideFromClient
     public void setDeploymentManager(DeploymentManager deploymentManager) {

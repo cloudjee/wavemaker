@@ -319,6 +319,26 @@ wm.CompositeMixin.extend({
         if (c)
             s.push(c);
         return s;
+    },
+    afterPaletteDrop: function() {
+    	this.inherited(arguments);
+		var path = studio.palette.dragger.info.obj.package.split(/\./);
+		if (path[0] == "common" && path[1] == "packages") {
+			path.shift();
+			path.shift();
+		}
+		if (path.length > 1 && path[path.length-1] === path[path.length-2]) {
+			path.pop();
+		}
+    	studio.deploymentService.requestAsync("copyComponentServices", [path.join("/")], dojo.hitch(this, function(inResponse) {
+			var response = dojo.fromJson(inResponse);
+			if (response.servicesAdded.length) {
+				var d = studio.deploy("Compiling new services", "studioProjectCompile");
+				d.addCallback(function() {
+					studio.updateFullServiceList();
+				});
+			}
+		}));
     }
 });
 

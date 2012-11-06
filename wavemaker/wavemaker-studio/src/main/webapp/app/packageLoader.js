@@ -51,7 +51,7 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
     if (inTab == bundlePackage.Non_Visual_Components || inTab == bundlePackage.Services) {
 	studio.addComponentMenuItem(inTab, n, d, i, c, inProps);
     } else {
-	studio["palette"].addItem(inTab, n, d, i, c, inProps, isBeta);
+	studio["palette"].addItem(inTab, n, d, i, c, m, inProps, isBeta);
     }
 }
 

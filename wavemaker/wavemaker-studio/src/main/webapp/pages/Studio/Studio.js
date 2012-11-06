@@ -696,7 +696,7 @@ dojo.declare("Studio", wm.Page, {
         for (var i = 0, current = studio.page ? studio.page.declaredClass : "", p; (p = list[i]); i++)
             if (current != p) {
                 var n = p.toLowerCase() + "Page", props = { name: n, pageName: p }
-                palette.addItem(caption, n, desc, image, "wm.PageContainer", props);
+                palette.addItem(caption, n, desc, image, "wm.PageContainer", "wm.base.widget.PageContainer", props);
             }
     },
     refreshDataPalette: function() {
@@ -712,7 +712,7 @@ dojo.declare("Studio", wm.Page, {
             wm.forEach(l, function(d) {
                 var liveDataName = d.caption.toLowerCase();
                 var name = liveDataName + "LivePanel1";
-                palette.addItem(caption, d.caption + " (" + i + ")", desc, image, "wm.LivePanel", {name: name, liveDataName: liveDataName, liveSource: d.type});
+                palette.addItem(caption, d.caption + " (" + i + ")", desc, image, "wm.LivePanel", "wm.base.components.DataModel", {name: name, liveDataName: liveDataName, liveSource: d.type});
             });
         });
     },
@@ -788,6 +788,7 @@ dojo.declare("Studio", wm.Page, {
         d.addErrback(dojo.hitch(this, "deployError"));
         if (!noWait) this.waitForDeferred(d, inMsg);
         this.updateStateWhileDeploying(false);
+        return d;
     },
 
     //=========================================================================

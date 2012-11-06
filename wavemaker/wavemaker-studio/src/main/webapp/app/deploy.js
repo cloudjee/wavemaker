@@ -294,14 +294,27 @@ Studio.extend({
 	importComponent: function() {
 		var d = this.getImportProjectDialog();
 	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_COMPONENT"));
-	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inResponse) {
+	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inSender, inResponse) {
 		    d.dismiss();
-			this.deployComponentCallback(inResponse.module, inResponse.displayName, inResponse.group, inResponse);
+		    var module = inResponse[0].path;
+		    // FIXME: Dojo has no re-require method, workaround:
+    		// unflag this module
+    		delete dojo._loadedModules[module];
+    		// destroy Dojo's URL cache completely
+    		dojo._loadedUrls = [];
+    		
+		    dojo["require"](module);
+    		// if we get here, no exceptions occured
+	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_SUCCESS", {name: module.replace(/^.*\./,"")}));
+		   wm.fire(studio.inspector, "reinspect");			
 	    });
+        d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
+    	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_FAILED", {inError: inError}));
+    	       if (app.toastDialog) app.toastDialog.hide();
+        });	    
 	    d.page.setService("deploymentService", "uploadClientComponent");
 	    d.show();		
 	},
-
 
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {

@@ -30,7 +30,7 @@ ImportFile.widgets = {
 										buttonCaption: "Select Zipfile",
 										service: "deploymentService",
 										operation: "uploadProjectZipFile"},
-							{onChange: "onChange", onSuccess: "onSuccess"}],
+							{onChange: "onChange", onSuccess: "onSuccess", onError: "onError"}],
 				     filename: ["wm.Text", {width: "100%",
 							    height: "32px",
 							    disabled: true,

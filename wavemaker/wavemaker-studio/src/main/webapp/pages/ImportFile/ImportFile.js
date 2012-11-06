@@ -26,6 +26,7 @@ dojo.declare("ImportFile", wm.Page, {
     },
     onHide: function() {
     	if (this._onSuccessConnect) dojo.disconnect(this._onSuccessConnect);
+    	if (this._onErrorConnect) dojo.disconnect(this._onErrorConnect);    	
     },
     /*
     openProject: function() {
@@ -58,5 +59,6 @@ dojo.declare("ImportFile", wm.Page, {
     onSuccess: function() {
 	    //this.openProject();
     },
+    onError: function() {},
     _end: 0
 });

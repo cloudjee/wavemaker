@@ -263,6 +263,8 @@
     ALERT_UNDEPLOY_COMPONENT_SUCCESS: "Undeployment successful.",
     ALERT_UNDEPLOY_COMPONENT_FAILED: "Component not found",
     ALERT_UNDEPLOY_COMPONENT_FAILED2: "Undeployment error: ${inError}",
+    ALERT_IMPORT_COMPONENT_SUCCESS: "Component '${name}' Imported",
+    ALERT_IMPORT_COMPONENT_FAILED: "Component Import Failed: ${inError}",
     TOAST_CODE_VALIDATION_SUCCESS: "No errors found",
     TITLE_CODE_VALIDATION_DIALOG: "Compiler Results",
     TITLE_IMPORT_JAVASCRIPT: "Script Importer",

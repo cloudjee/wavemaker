@@ -219,12 +219,14 @@ dojo.declare("wm.Palette", wm.Tree, {
 	    }
 	    return node;
 	},
-    addItem: function(inTab, inName, inDescription, inImage, inClass, inProps, isBeta) {
+    addItem: function(inTab, inName, inDescription, inImage, inClass, inModule, inProps, isBeta) {
 		if (inTab){
 			var p = this.findItemByName(inTab) || this.makeGroup(inTab);
 			wm.fire(this.findItemByName(inName, p), "destroy");
-			var parentIndex = inProps.indexInParent;
-			delete inProps.indexInParent;
+            if (inProps) {
+    			var parentIndex = inProps.indexInParent;
+    			delete inProps.indexInParent;
+    		}
 			var n = new wm.TreeNode(p, {
 					name: inName,
 				parentIndex: parentIndex,
@@ -233,6 +235,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 					       klass: inClass},
 					image: inImage,
 					klass: inClass,
+					"package": inModule,
 					props: inProps
 				});
 		    this.createContextMenu(n);
