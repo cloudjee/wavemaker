@@ -259,10 +259,14 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 	    var c = studio.navGotoEditor("JavaEditor", studio.JavaEditorTab, this.name + "JavaServiceLayer", this.name);
 	    this._editTab = c.parent;
 		if (this.serviceId) {
-			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
-				c.page.selectService(this);			    
-				return true;
-			}));
+			if (c.pageLoadedDeferred) {
+				c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+					c.page.selectService(this);			    
+					return true;
+				}));
+			} else {
+				c.page.selectService(this);
+			}
 		}
 	},
 	preNewComponentNode: function(inNode, inProps) {

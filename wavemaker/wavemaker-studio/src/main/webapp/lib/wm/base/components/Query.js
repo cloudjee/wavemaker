@@ -42,14 +42,19 @@ dojo.declare("wm.Query", wm.ServerComponent, {
     editView: function() {
 	var c = studio.navGotoEditor("QueryEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
 		if (this.dataModelName && this.queryName) {
-			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
-			    // Don't regenerate the query if we're actually returning to one we're in the middle of editing
-			    if (c._isNewlyCreated) {
-				c.page.selectQuery(this);
-				delete c._isNewlyCreated;
-			    }
-				return true;
-			}));
+            var f = dojo.hitch(this, function() {
+                // Don't regenerate the query if we're actually returning to one we're in the middle of editing
+                if (c._isNewlyCreated) {
+                c.page.selectQuery(this);
+                delete c._isNewlyCreated;
+                }
+                return true;
+            });
+            if (c.pageLoadedDeferred) {
+			    c.pageLoadedDeferred.addCallback(f);
+            } else {
+                f();
+            }
 		}
 	},
 	preNewComponentNode: function(inNode, inProps){
@@ -70,7 +75,7 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 				       service: this.dataModelName,
 				       operation: this.queryName,
 				       startUpdate: false});
-	return result; // returning will trigger a design tree refresh and a studio.select	
+	return result; // returning will trigger a design tree refresh and a studio.select
     }
 });
 
@@ -85,8 +90,8 @@ dojo.declare("wm.QueryLoader", null, {
 					d.children = d.children[0].children;
 					for (var ii=0, di; di=d.children[ii]; ii++) {
 						var c = new wm.Query({
-							name: di.content, 
-							dataModelName: d.content, 
+							name: di.content,
+							dataModelName: d.content,
 							queryName: di.content
 						});
 						cs.push(c);

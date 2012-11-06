@@ -176,9 +176,17 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    //    html ? klass + '.html = "' + escape(html) + '";' + '\n \n' : '',
 	    reg
 	].join('');
+    },
+    
+    download: function() {
+        studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=/common/packages/" + (this.namespace ? this.namespace.replace(/\./g,"/") + "/" : "") + this.publishName);
     }
 });
 
+
+wm.Object.extendSchema(wm.CompositePublisher, {
+	download: {operation:1, group: "operation"}
+});
 /*
 wm.registerPackage([bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);
 */

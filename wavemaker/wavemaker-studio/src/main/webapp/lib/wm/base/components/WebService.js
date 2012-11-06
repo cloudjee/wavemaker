@@ -102,10 +102,14 @@ dojo.declare("wm.WebService", wm.JavaService, {
     editView: function() {
         var c = studio.navGotoEditor("Services", studio.webServiceTab,  this.getLayerName(), this.getLayerCaption());
         if (this.serviceId) {
-            c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+            if (c.pageLoadedDeferred) {
+                c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+                    c.page.selectService(this);
+                    return true;
+                }));
+            } else {
                 c.page.selectService(this);
-                return true;
-            }));
+            }
         }
     },
     getLayerName: function() {

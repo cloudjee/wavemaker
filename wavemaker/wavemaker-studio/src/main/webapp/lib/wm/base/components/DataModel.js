@@ -264,10 +264,14 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
         var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
         c.page.objectPages.setLayer(c.page.OBJECT_PAGE);
         if (this.entityName) {
-            c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
-                c.page.selectEntity(this.dataModelName, this.entityName);
-                return true;
-            }));
+        	if (c.pageLoadedDeferred) {
+	            c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+	                c.page.selectEntity(this.dataModelName, this.entityName);
+	                return true;
+	            }));
+	        } else {
+	               c.page.selectEntity(this.dataModelName, this.entityName);	        
+	        }
         }
     },
     getLayerName: function() {
