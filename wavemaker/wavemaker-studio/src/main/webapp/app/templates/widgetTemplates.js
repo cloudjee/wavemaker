@@ -289,7 +289,7 @@ wm.fullTemplates.phoneLayout = {
     templateGroup: "Mobile",
     preferredDevice: "phone",
 	displayName: bundlePackage.PhoneTemplate,
-        thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
+        thumbnail: "app/templates/widgetTemplateImages/phoneTemplate.png",
          destroyTemplate: true,
 	_template: {
 variable1: ["wm.Variable", {"isList":true,"json":"[{name: \"Sunday\", dataValue: 0}, {name: \"Monday\", dataValue: 1},{name: \"Tuesday\", dataValue: 2},{name: \"Wednesday\", dataValue: 3},{name: \"Thursday\", dataValue: 4},{name: \"Friday\", dataValue: 5},{name: \"Saturday\", dataValue: 6}]","type":"EntryData"}, {}],
@@ -328,7 +328,7 @@ wm.fullTemplates.tabletLayout = {
     templateGroup: "Mobile",
     preferredDevice: "tablet",
 	displayName: bundlePackage.TabletTemplate,
-        thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
+        thumbnail: "app/templates/widgetTemplateImages/tabletTemplate.png",
          destroyTemplate: true,
 	_template: {
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","margin":"0","verticalAlign":"top"}, {}, {
