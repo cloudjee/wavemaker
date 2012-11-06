@@ -261,8 +261,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         } else {
             klass = name;
         }
-        String moduleString = "\"" + COMMON_MODULE_PREFIX + klass + "\"";
+        String moduleString =  COMMON_MODULE_PREFIX + klass;
+	writeModuleToLibJs(moduleString);
+    }
+    public void writeModuleToLibJs(String moduleString) throws IOException {
+	moduleString = "\"" + moduleString + "\"";
         boolean found = false;
+        org.springframework.core.io.Resource packagesDir = this.fileSystem.createPath(this.fileSystem.getCommonDir(), PACKAGES_DIR);
         org.springframework.core.io.Resource libJsFile = packagesDir.createRelative(LIB_JS_FILE);
         StringBuffer libJsData = new StringBuffer();
         if (libJsFile.exists()) {

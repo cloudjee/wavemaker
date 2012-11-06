@@ -93,6 +93,8 @@ public interface DeploymentManager {
 
     void deployClientComponent(String name, String namespace, String data) throws IOException;
 
+    void writeModuleToLibJs(String moduleString) throws IOException;
+
     void deployTheme(String themename, String filename, String data) throws IOException;
 
     String[] listThemes() throws IOException;
