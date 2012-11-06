@@ -84,16 +84,77 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 
 dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
-	deploy: function() {
+	_deploy: function(services) {
 		wm.Property.deploy = true;
-		try {
+		try {		
+		debugger;
 		    var json = this.getComponentJson();
-		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json);
+		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services);
 		} finally {
 			wm.Property.deploy = false;
 		}
 	},
+	deploy: function() {
+		var d = studio.publishComponentDialog;
+		if (!d) {
+			d = studio.publishComponentDialog = new wm.Dialog({
+				_classes: {domNode: ["studiodialog"]},
+				owner: studio,
+				width: "300px",
+				height: "400px",
+				title: "Deploy Component",
+				modal: true,
+				useContainerWidget: true,
+				useButtonBar: true});
+				d.containerWidget.setPadding("0");
+				d.innerContainerWidget = new wm.studio.DialogMainPanel({owner: d, parent: d.containerWidget});
 
+				new wm.Label({_classes: {domNode: ["StudioLabel"]},
+							  owner: d,
+							  parent: d.innerContainerWidget,
+							  width: "100%",
+							  caption: "Pick server-side services to include in Composite"
+							  });
+
+				d.checkboxSet = new wm.CheckboxSet({owner: d,
+													parent: d.innerContainerWidget,
+													editorBorder:0,
+													width: "100%",
+													height: "100%",
+													dataField: "dataValue",
+													displayField: "dataValue"});
+													
+
+
+
+			d.okButton = new wm.Button({
+										_classes: {domNode: ["StudioButton"]},
+										owner: d,
+										parent: d.buttonBar,
+										caption: "OK"
+										});
+			d.cancelButton = new wm.Button({
+										_classes: {domNode: ["StudioButton"]},
+										owner: d,
+										parent: d.buttonBar,
+										caption: "Cancel",
+										onclick: function() {d.hide();}
+										});
+	
+
+			}
+			var data = [];
+			wm.services.forEach(function(s) {
+				if (!s.isClientService) {
+					data.push(s.name);
+				}
+			});
+			d.checkboxSet.setOptions(data);
+			d.okButton.onclick = dojo.hitch(this, function() {
+				this._deploy(d.checkboxSet.getDataValue());
+			});
+			d.show();
+	},
     getComponentJson: function() {
 	if (!this.publishName || !studio.page)
 	    return;

@@ -236,10 +236,10 @@ Studio.extend({
 	//=====================================================================
 	// Widget Deploy
 	//=====================================================================
-	deployComponent: function(inName, inNamespace, inDisplayName, inGroup, inData) {
+	deployComponent: function(inName, inNamespace, inDisplayName, inGroup, inData, inServices) {
 		var klass = inNamespace ? inNamespace + '.' + inName : inName;
 		studio.deploymentService.requestAsync("deployClientComponent",
-			[inName, inNamespace, inData],
+			[inName, inNamespace, inData, inServices],
 			dojo.hitch(this, "deployComponentCallback", 'common.packages.' + klass, inDisplayName, inGroup),
 			dojo.hitch(this, "deployComponentError", inName, inNamespace));
 	},
