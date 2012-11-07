@@ -33,7 +33,7 @@ public class ReflectTypeState implements TypeState {
 
     private final Map<String, TypeDefinition> knownTypes = new HashMap<String, TypeDefinition>();
 
-    private final PropertyUtilsBean propertyUtilsBean = new PropertyUtilsBean();
+    private final PropertyUtilsBean propertyUtilsBean = new WMPropertyUtilsBean();
 
     @Override
     public void addType(TypeDefinition typeDefinition) {
