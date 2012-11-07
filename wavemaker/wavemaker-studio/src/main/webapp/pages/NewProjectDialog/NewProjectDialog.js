@@ -17,7 +17,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
     i18n: true,
     selectedTemplate: null,
     start: function() {
-        this.themeName.setDataValue("wm_default");
+        this.themeName.setDataValue("wm.base.widget.themes.wm_default");
 
         var templates = wm.fullTemplates;
         var templateList = [];

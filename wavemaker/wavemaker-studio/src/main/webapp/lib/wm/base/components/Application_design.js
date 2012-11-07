@@ -92,8 +92,8 @@ wm.Application.extend({
             }
             inEditorProps.dataValue = inValue;
             dojo.forEach(data, function(item) {
-                options.push(item.dataValue);
-                values.push(item.dataValue.match(/^wm_/) ? "wm.base.widget.themes." + item.dataValue : "common.themes." + item.dataValue);
+                options.push(item.name);
+                values.push(item.dataValue);
             });
             return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {
                 options: options,

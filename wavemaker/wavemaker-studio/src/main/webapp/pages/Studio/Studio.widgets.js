@@ -14,7 +14,7 @@
 
 Studio.widgets = {
     loadingDialog: ["wm.LoadingDialog", {_classes: {domNode: ["studiodialog"]}}],
-        themesListVar: ["wm.Variable", {type: "StringData"}],
+        themesListVar: ["wm.Variable", {type: "EntryData"}],
     /*deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],*/
     deviceSizeType: ["wm.TypeDefinition", {internal: true}, {}, {
         "deviceSizeType.deviceName": ["wm.TypeDefinitionField", {fieldName: "name", type: "String"}],

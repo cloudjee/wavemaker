@@ -2068,7 +2068,8 @@ dojo.declare("Studio", wm.Page, {
                 var d = [];
                 for (var i = 0; i < inData.length; i++)
                     if (inData[i] != "wm_studio")
-                        d.push({dataValue: inData[i]});
+                        d.push({name: inData[i],
+                                dataValue: inData[i].indexOf("wm_") == 0 ? "wm.base.widget.themes." + inData[i] : "common.themes." + inData[i]});
                 this.themesListVar.setData(d);
             }));
             if (optionalCallback)
