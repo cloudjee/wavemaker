@@ -778,7 +778,7 @@ dojo.declare("Studio", wm.Page, {
         var application = this.application || this._application;
         if (!application || application._deployStatus == "deploying") {
             if (!deployType.match(/compile/i)) this._runRequested = deployType;
-            return;
+            return this._deployer;
         }
         application._deployStatus = "deploying";
 
