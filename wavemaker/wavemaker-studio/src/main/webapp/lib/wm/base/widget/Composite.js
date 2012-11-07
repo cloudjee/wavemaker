@@ -133,7 +133,9 @@ dojo.declare("wm.CompositeMixin", null, {
     init: function() {
         //this.published = {};
         // FIXME: does createComposite need to come before inherited?
-        this.initDomNode();
+        if (this instanceof wm.Control) {
+            this.initDomNode();
+        }
         this.createComposite();
         this.inherited(arguments);
     },
