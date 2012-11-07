@@ -133,7 +133,7 @@ public class Beans {
     }
 
     /**
-     * Gets the value of the importsAndAliasAndBeen property.
+     * Gets the value of the importsAndAliasAndBean property.
      * 
      * <p>
      * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
@@ -144,7 +144,7 @@ public class Beans {
      * For example, to add a new item, do as follows:
      * 
      * <pre>
-     * getImportsAndAliasAndBeen().add(newItem);
+     * getImportsAndAliasAndBean().add(newItem);
      * </pre>
      * 
      * 

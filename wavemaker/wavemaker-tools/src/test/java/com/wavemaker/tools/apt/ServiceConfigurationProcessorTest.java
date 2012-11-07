@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +48,9 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.ConfigurationCompiler;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.spring.SpringConfigSupport;
+import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.spring.beans.Import;
 import com.wavemaker.tools.util.DesignTimeUtils;
 
 public class ServiceConfigurationProcessorTest {
@@ -105,7 +108,33 @@ public class ServiceConfigurationProcessorTest {
 
         Beans actualBeans = SpringConfigSupport.readBeans(actualServices);
 
-        assertEquals(0, actualBeans.getImportsAndAliasAndBean().size());
+        assertEquals(4, actualBeans.getImportsAndAliasAndBean().size());
+        for(Object o : actualBeans.getImportsAndAliasAndBean()){
+        	if(o instanceof Import){
+        		Import imp = (Import) o;
+        		
+        		if(("classpath:" + sd2.getRuntimeConfiguration()).equals((imp.getResource()))){
+        			//good
+        		} else if ("classpath:runtimeService.spring.xml".equals(imp.getResource())) {
+        			//good
+        		} else if ("classpath:waveMakerService.spring.xml".equals(imp.getResource())) {
+        			//good
+        		}  else if (("classpath:" + DesignServiceManager.getServiceBeanName(sd.getServiceId())).equals(imp.getResource())) {
+        			//good
+        		} else {
+        			fail("unknown resource: " + imp.getResource());
+        		}
+        	} else if(o instanceof Bean){
+        		Bean bean = (Bean) o;
+        		if ("updateService".equals(bean.getId())) {
+        			assertEquals("com.wavemaker.tools.service.UpdateService_SD", bean.getClazz());
+        		} else{
+        			fail("unknown id: " + bean.getId());
+        		}
+        	} else {
+        		fail("unkown type: " + o);
+        	}
+        }
 
         File actualManagers = this.project.getWebInfFolder().getFile("project-managers.xml");
         assertTrue(actualManagers.exists());
@@ -138,9 +167,16 @@ public class ServiceConfigurationProcessorTest {
         assertTrue(actualManagers.exists());
         assertTrue(actualTypes.exists());
 
+        String servicesStr = FileUtils.readFileToString(actualServices);
         String managersStr = FileUtils.readFileToString(actualManagers);
         String typesStr = FileUtils.readFileToString(actualTypes);
 
+        assertTrue("didn't expect service " + sd.getServiceClass() + " in servicesStr:\n" + servicesStr, -1 == servicesStr.indexOf(sd.getServiceClass() + "\""));
+        assertTrue("servicesStr:\n" + servicesStr,-1 != servicesStr.indexOf("classpath:" + DesignServiceManager.getServiceBeanName(sd.getServiceId()) + "\""));
+        assertTrue(-1 == servicesStr.indexOf(sd2.getServiceClass() + "\""));
+        assertTrue(-1 == servicesStr.indexOf(sd2.getServiceId() + "\""));
+        assertTrue(-1 != servicesStr.indexOf("classpath:" + sd2.getRuntimeConfiguration() + "\""));
+        
         assertTrue(-1 != managersStr.indexOf(sd.getServiceId()));
         assertTrue(-1 != managersStr.indexOf(sd2.getServiceId()));
 
