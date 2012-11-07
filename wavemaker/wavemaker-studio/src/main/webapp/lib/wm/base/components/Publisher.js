@@ -45,7 +45,7 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 		studio.undeployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, this.removeSource);
 	},
 	getComponentJson: function() {
-	
+
 	},
 	setPublishName: function(inValue){
 		this.publishName = wm.getValidJsName(inValue);
@@ -86,7 +86,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 	_deploy: function(services) {
 		wm.Property.deploy = true;
-		try {		
+		try {
 		debugger;
 		    var json = this.getComponentJson();
 		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services);
@@ -123,7 +123,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 													height: "100%",
 													dataField: "dataValue",
 													displayField: "dataValue"});
-													
+
 
 
 
@@ -140,7 +140,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 										caption: "Cancel",
 										onclick: function() {d.hide();}
 										});
-	
+
 
 			}
 			var data = [];
@@ -152,6 +152,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			d.checkboxSet.setOptions(data);
 			d.okButton.onclick = dojo.hitch(this, function() {
 				this._deploy(d.checkboxSet.getDataValue());
+				d.hide();
 			});
 			d.show();
 	},
@@ -238,7 +239,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    reg
 	].join('');
     },
-    
+
     download: function() {
         studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=/common/packages/" + (this.namespace ? this.namespace.replace(/\./g,"/") + "/" : "") + this.publishName);
     }
@@ -270,7 +271,7 @@ dojo.declare("wm.TemplatePublisher", wm.ComponentPublisher, {
 			'\tverticalAlign: "' + root.verticalAlign + '",\n' +
 			'\thorizontalAlign: "' + root.horizontalAlign + '",\n' +
 			'\t_template: {\n' +
-				root.writeComponents("\t").join(",\n") + 
+				root.writeComponents("\t").join(",\n") +
 			"}};";
 		//
 		var resource = 'common.packages.' + (this.namespace ? this.namespace + '.' + this.publishName : this.publishName);

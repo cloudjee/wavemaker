@@ -262,8 +262,31 @@ public class DeploymentService {
      * @param data contents of the file
      * @throws IOException
      */
-    public void deployClientComponent(String className, String folder, String data) throws IOException {
+    public void deployClientComponent(String className, String folder, String data, String[] services) throws IOException {
         this.deploymentManager.deployClientComponent(className, folder, data);
+
+	/* Take care of the services */
+	System.out.println("ServiceCount: " + services.length);
+	Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages");
+        if (folder != null && folder.length() > 0) {
+
+            String[] folderList = folder.split("\\.");
+            for (String f : folderList) {
+                componentFolder = componentFolder.getFolder(f);		
+            }
+        } 
+	System.out.println("FOLDER:" + componentFolder.toString());
+	Folder componentServiceFolder = componentFolder.getFolder("services");
+	componentServiceFolder.createIfMissing();
+	componentServiceFolder.list().delete(); // delete any old services
+	com.wavemaker.tools.io.Folder projectServicesFolder = this.serviceDeploymentManager.getProjectManager().getCurrentProject().getRootFolder().getFolder("services");
+
+	int i;
+	for (i = 0; i < services.length; i++) {
+	    Folder destFolder = componentServiceFolder.getFolder(services[i]);
+	    destFolder.createIfMissing();
+	    projectServicesFolder.getFolder(services[i]).copyContentsTo(destFolder);
+	}
     }
 
     /**
