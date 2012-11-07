@@ -247,6 +247,13 @@
                         </bean>
                     </list>
                 </entry> 
+                <entry key="0.54">
+                    <list>
+						<bean class="com.wavemaker.tools.project.upgrade.six_dot_five_dot_one.ProjSvcsUpgradeTask">
+                            <property name="file" value="webapproot/WEB-INF/project-services.xml" />
+                        </bean>
+                    </list>
+                </entry> 
             </map>
         </property>
         <property name="deploymentManager">
