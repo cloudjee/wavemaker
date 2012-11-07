@@ -577,7 +577,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    }
 
             /* Step 8: Load the new css values into the document */
-            studio.application.setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
+            var theme = this.currentTheme.indexOf("wm_") == 0 ? "wm.base.widget.themes." + this.currentTheme : "common.themes." + this.currentTheme;
+            studio.application.setTheme(theme, false, this.cssText, this.themePrototype, true);
             studio._themeDesignerChange = true;
             studio._reflowPageDesigner = true;
             studio.application.cacheWidgets();

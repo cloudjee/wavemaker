@@ -45,7 +45,8 @@ try
 	    ["github", wm.libPath + "/github"],
 	    ["wm.modules", wm.basePath + "modules/ep"],
 	    //["wm.language", wm.libPath + "/wm/language"],
-	    ["language", window.location.pathname.replace(/[^\/]*$/,"language")]
+	    ["language", window.location.pathname.replace(/[^\/]*$/,"language")],
+	    ["project", "", true]
 	);
 
 

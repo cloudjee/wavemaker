@@ -202,6 +202,7 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
                 return this.values[i];
             }
         }
+        if (!this.restrictValues) return display;
     },
     setEditorValue: function(inValue) {
         if (!this.values) return this.inherited(arguments);
@@ -210,6 +211,7 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
                 return this.inherited(arguments, [this.options[i]]);
             }
         }
+        if (!this.restrictValues) return this.inherited(arguments);
     },
     refreshOptions: function() {
         this.updateOptions();
@@ -1660,7 +1662,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
                         cssText += "filter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
 					} else if (styleName == "borderRadius") {
 						var values = String(styleValue).split(/\s+/);
-			        
+
 						for (var i = 0; i < values.length; i++) {
 							if (values[i].match(/^\d+$/)) values[i] += "px";
 						}
@@ -1671,7 +1673,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 						}
 						if (values.length == 3) {
 							values[3] = "0px";
-						}				
+						}
 						dojo.forEach(["-webkit-","-moz-","-ms-","-o-",""], function(prefix) {
 							if (values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
 								cssText += prefix + "border-radius: " + values[0] + ";\n";
@@ -1684,8 +1686,8 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 								cssText += "\n";
 							}
 						});
-					
-					
+
+
                     } else {
                         cssText += styleName.replace(/([A-Z])/g, function(inText) {
                             return "-" + inText.toLowerCase();
@@ -1753,7 +1755,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         //this.inspected.setStyle(styleName, inDataValue);
         for (var i = 0; i < studio.selected.length; i++) {
 	        if (!inSetByCode && (!inEditor.editor._opened)) { /* Color pickers change the value but only trigger this onClose, so the lastValue must come from the colorPicker not from our current state */
-	            var t = new wm.SetPropTask(studio.selected[i], styleName, 
+	            var t = new wm.SetPropTask(studio.selected[i], styleName,
 	            studio.selected[i].getStyle(styleName) || "", inDataValue, true);
 	        } else {
 	            studio.selected[i].setStyle(styleName, inDataValue);

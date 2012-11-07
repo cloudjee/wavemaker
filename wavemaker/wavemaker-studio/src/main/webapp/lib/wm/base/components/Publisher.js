@@ -168,7 +168,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 
 	var widgets = klass + ".components = {" + sourcer_nl + components /*source_body(studio.page)*/ + "}";
-	var css = studio.getCss();
+	var css = studio.getCss() + "\n//app.css\n" + studio.getAppCss();
 	var html = studio.getMarkup();
 	//
 	var resource = 'common.packages.' + klass + "." + klass.replace(/^.*\./,"");

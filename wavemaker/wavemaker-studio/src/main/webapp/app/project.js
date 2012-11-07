@@ -171,6 +171,7 @@ dojo.declare("wm.studio.Project", null, {
     // Open
     //=========================================================================
     openProject: function(inProjectName, inPageName) {
+        dojo.registerModulePath("project", wm.libPath + "/../projects/" + inProjectName);
         var deferred = new dojo.Deferred();
         if (this.projectName && this.projectName != inProjectName)
         this.closeProject();
@@ -645,8 +646,10 @@ dojo.declare("wm.studio.Project", null, {
             allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
             allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
             allProjectJS += this.loadProjectData("types.js") + "\n";
-            var themename = studio.application.theme;
-            allProjectJS += "wm.Application.themeData['" + themename + "'] = " + dojo.toJson(wm.Application.themeData[themename]) + ";\n"; // TODO need to utilize this data
+            var theme = studio.application.theme;
+            var themeName = theme.replace(/^.*\./,"");
+
+            allProjectJS += "wm.Application.themeData['" + theme + "'] = " + dojo.toJson(wm.Application.themeData[theme]) + ";\n"; // TODO need to utilize this data
             studio.incrementSaveProgressBar(1);
 
             // Adds the boot.js file to the project's webapproot; may want to undo this
@@ -673,7 +676,7 @@ dojo.declare("wm.studio.Project", null, {
                 dWhiteList.callback();
             });
 		}));
-		
+
         var d1 = new dojo.Deferred();
         dWhiteList.addCallback(dojo.hitch(this, function() {
             if (!studio.isCloud()) {
@@ -719,13 +722,25 @@ dojo.declare("wm.studio.Project", null, {
 
             // save html file, config file, and debug loader + css
             studio.setSaveProgressBarMessage(c.appIndexFileName);
-            var themename = studio.application.theme;
-            if (this.deployingProject || wm.studioConfig.environment != "local") {
-                themeUrl = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
+            var theme = studio.application.theme;
+            var themeName = theme.replace(/^.*\./,"");
+            /* Before WM 6.6, themes were stored only as theme names */
+            var path;
+            if (theme === themeName) {
+                if (this.deployingProject || wm.studioConfig.environment != "local") {
+                    themeUrl = (themeName.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themeName + "/theme.css" : "lib/wm/common/themes/" + themeName + "/theme.css";
+                } else {
+                    themeUrl = (themeName.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themeName + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themeName + "/theme.css";
+                }
             } else {
-                themeUrl = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+                if (theme.indexOf("project.") == 0) {
+                  themeUrl = theme.replace(/^project\./,"").replace(/\./g,"/") + "/theme.css";
+                } else if (this.deployingProject || wm.studioConfig.environment != "local") {
+                    themeUrl = dojo.moduleUrl(theme) + "/theme.css";
+                } else {
+                    themeUrl = "../wavemaker/" + dojo.moduleUrl(theme) + "theme.css";
+                }
             }
-
             if (webFileExists(c.appIndexFileName)) {
                 var indexHtml = this.loadProjectData(c.appIndexFileName);
                 if (indexHtml.match(/var wmThemeUrl\s*=.*?;/)) {
@@ -754,12 +769,13 @@ dojo.declare("wm.studio.Project", null, {
                     t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
                 }
 
-                var themename = studio.application.theme;
+                var theme = studio.application.theme;
+                var themeName = theme.replace(/^.*\./,"");
                 if (t.match(/wavemakerNode\",\s*theme\:/)) {
-                    t = t.replace(/wavemakerNode\",\s*theme\:\s*\".*?\"/, "wavemakerNode\", theme: \"" + themename + "\"");
+                    t = t.replace(/wavemakerNode\",\s*theme\:\s*\".*?\"/, "wavemakerNode\", theme: \"" + theme + "\"");
                 } else {
                     // first time we save login.html, it doesn't have a theme or projectName in the constructor
-                    t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themename + "\", name:\"" + studio.project.projectName + "\"}");
+                    t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + theme + "\", name:\"" + studio.project.projectName + "\"}");
                 }
                 var dlocal = this.saveProjectData("login.html", t, false, true);
                 dlocal.addCallback(function() {
@@ -802,15 +818,7 @@ dojo.declare("wm.studio.Project", null, {
         var d8 = new dojo.Deferred();
         d7.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
-            var themename = studio.application.theme;
-            var path;
-            /*
-        if (this.deployingProject || wm.studioConfig.environment != "local") {
-                    path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
-        } else {
-                    path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
-        }
-        */
+
             studio.setSaveProgressBarMessage(c.appCssFileName);
             var css = studio.getAppCss();
 
@@ -1825,7 +1833,7 @@ Studio.extend({
                 newtext = "@import \"" + filepath + "\";";
                 editArea.setText(newtext + "\n" + editArea.getText());
                 } else {
-                   newtext = "eval(wm.load(\"" + filepath + "\"));";
+                   newtext = "dojo.require(\"project." + filepath.replace(/\.js$/,"").replace(/\//g,".") + "\");";
                 editArea.setText(editArea.getText() + "\n" + newtext);// goes at end so that errors don't stop class from being declared (also needed for current technique for extracting the editable part of the application.js file)
                 }
             }

@@ -81,12 +81,24 @@ wm.Application.extend({
         switch (inName) {
         case "theme":
             var options = [];
+            var values = [];
             var data = studio.themesListVar.getData();
+            if (inValue.indexOf(".") == -1) {
+                if (inValue.indexOf("wm_") === 0) {
+                    inValue = "wm.base.widget.themes." + inValue;
+                } else {
+                    inValue = "common.themes." + inValue;
+                }
+            }
+            inEditorProps.dataValue = inValue;
             dojo.forEach(data, function(item) {
                 options.push(item.dataValue);
+                values.push(item.dataValue.match(/^wm_/) ? "wm.base.widget.themes." + item.dataValue : "common.themes." + item.dataValue);
             });
             return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {
-                options: options
+                options: options,
+                values: values,
+                restrictValues: false
             }));
         }
         return this.inherited(arguments);
@@ -185,6 +197,7 @@ wm.Object.extendSchema(wm.Application, {
     values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
     i18n: {group: "widgetName", type: "boolean", order: 6},
     theme: {group: "widgetName", type: "string", order: 7},
+    themeName: {ignore:1},
     currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
     saveCounter: {ignore:1},
     //IERoundedCorners: {ignore: true},

@@ -23,9 +23,15 @@
 		_moduleHasPrefix: function(/*String*/module){
 			// summary: checks to see if module has been established
 			var mp = d._modulePrefixes;
-			return !!(mp[module] && mp[module].value); // Boolean
+			return !!(mp[module] && (mp[module].value || mp[module].fixed)); // Boolean
 		},
-
+		/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+     	 * WaveMaker: Adds support for fixed paths */
+		_modulePathLocked: function(/*String*/module){
+			var mp = d._modulePrefixes;
+			var topModule = module && module.replace(/\..*$/,"");
+			return mp[topModule] && mp[topModule].fixed;
+		},
 		_getModulePrefix: function(/*String*/module){
 			// summary: gets the prefix associated with module
 			var mp = d._modulePrefixes;
@@ -72,7 +78,9 @@
 
 
 
-		var uri = ((relpath.charAt(0) == '/' || relpath.match(/^\w+:/)) ? "" : d.baseUrl) + relpath;
+		/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+     	 * WaveMaker: Adds support for fixed paths */
+		var uri = (module && d._modulePathLocked(module.split(/\./)[0]) || (relpath.charAt(0) == '/' || relpath.match(/^\w+:/)) ? "" : d.baseUrl) + relpath;
 		try{
 			currentModule = module;
 			return !module ? d._loadUri(uri, cb) : d._loadUriAndCheck(uri, module, cb); // Boolean
@@ -116,7 +124,7 @@
 			}
 			if(!d.isIE){ contents += "\r\n//@ sourceURL=" + uri; } // debugging assist for Firebug
 
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker wrapped the var value statement in try/catch and provides the body of the catch */
 			try{
 			        var value = d["eval"](contents);
@@ -179,7 +187,7 @@
 		d._loaders = [];
 
 		for(var x = 0; x < mll.length; x++){
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker added the try/catch block */
 			try {
 				mll[x]();
@@ -190,7 +198,7 @@
 		}
 
 		d._loadNotifying = false;
-		
+
 		//Make sure nothing else got added to the onload queue
 		//after this first run. If something did, and we are not waiting for any
 		//more inflight resources, run again.
@@ -314,6 +322,7 @@
 				}
 			}
 		}
+		if (syms[0] === "") syms.shift();
 		return syms; // Array
 	}
 
@@ -430,7 +439,7 @@
 		//		the required namespace object
 		omitModuleCheck = d._global_omit_module_check || omitModuleCheck;
 
-	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 	     * WaveMaker: Added this because for some reason, i18n! is added to all localization requests and isn't properly handled */
 		moduleName = moduleName.replace(/i18n\!/,"");
 
@@ -549,7 +558,7 @@
 		//
 		// example:
 		//	|	dojo.requireIf(dojo.isBrowser, "my.special.Module");
-		
+
 		if(condition === true){
 			// FIXME: why do we support chained require()'s here? does the build system?
 			var args = [];
@@ -562,7 +571,9 @@
 
 	dojo.requireAfterIf = d.requireIf;
 
-	dojo.registerModulePath = function(/*String*/module, /*String*/prefix){
+	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+     * WaveMaker: Adds support for fixed paths */
+	dojo.registerModulePath = function(/*String*/module, /*String*/prefix, /*Boolean*/isFixed){
 		//	summary:
 		//		Maps a module name to a path
 		//	description:
@@ -590,9 +601,9 @@
 		//	|		dojo.require("foo.baz");
 		//	|		dojo.require("foo.thud.xyzzy");
 		//	|	</script>
-		d._modulePrefixes[module] = { name: module, value: prefix };
+		d._modulePrefixes[module] = { name: module, value: prefix, fixed: isFixed };
 	};
-	
+
 	dojo.requireLocalization = function(/*String*/moduleName, /*String*/bundleName, /*String?*/locale, /*String?*/availableFlatLocales){
 		// summary:
 		//		Declares translated resources and loads them if necessary, in the
@@ -815,15 +826,18 @@
 		//	|	var dataPath = dojo.moduleUrl("acme.util","resources/data.json");
 
 		var loc = d._getModuleSymbols(module).join('/');
-		if(!loc){ return null; }
+		if(!loc && loc !== ""){ return null; }
 		if(loc.lastIndexOf("/") != loc.length-1){
 			loc += "/";
 		}
-		
+
 		//If the path is an absolute path (starts with a / or is on another
 		//domain/xdomain) then don't add the baseUrl.
 		var colonIndex = loc.indexOf(":");
-		if(loc.charAt(0) != "/" && (colonIndex == -1 || colonIndex > loc.indexOf("/"))){
+
+		/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+     	 * WaveMaker: Adds support for fixed paths */
+		if(!d._modulePathLocked(module) && loc.charAt(0) != "/" && (colonIndex == -1 || colonIndex > loc.indexOf("/"))){
 			loc = d.baseUrl + loc;
 		}
 
@@ -869,8 +883,8 @@
 				var exclamationIndex = depName.indexOf("!");
 				if(exclamationIndex > -1){
 					//fool the build system
-				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
-				    * BEFORE WAVEMAKER 
+				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+				    * BEFORE WAVEMAKER
 					if(depName.substring(0, exclamationIndex) == "i18n"){
 						var match = depName.match(/^?i18n\!(.+)\.nls\.([^\.]+)$/);
 						dojo["requireLocalization"](match[1], match[2]);
@@ -914,7 +928,7 @@
 		}else{
 			returned = def;
 		}
-		
+
 		if(returned){
 			dojo._loadedModules[dottedName] = returned;
 			dojo.setObject(dottedName, returned);
@@ -923,7 +937,7 @@
 			dojo._loadedModules[dottedName] = module.exports;
 		}
 		return returned;
-		
+
 	};
 	define.vendor = "dojotoolkit.org";
 	define.version = dojo.version;

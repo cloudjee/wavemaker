@@ -299,7 +299,7 @@ dojo.declare("wm.Application", wm.Component, {
         var themematch = window.location.search.match(/theme\=(.*?)\&/) || window.location.search.match(/theme\=(.*?)$/);
 
         var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
-        dojo.removeClass(node, this.theme);
+        if (this.themeName) dojo.removeClass(node, this.themeName);
 
         if (this._isDesignLoaded && !isInit) {
             try {
@@ -313,7 +313,8 @@ dojo.declare("wm.Application", wm.Component, {
 
         this._lastTheme = this.theme;
         this.theme = inTheme;
-        dojo.addClass(node, this.theme);
+        this.themeName = inTheme.replace(/^.*\./,"");
+        dojo.addClass(node, this.themeName);
 
 
         if (this._isDesignLoaded || !isInit || themematch) {
@@ -372,18 +373,28 @@ dojo.declare("wm.Application", wm.Component, {
         studio.page.reflow();
         studio.refreshWidgetsTree();
     },
-    loadThemePrototype: function(inThemeName, optionalThemeData) {
-        var themeData = wm.Application.themeData[inThemeName];
+    loadThemePrototype: function(inTheme, optionalThemeData) {
+        var inThemeName = inTheme.replace(/^.*\./,"");
+        var themeData = wm.Application.themeData[inTheme];
         if (!themeData || optionalThemeData) {
             var path;
-            if (inThemeName.match(/^wm_/)) path = dojo.moduleUrl("wm") + "base/widget/themes/" + inThemeName + "/Theme.js";
-            else path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/Theme.js";
+
+            /* Up until WM 6.5, themes were specified by name not path */
+            if (inTheme === inThemeName) {
+                if (inThemeName.match(/^wm_/)) {
+                    path = dojo.moduleUrl("wm") + "base/widget/themes/" + inThemeName + "/Theme.js";
+                } else {
+                     path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/Theme.js";
+                }
+            } else {
+                path = dojo.moduleUrl(inTheme) + "/Theme.js";
+            }
             themeData = optionalThemeData || dojo.fromJson(dojo.xhrGet({
                 url: path,
                 sync: true,
                 preventCache: true
             }).results[0]);
-            wm.Application.themeData[inThemeName] = themeData || {};
+            wm.Application.themeData[inTheme] = themeData || {};
         }
 
         var propHash = themeData["wm.Control"];
@@ -475,12 +486,18 @@ dojo.declare("wm.Application", wm.Component, {
         } /* End localization of default properties */
 
     },
-    loadThemeCss: function(inThemeName, inDesign, optionalCss) {
+    loadThemeCss: function(inTheme, inDesign, optionalCss) {
+        var inThemeName = inTheme.replace(/^.*\./,"");
         var path;
         var themecss;
-        if (inThemeName.match(/^wm_/)) path = dojo.moduleUrl("wm") + "base/widget/themes/" + inThemeName + "/theme.css";
-        else path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/theme.css";
 
+        /* If theme is specified by name (WM 6.5 and older) rather than by path */
+        if (inTheme === inThemeName) {
+            if (inThemeName.match(/^wm_/)) path = dojo.moduleUrl("wm") + "base/widget/themes/" + inThemeName + "/theme.css";
+            else path = dojo.moduleUrl("common") + "themes/" + inThemeName + "/theme.css";
+        } else {
+            path = dojo.moduleUrl(inTheme) + "/theme.css";
+        }
         if (inDesign) {
             var imagepath = path.replace(/\/[^\/]*$/, "/images");
             while (imagepath.match(/[^\/]+\/\.\.\//))
