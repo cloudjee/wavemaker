@@ -805,7 +805,11 @@ dojo.declare("wm.Application", wm.Component, {
             if (hash.length > 1) {
                 try {
                     this.locationState = dojo.fromJson(hash.substring(1));
-                } catch (e) {}
+                } catch (e) {
+                    try {
+                        this.locationState = dojo.fromJson(unescape(hash.substring(1)));
+                    } catch(e){}
+                }
             }
             if (this.manageURL) {
                 this._pageName = this.locationState && this.locationState.pageName ? this.locationState.pageName : inName;
