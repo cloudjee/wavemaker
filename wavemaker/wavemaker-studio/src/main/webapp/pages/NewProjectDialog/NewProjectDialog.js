@@ -207,12 +207,15 @@ dojo.declare("NewProjectDialog", wm.Page, {
         this.selectedTemplate.setBorder("2");
         dojo.addClass(inTarget.domNode, "Selected");
 
+        var disableThemes = false;
         var templateObj = this.selectedTemplate.templateObj;
         if (templateObj) {
             if (templateObj.theme) {
                 this.themeName.setDataValue(templateObj.theme);
+                disableThemes = true;
             }
         }
+        this.themeName.setDisabled(disableThemes);
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();
