@@ -254,7 +254,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
         var templateObj = this.selectedTemplate.templateObj;
         var projectName = this.projectName.getDataValue();
         var themeName = this.themeName.getDataValue();
-        if (templateObj.fullProjectTemplate) {
+        if (templateObj && templateObj.fullProjectTemplate) {
 
             studio.studioService.requestAsync("newProject", [projectName, templateObj.fullName],
                                                 dojo.hitch(this, function() {

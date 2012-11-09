@@ -149,6 +149,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
      */
     @ExposeToClient
 	public String newProject(String projectName,String templateFolderName) throws IOException {
+	if (templateFolderName == null) return newProject(projectName);
         this.projectManager.copyProject(this.fileSystem.getDemoDir().createRelative(templateFolderName + "/"), 
 					this.projectManager.getProjectDir(projectName,false));
 	return "";
