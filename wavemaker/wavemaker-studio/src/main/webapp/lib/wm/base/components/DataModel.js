@@ -211,7 +211,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
     designSelect: function() {
         if (studio.tree.selected.component instanceof wm.DataModelEntity) return;
         var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
-        studio.selected._studioTreeNode.setOpen(true);
+        studio.selected[0]._studioTreeNode.setOpen(true);
         c.page.setDataModel(this);
         c.page._selectNode();
 /*
@@ -270,7 +270,7 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
 	                return true;
 	            }));
 	        } else {
-	               c.page.selectEntity(this.dataModelName, this.entityName);	        
+	               c.page.selectEntity(this.dataModelName, this.entityName);
 	        }
         }
     },

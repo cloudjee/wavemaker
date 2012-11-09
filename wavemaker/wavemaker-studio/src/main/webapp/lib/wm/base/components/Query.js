@@ -26,11 +26,16 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 	queryName: "",
 	afterPaletteDrop: function() {
 	    var c = studio.navGotoEditor("QueryEditor",  studio.databaseTab, this.getLayerName(), this.getLayerCaption(), true);
-		c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+	    if (c.pageLoadedDeferred) {
+			c.pageLoadedDeferred.addCallback(dojo.hitch(this, function() {
+				c.page.addQuery();
+				studio.navGotoComponentsTreeClick();
+				return true;
+			}));
+		} else {
 			c.page.addQuery();
 			studio.navGotoComponentsTreeClick();
-			return true;
-		}));
+		}
 		return true;
 	},
     getLayerName: function() {

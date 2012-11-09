@@ -265,6 +265,7 @@ dojo.declare("wm.TemplatePublisher", wm.ComponentPublisher, {
             var template = ((!this.isFullPageTemplate) ? "wm.widgetTemplates." : "wm.fullTemplates.") + this.publishName;
 		var root = studio.page.root;
 		var widgets = template + " = {\n" +
+			'\ttemplateGroup: "Custom",\n' +
 			'\tlayoutKind: "' + root.layoutKind + '",\n' +
 			'\twidth: "' + this.width + '",\n' +
 			'\theight: "' + this.height + '",\n' +
