@@ -17,6 +17,7 @@ dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit._HasDropDown");
 
 dojo.declare("wm.ColorPicker", wm.Text, {
+	classNames: "wmeditor wmcolorpicker",
     changeOnKey: true,
     className: "wmeditor wmcolorpickereditor",
     _editorBackgroundColor: true,
@@ -80,10 +81,10 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                     v3 = parseInt(inValue.substr(3, 1), 16);
                 }
 
-                this.editorNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1 + v2 + v3 < 250) ? "white" : "black";
+                this.editor.focusNode.style.color = (v1 < 130 && v2 < 130 && v3 < 130 || v1 + v2 < 180 || v1 + v3 < 180 || v2 + v3 < 180) || (v1 + v2 + v3 < 250) ? "white" : "black";
             } else {
                 this.editorNode.style.backgroundColor = "";
-                this.editorNode.style.color = "";
+                this.editor.focusNode.style.color = "";
             }
         } else {
             if (typeof inValue == "string" && inValue.length) {

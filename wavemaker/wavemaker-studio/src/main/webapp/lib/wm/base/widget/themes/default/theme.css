@@ -1582,3 +1582,7 @@ height: 16px;
         background: -webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700));
 }
 /* End back button */
+
+.tundra .wmcolorpicker .dijitTextBox {
+    background-image: none;
+}
