@@ -147,18 +147,19 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
         if (type == DeploymentType.CLOUD_FOUNDRY) {
-            addCloudDataSource(mgr, cfg, dbName, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
+
+            addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         }
     }
 
-    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String dbName, String updateSchema) {
+    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String updateSchema) {
         if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             XMLWriter writer = XMLUtils.newXMLWriter(pw);
             writer.setStartIndent(4);
             writer.addAttribute();
-            writer.addElement(CLOUD_DATA_SOURCE, "id", dbName + "DataSource");
+            writer.addElement(CLOUD_DATA_SOURCE, "id", cfg.getServiceId() + "DataSource");
             writer.finish();
             File cfgFile = mgr.getProjectManager().getCurrentProject().getRootFolder().getFile(cfg.getPath());
             String s = cfgFile.getContent().asString();

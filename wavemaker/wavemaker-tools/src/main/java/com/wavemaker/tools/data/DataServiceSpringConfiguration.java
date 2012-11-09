@@ -238,6 +238,10 @@ public class DataServiceSpringConfiguration {
         writeProps(DataServiceUtils.addPrefix(this.serviceId, filterProps(props)));
     }
 
+    public String getServiceId() {
+        return this.serviceId;
+    }
+
     private Properties filterProps(Properties props) {
         Properties filtered = new Properties();
         filtered.putAll(props);
