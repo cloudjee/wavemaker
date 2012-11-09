@@ -17,10 +17,26 @@ dojo.declare("NewProjectDialog", wm.Page, {
     i18n: true,
     selectedTemplate: null,
     start: function() {
+    },
+    onShow: function() {
+        this.selectedTemplate = null;
+        studio.studioService.requestAsync("listProjectTemplates", [], dojo.hitch(this, "onListTemplateSuccess"));
+        dojo.forEach(this.tabs.layers, function(l) {
+            l.c$[0].removeAllControls();
+        });
+    },
+    onListTemplateSuccess: function(inResponse) {
         this.themeName.setDataValue("wm.base.widget.themes.wm_default");
 
-        var templates = wm.fullTemplates;
-        var templateList = [];
+        var templates = this.templates = dojo.clone(wm.fullTemplates);
+        try {
+            moreTemplates = dojo.fromJson(inResponse);
+            dojo.forEach(moreTemplates, function(template) {
+                template.dataValue.fullProjectTemplate = true;
+                template.dataValue.fullName = template.name;
+                templates[template.dataValue.name || template.name] = template.dataValue;
+            });
+        } catch(e) {}
         var i = 0;
 
         var panel = new wm.Panel({
@@ -99,6 +115,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
                         verticalAlign: "top"
                     });
                 }
+
                 var parent = layer.c$[0];
                 if (i % 3 === 0) {
                     panel = new wm.Panel({
@@ -118,6 +135,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
                     parent: panel,
                     owner: this,
                     name: "templatepanel_" + layer.name + templateKey,
+                    templateObj: template,
                     margin: "4",
                     border: "1",
                     borderColor: "#888888",
@@ -188,6 +206,13 @@ dojo.declare("NewProjectDialog", wm.Page, {
         this.selectedTemplate.setBorderColor("#333333");
         this.selectedTemplate.setBorder("2");
         dojo.addClass(inTarget.domNode, "Selected");
+
+        var templateObj = this.selectedTemplate.templateObj;
+        if (templateObj) {
+            if (templateObj.theme) {
+                this.themeName.setDataValue(templateObj.theme);
+            }
+        }
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();
@@ -222,8 +247,29 @@ dojo.declare("NewProjectDialog", wm.Page, {
     _onOkClick: function() {
         var templateName = this.selectedTemplate.name;
         var layer = this.selectedTemplate.isAncestorInstanceOf(wm.Layer);
-        templateName = templateName.substring(layer.name.length + "templatepanel_".length);
-        studio.project.newProject(this.projectName.getDataValue(), this.themeName.getDataValue(), wm.fullTemplates[templateName]);
+
+        var templateObj = this.selectedTemplate.templateObj;
+        var projectName = this.projectName.getDataValue();
+        var themeName = this.themeName.getDataValue();
+        if (templateObj.fullProjectTemplate) {
+
+            studio.studioService.requestAsync("newProject", [projectName, templateObj.fullName],
+                                                dojo.hitch(this, function() {
+                                                    studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
+                                                    var d = studio.project.openProject(projectName);
+                                                    d.addCallback(function() {
+                                                        studio.application.setTheme(themeName);
+                                                        studio.endWait();
+                                                        studio.saveAll();
+                                                    });
+                                                }),
+                                                function(inError) {
+                                                    studio.endWait();
+                                                    app.alert(inError.toString());
+                                                });
+        } else {
+            studio.project.newProject(projectName, themeName);
+        }
     },
   _end: 0
 });

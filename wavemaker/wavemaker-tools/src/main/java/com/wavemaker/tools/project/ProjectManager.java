@@ -245,9 +245,15 @@ public class ProjectManager {
      * @throws IOException
      */
     public void copyProject(String sourceProjectName, String destinationProjectName) throws IOException {
+	copyProject(getProjectDir(sourceProjectName, false),
+		    getProjectDir(destinationProjectName, false));
+    }
 
-        Project sourceProject = new Project(getProjectDir(sourceProjectName, false), this.fileSystem);
-        Project destProject = new Project(getProjectDir(destinationProjectName, true), this.fileSystem);
+    public void copyProject(Resource sourceProjectResource, Resource destinationProjectResource) throws IOException {
+        Project sourceProject = new Project(sourceProjectResource, this.fileSystem);
+        Project destProject = new Project(destinationProjectResource, this.fileSystem);
+	String sourceProjectName = sourceProjectResource.getFilename();
+	String destinationProjectName = destinationProjectResource.getFilename();
 
         if (!sourceProject.getProjectRoot().exists()) {
             throw new WMRuntimeException(MessageResource.PROJECTCOPY_SOURCE_DNE, sourceProjectName);

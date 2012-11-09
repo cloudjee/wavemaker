@@ -121,7 +121,11 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public FileUploadResponse importFromZip(MultipartFile file) throws IOException {
+	public FileUploadResponse importFromZip(MultipartFile file) throws IOException {
+	return importFromZip(file,false);
+    }
+    @Override
+	public FileUploadResponse importFromZip(MultipartFile file, boolean isTemplate) throws IOException {
         FileUploadResponse response = new FileUploadResponse();
         org.springframework.core.io.Resource tmpDir = this.projectManager.getTmpDir();
 
@@ -173,7 +177,11 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
             // Get a File to point to where we're going to place this imported
             // project
-            finalProjectFolder = this.projectManager.getBaseProjectDir().createRelative(newProjectName + "/");
+            finalProjectFolder = (isTemplate ? this.fileSystem.getDemoDir() : this.projectManager.getBaseProjectDir()).createRelative(newProjectName + "/");
+	    if (isTemplate && finalProjectFolder.exists()) {
+		this.fileSystem.deleteFile(finalProjectFolder);
+	    }
+	    System.out.println("FINAL PATH: " + finalProjectFolder.getURI().toString());
             String finalname = finalProjectFolder.getFilename();
             String originalFinalname = finalname;
             // If there is already a project at that location, rename the
@@ -181,13 +189,12 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
             int i = -1;
             do {
                 i++;
-                finalProjectFolder = this.projectManager.getBaseProjectDir().createRelative(finalname + (i > 0 ? "" + i : "") + "/");
+                finalProjectFolder = (isTemplate ? this.fileSystem.getDemoDir() : this.projectManager.getBaseProjectDir()).createRelative(finalname + (i > 0 ? "" + i : "") + "/");
             } while (finalProjectFolder.exists());
             finalname = finalProjectFolder.getFilename();
 
             // OK, now finalname has the name of the new project,
             // finalProjectFolder has the full path to the new project
-
             // Move the project into the project folder
             this.fileSystem.rename(projectFolder, finalProjectFolder);
 
@@ -225,7 +232,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
             // so just purge the tmp folder after we're done
             this.fileSystem.deleteFile(tmpDir);
         }
-
+	    System.out.println("C");
         response.setPath(finalProjectFolder.getFilename());
         response.setError("");
         response.setWidth("");

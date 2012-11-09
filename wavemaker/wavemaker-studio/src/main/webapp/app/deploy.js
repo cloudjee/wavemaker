@@ -209,7 +209,7 @@ Studio.extend({
 							    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_PROJECT"));
 							    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function() {
 								    d.dismiss();
-									this.project.openProject(d.page.getPath());									
+									this.project.openProject(d.page.getPath());
 							    });
 							    d.page.setService("deploymentService", "uploadProjectZipFile");
 							    d.show();
@@ -302,20 +302,34 @@ Studio.extend({
     		delete dojo._loadedModules[module];
     		// destroy Dojo's URL cache completely
     		dojo._loadedUrls = [];
-    		
+
 		    dojo["require"](module);
     		// if we get here, no exceptions occured
 	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_SUCCESS", {name: module.replace(/^.*\./,"")}));
-		   wm.fire(studio.inspector, "reinspect");			
+		   wm.fire(studio.inspector, "reinspect");
 	    });
         d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
     	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_FAILED", {inError: inError}));
     	       if (app.toastDialog) app.toastDialog.hide();
-        });	    
+        });
 	    d.page.setService("deploymentService", "uploadClientComponent");
-	    d.show();		
+	    d.show();
 	},
+	importTemplate: function() {
+		var d = this.getImportProjectDialog();
+	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_TEMPLATE"));
+	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inSender, inResponse) {
+		    d.dismiss();
 
+	       app.alert(this.getDictionaryItem("ALERT_IMPORT_TEMPLATE_SUCCESS"));
+	    });
+        d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
+    	       app.alert(this.getDictionaryItem("ALERT_IMPORT_TEMPLATE_FAILED", {inError: inError}));
+    	       if (app.toastDialog) app.toastDialog.hide();
+        });
+        d.page.setService("deploymentService", "uploadTemplateZipFile");
+	    d.show();
+	},
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {
         this.project.saveProject(true);

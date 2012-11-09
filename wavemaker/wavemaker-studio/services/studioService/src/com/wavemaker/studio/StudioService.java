@@ -143,6 +143,18 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         return getWebPath();
     }
 
+    /**
+     * @see ProjectManager#newProject(String,String)
+     * @return getWebPath()
+     */
+    @ExposeToClient
+	public String newProject(String projectName,String templateFolderName) throws IOException {
+        this.projectManager.copyProject(this.fileSystem.getDemoDir().createRelative(templateFolderName + "/"), 
+					this.projectManager.getProjectDir(projectName,false));
+	return "";
+    }
+
+
     private String getWebPath() {
         return this.projectManager.getCurrentProject().getProjectName() + "/" + ProjectConstants.WEB_DIR;
     }
@@ -191,6 +203,23 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         SortedSet<String> projects = this.projectManager.listProjects();
         return new ArrayList<String>(projects).toArray(new String[projects.size()]);
     }
+
+    @ExposeToClient
+    public String listProjectTemplates() throws FileAccessException {
+	String result = "";
+	com.wavemaker.tools.io.Folder folder = this.fileSystem.getDemoFolder();
+	com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> folders = folder.list().folders();
+	for (com.wavemaker.tools.io.Folder f : folders) {
+	    com.wavemaker.tools.io.File templatejson = f.getFile("template.json");
+	    if (templatejson.exists()) {
+		if (result != "") result += ",";
+		result += "{'name': '" + f.getName() + "', 'dataValue':" + templatejson.getContent().asString().replaceAll("\\n","") + "}";
+	    }
+	}
+
+	return "[" + result + "]";
+    }
+
 
     /**
      * Returns true if the file exists.

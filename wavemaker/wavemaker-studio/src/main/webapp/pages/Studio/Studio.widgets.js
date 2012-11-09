@@ -198,7 +198,10 @@ height: "29px", width: "420px",
 								   onClick: "importPartnerService"},
 								   {"defaultLabel": "Import Component...",
 								    idInPage: "importComponentItem",
-								   onClick: "importComponent"}
+								   onClick: "importComponent"},
+								   {"defaultLabel": "Import Template...",
+								    idInPage: "importTemplateItem",
+								   onClick: "importTemplate"}
 							      ]
 							     }
 							 ]},

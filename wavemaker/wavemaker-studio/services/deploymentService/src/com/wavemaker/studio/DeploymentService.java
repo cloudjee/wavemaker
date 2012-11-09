@@ -147,6 +147,10 @@ public class DeploymentService {
         return this.deploymentManager.importFromZip(file);
     }
 
+    public FileUploadResponse uploadTemplateZipFile(@ParamName(name = "file") MultipartFile file) throws IOException {
+        return this.deploymentManager.importFromZip(file,true);
+    }
+
     // FIXME save the deployment info
     /**
      * Add a {@link DeploymentInfo} so that it can be {@link #getDeploymentInfo() used} in future deployments.
@@ -262,8 +266,11 @@ public class DeploymentService {
      * @param data contents of the file
      * @throws IOException
      */
-    public void deployClientComponent(String className, String folder, String data, String[] services) throws IOException {
+    public void deployClientComponent(String className, String folder, String data) throws IOException {
         this.deploymentManager.deployClientComponent(className, folder, data);
+    }
+    public void deployClientComponent(String className, String folder, String data, String[] services) throws IOException {
+	deployClientComponent(className,folder,data);
 
 	/* Take care of the services */
 	System.out.println("ServiceCount: " + services.length);

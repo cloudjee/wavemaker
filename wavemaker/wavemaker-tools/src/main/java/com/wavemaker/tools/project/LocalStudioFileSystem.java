@@ -143,6 +143,19 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         }
     }
 
+    @Override
+	public Folder getDemoFolder() {
+	File demoDir;
+	try {
+	    demoDir = this.getDemoDir().getFile();
+	} catch (IOException ex) {
+	    throw new WMRuntimeException(ex);
+        }
+        LocalFolder folder = new LocalFolder(demoDir);
+        return folder;
+    }
+
+
     public void setDemoDir(File file) {
         ConfigurationStore.setPreference(getClass(), DEMOHOME_KEY, file.getAbsolutePath());
     }
