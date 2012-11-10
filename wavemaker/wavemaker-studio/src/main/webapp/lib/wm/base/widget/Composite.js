@@ -334,10 +334,28 @@ wm.CompositeMixin.extend({
 		}
     	studio.deploymentService.requestAsync("copyComponentServices", [path.join("/")], dojo.hitch(this, function(inResponse) {
 			var response = dojo.fromJson(inResponse);
+			var userMessage = "";
 			if (response.servicesAdded.length) {
+				userMessage += "The following services were added to your project <ul>";
+				dojo.forEach(response.servicesAdded, function(serviceName) {
+					userMessage += "<li>"+serviceName + "</li>";
+				});
+				userMessage += "</ul>";
+			}
+			if (response.servicesSkipped.length) {
+				userMessage += "The following services were NOT added to your project because they already exist<ul>";
+				dojo.forEach(response.servicesSkipped, function(serviceName) {
+					userMessage += "<li>"+serviceName + "</li>";
+				});			
+				userMessage += "</ul>";
+			}
+			
+			if (response.servicesAdded.length/* || response.servicesSkipped.length*/) {
 				var d = studio.deploy("Compiling new services", "studioProjectCompile");
 				d.addCallback(function() {
 					studio.updateFullServiceList();
+					
+					app.alert(userMessage);
 				});
 			}
 		}));
