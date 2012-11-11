@@ -973,6 +973,7 @@
              case "date":
              case "time":
              case "java.util.date":
+                 wm.getComponentStructure("wm.DateTime");
                  ctor = wm.DateTime;
                  editorProps.dateMode = "Date";
                  break;
