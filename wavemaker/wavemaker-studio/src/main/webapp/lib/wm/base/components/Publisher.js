@@ -90,7 +90,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 		wm.Property.deploy = true;
 		try {
 		    var json = this.getComponentJson();
-		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services);
+		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services, this._wmPictureSource, this._wmHtmlSource);
 		} finally {
 			wm.Property.deploy = false;
 		}
@@ -162,9 +162,15 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    return;
 	//
 	var klass = this.namespace ? this.namespace + '.' + this.publishName : this.publishName;
+	this.adjustAllPictures();
+	this.adjustAllHtmlWidgets();	
 	var pageComponents = studio.page.writeComponents(sourcer_tab);
+		
 	var root = studio.page.root;
 	var rootWidgets = root.writeComponents(sourcer_tab);
+	this.restoreAllPictures();
+	this.restoreAllHtmlWidgets();
+	
 	var components = pageComponents.concat(rootWidgets).join(",\n");
 
 
@@ -240,7 +246,53 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    reg
 	].join('');
     },
-
+	adjustAllPictures: function() {
+		var comps = wm.listComponents([studio.page], wm.Picture, true);
+		var sourcelist = this._wmPictureSource = [];
+		dojo.forEach(comps, function(w,i) {
+			if (!w.$.binding || !w.$.binding.wires.source) {
+				if (w.source) {
+					sourcelist[i] = w.source;
+					w.source = "images/" + w.source.replace(/^.*\//,"");
+				}
+			}
+		});
+	},
+	restoreAllPictures: function() {
+		var comps = wm.listComponents([studio.page], wm.Picture, true);
+		var sourcelist = this._wmPictureSource;
+		dojo.forEach(comps, function(w,i) {
+			if (sourcelist[i]) {
+				w.source = sourcelist[i];
+				sourcelist[i] = unescape(sourcelist[i]);
+			}
+		});
+	},
+	adjustAllHtmlWidgets: function() {
+		var comps = wm.listComponents([studio.page], wm.Html, true);
+		var sourcelist = this._wmHtmlSource = [];
+		dojo.forEach(comps, function(w,i) {
+			if (!w.$.binding || !w.$.binding.wires.html) {
+				if (w.html && w.html.match(/^resources\//)) {
+					sourcelist[i] = w.html;
+					w.html= "html/" + w.html.replace(/^.*\//,"");
+					w.htmlIsResource = true;
+				}
+			}
+		});	
+	
+	},
+	restoreAllHtmlWidgets: function() {
+		var comps = wm.listComponents([studio.page], wm.Html, true);
+		var sourcelist = this._wmHtmlSource;
+		dojo.forEach(comps, function(w,i) {
+			if (sourcelist[i]) {
+				w.html= sourcelist[i];
+				delete w.htmlIsResource;
+				sourcelist[i] = unescape(sourcelist[i]);
+			}
+		});
+	},
     download: function() {
         studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=/common/packages/" + (this.namespace ? this.namespace.replace(/\./g,"/") + "/" : "") + this.publishName);
     }

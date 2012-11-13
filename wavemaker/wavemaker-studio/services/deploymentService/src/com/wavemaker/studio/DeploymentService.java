@@ -272,7 +272,7 @@ public class DeploymentService {
     public void deployClientComponent(String className, String folder, String data) throws IOException {
         this.deploymentManager.deployClientComponent(className, folder, data);
     }
-    public void deployClientComponent(String className, String folder, String data, String[] services) throws IOException {
+    public void deployClientComponent(String className, String folder, String data, String[] services,String[] images, String[] html) throws IOException {
 	deployClientComponent(className,folder,data);
 
 	/* Take care of the services */
@@ -296,6 +296,21 @@ public class DeploymentService {
 	    Folder destFolder = componentServiceFolder.getFolder(services[i]);
 	    destFolder.createIfMissing();
 	    projectServicesFolder.getFolder(services[i]).copyContentsTo(destFolder);
+	}
+
+	com.wavemaker.tools.io.Folder webappFolder = this.serviceDeploymentManager.getProjectManager().getCurrentProject().getRootFolder().getFolder("webapproot");
+	Folder compositeImagesFolder = componentFolder.getFolder("images");
+	compositeImagesFolder.createIfMissing();
+	for (i = 0; i < images.length; i++) {
+	    com.wavemaker.tools.io.File sourceFile = webappFolder.getFile(images[i]);
+	    sourceFile.copyTo(compositeImagesFolder);
+	}
+
+	Folder compositeHtmlFolder = componentFolder.getFolder("html");
+	compositeHtmlFolder.createIfMissing();
+	for (i = 0; i < html.length; i++) {
+	    com.wavemaker.tools.io.File sourceFile = webappFolder.getFile(html[i]); 
+	    sourceFile.copyTo(compositeHtmlFolder);
 	}
     }
 
