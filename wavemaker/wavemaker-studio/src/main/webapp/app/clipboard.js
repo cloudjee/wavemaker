@@ -37,7 +37,7 @@ Studio.extend({
     },
     pasteControl: function(inParent) {
         if (!inParent) inParent = studio.selected[0];
-
+        while (inParent instanceof wm.Container === false && inParent.parent) inParent = inParent.parent;
         /* If we are pasting into a wm.Layers, and ANY of the components being pasted is not a wm.Layer, then generate a wm.Layer to
          * put them all in
          */
