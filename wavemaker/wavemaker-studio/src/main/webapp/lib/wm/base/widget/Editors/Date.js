@@ -466,7 +466,7 @@ dojo.declare("wm.DateTime", wm.Date, {
                 d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset + adjustSixHours);
             }
         }
-        return this.calcDisplayValue(d);
+        return d === null || d === undefined ? "" : this.calcDisplayValue(d);
     },
 
     getDisplayValue: function() {
