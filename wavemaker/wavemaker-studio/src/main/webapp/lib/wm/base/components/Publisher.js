@@ -251,7 +251,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 		var sourcelist = this._wmPictureSource = [];
 		dojo.forEach(comps, function(w,i) {
 			if (!w.$.binding || !w.$.binding.wires.source) {
-				if (w.source) {
+				if (w.source && w.source.indexOf("resources/") == 0) {
 					sourcelist[i] = w.source;
 					w.source = "images/" + w.source.replace(/^.*\//,"");
 				}
