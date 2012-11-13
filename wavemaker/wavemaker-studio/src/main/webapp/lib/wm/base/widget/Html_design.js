@@ -32,7 +32,8 @@ wm.Object.extendSchema(wm.Html, {
     autoSizeHeight: { writeonly: true},
     autoSizeWidth: {writeonly: true},
     disabled: { ignore: 1 },
-
+	htmlIsResource: {hidden:1},
+	
     /* Method group */
     setHtml: {method:1}
 });
@@ -44,8 +45,10 @@ wm.Html.extend({
     },
     set_html: function(inHtml) {
 	if (inHtml && String(inHtml).indexOf('resources/') === 0) {
-	    this._htmlIsResource = 1;
+	    this.htmlIsResource = true;
+	} else if (inHtml) {
+		this.htmlIsResource = false;
 	}
     	this.setHtml(inHtml);    
-    }
+    }    
 });
