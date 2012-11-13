@@ -48,6 +48,9 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.wavemaker.tools.io.FilterOn;
+import com.wavemaker.tools.io.FilterOn.AttributeFilter;
+
 /**
  * Deployment Service used by WaveMaker to manage and deploy projects to various deployment targets.
  * 
@@ -381,6 +384,17 @@ public class DeploymentService {
 		}
 	    }
 	}
+
+	com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.File> jarfiles = componentFolder.list().files().include(FilterOn.names().ending(".jar"));
+	com.wavemaker.tools.io.Folder projectFolder = this.serviceDeploymentManager.getProjectManager().getCurrentProject().getRootFolder();
+	com.wavemaker.tools.io.Folder libFolder = projectFolder.getFolder("lib");
+	for (com.wavemaker.tools.io.File f : jarfiles) {
+	    com.wavemaker.tools.io.File destfile = libFolder.getFile(f.getName());
+	    if (!destfile.exists()) {
+		f.copyTo(libFolder);
+	    }
+	}
+
 	return "{servicesAdded: [" + responseInclude + "], servicesSkipped: [" + responseExclude + "]}";
     }
 
