@@ -42,7 +42,7 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 		}
 	},
 	undeploy: function() {
-		studio.undeployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, this.removeSource);
+		studio.undeployComponent(this.publishName, this.namespace , this.displayName || this.publishName, this.group, this.removeSource);
 	},
 	getComponentJson: function() {
 
@@ -83,11 +83,12 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 
 
 dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
-
+	undeploy: function() {
+		studio.undeployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, this.removeSource);
+	},
 	_deploy: function(services) {
 		wm.Property.deploy = true;
 		try {
-		debugger;
 		    var json = this.getComponentJson();
 		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services);
 		} finally {
