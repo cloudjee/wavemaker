@@ -127,6 +127,7 @@ wm.AbstractEditor.extend({
 
         props.formField.ignoretmp = !Boolean(hasForm);
         props.displayValue.readonly = this.formField;
+        props.dataValue.readonly = this.formField;
         props.defaultInsert.ignoretmp = !wm.LiveFormBase || !this.isAncestorInstanceOf(wm.LiveFormBase);
         props.ignoreParentReadonly.ignoretmp = !hasForm;
         props.dataValueBindingEvaluated.ignoretmp = !wm.DataForm || !this.isAncestorInstanceOf(wm.DataForm) || this.$.binding;
