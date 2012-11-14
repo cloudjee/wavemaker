@@ -49,6 +49,8 @@ public final class StaticFileController extends AbstractController {
 
     private static final String WM_COMMON_URL = "lib/wm/common";
 
+    private static final String WM_TEMPLATES_URL = "lib/wm/templates";
+    
     private static final String WM_PROJECTS_PATH = "projects";
 
     private static final String WM_BUILD_GZIPPED_URL = "/lib//build/Gzipped/";
@@ -132,6 +134,15 @@ public final class StaticFileController extends AbstractController {
         } else if (reqPath.equals("/" + WM_COMMON_URL) || reqPath.startsWith("/" + WM_COMMON_URL + "/")) {
             reqPath = reqPath.substring(("/" + WM_COMMON_URL).length());
             Resource userWmDir = this.fileSystem.getCommonDir();
+            if (!userWmDir.exists()) {
+                handleError(response, "Expected wm directory does not exist: " + userWmDir, HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            }
+
+            sendFile = userWmDir.createRelative(reqPath);
+        }  else if (reqPath.equals("/" + WM_TEMPLATES_URL) || reqPath.startsWith("/" + WM_TEMPLATES_URL + "/")) {
+            reqPath = reqPath.substring(("/" + WM_TEMPLATES_URL).length());
+            Resource userWmDir = this.fileSystem.getTemplatesDir();
             if (!userWmDir.exists()) {
                 handleError(response, "Expected wm directory does not exist: " + userWmDir, HttpServletResponse.SC_NOT_FOUND);
                 return null;

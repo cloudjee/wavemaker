@@ -55,6 +55,8 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
 
     public static final String COMMON_DIR = "common/";
 
+    public static final String TEMPLATES_DIR = "templates/";
+
     public static final String DEMOHOME_KEY = "demoHome";
 
     private ServletContext servletContext;
@@ -142,6 +144,26 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         }
     }
 
+    
+    @Override
+    public Resource getTemplatesDir() throws IOException {
+        Resource templates = getWaveMakerHome().createRelative(TEMPLATES_DIR);
+        if (!templates.exists() && getWaveMakerHome().exists()) {
+            createCommonDir(templates);
+        }
+        return templates;
+    }
+
+    private synchronized void createTemplatesDir(Resource templates) throws IOException {
+        if (!templates.exists()) {
+            Resource templateFile = getStudioWebAppRoot().createRelative("lib/wm/" + TEMPLATES_DIR);
+            if (templateFile.exists()) {
+                copyRecursive(templateFile, templates, IOUtils.DEFAULT_EXCLUSION);
+            }
+        }
+    }
+    
+    
     @Override
     public Resource getResourceForURI(String uri) {
         return createResource(uri);
