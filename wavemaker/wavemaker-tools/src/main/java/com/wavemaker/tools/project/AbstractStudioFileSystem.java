@@ -149,17 +149,14 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
     public Resource getTemplatesDir() throws IOException {
         Resource templates = getWaveMakerHome().createRelative(TEMPLATES_DIR);
         if (!templates.exists() && getWaveMakerHome().exists()) {
-            createCommonDir(templates);
+            createTemplatesDir(templates);
         }
         return templates;
     }
 
     private synchronized void createTemplatesDir(Resource templates) throws IOException {
         if (!templates.exists()) {
-            Resource templateFile = getStudioWebAppRoot().createRelative("lib/wm/" + TEMPLATES_DIR);
-            if (templateFile.exists()) {
-                copyRecursive(templateFile, templates, IOUtils.DEFAULT_EXCLUSION);
-            }
+        	this.makeDirectories(templates);
         }
     }
     

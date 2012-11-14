@@ -177,9 +177,12 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
             // Get a File to point to where we're going to place this imported
             // project
-            finalProjectFolder = (isTemplate ? this.fileSystem.getDemoDir() : this.projectManager.getBaseProjectDir()).createRelative(newProjectName + "/");
+            if(isTemplate){
+            	this.fileSystem.getTemplatesFolder().createIfMissing();
+            }
+            finalProjectFolder = (isTemplate ? this.fileSystem.getTemplatesDir() : this.projectManager.getBaseProjectDir()).createRelative(newProjectName + "/");
 	    if (isTemplate && finalProjectFolder.exists()) {
-		this.fileSystem.deleteFile(finalProjectFolder);
+	    	this.fileSystem.deleteFile(finalProjectFolder);
 	    }
 	    System.out.println("FINAL PATH: " + finalProjectFolder.getURI().toString());
             String finalname = finalProjectFolder.getFilename();
@@ -189,7 +192,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
             int i = -1;
             do {
                 i++;
-                finalProjectFolder = (isTemplate ? this.fileSystem.getDemoDir() : this.projectManager.getBaseProjectDir()).createRelative(finalname + (i > 0 ? "" + i : "") + "/");
+                finalProjectFolder = (isTemplate ? this.fileSystem.getTemplatesDir() : this.projectManager.getBaseProjectDir()).createRelative(finalname + (i > 0 ? "" + i : "") + "/");
             } while (finalProjectFolder.exists());
             finalname = finalProjectFolder.getFilename();
 
