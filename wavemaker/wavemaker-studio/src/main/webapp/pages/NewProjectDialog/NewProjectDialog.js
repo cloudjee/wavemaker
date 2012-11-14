@@ -150,7 +150,11 @@ dojo.declare("NewProjectDialog", wm.Page, {
                     name: "template" + layer.name + i
                 });
                 if (template.thumbnail) {
-                    img.domNode.style.backgroundImage = "url(" + template.thumbnail + ")";
+                    if (template.fullProjectTemplate) {
+                        img.domNode.style.backgrounImage = "url(lib/wm/templates/" + template.fullName+ "/" + template.thumbnail + ")";
+                    } else {
+                        img.domNode.style.backgroundImage = "url(" + template.thumbnail + ")";
+                    }
                 }
                 var label = new wm.Label({
                     "width": "100%",
