@@ -232,7 +232,7 @@ wm.Component.extend({
         var o = [ '"' + this.publishClass + '"' ];
         // props
         var p = this.writeProps(inOptions);
-        o.push(toJson(p));
+        o.push(toJson(p,-1));
         // events
         var e = this.writeEvents();
         o.push(toJson(e));

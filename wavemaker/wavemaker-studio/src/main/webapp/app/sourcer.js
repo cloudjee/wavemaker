@@ -31,8 +31,8 @@ source_body = function(inTop) {
 	return c.length ? c.join("," + sourcer_nl) + sourcer_nl : "";
 }
 
-toJson = function(v) {
-	return dojo.toJson(v);
+toJson = function(v,prettyprint) {
+	return dojo.toJson(v,prettyprint);
 }
 
 quote = function(inValue) {

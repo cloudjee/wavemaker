@@ -75,7 +75,10 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 	// if they return "self" then just pass-through...
 	var newObj;
 	_indentStr = _indentStr || "";
-	var nextIndent = prettyPrint ? _indentStr + dojo.toJsonIndentStr : "";
+	
+	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: Added special meaning to prettyPrint === -1 */
+	var nextIndent = prettyPrint && prettyPrint !== -1 ? _indentStr + dojo.toJsonIndentStr : "";
 	var tf = it.__json__||it.json;
 	if(dojo.isFunction(tf)){
 		newObj = tf.call(it);
@@ -89,10 +92,10 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 		// that can be provided by users in the form of .json or .__json__ function.
 		throw new Error("Can't serialize DOM nodes");
 	}
-
-	var sep = prettyPrint ? " " : "";
-	var newLine = prettyPrint ? "\n" : "";
-
+	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: Added special meaning to prettyPrint === -1 */
+	var sep = prettyPrint && prettyPrint != -1 ? " " : "";
+    var newLine = prettyPrint === -1 && dojo.isArray(it) || prettyPrint && prettyPrint !== -1 ? "\n" : "";
 	// array
 	if(dojo.isArray(it)){
 		var res = dojo.map(it, function(obj){
