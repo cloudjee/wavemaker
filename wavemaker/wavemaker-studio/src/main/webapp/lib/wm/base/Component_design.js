@@ -29,7 +29,7 @@ wm.Object.extendSchema(wm.Component, {
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
         deletionDisabled: {ignore: 1},
-    components: { ignore: 1 },
+    components: { ignore: 1, type: "Object" },
     designWrapper: { ignore: 1 },
     eventBindings: { ignore: 1 },
     id: { ignore: 1 },
@@ -48,7 +48,7 @@ wm.Object.extendSchema(wm.Component, {
     toString: {method:1, doc: 1, returns: "String"},
     getId: {method:1, doc: 1, returns: "String"},
     getRuntimeId: {method:1, doc: 1, returns: "String"},
-    $: {ignore: true,doc: 1},
+    "$": {ignore: true,doc: 1, type: "Object"},
     localizedDeclaredClass: {ignore:1}
 });
 
@@ -78,15 +78,19 @@ wm.Component.extend({
     },
     listProperties: function() {
         var props = this.inherited(arguments);
-        if (this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
-                props = dojo.clone(props);
-        if (props.owner) props.owner.ignoretmp = 1;
-        else props.owner = {ignoretmp: 1};
-            }
-
-        if (this.deletionDisabled) {
-                props = dojo.clone(props);
-        props.name = {hidden: 1};
+        if(this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
+            if(props.owner) props.owner.ignoretmp = 1;
+            else props.owner = {
+                ignoretmp: 1
+            };
+        }
+        if (this._isDesignLoaded && props.roles) {
+            props.roles.ignoretmp = !wm.roles || wm.roles.length == 0;
+        }
+        if(this.deletionDisabled) {
+            props.name = {
+                hidden: 1
+            };
         }
         return props;
     },

@@ -470,7 +470,7 @@ height: "29px", width: "420px",
 				}],
 				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerWrapper: ["wm.Panel", {width: "100%", height: "100%", autoScroll: true, horizontalAlign:"center", verticalAlign: "middle"}, {}, {
-                        designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
+                        designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}]
                     }],
 				    benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {
@@ -525,64 +525,60 @@ height: "29px", width: "420px",
 					}],*/
 			sourceTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  border: "1,0,0,1", clientBorder: "1,0,0,0"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: "Script"}, {onShow: "editArea.focus"}, {
-						scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
-						    scriptPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
-						    scriptPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
-						    scriptPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import JS Library", imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
-						    scriptPageRefreshBtn: ["wm.studio.ToolbarButton", {hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
-						    scriptPageFormatBtn: ["wm.studio.ToolbarButton", {hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
-						    scriptPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]}, hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
-						    /*scriptPageCompileBtn: ["wm.studio.ToolbarButton", {width: "24px", margin: "0,4,0,4", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],*/
-						    scriptPageCompletionsBtn: ["wm.studio.ToolbarButton", {hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
-						    scriptPageDictionaryBtn: ["wm.studio.ToolbarButton", {hint: "Edit Localization Dictionary", imageIndex: 53, imageList: "silkIconImageList"}, {onclick: "editDictionary"}],
-						    scriptPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
-						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
-						    editAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
-						    editAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]
-						}],
-						editAreaPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-						    editArea: ["wm.AceEditor", {width: "100%", height: "100%", minWidth: 20}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty", onChange1: "updateAutoComplete", onShow: "updateAutoComplete", onHide: "hideAutoComplete"}],
-						    editAreaSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],
-						    autoCompletionDialog: ["wm.Panel", {width: "200px", minWidth: 20, height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5"}, {}, {
-							listPanelLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Completions"}],
-							autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, renderVisibleRowsOnly: false, width: "100%", height: "100%", headerVisible: false, dataFields: "name", columns: [{show:true,field:"name",cssClass:"if (${name}.match(/\<b\>/)) {'CompletionListHeader';}" }]}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
-							    binding: ["wm.Binding", {}, {}, {
-								wire: ["wm.Wire", {targetProperty: "dataSet", source: "autoCompletionVariable"}]
-							    }]
+							scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
+							    scriptPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
+							    scriptPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findScriptClick"}],
+							    scriptPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import JS Library", imageIndex: 25}, {onclick: "importJavascriptLibrary"}],
+							    scriptPageRefreshBtn: ["wm.studio.ToolbarButton", {hint: "Refresh from Server", imageIndex: 27}, {onclick: "refreshScriptClick"}],
+							    scriptPageFormatBtn: ["wm.studio.ToolbarButton", {hint: "Reformat Code", imageIndex: 29}, {onclick: "formatScriptClick"}],
+							    scriptPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]}, hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapScriptClick"}],
+							    /*scriptPageCompileBtn: ["wm.studio.ToolbarButton", {width: "24px", margin: "0,4,0,4", hint: "Validation", imageIndex: 28}, {onclick: "validateScriptClick"}],*/
+							    scriptPageCompletionsBtn: ["wm.studio.ToolbarButton", {hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
+							    scriptPageDictionaryBtn: ["wm.studio.ToolbarButton", {hint: "Edit Localization Dictionary", imageIndex: 53, imageList: "silkIconImageList"}, {onclick: "editDictionary"}],
+							    scriptPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
+							    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+							    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+							    editAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
+							    editAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]
 							}],
-							autoCompleteDetails: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true}],
-							autoCompletionHtmlLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Description"}],
-							autoCompletionHtml: ["wm.Html", {width: "100%", height: "100%", padding: "4", backgroundColor: "white", html: "Select a term to see description; double click to add it to your code"}]
-						    }]
-						}]
+							editAreaPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+							    editArea: ["wm.AceEditor", {width: "100%", height: "100%", minWidth: 20}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty", onChange1: "updateAutoComplete", onShow: "updateAutoComplete", onHide: "hideAutoComplete"}],
+							    editAreaSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],
+							    autoCompletionDialog: ["wm.Panel", {width: "200px", minWidth: 20, height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", margin: "5"}, {}, {
+								listPanelLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Completions"}],
+								autoCompletionList: ["wm.List", {_classes: {domNode: ["StudioList"]}, renderVisibleRowsOnly: false, width: "100%", height: "100%", headerVisible: false, dataFields: "name", columns: [{show:true,field:"name",cssClass:"if (${name}.match(/\<b\>/)) {'CompletionListHeader';}" }]}, {onSelect: "autoCompletionSelect", ondblclick: "insertCompletedText"}, {
+								    binding: ["wm.Binding", {}, {}, {
+									wire: ["wm.Wire", {targetProperty: "dataSet", source: "autoCompletionVariable"}]
+								    }]
+								}],
+								autoCompleteDetails: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true}],
+								autoCompletionHtmlLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", height: "20px", caption: "Description"}],
+								autoCompletionHtml: ["wm.Html", {width: "100%", height: "100%", padding: "4", backgroundColor: "white", html: "Select a term to see description; double click to add it to your code"}]
+							    }]
+							}]
 					    }],
 					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
-
-						cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
-						    cssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
-						    cssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
-						    cssPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importCssLibrary"}],
-						    cssPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]},hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
-						    cssPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
-						    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
-						    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
-						    cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "100%", align: "right", height: "100%"}]
+							cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
+							    cssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
+							    cssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
+							    cssPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importCssLibrary"}],
+							    cssPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]},hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
+							    cssPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
+							    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+							    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
+							    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}]
+							}],
+						    cssTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, clientBorder: "1,0,0,0"}, {}, {
+								appCssLayer: ["wm.Layer", {caption: "Application CSS"}, {}, {
+									cssAppFilePathLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "webapproot/app.css", height: "18px", width: "150px", align: "right", border: 0}],
+								    appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
+								}],
+								pageCssLayer: ["wm.Layer", {caption: "Page CSS"}, {}, {							
+									cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "", height: "18px", width: "150px", align: "right", border: 0}],
+									cssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
+							    }]
+							}]
 						}],
-						cssPageLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "Page CSS", height: "18px", width: "100%", border: 0}, {}, {
-						    format: ["wm.DataFormatter", {}, {}]
-						}],
-						cssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}],
-						cssSplitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]},layout: "bottom"}, {}],
-						cssInnerPanel: ["wm.Panel", {width: "100%", height: "300px", layoutKind: "top-to-bottom"},{}, {
-						    appCssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4"}, {}, {
-							cssAppLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "Application CSS", height: "18px", width: "100%", border: 0}],
-							cssAppFilePathLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "webapproot/app.css", height: "18px", width: "150px", align: "right", border: 0}]
-						    }],
-						    appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
-						}]
-                                            }],
 						markupLayer: ["wm.Layer", {caption: "Markup"}, {onShow: "markupEditArea.focus"}, {
 						    markupRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
 							markupPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveMarkupClick"}],
@@ -622,7 +618,7 @@ height: "29px", width: "420px",
 
 						}],
 					    appWidgets: ["wm.Layer", {caption: "App Widgets", autoScroll:true}, {}, {
-						        appsourceHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}],
+						        appsourceHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}]
 					    }],
                                             themeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Themes", width: "100%", height: "100%"}, {}, {
 						themesRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {

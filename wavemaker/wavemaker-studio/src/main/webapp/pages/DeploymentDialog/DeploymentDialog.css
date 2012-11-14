@@ -35,7 +35,7 @@
 .DeploymentDialog-cloudFoundryAppList .wmlist-list .wmlist-cell,
 .DeploymentDialog .wmlist-list .wmlist-cell {
     border-bottom: solid 1px #AAA;
-    white-space:nowrap;
+	overflow: hidden;
 }
 
 .DeploymentDialog .DeploymentDialog-deploymentMainPanel {

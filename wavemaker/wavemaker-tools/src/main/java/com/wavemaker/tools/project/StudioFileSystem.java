@@ -94,7 +94,7 @@ public interface StudioFileSystem {
      * @return the demo folder or <tt>null</tt>
      */
     Folder getDemoFolder(); // In desktop land this is shipped with WM, in /app/wm/examples. This is mutable.
-    
+
     /**
      * Returns the root resource of the packaged Studio application.
      * 

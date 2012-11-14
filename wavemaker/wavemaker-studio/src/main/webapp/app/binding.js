@@ -172,8 +172,11 @@ addResourceBinderNodes = function(inParent, inFile, isRoot, rootPath) {
       case "zip":
         newfile = new wm.ZipResourceItem({});
         break;
+      case "json":
+        newfile = new wm.JSONResourceItem({});
+        break;
       case "js":
-        newfile = new wm.JSResourceItem({});
+	    newfile = new wm.JSResourceItem({});
         break;
       case "css":
         newfile = new wm.CSSResourceItem({});
@@ -416,7 +419,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             }]
             }]
             }],
-            bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "65px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
+            bindEditor: ["wm.Text", { readonly:true, caption: "Bound to", captionSize: "75px", captionAlign: "left", width: "100%", padding: "4,0"}, {}, {}]
         }]
         }]
     },
@@ -1887,6 +1890,14 @@ dojo.declare("wm.JSResourceItem", wm.ResourceItem, {
     this.inherited(arguments);
     }
 });
+
+dojo.declare("wm.JSONResourceItem", wm.ResourceItem, {
+    iconSrc: "images/resourceManagerIcons/cssjs16.png",
+    init: function() {
+    this.inherited(arguments);
+    }
+});
+
 
 dojo.declare("wm.CSSResourceItem", wm.ResourceItem, {
     iconSrc: "images/resourceManagerIcons/cssjs16.png",

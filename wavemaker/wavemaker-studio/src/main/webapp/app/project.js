@@ -152,6 +152,8 @@ dojo.declare("wm.studio.Project", null, {
             var text = "";
             if (argHash && argHash.template && argHash.template && argHash.template.preferredDevice) {
                 text += "\"preferredDevice\": \"" + argHash.template.preferredDevice + "\",\n";
+            } else {
+            	text += "\"preferredDevice\": \"" + studio.currentDeviceType + "\",\n";
             }
 
           // NOTE: could present list of choices here
@@ -693,8 +695,8 @@ dojo.declare("wm.studio.Project", null, {
         var d2 = new dojo.Deferred();
         d1.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
-            var src = this.generateApplicationSource();
             studio.setSaveProgressBarMessage(this.projectName + ".js");
+            var src = this.generateApplicationSource();
             allProjectJS += src;
 
             var dlocal = this.saveProjectData(this.projectName + ".js", src, false, true);

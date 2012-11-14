@@ -226,6 +226,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		// if its defined and empty, then there is no containerWidget
 		if (this.containerWidgetId) {
 		    containerWidget = this.owner.getValueById(this.containerWidgetId);
+		    if (!containerWidget) return;
 		    containerNode = containerWidget.domNode;
 		}
 	    } else if (this.c$.length == 1) {
@@ -743,7 +744,6 @@ dojo.declare("wm.Dialog", wm.Container, {
         return true;
     },
 
-    // TODO: Update colorpickerdialog to use this
     // TODO: Add property to control whether dialog goes below, above, left or right
     renderBoundsByPositionNode: function() {
         if (!this.fixPositionNode) return;
@@ -1505,5 +1505,6 @@ dojo.declare("wm.Dialog", wm.Container, {
             this.fixPositionNode = widget ? widget.domNode : null;
         }
         this.renderBounds();
-    }
+    },
+    adjustFlowForMobile: function() {}
 });

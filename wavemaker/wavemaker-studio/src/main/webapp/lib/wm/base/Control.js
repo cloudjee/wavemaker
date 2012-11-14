@@ -161,11 +161,12 @@ dojo.declare("wm.Bounds", null, {
     */
     _edges: {l:1, t:1, r:1, b:1},
     calcPadBorderMargin: function() {
-	var pbm = this.padBorderMargin;
-	for(var e in this._edges)
-	    pbm[e] = this.borderExtents[e] + this.paddingExtents[e] + this.marginExtents[e];
-	pbm.w = pbm.l + pbm.r;
-	pbm.h = pbm.t + pbm.b;
+		var pbm = this.padBorderMargin;
+		for(var e in this._edges)
+		    pbm[e] = this.borderExtents[e] + this.paddingExtents[e] + this.marginExtents[e];
+		if (this._isDesignLoaded && studio.useDesignBorder && wm.isDesignable(this) && (!this.border || this.border === "0")) {pbm.t++;pbm.b++;pbm.r++;pbm.l++;}
+		pbm.w = pbm.l + pbm.r;
+		pbm.h = pbm.t + pbm.b;
     },
     getScrollMargins: function() {
 	return {w:0, h:0};
@@ -193,23 +194,23 @@ dojo.declare("wm.Bounds", null, {
 	return b;
     },
     getStyleBounds: function() {
-	if (this.isRelativePositioned){
-	    return {w: this.width, h: this.height};
-	}
+		if (this.isRelativePositioned){
+		    return {w: this.width, h: this.height};
+		}
 
-	var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
-	    var b = {
-		l: this.bounds.l,
-		t: this.bounds.t,
-		w: this.bounds.w - pbm.w,
-		h: this.bounds.h - pbm.h
-	    };
+		var pbm = (this.dom.node.tagName.toLowerCase() == "button") ? this.marginExtents : this.padBorderMargin;
+		    var b = {
+			l: this.bounds.l,
+			t: this.bounds.t,
+			w: this.bounds.w - pbm.w,
+			h: this.bounds.h - pbm.h
+		    };
 
- 	if (b.w < 0) b.w = 0;
- 	if (b.h < 0) b.h = 0;
-	b.r = b.l + b.w;
-	b.b = b.t + b.h;
-	return b;
+	 	if (b.w < 0) b.w = 0;
+	 	if (b.h < 0) b.h = 0;
+		b.r = b.l + b.w;
+		b.b = b.t + b.h;
+		return b;
     },
     cloneBounds: function() {
 	with (this.bounds) {
@@ -469,6 +470,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
         this.initDomNode();
         this.inherited(arguments);
+        if (this.ariaRole) dojo.attr(this.domNode, "role", this.ariaRole);
 
         var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
         if (this.height && String(this.height).match(/\%/)) {
@@ -650,6 +652,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     },
 
     callOnShowParent: function() {
+    	if (this.owner && this.owner._isUnloading) return;
         var self = this;
         wm.forEachVisibleWidget(this, function(w) {
             if (self != w) { /* For internal widget detection of changes to showing state, use _onShowParent */
@@ -1266,25 +1269,53 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             stylesObj = {
                 margin: (margins.join("px ") || 0) + "px",
                 padding: (paddings.join("px ") || 0) + "px",
-                borderLeftStyle: (this.designBorderState && this.designBorderState.l) ? "dashed" : "solid",
-                borderRightStyle: (this.designBorderState && this.designBorderState.r) ? "dashed" : "solid",
-                borderTopStyle: (this.designBorderState && this.designBorderState.t) ? "dashed" : "solid",
-                borderBottomStyle: (this.designBorderState && this.designBorderState.b) ? "dashed" : "solid",
-                borderLeftColor: (this.designBorderState && this.designBorderState.l) ? "#C1C1C1" : this.borderColor,
-                borderRightColor: (this.designBorderState && this.designBorderState.r) ? "#C1C1C1" : this.borderColor,
-                borderTopColor: (this.designBorderState && this.designBorderState.t) ? "#C1C1C1" : this.borderColor,
-                borderBottomColor: (this.designBorderState && this.designBorderState.b) ? "#C1C1C1" : this.borderColor,
-                borderLeftWidth: ((this.designBorderState && this.designBorderState.l) ? "1" : this.borderExtents.l) + "px",
-                borderRightWidth: ((this.designBorderState && this.designBorderState.r) ? "1" : this.borderExtents.r) + "px",
-                borderTopWidth: ((this.designBorderState && this.designBorderState.t) ? "1" : this.borderExtents.t) + "px",
-                borderBottomWidth: ((this.designBorderState && this.designBorderState.b) ? "1" : this.borderExtents.b) + "px",
                 backgroundColor: this.backgroundColor,
 
                 overflowX: this.scrollX ? "auto" : overflow,
                 overflowY: this.scrollY ? "auto" : overflow
             };
-
+            var bordersWidth = "", bordersStyle = "", bordersColor = "";
+            if (this.designBorderState.t) {
+            	bordersWidth += "1px ";
+            	bordersStyle += "dashed ";
+            	bordersColor += "#C1C1C1 ";
+            } else {
+            	bordersWidth += this.borderExtents.t + "px ";
+            	bordersStyle += "solid ";
+            	bordersColor += this.borderColor + " ";
+            }
+            if (this.designBorderState.r) {
+            	bordersWidth += "1px ";
+            	bordersStyle += "dashed ";
+            	bordersColor += "#C1C1C1 ";
+            } else {
+            	bordersWidth += this.borderExtents.r + "px ";
+            	bordersStyle += "solid ";
+            	bordersColor += this.borderColor + " ";
+            }
+            if (this.designBorderState.b) {
+            	bordersWidth += "1px ";
+            	bordersStyle += "dashed ";
+            	bordersColor += "#C1C1C1 ";
+            } else {
+            	bordersWidth += this.borderExtents.b + "px ";
+            	bordersStyle += "solid ";
+            	bordersColor += this.borderColor + " ";
+            }
+            if (this.designBorderState.l) {
+            	bordersWidth += "1px";
+            	bordersStyle += "dashed";
+            	bordersColor += "#C1C1C1";
+            } else {
+            	bordersWidth += this.borderExtents.l + "px";
+            	bordersStyle += "solid";
+            	bordersColor += this.borderColor;
+            }
+            stylesObj.borderStyle = bordersStyle;
+            stylesObj.borderColor = bordersColor;
+            stylesObj.borderWidth = bordersWidth;
         } else {
+            var device = this._isDesignLoaded ? studio.currentDeviceType : wm.device;
             stylesObj = {
                 margin: (margins.join("px ") || 0) + "px",
                 padding: (paddings.join("px ") || 0) + "px",
@@ -1292,7 +1323,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
                 borderWidth: (borders.join("px ") || 0) + "px",
                 borderColor: this.borderColor,
                 backgroundColor: this.backgroundColor,
-                overflowX: this.scrollX ? "auto" : overflow,
+                overflowX: device != "desktop" ? "hidden" : this.scrollX ? "auto" : overflow,
                 overflowY: this.scrollY ? "auto" : overflow
             }
         }
@@ -1352,11 +1383,17 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 							cssTextItems.push(prefix + "border-top-right-radius: " + values[1]);
 							cssTextItems.push(prefix + "border-bottom-left-radius: " + values[2]);
 							cssTextItems.push(prefix + "border-bottom-right-radius: " + values[3]);							
-				   	} else {
-			            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
-			                return "-" + inLetter.toLowerCase();
-			            }) + ":" + styleValue);
-			        }
+				   	} else {			         
+    			        if (styleName == "backgroundImage") {
+    			        	if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {
+    							styleValue = this.getPath() + styleValue;
+    						}
+    			        	if (styleValue.indexOf("url") != 0) styleValue = "url(" + styleValue + ")";
+    			        }
+    		            cssTextItems.push(styleName.replace(/([A-Z])/g, function(inLetter) {
+    		                return "-" + inLetter.toLowerCase();
+    		            }) + ":" + styleValue);
+    		        }
 		        this._appliedStyles[styleName] = styleValue;
 	        }
         }));
@@ -1364,16 +1401,17 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         /* margin/padding/border all affect the layout and sizing of widgets and can't be left to stylesheets */
         cssTextItems.push("margin:" + cssObj.margin);
         cssTextItems.push("padding:" + cssObj.padding);
+        /*
         if (this.designBorderState) {
             cssTextItems.push("border-top:" + cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor);
             cssTextItems.push("border-bottom:" + cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor);
             cssTextItems.push("border-left:" + cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor);
             cssTextItems.push("border-right:" + cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor);
-        } else {
+        } else {*/
             cssTextItems.push("border-style:" + cssObj.borderStyle);
             cssTextItems.push("border-width:" + cssObj.borderWidth);
             cssTextItems.push("border-color:" + cssObj.borderColor);
-        }
+//        }
         if (cssObj.backgroundColor) cssTextItems.push("background-color:" + cssObj.backgroundColor);
         cssTextItems.push("overflow-x:" + cssObj.overflowX);
         cssTextItems.push("overflow-y:" + cssObj.overflowY);
@@ -1392,57 +1430,26 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    var borderSet = false;
 	    wm.forEachProperty(cssObj, dojo.hitch(this, function(styleValue, styleName) {
 		try {
-		    if (this.designBorderState && styleName.match(/^border/)) {
-			if (!borderSet) {
-			    borderSet = true;
-			    s.borderLeft = cssObj.borderLeftStyle + " " + cssObj.borderLeftWidth + " " + cssObj.borderLeftColor;
-			    s.borderRight = cssObj.borderRightStyle + " " + cssObj.borderRightWidth + " " + cssObj.borderRightColor;
-			    s.borderTop = cssObj.borderTopStyle + " " + cssObj.borderTopWidth + " " + cssObj.borderTopColor;
-			    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
-			}
-		    } else if (this._appliedStyles[styleName] != styleValue) {
-			if (styleName == "backgroundGradient") {
-			    var gradient = cssObj[styleName];
-			    var inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
-			    if (dojo.isIE < 10) {
-				s.filter = inValue;
-			    } else {
-				s.background = inValue;
-			    }
-			 } else if (styleName == "borderRadius") {
-					var prefix = "";
-			   		   		if (dojo.isWebKit) {
-								prefix = "Webkit";
-			   		   		} else if (dojo.isFF) {
-			   		   			prefix = "Moz" ;
-			   		   		} else if (dojo.isIE) {
-			   		   			prefix = "Ms" ;
-				   		   	} else if (dojo.isOpera) {
-			   		   			prefix = "O";
-				   		   	}
-				   		   	
-				   		   	var values = String(styleValue).split(/\s+/);
-				           	inValue = "";
-							for (var i = 0; i < values.length; i++) {
-								if (values[i].match(/^\d+$/)) values[i] += "px";
-							}
-							if (values.length == 1) values[1] = values[2] = values[3] = values[0];
-							if (values.length == 2) {
-								values[3] = values[0];
-								values[2] = values[1];
-							}
-							if (values.length == 3) {
-								values[3] = "0px";
-							}				
-							s[prefix + "BorderTopLeftRadius"] = values[0];
-							s[prefix + "BorderTopRightRadius"] = values[1];
-							s[prefix + "BorderBottomLeftRadius"] = values[2];
-							s[prefix + "BorderBottomRightRadius"] = values[3];
-							this._appliedStyles[styleName] = styleValue;
-			} else {
-			    s[styleName] = styleValue;
-			    this._appliedStyles[styleName] = styleValue;
-			}
+
+		    if (this._appliedStyles[styleName] != styleValue) {
+				if (styleName == "backgroundGradient") {
+				    var gradient = cssObj[styleName];
+				    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+				    if (dojo.isIE < 10) {
+					s.filter = inValue;
+				    } else {
+					s.background = inValue;
+				    }
+				} else {
+					if (styleName == "backgroundImage") {
+						if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {
+							styleValue = this.getPath() + styleValue;
+						}
+			        	if (styleValue.indexOf("url") != 0) styleValue = "url(" + styleValue + ")";
+			        }
+				    s[styleName] = styleValue;
+				    this._appliedStyles[styleName] = styleValue;
+				}
 		    }
 		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
 			    s.WebkitOverflowScrolling = "touch";
@@ -1758,6 +1765,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         } else {
             this.styles[inStyle] = inValue;
         }
+
         switch(inStyle) {
 	        case "backgroundGradient":
 
@@ -1801,6 +1809,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		   		 this.domNode.style[prefix + "BorderBottomLeftRadius"] = values[2];
 		   		 this.domNode.style[prefix + "BorderBottomRightRadius"] = values[3];		   		 
 		   		 break;
+		   case "backgroundImage":
+        		if (this._isDesignLoaded && (inValue.indexOf("url") != 0 && inValue.indexOf("http") !=0 && inValue.indexOf("/") != 0)) {
+					inValue = this.getPath() + inValue;
+				}
+	        	if (inValue.indexOf("url") != 0) inValue = "url(" + inValue + ")";
+                this.domNode.style[inStyle] = inValue;		   
+	 	        break;
            default:
 	            this.domNode.style[inStyle] = inValue;
         }

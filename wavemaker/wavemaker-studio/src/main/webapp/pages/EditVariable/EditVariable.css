@@ -16,3 +16,8 @@
     display: inline-block;
     color: white;
 }
+
+.EditVariable-invalidLabel {
+	color: white;
+	text-align: center;
+}

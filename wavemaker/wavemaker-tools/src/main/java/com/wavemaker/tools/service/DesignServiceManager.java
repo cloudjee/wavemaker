@@ -317,6 +317,25 @@ public class DesignServiceManager {
     }
 
     private void deleteServiceShallow(String serviceId) throws IOException {
+        Folder classesFolder = getProjectWebAppRoot().getFolder("WEB-INF/classes");
+        File springConfig = classesFolder.getFile(serviceId + ".spring.xml");
+        springConfig.delete();
+        File dbProperty = classesFolder.getFile(serviceId + ".properties");
+        if (dbProperty.exists()) {
+            dbProperty.delete();    
+        }
+        Service service = getService(serviceId);
+        if (service != null) {
+            com.wavemaker.tools.io.Resource target;
+            if (service.getType().equals("JavaService")) {
+                target = classesFolder.getFile(StringUtils.classNameToClassFilePath(service.getClazz()));    
+            } else {
+                String packageName = StringUtils.getPackage(service.getClazz());
+                target = classesFolder.getFolder(StringUtils.packageToSrcFilePath(packageName));
+            }
+            target.delete();
+        }
+
         Map<String, Service> serviceDefs = getCurrentServiceDefinitions();
         serviceDefs.remove(serviceId);
 
@@ -506,6 +525,15 @@ public class DesignServiceManager {
      */
     public Folder getServicesFolder() {
         return getProjectManager().getCurrentProject().getRootFolder().getFolder(SERVICES_DIR);
+    }
+
+    /**
+     * Return the project's web app root folder
+     *
+     * @return
+     */
+    public Folder getProjectWebAppRoot() {
+        return getProjectManager().getCurrentProject().getWebAppRootFolder();
     }
 
     /**

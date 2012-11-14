@@ -71,7 +71,12 @@ dojo.declare("wm.Html", wm.Control, {
         this._needsAutoSize = true;
         return wm.job(this.getRuntimeId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,true);}));
     },
-        doAutoSize: function(setSize, force) {
+ _onShowParent: function() {
+        if (this._needsAutoSize) {
+            this.scheduleAutoSize();
+        }
+    },
+     doAutoSize: function(setSize, force) {
             if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
 	    if (!force && !this._needsAutoSize) return;
 

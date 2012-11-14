@@ -1185,13 +1185,12 @@ line-height:32px;
 border-bottom: solid 1px #999;
 }
 
-.wmmobile .wmlist-content {
-    min-height: 32px;
+.wmmobile .GridListStyle .wmlist-content {
+    min-height: 26px;
+    padding-top: 6px;
 }
+
 .wmmobile .wmlist-header .wmlist-content {
-    min-height: 0px;
-}
-.wmmobile .wmlist.MobileListStyle .wmlist-item .wmlist-content {
     min-height: 0px;
 }
 

@@ -238,6 +238,10 @@ public class DataServiceSpringConfiguration {
         writeProps(DataServiceUtils.addPrefix(this.serviceId, filterProps(props)));
     }
 
+    public String getServiceId() {
+        return this.serviceId;
+    }
+
     private Properties filterProps(Properties props) {
         Properties filtered = new Properties();
         filtered.putAll(props);
@@ -380,7 +384,7 @@ public class DataServiceSpringConfiguration {
 
     private void updateDialect(String dbName, Props propValues) {
         Properties properties = readProperties(false);
-        if (!properties.get(dbName + ".dialect").equals(MYSQL_DIALECT)) {
+        if (properties.get(dbName + ".dialect") != null && !properties.get(dbName + ".dialect").equals(MYSQL_DIALECT)) {
             return;
         }
         

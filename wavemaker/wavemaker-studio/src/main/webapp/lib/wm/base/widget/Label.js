@@ -127,6 +127,11 @@ ondblclick: function(inEvent) {
             this.doAutoSize(true, false);
         }));
     },
+    _onShowParent: function() {
+        if (this._needsAutoSize) {
+            this.scheduleAutoSize();
+        }
+    },
     doAutoSize: function(setSize, force) {
         if (this._doingAutoSize || !this.autoSizeHeight && !this.autoSizeWidth) return;
         if (!force && !this._needsAutoSize) return;

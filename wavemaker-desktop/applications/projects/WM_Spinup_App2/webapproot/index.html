@@ -17,7 +17,7 @@ var wmChromeFramePath = "http://google.com/chrome";
 <meta name="viewport" content="width=device-width,user-scalable=no" />
 <title>WaveMaker Launcher</title>
 <link rel="shortcut icon" href="/wavemaker/lib/boot/images/favicon.ico" />
-<script>var wmThemeUrl = "lib/wm/base/widget/themes/wm_default/theme.css";</script>
+<script>var wmThemeUrl = "/wavemaker/lib/wm/base/widget/themes/wm_default/theme.css";</script>
 <style type="text/css">
 	#wavemakerNode {
 		height: 100%;
@@ -29,6 +29,15 @@ var wmChromeFramePath = "http://google.com/chrome";
 <!-- Boot Wavemaker -->
 <script type="text/javascript" src="config.js"></script>
 </head>
+
+<script type="text/javascript">
+    if (window.location.protocol === "http:") {
+        var theURL = window.location.href.substr(5);
+        window.location = "https:" + theURL;
+    }
+</script>
+
+
 <body class="tundra">
 	<!-- Begin WM_Spinup_App -->
 	<div id="wavemakerNode">

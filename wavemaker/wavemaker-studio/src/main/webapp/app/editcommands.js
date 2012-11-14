@@ -928,17 +928,20 @@ Studio.extend({
 	}
 	var changed = originalText != inSender.getText();
 	var parent = inSender;
-	while (parent instanceof wm.Layer == false) {
-	    parent = parent.parent;
-	}
-	if (dojo.hasClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon")) {
-	    if (!changed) {
-		dojo.removeClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon");
-		this.updateSourceDirty();
-	    } 
-	} else if (changed) {
-		dojo.addClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon");
-		this.updateSourceDirty();
+	var repetitions = (name == "appCssEditArea" || name == "cssEditArea") ? 2 : 1;
+	for (var i = 0; i < repetitions; i++) {
+		while (parent instanceof wm.Layer == false) {
+		    parent = parent.parent;
+		}
+		if (dojo.hasClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon")) {
+		    if (!changed) {
+			dojo.removeClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon");
+			this.updateSourceDirty();
+		    } 
+		} else if (changed) {
+			dojo.addClass(parent.decorator.btns[parent.getIndex()], "StudioDirtyIcon");
+			this.updateSourceDirty();
+		}
 	}
 //	var caption = parent.caption;
 //	var newCaption = (changed ? "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " : "") + caption.replace(/^\<.*?\>\s*/,"");

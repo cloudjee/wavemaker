@@ -232,7 +232,7 @@
     /* Containers */
     "wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_HEIGHT": "This operation will turn off auto size height (fitToContentHeight) for this widget.  Continue?",
     "wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_WIDTH": "This operation will turn off auto size width (fitToContentWidth) for this widget.  Continue?",
-
+	"wm.Container.RESIZE_TO_FIT_PERCENT_SIZE": "This operation does not resize width if width is sized with %; nor height if height is sized with %",
 
     /* action.js/clipboard.js: undo/redo */
     "UNDO_MOUSEOVER_HINT": "Undo ${hint}",

@@ -119,18 +119,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
 
 
-        this.$ = this.components = {};
-
-
-        if (!this._isDesignLoaded) {
-
-            if (wm.serverTimeOffset === undefined) {
-                this.getServerTimeOffset();
-            } else {
-                wm.currentTimeZone = new Date().getTimezoneOffset();
-            }
-            window.setInterval(dojo.hitch(this, "_pollForTimezoneChange"), 10000); //3600000); // once per hour check to see if the timezone has changed
-        }
+        this.$ = this.components = {};        
 
         this._setupKeys();
     },
@@ -673,6 +662,14 @@ dojo.declare("wm.Application", wm.Component, {
     },
     doRun: function() {
         if (wm.isPhonegap) {
+            if (!window["PhoneGap"]) {
+                wm.job("doRun", 100, this, "doRun");
+                return;
+            }
+            /* IFrame added by phonegap build server seems to disrupt touch events */
+            if (document.body.nextSibling && document.body.nextSibling.tagName == "IFRAME") {
+                dojo.destroy(document.body.nextSibling);
+            }
             dojo["require"]("build.Gzipped.wm_phonegap_misc", true);
             dojo.forEach(wm.componentFixList._phonegap, function(fix) {
                 try {
@@ -681,14 +678,24 @@ dojo.declare("wm.Application", wm.Component, {
             });
         }
 
+		/* Needs to be here rather than postInit because wm.ServiceVariable not loaded in phonegap build until this point */
+		if (!this._isDesignLoaded) {
 
-
-        /* Load all app-level components from project.js */
-        this.loadComponents(this.constructor.widgets || this.widgets);
+            if (wm.serverTimeOffset === undefined) {
+                this.getServerTimeOffset();
+            } else {
+                wm.currentTimeZone = new Date().getTimezoneOffset();
+            }
+            window.setInterval(dojo.hitch(this, "_pollForTimezoneChange"), 10000); //3600000); // once per hour check to see if the timezone has changed
+        }
 
         this.createPageContainer();
         this.domNode = this.appRoot.domNode;
         this.reflow();
+
+        /* Load all app-level components from project.js */
+        this.loadComponents(this.constructor.widgets || this.widgets);
+
 
         if (!this.debugDialog) {
             if (this._overrideDebugDialog !== undefined) {
@@ -935,7 +942,7 @@ dojo.declare("wm.Application", wm.Component, {
                 userPrompt: ""
             });
             this.alertDialog.domNode.style.zIndex = 45;
-
+            dojo.attr(this.alertDialog.domNode, "role", "alertdialog");
         }
 
         if (this.alertDialog.width != "400px") this.alertDialog.setWidth("400px"); // reset any width changes made by users
@@ -967,6 +974,7 @@ dojo.declare("wm.Application", wm.Component, {
             this.confirmDialog.connect(this.confirmDialog, "onButton1Click", this, "confirmDialogOKClick");
             this.confirmDialog.connect(this.confirmDialog, "onButton2Click", this, "confirmDialogCancelClick");
             this.confirmDialog.connect(this.confirmDialog, "_onEsc", this, "confirmDialogCancelClick");
+            dojo.attr(this.confirmDialog.domNode, "role", "alertdialog");
         }
         nonmodal = Boolean(nonmodal);
         this.confirmDialog.setUserPrompt(inText);

@@ -193,7 +193,7 @@ dojo.declare("wm.XhrService", wm.Service, {
     onResult: function(parameters, operation, deferred, inResult) {
         var result;
         try {
-            if (inResult && inResult.match(/^\s*\{/)) {
+            if (inResult && inResult.match(/^\s*[\{\[]/)) {
                 result = dojo.fromJson(inResult);
             } else {
                 result = {dataValue: inResult};
@@ -201,14 +201,7 @@ dojo.declare("wm.XhrService", wm.Service, {
         } catch (e) {
             result = inResult;
         }
-        var typeDef = wm.typeManager.getType(operation.returnType);
-        if (typeDef && typeDef.fields) {
-            wm.forEachProperty(typeDef.fields, function(fieldDef, fieldName) {
-                if (fieldDef.type.toLowerCase() == "date" && typeof result[fieldName] == "string") {
-                    result[fieldName] = new Date(result[fieldName]).getTime();
-                }
-            });
-        }
+        
         deferred.callback(result);
     },
     onError: function(parameters, operation, deferred, inError) {

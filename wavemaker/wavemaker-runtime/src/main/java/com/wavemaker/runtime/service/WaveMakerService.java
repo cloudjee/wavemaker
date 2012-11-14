@@ -48,6 +48,7 @@ import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.ServerUtils;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 
 /**
@@ -332,6 +333,7 @@ public class WaveMakerService {
      * @return The service bean object.
      * @throws WMRuntimeException if no appropriate service can be found.
      */
+    @HideFromClient
     public ServiceWire getServiceWire(String serviceName, String typeName) {
         ServiceWire serviceWire = null;
         Exception enclosedException = null;
@@ -357,35 +359,43 @@ public class WaveMakerService {
 
         return serviceWire;
     }
-
+    
+    @HideFromClient
     public TypeManager getTypeManager() {
         return this.typeManager;
     }
 
+    @HideFromClient
     public void setTypeManager(TypeManager typeManager) {
         this.typeManager = typeManager;
     }
 
+    @HideFromClient
     public ServiceManager getServiceManager() {
         return this.serviceManager;
     }
 
+    @HideFromClient
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
 
+    @HideFromClient
     public ServiceEventNotifier getServiceEventNotifier() {
         return this.serviceEventNotifier;
     }
 
+    @HideFromClient
     public void setServiceEventNotifier(ServiceEventNotifier serviceEventNotifier) {
         this.serviceEventNotifier = serviceEventNotifier;
     }
 
+    @HideFromClient
     public InternalRuntime getInternalRuntime() {
         return this.internalRuntime;
     }
 
+    @HideFromClient
     public void setInternalRuntime(InternalRuntime internalRuntime) {
         this.internalRuntime = internalRuntime;
     }

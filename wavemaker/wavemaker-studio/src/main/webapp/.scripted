@@ -1,0 +1,23 @@
+{
+  "jslint": {
+    "global": [
+      "window","console", "wm", "dojo", "studio", "app", "djConfig"
+    ],
+    "options": {
+      "evil": false, 
+      "plusplus": false, 
+      "vars": true, 
+      "browser": true, 
+      "devel": true, 
+      "windows": true,
+      "eqeqeq": false,
+      "white": true
+    }
+  },
+  "formatter": {
+    "js": {
+      "indent_size": 4,
+      "indent_char": " "
+    }
+  }
+}

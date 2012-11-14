@@ -76,6 +76,10 @@ wm.Property.extend({
 	this.selectProperty(inId);
     },
 	write: function() {
+		var prop = this.owner.getValue(this.property);
+		if (prop && prop instanceof wm.Variable) {
+			this.type = prop.type;
+		}
 		return wm.Property.deploy ? "" : this.inherited(arguments);
 	},
 	publish: function() {

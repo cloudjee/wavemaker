@@ -680,6 +680,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
     },
     setSelectedItemType: function(inType) {
+    	this.selectedItem.dataSet = "";
         this.selectedItem.setType(inType);
     },
     update: function() {
@@ -1848,7 +1849,10 @@ wm.List.extend({
         if (inValue && inValue != '') {
             var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
             var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
-            if (formatterProps.prefix) inValue = formatterProps.prefix + inValue;
+            if (formatterProps.prefix) {
+            	if (formatterProps.prefix.match(/\/$/) && inValue.indexOf("/") == 0) inValue = inValue.substring(1);
+            	inValue = formatterProps.prefix + inValue;
+            }
 
             if (formatterProps.postfix) inValue = inValue + formatterProps.postfix;
 
@@ -1918,6 +1922,9 @@ wm.List.extend({
             this.deselectAll();
             return;
         }
+        wm.forEachProperty(inData, function(inValue, inKey) {
+            if (typeof inValue == "object") delete inData[inKey];
+        });
         this.selectByQuery(inData);
     },
     select: function(inItemOrIndex) {

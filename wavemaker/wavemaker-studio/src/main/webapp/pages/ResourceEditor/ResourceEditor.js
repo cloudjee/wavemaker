@@ -54,6 +54,9 @@ dojo.declare("ResourceEditor", wm.Page, {
         } else if (this.item instanceof wm.CSSResourceItem) {
             this.formatBtn.hide();
             this.editor.setSyntax("css");
+        } else if (this.item instanceof wm.JSONResourceItem) {
+            this.formatBtn.show();
+            this.editor.setSyntax("json");            
         } else if (this.item instanceof wm.JSResourceItem) {
             this.formatBtn.show();
             this.editor.setSyntax("javascript");

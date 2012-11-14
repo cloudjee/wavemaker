@@ -448,7 +448,10 @@ dojo.declare("wm.Variable", wm.Component, {
                 var v = this.data[i];
                 if (wm.getDataConvertDates && v instanceof Date) {
                     v = v.getTime();
+                } else if (props[i] && props[i].type == "Date" && typeof v === "string") {
+                	v = this.data[i] = new Date(v).getTime();
                 }
+
                 // we may not always want all related junk
                 if (v !== undefined) {
                     if (v instanceof wm.Variable) {
@@ -480,6 +483,13 @@ dojo.declare("wm.Variable", wm.Component, {
         // FIXME: Encountered a project where _isVariableProp(n) was true, but v was a string
         if (this._isVariableProp(n) && (!v || (v._isStub && v._isStub())) && !noMarshal) {
             v = d[n] = (f || this).marshallVariable(n, typeInfo, v);
+        } else if (typeInfo && typeInfo.type == "Date") {
+        	v = d[n];
+        	if (typeof v == "string") {
+				try {
+	        		v = d[n] = new Date(v).getTime();
+	        	} catch(e) {}
+        	}
         }
         return v;
     },
@@ -957,57 +967,78 @@ dojo.declare("wm.Variable", wm.Component, {
             var matchStart = true;
             var a = inItem.getValue(key);
             var b = inSample[key];
-            if (typeof b == "function") return b(a);
-            var stringB = String(b);
-            if (stringB.charAt(0) == w) {
-                b = b.substring(1);
-                matchStart = false;
-            } else if (stringB.charAt(0) == ">") {
-                var orEqual = false;
-                if (stringB.charAt(1) == "=") {
-                    orEqual = true;
-                    b = b.substring(2);
-                } else {
+            if (typeof b == "function") {
+                return b(a);
+            } else if (b !== null && typeof b == "object" && wm.typeManager.isStructuredType(inItem._dataSchema[key].type)) {
+                var aempty = (!a || a instanceof wm.Variable && a.isEmpty() || a instanceof wm.Variable === false && wm.isEmpty(a));
+                var bempty = (!b || b instanceof wm.Variable && b.isEmpty() || b instanceof wm.Variable === false && wm.isEmpty(b));
+                if (aempty != bempty) return false;
+                if (aempty && bempty) continue;
+
+                /* Don't even TRY to compare isList subvariables */
+                if (a instanceof wm.Variable && a.isList) {
+                    continue;
+                }
+
+                else {
+                    var submatch = this._queryItem(a, b, 0);
+                    if (!submatch) return false;
+                    continue;
+                }
+
+
+            } else {
+                var stringB = String(b);
+                if (stringB.charAt(0) == w) {
                     b = b.substring(1);
-                }
-                if (typeof a == "number") {
-                    b = Number(b);
-                } else if (typeof a == "string") {
-                    b = b.toLowerCase();
-                }
-                if (orEqual) {
-                    if (a < b) return false;
-                } else {
-                    if (a <= b) return false;
-                }
-                continue;
-            } else if (stringB.charAt(0) == "<") {
-                var orEqual = false;
-                if (stringB.charAt(1) == "=") {
-                    orEqual = true;
-                    b = b.substring(2);
-                } else {
+                    matchStart = false;
+                } else if (stringB.charAt(0) == ">") {
+                    var orEqual = false;
+                    if (stringB.charAt(1) == "=") {
+                        orEqual = true;
+                        b = b.substring(2);
+                    } else {
+                        b = b.substring(1);
+                    }
+                    if (typeof a == "number") {
+                        b = Number(b);
+                    } else if (typeof a == "string") {
+                        b = b.toLowerCase();
+                    }
+                    if (orEqual) {
+                        if (a < b) return false;
+                    } else {
+                        if (a <= b) return false;
+                    }
+                    continue;
+                } else if (stringB.charAt(0) == "<") {
+                    var orEqual = false;
+                    if (stringB.charAt(1) == "=") {
+                        orEqual = true;
+                        b = b.substring(2);
+                    } else {
+                        b = b.substring(1);
+                    }
+                    if (typeof a == "number") {
+                        b = Number(b);
+                    } else if (typeof a == "string") {
+                        b = b.toLowerCase();
+                    }
+                    if (orEqual) {
+                        if (a > b) return false;
+                    } else {
+                        if (a >= b) return false;
+                    }
+                    continue;
+                } else if (stringB.charAt(0) == "!") {
                     b = b.substring(1);
+                    if (typeof a == "number") {
+                        b = Number(b);
+                    } else if (typeof a == "string") {
+                        b = b.toLowerCase();
+                    }
+                    var invert = true;
                 }
-                if (typeof a == "number") {
-                    b = Number(b);
-                } else if (typeof a == "string") {
-                    b = b.toLowerCase();
-                }
-                if (orEqual) {
-                    if (a > b) return false;
-                } else {
-                    if (a >= b) return false;
-                }
-                continue;
-            } else if (stringB.charAt(0) == "!") {
-                b = b.substring(1);
-                if (typeof a == "number") {
-                    b = Number(b);
-                } else if (typeof a == "string") {
-                    b = b.toLowerCase();
-                }
-                var invert = true;
             }
             if (b == w) {
                 if (invert) return false;

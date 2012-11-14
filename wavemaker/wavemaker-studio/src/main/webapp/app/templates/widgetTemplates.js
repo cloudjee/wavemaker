@@ -341,14 +341,14 @@ wm.fullTemplates.tabletLayout = {
 			navButton3: ["wm.Button", {"border":"0",      "caption":"Layer Three","desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer3"}]
 		}],
 		layers1: ["wm.Layers", {"margin":"3,0,0,0"}, {}, {
-			layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+			layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"top-to-bottom","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
 				label1: ["wm.Label", {"border":"0","caption":"Your Start Page","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}]
 			}],
-			layer2: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+			layer2: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"left","layoutKind":"top-to-bottom","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
 				label2: ["wm.Label", {"border":"0","caption":"PageContainer1 is below this label","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
 				pageContainer1: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
 			}],
-			layer3: ["wm.Layer", {"borderColor":"","caption":"layer3","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+			layer3: ["wm.Layer", {"borderColor":"","caption":"layer3","horizontalAlign":"left","layoutKind":"top-to-bottom","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
 				label3: ["wm.Label", {"border":"0","caption":"PageContainer2 is below this label","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
 				pageContainer2: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
 			}]

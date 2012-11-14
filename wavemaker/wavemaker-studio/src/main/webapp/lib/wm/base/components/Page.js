@@ -53,6 +53,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    return owner;
 	},
 	destroy: function() {
+    	this._isUnloading = true;
 	    wm.Page.deregisterPage(this);
 	  	var owner = this.getMainPage();
 	  	if (owner)
@@ -158,6 +159,7 @@ dojo.declare("wm.Page", wm.Component, {
 			ds.left = previousStyleLeft;
                     if (!this.root.isAncestorHidden())
 			this.onShow();
+			this.root.callOnShowParent();
 		    //alert("Page rendered in " + ( new Date().getTime() - startTime) + " ms");
 		    //console.timeEnd('renderTime ');
 		    //console.info('postInitCalled = ' + postInitCalled);
@@ -527,6 +529,24 @@ wm.Page.extend({
 		return (getEvent(n,studio.getScript())) ? n : "";
 	    return this.inherited(arguments);
 	},
+	
+	writeComponents: function() {
+        var result = this.inherited(arguments);
+        var nonvisual = [];
+        var visual = [];
+        dojo.forEach(result, function(item) {
+            var	startIndex = item.indexOf('"')+1;
+            var	endIndex = item.indexOf('"', startIndex);
+            var className = item.substring(startIndex, endIndex);
+            var obj = dojo.getObject(className);
+            if (obj && obj.prototype instanceof wm.Control) {
+                visual.push(item);
+            } else {
+                nonvisual.push(item);
+            }
+        });
+        return nonvisual.concat(visual);
+    },
 
     /* LOCALIZATION TODO:
        1. If there's a dictionary being written, the page must be set to i18n: true

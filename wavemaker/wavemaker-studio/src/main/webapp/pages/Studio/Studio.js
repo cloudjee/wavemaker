@@ -1050,6 +1050,7 @@ dojo.declare("Studio", wm.Page, {
                 var status = "Editing ";
                 dojo.forEach(inComponents, function(c,i) { status += (i ? ", " : "") + c.toString();});
                 this.statusBarLabel.setCaption(status);
+
             }
             try {
                 var s = this.selected = inComponents;
@@ -1168,6 +1169,7 @@ dojo.declare("Studio", wm.Page, {
         html += "</table>";
         html = "<div class='KeyboardShortcutDialog'>" + html + "</div>";
         this.helpDialog.setUserPrompt(html);
+        this.helpDialog.button1.addUserClass("StudioButton")
         this.helpDialog.show();
 
     },
@@ -1597,10 +1599,24 @@ dojo.declare("Studio", wm.Page, {
                 if (w.owner == studio.page) {
                     //w.designWrapper.setBorder(on ? "1" : "0");
                                 w.getDesignBorder();
+                                w.calcPadBorderMargin();
                                 w.invalidCss = true;
                                 w.renderCss();
                             }
             });
+            wm.forEachProperty(studio.page.$, function(d) {
+            	if (d instanceof wm.Dialog) {
+		            wm.forEachWidget(d, function(w) {
+		                if (w.owner == studio.page) {
+		                    //w.designWrapper.setBorder(on ? "1" : "0");
+                            w.getDesignBorder();
+                            w.calcPadBorderMargin();
+                            w.invalidCss = true;
+                            w.renderCss();
+                        }
+	                });
+				}		           
+            });            
         }
         wm.fire(this.page, "reflow");
 
@@ -1728,6 +1744,7 @@ dojo.declare("Studio", wm.Page, {
     },
     */
     regenerateOrUpdateWidgetsForDevice: function() {
+        studio.page._loadingPage = true;
         var regenerated = false;
         var panels = [studio.page.root];
         wm.forEachProperty(studio.page.$, function(inComponent) {
@@ -1758,7 +1775,7 @@ dojo.declare("Studio", wm.Page, {
             }, false);
             if (panel.parent && panel.parent instanceof wm.Dialog) panel.parent.reflow();
         });
-
+        studio.page._loadingPage = false;
         return regenerated;
     },
     designDesktopUI: function() {
@@ -1785,7 +1802,8 @@ dojo.declare("Studio", wm.Page, {
             }
         }
         this.reinspect(); // some properties may change like height/minHeight
-    },
+        if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "auto"
+    },    	
     designTabletUI: function() {
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded) {
@@ -1805,13 +1823,13 @@ dojo.declare("Studio", wm.Page, {
         if (studio.page) {
             var self = this;
             var regenerated = this.regenerateOrUpdateWidgetsForDevice();
-
             if (regenerated) {
                 this.refreshVisualTree();
                 this.page.reflow();
             }
         }
         this.reinspect(); // some properties may change like height/minHeight
+        if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "hidden"
     },
     designPhoneUIClick: function(inSender) {
         this.designPhoneUI(false);
@@ -1842,6 +1860,7 @@ dojo.declare("Studio", wm.Page, {
             }
         }
         this.reinspect(); // some properties may change like height/minHeight
+        if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "hidden"
     },
     designMobileFoldingClick: function(inSender) {
        this.designMobileFolding(false);

@@ -230,7 +230,6 @@ wm.PageContainer.extend({
     listProperties: function() {
         var props = this.inherited(arguments);
         if (!this.page) return props;
-        props = dojo.clone(props);
         var newprops = wm.listMatchingComponents([this.page], function(c) {
             return c instanceof wm.Property;
         });

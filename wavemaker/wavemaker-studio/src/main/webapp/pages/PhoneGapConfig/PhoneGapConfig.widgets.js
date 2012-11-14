@@ -1050,10 +1050,9 @@ PhoneGapConfig.widgets = {
                     "caption": undefined,
                     "captionSize": "120px",
                     "dataField": "dataValue",
-                    "dataValue": ["http://api.phonegap.com/1.0/network", "http://api.phonegap.com/1.0/notification", "http://api.phonegap.com/1.0/geolocation", "http://api.phonegap.com/1.0/camera", "http://api.phonegap.com/1.0/contacts"],
                     "desktopHeight": "100%",
                     "displayField": "dataValue",
-                    "displayValue": "http://api.phonegap.com/1.0/network, http://api.phonegap.com/1.0/notification, http://api.phonegap.com/1.0/geolocation, http://api.phonegap.com/1.0/camera, http://api.phonegap.com/1.0/contacts, http://api.phonegap.com/1.0/file",
+                    "dataValue": ["http://api.phonegap.com/1.0/network","http://api.phonegap.com/1.0/notification","http://api.phonegap.com/1.0/geolocation","http://api.phonegap.com/1.0/camera","http://api.phonegap.com/1.0/contacts","http://api.phonegap.com/1.0/file","http://api.phonegap.com/1.0/media","http://api.phonegap.com/1.0/battery"],
                     "editorBorder": false,
                     "height": "100%",
                     "mobileHeight": "100%",
@@ -1062,6 +1061,7 @@ PhoneGapConfig.widgets = {
                 }, {
                     onchange: "onPermissionsChange"
                 }],
+                permissionsHtml: ["wm.Html", {width: "100%", height: "100%", html: "<p>By default, all permissions are enabled so that while testing, everything will work.  When you ready to start distributing this app, review the above list and remove those permissions that your application does not need.</p><p>On some devices, the lack of a requried permission results in no warnings, it just causes the app to freeze or fail.</p><p>On Android, the camera API requires the file API.</p>"}],
                 label3: ["wm.Label",
                 {
                     showing: 0,

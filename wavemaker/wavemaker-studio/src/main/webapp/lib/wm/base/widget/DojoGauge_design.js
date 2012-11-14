@@ -47,7 +47,6 @@ wm.Object.extendSchema(wm.DojoGauge, {
 });
 wm.DojoGauge.extend({
     listProperties: function() {
-	var props = dojo.clone(this.inherited(arguments));
 	props.useThirdIndicator.ignoretmp = props.currentValue2.ignoretmp = props.arrowColor2.ignoretmp = !this.useSecondIndicator;
 	props.currentValue3.ignoretmp = props.arrowColor3.ignoretmp = !this.useThirdIndicator;
 	return props;

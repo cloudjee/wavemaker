@@ -1,0 +1,1 @@
+https://www.googleapis.com/shopping/search/v1/public/products

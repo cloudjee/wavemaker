@@ -222,23 +222,42 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
             className: "EditorHelpIcon"
         }, this.domNode);
         if (typeof this.helpText == "string") {
-            this._helpTextOverConnect = this.connect(this.helpNode, "onmouseover", this, function(e) {
-                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-                    var coords = dojo.coords(this.helpNode);
-                    //app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
-                    app.createToolTip(this.helpText, null, {
-                        mouseX: coords.x,
-                        mouseY: coords.y + coords.h
-                    });
-                }));
-            });
-            this._helpTextOutConnect = this.connect(this.helpNode, "onmouseout", this, function() {
-                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-                    if (app.getToolTip() == this.helpText) // make sure tooltip isn't showing another editor's help text
-                    app.hideToolTip();
-                }));
+			if (wm.isMobile) {
+			    this._helpTextTouchStartConnect = this.connect(this.helpNode, "ontouchstart", this, function(e) {
+					this._helpTouchPos = {x: e.targetTouches[0].clientX,
+										   y: e.targetTouches[0].clientY};
+	        	});
+			    this._helpTextTouchMoveConnect = this.connect(this.helpNode, "ontouchmove", this, function(e) {
+					if (!this._helpTouchPos) return;
+					if (Math.abs(this._helpTouchPos.x - e.targetTouches[0].clientX) >= 5 ||
+						Math.abs(this._helpTouchPos.y - e.targetTouches[0].clientY) >= 5) {
+							delete this._helpTouchPos;
+			        }
+	        	});
+			    this._helpTextTouchEndConnect = this.connect(this.helpNode, "ontouchend", this, function(e) {
+					if (!this._helpTouchPos) return;
+					app.alert(this.helpText);
+				});
+			
+			} else {
+	            this._helpTextOverConnect = this.connect(this.helpNode, "onmouseover", this, function(e) {
+	                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
+	                    var coords = dojo.coords(this.helpNode);
+	                    //app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
+	                    app.createToolTip(this.helpText, null, {
+	                        mouseX: coords.x,
+	                        mouseY: coords.y + coords.h
+	                    });
+	                }));
+	            });
+	            this._helpTextOutConnect = this.connect(this.helpNode, "onmouseout", this, function() {
+	                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
+	                    if (app.getToolTip() == this.helpText) // make sure tooltip isn't showing another editor's help text
+	                    app.hideToolTip();
+	                }));
 
-            });
+	            });
+	        }
         }
         this.connect(this.helpNode, "onclick", this, "onHelpClick");
     },
@@ -247,9 +266,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         dojo.destroy(this.helpNode);
         wm.Array.removeElement(this._connections, this._helpTextOverConnect);
         wm.Array.removeElement(this._connections, this._helpTextOutConnect);
+        wm.Array.removeElement(this._connections, this._helpTextTouchStartConnect);
+        wm.Array.removeElement(this._connections, this._helpTextTouchMoveConnect);        
+        wm.Array.removeElement(this._connections, this._helpTextTouchEndConnect);
         dojo.disconnect(this._helpTextOverConnect);
         dojo.disconnect(this._helpTextOutConnect);
-
+        dojo.disconnect(this._helpTextStartConnect);
+        dojo.disconnect(this._helpTextMoveConnect);        
+        dojo.disconnect(this._helpTextEndConnect);        
     },
     createEditor: function(inProps) {
         // Its possible for createEditor to be called before postInit where createCaption is called,
@@ -349,8 +373,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                 editorHeight = h;
             } else if (position == "left" || position == "right") {
                 var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w / 100);
-                if (w - tmpWidth < (this.minEditorWidth || 16)) {
-                    editorWidth = this.minEditorWidth || 16;
+                var minEditorWidth = this.minEditorWidth || (wm.isMobile ? 32 : 16);
+                if (w - tmpWidth < (this.minEditorWidth || minEditorWidth)) {
+                    editorWidth = this.minEditorWidth || minEditorWidth;
                     labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
                     allocateHelpIconSpace = false;
                 } else {
@@ -719,6 +744,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     createReadOnlyNode: function() {
         var node = dojo.create("div");
         dojo.addClass(node, "wmeditor-readonlyNode");
+		dojo.attr(node, "role", "textbox");
+		dojo.attr(node, "aria-readonly", true);
+		dojo.attr(node, "aria-labelledby", this.domNode.id);
         var readstyle = node.style;
         readstyle.lineHeight = "normal";
         readstyle.position = "absolute";

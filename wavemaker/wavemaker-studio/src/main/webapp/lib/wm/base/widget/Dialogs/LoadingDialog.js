@@ -155,17 +155,26 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	if (inShowing) {
 	    this._getWidgetToCover();
 	    if (this.widgetToCover) {
+	    this.setMargin(this.widgetToCover.margin);
 		var node = this.widgetToCover.domNode;
-		var roundedStyle;
         if (window.getComputedStyle) {
+        	var roundedStyle, roundedStyleTL,roundedStyleTR, roundedStyleBL, roundedStyleBR;
             var computedStyle = window.getComputedStyle(node);
-		    roundedStyle = computedStyle.getPropertyValue("border-radius") || computedStyle.getPropertyValue("-webkit-border-radius") || computedStyle.getPropertyValue("-moz-border-radius");
-		    this.domNode.style.borderRadius = roundedStyle;
-        }
-		if (dojo.isWebKit) {
-		    this.domNode.style.WebkitBorderRadius = roundedStyle;
-		} else if (dojo.isFF) {
-		    this.domNode.style.MozBorderRadius = roundedStyle;
+		    roundedStyle = computedStyle.getPropertyValue("border-radius") || computedStyle.getPropertyValue("-webkit-border-radius") || computedStyle.getPropertyValue("-moz-border-radius") || computedStyle.getPropertyValue("-ms-border-radius") || computedStyle.getPropertyValue("-o-border-radius");
+			if (roundedStyle) {
+			    this.domNode.style.borderRadius = roundedStyle;
+			    if (dojo.isWebKit) {
+			    	this.domNode.style.WebkitBorderRadius = roundedStyle;
+				} else if (dojo.isFF) {
+				    this.domNode.style.MozBorderRadius = roundedStyle;
+				}
+    		} else { /* else clause required by IE10 which only lets us access the individual corners and not the total value */
+    			this.domNode.style.borderTopLeftRadius= computedStyle.getPropertyValue("border-top-left-radius");
+    			this.domNode.style.borderTopRightRadius= computedStyle.getPropertyValue("border-top-right-radius");
+    			this.domNode.style.borderBottomLeftRadius= computedStyle.getPropertyValue("border-bottom-left-radius");
+    			this.domNode.style.borderBottomRightRadius= computedStyle.getPropertyValue("border-bottom-right-radius");    			
+    		}
+			
 		}
 		var zindex = node.style.zIndex || 0;
 		while (node.parentNode && node.parentNode.tagName != "BODY") {

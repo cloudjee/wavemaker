@@ -1446,7 +1446,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         {name: "fontFamily", editor: "wm.Text", editorProps: {placeHolder: "Arial, Geneva, Helvetica, sans-serif"}},
         {name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
         {name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
-        {name: "borderRadius", editor: "wm.Text", editorProps:{options: {placeHolder: "8 or 8 8 4 4"}}},
+        {name: "borderRadius", editor: "wm.Text", editorProps:{placeHolder: "8 or 8 8 4 4"}},
         /*{name: "borderTopLeftRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},
         {name: "borderBottomRightRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},
         {name: "borderBottomLeftRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},        */

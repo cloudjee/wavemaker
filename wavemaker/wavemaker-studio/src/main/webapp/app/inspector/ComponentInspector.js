@@ -23,13 +23,14 @@
   * hidden, writeonly: both mean that the user doesn't see them.  writeonly though shows if its bindable/bindTarget. Both are written whether visible or not.
   * ignoretmp: This property is ignored for its current state; currently we disable/enable the disabled property editor; previously hidden/shown as needed
   * ignoreHint: Hint to give to property editors shown as disabled due to ignoretmp
+  * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
   * options: array of options for a wm.SelectMenu
   * bindSource: Shows up in the bind dialog as something that can be bound to
   * bindTarget: Has a bind button next to it and can be bound to other values
   * bindable: both bindTarget and bindSource are true
-  * contextMenu: Property (presumably an operation) shows up in the context menu for the widget
   * shortname: Alternate name to show instead of the real name; used for localization and for human readable prop names
   * operation: Show a button instead of an editor; component must have a method with the same name as the property name. If boolean, calls this.propertyName(); if a string it calls this[prop.operation]()
+  * contextMenu: Property (presumably an operation) shows up in the context menu for the widget
   * method: treat a property as a method, there only for property documentation and autocompletion
   * pageProperty: Used by the bind dialog to determine the property to use to find the subpage and let the user browse the subpage's properties
   * editor: Name of an editor class; typically an editor from propertyEdit.js which knows how to setup its own options
@@ -43,7 +44,6 @@
   * categoryProps.component: inspector will inspect this[categoryProps.component] (i.e. this.dataOutput)
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
-  * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
   * doNotPublish: property is not publishable (i.e. can't be exposed to parent pagecontainer)  hidden, ignored and writeonly properties are already skipped
   *
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
@@ -1029,46 +1029,16 @@
      */
      /* Called by propertyEdit's wm.SetWireTask */
      parseExpressionForWire: function(inValue, skipValidation) {
-     // A bind wire expression must be a string
-     if (typeof inValue == "number") {
-         return String(inValue);
-     } else if (typeof inValue == "boolean") {
-         return String(inValue);
-     } else if (typeof inValue == "object") {
-         return inValue; // may need to handle this some day... but this shouldn't ever happen
-     } else if (inValue == "true" || inValue == "false" || inValue.match(/^\d+$/) || inValue.match(/\"/) || inValue.match(/\$\{.*\}/) || inValue.match(/(\+|\-|\*|\/|\w\.\w)/)) {
-         ; // its an expression, no need to quote it
-     } else {
-         return  '"' + inValue + '"'; // its a string; quote it.
-     }
-
-     // Still here? Must be an expression; lets attempt to validate the expression
-     if (!skipValidation) {
-     try {
-         var tmp = inValue;
-         tmp = tmp.replace(/\$\{.*?\}/g, "''"); // remove the crazy stuff that we dont want to try evaluating right now (probably ok to evaluate it at design time, but its not needed to see if this will compile)
-         // if its undefined, then presumably it failed to compile
-         var tmp2 = function() {
-         return eval(tmp);
-         }.call(this.inspected.owner || this.inspected);
-         //var tmp2 = eval(tmp);
-         /* TODO: In 6.4 we openned the bind dialog so they could edit their bind expression in a larger area */
-         if (tmp2 === undefined) {
-         //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
-         //studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
-         //studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
-         app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
-         throw "Invalid Bind Expression";
+         // A bind wire expression must be a string
+         if (typeof inValue == "number" || inValue.match(/^\d+$/)) {
+             return String(inValue);
+         } else if (typeof inValue == "boolean" || inValue === "true" || inValue === "false") {
+             return String(inValue);
+         } else if (typeof inValue == "object") {
+             return inValue; // may need to handle this some day... but this shouldn't ever happen
+         } else {
+             return '"' + inValue + '"'; // its a string; quote it.
          }
-        } catch(e) {
-        //this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
-        //studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
-        //studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
-        app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
-        throw "Invalid Bind Expression";
-        }
-     }
-     return inValue;
      },
      beginHelp: function(inPropName, inNode, inType, altText) {
          var bd = studio.helpPopup;
@@ -1078,23 +1048,59 @@
              //bd.positionNode = inNode.parentNode;
              bd.fixPositionNode = inNode.parentNode;
 
-         dojo.forEach(classList, function(className,i) {
-             window.setTimeout(function() {
-             var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
-             var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: version,
-                                              className: className.replace(/^.*\./,"") + "_" + inPropName});
 
-             app.toastInfo("Testing " + className + "." + inPropName);
-             studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
-                 if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
-                 window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) +
-                         className + "_" + inPropName +
-                         "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
-                 }
+         } else {
+             bd.page.setHeader("Help");
+             bd.fixPositionNode = inNode;
+         }
+         bd.corner = "tl";
+         if (window.location.search.match(/editpropdoc/)) {
+            var propNames = [];
+            if (window.location.search.match(/editpropdocall/)) {
+              this.props.forEach(function(p) {
+                if (!p.name.match(/mobileFold/) && p.name != "styles") propNames.push(p.name);
+              });
+            } else {
+              propNames.push(inPropName);
+            }
+            var counter = 0;
+            propNames.forEach(function(inPropName) {
+               var classList = ["DataSetEditor"];
+               studio.palette.forEachNode(function(node) {
+                   if (node.klass) {
+                       try {
+                           var prototype = dojo.getObject(node.klass).prototype;
+                           if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && !wm.isInstanceType(prototype, [wm._BaseEditor, wm.Editor]) && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
+                               if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
+                                   var name = node.klass.replace(/^.*\./, "");
+                                   if (dojo.indexOf(classList, name) == -1) classList.push(name);
+                               }
+                           }
+                       } catch (e) {}
+                   }
+               });
+
+             dojo.forEach(classList, function(className, i) {
+                 window.setTimeout(function() {
+                     var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1");
+                     var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
+                         studioVersionNumber: version,
+                         className: className.replace(/^.*\./, "") + "_" + inPropName
+                     });
+
+                     app.toastInfo("Testing " + className + "." + inPropName);
+                     studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
+                         if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
+                             window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {
+                                 studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+                             }) + className + "_" + inPropName + "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+                         }
+                     });
+                 }, counter * 1300);
+                counter++;
              });
-             },
-                       i * 1300);
-         });
+});
+
          } else {
          if (!inType) {
              bd.show();
@@ -1202,20 +1208,26 @@
      },
 
      generateGroups: function(inComponent) {
-     var groups = this.initGroups(this.props);
-     dojo.forEach(groups, function(g) {
-         if (g.layer) {
-         var layer = this.addLayer(g.displayName,true);
-         layer.propertyGroup = g;
-         //layer.header.setMargin("2,0,2,0");
 
-         //layer.header.setBorder("1");
-         //layer.header.setBorderColor("");
-         layer._groupName = g.name;
-         this.generateLayer = layer;
-         //this.generateEditors(inComponent,g.name, layer);
-         g.layer = layer;
-         var formPanel = new wm.FormPanel({owner: this,
+	 var groups = this.initGroups(this.props);
+	 dojo.forEach(groups, function(g) {
+	     if (g.layer) {
+          var props = g.props;
+          var hasVisibleProp = dojo.some(props, function(prop) {
+            return this.isEditableProp(prop) && (!prop.ignoretmp || this.isAdvancedMode());
+          }, this) || g.subgroups.length;
+          if (!hasVisibleProp) return;
+		 var layer = this.addLayer(g.displayName,true);
+		 layer.propertyGroup = g;
+	     //layer.header.setMargin("2,0,2,0");
+
+	     //layer.header.setBorder("1");
+	     //layer.header.setBorderColor("");
+		 layer._groupName = g.name;
+		 this.generateLayer = layer;
+	     //this.generateEditors(inComponent,g.name, layer);
+		 g.layer = layer;
+		 var formPanel = new wm.FormPanel({owner: this,
                             name: layer.name + "FormPanel",
                            parent: layer,
                            width: "100%",
@@ -1898,6 +1910,8 @@ wm.addPropertyGroups({
     roles: {displayName: "Roles", order: 110, layer: true},
     /* Confirmed */
     devices: {displayName: "Devices", order: 120, layer: true},
+    aria: {displayName: "ARIA/Accessibility", order: 140, layer: true},
+
     /* Confirmed */
     operation: {displayName: "Operations", order: 200, layer: true},
     /* Confirmed */

@@ -23,7 +23,7 @@ dojo.declare("OpenProjectOptions", wm.Page, {
 	this.radioOpen.setChecked(true);
 	this.deferred = inDeferred;
 	this.projectName = inProjectName;
-	var newName = this.getUniqueProjectName(inProjectName + "_" + wm.studioConfig.studioVersion.replace(/\./g,""));
+	var newName = this.getUniqueProjectName(inProjectName + "_" + wm.studioConfig.studioVersion.replace(/\./g,"").replace(/-.*$/,""));
 	this.newProjectName.setDataValue(newName);
     },
     getUniqueProjectName: function(inName) {

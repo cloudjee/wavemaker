@@ -38,8 +38,8 @@
 @import url("TimePicker.css");
 /*
 @ import url("Toolbar.css");
-@ import url("Dialog.css");
 */
+@import url("Dialog.css");
 @import url("Menu.css");
 /*
 @ import url("Editor.css");

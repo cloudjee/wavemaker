@@ -27,6 +27,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
     build: function() {
         this.domNode = this.owner.domNode = dojo.byId(this.owner.domNode) || document.body;
         this.domNode.style.cssText += this.style + "overflow: hidden; position: relative;";
+        dojo.attr(this.domNode, "role", "application");
     },
     init: function() {
         var domId = this.domNode.id;

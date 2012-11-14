@@ -130,12 +130,17 @@ dojo.declare("wm.AceEditor", wm.Control, {
     // setText method is here for EditArea compatibility
     setText: function(inValue){
         this.setDataValue(inValue);
+        this.setCursorPosition(0,0);
     },
     setDataValue: function(inValue) {
+    	var cursorPos = this.getCursorPosition() || {};
+    	var row = cursorPos.row || 0;
+    	var col = cursorPos.column || 0;
         this.dataValue = inValue || ""; // we use this.dataValue in case we get a value before the editor has loaded/initialized
         this._cachedDataValue = this.dataValue;
         if (this._editor) {
             this._editor.getSession().setValue(this.dataValue);
+            this.setCursorPosition(row,col);
         }
     },
     updateIsDirty: function() {

@@ -32,11 +32,12 @@ EditVariable.widgets = {
 		    }]
 		}],
 		textLayer: ["wm.Layer", {caption: "Text Editor"}, {onShow: "updateText"}, {
-		    text: ["wm.AceEditor", {width: "100%", height: "100%"}, {onChange: "onAceChange"}]
+		    text: ["wm.AceEditor", {syntax: "json", width: "100%", height: "100%"}, {onChange: "onAceChange"}]
 		}]
 	    }]
 	}],
 	    buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
+	    	invalidLabel: ["wm.Label", {showing: false, caption: "Your json is invalid", width:"100%"}],
 			 CancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel"}, {onclick: "cancelClick"}],
 			 OKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK"}, {onclick: "okClick"}]
 		     }]

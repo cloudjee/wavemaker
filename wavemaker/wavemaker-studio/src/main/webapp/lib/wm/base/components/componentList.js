@@ -37,7 +37,6 @@ wm.componentList = {
     'wm.AccordionLayers': ['build.Gzipped.wm_accordion'],
     'wm.WizardLayers': ['build.Gzipped.wm_wizardlayer'],
     'wm.BreadcrumbLayers': ['build.Gzipped.wm_breadcrumblayer'],
-    'wm.ColorPickerDialog': ['build.Gzipped.wm_colorpicker'],
     'wm.ColorPicker': ['build.Gzipped.wm_colorpicker'],
     'wm.RichTextDialog': ['wm.base.widget.Dialogs.RichTextDialog'],
     'wm.DojoFisheye': ['wm.base.widget.DojoFisheye'],

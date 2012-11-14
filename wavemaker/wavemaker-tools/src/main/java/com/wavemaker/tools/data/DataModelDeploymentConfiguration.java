@@ -31,6 +31,7 @@ import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * @author Simon Toens
@@ -146,26 +147,29 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
         if (type == DeploymentType.CLOUD_FOUNDRY) {
-            addCloudDataSource(mgr, cfg, dbName);
+
+            addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         }
     }
 
-    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String dbName) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        XMLWriter writer = XMLUtils.newXMLWriter(pw);
-        writer.setStartIndent(4);
-        writer.addAttribute();
-        writer.addElement(CLOUD_DATA_SOURCE, "id", dbName + "DataSource");
-        writer.finish();
-        File cfgFile = mgr.getProjectManager().getCurrentProject().getRootFolder().getFile(cfg.getPath());
-        String s = cfgFile.getContent().asString();
-        int i = s.indexOf(CONIG_FILE_INSERT_BEFORE);
-        if (i == -1) {
-            throw new AssertionError("Could not find marker in spring config file: " + CONIG_FILE_INSERT_BEFORE);
+    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String updateSchema) {
+        if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            XMLWriter writer = XMLUtils.newXMLWriter(pw);
+            writer.setStartIndent(4);
+            writer.addAttribute();
+            writer.addElement(CLOUD_DATA_SOURCE, "id", cfg.getServiceId() + "DataSource");
+            writer.finish();
+            File cfgFile = mgr.getProjectManager().getCurrentProject().getRootFolder().getFile(cfg.getPath());
+            String s = cfgFile.getContent().asString();
+            int i = s.indexOf(CONIG_FILE_INSERT_BEFORE);
+            if (i == -1) {
+                throw new AssertionError("Could not find marker in spring config file: " + CONIG_FILE_INSERT_BEFORE);
+            }
+            s = s.substring(0, i) + writer.getLineSep() + sw.toString() + writer.getLineSep() + s.substring(i);
+            cfgFile.getContent().write(s);
         }
-        s = s.substring(0, i) + writer.getLineSep() + sw.toString() + writer.getLineSep() + s.substring(i);
-        cfgFile.getContent().write(s);
     }
 
     private void configureResourceRef(DesignServiceManager mgr, String jndiName) {
@@ -194,7 +198,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
         addToWebXml(mgr, writer.getLineSep() + sw.toString() + writer.getLineSep());
 
-        pw.close();
+        pw.close();       
     }
 
     private void addToWebXml(DesignServiceManager mgr, String xmlSnippet) {

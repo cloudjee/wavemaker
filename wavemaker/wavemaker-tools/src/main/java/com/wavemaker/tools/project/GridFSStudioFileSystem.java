@@ -111,8 +111,8 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-	public Folder getDemoFolder() {
-	return getStudioWebAppRootFolder().getParent().getFolder("Samples");
+    public Folder getDemoFolder() {
+        return getStudioWebAppRootFolder().getParent().getFolder("Samples");
     }
 
     @Override

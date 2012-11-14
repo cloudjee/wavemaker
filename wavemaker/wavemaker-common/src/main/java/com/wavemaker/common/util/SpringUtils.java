@@ -47,7 +47,7 @@ public abstract class SpringUtils {
      * Initializes Spring with config.xml. Statically initializes com.wavemaker.common.ResourceManager, used for msg
      * lookup.
      * 
-     * When runnung outside of a webapp container, this method needs to run once at startup before accessing Resources
+     * When running outside of a webapp container, this method needs to run once at startup before accessing Resources
      * defined in com.wavemaker.common.Resource.
      */
     public static GenericApplicationContext initSpringConfig() {

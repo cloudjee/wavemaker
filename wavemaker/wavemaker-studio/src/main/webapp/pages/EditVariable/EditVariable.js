@@ -32,25 +32,27 @@ dojo.declare("EditVariable", wm.Page, {
 
     },
     onGuiShow: function() {
-	this.reset(this.variable);
+		this.reset(this.variable);
+		this.OKButton.setDisabled(false);
+		this.invalidLabel.setShowing(false);
     },
     reset: function(inVariable) {
-	this.guiLayer.activate();
-	this.variable = inVariable;
-	if (!this.variable) return;
-	this.tree.clear();
-	this.text.setDataValue("");
-	this.tree.root.data = {variable: inVariable,
-			       isList: inVariable.isList,
-			       type: inVariable.type,
-			       field: inVariable.type,
-			       name: ""};
-	if (inVariable.isList) {
-	    this.addArrayNodes(this.variable, wm.typeManager.getType(this.variable.type), this.tree.root);
-	} else {
-	    this.generateNodes(this.variable, this.tree.root);
-	}
-	this.treeSelect();
+		this.guiLayer.activate();
+		this.variable = inVariable;
+		if (!this.variable) return;
+		this.tree.clear();
+		this.text.setDataValue("");
+		this.tree.root.data = {variable: inVariable,
+				       isList: inVariable.isList,
+				       type: inVariable.type,
+				       field: inVariable.type,
+				       name: ""};
+		if (inVariable.isList) {
+		    this.addArrayNodes(this.variable, wm.typeManager.getType(this.variable.type), this.tree.root);
+		} else {
+		    this.generateNodes(this.variable, this.tree.root);
+		}
+		this.treeSelect();
     },
     generateNodes: function(inVariable, inNode) {
 	    var fields = this.getFields(inVariable.type);
@@ -225,14 +227,16 @@ dojo.declare("EditVariable", wm.Page, {
 	this.text.setDataValue(dojo.toJson(this.variable.getData(), true));
     },
     onAceChange: function(inSender,inText) {
-	if (inSender.isAncestorHidden())
-	    return;
-	try {
-	    var data = dojo.fromJson(inText);
-	    if (data && typeof data == "object") {
-		this.variable.setData(data);
-	    }
-	} catch(e) {}
+		if (inSender.isAncestorHidden())
+		    return;
+		try {
+		    var data = dojo.fromJson(inText);
+		    if (data && typeof data == "object") {
+				this.variable.setData(data);
+		    } 
+		} catch(e) {}
+		this.OKButton.setDisabled(!Boolean(data));
+		this.invalidLabel.setShowing(!Boolean(data));
     },
     _end: 0
 });

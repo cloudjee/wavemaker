@@ -18,11 +18,11 @@ dojo.require("dijit._HasDropDown");
 dojo.require("dojox.color");
 
 dojo.declare("wm.ColorPicker", wm.Text, {
+	classNames: "wmeditor wmcolorpicker",
     changeOnKey: true,
     className: "wmeditor wmcolorpickereditor",
     _editorBackgroundColor: true,
     defaultColor: "",
-    colorPickerDialog: null,
     cancelValue: null,
     _empty: true,
     regExp: "\\s*(\#[0-9a-fA-F]{6}|\{.*\}|\#[0-9a-fA-F]{3}|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow|rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\))\\s*",
@@ -57,7 +57,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         if (this.gradient && inValue && typeof inValue === "object") {
         	inValue = dojo.toJson(inValue);
         } else if (!this.gradient) {
-	        inValue = String(inValue).toLowerCase();
+	        inValue = String(inValue||"").toLowerCase();
         }
         this.inherited(arguments);
     },
@@ -110,10 +110,10 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                     v3 = parseInt(inValue.substr(3, 1), 16);
                 }
 
-                this.editorNode.style.color = (v1 + v2 < 100 || v1 + v3 < 100 || v2 + v3 < 100 || v1 + v2 + v3 < 250) && (v1 + v2 + v3 < 250) ? "white" : "black";
+                this.editor.focusNode.style.color = (v1 < 130 && v2 < 130 && v3 < 130 || v1 + v2 < 180 || v1 + v3 < 180 || v2 + v3 < 180) || (v1 + v2 + v3 < 250) ? "white" : "black";
             } else {
                 this.editorNode.style.backgroundColor = "";
-                this.editorNode.style.color = "";
+                this.editor.focusNode.style.color = "";
             }
         } else {
             if (typeof inValue == "string" && inValue.length) {

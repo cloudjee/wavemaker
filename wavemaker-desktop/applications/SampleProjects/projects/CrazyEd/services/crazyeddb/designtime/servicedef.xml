@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="crazyeddb" class="com.crazyeddb.Crazyeddb" CRUDService="true" type="DataService" springFile="crazyeddb.spring.xml">
+    <operation operationType="hqlquery" name="getInventoryById">
+        <parameter name="id" typeRef="java.lang.Integer" isList="false"/>
+        <return typeRef="com.crazyeddb.data.Inventory" isList="false"/>
+    </operation>
+    <dataobjects>
+        <dataobject javaType="com.crazyeddb.data.Inventory" supportsQuickData="true">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="quantity" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
+            <element name="store" typeRef="com.crazyeddb.data.Store" isList="false" allowNull="false"/>
+            <element name="product" typeRef="com.crazyeddb.data.Product" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.crazyeddb.data.Product" supportsQuickData="true">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="imageUrl" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="price" typeRef="java.lang.Float" isList="false" allowNull="true"/>
+            <element name="specialInstructions" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="inventories" typeRef="com.crazyeddb.data.Inventory" isList="true" allowNull="true"/>
+        </dataobject>
+        <dataobject javaType="com.crazyeddb.data.Store" supportsQuickData="true">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="location" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="inventories" typeRef="com.crazyeddb.data.Inventory" isList="true" allowNull="true"/>
+        </dataobject>
+    </dataobjects>
+</service>

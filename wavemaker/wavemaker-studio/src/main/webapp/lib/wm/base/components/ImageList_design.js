@@ -22,7 +22,8 @@ wm.Object.extendSchema(wm.ImageList, {
     colCount: {group: "widgetName", subgroup: "graphics", type: "number", order: 30},
 
     width: {group: "widgetName", subgroup: "layout", type: "number", order: 20},
-    height: {group: "widgetName", subgroup: "layout", type: "number", order: 21}
+    height: {group: "widgetName", subgroup: "layout", type: "number", order: 21},
+   // owner:{ignore:0}
     
 });
 

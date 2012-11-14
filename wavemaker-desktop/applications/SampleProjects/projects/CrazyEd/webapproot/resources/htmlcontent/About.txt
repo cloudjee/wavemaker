@@ -1,0 +1,9 @@
+<h3>
+<center>
+This app was built using <a href="http://wavemaker.com">WaveMaker</a> version 6.5.<BR>
+Source code is available on <a href="https://github.com/SpringSource/wavemaker/tree/master/wavemaker-desktop/applications/SampleProjects/projects/CrazyEd">GitHub </a> as part of the WaveMaker project.<br>
+The MySQL database dump is included in the db_dump folder in the project root.<br>
+This app uses the <a href="https://developers.google.com/shopping-search/">Google Shopping Search</a>, which requires a key.<br>
+Put only your key in resources/passwords/api_key.txt for it to loaded automatically.<br>
+</center>
+</h3>

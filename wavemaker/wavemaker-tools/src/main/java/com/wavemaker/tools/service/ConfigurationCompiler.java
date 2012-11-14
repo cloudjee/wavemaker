@@ -45,6 +45,7 @@ import com.wavemaker.tools.service.definitions.Operation;
 import com.wavemaker.tools.service.definitions.Operation.Parameter;
 import com.wavemaker.tools.service.definitions.OperationComparator;
 import com.wavemaker.tools.service.definitions.Service;
+import com.wavemaker.tools.service.definitions.ServiceComparator;
 import com.wavemaker.tools.service.smd.Method;
 import com.wavemaker.tools.service.smd.Param;
 import com.wavemaker.tools.service.smd.SMD;
@@ -58,6 +59,7 @@ import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Entry;
+import com.wavemaker.tools.spring.beans.Import;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Value;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
@@ -107,6 +109,11 @@ public class ConfigurationCompiler {
 
     public static final String WM_TYPES_APPEND = ";";
 
+    
+    public static final String RUNTIME_SPRING_XML = "classpath:runtimeService.spring.xml";
+    
+    public static final String WM_SPRING_XML = "classpath:waveMakerService.spring.xml";
+    
     /**
      * Converts a type name to an array type name (suitable to send through an SMD).
      * 
@@ -222,22 +229,37 @@ public class ConfigurationCompiler {
         return getTypesFile(project.getWebAppRootFolder());
     }
 
-    /*
-     * @Deprecated public static void generateServices(FileService fileService, File servicesXml, SortedSet<Service>
-     * services) throws JAXBException, IOException { // Previously the top service file included imports for service
-     * bean spring definitions, since 6.5 all // *.spring.xml files are loaded using classpath scanning so the imports
-     * are no londer necessary. For now we // still write an empty file to ensure older projects remain operational.
-     * SpringConfigSupport.writeBeans(new Beans(), servicesXml, fileService); }
-     */
-
     public static void generateServices(File servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
-        // Previously the top service file included imports for service bean spring definitions, since 6.5 all
-        // *.spring.xml files are loaded using classpath scanning so the imports are no londer necessary. For now we
-        // still write an empty file to ensure older projects remain operational.
-        SpringConfigSupport.writeBeans(new Beans(), servicesXml);
-    }
+	    // Reverting to previous ( < 6.4) explicit import for 6.5.1 where the top service file included imports for service bean 
+		// spring definitions. In 6.5 all *.spring.xml files are loaded using classpath scanning so the imports were not maintained
+		SortedSet<Service> allServices = new TreeSet<Service>(new ServiceComparator());
+		allServices.addAll(services);
+		
+		Beans beans = new Beans();
+		List<Object> imports = beans.getImportsAndAliasAndBean();
+		
+		for (Service service : allServices) {
+			if (service.getSpringFile() == null) {
+				throw new WMRuntimeException(MessageResource.NO_EXTERNAL_BEAN_DEF, service.getId());
+			} else {
+				Import i = new Import();
+				i.setResource("classpath:" + service.getSpringFile());
+				imports.add(i);
+			}
+		}
+		
+		// WM-4679
+		Import rti = new Import();
+		rti.setResource(RUNTIME_SPRING_XML);
+		imports.add(rti);
+		Import wsi = new Import();
+		wsi.setResource(WM_SPRING_XML);
+		imports.add(wsi);
+		
+		SpringConfigSupport.writeBeans(beans, servicesXml);
+	}
 
-    public static SortedSet<Method> getMethods(List<Operation> ops, String serviceName) {
+	public static SortedSet<Method> getMethods(List<Operation> ops, String serviceName) {
 
         Collections.sort(ops, new OperationComparator());
 

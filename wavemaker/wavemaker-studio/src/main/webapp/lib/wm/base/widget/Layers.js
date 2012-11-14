@@ -513,7 +513,8 @@ dojo.declare("wm.Layers", wm.Container, {
     },
     setLayerInactive: function(inLayer) {
         wm.fire(inLayer.decorator, "deactivateLayer", [inLayer]);
-            inLayer.onDeactivate();
+        inLayer.onDeactivate();
+        inLayer.onHide();
     },
     setLayerIndex: function (inIndex) {
         if (inIndex == this.layerIndex) return;
@@ -558,7 +559,10 @@ dojo.declare("wm.Layers", wm.Container, {
                 l.onShow();
                 if (eventId) app.debugDialog.endLogEvent(eventId);
             }
-            oldLayer && oldLayer.onDeactivate();
+            if (oldLayer) {
+            	oldLayer.onDeactivate();
+            	oldLayer.onHide();
+            }
         }
         if (fireEvents && this.lastLayerIndex != this.layerIndex) this.onchange(this.layerIndex);
         if (!this._initialization && oldLayer &&  !this._isDesignLoaded && this.manageHistory) {

@@ -23,14 +23,8 @@ import java.util.Properties;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementKindVisitor6;
-import javax.lang.model.util.ElementScanner6;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
+import javax.lang.model.type.*;
+import javax.lang.model.util.*;
 
 import org.springframework.util.StringUtils;
 
@@ -165,8 +159,30 @@ public class CompileTypeUtils {
         def.setTypeName(type.toString());
         def.setShortName(type.asElement().getSimpleName().toString());
         typeState.addType(def);
+        typeState.setBaseClassName(type.toString());
         type.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
+        typeDefForParentBeans(processingEnv, typeState, type);
         return def;
+    }
+
+    private static void typeDefForParentBeans(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {
+
+        List<DeclaredType> allParentTypes = retrieveAllParentTypes(processingEnv, type);
+        for (TypeMirror typeMirror : allParentTypes) {
+            DeclaredType dt = (DeclaredType) typeMirror;
+            dt.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
+        }
+    }
+
+    private static List<DeclaredType> retrieveAllParentTypes(ProcessingEnvironment processingEnv, DeclaredType type) {
+        List<DeclaredType> allParentTypes = new ArrayList<DeclaredType>();
+        List<? extends TypeMirror> directSupertypes = processingEnv.getTypeUtils().directSupertypes(type);
+        for (TypeMirror typeMirror : directSupertypes) {
+            DeclaredType dt = (DeclaredType) typeMirror;
+            allParentTypes.add(dt);
+            allParentTypes.addAll(retrieveAllParentTypes(processingEnv, dt));
+        }
+        return allParentTypes;
     }
 
     public static TypeDefinition typeDefForEnum(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {
@@ -290,9 +306,10 @@ public class CompileTypeUtils {
         @Override
         public TypeState visitExecutableAsMethod(ExecutableElement method, TypeState typeState) {
 
-            if (!method.getSimpleName().toString().endsWith("Class")) {
+            if (!method.getSimpleName().toString().endsWith("Class") &&
+                    method.getEnclosingElement().toString().equals("java.lang.reflect.TypeVariable")) {
 
-                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(method.getEnclosingElement().asType().toString());
+                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(typeState.getBaseClassName());
                 if (def != null) {
                     String propName = getPropertyName(method);
                     if (!def.getFields().containsKey(propName)) {
