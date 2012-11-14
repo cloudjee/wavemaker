@@ -29,6 +29,7 @@ dojo.declare("wm.Date", wm.Text, {
     maximum: "",
     dateMode: "Date",
     formatLength: "short",
+    datePattern: "",
     //locale: '',
     validationEnabled: function() {
         return true;
@@ -37,6 +38,8 @@ dojo.declare("wm.Date", wm.Text, {
         var constraints = {};
         if (this.minimum) constraints.min = this.convertValue(this.minimum);
         if (this.maximum) constraints.max = this.convertValue(this.maximum);
+        if (this.datePattern) constraints.datePattern = this.datePattern;
+        if (this.timePattern) constraints.timePattern = this.timePattern;        
         return constraints;
     },
     getEditorProps: function(inNode, inProps) {
@@ -71,7 +74,8 @@ dojo.declare("wm.Date", wm.Text, {
         return wm.convertValueToDate(inValue, {
             selector: this.dateMode.toLowerCase(),
             formatLength: this.formatLength,
-            timePattern: this.use24Time ? "HH:mm" : "hh:mm a"
+            timePattern: this.use24Time ? "HH:mm" : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
     },
     getEditorValue: function() {
@@ -80,10 +84,10 @@ dojo.declare("wm.Date", wm.Text, {
             if (!this.useLocalTime) {
 
                     /* See WM-4490 to understand this calculation */
-                    var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
+                    var adjustTwoHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 120 : 0;
 
                     /* Zero out minutes/seconds which have no bearing on a date-only calc */
-                    d.setHours(0, -60 * wm.timezoneOffset + adjustSixHours,0,0);
+                    d.setHours(0, -60 * wm.timezoneOffset + adjustTwoHours,0,0);
 
             }
             return d.getTime();
@@ -98,14 +102,16 @@ dojo.declare("wm.Date", wm.Text, {
     },
     setEditorValue: function(inValue) {
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
+        
+        // don't modify the source data as the caller may still need it
+        v = new Date(v);
+        v.setHours(0,0,0);
+        
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
-        if (!this.useLocalTime && v) {
-            // don't modify the source data as the called may still need it
-            v = new Date(v);
-
+        if (!this.useLocalTime && v) {            
              /* See WM-4490 to understand this calculation. */
-            var adjustSixHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 360 : 0;
-            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustSixHours,0,0);
+            var adjustTwoHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 120 : 0;
+            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustTwoHours,0,0);
         }
         this.inherited(arguments, [v]);
     },
@@ -123,7 +129,8 @@ dojo.declare("wm.Date", wm.Text, {
             formatLength: this.formatLength,
             fullYear: true,
             selector: this.dateMode.toLowerCase(),
-            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
 
     },
@@ -175,12 +182,14 @@ dojo.declare("wm.Date", wm.Text, {
         val1 = dojo.date.locale.format(val1, {
             formatLength: this.formatLength || "short",
             selector: this.dateMode.toLowerCase(),
-            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
         val2 = dojo.date.locale.format(val2, {
             formatLength: this.formatLength || "short",
             selector: this.dateMode.toLowerCase(),
-            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+            timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+            datePattern: this.datePattern || undefined
         });
 
         return val1 != val2;
@@ -312,6 +321,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             openOnClick: this.openOnClick,
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
+            datePattern: this.datePattern,
             maximum: this.maximum,
             minimum: this.minimum,
             onchange: dojo.hitch(this, "changed")
@@ -329,6 +339,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
             use24Time: this.use24Time,
+            timePattern: this.timePattern,
             onchange: dojo.hitch(this, "changed")
         });
         if (this._disabled) this.setDisabled(this.disabled);
@@ -378,7 +389,8 @@ dojo.declare("wm.DateTime", wm.Date, {
             d = wm.convertValueToDate(inValue, {
                 formatLength: this.formatLength,
                 selector: this.dateMode.toLowerCase(),
-                timePattern: this.use24Time ? 'HH:mm' : "hh:mm a"
+                timePattern: this.use24Time ? 'HH:mm' : "hh:mm a",
+                datePattern: this.datePattern || undefined
             });
         }
 
@@ -443,7 +455,7 @@ dojo.declare("wm.DateTime", wm.Date, {
                 break;
             }
         }
-        this.setDataValue(value);
+        this.setDataValue(value); 
     },
     _getReadonlyValue: function() {
         var d = this.getDataValue();
@@ -451,12 +463,12 @@ dojo.declare("wm.DateTime", wm.Date, {
             d = new Date(d);
             if (!this.useLocalTime) {
                 /* See WM-4490 to understand this calculation */
-                var adjustSixHours = (this.dateMode == "Date") ? 360 : 0;
+                var adjustTwoHours = (this.dateMode == "Date") ? 120 : 0;
 
-                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset + adjustSixHours);
+                d.setHours(0, 60 * d.getHours() + d.getMinutes() + 60 * wm.timezoneOffset + adjustTwoHours);
             }
         }
-        return this.calcDisplayValue(d);
+        return d === null || d === undefined ? "" : this.calcDisplayValue(d);
     },
 
     getDisplayValue: function() {
