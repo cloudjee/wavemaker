@@ -150,7 +150,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
     @ExposeToClient
 	public String newProject(String projectName,String templateFolderName) throws IOException {
 	if (templateFolderName == null) return newProject(projectName);
-        this.projectManager.copyProject(this.fileSystem.getDemoDir().createRelative(templateFolderName + "/"), 
+        this.projectManager.copyProject(this.fileSystem.getTemplatesDir().createRelative(templateFolderName + "/"), 
 					this.projectManager.getProjectDir(projectName,false));
 	return "";
     }
@@ -208,7 +208,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
     @ExposeToClient
     public String listProjectTemplates() throws FileAccessException {
 	String result = "";
-	com.wavemaker.tools.io.Folder folder = this.fileSystem.getDemoFolder();
+	com.wavemaker.tools.io.Folder folder = this.fileSystem.getTemplatesFolder();
 	com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> folders = folder.list().folders();
 	for (com.wavemaker.tools.io.Folder f : folders) {
 	    com.wavemaker.tools.io.File templatejson = f.getFile("template.json");

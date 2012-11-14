@@ -78,7 +78,12 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     public Folder getCommonFolder() {
         return this.rootFolder.getFolder(COMMON_DIR).jail();
     }
-
+    
+    @Override
+    public Folder getTemplatesFolder() {
+        return this.rootFolder.getFolder(TEMPLATES_DIR).jail();
+    }
+    
     @Override
     public Folder getWaveMakerHomeFolder() {
         return this.rootFolder;

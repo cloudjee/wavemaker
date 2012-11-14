@@ -46,6 +46,13 @@ public interface StudioFileSystem {
     Folder getCommonFolder();
 
     /**
+     * Returns the WaveMaker templates folder.
+     * 
+     * @return the templates folder
+     */
+    Folder getTemplatesFolder();
+    
+    /**
      * Returns the WaveMaker home folder
      * 
      * @return the home folder
@@ -110,6 +117,15 @@ public interface StudioFileSystem {
      */
     @Deprecated
     Resource getCommonDir() throws IOException; // This is WM home /common
+    
+    
+    /**
+     * Get the templates directory.
+     * 
+     * @throws IOException
+     */
+    @Deprecated
+    Resource getTemplatesDir() throws IOException; // This is WM home /templates
 
     /**
      * Determine if the resource specified is a directory.

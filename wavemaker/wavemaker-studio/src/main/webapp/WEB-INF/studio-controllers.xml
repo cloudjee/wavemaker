@@ -26,7 +26,7 @@
 				/projects/**=agStaticFileController
 				/modules/**=wmModuleController
 				/lib/wm/common/**=agStaticFileController
-
+				/lib/wm/templates/**=agStaticFileController
 				/build/**=fileController
 				/lib/build/Gzipped/*=fileController
 				/lib/build/themes/**=fileController

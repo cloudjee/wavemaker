@@ -79,6 +79,15 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
+    public Folder getTemplatesFolder() {
+        try {
+            return new LocalFolder(getTemplatesDir().getFile());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    
+    @Override
     public Folder getWaveMakerHomeFolder() {
         try {
             return new LocalFolder(getWaveMakerHome().getFile());

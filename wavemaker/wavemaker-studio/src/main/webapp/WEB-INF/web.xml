@@ -124,6 +124,12 @@
 		<url-pattern>/lib/wm/common/*</url-pattern>
     </servlet-mapping>
 
+    <!-- for templates mapping -->
+    <servlet-mapping>
+        <servlet-name>springapp</servlet-name>
+		<url-pattern>/lib/wm/templates/*</url-pattern>
+    </servlet-mapping>
+    
     <!-- for modules -->
     <servlet-mapping>
         <servlet-name>springapp</servlet-name>
