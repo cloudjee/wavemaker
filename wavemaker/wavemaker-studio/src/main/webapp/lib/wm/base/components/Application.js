@@ -610,6 +610,7 @@ dojo.declare("wm.Application", wm.Component, {
     getRuntimeService: function(owner) {
         if (!this._runtimeService)
             this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
+                                    _isDesignLoaded: this._isDesignLoaded,
                                   owner: owner});
         return this._runtimeService;
     },
