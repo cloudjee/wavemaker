@@ -68,30 +68,52 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 
 	this.setImage(this.image);
 	this.setCaption(this.caption);
-	// serviceVariableToTrack is built into widgets.js using bindings, which fire before postInit
-	//this.setServiceVariableToTrack(this.serviceVariableToTrack);
-    },
-    setServiceVariableToTrack: function(inVar) {
-	if (this._isDesignLoaded) return;
-	if (this._onResultConnect) {
-	    dojo.disconnect(this._onResultConnect);
-	    dojo.disconnect(this._onRequestConnect);
-	    wm.Array.removeElement(this._connections, this._onResultConnect);
-	    wm.Array.removeElement(this._connections, this._onRequestConnect);
-	    delete this._onResultConnect;
-	    delete this._onRequestConnect;
-	}
-	if (inVar) {
-	    if (dojo.isString(inVar))
-		inVar = this.owner.getValueById(inVar);
-	}
 
-	this.serviceVariableToTrack = inVar;
-	  if (this.serviceVariableToTrack) {
-	      this._onResultConnect  = this.connect(this.serviceVariableToTrack, "onResult", this, "hide");
-	      this._onRequestConnect = this.connect(this.serviceVariableToTrack, "request", this, "show");
+	   this.setServiceVariableToTrack(this.serviceVariableToTrack);
+    },
+    setServiceVariableToTrack: function(inVars) {
+	if (this._isDesignLoaded) return;
+	
+	if (inVars && inVars.length) {
+        inVars = dojo.map(inVars, function(inVar) {
+    	    if (dojo.isString(inVar)) {
+    		  return this.owner.getValueById(inVar);
+    		 } else {
+    		  return inVar;
+    		 }
+  		 },this);    		 
+	}
+    if (inVars && !dojo.isArray(inVars)) inVars = [inVars];
+	this.serviceVariableToTrack = inVars;
+    if (this._onResultConnect) {
+    	dojo.forEach(this._onResultConnect, function(c) {
+    	   dojo.disconnect(c);
+    	   wm.Array.removeElement(this._connections, c);	 
+    	},this);
+    	dojo.forEach(this._onRequestConnect, function(c) {
+    	   dojo.disconnect(c);
+    	   wm.Array.removeElement(this._connections, c);	 
+    	},this);	
+    }
+      this._onResultConnect = [];
+      this._onRequestConnect = [];
+	  if (this.serviceVariableToTrack && this.serviceVariableToTrack.length) {	  
+	       dojo.forEach(this.serviceVariableToTrack, function(svar) {
+    	      this._onResultConnect.push(this.connect(svar, "onResult", dojo.hitch(this, "svarDone", svar)));
+    	      this._onRequestConnect.push(this.connect(svar, "request", dojo.hitch(this, "svarStart", svar)));
+    	   }, this);
 	  }
     },
+    svarDone: function(svar) {
+        if (!this._currentSVars) this._currentSVars = [];
+        wm.Array.removeElement(this._currentSVars, svar);
+        if (this._currentSVars.length == 0) this.hide();
+    },
+    svarStart: function(svar) {
+        if (!this._currentSVars) this._currentSVars = [];
+        this._currentSVars.push(svar);
+        if (!this.showing) this.show();
+    },    
     show: function() {
 	this._getWidgetToCover();
 	if (this.widgetToCover && !this.widgetToCover.isAncestorHidden()) {
