@@ -76,7 +76,7 @@ dojo.declare("wm.SetWireTask", null, {
         }
 
         var c = this.component;
-        while (c.owner && !wm.isInstanceType(c.owner, [wm.Page, wm.Application]) && c != studio.selected) {
+        while (c.owner && !wm.isInstanceType(c.owner, [wm.Page, wm.Application]) && dojo.indexOf(studio.selected,c) == -1) {
             c = c.owner;
         }
         if (dojo.indexOf(studio.selected,c) != -1) {
@@ -594,6 +594,54 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
     }
 });
 
+dojo.declare("wm.prop.MultiWidgetSelect", wm.ListSet, {
+    renderVisibleRowsOnly: false,   
+    inspectedChildrenOnly: false,
+    dataField: "dataValue",
+    displayField: "dataValue",
+    selectionMode: "checkbox",
+    height: "100px",
+    widgetType: null,
+    excludeType: null,
+    useOwner: null,
+    init: function() {
+        this.inherited(arguments);
+        dojo.addClass(this.domNode, "StudioList");
+    },
+    createEditor: function() {  
+        this.inherited(arguments);
+        if (this.widgetType && typeof this.widgetType == "string") this.widgetType = dojo.getObject(this.widgetType);
+        if (this.excludeType && typeof this.excludeType == "string") this.excludeType = dojo.getObject(this.excludeType);
+
+        var components = wm.listComponents([studio.getValueById(this.useOwner) || this.inspected.owner], this.widgetType);
+        var result = [];
+        if (this.excludeType) {
+            for (var i = 0; i < components.length; i++) {
+                if (wm.isInstanceType(components[i], this.excludeType) == false) {
+                    result.push(components[i]);
+                }
+            }
+        } else {
+            result = components;
+        }
+        if (this.inspectedChildrenOnly) {
+            components = result;
+            result = [];
+            for (var i = 0; i < components.length; i++) {
+                if (components[i].isAncestor(this.inspected)) {
+                    result.push(components[i]);
+                }
+            }
+        }
+        var ids = [];
+        for (var i = 0; i < result.length; i++) {
+            ids.push(result[i].getId());
+        }
+        
+        this.setOptions(ids);
+
+    }
+});
 dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     useLiterals: false,
     liveTypes: false,
@@ -1349,12 +1397,11 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     else {
         this.inherited(arguments);
         this.inspected.setProp(this.propName, value);
-        if (this.inspected == studio.selected)
-        studio.inspector.reinspect();
-
+        if (dojo.indexOf(studio.selected,this.inspected) != -1)
+            studio.inspector.reinspect();
         else {
-        studio.inspector.setLayerIndex(0);
-        studio.inspector.updateCurrentLayersList();
+            studio.inspector.setLayerIndex(0);
+            studio.inspector.updateCurrentLayersList();
         }
     }
     wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
@@ -1388,19 +1435,19 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
         */
             case "newService":
                 studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
-            this.setDisplayValue(studio.selected.name);
+                this.setDisplayValue(this.inspected.name);
                 break;
             case "newLiveVar":
                 studio.newComponentButtonClick({componentType: "wm.LiveVariable"});
-            this.setDisplayValue(studio.selected.name);
+                this.setDisplayValue(this.inspected.name);
                 break;
             case "newNavigation":
                 studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
-            this.setDisplayValue(studio.selected.name);
+                this.setDisplayValue(this.inspected.name);
                 break;
             case "newNotification":
                 studio.newComponentButtonClick({componentType: "wm.NotificationCall"});
-            this.setDisplayValue(studio.selected.name);
+                this.setDisplayValue(this.inspected.name);
                 break;
 
         }
