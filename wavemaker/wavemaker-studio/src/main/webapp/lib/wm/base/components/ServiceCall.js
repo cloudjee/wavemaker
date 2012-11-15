@@ -158,7 +158,7 @@ dojo.declare("wm.ServiceCall", null, {
      */
     connectStartUpdate: function() {
         if (this.owner && this.owner.start)
-            this.connectOnce(this.owner, "start", this, "doStartUpdate");
+            this.connectOnce(this.owner, "onStart", this, "doStartUpdate");
     },
 
     /* Changes autoUpdate, and optionally calls update() */
