@@ -226,6 +226,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		// if its defined and empty, then there is no containerWidget
 		if (this.containerWidgetId) {
 		    containerWidget = this.owner.getValueById(this.containerWidgetId);
+		    if (!containerWidget) return;
 		    containerNode = containerWidget.domNode;
 		}
 	    } else if (this.c$.length == 1) {

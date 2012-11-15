@@ -249,7 +249,7 @@ SECTION 2: Apache License, V2.0
    >>> acegi-security-1.0.7
    >>> ant-1.8.2
    >>> ant-launcher-1.8.2
-   >>> apache-tomcat-6.0.29
+   >>> apache-tomcat-6.0.36
    >>> catalina-ant-6.0.32
    >>> cglib-2.1_3
    >>> cloudfoundry-client-lib-0.7.1
@@ -4340,7 +4340,7 @@ Please contact us if you are not satisfied with the data contained in this POM.
 URL : http://ant.apache.org
 
 
->>> apache-tomcat-6.0.29
+>>> apache-tomcat-6.0.36
 
 Apache Tomcat
 Copyright 1999-2010 The Apache Software Foundation
@@ -8192,4 +8192,4 @@ years from the date you acquired this Software product. Alternatively,
 the Source Files may accompany the VMware product.
 
 
-[WAVEMAKER651GAKV110512]
+[WAVEMAKER651GAKV111312]
