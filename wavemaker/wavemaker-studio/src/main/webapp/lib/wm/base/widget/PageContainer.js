@@ -67,7 +67,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
             }));
         }
         if (this._isDesignLoaded) {
-            this.subscribe("deviceSizeRecalc", dojo.hitch(this, "updatePageName"));
+            this.subscribe("deviceSizeRecalc", dojo.hitch(this, "updateDesignTimePageName"));
         }
     },
     updatePageName: function() {
@@ -276,15 +276,26 @@ dojo.declare("wm.PageContainer", wm.Control, {
 
 
         if (this.subpageProplist) {
+
             for (var propName in this.subpageProplist) {
                 var v = this[propName];
-                if (v !== undefined) {
+                if (v instanceof wm.Component && v.isDestroyed) {
+                    v = this[propName] = undefined;
+                }
+                    
+                if (v !== undefined) {                                            
                     this.setProp(propName, this[propName]);
                 }
                 var propDef = this.page[propName];
                 if (propDef.bindSource) {
                     var target = this.page.getRuntimeId() + "." + propDef.property;
                     this.subscribe(target + "-changed", dojo.hitch(this, "setBoundProp", propName));
+                    var lastIndex = propDef.property.lastIndexOf(".");
+                    if (lastIndex != -1) {
+                        target = this.page.getRuntimeId() + "." + propDef.property.substring(0,lastIndex);
+                        this.subscribe(target + "-changed", dojo.hitch(this, "setBoundProp", propName));
+                    }
+                    
                 }
             }
             if (this.$.binding) this.$.binding.refresh(); // update all bound values

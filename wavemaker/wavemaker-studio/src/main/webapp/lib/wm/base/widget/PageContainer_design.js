@@ -223,6 +223,9 @@ wm.PageContainer.extend({
             })
         };
     },
+    updateDesignTimePageName: function() {
+        wm.job(this.getRuntimeId() + ".updateDesignTimePageName", 50, dojo.hitch(this, "updatePageName"));
+    },
     isEventProp: function(n) {
         if (this.subpageEventlist != null && n in this.subpageEventlist) return true;
         return this.inherited(arguments);
@@ -245,7 +248,7 @@ wm.PageContainer.extend({
             if (this[p.name] === undefined) {
             this[p.name] = function(){};
             }
-            */
+            */  
 
                 } else {
                     this.subpageProplist[p.name] = p.property;
@@ -258,6 +261,8 @@ wm.PageContainer.extend({
                     bindSource: p.bindSource,
                     isEvent: p.isEvent,
                     readonly: p.readonly,
+                    hidden: p.hidden,
+                    ignore: p.ignore,
                     propertyId: p.property
                 };
                 var propertyPath = p.property;

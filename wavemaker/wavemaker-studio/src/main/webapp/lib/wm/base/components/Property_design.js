@@ -58,14 +58,17 @@ wm.Property.extend({
 		if (propDef) {
 		    this.type = propDef.type;
             this.method = propDef.method;
+            if (propDef.operation) this.operation = propDef.operation;		
 		} else if (c instanceof wm.Variable && (!prop || prop == "dataSet")) {
 		    this.type = c.type;
+		} else if (c instanceof wm.Variable && c.isDataProp(prop)) {
+            this.type = c._dataSchema[prop].type
 		}
 		if (c.isEventProp(prop))
 		    this.setValue("isEvent", true);
 		if (c.schema[prop] && c.schema[prop].readonly) 
 		    this.setValue("readonly", true);
-		
+
 		this._nameChangeConnect = this.connect(c, "set_name", this, function() {
 		    this.property = c.name + "." + prop;
 		});
@@ -95,6 +98,8 @@ wm.Property.extend({
 						(this.readonly ? ', readonly: true' : '') +
 						(this.bindSource ? ', bindSource: true' : '') +
 					(this.bindTarget ? ', bindTarget: true' : '') +
+					(this.ignore ? ', ignore: true' : '') +					
+					(this.operation ? ', operation:"' + this.operation + '"' : '') + 
 					(this.type ? ', type: "' + this.type + '"' : '')) +
 			'}' +
 		']';
@@ -109,7 +114,10 @@ wm.Object.extendSchema(wm.Property, {
     bindSource: {group: "widgetName", order: 10},
     bindTarget: {group: "widgetName", order: 11},
     isEvent: {group: "widgetName", order: 20},
-    readonly: {group: "widgetName", order: 30}
+    readonly: {group: "widgetName", order: 30},
+    ignore: {group: "widgetName", order: 40},
+    isDataField: {group: "widgetName", order: 50},
+    operation: {group: "widgetName", order: 60}
 });
 
 /*
