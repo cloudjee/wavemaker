@@ -634,7 +634,8 @@ dojo.declare("wm.CheckboxSet", [wm.DataSetEditor, wm.TouchScrollMixinOptional], 
 
 
 /* TODO: onchange Events */
-dojo.declare("wm.ListSet", wm.DataSetEditor, {
+dojo.declare("wm.ListSet", wm.DataSetEditor, {    
+    renderVisibleRowsOnly: true,
     singleLine: false,
     showSearchBar: true,
     selectionMode: "multiple",
@@ -666,6 +667,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
                 expression: this.displayExpression
             }]);
             this.grid.renderDojoObj();
+            this.setEditorValue(this.dataValue);
         }
         delete this._typeWas;
     },
@@ -689,8 +691,14 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
         }
     },
     changed: function() {
+        var value = this.dataValue;
+        if (value && typeof value == "object") value = dojo.toJson(value);
         this.selectedItem.setDataSet(this.grid.selectedItem);
-        this.doOnchange();
+        var newvalue = this.getDataValue();
+        if (newvalue && typeof newvalue == "object") newvalue = dojo.toJson(newvalue);
+        if (value !== newvalue) {
+            this.doOnchange();
+        }
     },
     doOnchange: function() {
         var e = this.editor;
@@ -762,6 +770,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
         }
         wm.require("wm.List");
         this.grid = new wm.List({
+            renderVisibleRowsOnly: this.renderVisibleRowsOnly,
             owner: this,
             parent: this.editor,
             name: "grid",
