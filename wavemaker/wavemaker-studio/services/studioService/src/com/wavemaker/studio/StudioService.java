@@ -212,9 +212,13 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
 	com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> folders = folder.list().folders();
 	for (com.wavemaker.tools.io.Folder f : folders) {
 	    com.wavemaker.tools.io.File templatejson = f.getFile("template.json");
+	    com.wavemaker.tools.io.File projectprops = f.getFile(".wmproject.properties");
 	    if (templatejson.exists()) {
 		if (result != "") result += ",";
 		result += "{'name': '" + f.getName() + "', 'dataValue':" + templatejson.getContent().asString().replaceAll("\\n","") + "}";
+	    } else if (projectprops.exists()) {
+		if (result != "") result += ",";
+		result += "{'name': '" + f.getName() + "', 'dataValue':{'name':'" + f.getName() + "','templateGroup':'Custom'}}";
 	    }
 	}
 
