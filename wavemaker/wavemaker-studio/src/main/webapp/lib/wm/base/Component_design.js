@@ -85,7 +85,7 @@ wm.Component.extend({
             };
         }
         if (this._isDesignLoaded && props.roles) {
-            props.roles.ignoretmp = !wm.roles || wm.roles.length == 0;
+            props.roles.ignoretmp = Boolean(!wm.roles || wm.roles.length == 0);
         }
         if(this.deletionDisabled) {
             props.name = {
