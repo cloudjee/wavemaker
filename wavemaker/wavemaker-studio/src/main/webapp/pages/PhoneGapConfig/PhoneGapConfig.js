@@ -181,9 +181,11 @@ dojo.declare("PhoneGapConfig", wm.Page, {
         this.jsonData.xhrServiceProxies = this.xhrServiceProxies.getChecked();
 
         var xhrPath = this.xhrPath.getDataValue();
-        if (dojo.indexOf(this.jsonData.xhrpaths, xhrPath) == -1) {
-            wm.Array.insertElementAt(this.jsonData.xhrpaths, xhrPath, 0);
-        }
+	
+        if (dojo.indexOf(this.jsonData.xhrpaths, xhrPath) != -1) {
+	    wm.Array.removeElement(this.jsonData.xhrpaths, xhrPath);
+	}
+        wm.Array.insertElementAt(this.jsonData.xhrpaths, xhrPath, 0);
         studio.studioService.requestAsync("writeWebFile", ["phonegapconfig.json", dojo.toJson(this.jsonData, true), false]);
         var xmlfile = dojo.string.substitute(this.template,
                              {
