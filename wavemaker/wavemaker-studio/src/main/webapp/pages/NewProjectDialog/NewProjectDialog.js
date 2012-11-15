@@ -20,23 +20,20 @@ dojo.declare("NewProjectDialog", wm.Page, {
     },
     onShow: function() {
         this.selectedTemplate = null;
-        studio.studioService.requestAsync("listProjectTemplates", [], dojo.hitch(this, "onListTemplateSuccess"));
+        studio.studioService.requestAsync("listProjectTemplates", [], dojo.hitch(this, "onListTemplateSuccess"), dojo.hitch(this, "renderTemplates"));
         dojo.forEach(this.tabs.layers, function(l) {
             l.c$[0].removeAllControls();
         });
     },
-    onListTemplateSuccess: function(inResponse) {
+    renderTemplates: function() {
         this.themeName.setDataValue("wm.base.widget.themes.wm_default");
-
-        var templates = this.templates = dojo.clone(wm.fullTemplates);
-        try {
-            moreTemplates = dojo.fromJson(inResponse);
-            dojo.forEach(moreTemplates, function(template) {
-                template.dataValue.fullProjectTemplate = true;
-                template.dataValue.fullName = template.name;
-                templates[template.dataValue.name || template.name] = template.dataValue;
-            });
-        } catch(e) {}
+        var templates;
+        if (!this.templates) {
+            templates = this.templates = dojo.clone(wm.fullTemplates);
+        } else {
+            templates = this.templates;
+        }
+        
         var i = 0;
 
         var panel = new wm.Panel({
@@ -97,6 +94,19 @@ dojo.declare("NewProjectDialog", wm.Page, {
         wm.onidle(this, function() {
             this.reflow();
         });
+    },
+    onListTemplateSuccess: function(inResponse) {      
+
+        var templates = this.templates = dojo.clone(wm.fullTemplates);
+        try {
+            var moreTemplates = dojo.fromJson(inResponse);
+            dojo.forEach(moreTemplates, function(template) {
+                template.dataValue.fullProjectTemplate = true;
+                template.dataValue.fullName = template.name;
+                templates[template.dataValue.name || template.name] = template.dataValue;
+            });
+        } catch(e) {}
+        this.renderTemplates();
     },
     addTemplates: function(templates, panel, templateGroup, i) {
         for (var templateKey in templates) {

@@ -19,6 +19,7 @@
 .NewProjectDialog .NewProjectDialog-tabs .SelectableTemplate .wmpicture{
 	background-image:url(pages/NewProjectDialog/images/noIconTemplate.png);
         background-repeat: no-repeat;
+        background-position: 50% 50%;
 }
 .NewProjectDialog .NewProjectDialog-tabs .SelectableTemplate {
         -moz-box-shadow: 2px 2px 4px #333333;
