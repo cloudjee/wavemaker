@@ -352,9 +352,13 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         CloudApplication app = client.getApplication(deploymentInfo.getApplicationName());
 
         for (DeploymentDB db : deploymentInfo.getDatabases()) {
-            if (app.getServices().contains(db.getDbName())) {
+            if (app.getServices().contains(db.getDbName()) && !db.isUpdateSchema()) {
                 // service binding already exists
                 continue;
+            }
+
+            if (db.isUpdateSchema()) {
+                client.deleteService(db.getDbName());
             }
 
             String dbType = "NONE";
