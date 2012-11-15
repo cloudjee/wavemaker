@@ -88,7 +88,7 @@ dojo.declare("wm.ComponentTaskMixin", null, {
 
 dojo.declare("wm.DeleteTask", wm.ComponentTaskMixin, {
     constructor: function(inProps) {
-        var comps = inProps.components || studio.selected;
+        var comps = inProps && inProps.components || studio.selected;
         if (!comps || !comps.length)
             return;
         this.setComponents(comps);
