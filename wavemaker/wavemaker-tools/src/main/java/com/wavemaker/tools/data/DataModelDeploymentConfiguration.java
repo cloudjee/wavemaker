@@ -153,7 +153,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     }
 
     private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String updateSchema) {
-        if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
+        //if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             XMLWriter writer = XMLUtils.newXMLWriter(pw);
@@ -169,7 +169,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             }
             s = s.substring(0, i) + writer.getLineSep() + sw.toString() + writer.getLineSep() + s.substring(i);
             cfgFile.getContent().write(s);
-        }
+        //}
     }
 
     private void configureResourceRef(DesignServiceManager mgr, String jndiName) {
