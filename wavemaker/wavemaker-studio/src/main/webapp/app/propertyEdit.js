@@ -79,7 +79,7 @@ dojo.declare("wm.SetWireTask", null, {
         while (c.owner && !wm.isInstanceType(c.owner, [wm.Page, wm.Application]) && c != studio.selected) {
             c = c.owner;
         }
-        if (studio.selected == c) {
+        if (dojo.indexOf(studio.selected,c) != -1) {
             studio.inspector.reinspect();
         }
     },
