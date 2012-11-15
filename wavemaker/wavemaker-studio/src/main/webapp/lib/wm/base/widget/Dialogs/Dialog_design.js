@@ -284,7 +284,7 @@ wm.LoadingDialog.extend({
 wm.Object.extendSchema(wm.LoadingDialog, {
     /* Display group; misc subgroup */
     widgetToCover: {group: "widgetName", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1,editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
-    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", type: "wm.ServiceVariable", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
+    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, editor: "wm.prop.MultiWidgetSelect", type: "wm.ServiceVariable", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
 
     /* Display group; text subgroup */
     caption:      {group: "widgetName", subgroup: "text", order: 102, bindTarget: 1},
