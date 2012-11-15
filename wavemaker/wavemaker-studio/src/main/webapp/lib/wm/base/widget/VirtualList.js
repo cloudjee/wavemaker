@@ -547,7 +547,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
                 } else {
                     this.eventDeselect(inItem);
                 }
-                dojo.stopEvent(inEvent);
+                if (inEvent instanceof Event) {
+                    dojo.stopEvent(inEvent);
+                }
             } else if (target.type == "radio") {
                 var toggleSelectWas = this.toggleSelect;
                 this.toggleSelect = false;
