@@ -60,24 +60,36 @@ dojo.declare("wm.XhrService", wm.Service, {
 
             return this._invokeBasicRequest(url, headersHash, requestType, contentType, useProxy, parametersHash, "string", inOwner);
         } else {
-            var parameterDef = op.parameters;
+            var allParameterDef = op.allParameters || op.parameters;
 
             /* Turn inArgs (array of parameters) into a hash of name/value pairs so that we know what name each argument is associated with */
             parameters = {};
             var i = 0;
-            wm.forEachProperty(parameterDef, function(parameterObj, parameterName) {
+            /* Only iterate over public parameters, not hidden ones; inArgs will only contain the public ones */
+            wm.forEachProperty(op.parameters, function(parameterObj, parameterName) {
                 parameters[parameterName] = inArgs[i];
                 i++;
             });
             url = op.url;
-            headers = dojo.clone(op.headers) || {}; // headers can come from two places: a default headers structure, and parameters with isHeader
+            url = url.replace(/\$\{.*?\}/g, function() {
+                var input = arguments[0];
+                input = input.substring(2,input.length-1);
+                var value = parameters[input];
+                if (value === undefined || value === null) {
+                    value = allParameterDef[input].defaultValue;
+                }
+                if (value === undefined || value === null) value = "";
+                return value;
+            });
+
+
             if (op.requestType !== undefined) {
                 requestType = op.requestType;
             } else if (parameters.requestType) {
-                type = parameters.requestType;
+                requestType = parameters.requestType;
                 delete parameters.requestType;
             } else {
-                type = "GET";
+                requestType = "GET";
             }
 
             if (op.contentType) {
@@ -95,19 +107,23 @@ dojo.declare("wm.XhrService", wm.Service, {
                 useProxy = parameters.useProxy;
                 delete parameters.useProxy;
             }
-
+            headers = {};
             var inputs = {};
-            wm.forEachProperty(op.parameters, function(parameterDef, parameterName) {
+            wm.forEachProperty(allParameterDef, function(parameterDef, parameterName) {
                 var value = parameters[parameterName];
-                if (parameterDef.transmitType == "header") {
-                    headers[parameterName] = parameters[parameterName];
-                } else if (parameterDef.transmitType == "path") {
-                    if (!url.match(/\/$/)) url += "/";
-                    url += parameterName + "/" + (typeof value == "string" && !parameterDef.noEscape ? escape(value) : value);
-                } else if (parameters[parameterName] !== undefined) {
-
-                    inputs[parameterName] = typeof value == "string" && !parameterDef.noEscape ? escape(value) : value;
+                if (value === null || value === undefined) {
+                    value = parameterDef.defaultValue;
+                    if (value === null || value === undefined) value = "";
                 }
+                if (parameterDef.transmitType == "header") {
+                    headers[parameterName] = value;
+                } else if (parameterDef.transmitType == "queryString") {
+                    /* noEscape is something we can only control for GET no POST; dojo will escape the post request anyways, and we don't want
+                    * to escape it and then have dojo escape it again
+                    */
+                    inputs[parameterName] = typeof value == "string" && !parameterDef.noEscape && requestType === "GET" ? escape(value) : value;
+                }
+                // ignore transmitType == "path" which is handled in the url.replace call above
             });
             return this._invokeBasicRequest(url, headers, requestType, contentType, useProxy, inputs, op.returnType, op, inOwner);
         }
@@ -201,7 +217,6 @@ dojo.declare("wm.XhrService", wm.Service, {
         } catch (e) {
             result = inResult;
         }
-        
         deferred.callback(result);
     },
     onError: function(parameters, operation, deferred, inError) {
@@ -265,12 +280,17 @@ dojo.declare("wm.XhrDefinition", wm.Component, {
    },
    initType: function() {
        if (this.url) {
+            var publicParameters = dojo.clone(this.parameters);
+            wm.forEachProperty(publicParameters, function(inValue, inName) {
+                if (inValue.hidden) delete publicParameters[inName];
+            });
            wm.XhrService.prototype.addOperation({
                name: this.name,
                url: this.url,
                requestType: this.requestType,
                headers: this.headers,
-               parameters: this.parameters,
+               parameters: publicParameters,
+               allParameters: this.parameters,
                useProxy: this.useProxy,
                contentType: this.contentType,
                returnType: this.returnType

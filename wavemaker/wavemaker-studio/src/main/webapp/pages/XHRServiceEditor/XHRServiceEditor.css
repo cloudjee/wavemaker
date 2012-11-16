@@ -11,8 +11,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-.EditVariable .wmtree-content {
-    min-width: 80px;
-    display: inline-block;
-    color: white;
+.wmXhrInstructionsHeader {
+    font-weight: bold;
+    font-size: 1.2Em;
+}
+.wmXhrInstructionsBody {
+    margin: 5px 5px 15px 10px;
+}
+
+.wmXhrRequestParts {
+    float:right;
+    border: solid 1px #848C99;
+    margin: 10px 0px 10px 15px;
+    padding: 5px;
 }
