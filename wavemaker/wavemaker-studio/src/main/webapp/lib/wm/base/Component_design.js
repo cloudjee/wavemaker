@@ -618,13 +618,14 @@ wm.Component.extend({
    },
    _showContextMenu: function(children) {
            this.createDesignContextMenu(children);
-           children.push({label: "Cut",
-                          iconClass: "Studio_canvasToolbarImageList16_2",
-                          onClick: dojo.hitch(this, function() {
-                            studio.cutControl([this]);
-                          })
-                      });
-
+           if (this instanceof wm.Layout === false) {
+               children.push({label: "Cut",
+                              iconClass: "Studio_canvasToolbarImageList16_2",
+                              onClick: dojo.hitch(this, function() {
+                                studio.cutControl([this]);
+                              })
+                          });
+            }
           var props = this.listProperties();
        for(p in props) {
            if(!props[p].ignore && props[p].contextMenu === undefined && props[p].group == "operation" || props[p].contextMenu
