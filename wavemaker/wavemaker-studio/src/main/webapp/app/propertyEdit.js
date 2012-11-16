@@ -595,6 +595,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 });
 
 dojo.declare("wm.prop.MultiWidgetSelect", wm.ListSet, {
+    forceCaptionPositionTop: true,
     renderVisibleRowsOnly: false,   
     inspectedChildrenOnly: false,
     dataField: "dataValue",
