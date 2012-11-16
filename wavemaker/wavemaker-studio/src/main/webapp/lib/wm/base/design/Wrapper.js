@@ -155,6 +155,7 @@ dojo.declare("wm.WrapperResizer", wm.design.Resizer, {
 wm.wrapperResizer = new wm.WrapperResizer();
 
 dojo.declare("wm.DesignWrapper", wm.Designable, {
+    styles: {backgroundColor: "transparent"},
     //buffer: 6,
     _isDesignLoaded: false,
     border: 0,
@@ -215,7 +216,6 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
             n = this.designNode = c && c.domNode;
         if (c) {
             c.designWrapper = this;
-                this.domNode.style.backgroundColor = 'transparent';
             if (c.scrim)
                 this.setScrim(c.scrim);
                 this.label.innerHTML = c.getId();
