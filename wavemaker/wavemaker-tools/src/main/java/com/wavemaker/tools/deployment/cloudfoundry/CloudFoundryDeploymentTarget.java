@@ -358,7 +358,10 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             }
 
             if (db.isUpdateSchema()) {
-                client.deleteService(db.getDbName());
+            	try {
+            		client.deleteService(db.getDbName());
+            	} catch (Exception ex) {
+            	}
             }
 
             String dbType = "NONE";
