@@ -508,7 +508,7 @@ define("dojo/_base/event", ["dojo/lib/kernel", "dojo/_base/connect"], function(d
 	     * Adds in custom code because apparently some IE 9 events have these functions and some do not. */
 	    dojo.stopEvent = (dojo.isIE || dojo.isQuirks) ? function(evt){
 		evt = evt || window.event;
-		if (dojo.isIE == 9 && evt.preventDefault) {
+		if (dojo.isIE >= 9 && evt.preventDefault) {
 		    evt.preventDefault();
 		    evt.stopPropagation();
 		} else {
