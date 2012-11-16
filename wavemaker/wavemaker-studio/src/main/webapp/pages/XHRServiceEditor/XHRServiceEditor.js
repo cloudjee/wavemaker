@@ -25,6 +25,8 @@ dojo.declare("XHRServiceEditor", wm.Page, {
             options.push(typeName);
         });
         this.inputsGrid.setColumnComboBoxOptions("type", options);
+        this.pathInputsGrid.setColumnComboBoxOptions("type", options);
+        this.headerInputsGrid.setColumnComboBoxOptions("type", options);
         this.serviceResponseType.setDataValue("New Type");
     },
     onShow: function() {
@@ -41,25 +43,34 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         this.serviceResponseType.setDataValue(inService.returnType);
 
         var inputs = inService.parameters;
-        var inputsArray = [];
+        var inputsQueryArray = [];
+        var inputsHeaderArray = [];
+        var inputsPathArray = [];
         wm.forEachProperty(inputs, function(item, name) {
-            inputsArray.push({
+            var tmp = {
                 name: name,
                 type: item.type,
-                transmitType: item.transmitType
-            });
+                transmitType: item.transmitType,
+                defaultValue: item.defaultValue,
+                noEscape: item.noEscape,
+                hidden: item.hidden
+            };
+            switch(item.transmitType) {
+                case "path":
+                    inputsPathArray.push(tmp);
+                    break;
+                case "header":
+                    inputsHeaderArray.push(tmp);
+                    break;
+                case "queryString":
+                    inputsQueryArray.push(tmp);
+                    break;
+            }
         });
-        this.inputsVar.setData(inputsArray);
+        this.inputsVar.setData(inputsQueryArray);
+        this.inputsHeaderVar.setData(inputsHeaderArray);
+        this.inputsPathVar.setData(inputsPathArray);
 
-        var headers = inService.headers
-        var headersArray = [];
-        wm.forEachProperty(headers, function(value, name) {
-            headersArray.push({
-                name: name,
-                dataValue: value
-            });
-        });
-        this.fixedHeadersVar.setData(headersArray);
         this.toolbar.show();
         this.updateUrl();
         this.isDirty = false;
@@ -117,24 +128,29 @@ dojo.declare("XHRServiceEditor", wm.Page, {
         c.useProxy = this.useProxyCheckbox.getChecked();
         c.type = this.serviceRequestType.getDataValue();
 
-        var headers = {};
-        var headersArray = this.fixedHeadersVar.getData();
-        for (var i = 0; headersArray && i < headersArray.length; i++) {
-            var item = headersArray[i];
-            headers[item.name] = item.dataValue;
-        }
-
-        c.headers = headers;
-
         var inputs = {};
-        var inputsArray = this.inputsVar.getData();
-        for (var i = 0; inputsArray && i < inputsArray.length; i++) {
-            var item = inputsArray[i];
-            inputs[item.name] = {
-                transmitType: item.transmitType,
-                type: item.type || "string"
-            };
-        }
+
+        /* Add paths to the input */
+        this.inputsPathVar.forEach(dojo.hitch(this, function(item) {
+            inputs[item.getValue("name")] = {transmitType: "path",
+                                             type: item.getValue("type"),
+                                             defaultValue: item.getValue("defaultValue")};
+        }));
+
+        this.inputsHeaderVar.forEach(dojo.hitch(this, function(item) {
+            inputs[item.getValue("name")] = {transmitType: "header",
+                                             type: item.getValue("type"),
+                                             defaultValue: item.getValue("defaultValue"),
+                                             hidden: item.getValue("hidden")};
+        }));
+        this.inputsVar.forEach(dojo.hitch(this, function(item) {
+            inputs[item.getValue("name")] = {transmitType: "queryString",
+                                             type: item.getValue("type"),
+                                             defaultValue: item.getValue("defaultValue"),
+                                             hidden: item.getValue("hidden"),
+                                             noEscape: item.getValue("noEscape")
+                                             };
+        }));
 
         c.parameters = inputs;
 
@@ -173,23 +189,35 @@ dojo.declare("XHRServiceEditor", wm.Page, {
     updateUrl: function() {
         var text = this.serviceUrl.getDataValue();
         var queryString = "";
+
+        this.inputsPathVar.forEach(function(item) {
+            var replaceStr = "${" + item.getValue("name") + "}";
+            var replaceStrIndex = text.indexOf(replaceStr);
+            text = text.substring(0, replaceStrIndex) + (item.getValue("defaultValue") || "somevalue") + text.substring(replaceStrIndex + replaceStr.length);
+        });
+
         this.inputsVar.forEach(function(item) {
-            if (item.getValue("transmitType") == "path") {
-                text = text.replace(/\/$/,"");
-                text += "/" + item.getValue("name") + "/somevalue";
-            } else if (item.getValue("transmitType") == "queryString") {
-                if (queryString) queryString += "&";
-                queryString += item.getValue("name") + "=somevalue";
-            }
+            if (queryString) queryString += "&";
+            queryString += item.getValue("name") + "=somevalue";
         });
         if (queryString) text += "?" + queryString;
         this.actualUrl.setDataValue(text);
+    },
+    addHeaderButtonClick: function() {
+        this.headerInputsGrid.addRow({  name: "",
+                                        type: "String",
+                                        hidden: false,
+                                        noEscape: false,
+                                        defaultValue: ""});
     },
     addInputRow: function() {
         this.inputsGrid.addRow({
             type: "String",
             transmitType: "queryString",
-            name: ""
+            name: "",
+            defaultValue: "",
+            hidden: false,
+            noEscape: false
         });
     },
     cancelClick: function() {
@@ -219,7 +247,48 @@ dojo.declare("XHRServiceEditor", wm.Page, {
             studio.updateServicesDirtyTabIndicators();
         }
     },
+    regeneratePathGrid: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (inSetByCode) return;
+        /* Step 1: Get the list of inputs based on the URL */
+        var value = this.serviceUrl.getDataValue();
+        var queryString = value.match(/\?.*$/);
+        if (queryString) {
+            queryString = queryString[0];
+            this.serviceUrl.setDataValue(value.substring(0,value.indexOf(queryString)));
+            queryString = queryString.substring(1);
+            var queryInputs = queryString.split(/\&/);
+            for (var i = 0; i < queryInputs.length; i++) {
+                var namevalue = queryInputs[i].match(/^(.*)\=(.*$)/);
+                if (namevalue && this.inputsVar.query({name: namevalue[1]}).getCount() == 0) {
+                    this.inputsVar.addItem({name: namevalue[1],
+                                            defaultValue: namevalue[2],
+                                            type: "String"});
+                }
+            }
+            app.toastInfo("Everything after the '?' has been removed from the URL and put into the 'Query String Inputs' tab");
+        }
+        var inputs = value.match(/\$\{.*?\}/g) || [];
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i] = inputs[i].substring(2,inputs[i].length-1);
+        }
 
+        /* Step 2: Remove from our inputPathVar any items that don't exist in the inputs array */
+        var remainingPathVar = this.inputsPathVar.filterItems(function(item) {
+            var name = item.getValue("name");
+            return dojo.indexOf(inputs, name) != -1;
+        });
+
+        /* Step 3: Add items from the inputs array into remainingPathVar unless the item is already there */
+        for (var i = 0; i < inputs.length; i++) {
+            var name = inputs[i];
+            if (remainingPathVar.query({name: name}).getCount() == 0) {
+                remainingPathVar.addItem({name: name, defaultValue: name, type: "String"});
+            }
+        }
+
+        /* Step 4: Update the dataSet and grid */
+        this.inputsPathVar.setData(remainingPathVar.getData());
+    },
     /* Accessed from studio */
     getDirty: function() {
         return this.isDirty;
