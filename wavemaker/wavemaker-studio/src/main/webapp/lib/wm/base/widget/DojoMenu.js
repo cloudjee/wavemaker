@@ -234,7 +234,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 		else if (!data.children)
 		{
-		    menuObj = new dijit.MenuItem({label: data.label, iconClass: data.iconClass});
+		    menuObj = new dijit.MenuItem({label: '<img src="../wavemaker/lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuItemIcon app_silkIconList_6" dojoattachpoint="iconNode">' + data.label, iconClass: data.iconClass});
 		}
 		else
 		{
@@ -325,14 +325,16 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 		if (isTop && !this._neverIsTop)
 		{
-		    menuObj = new dijit.PopupMenuBarItem({label: data.label, data: data});
+
+  	        var prepend = data.iconClass ? '<img src="../wavemaker/lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuBarItemIcon dijitMenuItemIcon ' + data.iconClass + '" dojoattachpoint="iconNode">' : "";
+		    menuObj = new dijit.PopupMenuBarItem({label: prepend + data.label, data: data});
 		}
 		else if (data.separator === true)
 		{
 			menuObj = new dijit.MenuSeparator();
 		}
-	        else if (data.isCheckbox === true)
-	        {
+	    else if (data.isCheckbox === true)
+	    {
 		    menuObj = new dijit.CheckedMenuItem(data);
 		    dojo.addClass(menuObj.iconNode, "dijitMenuItemIcon dijitCheckedMenuItemIcon"); // stupid hack to fix broken template handler in dojo 1.6
 		}

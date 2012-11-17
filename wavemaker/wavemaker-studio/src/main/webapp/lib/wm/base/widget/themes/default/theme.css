@@ -941,6 +941,11 @@ display:block;
    margin-right: 0px;
    padding-right: 20px;
 }
+.dijitMenuBarItemIcon {
+    margin-right: 5px;
+    float:left;
+}
+
 .accordionArrowNode {
     display: none;
     background-repeat: no-repeat;
