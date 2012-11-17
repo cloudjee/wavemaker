@@ -558,23 +558,35 @@ height: "29px", width: "420px",
 							}]
 					    }],
 					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
-							cssRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
-							    cssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
-							    cssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
-							    cssPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importCssLibrary"}],
-							    cssPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]},hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
-							    cssPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
-							    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-							    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
-							    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}]
-							}],
 						    cssTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, clientBorder: "1,0,0,0"}, {}, {
 								appCssLayer: ["wm.Layer", {caption: "Application CSS"}, {}, {
-									cssAppFilePathLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "webapproot/app.css", height: "18px", width: "150px", align: "right", border: 0}],
+        							appCssRibbon: ["wm.Panel", {_classes: {domNode: [""]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
+        							    appCssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
+        							    appCssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppCssClick"}],
+        							    appCssPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importAppCssLibrary"}],
+        							    appCssPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]},hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapAppCssClick"}],
+        							    appCssPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
+        							    appCssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+        							    appCssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
+        							    appCssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
+        							    cssAppFilePathLabel: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "webapproot/app.css", height: "18px", width: "100%", align: "right", border: 0}]
+        							}],
+								
+									
 								    appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
 								}],
-								pageCssLayer: ["wm.Layer", {caption: "Page CSS"}, {}, {							
-									cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "", height: "18px", width: "150px", align: "right", border: 0}],
+								pageCssLayer: ["wm.Layer", {caption: "Page CSS"}, {}, {
+        							cssRibbon: ["wm.Panel", {_classes: {domNode: [""]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
+        							    cssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
+        							    cssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
+        							    cssPageImportBtn: ["wm.studio.ToolbarButton", {hint: "Import CSS Resource", imageIndex: 25}, {onclick: "importCssLibrary"}],
+        							    cssPageWordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]},hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
+        							    cssPageHelpBtn: ["wm.studio.ToolbarButton", {hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
+        							    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+        							    cssHelpLink: ["wm.Label", {_classes: {domNode:["StudioLabel"]},width: "80px", caption: "Styling Wiki"}, {}],
+        							    cssEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},width: "100px", align: "center", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", showing: false, hint: "<div class='StudioWarningIcon'></div>Zooming your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
+									cssEditAreaFullPath: ["wm.Label", {_classes: {domNode:["StudioLabel"]},caption: "", height: "18px", width: "100%", align: "right", border: 0}],        							    
+        							}],
 									cssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
 							    }]
 							}]

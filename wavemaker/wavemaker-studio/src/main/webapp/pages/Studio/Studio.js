@@ -195,7 +195,10 @@ dojo.declare("Studio", wm.Page, {
         this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {
             studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
         }));
-
+        this.appCssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {
+            studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
+        }));
+        
         this.helpDialog.containerWidget.c$[0].setPadding("0");
         this.helpDialog.containerWidget.c$[0].setBorder("10");
         this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");

@@ -68,6 +68,8 @@ Studio.extend({
     },
     toggleWrapCssClick: function() {
 	this.cssEditArea.toggleWordWrap();
+    },
+    toggleWrapAppCssClick: function() {
 	this.appCssEditArea.toggleWordWrap();
     },
     toggleWrapMarkupClick: function() {
@@ -174,8 +176,11 @@ Studio.extend({
     },
     findCssClick: function() {
 	studio.cssEditArea.showSearch();
+    },
+    findAppCssClick: function() {
 	studio.appCssEditArea.showSearch();
     },
+    
     findMarkupClick: function() {
 	studio.markupEditArea.showSearch();
     },
@@ -306,6 +311,9 @@ Studio.extend({
     },
     importCssLibrary: function() {
 	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.cssEditArea, "css");
+    },
+    importAppCssLibrary: function() {
+	this.beginBind(this.getDictionaryItem("TITLE_IMPORT_JAVASCRIPT"), studio.appCssEditArea, "css");
     },
 
     editDictionary: function() {
