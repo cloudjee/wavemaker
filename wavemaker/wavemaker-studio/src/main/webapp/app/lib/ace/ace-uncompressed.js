@@ -7314,7 +7314,7 @@ canon.addCommand({
 
 canon.addCommand({
     name: "find",
-    bindKey: bindKey("Ctrl-F", "Command-F|Ctrl-F"),
+    bindKey: bindKey("Ctrl-F", "Command-F|Ctrl-F|Command-R|Ctrl-R"),
     exec: function(env, args, request) {
 	/* WaveMaker code for showing a nicer search dialog */
 	if (env.editor.owner) {
@@ -7330,7 +7330,7 @@ canon.addCommand({
 
     }
 });
-
+/* WaveMaker removed: use the WaveMaker find and replace dialog instead
 canon.addCommand({
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F|Ctrl-R"),
@@ -7344,6 +7344,7 @@ canon.addCommand({
         env.editor.replace(replacement, {needle: needle});
     }
 });
+*/
 /* WaveMaker removed: seems like something your more likely to do by accident; users should use find/replace dialog
 canon.addCommand({
     name: "replaceall",
