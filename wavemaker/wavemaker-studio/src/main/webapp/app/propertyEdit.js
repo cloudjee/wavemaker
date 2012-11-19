@@ -371,6 +371,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     insepected: null,
     allowNone: true,
     emptyLabel: "",
+    allowRelatedField: false,
     updateOptions: function() {
         this.inherited(arguments);
         var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
@@ -388,7 +389,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
                 if (typeDef) {
                     options = wm.typeManager.getSimplePropNames(typeDef.fields);
                 }
-            }
+            }                            
         }
         if (!options) {
             if (ds) {
@@ -397,6 +398,19 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
                 options = [];
             }
         }
+        if (this.allowRelatedField) {
+            if (ds instanceof wm.LiveVariable) {
+                var liveViewFields = ds.liveView.related;
+                dojo.forEach(liveViewFields, function(field) {
+                    var moreoptions = wm.typeManager.getSimplePropNames(wm.typeManager.getType(ds._dataSchema[field].type).fields);
+                    dojo.forEach(moreoptions, function(o) {options.push(field + "." + o);});
+                });
+            } else {
+                var moreoptions = wm.typeManager.getStructuredPropNames(ds._dataSchema);
+                dojo.forEach(moreoptions, function(o) {options.push(o);});
+            }
+        }
+        
         if (this.emptyLabel) {
             this.allowNone = false;
             options.unshift(this.emptyLabel);
@@ -404,6 +418,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
         if (!wm.Array.equals(this.options,options)) {
             this.setOptions(options);
         }
+        
     },
     setEditorValue: function(inValue) {
         if (!inValue && this.emptyLabel) {

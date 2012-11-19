@@ -311,6 +311,7 @@ public class DataServiceSpringConfiguration {
                 auxBean.setScope(bean.getScope());
                 this.beans.addBean(auxBean);
             }
+            this.isDirty = true;
         }
     }
 
@@ -348,6 +349,7 @@ public class DataServiceSpringConfiguration {
         if (type == DeploymentType.CLOUD_FOUNDRY) {
             String id = ds.getId();
             this.beans.removeBeanById(id);
+            this.isDirty = true;
         } else if (!ds.getId().equals(dbName + "DataSource")) {
             Alias dsAlias = new Alias();
             dsAlias.setName(ds.getId());

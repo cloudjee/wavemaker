@@ -23,8 +23,8 @@ wm.Object.extendSchema(wm.ImageList, {
 
     width: {group: "widgetName", subgroup: "layout", type: "number", order: 20},
     height: {group: "widgetName", subgroup: "layout", type: "number", order: 21},
-   // owner:{ignore:0}
-    
+    owner:{ignore:0}
+
 });
 
 wm.ImageList.extend({

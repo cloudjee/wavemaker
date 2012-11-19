@@ -158,7 +158,7 @@ wm.typeManager = {
 			return !wm.typeManager.isStructuredType((p || 0).type);
 		});
 	},
-
+    
 
     getFieldList: function(inTypeSchema, inPath, maxDepth) {
         if (typeof inTypeSchema == "string") inTypeSchema = this.getType(inTypeSchema).fields;
