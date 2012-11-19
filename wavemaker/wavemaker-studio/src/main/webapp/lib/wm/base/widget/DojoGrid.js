@@ -1359,7 +1359,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 }
             }
         }
-        if (useMobileColumn && (isAllPhoneCol || designMode && !this.owner._loadingPage && wm.List.prototype.desktopWidthExcedesBounds.call(this))) {
+        if (useMobileColumn && (isAllPhoneCol || studio.currentDeviceType == "phone" || designMode && !this.owner._loadingPage && wm.List.prototype.desktopWidthExcedesBounds.call(this))) {
             ;
         } else {
             useMobileColumn = false;
@@ -2056,7 +2056,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         return csvData.join('');
     },
-    getExpressionValue: function(exp, idx, dataObj, isSimpleDataObj){
+    getExpressionValue: function(exp, idx, dataObj, isSimpleDataObj){       
         var expValue = '..';
         if (!dataObj)
             return expValue;
@@ -2066,6 +2066,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             json = this.itemToJSONObject(this.store, dataObj);
         if (!json)
             return expValue;
+            
+        if (this._isDesignLoaded && studio.currentDeviceType != "desktop") {
+            exp = exp.replace(/\$\{wm\.rowId\}/g, String(idx));
+            exp = exp.replace(/\$\{this\}/g, dojo.toJson(json));
+            exp = exp.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
+        }
+        
         try
         {
             expValue = wm.expression.getValue(exp, json, this.owner);

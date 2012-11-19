@@ -1588,7 +1588,8 @@ dojo.declare("wm.List", wm.VirtualList, {
         }
     },
     // item rendering override.
-    getCellContent: function(inRow, inCol, inHeader) {
+    getCellContent: function(inRow, inCol, inHeader, optional) {
+        /* dataFields is a string with "." separated name parts */
         var dataFields = this._dataFields && this._dataFields[inCol];
         var cellData;
         var i = this._formatIndex != null ? this._formatIndex : this.getCount();
@@ -1718,76 +1719,87 @@ wm.List.extend({
         this._render();
     },
     formatCell: function(inField, inValue, inItem, inRowId, inColumnIndex) {
-        if (!this._columnsHash) {
-            return inValue;
+        var col;
+        if (!this._columnsHash || !this._columnsHash[inField]) {
+            if (this.columns) {
+                dojo.forEach(this.columns, function(c) {if (c.field == inField || c.id == inField) col = c;});
+            }
+            if (!col) return inValue;
         } else {
-            var col = this._columnsHash[inField];
-            var value = "";
-            if (col.expression) {
-                var expr = col.expression;
-                try {
-                    if (col.field == "PHONE COLUMN") {
-                        expr = expr.replace(/\$\{wm\.rowId\}/g, inRowId);
-                    }
-                    value = wm.expression.getValue(expr, inItem, this.owner);
-                } catch (e) {}
-            } else {
-                value = inValue;
-            }
-
-            if (col.formatFunc) {
-                switch (col.formatFunc) {
-                case 'wm_date_formatter':
-                case 'Date (WaveMaker)':
-                    value = this.dateFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_localdate_formatter':
-                case 'Local Date (WaveMaker)':
-                    value = this.localDateFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_time_formatter':
-                case 'Time (WaveMaker)':
-                    value = this.timeFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_number_formatter':
-                case 'Number (WaveMaker)':
-                    value = this.numberFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_array_formatter':
-                    value = this.arrayFormatter(col.field || col.id, col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_currency_formatter':
-                case 'Currency (WaveMaker)':
-                    value = this.currencyFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_image_formatter':
-                case 'Image (WaveMaker)':
-                    value = this.imageFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_link_formatter':
-                case 'Link (WaveMaker)':
-                    value = this.linkFormatter(col.formatProps || {}, null, null, null, value);
-                    break;
-                case 'wm_button_formatter':
-                    value = this.buttonFormatter(inField, col.formatProps || {}, null, null, null, value, inRowId);
-                    break;
-                default:
-                    if (!this.isDesignLoaded()) {
-                        if (this.owner[col.formatFunc]) {
-                            value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {
-                                customStyles: [],
-                                customClasses: []
-                            }, inItem);
-                        }
-                    } else {
-                        value = "<i>runtime only...</i>";
-                    }
-                    break;
-                }
-            }
-
-            return value;
+            col = this._columnsHash[inField];
         }
+        var value = "";
+        if (col.expression) {
+            var expr = col.expression;
+            try {
+                if (col.field == "PHONE COLUMN") {
+                    expr = expr.replace(/\$\{wm\.rowId\}/g, inRowId);
+                }
+                if (expr.indexOf("${this}") != -1) {
+                    expr = expr.replace(/\$\{this\}/g, dojo.toJson(inItem));
+                }
+                if (this._isDesignLoaded) {
+                    expr = expr.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
+                }
+                value = wm.expression.getValue(expr, inItem, this.owner);
+            } catch (e) {}
+        } else {
+            value = inValue;
+        }
+
+        if (col.formatFunc) {
+            switch (col.formatFunc) {
+            case 'wm_date_formatter':
+            case 'Date (WaveMaker)':
+                value = this.dateFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_localdate_formatter':
+            case 'Local Date (WaveMaker)':
+                value = this.localDateFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_time_formatter':
+            case 'Time (WaveMaker)':
+                value = this.timeFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_number_formatter':
+            case 'Number (WaveMaker)':
+                value = this.numberFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_array_formatter':
+                value = this.arrayFormatter(col.field || col.id, col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_currency_formatter':
+            case 'Currency (WaveMaker)':
+                value = this.currencyFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_image_formatter':
+            case 'Image (WaveMaker)':
+                value = this.imageFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_link_formatter':
+            case 'Link (WaveMaker)':
+                value = this.linkFormatter(col.formatProps || {}, null, null, null, value);
+                break;
+            case 'wm_button_formatter':
+                value = this.buttonFormatter(inField, col.formatProps || {}, null, null, null, value, inRowId);
+                break;
+            default:
+                if (!this.isDesignLoaded()) {
+                    if (this.owner[col.formatFunc]) {
+                        value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {
+                            customStyles: [],
+                            customClasses: []
+                        }, inItem);
+                    }
+                } else {
+                    value = "<i>runtime only...</i>";
+                }
+                break;
+            }
+        }
+
+        return value;
+    
     },
     dateFormatter: function(formatterProps, ignore1, ignore2, ignore3, inValue) {
         if (!inValue) {

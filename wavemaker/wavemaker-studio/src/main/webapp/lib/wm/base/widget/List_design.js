@@ -311,52 +311,19 @@ wm.List.extend({
         dojo.forEach(inColumns, function(column, i) {
             if (column.mobileColumn || !column.show) return;
             var rowText = "";
+            
             var value;
-            if (column.expression) {
-                // TODO: Handling this can't be done inline because there could be name space conflicts or other types of errors to randomly combine a bunch of display
-                // expressions. Making matters worse, there is no clear return statement, so can't just stick these in anonymous functions.
-                // only option is something like ${wm.runtimeId}.getCellContent(null, i, false) and then make it work in DojoGrid at designTime.
+            if (column.expression || column.formatFunc) {
+                value = "${wm.runtimeId}.formatCell(\"" + column.field + "\", ${" + column.field + "}, ${this}, ${wm.rowId})";               
             } else {
                 value = "\${" + column.field + "}";
-                var formatProps = column.formatProps ? dojo.toJson(column.formatProps) : "{}";
-                if (column.formatFunc) {
-                    switch (column.formatFunc) {
-                    case "wm_date_formatter":
-                    case 'Date (WaveMaker)':
-                    case 'wm_localdate_formatter':
-                    case 'Local Date (WaveMaker)':
-                        value = "wm.List.prototype.dateFormatter(" + formatProps + ", null,null,null," + value + ")";
-                        break;
-                    case 'wm_number_formatter':
-                    case 'Number (WaveMaker)':
-                        value = "wm.List.prototype.numberFormatter(" + formatProps + ", null,null,null," + value + ")";
-                        break;
-                    case 'wm_currency_formatter':
-                    case 'Currency (WaveMaker)':
-                        value = "wm.List.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value + ")";
-                        break;
-                    case 'wm_image_formatter':
-                    case 'Image (WaveMaker)':
-                        value = "wm.List.prototype.imageFormatter(" + formatProps + ", null,null,null," + value + ")";
-                        break;
-                    case 'wm_link_formatter':
-                    case 'Link (WaveMaker)':
-                        value = "wm.List.prototype.linkFormatter(" + formatProps + ", null,null,null," + value + ")";
-                        break;
-                    case "wm_array_formatter":
-                        value = "wm.List.prototype.arrayFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ")";
-                        break;
-                    case 'wm_button_formatter':
-                        value = "wm.List.prototype.buttonFormatter(\"" + column.field + "\"," + formatProps + ", null,null,null," + value + ", ${wm.rowId})";
-                        break;
-                    }
-                }
             }
+            
             if (value) {
                 if (!mobileExpr) {
-                    mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
+                    mobileExpr = "\"<div class='MobileRowTitle'>\" +\n\"" + wm.capitalize(column.title) + ": \" + " + value + " +\n\"</div>\"\n\n";
                 } else {
-                    mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
+                    mobileExpr += "+ \"<div class='MobileRow'>\" +\n\"" + wm.capitalize(column.title) + ": \" + " + value + "\n + \"</div>\"\n\n";
                 }
             }
 

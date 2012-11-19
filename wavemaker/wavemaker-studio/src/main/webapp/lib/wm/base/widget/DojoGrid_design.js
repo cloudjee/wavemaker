@@ -121,6 +121,9 @@ wm.DojoGrid.extend({
     regenerateMobileColumn: function(inColumns) {
         return wm.List.prototype.regenerateMobileColumn(inColumns);
     },
+    formatCell: function(inField, inValue, inItem, inRowId, inColumnIndex) {
+        return wm.List.prototype.formatCell.call(this, inField,inValue,inItem,inRowId,inColumnIndex);
+    },
     updateNow: function() {
         /* Running in CloudFoundry, set LiveLayoutReady to 0 if its -1 (CF-only flag that its ready but out of date) */
         if (studio.isLiveLayoutReady() == -1) studio.setLiveLayoutReady(0);
