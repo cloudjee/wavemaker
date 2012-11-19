@@ -28,7 +28,7 @@ if (location.search.indexOf("dojo.locale=") != -1) {
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.5.1.Release';
+wm.version = '6.6.0.M0-BUILD-SNAPSHOT';
 
 wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window || navigator.msMaxTouchPoints > 0;
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
