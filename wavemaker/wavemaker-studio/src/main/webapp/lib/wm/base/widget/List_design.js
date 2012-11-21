@@ -66,8 +66,8 @@ wm.Object.extendSchema(wm.List, {
     columnWidths:      {group: "widgetName", subgroup: "layout", order: 51, advanced:1},
 
     renderVisibleRowsOnly: {group: "widgetName", subgroup: "behavior", type: "boolean", advanced: 1},
-    styleAsGrid:        {group: "widgetName", subgroup: "layout", type: "boolean"},
-    rightNavArrow:      {group: "widgetName", subgroup: "layout", type: "boolean"},
+    styleAsGrid:        {group: "widgetName", subgroup: "layout", type: "boolean", doNotPublish:1},
+    rightNavArrow:      {group: "widgetName", subgroup: "layout", type: "boolean", doNotPublish:1},
     isNavigationMenu:   {group: "widgetName", subgroup: "behavior", type: "boolean"},
     autoSizeHeight:     {group: "widgetName", subgroup: "layout", type: "boolean", advanced: 1},
 
