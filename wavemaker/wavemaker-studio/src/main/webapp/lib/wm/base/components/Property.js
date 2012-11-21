@@ -20,11 +20,10 @@ dojo.declare("wm.Property", wm.Component, {
 	bindSource: true,
 	isEvent: false,
 	readonly: false,    
-        type: "",
+    type: "",
 	init: function() {
 		this.inherited(arguments);
 	    if (this._isDesignLoaded && this.owner === studio.page) {
-		this.type = '';
 		this.designTimeInit();
 	    }
 	}
