@@ -49,7 +49,7 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
 	}
 	p = "palette" + p;*/
     if (inTab == bundlePackage.Non_Visual_Components || inTab == bundlePackage.Services) {
-	studio.addComponentMenuItem(inTab, n, d, i, c, inProps);
+	studio.addComponentMenuItem(inTab, n, d, i, c, m, inProps);
     } else {
 	studio["palette"].addItem(inTab, n, d, i, c, m, inProps, isBeta);
     }
