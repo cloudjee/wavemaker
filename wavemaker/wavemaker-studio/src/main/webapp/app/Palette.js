@@ -178,7 +178,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 				//comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
 				this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
 			}
-			if (!wm.fire(comp, "afterPaletteDrop")) {
+			if (!comp.afterPaletteDrop(info.obj.module)) {
 			    // FIXME: should not refresh entire tree when dropping from palette.
 			    studio.refreshDesignTrees();
 			    //studio.inspector.resetInspector();
@@ -235,7 +235,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 					       klass: inClass},
 					image: inImage,
 					klass: inClass,
-					"package": inModule,
+					module: inModule,
 					props: inProps
 				});
 		    this.createContextMenu(n);
