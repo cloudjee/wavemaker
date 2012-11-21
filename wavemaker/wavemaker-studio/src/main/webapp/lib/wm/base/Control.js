@@ -557,10 +557,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
             this.addTouchListener(this._touchNode || this.domNode);
         }
 
-        if (!this.$.binding && this.isDesignLoaded()) new wm.Binding({
-            name: "binding",
-            owner: this
-        });
+        if (!this.$.binding && this.isDesignLoaded()) {
+            new wm.Binding({
+                name: "binding",
+                owner: this
+            });
+        }
         if (this.hint) {
             this.setHint(this.hint);
         }
@@ -1610,7 +1612,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    */
 	    if (newParent && oldParent)
 		dojo.publish("wmwidget-parentChange", [oldParent, newParent, this]);
-	    if ((this._isDesignLoaded === undefined ? this.isDesignLoaded() : this._isDesignLoaded) && !this.owner._loadingPage && inParent instanceof wm.Container) {
+	    if ((this._isDesignLoaded === undefined ? this.isDesignLoaded() : this._isDesignLoaded) && this.owner == studio.page && !this.owner._loadingPage && inParent instanceof wm.Container) {
 		wm.job(inParent.getRuntimeId() + ".designResize", 50, function() {
 		    inParent.designResizeForNewChild();
 		});
