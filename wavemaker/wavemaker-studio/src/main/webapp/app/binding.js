@@ -42,12 +42,19 @@ wm.hasBindableWidgets = function(inWidget, inExcludeWidget) {
 
 };
 
-addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageContainers) {
+addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageContainers, inExcludeClasses) {
     var isRoot = !inParent.page || inParent.page == studio.page;
     var owners = (isRoot) ? [studio.application, inParent.page] : [inParent.page];
     var comps;
     if (!includePageContainers) {
         comps = wm.listComponents(owners, inClass, inStrict);
+        if (inExcludeClasses && inExcludeClasses.length) {
+            var filteredComps = [];
+            dojo.forEach(comps, function(c) {
+                if (!wm.isInstanceType(c, inExcludeClasses)) filteredComps.push(c);
+            });
+            comps = filteredComps;
+        }
     } else {
         var pages = wm.listAllPageContainers(owners);
         comps = wm.listComponents(pages, inClass, false);
@@ -986,7 +993,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         // servicecalls
         addComponentTypeBinderNodes(inParent, wm.ServiceVariable);
         // variables
-        addComponentTypeBinderNodes(inParent, wm.Variable, true);
+        addComponentTypeBinderNodes(inParent, wm.Variable, false,false,[wm.ServiceVariable]);
         // widgets
 
         // pagecontainers
@@ -1002,7 +1009,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 
         new wm.ComponentTypeSourceTreeNode(inParent, {page: inParent.page,
                               content: this.getDictionaryItem("NON_VISUAL"),
-                              className: "wm.Variable",
+                              /* Used to only show wm.Variable classes/subclasses, but we need to better support nonvisual custom components provided by users */
+                              className: "wm.Component",
+                              excludeClassNames: ["wm.Control","wm.ImageList", "wm.CompositePublisher", "wm.TemplatePublisher", "wm.TypeDefinition"],
                               canSelect: false,
                               image: "images/wm/variable_16.png"});
         // widgets
@@ -1718,8 +1727,7 @@ dojo.declare("wm.ComponentTypeSourceTreeNode", wm.TreeNode, {
     },
     initNodeChildren: function() {
         if (this.className) {
-            addComponentTypeBinderNodes(this, dojo.getObject(this.className), this.strict);
-
+            addComponentTypeBinderNodes(this, dojo.getObject(this.className), this.strict, false, this.excludeClassNames && this.excludeClassNames.length ? dojo.map(this.excludeClassNames, function(inClass) {return dojo.getObject(inClass);}) : null);
         }
     },
     expandBySource: function(inObjectId, inProp) {
