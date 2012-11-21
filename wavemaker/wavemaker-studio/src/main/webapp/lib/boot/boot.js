@@ -109,7 +109,7 @@ wm.loadScript = function(inUrl, inPreferHeadLoad) {
 	// FIXME: FF 3 appears to load script tags appended to head asynchronously
 	// and potentially after dojo.addOnLoad is fired. Therefore not using this method for FF3.
 	// NOTE: argh! FF3 requires head mode for files that rely on script tag inspection (EditArea)
-	if (wm.isMoz && (wm.isFF < 3 || inPreferHeadLoad))
+	if (wm.isMoz && wm.isFF < 3 || inPreferHeadLoad)
 		wm.headAppend(wm.createElement("script", { type: "text/javascript", src: inUrl }));
 	else
 		wm.writeJsTag(inUrl);
