@@ -36,7 +36,7 @@ Studio.extend({
         menu.children.push(this._partnerServicesStructure);
     },
     // called by packageLoader.js for anything that is not an instanceof wm.Control
-    addComponentMenuItem: function(inTab, inName, inDescription, inImage, inClass, inProps) {
+    addComponentMenuItem: function(inTab, inName, inDescription, inImage, inClass, inModule, inProps) {
 
         try {
 
@@ -52,6 +52,7 @@ Studio.extend({
                 label: inName,
                 info: {
                     type: inClass,
+                    module: inModule,
                     props: inProps
                 },
                 // for callback to selectComponentMenuItem, not for the menu itself
@@ -148,8 +149,8 @@ Studio.extend({
             if (!(comp instanceof wm.ServerComponent)) {
                 // create an undo task
                 new wm.AddTask(comp);
-            }
-            if (!wm.fire(comp, "afterPaletteDrop")) {
+            }            
+            if (!comp._afterPaletteDrop(info.module)) {
                 // FIXME: should not refresh entire tree when dropping from palette.
                 studio.refreshDesignTrees();
                 studio.select(comp);

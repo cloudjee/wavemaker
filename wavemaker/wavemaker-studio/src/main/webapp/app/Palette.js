@@ -178,7 +178,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 				//comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
 				this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
 			}
-			if (!comp.afterPaletteDrop(info.obj.module)) {
+			if (!comp._afterPaletteDrop(info.obj.module)) {
 			    // FIXME: should not refresh entire tree when dropping from palette.
 			    studio.refreshDesignTrees();
 			    //studio.inspector.resetInspector();
