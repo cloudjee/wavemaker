@@ -194,10 +194,13 @@ wm.Component.extend({
     _isWriteableComponent: function(inName, inProperties) {
         var c = this.components[inName];
 
+
         /* If it has no name, then its not a user generated component, its an internal component and in any case is unsafe to write */
         if (!inName || inName.match(/^_/)) {
         return false;
         }
+
+        if (c.__isWriteableComponent) return c.__isWriteableComponent();
 
         /* If its a widget that is owned by something, don't write it; widgets are written as part of writing widgets NOT writing this.components.
          * Exceptions to this are Dialogs and PopupMenus which are outside the widget heirarchy
@@ -579,6 +582,11 @@ wm.Component.extend({
            v = inValue || this.generateEventName(n);
        this.setEvent(n, v, false);
        eventEdit(this, n, v, c == studio.application);
+   },
+   afterPaletteDrop: function() {
+   },
+   _afterPaletteDrop: function(inPackageName) {
+        this.afterPaletteDrop();
    },
 
    createDesignContextMenu: function(children) {},
