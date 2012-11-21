@@ -1551,7 +1551,7 @@ dojo.declare("Studio", wm.Page, {
             if (s && s instanceof wm.Container) {
                 s.resizeToFit();
             }
-        });
+        },this);
     },
     toggleVerticalAlignClick: function() {
         var changed = false;
@@ -1562,7 +1562,7 @@ dojo.declare("Studio", wm.Page, {
                 this.toggleControlPosition(s, "verticalAlign", ["top", "middle", "bottom"]);
                 changed = true;
             }
-        });
+        },this);
         if (changed) this.inspector.reinspect();
     },
     toggleHorizontalAlignClick: function() {
@@ -1573,7 +1573,7 @@ dojo.declare("Studio", wm.Page, {
                 this.toggleControlPosition(s, "horizontalAlign", ["left", "center", "right"]);
                 changed = true;
             }
-        });
+        },this);
         if (changed) this.inspector.reinspect();
 
     },
@@ -1587,7 +1587,7 @@ dojo.declare("Studio", wm.Page, {
                 s.setLayoutKind(s.layoutKind == v ? h : v);
                 changed = true;
             }
-        });
+        },this);
         if (changed) this.inspector.reinspect();
 
     },
