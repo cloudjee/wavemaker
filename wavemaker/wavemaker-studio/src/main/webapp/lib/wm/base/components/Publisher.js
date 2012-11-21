@@ -32,6 +32,9 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 		this.publishName = this.publishName || p.projectName + p.pageName;
 	    }
 	},
+    __isWriteableComponent: function(inName, inProperties) {
+        return !studio._isPublishComponent;
+    },
 	deploy: function() {
 		wm.Property.deploy = true;
 		try {
@@ -83,14 +86,18 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 
 
 dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
+    parentClass: "wm.Composite",
 	undeploy: function() {
 		studio.undeployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, this.removeSource);
 	},
 	_deploy: function(services) {
 		wm.Property.deploy = true;
 		try {
-		    var json = this.getComponentJson();
-		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services, this._wmPictureSource, this._wmHtmlSource);
+            // save the composite and publisher's current state
+   	        studio.project.savePage(dojo.hitch(this, function() {
+    		    var json = this.getComponentJson();
+    		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services, this._wmPictureSource, this._wmHtmlSource);
+    		}));   
 		} finally {
 			wm.Property.deploy = false;
 		}
@@ -146,16 +153,20 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			}
 			var data = [];
 			wm.services.forEach(function(s) {
-				if (!s.isClientService) {
+				if (!s.isClientService && s.name != "resourceFileService") {
 					data.push(s.name);
 				}
 			});
-			d.checkboxSet.setOptions(data);
-			d.okButton.onclick = dojo.hitch(this, function() {
-				this._deploy(d.checkboxSet.getDataValue());
-				d.hide();
-			});
-			d.show();
+			if (data.length) {
+    			d.checkboxSet.setOptions(data);
+    			d.okButton.onclick = dojo.hitch(this, function() {
+    				this._deploy(d.checkboxSet.getDataValue());
+    				d.hide();
+    			});
+    			d.show();
+    		} else {
+    		    this._deploy([]);
+    		}
 	},
     getComponentJson: function() {
 	if (!this.publishName || !studio.page)
@@ -164,10 +175,19 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	var klass = this.namespace ? this.namespace + '.' + this.publishName : this.publishName;
 	this.adjustAllPictures();
 	this.adjustAllHtmlWidgets();	
+	studio._isPublishComponent = true;
 	var pageComponents = studio.page.writeComponents(sourcer_tab);
+
+    // add in a few app level components such as TypeDefinitions that we will likely need 
+    wm.forEachProperty(studio.application.$, function(inValue, inName) {
+        if (inValue instanceof wm.TypeDefinition) {
+            pageComponents.push(inValue.write("\t"));
+        }
+    });
 		
 	var root = studio.page.root;
 	var rootWidgets = root.writeComponents(sourcer_tab);
+	studio._isPublishComponent = false;
 	this.restoreAllPictures();
 	this.restoreAllHtmlWidgets();
 	
@@ -180,7 +200,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	//
 	var resource = 'common.packages.' + klass + "." + klass.replace(/^.*\./,"");
 	var group = this.group || "Published";
-	var image = "images/wm/widget.png";
+	var image = group == "Services" || group == "Non-Visual Components" ? "Studio_paletteImageList_43" : "images/wm/widget.png";
 	var displayName = this.displayName || this.publishName;
 	//
 	// FIXME: hackalicious
@@ -193,15 +213,35 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 	/* Enables the CSS designed for widgets in this page to affect the the widgets in the composite as well */
 	js.unshift("  _appendCssClassName: '" + studio.project.pageName + "',");
+	
+	if (this.parentClass && dojo.getObject(this.parentClass) && dojo.getObject(this.parentClass).prototype instanceof wm.Control) {
+		var rootProps = studio.page.root.writeProps();
+    	rootProps.width = this.width;
+    	rootProps.height = this.height;
+    	wm.forEachProperty(rootProps, function(inValue, inName) {
+            if (typeof inValue == "string") {
+                    inValue = "\"" + inValue + "\"";
+            }
+     	    js.unshift("  " + inName + ": " + inValue + ",");
+    	});
+    }
+/*
 	// stream box properties specially
 	var rootProps = ["layoutKind", "verticalAlign", "horizontalAlign"];
 	dojo.forEach(rootProps, function(p) {
 	    if (root[p])
 		js.unshift("  " + p + ": \"" + root[p] + "\",");
 	});
-	//
-	js.unshift('dojo.declare("' + klass + '", wm.Composite, {');
+*/
+    if (this.parentClass == "wm.Composite") {
+    	js.unshift('dojo.declare("' + klass + '", wm.Composite, {');
+    } else {
+    	js.unshift('dojo.declare("' + klass + '", [' + this.parentClass + ',wm.CompositeMixin], {');
+    }
 	js = js.join("\n");
+	
+
+	
 	//
 	var reg = 'wm.registerPackage(["' +
 	    group + '", ' +
@@ -210,7 +250,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    '"' + resource + '", ' +
 	    '"' + image + '", ' +
 	    '"' + this.description + '", ' +
-	    '{width: "' + this.width + '", height: "' + this.height + '"},' +
+	    '{},' +
 	    "false" +
 	    ']);';
 	//

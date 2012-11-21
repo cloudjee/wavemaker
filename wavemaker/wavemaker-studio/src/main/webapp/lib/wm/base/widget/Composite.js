@@ -51,7 +51,7 @@ wm.publishProperty = function(ctor, name, id, schema) {
         var capP = name.slice(0, 1).toUpperCase() + name.slice(1);
         pt["get" + capP] = function(inValue) {
             var t = this.getValue(target);
-            if (property == "dataSet" && t instanceof wm.Variable) {
+            if ((!property || property == "dataSet") && t instanceof wm.Variable) {
                  return t;
             } else {
                  return this[name] = this.getValue(target).getValue(property);
@@ -63,7 +63,12 @@ wm.publishProperty = function(ctor, name, id, schema) {
             if (t) {
                 t["_inSet" + capP] = true;
                 try {
-                    this.getValue(target).setValue(property, this[name] = inValue);
+                    if (!property && t instanceof wm.Variable) {
+                        this[name] = inValue;
+                        t.setData(inValue);
+                    } else {
+                        this.getValue(target).setValue(property, this[name] = inValue);
+                    }
                 } catch(e) {}
                 delete t["_inSet" + capP];
             }
@@ -78,8 +83,15 @@ wm.publishProperty = function(ctor, name, id, schema) {
                 if (!t["_inSet" + capP]) {
                     t["_inSet" + capP] = true;
                     try {
-                        t._setProp(property, this[name] = inValue);
-                        this.valueChanged(name, inValue);
+                        if (!property && t instanceof wm.Variable) {
+                            this[name] = inValue;
+                            var id = t.owner.getRuntimeId();
+                            dojo.publish(id + "." + name + "-ownerChanged", [this]);
+                        } else {
+                            t._setProp(property, this[name] = inValue);
+                            this.valueChanged(name, inValue);
+                        }
+
                     } catch(e) {}
                     delete t["_inSet" + capP];
                 }
@@ -127,9 +139,6 @@ wm.publish = function(inCtor, inProperties) {
 dojo.declare("wm.CompositeMixin", null, {
     _regenerateOnDeviceChange: 1,
     _hasCustomPath: true,
-
-        scrim: true, // prevent the user from interacting with the contents of the composite in designer
-    lock: true, // prevent user from adding additional controls
     init: function() {
         //this.published = {};
         // FIXME: does createComposite need to come before inherited?
@@ -141,6 +150,14 @@ dojo.declare("wm.CompositeMixin", null, {
     },
     postInit: function() {
         this.inherited(arguments);
+        if (this instanceof wm.Control == false) {
+            if (!this.$.binding && this.isDesignLoaded()) {
+                new wm.Binding({
+                    name: "binding",
+                    owner: this
+                });
+            }
+        }
         // initialize published properties
         for (var p in this.published) {
             // id qualifier to localize ids
@@ -170,9 +187,10 @@ dojo.declare("wm.CompositeMixin", null, {
             });
             this.cssLoader.setCss(cssText);
         }
-
-        this.start(); // this is created from a wm.Page where startup code goes in start method
-        this.onStart();
+        wm.onidle(this, function() {
+            this.start(); // this is created from a wm.Page where startup code goes in start method
+            this.onStart();
+        });
     },
     start: function() {}, // meant to be overridden by the end user's composite
     onStart: function() {}, // meant to be overriden as standard event handler
@@ -322,9 +340,8 @@ wm.CompositeMixin.extend({
             s.push(c);
         return s;
     },
-    afterPaletteDrop: function() {
-    	this.inherited(arguments);
-		var path = studio.palette.dragger.info.obj.package.split(/\./);
+    _afterPaletteDrop: function(inPackagePath) {
+		var path = inPackagePath.split(/\./);
 		if (path[0] == "common" && path[1] == "packages") {
 			path.shift();
 			path.shift();
@@ -332,7 +349,10 @@ wm.CompositeMixin.extend({
 		if (path.length > 1 && path[path.length-1] === path[path.length-2]) {
 			path.pop();
 		}
-    	studio.deploymentService.requestAsync("copyComponentServices", [path.join("/")], dojo.hitch(this, function(inResponse) {
+
+
+        var copyServicesFunc = dojo.hitch(this, function() {
+            	studio.deploymentService.requestAsync("copyComponentServices", [path.join("/")], dojo.hitch(this, function(inResponse) {
 			var response = dojo.fromJson(inResponse);
 			var userMessage = "";
 			if (response.servicesAdded.length) {
@@ -353,16 +373,21 @@ wm.CompositeMixin.extend({
 			if (response.servicesAdded.length/* || response.servicesSkipped.length*/) {
 				var d = studio.deploy("Compiling new services", "studioProjectCompile");
 				d.addCallback(function() {
-					studio.updateFullServiceList();
-					
+					studio.updateFullServiceList();					
 					app.alert(userMessage);
 				});
+			} else {
+			     this.reflowParent();
 			}
 		}));
+    });
+	
     }
 });
 
 dojo.declare("wm.Composite", [wm.Container, wm.CompositeMixin], {
+    scrim: true, // prevent the user from interacting with the contents of the composite in designer
+    lock: true, // prevent user from adding additional controls
 });
 
 wm.Object.extendSchema(wm.Composite, {
