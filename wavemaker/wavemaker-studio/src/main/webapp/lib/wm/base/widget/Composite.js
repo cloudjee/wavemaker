@@ -341,6 +341,8 @@ wm.CompositeMixin.extend({
         return s;
     },
     _afterPaletteDrop: function(inPackagePath) {
+        var onDone = dojo.hitch(this, "afterPaletteDrop");
+
 		var path = inPackagePath.split(/\./);
 		if (path[0] == "common" && path[1] == "packages") {
 			path.shift();
@@ -351,8 +353,7 @@ wm.CompositeMixin.extend({
 		}
 
 
-        var copyServicesFunc = dojo.hitch(this, function() {
-            	studio.deploymentService.requestAsync("copyComponentServices", [path.join("/")], dojo.hitch(this, function(inResponse) {
+        studio.deploymentService.requestAsync("copyComponentServices", [path.join("/")], dojo.hitch(this, function(inResponse) {
 			var response = dojo.fromJson(inResponse);
 			var userMessage = "";
 			if (response.servicesAdded.length) {
@@ -366,22 +367,23 @@ wm.CompositeMixin.extend({
 				userMessage += "The following services were NOT added to your project because they already exist<ul>";
 				dojo.forEach(response.servicesSkipped, function(serviceName) {
 					userMessage += "<li>"+serviceName + "</li>";
-				});			
+				});
 				userMessage += "</ul>";
 			}
-			
+
 			if (response.servicesAdded.length/* || response.servicesSkipped.length*/) {
 				var d = studio.deploy("Compiling new services", "studioProjectCompile");
 				d.addCallback(function() {
-					studio.updateFullServiceList();					
+					studio.updateFullServiceList();
 					app.alert(userMessage);
+                    onDone();
 				});
 			} else {
-			     this.reflowParent();
+			     wm.fire(this,"reflowParent");
+                 onDone();
 			}
 		}));
-    });
-	
+
     }
 });
 
