@@ -373,8 +373,10 @@ public class DeploymentService {
 	this.deploymentManager.writeModuleToLibJs(packageStr + "." + className);
 	componentStage.delete();
         ret.setPath(packageStr + "." + className);
+
         return ret;
     }
+
     public String copyComponentServices(String path) {
 	Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(path);
 	com.wavemaker.tools.io.Folder componentServicesFolder = componentFolder.getFolder("services");
@@ -412,7 +414,46 @@ public class DeploymentService {
 
 	return "{servicesAdded: [" + responseInclude + "], servicesSkipped: [" + responseExclude + "]}";
     }
-
+    public String[] copyComponentStudioPagesTest(String path) {
+	java.util.Vector<String> result = new java.util.Vector();
+	Folder studioPagesFolder = this.fileSystem.getStudioWebAppRootFolder().getFolder("pages");
+	Folder pagesFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(path).getFolder("studiopages");	
+	com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> pages =  pagesFolder.list().folders();	
+	for (com.wavemaker.tools.io.Folder f : pages) {
+	    String name = f.getName();
+	    Folder studioPage = studioPagesFolder.getFolder(name);
+	    if (studioPage.exists()) {
+		com.wavemaker.tools.io.File adotjs1 = studioPage.getFile(studioPage.getName() + ".a.js");
+		com.wavemaker.tools.io.File adotjs2 = f.getFile(studioPage.getName() + ".a.js");
+		if (adotjs1.exists() && adotjs2.exists()) {
+		    if (!adotjs1.getContent().asString().equals(adotjs2.getContent().asString())) {
+			result.addElement(name);			
+		    }
+		} else {
+		    com.wavemaker.tools.io.File js1 = studioPage.getFile(studioPage.getName() + ".js");
+		    com.wavemaker.tools.io.File js2 = f.getFile(studioPage.getName() + ".js");
+		    com.wavemaker.tools.io.File jsw1 = studioPage.getFile(studioPage.getName() + ".widgets.js");
+		    com.wavemaker.tools.io.File jsw2 = f.getFile(studioPage.getName() + ".widgets.js");
+		    if (!js1.getContent().asString().equals(js2.getContent().asString()) ||
+			!jsw1.getContent().asString().equals(jsw2.getContent().asString())) {
+			result.addElement(name);			
+		    }
+		}
+	    }
+	}
+	return (String[])result.toArray(new String[result.size()]);
+    }
+    public String[] copyComponentStudioPages(String path) {
+	java.util.Vector<String> result = new java.util.Vector();
+	Folder studioPagesFolder = this.fileSystem.getStudioWebAppRootFolder().getFolder("pages");
+	Folder pagesFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(path).getFolder("studiopages");	
+	com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> pages =  pagesFolder.list().folders();	
+	for (com.wavemaker.tools.io.Folder f : pages) {
+	    f.copyTo(studioPagesFolder);
+	    result.addElement(f.getName());
+	}
+	return (String[])result.toArray(new String[result.size()]);
+    }
 
     @HideFromClient
     public void setDeploymentManager(DeploymentManager deploymentManager) {

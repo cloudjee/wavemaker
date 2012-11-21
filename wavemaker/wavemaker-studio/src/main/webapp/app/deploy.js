@@ -257,6 +257,9 @@ Studio.extend({
 		// if we get here, no exceptions occured
 	    app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS"));
 		wm.fire(studio.inspector, "reinspect");
+		wm.job("studio.navigation.setFullStructure", 50, function() {
+		  studio.navigationMenu.renderDojoObj();		  
+		});
 	},
 	deployComponentError: function(inName, inNamespace, inError) {
 		try {
@@ -294,6 +297,7 @@ Studio.extend({
 	importComponent: function() {
 		var d = this.getImportProjectDialog();
 	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_COMPONENT"));
+	    var path;
 	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inSender, inResponse) {
 		    d.dismiss();
 		    var module = inResponse[0].path;
@@ -305,15 +309,51 @@ Studio.extend({
 
 		    dojo["require"](module);
     		// if we get here, no exceptions occured
-	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_SUCCESS", {name: module.replace(/^.*\./,"")}));
-		   wm.fire(studio.inspector, "reinspect");
-	    });
+
+            /* Needed in case items added to menubar */
+    		wm.job("studio.navigation.setFullStructure", 50, function() {
+    		      studio.navigationMenu.renderDojoObj();		  
+    		});
+
+    			
+    			
+    		path = module.split(/\./);
+    		if (path[0] == "common" && path[1] == "packages") {
+    			path.shift();
+    			path.shift();
+    		}
+    		if (path.length > 1 && path[path.length-1] === path[path.length-2]) {
+    			path.pop();
+    		}    		
+    		copyPagesTestFunc();
+		});
         d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
     	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_FAILED", {inError: inError}));
     	       if (app.toastDialog) app.toastDialog.hide();
         });
 	    d.page.setService("deploymentService", "uploadClientComponent");
 	    d.show();
+	    
+	    
+	    var copyPagesFunc = dojo.hitch(this, function() {
+		     studio.deploymentService.requestSync("copyComponentStudioPages", [path.join("/")], dojo.hitch(this, function(inResponse) {
+        	       app.alert(this.getDictionaryItem("ALERT_IMPORT_COMPONENT_SUCCESS", {name: path[path.length-1]}));
+		     }));
+        }); 		
+        var copyPagesTestFunc = dojo.hitch(this, function() {
+            /* Do this sync instead of async so that other implementations of afterPaletteDrop can assume these pages already exist */
+    		studio.deploymentService.requestSync("copyComponentStudioPagesTest", [path.join("/")], 
+        		dojo.hitch(this, function(inResponse) {
+        		  if (inResponse.length == 0) {
+        	           copyPagesFunc();		     
+        		  } else {
+        		      app.confirm("This component is attempting to overwrite the following studio-owned pages: <ul><li>" + inResponse.join("</li><li>") + "</li></ul>  Are you sure you trust the provider of this component?",
+        		                  false, copyPagesFunc);
+        		  }
+        		}),
+        		dojo.hitch(this, function(inError) {app.alert(inError);})
+        	);		    		    		
+	    });
 	},
 	importTemplate: function() {
 		var d = this.getImportProjectDialog();
