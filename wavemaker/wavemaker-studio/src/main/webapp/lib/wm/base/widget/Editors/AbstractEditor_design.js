@@ -90,7 +90,9 @@ wm.AbstractEditor.extend({
             this.adjustToForm(liveform);
 
             var liveform2 = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.DataForm);
-            liveform2.afterPaletteChildDrop(this);
+            if (liveform2) {
+                liveform2.afterPaletteChildDrop(this);
+            }
         }
     },
     afterDragDrop: function() {
