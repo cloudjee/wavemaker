@@ -140,7 +140,7 @@ Studio.extend({
         var ctor = dojo.getObject(info.type);
         dojo.mixin(props, {
             _designer: studio.page._designer,
-            name: studio.page.getUniqueName(props.name || studio.makeName(info.type)),
+            name: studio.page.getUniqueName(props.name || studio.makeName(info.type.replace(/^.*\./,""))),
             owner: studio.page,
             parent: studio.page.root
         });
@@ -149,7 +149,7 @@ Studio.extend({
             if (!(comp instanceof wm.ServerComponent)) {
                 // create an undo task
                 new wm.AddTask(comp);
-            }            
+            }
             if (!comp._afterPaletteDrop(info.module)) {
                 // FIXME: should not refresh entire tree when dropping from palette.
                 studio.refreshDesignTrees();
