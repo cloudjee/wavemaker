@@ -421,8 +421,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
         // Also don't repeat this alert more than once every 3 minutes (it takes 4 server accesses to open a page, so thats 4 alerts in a row!)
         if (errCode == 403) {
             dojo.publish("session-expiration", []);
-            if (app && app.onSessionExpiration)
-            app.onSessionExpiration();
+            if (app) app._onSessionExpiration();
         }
         } catch(e) {
         if (wm.logging) {

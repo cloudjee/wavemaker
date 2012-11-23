@@ -986,8 +986,8 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 	onError: function(inError) {
 	    wm.logging && console.error(inError);
-	    if (this.displayErrors) {
-		app.alert(wm.getDictionaryItem("wm.LiveForm.ONERROR", {error: dojo.isString(inError) ? inError : inError.message || "??"}));
+	    if (this.displayErrors && !inError.toString().match(/ status\:403/)) {
+			app.alert(wm.getDictionaryItem("wm.LiveForm.ONERROR", {error: dojo.isString(inError) ? inError : inError.message || "??"}));
 	    }
 	}
 });

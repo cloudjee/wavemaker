@@ -190,6 +190,7 @@ wm.Object.extendSchema(wm.Application, {
     phoneMain: {group: "mobile", order: 7, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
     isSecurityEnabled: {group: "widgetName", subgroup: "security", type: "boolean", hidden: 1}, // used as hint, not a fact
     isLoginPageEnabled: {hidden:1,type:"boolean"}, // used to aid in restoring this setting if the user turns off security and then turns it back on
+    sessionExpirationHandler: {hidden:1,type: "string"}, // editted not through property panel, but through Security page setup
     phoneGapLoginPage: {group: "mobile", order: 10, type: "string"},
     promptChromeFrame: {group: "widgetName",  subgroup: "behavior", order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
     toastPosition: {group: "widgetName",  subgroup: "behavior", editor: "wm.prop.SelectMenu", editorProps: {

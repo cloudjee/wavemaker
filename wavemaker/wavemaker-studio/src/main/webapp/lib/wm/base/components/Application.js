@@ -23,6 +23,7 @@ wm.registerComponentLoader = function(inType, inLoader){
 
 dojo.declare("wm.Application", wm.Component, {
     debugDialog: null,
+    sessionExpirationHandler: "nothing",
     touchToClickDelay: 500, // ms user must hold a touch for it to be treated as a click
     touchToRightClickDelay: 1500, // ms user must hold a touch for it to be treated as a right click
     eventDelay: wm.isMobile ? 100 : 0, // 100ms delay during which a user selection is highlighted and before the event is fired
@@ -119,7 +120,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
 
 
-        this.$ = this.components = {};        
+        this.$ = this.components = {};
 
         this._setupKeys();
     },
@@ -595,6 +596,36 @@ dojo.declare("wm.Application", wm.Component, {
           delete(this.debugSubPageList[inPage.name]);
       }
     },
+    _onSessionExpiration: function() {
+        switch(this.sessionExpirationHandler) {
+            case "nothing":
+                break;
+            case "navigateToLogin":
+                if (window.location.pathname.indexOf("index.html") != -1) {
+                    window.location.pathname = location.pathname.replace(/index\.html/, "login.html")
+                } else {
+                    window.location.pathname += window.location.pathname.match(/\/$/) ? "login.html" : "/login.html";
+                }
+                break;
+            case "showLoginDialog":
+                if (!this._loginDialog) {
+                    this._loginDialog = new wm.PageDialog({
+                        name: "_loginDialog",
+                        owner: this,
+                        width: "80%",
+                        height: "80%",
+                        title: "Login",
+                        pageName: "Login",
+                        hideControls: true,
+                        noEscape: true,
+                        deferLoad: false});
+                }
+                this._loginDialog.show();
+            break;
+        }
+        wm.fire(this, "onSessionExpiration");
+    },
+
     qualifyName: function(inName) {
         return inName;
     },

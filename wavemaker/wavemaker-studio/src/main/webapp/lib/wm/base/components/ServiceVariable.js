@@ -81,7 +81,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
         // Also don't repeat this alert more than once every 3 minutes (it takes 4 server accesses to open a page, so thats 4 alerts in a row!)
         if (errCode == 403) {
             dojo.publish("session-expiration-servicecall", [this]);
-            if (app && app.onSessionExpiration) app.onSessionExpiration();
+            if (app ) app._onSessionExpiration();
         } else {
             dojo.publish("service-variable-error", [this, inError]);
         }

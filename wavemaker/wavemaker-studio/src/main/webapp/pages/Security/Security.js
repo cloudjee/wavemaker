@@ -68,6 +68,7 @@ dojo.declare(
             this.servicesLayer.setShowing(true);
             this.rolesLayer.setShowing(true);
             this.showLoginPageInput.setChecked(true);
+            this.sessionExpirationHandler.setDataValue(studio.application.sessionExpirationHandler || "nothing");
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
             this.dbRoleBySQLCheckbox.setChecked(false);
@@ -265,8 +266,8 @@ dojo.declare(
             this.ldapRoleDbEntityInput.setDataValue(inResponse.roleEntity);
             this.ldapRoleDbEntityInputChange();
         },
-        saveButtonClick : function(inSender) {            
-            studio.saveAll(this);            
+        saveButtonClick : function(inSender) {
+            studio.saveAll(this);
         },
         toastToSuccess : function() {
             this.onSaveSuccess();
@@ -745,25 +746,31 @@ dojo.declare(
         showDemoLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
+            this.sessionExpirationHandler.setShowing(true);
         },
         showDBLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
+            this.sessionExpirationHandler.setShowing(true);
         },
         showLDAPLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
+            this.sessionExpirationHandler.setShowing(true);
         },
         securityCheckboxChange : function() {
             var enabled = this.secEnableInput.getChecked();
             this.servicesLayer.setShowing(enabled);
             this.rolesLayer.setShowing(enabled);
             this.showLoginPageInput.setShowing(enabled);
+            this.sessionExpirationHandler.setShowing(enabled);
             this.panel4a.setShowing(enabled);
             this.panelBottom.setShowing(enabled);
             this.panelBottom.setShowing(enabled);
-            if (this.isJOSSO())
+            if (this.isJOSSO()) {
                 this.showLoginPageInput.setShowing(false);
+                this.sessionExpirationHandler.setShowing(false);
+            }
             this.setDirty();
         },
         isJOSSO : function() {
@@ -775,6 +782,7 @@ dojo.declare(
                 rolesQuery = this.dbRoleBySQLInput.getDataValue();
             }
             var result = [ dojo.toJson(this.demoUserList._data), dojo.toJson(this.roleList._data), this.secProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
+                    this.sessionExpirationHandler.getDataValue(),
                     this.dbRoleBySQLCheckbox.getChecked(), this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
                     this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput), this.getEditorDisplayValue(this.tenantIdField) || "",
                     this.defTenantId.getDataValue() || 0, rolesQuery, this.ldapUrlInput.getDataValue(), this.ldapManagerDnInput.getDataValue(), this.ldapManagerPasswordInput.getDataValue(),
@@ -807,7 +815,7 @@ dojo.declare(
         getDirty : function() {
             return this.dirty;
         },
-        save : function() {           
+        save : function() {
             if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
                 this.saveError({
                     owner : this,
@@ -887,8 +895,8 @@ dojo.declare(
                     } else if (t == "JOSSO") {
                         var roles = this.roleList._data;
                         if (roles.length == 1 || !this.secEnableInput.getChecked()) {
-                            studio.securityConfigService.requestSync("configJOSSO", 
-                                [ this.secEnableInput.getChecked(), roles[0] || "test"], 
+                            studio.securityConfigService.requestSync("configJOSSO",
+                                [ this.secEnableInput.getChecked(), roles[0] || "test"],
                                 dojo.hitch(this, "configJOSSOResult"));
                             studio.application.loadServerComponents();
                             studio.refreshServiceTree();
@@ -916,6 +924,7 @@ dojo.declare(
         onSaveSuccess : function() {
             studio.application.isLoginPageEnabled = this.showLoginPageInput.getChecked();
             studio.application.isSecurityEnabled = this.secEnableInput.getChecked();
+            studio.application.sessionExpirationHandler = this.sessionExpirationHandler.getDataValue();
             studio.project.saveApplication(dojo.hitch(this, function() {
                 this._cachedData = this.getCachedData();
                 this.setDirty();
@@ -1049,9 +1058,9 @@ dojo.declare(
         },
         saveServicesSetup : function() {
             /* TODO: Remove from submission any "DEFAULT" values */
-            
+
             // don't use the name as it will be localized
-            var databaseServiceURL = "/runtimeservice.json"; 
+            var databaseServiceURL = "/runtimeservice.json";
             var data = this.varServList.getData();
             var sendData = [];
             var databaseAttributes = "";

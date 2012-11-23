@@ -46,9 +46,10 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
     def.addErrback(onError);
 
     var onSuccess = function(inUrl) {
+    	if (app && app._loginDialog && app._loginDialog.showing) app._loginDialog.hide();
 
-	/* Fire any custom onSuccess handlers BEFORE we do a navigation that will unload the developer's components */
-	deferred.callback(inUrl);
+		/* Fire any custom onSuccess handlers BEFORE we do a navigation that will unload the developer's components */
+		deferred.callback(inUrl);
 
             var pathname = location.protocol + "//" + location.host + location.pathname + location.search; // sometimes using search helps and sometimes it breaks this test; still working out what is going on
 	    if (dojo.cookie.isSupported() && !wm.disableUserPrincipalCookie) {
@@ -69,7 +70,7 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
                 // Typically this tests to see if we're on login.html and being directed to index.html
 	    } else if (pathname != inUrl) {
 		location.href = inUrl
-				    
+
                 // If the page name is login, but app.main is not login, then we're on the real project,
                 // not the special project used for logging in.  If we're on the real project, a wm page nav is all that is needed
 	    } else if (app._page.name == "login" && app.main != "login") {
@@ -89,7 +90,7 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 }
 
 wm.getUserPrincipal = function() {
-	return wm.disableUserPrincipalCookie ? {} : 
+	return wm.disableUserPrincipalCookie ? {} :
 		dojo.fromJson(dojo.cookie("wmUserPrincipal")) || {};
 }
 
@@ -111,7 +112,7 @@ wm.getUserRoles = function(force) {
 	    return wm.roles;
 	}
     }
-	var s = wm.securityService || (wm.securityService = 
+	var s = wm.securityService || (wm.securityService =
 		new wm.JsonRpcService({name: "securityService", sync: true}));
 	try {
 		if (s.ready) {
@@ -129,11 +130,11 @@ wm.logoutSuccess = function() {
     } else {
 	wm.roles = [];
     }
-    dojo.publish("wmRbacUpdate");    
+    dojo.publish("wmRbacUpdate");
 }
 
 wm.logout = function() {
-	var s = wm.securityService || (wm.securityService = 
+	var s = wm.securityService || (wm.securityService =
 		new wm.JsonRpcService({name: "securityService", sync: true, errorLevel: 2}));
 	try {
 		if (s.ready) {

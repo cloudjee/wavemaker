@@ -52,7 +52,10 @@ dojo.declare("wm.studio.Project", null, {
         studio.updateServices();
         this.projectChanging();
         this.createApplicationArtifacts();
-            this.makeApplication({theme: optionalInTheme || "wm.base.widget.themes.wm_default"});
+            this.makeApplication({
+              theme: optionalInTheme || "wm.base.widget.themes.wm_default",
+              sessionExpirationHandler: "navigateToLogin" // move to Application.js once we no longer care about upgrading projects
+            });
             new wm.ImageList({owner: studio.application,
                   name: "silkIconList",
                   url: "lib/images/silkIcons/silk.png",
