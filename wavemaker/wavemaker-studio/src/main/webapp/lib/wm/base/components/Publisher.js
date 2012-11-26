@@ -264,12 +264,12 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	props = props.length ? 'wm.publish(' + klass + ', [\n\t' + props.join(',\n\t') + '\n]);\n \n' : "";
 
 
-	var css = dojo.trim(studio.getCss());
+	var css = dojo.trim(studio.getCss()) + "\n\n" + dojo.trim(studio.getAppCss());
         var jscss = klass + ".prototype._cssText = '";
         var cssArray = [];
         dojo.forEach(css.split(/\n/), function(line) {
             if (line.match(/\S/))
-		cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + "\\\n");
+		cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + " \\\n");
         });
         jscss += cssArray.join("") + "';\n\n";
 
