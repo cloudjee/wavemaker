@@ -241,10 +241,10 @@ public class WaveMakerService {
             			if(key.toLowerCase().equals("proxy-connection")|| key.toLowerCase().equals("expires")){
             				logger.debug("Remote server returned header of: " + key + " " + field + " it was not forwarded");
             			}
-            			if(key.toLowerCase().equals("transfer-encoding") && field.toLowerCase().equals("chunked")){
+            			else if(key.toLowerCase().equals("transfer-encoding") && field.toLowerCase().equals("chunked")){
             				logger.debug("Remote server returned header of: " + key + " " + field + " it was not forwarded");
             			}
-               			if(key.toLowerCase().equals("content-length")){
+            			else if(key.toLowerCase().equals("content-length")){
             				// do NOT use this length as return header value
             				responseLen = new Integer(field);
             			}
