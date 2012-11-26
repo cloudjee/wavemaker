@@ -557,9 +557,9 @@ height: "29px", width: "420px",
 							    }]
 							}]
 					    }],
-					    cssLayer: ["wm.Layer", {caption: "CSS"}, {onShow: "cssEditArea.focus"}, {
+					    cssLayer: ["wm.Layer", {caption: "CSS"}, {}, {
 						    cssTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}, clientBorder: "1,0,0,0"}, {}, {
-								appCssLayer: ["wm.Layer", {caption: "Application CSS"}, {}, {
+								appCssLayer: ["wm.Layer", {caption: "Application CSS"}, {onShow: "appCssEditArea.focus"}, {
         							appCssRibbon: ["wm.Panel", {_classes: {domNode: [""]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
         							    appCssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
         							    appCssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findAppCssClick"}],
@@ -575,7 +575,7 @@ height: "29px", width: "420px",
 									
 								    appCssEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "css"}, {onCtrlKey: "cssEditorCtrlKey", onChange: "setEditAreaDirty"}]
 								}],
-								pageCssLayer: ["wm.Layer", {caption: "Page CSS"}, {}, {
+								pageCssLayer: ["wm.Layer", {caption: "Page CSS"}, {onShow: "cssEditArea.focus"}, {
         							cssRibbon: ["wm.Panel", {_classes: {domNode: [""]}, height: "29px", width: "100%", border: "0,0,1,0", borderColor: "#959DAB", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", verticalAlign: "middle"}, {}, {
         							    cssPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveCssClick"}],
         							    cssPageFindBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findCssClick"}],
