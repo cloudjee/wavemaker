@@ -218,6 +218,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
         } else {
             var randomParam = window["PhoneGap"] ? "" : "?rand=" + rand
             this._service = new wm.JsonRpc(url + randomParam);
+            this._service.serviceUrl = "services/" + this._service.serviceUrl;
         }
         wm.JsonRpcService.smdCache[url] = this._service;
             //The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
