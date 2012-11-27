@@ -960,7 +960,7 @@ dojo.declare(
                 var attributes = this.findServiceSecurityForService("runtimeService");
                 var serviceList = [ {
                     name : this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
-                    URL : "/runtimeservice.json",
+                    URL : "/services/runtimeservice.json",
                     attributes : attributes,
                     Settings : this.getAttributesDisplay(attributes)
                 } ];
@@ -1051,7 +1051,7 @@ dojo.declare(
             /* TODO: Remove from submission any "DEFAULT" values */
             
             // don't use the name as it will be localized
-            var databaseServiceURL = "/runtimeservice.json"; 
+            var databaseServiceURL = "/services/runtimeservice.json"; 
             var data = this.varServList.getData();
             var sendData = [];
             var databaseAttributes = "";

@@ -142,12 +142,12 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
         cfg.writeProperties(existingProps, true);
         String dbName = existingProps.getProperty(DB_ALIAS_PROPERTY);
-        cfg.configureDbAlias(dbName, type);
-        cfg.configureHibernateSchemaUpdate(dbName, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
+        String dialect = (String)existingProps.get("dialect");
+        cfg.configureDbAlias(dbName, type, dialect);
+        cfg.configureHibernateSchemaUpdate(cfg.getServiceId(), existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
-        if (type == DeploymentType.CLOUD_FOUNDRY) {
-
+        if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(DataServiceSpringConfiguration.MYSQL_DIALECT)) {
             addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         }
     }

@@ -66,7 +66,7 @@ public class DataServiceSpringConfiguration {
 
     private static final String HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String MSSQL_INNODB = "org.hibernate.dialect.MySQLInnoDBDialect";
-    private static final String MYSQL_DIALECT = "com.wavemaker.runtime.data.dialect.MySQLDialect";
+    public static final String MYSQL_DIALECT = "com.wavemaker.runtime.data.dialect.MySQLDialect";
 
     private final String rootPath;
 
@@ -333,7 +333,7 @@ public class DataServiceSpringConfiguration {
     /**
      * @param dbName
      */
-    void configureDbAlias(String dbName, DeploymentType type) {
+    void configureDbAlias(String dbName, DeploymentType type, String dialect) {
         if (!hasText(dbName)) {
             return;
         }
@@ -346,7 +346,7 @@ public class DataServiceSpringConfiguration {
 
         Bean ds = l.get(0);
 
-        if (type == DeploymentType.CLOUD_FOUNDRY) {
+        if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(this.MYSQL_DIALECT)) {
             String id = ds.getId();
             this.beans.removeBeanById(id);
             this.isDirty = true;
@@ -359,7 +359,7 @@ public class DataServiceSpringConfiguration {
         }
     }
 
-    void configureHibernateSchemaUpdate(String dbName, String updateSchema) {
+    void configureHibernateSchemaUpdate(String serviceId, String updateSchema) {
         if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
 
             List<Bean> l = this.beans.getBeansByType(ConfigurationAndSessionFactoryBean.class);
@@ -379,14 +379,14 @@ public class DataServiceSpringConfiguration {
                 propValues.getProps().add(ddlProp);
                 this.isDirty = true;
 
-                updateDialect(dbName, propValues);
+                updateDialect(serviceId, propValues);
             }
         }
     }
 
-    private void updateDialect(String dbName, Props propValues) {
+    private void updateDialect(String serviceId, Props propValues) {
         Properties properties = readProperties(false);
-        if (properties.get(dbName + ".dialect") != null && !properties.get(dbName + ".dialect").equals(MYSQL_DIALECT)) {
+        if (properties.get(serviceId + ".dialect") != null && !properties.get(serviceId + ".dialect").equals(MYSQL_DIALECT)) {
             return;
         }
         
