@@ -88,7 +88,7 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     parentClass: "wm.Composite",
 	undeploy: function() {
-		studio.undeployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, this.removeSource);
+		studio.undeployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, this.removeSource);
 	},
 	_deploy: function(services) {
 		wm.Property.deploy = true;
@@ -153,7 +153,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			}
 			var data = [];
 			wm.services.forEach(function(s) {
-				if (!s.isClientService && s.name != "resourceFileService") {
+				if (!s.isClientService && !s.clientHide && s.name != "resourceFileService") {
 					data.push(s.name);
 				}
 			});
