@@ -582,7 +582,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                     rmDirs.add(moduleDir);
                 }
             }
-            org.springframework.core.io.Resource sourceJsFile = moduleDir.createRelative(name + ".js");
+            org.springframework.core.io.Resource sourceJsFile = moduleDir.createRelative(name);
             if (sourceJsFile.exists()) {
                 this.fileSystem.deleteFile(sourceJsFile);
                 for (int i = rmDirs.size() - 1; i > -1; i--) {
@@ -595,14 +595,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 }
             }
         }
-
         org.springframework.core.io.Resource libJsFile = packagesDir.createRelative(LIB_JS_FILE);
         StringBuffer libJsData = new StringBuffer();
         if (libJsFile.exists()) {
             boolean found = false;
             String klass = null;
             if (namespace != null && namespace.length() > 0) {
-                klass = namespace + "." + name;
+                klass = namespace + "." + name + "." + name;
             } else {
                 klass = name;
             }
