@@ -16,20 +16,21 @@ package com.wavemaker.tools.security;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.acegisecurity.ConfigAttributeDefinition;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.SecurityConfig;
-import org.acegisecurity.intercept.web.FilterInvocationDefinitionSourceEditor;
-import org.acegisecurity.intercept.web.PathBasedFilterInvocationDefinitionMap;
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.memory.UserMap;
-import org.acegisecurity.userdetails.memory.UserMapEditor;
+//import org.acegisecurity.ConfigAttributeDefinition;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.access.SecurityConfig;
+//import org.acegisecurity.intercept.web.FilterInvocationDefinitionSourceEditor;
+//import org.acegisecurity.intercept.web.PathBasedFilterInvocationDefinitionMap;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.memory.UserMap;
+import org.springframework.security.core.userdetails.memory.UserMapEditor;
 
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.SystemUtils;
@@ -166,18 +167,18 @@ public class SecuritySpringSupport {
     private static final String ROLES = "roles";
 
     private static List<String> getSecurityResourceAttrs(Beans beans, String url) {
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        FilterInvocationDefinitionSourceEditor e = new FilterInvocationDefinitionSourceEditor();
-        e.setAsText(getPropertyValueString(bean, OBJECT_DEFINITION_SOURCE_PROPERTY));
-        PathBasedFilterInvocationDefinitionMap map = (PathBasedFilterInvocationDefinitionMap) e.getValue();
-        ConfigAttributeDefinition attrs = map.lookupAttributes(url);
+//        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
+//        FilterInvocationDefinitionSourceEditor e = new FilterInvocationDefinitionSourceEditor();
+//        e.setAsText(getPropertyValueString(bean, OBJECT_DEFINITION_SOURCE_PROPERTY));
+//        PathBasedFilterInvocationDefinitionMap map = (PathBasedFilterInvocationDefinitionMap) e.getValue();
+//        ConfigAttributeDefinition attrs = map.lookupAttributes(url);
         List<String> authzList = new ArrayList<String>();
-        if (attrs != null) {
-            Iterator<SecurityConfig> iter = CastUtils.cast(attrs.getConfigAttributes());
-            while (iter.hasNext()) {
-                authzList.add(iter.next().getAttribute());
-            }
-        }
+//        if (attrs != null) {
+//            Iterator<SecurityConfig> iter = CastUtils.cast(attrs.getConfigAttributes());
+//            while (iter.hasNext()) {
+//                authzList.add(iter.next().getAttribute());
+//            }
+//        }
         return authzList;
     }
 
@@ -385,8 +386,9 @@ public class SecuritySpringSupport {
                     UserDetails user = userMap.getUser(userid);
                     DemoUser demoUser = new DemoUser();
                     demoUser.setUserid(userid);
-                    demoUser.setPassword(user.getPassword());
-                    GrantedAuthority[] authorities = user.getAuthorities();
+                    demoUser.setPassword(user.getPassword());//TODO:This is empty
+                    Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                    //GrantedAuthority[] authorities = user.getAuthorities();
                     List<String> userRoles = new ArrayList<String>();
                     for (GrantedAuthority authority : authorities) {
                         String role = authority.getAuthority();

@@ -23,8 +23,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.ui.ExceptionTranslationFilter;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 
 /**
  * Extends from the normal <code>ExceptionTranslationFilter</code>, this filter will send 403 if the request is a JSON
@@ -35,7 +35,7 @@ import org.acegisecurity.ui.ExceptionTranslationFilter;
 public class JSONExceptionTranslationFilter extends ExceptionTranslationFilter {
 
     @Override
-    protected void sendStartAuthentication(ServletRequest request, ServletResponse response, FilterChain chain, AuthenticationException reason)
+    protected void sendStartAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, AuthenticationException reason)
         throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestPath = httpRequest.getServletPath();

@@ -18,15 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.AuthenticationManager;
-import org.acegisecurity.BadCredentialsException;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.apache.log4j.Logger;
 
 import com.wavemaker.runtime.RuntimeAccess;
@@ -136,7 +137,8 @@ public class SecurityService {
         if (authentication == null) {
             return new String[0];
         }
-        GrantedAuthority[] authorities = authentication.getAuthorities();
+        //GrantedAuthority[] authorities = authentication.getAuthorities(); //TODO:This is empty
+        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();//authentication.getAuthorities();
         List<String> roleNames = new ArrayList<String>();
         for (GrantedAuthority authority : authorities) {
             String roleName = authority.getAuthority();

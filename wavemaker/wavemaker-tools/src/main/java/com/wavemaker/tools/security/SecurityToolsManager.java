@@ -31,9 +31,9 @@ import javax.naming.directory.DirContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
-import org.acegisecurity.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.core.GrantedAuthority;
+//import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -450,15 +450,15 @@ public class SecurityToolsManager {
         }
 
         @SuppressWarnings("unchecked")
-        public List<String> loadUserRolesByUsername(String username) {
-            List<GrantedAuthority> dbAuths = this.authoritiesByUsernameMapping.execute(username);
+        public List<String> loadUserRolesByUsername(String username) { //TODO: fixme
+            List<GrantedAuthority> dbAuths; // = this.authoritiesByUsernameMapping.execute(username);
             List<String> userRoles = new ArrayList<String>();
-            for (GrantedAuthority dbAuth : dbAuths) {
-                String dbAuthString = dbAuth.getAuthority();
-                if (dbAuthString.startsWith(SecuritySpringSupport.ROLE_PREFIX)) {
-                    userRoles.add(dbAuthString.substring(SecuritySpringSupport.ROLE_PREFIX.length()));
-                }
-            }
+//            for (GrantedAuthority dbAuth : dbAuths) {
+//                String dbAuthString = dbAuth.getAuthority();
+//                if (dbAuthString.startsWith(SecuritySpringSupport.ROLE_PREFIX)) {
+//                    userRoles.add(dbAuthString.substring(SecuritySpringSupport.ROLE_PREFIX.length()));
+//                }
+//            }
             return userRoles;
         }
     }
@@ -512,26 +512,26 @@ public class SecurityToolsManager {
      * @throws org.acegisecurity.ldap.LdapDataAccessException
      */
     public static void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) {
-        DefaultInitialDirContextFactory dirContext = new DefaultInitialDirContextFactory(ldapUrl);
-        if (managerDn != null && managerDn.length() != 0) {
-            dirContext.setManagerDn(managerDn);
-            if (SystemUtils.isEncrypted(managerPassword)) {
-                managerPassword = SystemUtils.decrypt(managerPassword);
-            }
-            dirContext.setManagerPassword(managerPassword);
-        }
-        DirContext context = null;
-        try {
-            context = dirContext.newInitialDirContext();
-        } finally {
-            if (context != null) {
-                try {
-                    context.close();
-                } catch (NamingException e) {
-                    throw new ConfigurationException(e);
-                }
-            }
-        }
+//        DefaultInitialDirContextFactory dirContext = new DefaultInitialDirContextFactory(ldapUrl);
+//        if (managerDn != null && managerDn.length() != 0) {
+//            dirContext.setManagerDn(managerDn);
+//            if (SystemUtils.isEncrypted(managerPassword)) {
+//                managerPassword = SystemUtils.decrypt(managerPassword);
+//            }
+//            dirContext.setManagerPassword(managerPassword);
+//        }
+//        DirContext context = null;
+//        try {
+//            context = dirContext.newInitialDirContext();
+//        } finally {
+//            if (context != null) {
+//                try {
+//                    context.close();
+//                } catch (NamingException e) {
+//                    throw new ConfigurationException(e);
+//                }
+//            }
+//        }
     }
 
     public List<String> getRoles() throws IOException, JAXBException {

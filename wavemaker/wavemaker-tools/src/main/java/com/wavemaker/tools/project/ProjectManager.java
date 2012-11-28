@@ -96,16 +96,17 @@ public class ProjectManager {
     @Deprecated
     private String getCurrentUsername() {
         try {
-            org.acegisecurity.Authentication authentication = org.acegisecurity.context.SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            username = username.replaceAll("_", "__"); // insures that users
-                                                       // can't type in
-                                                       // mkantor_AT_wavemaker.com;
-                                                       // because that gets
-                                                       // turned into
-                                                       // mkantor__AT__wavemaker.com
-            username = username.replaceAll("\\.", "_DOT_");
-            username = username.replaceAll("@", "_AT_");
+        	String username = "NOT IMPLEMENTED";
+//            org.acegisecurity.Authentication authentication = org.acegisecurity.context.SecurityContextHolder.getContext().getAuthentication();
+//            String username = authentication.getName();
+//            username = username.replaceAll("_", "__"); // insures that users
+//                                                       // can't type in
+//                                                       // mkantor_AT_wavemaker.com;
+//                                                       // because that gets
+//                                                       // turned into
+//                                                       // mkantor__AT__wavemaker.com
+//            username = username.replaceAll("\\.", "_DOT_");
+//            username = username.replaceAll("@", "_AT_");
             return username;
         } catch (Exception e) {
             return null;

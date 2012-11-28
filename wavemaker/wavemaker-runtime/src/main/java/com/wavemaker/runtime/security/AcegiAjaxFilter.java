@@ -21,8 +21,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.ui.AbstractProcessingFilter;
+import org.springframework.security.core.AuthenticationException;
+//import org.acegisecurity.ui.AbstractProcessingFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -70,8 +70,8 @@ public class AcegiAjaxFilter extends OncePerRequestFilter {
             if (redirectURL.indexOf(FAILURE_INDICATOR) == -1) {
                 jsonContent = "{\"" + SUCCESS_URL + "\":\"" + redirectURL + "\"}";
             } else {
-                String errorMsg = ((AuthenticationException) request.getSession().getAttribute(
-                    AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY)).getMessage();
+                String errorMsg = ("THERE WAS A PROBLEM AcegiAjaxFilter"); //(AuthenticationException) request.getSession().getAttribute(
+                    //AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY)).getMessage();
                 jsonContent = "{\"" + FAILURE_ERROR_MESSAGE + "\":\"" + errorMsg + "\"}";
             }
             response.getOutputStream().write(jsonContent.getBytes());

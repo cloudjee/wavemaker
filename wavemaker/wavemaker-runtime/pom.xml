@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wavemaker</artifactId>
-		<version>6.6.0.M0-BUILD-SNAPSHOT</version>
+		<version>6.6.0.M1</version>
 	</parent>
 	<artifactId>wavemaker-runtime</artifactId>
 	<packaging>jar</packaging>
@@ -55,9 +55,25 @@
 			<artifactId>spring-orm</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.acegisecurity</groupId>
-			<artifactId>acegi-security</artifactId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+		<dependency>
+        <groupId>org.springframework.ldap</groupId>
+        	<artifactId>spring-ldap-core</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.cloudfoundry</groupId>
 			<artifactId>cloudfoundry-runtime</artifactId>

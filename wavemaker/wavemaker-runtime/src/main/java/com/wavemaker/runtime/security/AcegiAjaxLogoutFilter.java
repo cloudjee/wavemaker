@@ -19,8 +19,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.ui.logout.LogoutFilter;
-import org.acegisecurity.ui.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 /**
  * Filter to support Acegi's Ajax based logout.
@@ -37,7 +37,7 @@ public class AcegiAjaxLogoutFilter extends LogoutFilter {
         super(logoutSuccessUrl, handlers);
     }
 
-    @Override
+    //@Override
     protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
         if (isAjaxRequest(request)) {
             if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -46,7 +46,8 @@ public class AcegiAjaxLogoutFilter extends LogoutFilter {
             String jsonContent = "{\"" + SUCCESS_URL + "\":\"" + url + "\"}";
             response.getOutputStream().write(jsonContent.getBytes());
         } else {
-            super.sendRedirect(request, response, url);
+        	throw new IOException("Hey, this shouldn't happen");
+           // super.sendRedirect(request, response, url);
         }
     }
 

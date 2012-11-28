@@ -185,45 +185,6 @@
         <filter-name>springEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <!-- security configuration -->
-	<filter>
-		<filter-name>WaveMaker Security Filter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetBeanName</param-name>
-			<param-value>waveMakerSecurityFilter</param-value>
-		</init-param>
-	</filter>
-
-    <filter>
-        <filter-name>Acegi Ajax Filter</filter-name>
-        <filter-class>com.wavemaker.runtime.security.AcegiAjaxFilter</filter-class>
-    </filter>
-
-    <filter>
-        <filter-name>Acegi Filter Chain Proxy</filter-name>
-        <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
-        <init-param>
-            <param-name>targetBean</param-name>
-            <param-value>filterChainProxy</param-value>
-        </init-param>
-    </filter>
-
-	<filter-mapping>
-		<filter-name>WaveMaker Security Filter</filter-name>
-		<url-pattern>*</url-pattern>
-	</filter-mapping>
-
-    <filter-mapping>
-        <filter-name>Acegi Ajax Filter</filter-name>
-        <url-pattern>/j_acegi_security_check</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>Acegi Filter Chain Proxy</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     
     <mime-mapping>
     	<extension>smd</extension>

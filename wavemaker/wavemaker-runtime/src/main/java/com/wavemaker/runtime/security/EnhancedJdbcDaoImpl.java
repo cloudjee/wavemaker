@@ -17,136 +17,153 @@ package com.wavemaker.runtime.security;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.userdetails.User;
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 import com.wavemaker.runtime.WMAppContext;
 
 /**
- * In the default <code>org.acegisecurity.userdetails.jdbc.JdbcDaoImpl</code> the SQL parameter type for
- * authoritiesByUsernameQuery is hardcoded to <code>Types.VARCHAR</code>. This doesn't work well if the actual type for
- * the parameter is something else like <code>Types.INTEGER</code>. This seems to be a problem only in PostgreSQL, other
- * databases like MySQL seems to will just covert the parameter value to the right type.
+ * In the default <code>org.acegisecurity.userdetails.jdbc.JdbcDaoImpl</code>
+ * the SQL parameter type for authoritiesByUsernameQuery is hardcoded to
+ * <code>Types.VARCHAR</code>. This doesn't work well if the actual type for the
+ * parameter is something else like <code>Types.INTEGER</code>. This seems to be
+ * a problem only in PostgreSQL, other databases like MySQL seems to will just
+ * covert the parameter value to the right type.
  * 
  * @author Frankie Fu
  */
-public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
+public class EnhancedJdbcDaoImpl extends JdbcDaoImpl { // implements
+														// UserDetailsService
+														// ???
 
-    private String authoritiesByUsernameQueryParamType;
+	private String authoritiesByUsernameQueryParamType;
 
-    @Override
-    protected void initMappingSqlQueries() {
-        String qryStr = getUsersByUsernameQuery();
-        try {
-            WMAppContext wmApp = WMAppContext.getInstance();
-            if (wmApp != null && WMAppContext.getInstance().isMultiTenant()) {
-                qryStr = insertTenantIdField(getUsersByUsernameQuery(), wmApp.getTenantColumnName());
-                // } catch (WMRuntimeInitException ex) {}
-            }
-        } catch (Exception ex) {
-        }
+	// @Override
+	protected void initMappingSqlQueries() {
+		String qryStr = getUsersByUsernameQuery();
+		try {
+			WMAppContext wmApp = WMAppContext.getInstance();
+			if (wmApp != null && WMAppContext.getInstance().isMultiTenant()) {
+				qryStr = insertTenantIdField(getUsersByUsernameQuery(),
+						wmApp.getTenantColumnName());
+				// } catch (WMRuntimeInitException ex) {}
+			}
+		} catch (Exception ex) {
+		}
 
-        this.usersByUsernameMapping = new UsersByUsernameMapping(getDataSource(), qryStr);
-        this.authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(getDataSource());
-    }
+//		this.usersByUsernameMapping = new UsersByUsernameMapping(
+//				getDataSource(), qryStr);
+//		this.authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(
+//				getDataSource());
+		
+		this.setUsersByUsernameQuery(qryStr);
+//		this.setGroupAuthoritiesByUsernameQuery();
+	}
 
-    private String insertTenantIdField(String str, String colName) {
-        StringBuffer sb = new StringBuffer(str);
+	private String insertTenantIdField(String str, String colName) {
+		StringBuffer sb = new StringBuffer(str);
 
-        int indx = sb.lastIndexOf("FROM");
-        if (indx < 0) {
-            indx = sb.lastIndexOf("from");
-        }
-        if (indx < 0) {
-            return str;
-        }
+		int indx = sb.lastIndexOf("FROM");
+		if (indx < 0) {
+			indx = sb.lastIndexOf("from");
+		}
+		if (indx < 0) {
+			return str;
+		}
 
-        sb.insert(indx, ", " + colName + " ");
+		sb.insert(indx, ", " + colName + " ");
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    /**
-     * Query object to look up a user's authorities.
-     */
-    protected class AuthoritiesByUsernameMapping extends MappingSqlQuery {
+	/**
+	 * Query object to look up a user's authorities.
+	 */
+	protected class AuthoritiesByUsernameMapping extends MappingSqlQuery {
 
-        protected AuthoritiesByUsernameMapping(DataSource ds) {
-            super(ds, getAuthoritiesByUsernameQuery());
-            int type = Types.VARCHAR;
-            String sType = getAuthoritiesByUsernameQueryParamType();
-            // TODO: need to support other SQL types
-            if (sType != null && sType.equals("integer")) {
-                type = Types.INTEGER;
-            }
-            declareParameter(new SqlParameter(type));
-            compile();
-        }
+		protected AuthoritiesByUsernameMapping(DataSource ds) {
+			super(ds, getAuthoritiesByUsernameQuery());
+			int type = Types.VARCHAR;
+			String sType = getAuthoritiesByUsernameQueryParamType();
+			// TODO: need to support other SQL types
+			if (sType != null && sType.equals("integer")) {
+				type = Types.INTEGER;
+			}
+			declareParameter(new SqlParameter(type));
+			compile();
+		}
 
-        @Override
-        protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
-            String roleName = getRolePrefix() + rs.getString(2);
-            GrantedAuthorityImpl authority = new GrantedAuthorityImpl(roleName);
+		@Override
+		protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
+			String roleName = getRolePrefix() + rs.getString(2);
+			GrantedAuthorityImpl authority = new GrantedAuthorityImpl(roleName);
 
-            return authority;
-        }
-    }
+			return authority;
+		}
+	}
 
-    /**
-     * Query object to look up a user.
-     */
-    protected class UsersByUsernameMapping extends MappingSqlQuery {
+	/**
+	 * Query object to look up a user.
+	 */
+	protected class UsersByUsernameMapping extends MappingSqlQuery {
 
-        protected UsersByUsernameMapping(DataSource ds, String str) {
-            // super(ds, getUsersByUsernameQuery());
-            super(ds, str);
-            declareParameter(new SqlParameter(Types.VARCHAR));
-            compile();
-        }
+		protected UsersByUsernameMapping(DataSource ds, String str) {
+			// super(ds, getUsersByUsernameQuery());
+			super(ds, str);
+			declareParameter(new SqlParameter(Types.VARCHAR));
+			compile();
+		}
 
-        @Override
-        protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
+		@Override
+		protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
 
-            String userid = rs.getString(1);
-            String password = rs.getString(2);
-            boolean enabled = rs.getBoolean(3);
-            String username = null;
-            try {
-                username = rs.getString(4);
-            } catch (SQLException e) {
-            }
+			String userid = rs.getString(1);
+			String password = rs.getString(2);
+			boolean enabled = rs.getBoolean(3);
+			String username = null;
+			try {
+				username = rs.getString(4);
+			} catch (SQLException e) {
+			}
 
-            try {
-                int tenantId = -1;
-                WMAppContext wmApp = WMAppContext.getInstance();
-                if (wmApp != null && wmApp.isMultiTenant()) {
-                    tenantId = rs.getInt(5);
-                    wmApp.setTenantIdForUser(username, tenantId);
-                }
-                // } catch (WMRuntimeInitException ex) {}
-            } catch (Exception ex) {
-            }
+			try {
+				int tenantId = -1;
+				WMAppContext wmApp = WMAppContext.getInstance();
+				if (wmApp != null && wmApp.isMultiTenant()) {
+					tenantId = rs.getInt(5);
+					wmApp.setTenantIdForUser(username, tenantId);
+				}
+				// } catch (WMRuntimeInitException ex) {}
+			} catch (Exception ex) {
+			}
 
-            WMAppContext.getInstance().setUserNameForUserID(userid, username);
+			WMAppContext.getInstance().setUserNameForUserID(userid, username);
+			ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+			//new GrantedAuthority[] { new GrantedAuthorityImpl(
+			//		"HOLDER") });
+			UserDetails user = new User(userid, password, enabled, true, true,
+					true, authorities);
+			
+			return user;
+		}
+	}
 
-            UserDetails user = new User(userid, password, enabled, true, true, true, new GrantedAuthority[] { new GrantedAuthorityImpl("HOLDER") });
-            return user;
-        }
-    }
+	public String getAuthoritiesByUsernameQueryParamType() {
+		return this.authoritiesByUsernameQueryParamType;
+	}
 
-    public String getAuthoritiesByUsernameQueryParamType() {
-        return this.authoritiesByUsernameQueryParamType;
-    }
-
-    public void setAuthoritiesByUsernameQueryParamType(String authoritiesByUsernameQueryParamType) {
-        this.authoritiesByUsernameQueryParamType = authoritiesByUsernameQueryParamType;
-    }
+	public void setAuthoritiesByUsernameQueryParamType(
+			String authoritiesByUsernameQueryParamType) {
+		this.authoritiesByUsernameQueryParamType = authoritiesByUsernameQueryParamType;
+	}
 }
