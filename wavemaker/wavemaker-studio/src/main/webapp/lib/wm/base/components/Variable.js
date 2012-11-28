@@ -404,7 +404,7 @@ dojo.declare("wm.Variable", wm.Component, {
     */
     // NB: output is POJSO
     getData: function(flattenPrimitives) {
-        if (!this.data) return;
+        if (!this.data || this.disabled) return;
         if (this._isNull) return null;
         else if (this.isList) {
             // if its a byte list merge it into a single string and change it to a nonlist
@@ -528,7 +528,11 @@ dojo.declare("wm.Variable", wm.Component, {
             this.dataValueChanged(n, v);
         }
     },
-
+    setDisabled: function(inDisabled) {
+        var valueWas = this.disabled;
+        this.disabled = Boolean(inDisabled);
+        if (valueWas != this.disabled) this.notify();
+    },
     //===========================================================================
     // List API
     //===========================================================================
@@ -1102,10 +1106,12 @@ dojo.declare("wm.Variable", wm.Component, {
         wm.logging && console.group("<== OWNERCHANGED [", topic, "] published by Variable.dataOwnerChanged");
         dojo.publish(topic, [n]);
 
-        var root = this.getRoot().getRuntimeId();
-        if (root && root.indexOf(".") && n.indexOf(root) == 0) {
-            var tmpn = n.substring(root.length);
-            tmpn = root.substring(root.lastIndexOf(".") + 1) + tmpn;
+        var root = this.getRoot();
+        if (!root) return;
+        var rootId = root.getRuntimeId();
+        if (rootId && rootId.indexOf(".") && n.indexOf(rootId) == 0) {
+            var tmpn = n.substring(rootId.length);
+            tmpn = rootId.substring(rootId.lastIndexOf(".") + 1) + tmpn;
             var topic2 = tmpn + "-ownerChanged";
             if (topic2 != topic) {
                 wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
@@ -1133,10 +1139,11 @@ dojo.declare("wm.Variable", wm.Component, {
         dojo.publish(topic, [this]);
 
         var root = this.getRoot();
-        if (root) root = root.getRuntimeId();
-        if (root && root.indexOf(".") && id.indexOf(root) == 0) {
-            var tmpn = id.substring(root.length);
-            tmpn = root.substring(root.lastIndexOf(".") + 1) + tmpn;
+        if (!root) return;
+        var rootId = root.getRuntimeId();
+        if (rootId && rootId.indexOf(".") && id.indexOf(rootId) == 0) {
+            var tmpn = id.substring(rootId.length);
+            tmpn = rootId.substring(rootId.lastIndexOf(".") + 1) + tmpn;
             var topic2 = tmpn + "-changed";
             if (topic2 != topic) {
                 wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
