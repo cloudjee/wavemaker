@@ -453,7 +453,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
             /* Step 2: Set the class of the demo panel to the new theme so the demo widgets will get the proper classpath */
 	    for (var i = 0; i < this.demoPanelTabLayers.layers.length; i++)
-                this.demoPanelTabLayers.layers[i].domNode.className = this.currentTheme;
+                this.demoPanelTabLayers.layers[i].domNode.className = this.currentTheme.replace(/^.*\./,"");
 
             /* Step 3: Get a list of images available for this theme so they're avialable for image pulldown menus */
 	    var path;
@@ -466,11 +466,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             this.imageListVar.setData(imageList);
 
             /* Step 4: Find the path to the theme folder */
-            console.log("THEME:" + this.currentTheme);
-	    if (this.currentTheme.match(/^wm_/))
-	        path = dojo.moduleUrl("wm") + "base/widget/themes/" + this.currentTheme + "/";
-	    else
-	        path = dojo.moduleUrl("common") + "themes/" + this.currentTheme + "/";
+	        path = dojo.moduleUrl(this.currentTheme);
 
             /* Step 5: Load the theme.css file and store it in this.cssText, and load the css so it affects the demo panel */
 	    var originalCssText =  dojo.xhrGet({url:path + "theme.css", sync:true, preventCache:true}).results[0];
@@ -482,7 +478,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		    "/*****************************************\n * EOF: " + stylesheets[i] + "\n *****************************************/\n";
 	    }
 
-            templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme);
+            templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme.replace(/^.*\./,""));
             this.cssText = templateCssText;
 	    templateCssText = "";
 	    for (var i = 0; i < stylesheets.length; i++) {
@@ -490,7 +486,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		    dojo.xhrGet({url:dojo.moduleUrl("wm.studio.app") + "templates/themes/mobile/" + stylesheets[i], sync:true, preventCache:true}).results[0] +
 		    "/*****************************************\n * EOF: " + stylesheets[i] + "\n *****************************************/\n";
 	    }
-            templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme);
+            templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme.replace(/^.*\./,""));
             this.mobileCssText = templateCssText;
 
 
@@ -575,9 +571,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 }
 	    }
 
-            /* Step 8: Load the new css values into the document */
-            var theme = this.currentTheme.indexOf("wm_") == 0 ? "wm.base.widget.themes." + this.currentTheme : "common.themes." + this.currentTheme;
-            studio.application.setTheme(theme, false, this.cssText, this.themePrototype, true);
+            studio.application.setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
             studio._themeDesignerChange = true;
             studio._reflowPageDesigner = true;
             studio.application.cacheWidgets();
@@ -641,7 +635,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                  captionAlign: "left",
                                  width: "100%",
                                  height: "100%",
-                                 readonly: Boolean(this.currentTheme.match(/^wm_/))};
+                                 readonly: Boolean(this.currentTheme.match(/^wm\./))};
 
 
         new wm.Label({name: "editorsHeading", caption: "Quick Theme Creator", width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
@@ -671,7 +665,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
         editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]},
 				    name: "borderRadius",
@@ -686,7 +680,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
         editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]},
 				    name: "borderWidth",
@@ -701,7 +695,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                     height: "100%",
                                     owner: this,
                                     parent: container,
-                                    readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                    readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
         new wm.Label({caption: "Page Style",
                       width: "75px",
@@ -727,7 +721,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
         editors.push(new wm.ColorPicker({_classes: {domNode: ["StudioEditor"]},
 					 name: "pageFontColor",
@@ -740,7 +734,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
         editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]},
 				    name: "pageFontSize",
@@ -755,7 +749,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
 	editors.push(new wm.SelectMenu({_classes: {domNode: ["StudioEditor"]},
 					name: "headerFontFamily",
@@ -769,7 +763,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                        readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                        readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
 
         new wm.Label({caption: "Clickable Styles",
@@ -795,7 +789,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
         var widget_json = this.themeTypes["Image"];
         var val =
             this.getThemeDataValue("Document-ClickablesDefault-Background", "Image-Repeat") + "," +
@@ -822,7 +816,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
         editors.push(new wm.Number({_classes: {domNode: ["StudioEditor"]},
 				    name: "headerFontSize",
@@ -837,7 +831,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                          height: "100%",
                                          owner: this,
                                          parent: container,
-                                         readonly: Boolean(this.currentTheme.match(/^wm_/))}));
+                                         readonly: Boolean(this.currentTheme.match(/^wm\./))}));
 
 
         new wm.Label({caption: "Everything you need to create a basic theme can be found here. To create a more sophisticated theme, you'll need to try the settings in 'Full Theme Settings' and 'Advanced Settings'.  If you change font sizes for headers and Accordions and FancyPanels stop fitting, you may need to go to 'Widget Settings' to adjust the size of your Accordions and FancyPanel titles.",
@@ -1287,7 +1281,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                                  dataValue: value,
                                  width: "100%",
                                  height: "100%",
-                                 readonly: Boolean(this.currentTheme.match(/^wm_/))};
+                                 readonly: Boolean(this.currentTheme.match(/^wm\./))};
                     var widget_json = this.themeTypes[styleName];
 
                     var e =
@@ -1316,7 +1310,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         //var buttonpanel = this.createSaveThemeButtonPanel();
 
 	var selectedLevel = this.themeGroupList.selectedItem.getData().dataValue;
-	if (selectedLevel.match(/Content$/) && !this.currentTheme.match(/^wm_/)) {
+	if (selectedLevel.match(/Content$/) && !this.currentTheme.match(/^wm\./)) {
 	    new wm.Label({width: "100%", height: "50px", parent: this.widgetEditPanel, owner: this, singleLine: false, caption: "Use the controls below to copy styles from another panel type; select the panel type to copy from and either copy all styles for that group, or just update just the values shown above."});
 	    var buttonpanel = new wm.Panel({layoutKind: "left-to-right", width: "100%", height: "80px", owner: this, parent: this.widgetEditPanel, margin: "10,5,10,5", verticalAlign: "top", horizontalAlign: "right"});
 
@@ -1330,8 +1324,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 						    height: "40px",
 						    dataValue: "Document",
 						    options: wm.Array.removeElement(["Document", "MainContent", "EmphasizedContent", "HeaderContent"], selectedLevel).join(",")});
-	    var copyButton = new wm.Button({_classes: {domNode: ["StudioButton"]}, owner: this, parent: buttonpanel, caption: "Copy", width: "100%", margin: "3", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
-	    var copyAllButton = new wm.Button({_classes: {domNode: ["StudioButton"]}, owner: this, parent: buttonpanel, caption: "Copy All", width: "100%", margin: "3", height: "40px",disabled: this.currentTheme.match(/^wm_/), border: 2, borderColor: "#262b34"});
+	    var copyButton = new wm.Button({_classes: {domNode: ["StudioButton"]}, owner: this, parent: buttonpanel, caption: "Copy", width: "100%", margin: "3", height: "40px",disabled: this.currentTheme.match(/^wm\./), border: 2, borderColor: "#262b34"});
+	    var copyAllButton = new wm.Button({_classes: {domNode: ["StudioButton"]}, owner: this, parent: buttonpanel, caption: "Copy All", width: "100%", margin: "3", height: "40px",disabled: this.currentTheme.match(/^wm\./), border: 2, borderColor: "#262b34"});
 
 	    copyButton.connect(copyButton, "onclick", this, function() {
                 studio.beginWait("Copying...");
@@ -1366,7 +1360,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 		     height: "20px",
 		     owner: this,
 		     parent: this.widgetEditPanel,
-		     readonly: Boolean(this.currentTheme.match(/^wm_/))
+		     readonly: Boolean(this.currentTheme.match(/^wm\./))
 		    };
 
 	var editors = [];
@@ -1607,7 +1601,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         if (editableProps.length)
             dojo.forEach(editableProps, dojo.hitch(this, function(p) {
 		var props = {_classes: {domNode: ["StudioEditor"]},
-			     captionSize: "120px", captionAlign: "left",  padding: "2,5,2,5", caption: p, dataValue: this.themePrototype[name][p] || ctor.prototype[p], width: "100%", height: "20px", owner: this, parent: this.widgetEditPanel, name: p, readonly: Boolean(this.currentTheme.match(/^wm_/))};
+			     captionSize: "120px", captionAlign: "left",  padding: "2,5,2,5", caption: p, dataValue: this.themePrototype[name][p] || ctor.prototype[p], width: "100%", height: "20px", owner: this, parent: this.widgetEditPanel, name: p, readonly: Boolean(this.currentTheme.match(/^wm\./))};
 		var e;
 		switch(p) {
 		case "borderColor":
@@ -1756,7 +1750,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
     addThemeEditor: function(inName, inDisplayName, inValue, inGroupName, parent, showGroupName) {
         var props = {_classes: {domNode: ["StudioEditor"]},
-		     captionSize: "120px", captionAlign: "left", padding: "2,5,2,5", caption: inDisplayName || (((showGroupName) ? inGroupName + "-" : "") + inName), dataValue: inValue, width: "100%", height: "20px", owner: this, parent: parent, name: inGroupName + "__" + inName, readonly: this.currentTheme.match(/^wm_/)};
+		     captionSize: "120px", captionAlign: "left", padding: "2,5,2,5", caption: inDisplayName || (((showGroupName) ? inGroupName + "-" : "") + inName), dataValue: inValue, width: "100%", height: "20px", owner: this, parent: parent, name: inGroupName + "__" + inName, readonly: this.currentTheme.match(/^wm\./)};
         var e;
         var shortname = inName.replace(/^.*\-/, "");
         switch(shortname) {
@@ -1976,19 +1970,19 @@ dojo.declare("ThemeDesigner", wm.Page, {
     saveTheme: function() {
         studio.beginWait("Saving...");
 
-	var result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "themedescriptor.json",dojo.toJson(this.themeData,true)]);
+	var result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme.replace(/^.*\./,""), "themedescriptor.json",dojo.toJson(this.themeData,true)]);
         if (result)
-            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "theme.css",this.optimizeCSS(this.cssText)]);
+            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme.replace(/^.*\./,""), "theme.css",this.optimizeCSS(this.cssText)]);
         if (result)
-            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "mtheme.css",this.optimizeCSS(this.mobileCssText)]);
+            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme.replace(/^.*\./,""), "mtheme.css",this.optimizeCSS(this.mobileCssText)]);
         if (result)
-            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "Theme.js",dojo.toJson(this.themePrototype, true)]);
+            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme.replace(/^.*\./,""), "Theme.js",dojo.toJson(this.themePrototype, true)]);
         studio.endWait("Saving...");
         if (!result) {
             app.toastWarning("Error saving theme!");
             return;
         }
-        app.toastSuccess("Theme '" + this.currentTheme + "' saved!");
+        app.toastSuccess("Theme '" + this.currentTheme.replace(/^.*\./,"") + "' saved!");
         this.setDirty(false);
 
         // force an update in the applicaton's theme if we've modified its current theme
@@ -2040,7 +2034,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         //var selectedName = this.themeList.selectedItem.getData().dataValue;
         var selectedName = this.copyTheme;
         var newname = selectedName;
-        newname = newname.replace(/^wm_/, "");
+        newname = newname.replace(/\.wm_/, ".");
         var list = [];
         var tmplist = studio.themesListVar.getData();
         for (var i = 0; i < tmplist.length; i++) list.push(tmplist[i].dataValue);
@@ -2052,7 +2046,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             } else
                 newname += "1";
         }
-        dialog.setInputDataValue(newname);
+        dialog.setInputDataValue(newname.replace(/^.*\./,""));
         this.connect(dialog, "onButton2Click", this, function(inSender, inText) {
             this.disconnectEvent("onButton2Click");
             this.disconnectEvent("onButton1Click");
@@ -2096,11 +2090,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
         if (!inText) {
             app.alert("Please enter a name for your theme before hitting OK...");
             return;
-        } else if (dojo.indexOf(list, inText) != -1) {
+        } 
+        inText = "common.themes." + inText;
+        if (dojo.indexOf(list, inText) != -1) {
             app.alert("Unfortunately, " + inText + " is already in use");
-        } else if (inText.match(/^wm_/)) {
-            app.alert("Only built-in themes can use the wm_ prefix");
-            return;
         }
         dialog.dismiss();
         this.disconnectEvent("onButton2Click");
