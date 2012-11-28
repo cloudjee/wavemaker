@@ -77,9 +77,9 @@ wm.Property.extend({
 	},
     setProperty: function(inId) {
 	this.selectProperty(inId);
-    },
+    }, 
 	write: function() {
-		var prop = this.owner.getValue(this.property);
+        var prop = this.owner.getValue(this.property);
 		if (prop && prop instanceof wm.Variable) {
 			this.type = prop.type;
 		}
@@ -89,6 +89,14 @@ wm.Property.extend({
 	    try {
 		this.selectProperty(this.property); // updates type field
 	    } catch(e){}
+	    var operation = "";
+	    if (this.operation) {
+    	    if (typeof this.operation == "number" || typeof this.operation == "boolean") {
+    	       operation = this.operation;
+    	    } else if (typeof this.operation == "string") {
+    	       operation = "'" + this.operation + "'";
+    	    }
+    	}
 		return '[' +
 			'"' + this.name + '", ' + 
 			'"' + this.property + '", ' + 
@@ -99,8 +107,10 @@ wm.Property.extend({
 						(this.bindSource ? ', bindSource: true' : '') +
 					(this.bindTarget ? ', bindTarget: true' : '') +
 					(this.ignore ? ', ignore: true' : '') +					
-					(this.operation ? ', operation:"' + this.operation + '"' : '') + 
-					(this.type ? ', type: "' + this.type + '"' : '')) +
+					(this.hidden ? ', hidden: true' : '') +										
+					(this.writeonly ? ', writeonly: true' : '') +															
+					(operation ? ', operation:' + operation : '') + 
+					(this.type && !operation ? ', type: "' + this.type + '"' : '')) +
 			'}' +
 		']';
 	}
@@ -116,6 +126,7 @@ wm.Object.extendSchema(wm.Property, {
     isEvent: {group: "widgetName", order: 20},
     readonly: {group: "widgetName", order: 30},
     ignore: {group: "widgetName", order: 40},
+    hidden: {group: "widgetName", order: 45},    
     isDataField: {group: "widgetName", order: 50},
     operation: {group: "widgetName", order: 60}
 });
