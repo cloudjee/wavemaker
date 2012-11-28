@@ -179,6 +179,24 @@ dojo.declare("PropertyPublisher", wm.Page, {
 					name: name + (!inNode.data ? "Data" : "")
 				});
 				p.selectProperty(property);
+				if (propDef.publishWithProps) {
+				    dojo.forEach(propDef.publishWithProps, function(propName) {
+				        var property = this.inspected.getId() + "." + propName;
+				        if (!this.propComponentList[property]) {
+               				var p2 = this.propComponentList[property] = new wm.Property({
+            					owner: studio.page,
+            					name: this.calcName(propName)
+            				});				           
+            				p2.selectProperty(property);
+            				var propDef2 = this.inspected.listProperties()[propName];
+            				p2.hidden = propDef2.hidden || false;
+            				p2.readonly= propDef2.readonly || false;        				
+            				p2.writeonly= propDef2.writeonly || false;
+            				p2.bindSource = propDef2.bindSource || propDef2.bindable || false;
+            				p2.bindTarget = propDef2.bindTarget || propDef2.bindable || false;        				
+            		    }
+				    }, this);
+				}
                 if (!propDef || inNode.parent == this.fieldsRoot) {
                     p.isDataField = inNode.parent == this.fieldsRoot;
                     p.bindSource = true;
@@ -191,8 +209,8 @@ dojo.declare("PropertyPublisher", wm.Page, {
                     /* Don't let the owner set the data of a servicevar, only the server/service should do that */
                     this.inspected instanceof wm.ServiceVariable === false;
 				} else if (!p.isEvent) {
-					p.bindSource = propDef.bindable || propDef.bindSource;
-					p.bindTarget = propDef.bindable || propDef.bindTarget;
+					p.bindSource = propDef.bindable || propDef.bindSource || false;
+					p.bindTarget = propDef.bindable || propDef.bindTarget || false;
 				}
 			}
 		} else {
@@ -200,6 +218,15 @@ dojo.declare("PropertyPublisher", wm.Page, {
 				this.propComponentList[property].destroy();
 				delete this.propComponentList[property];
 			}
+			if (propDef.publishWithProps) {
+				dojo.forEach(propDef.publishWithProps, function(propName) {
+    				var property = this.inspected.getId() + "." + propName;
+				    if (this.propComponentList[property]) {
+				        this.propComponentList[property].destroy();
+        				delete this.propComponentList[property];
+        			}
+        		}, this);
+        	}
 		}
 		this.onChange();
 	},
