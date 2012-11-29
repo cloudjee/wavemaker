@@ -141,12 +141,17 @@ wm.FormPanel.extend({
     makeEditors: function() {
         var typeDef;
         var fields;
-
+        var dbFieldDefs = {};
         typeDef = this.getTypeDef();
         if (typeDef) {
             var dataSource = "object"; // either liveData, compositeKey or object
             if (typeDef.liveService) {
                 dataSource = "liveData";
+    			studio.dataService.requestSync("getEntity", [typeDef.service, this.type.replace(/^.*\./,"")], function(inResult) {
+    			     dojo.forEach(inResult.properties, function(field) {
+    			         dbFieldDefs[field.name] = field;
+    			     });
+    			});
             } else { /* If there is a parent form and its a liveService and this subform's type is NOT liveSource then its a composite key */
                 var parentForm = this.getParentForm();
                 if (parentForm) {
@@ -216,7 +221,7 @@ wm.FormPanel.extend({
                 var fieldName = fields[i];
                 var fieldDef = typeDef.fields[fieldName];
                 if (!fieldDef.nogen && !fieldDef.readonly) {
-                    var e = this.makeEditor(fieldDef, fieldName);
+                    var e = this.makeEditor(fieldDef, fieldName, dbFieldDefs);
                     if (e instanceof wm.Lookup && dataSource == "compositeKey") {
                         e.dataField = e.formField;
                         e.dataType = fieldDef.type;
@@ -231,14 +236,14 @@ wm.FormPanel.extend({
      * METHOD: makeEditor (DESIGNTIME)
      * DESCRIPTION: Figure out if we're creating a basic editor or related/lookup editor; and create the editor
      ***************/
-    makeEditor: function(inFieldInfo, fieldName) {
+    makeEditor: function(inFieldInfo, fieldName, dbFieldDefs) {
         var formField = this._getFormField( /*inFieldInfo.dataIndex */ fieldName);
         if (formField && !this._getEditorForField(formField)) {
             if (wm.typeManager.isStructuredType(inFieldInfo.type) || inFieldInfo.isList) {
                 if (inFieldInfo.isList && (this.formBehavior == 'insertOnly' || this.subFormOnly)) return;
                 return this.makeRelatedEditor(inFieldInfo, formField);
             } else {
-                return this.makeBasicEditor(inFieldInfo, formField);
+                return this.makeBasicEditor(inFieldInfo, formField, dbFieldDefs);
             }
         }
     },
@@ -247,14 +252,21 @@ wm.FormPanel.extend({
      * METHOD: makeBasicEditor (DESIGNTIME)
      * DESCRIPTION: Create a basic editor based on type information
      ***************/
-    makeBasicEditor: function(inFieldInfo, inFormField) {
+    makeBasicEditor: function(inFieldInfo, inFormField, dbFieldDefs) {
         var props = dojo.mixin(this.getFormEditorProps() || {}, {
             formField: inFormField,
             readonly: this.readonly,
             name: wm.makeNameForProp(inFormField, "Editor")
         });
-
-        var e = this.createEditor(inFieldInfo, props, {}, wm.getEditorClassName(inFieldInfo.displayType || inFieldInfo.type));
+        var editorClassName = wm.getEditorClassName(inFieldInfo.displayType || inFieldInfo.type);
+		if (editorClassName == "wm.Text" && dbFieldDefs[inFormField] && dbFieldDefs[inFormField].column && dbFieldDefs[inFormField].column.length) {
+		    if (dbFieldDefs[inFormField].column.length > 127) {
+		        editorClassName = "wm.LargeTextArea";
+		        props.height = "80px";
+		    }
+		    props.maxChars = dbFieldDefs[inFormField].column.length;
+		}
+        var e = this.createEditor(inFieldInfo, props, {}, editorClassName);
         if (e) {
             if (!e.caption) e.setCaption(wm.capitalize(inFormField));
         }
@@ -318,25 +330,27 @@ wm.FormPanel.extend({
         if (e) {
             this.placeEditor(e);
             if (wm.isInstanceType(e, wm.Number) || wm.isInstanceType(e, wm.Date) ||  wm.isInstanceType(e, wm.DateTime)) {
-            e.emptyValue = "zero";
+                e.emptyValue = "zero";
             } else {
-            e.emptyValue = "emptyString";
+                e.emptyValue = "emptyString";
             }
 
             if (e.parent.horizontalAlign != "justified")
-            e.setWidth(this.editorWidth);
-                    else
-                        e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
+             e.setWidth(this.editorWidth);
+            else
+                e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 
-            if (studio.currentDeviceType == "desktop") {
-            e.setHeight(this.editorHeight);
-            } else {
-            e.desktopHeight = this.editorHeight;
-            if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
-                e.setHeight(e.mobileHeight);
-            } else {
-                e.setHeight(this.editorHeight);
-            }
+            if (!wm.isInstanceType(e, wm.LargeTextArea)) {
+                if (studio.currentDeviceType == "desktop") {
+                    e.setHeight(this.editorHeight);
+                } else {
+                    e.desktopHeight = this.editorHeight;
+                    if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
+                        e.setHeight(e.mobileHeight);
+                    } else {
+                        e.setHeight(this.editorHeight);
+                    }
+                }
             }
             //console.log(this.name, "createEditor", arguments, e);
             return e;
