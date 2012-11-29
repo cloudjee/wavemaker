@@ -251,7 +251,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    '"' + image + '", ' +
 	    '"' + this.description + '", ' +
 	    '{},' +
-	    "false" +
+	    "false," +
+	    (this.index === null ? "undefined" : this.index) +
 	    ']);';
 	//
 	var c, props = [];
@@ -340,7 +341,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 
 wm.Object.extendSchema(wm.CompositePublisher, {
-	download: {operation:1, group: "operation"}
+	download: {operation:1, group: "operation"},
+	index: {type: "Number", order:100}
 });
 /*
 wm.registerPackage([bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);

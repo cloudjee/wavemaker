@@ -15,7 +15,7 @@
 dojo.provide("wm.studio.app.packageLoader");
 
 wm.packageImages = {};
-_import = function(inTab, inName, inClass, inModule, inImage, inDescription, inProps, isBeta) {
+_import = function(inTab, inName, inClass, inModule, inImage, inDescription, inProps, isBeta, inIndex) {
 	var
 		n=inName,
 		c=inClass,
@@ -51,7 +51,7 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
     if (inTab == bundlePackage.Non_Visual_Components || inTab == bundlePackage.Services) {
 	studio.addComponentMenuItem(inTab, n, d, i, c, m, inProps);
     } else {
-	studio["palette"].addItem(inTab, n, d, i, c, m, inProps, isBeta);
+	studio["palette"].addItem(inTab, n, d, i, c, m, inProps, isBeta,inIndex);
     }
 }
 
