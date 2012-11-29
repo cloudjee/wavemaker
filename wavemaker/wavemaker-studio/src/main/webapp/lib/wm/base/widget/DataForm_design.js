@@ -279,6 +279,7 @@ wm.FormPanel.extend({
      ***************/
     makeRelatedEditor: function(inFieldInfo, inFormField) {
         var props = this.getFormEditorProps();
+        delete props.height;
         props.caption = wm.capitalize(inFormField);
         props.formField = inFormField;
         props.width = this.editorWidth;
@@ -340,7 +341,7 @@ wm.FormPanel.extend({
             else
                 e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
 
-            if (!wm.isInstanceType(e, wm.LargeTextArea)) {
+            if (e.constructor.prototype.height == wm.Text.prototype.height) {
                 if (studio.currentDeviceType == "desktop") {
                     e.setHeight(this.editorHeight);
                 } else {
