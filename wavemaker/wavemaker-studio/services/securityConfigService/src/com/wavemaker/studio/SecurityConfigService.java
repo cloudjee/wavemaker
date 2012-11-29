@@ -101,10 +101,10 @@ public class SecurityConfigService {
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-        if (options != null) {
-            return options.isEnforceSecurity();
-        }
+//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
+//        if (options != null) {
+//            return options.isEnforceSecurity();
+//        }
         return false;
     }
 
