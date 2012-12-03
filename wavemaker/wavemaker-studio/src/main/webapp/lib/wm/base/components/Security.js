@@ -22,10 +22,8 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 	properties = {
 	    j_username : args[0],
 	    j_password : args[1]
-	};
+	    };
     }
-
-    properties.ajax = 'true';
 
     var deferred = new dojo.Deferred();
 
@@ -33,7 +31,8 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
     if (wm.xhrPath) url = wm.xhrPath + url;
     var def= dojo.xhrPost({
 	url: url,
-	content : properties});
+	content : properties,
+	handleAs: "json"});
 
     var onError = function(inError) {
 	if (loginFailedCallback) {
