@@ -646,7 +646,7 @@ dojo.declare("wm.studio.Project", null, {
         dSecurityCheck.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
             allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
-            allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
+            allProjectJS += "wm.JsonRpcService.smdCache['waveMakerService.smd'] = " + this.loadProjectData("services/waveMakerService.smd") + ";\n";
             allProjectJS += this.loadProjectData("types.js") + "\n";
             var theme = studio.application.theme;
             var themeName = theme.replace(/^.*\./,"");
