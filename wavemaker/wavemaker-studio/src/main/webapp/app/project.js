@@ -645,7 +645,7 @@ dojo.declare("wm.studio.Project", null, {
         dSecurityCheck.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
             allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
-            allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
+            allProjectJS += "wm.JsonRpcService.smdCache['waveMakerService.smd'] = " + this.loadProjectData("services/waveMakerService.smd") + ";\n";
             allProjectJS += this.loadProjectData("types.js") + "\n";
             var themename = studio.application.theme;
             allProjectJS += "wm.Application.themeData['" + themename + "'] = " + dojo.toJson(wm.Application.themeData[themename]) + ";\n"; // TODO need to utilize this data
