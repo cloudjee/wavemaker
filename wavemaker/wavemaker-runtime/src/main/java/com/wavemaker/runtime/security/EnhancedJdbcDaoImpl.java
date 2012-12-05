@@ -16,7 +16,6 @@ package com.wavemaker.runtime.security;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -39,8 +38,6 @@ import com.wavemaker.runtime.WMAppContext;
  */
 public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
 
-	private String authoritiesByUsernameQueryParamType;
-
 	@Override
 	protected void initDao() {
 		String qryStr = getUsersByUsernameQuery();
@@ -49,7 +46,6 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
 			if (wmApp != null && WMAppContext.getInstance().isMultiTenant()) {
 				qryStr = insertTenantIdField(getUsersByUsernameQuery(),
 						wmApp.getTenantColumnName());
-				// } catch (WMRuntimeInitException ex) {}
 			}
 		} catch (Exception ex) {
 		}
@@ -93,7 +89,6 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
                 } catch (Exception ex) {
                 }
 
-                ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
                 WMUserDetails user = new WMUser(userId, password, userName, tenantId, enabled, true, true,
                         true, AuthorityUtils.NO_AUTHORITIES);
 
@@ -119,13 +114,4 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
         return new WMUser(returnUsername, userFromUserQuery.getPassword(), userLongName, tenantId, userFromUserQuery.isEnabled(),
                 true, true, true, combinedAuthorities);
     }
-
-	public String getAuthoritiesByUsernameQueryParamType() {
-		return this.authoritiesByUsernameQueryParamType;
-	}
-
-	public void setAuthoritiesByUsernameQueryParamType(
-			String authoritiesByUsernameQueryParamType) {
-		this.authoritiesByUsernameQueryParamType = authoritiesByUsernameQueryParamType;
-	}
 }
