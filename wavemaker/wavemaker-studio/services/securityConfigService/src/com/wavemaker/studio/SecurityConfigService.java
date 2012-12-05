@@ -96,10 +96,6 @@ public class SecurityConfigService {
         return getSecToolsMgr().getGeneralOptions();
     }
 
-    public List<String> getJOSSOOptions() throws JAXBException, IOException {
-        return getSecToolsMgr().getJOSSOOptions();
-    }
-
     public boolean isSecurityEnabled() throws JAXBException, IOException {
 //        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
 //        if (options != null) {
@@ -361,20 +357,9 @@ public class SecurityConfigService {
         SecurityToolsManager.testLDAPConnection(ldapUrl, managerDn, managerPassword);
     }
 
-    public void configJOSSO(boolean enforceSecurity, String primaryRole) throws JAXBException, IOException {
-        if (enforceSecurity) {
-            getSecToolsMgr().registerJOSSOSecurityService();
-            getSecToolsMgr().setJOSSOOptions(primaryRole);
-            // getSecToolsMgr().setGeneralOptions(enforceSecurity);
-        } else {
-            getSecToolsMgr().removeJOSSOConfig();
-
-        }
-    }
-
     public List<String> getRoles(Boolean isJoSSO) throws IOException, JAXBException {
         if (Boolean.valueOf("true")) {
-            return getSecToolsMgr().getJOSSORoles();
+        	throw new IOException("Unsupported");
         } else {
             return getSecToolsMgr().getRoles();
         }
@@ -384,16 +369,8 @@ public class SecurityConfigService {
         return getSecToolsMgr().getRoles();
     }
 
-    public List<String> getJOSSORoles() throws IOException, JAXBException {
-        return getSecToolsMgr().getJOSSORoles();
-    }
-
     public void setRoles(List<String> roles) throws IOException, JAXBException, ConfigurationException {
         getSecToolsMgr().setRoles(roles);
-    }
-
-    public void setJOSSORoles(List<String> roles) throws IOException, JAXBException {
-        getSecToolsMgr().setJOSSORoles(roles);
     }
 
     /**
