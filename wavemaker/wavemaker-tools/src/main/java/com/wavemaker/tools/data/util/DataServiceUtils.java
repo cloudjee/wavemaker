@@ -453,7 +453,7 @@ public class DataServiceUtils {
 
     public static Beans readBeans(com.wavemaker.tools.io.File springConfig, FileService fileService) {
         try {
-            return SpringConfigSupport.readBeans(springConfig, fileService);
+            return SpringConfigSupport.readBeans(springConfig);
         } catch (JAXBException ex) {
             throw new ConfigurationException(ex);
         } catch (IOException ex) {

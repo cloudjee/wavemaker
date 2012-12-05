@@ -25,7 +25,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Beans;
 
 /**
@@ -54,13 +53,6 @@ public class SpringConfigSupport {
         return ret;
     }
 
-    @Deprecated
-    public static Beans readBeans(File configFile, FileService fileService) throws JAXBException, IOException {
-        Reader reader = fileService.getReader(configFile);
-        Beans ret = readBeans(reader);
-        reader.close();
-        return ret;
-    }
 
     public static Beans readBeans(File configFile) throws JAXBException, IOException {
         Reader reader = configFile.getContent().asReader();
@@ -75,14 +67,7 @@ public class SpringConfigSupport {
         Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
         return (Beans) unmarshaller.unmarshal(reader);
     }
-
-    @Deprecated
-    public static void writeBeans(Beans beans, File configFile, FileService fileService) throws JAXBException, IOException {
-        Writer writer = fileService.getWriter(configFile);
-        writeBeans(beans, writer);
-        writer.close();
-    }
-
+    
     public static void writeBeans(Beans beans, File file) throws JAXBException, IOException {
         Writer writer = file.getContent().asWriter();
         try {
