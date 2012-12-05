@@ -19,9 +19,9 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
 
 public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler  {
-	
+
 	private RequestCache requestCache = new HttpSessionRequestCache();
-	
+
 	private static final String SUCCESS_URL = "url";
 
 	public WMAuthenticationSuccessHandler(){
@@ -34,45 +34,47 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 			ServletException{
 		System.out.println("********** SUCCESSS *****************");
 		String redirectURL = null;
+		SavedRequest savedRequest = null;
 		if(!isAjaxRequest(request)){
-            super.onAuthenticationSuccess(request, response, authentication);
-            return;			
+			super.onAuthenticationSuccess(request, response, authentication);
+			return;			
 		}
 		else{
-			if(requestCache == null){
-				System.out.println("Not able to get a requestCache !!!!");					
-				return;
+			if(requestCache != null){
+				savedRequest = requestCache.getRequest(request, response);
 			}
-			SavedRequest savedRequest = requestCache.getRequest(request, response); 
-	        if (savedRequest == null) {
-	        	redirectURL = getDefaultTargetUrl();
-	        	System.out.println("** no saved request");
-	        }
-	        else{
-	        	redirectURL = savedRequest.getRedirectUrl();
-	        }
-			
-	        String targetUrlParameter = getTargetUrlParameter();
-	        if (isAlwaysUseDefaultTargetUrl() || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-	        	System.out.println("have target. Remove and Super");
-	            requestCache.removeRequest(request, response);
-	            super.onAuthenticationSuccess(request, response, authentication);
-	            return;
-	        }
+			if (savedRequest == null) {
+				System.out.println("** NO saved request, using Target URL");
+				redirectURL = determineTargetUrl(request, response); //returning "/"
+			}
+			else{
+				System.out.println("*** YES saved request, using redirect URL");
+				redirectURL = savedRequest.getRedirectUrl(); 
+			}
 
-	        clearAuthenticationAttributes(request);
+			String targetUrlParameter = getTargetUrlParameter();
+			if (isAlwaysUseDefaultTargetUrl() || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
+				System.out.println("have targetURL: " + targetUrlParameter + " Removing request");
+				requestCache.removeRequest(request, response);
+			}
+
+			if (isAlwaysUseDefaultTargetUrl()){
+				redirectURL = getDefaultTargetUrl();
+			}
+
+			clearAuthenticationAttributes(request);
+
+			if (redirectURL == null || redirectURL.isEmpty()){
+				System.out.println("No redirectUrl, throw");
+				throw new IOException("Unable to determine a redirect URL");
+			}
+			System.out.println("redirect URL IS: " + redirectURL);
 
 			request.setCharacterEncoding("UTF-8");
 			response.setContentType("text/plain;charset=utf-8");
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);
 			response.setHeader("Pragma", "no-cache");
-
-			// Use the DefaultSavedRequest URL
-			if (redirectURL == null || redirectURL.isEmpty()){
-				System.out.println("No redirectUrl, throw");
-			}
-			System.out.println("URL IS : " + redirectURL);
 			String jsonContent = "{\"url\":\"" +  redirectURL + "\"}";
 			response.getWriter().print(jsonContent);
 			response.getWriter().flush();
