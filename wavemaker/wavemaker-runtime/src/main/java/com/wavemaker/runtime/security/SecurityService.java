@@ -55,6 +55,10 @@ public class SecurityService {
 
     private Map<String, List<Rule>> roleMap;
 
+    public SecurityService() {
+        System.out.println("*** SecurityService is being instantiated ***");
+    }
+
     /**
      * Provides a simple username/password authentication. It uses the authentication provider(s) specified in the
      * security spring config file. Upon successful authentication, the Authentication object would be set into
@@ -86,7 +90,7 @@ public class SecurityService {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-    private Authentication getAuthenticatedAuthentication() {
+    private static Authentication getAuthenticatedAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication instanceof AnonymousAuthenticationToken ? null : authentication;
     }
@@ -108,8 +112,14 @@ public class SecurityService {
      */
     @ExposeToClient
     public String getUserName() {
-        WMAppContext wmApp = WMAppContext.getInstance();
-        return wmApp.getUserNameForUserID(this.getUserId());
+        //WMAppContext wmApp = WMAppContext.getInstance();
+        //return wmApp.getUserNameForUserID(this.getUserId());
+        Authentication authentication = getAuthenticatedAuthentication();
+        if (authentication != null) {
+            WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
+            return principal.getUserLongName();
+        }
+        return null;
     }
 
     /**
@@ -160,13 +170,22 @@ public class SecurityService {
             }
         }
 
-        WMAppContext wmApp = WMAppContext.getInstance();
-        if (wmApp != null && wmApp.isMultiTenant()) {
-            Integer tid = wmApp.getTenantIdForUser(getUserName());
-            RuntimeAccess.getInstance().setTenantId(tid);
-        }
-
         return roleNames.toArray(new String[0]);
+    }
+
+    /**
+     * Returns the tenant Id for the logged in user.
+     *
+     * @return The tenant Id.
+     */
+    @ExposeToClient
+    public static int getTenantId() {
+        Authentication authentication = getAuthenticatedAuthentication();
+        if (authentication != null) {
+            WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
+            return principal.getTenantId();
+        }
+        return -1;
     }
 
     /**

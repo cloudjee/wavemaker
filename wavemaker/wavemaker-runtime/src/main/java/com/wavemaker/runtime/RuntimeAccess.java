@@ -167,7 +167,7 @@ public class RuntimeAccess {
         this.serviceManager = serviceManager;
     }
 
-    public void setTenantId(int val) {
+    /*public void setTenantId(int val) {
         this.getSession().setAttribute(CommonConstants.LOGON_TENANT_ID, val);
     }
 
@@ -178,7 +178,7 @@ public class RuntimeAccess {
         }
 
         return (Integer) o;
-    }
+    }*/
 
     public Object getSpringBean(String beanId) {
         if (this.request == null) {

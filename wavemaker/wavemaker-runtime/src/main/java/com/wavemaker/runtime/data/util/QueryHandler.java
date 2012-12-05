@@ -25,6 +25,8 @@ import java.beans.PropertyDescriptor;
 import java.beans.Introspector;
 import java.beans.IntrospectionException;
 
+import com.wavemaker.runtime.security.SecurityService;
+import com.wavemaker.runtime.security.WMUserDetails;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.cfg.Configuration;
@@ -37,6 +39,7 @@ import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * This class wraps Hibernate APIs to incorporate the tenant ID in the DB queries.
@@ -80,7 +83,7 @@ public class QueryHandler implements InvocationHandler {
 
         WMAppContext wmApp = WMAppContext.getInstance();
         String tFldName = wmApp.getTenantFieldName();
-        int tid = RuntimeAccess.getInstance().getTenantId();
+        int tid = SecurityService.getTenantId();
         boolean tidExists = true;
 
         if (tid == -1) {

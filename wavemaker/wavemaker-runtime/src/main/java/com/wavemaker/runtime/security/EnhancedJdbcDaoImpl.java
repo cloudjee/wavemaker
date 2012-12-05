@@ -18,14 +18,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -42,14 +43,12 @@ import com.wavemaker.runtime.WMAppContext;
  * 
  * @author Frankie Fu
  */
-public class EnhancedJdbcDaoImpl extends JdbcDaoImpl { // implements
-														// UserDetailsService
-														// ???
+public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
 
 	private String authoritiesByUsernameQueryParamType;
 
-	// @Override
-	protected void initMappingSqlQueries() {
+	@Override
+	protected void initDao() {
 		String qryStr = getUsersByUsernameQuery();
 		try {
 			WMAppContext wmApp = WMAppContext.getInstance();
@@ -61,13 +60,11 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl { // implements
 		} catch (Exception ex) {
 		}
 
-//		this.usersByUsernameMapping = new UsersByUsernameMapping(
-//				getDataSource(), qryStr);
-//		this.authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(
-//				getDataSource());
+        //TODO: Get rid of this line of code. Probably, no need to use it.
+        MappingSqlQuery authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(getDataSource());
 		
 		this.setUsersByUsernameQuery(qryStr);
-//		this.setGroupAuthoritiesByUsernameQuery();
+		this.setGroupAuthoritiesByUsernameQuery(authoritiesByUsernameMapping.getSql());
 	}
 
 	private String insertTenantIdField(String str, String colName) {
@@ -85,6 +82,52 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl { // implements
 
 		return sb.toString();
 	}
+
+    @Override
+    protected List<UserDetails> loadUsersByUsername(String username) {
+        return getJdbcTemplate().query(getUsersByUsernameQuery(), new String[] {username}, new RowMapper<UserDetails>() {
+            public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                String userId = rs.getString(1);
+                String password = rs.getString(2);
+                boolean enabled = rs.getBoolean(3);
+                String userName = rs.getString(4);
+
+                int tenantId = -1;
+                try {
+
+                    WMAppContext wmApp = WMAppContext.getInstance();
+                    if (wmApp != null && wmApp.isMultiTenant()) {
+                        tenantId = rs.getInt(5);
+                    }
+                } catch (Exception ex) {
+                }
+
+                ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                WMUserDetails user = new WMUser(userId, password, userName, tenantId, enabled, true, true,
+                        true, AuthorityUtils.NO_AUTHORITIES);
+
+                return user;
+            }
+
+        });
+    }
+
+    @Override
+    protected UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
+                                            List<GrantedAuthority> combinedAuthorities) {
+        String returnUsername = userFromUserQuery.getUsername();
+
+        if (!isUsernameBasedPrimaryKey()) {
+            returnUsername = username;
+        }
+
+        WMUserDetails wmUserDetails = (WMUserDetails) userFromUserQuery;
+        String userLongName = wmUserDetails.getUserLongName();
+        int tenantId = wmUserDetails.getTenantId();
+
+        return new WMUser(returnUsername, userFromUserQuery.getPassword(), userLongName, tenantId, userFromUserQuery.isEnabled(),
+                true, true, true, combinedAuthorities);
+    }
 
 	/**
 	 * Query object to look up a user's authorities.
@@ -109,52 +152,6 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl { // implements
 			GrantedAuthorityImpl authority = new GrantedAuthorityImpl(roleName);
 
 			return authority;
-		}
-	}
-
-	/**
-	 * Query object to look up a user.
-	 */
-	protected class UsersByUsernameMapping extends MappingSqlQuery {
-
-		protected UsersByUsernameMapping(DataSource ds, String str) {
-			// super(ds, getUsersByUsernameQuery());
-			super(ds, str);
-			declareParameter(new SqlParameter(Types.VARCHAR));
-			compile();
-		}
-
-		@Override
-		protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
-
-			String userid = rs.getString(1);
-			String password = rs.getString(2);
-			boolean enabled = rs.getBoolean(3);
-			String username = null;
-			try {
-				username = rs.getString(4);
-			} catch (SQLException e) {
-			}
-
-			try {
-				int tenantId = -1;
-				WMAppContext wmApp = WMAppContext.getInstance();
-				if (wmApp != null && wmApp.isMultiTenant()) {
-					tenantId = rs.getInt(5);
-					wmApp.setTenantIdForUser(username, tenantId);
-				}
-				// } catch (WMRuntimeInitException ex) {}
-			} catch (Exception ex) {
-			}
-
-			WMAppContext.getInstance().setUserNameForUserID(userid, username);
-			ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-			//new GrantedAuthority[] { new GrantedAuthorityImpl(
-			//		"HOLDER") });
-			UserDetails user = new User(userid, password, enabled, true, true,
-					true, authorities);
-			
-			return user;
 		}
 	}
 

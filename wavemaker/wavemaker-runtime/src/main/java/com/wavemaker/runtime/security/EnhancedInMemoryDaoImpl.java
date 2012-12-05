@@ -27,6 +27,7 @@ import com.wavemaker.runtime.WMAppContext;
  * 
  * @author Seung Lee
  */
+@Deprecated
 public class EnhancedInMemoryDaoImpl extends InMemoryDaoImpl {
 
     @Override
@@ -35,7 +36,7 @@ public class EnhancedInMemoryDaoImpl extends InMemoryDaoImpl {
 
         UserDetails details = userMap.getUser(username);
         if (details != null) {
-            WMAppContext.getInstance().setUserNameForUserID(username, username);
+            //WMAppContext.getInstance().setUserNameForUserID(username, username);
         }
 
         return details;
