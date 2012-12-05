@@ -16,20 +16,14 @@ package com.wavemaker.runtime.security;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
 
 import com.wavemaker.runtime.WMAppContext;
 
@@ -60,11 +54,8 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
 		} catch (Exception ex) {
 		}
 
-        //TODO: Get rid of this line of code. Probably, no need to use it.
-        MappingSqlQuery authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(getDataSource());
 		
 		this.setUsersByUsernameQuery(qryStr);
-		this.setGroupAuthoritiesByUsernameQuery(authoritiesByUsernameMapping.getSql());
 	}
 
 	private String insertTenantIdField(String str, String colName) {
@@ -128,32 +119,6 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
         return new WMUser(returnUsername, userFromUserQuery.getPassword(), userLongName, tenantId, userFromUserQuery.isEnabled(),
                 true, true, true, combinedAuthorities);
     }
-
-	/**
-	 * Query object to look up a user's authorities.
-	 */
-	protected class AuthoritiesByUsernameMapping extends MappingSqlQuery {
-
-		protected AuthoritiesByUsernameMapping(DataSource ds) {
-			super(ds, getAuthoritiesByUsernameQuery());
-			int type = Types.VARCHAR;
-			String sType = getAuthoritiesByUsernameQueryParamType();
-			// TODO: need to support other SQL types
-			if (sType != null && sType.equals("integer")) {
-				type = Types.INTEGER;
-			}
-			declareParameter(new SqlParameter(type));
-			compile();
-		}
-
-		@Override
-		protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
-			String roleName = getRolePrefix() + rs.getString(2);
-			GrantedAuthorityImpl authority = new GrantedAuthorityImpl(roleName);
-
-			return authority;
-		}
-	}
 
 	public String getAuthoritiesByUsernameQueryParamType() {
 		return this.authoritiesByUsernameQueryParamType;

@@ -112,8 +112,6 @@ public class SecurityService {
      */
     @ExposeToClient
     public String getUserName() {
-        //WMAppContext wmApp = WMAppContext.getInstance();
-        //return wmApp.getUserNameForUserID(this.getUserId());
         Authentication authentication = getAuthenticatedAuthentication();
         if (authentication != null) {
             WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
