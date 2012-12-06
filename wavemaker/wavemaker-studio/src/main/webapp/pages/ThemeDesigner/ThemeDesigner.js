@@ -422,15 +422,24 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
     // Populate this.widgetListVar
     initWidgetList: function() {
-        if (!this.widgetListVar.getData()) {
+        if(!this.widgetListVar.getData()) {
             var widgetList = [];
             // sync request
             loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", dojo.hitch(this, function(d) {
                 var list = eval("[" + d + "]");
-                for (var i = 0; i < list.length; i++) {
-                var cl = list[i][2];
-                    if (dojo.getObject(cl).prototype.themeable) {
-                        widgetList.push({dataValue: cl});
+                for(var i = 0; i < list.length; i++) {
+                    var cl = list[i][2];
+                    var ctor = dojo.getObject(cl);
+                    if(ctor) {
+                        dojo.getObject(cl);
+                        ctor = dojo.getObject(cl);
+                    }
+                    if(ctor) {
+                        if(ctor.prototype.themeable) {
+                            widgetList.push({
+                                dataValue: cl
+                            });
+                        }
                     }
                 }
                 this.widgetListVar.setData(widgetList);
@@ -2090,7 +2099,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         if (!inText) {
             app.alert("Please enter a name for your theme before hitting OK...");
             return;
-        } 
+        }
         inText = "common.themes." + inText;
         if (dojo.indexOf(list, inText) != -1) {
             app.alert("Unfortunately, " + inText + " is already in use");

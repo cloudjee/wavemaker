@@ -649,7 +649,7 @@ dojo.declare("wm.studio.Project", null, {
         dSecurityCheck.addCallback(dojo.hitch(this, function() {
             studio.incrementSaveProgressBar(1);
             allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
-            allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
+            allProjectJS += "wm.JsonRpcService.smdCache['waveMakerService.smd'] = " + this.loadProjectData("services/waveMakerService.smd") + ";\n";
             allProjectJS += this.loadProjectData("types.js") + "\n";
             var theme = studio.application.theme;
             var themeName = theme.replace(/^.*\./,"");
@@ -1841,7 +1841,7 @@ Studio.extend({
                 newtext = "@import \"" + filepath + "\";";
                 editArea.setText(newtext + "\n" + editArea.getText());
                 } else {
-                   newtext = "dojo.require(\"project." + filepath.replace(/\.js$/,"").replace(/\//g,".") + "\");";
+                   newtext = "dojo" + ".require(\"project." + filepath.replace(/\.js$/,"").replace(/\//g,".") + "\");";
                 editArea.setText(editArea.getText() + "\n" + newtext);// goes at end so that errors don't stop class from being declared (also needed for current technique for extracting the editable part of the application.js file)
                 }
             }

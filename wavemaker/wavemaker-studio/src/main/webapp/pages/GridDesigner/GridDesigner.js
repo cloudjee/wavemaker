@@ -47,9 +47,11 @@ dojo.declare("GridDesigner", wm.Page, {
     /* Called when deviceType changes, triggering the selected grid to be destroyed, recreated, and our current grid to be destroyed and
      * in need of reselection */
     reselectGrid:function() {
-        wm.onidle(this, function() {
-            this.currentGrid = app.getValueById(this.currentGridOwnerId + "." + this.currentGrid.name);
-        });
+        if (this.currentGrid) {
+            wm.onidle(this, function() {
+                this.currentGrid = app.getValueById(this.currentGridOwnerId + "." + this.currentGrid.name);
+            });
+        }
     },
     setGrid: function(inGrid) {
         this.currentGrid = inGrid;
@@ -298,25 +300,30 @@ dojo.declare("GridDesigner", wm.Page, {
             this.currentGrid.set_columns(inColumns);
         }
 
-        /* Composite */
-        else if (this.currentGrid.owner.isDesignLoaded() && wm.isInstanceType(this.currentGrid.owner, wm.Composite)) {
-            var composite = this.currentGrid.owner;
-            var publishedProps = composite.constructor.prototype.published;
-            wm.forEachProperty(publishedProps, dojo.hitch(this, function(schema, name) {
-                if (schema.target == this.currentGrid.name && schema.property == "columns") {
-                    this.currentGrid.owner["set" + wm.capitalize(schema.name)](inColumns);
-                }
-            }));
-        }
+        else {
+            var o = this.currentGrid.owner;
+            while (o != studio.page && !o.isDesignLoaded()) o = o.owner;
+            if (o.isDesignLoaded()) {
+                if (wm.isInstanceType(o, wm.Composite)) {
+                    /* Composite */
+                    var publishedProps = o.constructor.prototype.published;
+                    wm.forEachProperty(publishedProps, dojo.hitch(this, function(schema, name) {
 
-        /* PageContainer property allows editing of grid columns */
-        else if (this.currentGrid.owner.owner.isDesignLoaded()) {
-            var p = this.currentGrid.owner.owner;
-            wm.forEachProperty(p.subpageProplist, dojo.hitch(this, function(propertyPath, propertyName) {
-                if (propertyPath == this.currentGrid.name + ".columns") {
-                    p.setProp(propertyName, inColumns);
+                        if (schema.operation && schema.operationTarget.replace(/^.*\./,"") == this.currentGrid.name && schema.operation == "editColumns") {
+                            o["set" + wm.capitalize(schema.name)](inColumns);
+                        }
+                    }));
+
+                } else {
+                    /* Page Container */
+                    var p = o;
+                    wm.forEachProperty(p.subpageProplist, dojo.hitch(this, function(propertyPath, propertyName) {
+                        if (propertyPath == this.currentGrid.name + ".columns") {
+                            p.setProp(propertyName, inColumns);
+                        }
+                    }));
                 }
-            }));
+            }
         }
     },
     onTitleChange: function(inSender, inDisplayValue, inDataValue, inSetByCode) {

@@ -31,7 +31,7 @@ wm.Object.extendSchema(wm.Variable, {
     editJson: {operation: 1, group:"data", subgroup: "data", order:5, shortname: "Edit JSON"},
 
     /* Data group; custom subgroup */
-    dataSet: { bindTarget: 1, group: "dataSet", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},
+    dataSet: { bindTarget: 1, group: "dataSet", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor", doNotPublish:1},
     isEmpty: {ignore: 1, bindSource: 1, type: "boolean"},
     count: {ignore: 1, bindSource: 1, type: "number"},
     queriedItems: {ignore: 1, bindSource: 1},

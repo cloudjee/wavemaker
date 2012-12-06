@@ -194,6 +194,10 @@ dojo.declare("wm.Wire", wm.Component, {
 		var topic = pre + inSource + "-changed";
 	    this.subscribe(topic, this, "sourceValueChanged");
 		wm.logging && console.info("***", " subscribed to [", topic, "]");
+
+        topic = pre + inSource + "-ownerChanged";
+        this.subscribe(topic, this, "refreshValue");
+        wm.logging && console.info("***", " subscribed to [", topic, "]");
 		/*
 		var p = inSource.split("."), top = p.shift();
 		if (top == "app" && p.length)
@@ -243,7 +247,7 @@ dojo.declare("wm.Wire", wm.Component, {
 			} else {
 				this._watch(this.source, rid);
 			}
-			//if (this.targetProperty == "dataStoreName") 
+			//if (this.targetProperty == "dataStoreName")
 			//	console.info("Wire: ", this.target.getId() + "." + this.targetProperty, "[connected to]", this.source, "via", rid + this.source + '-changed');
 			this.refreshValue();
 		}
@@ -260,7 +264,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		return r;
 	},
 	// check if a wire needs to be updated and redo it if necessary.
-	// to match, the checkId should start 
+	// to match, the checkId should start
 	isPartialId: function(inId, inIdPart) {
 		return (inId.indexOf(inIdPart) == 0) && (inIdPart.length == inId.length || inId.charAt(inIdPart.length) == ".");
 	},
@@ -352,7 +356,7 @@ dojo.declare("wm.Binding", wm.Component, {
 	removeWire: function(inWireId, inSource, inExpression) {
 		var wire = this.wires[inWireId];
 		if (wire) {
-			var 
+			var
 				s = inSource == undefined || inSource == wire.source,
 				e = inExpression == undefined || inExpression == wire.expression;
 			if (s && e) {
@@ -385,10 +389,10 @@ dojo.declare("wm.Binding", wm.Component, {
 	},
 	removeWireByProp: function(inPropName) {
 	    var result = false;
-	    wm.forEachProperty(this.wires, dojo.hitch(this, function(w) { 
+	    wm.forEachProperty(this.wires, dojo.hitch(this, function(w) {
 		    if (w.targetProperty == inPropName) {
 			delete this.wires[inPropName];
-			w.destroy(); 
+			w.destroy();
 			result = true;
 		    }
 	    }));

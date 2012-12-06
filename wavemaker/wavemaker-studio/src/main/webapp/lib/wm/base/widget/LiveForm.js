@@ -567,8 +567,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	setDataSet: function(inDataSet) {
 	    if (this.dataSet && this.operation && !this.alwaysPopulateEditors)
 		return;
-	    if (this.liveVariable && inDataSet && inDataSet.type)
-		this.liveVariable.setLiveSource(inDataSet.type);
+	    if (this.liveVariable && inDataSet && inDataSet.type) {
+		    this.liveVariable.setLiveSource(inDataSet.type);
+            this.updateDataOutputType();
+        }
 	    this._cancelOnEnterKey();
 	    this.inherited(arguments, [inDataSet]);
 

@@ -337,6 +337,7 @@ dojo.declare("wm.Page", wm.Component, {
 			};
 		}
 
+
 		// props.name should overwrite getUniqueName(inName), which should overwrite inProps.
 		if (!props.owner) {
 			if (inParent && inParent instanceof wm.Layout) props.owner = inParent.owner;
@@ -349,6 +350,10 @@ dojo.declare("wm.Page", wm.Component, {
 			_loading: true
 		}, props);
 
+        /* Special case where a Composite being designed opens a PageDialog at designtime where the PageDialog 
+         * is itself not being designed but is in fact a wizard
+         */
+        if (inProps._isDesignLoaded === false) delete props._designer;
 
 		if (this.isRelativePositioned && inType == "wm.Layout") {
 			props.isRelativePositioned = true;
@@ -618,13 +623,16 @@ wm.Page.extend({
     setPageProperty: function(inPropName, inValue) {
     	if (typeof inValue == "string") inValue = '"' + inValue + '"';
     	var text = studio.getScript();
+    	var newtext;
     	var regex = new RegExp('"' + inPropName + '": .*,');
     	if (text.match(regex)) {
-    		text = text.replace(regex, '"' + inPropName + '": ' + inValue + ",")
+    		newtext = text.replace(regex, '"' + inPropName + '": ' + inValue + ",")
     	} else {
-    		text = text.replace(/\{(.*?)\n/, '{$1\n\t"' + inPropName + '": ' + inValue + ',\n');
+    		newtext = text.replace(/\{(.*?)\n/, '{$1\n\t"' + inPropName + '": ' + inValue + ',\n');
     	}
-    	studio.setScript(text);
+    	if (newtext != text) {
+        	studio.setScript(newtext);
+        }
 
     },
     getPageProperty: function(inPropName) {

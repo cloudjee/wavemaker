@@ -45,7 +45,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
             } else if (p.isCustomMethod) {
 				p.group = "custommethods";
 			} else if (p.bindSource) {
-				p.group = "Bindings";			
+				p.group = "Bindings";
 			} else if (!p.group) {
 				p.group = "Properties";
 			}
@@ -75,7 +75,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 				closed: true,
 				hasChildren: false,
 				checked: this.propComponentList[this.inspected.id]
-			});		
+			});
 		  this.generateFieldProps(fieldsRoot, this.inspected._dataSchema);
 		}
 		dojo.forEach(groups, dojo.hitch(this, function(group) {
@@ -107,7 +107,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
     			data.push({
     				name: prop.property,
     				dataValue: "All Data"
-    			});    		    		
+    			});
     		}
 
 		});
@@ -135,9 +135,9 @@ dojo.declare("PropertyPublisher", wm.Page, {
     				hasChildren: false,
     				checked: this.propComponentList[this.inspected.id + "." + inPropName] && this.propComponentList[this.inspected.id + "." + inPropName].isDataField
     			});
-	   
+
 	   }));
-	
+
 	},
 	generateProps: function(inNode, inProps) {
 		dojo.forEach(inProps, dojo.hitch(this, function(prop) {
@@ -175,37 +175,34 @@ dojo.declare("PropertyPublisher", wm.Page, {
 			if (!this.propComponentList[property]) {
 				var p = this.propComponentList[property] = new wm.Property({
 					owner: studio.page,
-					ignore: this.inspected instanceof wm.ServiceVariable,
+					ignore: this.inspected instanceof wm.ServiceVariable && property.indexOf(".") == -1,
 					name: name + (!inNode.data ? "Data" : "")
 				});
 				p.selectProperty(property);
-				if (propDef.publishWithProps) {
+				if (propDef && propDef.publishWithProps) {
 				    dojo.forEach(propDef.publishWithProps, function(propName) {
 				        var property = this.inspected.getId() + "." + propName;
 				        if (!this.propComponentList[property]) {
                				var p2 = this.propComponentList[property] = new wm.Property({
             					owner: studio.page,
             					name: this.calcName(propName)
-            				});				           
+            				});
             				p2.selectProperty(property);
-            				var propDef2 = this.inspected.listProperties()[propName];
-            				p2.hidden = propDef2.hidden || false;
-            				p2.readonly= propDef2.readonly || false;        				
-            				p2.writeonly= propDef2.writeonly || false;
-            				p2.bindSource = propDef2.bindSource || propDef2.bindable || false;
-            				p2.bindTarget = propDef2.bindTarget || propDef2.bindable || false;        				
+
             		    }
 				    }, this);
 				}
+
+                /* This whole block appears redundant with code in Property_design, except for the fieldsRoot test */
                 if (!propDef || inNode.parent == this.fieldsRoot) {
                     p.isDataField = inNode.parent == this.fieldsRoot;
                     p.bindSource = true;
                     /* Owner might set the data of a wm.Variable, but only the server/service sets the value of a servicevar. */
-                    p.bindTarget = this.inspected instanceof wm.Variable && 
-                    
+                    p.bindTarget = this.inspected instanceof wm.Variable &&
+
                     /* Don't expose a field in the property panel if its a field of an isList var */
-                    (!this.inspected.isList || !p.isDataField) && 
-                    
+                    (!this.inspected.isList || !p.isDataField) &&
+
                     /* Don't let the owner set the data of a servicevar, only the server/service should do that */
                     this.inspected instanceof wm.ServiceVariable === false;
 				} else if (!p.isEvent) {
@@ -218,7 +215,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 				this.propComponentList[property].destroy();
 				delete this.propComponentList[property];
 			}
-			if (propDef.publishWithProps) {
+			if (propDef && propDef.publishWithProps) {
 				dojo.forEach(propDef.publishWithProps, function(propName) {
     				var property = this.inspected.getId() + "." + propName;
 				    if (this.propComponentList[property]) {

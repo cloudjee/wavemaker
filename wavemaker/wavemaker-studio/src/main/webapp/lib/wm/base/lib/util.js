@@ -73,11 +73,11 @@ wm.requireCss = function(modulepath) {
     var filename = modulepath.substring(lastIndex + 1);
     var modulepath = modulepath.substring(0,lastIndex);
     var path = dojo.moduleUrl(modulepath).path.replace(/lib\/\//, "lib/") + filename + ".css";
-    
+
     while (path.match(/[^\/]\/\.\.\//)) {
         path = path.replace(/[^\/]*\/\.\.\/+/, "");
     }
-    
+
     wm.requireCssPath(path);
 }
 wm.requireCssPath = function(path) {
@@ -397,7 +397,7 @@ wm.connectEvents = function(inObject, inNode, inEvents) {
 wm._isUniqueName = function(inName, inNameSpaces) {
     for (var j = 0, s;
     (s = inNameSpaces[j]); j++)
-    if (inName in s) return false;
+    if (s[inName] !== undefined) return false;
     return true;
 }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@ dojo.require("wm.base.components.ServiceVariable_design");
 dojo.require("wm.base.components.LiveVariable");
 
 wm.Object.extendSchema(wm.LiveVariable, {
-    
+
     /* Data group; data subgroup */
     type: { ignore: 0, editorProps: {liveTypes: 1}},
 
@@ -27,8 +27,8 @@ wm.Object.extendSchema(wm.LiveVariable, {
     editView: {group: "data", subgroup: "type", requiredGroup: 1, operation:1, shortname: "Edit View", ignoreHint: "Set the type property before you can edit the view"},
 
     /* Data group; custom subgroup */
-    sourceData: {group: "dataSet", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
-    filter:     {group: "dataSet", readonly: 1, order: 5, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
+    sourceData: {group: "dataSet", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor",doNotPublish:1},
+    filter:     {group: "dataSet", readonly: 1, order: 5, bindTarget: 1, editor: "wm.prop.FieldGroupEditor",doNotPublish:1},
 
     /* Data group; server options subgroup */
     matchMode: {group: "data", subgroup: "serverOptions", order: 10, options: ["start", "end", "anywhere", "exact"]},
@@ -74,7 +74,7 @@ wm.LiveVariable.extend({
 		p.filter.ignoretmp = !r;
 	        p.sourceData.ignoretmp = r;
 
-	    p.liveSource.ignoretmp = !this.liveSource; // if there's no liveSource, hide the prop because its deprecated 
+	    p.liveSource.ignoretmp = !this.liveSource; // if there's no liveSource, hide the prop because its deprecated
 	    var hasLiveSource = Boolean(this.liveSource);
 	    p.editView.ignoretmp = hasLiveSource // if its got a liveSource its using an app-level live view, don't let it editView.
 		|| !this.type; // if it doesn't have a type, don't allow editing of its view
@@ -90,7 +90,7 @@ wm.LiveVariable.extend({
 	designCreate: function() {
 		this.inherited(arguments);
 		this.subscribe("wmwidget-idchanged", this, "componentNameChanged");
-		
+
 	},
 	componentNameChanged: function(inOldId, inNewId, inOldRtId, inNewRtId) {
 		if (inOldId == this.liveSource)
@@ -98,7 +98,7 @@ wm.LiveVariable.extend({
 	},
 	set_operation: function(inOperation) {
 		this.operation = inOperation;
-	    // automatically set autoUpdate to true if we're reading, 
+	    // automatically set autoUpdate to true if we're reading,
 	    // since this is the default anyway, otherwise set to false.
 	    this.setStartUpdate(inOperation == "read");
 	    this.setAutoUpdate(inOperation == "read");

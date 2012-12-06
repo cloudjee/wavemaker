@@ -33,7 +33,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
         } else {
             templates = this.templates;
         }
-        
+
         var i = 0;
 
         var panel = new wm.Panel({
@@ -95,7 +95,7 @@ dojo.declare("NewProjectDialog", wm.Page, {
             this.reflow();
         });
     },
-    onListTemplateSuccess: function(inResponse) {      
+    onListTemplateSuccess: function(inResponse) {
 
         var templates = this.templates = dojo.clone(wm.fullTemplates);
         try {
@@ -285,8 +285,8 @@ dojo.declare("NewProjectDialog", wm.Page, {
                                                     app.alert(inError.toString());
                                                 });
         } else {
-            studio.project.newProject(projectName, themeName);
-        }
+            templateName = templateName.substring(layer.name.length + "templatepanel_".length);
+            studio.project.newProject(projectName, themeName, wm.fullTemplates[templateName]);        }
     },
   _end: 0
 });

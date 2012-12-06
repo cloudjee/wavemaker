@@ -296,11 +296,16 @@ dojo.declare("wm.Designer", wm.Surface, {
         /* If the specified control was already selected, then do nothing... unless shift or meta are held, in which case deselect */
         var index = dojo.indexOf(this.selected || [], inControl);
         if(index != -1) {
-            if(!shiftKey && !metaKey) return;
-            inControl.designWrapper.ondeselected();
-            wm.Array.removeElementAt(this.selected, index);
-            this.onselect(this.selected);
-            return;
+            if(!shiftKey && !metaKey) {
+                dojo.forEach(this.selected, function(c) {
+                    c.designWrapper.ondeselected();
+                });
+            } else {
+                inControl.designWrapper.ondeselected();
+                wm.Array.removeElementAt(this.selected, index);
+                this.onselect(this.selected);
+                return;
+            }
         }
 
 

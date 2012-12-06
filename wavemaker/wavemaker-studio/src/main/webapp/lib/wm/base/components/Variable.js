@@ -1109,13 +1109,16 @@ dojo.declare("wm.Variable", wm.Component, {
         var root = this.getRoot();
         if (!root) return;
         var rootId = root.getRuntimeId();
-        if (rootId && rootId.indexOf(".") && n.indexOf(rootId) == 0) {
+        while(rootId && rootId.indexOf(".") && n.indexOf(rootId) == 0) {
             var tmpn = n.substring(rootId.length);
             tmpn = rootId.substring(rootId.lastIndexOf(".") + 1) + tmpn;
             var topic2 = tmpn + "-ownerChanged";
             if (topic2 != topic) {
                 wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
                 dojo.publish(topic2, [n]);
+                rootId = tmpn;
+            } else {
+                break;
             }
         }
 
@@ -1178,7 +1181,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (!this._updating && this.owner) {
             // Can't simply call valueChanged; see note below.
             wm.Component.prototype.valueChanged.call(this, inProp, inValue);
-            this.dataChanged();
+            this.notify();
             this.updatePermanentMemory();
         }
     },

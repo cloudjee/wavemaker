@@ -34,12 +34,12 @@ wm.Object.extendSchema(wm.Component, {
     eventBindings: { ignore: 1 },
     id: { ignore: 1 },
     ignoredProps: { ignore: 1 },
-    name: {readonly:1, group: "common", order: 0, requiredGroup: true},
-    owner: { group: "common", order: 1, ignore: 1, unwritable: true, options: ["Page", "Application"], doc: 1},
+    name: {readonly:1, group: "common", order: 0, requiredGroup: true, doNotPublish:1},
+    owner: { group: "common", order: 1, ignore: 1, unwritable: true, options: ["Page", "Application"], doc: 1, doNotPublish:1},
     publishClass: { ignore: 1 },
     readonlyProps: { ignore: 1 },
     referenceProps: { ignore: 1 },
-        binding: { ignore: 1, writeonly: 1},
+        binding: {ignore: 1, writeonly: 1, doNotPublish:1},
         runtimeId: {ignore: 1},
     rootId: {ignore: 1},
 
@@ -130,22 +130,21 @@ wm.Component.extend({
             if ((n in target) && (target[n]!=p[n]))
                 inProps[pf + n] = target[n];
     },
-        isWriteableProp: function(inPropSchema, inName) {
+    isWriteableProp: function(inPropSchema, inName) {
         var ps = inPropSchema;
-        if (!ps) return true;
-        if (ps.method || ps.unwritable) return false;
+        if(!ps) return true;
+        if(ps.method || ps.unwritable) return false;
 
         /* Its not writable if its bound; the binding is the source of the value */
-        if (inName && this.$.binding && this.$.binding.wires[inName])
-        return false;
+        if(inName && this.$.binding && this.$.binding.wires[inName]) return false;
 
-        return ((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent &&  !ps.componentonly);
+        return((ps.writeonly || !(ps.ignore || ps.ignoretmp || ps.readonly)) && !ps.isEvent && !ps.componentonly);
     },
     writeProps: function() {
         // make sure the proper prototype is loaded so we correctly write the properties that are different from default
-        if (this._isDesignLoaded && studio && studio.application)
-        studio.application.loadThemePrototypeForClass(this.constructor);
-
+        if(this._isDesignLoaded && studio && studio.application) {
+            studio.application.loadThemePrototypeForClass(this.constructor);
+        }
         // iterates over all props and checks it's writeable via isWriteableProp
         // NOTE: previously used listWriteableProps, which was eliminated as unnecessary.  [MK: Added back for use in localization]
         var props = this.listProperties();
@@ -153,31 +152,30 @@ wm.Component.extend({
         var p = src.constructor.prototype;
         var out = {};
         var propList = [];
-        for (var n in props) propList.push(n);
+        for(var n in props) propList.push(n);
         propList = propList.sort();
-            for (var i = 0; i < propList.length; i++) {
+        for(var i = 0; i < propList.length; i++) {
             var n = propList[i];
-            if (this.isWriteableProp(props[n],n)) {
-            var value = (window["studio"] && studio._designLanguage !== undefined && studio._designLanguage != "default") ? src["_original_i18n_" + n] || src[n] : src[n];
-            if (n == "showing" && this._mobileShowingRequested) {
-                value = this._mobileShowingRequested;
-            }
-            if (value instanceof Date) value = value.getTime();
-            if (wm.isInstanceType(src, wm.Application) && value !== undefined) {
-                out[n] = value;
-            } else if (n in src && !(value instanceof wm.Variable) && (n == "_classes" && value && value.domNode && value.domNode.length > 0 || n != "_classes" && value !== p[n])) {
-                if (value instanceof Date) {
-                try {
-                    out[n] = value.getTime();
-                } catch(e) {}
-                } else if (dojo.isArray(value) && (!value.length || value[0] instanceof wm.Component || wm.isNode(value[0]))) {
-                ;
-                } else if (p[n] === "" & value == "0" && (n == "border" || n == "margin" || n == "padding")) {
-                // sometimes values switch between 0 and "", but these should be treated as equivalent
-                } else {
-                out[n] = value;
+            if(this.isWriteableProp(props[n], n)) {
+                var value = (window["studio"] && studio._designLanguage !== undefined && studio._designLanguage != "default") ? src["_original_i18n_" + n] || src[n] : src[n];
+                if(n == "showing" && this._mobileShowingRequested) {
+                    value = this._mobileShowingRequested;
                 }
-            }
+                if(value instanceof Date) value = value.getTime();
+                if(wm.isInstanceType(src, wm.Application) && value !== undefined) {
+                    out[n] = value;
+                } else if(n in src && !(value instanceof wm.Component) && (n == "_classes" && value && value.domNode && value.domNode.length > 0 || n != "_classes" && value !== p[n])) {
+                    if(value instanceof Date) {
+                        try {
+                            out[n] = value.getTime();
+                        } catch(e) {}
+                    } else if(dojo.isArray(value) && (!value.length || value[0] instanceof wm.Component || wm.isNode(value[0]))) {;
+                    } else if(p[n] === "" & value == "0" && (n == "border" || n == "margin" || n == "padding")) {
+                        // sometimes values switch between 0 and "", but these should be treated as equivalent
+                    } else {
+                        out[n] = value;
+                    }
+                }
             }
         }
 
