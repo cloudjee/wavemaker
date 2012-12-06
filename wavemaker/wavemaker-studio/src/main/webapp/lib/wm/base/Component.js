@@ -59,30 +59,32 @@ dojo.declare("wm.Component", wm.Object, {
         May be ommitted.
     */
     getParentDialog: function() {
-    var w = this;
-    while (w) {
-        if (w instanceof wm.Dialog) {
-        return w;
-        } else {
-        w = w.parent;
+        var w = this;
+        while(w) {
+            if(w instanceof wm.Dialog) {
+                return w;
+            } else {
+                w = w.parent;
+            }
         }
-    }
-    return null;
+        return null;
     },
     getParentPage: function() {
-    if (this instanceof wm.Page || this instanceof wm.PageDialog)
-        return this;
-    if (this.owner)
-        return this.owner.getParentPage();
-    return null;
+        if(this instanceof wm.Page || this instanceof wm.PageDialog) return this;
+        if(this.owner) return this.owner.getParentPage();
+        return null;
     },
-
+    getParentPageOrComposite: function() {
+        if(wm.isInstanceType(this, [wm.Page, wm.PageDialog, wm.Composite])) return this;
+        if(this.owner) return this.owner.getParentPageOrComposite();
+        return null;
+    },
     isAncestor: function(inOwner) {
-    var o = this.owner;
-    while (o && o != inOwner) {
-        o = o.owner;
-    }
-    return (o == inOwner);
+        var o = this.owner;
+        while(o && o != inOwner) {
+            o = o.owner;
+        }
+        return(o == inOwner);
     },
 
 
@@ -266,7 +268,7 @@ dojo.declare("wm.Component", wm.Object, {
         if (this.owner == studio.application || this.owner == studio._application) return true; // must come before test for !studio.page
         if (!studio.page && !studio.application && !studio._application) return false;
         if (!this.owner) return false;
-        var pp = this.getParentPage();
+        var pp = this.getParentPageOrComposite();
         if (pp && pp == studio.page || this.owner == studio.page) return true; // getParentPage() test failed for PageDialogs owned by studio
         if (this == studio.page) return true;
         if (this.isOwnedBy(studio.application)) return true;
@@ -312,15 +314,18 @@ dojo.declare("wm.Component", wm.Object, {
         wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
 
         var originalOwner = this.owner;
-        if (this.owner)
+        if (this.owner) {
             this.owner.removeComponent(this);
+        }
         this.owner = inOwner;
         //this.cacheRuntimeId = this.getRuntimeId();
         if (this.owner) {
             if (!nonWritable) {
-            this.owner.addComponent(this);
-            if (!this._designer)
-                this._designer = this.owner._designer;
+                this.owner.addComponent(this);
+                /* It is possible for the owner to have a designer and the child to not have a designer; set this._isDesignLoaded to false to make this happen */
+                if (!this._designer && this._isDesignLoaded !== false) {
+                    this._designer = this.owner._designer;
+                }
             }
             // if the owner has changed between being page and app level, then we need to reset IDs.
             // If there is a way to move components from one page to another, we'll need to do this as well, but
@@ -772,6 +777,11 @@ this.panel1.createComponent("custom", "wm.Panel", {
         var props = dojo.mixin({_designer: this._designer, _loading: true}, inProps);
         this.adjustChildProps(ctor, props);
 
+        /* Special case where a Composite being designed opens a PageDialog at designtime where the PageDialog
+         * is itself not being designed but is in fact a wizard
+         */
+        if (inProps._isDesignLoaded === false) delete props._designer;
+
         if (inOwner)
             props.owner = inOwner;
         //
@@ -811,7 +821,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
         finally{
             try {
             w.loaded();
-            if (w.owner && w.owner[w.name] === undefined && !w._isDesignLoaded) {
+            if (w.owner && w.owner[w.name] === undefined && !w._isDesignLoaded && !wm.isInstanceType(w, wm.Property)) {
                 w.owner[w.name] = w;
             }
             } catch(e) {
