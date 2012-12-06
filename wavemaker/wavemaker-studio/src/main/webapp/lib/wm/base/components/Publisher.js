@@ -79,8 +79,8 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 	description: {group: "widgetName", order: 50},
     width: {group: "display", subgroup: "layout", order: 20, editor: "wm.prop.SizeEditor"},
 	height: {group: "display", subgroup: "layout", order: 30, editor: "wm.prop.SizeEditor"},
-    deploy: {group: "operation", order: 10, operation: "doDeploy"},
-    undeploy: {group: "operation", order: 20, operation: true},
+    deploy: {group: "widgetName", order: 100, operation: "doDeploy"},
+    undeploy: {group: "widgetName", order: 110, operation: true},
 	owner: {ignore: 1}
 });
 
@@ -97,7 +97,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
    	        studio.project.savePage(dojo.hitch(this, function() {
     		    var json = this.getComponentJson();
     		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services, this._wmPictureSource, this._wmHtmlSource);
-    		}));   
+    		}));
 		} finally {
 			wm.Property.deploy = false;
 		}
@@ -134,20 +134,20 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 
 
-
+            d.cancelButton = new wm.Button({
+                                        _classes: {domNode: ["StudioButton"]},
+                                        owner: d,
+                                        parent: d.buttonBar,
+                                        caption: "Cancel",
+                                        onclick: function() {d.hide();}
+                                        });
 			d.okButton = new wm.Button({
 										_classes: {domNode: ["StudioButton"]},
 										owner: d,
 										parent: d.buttonBar,
 										caption: "OK"
 										});
-			d.cancelButton = new wm.Button({
-										_classes: {domNode: ["StudioButton"]},
-										owner: d,
-										parent: d.buttonBar,
-										caption: "Cancel",
-										onclick: function() {d.hide();}
-										});
+
 
 
 			}
@@ -174,23 +174,23 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	//
 	var klass = this.namespace ? this.namespace + '.' + this.publishName : this.publishName;
 	this.adjustAllPictures();
-	this.adjustAllHtmlWidgets();	
+	this.adjustAllHtmlWidgets();
 	studio._isPublishComponent = true;
 	var pageComponents = studio.page.writeComponents(sourcer_tab);
 
-    // add in a few app level components such as TypeDefinitions that we will likely need 
+    // add in a few app level components such as TypeDefinitions that we will likely need
     wm.forEachProperty(studio.application.$, function(inValue, inName) {
         if (inValue instanceof wm.TypeDefinition) {
             pageComponents.push(inValue.write("\t"));
         }
     });
-		
+
 	var root = studio.page.root;
 	var rootWidgets = root.writeComponents(sourcer_tab);
 	studio._isPublishComponent = false;
 	this.restoreAllPictures();
 	this.restoreAllHtmlWidgets();
-	
+
 	var components = pageComponents.concat(rootWidgets).join(",\n");
 
 
@@ -213,7 +213,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 	/* Enables the CSS designed for widgets in this page to affect the the widgets in the composite as well */
 	js.unshift("  _appendCssClassName: '" + studio.project.pageName + "',");
-	
+
 	if (this.parentClass && dojo.getObject(this.parentClass) && dojo.getObject(this.parentClass).prototype instanceof wm.Control) {
 		var rootProps = studio.page.root.writeProps();
     	rootProps.width = this.width;
@@ -239,9 +239,9 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     	js.unshift('dojo.declare("' + klass + '", [' + this.parentClass + ',wm.CompositeMixin], {');
     }
 	js = js.join("\n");
-	
 
-	
+
+
 	//
 	var reg = 'wm.registerPackage(["' +
 	    group + '", ' +
@@ -320,8 +320,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 					w.htmlIsResource = true;
 				}
 			}
-		});	
-	
+		});
+
 	},
 	restoreAllHtmlWidgets: function() {
 		var comps = wm.listComponents([studio.page], wm.Html, true);
@@ -341,8 +341,9 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 
 wm.Object.extendSchema(wm.CompositePublisher, {
-	download: {operation:1, group: "operation"},
-	index: {type: "Number", order:100}
+	download: {operation:1, group: "widgetName", order: 150},
+	index: {group: "widgetName", type: "Number", order:80},
+    parentClass: {group: "widgetName", type: "String", order:81}
 });
 /*
 wm.registerPackage([bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);
