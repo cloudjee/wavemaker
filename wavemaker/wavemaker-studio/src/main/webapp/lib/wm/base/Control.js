@@ -1349,13 +1349,14 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         	if (dojo.indexOf(skipItems, styleName) == -1) {
         		if (styleName == "backgroundGradient") {
 		            var gradient = cssObj.backgroundGradient;
-		            inValue = wm.getBackgroundStyle(gradient.startColor, gradient.endColor, gradient.colorStop, gradient.direction, "");
-		            if (dojo.isIE < 10) {
-		                cssTextItems.push("filter: " + inValue);
-		            } else {
-		                cssTextItems.push("background: " + inValue);
-		            }		        
-		        
+                if (gradient) {
+  		            inValue = wm.getBackgroundStyle(gradient.startColor, gradient.endColor, gradient.colorStop, gradient.direction, "");
+  		            if (dojo.isIE < 10) {
+  		                cssTextItems.push("filter: " + inValue);
+  		            } else {
+  		                cssTextItems.push("background: " + inValue);
+  		            }
+                }
 		        } else if (styleName == "borderRadius") {
 					var prefix = "";
 			   		   		if (dojo.isWebKit) {
@@ -1367,7 +1368,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 				   		   	} else if (dojo.isOpera) {
 			   		   			prefix = "-o-";
 				   		   	}
-				   		   	
+
 				   		   	var values = String(styleValue).split(/\s+/);
 				           	inValue = "";
 							for (var i = 0; i < values.length; i++) {
@@ -1380,12 +1381,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 							}
 							if (values.length == 3) {
 								values[3] = "0px";
-							}				
+							}
 							cssTextItems.push(prefix + "border-top-left-radius: " + values[0]);
 							cssTextItems.push(prefix + "border-top-right-radius: " + values[1]);
 							cssTextItems.push(prefix + "border-bottom-left-radius: " + values[2]);
-							cssTextItems.push(prefix + "border-bottom-right-radius: " + values[3]);							
-				   	} else {			         
+							cssTextItems.push(prefix + "border-bottom-right-radius: " + values[3]);
+				   	} else {
     			        if (styleName == "backgroundImage") {
     			        	if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {
     							styleValue = this.getPath() + styleValue;
@@ -1436,12 +1437,14 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		    if (this._appliedStyles[styleName] != styleValue) {
 				if (styleName == "backgroundGradient") {
 				    var gradient = cssObj[styleName];
-				    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
-				    if (dojo.isIE < 10) {
-					s.filter = inValue;
-				    } else {
-					s.background = inValue;
-				    }
+            if (gradient) {
+  				    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+  				    if (dojo.isIE < 10) {
+  					     s.filter = inValue;
+  				    } else {
+  					     s.background = inValue;
+  				    }
+            }
 				} else {
 					if (styleName == "backgroundImage") {
 						if (this._isDesignLoaded && (styleValue.indexOf("url") != 0 && styleValue.indexOf("http") !=0 && styleValue.indexOf("/") != 0)) {
@@ -1762,7 +1765,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         if (!this.styles) {
             this.styles = {};
         }
-        if (inValue === null || inValue === undefined) {
+        if (inValue === null || inValue === undefined || inValue === "") {
             delete this.styles[inStyle];
         } else {
             this.styles[inStyle] = inValue;
@@ -1782,8 +1785,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	                this.domNode.style.background = inValue;
 	            }
 	            break;
-		   case "borderRadius":	   
-				var prefix;		   
+		   case "borderRadius":
+				var prefix;
    		   		if (dojo.isWebKit) {
    		   			prefix = "Webkit";
    		   		} else if (dojo.isFF) {
@@ -1805,18 +1808,18 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 				}
 				if (values.length == 3) {
 					values[3] = "0px";
-				}				
+				}
 		   		 this.domNode.style[prefix + "BorderTopLeftRadius"] = values[0];
 		   		 this.domNode.style[prefix + "BorderTopRightRadius"] = values[1];
 		   		 this.domNode.style[prefix + "BorderBottomLeftRadius"] = values[2];
-		   		 this.domNode.style[prefix + "BorderBottomRightRadius"] = values[3];		   		 
+		   		 this.domNode.style[prefix + "BorderBottomRightRadius"] = values[3];
 		   		 break;
 		   case "backgroundImage":
         		if (this._isDesignLoaded && (inValue.indexOf("url") != 0 && inValue.indexOf("http") !=0 && inValue.indexOf("/") != 0)) {
 					inValue = this.getPath() + inValue;
 				}
 	        	if (inValue.indexOf("url") != 0) inValue = "url(" + inValue + ")";
-                this.domNode.style[inStyle] = inValue;		   
+                this.domNode.style[inStyle] = inValue;
 	 	        break;
            default:
 	            this.domNode.style[inStyle] = inValue;
