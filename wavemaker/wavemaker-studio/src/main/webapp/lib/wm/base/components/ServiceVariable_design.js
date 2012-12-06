@@ -44,10 +44,10 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     downloadFile:     {group: "data", subgroup: "serverOptions", order: 20, advanced: 1},
 
     /* Data group; its own subgroup */
-    input:            {group: "dataSet", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, editor: "wm.prop.FieldGroupEditor", editorProps: {showMainInput: false, multiLayer: true}},
+    input:            {group: "dataSet", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, editor: "wm.prop.FieldGroupEditor", editorProps: {showMainInput: false, multiLayer: true},doNotPublish:1},
 
     /* Operations group */
-    updateNow:        {group: "operation", operation: "updateNow",      order: 10},
+    updateNow:        {group: "operation", operation: 1,      order: 10},
     clearInput:       {group: "operation", operation: "doClearInput",order: 30},
 
     /* Special deprecated group.... */
