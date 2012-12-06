@@ -241,7 +241,7 @@
         });
         if (inComponents.length == 0) {
             if (studio.page && studio.page.root) {
-                this.inspect(studio.page.root);
+                this.inspect([studio.page.root]);
             }
             return;
         }
@@ -590,10 +590,10 @@
      this.editorHash[this.getHashId(inComponent,inProp.name)] = b;
 
          b.connect(b, "onclick", this, function() {
-            if (typeof inProp.operation == "function") {
+            if (inProp._operation && typeof inProp._operation == "function") {
                 // This is a function for published properties from PageContainers and Composites.
                 // Composites require the dojo.hitch as their operation functions have no this.
-                dojo.hitch(inComponent, inProp.operation)();
+                dojo.hitch(inComponent, inProp._operation)();
             } else {
                 inComponent[typeof inProp.operation == "string" ? inProp.operation : inProp.name]();
             }
@@ -623,6 +623,7 @@
      var isBound = false;
      var propName = inProp.name;
      var fullPropName = inProp.fullName || propName;
+
      var hashId = (optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName);
      /**********************************************************
       * Get the panel we'll insert our editor into
@@ -642,6 +643,26 @@
          panel.setShowing(false);
          }
      }
+
+/*
+     if (inComponent.$[propName] instanceof wm.Property && inComponent.$[propName].property.indexOf(".") != -1) {
+        var originalPropertyName = inComponent.$[propName].property;
+        if ( originalPropertyName.indexOf(".") != -1) {
+            var wmpropertyPropName = originalPropertyName.replace(/^.*\./,"");
+            var wmpropertyTargetName = originalPropertyName.replace(/\..*?$/,"");
+            var wmpropertyTargetObj = inComponent.getValue(wmpropertyTargetName);
+        } else {
+            wmpropertyTargetObj = inComponent.getValue(originalPropertyName);
+            if (wmpropertyTargetObj && wmpropertyTargetObj instanceof wm.Variable) {
+                wmpropertyPropName = "dataSet";
+            }
+        }
+        if (wmpropertyTargetObj) {
+            var tmpProp = wmpropertyTargetObj.listProperties()[wmpropertyPropName];
+            if (tmpProp) inProp = tmpProp;
+        }
+     }
+*/
 
      /**********************************************************
       * Get the current value of the editor; some complex editors don't have a value as such,
@@ -1339,44 +1360,70 @@
      }
      subgroupObj.props.push(inPropDef);
      },
-     buildGroups: function(inProps,showStyleInspector, showAllProps) {
+     buildGroups: function(inProps, showStyleInspector, showAllProps) {
 
-     //var groups = {"required": this.makeNewGroupObj("required")}; // hash of all of the groups and subgroups and properties in those groups
-     var groups = {"properties": this.makeNewGroupObj("properties")}; // hash of all of the groups and subgroups and properties in those groups
+         //var groups = {"required": this.makeNewGroupObj("required")}; // hash of all of the groups and subgroups and properties in those groups
+         var groups = {
+             "properties": this.makeNewGroupObj("properties")
+         }; // hash of all of the groups and subgroups and properties in those groups
          var groupsArray = []; // We'll copy the groups hash into the array before returning it
          var defaultGroup = wm.propertyGroups.properties; // Name of the default property group if the property has no group
-
          dojo.forEach(inProps, dojo.hitch(this, function(inPropDef, index) {
-         var groupName = (inPropDef && inPropDef.group) || defaultGroup;
-         if (showAllProps && (inPropDef.bindSource || inPropDef.bindTarget || inPropDef.bindable || !inPropDef.ignore && !inPropDef.writeonly && !inPropDef.hidden)) {
-            ;
-         } else if (!this.isEditableProp(inPropDef, false, showStyleInspector || Boolean(groups[groupName]))) {
-             return;
-         }
-         var subgroupName = inPropDef && inPropDef.subgroup || "";
 
-         /* Get a pointer to the group object we'll be adding this property into */
-         var groupObj = groups[groupName];
-         if (!groupObj) {
-             groups[groupName] = this.makeNewGroupObj(groupName);
-             groupObj = groups[groupName];
-         }
-
-         /* Set the order if provided or set it to 1000 if not */
-         var order = inPropDef && inPropDef.order != undefined ? inPropDef.order : 1000;
-
-         /* Copy the Property Definition, and add in the name and order */
-         var newPropDef = dojo.mixin({}, inPropDef, {order: order});
-
-         /* Make sure there is an entry for the subgroup -- if there is a subgroup specified */
-         if (subgroupName) {
-             this.addToSubgroup(groupObj, subgroupName, newPropDef);
-         } else {
-             groupObj.props.push(newPropDef);
-         }
-
-         /* Enter into the required group if needed */
+            var c = this.inspected[0];
 /*
+            if (c.$[inPropDef.name] instanceof wm.Property) {
+                var originalPropertyName = c.$[inPropDef.name].property;
+                if ( originalPropertyName.indexOf(".") != -1) {
+                    var wmpropertyPropName = originalPropertyName.replace(/^.*\./,"");
+                    var wmpropertyTargetName = originalPropertyName.replace(/\..*?$/,"");
+                    var wmpropertyTargetObj = c.getValue(wmpropertyTargetName);
+                } else {
+                    wmpropertyTargetObj = c.getValue(originalPropertyName);
+                    if (wmpropertyTargetObj && wmpropertyTargetObj instanceof wm.Variable) {
+                        wmpropertyPropName = "dataSet";
+                    }
+                }
+                if (wmpropertyTargetObj) {
+                    var tmpPropDef = wmpropertyTargetObj.listProperties()[wmpropertyPropName];
+                    if (tmpPropDef) {
+                        inPropDef = dojo.clone(tmpPropDef);
+                        inPropDef.name = originalPropertyName;
+                    }
+                }
+            }
+            */
+             var groupName = (inPropDef && inPropDef.group) || defaultGroup;
+             if(showAllProps && (inPropDef.bindSource || inPropDef.bindTarget || inPropDef.bindable || !inPropDef.ignore && !inPropDef.writeonly && !inPropDef.hidden)) {;
+             } else if(!this.isEditableProp(inPropDef, false, showStyleInspector || Boolean(groups[groupName]))) {
+                 return;
+             }
+             var subgroupName = inPropDef && inPropDef.subgroup || "";
+
+             /* Get a pointer to the group object we'll be adding this property into */
+             var groupObj = groups[groupName];
+             if(!groupObj) {
+                 groups[groupName] = this.makeNewGroupObj(groupName);
+                 groupObj = groups[groupName];
+             }
+
+             /* Set the order if provided or set it to 1000 if not */
+             var order = inPropDef && inPropDef.order != undefined ? inPropDef.order : 1000;
+
+             /* Copy the Property Definition, and add in the name and order */
+             var newPropDef = dojo.mixin({}, inPropDef, {
+                 order: order
+             });
+
+             /* Make sure there is an entry for the subgroup -- if there is a subgroup specified */
+             if(subgroupName) {
+                 this.addToSubgroup(groupObj, subgroupName, newPropDef);
+             } else {
+                 groupObj.props.push(newPropDef);
+             }
+
+             /* Enter into the required group if needed */
+             /*
          if (newPropDef.requiredGroup) {
              groups.required.props.push(newPropDef);
          }
@@ -1384,7 +1431,7 @@
          }));
 
          /* Build the groupsArray; make sure required group is first */
-         wm.forEachProperty(groups, function(group,i) {
+         wm.forEachProperty(groups, function(group, i) {
              groupsArray.push(group);
          });
          return groupsArray;
@@ -1392,35 +1439,33 @@
      sortGroups: function(inGroups) {
          // sort groups
          inGroups.sort(function(a, b) {
-         return ((wm.propertyGroups[a.name] || 0).order || 28) - ((wm.propertyGroups[b.name] || 0).order || 28); // things with no order go after layout and before style
+             return((wm.propertyGroups[a.name] || 0).order || 28) - ((wm.propertyGroups[b.name] || 0).order || 28); // things with no order go after layout and before style
          });
 
          var mysort = function(a, b) {
-         var o = a.order - b.order;
-         return o == 0 ? wm.compareStrings(a.name, b.name) : o;
-         };
+                 var o = a.order - b.order;
+                 return o == 0 ? wm.compareStrings(a.name, b.name) : o;
+             };
 
          // sort props in each group
          dojo.forEach(inGroups, function(g) {
-         if (g.props.sort)
-             g.props.sort(mysort);
-         if (g.subgroups && g.subgroups.sort)
-             g.subgroups.sort(mysort);
-         wm.forEach(g.subgroups, function(subgroupName) {
-             if (g.subgroups) {
-             var subgroup = g.subgroups[subgroupName];
-             if (subgroup && subgroup.props) {
-                 subgroup.props.sort(mysort);
-             }
-             }
-         });
+             if(g.props.sort) g.props.sort(mysort);
+             if(g.subgroups && g.subgroups.sort) g.subgroups.sort(mysort);
+             wm.forEach(g.subgroups, function(subgroupName) {
+                 if(g.subgroups) {
+                     var subgroup = g.subgroups[subgroupName];
+                     if(subgroup && subgroup.props) {
+                         subgroup.props.sort(mysort);
+                     }
+                 }
+             });
          });
 
          inGroups = dojo.filter(inGroups, function(g) {
-         if (!g.layer) {
-             inGroups[0].subgroups.push(g);
-         }
-         return g.layer;
+             if(!g.layer) {
+                 inGroups[0].subgroups.push(g);
+             }
+             return g.layer;
          });
 
          return inGroups;
