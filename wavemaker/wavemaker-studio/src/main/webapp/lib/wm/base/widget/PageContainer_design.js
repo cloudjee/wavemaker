@@ -248,7 +248,7 @@ wm.PageContainer.extend({
             if (this[p.name] === undefined) {
             this[p.name] = function(){};
             }
-            */  
+            */
 
                 } else {
                     this.subpageProplist[p.name] = p.property;
@@ -263,6 +263,10 @@ wm.PageContainer.extend({
                     readonly: p.readonly,
                     hidden: p.hidden,
                     ignore: p.ignore,
+                    operation: p.operation,
+                    _operation: p._operation,
+                    operationTarget: p.operationTarget,
+                    editor: p.editor,
                     propertyId: p.property
                 };
                 var propertyPath = p.property;
@@ -285,6 +289,10 @@ wm.PageContainer.extend({
                             editor: propDef.editor,
                             options: propDef.options,
                             operation: propDef.operation,
+                            _operation: propDef._operation,
+                            operationTarget: propDef.operationTarget,
+                            editor: propDef.editor,
+                            editorProps: propDef.editorProps,
                             ignore: propDef.ignore,
                             // these three used for bind-only properties
                             hidden: propDef.hidden,
@@ -302,9 +310,9 @@ wm.PageContainer.extend({
                             // do nothing
                             ;
                         } else if (typeof props[p.name].operation == "string") {
-                            props[p.name].operation = dojo.hitch(component, propDef.operation);
+                            props[p.name]._operation = dojo.hitch(component, propDef.operation);
                         } else {
-                            props[p.name].operation = dojo.hitch(component, propertyName);
+                            props[p.name]._operation = dojo.hitch(component, propertyName);
                         }
                     }
                 }
