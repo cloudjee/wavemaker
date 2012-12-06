@@ -219,17 +219,14 @@ dojo.declare("wm.Palette", wm.Tree, {
 	    }
 	    return node;
 	},
-    addItem: function(inTab, inName, inDescription, inImage, inClass, inModule, inProps, isBeta) {
+    addItem: function(inTab, inName, inDescription, inImage, inClass, inModule, inProps, isBeta, inIndex) {
 		if (inTab){
 			var p = this.findItemByName(inTab) || this.makeGroup(inTab);
 			wm.fire(this.findItemByName(inName, p), "destroy");
-            if (inProps) {
-    			var parentIndex = inProps.indexInParent;
-    			delete inProps.indexInParent;
-    		}
+           
 			var n = new wm.TreeNode(p, {
 					name: inName,
-				parentIndex: parentIndex,
+				parentIndex: inIndex,
 			    content: inName + (isBeta ? " " + bundlePackage.isBeta : ""),
 			                data: {description: inDescription,
 					       klass: inClass},

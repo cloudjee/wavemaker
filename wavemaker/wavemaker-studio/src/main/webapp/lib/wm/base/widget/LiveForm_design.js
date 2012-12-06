@@ -226,7 +226,16 @@ wm.LiveFormBase.extend({
 		var
 			lv = this.findLiveVariable(),
 			fields = lv ? lv.getViewFields() : wm.getDefaultView((this.dataSet || 0).type);
-		dojo.forEach(fields, dojo.hitch(this, "makeEditor"));
+            var dbFieldDefs = {};
+            if (lv) {                
+                var typeDef = wm.typeManager.getType(lv.type);
+    			studio.dataService.requestSync("getEntity", [typeDef.service, lv.type.replace(/^.*\./,"")], function(inResult) {
+    			     dojo.forEach(inResult.properties, function(field) {
+    			         dbFieldDefs[field.name] = field;
+    			     });
+    			});
+    		}
+		dojo.forEach(fields, dojo.hitch(this, "makeEditor", dbFieldDefs));
 		// make a related editor for each relationship in relevant liveView
 		if (lv) {
 			if (lv.liveView)
@@ -239,7 +248,7 @@ wm.LiveFormBase.extend({
 			}, this);
 		}
 	},
-	makeEditor: function(inFieldInfo) {
+	makeEditor: function(dbFieldDefs, inFieldInfo) {
 		var
 			f = inFieldInfo,
 			ff = this._getFormField(f.dataIndex);
@@ -250,17 +259,26 @@ wm.LiveFormBase.extend({
 				        readonly: this.readonly,
 					name: wm.makeNameForProp(ff, "Editor")
 				}),
+				editorClassName = wm.getEditorClassName(f.displayType);
+				if (editorClassName == "wm.Text" && dbFieldDefs[ff] && dbFieldDefs[ff].column && dbFieldDefs[ff].column.length) {
+				    if (dbFieldDefs[ff].column.length > 127) {
+				        editorClassName = "wm.LargeTextArea";
+				        props.height = "80px";
+				    }
+				    props.maxChars = dbFieldDefs[ff].column.length;
+				}
 /*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
-		    e = this.createEditor(f, props, {}, wm.getEditorClassName(f.displayType));
+		    var e = this.createEditor(f, props, {}, editorClassName);
 		    if (e) {
-			if (wm.isInstanceType(e, [wm.Number, wm.Date, wm.DateTime]))
-			    e.emptyValue = "zero";
-			else if (e instanceof wm.Text)
-			    e.emptyValue = "emptyString";
-		    }
-
-			if (e)
-			this._bindEditor(e);
+    			if (wm.isInstanceType(e, [wm.Number, wm.Date, wm.DateTime])) {
+    			    e.emptyValue = "zero";
+    			} else if (e instanceof wm.Text) {
+    			    e.emptyValue = "emptyString";
+    		    }
+            }
+			if (e) {
+    			this._bindEditor(e);				
+    		}
 			return true;
 		}
 	},
@@ -344,18 +362,20 @@ wm.LiveFormBase.extend({
 		if (e) {
 		    if (e.parent.horizontalAlign != "justified")
 			    e.setWidth(this.editorWidth);
-                        else
-                            e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-		    if (studio.currentDeviceType == "desktop") {
-			e.setHeight(this.editorHeight);
-		    } else {
-			e.desktopHeight = this.editorHeight;
-			if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
-			    e.setHeight(e.mobileHeight);
-			} else {
-			    e.setHeight(this.editorHeight);
-			}
-		    }
+            else
+                e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
+            if (!wm.isInstanceType(e, wm.LargeTextArea)) {
+    		    if (studio.currentDeviceType == "desktop") {
+    			    e.setHeight(this.editorHeight);
+    		    } else {
+    			    e.desktopHeight = this.editorHeight;
+        			if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
+        			    e.setHeight(e.mobileHeight);
+        			} else {
+        			    e.setHeight(this.editorHeight);
+        			}
+    		    }
+    		}
 			//console.log(this.name, "createEditor", arguments, e);
 			return e;
 		}

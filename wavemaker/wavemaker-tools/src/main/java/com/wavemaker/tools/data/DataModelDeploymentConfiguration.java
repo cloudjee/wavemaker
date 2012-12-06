@@ -142,34 +142,32 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
         cfg.writeProperties(existingProps, true);
         String dbName = existingProps.getProperty(DB_ALIAS_PROPERTY);
-        cfg.configureDbAlias(dbName, type);
-        cfg.configureHibernateSchemaUpdate(dbName, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
+        String dialect = (String)existingProps.get("dialect");
+        cfg.configureDbAlias(dbName, type, dialect);
+        cfg.configureHibernateSchemaUpdate(cfg.getServiceId(), existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
-        if (type == DeploymentType.CLOUD_FOUNDRY) {
-
-            addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
+        if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(DataServiceSpringConfiguration.MYSQL_DIALECT)) {
+            addCloudDataSource(mgr, cfg, dbName);
         }
     }
 
-    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String updateSchema) {
-        //if (hasText(updateSchema) && Boolean.parseBoolean(updateSchema)) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            XMLWriter writer = XMLUtils.newXMLWriter(pw);
-            writer.setStartIndent(4);
-            writer.addAttribute();
-            writer.addElement(CLOUD_DATA_SOURCE, "id", cfg.getServiceId() + "DataSource");
-            writer.finish();
-            File cfgFile = mgr.getProjectManager().getCurrentProject().getRootFolder().getFile(cfg.getPath());
-            String s = cfgFile.getContent().asString();
-            int i = s.indexOf(CONIG_FILE_INSERT_BEFORE);
-            if (i == -1) {
-                throw new AssertionError("Could not find marker in spring config file: " + CONIG_FILE_INSERT_BEFORE);
-            }
-            s = s.substring(0, i) + writer.getLineSep() + sw.toString() + writer.getLineSep() + s.substring(i);
-            cfgFile.getContent().write(s);
-        //}
+    private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String dbName) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        XMLWriter writer = XMLUtils.newXMLWriter(pw);
+        writer.setStartIndent(4);
+        writer.addAttribute();
+        writer.addElement(CLOUD_DATA_SOURCE, "id", cfg.getServiceId() + "DataSource", "service-name", dbName);
+        writer.finish();
+        File cfgFile = mgr.getProjectManager().getCurrentProject().getRootFolder().getFile(cfg.getPath());
+        String s = cfgFile.getContent().asString();
+        int i = s.indexOf(CONIG_FILE_INSERT_BEFORE);
+        if (i == -1) {
+            throw new AssertionError("Could not find marker in spring config file: " + CONIG_FILE_INSERT_BEFORE);
+        }
+        s = s.substring(0, i) + writer.getLineSep() + sw.toString() + writer.getLineSep() + s.substring(i);
+        cfgFile.getContent().write(s);
     }
 
     private void configureResourceRef(DesignServiceManager mgr, String jndiName) {

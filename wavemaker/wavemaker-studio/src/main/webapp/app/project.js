@@ -48,7 +48,7 @@ dojo.declare("wm.studio.Project", null, {
                 );
         return d;
     },
-        finishNewProject: function(inResult, optionalInTheme, optionalInTemplate) {
+    finishNewProject: function(inResult, optionalInTheme, optionalInTemplate) {
         studio.updateServices();
         this.projectChanging();
         this.createApplicationArtifacts();
@@ -176,7 +176,7 @@ dojo.declare("wm.studio.Project", null, {
     // Open
     //=========================================================================
     openProject: function(inProjectName, inPageName) {
-        dojo.registerModulePath("project", wm.libPath + "/../projects/" + inProjectName);
+
         var deferred = new dojo.Deferred();
         if (this.projectName && this.projectName != inProjectName)
         this.closeProject();
@@ -1212,6 +1212,9 @@ dojo.declare("wm.studio.Project", null, {
         }
     },
     projectChanging: function() {
+        if (this.projectName) {
+            dojo.registerModulePath("project", wm.libPath + "/../projects/" + this.projectName);
+        }
         this.updatePageList(studio._loadingApplication);
         studio.projectChanging();
     },

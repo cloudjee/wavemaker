@@ -969,7 +969,7 @@ dojo.declare(
                 var attributes = this.findServiceSecurityForService("runtimeService");
                 var serviceList = [ {
                     name : this.getDictionaryItem("SERVICE_DATABASE_SERVICES_NAME"),
-                    URL : "/runtimeservice.json",
+                    URL : "/services/runtimeservice.json",
                     attributes : attributes,
                     Settings : this.getAttributesDisplay(attributes)
                 } ];
@@ -979,7 +979,7 @@ dojo.declare(
                         var attributes = this.findServiceSecurityForService(node.component.name)
                         serviceList.push({
                             name : node.component.name,
-                            URL : "/" + wm.decapitalize(node.component.name) + ".json",
+                            URL : "/services/" + wm.decapitalize(node.component.name) + ".json",
                             attributes : attributes,
                             Settings : this.getAttributesDisplay(attributes)
                         });
@@ -1060,7 +1060,8 @@ dojo.declare(
             /* TODO: Remove from submission any "DEFAULT" values */
 
             // don't use the name as it will be localized
-            var databaseServiceURL = "/runtimeservice.json";
+
+            var databaseServiceURL = "/services/runtimeservice.json"; 
             var data = this.varServList.getData();
             var sendData = [];
             var databaseAttributes = "";
@@ -1090,7 +1091,7 @@ dojo.declare(
                 var components = studio.application.getServerComponents();
                 for ( var i = 0; i < components.length; i++) {
                     if (components[i] instanceof wm.DataModel) {
-                        sendData.push("/" + components[i].name + ".json:" + databaseAttributes);
+                        sendData.push("/services/" + components[i].name + ".json:" + databaseAttributes);
                     }
                 }
             }

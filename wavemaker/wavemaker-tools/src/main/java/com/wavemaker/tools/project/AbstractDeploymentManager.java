@@ -383,7 +383,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
      */
     @Override
     public void deployTheme(String themename, String filename, String data) throws IOException {
-
+	themename = themename.substring(1+themename.lastIndexOf("."));
         org.springframework.core.io.Resource themesDir = this.fileSystem.createPath(this.fileSystem.getCommonDir(), THEMES_DIR);
 
         org.springframework.core.io.Resource moduleDir = themesDir;
@@ -422,18 +422,21 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     @Override
     @SuppressWarnings("unchecked")
     public void copyTheme(String oldName, String newName) throws IOException {
+	String oldNameShort = oldName.substring(1+oldName.lastIndexOf("."));
+	String newNameShort = newName.substring(1+newName.lastIndexOf("."));
         org.springframework.core.io.Resource oldFile;
-        if (oldName.indexOf("wm_") == 0) {
-            oldFile = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/base/widget/themes/" + oldName + "/");
+        if (oldName.indexOf("wm.") == 0) {
+            oldFile = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/base/widget/themes/" + oldNameShort + "/");
         } else {
-            oldFile = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + oldName + "/");
+            oldFile = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + oldNameShort + "/");
         }
-        org.springframework.core.io.Resource newFile = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + newName);
+
+        org.springframework.core.io.Resource newFile = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + newNameShort);
         this.fileSystem.copyRecursive(oldFile, newFile, Collections.EMPTY_LIST);
 
         org.springframework.core.io.Resource cssFile = newFile.createRelative("theme.css");
-        com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(this.fileSystem.getOutputStream(cssFile), cssFile, "\\." + oldName, "."
-            + newName);
+        com.wavemaker.tools.project.ResourceManager.ReplaceTextInFile(this.fileSystem.getOutputStream(cssFile), cssFile, "\\." + oldNameShort, "."
+            + newNameShort);
 
     }
 
@@ -442,7 +445,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
      */
     @Override
     public void deleteTheme(String name) throws IOException {
-        this.fileSystem.deleteFile(this.fileSystem.getCommonDir().createRelative(THEMES_DIR + name + "/"));
+        this.fileSystem.deleteFile(this.fileSystem.getCommonDir().createRelative(THEMES_DIR + name.substring(1+name.lastIndexOf(".")) + "/"));
     }
 
     /**
@@ -451,10 +454,10 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     @Override
     public String[] listThemeImages(String themename) throws IOException {
         org.springframework.core.io.Resource themesDir;
-        if (themename.indexOf("wm_") == 0) {
-            themesDir = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/base/widget/themes/" + themename + "/images/");
+        if (themename.indexOf("common.") == 0) {
+            themesDir = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + themename.substring(1+themename.lastIndexOf(".")) + "/images/");
         } else {
-            themesDir = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + themename + "/images/");
+            themesDir = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/base/widget/themes/" + themename.substring(1+themename.lastIndexOf(".")) + "/images/");
         }
 
         String files0[] = getImageFiles(themesDir, null, "repeat,top left,");
@@ -582,7 +585,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                     rmDirs.add(moduleDir);
                 }
             }
-            org.springframework.core.io.Resource sourceJsFile = moduleDir.createRelative(name + ".js");
+            org.springframework.core.io.Resource sourceJsFile = moduleDir.createRelative(name);
             if (sourceJsFile.exists()) {
                 this.fileSystem.deleteFile(sourceJsFile);
                 for (int i = rmDirs.size() - 1; i > -1; i--) {
@@ -595,14 +598,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 }
             }
         }
-
         org.springframework.core.io.Resource libJsFile = packagesDir.createRelative(LIB_JS_FILE);
         StringBuffer libJsData = new StringBuffer();
         if (libJsFile.exists()) {
             boolean found = false;
             String klass = null;
             if (namespace != null && namespace.length() > 0) {
-                klass = namespace + "." + name;
+                klass = namespace + "." + name + "." + name;
             } else {
                 klass = name;
             }

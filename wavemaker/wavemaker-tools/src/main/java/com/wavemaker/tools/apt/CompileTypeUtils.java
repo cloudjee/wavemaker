@@ -50,7 +50,11 @@ public class CompileTypeUtils {
             return def;
         }
 
-        def.setTypeDefinition(buildTypeDefinition(processingEnv, typeState, type));
+        try {
+            def.setTypeDefinition(buildTypeDefinition(processingEnv, typeState, type));
+        } catch (InvalidTypeException ex) {
+            return def;
+        }
 
         if (type.getKind() == TypeKind.ARRAY || type.getKind() == TypeKind.DECLARED && isCollection(processingEnv, (DeclaredType) type)) {
             def.setArrayTypes(buildArrayTypesList(processingEnv, typeState, type, new ArrayList<ListTypeDefinition>()));
@@ -113,7 +117,7 @@ public class CompileTypeUtils {
                 return typeDefForPrimitive(processingEnv, typeState, type);
 
             default:
-                throw new WMRuntimeException("Cannot convert type " + type.toString() + " to a TypeDefinition.");
+                throw new InvalidTypeException("Cannot convert type " + type.toString() + " to a TypeDefinition.");
         }
     }
 
@@ -129,7 +133,8 @@ public class CompileTypeUtils {
         return def;
     }
 
-    public static TypeDefinition typeDefForObject(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {
+    public static TypeDefinition typeDefForObject(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type)
+            throws InvalidTypeException {
         if (isPrimitiveWrapper(processingEnv, type)) {
             return typeDefForPrimitive(processingEnv, typeState, type);
         } else if (isCollection(processingEnv, type)) {
@@ -306,7 +311,7 @@ public class CompileTypeUtils {
         @Override
         public TypeState visitExecutableAsMethod(ExecutableElement method, TypeState typeState) {
 
-            if (!method.getSimpleName().toString().endsWith("Class") &&
+            if (!method.getSimpleName().toString().endsWith("Class") ||
                     method.getEnclosingElement().toString().equals("java.lang.reflect.TypeVariable")) {
 
                 ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(typeState.getBaseClassName());

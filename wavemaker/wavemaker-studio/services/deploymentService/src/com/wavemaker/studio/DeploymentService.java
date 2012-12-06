@@ -276,7 +276,6 @@ public class DeploymentService {
 	deployClientComponent(className,folder,data);
 
 	/* Take care of the services */
-	System.out.println("ServiceCount: " + services.length);
 	Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages");
         if (folder != null && folder.length() > 0) {
 
@@ -285,7 +284,7 @@ public class DeploymentService {
                 componentFolder = componentFolder.getFolder(f);		
             }
         } 
-	System.out.println("FOLDER:" + componentFolder.toString());
+
 	Folder componentServiceFolder = componentFolder.getFolder("services");
 	componentServiceFolder.createIfMissing();
 	componentServiceFolder.list().delete(); // delete any old services
@@ -361,7 +360,10 @@ public class DeploymentService {
         Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(CLIENT_COMPONENTS_STAGE);
         ZipArchive.unpack(file.getInputStream(), componentStage);
         com.wavemaker.tools.io.File jsFile = componentStage.getFile(className + "/" + className + ".js");
-
+	if (!jsFile.exists()){
+	    componentStage.delete();
+	    throw new IOException(jsFile.toString() + " not found");
+	}
         String str = getClientComponentPackageString(jsFile);
         String packageStr = str.substring(0, str.lastIndexOf("." + className));
 
@@ -385,11 +387,9 @@ public class DeploymentService {
 	String responseExclude = "";
 	if (componentServicesFolder.exists()) {
 	    com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> componentServiceFolders =  componentServicesFolder.list().folders();
-	    System.out.println("componentServiceFolders:" + componentServicesFolder.toString());
 	    for (com.wavemaker.tools.io.Folder f : componentServiceFolders) {
 		String name = f.getName();
 		com.wavemaker.tools.io.Folder projectServiceFolder = projectServicesFolder.getFolder(name);
-		System.out.println("Service:" + f.toString() + " | " + projectServiceFolder.exists());
 		if (!projectServiceFolder.exists()) {
 		    projectServiceFolder.createIfMissing();
 		    f.copyContentsTo(projectServiceFolder);
@@ -487,6 +487,7 @@ public class DeploymentService {
         } else {
             return null;
         }
+
         p = Pattern.compile("\"");
         m = p.matcher(str);
         if (m.find()) {
@@ -494,7 +495,6 @@ public class DeploymentService {
         } else {
             return null;
         }
-
         return rtn;
     }
 }

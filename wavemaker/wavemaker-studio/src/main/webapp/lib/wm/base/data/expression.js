@@ -55,7 +55,14 @@ wm.expression.getValue(exp, app.main);
 	},
 	getSources: function(inExpression) {
 		var re = wm.expression._getSourceRegEx
+
 		re.lastIndex = 0;
+		var sources = (inExpression || "").match(re, "g") || [];
+		for (var i = 0; i < sources.length; i++) {
+		  sources[i] = sources[i].substring(2,sources[i].length-1);
+		}
+		return sources;
+	/*
 		var m, sources=[];
 		while((m = re.exec(inExpression)) != null) {
 		  sources.push(m[1]);
@@ -67,6 +74,7 @@ wm.expression.getValue(exp, app.main);
 		  }
 		}
 		return sources;
+		*/
 	},
 	_getText: function(inExpression, inRoot) {
 		//return inExpression.replace(wm.expression._getSourceRegEx(), function(){

@@ -173,7 +173,11 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    var s = this.liveSource = inLiveSource;
 	    var v;
 	    try {
-		v = this.getRoot().app.getValueById(s);
+            if (this._isDesignLoaded) {
+                v = studio.application.getValueById(s);
+            } else {
+                v = app.getValueById(s);
+            }
 	    } catch(e) {}
 	    if (!v)
 		v = this.createLiveView(s);

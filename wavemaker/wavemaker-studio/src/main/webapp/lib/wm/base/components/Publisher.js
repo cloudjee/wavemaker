@@ -88,7 +88,7 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     parentClass: "wm.Composite",
 	undeploy: function() {
-		studio.undeployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, this.removeSource);
+		studio.undeployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, this.removeSource);
 	},
 	_deploy: function(services) {
 		wm.Property.deploy = true;
@@ -153,7 +153,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			}
 			var data = [];
 			wm.services.forEach(function(s) {
-				if (!s.isClientService && s.name != "resourceFileService") {
+				if (!s.isClientService && !s.clientHide && s.name != "resourceFileService") {
 					data.push(s.name);
 				}
 			});
@@ -251,7 +251,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	    '"' + image + '", ' +
 	    '"' + this.description + '", ' +
 	    '{},' +
-	    "false" +
+	    "false," +
+	    (this.index === null ? "undefined" : this.index) +
 	    ']);';
 	//
 	var c, props = [];
@@ -264,12 +265,12 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	props = props.length ? 'wm.publish(' + klass + ', [\n\t' + props.join(',\n\t') + '\n]);\n \n' : "";
 
 
-	var css = dojo.trim(studio.getCss());
+	var css = dojo.trim(studio.getCss()) + "\n\n" + dojo.trim(studio.getAppCss());
         var jscss = klass + ".prototype._cssText = '";
         var cssArray = [];
         dojo.forEach(css.split(/\n/), function(line) {
             if (line.match(/\S/))
-		cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + "\\\n");
+		cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + " \\\n");
         });
         jscss += cssArray.join("") + "';\n\n";
 
@@ -340,7 +341,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 
 wm.Object.extendSchema(wm.CompositePublisher, {
-	download: {operation:1, group: "operation"}
+	download: {operation:1, group: "operation"},
+	index: {type: "Number", order:100}
 });
 /*
 wm.registerPackage([bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);

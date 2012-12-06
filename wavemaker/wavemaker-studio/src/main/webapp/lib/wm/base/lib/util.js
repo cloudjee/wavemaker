@@ -58,19 +58,26 @@ wm.flattenObject = function(inObj, keepOld) {
 
 
 wm.requireCss = function(modulepath) {
-
+/*
     var replaceSubstr = 'lib/dojo/dojo/../../../lib';
     if (modulepath.indexOf(replaceSubstr) == 0) {
 	modulepath = "lib" + modulepath.substring(replaceSubstr.length);
     }
     modulepath = ((modulepath.charAt(0) == "/" || modulepath.match(/^\w+:/)) ? "" : dojo.baseUrl) + modulepath;
-    while (modulepath.match(/[^\/]\/\.\.\//)) {
-        modulepath = modulepath.replace(/[^\/]*\/\.\.\/+/, "");
-    }
+
     var parts = modulepath.split(".");
     var filename = parts.pop();
     var path = parts.join(".");
-    path = dojo.moduleUrl(path).path.replace(/lib\/\//, "lib/") + filename + ".css";
+    */
+    var lastIndex = modulepath.lastIndexOf(".");
+    var filename = modulepath.substring(lastIndex + 1);
+    var modulepath = modulepath.substring(0,lastIndex);
+    var path = dojo.moduleUrl(modulepath).path.replace(/lib\/\//, "lib/") + filename + ".css";
+    
+    while (path.match(/[^\/]\/\.\.\//)) {
+        path = path.replace(/[^\/]*\/\.\.\/+/, "");
+    }
+    
     wm.requireCssPath(path);
 }
 wm.requireCssPath = function(path) {

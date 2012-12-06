@@ -616,7 +616,7 @@ dojo.declare("wm.prop.MultiWidgetSelect", wm.ListSet, {
     dataField: "dataValue",
     displayField: "dataValue",
     selectionMode: "checkbox",
-    height: "100px",
+    height: "300px",
     widgetType: null,
     excludeType: null,
     useOwner: null,
