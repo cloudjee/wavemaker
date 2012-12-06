@@ -61,7 +61,7 @@ public class SecuritySpringSupport {
 
     private static final String FILTER_DEFINITION_SOURCE_PROPERTY = "filterInvocationDefinitionSource";
 
-    private static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
+    static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
 
     private static final String AUTH_PROVIDERS_PROPERTY = "providers";
 
