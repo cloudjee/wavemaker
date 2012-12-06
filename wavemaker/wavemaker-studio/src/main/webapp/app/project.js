@@ -1838,7 +1838,7 @@ Studio.extend({
                 newtext = "@import \"" + filepath + "\";";
                 editArea.setText(newtext + "\n" + editArea.getText());
                 } else {
-                   newtext = "dojo.require(\"project." + filepath.replace(/\.js$/,"").replace(/\//g,".") + "\");";
+                   newtext = "dojo" + ".require(\"project." + filepath.replace(/\.js$/,"").replace(/\//g,".") + "\");";
                 editArea.setText(editArea.getText() + "\n" + newtext);// goes at end so that errors don't stop class from being declared (also needed for current technique for extracting the editable part of the application.js file)
                 }
             }
