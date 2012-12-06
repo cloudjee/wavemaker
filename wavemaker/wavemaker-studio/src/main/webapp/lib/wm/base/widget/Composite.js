@@ -51,9 +51,10 @@ wm.publishProperty = function(ctor, name, id, schema) {
         var capP = name.slice(0, 1).toUpperCase() + name.slice(1);
         pt["get" + capP] = function(inValue) {
             var t = this.getValue(target);
+
             if ((!property || property == "dataSet") && t instanceof wm.Variable) {
                  return t;
-            } else {
+            } else if (t) {
                  return this[name] = this.getValue(target).getValue(property);
             }
         };
@@ -83,13 +84,22 @@ wm.publishProperty = function(ctor, name, id, schema) {
                 if (!t["_inSet" + capP]) {
                     t["_inSet" + capP] = true;
                     try {
-                        if (!property && t instanceof wm.Variable) {
-                            this[name] = inValue;
-                            var id = t.owner.getRuntimeId();
-                            dojo.publish(id + "." + name + "-ownerChanged", [this]);
+                        if (t instanceof wm.Variable) {
+                            if (t !== this[name]) {
+                                this[name] = inValue;
+                                var id = t.owner.getRuntimeId();
+                                dojo.publish(id + "." + name + "-ownerChanged", [this]);
+                            }
+
                         } else {
-                            t._setProp(property, this[name] = inValue);
-                            this.valueChanged(name, inValue);
+                            if (this[name] !== inValue) {
+                                // This is not needed; in setsource + Name, its triggered by a bind
+                                // event which means its already been changed
+                                // t._setProp(property, this[name] = inValue);
+                                this.valueChanged(name, inValue);
+                            } else if (this[name] instanceof wm.Variable) {
+
+                            }
                         }
 
                     } catch(e) {}
@@ -98,16 +108,24 @@ wm.publishProperty = function(ctor, name, id, schema) {
             }
         };
 
+
         if (schema.operation) {
             schema = dojo.clone(schema);
             var op = schema.operation;
-            schema.operation = function() {
-                var t = this.getValue(target);
+            var opTarget = schema.operationTarget;
+            schema._operation = function() {
+                var t;
+                var operation = op;
+                if (opTarget) {
+                    t = this.getValue(opTarget);
+                } else {
+                    t = this.getValue(target);
+                }
                 if (t) {
-                    if (typeof op == "function") {
-                        ;
-                    } else if (typeof op == "string") {
-                        t[op]();
+                    if (typeof operation == "function") {
+                        operation();
+                    } else if (typeof operation == "string") {
+                        t[operation]();
                     } else {
                         t[property]();
                     }
@@ -123,6 +141,10 @@ wm.publishProperty = function(ctor, name, id, schema) {
     // register published properties
     var pb = pt.published = (pt.published || {});
     pb[name] = {name: name, id: id, target: target, property: property};
+    if (schema.operation) {
+        pb[name].operation = schema.operation;
+        pb[name].operationTarget = schema.operationTarget;
+    }
 }
 
 // Cause inCtor to publish inProperties (Array of property descriptors, [[ctor, name, id, schema]...])
@@ -145,13 +167,14 @@ dojo.declare("wm.CompositeMixin", null, {
         if (this instanceof wm.Control) {
             this.initDomNode();
         }
+        this._isDesignLoaded = this.isDesignLoaded();
         this.createComposite();
         this.inherited(arguments);
     },
     postInit: function() {
         this.inherited(arguments);
         if (this instanceof wm.Control == false) {
-            if (!this.$.binding && this.isDesignLoaded()) {
+            if (!this.$.binding && this._isDesignLoaded) {
                 new wm.Binding({
                     name: "binding",
                     owner: this
@@ -162,6 +185,11 @@ dojo.declare("wm.CompositeMixin", null, {
         for (var p in this.published) {
             // id qualifier to localize ids
             var pre = this.name + ".";
+            var o = this.owner;
+            while (o instanceof wm.Composite) {
+                pre = o.name + "." + pre;
+                o = o.owner;
+            }
             var pub = this.published[p];
             if (this.schema[pub.name].isEvent) {
                 var c = this.marshallFacade(pub.name);
@@ -171,11 +199,20 @@ dojo.declare("wm.CompositeMixin", null, {
                 // propagate loaded values to underlying properties
                 if (this[p] != this.constructor.prototype[p])
                     this.setValue(p, this[p]);
-                // watch changes on our source property, will propagate values up from source
-                // (possibly round-tripping a value set above)
-                // instead of using the real target name, use a special one ("source" + realTargetName)
-                // to avoid circular connection
-                new wm.Wire({target: this, targetProperty: "source" + pub.name, source: pre + pub.id, owner: this}).connectWire();
+
+                if (!this.schema[pub.name].operation) {
+                    // watch changes on our source property, will propagate values up from source
+                    // (possibly round-tripping a value set above)
+                    // instead of using the real target name, use a special one ("source" + realTargetName)
+                    // to avoid circular connection
+                      if (!this.$.binding) {
+                        new wm.Binding({
+                            name: "binding",
+                            owner: this
+                        });
+                    }
+                    new wm.Wire({name: "_" + pub.name, target: this, targetProperty: "source" + pub.name, source: pre + pub.id, owner: this.$.binding}).connectWire();
+                }
             }
         }
 
@@ -213,9 +250,34 @@ dojo.declare("wm.CompositeMixin", null, {
         // FIXME: fix scoping in publisher instead because
         // we have more ready information at publish time.
         var c = dojo.clone(this.constructor.components);
+        var isDesignLoaded = this._isDesignLoaded;
+
         this.updateComponentsBinding(c);
+
         // construct designed components with "owner: this"
+        this._isDesignLoaded = false;
         this.createComponents(c, this);
+        this.fixupSubscriptions();
+        this._isDesignLoaded = isDesignLoaded;
+    },
+    fixupSubscriptions: function() {
+
+        wm.forEachProperty(this.constructor.prototype.published, dojo.hitch(this, function(propDef,name) {
+                    var target = this.getRuntimeId() + "." + propDef.id;
+
+
+                    var value = this.getValue(name);
+                    if (value instanceof wm.Component) {
+                        if (value instanceof wm.Variable) {
+                            this.subscribe(target + "-ownerChanged", dojo.hitch(this, "_forwardBindEvent", this.getRuntimeId() + "." + name, name, target));
+                        }
+                    }
+
+
+        }));
+    },
+    _forwardBindEvent: function(inName, inPropName, target) {
+            dojo.publish(inName + "-ownerChanged", [this.getValue(inPropName)]);
     },
     updateComponentsBinding: function(inComponents) {
         // construct a directory of component names that are
@@ -241,8 +303,15 @@ dojo.declare("wm.CompositeMixin", null, {
             v = v.split(".").shift();
             if (v == "*")
                 v = this.name;
-            else if (this._dir[v])
-                v = this.name + "." + inValue;
+            else if (this._dir[v]) {
+                if (this._isDesignLoaded && this.isAncestor(studio.designer)) {
+                    v = this.getRuntimeId().replace(/^studio\.wip\./,"") + "." + inValue;
+                } else if (!this._isDesignLoaded && this.isAncestor(app._page)) {
+                    v = this.getRuntimeId().replace(/^.*?\./,"") + "." + inValue;
+                } else {
+                    v = this.getRuntimeId() + "." + inValue;
+                }
+            }
         }
         return v;
     },
@@ -269,6 +338,20 @@ dojo.declare("wm.CompositeMixin", null, {
                             break; // switch(p)
                     }
                     break; // switch(inClass)
+                case "wm.EditPanel":
+                    switch(p){
+                        case "liveForm":
+                        case "operationPanel":
+                        case "savePanel":
+                        v = this._fixupValue(v);
+                        break;
+                    }
+                    break;
+                case "wm.DesignableDialog":
+                    if (p == "containerWidgetId") {
+                        v = this._fixupValue(v);
+                    }
+                    break;
                 default:
                     switch(p){
                         case "dataSet":
@@ -302,6 +385,19 @@ dojo.declare("wm.CompositeMixin", null, {
 
 // design only
 wm.CompositeMixin.extend({
+/*    init: function() {
+        this.inherited(arguments);
+        if (this._isDesignLoaded) {
+            this.createPageLoader();
+        }
+    },
+    createPageLoader: function() {
+
+        this._pageLoader = new wm.PageLoader({
+            owner: this,
+            domNode: this.domNode
+        });
+    },    */
     // ask owner of the underlying property to generate an editor for facade property inName
     makePropEdit: function(inName, inValue, inDefault) {
         var p = this.marshallFacade(inName);
@@ -334,7 +430,7 @@ wm.CompositeMixin.extend({
     },
     writeComponents: function(inIndent, inOptions) {
         var
-            s = [];
+            s = [],
             c = this.components.binding.write(inIndent);
         if (c)
             s.push(c);
@@ -389,12 +485,16 @@ wm.CompositeMixin.extend({
 
 dojo.declare("wm.Composite", [wm.Container, wm.CompositeMixin], {
     scrim: true, // prevent the user from interacting with the contents of the composite in designer
-    lock: true, // prevent user from adding additional controls
+    lock: true // prevent user from adding additional controls
 });
 
 wm.Object.extendSchema(wm.Composite, {
     box: {ignore: 1},
     boxPosition: {ignore: 1},
     freeze: { ignore: 1 },
-    lock: { ignore: 1 } // prevent user from unlocking in studio
+    lock: { ignore: 1 }, // prevent user from unlocking in studio
+
+     // properties written into user's page which isn't desired for composite's property panel
+    preferredDevice: {ignore:1},
+    i18n: {ignore:1}
 });
