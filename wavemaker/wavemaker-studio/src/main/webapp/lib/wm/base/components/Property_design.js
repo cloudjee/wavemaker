@@ -39,45 +39,88 @@ wm.Property.extend({
 	    studio.selectProperty(this, null, studio.getDictionaryItem("wm.Property.SELECT_PROPERTY", {propertyName: this.name}));
 	},
     /* Design-time only */
-	selectProperty: function(inId) {
-	    if (this._nameChangeConnect) {
-		dojo.disconnect(this._nameChangeConnect);
-		delete this._nameChangeConnect;
-	    }
+    selectProperty: function(inId) {
+        if(this._nameChangeConnect) {
+            dojo.disconnect(this._nameChangeConnect);
+            delete this._nameChangeConnect;
+        }
 
-		studio.onSelectProperty = null;
-		var id = inId.replace("studio.wip.", "");
-	        this.property = id;
-		// FIXME: this split/shift/join thing happens in Composite too, unify
-		var ids = id.split("."), c = ids.shift(), prop = ids.join(".");
-		// FIXME: this also happens in Composite, a couple different ways
-		var c = studio.wip.getValue(c);
-	    
-	    if (c) {
-		var propDef = c.listProperties()[prop];
-		if (propDef) {
-		    this.type = propDef.type;
-            this.method = propDef.method;
-            if (propDef.operation) this.operation = propDef.operation;		
-		} else if (c instanceof wm.Variable && (!prop || prop == "dataSet")) {
-		    this.type = c.type;
-		} else if (c instanceof wm.Variable && c.isDataProp(prop)) {
-            this.type = c._dataSchema[prop].type
-		}
-		if (c.isEventProp(prop))
-		    this.setValue("isEvent", true);
-		if (c.schema[prop] && c.schema[prop].readonly) 
-		    this.setValue("readonly", true);
+        studio.onSelectProperty = null;
+        var id = inId.replace("studio.wip.", "");
+        this.property = id;
+        // FIXME: this split/shift/join thing happens in Composite too, unify
+        var ids = id.split(".");
+        var cName = ids.shift();
+        var prop = ids.join(".");
+        if (!prop) prop = "dataSet";
 
-		this._nameChangeConnect = this.connect(c, "set_name", this, function() {
-		    this.property = c.name + "." + prop;
-		});
-	    }
+        // FIXME: this also happens in Composite, a couple different ways
+        var c = studio.wip.getValue(cName);
 
-	},
+        if(c) {
+            var propDef = c.listProperties()[prop];
+
+            if(propDef) {
+                if (!wm.typeManager.getType(propDef.type)) {
+                    var prop_c = c.getValue(prop);
+                    if (prop_c instanceof wm.Variable) {
+                        this.type = prop_c.type;
+                    }
+                } else {
+                    this.type = propDef.type;
+                }
+                this.method = propDef.method;
+                if (propDef.operation) {
+                    debugger;
+                    if (propDef.operationTarget) {
+                        this.operationTarget = cName + "." + propDef.operationTarget;
+                    } else {
+                        this.operationTarget = cName;
+                    }
+                    this.operation = typeof propDef.operation == "string" ? propDef.operation : prop;
+                    /*
+                    if (typeof propDef.operation == "string") {
+                        this.operation = cName + "." + propDef.operation;
+                    } else {
+                        this.operation = cName + "." + prop;
+                    }*/
+
+                }
+                var props = ["bindSource", "bindTarget", "ignore", "hidden", "readonly", "writeonly", "editor", "editorProps"];
+                dojo.forEach(props, function(inName, i) {
+                    if (propDef[inName]) this[inName] = propDef[inName];
+                }, this);
+                if (propDef.bindable) {
+                    this.bindSource = this.bindTarget = true;
+                }
+            } else if (c instanceof wm.Variable && (!prop || prop == "dataSet")) {
+                this.type = c.type;
+                if (c instanceof wm.ServiceVariable == false) {
+                    this.bindSource = this.bindTarget = true;
+                } else {
+                    this.ignore = true;
+                }
+            } else if (c instanceof wm.Variable && c.isDataProp(prop)) {
+                this.type = c._dataSchema[prop].type;
+                if (c instanceof wm.ServiceVariable) {
+                    this.ignore = true;
+                    this.bindTarget = false;
+                    this.isDataField = true;
+                }
+            }
+            if(c.isEventProp(prop)) this.setValue("isEvent", true);
+            if(c.schema[prop] && c.schema[prop].readonly) this.setValue("readonly", true);
+
+            this._nameChangeConnect = this.connect(c, "set_name", this, function() {
+                this.property = c.name + "." + prop;
+            });
+        }
+
+    },
+
     setProperty: function(inId) {
 	this.selectProperty(inId);
-    }, 
+    },
 	write: function() {
         var prop = this.owner.getValue(this.property);
 		if (prop && prop instanceof wm.Variable) {
@@ -97,19 +140,25 @@ wm.Property.extend({
     	       operation = "'" + this.operation + "'";
     	    }
     	}
+
+
 		return '[' +
-			'"' + this.name + '", ' + 
-			'"' + this.property + '", ' + 
-			'{' + 
+			'"' + this.name + '", ' +
+			'"' + this.property + '", ' +
+			'{' +
 				'group: "Published"' + (
 					this.isEvent ? ', isEvent: true' :
 						(this.readonly ? ', readonly: true' : '') +
 						(this.bindSource ? ', bindSource: true' : '') +
 					(this.bindTarget ? ', bindTarget: true' : '') +
-					(this.ignore ? ', ignore: true' : '') +					
-					(this.hidden ? ', hidden: true' : '') +										
-					(this.writeonly ? ', writeonly: true' : '') +															
-					(operation ? ', operation:' + operation : '') + 
+					(this.ignore ? ', ignore: true' : '') +
+					(this.hidden ? ', hidden: true' : '') +
+					(this.writeonly ? ', writeonly: true' : '') +
+                    (this.editor ? ', editor: "' + this.editor + '"' : '') +
+                    (this.editorProps ? ', editorProps: ' + dojo.toJson(this.editorProps) : '') +
+					(operation ? ', operation:' + operation : '') +
+                    (this.operationTarget ? ', operationTarget:"' + this.operationTarget + '"' : '') +
+                    (this.property ? ', property: "' + this.property + '"': '') +
 					(this.type && !operation ? ', type: "' + this.type + '"' : '')) +
 			'}' +
 		']';
@@ -126,9 +175,12 @@ wm.Object.extendSchema(wm.Property, {
     isEvent: {group: "widgetName", order: 20},
     readonly: {group: "widgetName", order: 30},
     ignore: {group: "widgetName", order: 40},
-    hidden: {group: "widgetName", order: 45},    
+    hidden: {group: "widgetName", order: 45},
     isDataField: {group: "widgetName", order: 50},
-    operation: {group: "widgetName", order: 60}
+    operation: {group: "widgetName", order: 60},
+    operationTarget: {group: "widgetName", order: 60},
+    editor: {group: "widgetName", order: 70},
+    editorProps: {group: "widgetName", order: 70}
 });
 
 /*
