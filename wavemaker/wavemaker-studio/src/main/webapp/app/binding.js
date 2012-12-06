@@ -1,5 +1,4 @@
-/*
- * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+/* Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -571,6 +570,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
     } else {
         var sourceProp = inObject.owner.listProperties()[rootName];
     }
+
+    /* Property name with "Data" added to the end is a wm.Property created property representing the data of a wm.Variable */
+    if (!sourceProp)  sourceProp = inObject.listProperties()[rootName + "Data"];
     sourceProp.name = rootName;
 
         var wire = inObject.$.binding && inObject.$.binding.wires[rootName];
