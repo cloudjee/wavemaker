@@ -71,7 +71,6 @@ wm.Property.extend({
                 }
                 this.method = propDef.method;
                 if (propDef.operation) {
-                    debugger;
                     if (propDef.operationTarget) {
                         this.operationTarget = cName + "." + propDef.operationTarget;
                     } else {
