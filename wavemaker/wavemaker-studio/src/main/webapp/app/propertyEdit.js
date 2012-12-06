@@ -389,7 +389,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
                 if (typeDef) {
                     options = wm.typeManager.getSimplePropNames(typeDef.fields);
                 }
-            }                            
+            }
         }
         if (!options) {
             if (ds) {
@@ -410,7 +410,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
                 dojo.forEach(moreoptions, function(o) {options.push(o);});
             }
         }
-        
+
         if (this.emptyLabel) {
             this.allowNone = false;
             options.unshift(this.emptyLabel);
@@ -418,7 +418,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
         if (!wm.Array.equals(this.options,options)) {
             this.setOptions(options);
         }
-        
+
     },
     setEditorValue: function(inValue) {
         if (!inValue && this.emptyLabel) {
@@ -611,7 +611,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 
 dojo.declare("wm.prop.MultiWidgetSelect", wm.ListSet, {
     forceCaptionPositionTop: true,
-    renderVisibleRowsOnly: false,   
+    renderVisibleRowsOnly: false,
     inspectedChildrenOnly: false,
     dataField: "dataValue",
     displayField: "dataValue",
@@ -624,7 +624,7 @@ dojo.declare("wm.prop.MultiWidgetSelect", wm.ListSet, {
         this.inherited(arguments);
         dojo.addClass(this.domNode, "StudioList");
     },
-    createEditor: function() {  
+    createEditor: function() {
         this.inherited(arguments);
         if (this.widgetType && typeof this.widgetType == "string") this.widgetType = dojo.getObject(this.widgetType);
         if (this.excludeType && typeof this.excludeType == "string") this.excludeType = dojo.getObject(this.excludeType);
@@ -653,7 +653,7 @@ dojo.declare("wm.prop.MultiWidgetSelect", wm.ListSet, {
         for (var i = 0; i < result.length; i++) {
             ids.push(result[i].getId());
         }
-        
+
         this.setOptions(ids);
 
     }
@@ -1450,20 +1450,20 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
                 break;
         */
             case "newService":
-                studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
-                this.setDisplayValue(this.inspected.name);
+                c = studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
+                this.setDisplayValue(c.name);
                 break;
             case "newLiveVar":
-                studio.newComponentButtonClick({componentType: "wm.LiveVariable"});
-                this.setDisplayValue(this.inspected.name);
+                c = studio.newComponentButtonClick({componentType: "wm.LiveVariable"});
+                this.setDisplayValue(c.name);
                 break;
             case "newNavigation":
-                studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
-                this.setDisplayValue(this.inspected.name);
+                c = studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
+                this.setDisplayValue(c.name);
                 break;
             case "newNotification":
-                studio.newComponentButtonClick({componentType: "wm.NotificationCall"});
-                this.setDisplayValue(this.inspected.name);
+                c = studio.newComponentButtonClick({componentType: "wm.NotificationCall"});
+                this.setDisplayValue(c.name);
                 break;
 
         }
