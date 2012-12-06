@@ -198,7 +198,7 @@ dojo.declare("Studio", wm.Page, {
         this.appCssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {
             studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")
         }));
-        
+
         this.helpDialog.containerWidget.c$[0].setPadding("0");
         this.helpDialog.containerWidget.c$[0].setBorder("10");
         this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
@@ -800,17 +800,17 @@ dojo.declare("Studio", wm.Page, {
     getScript: function() {
         return this.editArea.getText();
     },
-        setScript: function(inScript) {
+    setScript: function(inScript) {
             //this["_cachedEditDataeditArea"] = inScript;
-        this.editArea.setText(inScript);
+        this.editArea.setDataValue(inScript);
     },
 
-        getAppScript: function() {
+    getAppScript: function() {
         return this.appsourceEditor.getText();
     },
-        setAppScript: function(inScript) {
+    setAppScript: function(inScript) {
         //this["_cachedEditDataappsourceEditor"] = inScript;
-        this.appsourceEditor.setText(inScript);
+        this.appsourceEditor.setDataValue(inScript);
     },
     getWidgets: function() {
         return this.page ? sourcer(this.project.pageName, this.page) : "";
@@ -878,7 +878,8 @@ dojo.declare("Studio", wm.Page, {
     // Control Management
     //=========================================================================
     makeName: function(inType) {
-        var n = inType.replace("wm.", "").replace("dijit.", "").replace("wm.", "");
+        //var n = inType.replace("wm.", "").replace("dijit.", "").replace("wm.", "");
+        var n = inType.replace(/^.*\./,"");
         n = n.substring(0, 1).toLowerCase() + n.substring(1);
         // default name includes trailing 1
         return n.replace(/\./g, "") + "1";
@@ -1618,8 +1619,8 @@ dojo.declare("Studio", wm.Page, {
                             w.renderCss();
                         }
 	                });
-				}		           
-            });            
+				}
+            });
         }
         wm.fire(this.page, "reflow");
 
@@ -1668,8 +1669,9 @@ dojo.declare("Studio", wm.Page, {
     newComponentButtonClick: function(inSender) {
         var t = inSender.componentType;
         if (t) {
-            this.make(t);
+            var c = this.make(t);
             wm.fire(this.selected[0], "showConfigureDialog");
+            return c;
         }
     },
 /*
@@ -1806,7 +1808,7 @@ dojo.declare("Studio", wm.Page, {
         }
         this.reinspect(); // some properties may change like height/minHeight
         if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "auto"
-    },    	
+    },
     designTabletUI: function() {
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded) {
