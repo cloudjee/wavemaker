@@ -63,20 +63,20 @@ dojo.declare("PropertyPublisher", wm.Page, {
             }
         }
 		groups.shift();
-		if (this.inspected instanceof wm.Variable) {
-		var node = new wm.TreeNode(this.tree.root, {
-		  content: "Current Data",
-		  closed: false,
-		  hasChildren: true
-		  });
-		var fieldsRoot = this.fieldsRoot = new wm.TreeCheckNode(node, {
+		if(this.inspected instanceof wm.Variable) {
+			var node = new wm.TreeNode(this.tree.root, {
+				content: "Current Data",
+				closed: false,
+				hasChildren: true
+			});
+			var fieldsRoot = this.fieldsRoot = new wm.TreeCheckNode(node, {
 				content: "All Data",
 				data: "",
 				closed: true,
 				hasChildren: false,
 				checked: this.propComponentList[this.inspected.id]
 			});
-		  this.generateFieldProps(fieldsRoot, this.inspected._dataSchema);
+			this.generateFieldProps(fieldsRoot, this.inspected._dataSchema);
 		}
 		dojo.forEach(groups, dojo.hitch(this, function(group) {
 			var node = new wm.TreeNode(this.tree.root, {
