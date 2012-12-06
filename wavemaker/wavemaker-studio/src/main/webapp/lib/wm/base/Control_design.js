@@ -433,44 +433,45 @@ wm.Control.extend({
     },
     */
     writeProps: function(inOptions) {
-    var props = this.inherited(arguments);
-    if (this._percEx.h || !this.enableTouchHeight) {
-        delete props.desktopHeight;
-        delete props.mobileHeight;
-    }
-    if (this.desktopHeight == this.constructor.prototype.height) {
-        delete props.desktopHeight;
-    }
-    if (this.mobileHeight == this.constructor.prototype.height) {
-        delete props.mobileHeight;
-    }
+        var props = this.inherited(arguments);
+        if(this._percEx.h || !this.enableTouchHeight) {
+            delete props.desktopHeight;
+            delete props.mobileHeight;
+        }
+        if(this.desktopHeight == this.constructor.prototype.height) {
+            delete props.desktopHeight;
+        }
+        if(this.mobileHeight == this.constructor.prototype.height) {
+            delete props.mobileHeight;
+        }
 
-    return props;
+        return props;
     },
     writeChildren: function(inNode, inIndent, inOptions) {
         return [];
     },
     wrapInPanel: function() {
-    var index = this.getIndexInParent();
-    var parent = this.parent;
-    var p = new wm.Panel({owner: this.owner,
-                  parent: parent,
-                  name: this.name + "Panel",
-                  width: this.width,
-                  height: this.height,
-                  verticalAlign: "top",
-                  horizontalAlign: "left",
-                  layoutKind: parent.layoutKind == "left-to-right" ? "top-to-bottom" : "left-to-right"});
-    p.setIndexInParent(index);
-    this.setParent(p);
-    this.setWidth("100%");
-    this.designWrapper.controlParentChanged();
-    parent.reflow();
-    studio.refreshDesignTrees();
-    studio.select(p);
-    app.toastSuccess("A new panel has been created, and is currently selected");
+        var index = this.getIndexInParent();
+        var parent = this.parent;
+        var p = new wm.Panel({
+            owner: this.owner,
+            parent: parent,
+            name: this.name + "Panel",
+            width: this.width,
+            height: this.height,
+            verticalAlign: "top",
+            horizontalAlign: "left",
+            layoutKind: parent.layoutKind == "left-to-right" ? "top-to-bottom" : "left-to-right"
+        });
+        p.setIndexInParent(index);
+        this.setParent(p);
+        this.setWidth("100%");
+        this.designWrapper.controlParentChanged();
+        parent.reflow();
+        studio.refreshDesignTrees();
+        studio.select(p);
+        app.toastSuccess("A new panel has been created, and is currently selected");
     }
-
     // EXPERIMENTAL: use property ui to do binding...
     // NOTE: does not currently handle app bindings or Expressions
     /*makePropEdit: function(inName, inValue, inDefault) {
