@@ -286,7 +286,9 @@ dojo.declare("NewProjectDialog", wm.Page, {
                                                 });
         } else {
             templateName = templateName.substring(layer.name.length + "templatepanel_".length);
-            studio.project.newProject(projectName, themeName, wm.fullTemplates[templateName]);        }
+            studio.project.newProject(projectName, themeName, wm.fullTemplates[templateName]);
+        }
+
     },
   _end: 0
 });

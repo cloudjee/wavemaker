@@ -132,7 +132,7 @@ wm.AbstractEditor.extend({
         props.dataValue.readonly = this.formField;
         props.defaultInsert.ignoretmp = !wm.LiveFormBase || !this.isAncestorInstanceOf(wm.LiveFormBase);
         props.ignoreParentReadonly.ignoretmp = !hasForm;
-        props.dataValueBindingEvaluated.ignoretmp = Boolean(!wm.DataForm || !this.isAncestorInstanceOf(wm.DataForm) || this.$.binding);
+        props.dataValueBindingEvaluated.ignoretmp = Boolean(!wm.DataForm || !this.isAncestorInstanceOf(wm.DataForm));
         props.minEditorWidth.ignoretmp = this.captionPosition == "top" || this.captionPosition == "bottom" || this.captionSize.match(/px/);
         return props;
     },

@@ -53,10 +53,11 @@ dojo.declare("PreferencesPane", wm.Page, {
     wm.fire(this.owner, "dismiss", ["OK"]);
     if (studio.startPageDialog.page)
         studio.startPageDialog.page.refreshProjectList();
-    var exists = dojo.some(this.wavemakerFolderEditor.options, function(item) {return item === this.wavemakerFolderEditor.getDataValue();}, this);
+    var currentOptions = this.wavemakerFolderEditor.options || [];
+    var exists = dojo.some(currentOptions, function(item) {return item === this.wavemakerFolderEditor.getDataValue();}, this);
     if (!exists) {
-        while (this.wavemakerFolderEditor.options.length > 4) this.wavemakerFolderEditor.options.pop(); // bring it down to 4 items before we add a new item. Max of 5 item history (cookie memory space is small)
-        var options = this.wavemakerFolderEditor.getDataValue() + "," + this.wavemakerFolderEditor.options.join(",")
+        while (currentOptions.length > 4) currentOptions.pop(); // bring it down to 4 items before we add a new item. Max of 5 item history (cookie memory space is small)
+        var options = this.wavemakerFolderEditor.getDataValue() + "," + currentOptions.join(",")
         dojo.cookie("wavemakerHome", options);
     }
   },
