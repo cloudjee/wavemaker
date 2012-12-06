@@ -53,11 +53,16 @@ dojo.declare("wm.Layer", wm.Container, {
 
 
     setParent: function(inParent) {
-    this.inherited(arguments);
-    if (this.parent) {
-            this.setBorder(this.parent.clientBorder);
-            this.setBorderColor(this.parent.clientBorderColor);
-    }
+        this.inherited(arguments);
+        if(this.parent) {
+            /* Apply the wm.Layers clientBorder if the layer hasn't customized its own border */
+            if (this.border === wm.Layer.prototype.border) {
+                this.setBorder(this.parent.clientBorder);
+            }
+            if (this.borderColor === wm.Layer.prototype.borderColor) {
+                this.setBorderColor(this.parent.clientBorderColor);
+            }
+        }
     },
 
     // FIXME: override so that we do not remove and re-add layer
