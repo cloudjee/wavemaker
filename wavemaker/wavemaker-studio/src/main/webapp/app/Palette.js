@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.Palette");
 dojo.require("wm.base.widget.Trees.DraggableTree");
 
@@ -167,9 +167,9 @@ dojo.declare("wm.Palette", wm.Tree, {
 			props.width = ctor.prototype.width  || props.width || "96px";
 		}
 
-                studio.application.loadThemePrototypeForClass(ctor);
 		var comp = new ctor(props);
 		if (comp) {
+			studio.application.loadThemePrototypeForClass(ctor, comp);
 			if (!(comp instanceof wm.ServerComponent)) {
 				// create an undo task
 				new wm.AddTask(comp);
@@ -223,7 +223,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 		if (inTab){
 			var p = this.findItemByName(inTab) || this.makeGroup(inTab);
 			wm.fire(this.findItemByName(inName, p), "destroy");
-           
+
 			var n = new wm.TreeNode(p, {
 					name: inName,
 				parentIndex: inIndex,
@@ -242,14 +242,14 @@ dojo.declare("wm.Palette", wm.Tree, {
 	},
     createContextMenu:function(inNode) {
 	    var f = function(e) {
-		dojo.stopEvent(e);		
+		dojo.stopEvent(e);
 		var menuObj = studio.contextualMenu;
 		menuObj.removeAllChildren();
 		var ctor = dojo.getObject(inNode.klass);
 		if (ctor)
 		    var prototype = ctor.prototype;
 		if (prototype && !prototype._noPaletteCopy) {
- 		    menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+ 		    menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
 						    {label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_COPY", {className: inNode.klass}),
 						     iconClass: "Studio_canvasToolbarImageList16_3",
 						     onClick: dojo.hitch(this, function() {
@@ -259,9 +259,9 @@ dojo.declare("wm.Palette", wm.Tree, {
 						     })
 						    });
 		}
-		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, 
+		menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
 						{label: studio.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inNode.klass}),
-						 iconClass: "StudioHelpIcon", 
+						 iconClass: "StudioHelpIcon",
 						 onClick: dojo.hitch(this, function() {
 						     window.open(studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"), className: inNode.klass.replace(/^.*\./,""), shortName: inNode.klass.replace(/^.*\./,"")}));
 						 })
@@ -274,7 +274,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 	dojo.connect(inNode.domNode, "oncontextmenu", this, f);
 	if (dojo.isFF) {
 	    dojo.connect(inNode.domNode, "onmousedown", this, function(e) {
-	    if (e.button == 2 || e.ctrlKey) 
+	    if (e.button == 2 || e.ctrlKey)
 		dojo.hitch(this, f)(e);
 	    });
 	}
@@ -304,7 +304,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 	},
 	findItemByName: function(inName, inParent) {
 	    var names = inName.split("/");
-	    
+
 	    var f = function(inName,inParent) {
 		for (var i=0, nodes=inParent.kids, n; (n=nodes[i]); i++) {
 			if (inName == (n||0).name)
