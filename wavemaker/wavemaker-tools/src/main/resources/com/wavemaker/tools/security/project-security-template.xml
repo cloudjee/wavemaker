@@ -40,7 +40,7 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
 
 <beans:bean id="WMSecAuthFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 	<beans:property name="authenticationSuccessHandler" ref="successHandler" />
-	<beans:property name="authenticationManager" ref="authenticationManager" />
+	<beans:property name="authenticationManager" ref="authenticationManagerDemo" />
 	<beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
 </beans:bean>
 
@@ -57,7 +57,7 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
         manager/manager
         user/user
     --> 
-    <authentication-manager alias="authenticationManager">
+    <authentication-manager alias="authenticationManagerDemo">
         <authentication-provider>
             <password-encoder hash="md5"/>
             <user-service>
@@ -67,6 +67,18 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
             </user-service>
         </authentication-provider>
     </authentication-manager>
+
+	<authentication-manager alias="authenticationManagerDB">
+		<authentication-provider user-service-ref = "jdbcUserService">
+			<!--password-encoder hash="md5"/-->
+		</authentication-provider>
+	</authentication-manager>
+
+	<beans:bean id = "jdbcUserService"  class = "com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
+		<beans:property name = "dataSource" ref = "mytestdbDataSource" />
+		<beans:property name = "usersByUsernameQuery" value = "SELECT userid, password, 1, username FROM user WHERE username = ?" />
+		<beans:property name = "authoritiesByUsernameQuery" value = "select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
+	</beans:bean>
     
                           
 </beans:beans> 
