@@ -62,6 +62,10 @@ public class SecuritySpringSupport {
     private static final String FILTER_DEFINITION_SOURCE_PROPERTY = "filterInvocationDefinitionSource";
 
     static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_DEMO = "authenticationManagerDemo";
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP = "authenticationManagerLDAP";
+    static final String USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID = "WMSecAuthFilter";
 
     private static final String AUTH_PROVIDERS_PROPERTY = "providers";
 
@@ -332,7 +336,20 @@ public class SecuritySpringSupport {
     }
 
     static String getDataSourceType(Beans beans) {
-        String[] authProviderBeanIds = getAuthManagerProviderBeanIds(beans);
+        Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
+        Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
+        String beanId = property.getValue();
+        if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_DEMO)) {
+            return GeneralOptions.DEMO_TYPE;
+        } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_DB)) {
+            return GeneralOptions.DATABASE_TYPE;
+        } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP)) {
+            return GeneralOptions.LDAP_TYPE;
+        } else {
+            throw new ConfigurationException("Unable to get data source type!");
+        }
+
+        /*String[] authProviderBeanIds = getAuthManagerProviderBeanIds(beans);
         for (String authProviderBeanId : authProviderBeanIds) {
             if (authProviderBeanId.equals(DAO_AUTHENTICATION_PROVIDER_BEAN_ID)) {
                 Bean bean = beans.getBeanById(DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
@@ -350,7 +367,7 @@ public class SecuritySpringSupport {
                 return GeneralOptions.LDAP_TYPE;
             }
         }
-        throw new ConfigurationException("Unable to get data source type!");
+        throw new ConfigurationException("Unable to get data source type!");*/
     }
 
     static void updateAuthProviderUserDetailsService(Beans beans, String refId) {
@@ -511,7 +528,7 @@ public class SecuritySpringSupport {
                 buildAuthoritiesByUsernameQuery(tableName, unameColumnName, uidColumnName, roleColumnName));
         }
 
-        setPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PARAM_TYPE_PROPERTY, uidColumnSqlType);
+        //setPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PARAM_TYPE_PROPERTY, uidColumnSqlType);
     }
 
     static void resetJdbcDaoImpl(Beans beans) {

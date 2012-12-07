@@ -264,7 +264,7 @@ public class SecurityToolsManager {
     public void configDatabase(String modelName, String tableName, String unameColumnName, String uidColumnName, String uidColumnSqlType,
         String pwColumnName, String roleColumnName, String rolesByUsernameQuery) throws JAXBException, IOException {
         Beans beans = getSecuritySpringBeans(true);
-        SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.JDBC_DAO_IMPL_BEAN_ID);
+        //SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.JDBC_DAO_IMPL_BEAN_ID);
         SecuritySpringSupport.updateJdbcDaoImpl(beans, modelName, tableName, unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName,
             roleColumnName, rolesByUsernameQuery);
         saveSecuritySpringBeans(beans);
