@@ -69,12 +69,12 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
     </authentication-manager>
 
 	<authentication-manager alias="authenticationManagerDB">
-		<authentication-provider user-service-ref = "jdbcUserService">
+		<authentication-provider user-service-ref = "jdbcDaoImpl">
 			<!--password-encoder hash="md5"/-->
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id = "jdbcUserService"  class = "com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
+	<beans:bean id = "jdbcDaoImpl"  class = "com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
 		<beans:property name = "dataSource" ref = "mytestdbDataSource" />
 		<beans:property name = "usersByUsernameQuery" value = "SELECT userid, password, 1, username FROM user WHERE username = ?" />
 		<beans:property name = "authoritiesByUsernameQuery" value = "select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
