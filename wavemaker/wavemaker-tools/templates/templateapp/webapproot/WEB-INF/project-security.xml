@@ -62,7 +62,7 @@
 	<bean id="WMSecAuthFilter"
 		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<property name="authenticationSuccessHandler" ref="successHandler" />
-		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationManager" ref="authenticationManagerDemo" />
 		<property name="filterProcessesUrl" value="/j_spring_security_check" />
 	</bean>
 
@@ -78,7 +78,7 @@
 	<!-- Default Demo username and passwords are admin/admin manager/manager 
 		user/user -->
 
-	<security:authentication-manager alias="authenticationManager">
+	<security:authentication-manager alias="authenticationManagerDemo">
 		<security:authentication-provider>
 			<security:password-encoder hash="md5" />
 			<security:user-service>

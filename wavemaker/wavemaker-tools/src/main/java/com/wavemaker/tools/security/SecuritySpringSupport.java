@@ -338,7 +338,7 @@ public class SecuritySpringSupport {
     static String getDataSourceType(Beans beans) {
         Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
         Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
-        String beanId = property.getValue();
+        String beanId = property.getRef();
         if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_DEMO)) {
             return GeneralOptions.DEMO_TYPE;
         } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_DB)) {
