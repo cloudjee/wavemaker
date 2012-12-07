@@ -457,7 +457,7 @@ dojo.declare("wm.Application", wm.Component, {
                         wm.defaultPrototypeValues[declaredClass][j] = ctor.prototype[j];
                     }
                     ctor.prototype[j] = ctorData[j];
-                    if (optionalWidget && oldCtorData && optionalWidget[j] === oldCtorData[j]) {
+                    if (optionalWidget && oldCtorData && (optionalWidget[j] === oldCtorData[j] || optionalWidget[j] === ctor.prototype[j])) {
                         optionalWidget[j] = ctorData[j];
                     }
                 }
