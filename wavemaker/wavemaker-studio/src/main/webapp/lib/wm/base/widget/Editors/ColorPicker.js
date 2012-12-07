@@ -105,9 +105,9 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                     v2 = parseInt(inValue.substr(3, 2), 16);
                     v3 = parseInt(inValue.substr(5, 2), 16);
                 } else {
-                    v1 = parseInt(inValue.substr(1, 1), 16);
-                    v2 = parseInt(inValue.substr(2, 1), 16);
-                    v3 = parseInt(inValue.substr(3, 1), 16);
+                    v1 = parseInt(inValue.substr(1, 1) || 0, 16);
+                    v2 = parseInt(inValue.substr(2, 1) || 0, 16);
+                    v3 = parseInt(inValue.substr(3, 1) || 0, 16);
                 }
 
                 this.editor.focusNode.style.color = (v1 < 130 && v2 < 130 && v3 < 130 || v1 + v2 < 180 || v1 + v3 < 180 || v2 + v3 < 180) || (v1 + v2 + v3 < 250) ? "white" : "black";
