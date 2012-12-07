@@ -32,7 +32,6 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 	public void onAuthenticationSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication) throws IOException,
 			ServletException{
-		System.out.println("********** SUCCESSS *****************");
 		String redirectURL = null;
 		SavedRequest savedRequest = null;
 		if(!isAjaxRequest(request)){
@@ -44,8 +43,11 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 				savedRequest = requestCache.getRequest(request, response);
 			}
 			if (savedRequest == null) {
+				//TODO: this is getting the base url, but not the query params
 				System.out.println("** NO saved request, using Target URL");
-				redirectURL = determineTargetUrl(request, response); //returning "/"
+				String queryString = request.getQueryString();
+				String redirectUrl = request.getContextPath();
+				redirectURL = (queryString != null) ? redirectUrl + "/" + queryString : redirectUrl ;
 			}
 			else{
 				System.out.println("*** YES saved request, using redirect URL");
@@ -78,7 +80,6 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 			String jsonContent = "{\"url\":\"" +  redirectURL + "\"}";
 			response.getWriter().print(jsonContent);
 			response.getWriter().flush();
-			System.out.println("************ END SUCCESS ***************");
 		}
 	}
 
