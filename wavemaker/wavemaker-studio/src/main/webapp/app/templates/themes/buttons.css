@@ -102,7 +102,9 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
        ************************************************************************************************/
-    .wm_template   .wmbutton.toggleButtonDown {
+    .wm_template   .wmbutton.toggleButtonDown,
+    .wm_template   .wmbutton.Active,
+    .wm_template   .wmbutton:active {
 	/* Document-ClickablesActive-Font */
 	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
 
@@ -124,8 +126,6 @@
        *
        * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
        ************************************************************************************************/
-    .wm_template   .wmbutton.Active,
-    .wm_template   .wmbutton:active,
     .wm_template   .wmbutton:hover,
     .wm_template   .wmbutton:focus,
     .wm_template   .wmroundedbutton:hover,
