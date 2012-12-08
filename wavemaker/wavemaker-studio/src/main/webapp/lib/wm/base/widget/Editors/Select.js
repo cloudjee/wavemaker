@@ -594,9 +594,11 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     },
     */
     getSelectedIndex: function() {
-        return this.getItemIndex(this.selectedItem.getData());
+        if (this.editor.item) return this.editor.item.id;
+        return -1;
+        //return this.getItemIndex(this.selectedItem.getData());
     },
-
+/*
     getItemIndex: function(item) {
         if (!item) return -1;
         var data = this.editor.store.data;
@@ -604,7 +606,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
         if (item == data[i] || item[this.dataField] == data[i][this.dataField]) return i;
         return -1;
     },
-
+*/
     getEditorValue: function() {
         var result = this.inherited(arguments);
 
