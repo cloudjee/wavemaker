@@ -86,7 +86,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                       symbol: "Borders-Panel_Border",
                       description: "Change the border width and color of containers such as Accordions, TabLayers, Dialogs and FancyPanels. This also sets the default color for all of your wm.Panels, but does NOT change the border size for wm.Panels.",
                       borders: [{borderClass: "wm.TabLayers", borderProperty: "clientBorder"},
-			        {borderClass: "wm.AccordionLayers", borderProperty: "layerBorder", borderColorProperty: "borderColor"},
+			        {borderClass: "wm.AccordionLayers", borderProperty: "clientBorder", borderColorProperty: "borderColor"},
 			        {borderClass: "wm.WizardLayers", borderProperty: "clientBorder"},
 		                {borderClass: "wm.FancyPanel", borderProperty: "innerBorder"},
 			        {borderClass: "wm.Panel", borderProperty: "border"}
