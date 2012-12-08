@@ -34,9 +34,8 @@
 		"border": "0",
 		"borderColor": "#333333",
 		"captionBorder": "2",
-		"layerBorder": "1",
 		"captionHeight": "30",
-		"layerBorderColor": "#666666"
+		"clientBorderColor": "#666666"
 	},
 	"wm.FancyPanel": {
 		"margin": "2",

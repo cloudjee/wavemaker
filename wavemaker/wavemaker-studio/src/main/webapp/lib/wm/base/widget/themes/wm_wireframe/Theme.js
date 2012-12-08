@@ -36,7 +36,6 @@
 		"border": "0",
 		"borderColor": "#444444",
 		"captionBorder": "2",
-		"layerBorder": 1,
 		"captionHeight": "30"
 	},
 	"wm.FancyPanel": {
