@@ -422,6 +422,10 @@ dojo.declare("wm.Application", wm.Component, {
         }
         var declaredClass = ctor.prototype.declaredClass;
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
+
+        var themeData = wm.Application.themeData[this.theme];
+        var ctorData = themeData[ctor.prototype.declaredClass];
+
         if (!wm.Application.themePrototypeData[declaredClass] || wm.Application.themePrototypeData[declaredClass] != this.theme) {
             var p = ctor.prototype;
             var lastTheme = wm.Application.themePrototypeData[declaredClass];
@@ -446,8 +450,7 @@ dojo.declare("wm.Application", wm.Component, {
             }
 
             // make all changes need for this theme for this class
-            var themeData = wm.Application.themeData[this.theme];
-            var ctorData = themeData[ctor.prototype.declaredClass];
+
             if (ctorData) {
                 for (var j in ctorData) {
                     if (wm.defaultPrototypeValues && !wm.defaultPrototypeValues[declaredClass]) {
@@ -463,11 +466,14 @@ dojo.declare("wm.Application", wm.Component, {
                 }
             }
             wm.Application.themePrototypeData[declaredClass] = this.theme;
+
         }
 
 
         /* Localization of default properties */
-        if (wm.locale.props) var ctorData = wm.locale.props[declaredClass];
+        if (wm.locale.props) {
+            dojo.mixin(ctorData,wm.locale.props[declaredClass]);
+        }
         if (ctorData) {
             for (var j in ctorData) {
                 ctor.prototype[j] = ctorData[j];
@@ -961,6 +967,7 @@ dojo.declare("wm.Application", wm.Component, {
     },
     alert: function(inText, nonmodal) {
         if (!this.alertDialog) {
+            this.loadThemePrototypeForClass(wm.Dialog);
             this.alertDialog = new wm.GenericDialog({
                 name: "alertDialog",
                 _noAnimation: true,
@@ -989,6 +996,7 @@ dojo.declare("wm.Application", wm.Component, {
     confirmCancelFunc: null,
     confirm: function(inText, nonmodal, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, noshow) {
         if (!this.confirmDialog) {
+            this.loadThemePrototypeForClass(wm.Dialog);
             this.confirmDialog = new wm.GenericDialog({
                 name: "confirmDialog",
                 _noAnimation: true,
