@@ -48,6 +48,7 @@ import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
@@ -242,10 +243,10 @@ public class SecurityToolsManager {
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
-        Beans beans = getSecuritySpringBeans(false);
-        DemoOptions options = new DemoOptions();
-        options.setUsers(SecuritySpringSupport.getDemoUsers(beans));
-        return options;
+    	List<UserService.User> userList = SecurityXmlSupport.getUserSvcUsers(getSecuritySpringFile());
+    	DemoOptions options = new DemoOptions();
+    	options.setUsersByUserSvc(userList);
+    	return options;
     }
 
     public void configDemo(DemoUser[] demoUsers) throws JAXBException, IOException {

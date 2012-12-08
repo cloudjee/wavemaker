@@ -54,11 +54,6 @@
 			<security:logout /> -->
 	</security:http>
 
-	<security:authentication-manager>
-		<security:authentication-provider
-			ref="myAuthenticationProvider" />
-	</security:authentication-manager>
-
 	<bean id="WMSecAuthFilter"
 		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<property name="authenticationSuccessHandler" ref="successHandler" />

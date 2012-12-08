@@ -379,6 +379,7 @@ public class SecuritySpringSupport {
         property.setRefElement(ref);
     }
 
+    @Deprecated
     static List<DemoUser> getDemoUsers(Beans beans) {
         Bean bean = beans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
         Property property = bean.getProperty(USER_MAP_PROPERTY);

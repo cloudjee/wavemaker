@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -56,16 +57,20 @@ public class SecurityXmlSupport {
     public static final String SPRING_SCHEMA_LOCATION = "http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd";
     
     public static final String SECURITY_PACKAGE = "com.wavemaker.tools.spring.beans:com.wavemaker.tools.security.schema";
+    
+    public static final String DEMO_AUTHMAN_ALIAS = "authenticationManagerDemo";
+    
+    public static final String DB_AUTHMAN_ALIAS = "authenticationManagerDB";
 
     private static JAXBContext jaxbContext;
     
 	static List<UserService.User> getUserSvcUsers(File secXmlFile){
-		 List<UserService.User> demoUsers = new ArrayList<UserService.User>();
+		 List<UserService.User> demoUsers = null;
 		 try{
 			 UserService userSvc = getUserSvc(secXmlFile);
 			 if(userSvc != null){
-				 List<UserService.User> userList = userSvc.getUser();
-			 }
+				 demoUsers = userSvc.getUser();
+				 }
 		 }
 		 catch(Exception e){
 			 e.printStackTrace();
@@ -77,27 +82,38 @@ public class SecurityXmlSupport {
 		
 	}
 	
-	static UserService getUserSvc(File SecXmlFile){
+	/*
+	 * Returns FIRST user-service found of all authentication-managers returned
+	 */
+	static UserService getUserSvc(File secXmlFile){
 		 UserService userSvc = null;
 		 try{
-			 List<Object> authProviderList = getAuthProviders(SecXmlFile);
-			 for(Object o : authProviderList){
-				 if(o instanceof UserService){
-					 userSvc = (UserService)o;
+			 List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(secXmlFile, DEMO_AUTHMAN_ALIAS);
+			 for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
+				 List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
+				 for(JAXBElement<?> je : jeList){
+					 if(je.getDeclaredType().getName().equals("com.wavemaker.tools.security.schema.UserService"))
+						 return userSvc = (UserService)je.getValue();
 				 }
 			 }
 		 }
 		 catch(Exception e){
 			 e.printStackTrace();
 		 }
-		 return userSvc;
+		 return userSvc; 
 	}
 	
-	static List<Object> getAuthProviders(File SecXmlFile){
-		List<Object> authProviderList  = new ArrayList<Object>();
+	static List<AuthenticationManager.AuthenticationProvider> getAuthProviders(File secXmlFile, String alias){
+		List<AuthenticationManager.AuthenticationProvider> authProviderList  = new ArrayList<AuthenticationManager.AuthenticationProvider>();
 		 try{
-			 AuthenticationManager authMan = getAuthMan(SecXmlFile);
-			 authProviderList = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
+			 List<Object> authProviderOrLdapProviders =  Collections.emptyList();
+			 AuthenticationManager authMan = getAuthMan(secXmlFile,alias);
+			 authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
+			 for(Object o : authProviderOrLdapProviders){
+				 if(o instanceof AuthenticationManager.AuthenticationProvider){
+					 authProviderList.add((AuthenticationManager.AuthenticationProvider)o);
+				 }
+			 }
 		 }
 		 catch(Exception e){
 			 e.printStackTrace();
@@ -105,14 +121,41 @@ public class SecurityXmlSupport {
 		 return authProviderList;		
 	}
 	
-	static AuthenticationManager getAuthMan(File SecXmlFile){
+	static List<AuthenticationManager.LdapAuthenticationProvider> getLdapAuthProviders(File secXmlFile, String alias){
+		List<AuthenticationManager.LdapAuthenticationProvider> ldapAuthProviderList  = new ArrayList<AuthenticationManager.LdapAuthenticationProvider>();
+		 try{
+			 List<Object> authProviderOrLdapProviders =  Collections.emptyList();
+			 AuthenticationManager authMan = getAuthMan(secXmlFile,alias);
+			 authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
+			 for(Object o : authProviderOrLdapProviders){
+				 if(o instanceof AuthenticationManager.LdapAuthenticationProvider){
+					 ldapAuthProviderList.add((AuthenticationManager.LdapAuthenticationProvider)o);
+				 }
+			 }
+		 }
+		 catch(Exception e){
+			 e.printStackTrace();
+		 }
+		 return ldapAuthProviderList;		
+	}
+	
+	/*
+	 * Returns Authentiation Manager with given alias
+	 * @param secXmlFile the xml file to be parsed
+	 * @param alias alias of Authentication Manager to return
+	 * 
+	 */
+	static AuthenticationManager getAuthMan(File secXmlFile, String alias){
 		 Beans beans = null;
 		 try{
-			 beans = readSecurityXml(SecXmlFile);
+			 beans = readSecurityXml(secXmlFile);
 			 List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
 			 for (Object o : importOrAliasOrBeanList) {
 				 if(o instanceof AuthenticationManager){
-					 return (AuthenticationManager)o;
+					 AuthenticationManager authMan =(AuthenticationManager)o;
+					 String a = authMan.getAlias();
+					 if(a!=null && a.equals(alias))
+						 return authMan;
 				 }
 			 }
 		 }
@@ -122,10 +165,10 @@ public class SecurityXmlSupport {
 		 return null;
 	}
 	
-	static Http getHttp(File SecXmlFile){
+	static Http getHttp(File secXmlFile){
 		 Beans beans = null;
 		 try{
-			 beans = readSecurityXml(SecXmlFile);
+			 beans = readSecurityXml(secXmlFile);
 			 List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
 			 for (Object o : importOrAliasOrBeanList) {
 				 if(o instanceof Http){
@@ -139,10 +182,10 @@ public class SecurityXmlSupport {
 		 return null;
 	}     
 	
-    public static Beans readSecurityXml(File SecXmlFile) throws JAXBException, IOException {
+    public static Beans readSecurityXml(File secXmlFile) throws JAXBException, IOException {
         BufferedInputStream bis = null;
         try {
-            bis = new BufferedInputStream(SecXmlFile.getContent().asInputStream());
+            bis = new BufferedInputStream(secXmlFile.getContent().asInputStream());
             return readSecurityXml(bis);
         } finally {
             try {
