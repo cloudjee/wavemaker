@@ -388,6 +388,9 @@ public class SecurityToolsManager {
 
     public List<String> getRoles() throws IOException, JAXBException {
         Beans beans = getSecuritySpringBeans(false);
+        if (beans == null || beans.getBeanList().isEmpty()) {
+            return null;
+        }
         return SecuritySpringSupport.getRoles(beans);
     }
 
