@@ -214,7 +214,8 @@ wm.ToggleButtonPanel.extend({
             name: "togglePanelButton1",
             caption: "Toggle1",
             height: "100%",
-            width: "100%"
+            width: "100%",
+            border: "0"
         });
         this.reflow();
     },
