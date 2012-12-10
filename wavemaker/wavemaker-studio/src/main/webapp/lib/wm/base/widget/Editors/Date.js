@@ -39,7 +39,7 @@ dojo.declare("wm.Date", wm.Text, {
         if (this.minimum) constraints.min = this.convertValue(this.minimum);
         if (this.maximum) constraints.max = this.convertValue(this.maximum);
         if (this.datePattern) constraints.datePattern = this.datePattern;
-        if (this.timePattern) constraints.timePattern = this.timePattern;        
+        if (this.timePattern) constraints.timePattern = this.timePattern;
         return constraints;
     },
     getEditorProps: function(inNode, inProps) {
@@ -102,13 +102,13 @@ dojo.declare("wm.Date", wm.Text, {
     },
     setEditorValue: function(inValue) {
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
-        
+
         // don't modify the source data as the caller may still need it
         v = new Date(v);
         v.setHours(0,0,0);
-        
+
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
-        if (!this.useLocalTime && v) {            
+        if (!this.useLocalTime && v) {
              /* See WM-4490 to understand this calculation. */
             var adjustTwoHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 120 : 0;
             v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustTwoHours,0,0);
@@ -455,7 +455,7 @@ dojo.declare("wm.DateTime", wm.Date, {
                 break;
             }
         }
-        this.setDataValue(value); 
+        this.setDataValue(value);
     },
     _getReadonlyValue: function() {
         var d = this.getDataValue();
@@ -908,6 +908,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
             parent: this.mainPanel,
             name: "ampm",
             height: "90px",
+            desktopHeight: "90px",
             // optimal size for iphone in landscape mode
             width: "60px",
             layoutKind: "top-to-bottom",
@@ -919,6 +920,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
             owner: this,
             parent: this.ampm,
             height: "100%",
+            desktopHeight: "100%",
             caption: "AM",
             name: "amButton"
         });
@@ -926,6 +928,7 @@ dojo.declare("wm.TimePicker", wm.Container, {
             owner: this,
             parent: this.ampm,
             height: "100%",
+            desktopHeight: "100%",
             caption: "PM",
             name: "pmButton"
         });
