@@ -348,26 +348,6 @@ public class SecuritySpringSupport {
         } else {
             throw new ConfigurationException("Unable to get data source type!");
         }
-
-        /*String[] authProviderBeanIds = getAuthManagerProviderBeanIds(beans);
-        for (String authProviderBeanId : authProviderBeanIds) {
-            if (authProviderBeanId.equals(DAO_AUTHENTICATION_PROVIDER_BEAN_ID)) {
-                Bean bean = beans.getBeanById(DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
-                Property property = bean.getProperty(USER_DETAILS_SERVICE_PROPERTY);
-                Ref refElement = property.getRefElement();
-                String beanId = refElement.getBean();
-                if (beanId.equals(IN_MEMORY_DAO_IMPL_BEAN_ID)) {
-                    return GeneralOptions.DEMO_TYPE;
-                } else if (beanId.equals(JDBC_DAO_IMPL_BEAN_ID)) {
-                    return GeneralOptions.DATABASE_TYPE;
-                } else {
-                    throw new ConfigurationException("Unrecognized bean Id " + beanId + " for userDetailsService property.");
-                }
-            } else if (authProviderBeanId.equals(LDAP_AUTH_PROVIDER_BEAN_ID)) {
-                return GeneralOptions.LDAP_TYPE;
-            }
-        }
-        throw new ConfigurationException("Unable to get data source type!");*/
     }
 
     static void updateAuthProviderUserDetailsService(Beans beans, String refId) {

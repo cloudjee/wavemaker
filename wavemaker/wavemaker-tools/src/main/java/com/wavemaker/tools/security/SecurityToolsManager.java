@@ -201,6 +201,11 @@ public class SecurityToolsManager {
         } catch (UnmarshalException e) {
             return null; // project-security.xml must be setting to DTD
         }
+
+        if (beans == null || beans.getBeanList().isEmpty()) { // project-security.xml
+            return null;
+        }
+
         GeneralOptions options = new GeneralOptions();
         options.setEnforceSecurity(SecuritySpringSupport.isSecurityEnforced(beans));
         options.setEnforceIndexHtml(SecuritySpringSupport.isIndexHtmlEnforced(beans));
