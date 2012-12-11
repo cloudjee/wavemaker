@@ -36,6 +36,7 @@ import org.springframework.security.core.userdetails.memory.UserMapEditor;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
@@ -440,34 +441,27 @@ public class SecuritySpringSupport {
         return demoUsers;
     }
 
-    static void setDemoUsers(Beans beans, DemoUser[] demoUsers) {
-        Bean bean = beans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
-        StringBuilder sb = new StringBuilder();
-        for (DemoUser demoUser : demoUsers) {
-            sb.append("\n");
-            sb.append(SPACES_16);
-            sb.append(demoUser.getUserid());
-            sb.append("=");
-            sb.append(demoUser.getPassword());
-            List<String> roles = demoUser.getRoles();
-            if (roles.isEmpty()) {
-                sb.append(",");
-                sb.append(ROLE_PREFIX);
-                sb.append(DEFAULT_NO_ROLES_ROLE);
-            } else {
-                for (String role : roles) {
-                    sb.append(",");
-                    sb.append(ROLE_PREFIX);
-                    sb.append(role);
-                }
-            }
-        }
-        sb.append("\n");
-        sb.append(SPACES_12);
-
-        setPropertyValueString(bean, USER_MAP_PROPERTY, sb.toString());
+    static void setDemoUsers(Beans beans, DemoUser[] demoUsers) {	
+    	SecurityXmlSupport.setUserSvcUsers(beans, demoUsersToUsers(demoUsers));
     }
+    
 
+	static public List<UserService.User> demoUsersToUsers(DemoUser[] demoUsers){
+		List<UserService.User> usersList = new ArrayList<UserService.User>();
+		for(DemoUser u : demoUsers){
+			UserService.User user = new UserService.User();
+			String roles = new String();
+			for(String r : u.getRoles() ){
+				roles = roles + r + ",";
+			}
+			user.setName(u.getUserid());
+			user.setPassword(u.getPassword());
+			user.setAuthorities(roles);
+			usersList.add(user);
+		}
+		return usersList;
+	}
+	
     static DatabaseOptions constructDatabaseOptions(Beans beans) {
         DatabaseOptions options = new DatabaseOptions();
         Bean jdbcDaoBean = beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);

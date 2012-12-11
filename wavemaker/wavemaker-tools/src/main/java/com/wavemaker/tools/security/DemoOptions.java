@@ -39,7 +39,7 @@ public class DemoOptions {
     }
     
     /*
-     * setUsers list of DemoUsers from list of UserService Users
+     * set the list of DemoUser type from the given list of UserService.User type
      */
     public void setUsersByUserSvc(List<UserService.User> users) {
     	List<DemoUser> newUsers = new ArrayList<DemoUser>();
@@ -60,4 +60,5 @@ public class DemoOptions {
     public void setUsers(List<DemoUser> users) {
         this.users = users;
     }
+    
 }

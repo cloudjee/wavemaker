@@ -14,27 +14,13 @@
 
 package com.wavemaker.tools.security;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
-
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.security.schema.*;
-import com.wavemaker.tools.spring.SpringConfigSupport;
-import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 
 /**
@@ -47,135 +33,143 @@ import com.wavemaker.tools.spring.beans.Beans;
 
 
 public class SecurityXmlSupport {
-	
-	public static final String WEBAPP_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd";
 
-    public static final String WEBAPP_PACKAGE = "com.wavemaker.tools.webapp.schema";
-	
-    public static final String SECURITY_SCHEMA_LOCATION = "http://www.springframework.org/schema/security/spring-security-3.1.xsd";
-    
-    public static final String SPRING_SCHEMA_LOCATION = "http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd";
-    
-    public static final String SECURITY_PACKAGE = "com.wavemaker.tools.spring.beans:com.wavemaker.tools.security.schema";
-    
-    public static final String DEMO_AUTHMAN_ALIAS = "authenticationManagerDemo";
-    
-    public static final String DB_AUTHMAN_ALIAS = "authenticationManagerDB";
 
-    private static JAXBContext jaxbContext;
-    
-	static List<UserService.User> getUserSvcUsers(File secXmlFile){
-		 List<UserService.User> demoUsers = null;
-		 try{
-			 UserService userSvc = getUserSvc(secXmlFile);
-			 if(userSvc != null){
-				 demoUsers = userSvc.getUser();
-				 }
-		 }
-		 catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return demoUsers;		
+	public static final String DEMO_AUTHMAN_ALIAS = "authenticationManagerDemo";
+
+	public static final String DB_AUTHMAN_ALIAS = "authenticationManagerDB";
+
+
+	static List<UserService.User> getUserSvcUsers(Beans beans){
+		List<UserService.User> demoUsers = null;
+		try{
+			UserService userSvc = getUserSvc(beans);
+			if(userSvc != null){
+				demoUsers = userSvc.getUser();
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return demoUsers;		
 	}
-	
-	static void setUserSvcUsers(File xmlFile, DemoUser[] demoUsers){
-		
+
+	static void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
+		try{
+			UserService userSvc = getUserSvc(beans);
+			if(userSvc != null){
+				List<UserService.User> demoUsersLive = userSvc.getUser();
+				demoUsersLive.clear();
+				demoUsersLive.addAll(demoUsersNew);
+				setUserSvc(beans, userSvc);
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
-	
+
 	/*
 	 * Returns FIRST user-service found of all authentication-managers returned
 	 */
-	static UserService getUserSvc(File secXmlFile){
-		 UserService userSvc = null;
-		 try{
-			 List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(secXmlFile, DEMO_AUTHMAN_ALIAS);
-			 for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
-				 List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
-				 for(JAXBElement<?> je : jeList){
-					 if(je.getDeclaredType().getName().equals("com.wavemaker.tools.security.schema.UserService"))
-						 return userSvc = (UserService)je.getValue();
-				 }
-			 }
-		 }
-		 catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return userSvc; 
+	static UserService getUserSvc(Beans beans){
+		UserService userSvc = null;
+		try{
+			List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(beans, DEMO_AUTHMAN_ALIAS);
+			for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
+				List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
+				for(JAXBElement<?> je : jeList){
+					if(je.getDeclaredType().getName().equals("com.wavemaker.tools.security.schema.UserService"))
+						return userSvc = (UserService)je.getValue();
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return userSvc; 
 	}
-	
-	static List<AuthenticationManager.AuthenticationProvider> getAuthProviders(File secXmlFile, String alias){
-		List<AuthenticationManager.AuthenticationProvider> authProviderList  = new ArrayList<AuthenticationManager.AuthenticationProvider>();
-		 try{
-			 List<Object> authProviderOrLdapProviders =  Collections.emptyList();
-			 AuthenticationManager authMan = getAuthMan(secXmlFile,alias);
-			 authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
-			 for(Object o : authProviderOrLdapProviders){
-				 if(o instanceof AuthenticationManager.AuthenticationProvider){
-					 authProviderList.add((AuthenticationManager.AuthenticationProvider)o);
-				 }
-			 }
-		 }
-		 catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return authProviderList;		
-	}
-	
-	static List<AuthenticationManager.LdapAuthenticationProvider> getLdapAuthProviders(File secXmlFile, String alias){
-		List<AuthenticationManager.LdapAuthenticationProvider> ldapAuthProviderList  = new ArrayList<AuthenticationManager.LdapAuthenticationProvider>();
-		 try{
-			 List<Object> authProviderOrLdapProviders =  Collections.emptyList();
-			 AuthenticationManager authMan = getAuthMan(secXmlFile,alias);
-			 authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
-			 for(Object o : authProviderOrLdapProviders){
-				 if(o instanceof AuthenticationManager.LdapAuthenticationProvider){
-					 ldapAuthProviderList.add((AuthenticationManager.LdapAuthenticationProvider)o);
-				 }
-			 }
-		 }
-		 catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return ldapAuthProviderList;		
-	}
-	
 	/*
-	 * Returns Authentiation Manager with given alias
+	 * sets the FIRST user-service found of all authentication-managers to the provided userSvc
+	 */
+	static void setUserSvc(Beans beans, UserService userSvc){
+		UserService userSvcOld = null;
+		try{
+			List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(beans, DEMO_AUTHMAN_ALIAS);
+			for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
+				List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
+				for(JAXBElement<?> je : jeList){
+					if(je.getDeclaredType().getName().equals("com.wavemaker.tools.security.schema.UserService"))
+						userSvcOld = (UserService)je.getValue();
+					userSvcOld = userSvc;
+					return;
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	static List<AuthenticationManager.AuthenticationProvider> getAuthProviders(Beans beans, String alias){
+		List<AuthenticationManager.AuthenticationProvider> authProviderList  = new ArrayList<AuthenticationManager.AuthenticationProvider>();
+		try{
+			List<Object> authProviderOrLdapProviders =  Collections.emptyList();
+			AuthenticationManager authMan = getAuthMan(beans,alias);
+			authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
+			for(Object o : authProviderOrLdapProviders){
+				if(o instanceof AuthenticationManager.AuthenticationProvider){
+					authProviderList.add((AuthenticationManager.AuthenticationProvider)o);
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return authProviderList;		
+	}
+
+	static List<AuthenticationManager.LdapAuthenticationProvider> getLdapAuthProviders(Beans beans, String alias){
+		List<AuthenticationManager.LdapAuthenticationProvider> ldapAuthProviderList  = new ArrayList<AuthenticationManager.LdapAuthenticationProvider>();
+		try{
+			List<Object> authProviderOrLdapProviders =  Collections.emptyList();
+			AuthenticationManager authMan = getAuthMan(beans,alias);
+			authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
+			for(Object o : authProviderOrLdapProviders){
+				if(o instanceof AuthenticationManager.LdapAuthenticationProvider){
+					ldapAuthProviderList.add((AuthenticationManager.LdapAuthenticationProvider)o);
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return ldapAuthProviderList;		
+	}
+
+	/*
+	 * Returns Authentication Manager with given alias
 	 * @param secXmlFile the xml file to be parsed
 	 * @param alias alias of Authentication Manager to return
 	 * 
 	 */
-	static AuthenticationManager getAuthMan(File secXmlFile, String alias){
-		 Beans beans = null;
-		 try{
-			 beans = readSecurityXml(secXmlFile);
-			 List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
-			 for (Object o : importOrAliasOrBeanList) {
-				 if(o instanceof AuthenticationManager){
-					 AuthenticationManager authMan =(AuthenticationManager)o;
-					 String a = authMan.getAlias();
-					 if(a!=null && a.equals(alias))
-						 return authMan;
-				 }
-			 }
-		 }
-		 catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return null;
+	static AuthenticationManager getAuthMan(Beans beans, String alias){
+		try{
+			List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
+			for (Object o : importOrAliasOrBeanList) {
+				if(o instanceof AuthenticationManager){
+					AuthenticationManager authMan =(AuthenticationManager)o;
+					String a = authMan.getAlias();
+					if(a!=null && a.equals(alias))
+						return authMan;
+				}
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
-
-    static Http getHttp(File secXmlFile){
-        Beans beans;
-        try{
-            beans = readSecurityXml(secXmlFile);
-            return getHttp(beans);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     static Http getHttp(Beans beans){
         List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
@@ -221,32 +215,5 @@ public class SecurityXmlSupport {
             }
         }
         objs.add(interceptUrl);
-    }
-	
-    public static Beans readSecurityXml(File secXmlFile) throws JAXBException, IOException {
-        BufferedInputStream bis = null;
-        try {
-            bis = new BufferedInputStream(secXmlFile.getContent().asInputStream());
-            return readSecurityXml(bis);
-        } finally {
-            try {
-                bis.close();
-            } catch (Exception ignore) {
-            }
-        }
-    }
-    
-    public static Beans readSecurityXml(InputStream is) throws JAXBException {
-        Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
-        Beans beans = (Beans)  unmarshaller.unmarshal(is);
-        return beans;
-    }
-    
-    public static synchronized JAXBContext getJAXBContext() throws JAXBException {
-        if (jaxbContext == null) {
-            jaxbContext = JAXBContext.newInstance(SECURITY_PACKAGE);
-        }
-        return jaxbContext;
-    }
-
+    }   
 }

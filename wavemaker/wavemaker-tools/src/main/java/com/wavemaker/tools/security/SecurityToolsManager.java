@@ -15,6 +15,7 @@
 package com.wavemaker.tools.security;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -98,9 +99,9 @@ public class SecurityToolsManager {
      */
     private Beans getSecuritySpringBeansTemplate() throws JAXBException, IOException {
         ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CLASSPATH);
-        Reader reader = new InputStreamReader(securityTemplateXml.getInputStream());
-        Beans ret = SpringConfigSupport.readBeans(reader);
-        reader.close();
+        InputStream is = securityTemplateXml.getInputStream();
+        Beans ret = SpringConfigSupport.readSecurityBeans(is);
+        is.close();
         return ret;
     }
 
@@ -133,12 +134,11 @@ public class SecurityToolsManager {
      *        does not exist in current project.
      */
     private Beans getSecuritySpringBeans(boolean create) throws IOException, JAXBException {
-        Project currentProject = this.projectMgr.getCurrentProject();
-        File securityXml = getSecuritySpringFile(currentProject);
+        File securityXml = getSecuritySpringFile();
         Beans beans = null;
         if (securityXml.exists()) {
             try {
-                beans = SpringConfigSupport.readBeans(securityXml);
+                beans = SpringConfigSupport.readSecurityBeans(securityXml);
             } catch (JAXBException e) {
                 if (create) {
                     beans = getSecuritySpringBeansTemplate();
@@ -161,9 +161,8 @@ public class SecurityToolsManager {
      * Saves the specified Security Spring beans to the current project.
      */
     private synchronized void saveSecuritySpringBeans(Beans beans) throws JAXBException, IOException {
-        Project currentProject = this.projectMgr.getCurrentProject();
-        File securityXml = getSecuritySpringFile(currentProject);
-        SpringConfigSupport.writeBeans(beans, securityXml);
+        File securityXml = getSecuritySpringFile();
+        SpringConfigSupport.writeSecurityBeans(beans, securityXml);
     }
 
     /**
@@ -248,7 +247,8 @@ public class SecurityToolsManager {
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
-    	List<UserService.User> userList = SecurityXmlSupport.getUserSvcUsers(getSecuritySpringFile());
+    	Beans beans = getSecuritySpringBeans(false);
+    	List<UserService.User> userList = SecurityXmlSupport.getUserSvcUsers(beans);
     	DemoOptions options = new DemoOptions();
     	options.setUsersByUserSvc(userList);
     	return options;
@@ -256,9 +256,9 @@ public class SecurityToolsManager {
 
     public void configDemo(DemoUser[] demoUsers) throws JAXBException, IOException {
         Beans beans = getSecuritySpringBeans(true);
-        SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
+        //SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
         SecuritySpringSupport.setDemoUsers(beans, demoUsers);
-        SecuritySpringSupport.resetJdbcDaoImpl(beans);
+        //SecuritySpringSupport.resetJdbcDaoImpl(beans);
         saveSecuritySpringBeans(beans);
     }
 
