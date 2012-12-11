@@ -265,8 +265,9 @@ dojo.declare("wm.CompositeMixin", null, {
         wm.forEachProperty(this.constructor.prototype.published, dojo.hitch(this, function(propDef,name) {
                     var target = this.getRuntimeId() + "." + propDef.id;
 
-
-                    var value = this.getValue(name);
+                    var valueFromOwner = this[name];
+                    var value = this.getValue(name); // this call rather annoyingly changes this[name]
+                    if (valueFromOwner !== undefined ) this[name] = valueFromOwner;
                     if (value instanceof wm.Component) {
                         if (value instanceof wm.Variable) {
                             this.subscribe(target + "-ownerChanged", dojo.hitch(this, "_forwardBindEvent", this.getRuntimeId() + "." + name, name, target));
