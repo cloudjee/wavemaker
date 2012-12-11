@@ -14,9 +14,7 @@
 
 package com.wavemaker.tools.spring;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -69,12 +67,12 @@ public class SpringConfigSupport {
         return ret;
     }
 
-//    public static Beans readSecurityBeans(String configFile) throws JAXBException, IOException {
-//        Reader reader = new StringReader(configFile);
-//        Beans ret = readSecurityBeans(new StringReader(configFile));
-//        reader.close();
-//        return ret;
-//    }
+    public static Beans readSecurityBeans(String configFile) throws JAXBException, IOException {
+        Reader reader = new StringReader(configFile);
+        Beans ret = readSecurityBeans(new StringReader(configFile));
+        reader.close();
+        return ret;
+    }
     
     public static Beans readBeans(File configFile) throws JAXBException, IOException {
         Reader reader = configFile.getContent().asReader();
@@ -86,13 +84,12 @@ public class SpringConfigSupport {
     }
 
     public static Beans readSecurityBeans(File secXmlFile) throws JAXBException, IOException {
-        BufferedInputStream bis = null;
+    	Reader reader = secXmlFile.getContent().asReader();
         try {
-            bis = new BufferedInputStream(secXmlFile.getContent().asInputStream());
-            return readSecurityBeans(bis);
+            return readSecurityBeans(reader);
         } finally {
             try {
-                bis.close();
+                reader.close();
             } catch (Exception ignore) {
             }
         }
@@ -103,9 +100,9 @@ public class SpringConfigSupport {
         return (Beans) unmarshaller.unmarshal(reader);
     }
 
-    public static Beans readSecurityBeans(InputStream is) throws JAXBException {
+    public static Beans readSecurityBeans(Reader reader) throws JAXBException {
         Unmarshaller unmarshaller = getJAXBSecurityContext().createUnmarshaller();
-        return (Beans) unmarshaller.unmarshal(is);
+        return (Beans) unmarshaller.unmarshal(reader);
     }
     
     public static void writeBeans(Beans beans, File file) throws JAXBException, IOException {

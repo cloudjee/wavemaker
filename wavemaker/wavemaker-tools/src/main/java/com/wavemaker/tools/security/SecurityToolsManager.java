@@ -99,9 +99,9 @@ public class SecurityToolsManager {
      */
     private Beans getSecuritySpringBeansTemplate() throws JAXBException, IOException {
         ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CLASSPATH);
-        InputStream is = securityTemplateXml.getInputStream();
-        Beans ret = SpringConfigSupport.readSecurityBeans(is);
-        is.close();
+        Reader reader = new InputStreamReader(securityTemplateXml.getInputStream());
+        Beans ret = SpringConfigSupport.readBeans(reader);
+        reader.close();
         return ret;
     }
 
