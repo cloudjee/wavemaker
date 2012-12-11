@@ -164,23 +164,64 @@ public class SecurityXmlSupport {
 		 }
 		 return null;
 	}
-	
-	static Http getHttp(File secXmlFile){
-		 Beans beans = null;
-		 try{
-			 beans = readSecurityXml(secXmlFile);
-			 List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
-			 for (Object o : importOrAliasOrBeanList) {
-				 if(o instanceof Http){
-					 return (Http)o;
-				 }
-			 }
-		 }
-		 catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return null;
-	}     
+
+    static Http getHttp(File secXmlFile){
+        Beans beans;
+        try{
+            beans = readSecurityXml(secXmlFile);
+            return getHttp(beans);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static Http getHttp(Beans beans){
+        List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
+        for (Object o : importOrAliasOrBeanList) {
+            if(o instanceof Http){
+                return (Http)o;
+            }
+        }
+        return null;
+	}
+
+    static List<Http.InterceptUrl>getInterceptUrls(Beans beans) {
+        return getInterceptUrls(getHttp(beans));
+    }
+
+    static List<Http.InterceptUrl>getInterceptUrls(Http http) {
+        List<Object> objs = http.getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        List<Http.InterceptUrl> urls = new ArrayList<Http.InterceptUrl>();
+        for (Object obj : objs) {
+            if (obj instanceof Http.InterceptUrl) {
+                urls.add((Http.InterceptUrl) obj);
+            }
+        }
+
+        return urls;
+    }
+
+    static void setInterceptUrls(Beans beans, List<Http.InterceptUrl> interceptUrls) {
+        for (Http.InterceptUrl url : interceptUrls) {
+            setInterceptUrl(beans, url);
+        }
+    }
+
+    static void setInterceptUrl(Beans beans, Http.InterceptUrl interceptUrl) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        for (Object obj : objs) {
+            if (obj instanceof Http.InterceptUrl) {
+                Http.InterceptUrl url = (Http.InterceptUrl) obj;
+                if (interceptUrl.getPattern().equals(url.getPattern())) {
+                    url = interceptUrl;
+                    return;
+                }
+            }
+        }
+        objs.add(interceptUrl);
+    }
 	
     public static Beans readSecurityXml(File secXmlFile) throws JAXBException, IOException {
         BufferedInputStream bis = null;

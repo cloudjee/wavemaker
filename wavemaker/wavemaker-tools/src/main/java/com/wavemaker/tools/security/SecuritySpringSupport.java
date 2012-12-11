@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 //import org.acegisecurity.ConfigAttributeDefinition;
+import com.wavemaker.tools.security.schema.Http;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.access.SecurityConfig;
 //import org.acegisecurity.intercept.web.FilterInvocationDefinitionSourceEditor;
@@ -154,9 +155,9 @@ public class SecuritySpringSupport {
     private static final String OBJECT_DEFINITION_SOURCE_PREFIX = "\n" + SPACES_16 + "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON\n" + SPACES_16
         + "PATTERN_TYPE_APACHE_ANT\n";
 
-    private static final String IS_AUTHENTICATED_ANONYMOUSLY = "IS_AUTHENTICATED_ANONYMOUSLY";
+    private static final String IS_AUTHENTICATED_ANONYMOUSLY = "permitAll";
 
-    private static final String IS_AUTHENTICATED_FULLY = "IS_AUTHENTICATED_FULLY";
+    private static final String IS_AUTHENTICATED_FULLY = "isAuthenticated()";
 
     private static final String UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX = "\n" + SPACES_12;
 
@@ -243,11 +244,6 @@ public class SecuritySpringSupport {
     }
 
     static void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        Property property = bean.getProperty(OBJECT_DEFINITION_SOURCE_PROPERTY);
-        List<String> newContent = new ArrayList<String>();
-        String value = null;
-        Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
         if (enforceSecurity) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
@@ -255,19 +251,55 @@ public class SecuritySpringSupport {
             } else {
                 indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
             }
-            urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            urlMap.put("/*.download", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-            urlMap.put("/*.upload", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-            urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-            urlMap.put("/*/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
+            List<Http.InterceptUrl> urls = new ArrayList<Http.InterceptUrl>();
+
+            Http.InterceptUrl url = new Http.InterceptUrl();
+            url.setPattern("/index.html");
+            url.setAccess(indexHtmlAuthz);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/");
+            url.setAccess(indexHtmlAuthz);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/pages/login/**");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/securityservice.json");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.download");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.upload");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/pages/**");
+            url.setAccess(indexHtmlAuthz);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.json");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*/*.json");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            SecurityXmlSupport.setInterceptUrls(beans, urls);
         }
-        value = generateObjectDefinitionSource(enforceSecurity, urlMap);
-        newContent.add(value);
-        property.getValueElement().setContent(newContent);
     }
 
     static void setSecurityFilterChain(Beans beans) {
