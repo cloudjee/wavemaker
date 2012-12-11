@@ -737,6 +737,13 @@ dojo.declare("wm.studio.Project", null, {
                 // if no d returned, immediately calls the next then()
             }),onError
         ).then(
+            /* Add custom components to wm.componentList */
+            dojo.hitch(this, function() {
+                dojo.forEach(__packageRegistry, function(customComponent) {
+                    allProjectJS += "wm.componentList['" + customComponent[2] + "'] = ['wm.base.widget.Composite','" + customComponent[3] + "'];\n";
+                }, this);
+            }), onError
+        ).then(
             /* Save Step: Write application widgets, properties and custom code */
             dojo.hitch(this, function() {
 
