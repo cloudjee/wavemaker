@@ -718,21 +718,17 @@ public class SecuritySpringSupport {
     }
 
     static List<String> getRoles(Beans beans) {
-        if (getDataSourceType(beans).equals(GeneralOptions.DEMO_TYPE)) {
-            return getDemoRoles(beans);
-        } else if (getDataSourceType(beans).equals(GeneralOptions.DATABASE_TYPE)) {
-            return getDBRoles(beans);
+        Bean securityServiceBean = beans.getBeanById(SECURITY_SERVICE);
+        Property rolesProperty = securityServiceBean.getProperty(ROLES);
+        if (rolesProperty == null || rolesProperty.getList() == null) {
+            return Collections.emptyList();
         }
-
-        return null;
-    }
-
-    static List<String> getDemoRoles(Beans beans) {
-        return null;
-    }
-
-    static List<String> getDBRoles(Beans beans) {
-        return null;
+        List<Object> refElements = rolesProperty.getList().getRefElement();
+        List<String> roles = new ArrayList<String>(refElements.size());
+        for (Object o : refElements) {
+            roles.add(((Value) o).getContent().get(0));
+        }
+        return roles;
     }
 
     static void setRoles(Beans beans, List<String> roles) {
