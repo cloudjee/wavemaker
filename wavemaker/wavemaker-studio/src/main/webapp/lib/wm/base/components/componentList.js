@@ -176,6 +176,7 @@ wm.getComponentStructure = function(inType) {
             inType = inType.substring(3);
         }
 
+        /* This code is obsolete as of WM 6.6; see WM-4750: https://github.com/SpringSource/wavemaker/commit/aa3d2c28721740c0182b0a98e3674ee3c1114c60 */
         requireList = ['wm.base.widget.Composite', 'wm.packages.' + inType];
         //console.info('Trying to load composite: ' + requireList);
     }

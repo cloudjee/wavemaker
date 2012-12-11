@@ -299,24 +299,30 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     createButtonBar: function() {
         var owner = (this.declaredClass == "wm.Dialog" || this instanceof wm.DesignableDialog) ? this.owner : this;
-	this.buttonBar = new wm.Panel({_classes: {domNode: ["dialogfooter"]},
-				       name: "buttonBar",
-				       owner: owner,
-				       parent: this,
-				       width: "100%",
-				       height: wm.Button.prototype.height,
-				       mobileHeight: wm.Button.prototype.mobileHeight,
-				       enableTouchHeight: true,
-				       horizontalAlign: "right",
-				       verticalAlign: "top",
-				       layoutKind: "left-to-right",
-				       border: this.footerBorder,
-				       borderColor: this.titlebarBorderColor});
+        this.buttonBar = new wm.Panel({
+            _classes: {
+                domNode: ["dialogfooter"]
+            },
+            name: "buttonBar",
+            owner: owner,
+            parent: this,
+            width: "100%",
+            height: wm.Dialog.prototype.buttonBarHeight || wm.Button.prototype.height,
+            padding: wm.Dialog.prototype.buttonBarPadding || "0",
+            // buttonBarHeight set via Theme.js
+            mobileHeight: wm.Button.prototype.mobileHeight,
+            enableTouchHeight: true,
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            layoutKind: "left-to-right",
+            border: this.footerBorder,
+            borderColor: this.titlebarBorderColor
+        });
         this.reflow();
     },
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
-	var border = (String(inBorder).match(",")) ? inBorder : "0,0," + inBorder + ",0";
+        var border = (String(inBorder).match(",")) ? inBorder : "0,0," + inBorder + ",0";
         this.titleBar.setBorder(border);
         this.titleBar.setHeight((parseInt(this.titlebarHeight) + this.titleBar.padBorderMargin.t + this.titleBar.padBorderMargin.b) + "px");
     },

@@ -947,10 +947,18 @@ display:block;
 }
 
 .accordionArrowNode {
+float: right;
+}
+.accordionOnLeftArrowNode {
+    position: relative;
+    top: 4px;
+}
+.accordionOnLeftArrowNode,
+.accordionArrowNode {
     display: none;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    float: right;
+
     width: 16px;
     height: 16px;
 }

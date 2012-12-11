@@ -27,11 +27,12 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
         var captionHeight = inLayer.parent.captionHeight;
         var p = this.decoree.client;
         var h = inLayer.header = new wm.Label({
+            noSizeNode: true,
             caption: inLayer.caption,
             width: "100%",
             margin: "0,0,2,0",
             height: captionHeight + "px",
-            padding: "4,4,0,4",
+            padding: "0,4,0,4",
             _classes: {
                 domNode: ["wmaccordion-header"]
             },
@@ -42,15 +43,12 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
             borderColor: this.decoree.captionBorderColor !== undefined ? this.decoree.captionBorderColor : this.captionBorderColor,
             onclick: dojo.hitch(this, "headerClicked", inLayer)
         });
-        h.domNode.appendChild(dojo.create("span", {
-            innerHTML: "",
-            className: "accordionArrowNode"
-        }));
+
         p.moveControl(h, inIndex * 2);
         dojo.addClass(inLayer.domNode, "wmaccordion-content");
         //this.decoree.connect(h.domNode, 'onclick', dojo.hitch(this, "headerClicked", inLayer));
     },
-    
+
 	headerClicked: function(inLayer, e) {
 		var d = this.decoree;
 		// prevent designer click
@@ -96,7 +94,11 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		this.inherited(arguments);
 	},
 	applyLayerCaption: function(inLayer) {
-	    inLayer.header.setCaption(inLayer.caption);
+        if (this.decoree.arrowsOnLeft) {
+           inLayer.header.setCaption("<span class='accordionOnLeftArrowNode'></span>" + inLayer.caption );
+        } else {
+	       inLayer.header.setCaption(inLayer.caption + "<span class='accordionArrowNode'></span>");
+       }
 	},
 	moveLayerIndex: function(inFromIndex, inToIndex) {
 		var d = this.decoree, client = d.client, l = d.getLayer(inFromIndex);

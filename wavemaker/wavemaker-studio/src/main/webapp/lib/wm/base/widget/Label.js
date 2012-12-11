@@ -32,9 +32,13 @@ dojo.declare("wm.Label", wm.Control, {
     },
     build: function() {
         this.inherited(arguments);
-        this.sizeNode = document.createElement("div");
-        dojo.addClass(this.sizeNode, "wmSizeNode");
-        this.domNode.appendChild(this.sizeNode);
+        if (!this.noSizeNode) {
+            this.sizeNode = document.createElement("div");
+            dojo.addClass(this.sizeNode, "wmSizeNode");
+            this.domNode.appendChild(this.sizeNode);
+        } else {
+            this.sizeNode = this.domNode;
+        }
     },
     _onclick: function(inEvent) {
         if (this._disabled) return;

@@ -21,7 +21,6 @@ dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
     layersType: 'Breadcrumb',
     transition: "fade",
     headerWidth: "50px",
-    layerBorder: 1,
     postInit: function() {
 	this.inherited(arguments);
 	this._inBreadcrumbPostInit = true;
@@ -40,7 +39,7 @@ dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
 	inChangeInfo.canChange = l;
     },
     addWidget: function(inWidget) {
-	this.inherited(arguments);	
+	this.inherited(arguments);
 	if (!this._isDesignLoaded && !this._loading && inWidget instanceof wm.Layer && !inWidget.isActive()) {
 	    inWidget.setShowing(false);
 	}

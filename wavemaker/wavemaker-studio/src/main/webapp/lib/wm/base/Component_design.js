@@ -596,7 +596,6 @@ wm.Component.extend({
 
         var children = [];
 
-       this.createDesignContextMenu(children);
        this._showContextMenu(children);
 
        if(this instanceof wm.Control) {

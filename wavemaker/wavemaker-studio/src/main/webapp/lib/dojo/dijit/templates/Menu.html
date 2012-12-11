@@ -1,3 +1,5 @@
-<table class="dijit dijitMenu dijitMenuPassive dijitReset dijitMenuTable" role="menu" tabIndex="${tabIndex}" dojoAttachEvent="onkeypress:_onKeyPress" cellspacing="0">
-	<tbody class="dijitReset" dojoAttachPoint="containerNode"></tbody>
-</table>
+<!-- Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     WaveMaker: Replaced all table and tbody tags with div because dojo puts divs inside of tbody which breaks IE 8 -->
+<div class="dijit dijitMenu dijitMenuPassive dijitReset dijitMenuTable" role="menu" tabIndex="${tabIndex}" dojoAttachEvent="onkeypress:_onKeyPress" cellspacing="0">
+	<div class="dijitReset" dojoAttachPoint="containerNode"></div>
+</div>
