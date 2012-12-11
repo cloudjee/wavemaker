@@ -132,6 +132,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     titlebarBorderColor: "black",
     titlebarHeight: "23",
     mobileTitlebarHeight: "35",
+    titleBarButtonsOnRight: false,
     footerBorder: "1,0,0,0",
     containerPadding: "5",
 /*
@@ -564,11 +565,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}
 	if (this._maxified) {
 	    this._maxified = false;
+        dojo.removeClass(this.domNode, "wmDialogMaxify");
 	    //this.titleMaxify.setCaption(" ");
 	    this.bounds.h = parseInt(this.height);
 	    this.bounds.w = parseInt(this.width);
 	} else {
 	    this._maxified = true;
+        dojo.addClass(this.domNode, "wmDialogMaxify");
 	    //this.titleMaxify.setCaption("O");
 	}
 	this.renderBounds();
@@ -1337,25 +1340,30 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.connect(this.titleMinify, "onclick", this, "minify");
 	this.connect(this.titleMaxify, "onclick", this, "maxify");
 
-	if (this.titlebarButtons && !wm.isMobile) {
-	    var buttonList = this.titlebarButtons.split(/\s*,\s*/);
-	    for (var i = 0; i < buttonList.length; i++) {
-		new wm.ToolButton({_classes: {domNode: [buttonList[i]]},
-				   noInspector: true,
-				   name: buttonList[i],
-				   caption: " ",
-				   width: "19px",
-				   height: "19px",
-				   margin: "3,0,0,3",
-				   parent: this.titleBar,
-				   owner: this,
-				   onclick: dojo.hitch(this, "onMiscButtonClick", buttonList[i])
-				  });
-	    }
-	    new wm.Spacer({owner: this,
-			   parent: this.titleBar,
-			   width: "5px"});
-	}
+    	if (this.titlebarButtons && !wm.isMobile) {
+    	    var buttonList = this.titlebarButtons.split(/\s*,\s*/);
+    	    for (var i = 0; i < buttonList.length; i++) {
+    		new wm.ToolButton({_classes: {domNode: [buttonList[i]]},
+    				   noInspector: true,
+    				   name: buttonList[i],
+    				   caption: " ",
+    				   width: "19px",
+    				   height: "19px",
+    				   margin: "3,0,0,3",
+    				   parent: this.titleBar,
+    				   owner: this,
+    				   onclick: dojo.hitch(this, "onMiscButtonClick", buttonList[i])
+    				  });
+    	    }
+    	    new wm.Spacer({owner: this,
+    			   parent: this.titleBar,
+    			   width: "5px"});
+
+    	}
+        if (this.titleBarButtonsOnRight) {
+            this.titleBar.c$.reverse();
+            buttonPanel.c$.reverse();
+        }
     },
     onMiscButtonClick: function(inButtonName) {},
     setTitlebarButtons: function(inButtons) {

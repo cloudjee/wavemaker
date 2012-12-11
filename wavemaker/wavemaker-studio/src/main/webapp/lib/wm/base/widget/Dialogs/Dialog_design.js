@@ -17,8 +17,8 @@ dojo.provide("wm.base.widget.Dialogs.Dialog_design");
 
 dojo.require("wm.base.widget.Dialogs.Dialog");
 dojo.require("wm.base.widget.Dialogs.DesignableDialog");
-dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog"); 
-dojo.require("wm.base.widget.Dialogs.GenericDialog"); 
+dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog");
+dojo.require("wm.base.widget.Dialogs.GenericDialog");
 dojo.require("wm.base.widget.Dialogs.PageDialog");
 dojo.require("wm.base.widget.Dialogs.Toast");
 dojo.require("wm.base.widget.Container_design");
@@ -49,6 +49,21 @@ wm.Dialog.extend({
 	    }
 	});
 	studio.refreshDesignTrees();
+    },
+    set_titleBarButtonsOnRight: function(inValue) {
+        this.titleBarButtonsOnRight = inValue;
+        if (this.titleBar.c$[0].name == "titleButtonBar") {
+            if (inValue) {
+                this.titleBar.c$[0].c$.reverse();
+                this.titleBar.c$.reverse();
+            }
+        } else {
+            if (!inValue) {
+                this.titleBar.c$.reverse();
+                this.titleBar.c$[0].c$.reverse();
+            }
+        }
+        this.titleBar.reflow();
     },
     set_containerPadding: function(inPadding) {
 	this.containerPadding = inPadding;
@@ -153,7 +168,7 @@ wm.Object.extendSchema(wm.Dialog, {
 
 
 
-wm.Object.extendSchema(wm.GenericDialog, {   
+wm.Object.extendSchema(wm.GenericDialog, {
     /* Subwidgets group; buttons subgroup */
     button1Caption: {group: "subwidgets", subgroup: "buttons", order: 61},
     button2Caption: {group: "subwidgets", subgroup: "buttons", order: 63},
@@ -272,7 +287,7 @@ wm.LoadingDialog.extend({
 	this._label.setWidth(inWidth);
 	this._label.doAutoSize();
     },
-    set_image: function(inImage) {	
+    set_image: function(inImage) {
 	this.setImage(inImage);
 	this.connectOnce(this._picture.img, "onload", this, function() {
 	    this.setImageWidth(this._picture.img.naturalWidth + "px");
@@ -284,7 +299,7 @@ wm.LoadingDialog.extend({
 wm.Object.extendSchema(wm.LoadingDialog, {
     /* Display group; misc subgroup */
     widgetToCover: {group: "widgetName", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1,editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
-    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, editor: "wm.prop.MultiWidgetSelect", type: "wm.ServiceVariable", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
+    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, editor: "wm.prop.MultiWidgetSelect", type: "wm.ServiceVariable", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},
 
     /* Display group; text subgroup */
     caption:      {group: "widgetName", subgroup: "text", order: 102, bindTarget: 1},
@@ -292,7 +307,7 @@ wm.Object.extendSchema(wm.LoadingDialog, {
     image:        {group: "widgetName", subgroup: "graphics", order: 110, type: "String", bindTarget: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"]},
     imageWidth:   {group: "widgetName", subgroup: "layout", order: 111, editor: "wm.prop.SizeEditor"},
     imageHeight:  {group: "widgetName", subgroup: "layout", order: 112, editor: "wm.prop.SizeEditor"},
-    
+
     /* Ignore group */
     positionNear: {ignore:1},
     noTopBottomDocking: {ignore:1},
