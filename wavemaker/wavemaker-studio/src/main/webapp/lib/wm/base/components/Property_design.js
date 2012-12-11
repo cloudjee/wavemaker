@@ -65,6 +65,10 @@ wm.Property.extend({
                     var prop_c = c.getValue(prop);
                     if (prop_c instanceof wm.Variable) {
                         this.type = prop_c.type;
+                    } else if (propDef.type) {
+                        this.type = propDef.type;
+                    } else {
+                        this.type = typeof prop_c;
                     }
                 } else {
                     this.type = propDef.type;
