@@ -35,6 +35,7 @@ dojo.declare("wm.Application", wm.Component, {
     phoneMain: "",
     isSecurityEnabled: false,
     phoneGapLoginPage: "Login",
+    hintDelay: 1500,
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
         projectSubVersion: "Alpha",

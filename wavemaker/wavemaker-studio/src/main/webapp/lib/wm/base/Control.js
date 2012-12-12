@@ -1913,7 +1913,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		var self = this;
 		wm.cancelJob("app.hint");
 		var isShowing =  (app.toolTipDialog && app.toolTipDialog.showing);
-		wm.job("app.hint", isShowing ? 0 : 1500, function() {
+		wm.job("app.hint", isShowing ? 0 : app.hintDelay, function() {
 		    if (!self.isAncestorHidden()) {
 			app.createToolTip(self.hint, self.domNode, event, self);
 		    }

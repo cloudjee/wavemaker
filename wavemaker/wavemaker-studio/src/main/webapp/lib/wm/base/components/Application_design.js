@@ -200,6 +200,7 @@ wm.Object.extendSchema(wm.Application, {
     theme: {group: "widgetName", type: "string", order: 7},
     themeName: {ignore:1},
     currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
+    hintDelay: {group: "widgetName", subgroup: "behavior", type: "number", order: 100},
     saveCounter: {ignore:1},
     //IERoundedCorners: {ignore: true},
     disableDirtyEditorTracking: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 250},
