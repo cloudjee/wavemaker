@@ -76,13 +76,13 @@ public class PhoneGapService {
 	 */
 	@ExposeToClient
 
-	public void generateBuild(String xhrPath, String themeName, String configxml, boolean useProxy) {
+	public void generateBuild(String xhrPath, String themePath, String configxml, boolean useProxy) {
 		try{
 			Project currentProject = this.projectManager.getCurrentProject();
 			currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
 			getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
 			setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
-			updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName, useProxy);
+			updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themePath, useProxy);
 
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -128,13 +128,13 @@ public class PhoneGapService {
 	 * Update an existing phone gap project structure.
 	 */
 	@ExposeToClient
-	public void updatePhonegapFiles(int portNumb, String themeName) {
+	public void updatePhonegapFiles(int portNumb, String themePath) {
 		setupPhonegapFiles();
 		String serverUrl = SystemUtils.getIP();
 		String projectName = this.projectManager.getCurrentProject().getProjectName();
 		for (FolderLayout layout : FolderLayout.values()) {
 			if (layout != FolderLayout.PHONEGAP_BUILD_SERVICE) {
-				updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themeName, false);
+				updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themePath, false);
 			}
 		}
 		fixupXCodeFilesFollowingUpdate();
@@ -241,7 +241,7 @@ public class PhoneGapService {
 		themes.list().include(FilterOn.names().notMatching("default")).delete();
 	}
 
-	private void updatePhonegapFiles(String url, FolderLayout layout, String themeName, boolean useProxy) {
+	private void updatePhonegapFiles(String url, FolderLayout layout, String themePath, boolean useProxy) {
 		Folder phoneGapFolder = getPhoneGapFolder(layout);
 		if (!phoneGapFolder.exists()) {
 			return;
@@ -258,16 +258,18 @@ public class PhoneGapService {
 
 		// Update index and login HTML files
 		String phonegapName = getPhoneGapScript(phoneGapFolder);
-		updateHtmlFile(phonegapName, phoneGapFolder.getFile("index.html"));
-		updateHtmlFile(phonegapName, phoneGapFolder.getFile("login.html"));
+		updateHtmlFile(phonegapName, phoneGapFolder.getFile("index.html"), themePath);
+		updateHtmlFile(phonegapName, phoneGapFolder.getFile("login.html"), themePath);
 
 		// Combine boot.js and config.js
 		phoneGapFolder.getFile("config.js").getContent().write(combineBootAndConfig(url, useProxy));
 
 		// Copy theme
-		Folder theme = getThemeFolder(themeName);
-		theme.copyTo(phoneGapFolder);
-		phoneGapFolder.getFolder(theme.getName()).rename("theme");
+		if (themePath.startsWith("wm.base.widget.themes") || themePath.startsWith("common.themes")) {
+		    Folder theme = getThemeFolder(themePath);
+		    theme.copyTo(phoneGapFolder);
+		    phoneGapFolder.getFolder(theme.getName()).rename("theme");
+		}
 	}
 
 	private String getPhoneGapScript(Folder phoneGapFolder) {
@@ -278,7 +280,7 @@ public class PhoneGapService {
 		return "phonegap.js";
 	}
 
-	private void updateHtmlFile(String phoneGapScript, File file) {
+        private void updateHtmlFile(String phoneGapScript, File file, String themePath) {
 		if (!file.exists()) {
 			return;
 		}
@@ -289,11 +291,13 @@ public class PhoneGapService {
 			content = content.replace(insertLocation, insertLocation + "\n" + phoneGapScriptTag);
 		}
 		content = content.replaceAll("/wavemaker/", "");
-		String themeUrlVar = "var wmThemeUrl =";
-		if (content.contains(themeUrlVar)) {
+		if (themePath.startsWith("wm.base.widget") || themePath.startsWith("common.themes")) {
+		    String themeUrlVar = "var wmThemeUrl =";
+		    if (content.contains(themeUrlVar)) {
 			int start = content.indexOf(themeUrlVar);
 			int end = content.indexOf(";", start);
 			content = content.substring(0, start) + themeUrlVar + " \"theme/theme.css\"" + content.substring(end);
+		    }
 		}
 		file.getContent().write(content);
 	}
@@ -310,9 +314,10 @@ public class PhoneGapService {
 		return config + boot;
 	}
 
-	private Folder getThemeFolder(String themeName) {
+	private Folder getThemeFolder(String themePath) {
 		Folder themeFolder;
-		if (themeName.startsWith("wm_")) {
+		String themeName = themePath.substring(themePath.lastIndexOf(".")+1);
+		if (themePath.startsWith("wm.base.widget")) {
 			themeFolder = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/" + themeName);
 		} else {
 			themeFolder = this.fileSystem.getCommonFolder().getFolder("themes/" + themeName);
