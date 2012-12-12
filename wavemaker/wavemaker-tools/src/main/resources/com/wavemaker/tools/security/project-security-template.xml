@@ -51,19 +51,12 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
 <bean id="successHandler" class="com.wavemaker.runtime.security.WMAuthenticationSuccessHandler" >
 </bean>              
   
-  <!--
-    Usernames/Passwords are
-        admin/admin
-        manager/manager
-        user/user
-    --> 
     <security:authentication-manager alias="authenticationManagerDemo">
         <security:authentication-provider>
-            <security:password-encoder hash="md5"/>
             <security:user-service>
-                <security:user name="admin" password="21232f297a57a5a743894a0e4a801fc3" authorities="admin, manager,user" />
-                <security:user name="manager" password="1d0258c2440a8d19e716292b231e3190" authorities="manager,user" />
-                <security:user name="user" password="ee11cbb19052e40b07aac0ca060c23ee" authorities="user" />
+                <security:user name="admin" password="admim" authorities="admin, manager,user" />
+                <security:user name="manager" password="manager" authorities="manager,user" />
+                <security:user name="user" password="user" authorities="user" />
             </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
@@ -74,11 +67,13 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<bean id = "jdbcDaoImpl"  class = "com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
-		<property name = "dataSource" ref = "mytestdbDataSource" />
-		<property name = "usersByUsernameQuery" value = "SELECT userid, password, 1, username FROM user WHERE username = ?" />
-		<property name = "authoritiesByUsernameQuery" value = "select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
+	<bean id="jdbcDaoImpl"  class="com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
+		<property name="dataSource" ref="dummyDataSource" />
+		<property name="usersByUsernameQuery" value="SELECT userid, password, 1, username FROM user WHERE username = ?" />
+		<property name="authoritiesByUsernameQuery" value ="select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
 	</bean>
     
+    <bean id="dummyDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true"/>
                           
 </beans> 
