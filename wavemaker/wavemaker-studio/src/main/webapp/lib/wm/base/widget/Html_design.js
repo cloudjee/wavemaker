@@ -27,13 +27,14 @@ wm.Object.extendSchema(wm.Html, {
 
     /* Display group; text subgroup */
     html: {group: "widgetName", subgroup: "text", order: 100,  type: "String", bindable: 1, editor: "wm.LargeTextArea", editorProps: {height: "250px"}, requiredGroup:1 },
+    allowScriptTags: {group: "widgetName", subgroup: "behavior", order: 10, type: "boolean"},
 
     /* Ignored/writeonly group */
     autoSizeHeight: { writeonly: true},
     autoSizeWidth: {writeonly: true},
     disabled: { ignore: 1 },
 	htmlIsResource: {hidden:1},
-	
+
     /* Method group */
     setHtml: {method:1}
 });
@@ -49,6 +50,6 @@ wm.Html.extend({
 	} else if (inHtml) {
 		this.htmlIsResource = false;
 	}
-    	this.setHtml(inHtml);    
-    }    
+    	this.setHtml(inHtml);
+    }
 });

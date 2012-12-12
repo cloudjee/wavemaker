@@ -21,6 +21,7 @@ dojo.declare("wm.Html", wm.Control, {
 	html: "",
 	htmlIsResource: false,
         autoScroll: true,
+    allowScriptTags: false,
 	init: function() {
 		dojo.addClass(this.domNode, "wmhtml");
 		this.inherited(arguments);
@@ -66,7 +67,59 @@ dojo.declare("wm.Html", wm.Control, {
                 if ( innerHTML != this.sizeNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
                     this.scheduleAutoSize();
                 }
+        if (this.allowScriptTags) this.processScriptTags();
 	},
+    processScriptTags: function() {
+        var nodes = dojo.query("script", main.html1.domNode);
+        var tmpparent = document.createElement("div");
+        dojo.forEach(nodes, function(node) {
+            var originalParent = node.parentNode;
+            var originalIndex = dojo.indexOf(originalParent.childNodes, node);
+            tmpparent.appendChild(node);
+            var scripthtml = tmpparent.innerHTML;
+
+            var n = document.createElement("script");
+            /* Find properties set by developer like djconfig and other arbitrary properties that may be written into the script node */
+            var props = {};
+            var parts = scripthtml.replace(/\<script\s*/,"").replace(/\>.*/,"").split(/\s+/);
+            var partialName = "";
+            var partialValue = "";
+            for (var i = 0; i < parts.length; i++) {
+                var part = parts[i];
+                if (!partialValue) {
+                    var namevaluematch = part.match(/^(.*?)\s*\=\s*(.*)\s*$/);
+                    if (namevaluematch) {
+                        var name = namevaluematch[1];
+                        var value = namevaluematch[2];
+                    }
+                } else {
+                    value = partialValue + " " + part;
+                    partialValue = "";
+                }
+                if (value) {
+                    value = value.replace(/^"(.*)"/,"$1");
+                    value = value.replace(/^'(.*)'/,"$1");
+                    if (value.match(/^['"]/)) {
+                        partialValue = value;
+                        partialName = name;
+                    } else {
+                        dojo.attr(n,name,value);
+                    }
+
+                }
+            }
+
+            try {
+                n.innerText = node.innerText;
+            }catch(e){}
+            try {
+                n.textContent = node.textContent;
+            }catch(e){}
+
+            dojo.destroy(node);
+            dojo.place(n, originalParent, originalIndex);
+        }, this);
+    },
     scheduleAutoSize: function() {
         this._needsAutoSize = true;
         return wm.job(this.getRuntimeId() + ": doAutoSize", 10,  dojo.hitch(this, function() {this.doAutoSize(true,true);}));
