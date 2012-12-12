@@ -268,6 +268,14 @@ wm.MobileIconButton.extend({
         this.inherited(arguments);
         this.setEvent("onclick", "app._onBack");
     },
+    listProperties: function() {
+        var props = this.inherited(arguments);
+        if (this.direction != "back") {
+            props.displayWhenHistoryEmpty.ignoretmp = true;
+            props.historyEmptyIfLessThanOrEqualTo.ignoretmp = true;
+        }
+        return props;
+    },
     set_direction: function(inDirection) {
         this.direction = inDirection;
         var widgetsjs = this.write("");
@@ -288,5 +296,6 @@ wm.MobileIconButton.extend({
 
 wm.Object.extendSchema(wm.MobileIconButton, {
     displayWhenHistoryEmpty: {group: "widgetName", subgroup: "behavior", order: 100, options: ["", "hidden", "disabled"]},
+    historyEmptyIfLessThanOrEqualTo: {group: "widgetName", subgroup: "behavior", order: 101, type: "number"},
     direction: {group: "widgetName", subgroup: "display", order: 10, options: ["back", "up", "left", "right", "down"]}
 });
