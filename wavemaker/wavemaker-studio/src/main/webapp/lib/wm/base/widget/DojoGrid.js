@@ -1010,7 +1010,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             structure = {};
         var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, queryOptions: this.queryOptions, query: this.query || {}, updateDelay: 0};
         this.addDojoProps(props);
-        this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%', disabled: this._disabled}, this.domNode));
+        this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%'}, this.domNode));
+        if (this._disabled) this.dojoObj.set("disabled",true);
         this.connectDojoEvents();
         this.setSelectionMode(this.selectionMode);
         this.dojoRenderer();
@@ -2056,7 +2057,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         return csvData.join('');
     },
-    getExpressionValue: function(exp, idx, dataObj, isSimpleDataObj){       
+    getExpressionValue: function(exp, idx, dataObj, isSimpleDataObj){
         var expValue = '..';
         if (!dataObj)
             return expValue;
@@ -2066,13 +2067,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             json = this.itemToJSONObject(this.store, dataObj);
         if (!json)
             return expValue;
-            
+
         if (this._isDesignLoaded && studio.currentDeviceType != "desktop") {
             exp = exp.replace(/\$\{wm\.rowId\}/g, String(idx));
             exp = exp.replace(/\$\{this\}/g, dojo.toJson(json));
             exp = exp.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
         }
-        
+
         try
         {
             expValue = wm.expression.getValue(exp, json, this.owner);
