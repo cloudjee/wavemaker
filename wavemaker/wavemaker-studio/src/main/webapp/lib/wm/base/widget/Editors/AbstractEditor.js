@@ -238,7 +238,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 					if (!this._helpTouchPos) return;
 					app.alert(this.helpText);
 				});
-			
+
 			} else {
 	            this._helpTextOverConnect = this.connect(this.helpNode, "onmouseover", this, function(e) {
 	                wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
@@ -267,13 +267,13 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         wm.Array.removeElement(this._connections, this._helpTextOverConnect);
         wm.Array.removeElement(this._connections, this._helpTextOutConnect);
         wm.Array.removeElement(this._connections, this._helpTextTouchStartConnect);
-        wm.Array.removeElement(this._connections, this._helpTextTouchMoveConnect);        
+        wm.Array.removeElement(this._connections, this._helpTextTouchMoveConnect);
         wm.Array.removeElement(this._connections, this._helpTextTouchEndConnect);
         dojo.disconnect(this._helpTextOverConnect);
         dojo.disconnect(this._helpTextOutConnect);
         dojo.disconnect(this._helpTextStartConnect);
-        dojo.disconnect(this._helpTextMoveConnect);        
-        dojo.disconnect(this._helpTextEndConnect);        
+        dojo.disconnect(this._helpTextMoveConnect);
+        dojo.disconnect(this._helpTextEndConnect);
     },
     createEditor: function(inProps) {
         // Its possible for createEditor to be called before postInit where createCaption is called,
@@ -900,9 +900,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     setInitialValue: function() {
         this.beginEditUpdate();
         try {
-        this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", this.constructor) ? this.dataValue : this.displayValue);
+            this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", this.constructor) ? this.dataValue : this.displayValue);
         } catch(e) {}
         this.endEditUpdate();
+        this.clearDirty(true);
     },
 
     /* EditorChanged is called when we think that the editor has changed values.  If it returns false however,
@@ -945,7 +946,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         if (val2 === undefined || val2 === null) val2 = "";
         return val1 != val2;
     },
-    clearDirty: function() {
+    clearDirty: function(noEvent) {
         this._lastValueReported = this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
         this.updateIsDirty();
     },
@@ -983,9 +984,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         */
         this.setEditorValue(inValue);
         if (inValue === "" || inValue === null)
-        this.resetState();
+            this.resetState();
         if (!this.isUpdating())
-        this.clearDirty(); // calls to setDataValue should always clear the dirty indicator and assume the input value is "Good"
+            this.clearDirty(); // calls to setDataValue should always clear the dirty indicator and assume the input value is "Good"
         delete this._inSetDataValue;
     },
     isUpdating: function() {
