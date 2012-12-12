@@ -136,8 +136,9 @@ dojo.declare("wm.Security", wm.ServerComponent, {
 	    this.name = "securityService";
 	    var result =this.inherited(arguments);
 	    this.name = name;
-	    return result; // returning will trigger a design tree refresh and a studio.select	
-	}    
+        result.startUpdate = true;
+	    return result; // returning will trigger a design tree refresh and a studio.select
+	}
     }
 });
 

@@ -539,8 +539,16 @@ wm.ServiceCall.extend({
     },
     set_operation: function(inOperation) {
         this.setOperation(inOperation);
-        if (this.isDesignLoaded() && studio.selected == this)
+        if (this.isDesignLoaded() && dojo.indexOf(studio.selected, this) != -1) {
+            /* Security Services other than logout almost always require this setting, and users get in trouble
+             * by assuming the setting is the default we provide.
+             */
+            if (this.service == "securityService") {
+                this.startUpdate = inOperation != "logout";
+            }
+
             studio.inspector.inspect(studio.selected);
+        }
     },
     getServicesList: function() {
         return [""].concat(wm.services.getNamesList()||[]);
