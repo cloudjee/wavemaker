@@ -103,10 +103,11 @@ public class SecurityXmlSupport {
 			for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
 				List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
 				for(JAXBElement<?> je : jeList){
-					if(je.getDeclaredType().getName().equals("com.wavemaker.tools.security.schema.UserService"))
+					if(je.getDeclaredType().getName().equals("com.wavemaker.tools.security.schema.UserService")) {
 						userSvcOld = (UserService)je.getValue();
-					userSvcOld = userSvc;
-					return;
+						userSvcOld = userSvc;
+						return;
+					}
 				}
 			}
 		}
