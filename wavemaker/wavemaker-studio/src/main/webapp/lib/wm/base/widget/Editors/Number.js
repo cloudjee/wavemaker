@@ -251,6 +251,7 @@ dojo.declare("wm.Number", wm.Text, {
         }
     },
     calcIsDirty: function(a, b) {
+        if (a === 0 && b === "" || a === "" && b === 0) return false; // number editor treats "" as 0
         return a !== b;
     }
 /*
