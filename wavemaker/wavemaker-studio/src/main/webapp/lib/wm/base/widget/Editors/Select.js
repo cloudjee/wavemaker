@@ -511,13 +511,15 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
                 this.updateReadonlyValue();
                 this.resetState();
             }
-            if (!this._cupdating && valueWas && this.hasValues()) this.changed();
+            if (!this._cupdating && valueWas && this.hasValues()) {
+                this.changed();
+            }
         } else {
             this.resetState();
         }
     },
     validationEnabled: function() {
-        return !this.restrictValues;
+        return this.restrictValues || this.required;
     },
     _getValidatorNode: function() {
         var result = dojo.query(".dijitValidationContainer", this.editor.domNode)[0];
