@@ -269,3 +269,8 @@ wm.MobileIconButton.extend({
         this.setEvent("onclick", "app._onBack");
     }
 });
+
+wm.Object.extendSchema(wm.MobileIconButton, {
+    displayWhenHistoryEmpty: {group: "widgetName", subgroup: "behavior", order: 100, options: ["", "hidden", "disabled"]},
+    direction: {group: "widgetName", subgroup: "display", order: 10, options: ["back", "up", "left", "right", "down"]}
+});

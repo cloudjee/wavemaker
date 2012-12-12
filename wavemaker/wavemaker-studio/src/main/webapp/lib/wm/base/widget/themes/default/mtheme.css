@@ -982,7 +982,9 @@ body .wmmobile button.wmtablayers-tab {
 }
 
 
-
+.wmMobileButton {
+    background-color: transparent;
+}
 .mblArrow {
 	position: absolute;
 
@@ -1036,6 +1038,9 @@ body .wmmobile button.wmtablayers-tab {
 /* BACK BUTTON */
 .wmBackButton {
     background-color: transparent !important;
+}
+.wmBackButton.Disabled {
+    opacity: 0.5;
 }
 .mblArrowBackButton {
         position: relative;

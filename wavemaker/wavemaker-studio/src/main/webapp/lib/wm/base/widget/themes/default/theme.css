@@ -1450,7 +1450,9 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     padding: 5px 0px 2px 0px;
 }
 
-
+.wmMobileButton {
+    background-color: transparent;
+}
 .mblArrow {
 	position: absolute;
 
@@ -1526,6 +1528,9 @@ height: 16px;
 /* Back Button Should only be used in mobile, but don't want it failing to render on desktop */
 .wmBackButton {
     background-color: transparent !important;
+}
+.wmBackButton.Disabled {
+    opacity: 0.5;
 }
 .mblArrowBackButton {
         position: relative;

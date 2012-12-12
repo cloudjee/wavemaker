@@ -60,6 +60,35 @@ dojo.declare("wm.MobileIconButton", wm.ToolButton, {
     direction: "down",
     caption: "Back",
     height: "40px",
+    displayWhenHistoryEmpty: "", // "", "hidden", "disabled"
+    classNames: "wmMobileButton",
+    init: function() {
+        this.inherited(arguments);
+        if (!this._isDesignLoaded && this.direction == "back" && this.displayWhenHistoryEmpty) {
+            this.connect(app, "_onBack", this, "updateEmptyState");
+            this.connect(app, "addHistory", this, "updateEmptyState");
+            this.updateEmptyState();
+        }
+    },
+    listProperties: function() {
+        var props = this.inherited(arguments);
+        if (this.direction != "back") {
+            props.displayWhenHistoryEmpty.ignoretmp = true;
+        }
+        return props;
+    },
+    updateEmptyState: function() {
+        var hasHistory = app.history && app.history.length;
+        switch(this.displayWhenHistoryEmpty){
+            case "hidden":
+                this.setShowing(hasHistory);
+                break;
+            case "disabled":
+                this.setDisabled(!hasHistory);
+                break;
+
+        }
+    },
     build: function() {
         this.inherited(arguments);
         if (this.direction == "back") {
