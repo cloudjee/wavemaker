@@ -101,7 +101,7 @@ public class SecurityConfigService {
 //        if (options != null) {
 //            return options.isEnforceSecurity();
 //        }
-        return false;
+        return true;
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
@@ -110,7 +110,7 @@ public class SecurityConfigService {
 
     public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml) throws JAXBException, IOException {
         getSecToolsMgr().configDemo(demoUsers);
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+        //getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
@@ -381,17 +381,17 @@ public class SecurityConfigService {
      * @throws IOException
      */
     public List<SecurityURLMap> getSecurityFilterODS() throws JAXBException, IOException {
-        Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityFilterODS();
+//        Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityFilterODS();
         List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
-        if (!(urlMap == null)) {
-            for (String url : urlMap.keySet()) {
-                SecurityURLMap secMap = new SecurityURLMap();
-                secMap.setURL(url);
-                List<String> attributes = urlMap.get(url);
-                secMap.setAttributes(attributes.get(0));
-                securityURLMap.add(secMap);
-            }
-        }
+//        if (!(urlMap == null)) {
+//            for (String url : urlMap.keySet()) {
+//                SecurityURLMap secMap = new SecurityURLMap();
+//                secMap.setURL(url);
+//                List<String> attributes = urlMap.get(url);
+//                secMap.setAttributes(attributes.get(0));
+//                securityURLMap.add(secMap);
+//            }
+//        }
         return securityURLMap;
     }
 
@@ -407,46 +407,46 @@ public class SecurityConfigService {
 
     public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
         throws JAXBException, IOException {
-        Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
-        Iterator<SecurityURLMap> itr = securityURLMap.iterator();
-        while (itr.hasNext()) {
-            SecurityURLMap thisEntry = itr.next();
-            List<String> attributes = new ArrayList<String>();
-            attributes.add(thisEntry.getAttributes());
-            urlMap.put(thisEntry.getURL().toLowerCase().trim(), attributes);
-        }
-        // ensure wildcards are last if present and setup for login, unless preserve set
-        if (enforceSecurity && !preserveMap) {
-            String indexHtmlAuthz = null;
-            if (enforceIndexHtml) {
-                indexHtmlAuthz = IS_AUTHENTICATED_FULLY;
-            } else {
-                indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
-            }
-            urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
-            if (urlMap.get("/securityservice.json") != null) {
-                urlMap.remove("/securityservice.json");
-            }
-            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            if (urlMap.get("/pages/login/**") != null) {
-                urlMap.remove("/pages/login/**");
-            }
-            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            if (urlMap.get("/pages/**") != null) {
-                urlMap.remove("/pages/**");
-            }
-            urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
-            if (urlMap.get("/*.json") != null) {
-                List<String> jsonEntry = urlMap.remove("/*.json");
-                urlMap.put("/*.json", jsonEntry);
-            }
-            if (urlMap.get("/*/*.json") != null) {
-                List<String> jsonEntry = urlMap.remove("/*/*.json");
-                urlMap.put("/*/*.json", jsonEntry);
-            }
-        }
-        getSecToolsMgr().setSecurityFilterODS(urlMap);
+//        Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
+//        Iterator<SecurityURLMap> itr = securityURLMap.iterator();
+//        while (itr.hasNext()) {
+//            SecurityURLMap thisEntry = itr.next();
+//            List<String> attributes = new ArrayList<String>();
+//            attributes.add(thisEntry.getAttributes());
+//            urlMap.put(thisEntry.getURL().toLowerCase().trim(), attributes);
+//        }
+//        // ensure wildcards are last if present and setup for login, unless preserve set
+//        if (enforceSecurity && !preserveMap) {
+//            String indexHtmlAuthz = null;
+//            if (enforceIndexHtml) {
+//                indexHtmlAuthz = IS_AUTHENTICATED_FULLY;
+//            } else {
+//                indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
+//            }
+//            urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
+//            urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
+//            if (urlMap.get("/securityservice.json") != null) {
+//                urlMap.remove("/securityservice.json");
+//            }
+//            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+//            if (urlMap.get("/pages/login/**") != null) {
+//                urlMap.remove("/pages/login/**");
+//            }
+//            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+//            if (urlMap.get("/pages/**") != null) {
+//                urlMap.remove("/pages/**");
+//            }
+//            urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
+//            if (urlMap.get("/*.json") != null) {
+//                List<String> jsonEntry = urlMap.remove("/*.json");
+//                urlMap.put("/*.json", jsonEntry);
+//            }
+//            if (urlMap.get("/*/*.json") != null) {
+//                List<String> jsonEntry = urlMap.remove("/*/*.json");
+//                urlMap.put("/*/*.json", jsonEntry);
+//            }
+//        }
+//        getSecToolsMgr().setSecurityFilterODS(urlMap);
     }
 
     /**
