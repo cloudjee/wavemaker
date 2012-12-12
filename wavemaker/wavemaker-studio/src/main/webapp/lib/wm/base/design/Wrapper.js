@@ -435,7 +435,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
     },
     click: function(e) {
         dojo.stopEvent(e);
-        this.select(e.shiftKey, e.metaKey);
+        this.select(e.shiftKey, e.metaKey || e.ctrlKey);
         //wm.fire(this.control, "click", e);
     },
     dblclick: function(e) {
