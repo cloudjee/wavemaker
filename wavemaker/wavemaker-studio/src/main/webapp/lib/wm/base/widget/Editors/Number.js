@@ -79,6 +79,7 @@ dojo.declare("wm.Number", wm.Text, {
     minimum: "",
     maximum: "",
     places: "",
+    noFormatting: false,
     applyPlacesWhileTyping: false,
     _messages: {
         rangeMin: "Minimum number must be less than the maximum setting of ${0}.",
@@ -120,6 +121,8 @@ dojo.declare("wm.Number", wm.Text, {
             value: v ? Number(v) : "",
             editOptions: dojo.clone(dijit.form.NumberTextBox.prototype.editOptions)
         }, inProps || {});
+        if (this.noFormatting) p._formatter = function(inValue) {return inValue;};
+
         var places = this._getPlaces();
         if (places !== "") {
             p.editOptions.places = places;

@@ -18,7 +18,11 @@ dojo.require("wm.base.widget.Editors.AbstractEditor_design");
 dojo.require("wm.base.widget.Editors.Number");
 
 wm.Number.extend({
-    themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}]
+    themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}],
+    set_noFormatting: function(inValue) {
+        this.noFormatting = Boolean(inValue);
+        this.createEditor();
+    }
 });
 
 wm.Object.extendSchema(wm.Number, {
@@ -29,6 +33,7 @@ wm.Object.extendSchema(wm.Number, {
     /* Editor group; display subgroup */
     places: {group: "editor", subgroup: "display", order: 2, type: "number"},
     applyPlacesWhileTyping: {group: "editor", subgroup: "display", order: 3, type: "boolean"},
+    noFormatting: {group: "editor", subgroup: "display", order: 10, type: "boolean", advanced:1},
 
     /* Editor group; validation subgroup */
     minimum:  { group: "editor", subgroup: "validation", order: 3, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "emptyString"}},
