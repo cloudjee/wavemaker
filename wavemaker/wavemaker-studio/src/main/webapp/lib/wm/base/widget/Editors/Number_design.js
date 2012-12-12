@@ -61,6 +61,7 @@ wm.Object.extendSchema(wm.Number, {
 wm.Object.extendSchema(wm.Currency, {
     /* Editor group; display subgroup */
     currency: {group: "editor", subgroup: "display", order: 2},
+    noFormatting: {ignore:1},
 
     /* Ignored group */
     password: {ignore:1},
