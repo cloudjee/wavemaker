@@ -267,6 +267,22 @@ wm.MobileIconButton.extend({
     afterPaletteDrop: function(){
         this.inherited(arguments);
         this.setEvent("onclick", "app._onBack");
+    },
+    set_direction: function(inDirection) {
+        this.direction = inDirection;
+        var widgetsjs = this.write("");
+        widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/, ""));
+        var name = this.name;
+        var parent = this.parent;
+        var owner = this.owner;
+        var indexInParent = dojo.indexOf(this.parent.c$, this);
+        this.destroy();
+
+        var clone = parent.createComponent(name, "wm.MobileIconButton", widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
+        parent.moveControl(clone, indexInParent);
+        parent.reflow();
+        studio.refreshVisualTree();
+        studio.select(clone);
     }
 });
 
