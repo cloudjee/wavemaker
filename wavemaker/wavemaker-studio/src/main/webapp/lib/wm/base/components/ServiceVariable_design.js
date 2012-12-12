@@ -25,6 +25,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     onSetData: {},
     onCanUpdate: {events: ["js", "sharedjs", "sharedEventHandlers"], advanced:1},
     onBeforeUpdate: {advanced:1},
+    onInflightBacklogComplete: {advanced:1},
 
     /* Data group; type subgroup */
     service:          {group: "data", subgroup: "service", order: 23, requiredGroup: 1 },

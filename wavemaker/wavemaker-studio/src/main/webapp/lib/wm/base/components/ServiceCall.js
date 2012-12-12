@@ -341,15 +341,24 @@ dojo.declare("wm.ServiceCall", null, {
 
     /* Fire the next call in the backlog.  We use wm.onidle mostly so that all of the side effects and cleanup have time to complete before firing the next call. */
     _updateNextInQueue: function() {
-        if (!this._isDesignLoaded && this._inFlightBacklog && this._inFlightBacklog.length) {
-            wm.onidle(this, function() {
-                var backlog = this._inFlightBacklog.shift();
-                if (backlog) {
-                    this.request(backlog.args, backlog.operation, backlog.deferred);
-                }
-            });
+        if (!this._isDesignLoaded && this._inFlightBacklog) {
+             if (this._inFlightBacklog.length) {
+                wm.onidle(this, function() {
+                    var backlog = this._inFlightBacklog.shift();
+                    if (backlog) {
+                        this.request(backlog.args, backlog.operation, backlog.deferred);
+                    }
+                });
+            } else {
+                this.onInflightBacklogComplete();
+            }
         }
     },
+
+    /* A user who fires 50 calls needs to know when all 50 are complete; no data needed, just a callback so
+    * the next step of their process can begin
+    */
+    onInflightBacklogComplete: function() {},
 
     /* Called by result(); calls onResult and onSuccess when the ServiceCall completes */
     processResult: function(inResult) {
