@@ -20,13 +20,20 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.springframework.util.Assert;
+
 import com.wavemaker.tools.security.schema.*;
+import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.spring.beans.Property;
 
 /**
  * Helper class for handling security beans entities in project security config file
  * 
- * Provides access to security namespace elements given beans based security xml file
+ * Provides access to security namespace elements given security xml file bean
+ * 
+ * Beans should be obtained using security bean methods, e.g. readSecurityBeans NOT readBeans 
+ * to ensure security schema is included.
  * 
  * @author Ed Callahan
  */
@@ -34,10 +41,7 @@ import com.wavemaker.tools.spring.beans.Beans;
 
 public class SecurityXmlSupport {
 
-
-	public static final String DEMO_AUTHMAN_ALIAS = "authenticationManagerDemo";
-
-	public static final String DB_AUTHMAN_ALIAS = "authenticationManagerDB";
+	public static final String WM_AUTH_ENTRY_POINT = "WMSecAuthEntryPoint";
 
 
 	static List<UserService.User> getUserSvcUsers(Beans beans){
@@ -75,7 +79,7 @@ public class SecurityXmlSupport {
 	static UserService getUserSvc(Beans beans){
 		UserService userSvc = null;
 		try{
-			List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(beans, DEMO_AUTHMAN_ALIAS);
+			List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_DEMO);
 			for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
 				List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
 				for(JAXBElement<?> je : jeList){
@@ -95,7 +99,7 @@ public class SecurityXmlSupport {
 	static void setUserSvc(Beans beans, UserService userSvc){
 		UserService userSvcOld = null;
 		try{
-			List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(beans, DEMO_AUTHMAN_ALIAS);
+			List<AuthenticationManager.AuthenticationProvider> authProviderList = getAuthProviders(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_DEMO);
 			for(AuthenticationManager.AuthenticationProvider authProvider : authProviderList){
 				List<JAXBElement<?>> jeList = authProvider.getAnyUserServiceOrPasswordEncoder();
 				for(JAXBElement<?> je : jeList){
@@ -112,10 +116,12 @@ public class SecurityXmlSupport {
 	}
 
 	static List<AuthenticationManager.AuthenticationProvider> getAuthProviders(Beans beans, String alias){
+		Assert.notNull(alias, "Authentication manager alias must not be null");
 		List<AuthenticationManager.AuthenticationProvider> authProviderList  = new ArrayList<AuthenticationManager.AuthenticationProvider>();
 		try{
 			List<Object> authProviderOrLdapProviders =  Collections.emptyList();
 			AuthenticationManager authMan = getAuthMan(beans,alias);
+			Assert.notNull(authMan, "Authentication Manager must not be null");
 			authProviderOrLdapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
 			for(Object o : authProviderOrLdapProviders){
 				if(o instanceof AuthenticationManager.AuthenticationProvider){
@@ -149,7 +155,7 @@ public class SecurityXmlSupport {
 
 	/*
 	 * Returns Authentication Manager with given alias
-	 * @param secXmlFile the xml file to be parsed
+	 * @param beans the beans to be parsed
 	 * @param alias alias of Authentication Manager to return
 	 * 
 	 */
@@ -169,6 +175,23 @@ public class SecurityXmlSupport {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	static AuthenticationManager getActiveAuthMan(Beans beans){
+		return getAuthMan(beans, getActiveAuthManAlias(beans));
+	}
+	
+	static String getActiveAuthManAlias(Beans beans){
+		String authManRef = null;
+		try{
+			Bean authFilter = beans.getBeanById(WM_AUTH_ENTRY_POINT);
+			Property authMan = authFilter.getProperty(SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
+			authManRef = authMan.getRef();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return authManRef;
+
 	}
 
     static Http getHttp(Beans beans){

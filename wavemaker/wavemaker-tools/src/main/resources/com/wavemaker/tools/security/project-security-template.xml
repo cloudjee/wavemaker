@@ -4,52 +4,52 @@
 This is a Studio Managed File. If you customize this file by hand, use of Studio Security tooling is likely to break your customizations, 
 -->
 
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:security="http://www.springframework.org/schema/security"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
                     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                     http://www.springframework.org/schema/security 
                     http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-  <debug /> 
+  <security:debug /> 
 
-  <global-method-security pre-post-annotations="enabled" />
+  <security:global-method-security pre-post-annotations="enabled" />
                     
-  <http auto-config="false" use-expressions="true" entry-point-ref="WMSecAuthEntryPoint" >
-    <custom-filter position="FORM_LOGIN_FILTER" ref="WMSecAuthFilter" />	
+  <security:http auto-config="false" use-expressions="true" entry-point-ref="WMSecAuthEntryPoint" >
+    <security:custom-filter position="FORM_LOGIN_FILTER" ref="WMSecAuthFilter" />	
 <!-- Uncomment to access app without authentication  
-	<intercept-url pattern="/**" access="permitAll" /> -->
-	<intercept-url pattern="/app.css" access="permitAll" />
-    <intercept-url pattern="/config.js" access="permitAll" />
-    <intercept-url pattern="/types.js" access="permitAll" />
-    <intercept-url pattern="/login.html" access="permitAll" />
-    <intercept-url pattern="/pages/login/**" access="permitAll" />
-    <intercept-url pattern="/securityservice.json" access="permitAll" />
-    <intercept-url pattern="/j_spring_security_check" access="permitAll" />
-    <intercept-url pattern="/*.upload" access="isAuthenticated()" />
-    <intercept-url pattern="/*.download" access="isAuthenticated()" /> 
-    <intercept-url pattern="/index.html" access="isAuthenticated()" /> 
-    <intercept-url pattern="/" access="isAuthenticated()" /> 
-    <intercept-url pattern="/pages/**" access="isAuthenticated()" /> 
-    <intercept-url pattern="/*.json" access="isAuthenticated()" /> 
-    <intercept-url pattern="/*/*.json" access="isAuthenticated()" />  
+	<security:intercept-url pattern="/**" access="permitAll" /> -->
+	<security:intercept-url pattern="/app.css" access="permitAll" />
+    <security:intercept-url pattern="/config.js" access="permitAll" />
+    <security:intercept-url pattern="/types.js" access="permitAll" />
+    <security:intercept-url pattern="/login.html" access="permitAll" />
+    <security:intercept-url pattern="/pages/login/**" access="permitAll" />
+    <security:intercept-url pattern="/securityservice.json" access="permitAll" />
+    <security:intercept-url pattern="/j_spring_security_check" access="permitAll" />
+    <security:intercept-url pattern="/*.upload" access="isAuthenticated()" />
+    <security:intercept-url pattern="/*.download" access="isAuthenticated()" /> 
+    <security:intercept-url pattern="/index.html" access="isAuthenticated()" /> 
+    <security:intercept-url pattern="/" access="isAuthenticated()" /> 
+    <security:intercept-url pattern="/pages/**" access="isAuthenticated()" /> 
+    <security:intercept-url pattern="/*.json" access="isAuthenticated()" /> 
+    <security:intercept-url pattern="/*/*.json" access="isAuthenticated()" />  
 <!-- causes SMD to be redirect
-    <intercept-url pattern="/**" access="isAuthenticated()" /> 			
-    <logout /> -->
-  </http>
+    <security:intercept-url pattern="/**" access="isAuthenticated()" /> 			
+    <security:logout /> -->
+  </security:http>
 
-<beans:bean id="WMSecAuthFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
-	<beans:property name="authenticationSuccessHandler" ref="successHandler" />
-	<beans:property name="authenticationManager" ref="authenticationManagerDemo" />
-	<beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
-</beans:bean>
+<bean id="WMSecAuthFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+	<property name="authenticationSuccessHandler" ref="successHandler" />
+	<property name="authenticationManager" ref="authenticationManagerDemo" />
+	<property name="filterProcessesUrl" value="/j_spring_security_check" />
+</bean>
 
-<beans:bean id="WMSecAuthEntryPoint"  class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
- <beans:property name="loginFormUrl" value="/login.html"/>
-</beans:bean>	
+<bean id="WMSecAuthEntryPoint"  class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+ <property name="loginFormUrl" value="/login.html"/>
+</bean>	
 	
-<beans:bean id="successHandler" class="com.wavemaker.runtime.security.WMAuthenticationSuccessHandler" >
-</beans:bean>              
+<bean id="successHandler" class="com.wavemaker.runtime.security.WMAuthenticationSuccessHandler" >
+</bean>              
   
   <!--
     Usernames/Passwords are
@@ -57,28 +57,28 @@ This is a Studio Managed File. If you customize this file by hand, use of Studio
         manager/manager
         user/user
     --> 
-    <authentication-manager alias="authenticationManagerDemo">
-        <authentication-provider>
-            <password-encoder hash="md5"/>
-            <user-service>
-                <user name="admin" password="21232f297a57a5a743894a0e4a801fc3" authorities="admin, manager,user" />
-                <user name="manager" password="1d0258c2440a8d19e716292b231e3190" authorities="manager,user" />
-                <user name="user" password="ee11cbb19052e40b07aac0ca060c23ee" authorities="user" />
-            </user-service>
-        </authentication-provider>
-    </authentication-manager>
+    <security:authentication-manager alias="authenticationManagerDemo">
+        <security:authentication-provider>
+            <security:password-encoder hash="md5"/>
+            <security:user-service>
+                <security:user name="admin" password="21232f297a57a5a743894a0e4a801fc3" authorities="admin, manager,user" />
+                <security:user name="manager" password="1d0258c2440a8d19e716292b231e3190" authorities="manager,user" />
+                <security:user name="user" password="ee11cbb19052e40b07aac0ca060c23ee" authorities="user" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
 
-	<authentication-manager alias="authenticationManagerDB">
-		<authentication-provider user-service-ref = "jdbcDaoImpl">
-			<!--password-encoder hash="md5"/-->
-		</authentication-provider>
-	</authentication-manager>
+	<security:authentication-manager alias="authenticationManagerDB">
+		<security:authentication-provider user-service-ref = "jdbcDaoImpl">
+			<security:password-encoder hash="md5"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
 
-	<beans:bean id = "jdbcDaoImpl"  class = "com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
-		<beans:property name = "dataSource" ref = "mytestdbDataSource" />
-		<beans:property name = "usersByUsernameQuery" value = "SELECT userid, password, 1, username FROM user WHERE username = ?" />
-		<beans:property name = "authoritiesByUsernameQuery" value = "select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
-	</beans:bean>
+	<bean id = "jdbcDaoImpl"  class = "com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
+		<property name = "dataSource" ref = "mytestdbDataSource" />
+		<property name = "usersByUsernameQuery" value = "SELECT userid, password, 1, username FROM user WHERE username = ?" />
+		<property name = "authoritiesByUsernameQuery" value = "select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
+	</bean>
     
                           
-</beans:beans> 
+</beans> 
