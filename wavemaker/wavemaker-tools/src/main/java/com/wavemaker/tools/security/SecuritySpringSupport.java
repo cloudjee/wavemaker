@@ -89,7 +89,7 @@ public class SecuritySpringSupport {
 
     private static final String DATA_SOURCE_PROPERTY = "dataSource";
 
-    private static final String DEFAULT_DATA_SOURCE_BEAN_ID = "jdbcDataSource";
+    private static final String DEFAULT_DATA_SOURCE_BEAN_ID = "dummyDataSource";
 
     private static final String USERS_BY_USERNAME_QUERY_PROPERTY = "usersByUsernameQuery";
 
@@ -156,9 +156,9 @@ public class SecuritySpringSupport {
     private static final String OBJECT_DEFINITION_SOURCE_PREFIX = "\n" + SPACES_16 + "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON\n" + SPACES_16
         + "PATTERN_TYPE_APACHE_ANT\n";
 
-    private static final String IS_AUTHENTICATED_ANONYMOUSLY = "permitAll";
+    public static final String IS_AUTHENTICATED_ANONYMOUSLY = "permitAll";
 
-    private static final String IS_AUTHENTICATED_FULLY = "isAuthenticated()";
+    public static final String IS_AUTHENTICATED_FULLY = "isAuthenticated()";
 
     private static final String UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX = "\n" + SPACES_12;
 
@@ -220,28 +220,21 @@ public class SecuritySpringSupport {
     }
 
     static void setObjectDefinitionSource(Beans beans, Map<String, List<String>> urlMap) {
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        Property property = bean.getProperty(OBJECT_DEFINITION_SOURCE_PROPERTY);
-        StringBuilder objectDefSource = new StringBuilder();
-        objectDefSource.append(OBJECT_DEFINITION_SOURCE_PREFIX);
         for (String url : urlMap.keySet()) {
-            objectDefSource.append(SPACES_16);
-            objectDefSource.append(url);
-            objectDefSource.append("=");
+            String access = "";
+            Http.InterceptUrl iurl = new Http.InterceptUrl();
             List<String> authzList = urlMap.get(url);
             if (authzList.size() > 0) {
-                objectDefSource.append(authzList.get(0));
+                access = authzList.get(0);
                 for (int i = 1; i < authzList.size(); i++) {
-                    objectDefSource.append(",");
-                    objectDefSource.append(authzList.get(i));
+                    access = access + ",";
+                    access = access + authzList.get(i);
                 }
+                iurl.setPattern(url);
+                iurl.setAccess(access);
+                SecurityXmlSupport.setInterceptUrl(beans, iurl);
             }
-            objectDefSource.append("\n");
         }
-        objectDefSource.append(SPACES_12);
-        List<String> newContent = new ArrayList<String>();
-        newContent.add(objectDefSource.toString());
-        property.getValueElement().setContent(newContent);
     }
 
     static void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
@@ -381,15 +374,6 @@ public class SecuritySpringSupport {
         } else {
             throw new ConfigurationException("Unable to get data source type!");
         }
-    }
-
-    static void updateAuthProviderUserDetailsService(Beans beans, String refId) {
-        setAuthManagerProviderBeanId(beans, DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
-        Bean bean = beans.getBeanById(DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
-        Property property = bean.getProperty(USER_DETAILS_SERVICE_PROPERTY);
-        Ref ref = new Ref();
-        ref.setBean(refId);
-        property.setRefElement(ref);
     }
 
     @Deprecated
@@ -534,8 +518,6 @@ public class SecuritySpringSupport {
             setPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PROPERTY,
                 buildAuthoritiesByUsernameQuery(tableName, unameColumnName, uidColumnName, roleColumnName));
         }
-
-        //setPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PARAM_TYPE_PROPERTY, uidColumnSqlType);
     }
 
     static void resetJdbcDaoImpl(Beans beans) {
@@ -736,12 +718,14 @@ public class SecuritySpringSupport {
         Property rolesProperty = securityServiceBean.getProperty(ROLES);
         com.wavemaker.tools.spring.beans.List list = rolesProperty.getList();
         List<Object> refElements = new ArrayList<Object>();
-        for (String role : roles) {
-            Value v = new Value();
-            List<String> content = new ArrayList<String>();
-            content.add(role);
-            v.setContent(content);
-            refElements.add(v);
+        if (roles != null) {
+            for (String role : roles) {
+                Value v = new Value();
+                List<String> content = new ArrayList<String>();
+                content.add(role);
+                v.setContent(content);
+                refElements.add(v);
+            }
         }
         list.setRefElement(refElements);
     }

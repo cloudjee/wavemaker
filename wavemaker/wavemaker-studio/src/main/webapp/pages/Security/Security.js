@@ -943,15 +943,15 @@ dojo.declare(
                     dataValue : ""
                 }, {
                     name : this.getDictionaryItem("SERVICE_ANONYMOUS_USERS"),
-                    dataValue : "IS_AUTHENTICATED_ANONYMOUSLY"
+					dataValue : "permitAll"
                 }, {
                     name : this.getDictionaryItem("SERVICE_AUTHENTICATED_USERS"),
-                    dataValue : "IS_AUTHENTICATED_FULLY"
+					dataValue : "isAnonymous()"
                 } ];
-                for ( var i = 0; i < d.length; i++) {
+				for ( var i = 0; i < d.length; i++) {
                     data.push({
                         name : d[i],
-                        dataValue : "ROLE_" + d[i]
+                        dataValue : "hasRole('" + d[i] + "')"
                     });
                 }
                 this.varRoleList.setData(data);

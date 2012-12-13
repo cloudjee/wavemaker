@@ -85,20 +85,40 @@
 	<security:authentication-manager alias="authenticationManagerDB">
 		<security:authentication-provider
 			user-service-ref="jdbcDaoImpl">
-			<security:password-encoder hash="md5" />
+			<!--security:password-encoder hash="md5" /-->
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<bean id="jdbcDaoImpl" class="com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
-		<property name="dataSource" ref="dummyDataSource" />
-		<property name="usersByUsernameQuery"
-			value="SELECT userid, password, 1, username FROM user WHERE username = ?" />
-		<property name="authoritiesByUsernameQuery"
-			value="select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid =?" />
-	</bean>
+	<bean id="jdbcDaoImpl"
+        class="com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
+        <property name="dataSource"><ref bean="dummyDataSource"/></property>
+        <property name="usersByUsernameQuery">
+            <value>SELECT first_name, last_name, 1 FROM employee WHERE first_name = ?</value>
+        </property>
+        <property name="authoritiesByUsernameQuery">
+            <value>SELECT first_name, "DEFAULT_NO_ROLES" FROM employee WHERE first_name = ?</value>
+        </property>
+    </bean>
 
 	<bean id="dummyDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 		lazy-init="true" />
+
+	<!-- Setup Security Service -->
+    <bean id="securityService"
+        class="com.wavemaker.runtime.security.SecurityService"
+        scope="singleton">
+        <property name="rolePrefix">
+            <value>ROLE_</value>
+        </property>
+        <property name="noRolesMarkerRole">
+            <value>DEFAULT_NO_ROLES</value>
+        </property>
+        <!-- All the roles used in the system should be listed here. -->
+        <property name="roles">
+            <list>
+            </list>
+        </property>
+    </bean>
 
 </beans> 

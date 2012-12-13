@@ -45,7 +45,7 @@ public class SecurityService {
 
     static final Logger logger = Logger.getLogger(SecurityService.class);
 
-    private AuthenticationManager authenticationManager;
+    //private AuthenticationManager authenticationManager;
 
     private String rolePrefix;
 
@@ -69,7 +69,7 @@ public class SecurityService {
      * @throws InvalidCredentialsException If the supplied credentials are invalid.
      * @throws SecurityException if authentication failed for some reasons other than invalid credentials.
      */
-    public void authenticate(String username, String password) throws InvalidCredentialsException, SecurityException {
+    /*public void authenticate(String username, String password) throws InvalidCredentialsException, SecurityException {
         Authentication auth = null;
         try {
             auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -79,7 +79,7 @@ public class SecurityService {
             throw new SecurityException(e);
         }
         SecurityContextHolder.getContext().setAuthentication(auth);
-    }
+    }*/
 
     /**
      * Logs the current principal out. The principal is the one in the security context.
@@ -233,13 +233,13 @@ public class SecurityService {
         return true;
     }
 
-    public AuthenticationManager getAuthenticationManager() {
+    /*public AuthenticationManager getAuthenticationManager() {
         return this.authenticationManager;
     }
 
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-    }
+    }*/
 
     public String getRolePrefix() {
         return this.rolePrefix;
