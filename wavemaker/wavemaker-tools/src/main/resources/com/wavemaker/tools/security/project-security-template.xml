@@ -68,8 +68,17 @@
 	<bean id="successHandler"
 		class="com.wavemaker.runtime.security.WMAuthenticationSuccessHandler">
 	</bean>
+	
+	 <!-- This authentication-manager exists to populate the default authentiation-manager id. It is not used  -->
+    <security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="dummy" password="dummy" authorities="dummy" />
+			</security:user-service>	
+		</security:authentication-provider>	
+	</security:authentication-manager>
 
-	<security:authentication-manager alias="authenticationManagerDemo">
+	<security:authentication-manager id="authenticationManagerDemo" alias="authenticationManagerDemo">
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="admin" password="admim"
@@ -82,7 +91,7 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<security:authentication-manager alias="authenticationManagerDB">
+	<security:authentication-manager id="authenticationManagerDB" alias="authenticationManagerDB">
 		<security:authentication-provider
 			user-service-ref="jdbcDaoImpl">
 			<!--security:password-encoder hash="md5" /-->
