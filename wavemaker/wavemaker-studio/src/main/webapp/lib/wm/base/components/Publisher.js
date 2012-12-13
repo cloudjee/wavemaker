@@ -90,13 +90,20 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	undeploy: function() {
 		studio.undeployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, this.removeSource);
 	},
-	_deploy: function(services) {
+	_deploy: function(services, components) {
 		wm.Property.deploy = true;
 		try {
             // save the composite and publisher's current state
    	        studio.project.savePage(dojo.hitch(this, function() {
-    		    var json = this.getComponentJson();
-    		    studio.deployComponent(this.publishName, this.namespace + "." + this.publishName, this.displayName || this.publishName, this.group, json, services, this._wmPictureSource, this._wmHtmlSource);
+    		    var json = this.getComponentJson(components);
+    		    studio.deployComponent( this.publishName,
+                                        this.namespace + "." + this.publishName,
+                                        this.displayName || this.publishName,
+                                        this.group,
+                                        json,
+                                        services,
+                                        this._wmPictureSource,
+                                        this._wmHtmlSource);
     		}));
 		} finally {
 			wm.Property.deploy = false;
@@ -121,7 +128,9 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 							  owner: d,
 							  parent: d.innerContainerWidget,
 							  width: "100%",
-							  caption: "Pick server-side services to include in Composite"
+							  caption: "Pick app-level components and services to include in Composite",
+                              singleLine: false,
+                              height: "30px"
 							  });
 
 				d.checkboxSet = new wm.CheckboxSet({owner: d,
@@ -152,15 +161,34 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 			}
 			var data = [];
+            var skipServices = ["resourceFileService", "securityService"]
 			wm.services.forEach(function(s) {
-				if (!s.isClientService && !s.clientHide && s.name != "resourceFileService") {
-					data.push(s.name);
+				if (!s.isClientService && !s.clientHide && dojo.indexOf(skipServices,s.name) == -1) {
+					data.push(s.type + ": " + s.name);
 				}
 			});
+
+            wm.forEachProperty(studio.application.components, function(inValue, inName) {
+                if (inName && wm.isInstanceType(inValue, [wm.XhrDefinition, wm.TypeDefinition, wm.Dialog])) {
+                    data.push(inValue.publishClass.replace(/^.*\./,"") + ": " + inName);
+                }
+            });
+
 			if (data.length) {
     			d.checkboxSet.setOptions(data);
     			d.okButton.onclick = dojo.hitch(this, function() {
-    				this._deploy(d.checkboxSet.getDataValue());
+    				var values = d.checkboxSet.getDataValue();
+                    var serverComponents = [];
+                    var clientComponents = [];
+                    for (var i = 0; i < values.length; i++) {
+                        values[i] = values[i].replace(/^.*\: /,"");
+                        if (wm.services.byName[values[i]]) {
+                            serverComponents.push(values[i]);
+                        } else {
+                            clientComponents.push(studio.application.components[values[i]]);
+                        }
+                    }
+                    this._deploy(serverComponents,clientComponents);
     				d.hide();
     			});
     			d.show();
@@ -168,7 +196,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     		    this._deploy([]);
     		}
 	},
-    getComponentJson: function() {
+    getComponentJson: function(applevelComponents) {
 	if (!this.publishName || !studio.page)
 	    return;
 	//
@@ -176,14 +204,14 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	this.adjustAllPictures();
 	this.adjustAllHtmlWidgets();
 	studio._isPublishComponent = true;
-	var pageComponents = studio.page.writeComponents(sourcer_tab);
 
-    // add in a few app level components such as TypeDefinitions that we will likely need
-    wm.forEachProperty(studio.application.$, function(inValue, inName) {
-        if (inValue instanceof wm.TypeDefinition) {
-            pageComponents.push(inValue.write("\t"));
-        }
+    var componentArray = [];
+    dojo.forEach(applevelComponents, function(c) {
+        componentArray.push(c.write("\t"));
     });
+
+    var pageComponents = studio.page.writeComponents(sourcer_tab);
+    componentArray = pageComponents.concat(componentArray);
 
 	var root = studio.page.root;
 	var rootWidgets = root.writeComponents(sourcer_tab);
@@ -191,7 +219,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	this.restoreAllPictures();
 	this.restoreAllHtmlWidgets();
 
-	var components = pageComponents.concat(rootWidgets).join(",\n");
+	var components = componentArray.concat(rootWidgets).join(",\n");
 
 
 	var widgets = klass + ".components = {" + sourcer_nl + components /*source_body(studio.page)*/ + "}";
@@ -220,7 +248,11 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     	rootProps.height = this.height;
     	wm.forEachProperty(rootProps, function(inValue, inName) {
             if (typeof inValue == "string") {
-                    inValue = "\"" + inValue + "\"";
+                inValue = "\"" + inValue + "\"";
+            } else if (inValue instanceof Date) {
+                inValue = inValue.getTime();
+            } else if (typeof inValue == "object" && inValue instanceof wm.Component == false) {
+                inValue = dojo.toJson(inValue,true);
             }
      	    js.unshift("  " + inName + ": " + inValue + ",");
     	});

@@ -1579,25 +1579,25 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    var newParent = this.parent = inParent;
 
 	    // Tricky new addition: if the parent has a containerWidget AND the parent OWNS that containerWidget, then switch parents!
-	    if (inParent && inParent.containerWidget && inParent.containerWidget.owner == inParent)
-		newParent = this.parent = inParent.containerWidget;
-
+	    if (inParent && inParent.containerWidget && inParent.containerWidget.owner == inParent && !wm.isInstanceType(inParent.containerWidget.owner, wm.Composite)) {
+		   newParent = this.parent = inParent.containerWidget;
+        }
 	    // If the new parent is not the same as the old parent, remove the widget from the old parent
 	    // and remove the control from the old parent (Note: lookup difference between widget and control)
 	    if (oldParent && oldParent != newParent) {
-		oldParent.removeWidget(this);
-		// BC: we still have non-container parents (e.g. wm.Dialog)
-		if (oldParent.removeControl)
-		    oldParent.removeControl(this);
+    		oldParent.removeWidget(this);
+    		// BC: we still have non-container parents (e.g. wm.Dialog)
+    		if (oldParent.removeControl) {
+    		    oldParent.removeControl(this);
+            }
 	    }
 
-	    if (!this._cupdating)
-	    {
-		if (newParent) {
-		    this.appendDOMNode(newParent);
-		} else if (this.domNode && this.domNode.parentNode) {
-		    this.domNode.parentNode.removeChild(this.domNode);
-		}
+	    if (!this._cupdating) {
+    		if (newParent) {
+    		    this.appendDOMNode(newParent);
+    		} else if (this.domNode && this.domNode.parentNode) {
+    		    this.domNode.parentNode.removeChild(this.domNode);
+    		}
 	    }
 
 	    // If there is a new parent, add this component to its widgets and controls
@@ -1613,12 +1613,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	      this.parentNode.appendChild(this.domNode);
 	      }
 	    */
-	    if (newParent && oldParent)
-		dojo.publish("wmwidget-parentChange", [oldParent, newParent, this]);
+	    if (newParent && oldParent) {
+    		dojo.publish("wmwidget-parentChange", [oldParent, newParent, this]);
+        }
 	    if ((this._isDesignLoaded === undefined ? this.isDesignLoaded() : this._isDesignLoaded) && this.owner == studio.page && !this.owner._loadingPage && inParent instanceof wm.Container) {
-		wm.job(inParent.getRuntimeId() + ".designResize", 50, function() {
-		    inParent.designResizeForNewChild();
-		});
+    		wm.job(inParent.getRuntimeId() + ".designResize", 50, function() {
+    		    inParent.designResizeForNewChild();
+    		});
 	    }
 	},
 	appendDOMNode: function(inParent){
