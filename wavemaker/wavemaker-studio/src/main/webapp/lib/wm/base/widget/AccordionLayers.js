@@ -21,13 +21,13 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
     layersType: 'Accordion',
     captionHeight: 26, // used by decorator
     dndTargetName: "",
-
+    arrowsOnLeft: false,
     setCaptionHeight: function(inHeight) {
 	this.captionHeight = inHeight;
         for (var i = 0; i < this.layers.length; i++) {
 	    this.layers[i].header.setHeight(inHeight + "px");
 	}
-	
+
     },
     setBorderColor: function(inColor) {
 	this.inherited(arguments);

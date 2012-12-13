@@ -95,7 +95,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 	},
 	applyLayerCaption: function(inLayer) {
         if (this.decoree.arrowsOnLeft) {
-           inLayer.header.setCaption("<span class='accordionOnLeftArrowNode'></span>" + inLayer.caption );
+           inLayer.header.setCaption("<span class='accordionArrowNode accordionOnLeftArrowNode'></span>" + inLayer.caption );
         } else {
 	       inLayer.header.setCaption(inLayer.caption + "<span class='accordionArrowNode'></span>");
        }

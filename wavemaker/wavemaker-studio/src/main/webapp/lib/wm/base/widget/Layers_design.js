@@ -37,8 +37,8 @@ wm.Object.extendSchema(wm.Layer, {
     /* Events/custom methods group */
     onDeactivate: {group:"events",order: 1},
     onShow: {advanced:0},
-    onCloseOrDestroy:     {group:"events",advanced:1},
-    customCloseOrDestroy: {group:"custommethods",advanced:1},
+    onCloseOrDestroy:     {group:"events",advanced:1, ignoreHint: "Only available for Layers in a TabLayers"},
+    customCloseOrDestroy: {group:"custommethods",advanced:1, ignoreHint: "Only available for Layers in a TabLayers"},
 
     /* Ignored group */
     wrapInPanel: {ignore:1},
@@ -103,6 +103,8 @@ wm.Layer.extend({
         props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
         props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
         props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
+        props.customCloseOrDestroy.ignoretmp = (this.parent.layersType != 'Tabs');
+        props.onCloseOrDestroy.ignoretmp = (this.parent.layersType != 'Tabs');
         props.caption.requiredGroup = (dojo.indexOf(["Tabs","Wizard","Breadcrumb"], this.parent.layersType) != -1);
         return props;
     }
@@ -138,10 +140,11 @@ wm.Object.extendSchema(wm.Layers, {
     /* Events/custom methods group */
     oncanchange: {advanced:1, order: 100},
     onchange: {order: 50},
-    onCloseOrDestroy:     {advanced:1, order: 150},
-    customCloseOrDestroy: {advanced:1},
+    onCloseOrDestroy:     {ignore:1,advanced:1, order: 150},
+    customCloseOrDestroy: {ignore:1,advanced:1},
 
     /* Ignored group */
+    dndTargetName:  {ignore:1},
     lock: {ignore: 1},
     freeze: {ignore: 1},
     box: {ignore: 1},
@@ -337,7 +340,13 @@ wm.AccordionLayers.extend({
     themeable: true,
     themeableProps: ["border","borderColor","layerBorder","captionHeight"],
     themeableStyles: [{name: "wm.AccordionLayers-Open_Image", displayName: "Open Arrow Icon"},
-              {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
+              {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}],
+    set_arrowsOnLeft: function(inValue) {
+        this.arrowsOnLeft = Boolean(inValue);
+        dojo.forEach(this.layers, function(l) {
+            l.setCaption(l.caption);
+        });
+    }
 });
 wm.Object.extendSchema(wm.AccordionLayers, {
     /* Display group; scrolling subgroup */
@@ -349,19 +358,23 @@ wm.Object.extendSchema(wm.AccordionLayers, {
 
     /* Display group; layout subgroup */
     captionHeight: {group: "widgetName", subgroup: "layout"},
+    arrowsOnLeft:  {group: "widgetName", subgroup: "layout"},
 
     /* Ignored group */
     transition: {ignore: true},
     captionBorder: {ignore: 1},
 });
 wm.Object.extendSchema(wm.TabLayers, {
-    dndTargetName:  {group: "widgetName", subgroup: "behavior", order: 500, advanced: 1},
+    dndTargetName:  {ignore:0,group: "widgetName", subgroup: "behavior", order: 500, advanced: 1},
     conditionalTabButtons: {group: "widgetName", subgroup: "behavior"},
     verticalButtons: {group: "widgetName", subgroup: "layout"},
     layoutKind: { writeonly: 1},
     mobileHeaderHeight: {ignore:0},
     headerHeight: {ignore: 0},
-    headerWidth: {ignore: 0}
+    headerWidth: {ignore: 0},
+    onCloseOrDestroy:     {ignore:0},
+    customCloseOrDestroy: {ignore:0}
+
 });
 
 wm.Object.extendSchema(wm.WizardLayers, {

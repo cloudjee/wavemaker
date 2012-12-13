@@ -1365,11 +1365,11 @@ border-top-left-radius: 4px;
 border-top-right-radius: 4px;
 }
 .wm_coolblue .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
-display: block;
+display: inline-block;
 background-image: url(images/arrowRightLight.png);
 }
 .wm_coolblue .wmaccordion .accordionArrowNode {
-display: block;
+display: inline-block;
 background-image: url(images/comboArrowDownDark.png);
 }
 .wm_coolblue .wmaccordion .wmaccordion-content {

@@ -179,13 +179,13 @@ body.tundra .wm_template  div.wmheader,
 
 
     .wm_template .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
-        display: block;
+        display: inline-block;
         background-image: url(images/arrowRightDark.png); /* wm.AccordionLayers-Closed_Image */
      }
 
 
     .wm_template .wmaccordion .accordionArrowNode {
-        display: block;
+        display: inline-block;
         background-image: url(images/comboArrowDownDark.png); /* wm.AccordionLayers-Open_Image */
      }
 

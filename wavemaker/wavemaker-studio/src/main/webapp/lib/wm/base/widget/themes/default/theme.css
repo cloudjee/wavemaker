@@ -949,9 +949,10 @@ display:block;
 .accordionArrowNode {
 float: right;
 }
-.accordionOnLeftArrowNode {
+div .accordionOnLeftArrowNode {
     position: relative;
     top: 4px;
+    float: none;
 }
 .accordionOnLeftArrowNode,
 .accordionArrowNode {
