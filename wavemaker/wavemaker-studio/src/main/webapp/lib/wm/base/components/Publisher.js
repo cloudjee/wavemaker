@@ -91,6 +91,9 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 		studio.undeployComponent(this.publishName, this.namespace, this.displayName || this.publishName, this.group, this.removeSource);
 	},
 	_deploy: function(services, components) {
+        this.serviceList = dojo.clone(services);
+        this.componentList = dojo.map(components, function(c) {return c.name;});
+
 		wm.Property.deploy = true;
 		try {
             // save the composite and publisher's current state
@@ -111,7 +114,14 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	},
 	deploy: function() {
 		var d = studio.publishComponentDialog;
+        var dataSet = studio.publishComponentDialogDataSet;
 		if (!d) {
+            dataSet = studio.publishComponentDialogDataSet = new wm.Variable({
+                name: "publishComponentDialogDataSet",
+                type: "EntryData",
+                isList: true,
+                owner: studio
+            });
 			d = studio.publishComponentDialog = new wm.Dialog({
 				_classes: {domNode: ["studiodialog"]},
 				owner: studio,
@@ -138,8 +148,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 													editorBorder:0,
 													width: "100%",
 													height: "100%",
-													dataField: "dataValue",
-													displayField: "dataValue"});
+													dataField: "name",
+													displayExpression: "${dataValue}.replace(/^.*\\./,'') + ': ' + ${name}"});
 
 
 
@@ -164,24 +174,25 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
             var skipServices = ["resourceFileService", "securityService"]
 			wm.services.forEach(function(s) {
 				if (!s.isClientService && !s.clientHide && dojo.indexOf(skipServices,s.name) == -1) {
-					data.push(s.type + ": " + s.name);
+					data.push({dataValue: s.type, name: s.name});
 				}
 			});
 
             wm.forEachProperty(studio.application.components, function(inValue, inName) {
                 if (inName && wm.isInstanceType(inValue, [wm.XhrDefinition, wm.TypeDefinition, wm.Dialog])) {
-                    data.push(inValue.publishClass.replace(/^.*\./,"") + ": " + inName);
+                    data.push({dataValue: inValue.publishClass, name: inName});
                 }
             });
 
 			if (data.length) {
-    			d.checkboxSet.setOptions(data);
+                dataSet.setData(data);
+    			d.checkboxSet.setDataSet(dataSet);
+                d.checkboxSet.setDataValue((this.componentList || []).concat(this.serviceList || []));
     			d.okButton.onclick = dojo.hitch(this, function() {
     				var values = d.checkboxSet.getDataValue();
                     var serverComponents = [];
                     var clientComponents = [];
                     for (var i = 0; i < values.length; i++) {
-                        values[i] = values[i].replace(/^.*\: /,"");
                         if (wm.services.byName[values[i]]) {
                             serverComponents.push(values[i]);
                         } else {
@@ -375,7 +386,9 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 wm.Object.extendSchema(wm.CompositePublisher, {
 	download: {operation:1, group: "widgetName", order: 150},
 	index: {group: "widgetName", type: "Number", order:80},
-    parentClass: {group: "widgetName", type: "String", order:81}
+    parentClass: {group: "widgetName", type: "String", order:81},
+    serviceList: {writeonly:1},
+    componentList: {writeonly:1}
 });
 /*
 wm.registerPackage([bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png"]);
