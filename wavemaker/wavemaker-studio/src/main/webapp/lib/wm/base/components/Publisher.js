@@ -130,7 +130,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 							  width: "100%",
 							  caption: "Pick app-level components and services to include in Composite",
                               singleLine: false,
-                              height: "30px"
+                              height: "38px"
 							  });
 
 				d.checkboxSet = new wm.CheckboxSet({owner: d,
