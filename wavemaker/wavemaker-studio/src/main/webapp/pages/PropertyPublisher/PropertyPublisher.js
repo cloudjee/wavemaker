@@ -70,7 +70,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 				hasChildren: true
 			});
 			var fieldsRoot = this.fieldsRoot = new wm.TreeCheckNode(node, {
-				content: "All Data",
+				content: this.getNodeCaption("All Data", this.propComponentList[this.inspected.id] ? this.propComponentList[this.inspected.id].name : ""),
 				data: "",
 				closed: true,
 				hasChildren: false,
@@ -128,12 +128,14 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	},
 	generateFieldProps: function(inNode, inSchema) {
 	   wm.forEachProperty(inSchema, dojo.hitch(this, function(inPropDef, inPropName) {
+            var propertyComponent = this.propComponentList[this.inspected.id + "." + inPropName];
+            if (propertyComponent && !propertyComponent.isDataField) propertyComponent = undefined;
     	   new wm.TreeCheckNode(inNode, {
-    				content:inPropName,
+    				content:this.getNodeCaption(inPropName, propertyComponent ? propertyComponent.name : ""),
     				data: inPropName,
     				closed: true,
     				hasChildren: false,
-    				checked: this.propComponentList[this.inspected.id + "." + inPropName] && this.propComponentList[this.inspected.id + "." + inPropName].isDataField
+    				checked: Booleaan(propertyComponent)
     			});
 
 	   }));
@@ -141,12 +143,14 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	},
 	generateProps: function(inNode, inProps) {
 		dojo.forEach(inProps, dojo.hitch(this, function(prop) {
+            var propertyComponent = this.propComponentList[this.inspected.id + "." + prop.name];
+            if (propertyComponent && propertyComponent.isDataField) propertyComponent = undefined;
 			new wm.TreeCheckNode(inNode, {
-				content: prop.displayName || prop.name,
+				content: this.getNodeCaption(prop.displayName || prop.name, propertyComponent ? propertyComponent.name : ""),
 				data: prop.name,
 				closed: true,
 				hasChildren: false,
-				checked: this.propComponentList[this.inspected.id + "." + prop.name] && !this.propComponentList[this.inspected.id + "." + prop.name].isDataField
+				checked: Boolean(propertyComponent)
 			});
 		}));
 	},
@@ -214,6 +218,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 			if (this.propComponentList[property]) {
 				this.propComponentList[property].destroy();
 				delete this.propComponentList[property];
+                inNode.setContent(inNode.data);
 			}
 			if (propDef && propDef.publishWithProps) {
 				dojo.forEach(propDef.publishWithProps, function(propName) {
@@ -227,6 +232,33 @@ dojo.declare("PropertyPublisher", wm.Page, {
 		}
 		this.onChange();
 	},
+    propertySelect: function(inSender, inNode) {
+        if (inNode.getChecked && inNode.getChecked()) {
+            var propertyId = inNode.data ? this.inspected.getId() + "." + inNode.data : this.inspected.getId();
+            var propertyComponent = this.propComponentList[propertyId];
+            var name;
+            if (propertyComponent) {
+                name = propertyComponent.name;
+            } else {
+                name = this.calcName(inNode.data);
+                if (!inNode.data) name += "Data";
+            }
+            app.prompt("Pick a name for this property (what the user using your page/composite will see)", name, dojo.hitch(this,"onPropertyRename", inNode));
+        }
+    },
+    onPropertyRename: function(inNode, inValue) {
+        var propertyId = inNode.data ? this.inspected.getId() + "." + inNode.data : this.inspected.getId();
+        var propertyComponent = this.propComponentList[propertyId];
+        propertyComponent.set_name(inValue);
+        inNode.setContent(this.getNodeCaption(inNode.data, propertyComponent.name));
+    },
+    getNodeCaption: function(inFieldName, inPropertyName) {
+        if (inPropertyName) {
+            return inFieldName + " <i>(" + inPropertyName + ")</i>";
+        } else {
+            return inFieldName;
+        }
+    },
 	onChange: function() {
 		studio.refreshDesignTrees();
 		studio.reinspect(true);
