@@ -32,7 +32,7 @@ wm.load = function(inFile, allowCache,async) {
 // And you dont have to put this in try catch block either since that is taken care of.
 wm.dojoScriptLoader = function(uri){
 	try{
-	        dojo._loadUri(uri);
+	   dojo._loadUri(uri);
 	}catch(e){
 		console.error(e);
 		return false; // Boolean
@@ -79,6 +79,15 @@ dojo.declare("wm.PageLoader", wm.Component, {
     getPageCtor: function() {
         return dojo.getObject(this.className || "");
     },
+    testForSecurityErrrors: function(path) {
+        if (app.isSecurityEnabled) {
+            var result = dojo._getText(path);
+            if (result.match(/^\<\!DOCTYPE/) && result.match(/new\s*wm\.Application\(/)) {
+                this.isSecurityError = true;
+                throw "SecurityError";
+            }
+        }
+    },
     loadCombinedFiles: function(inName, inPath) {
         var randpath = inPath + ".a.js" + this.randomParam;
         delete dojo._loadedUrls[randpath];
@@ -87,6 +96,8 @@ dojo.declare("wm.PageLoader", wm.Component, {
         if (ctor) {
             this.cssLoader.setCss(ctor.prototype._cssText);
             this.htmlLoader.setHtml(ctor.prototype._htmlText);
+        } else {
+            this.testForSecurityErrrors(randpath);
         }
         return ctor;
     },
@@ -102,6 +113,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
             ctor = dojo.getObject(inName);
         }
         if (!ctor) {
+            this.testForSecurityErrrors(randpath);
             if (!wm.disablePageLoadingToast) app.toastError(wm.getDictionaryItem("wm.Page.PAGE_ERRORS", {
                 name: inName
             }));
@@ -179,8 +191,13 @@ dojo.declare("wm.PageLoader", wm.Component, {
                 this.onError("Page not loaded:" + inClassName); // if you localize onError, then developers can't do tests on the return value
             }
         } catch (e) {
-            console.error("Page not found:", inClassName);
-            this.onError(e);
+            if (this.isSecurityError) {
+                delete this.isSecurityError;
+                app.onSessionExpiration();
+            } else {
+                console.error("Page not found:", inClassName);
+                this.onError(e);
+            }
         }
 
     },
