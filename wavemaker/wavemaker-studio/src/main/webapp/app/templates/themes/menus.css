@@ -16,18 +16,18 @@
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu
    *
-   * DESCRIPTION: Sets styles for menu.  Some styles (font-size) are going to be shared across all 
+   * DESCRIPTION: Sets styles for menu.  Some styles (font-size) are going to be shared across all
    *              panel types
    *
    ************************************************************************************************/
 
-#studio_designer.wm_template .dojoMenu, 
+#studio_designer.wm_template .dojoMenu,
 #studio_themesPage_themeDesigner_demoPanelTabLayers_client .dojoMenu {
     background-image: none !important;
 }
 
 .wm_template .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
-   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Right_Image */    
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Right_Image */
     background-position: 0% 50% !important;
 }
 
@@ -38,7 +38,7 @@
     padding-right: 25px !important;
 }
 
-@media screen { /* Document-Level */ 
+@media screen { /* Document-Level */
     .wm_template .dojoMenu .dijitMenu,
     .wm_template .dojoMenu .dijitMenuBar {
 	/* Document-ClickablesDefault-Font */
@@ -49,7 +49,7 @@
 	background-color: transparent;
 	background-image: none;
     }
-    
+
     .wm_template .dojoMenu.ClickableDojoMenu {
 	/* Document-ClickablesDefault-Background */
 	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
@@ -91,7 +91,7 @@
     }
 }
 
-@media screen { /* MainContent-Level */ 
+@media screen { /* MainContent-Level */
     .wm_template .MainContent .dojoMenu .dijitMenu,
     .wm_template .MainContent .dojoMenu .dijitMenuBar {
 	/* MainContent-ClickablesDefault-Font */
@@ -102,9 +102,9 @@
 	background-color: transparent;
 	background-image: none;
 }
-   
+
     .wm_template .MainContent .dojoMenu.ClickableDojoMenu {
-	
+
 	/* MainContent-ClickablesDefault-Background */
 	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
@@ -140,7 +140,7 @@
 }
 
 
-@media screen { /* HeaderContent-Level */ 
+@media screen { /* HeaderContent-Level */
     .wm_template .HeaderContent .dojoMenu .dijitMenu,
     .wm_template .HeaderContent .dojoMenu .dijitMenuBar {
 	/* HeaderContent-ClickablesDefault-Font */
@@ -151,9 +151,9 @@
 	background-color: transparent;
 	background-image: none;
 }
-    
+
     .wm_template .HeaderContent .dojoMenu.ClickableDojoMenu {
-	
+
 	/* HeaderContent-ClickablesDefault-Background */
 	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
@@ -191,7 +191,7 @@
 
 
 
-@media screen { /* EmphasizedContent-Level */ 
+@media screen { /* EmphasizedContent-Level */
     .wm_template .EmphasizedContent .dojoMenu .dijitMenu,
     .wm_template .EmphasizedContent .dojoMenu .dijitMenuBar {
 	/* EmphasizedContent-ClickablesDefault-Font */
@@ -202,9 +202,9 @@
 	background-color: transparent;
 	background-image: none;
 }
-  
+
     .wm_template .EmphasizedContent .dojoMenu.ClickableDojoMenu {
-	
+
 	/* EmphasizedContent-ClickablesDefault-Background */
 	background-color: #444444; /* EmphasizedContent-ClickablesDefault-Background_Color */
 	background-image: url(images/repeatx/brightEdge1.png); /* EmphasizedContent-ClickablesDefault-Background_Image */
@@ -248,7 +248,7 @@
    *              the popup is always under body; the menubar itself we may update to work anywhere.
    *
    ************************************************************************************************/
-.wm_template .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_template .dijitMenuPopup .dijitMenuTable.dijitMenu.dijitReset,
 .wm_template .dijitPopup .dijitCalendarMonthLabel {
     /* Document-ClickablesDefault-Font */
     font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
@@ -297,7 +297,7 @@ body.wm_template div.dijitMenu .dijitCalendarMonthLabel {
     background-color: #444444; /* Tables-EvenRows-Background_Color */
 
     border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
-    border-bottom-style: solid;   
+    border-bottom-style: solid;
     border-bottom-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 }
 
@@ -312,7 +312,7 @@ body .wm_template div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
     /* Document-ClickablesHover-Background */
-    background-color: #333333; /* Document-ClickablesHover-Background_Color */    
+    background-color: #333333; /* Document-ClickablesHover-Background_Color */
 
     outline-width: 0;
 }
@@ -321,7 +321,7 @@ body .wm_template div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
  body.tundra.wm_template .dijitPopup ul.dijitMenu {
     border-width: 1px;
     border-style: solid;
-    border-color: black; 
+    border-color: black;
 
     -moz-box-shadow: 4px 4px 8px black; /* Floating-Shadow */
     -webkit-box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
