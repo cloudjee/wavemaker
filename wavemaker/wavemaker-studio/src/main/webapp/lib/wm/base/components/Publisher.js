@@ -204,7 +204,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     			});
     			d.show();
     		} else {
-    		    this._deploy([]);
+    		    this._deploy([],[]);
     		}
 	},
     getComponentJson: function(applevelComponents) {
