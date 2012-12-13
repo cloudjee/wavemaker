@@ -162,6 +162,8 @@ wm.Property.extend({
 					(operation ? ', operation:' + operation : '') +
                     (this.operationTarget ? ', operationTarget:"' + this.operationTarget + '"' : '') +
                     (this.property ? ', property: "' + this.property + '"': '') +
+                    (this.group ? ', group:"widgetName", subgroup:"' + this.group + '"': '') +
+                    (this.order && this.group ? ', order:' + this.order : '') +
 					(this.type && !operation ? ', type: "' + this.type + '"' : '')) +
 			'}' +
 		']';
@@ -179,6 +181,8 @@ wm.Object.extendSchema(wm.Property, {
     readonly: {group: "widgetName", order: 30},
     ignore: {group: "widgetName", order: 40},
     hidden: {group: "widgetName", order: 45},
+    group: {group: "widgetName", order: 46},
+    order: {group: "widgetName", order: 47, type: "number"},
     isDataField: {group: "widgetName", order: 50},
     operation: {group: "widgetName", order: 60},
     operationTarget: {group: "widgetName", order: 60},
