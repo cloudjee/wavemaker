@@ -1239,7 +1239,7 @@ background-repeat: no-repeat;
 outline-width: 0;
 }
 }
-.wm_wireframe .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_wireframe .dijitMenuPopup .dijitMenuTable.dijitMenu.dijitReset,
 .wm_wireframe .dijitPopup .dijitCalendarMonthLabel {
 font-family: Verdana;
 color: #000000;

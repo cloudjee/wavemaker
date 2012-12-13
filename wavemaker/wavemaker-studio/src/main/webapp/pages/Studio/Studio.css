@@ -112,22 +112,22 @@
 }
 
 /* Color/background for all context menus */
-table.studio_contextualMenu_CSS.dijitMenu,
-table.studio_contextualMenu_CSS .dijitMenuItem {
+.studio_contextualMenu_CSS.dijitMenu,
+.studio_contextualMenu_CSS .dijitMenuItem {
 	background-color: #6f798a;
 	color: #FFF;
 }
 
 /* Hover styling/selected style for all context menus */
-table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemHover,
-table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
+.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemHover,
+.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
   background-color: #586981;
 }
 
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled,
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled *,
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled td,
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled .dijitMenuItemLabel {
+.dj_ie .studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled,
+.dj_ie .studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled *,
+.dj_ie .studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled td,
+.dj_ie .studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled .dijitMenuItemLabel {
 	filter: alpha(opacity=100) !important;
 	color:  rgb(140,140,140) !important;
 }
@@ -557,39 +557,39 @@ div .StudioGrid td,
    background: transparent url(images/smallToolbarBtns.png) no-repeat scroll -32px 0px;
 }
 
-table.studio_contextualMenu_CSS .dijitMenuItem .wm_tablayers {
+.studio_contextualMenu_CSS .dijitMenuItem .wm_tablayers {
     background-image: url(images/wm/tabbook.png)
 }
 
-table.studio_contextualMenu_CSS .dijitMenuItem .wm_wizardlayers {
+.studio_contextualMenu_CSS .dijitMenuItem .wm_wizardlayers {
     background-image: url(images/wm/tabbook.png)
 }
 
-table.studio_contextualMenu_CSS .dijitMenuItem .wm_layers {
+.studio_contextualMenu_CSS .dijitMenuItem .wm_layers {
     background-image: url(images/wm/notebook.png)
 }
 
-table.studio_contextualMenu_CSS .dijitMenuItem .wm_accordionlayers {
+.studio_contextualMenu_CSS .dijitMenuItem .wm_accordionlayers {
     background-image: url(images/wm/press.png)
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lightbox_16 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lightbox_16 {
    background: transparent url(images/wm/lightbox_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.fisheye {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.fisheye {
    background: transparent url(images/wm/fisheye.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.variable_24 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.variable_24 {
    background: transparent url(images/wm/variable_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.servicevar_24 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.servicevar_24 {
    background: transparent url(images/wm/serviceVar_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.livevar_24 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.livevar_24 {
    background: transparent url(images/wm/livevar_16.png) no-repeat;
 
 }
@@ -598,36 +598,36 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.livevar_24 {
    background: transparent url(images/wm/picture_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.navigation_24 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.navigation_24 {
    background: transparent url(images/wm/navigation_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.flash {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.flash {
    background: transparent url(images/flash_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.data_blue {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.data_blue {
    background: transparent url(images/wm/dataBlue_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.component {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.component {
    background: transparent url(images/wm/component_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.liveview_16 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.liveview_16 {
    background: transparent url(images/wm/liveview_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.operation {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.operation {
    background: transparent url(images/wm/operation_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lock_16 {
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lock_16 {
    background: transparent url(images/lock_16.png) no-repeat;
 }
 
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service,
-table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service,
+.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
  {
    background: transparent url(images/wm/service_16.png) no-repeat;
 }
