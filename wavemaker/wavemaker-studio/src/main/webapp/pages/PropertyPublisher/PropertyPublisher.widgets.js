@@ -33,7 +33,7 @@ PropertyPublisher.widgets = {
 				    }]
 				}],
 				listPanelOuter: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left",margin: "0,0,0,10"}, {}, {
-				    listHeader: ["wm.Label", {width: "100%", caption: "Summary"}],
+				    listHeader: ["wm.Label", {width: "100%", caption: "All published properties; edit order and group to organize how properties are shown in your user's property panel", singleLine:false,height:"36px"}],
 				    listPanelInner: ["wm.Panel", {_classes: {domNode: ["StudioDarkPanel"]},width:"100%", height: "100%", border: "1", borderColor: "#959DAB"}, {}, {
 					fullList: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, width: "100%", height: "100%", margin: "0", deleteColumn: true, singleClickEdit:true,
 												columns: [{show: true,title: "Widget", field: "widgetName", width: "100%"},

@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 #studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridHeader {
 	background-color: #444444;
 	color: #FFF;
@@ -19,7 +19,7 @@
 #studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridHeader .dojoxGridCell {
 	background: inherit;
 
-	border-right-width: 1px; 
+	border-right-width: 1px;
 	border-right-style: solid;
 	border-right-color: #AAAAAA;
 
@@ -32,7 +32,11 @@
     background-color: rgb(230,230,230);
 }
 
-#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridRow.dojoxGridRowSelected, 
+#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridRow.dojoxGridRowSelected,
 #studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected {
     background-color: #3D80DF;
+}
+
+.PropertyPublisher {
+	color: #fff;
 }
