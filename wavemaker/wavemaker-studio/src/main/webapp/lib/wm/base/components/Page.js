@@ -344,45 +344,51 @@ dojo.declare("wm.Page", wm.Component, {
 			else if (inParent) props.owner = inParent;
 			else props.owner = this;
 		}
-		props = dojo.mixin({}, inProps, {
-			name: props.owner.getUniqueName(inName),
-			_designer: this._designer,
-			_loading: true
-		}, props);
+	    if (this[inName] instanceof wm.Binding) {
+			c = this[inName];
+	    } else {
+			props = dojo.mixin({}, inProps, {
+			    name: props.owner.getUniqueName(inName),
+				_designer: this._designer,
+				_loading: true
+			}, props);
+	    }
+	    if (!c) {
 
-        /* Special case where a Composite being designed opens a PageDialog at designtime where the PageDialog 
-         * is itself not being designed but is in fact a wizard
-         */
-        if (inProps._isDesignLoaded === false) delete props._designer;
+	        /* This _isDesignLoaded case is a Special case where a Composite being designed opens a
+	         * PageDialog at designtime where the PageDialog is itself not being designed but is in fact a wizard
+	         */
+	        if (inProps._isDesignLoaded === false) delete props._designer;
 
-		if (this.isRelativePositioned && inType == "wm.Layout") {
-			props.isRelativePositioned = true;
-		}
+	        /* isRelativePositioned not currently supported */
+			if (this.isRelativePositioned && inType == "wm.Layout") {
+				props.isRelativePositioned = true;
+			}
 
-		// All custom methods should be page methods; page methods have not been evaled, so
-		// can not be defined nor invoked at design time
-		if (!this.isDesignLoaded()) {
-			for (var p in props) {
-				if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p])) {
-					var owner = props.owner;
-					props[p] = dojo.hitch(owner, owner[props[p]]);
+			// All custom methods should be page methods; page methods have not been evaled, so
+			// can not be defined nor invoked at design time
+			if (!this.isDesignLoaded()) {
+				for (var p in props) {
+					if (p.indexOf("custom") == 0 && dojo.isFunction(ctor.prototype[p])) {
+						var owner = props.owner;
+						props[p] = dojo.hitch(owner, owner[props[p]]);
+					}
 				}
 			}
-		}
 
 
 
-		// Calls Component.create, which calls prepare, build, init and postInit
-		var c = this._create(ctor, props);
+			// Calls Component.create, which calls prepare, build, init and postInit
+			var c = this._create(ctor, props);
 
 
-		// FIXME: this initialization should be in Component
-		// to remove the distinction between 'loading' and 'creating'
-		if (!inParent && isWidget) {
-			c.moveable = false;
-			this.root = c;
-		}
-
+			// FIXME: this initialization should be in Component
+			// to remove the distinction between 'loading' and 'creating'
+			if (!inParent && isWidget) {
+				c.moveable = false;
+				this.root = c;
+			}
+	    }
 		this.makeEvents(inEvents, c);
 		//if (!(c instanceof wm.Layer) || !c.deferLoading)
 		if (inChildren) this.loadComponents(inChildren, c);
@@ -534,7 +540,7 @@ wm.Page.extend({
 		return (getEvent(n,studio.getScript())) ? n : "";
 	    return this.inherited(arguments);
 	},
-	
+
 	writeComponents: function() {
         var result = this.inherited(arguments);
         var nonvisual = [];
