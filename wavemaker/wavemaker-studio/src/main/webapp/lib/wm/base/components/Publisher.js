@@ -245,7 +245,13 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 	// FIXME: hackalicious
 	var js = studio.getScript();
 	js = js.split("\n");
-	js.shift();
+	//js.shift();
+    var header = [];
+    while (js[0].indexOf('dojo.declare("' + studio.project.pageName + '"') == -1 &&
+           js[0].indexOf("dojo.declare('" + studio.project.pageName + "'") == -1) {
+        header.push(js.shift());
+    }
+    js.shift(); // get rid of dojo.declare("Main", wm.Page, {
 
 	/* Enables pictures to get images from the Composite's folder */
 	js.unshift("  getPath: function() {return dojo.moduleUrl('common.packages." + klass + "').uri;},");
@@ -281,7 +287,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
     } else {
     	js.unshift('dojo.declare("' + klass + '", [' + this.parentClass + ',wm.CompositeMixin], {');
     }
-	js = js.join("\n");
+	js = header.join("\n") + "\n" + js.join("\n");
 
 
 
