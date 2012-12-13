@@ -283,20 +283,23 @@ Studio.extend({
 	//=====================================================================
 	undeployComponent: function(inName, inNamespace, inDisplayName, inGroup, inRemoveSource) {
 		var klass = inNamespace + "." + inName;
+        var module = "common.package." + klass;
 		studio.deploymentService.requestAsync("undeployClientComponent",
 			[inName, inNamespace, inRemoveSource],
-			dojo.hitch(this, "undeployComponentCallback", inDisplayName, inGroup),
+			dojo.hitch(this, "undeployComponentCallback", inModule, inDisplayName, inGroup),
 			dojo.hitch(this, "undeployComponentError"));
 	},
-	undeployComponentCallback: function(inDisplayName, inGroup, inResponse) {
-	    if (inResponse == true) {
-		studio.palette.removeItem(inGroup, inDisplayName);
-		wm.fire(studio.inspector, "reinspect");
-		app.toastSuccess(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_SUCCESS"));
-	    } else {
-		app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED"));
-	    }
-	},
+    undeployComponentCallback: function(inModule, inDisplayName, inGroup, inResponse) {
+        if(inResponse == true) {
+            studio.palette.removeItem(inGroup, inDisplayName);
+            wm.fire(studio.inspector, "reinspect");
+            wm.Array.removeElement(__packageRegistry, inModule);
+            app.toastSuccess(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_SUCCESS"));
+        } else {
+            app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED"));
+        }
+    },
+
 	undeployComponentError: function(inError) {
 	    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED2", {error: inError}));
 

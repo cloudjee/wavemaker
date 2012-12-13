@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.packageLoader");
 
 wm.packageImages = {};
@@ -31,7 +31,7 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
 		return 'Could not import module "' + m + '".';
 	}
 	var ctor = dojo.getObject(c);
-    /* Removing to improve studio loading performance in cloud 
+    /* Removing to improve studio loading performance in cloud
 	if (!ctor) {
 		return 'Module "' + m + '" is loaded, but function "' + c + '" was not found.';
 	}
@@ -82,9 +82,10 @@ loadPackages = function() {
 	studio.palette.setLayerIndex(0);
 	// redefine registration
 	wm.registerPackage = registerPackage = function(p) {
+        if (dojo.indexOf(__packageRegistry, p) == -1) __packageRegistry.push(p);
 		//console.log("[late] registerPackage:", p);
-		wm.onidle(function(){ 
-				installPackages([p]); 
+		wm.onidle(function(){
+				installPackages([p]);
 			});
 	}
 }
