@@ -100,12 +100,17 @@
 
 	<bean id="jdbcDaoImpl"
         class="com.wavemaker.runtime.security.EnhancedJdbcDaoImpl">
-        <property name="dataSource"><ref bean="dummyDataSource"/></property>
+        <property name="dataSource">
+			<ref bean="dummyDataSource"/>
+		</property>
+		 <property name="rolePrefix">
+            <value>ROLE_</value>
+        </property>
         <property name="usersByUsernameQuery">
             <value>SELECT first_name, last_name, 1 FROM employee WHERE first_name = ?</value>
         </property>
         <property name="authoritiesByUsernameQuery">
-            <value>SELECT first_name, "DEFAULT_NO_ROLES" FROM employee WHERE first_name = ?</value>
+            <value>select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid = ?</value>
         </property>
     </bean>
 
