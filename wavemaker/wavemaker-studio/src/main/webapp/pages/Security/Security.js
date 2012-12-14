@@ -1018,8 +1018,9 @@ dojo.declare(
             for ( var i = 0; i < this._urlMap.length; i++) {
                 var str = this._urlMap[i];
                 var realName;
-                if (str.URL.indexOf("/") == 0 && str.URL.match(/\.(json|download|upload)$/)) {
-                    realName = str.URL.substring(1, str.URL.indexOf("."));
+                var lastSlash = str.URL.lastIndexOf("/");
+                if (lastSlash >= 0 && str.URL.match(/\.(json|download|upload)$/)) {
+                    realName = str.URL.substring(lastSlash + 1, str.URL.indexOf("."));
                 }
                 if (realName == inName) {
                     return str.attributes;
