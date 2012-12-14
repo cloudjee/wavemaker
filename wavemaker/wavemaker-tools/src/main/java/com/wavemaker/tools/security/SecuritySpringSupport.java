@@ -376,6 +376,12 @@ public class SecuritySpringSupport {
         }
     }
 
+    static void setDataSourceType(Beans beans, String authMgrName) {
+        Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
+        Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
+        property.setRef(authMgrName);
+    }
+
     @Deprecated
     static List<DemoUser> getDemoUsers(Beans beans) {
         Bean bean = beans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);

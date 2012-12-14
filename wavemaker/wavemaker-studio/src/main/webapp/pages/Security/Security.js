@@ -951,7 +951,7 @@ dojo.declare(
 				for ( var i = 0; i < d.length; i++) {
                     data.push({
                         name : d[i],
-                        dataValue : "hasRole('" + d[i] + "')"
+                        dataValue : "hasRole('" + "ROLE_" + d[i] + "')"
                     });
                 }
                 this.varRoleList.setData(data);
