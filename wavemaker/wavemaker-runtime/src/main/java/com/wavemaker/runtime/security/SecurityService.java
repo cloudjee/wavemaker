@@ -145,8 +145,7 @@ public class SecurityService {
         if (authentication == null) {
             return new String[0];
         }
-        //GrantedAuthority[] authorities = authentication.getAuthorities(); //TODO:This is empty
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();//authentication.getAuthorities();
+        Collection<? extends GrantedAuthority>  authorities = authentication.getAuthorities(); 
         List<String> roleNames = new ArrayList<String>();
         for (GrantedAuthority authority : authorities) {
             String roleName = authority.getAuthority();

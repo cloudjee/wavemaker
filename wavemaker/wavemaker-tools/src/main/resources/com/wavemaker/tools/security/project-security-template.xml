@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- This is a Studio Managed File. If you customize this file by hand, use 
-	of Studio Security tooling is likely to break your customizations, -->
+	of Studio Security tooling may revert your customizations -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:security="http://www.springframework.org/schema/security"
@@ -69,7 +69,7 @@
 		class="com.wavemaker.runtime.security.WMAuthenticationSuccessHandler">
 	</bean>
 	
-	 <!-- This authentication-manager exists to populate the default authentiation-manager id. It is not used  -->
+	 <!-- This authentication-manager exists to populate the default authentication-manager id. It is not used  -->
     <security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
