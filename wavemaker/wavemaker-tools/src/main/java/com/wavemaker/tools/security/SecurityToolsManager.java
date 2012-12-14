@@ -258,7 +258,7 @@ public class SecurityToolsManager {
         Beans beans = getSecuritySpringBeans(true);
         //SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
         SecuritySpringSupport.setDemoUsers(beans, demoUsers);
-        //SecuritySpringSupport.resetJdbcDaoImpl(beans);
+        SecuritySpringSupport.resetJdbcDaoImpl(beans);
         saveSecuritySpringBeans(beans);
     }
 
@@ -302,15 +302,15 @@ public class SecurityToolsManager {
         }
 
         @SuppressWarnings("unchecked")
-        public List<String> loadUserRolesByUsername(String username) { //TODO: fixme
-            List<GrantedAuthority> dbAuths; // = this.authoritiesByUsernameMapping.execute(username);
+        public List<String> loadUserRolesByUsername(String username) {
+            List<GrantedAuthority> dbAuths = this.loadUserAuthorities(username);
             List<String> userRoles = new ArrayList<String>();
-//            for (GrantedAuthority dbAuth : dbAuths) {
-//                String dbAuthString = dbAuth.getAuthority();
-//                if (dbAuthString.startsWith(SecuritySpringSupport.ROLE_PREFIX)) {
-//                    userRoles.add(dbAuthString.substring(SecuritySpringSupport.ROLE_PREFIX.length()));
-//                }
-//            }
+            for (GrantedAuthority dbAuth : dbAuths) {
+                String dbAuthString = dbAuth.getAuthority();
+                if (dbAuthString.startsWith(SecuritySpringSupport.ROLE_PREFIX)) {
+                    userRoles.add(dbAuthString.substring(SecuritySpringSupport.ROLE_PREFIX.length()));
+                }
+            }
             return userRoles;
         }
     }
