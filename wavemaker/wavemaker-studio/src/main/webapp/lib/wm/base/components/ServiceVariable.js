@@ -441,6 +441,20 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     },
     onBlocked: function(inMessage) {},
 
+    setDisabled: function(inDisabled) {
+        var valueWas = this.disabled;
+        this.disabled = Boolean(inDisabled);
+        
+        // parent class (wm.Variable) does calls this, but this fires
+        // the service variable immediately,
+        // and the new filter/sourceData/input values
+        // may not have arrived yet; this notify
+        // should only be called when there is a change in data
+        //if (valueWas != this.disabled) this.notify();
+    },
+
+
+
     /* Adds logging to result method */
     result: function(inResult) {
         delete this._lastError;
