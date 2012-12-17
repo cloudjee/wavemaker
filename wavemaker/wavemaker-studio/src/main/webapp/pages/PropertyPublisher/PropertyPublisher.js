@@ -135,7 +135,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
     				data: inPropName,
     				closed: true,
     				hasChildren: false,
-    				checked: Booleaan(propertyComponent)
+    				checked: Boolean(propertyComponent)
     			});
 
 	   }));
