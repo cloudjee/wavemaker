@@ -1,0 +1,52 @@
+/* GROUP: Standard Button */
+.wm_template .wmbutton {
+	font-family: sans-serif;
+	font-size: 12pt;
+	color: #FFFFFF;
+	font-weight: bold;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	box-shadow: 4px 4px 4px black;
+	background-color: #333333;
+	background-image: none;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+/* GROUP: Active State */
+.wm_template   .wmbutton.Active,
+.wm_template   .wmbutton.Active:hover,
+.wm_template   .wmbutton:active,
+.wm_template   .wmbutton:active:hover {
+	color: #FFFFFF;
+	font-weight: bold;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	box-shadow: 4px 4px 4px black;
+	background-color: #333333;
+	background-image: none;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+/* GROUP: Hover State */
+ .wm_template   .wmbutton:hover,
+ .wm_template   .wmbutton:focus {
+ 	color: #FFFFFF;
+	font-weight: bold;
+
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	box-shadow: 4px 4px 4px black;
+
+	background-color: #333333;
+	background-image: none;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+/* GROUP: Popup Menu */
+.wm_template .wmPopupButton .popupIcon {
+   background-image: url(lib/wm/base/widget/themes/wm_default/images/comboArrowDownDark.png);
+   background-position: 0% 50%;
+}
