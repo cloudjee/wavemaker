@@ -254,7 +254,8 @@ wm.PageContainer.extend({
                     this.subpageProplist[p.name] = p.property;
                 }
                 props[p.name] = {
-                    group: "subpageprops",
+                    group: p.group || "subpageprops",
+                    order: p.order || 0,
                     name: p.name,
                     type: p.type || "string",
                     bindTarget: p.bindTarget,

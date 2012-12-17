@@ -359,18 +359,42 @@ public class DeploymentService {
         FileUploadResponse ret = new FileUploadResponse();
         Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(CLIENT_COMPONENTS_STAGE);
         ZipArchive.unpack(file.getInputStream(), componentStage);
-        com.wavemaker.tools.io.File jsFile = componentStage.getFile(className + "/" + className + ".js");
-	if (!jsFile.exists()){
+        com.wavemaker.tools.io.Folder unzipfolder = componentStage.getFolder(className);
+	com.wavemaker.tools.io.File jsFile = null;
+	Folder zipFolder = unzipfolder;
+	if (!unzipfolder.exists()) {
+	    com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Folder> folders  = componentStage.list().folders();
+
+	    for (com.wavemaker.tools.io.Folder f : folders) {
+		String name = f.getName();
+		com.wavemaker.tools.io.File afile = f.getFile(name + ".js");
+		    System.out.println("TEST " + afile.getName());
+		if (afile.exists() && getClientComponentPackageString(afile) != null) {
+		    jsFile = afile;
+		    zipFolder = f;
+		    System.out.println("FOUND " + afile.getName() + " | " + getClientComponentPackageString(afile));
+		    break;
+		}
+	    }
+	}
+
+
+
+        //com.wavemaker.tools.io.File jsFile = componentStage.getFolder(className + "/" + className + ".js");
+	if (jsFile == null || !jsFile.exists()){
 	    componentStage.delete();
 	    throw new IOException(jsFile.toString() + " not found");
 	}
         String str = getClientComponentPackageString(jsFile);
+	if (str == null) throw new IOException("dojo.provide line missing in " + jsFile.toString());
+	className = str.substring(str.lastIndexOf(".") + 1);
         String packageStr = str.substring(0, str.lastIndexOf("." + className));
 
         Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder(StringUtils.packageToSrcFilePath(packageStr));
         componentFolder.createIfMissing();
 	componentFolder.list().delete(); // delete older version of the composite
-	Folder zipFolder = componentStage.getFolder(className);
+	System.out.println("ZIP FOLDER: " + zipFolder.toString());
+	//Folder zipFolder = componentStage.getFolder(className);
 	zipFolder.copyContentsTo(componentFolder);
 	this.deploymentManager.writeModuleToLibJs(packageStr + "." + className);
 	componentStage.delete();

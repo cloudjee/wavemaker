@@ -486,7 +486,17 @@ wm.CompositeMixin.extend({
 
 dojo.declare("wm.Composite", [wm.Container, wm.CompositeMixin], {
     scrim: true, // prevent the user from interacting with the contents of the composite in designer
-    lock: true // prevent user from adding additional controls
+    lock: true, // prevent user from adding additional controls
+    _onShowParent: function() {
+        dojo.forEach(this.c$, function(c) {
+            c.callOnShowParent();
+        });
+    },
+    _onHideParent: function() {
+      dojo.forEach(this.c$, function(c) {
+            c.callOnHideParent();
+        });
+    }
 });
 
 wm.Object.extendSchema(wm.Composite, {

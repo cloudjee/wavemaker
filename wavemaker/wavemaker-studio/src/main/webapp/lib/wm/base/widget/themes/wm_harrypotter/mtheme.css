@@ -619,7 +619,7 @@ background-repeat: repeat-x;
 outline-width: 0;
 }
 }
-.wm_harrypotter .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_harrypotter .dijitMenuPopup .dijitMenuTable.dijitMenu.dijitReset,
 .wm_harrypotter .dijitPopup .dijitCalendarMonthLabel {
 font-family: Verdana;
 color: #ffffff;

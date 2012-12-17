@@ -1073,7 +1073,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     },
 
     setDefaultOnInsert: function() {
-        if (this.editor && this.defaultInsert) {
+        if (this.editor && this.defaultInsert !== undefined) {
             if (this.$.binding && this.$.binding.wires.defaultInsert) this.$.binding.wires.defaultInsert.refreshValue();
 
             this.editor.set('value', this.defaultInsert, false);

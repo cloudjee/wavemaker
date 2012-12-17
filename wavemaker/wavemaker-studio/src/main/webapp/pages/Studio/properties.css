@@ -506,3 +506,16 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 .AllCheckboxSetNote {
     white-space: normal;
 }
+
+.studio_propertiesMenu_CSS .dijitMenuSeparator,
+.studio_propertiesMenu_CSS.dijitMenu,
+.studio_propertiesMenu_CSS .dijitMenuItem {
+	background-color: #ffffff;
+	color: #000;
+}
+/* Hover styling/selected style for all context menus */
+.studio_propertiesMenu_CSS .dijitMenuItem.dijitMenuItemHover,
+.studio_propertiesMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
+  background-color: #586981;
+  color: white;
+}

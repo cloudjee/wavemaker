@@ -95,36 +95,59 @@ dojo.declare("PropertyPublisher", wm.Page, {
 		dojo.forEach(propComponentList, function(prop) {
             if (prop.parent) {
     			data.push({
-    				name: prop.parent.getId(),
-    				dataValue: prop.property.replace(/^.*\./, "")
+    				widgetName: prop.parent.getId(),
+    				widgetPropertyName: prop.property.replace(/^.*\./, "")
     			});
     		} else if (prop.property.indexOf(".") != -1) {
     		  data.push({
-    		      name: prop.property.substring(0,prop.property.lastIndexOf(".")),
-    		      dataValue: prop.property.substring(1+prop.property.lastIndexOf("."))
+    		      widgetName: prop.property.substring(0,prop.property.lastIndexOf(".")),
+    		      widgetPropertyName: prop.property.substring(1+prop.property.lastIndexOf("."))
     		  });
     		} else {
     			data.push({
-    				name: prop.property,
-    				dataValue: "All Data"
+    				widgetName: prop.property,
+    				widgetPropertyName: "All Data"
     			});
     		}
-
+    		dojo.mixin(data[data.length-1], {
+    			wmPropertyName: prop.name,
+    			groupName: prop.group,
+    			groupOrder: prop.order});
 		});
 		this.fullPropListVar.setDataSet(data);
 	},
 	listRowDeleted: function(inSender, rowId, rowData) {
-		var id = rowData.name + (rowData.dataValue == "All Data" ? "" : "." + rowData.dataValue);
+		var wmpropname = rowData.wmPropertyName;
+		var wmprop = this.inspected.owner[wmpropname];
+		wmprop.destroy();
+		/*
+		var id = rowData.widgetName + (rowData.widgetPropertyName == "All Data" ? "" : "." + rowData.widgetPropertyName);
 		var propComponentList = wm.listComponents([studio.page], wm.Property);
 		dojo.forEach(propComponentList, function(inProp) {
 			if (inProp.property == id) {
 				inProp.destroy();
 			}
 		});
+*/
 		wm.job(this.getRuntimeId() + ".repopulate", 100, this, function() {
     		this.onChange();
     		this.populateTree();
     	});
+	},
+	onPropCellEdited: function(inSender, inValue, rowId, fieldId, isInvalid) {
+		if (!isInvalid) {
+			var rowData = inSender.getRow(rowId);
+			var wmpropname = rowData.wmPropertyName;
+			var wmprop = this.inspected.owner[wmpropname];
+			switch(fieldId) {
+				case "groupName":
+					wmprop.group = inValue;
+					break;
+				case "groupOrder":
+					wmprop.order = inValue;
+					break;
+			}
+		}
 	},
 	generateFieldProps: function(inNode, inSchema) {
 	   wm.forEachProperty(inSchema, dojo.hitch(this, function(inPropDef, inPropName) {
@@ -213,6 +236,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 					p.bindSource = propDef.bindable || propDef.bindSource || false;
 					p.bindTarget = propDef.bindable || propDef.bindTarget || false;
 				}
+				inNode.setContent(this.getNodeCaption(inNode.data, p.name));
 			}
 		} else {
 			if (this.propComponentList[property]) {
@@ -251,6 +275,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
         var propertyComponent = this.propComponentList[propertyId];
         propertyComponent.set_name(inValue);
         inNode.setContent(this.getNodeCaption(inNode.data, propertyComponent.name));
+        this.onChange();
     },
     getNodeCaption: function(inFieldName, inPropertyName) {
         if (inPropertyName) {

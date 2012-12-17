@@ -286,7 +286,7 @@ Studio.extend({
         var module = "common.package." + klass;
 		studio.deploymentService.requestAsync("undeployClientComponent",
 			[inName, inNamespace, inRemoveSource],
-			dojo.hitch(this, "undeployComponentCallback", inModule, inDisplayName, inGroup),
+			dojo.hitch(this, "undeployComponentCallback", module, inDisplayName, inGroup),
 			dojo.hitch(this, "undeployComponentError"));
 	},
     undeployComponentCallback: function(inModule, inDisplayName, inGroup, inResponse) {

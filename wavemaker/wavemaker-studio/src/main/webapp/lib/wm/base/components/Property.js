@@ -19,8 +19,10 @@ dojo.declare("wm.Property", wm.Component, {
 	bindTarget: true,
 	bindSource: true,
 	isEvent: false,
-	readonly: false,    
+	readonly: false,
     type: "",
+    group: "",
+    order: 100,
 	init: function() {
 		this.inherited(arguments);
 	    if (this._isDesignLoaded && this.owner === studio.page) {
