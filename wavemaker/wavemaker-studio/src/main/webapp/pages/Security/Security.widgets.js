@@ -76,14 +76,6 @@ Security.widgets = {
 					    dbRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Role Field","display":"Select","emptyValue":"null","padding":"2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange":"setDirty"}]
 					}],
 					spacer30: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
-					dbregCheckbox: ["wm.Checkbox", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Generate Registration page?",captionPosition:"right",captionSize:"100%",captionAlign:"left","padding":"4"}],
-					regPanel: ["wm.Panel", {width: "100%", height: "280px", fitToContentHeight: true, margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
-						binding: ["wm.Binding", {}, {}, {
-							wire: ["wm.Wire", {targetProperty: "disabled", expression: "!${dbregCheckbox.checked}"}]
-						}],
-					    regEmailField: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Email Field Name","display":"Select","emptyValue":"null","padding":"2",helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange":"setDirty"}],
-
-					}],
 
 					labelmt: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Multitenant Configuration","padding":"4"}],
 					tenantPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
