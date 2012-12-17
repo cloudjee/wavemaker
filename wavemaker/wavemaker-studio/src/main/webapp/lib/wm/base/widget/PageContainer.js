@@ -113,7 +113,11 @@ dojo.declare("wm.PageContainer", wm.Control, {
             var prop = this.subpageProplist[inName];
             if (prop) {
                 if (inValue instanceof wm.Component === false) this[inName] = inValue;
-                return this.page.setValue(prop, inValue);
+                if (prop.indexOf(".") == -1 && this.page.getValue(prop) instanceof wm.Variable) {
+                    return this.page.getValue(prop).setDataSet(inValue);   
+                } else {
+                    return this.page.setValue(prop, inValue);
+                }
             }
         } else if (this.subpageEventlist !== null && this.page && this.subpageEventlist[inName]) {
             var prop = this.subpageEventlist[inName];
