@@ -57,7 +57,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
     public void DownloadPackages() throws Exception {
         File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
-     URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/raw/6.5.1/repo.zip");
+     URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/raw/6.6/repo.zip");
       URLConnection urlC = url.openConnection();
           // Copy resource to local file, use remote file
           // if no local file name specified
@@ -84,7 +84,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          if (!versionFile.exists())
             throw new IOException("This repo.zip file does not contain the correct version information.");
          String s = IOUtils.read(versionFile);
-         if (s.indexOf("6.5.1") != 0)
+         if (s.indexOf("6.6") != 0)
             throw new IOException("This repo.zip file is from the wrong version of studio");
          File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
