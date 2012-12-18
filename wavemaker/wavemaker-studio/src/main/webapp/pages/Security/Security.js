@@ -930,7 +930,7 @@ dojo.declare(
         setupServicesLayer : function() {
             try {
                 var success = true;
-                studio.securityConfigService.requestSync("getSecurityFilterODS", null, dojo.hitch(this, "getSecurityFilterODSResult"), dojo.hitch(this, function(inError) {
+                studio.securityConfigService.requestSync("getSecurityInterceptUrls", null, dojo.hitch(this, "getSecurityInterceptUrlsResult"), dojo.hitch(this, function(inError) {
                     this._urlMap = [];
                 }));
                 /* Get the role list */
@@ -1000,7 +1000,7 @@ dojo.declare(
                 this.servicesSettingsPanel.hide();
             }
         },
-        getSecurityFilterODSResult : function(inResponse) {
+        getSecurityInterceptUrlsResult : function(inResponse) {
             this._urlMap = dojo.clone(inResponse);
             this.varUrlMap.setData(inResponse);
         },
@@ -1018,11 +1018,12 @@ dojo.declare(
             for ( var i = 0; i < this._urlMap.length; i++) {
                 var str = this._urlMap[i];
                 var realName;
-                if (str.URL.indexOf("/") == 0 && str.URL.match(/\.(json|download|upload)$/)) {
-                    realName = str.URL.substring(1, str.URL.indexOf("."));
+				var lastSlash = str.URL.lastIndexOf("/");
+                if (lastSlash >= 0 && str.URL.match(/\.(json|download|upload)$/)) {
+                    realName = str.URL.substring(lastSlash + 1, str.URL.indexOf("."));
                 }
                 if (realName == inName) {
-                    return str.attributes;
+                    return str.Attributes;
                 }
             }
         },
@@ -1092,7 +1093,7 @@ dojo.declare(
             sendData.push("/*.upload:" + starAttributes);
             sendData.push("/*.download:" + starAttributes);
 
-            studio.securityConfigService.requestSync("setSecurityFilterODS", [ sendData, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "saveServicesSetupSuccess"), dojo.hitch(this,
+            studio.securityConfigService.requestSync("setSecurityInterceptUrls", [ sendData, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "saveServicesSetupSuccess"), dojo.hitch(this,
                     "saveServicesSetupError"));
         },
         saveServicesSetupSuccess : function() {

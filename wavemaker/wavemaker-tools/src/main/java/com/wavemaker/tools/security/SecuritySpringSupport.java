@@ -54,15 +54,6 @@ public class SecuritySpringSupport {
     static final String ROLE_PREFIX = "ROLE_";
 
     private static final String DEFAULT_NO_ROLES_ROLE = "DEFAULT_NO_ROLES";
-
-    private static final String FILTER_SECURITY_INTERCEPTOR_BEAN_ID = "filterSecurityInterceptor";
-
-    private static final String OBJECT_DEFINITION_SOURCE_PROPERTY = "objectDefinitionSource";
-
-    private static final String FILTER_CHAIN_PROXY_BEAN_ID = "filterChainProxy";
-
-    private static final String FILTER_DEFINITION_SOURCE_PROPERTY = "filterInvocationDefinitionSource";
-
     static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
     static final String AUTHENTICATON_MANAGER_BEAN_ID_DEMO = "authenticationManagerDemo";
     static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
@@ -73,11 +64,7 @@ public class SecuritySpringSupport {
 
     private static final String ANONYMOUS_AUTHENTICATION_PROVIDER_BEAN_ID = "anonymousAuthenticationProvider";
 
-    private static final String DAO_AUTHENTICATION_PROVIDER_BEAN_ID = "daoAuthenticationProvider";
-
     static final String LDAP_AUTH_PROVIDER_BEAN_ID = "ldapAuthProvider";
-
-    private static final String USER_DETAILS_SERVICE_PROPERTY = "userDetailsService";
 
     static final String IN_MEMORY_DAO_IMPL_BEAN_ID = "inMemoryDaoImpl";
 
@@ -94,8 +81,6 @@ public class SecuritySpringSupport {
     private static final String USERS_BY_USERNAME_QUERY_PROPERTY = "usersByUsernameQuery";
 
     private static final String AUTHORITIES_BY_USERNAME_QUERY_PROPERTY = "authoritiesByUsernameQuery";
-
-    private static final String AUTHORITIES_BY_USERNAME_QUERY_PARAM_TYPE_PROPERTY = "authoritiesByUsernameQueryParamType";
 
     private static final String TABLE_MARKER = "table";
 
@@ -149,64 +134,30 @@ public class SecuritySpringSupport {
 
     private static final String LDAP_ROLE_PROVIDER = "roleProvider";
 
-    private static final String SPACES_12 = "            ";
-
-    private static final String SPACES_16 = "                ";
-
-    private static final String OBJECT_DEFINITION_SOURCE_PREFIX = "\n" + SPACES_16 + "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON\n" + SPACES_16
-        + "PATTERN_TYPE_APACHE_ANT\n";
-
     public static final String IS_AUTHENTICATED_ANONYMOUSLY = "permitAll";
 
     public static final String IS_AUTHENTICATED_FULLY = "isAuthenticated()";
-
-    private static final String UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX = "\n" + SPACES_12;
-
-    private static final String STANDARD_FILTER_CHAIN_DEFINITION = "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON"
-        + "\n"
-        + "					PATTERN_TYPE_APACHE_ANT"
-        + "\n"
-        + "					/**=httpSessionContextIntegrationFilter,logoutFilter,formAuthenticationProcessingFilter,anonymousProcessingFilter,jsonExceptionTranslationFilter,filterSecurityInterceptor";
-
     private static final String SECURITY_SERVICE = "securityService";
 
     private static final String ROLES = "roles";
 
     private static List<String> getSecurityResourceAttrs(Beans beans, String url) {
-//        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-//        FilterInvocationDefinitionSourceEditor e = new FilterInvocationDefinitionSourceEditor();
-//        e.setAsText(getPropertyValueString(bean, OBJECT_DEFINITION_SOURCE_PROPERTY));
-//        PathBasedFilterInvocationDefinitionMap map = (PathBasedFilterInvocationDefinitionMap) e.getValue();
-//        ConfigAttributeDefinition attrs = map.lookupAttributes(url);
-        List<String> authzList = new ArrayList<String>();
-//        if (attrs != null) {
-//            Iterator<SecurityConfig> iter = CastUtils.cast(attrs.getConfigAttributes());
-//            while (iter.hasNext()) {
-//                authzList.add(iter.next().getAttribute());
-//            }
-//        }
-        return authzList;
+        Map<String, List<String>> urlMap = getSecurityInterceptUrls(beans);
+        return urlMap.get(url);
     }
 
-    static Map<String, List<String>> getObjectDefinitionSource(Beans beans) {
+    static Map<String, List<String>> getSecurityInterceptUrls(Beans beans) {
         Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        String odspFull = getPropertyValueString(bean, OBJECT_DEFINITION_SOURCE_PROPERTY);
-        String odspBody = "";
-        if (odspFull.startsWith(OBJECT_DEFINITION_SOURCE_PREFIX)) {
-            odspBody = odspFull.substring(OBJECT_DEFINITION_SOURCE_PREFIX.length()).trim();
-        }
-        String delim = "[=,\n]";
-        String[] odspArray = odspBody.split(delim);
-        List<String> odspList = new ArrayList<String>(Arrays.asList(odspArray));
-        Iterator<String> itr = odspList.iterator();
-        if (itr != null) {
-            while (itr.hasNext()) {
-                String key = itr.next().trim();
-                List<String> authzList = new ArrayList<String>();
-                authzList.add(itr.next().trim());
-                urlMap.put(key, authzList);
+        List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
+        for (Http.InterceptUrl url : urls) {
+            String key = url.getPattern();
+            List<String> authzList = new ArrayList<String>();
+            String accessStr = url.getAccess();
+            String[] accessArr = accessStr.split(",");
+            for (String access : accessArr) {
+                authzList.add(access);
             }
+            urlMap.put(key, authzList);
         }
         return urlMap;
     }
@@ -219,7 +170,7 @@ public class SecuritySpringSupport {
         return getSecurityResourceAttrs(beans, "/index.html").contains(IS_AUTHENTICATED_FULLY);
     }
 
-    static void setObjectDefinitionSource(Beans beans, Map<String, List<String>> urlMap) {
+    static void setSecurityInterceptUrls(Beans beans, Map<String, List<String>> urlMap) {
         for (String url : urlMap.keySet()) {
             String access = "";
             Http.InterceptUrl iurl = new Http.InterceptUrl();
@@ -294,53 +245,6 @@ public class SecuritySpringSupport {
 
             SecurityXmlSupport.setInterceptUrls(beans, urls);
         }
-    }
-
-    static void setSecurityFilterChain(Beans beans) {
-        Bean bean = beans.getBeanById(FILTER_CHAIN_PROXY_BEAN_ID);
-        Property property = bean.getProperty(FILTER_DEFINITION_SOURCE_PROPERTY);
-        List<String> newContent = new ArrayList<String>();
-        String value = STANDARD_FILTER_CHAIN_DEFINITION;
-        newContent.add(value);
-        property.getValueElement().setContent(newContent);
-    }
-
-    private static String generateObjectDefinitionSource(boolean securityEnabled, Map<String, List<String>> urlMap) {
-        StringBuilder objectDefSource = new StringBuilder();
-        objectDefSource.append(OBJECT_DEFINITION_SOURCE_PREFIX);
-        if (securityEnabled) {
-            for (String url : urlMap.keySet()) {
-                objectDefSource.append(SPACES_16);
-                objectDefSource.append(url);
-                objectDefSource.append("=");
-                List<String> authzList = urlMap.get(url);
-                if (authzList.size() > 0) {
-                    objectDefSource.append(authzList.get(0));
-                    for (int i = 1; i < authzList.size(); i++) {
-                        objectDefSource.append(",");
-                        objectDefSource.append(authzList.get(i));
-                    }
-                }
-                objectDefSource.append("\n");
-            }
-            objectDefSource.append(SPACES_12);
-        } else {
-            objectDefSource.append(UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX);
-        }
-        return objectDefSource.toString();
-    }
-
-    private static String[] getAuthManagerProviderBeanIds(Beans beans) {
-        Bean bean = beans.getBeanById(AUTHENTICATON_MANAGER_BEAN_ID);
-        Property property = bean.getProperty(AUTH_PROVIDERS_PROPERTY);
-        com.wavemaker.tools.spring.beans.List list = property.getList();
-        List<Object> refElements = list.getRefElement();
-        String[] pbids = new String[refElements.size()];
-        for (int i = 0; i < refElements.size(); i++) {
-            Ref ref = (Ref) refElements.get(i);
-            pbids[i] = ref.getBean();
-        }
-        return pbids;
     }
 
     static void setAuthManagerProviderBeanId(Beans beans, String beanId) {

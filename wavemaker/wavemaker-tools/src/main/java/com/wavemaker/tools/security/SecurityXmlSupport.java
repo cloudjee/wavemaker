@@ -233,7 +233,7 @@ public class SecurityXmlSupport {
             if (obj instanceof Http.InterceptUrl) {
                 Http.InterceptUrl url = (Http.InterceptUrl) obj;
                 if (interceptUrl.getPattern().equals(url.getPattern())) {
-                    url = interceptUrl;
+                    url.setAccess(interceptUrl.getAccess());
                     return;
                 }
             }

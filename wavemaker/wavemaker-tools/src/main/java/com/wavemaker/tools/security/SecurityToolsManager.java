@@ -234,18 +234,6 @@ public class SecurityToolsManager {
         }
     }
 
-    public void setStandardOptions(boolean enforceSecurity) throws IOException, JAXBException {
-        this.lock.lock();
-        try {
-            Beans beans = getSecuritySpringBeans(false);
-            SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
-            SecuritySpringSupport.setSecurityFilterChain(beans);
-            saveSecuritySpringBeans(beans);
-        } finally {
-            this.lock.unlock();
-        }
-    }
-
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
     	Beans beans = getSecuritySpringBeans(false);
     	List<UserService.User> userList = SecurityXmlSupport.getUserSvcUsers(beans);
@@ -427,7 +415,7 @@ public class SecurityToolsManager {
      * @throws IOException
      * @throws JAXBException
      */
-    public void setSecurityFilterODS(Map<String, List<String>> urlMap) throws IOException, JAXBException {
+    public void setSecurityInterceptUrls(Map<String, List<String>> urlMap) throws IOException, JAXBException {
         Beans beans = null;
         this.lock.lock();
         try {
@@ -435,7 +423,7 @@ public class SecurityToolsManager {
             if (beans == null || beans.getBeanList().isEmpty()) {
                 throw new RuntimeException("Unable to get Security Bean");
             } else {
-                SecuritySpringSupport.setObjectDefinitionSource(beans, urlMap);
+                SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
                 saveSecuritySpringBeans(beans);
             }
         } catch (Exception e) {
@@ -445,7 +433,7 @@ public class SecurityToolsManager {
         }
     }
 
-    public Map<String, List<String>> getSecurityFilterODS() {
+    public Map<String, List<String>> getSecurityInterceptUrls() {
         Beans beans = null;
         try {
             beans = getSecuritySpringBeans(false);
@@ -455,7 +443,7 @@ public class SecurityToolsManager {
         if (beans == null || beans.getBeanList().isEmpty()) {
             return null;
         } else {
-            return SecuritySpringSupport.getObjectDefinitionSource(beans);
+            return SecuritySpringSupport.getSecurityInterceptUrls(beans);
         }
     }
 }

@@ -371,18 +371,18 @@ public class SecurityConfigService {
      * @throws JAXBException
      * @throws IOException
      */
-    public List<SecurityURLMap> getSecurityFilterODS() throws JAXBException, IOException {
-//        Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityFilterODS();
+    public List<SecurityURLMap> getSecurityInterceptUrls() throws JAXBException, IOException {
+        Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityInterceptUrls();
         List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
-//        if (!(urlMap == null)) {
-//            for (String url : urlMap.keySet()) {
-//                SecurityURLMap secMap = new SecurityURLMap();
-//                secMap.setURL(url);
-//                List<String> attributes = urlMap.get(url);
-//                secMap.setAttributes(attributes.get(0));
-//                securityURLMap.add(secMap);
-//            }
-//        }
+        if (!(urlMap == null)) {
+            for (String url : urlMap.keySet()) {
+                SecurityURLMap secMap = new SecurityURLMap();
+                secMap.setURL(url);
+                List<String> attributes = urlMap.get(url);
+                secMap.setAttributes(attributes.get(0));
+                securityURLMap.add(secMap);
+            }
+        }
         return securityURLMap;
     }
 
@@ -396,7 +396,7 @@ public class SecurityConfigService {
      * @throws IOException
      */
 
-    public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
+    public void setSecurityInterceptUrls(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
         throws JAXBException, IOException {
         Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
         Iterator<SecurityURLMap> itr = securityURLMap.iterator();
@@ -437,7 +437,7 @@ public class SecurityConfigService {
                 urlMap.put("/*/*.json", jsonEntry);
             }
         }
-        getSecToolsMgr().setSecurityFilterODS(urlMap);
+        getSecToolsMgr().setSecurityInterceptUrls(urlMap);
     }
 
     /**
@@ -448,7 +448,7 @@ public class SecurityConfigService {
      * @throws JAXBException
      * @throws IOException
      */
-    public void setSecurityFilterODS(List<String> securityURLList, Boolean enforceSecurity, Boolean enforceIndexHtml) throws JAXBException,
+    public void setSecurityInterceptUrls(List<String> securityURLList, Boolean enforceSecurity, Boolean enforceIndexHtml) throws JAXBException,
         IOException {
         List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
         Iterator<String> itr = securityURLList.iterator();
@@ -459,7 +459,7 @@ public class SecurityConfigService {
             SecurityURLMap secURLRule = new SecurityURLMap(ruleArray[0], ruleArray[1]);
             securityURLMap.add(secURLRule);
         }
-        setSecurityFilterODS(securityURLMap, false, enforceSecurity, enforceIndexHtml);
+        setSecurityInterceptUrls(securityURLMap, false, enforceSecurity, enforceIndexHtml);
     }
 
     public class SecurityURLMap {
