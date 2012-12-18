@@ -93,6 +93,12 @@ dojo.declare("wm.Variable", wm.Component, {
 
         // need to reinitialize after type is set
         if (!this._updating && this.$.binding) this.$.binding.refresh();
+
+        // widgets bound to this component won't have received any events/initial
+        // data or properties if no data has yet been set
+        if (this.isEmpty()) {
+            this.notify();
+        }
     },
     //===========================================================================
     // Type Information
