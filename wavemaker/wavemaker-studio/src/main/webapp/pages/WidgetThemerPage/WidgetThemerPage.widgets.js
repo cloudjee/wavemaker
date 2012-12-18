@@ -32,12 +32,15 @@ WidgetThemerPage.widgets = {
 					}]
 				}]
 			}],
-			outerEditorPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
-				editorPanelHeader: ["wm.Label", {width: "100%", _classes: {domNode: ["Header"]}}],
-				editorPanel: ["wm.Panel", {autoScroll:true,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{
-
-				}]
-			}],
+			tabs:["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
+			    editorLayer: ["wm.Layer", {caption: "Editors"},{}, {
+    				editorPanelHeader: ["wm.Label", {width: "100%", _classes: {domNode: ["Header"]}}],
+    				editorPanel: ["wm.Panel", {autoScroll:true,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{	}],
+    			}],
+				cssLayer: ["wm.Layer", {caption: "Code"},{onShow: "onCssLayerShow"}, {
+				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"}]
+				}]    			
+    		}],
 			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"300px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 				demoPanelHeader: ["wm.Label", {width: "100%", caption: "Samples", _classes: {domNode: ["Header"]}}],
 				demoPanel: ["wm.Panel", {height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%", padding: "20"}, {}, {

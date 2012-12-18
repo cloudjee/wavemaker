@@ -11,7 +11,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     defaultEditorProps: {
         _classes: {domNode: ["StudioEditor"]},
         width: "100%",
-        captionSize: "200px"
+        captionSize: "120px",
+        captionAlign: "left",
+        margin: "0,0,0,15"
     },
 
 
@@ -24,20 +26,63 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     ],
 
 	styleEditors: {
+	    "default": ["wm.Text", {}],
 		"font-family": ["wm.SelectMenu", {restrictValues: false, dataField: "dataValue", displayField: "dataValue"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {targetProperty: "dataSet", source: "fontFaceVar"}]
 			}]
 		}],
-		"font-size": ["wm.Text", {regExp: '\d+[px|pt|em]'}],
+		"font-size": ["wm.FontSizeEditor", {regExp: '\\d+(px|pt|em)'}],
 		"color": ["wm.ColorPicker", {}],
 		"font-weight": ["wm.SelectMenu", {options: "normal,bold"}],
-		"border-radius":["wm.BorderRadiusEditor", {}],
+		"border-radius":["wm.BorderRadiusEditor", {caption: "border-radius"}],
 		"box-shadow":   ["wm.BoxShadowEditor", {}],
 		"background": ["wm.BackgroundEditor", {}]
 	},
-
-
+    /* If the style name is not in the styleRules object, then check directly in the styleEditors object.
+     * Example: "font-family" isn't here, so check for font-family in the stylesEditor.
+     * This section of for rules that are more complicated
+     */
+    styleRules: {
+        "background": "background",
+        "background-color": "background",
+        "background-image": "background",
+        "background-position": "background",
+        "background-repeat": "background",
+        
+        "border-radius": "border-radius",
+        "-webkit-border-radius": "border-radius",
+        "-moz-border-radius": "border-radius",        
+        "-o-border-radius": "border-radius",
+        "-ms-border-radius": "border-radius",
+        "border-top-left-radius": "border-radius",
+        "-webkit-border-top-left-radius": "border-radius",
+        "-moz-border-top-left-radius": "border-radius",        
+        "-o-border-top-left-radius": "border-radius",
+        "-ms-border-top-left-radius": "border-radius",        
+        "border-top-left-radius": "border-radius",
+        "-webkit-border-top-right-radius": "border-radius",
+        "-moz-border-top-right-radius": "border-radius",        
+        "-o-border-top-right-radius": "border-radius",
+        "-ms-border-top-right-radius": "border-radius", 
+        "border-bottom-left-radius": "border-radius",
+        "-webkit-border-bottom-left-radius": "border-radius",
+        "-moz-border-bottom-left-radius": "border-radius",        
+        "-o-border-bottom-left-radius": "border-radius",
+        "-ms-border-bottom-left-radius": "border-radius", 
+        "border-bottom-right-radius": "border-radius",
+        "-webkit-border-bottom-right-radius": "border-radius",
+        "-moz-border-bottom-right-radius": "border-radius",        
+        "-o-border-bottom-right-radius": "border-radius",
+        "-ms-border-bottom-right-radius": "border-radius", 
+        
+        "box-shadow": "box-shadow",
+        "-webkit-box-shadow": "box-shadow",
+        "-moz-box-shadow": "box-shadow",        
+        "-o-box-shadow": "box-shadow",        
+        "-ms-box-shadow": "box-shadow"
+    },
+    
     start: function() {
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
@@ -156,7 +201,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
 
         /* Step 2: Load the css file and the sample file and apply it to the demo panel */
-        this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + this.currentWidgetTemplateFile + ".css") ||
+        this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + this.currentWidgetTemplateFile + ".css?" + (Math.floor(Math.random(new Date().getTime()) * 1000000))) ||
                                     wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
         this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".widgets"));
         this.regenerateDemoPanel();
@@ -172,29 +217,59 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* START SECTION: Edit the selected widget styles */
     generateCssEditors: function(filename) {
-        var parent = this.editorPanel;
+        this._generatingEditors = true;
+        try {
+            var parent = this.editorPanel;
 
-        var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
-        var currentGroup = "";
-        dojo.forEach(lines, function(l) {
-            var groupName = this.getGroupNameFromLine(l);
-            if (groupName) {
-                currentGroup = groupName;
-                var label = new wm.Label({width: "100%", caption: currentGroup, _classes: {domNode: ["SubHeading"]}, owner: this, parent: parent});
-            } else {
-                var styleObj = this.getStyleObjFromLine(l);
-                if (styleObj) {
-
-                    var e = new wm.Text(dojo.mixin({
-                        caption: styleObj.name,
-                        dataValue: styleObj.value,
-                        owner: this,
-                        parent: parent
-                    }, this.defaultEditorProps));
-                    e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, currentGroup, styleObj.name));
+            var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
+            var currentGroup = "";
+            dojo.forEach(lines, function(l) {
+                var groupName = this.getGroupNameFromLine(l);
+                if (groupName) {
+                    currentGroup = groupName;
+                    var label = new wm.Label({ width: "100%", 
+                                                height: "30px",
+                                                margin: "10,0,0,0",
+                                                caption: currentGroup, 
+                                                _classes: {domNode: ["SubHeading"]}, 
+                                                owner: this, 
+                                                parent: parent});
+                    this.currentEditorsHash = {};
+                } else {
+                    var styleObj = this.getStyleObjFromLine(l);
+                    if (styleObj) {
+                        this.generateCssEditor(styleObj.name, styleObj.value, parent, currentGroup);
+                    }
                 }
-            }
-        }, this);
+            }, this);
+        } catch(e) {}
+        delete this._generatingEditors;
+    },
+    generateCssEditor: function(styleName, styleValue, parent, styleGroup) {
+        var styleEditorDef;
+        var styleRule = this.styleRules[styleName];
+        var editorExists = false;
+        if (styleRule) {
+            styleEditorDef =  this.styleEditors[styleRule];
+            editorExists = Boolean(this.currentEditorsHash[styleRule]);
+        } else {
+            styleEditorDef =  this.styleEditors[styleName];
+        }
+        if (editorExists) {
+            var e = this.currentEditorsHash[styleRule];
+            e.setPartialValue(styleName, styleValue);
+        } else {
+            if (!styleEditorDef) styleEditorDef = this.styleEditors["default"];
+            var e = parent.createComponent("", styleEditorDef[0], 
+                dojo.mixin(styleEditorDef[1], {
+                    caption: styleEditorDef[1] && styleEditorDef[1].caption || styleName,
+                    dataValue: styleValue,
+                    owner: this,
+                    parent: parent
+                }, this.defaultEditorProps), styleEditorDef[2], styleEditorDef[3]);
+            e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, styleGroup, styleName));    
+            this.currentEditorsHash[styleRule || styleName] = e;
+        }
     },
     getStyleObjFromLine: function(inLine) {
         var values = inLine.match(/\s*(.*?)\:\s*(.*);/);
@@ -207,6 +282,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (values) return values[1];
     },
     onEditorChange: function(inEditor, inGroup, inStyleName, inDisplayValue, inDataValue) {
+        if (this._generatingEditors) return;
+        var foundGroup = false;
         var currentGroup = "";
         var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
         for (var i = 0; i < lines.length; i++) {
@@ -215,13 +292,30 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             if (groupName) {
                 currentGroup = groupName;
             } else if (currentGroup == inGroup) {
+                foundGroup = true;
                 var styleObj = this.getStyleObjFromLine(l);
-                if (styleObj && styleObj.name === inStyleName) {
-                    lines[i] = "\t" + inStyleName + ": " + inDataValue + ";";
-                    break;
+                if (styleObj) {
+                    /* If its a complex editor (has updateCssLIne method) let it examine
+                     * every style in the group and update it if it chooses to 
+                     */
+                    if (inEditor.updateCssLine) {
+                        var altLine = inEditor.updateCssLine(styleObj.name);
+                        if (altLine) lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
+                    } 
+                    
+                    /* Basic editors only edit a single line; exit loop after
+                     * making the change
+                     */
+                    else if (styleObj.name === inStyleName) {
+                        lines[i] = "\t" + inStyleName + ": " + inDataValue + ";";
+                        break;
+                    }
                 }
+            } else if (foundGroup) {
+                break;
             }
         }
+    
         this.widgetCssFiles[this.currentWidgetTemplateFile] = lines.join("\n");
         var startString = "/***** START SECTION: " + this.currentWidgetName + " *****/";
         var endString = "/***** END SECTION: " + this.currentWidgetName + " *****/";
@@ -238,6 +332,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         studio.application.loadThemeCss(studio.application.theme, true, this.cssText);
     },
     /* END SECTION: Edit the selected widget styles */
+
+    /* START SECTION: Manage AceEditor */
+    /* TODO: Support user editing this file, OR make it readonly */
+    onCssLayerShow: function() {
+        this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);
+    },
 
 
     /* START SECTION: Edit the selected widget prototype */

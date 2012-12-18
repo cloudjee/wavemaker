@@ -2754,3 +2754,355 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
     }
     }
 });
+
+
+
+
+dojo.declare("wm.BorderRadiusEditor", wm.Container, {
+    layoutKind: "left-to-right",
+    dataValue: "0",
+    height: "24px",
+    caption: "border-radius",
+    captionSize: "100px",
+    captionAlign: "left",
+    postInit: function() {
+        this.inherited(arguments);
+        this.captionWidget = new wm.Label({
+            _classes: {domNode: ["wmeditor-caption"]},
+            owner: this,
+            parent: this,
+            name: "label",
+            width: this.captionSize,
+            height: "100%",
+            align: this.captionAlign,
+            caption: this.caption});
+        this.topLeftEditor = new wm.Number({
+            owner: this,
+            parent: this,
+            name: "topLeft",
+            width: "35px",
+            onchange: dojo.hitch(this, "changed", 0)
+        });
+        this.toggleButton = new wm.ToggleButton({
+            owner: this,
+            parent: this,
+            name: "toggleButton",
+            width: "40px",
+            height: "100%",
+            captionUp: "->",
+            captionDown: "<-",
+            onclick: dojo.hitch(this, "toggleChange")
+        });
+        this.panel = new wm.Panel({
+            width: "100%",
+            height: "100%",
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this,
+            name: "panel",
+            horizontalAlign: "left",
+            verticalAlign: "top",
+            showing: false
+        });
+        this.topRightEditor = new wm.Number({
+            owner: this,
+            parent: this.panel,
+            name: "topRight",
+            width: "35px",
+            onchange: dojo.hitch(this, "changed", 1)
+        });
+        this.bottomLeftEditor = new wm.Number({
+            owner: this,
+            parent: this.panel,
+            name: "bottomLeft",
+            width: "35px",
+            onchange: dojo.hitch(this, "changed", 2)
+        });
+        this.bottomRightEditor = new wm.Number({
+            owner: this,
+            parent: this.panel,
+            name: "bottomRight",
+            width: "35px",
+            onchange: dojo.hitch(this, "changed", 3)
+        });
+        this.setDataValue(this.dataValue);
+        if (this.dataValue.match(/\s/)) {
+            this.toggleButton.setClicked(true);
+            this.toggleChange();
+        }        
+    },
+    toggleChange: function() {
+        this.panel.setShowing(this.toggleButton.clicked);
+        this.changed();
+    },
+    setDataValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);
+
+        var parts = v.split(/\s+/);
+        for (var i = 0; i < parts.length; i++) parts[i] = Number(parts[i].replace(/px/, ""));
+        if (parts.length == 1) {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[0]);
+            this.bottomLeftEditor.setDataValue(parts[0]);
+            this.bottomRightEditor.setDataValue(parts[0]);
+        } else if (parts.length == 2) {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[1]);
+            this.bottomLeftEditor.setDataValue(parts[1]);
+            this.bottomRightEditor.setDataValue(parts[0]);
+        } else if (parts.length == 3) {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[1]);
+            this.bottomLeftEditor.setDataValue(parts[1]);
+            this.bottomRightEditor.setDataValue(parts[3]);
+        } else {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[1]);
+            this.bottomLeftEditor.setDataValue(parts[2]);
+            this.bottomRightEditor.setDataValue(parts[3]);
+        }
+        this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        var styleName = inStyleName.replace(/^.*border-/,"");
+        switch(styleName) {
+            case "radius":
+                this.setDataValue(inStyleValue);    
+                break;
+            case "top-left-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");
+                if (inStyleValue != this.topLeftEditor.getDataValue()) {
+                    this.topLeftEditor.setDataValue(inStyleValue);
+                    this.toggleButton.setClicked(true);                    
+                    this.toggleChange();
+                }
+                break;
+            case "top-right-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");            
+                if (inStyleValue != this.topRightEditor.getDataValue()) {
+                    this.topRightEditor.setDataValue(inStyleValue);
+                    this.toggleButton.setClicked(true);                    
+                    this.toggleChange();                    
+                }
+                break;
+            case "bottom-left-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");            
+                if (inStyleValue != this.bottomLeftEditor.getDataValue()) {            
+                    this.bottomLeftEditor.setDataValue(inStyleValue);
+                    this.toggleButton.setClicked(true);                    
+                    this.toggleChange();                    
+                }
+                break;     
+            case "bottom-right-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");            
+                if (inStyleValue != this.bottomRightEditor.getDataValue()) {            
+                    this.bottomRightEditor.setDataValue(inStyleValue);
+                    this.toggleButton.setClicked(true);
+                    this.toggleChange();                    
+                }
+                break;
+        }
+    },
+    getDataValue: function() {
+        return this.dataValue;
+    },
+    changed: function() {
+        var values = [this.topLeftEditor.getDataValue(),
+                     this.topRightEditor.getDataValue(),
+                     this.bottomLeftEditor.getDataValue(),
+                     this.bottomRightEditor.getDataValue()];
+        if (!this.toggleButton.clicked || values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
+            this.dataValue = values[0] + "px";
+        } else if (values[0] === values[3] && values[1] === values[2]) {
+            this.dataValue = values[0] + "px " + values[1] + "px";
+        } else if (values[0] === values[3]) {
+            this.dataValue = values[0] + "px " + values[1] + "px " + values[2] + "px";
+        } else {
+            this.dataValue = values.join("px ") + "px";
+        }        
+        this.onchange(this.dataValue, this.dataValue);
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+    updateCssLine: function(inStyleName) {
+        
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/border-.*radius/)) {                        
+            var styleName = inStyleName.replace(/^.*border-/,"");
+            var topLeft = this.topLeftEditor.getDataValue();
+            switch(styleName) {
+                case "radius":
+                    return inStyleName + ": " + this.getDataValue();
+                case "top-left-radius":
+                    return inStyleName + ": " + topLeft + "px";
+                case "top-right-radius":
+                    return inStyleName + ": " + (this.toggleButton.clicked ? this.topRightEditor.getDataValue() : topLeft) + "px";
+                case "bottom-left-radius":
+                    return inStyleName + ": " + (this.toggleButton.clicked ? this.bottomLeftEditor.getDataValue() : topLeft) + "px";
+                case "bottom-right-radius":
+                    return inStyleName + ": " + (this.toggleButton.clicked ? this.bottomRightEditor.getDataValue() : topLeft) + "px";
+            }
+        
+        }   
+    }
+});
+
+dojo.declare("wm.BoxShadowEditor", wm.Container, {
+    layoutKind: "left-to-right",
+    dataValue: "0px 0px 0px #000000",
+    height: "24px",
+    caption: "border-radius",
+    captionSize: "100px",
+    captionAlign: "right",
+    postInit: function() {
+        this.inherited(arguments);
+        this.captionWidget = new wm.Label({
+            _classes: {domNode: ["wmeditor-caption"]},
+            owner: this,
+            parent: this,
+            name: "label",
+            width: this.captionSize,
+            height: "100%",
+            align: this.captionAlign,
+            caption: this.caption});
+        this.horizontalEditor = new wm.Number({
+            owner: this,
+            parent: this,
+            name: "horizontal",
+            width: "45px",
+            onchange: dojo.hitch(this, "horizontalChange")
+        });
+        this.verticalEditor = new wm.Number({
+            owner: this,
+            parent: this,
+            name: "vertical",
+            width: "45px",
+            onchange: dojo.hitch(this, "verticalChange")
+        });
+        this.blurEditor = new wm.Number({
+            owner: this,
+            parent: this,
+            name: "blurEditor",
+            width: "45px",
+            onchange: dojo.hitch(this, "blurChange")
+        });
+        this.colorEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this,
+            name: "colorEditor",
+            width: "100px",
+            onchange: dojo.hitch(this, "colorChange")
+        });
+        this.setDataValue(this.dataValue);
+    },
+    horizontalChange: function(inDisplayValue, inDataValue) {
+        var parts = this.dataValue.split(/\s+/);
+        parts[0] = inDataValue +  "px";
+        this.dataValue = parts.join(" ");
+        this.onchange(this.dataValue, this.dataValue);
+    },
+
+    verticalChange: function(inDisplayValue, inDataValue) {
+        var parts = this.dataValue.split(/\s+/);
+        parts[1] = inDataValue +  "px";
+        this.dataValue = parts.join(" ");
+        this.onchange(this.dataValue, this.dataValue);
+    },
+
+    blurChange: function(inDisplayValue, inDataValue) {
+        var parts = this.dataValue.split(/\s+/);
+        parts[2] = inDataValue +  "px";
+        this.dataValue = parts.join(" ");
+        this.onchange(this.dataValue, this.dataValue);
+    },
+
+    colorChange: function(inDisplayValue, inDataValue) {
+        var parts = this.dataValue.split(/\s+/);
+        parts[3] = inDataValue;
+        this.dataValue = parts.join(" ");
+        this.onchange(this.dataValue, this.dataValue);
+    },
+
+
+    onchange: function(inDisplayValue, inDataValue) {},
+    setDataValue: function(inValue) {
+        var v = this.dataValue = inValue;
+
+        var parts = v.split(/\s+/);
+        this.horizontalEditor.setDataValue(parseInt(parts[0]));
+        this.verticalEditor.setDataValue(parseInt(parts[1]));
+        this.blurEditor.setDataValue(parseInt(parts[2]));
+        this.colorEditor.setDataValue(parts[3]);
+    },
+    setPartialValue: function(inStyleName, inStyleValue) {},
+    getDataValue: function() {
+        return this.dataValue;
+    }
+});
+
+dojo.declare("wm.BackgroundEditor", wm.Container, {
+    dataValue: "",
+    getDataValue: function() {
+        return this.dataValue;
+    },
+    setDataValue: function(inValue) {
+        this.dataValue = inValue;
+    },
+    setPartialValue: function(inStyleName, inStyleValue) {}    
+});
+
+dojo.declare("wm.FontSizeEditor", wm.Container, {
+layoutKind: "left-to-right",
+    dataValue: "0px 0px 0px #000000",
+    height: "24px",
+    caption: "border-radius",
+    captionSize: "100px",
+    captionAlign: "right",
+    postInit: function() {
+        this.inherited(arguments);
+        this.captionWidget = new wm.Label({
+            _classes: {domNode: ["wmeditor-caption"]},
+            owner: this,
+            parent: this,
+            name: "label",
+            width: this.captionSize,
+            height: "100%",
+            align: this.captionAlign,
+            caption: this.caption});
+        this.sizeEditor = new wm.Number({
+            owner: this,
+            parent: this,
+            name: "sizeEditor",
+            width: "45px",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.sizeTypeEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this,
+            name: "sizeType",
+            width: "55px",
+            onchange: dojo.hitch(this, "changed"),
+            options: "px,pt,em,%"
+        });
+        this.setDataValue(this.dataValue);
+    },
+    getDataValue: function() {
+        return this.dataValue;
+    },
+    setDataValue: function(inValue) {
+        this.dataValue = inValue;
+        var match = inValue.match(/^(\d+)(.+)/);
+        if (match) {
+            this.sizeEditor.setDataValue(match[1]);
+            this.sizeTypeEditor.setDataValue(match[2]);
+        } else {
+            this.sizeEditor.clear();
+            this.sizeTypeEditor.clear();
+        }
+    },
+    setPartialValue: function(inStyleName, inStyleValue) {},
+    changed: function() {
+        this.dataValue = this.sizeEditor.getDataValue() + this.sizeTypeEditor.getDataValue();
+        this.onchange(this.dataValue, this.dataValue);
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+});
