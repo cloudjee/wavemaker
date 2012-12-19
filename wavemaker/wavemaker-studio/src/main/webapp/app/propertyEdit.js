@@ -101,6 +101,7 @@ dojo.declare("wm.SetWireTask", null, {
 dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
     editorBorder: false,
     pxOnly: false,
+    allSizeTypes: false,
     validationEnabled: function() {
         return false;
     },
@@ -119,7 +120,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         });
         this.numberEditor = new wm.Text({
             owner: this,
-            regExp: "^\\d*(%|px|)",
+            regExp: this.allSizeTypes ? "^\\d*(%|px|pt|em|)" : "^\\d*(%|px|)",
             parent: this.editor,
             width: "100%",
             name: "numberEditor",
@@ -131,7 +132,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
             owner: this,
             parent: this.editor,
             name: "typeEditor",
-            options: "px,%",
+            options: this.allSizeTypes ? "px,pt,%,em" : "px,%",
             dataField: "dataValue",
             displayField: "dataValue",
             width: "50px",
@@ -158,6 +159,13 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         } else if (displayValue.match(/px$/)) {
             this.numberEditor.setDataValue(displayValue.replace(/px$/, ""));
             this.typeEditor.setDataValue("px");
+        } else if (displayValue.match(/pt$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/pt$/, ""));
+            this.typeEditor.setDataValue("pt");
+        } else if (displayValue.match(/em$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/em$/, ""));
+            this.typeEditor.setDataValue("em");
+            
         } else {
             this.changed();
         }
@@ -2757,94 +2765,123 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 
 
 
-
-dojo.declare("wm.BorderRadiusEditor", wm.Container, {
-    layoutKind: "left-to-right",
+dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
     dataValue: "0",
-    height: "24px",
     caption: "border-radius",
-    captionSize: "100px",
-    captionAlign: "left",
-    postInit: function() {
-        this.inherited(arguments);
-        this.captionWidget = new wm.Label({
-            _classes: {domNode: ["wmeditor-caption"]},
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.initialHeight = parseInt(this.height);
+        this.allEditor = new wm.Number({
             owner: this,
-            parent: this,
-            name: "label",
-            width: this.captionSize,
-            height: "100%",
-            align: this.captionAlign,
-            caption: this.caption});
-        this.topLeftEditor = new wm.Number({
-            owner: this,
-            parent: this,
-            name: "topLeft",
+            parent: e,
+            name: "allCorners",
             width: "35px",
+            padding: "0",
             onchange: dojo.hitch(this, "changed", 0)
         });
-        this.toggleButton = new wm.ToggleButton({
-            owner: this,
-            parent: this,
-            name: "toggleButton",
-            width: "40px",
+        this.cornersPanel = new wm.Panel({
+            width: "75px",
             height: "100%",
-            captionUp: "->",
-            captionDown: "<-",
-            onclick: dojo.hitch(this, "toggleChange")
-        });
-        this.panel = new wm.Panel({
-            width: "100%",
-            height: "100%",
-            layoutKind: "left-to-right",
+            layoutKind: "top-to-bottom",
             owner: this,
-            parent: this,
-            name: "panel",
+            parent: e,
+            name: "cornersPanel",
             horizontalAlign: "left",
             verticalAlign: "top",
             showing: false
         });
+        this.row1 = new wm.Panel({
+            width: "100%",
+            height: "100%",
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this.cornersPanel,
+            name: "row1",
+            horizontalAlign: "left",
+            verticalAlign: "top"
+        });
+        this.topLeftEditor = new wm.Number({
+            owner: this,
+            parent: this.row1,
+            name: "topLeft",
+            width: "100%",
+            minWidth: "30",            
+            padding: "0",
+            onchange: dojo.hitch(this, "changed", 0)
+        });
         this.topRightEditor = new wm.Number({
             owner: this,
-            parent: this.panel,
+            parent: this.row1,
             name: "topRight",
-            width: "35px",
+            width: "100%",
+            minWidth: "30",     
+            padding: "0",                        
             onchange: dojo.hitch(this, "changed", 1)
         });
+        
+        this.row2= new wm.Panel({
+            width: "100%",
+            height: "100%",
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this.cornersPanel,
+            name: "row2",
+            horizontalAlign: "left",
+            verticalAlign: "top"
+        });
+        
         this.bottomLeftEditor = new wm.Number({
             owner: this,
-            parent: this.panel,
+            parent: this.row2,
             name: "bottomLeft",
-            width: "35px",
+            width: "100%",
+            minWidth: "30",            
+            padding: "0",            
             onchange: dojo.hitch(this, "changed", 2)
         });
+        
+
         this.bottomRightEditor = new wm.Number({
             owner: this,
-            parent: this.panel,
+            parent: this.row2,
             name: "bottomRight",
-            width: "35px",
+            width: "100%",
+            minWidth: "30",            
+            padding: "0",            
             onchange: dojo.hitch(this, "changed", 3)
         });
-        this.setDataValue(this.dataValue);
+        this.toggleButton = new wm.ToggleButton({
+            _classes: {domNode: ["StudioButton"]},
+            owner: this,
+            parent: e,
+            name: "toggleButton",
+            width: "40px",
+            height: "100%",
+            margin: "0",
+            padding: "0",
+            captionUp: "->",
+            captionDown: "<-",
+            onclick: dojo.hitch(this, "toggleClicked")
+        });        
+        return this.editor;
+    },
+    setInitialValue: function() {
+        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
         if (this.dataValue.match(/\s/)) {
             this.toggleButton.setClicked(true);
-            this.toggleChange();
+            this.changed();
         }        
+        this.endEditUpdate();
+        this.clearDirty(true);
     },
-    toggleChange: function() {
-        this.panel.setShowing(this.toggleButton.clicked);
-        this.changed();
-    },
-    setDataValue: function(inValue) {
+    setEditorValue: function(inValue) {
         var v =  this.dataValue = String(inValue);
 
         var parts = v.split(/\s+/);
         for (var i = 0; i < parts.length; i++) parts[i] = Number(parts[i].replace(/px/, ""));
         if (parts.length == 1) {
-            this.topLeftEditor.setDataValue(parts[0]);
-            this.topRightEditor.setDataValue(parts[0]);
-            this.bottomLeftEditor.setDataValue(parts[0]);
-            this.bottomRightEditor.setDataValue(parts[0]);
+            this.allEditor.setDataValue(parts[0]);
         } else if (parts.length == 2) {
             this.topLeftEditor.setDataValue(parts[0]);
             this.topRightEditor.setDataValue(parts[1]);
@@ -2872,159 +2909,186 @@ dojo.declare("wm.BorderRadiusEditor", wm.Container, {
             case "top-left-radius":
                 inStyleValue = inStyleValue.replace(/px/,"");
                 if (inStyleValue != this.topLeftEditor.getDataValue()) {
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.topLeftEditor.setDataValue(inStyleValue);
-                    this.toggleButton.setClicked(true);                    
-                    this.toggleChange();
                 }
                 break;
             case "top-right-radius":
                 inStyleValue = inStyleValue.replace(/px/,"");            
                 if (inStyleValue != this.topRightEditor.getDataValue()) {
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.topRightEditor.setDataValue(inStyleValue);
-                    this.toggleButton.setClicked(true);                    
-                    this.toggleChange();                    
                 }
                 break;
             case "bottom-left-radius":
                 inStyleValue = inStyleValue.replace(/px/,"");            
                 if (inStyleValue != this.bottomLeftEditor.getDataValue()) {            
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.bottomLeftEditor.setDataValue(inStyleValue);
-                    this.toggleButton.setClicked(true);                    
-                    this.toggleChange();                    
                 }
                 break;     
             case "bottom-right-radius":
                 inStyleValue = inStyleValue.replace(/px/,"");            
-                if (inStyleValue != this.bottomRightEditor.getDataValue()) {            
+                if (inStyleValue != this.bottomRightEditor.getDataValue()) {
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.bottomRightEditor.setDataValue(inStyleValue);
-                    this.toggleButton.setClicked(true);
-                    this.toggleChange();                    
                 }
                 break;
         }
     },
-    getDataValue: function() {
+    getEditorValue: function() {
         return this.dataValue;
     },
-    changed: function() {
-        var values = [this.topLeftEditor.getDataValue(),
-                     this.topRightEditor.getDataValue(),
-                     this.bottomLeftEditor.getDataValue(),
-                     this.bottomRightEditor.getDataValue()];
-        if (!this.toggleButton.clicked || values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
-            this.dataValue = values[0] + "px";
-        } else if (values[0] === values[3] && values[1] === values[2]) {
-            this.dataValue = values[0] + "px " + values[1] + "px";
-        } else if (values[0] === values[3]) {
-            this.dataValue = values[0] + "px " + values[1] + "px " + values[2] + "px";
+    setFullEditorShowing: function(inShowing) {
+        if (inShowing) {
+            this.cornersPanel.show();
+            this.allEditor.hide();
+            this.setHeight(this.initialHeight * 2 + "px");
         } else {
-            this.dataValue = values.join("px ") + "px";
-        }        
+            this.cornersPanel.hide();
+            this.allEditor.show();
+            this.setHeight(this.initialHeight + "px");
+        }    
+    },
+    toggleClicked: function() {
+        if (!this.toggleButton.clicked) {
+            this.allEditor.setDataValue(this.topLeftEditor.getDataValue());
+        }
+        this.changed();
+    },
+    changed: function() {
+        if (!this.toggleButton.clicked) {
+            this.setFullEditorShowing(false);
+            if (this.allEditor.getDisplayValue() === "") {
+                if (this.topLeftEditor.getDisplayValue() !== "") {
+                    this.allEditor.setDataValue(this.topLeftEditor.getDataValue());
+                }
+            }
+            var value = this.allEditor.getDataValue();
+            this.dataValue = value + "px";
+            this.topLeftEditor.setDataValue(value);
+            this.topRightEditor.setDataValue(value);
+            this.bottomLeftEditor.setDataValue(value);
+            this.bottomRightEditor.setDataValue(value);
+
+        } else {
+            this.setFullEditorShowing(true);
+            var values = [this.topLeftEditor.getDataValue(),
+                         this.topRightEditor.getDataValue(),
+                         this.bottomLeftEditor.getDataValue(),
+                         this.bottomRightEditor.getDataValue()];
+            if (values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
+                this.dataValue = values[0] + "px";
+            } else if (values[0] === values[3] && values[1] === values[2]) {
+                this.dataValue = values[0] + "px " + values[1] + "px";
+            } else if (values[1] === values[2]) {
+                this.dataValue = values[0] + "px " + values[1] + "px " + values[3] + "px";
+            } else {
+                this.dataValue = values.join("px ") + "px";
+            }   
+        }
         this.onchange(this.dataValue, this.dataValue);
     },
     onchange: function(inDisplayValue, inDataValue) {},
     updateCssLine: function(inStyleName) {
-        
+       
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/border-.*radius/)) {                        
-            var styleName = inStyleName.replace(/^.*border-/,"");
-            var topLeft = this.topLeftEditor.getDataValue();
-            switch(styleName) {
-                case "radius":
-                    return inStyleName + ": " + this.getDataValue();
-                case "top-left-radius":
-                    return inStyleName + ": " + topLeft + "px";
-                case "top-right-radius":
-                    return inStyleName + ": " + (this.toggleButton.clicked ? this.topRightEditor.getDataValue() : topLeft) + "px";
-                case "bottom-left-radius":
-                    return inStyleName + ": " + (this.toggleButton.clicked ? this.bottomLeftEditor.getDataValue() : topLeft) + "px";
-                case "bottom-right-radius":
-                    return inStyleName + ": " + (this.toggleButton.clicked ? this.bottomRightEditor.getDataValue() : topLeft) + "px";
-            }
-        
+        if (inStyleName.match(/border-.*radius/)) {   
+             var value = this.getDataValue();
+             return "border-radius: " + value + ";\n\t-webkit-border-radius: " + value +";";        
         }   
     }
 });
 
-dojo.declare("wm.BoxShadowEditor", wm.Container, {
-    layoutKind: "left-to-right",
+
+dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     dataValue: "0px 0px 0px #000000",
-    height: "24px",
-    caption: "border-radius",
-    captionSize: "100px",
-    captionAlign: "right",
-    postInit: function() {
-        this.inherited(arguments);
-        this.captionWidget = new wm.Label({
-            _classes: {domNode: ["wmeditor-caption"]},
-            owner: this,
-            parent: this,
-            name: "label",
-            width: this.captionSize,
-            height: "100%",
-            align: this.captionAlign,
-            caption: this.caption});
+    caption: "box-shadow",
+    height: "43px",
+    
+    _createEditor: function() {
+        var e = this.inherited(arguments);
         this.horizontalEditor = new wm.Number({
             owner: this,
-            parent: this,
+            parent: e,
             name: "horizontal",
-            width: "45px",
+            height: "100%",
+            width: "70px",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Horizontal",
             onchange: dojo.hitch(this, "horizontalChange")
         });
         this.verticalEditor = new wm.Number({
             owner: this,
-            parent: this,
+            parent: e,
             name: "vertical",
-            width: "45px",
+            height: "100%",
+            width: "60px",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Vertical",
             onchange: dojo.hitch(this, "verticalChange")
         });
         this.blurEditor = new wm.Number({
             owner: this,
-            parent: this,
+            parent: e,
             name: "blurEditor",
-            width: "45px",
+            height: "100%",
+            width: "60px",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Blur",
             onchange: dojo.hitch(this, "blurChange")
         });
         this.colorEditor = new wm.ColorPicker({
             owner: this,
-            parent: this,
+            parent: e,
             name: "colorEditor",
+            caption: "Color",
+            height: "100%",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
             width: "100px",
             onchange: dojo.hitch(this, "colorChange")
         });
-        this.setDataValue(this.dataValue);
+        return e;
     },
     horizontalChange: function(inDisplayValue, inDataValue) {
         var parts = this.dataValue.split(/\s+/);
         parts[0] = inDataValue +  "px";
         this.dataValue = parts.join(" ");
-        this.onchange(this.dataValue, this.dataValue);
+        this.changed();
     },
 
     verticalChange: function(inDisplayValue, inDataValue) {
         var parts = this.dataValue.split(/\s+/);
         parts[1] = inDataValue +  "px";
         this.dataValue = parts.join(" ");
-        this.onchange(this.dataValue, this.dataValue);
+        this.changed();
     },
 
     blurChange: function(inDisplayValue, inDataValue) {
         var parts = this.dataValue.split(/\s+/);
         parts[2] = inDataValue +  "px";
         this.dataValue = parts.join(" ");
-        this.onchange(this.dataValue, this.dataValue);
+        this.changed();
     },
 
     colorChange: function(inDisplayValue, inDataValue) {
         var parts = this.dataValue.split(/\s+/);
         parts[3] = inDataValue;
         this.dataValue = parts.join(" ");
-        this.onchange(this.dataValue, this.dataValue);
+        this.changed();
     },
 
 
     onchange: function(inDisplayValue, inDataValue) {},
-    setDataValue: function(inValue) {
+    setEditorValue: function(inValue) {
         var v = this.dataValue = inValue;
 
         var parts = v.split(/\s+/);
@@ -3034,75 +3098,371 @@ dojo.declare("wm.BoxShadowEditor", wm.Container, {
         this.colorEditor.setDataValue(parts[3]);
     },
     setPartialValue: function(inStyleName, inStyleValue) {},
-    getDataValue: function() {
-        return this.dataValue;
+    
+    updateCssLine: function(inStyleName) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/box-shadow/)) {   
+             var value = this.getDataValue();
+             return "box-shadow: " + value + ";\n\t-webkit-box-shadow: " + value +";";        
+        }   
     }
 });
 
-dojo.declare("wm.BackgroundEditor", wm.Container, {
+dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
     dataValue: "",
-    getDataValue: function() {
-        return this.dataValue;
-    },
-    setDataValue: function(inValue) {
-        this.dataValue = inValue;
-    },
-    setPartialValue: function(inStyleName, inStyleValue) {}    
-});
+    height: "130px",        
+    editorBorder: true,
+    containerLayoutKind: "top-to-bottom",
+    urlPlaceHolder: "",
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.editor.setVerticalAlign("bottom");        
+        var groupName = this.getRuntimeId().replace(/\./,"_");
 
-dojo.declare("wm.FontSizeEditor", wm.Container, {
-layoutKind: "left-to-right",
-    dataValue: "0px 0px 0px #000000",
-    height: "24px",
-    caption: "border-radius",
-    captionSize: "100px",
-    captionAlign: "right",
-    postInit: function() {
-        this.inherited(arguments);
-        this.captionWidget = new wm.Label({
-            _classes: {domNode: ["wmeditor-caption"]},
+        this.testNode = new wm.Label({owner: this, parent: this, showing: false});
+        this.colorPanel = new wm.Container({
             owner: this,
-            parent: this,
-            name: "label",
-            width: this.captionSize,
-            height: "100%",
-            align: this.captionAlign,
-            caption: this.caption});
-        this.sizeEditor = new wm.Number({
+            parent: e,
+            width: "100%",
+            height: wm.AbstractEditor.prototype.height,
+            layoutKind: "left-to-right",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        this.colorChoice = new wm.RadioButton({
             owner: this,
-            parent: this,
-            name: "sizeEditor",
-            width: "45px",
+            parent: this.colorPanel,
+            width: "24px",
+            margin: "0,8,0,0",
+            radioGroup: groupName,
+            checkedValue: "color",
             onchange: dojo.hitch(this, "changed")
         });
-        this.sizeTypeEditor = new wm.SelectMenu({
+        
+        
+        this.colorEditor = new wm.ColorPicker({
             owner: this,
-            parent: this,
-            name: "sizeType",
-            width: "55px",
-            onchange: dojo.hitch(this, "changed"),
-            options: "px,pt,em,%"
+            parent: this.colorPanel,
+            captionSize: "50px",
+            captionAlign: "left",
+            caption: "Color",
+            width: "140px",   
+            gradient: false,
+            onchange: dojo.hitch(this, "changed")
         });
-        this.setDataValue(this.dataValue);
+        
+        this.gradientEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorPanel,
+            captionSize: "80px",
+            caption: "Gradient",
+            width: "200px",
+            height: "100%",            
+            gradient: true,
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+
+        this.imagePanel = new wm.Container({
+            owner: this,
+            parent: e,
+            width: "100%",
+            height: "43px",
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom",
+            horizontalAlign: "left"
+        });
+        this.imageChoice = new wm.RadioButton({
+            owner: this,
+            parent: this.imagePanel ,
+            width: "24px",
+            height: "20px",
+            margin: "0,8,4,0",
+            radioGroup: groupName,
+            checkedValue: "image",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.urlEditor = new wm.Text({
+            owner: this,
+            parent: this.imagePanel,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "URL",
+            width: "100%",
+            height: "100%",
+            placeHolder: this.urlPlaceHolder,      
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.imageRepeatEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Repeats?",
+            width: "60px",
+            height: "100%",
+            allowNone: true,
+            options: "no-repeat,repeat,repeat-x,repeat-y",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.horizontalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Horizontal Position",
+            width: "120px",
+            height: "100%",
+            dataValue: "0%",
+            onchange: dojo.hitch(this, "changed")  
+        });
+        this.verticalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+
+            caption: "Vertical Position",
+            width: "120px",
+            height: "100%",
+            dataValue: "0%",            
+            onchange: dojo.hitch(this, "changed")
+        });                
+
+        this.transparentChoice = new wm.RadioButton({
+            owner: this,
+            parent: e ,
+            width: "100%",
+            captionSize: "100%",
+            captionPosition: "right",
+            captionAlign: "left",
+
+            radioGroup: groupName,
+            checkedValue: "transparent",
+            caption: "Transparent",
+            onchange: dojo.hitch(this, "changed")
+        });                
+       this.customChoice = new wm.RadioButton({
+            owner: this,
+            parent: e ,
+            width: "100%",
+            captionSize: "100%",            
+            captionPosition: "right",
+            captionAlign: "left",
+            radioGroup: groupName,
+            checkedValue: "custom",
+            caption: "Custom (use editor tab)",
+            onchange: dojo.hitch(this, "changed")
+        });                        
+        return e;
+    },    
+    
+    setInitialValue: function() {
+        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
+        this.clearDirty(true);
     },
-    getDataValue: function() {
+
+    /* Possible values that might come in (we do not handle every possibility) 
+     * 	background-color: <color-spec>;
+     *  background-image: <image-spec>;
+     *  background-image: <gradient-spec>
+     *  background-position: <position-spec>;
+     *  background-repeat: <repeat-spec>;
+     *  background: <color-spec> <image-spec|gradient-spec> <repeat-spec> <position-spec>; // any element can be left out but order must be maintained for those present
+     *  filter: progid:DXImageTransform.Microsoft.gradient(...); // ignore this one; the colors should already be extracted from a more standard-based statement
+     * color-spec: #xxx, #xxxxxx, rgb(x,y,z), color-name
+     * image-spec: url(xxx)
+     * gradient-spec: linear-gradient | radial-gradient | -webkit-gradient; // may have browser prefix; -webkit-gradient is deprecated but is only one supported on many android 2 devices     
+     */
+    
+    /* setEditorValue expects the full "backgroud: color image|gradient repeat position" value */
+    
+    getBackgroundObj: function(inValue) {
+        var s = this.testNode.domNode.style;
+        s.background = inValue;
+        var repeatX = s.backgroundRepeatX;
+        var repeatY = s.backgroundRepeatY;
+        var repeat;
+        if (repeatX && repeatY) {
+            repeat = "repeat";
+        } else if (repeatX) {
+            repeat = "repeat-x";
+        } else if (repeatY) {
+            repeat = "repeat-y";
+        } else {
+            repeat = "no-repeat";
+        }
+
+        var result = {
+            color: s.backgroundColor,
+            gradient: (s.backgroundImage||"").match(/gradient/) ? s.backgroundImage : "",
+            url: (s.backgroundImage||"").match(/^url/) ? s.backgroundImage : "",
+            repeat: repeat,
+            positionX: s.backgroundPositionX,
+            positionY: s.backgroundPositionY
+        };
+        return result;
+    },
+    
+    /* Parse either of these options: 
+    * -browserPrefix-linear-gradient(top, #0101b7 0%,#011d65 46%,#011d65 100%); 
+    * -webkit-gradient(linear, center top, center bottom, from(#0101b7), color-stop(46%,#011d65), to(#011d65));
+    * If there are more than 3 colors in the first one, then switch to "custom".
+    * If there is more than one color-stop in the second one, switch to "custom"
+    */
+    parseGradient: function(inValue) {
+        var gradientObj = {};    
+        
+        // matches the -webkit-gradient which is deprecated but still only one supported on android 2 browsers
+        var matches = inValue.match(/-webkit-gradient\(linear,\s*(.*?),\s*(.*?),\s*from\((.*?)\),\s*color-stop\((.*?),(.*?)\),\s*to\((.*?)\)/)
+
+            if (matches) {
+                gradientObj.direction  =  matches[1].match(/top/) && matches[2].match(/bottom/) ? "vertical" : "horizontal";
+                gradientObj.startColor = matches[3];
+                gradientObj.endColor   = matches[6];
+                gradientObj.colorStop = parseInt(matches[4]);
+                return gradientObj;
+            } else {
+                matches = g.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
+                if (matches) {
+                    gradientObj.direction = matches[1] == "top" ? "vertical" : "horizontal";
+                    gradientObj.startColor = matches[2];
+                    gradientObj.colorStop = matches[5];
+                    gradientObj.endColor = matches[6];
+                    return gradientObj;
+                }                    
+            }
+        return null; // failed to parse it
+    },
+    setEditorValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);        
+        var backgroundObj = this.getBackgroundObj(v);
+        if (backgroundObj.gradient && backgroundObj.gradient.match(/radial/)) {
+            this.customChoice.setChecked(true);
+        } else if (backgroundObj.color == "transparent") {
+            this.transparentChoice.setChecked(true);
+            this.dataValue = "transparent";
+
+        } else if (backgroundObj.gradient) {
+           var gradientObj = this.parseGradient(backgroundObj.gradient);
+           if (gradientObj) {
+                this.colorChoice.setChecked(true);
+                this.gradientEditor.setDataValue(gradientObj);
+            } else {
+                this.customChoice.setChecked(true);
+            }
+        } else if (backgroundObj.url) {
+            this.imageChoice.setChecked(true);
+            this.urlEditor.setDataValue(backgroundObj.url);
+            this.imageRepeatEditor.setDataValue(backgroundObj.repeat);
+            var x;
+            if (!backgroundObj.positionX || backgroundObj.positionX == "left") {
+                x = "0%";
+            } else if (backgroundObj.positionX == "center") {
+                x = "50%";
+            } else if (backgroundObj.positionX == "right") {
+                x = "100%";
+            } else {
+                x = backgroundObj.positionX;
+            }
+            this.horizontalPosEditor.setDataValue(x);
+            
+            var y;
+            if (!backgroundObj.positionY || backgroundObj.positionY == "top") {
+                y = "0%";
+            } else if (backgroundObj.positionY == "center") {
+                y = "50%";
+            } else if (backgroundObj.positionY == "bottom") {
+                y = "100%";
+            } else {
+                y = backgroundObj.positionY;
+            }            
+            this.verticalPosEditor.setDataValue(y);
+        } else if (backgroundObj.color) {
+            this.colorChoice.setChecked(true);
+            this.colorEditor.setDataValue(backgroundObj.color);
+
+        }
+        //this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        if (!inStyleName.match(/^background/i)) return;
+        var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
+    		                  return inLetter.substring(1).toUpperCase();
+    		               });
+        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        this.setDataValue(this.testNode.domNode.style.background);
+    },
+    getEditorValue: function() {
         return this.dataValue;
     },
-    setDataValue: function(inValue) {
-        this.dataValue = inValue;
-        var match = inValue.match(/^(\d+)(.+)/);
-        if (match) {
-            this.sizeEditor.setDataValue(match[1]);
-            this.sizeTypeEditor.setDataValue(match[2]);
-        } else {
-            this.sizeEditor.clear();
-            this.sizeTypeEditor.clear();
+    changed: function() {
+        if (this.colorChoice.getChecked()) {
+            this.dataValue = this.getColorDataValue();        
+        } else if (this.imageChoice.getChecked()) {
+            this.dataValue = this.getImageDataValue();
+        } else if (this.transparentChoice.getChecked()) {
+            this.dataValue = "transparent";
+        } else if (this.customChoice.getChecked()) {
+            ;
+        }
+        if (!this.customChoice.getChecked()) {
+            this.onchange(this.dataValue, this.dataValue);
         }
     },
-    setPartialValue: function(inStyleName, inStyleValue) {},
-    changed: function() {
-        this.dataValue = this.sizeEditor.getDataValue() + this.sizeTypeEditor.getDataValue();
-        this.onchange(this.dataValue, this.dataValue);
+    getImageDataValue: function() {
+        var value = this.urlEditor.getDataValue();
+        if (value) value = "url(" + value.replace(/\s*$/,"") + ")";
+        var repeat = this.imageRepeatEditor.getDataValue();
+        if (repeat) value += " " + repeat;
+        value += " " + this.horizontalPosEditor.getDataValue()
+              +  " " + this.verticalPosEditor.getDataValue();
+        return value;            
+    },
+    getColorDataValue: function() {
+        var value = "";
+        
+        var color = this.colorEditor.getDataValue();
+        if (color) {
+            value += color;
+        }
+        
+        var gradient = this.gradientEditor.getDataValue();
+        if (color && gradient) value += " ";
+        if (gradient) value += this.testNode.domNode.style.backgroundImage;
+        return value;    
     },
     onchange: function(inDisplayValue, inDataValue) {},
+    updateCssLine: function(inStyleName, inStyleValue) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/^background/) || inStyleName == "filter" && inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/)) {   
+            var value = "";
+            if (!this.colorChoice.getChecked()) {
+                value = "background: " + this.getDataValue();
+            } else {
+                if (this.colorEditor.getDataValue()) {
+                    value += "background-color: " + this.colorEditor.getDataValue() + ";";
+                }
+                if (this.gradientEditor.getDataValue()) {
+                    if (value) value += "\n\t";
+                    var styleValue = this.gradientEditor.getDataValue();
+                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
+                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+                }
+            }
+            return value;
+        }   
+    }
+    
 });

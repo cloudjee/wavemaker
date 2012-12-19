@@ -69,16 +69,20 @@ wm.requireCss = function(modulepath) {
     var filename = parts.pop();
     var path = parts.join(".");
     */
+
+    var path = wm.dojoModuleToPath(modulepath) + ".css";
+    wm.requireCssPath(path);
+}
+wm.dojoModuleToPath = function(modulepath) {
     var lastIndex = modulepath.lastIndexOf(".");
     var filename = modulepath.substring(lastIndex + 1);
     var modulepath = modulepath.substring(0,lastIndex);
-    var path = dojo.moduleUrl(modulepath).path.replace(/lib\/\//, "lib/") + filename + ".css";
+    var path = dojo.moduleUrl(modulepath).path.replace(/lib\/\//, "lib/") + filename;
 
     while (path.match(/[^\/]\/\.\.\//)) {
         path = path.replace(/[^\/]*\/\.\.\/+/, "");
     }
-
-    wm.requireCssPath(path);
+    return path;
 }
 wm.requireCssPath = function(path) {
     var styleNodeId = "CSS_" + path.replace(/\./g,"_").replace(/\//g,"_");

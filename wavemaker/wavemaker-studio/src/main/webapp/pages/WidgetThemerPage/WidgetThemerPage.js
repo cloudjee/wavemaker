@@ -32,12 +32,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 				wire: ["wm.Wire", {targetProperty: "dataSet", source: "fontFaceVar"}]
 			}]
 		}],
-		"font-size": ["wm.FontSizeEditor", {regExp: '\\d+(px|pt|em)'}],
+		"font-size": ["wm.prop.SizeEditor", {allSizeTypes:true}],
 		"color": ["wm.ColorPicker", {}],
 		"font-weight": ["wm.SelectMenu", {options: "normal,bold"}],
 		"border-radius":["wm.BorderRadiusEditor", {caption: "border-radius"}],
-		"box-shadow":   ["wm.BoxShadowEditor", {}],
-		"background": ["wm.BackgroundEditor", {}]
+		"box-shadow":   ["wm.BoxShadowEditor", {caption: "box-shadow"}],
+		"background": ["wm.BackgroundEditor", {caption: "background"}]
 	},
     /* If the style name is not in the styleRules object, then check directly in the styleEditors object.
      * Example: "font-family" isn't here, so check for font-family in the stylesEditor.
@@ -49,6 +49,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         "background-image": "background",
         "background-position": "background",
         "background-repeat": "background",
+        // should have filter here, but thats a screwy microsoft style.
         
         "border-radius": "border-radius",
         "-webkit-border-radius": "border-radius",
@@ -248,6 +249,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     generateCssEditor: function(styleName, styleValue, parent, styleGroup) {
         var styleEditorDef;
         var styleRule = this.styleRules[styleName];
+        if (styleName == "filter" && styleValue.match(/Gradient/i)) {
+            styleRule = this.styleRules.background;
+        }
         var editorExists = false;
         if (styleRule) {
             styleEditorDef =  this.styleEditors[styleRule];
@@ -260,6 +264,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             e.setPartialValue(styleName, styleValue);
         } else {
             if (!styleEditorDef) styleEditorDef = this.styleEditors["default"];
+            if (styleEditorDef[0] == "wm.BackgroundEditor") {
+                styleEditorDef[1].urlPlaceHolder = wm.dojoModuleToPath(this.currentTheme + ".images") + "/example.png";
+            }
             var e = parent.createComponent("", styleEditorDef[0], 
                 dojo.mixin(styleEditorDef[1], {
                     caption: styleEditorDef[1] && styleEditorDef[1].caption || styleName,
@@ -286,6 +293,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         var foundGroup = false;
         var currentGroup = "";
         var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
+        var updateCssLineFired = false;
+        var deleteRows = [];
         for (var i = 0; i < lines.length; i++) {
             var l = lines[i];
             var groupName = this.getGroupNameFromLine(l);
@@ -298,9 +307,19 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     /* If its a complex editor (has updateCssLIne method) let it examine
                      * every style in the group and update it if it chooses to 
                      */
-                    if (inEditor.updateCssLine) {
-                        var altLine = inEditor.updateCssLine(styleObj.name);
-                        if (altLine) lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
+                    if (inEditor.updateCssLine) {                        
+                        // value is sent in case of name "filter" and value "Gradient"
+                        // as thats the only way to know that a filter is for background gradient
+                        var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
+                        if (altLine) {
+                            if (!updateCssLineFired) {
+                                lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
+                                updateCssLineFired = true;
+                            } else {
+                                lines[i] = "";
+                                deleteRows.push(i);
+                            }
+                        } 
                     } 
                     
                     /* Basic editors only edit a single line; exit loop after
@@ -315,7 +334,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 break;
             }
         }
-    
+        for (var i = deleteRows.length-1; i >= 0; i--) wm.Array.removeElementAt(lines,deleteRows[i]);
         this.widgetCssFiles[this.currentWidgetTemplateFile] = lines.join("\n");
         var startString = "/***** START SECTION: " + this.currentWidgetName + " *****/";
         var endString = "/***** END SECTION: " + this.currentWidgetName + " *****/";

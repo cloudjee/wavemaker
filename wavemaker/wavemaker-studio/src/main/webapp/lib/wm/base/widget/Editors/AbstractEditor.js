@@ -1161,6 +1161,12 @@ dojo.declare("wm.AbstractEditorContainer", wm.AbstractEditor, {
     blur:  function(inValue) {}, // TODO: Subclass should override this method
     _getValidatorNode: function() {
         return null;
+    },
+    setEditorValue: function(inValue) {// TODO: Override this
+        this.dataValue = inValue;
+    },
+    getEditorValue: function() { // TODO: Override this unless your maintaining dataValue (which is probably a good practice)
+        return this.dataValue;
     }
 });
 
