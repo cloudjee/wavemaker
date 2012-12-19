@@ -156,7 +156,7 @@ dojo.declare("wm.DojoFisheye", wm.Control, {
 		this.selectedItem.setType(this.variable ? this.variable.type : "any");
 	},
 	updateSelected: function(dataObj){
-		this.selectedItem.setDataSchema(dataObj);
+		this.selectedItem.setDataSchema(this.variable._dataSchema);
 		this.selectedItem.setData(dataObj);
 		this.setValue("emptySelection", Boolean(!dataObj));
 	},
