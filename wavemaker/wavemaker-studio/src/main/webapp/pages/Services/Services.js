@@ -13,6 +13,7 @@
  */
 
 dojo.provide("wm.studio.pages.Services.Services");
+dojo.require("wm.studio.app.servicesTree");
 
 dojo.declare("Services", wm.Page, {
         i18n: true,
@@ -213,7 +214,7 @@ dojo.declare("Services", wm.Page, {
         } else {
             this.wsdlCodeEditor.setShowing(true);
             this.wsdlLink.setShowing(false);
-            this.wsdlCodeEditor.setInputValue(inData);
+            this.wsdlCodeEditor.setDataValue(inData);
         }
     },
     webServiceSaveBtnClick: function(inSender) {
@@ -231,7 +232,7 @@ dojo.declare("Services", wm.Page, {
     },
     clearAll: function() {
         this.tree.serviceId = null;
-        this.wsdlCodeEditor.setInputValue(null);
+        this.wsdlCodeEditor.setDataValue(null);
         this.serviceNameInput.clear();
         this.serviceNameInput.setShowing(false);
         this.feedDescInput.setShowing(false);

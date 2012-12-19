@@ -58,7 +58,7 @@ Services.widgets = {
 					}],
 					wsdlPanel: ["wm.Panel", {border: "0", height: "100%", padding: "0"}, {}, {
 						wsdlTextHolder: ["wm.Panel", {border: "0", layoutKind: "left-to-right", height: "100%"}, {}, {
-							wsdlCodeEditor: ["wm.TextArea", {readonly: true, border: "0", width: "100%", height: "100%", margin: "", padding: "2", readOnly: true, scrollY: true}, {}],
+						    wsdlCodeEditor: ["wm.LargeTextArea", {disabled: true, border: "0", width: "100%", height: "100%", margin: "", padding: "2", readOnly: true, scrollY: true}, {}],
 							wsdlLink: ["wm.Label", {caption: "Download WSDL", height: "100%", border: "0", width: "100%", showing: false}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}]
