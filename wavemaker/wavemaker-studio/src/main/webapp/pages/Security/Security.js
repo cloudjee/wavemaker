@@ -1023,7 +1023,7 @@ dojo.declare(
                     realName = str.URL.substring(lastSlash + 1, str.URL.indexOf("."));
                 }
                 if (realName == inName) {
-                    return str.attributes;
+                    return str.Attributes;
                 }
             }
         },
