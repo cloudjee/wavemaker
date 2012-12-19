@@ -1063,11 +1063,11 @@ dojo.declare(
              */
             var starAttributes;
             if (!this.secEnableInput.getChecked()) {
-                starAttributes = "IS_AUTHENTICATED_ANONYMOUSLY";
+                starAttributes = "permitAll";
             } else if (!this.showLoginPageInput.getChecked()) {
-                starAttributes = "IS_AUTHENTICATED_FULLY";
+                starAttributes = "isAuthenticated()";
             } else {
-                starAttributes = "IS_AUTHENTICATED_FULLY";
+                starAttributes = "isAuthenticated()";
             }
 
             for ( var i = 0; i < data.length; i++) {
