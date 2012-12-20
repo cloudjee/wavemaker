@@ -238,6 +238,6 @@ public class SecurityXmlSupport {
                 }
             }
         }
-        objs.add(interceptUrl);
+        objs.add(0, interceptUrl);
     }   
 }

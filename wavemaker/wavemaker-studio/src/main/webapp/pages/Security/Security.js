@@ -970,7 +970,7 @@ dojo.declare(
                         var attributes = this.findServiceSecurityForService(node.component.name)
                         serviceList.push({
                             name : node.component.name,
-                            URL : "/" + wm.decapitalize(node.component.name) + ".json",
+                            URL : "/services/" + wm.decapitalize(node.component.name) + ".json",
                             attributes : attributes,
                             Settings : this.getAttributesDisplay(attributes)
                         });
