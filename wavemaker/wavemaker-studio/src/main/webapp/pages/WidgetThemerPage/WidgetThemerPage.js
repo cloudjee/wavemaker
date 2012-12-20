@@ -22,7 +22,30 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Buttons",
             templateFile: "button",
             classList: [{dataValue: "wm.Button"},{dataValue: "wm.ToggleButton"}, {dataValue: "wm.PopupMenuButton"}]
+        },
+        {
+            name: "Editors",
+            templateFile: "editors",
+            classList: [{dataValue: "wm.Text"},
+                        {dataValue: "wm.LargeTextArea"}, 
+                        {dataValue: "wm.Number"},
+                        {dataValue: "wm.Currency"},                        
+                        {dataValue: "wm.SelectMenu"},
+                        {dataValue: "wm.Lookup"},
+                        {dataValue: "wm.FilteringLookup"},
+                        {dataValue: "wm.Date"},
+                        {dataValue: "wm.Time"},
+                        {dataValue: "wm.DateTime"},
+                        {dataValue: "wm.Checkbox"},
+                        {dataValue: "wm.RadioButton"},
+                        {dataValue: "wm.RichText"},
+                        {dataValue: "wm.Date"},
+                        {dataValue: "wm.CheckboxSet"},
+                        {dataValue: "wm.RadioSet"},
+                        {dataValue: "wm.ListSet"}
+                    ]
         }
+        
     ],
 
 	styleEditors: {
@@ -32,8 +55,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 				wire: ["wm.Wire", {targetProperty: "dataSet", source: "fontFaceVar"}]
 			}]
 		}],
-		"font-size": ["wm.prop.SizeEditor", {allSizeTypes:true}],
-		"color": ["wm.ColorPicker", {}],
+		"font-size": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 12}],
+		"color": ["wm.ColorPicker", {caption: "font color"}],
+		"border": ["wm.BorderEditor", {caption: "border"}],		
+		"outline": ["wm.BorderEditor", {caption: "outline"}],				
 		"font-weight": ["wm.SelectMenu", {options: "normal,bold"}],
 		"border-radius":["wm.BorderRadiusEditor", {caption: "border-radius"}],
 		"box-shadow":   ["wm.BoxShadowEditor", {caption: "box-shadow"}],
@@ -56,12 +81,14 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         "-moz-border-radius": "border-radius",        
         "-o-border-radius": "border-radius",
         "-ms-border-radius": "border-radius",
+        
         "border-top-left-radius": "border-radius",
         "-webkit-border-top-left-radius": "border-radius",
         "-moz-border-top-left-radius": "border-radius",        
         "-o-border-top-left-radius": "border-radius",
-        "-ms-border-top-left-radius": "border-radius",        
-        "border-top-left-radius": "border-radius",
+        "-ms-border-top-left-radius": "border-radius",  
+        
+        "border-top-right-radius": "border-radius",
         "-webkit-border-top-right-radius": "border-radius",
         "-moz-border-top-right-radius": "border-radius",        
         "-o-border-top-right-radius": "border-radius",
@@ -81,7 +108,33 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         "-webkit-box-shadow": "box-shadow",
         "-moz-box-shadow": "box-shadow",        
         "-o-box-shadow": "box-shadow",        
-        "-ms-box-shadow": "box-shadow"
+        "-ms-box-shadow": "box-shadow",
+        
+        "outline": "outline",
+        "outline-width": "outline",        
+        "outline-color": "outline",                
+        "outline-style": "outline",        
+        
+        "border": "border",
+        "border-width": "border",
+        "border-style": "border",
+        "border-color": "border",
+        "border-top":   "border",
+        "border-left":  "border",
+        "border-right":  "border",        
+        "border-bottom":  "border",                
+        "border-top-width":   "border",
+        "border-left-width":  "border",
+        "border-right-width":  "border",        
+        "border-bottom-width":  "border",                
+        "border-top-color":   "border",
+        "border-left-color":  "border",
+        "border-right-color":  "border",        
+        "border-bottom-color":  "border",                
+        "border-top-style":   "border",
+        "border-left-style":  "border",
+        "border-right-style":  "border",        
+        "border-bottom-style":  "border",                
     },
     
     start: function() {
@@ -206,6 +259,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                     wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
         this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".widgets"));
         this.regenerateDemoPanel();
+        this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);
 
         /* Generate the editors */
         this.editorPanel.removeAllControls();
@@ -237,9 +291,14 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                                 parent: parent});
                     this.currentEditorsHash = {};
                 } else {
-                    var styleObj = this.getStyleObjFromLine(l);
-                    if (styleObj) {
-                        this.generateCssEditor(styleObj.name, styleObj.value, parent, currentGroup);
+                
+                    var calcString = "THEMER: CALC:";
+                    var indexOfCalcString = l.indexOf(calcString);
+                    if (indexOfCalcString == -1) {                                    
+                        var styleObj = this.getStyleObjFromLine(l);
+                        if (styleObj) {
+                            this.generateCssEditor(styleObj.name, styleObj.value, parent, currentGroup);
+                        }
                     }
                 }
             }, this);
@@ -259,10 +318,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         } else {
             styleEditorDef =  this.styleEditors[styleName];
         }
-        if (editorExists) {
-            var e = this.currentEditorsHash[styleRule];
-            e.setPartialValue(styleName, styleValue);
-        } else {
+        if (!editorExists) {        
             if (!styleEditorDef) styleEditorDef = this.styleEditors["default"];
             if (styleEditorDef[0] == "wm.BackgroundEditor") {
                 styleEditorDef[1].urlPlaceHolder = wm.dojoModuleToPath(this.currentTheme + ".images") + "/example.png";
@@ -270,12 +326,20 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             var e = parent.createComponent("", styleEditorDef[0], 
                 dojo.mixin(styleEditorDef[1], {
                     caption: styleEditorDef[1] && styleEditorDef[1].caption || styleName,
-                    dataValue: styleValue,
+                    //dataValue: styleValue != "inherit" ? styleValue || "" : "",
                     owner: this,
                     parent: parent
                 }, this.defaultEditorProps), styleEditorDef[2], styleEditorDef[3]);
             e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, styleGroup, styleName));    
             this.currentEditorsHash[styleRule || styleName] = e;
+        }
+        if (styleValue && styleValue != "inherit") {
+            if (!e) e = this.currentEditorsHash[styleRule || styleName];
+            if (e.setPartialValue) {            
+                e.setPartialValue(styleName, styleValue);
+            } else {
+                e.setDataValue(styleValue);
+            }
         }
     },
     getStyleObjFromLine: function(inLine) {
@@ -302,32 +366,42 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 currentGroup = groupName;
             } else if (currentGroup == inGroup) {
                 foundGroup = true;
-                var styleObj = this.getStyleObjFromLine(l);
-                if (styleObj) {
-                    /* If its a complex editor (has updateCssLIne method) let it examine
-                     * every style in the group and update it if it chooses to 
-                     */
-                    if (inEditor.updateCssLine) {                        
-                        // value is sent in case of name "filter" and value "Gradient"
-                        // as thats the only way to know that a filter is for background gradient
-                        var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
-                        if (altLine) {
-                            if (!updateCssLineFired) {
-                                lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
-                                updateCssLineFired = true;
-                            } else {
-                                lines[i] = "";
-                                deleteRows.push(i);
-                            }
+                
+                var calcString = "THEMER: CALC:";
+                var indexOfCalcString = l.indexOf(calcString);
+                if (indexOfCalcString != -1) {
+                    /* TODO: Need to apply these expressions! */
+                    var expr = l.substring(indexOfCalcString, l.indexOf("*/", indexOfCalcString));
+                    console.log("EXPR:" + expr);
+                
+                } else {
+                    var styleObj = this.getStyleObjFromLine(l);
+                    if (styleObj) {
+                        /* If its a complex editor (has updateCssLIne method) let it examine
+                         * every style in the group and update it if it chooses to 
+                         */
+                        if (inEditor.updateCssLine) {                        
+                            // value is sent in case of name "filter" and value "Gradient"
+                            // as thats the only way to know that a filter is for background gradient
+                            var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
+                            if (altLine) {
+                                if (!updateCssLineFired) {
+                                    lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
+                                    updateCssLineFired = true;
+                                } else {
+                                    lines[i] = "";
+                                    deleteRows.push(i);
+                                }
+                            } 
                         } 
-                    } 
-                    
-                    /* Basic editors only edit a single line; exit loop after
-                     * making the change
-                     */
-                    else if (styleObj.name === inStyleName) {
-                        lines[i] = "\t" + inStyleName + ": " + inDataValue + ";";
-                        break;
+                        
+                        /* Basic editors only edit a single line; exit loop after
+                         * making the change
+                         */
+                        else if (styleObj.name === inStyleName) {
+                            lines[i] = "\t" + inStyleName + ": " + inDataValue + ";";
+                            break;
+                        }
                     }
                 }
             } else if (foundGroup) {
@@ -418,9 +492,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     props.regExp = "\\d+(\\s*,\\s*\\d+){0,3}";
                     e = new wm.Text(props);
                     break;
-        case "isMajorContent":
-                    e = new wm.Checkbox(props);
-                    e.setChecked(props.dataValue);
+        case "width":
+        case "height":        
+        case "mobileHeight":        
+        case "desktopHeight":                
+                    e = new wm.prop.SizeEditor(props);
                     break;
         default:
                     e = new wm.Text(props);

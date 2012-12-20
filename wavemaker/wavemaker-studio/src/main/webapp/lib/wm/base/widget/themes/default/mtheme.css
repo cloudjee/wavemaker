@@ -1375,3 +1375,17 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 height: 100%;
 display: inline-block;
 }
+
+
+/* Misc stuff moved from theme designer to standard theme file */
+.dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wmeditor .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitSelect .dijitArrowButton {
+    height: 100% !important;
+}
+.wmeditor .dijitSpinner .dijitArrowButton,
+.dojoxGrid .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitSelect .dijitArrowButton {
+    background-image: none;
+}

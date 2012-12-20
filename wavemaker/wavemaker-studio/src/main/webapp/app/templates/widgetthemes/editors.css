@@ -1,0 +1,171 @@
+/* TODO: Fix all .dijitButtonContents which are found in Select editors which are found in editable grid */
+
+/* GROUP: Standard Editors */
+.wm_template .dojoxGrid .dijitTextBox,
+.wm_template .dojoxGrid .dijitComboBox,
+.wm_template .dojoxGrid .dijitSelect .dijitButtonContents,
+.wm_template .wmeditor .dijitTextBox,
+.wm_template .wmeditor .dijitTextArea,
+.wm_template .wmeditor .dijitComboBox,
+.wm_template .wmeditor .dijitSelect .dijitButtonContents,
+.wm_template .dijitTimePickerItem,
+.wm_template .wmeditor .RichTextEditable iframe {
+	border-color: #666666;  
+	border-width: 1px;
+	font-family: sans-serif;
+	font-size: 12pt;
+	color: #FFFFFF;
+	font-weight: bold;
+	background-color: #444444;
+}
+
+.wm_template  .wmeditor .dijitTextBox,
+.wm_template  .wmeditor .dijitTextArea,
+.wm_template  .wmeditor .dijitComboBox,
+.wm_template  .dojoxGrid .dijitTextBox,
+.wm_template  .dojoxGrid .dijitTextArea,
+.wm_template  .dojoxGrid .dijitComboBox
+ {
+     -webkit-border-radius: 4px;
+     border-radius: 4px;
+}
+
+.wm_template .wmeditor.wmrichtext {
+    -webkit-border-bottom-left-radius: 4px;  /* THEMER: CALC: ${border-bottom-left-radius} */
+    -webkit-border-bottom-right-radius: 4px; /* THEMER: CALC: ${border-bottom-right-radius} */
+    border-bottom-left-radius: 4px;       /* THEMER: CALC: ${border-bottom-left-radius} */
+    border-bottom-right-radius: 4px;      /* THEMER: CALC: ${border-bottom-right-radius} */
+}
+
+
+/* GROUP: Hover */
+.wm_template .wmeditor .dijitTextBox.dijitHover,
+.wm_template .wmeditor .dijitTextArea:hover,
+.wm_template .wmeditor .dijitComboBox.dijitHover,
+.wm_template .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.wm_template .wmeditor .RichTextEditable:hover iframe,
+.wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_template .dijitTimePickerItem.dijitTimePickerItemHover {
+	color: #FFFFFF;
+	border-color: #666666;
+	background-color: #444444;
+}
+
+/* GROUP: Focus */
+.wm_template .dojoxGrid .dijitTextBox.dijitFocused,
+.wm_template .dojoxGrid .dijitComboBox.dijitFocused,
+.wm_template .dojoxGrid .dijitSelect.dijitFocused .dijitButtonContents,
+.wm_template .wmeditor .dijitTextBox.dijitFocused,
+.wm_template .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.wm_template .wmeditor .dijitTextArea.dijitFocused,
+.wm_template .wmeditor .dijitTextArea.dijitFocused:hover,
+.wm_template .wmeditor .dijitComboBox.dijitFocused,
+.wm_template .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.wm_template .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.wm_template .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
+.wm_template .isDirty.wmeditor .dijitTextBox,
+.wm_template .isDirty.wmeditor .dijitTextArea,
+.wm_template .isDirty.wmeditor .dijitComboBox,
+.wm_template .wmeditor .RichTextEditable.Focused iframe {
+	color: #FFFFFF; 
+	border-color: #666666; 
+	background-color: #444444; 
+}
+
+/* GROUP: isDirty */
+.wm_template .isDirty.wmeditor .dijitTextBox,
+.wm_template .isDirty.wmeditor .dijitTextArea,
+.wm_template .isDirty.wmeditor .dijitComboBox {
+	color: #FFFFFF; 
+	border-color: #666666; 
+	background-color: #444444; 
+}
+
+/* GROUP: Invalid */
+.wm_template .wmeditor .dijitError.dijitTextBox,
+.wm_template .wmeditor .dijitError.dijitTextArea,
+.wm_template .wmeditor .dijitError.dijitComboBox,
+.wm_template .wmeditor .dijitError.isDirty.dijitTextBox,
+.wm_template .wmeditor .dijitError.isDirty.dijitTextArea,
+.wm_template .wmeditor .dijitError.isDirty.dijitComboBox
+{
+	color: #FFFFFF; 
+	border-color: #666666; 
+	background-color: #F9F7BA; 
+	background-image: none; 
+}
+
+
+/* GROUP: Captions */
+.wm_template .wmeditor .wmeditor-caption {
+	font-family: inherit; 
+	font-size: inherit; 
+	color: inherit; 
+	font-weight: bold;
+}
+
+/* GROUP: Read-only */
+.wm_template .wmeditor .wmeditor-readonlyNode {
+	font-family: inherit; 
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+}
+
+
+/* GROUP: Drop Down Arrows */
+.wm_template .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template .dojoxGrid .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton {
+    background-color: #666666;
+    background-image: -webkit-gradient(linear, center top, center bottom, from(#aaaaaa), color-stop(52%,#666666), to(#666666));
+	background-image: -moz-linear-gradient(top, #aaaaaa 0%,#666666 52%,#666666 100%);
+	background-image: -o-linear-gradient(top, #aaaaaa 0%,#666666 52%,#666666 100%);
+	background-image: -ms-linear-gradient(top, #aaaaaa 0%,#666666 52%,#666666 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aaaaaa', endColorstr='#666666',GradientType=0);  
+}
+
+
+.wm_template .dojoxGrid .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton,
+.wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_template .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+    -webkit-border-bottom-right-radius: 2px;
+    -webkit-border-top-right-radius: 2px; 
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+/* GROUP: Drop Down Background */
+.wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_template .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+    background-position: 50% 50%;
+	background-image: url(images/comboArrowDownLight.png);
+}
+
+
+
+/* GROUP: Spinner Arrows Down */
+.wm_template .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+	background-position: 30% 30%;
+	background-image: url(images/comboArrowDownLight.png); 
+}
+
+/* GROUP: Spinner Arrows Up */
+.wm_template .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowUpLight.png);
+}
+
+
+
+/* GROUP: sliders */
+.wm_template .dijitSlider .dijitProgressBarLabel {
+    color: white;
+}
+
+.wm_template .dijitSlider .dijitSliderImageHandleH {
+    background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+    outline-width: 0;
+}
