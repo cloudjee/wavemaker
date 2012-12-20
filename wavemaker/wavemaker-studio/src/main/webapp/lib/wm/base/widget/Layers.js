@@ -773,18 +773,18 @@ dojo.declare("wm.Layers", wm.Container, {
             }
         });
     },
-        getMinHeightProp: function() {
-            if (this.minHeight) return this.minHeight;
-            var minHeight = 80;
-            if (this.layersType.match(/tabs/i)) minHeight += parseInt(this._headerHeight);
-            return minHeight;
-        },
-        getMinWidthProp: function() {
-            if (this.minWidth) return this.minWidth;
-            var minWidth = 80;
-            if (this.layersType.match(/tabs/i)) minWidth += 120; // need horiz space for tabs
-            return minWidth;
-        },
+    getMinHeightProp: function() {
+        if (this.minHeight) return this.minHeight;
+        var minHeight = 15;
+        if (this.layersType.match(/tabs/i)) minHeight += parseInt(this._headerHeight);
+        return minHeight;
+    },
+    getMinWidthProp: function() {
+        if (this.minWidth) return this.minWidth;
+        var minWidth = 80;
+        if (this.layersType.match(/tabs/i)) minWidth += 120; // need horiz space for tabs
+        return minWidth;
+    },
     restoreFromLocationHash: function(inValue) {
     var value = inValue;
     if (value !== undefined) {
