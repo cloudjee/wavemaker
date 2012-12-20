@@ -23,7 +23,7 @@ wm.isDesignable = function(inControl) {
 wm.Control.extend({
 
 
-    themeableProps: ["border", "borderColor"],
+    themeableProps: ["border", "borderColor", "margin", "padding", "desktopHeight", "mobileHeight", "width"],
     hint: "",
     themeable: true,
     //publishClass: '',
