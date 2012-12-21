@@ -1584,7 +1584,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         }
 	    // If the new parent is not the same as the old parent, remove the widget from the old parent
 	    // and remove the control from the old parent (Note: lookup difference between widget and control)
-	    if (oldParent && oldParent != newParent) {
+	    if (oldParent && oldParent != newParent && !oldParent.isDestroyed) {
     		oldParent.removeWidget(this);
     		// BC: we still have non-container parents (e.g. wm.Dialog)
     		if (oldParent.removeControl) {
@@ -1672,11 +1672,18 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    var d = Boolean(inDisabled);
 	    this.disabled = d;
 	    this._disabled = d || this._parentDisabled;
-
 	    wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
-		w.setParentDisabled(this._disabled);
+    		w.setParentDisabled(this._disabled);
 	    }));
-
+	    
+	    /* foreach property fails on unnamed widgets; but not all widgets have a this.c$ */
+	    if (this.c$) {
+            dojo.forEach(this.c$, function(w) {
+                if (!w.name) {
+                    w.setParentDisabled(this._disabled);
+                }
+            }, this);
+        }
 	    dojo.toggleClass(this.domNode, "Disabled", this._disabled);
 	},
     setParentDisabled: function(inDisabled) {
