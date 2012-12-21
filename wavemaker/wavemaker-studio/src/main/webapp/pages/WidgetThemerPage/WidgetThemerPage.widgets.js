@@ -1,4 +1,5 @@
 WidgetThemerPage.widgets = {
+    sampleDataSet: ["wm.Variable", {type: "EntryData", isList: true, json:"[{name: 'Sunday', dataValue: 0},{name: 'Monday', dataValue: 1},{name: 'Tuesday', dataValue: 2},{name: 'Wednesday', dataValue: 3},{name: 'Thursday', dataValue: 4},{name: 'Friday', dataValue: 5},{name: 'Saturday', dataValue: 6}]"}],
 	widgetListTypeDef: ["wm.TypeDefinition", {internal:1},{},{
 		widgetListTypeDefField1: ["wm.TypeDefinitionField", {fieldName: "name", type: "String"}],
 		widgetListTypeDefField2: ["wm.TypeDefinitionField", {fieldName: "templateFile", type: "String"}],

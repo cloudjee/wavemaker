@@ -73,8 +73,14 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         {dataValue: "wm.GenericDialog"},                        
                         {dataValue: "wm.DesignableDialog"}]
             
+        },
+        {
+            name: "Grids",
+            templateFile: "grid",
+            classList: [{dataValue: "wm.DojoGrid"},
+                        {dataValue: "wm.List"}]
+            
         }
-        
     ],
 
 	styleEditors: {
@@ -427,7 +433,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 
                 var calcString = "THEMER: CALC:";
                 var indexOfCalcString = l.indexOf(calcString);
-                if (indexOfCalcString != -1) {
+                var hideString = "THEMER: HIDE";
+                var indexOfHideString = l.indexOf(hideString);                
+                if (indexOfHideString != -1) {
+                    ;
+                } else if (indexOfCalcString != -1) {
                     /* TODO: Need to apply these expressions! */
                     var expr = l.substring(indexOfCalcString, l.indexOf("*/", indexOfCalcString));
                     console.log("EXPR:" + expr);
@@ -652,11 +662,18 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         
         this.demoPanel.createComponents(this.sampleWidgets);
         
-        if (this.widgetGrid.selectedItem.getValue("templateFile") == "document") {
-            wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
-                this.demoPanel.c$[0].c$[0].setValue(inName, inValue);
-            }));
-        
+        /* Custom hacks needed to get the sample widgets to work */
+        switch(this.widgetGrid.selectedItem.getValue("templateFile")) {
+            case "document":
+                wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
+                    this.demoPanel.c$[0].c$[0].setValue(inName, inValue);
+                }));        
+                break;
+            case "grid":
+                this.demoPanel.c$[0].setDataSet(this.sampleDataSet);
+                this.demoPanel.c$[1].setDataSet(this.sampleDataSet);                
+                this.demoPanel.c$[2].setDataSet(this.sampleDataSet);                                
+                break;
         }
         
         this.demoPanel.reflow();

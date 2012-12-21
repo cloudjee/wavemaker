@@ -1,0 +1,168 @@
+/* GROUP: Grid Rows */
+.wm_template div.dojoxGrid, 
+.wm_template .wmlist {
+    font-size: 12px;
+}
+
+.wm_template td.dojoxGridCell {
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 1px;
+    border-style: solid;
+    border-color: #999999;
+}
+
+.wm_template div.dojoxGridRow,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOver,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
+.wm_template .GridListStyle div.wmlist-item,
+.wm_template .GridListStyle.Disabled div.wmlist-item.wmlist-item-over  {
+    font-family: sans-serif;
+    font-weight: normal;
+}
+
+.wm_template div.dojoxGridContent .dojoxGridCell {
+   background-color: transparent; /* THEMER: HIDE */
+}
+
+.wm_template div.dojoxGridContent .dojoxGridCellFocus,
+.wm_template div.dojoxGridContent .dojoxGrid-cell-focus {
+   border: 1px dashed transparent !important; /* THEMER: HIDE */
+}
+
+
+/* GROUP: Odd Numbered Rows */
+.wm_template div.dojoxGridRow,
+.wm_template .GridListStyle div.wmlist-item,
+
+/* Disabled grid rows */
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOver,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowSelected,
+.wm_template .Disabled .dojoxGridRowOver td.dojoxGridCell,
+.wm_template .GridListStyle.Disabled div.wmlist-item.wmlist-item-over,
+.wm_template .GridListStyle.Disabled div.wmlist-item.wmlist-item-selected,
+
+/* Disabled odd    rows */
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+.wm_template .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.wm_template .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-selected   {
+    color: #000000;
+    background-color: #aaaaaa;
+}
+
+
+/* GROUP: Even Numbered Rows */
+.wm_template div.dojoxGrid-row.dojoxGrid-row-odd,
+.wm_template div.dojoxGridRow.dojoxGridRowOdd,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+.wm_template .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
+.wm_template .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.wm_template .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-selected,
+.wm_template .GridListStyle .wmlist-item.Odd {
+		color: #1e1c1c;
+    background-color: #cccccc;
+}
+
+/* GROUP: Selected Row */
+.wm_template .dojoxGridRow.dojoxGridRowSelected,
+.wm_template .Disabled .dojoxGridRow.dojoxGridRowSelected,
+.wm_template .dojoxGridRow.dojoxGridRowSelected td.dojoxGridCell,
+.wm_template .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+.wm_template .dojoxGridRow.dojoxGridRowOver.dojoxGridRowSelected,
+.wm_template .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver.dojoxGridRowSelected,
+.wm_template .GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_template .Disabled.GridListStyle .wmlist-item.wmlist-item-selected,
+.wm_template .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over {
+   background-color: #333333;
+   color: #FFFFFF;
+}
+
+/* GROUP: Hover row */
+.wm_template .GridListStyle .wmlist-item.wmlist-item-over,
+.wm_template .dojoxGridRow.dojoxGridRowOver,
+.wm_template .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.wm_template .dojoxGridRowOver a,
+.wm_template .dojoxGridRowOver td.dojoxGridCell {
+   background-color: #999999;
+   color: #000000;
+}
+
+/* GROUP: Grid Header */
+.wm_template .wmlist-header th,
+.wm_template .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
+			      font-size: 14px;
+}
+
+.wm_template .wmlist-header .wmlist-cell,
+.wm_template div.dojoxGridHeader .dojoxGridCell {
+				    border-top: solid 0px rgb(251, 251, 251);
+				    		border-right: solid 1px rgb(170, 170, 170);
+							      border-bottom: solid 0px rgb(251, 251, 251);
+							      		     border-left: solid 0px rgb(251, 251, 251);
+}
+
+
+
+.wm_template .wmlist-header,
+.wm_template div.dojoxGridHeader {
+		background-color: #575050;
+		background-image: -webkit-gradient(linear, center top, center bottom, from(#bcbcc3), color-stop(51%,#262728), to(#262728));
+		background-image: -moz-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
+		background-image: -o-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
+		background-image: -ms-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcbcc3', endColorstr='#262728',GradientType=0);
+}
+.wm_template .wmlist-header th,
+.wm_template div.dojoxGridHeader th.dojoxGridCell,
+.wm_template div.dojoxGridHeader th.dojoxGridCell.dojoxGridCellOver {	
+  background: transparent none !important; /* THEMER: HIDE */
+
+  font-family: sans-serif;
+  color: #e6e6e6;
+  font-weight: bold;
+}
+
+
+
+
+/* GROUP: Mobile List */
+.wm_template .MobileListStyle div.wmlist-item/*
+.wm_template .Disabled.MobileListStyle div.wmlist-item,
+.wm_template .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_template .MobileListStyle div.wmlist-item.wmlist-item-over*/ {
+   border-radius: 4px;
+   margin: 5px;
+   background-color: #b52727;
+   background-image: none;
+   color: #000000;
+   font-family: sans-serif;
+   min-height: 24px;
+}
+
+.wm_template .wmlist-cell {
+    border-style: solid;
+    border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
+    border-left-width: 0px;
+    border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+}
+
+/* GROUP: Mobile List Hover (Desktop only!) */
+.wm_template .MobileListStyle div.wmlist-item.wmlist-item-over,
+.wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+		background-color: #555555;
+		color: #FFFFFF;
+}
+
+/* GROUP: Mobile List Selected Row */
+.wm_template .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.wm_template .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.wm_template .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+		background-color: #333333; 
+		color: #FFFFFF; 
+}

@@ -45,12 +45,16 @@
 	padding-bottom: 0px;
 	border-color: transparent #ACA899 #919191 transparent;
 	background: url(../../../dijit/themes/tundra/images/tabEnabled.png) #e9e9e9 repeat-x top;
-	color: #000 !important;
+    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: Removed !important */
+	color: #000;
 }
 
-.tundra .dojoxGridHeader .dojoxGridCellOver {
+    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: Removed !important; added .dojoxGridCell */
+.tundra .dojoxGridHeader .dojoxGridCell.dojoxGridCellOver {
 	background: url(../../../dijit/themes/tundra/images/tabHover.png) #e9e9e9 repeat-x top;
-	color: #000 !important;
+	color: #000;
 }
 .tundra .dojoxGridHeader .dojoxGridCellFocus {
 	border-color: #ACA899 #919191;
