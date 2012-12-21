@@ -988,6 +988,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             for (var i = 0; i < totalCount; i++) {
                 this.addItem(this.getItemData(i), i);
             }
+            this.addOddClasses();
             if (this.autoSizeHeight) {
                 if (!this.isAncestorHidden() || this._isDesignLoaded) {
                     this.setBestHeight();
