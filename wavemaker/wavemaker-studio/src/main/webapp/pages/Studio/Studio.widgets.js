@@ -523,7 +523,7 @@ height: "29px", width: "420px",
 						sourceToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
 						sourceLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
 					}],*/
-			sourceTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  border: "1,0,0,1", clientBorder: "1,0,0,0"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
+			sourceTabs: ["wm.studio.TabLayers", {manageURL:1,_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]},  border: "1,0,0,1", clientBorder: "1,0,0,0"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {
 					    scriptLayer: ["wm.Layer", {caption: "Script"}, {onShow: "editArea.focus"}, {
 							scriptRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", border: "0", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
 							    scriptPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveScriptClick"}],
@@ -642,6 +642,10 @@ height: "29px", width: "420px",
 							}],
                             themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
                                                               pageName: "ThemeDesigner"}]
+                        }],
+                        widgetThemeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "WidgetThemer", width: "100%", height: "100%"}, {}, {                        
+                            themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
+                                                              pageName: "WidgetThemerPage"}]
                         }],
                         /*
                         theme2Layer: ["wm.Layer", {_classes: {domNode: []}, caption: "Themes", width: "100%", height: "100%"}, {}, {
