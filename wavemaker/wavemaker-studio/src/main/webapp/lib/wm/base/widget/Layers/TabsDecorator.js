@@ -34,6 +34,9 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 		    name: "tabsControl"
 		});
 		this.decoree.moveControl(this.tabsControl, 0);
+		if (this.decoree.verticalButtons) {
+		  this.decoree.setLayoutKind("left-to-right");
+		}
 	    if (this.decoree.dndTargetName || this.decoree.isDesignLoaded()) {
 		dojo.require("dojo.dnd.Source");
     		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
