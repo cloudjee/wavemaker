@@ -1152,10 +1152,10 @@ dojo.declare("wm.AbstractEditorContainer", wm.AbstractEditor, {
     },
      setDisabled: function(inValue) {
         wm.Control.prototype.setDisabled.call(this, inValue);
-        if (this.editor) {
+        /*if (this.editor) {
             this.editor._parentDisabled = this._disabled;
-            this.editor.setDisabled(inValue);
-        }
+            this.editor.setParentDisabled(inValue);
+        }*/
     },
     focus: function(inValue) {}, // TODO: Subclass should override this method
     blur:  function(inValue) {}, // TODO: Subclass should override this method
