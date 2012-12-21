@@ -25,7 +25,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     defaultColor: "",
     cancelValue: null,
     _empty: true,
-    regExp: "\\s*(\#[0-9a-fA-F]{6}|\{.*\}|\#[0-9a-fA-F]{3}|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow|rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\))\\s*",
+    regExp: "\\s*(\#[0-9a-fA-F]{6}|\{.*\}|\#[0-9a-fA-F]{3}|transparent|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow|rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\))\\s*",
     regExpOptions: "i",
     // could use a more precise regex for gradients
     showMessages: false,
