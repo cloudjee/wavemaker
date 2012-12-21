@@ -3671,14 +3671,16 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 if (this.colorEditor.getDataValue()) {
                     value += "background-color: " + this.colorEditor.getDataValue() + ";";
                 }
+                if (value) value += "\n\t";                
                 if (this.gradientEditor.getDataValue()) {
-                    if (value) value += "\n\t";
                     var styleValue = this.gradientEditor.getDataValue();
                     value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
                     value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
                     value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
                     value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
                     value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";";
+                } else {
+                    value += "background-image: none;"
                 }
             }
             return value;
