@@ -86,12 +86,13 @@ dojo.declare("wm.ColorPicker", wm.Text, {
             if (inValue) {
             	var v1,v2,v3;
                 this.editorNode.style.backgroundColor = inValue;
+                inValue = this.editorNode.style.backgroundColor; // find the value ACTUALLY found by the browser
                 if (inValue.match(/^\#/)) {
                 	;
                 } else {
                 	var matches = inValue.match(/rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)/);
                 	if (matches) {
-                		inValue = "#" + parseInt(matches[1],16) + parseInt(matches[2],16) + parseInt(matches[3],16);
+                		inValue = "#" + matches[1].toString(16) + matches[2].toString(16) + matches[3].toString(16);
                 	} else {
                 		var colorObj = dojox.color.fromString(inValue);
                 		if (colorObj) {
@@ -99,8 +100,9 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 		}
                 	}
                 }
-
-                if (inValue.length > 5) {
+                if (inValue === "") {
+                    v1 = v2 = v3 = 255;
+                } else if (inValue.length > 5) {
                     v1 = parseInt(inValue.substr(1, 2), 16);
                     v2 = parseInt(inValue.substr(3, 2), 16);
                     v3 = parseInt(inValue.substr(5, 2), 16);
