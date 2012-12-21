@@ -31,8 +31,9 @@ dojo.declare("wm.Layer", wm.Container, {
         //console.info('layer destroy called');
         this._isLayerDestroying = true;
         var parent = this.parent;
-        if (parent && parent instanceof wm.Layers)
-        parent.setCaptionMapLayer(this.caption, null);
+        if (parent && parent instanceof wm.Layers && !parent.isDestroyed) {
+            parent.setCaptionMapLayer(this.caption, null);
+        }
         this.inherited(arguments);
         if (parent && parent.conditionalTabButtons && !parent.decorator.tabsControl.isDestroyed)
         parent.decorator.tabsControl.setShowing(parent.getVisibleLayerCount() > 1);
