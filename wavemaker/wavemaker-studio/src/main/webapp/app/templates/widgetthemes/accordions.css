@@ -1,0 +1,45 @@
+
+/* GROUP: Accordion Header */
+.wm_template div.wmaccordion-header {
+  font-family: sans-serif;
+  font-size: 12pt;
+  color: #FFFFFF;
+  font-weight: bold;
+  background-color: #444444;
+  background-image: none;
+  border-radius: 4px;
+}
+
+/* GROUP: Closed Header */
+.wm_template div.wmaccordion-header.wmaccordion-collapsed {
+  color: #FFFFFF;
+  font-weight: bold;
+  background-color: #555555; /* Document-ClickablesDefault-Background_Color */
+  background-image: none;
+}
+
+/* GROUP: Header Hover */
+.wm_template div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+  color: #FFFFFF;
+  background-color: #666666;
+  background-image: none;
+}
+
+
+
+/* GROUP: Accordion Arrow (Selected) */
+.wm_template .wmaccordion .accordionArrowNode {
+   background-image: url(images/comboArrowDownDark.png);
+}
+
+/* GROUP: Accordion Arrow (Closed) */
+.wm_template .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+   background-image: url(images/arrowRightDark.png); 
+}
+
+
+/* GROUP: Layer Styling */
+.wm_template .wmaccordion .wmlayer.wmaccordion-content {
+    border-radius: 2px;
+    background-color: transparent;
+}

@@ -687,7 +687,7 @@ display:block;
     float:left;
 }
 .accordionArrowNode {
-    display: none;
+    display: inline-block;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     float: right;

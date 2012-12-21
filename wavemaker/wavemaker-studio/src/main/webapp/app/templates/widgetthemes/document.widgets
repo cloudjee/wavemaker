@@ -1,0 +1,7 @@
+{
+   approot: ["wm.Panel", {_classes: {domNode: ["wmapproot"]}, width: "100%", height: "100%"}, {}, {
+      pcontainer: ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, width: "100%", height: "100%"}, {}, {
+   	    label: ["wm.Label", {caption: "This is how default text will look", width: "100%"}]
+      }]
+   }]
+}

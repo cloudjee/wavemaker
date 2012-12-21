@@ -2,5 +2,8 @@
 	background-color: black;
 	font-weight: bold;
 	font-size: 14px;
-
+}
+.WidgetThemerPage .SubHeading {
+    font-weight: bold;
+    font-size: 14px;
 }

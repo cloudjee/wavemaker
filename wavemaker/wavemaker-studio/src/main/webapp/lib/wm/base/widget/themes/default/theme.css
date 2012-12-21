@@ -948,6 +948,8 @@ display:block;
 
 .accordionArrowNode {
 float: right;
+display: inline-block;
+margin-top: 4px;
 }
 div .accordionOnLeftArrowNode {
     position: relative;
@@ -956,7 +958,6 @@ div .accordionOnLeftArrowNode {
 }
 .accordionOnLeftArrowNode,
 .accordionArrowNode {
-    display: none;
     background-repeat: no-repeat;
     background-position: 50% 50%;
 

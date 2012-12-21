@@ -2903,6 +2903,9 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             this.bottomLeftEditor.setDataValue(parts[2]);
             this.bottomRightEditor.setDataValue(parts[3]);
         }
+        this.toggleButton.setClicked(this.topLeftEditor.getDataValue() != this.topRightEditor.getDataValue() ||
+            this.topLeftEditor.getDataValue() != this.bottomRightEditor.getDataValue() ||
+            this.topLeftEditor.getDataValue() != this.bottomLeftEditor.getDataValue());
         this.changed();
     }, 
     setPartialValue: function(inStyleName, inStyleValue) {
@@ -2948,12 +2951,15 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
         if (inShowing) {
             this.cornersPanel.show();
             this.allEditor.hide();
-            this.setHeight(this.initialHeight * 2 + "px");
+            this.setHeight(this.initialHeight * 2 + "px");                        
         } else {
             this.cornersPanel.hide();
             this.allEditor.show();
             this.setHeight(this.initialHeight + "px");
         }    
+        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h < this.bounds.h) {
+            this.parent.setHeight(this.height);
+        }
     },
     toggleClicked: function() {
         if (!this.toggleButton.clicked) {
@@ -3120,6 +3126,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
         });
 
         this.testNode.domNode.style[domStyleName] = inStyleValue;
+        if (inStyleName.match(/(top|left|bottom|right)/)) this.toggleButton.setClicked(true);
         this.getValuesFromTestNode();
     },
     getEditorValue: function() {
@@ -3141,6 +3148,9 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             this.allPanel.show();
             this.setHeight(24 + "px");
         }    
+       if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h < this.bounds.h) {
+            this.parent.setHeight(this.height);
+        }
     },
     toggleClicked: function() {
         this.changed();
@@ -3241,28 +3251,28 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
         return e;
     },
     horizontalChange: function(inDisplayValue, inDataValue) {
-        var parts = this.dataValue.split(/\s+/);
+        var parts = String(this.dataValue).split(/\s+/);
         parts[0] = inDataValue +  "px";
         this.dataValue = parts.join(" ");
         this.changed();
     },
 
     verticalChange: function(inDisplayValue, inDataValue) {
-        var parts = this.dataValue.split(/\s+/);
+        var parts = String(this.dataValue).split(/\s+/);
         parts[1] = inDataValue +  "px";
         this.dataValue = parts.join(" ");
         this.changed();
     },
 
     blurChange: function(inDisplayValue, inDataValue) {
-        var parts = this.dataValue.split(/\s+/);
+        var parts = String(this.dataValue).split(/\s+/);
         parts[2] = inDataValue +  "px";
         this.dataValue = parts.join(" ");
         this.changed();
     },
 
     colorChange: function(inDisplayValue, inDataValue) {
-        var parts = this.dataValue.split(/\s+/);
+        var parts = String(this.dataValue).split(/\s+/);
         parts[3] = inDataValue;
         this.dataValue = parts.join(" ");
         this.changed();
@@ -3273,13 +3283,12 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     setEditorValue: function(inValue) {
         var v = this.dataValue = inValue;
 
-        var parts = v.split(/\s+/);
+        var parts = String(v).split(/\s+/);
         this.horizontalEditor.setDataValue(parseInt(parts[0]));
         this.verticalEditor.setDataValue(parseInt(parts[1]));
         this.blurEditor.setDataValue(parseInt(parts[2]));
         this.colorEditor.setDataValue(parts[3]);
     },
-    setPartialValue: function(inStyleName, inStyleValue) {},
     
     updateCssLine: function(inStyleName) {
        
@@ -3333,7 +3342,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             captionSize: "50px",
             captionAlign: "left",
             caption: "Color",
-            width: "140px",   
+            width: "180px",   
             padding: "0",            
             gradient: false,
             onchange: dojo.hitch(this, "changed")
@@ -3382,6 +3391,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             height: "100%",
             padding: "0",            
             allowNone: true,
+            dataValue: "no-repeat",
             options: "no-repeat,repeat,repeat-x,repeat-y",
             onchange: dojo.hitch(this, "changed")
         });
@@ -3471,6 +3481,8 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         s.background = inValue;
         var repeatX = s.backgroundRepeatX;
         var repeatY = s.backgroundRepeatY;
+        if (repeatX == "initial" || repeatX == "no-repeat") repeatX = "";
+        if (repeatY == "initial" || repeatY == "no-repeat") repeatY = "";
         var repeat;
         if (repeatX && repeatY) {
             repeat = "repeat";
@@ -3518,7 +3530,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 return gradientObj;
             } else {
                 /* TODO: COLOR STOPS IN WEBKIT CAME BACK NOT AS PERCENTS, NEED TO TEST THIS ON OTHER BROWSERS TO SEE WHAT VALUES ARE REALLY RETURNED */
-                matches = g.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
+                matches = inValue.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
                 if (matches) {
                     gradientObj.direction = matches[1] == "top" ? "vertical" : "horizontal";
                     gradientObj.startColor = matches[2];
@@ -3560,6 +3572,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             } else {
                 x = backgroundObj.positionX;
             }
+            if (x == "initial") x = "0%";
             this.horizontalPosEditor.setDataValue(x);
             
             var y;
@@ -3572,6 +3585,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             } else {
                 y = backgroundObj.positionY;
             }            
+            if (y == "initial") y = "0%";            
             this.verticalPosEditor.setDataValue(y);
         } else if (backgroundObj.color) {
             this.backgroundChooser.setDataValue("Color/Gradient");        
@@ -3617,6 +3631,9 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         if (backgroundType != "Custom") {
             this.onchange(this.dataValue, this.dataValue);
         }
+        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h < this.bounds.h) {
+            this.parent.setHeight(this.height);
+        }        
     },
     getImageDataValue: function() {
         var value = this.urlEditor.getDataValue();
@@ -3661,7 +3678,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                     value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
                     value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
                     value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
-                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";";
                 }
             }
             return value;

@@ -338,7 +338,7 @@ wm.Layers.extend({
 dojo.require("wm.base.widget.AccordionLayers");
 wm.AccordionLayers.extend({
     themeable: true,
-    themeableProps: ["border","borderColor","layerBorder","captionHeight"],
+    themeableProps: ["border","borderColor","clientBorder", "clientBorderColor","captionHeight", "captionBorder", "captionBorderColor"],
     themeableStyles: [{name: "wm.AccordionLayers-Open_Image", displayName: "Open Arrow Icon"},
               {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}],
     set_arrowsOnLeft: function(inValue) {

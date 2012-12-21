@@ -1,0 +1,84 @@
+/* GROUP: Main Dialog */
+.wm_template .wmdialog {
+    border-radius: 4px;
+    box-shadow: 3px 3px 3px black;    
+    background-color: white;
+    background-image: none;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+/* GROUP: Dialog Titlebar */
+.wm_template .dialogtitlebar .wmlabel{
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.wm_template .dialogtitlebar {
+    background-color: #444444;
+    background-image: none;
+}
+
+/* GROUP: Dialog Footer */
+.wm_template .dialogfooter,
+.wm_template .wmpagedialog-controlspanel {
+    background-color: #444444;
+    background-image: none;
+}
+
+/* GROUP: Dialog Footer Buttons */
+.wm_template .dialogfooter .wmbutton {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #FFFFFF; 
+    font-weight: bold;
+    background-color: #444444;
+    background-image: none;
+    box-shadow: 4px 4px 4px black;
+    border-radius: 4px;
+}
+
+/* GROUP: Footer Buttons (Hover) */
+.wm_template .dialogfooter .wmbutton:focus,
+.wm_template .dialogfooter .wmbutton:hover {
+    color: #FFFFFF; 
+    background-color: #444444;
+    background-image: none;
+    box-shadow: 4px 4px 4px black;
+}
+
+/* GROUP: Footer Buttons (Active) */
+.wm_template .dialogfooter .wmbutton.toggleButtonDown,
+.wm_template .dialogfooter .wmbutton.Active,
+.wm_template .dialogfooter .wmbutton:active,
+.wm_template .dialogfooter .wmbutton.Active:hover,
+.wm_template .dialogfooter .wmbutton:active:hover {
+    color: #FFFFFF; 
+    background-color: #444444;
+    background-image: none;
+    box-shadow: 4px 4px 4px black;
+}
+
+/* GROUP: Titlebar Buttons: Close Button */
+.wm_template .dialogtitlebar .dialogclosebutton {
+    background-image: url(images/DialogIconsGray.png);
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+}
+
+/* GROUP: Titlebar Buttons: Minify Button */
+.wm_template .dialogtitlebar .dialogminifybutton {
+    background-image: url(images/DialogIconsGray.png);
+    background-position: -16px 0px;
+    background-repeat: no-repeat;
+}
+/* GROUP: Titlebar Buttons: Maxify Button */
+.wm_template .dialogtitlebar .dialogmaxifybutton {
+    background-image: url(images/DialogIconsGray.png);
+    background-position: -32px 0px;
+    background-repeat: no-repeat;
+}

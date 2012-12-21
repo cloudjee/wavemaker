@@ -14,7 +14,7 @@
 }
 
 /* GROUP: Active State */
-.wm_template   .wmbutton.wmtogglebutton.toggleButtonDown,
+.wm_template   .wmbutton.toggleButtonDown,
 .wm_template   .wmbutton.Active,
 .wm_template   .wmbutton.Active:hover,
 .wm_template   .wmbutton:active,

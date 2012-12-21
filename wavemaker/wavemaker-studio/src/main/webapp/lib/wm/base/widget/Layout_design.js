@@ -49,3 +49,7 @@ wm.Layout.extend({
 	return p;
     }
 });
+
+wm.AppRoot.extend({
+    themeableProps: ["border", "borderColor", "margin", "padding"]
+});
