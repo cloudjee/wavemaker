@@ -324,24 +324,39 @@ public class SecurityToolsManager {
      * @throws IOException
      * @throws JAXBException
      */
-    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+    public void configLDAPwithDB(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
         String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
-        configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter,
+        configLDAPwithDB(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter,
             "", "", "", "", "", "", "");
     }
 
-    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+    public void configLDAPwithDB(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
         String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable,
         String roleUsername, String roleProperty, String roleQuery, String roleProvider) throws IOException, JAXBException {
         Beans beans = getSecuritySpringBeans(true);
-        SecuritySpringSupport.setAuthManagerProviderBeanId(beans, SecuritySpringSupport.LDAP_AUTH_PROVIDER_BEAN_ID);
-        SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
-        SecuritySpringSupport.updateLDAAuthProvider(beans, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute,
-            groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+        SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB);
+        
+        //sets manager. non-manager test connection would be better.
+        //SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
+        
+        SecuritySpringSupport.updateLDAAuthProvider(beans, "", userDnPattern, groupSearchDisabled, groupSearchBase,
+            groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
         saveSecuritySpringBeans(beans);
     }
 
+    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+            String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
+            Beans beans = getSecuritySpringBeans(true);
+            SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);
+        
+            //TODO: Non-manager connection test            
+            SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase,
+                groupRoleAttribute, groupSearchFilter);
+            SecuritySpringSupport.resetJdbcDaoImpl(beans);
+            saveSecuritySpringBeans(beans);
+        }
+    
     /**
      * Tests if the LDAP connection could be established successfully using the supplied parameters. An exception will
      * be thrown if it can't connect to the LDAP server.

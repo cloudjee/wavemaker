@@ -319,29 +319,31 @@ public class SecurityConfigService {
      */
 
     public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchingDisabled,
-        String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleUsername,
-        String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml) throws IOException,
-        JAXBException {
+    		String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleUsername,
+    		String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml) throws IOException,
+    		JAXBException {
 
-        // GD: Get the schema name, if any, for the entity/table
-        // Probably have to do this only if "roleProvider" == "Database"
+    	// GD: Get the schema name, if any, for the entity/table
+    	// Probably have to do this only if "roleProvider" == "Database"
 
-        String roleTable = null;
+    	String roleTable = null;
 
-        if (roleProvider != null && roleProvider.equals("Database")) {
-            DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(roleModel);
-            EntityInfo entity = dataModel.getEntity(roleEntity);
-            roleTable = entity.getTableName();
-            String qualifiedTablePrefix = entity.getSchemaName() == null ? entity.getCatalogName() : entity.getSchemaName();
-            if (qualifiedTablePrefix != null && qualifiedTablePrefix.length() > 0) {
-                roleTable = qualifiedTablePrefix + "." + roleTable;
-            }
-        }
+    	if (roleProvider != null && roleProvider.equals(SecuritySpringSupport.ROLE_PROVIDER_DATABASE)) {
+    		DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(roleModel);
+    		EntityInfo entity = dataModel.getEntity(roleEntity);
+    		roleTable = entity.getTableName();
+    		String qualifiedTablePrefix = entity.getSchemaName() == null ? entity.getCatalogName() : entity.getSchemaName();
+    		if (qualifiedTablePrefix != null && qualifiedTablePrefix.length() > 0) {
+    			roleTable = qualifiedTablePrefix + "." + roleTable;
+    		}
 
-        getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute,
-            groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
-
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+    		getSecToolsMgr().configLDAPwithDB(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute,
+    				groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+    	}
+    	else {
+    		getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter);
+    	}
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) {

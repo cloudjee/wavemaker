@@ -41,9 +41,6 @@ import com.wavemaker.tools.spring.beans.Property;
 
 public class SecurityXmlSupport {
 
-	public static final String WM_AUTH_ENTRY_POINT = "WMSecAuthEntryPoint";
-
-
 	static List<UserService.User> getUserSvcUsers(Beans beans){
 		List<UserService.User> demoUsers = null;
 		try{
@@ -185,7 +182,7 @@ public class SecurityXmlSupport {
 	static String getActiveAuthManAlias(Beans beans){
 		String authManRef = null;
 		try{
-			Bean authFilter = beans.getBeanById(WM_AUTH_ENTRY_POINT);
+			Bean authFilter = beans.getBeanById(SecuritySpringSupport.USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
 			Property authMan = authFilter.getProperty(SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
 			authManRef = authMan.getRef();
 		} catch(Exception e){
@@ -195,6 +192,44 @@ public class SecurityXmlSupport {
 
 	}
 
+	static void setActiveAuthMan(Beans beans, String alias){
+		if(alias.equals(getActiveAuthManAlias(beans))){
+			return;
+		}
+		Bean authFilter = beans.getBeanById(SecuritySpringSupport.USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
+		Property authMan = authFilter.getProperty(SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
+		authMan.setRef(alias);		
+	}
+
+	public static void setLdapProviderProps(Beans beans, String userDnPattern, String groupSearchBase, String groupRoleAttribute, String groupSearchFilter){
+		AuthenticationManager.LdapAuthenticationProvider ldapAuthProvider = getLdapAuthProvider(beans);
+		//ldapAuthProvider.setUserDnPattern(userDnPattern);
+		//ldapAuthProvider.setGroupSearchBase(groupSearchBase);
+		ldapAuthProvider.setGroupSearchFilter(groupSearchFilter);
+		} 
+	
+    static LdapServer getLdapServer(Beans beans){
+        List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
+        for (Object o : importOrAliasOrBeanList) {
+            if(o instanceof LdapServer){
+                return (LdapServer)o;
+            }
+        }
+        return null;
+	}
+
+    public static AuthenticationManager.LdapAuthenticationProvider getLdapAuthProvider(Beans beans) {
+		AuthenticationManager authMan = getAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);
+		List<Object> ldapProviders = authMan.getAuthenticationProviderOrLdapAuthenticationProvider();
+        for (Object o : ldapProviders) {
+            if(o instanceof AuthenticationManager.LdapAuthenticationProvider){
+                return (AuthenticationManager.LdapAuthenticationProvider)o;
+            }
+        }
+        return null;
+	} 
+	
+    
     static Http getHttp(Beans beans){
         List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();
         for (Object o : importOrAliasOrBeanList) {
@@ -239,5 +274,6 @@ public class SecurityXmlSupport {
             }
         }
         objs.add(0, interceptUrl);
-    }   
+    }
+  
 }
