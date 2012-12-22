@@ -74,10 +74,12 @@ dojo.declare(
             this.dbRoleBySQLCheckboxChange(this.dbRoleBySQLCheckbox);
             this.ldapRoleBySQLCheckbox.setChecked(false);
             this.ldapRoleBySQLCheckboxChange(this.ldapRoleBySQLCheckbox);
-            this.demoUserList.renderData([ {
-                userid : "demo",
-                password : "demo"
-            } ]);
+            this.demoUserList.renderData([ 
+				{userid : "admin",
+                password : "admin"},
+				{userid : "user",
+                password : "user"} 				
+				]);
             this.resetDatabaseInputs();
             this.resetLDAPInputs();
             this.populateGeneralOptions();
