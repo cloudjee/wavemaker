@@ -19,8 +19,6 @@
 		entry-point-ref="WMSecAuthEntryPoint">
 		<security:custom-filter position="FORM_LOGIN_FILTER"
 			ref="WMSecAuthFilter" />
-		<!-- Uncomment to access app without authentication <security:intercept-url 
-			pattern="/**" access="permitAll" /> -->
 		<security:intercept-url pattern="/app.css"
 			access="permitAll" />
 		<security:intercept-url pattern="/config.js"
@@ -49,8 +47,7 @@
 			access="isAuthenticated()" />
 		<security:intercept-url pattern="/*/*.json"
 			access="isAuthenticated()" />
-		<!-- causes SMD to be redirect <security:intercept-url pattern="/**" access="isAuthenticated()" 
-			/> <security:logout /> -->
+		<!-- <security:logout /> -->
 	</security:http>
 
 	<bean id="WMSecAuthFilter"
@@ -82,9 +79,7 @@
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="admin" password="admim"
-					authorities="admin, manager,user" />
-				<security:user name="manager" password="manager"
-					authorities="manager,user" />
+					authorities="admin,user" />
 				<security:user name="user" password="user"
 					authorities="user" />
 			</security:user-service>
@@ -135,4 +130,63 @@
         </property>
     </bean>
 
+    <security:authentication-manager id="authenticationManagerLDAPwithDB" alias="authenticationManagerLDAPwithDB">
+        <security:authentication-provider ref="ldapAuthProvider"/>
+    </security:authentication-manager>
+	
+	<security:ldap-server url="ldap://localhost:389/dc=wavemaker,dc=vmware,dc=com"/>
+	 
+    <security:authentication-manager id="authenticationManagerLDAP" alias="authenticationManagerLDAP">
+        <security:ldap-authentication-provider user-search-filter="(cn={0})" role-prefix="ROLE_"/>
+    </security:authentication-manager>
+	
+	
+    <bean class="org.springframework.security.ldap.DefaultSpringSecurityContextSource" id="contextSource">
+        <constructor-arg value="ldap://localhost:389/dc=wavemaker,dc=vmware,dc=com"/>
+        <property name="userDn" value="cn=admin,dc=wavemaker,dc=vmware,dc=com"/>
+        <property name="password" value="secret"/>
+    </bean>
+    <bean class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider" id="ldapAuthProvider">
+        <constructor-arg>
+            <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userSearch">
+                    <bean class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch" id="userSearch">
+                        <constructor-arg index="0" value=""/>
+                        <constructor-arg index="1" value="(cn={0})"/>
+                        <constructor-arg index="2" ref="contextSource"/>
+                    </bean>
+                </property>
+            </bean>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="com.wavemaker.runtime.security.LdapAuthoritiesPopulator" id="LdapAuthoritiesPopulator">
+                <constructor-arg>
+                    <ref local="contextSource"/>
+                </constructor-arg>
+                <constructor-arg>
+                    <value>ou=Groups</value>
+                </constructor-arg>
+                <property name="groupSearchDisabled">
+                    <value>false</value>
+                </property>
+                <property name="groupRoleAttribute">
+                    <value>cn</value>
+                </property>
+                <property name="groupSearchFilter">
+                    <value>(uniqueMember={0})</value>
+                </property>
+                <property name="defaultRole">
+                    <value>ROLE_DEFAULT_NO_ROLES</value>
+                </property>
+                <property name="rolePrefix">
+                    <value>ROLE_</value>
+                </property>
+                <property name="convertToUpperCase">
+                    <value>false</value>
+                </property>
+            </bean>
+        </constructor-arg>
+    </bean>
+    
 </beans> 
