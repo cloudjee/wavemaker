@@ -92,7 +92,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 } else {
                 	var matches = inValue.match(/rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)/);
                 	if (matches) {
-                		inValue = "#" + matches[1].toString(16) + matches[2].toString(16) + matches[3].toString(16);
+                		inValue = "#" + Number(matches[1]).toString(16) + Number(matches[2]).toString(16) + Number(matches[3]).toString(16);
                 	} else {
                 		var colorObj = dojox.color.fromString(inValue);
                 		if (colorObj) {
