@@ -367,7 +367,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
             var helpIconSize = 16;
             var helpIconMargin = 4;
             var allocateHelpIconSpace = Boolean(this.helpText);
-            if (!this.caption) {
+            if (!this.caption || this.captionSize == "0px" || this.captionSize == "0%") {
                 labelWidth = 0;
                 editorWidth = w;
                 editorHeight = h;
@@ -1112,5 +1112,63 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 wm.AbstractEditor.captionPaddingWidth = 8;
 wm.AbstractEditor.captionPaddingHeight = 2;
+
+/* A subclass of AbstractEditor whose "editor" property points to a Container instead of a dijit */
+dojo.declare("wm.AbstractEditorContainer", wm.AbstractEditor, {
+    containerLayoutKind: "left-to-right",
+    editorBorder: false,
+    /* Sublcasses should override this, but should create the container using this.inherited(arguments) 
+     * For a single row of controls, use padding: "0" on any editors.
+     */
+    _createEditor: function(inNode, inProps) {
+        this.editor = new wm.Container({
+            owner: this,
+            parent: this,
+            name: "editContainer",
+            width: "100%",
+            height: "100%",
+            padding: "0",
+            margin: "0",
+            layoutKind: this.containerLayoutKind,
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        return this.editor;
+    },
+    _onShowParent: function() {
+        if (this.editor) this.editor.callOnShowParent();
+    },
+    _onHideParent: function() {
+        if (this.editor) this.editor.callOnHideParent();
+    },
+    sizeEditor: function() {
+        this.inherited(arguments);
+        this.flow();
+    },    
+    flow: function() {
+        if (this.editor) {
+            this.editor.flow();
+        }
+    },
+     setDisabled: function(inValue) {
+        wm.Control.prototype.setDisabled.call(this, inValue);
+        /*if (this.editor) {
+            this.editor._parentDisabled = this._disabled;
+            this.editor.setParentDisabled(inValue);
+        }*/
+    },
+    focus: function(inValue) {}, // TODO: Subclass should override this method
+    blur:  function(inValue) {}, // TODO: Subclass should override this method
+    _getValidatorNode: function() {
+        return null;
+    },
+    setEditorValue: function(inValue) {// TODO: Override this
+        this.dataValue = inValue;
+    },
+    getEditorValue: function() { // TODO: Override this unless your maintaining dataValue (which is probably a good practice)
+        return this.dataValue;
+    }
+});
+
 
 

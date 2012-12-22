@@ -24,6 +24,7 @@ dojo.require('wm.base.lib.data');
 
 // Data; List: a list with a model
 dojo.declare("wm.ListItem", wm.VirtualListItem, {
+    top: 0,
     create: function() {
         this.inherited(arguments);
         if (!this.domNode.id) {
@@ -369,7 +370,17 @@ dojo.declare("wm.List", wm.VirtualList, {
         //this._onScroll(); // needed for android 3&4 browser
     },
     setScrollTop: function(inTop) {
-        var top = Math.max(0, inTop);
+        var min = 0;
+        var max = this.listNode.scrollHeight;
+        var top;
+        if (inTop < min) {
+            top = min;
+        } else if (inTop > max) {
+            top = max;
+        } else {
+            top = inTop;
+        }
+        
         if (wm.isMobile) { // should always be true for touch events
             var topWas = this._scrollTop;
             top = Math.min(top, Math.max(0,this.listNode.clientHeight - this.listNodeWrapper.clientHeight));
@@ -387,6 +398,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             }
             this.listNode.style.transform = "translate(0,-" + top + "px)";
             this._scrollTop = top;
+            console.log("scrollTop:" + top);
             if (!this._inScroll) {
                 this._onScroll(top > topWas ? "down" : "up");
             }
@@ -394,19 +406,123 @@ dojo.declare("wm.List", wm.VirtualList, {
             this.listNode.scrollTop = top ;
         }
     },
-    scrollToRow: function(inIndex) {
-        var item = this.getItem(inIndex);
-        if (!item) {
-          /* TODO: This is terrible: this will render all 10,000 items if the developer calls select().  Fix this... */
-            this.renderVisibleRowsOnly = false;
-            this._render();
-            this.renderVisibleRowsOnly = true;
-            item = this.getItem(inIndex);
+    isItemShowing: function(inItem) {
+        if (!inItem.domNode.parentNode) return 0;
+        var box = {t: inItem.domNode.offsetTop};
+        box.b = box.t + inItem.domNode.clientHeight;
+        var scrollTop = this.getScrollTop();
+        var scrollHeight = this.getListNodeHeight();
+        var scrollBottom = scrollTop + scrollHeight;
+        // if the top of the box is greater than the scrollTop position
+        // and if the bottom of the box is less than the scrollTop + the listNodeHeight,
+        // then its fully visible
+        if (box.t >= scrollTop && box.b <= scrollBottom) {
+            return 2; // fully showing
+        } 
+        
+        // If bottom of the box is greater than the scrolltop but the top is not, then its partially visible on top
+        // return 1
+        else if (box.b >= scrollTop && box.t < scrollTop) {
+            return 1;
         }
-        var top = item.domNode.offsetTop;
-        this._inScroll = true;
-        this.setScrollTop(Math.max(0,top-15));
-        this._inScroll = false;
+        
+        // If the top of the box is less than the bottom, but the bottom of the box is greater than the bottom,
+        // then its partially visible on the bottom; return -1
+        else if (box.t <= scrollBottom && box.b > scrollBottom) {
+            return -1;
+        } else {
+            return 0;
+        }
+    },
+    scrollToRow: function(inIndex) {
+        if (inIndex > this._data.length) inIndex = this._data.length-1;
+        var hadItem = Boolean(this.items[inIndex]);
+        var item = this.getItem(inIndex);
+        var top, itemHeight;
+                        
+        /* Get the height WITH margin, border and padding */
+        if (item.domNode.parentNode) {
+            var box = dojo.marginBox(item.domNode);
+            itemHeight = box.h;
+            var itemTop = box.t;
+        } else {
+            itemHeight = this.avgHeight;
+        }
+        
+        var isShowing = !hadItem ? 0 : this.isItemShowing(item);
+        switch(isShowing) {
+            case 2:
+                break; // do nothing, its already fully visible
+                
+            case 1:
+                /* Set the top to match the item's top; add in margin/padding/border
+                 * via itemHeight - clientHeight
+                 */
+                top = item.domNode.offsetTop;
+                this.setScrollTop(top - (itemHeight - item.domNode.clientHeight));
+                break;
+                
+            case -1:
+                /* Set the top so that the bottom of the item lines up with the bottom of
+                 * the listNode
+                 */
+                 //var change = this.getScrollTop() + this.getListNodeHeight() - itemTop;
+                 this.setScrollTop(itemTop - this.getListNodeHeight() + itemHeight);
+                 break;
+            default:
+                /* Regenerate the entire list; this will happen even if we're only scrolling a few lines
+                 * in order to keep the code simple
+                 */
+                var initialScrollTop = this.getScrollTop();
+                var scrollHeight = this.spacerNodeBottom.clientHeight + this.spacerNodeTop.clientHeight + this.getListNodeHeight();
+                
+                /* If the there is not a gap in the items array prior to this item, then its offsetTop should be reliable */
+                if (item && item.domNode.parentNode && (inIndex == 0 || this.items[inIndex-1])) {
+                    top = item.domNode.offsetTop;
+                } else {
+                    top = itemHeight * inIndex;
+                }
+                var spacerNodeBottomHeightWas = this.spacerNodeBottom.clientHeight;
+                var spacerNodeTopHeightWas = this.spacerNodeTop.clientHeight;
+                var spacerNodeTopHeight    = top - itemHeight;
+                this.spacerNodeTop.style.height = spacerNodeTopHeight + "px";
+                this.spacerNodeBottom.style.height = (spacerNodeBottomHeightWas - spacerNodeTopHeight + spacerNodeTopHeightWas) + "px";
+                this._inScroll = true;
+                this.setScrollTop(Math.max(0,top-15));
+                this._inScroll = false;
+                var deltaScrollTop = this.getScrollTop() - initialScrollTop;
+                //this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight + deltaScrollTop) + "px";
+                //this.spacerNodeBottom.style.height = (this.spacerNodeBottom.clientHeight - deltaScrollTop) + "px";
+                var rows = this.listNode.childNodes;
+                var rowsToDelete = [];
+                for (var i = 1; i < rows.length - 1; i++) {
+                    var node = rows[i];
+                    if (node.className.match(/wmlist-item/)) rowsToDelete.push(node);
+                }
+                dojo.forEach(rowsToDelete, function(node) {
+                    node.parentNode.removeChild(node);
+                });
+
+                this.scrollDownAddItems(Math.max(0,inIndex-1));   
+                this._lastScrollTop = this.getScrollTop();
+                
+                /* If we're showing the end of the list try to put the last item in the bottom of the view area */
+                var lastItem = this.items[this._data.length-1];
+                if (lastItem && this.isItemShowing(lastItem)) {
+                    var box = dojo.marginBox(lastItem.domNode);
+                    var lastItemHeight = box.h;
+                    var lastItemTop = box.t;
+                    this.setScrollTop(this.listNode.scrollHeight - lastItemHeight + this.getListNodeHeight());
+                    this._lastScrollTop = this.getScrollTop();
+                }
+        }
+
+    },
+    getItem: function(inIndex) {
+        if (!this.items[inIndex] && inIndex < this._data.length) {
+            this.addItem(this.getItemData(inIndex),inIndex);
+        }
+        return this.items[inIndex];
     },
     createSelectedItem: function() {
         //this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, async: true});
@@ -422,8 +538,8 @@ dojo.declare("wm.List", wm.VirtualList, {
         this.builder.getCellClass = dojo.hitch(this, 'getCellClass');
 
     },
-    createItem: function(inContent, optionalDomNode) {
-        return new wm.ListItem(this, inContent, null, optionalDomNode);
+    createItem: function(inContent, optionalDomNode, optionalIndex) {
+        return new wm.ListItem(this, inContent, null, optionalDomNode, optionalIndex);
     },
     getEmptySelection: function() {
         return !this.hasSelection();
@@ -564,7 +680,12 @@ dojo.declare("wm.List", wm.VirtualList, {
                 }
             }
         });
-        return (width > this.bounds.w) && colCount > 1;
+
+        /* If the grid's bounds haven't yet been rendered, then we don't yet know how big it will
+         * be; guestimate using the page size
+         */
+        var containerWidth = this.domNode.style.width || app.appRoot.bounds.w;
+        return (width > containerWidth) && colCount > 1;
     },
     getDataSetObjectFields: function() {
         var o = {};
@@ -867,6 +988,7 @@ dojo.declare("wm.List", wm.VirtualList, {
             for (var i = 0; i < totalCount; i++) {
                 this.addItem(this.getItemData(i), i);
             }
+            this.addOddClasses();
             if (this.autoSizeHeight) {
                 if (!this.isAncestorHidden() || this._isDesignLoaded) {
                     this.setBestHeight();
@@ -894,11 +1016,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     },
     _renderItem: function(i) {
-        if (this.items[i]) { /* in IE 8, domNodes removed from body are given a parentNode with no tagName */
-            if (!this.items[i].domNode.parentNode || !this.items[i].domNode.parentNode.tagName) {
+        var item = this.items[i];
+        if (item) { /* in IE 8, domNodes removed from body are given a parentNode with no tagName */
+            if (!item.domNode.parentNode || !item.domNode.parentNode.tagName) {
                 var parent = this.listNode;
                 var sibling = this.findNextSiblingNode(i);
-                parent.insertBefore(this.items[i].domNode, sibling);
+                var bottomSpacerY = this.spacerNodeBottom.offsetTop;
+                parent.insertBefore(item.domNode, sibling);
                 if (this._isScrolling) {
                     if (this._scrollDirection == "down") {
                         this.updateBottomSpacerHeight();
@@ -906,7 +1030,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                             this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].domNode.clientHeight) + "px";
                         }
                     } else {
-                        this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.getAverageItemHeight()) + "px";
+                        var deltaBottomSpacerY = this.spacerNodeBottom.offsetTop - bottomSpacerY;
+                        this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - deltaBottomSpacerY) + "px";
+                        //this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.getAverageItemHeight()) + "px";
                     }
                 }
                 //console.log("Adding: " + i + "; " + this._data[i].dataValue);
@@ -914,13 +1040,17 @@ dojo.declare("wm.List", wm.VirtualList, {
         } else { /* Its a spacer node, destroy the spacer and generate the real item */
             var hadSpacer = false;
             this._formatIndex = i;
+            var bottomSpacerY = this.spacerNodeBottom.offsetTop;
             this.addItem(this.getItemData(i), i);
+            item = this.items[i];
             this._formatIndex = null;
             if (this._isScrolling) {
                 if (this._scrollDirection == "down") {
                     this.updateBottomSpacerHeight();
                 } else if (!hadSpacer) {
-                    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - this.items[i].height) + "px";
+                    if (!item.height) item.height = item.domNode.clientHeight;
+                    var deltaBottomSpacerY = this.spacerNodeBottom.offsetTop - bottomSpacerY;
+                    this.spacerNodeTop.style.height = (this.spacerNodeTop.clientHeight - deltaBottomSpacerY) + "px";
                 }
             }
             //console.log("Adding B: " + i + "; " + this._data[i].dataValue);
@@ -969,15 +1099,14 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
     onStyleRow: function(inRow /* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */ , rowData) {},
     _onStyleRowBeforeStart: 1,
-    addItem: function(inContent, inIndex, optionalDomNode) {
-        var item = this.createItem(inContent, optionalDomNode);
+    addItem: function(inContent, optionalIndex, optionalDomNode) {
+        var item = this.createItem(inContent, optionalDomNode, optionalIndex);
 
         var parent = this.listNode;
         dojo.setSelectable(item.domNode, false);
-        if (inIndex != undefined) {
-            this.items[inIndex] = item;
-            item.index = inIndex;
-            var sibling = this.findNextSiblingNode(inIndex);
+        if (optionalIndex != undefined) {
+            this.items[optionalIndex] = item;
+            var sibling = this.findNextSiblingNode(optionalIndex);
             if (sibling) {
                 parent.insertBefore(item.domNode, sibling);
             } else {
@@ -986,7 +1115,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         } else {
             this.items.push(item);
             item.index = this.items.length - 1;
-            var sibling = (this.items.length == inIndex + 1) ? this.spacerNodeBottom : parent.childNodes[inIndex + 1]; // +1 to get past the spacerNode
+            var sibling = (this.items.length == optionalIndex + 1) ? this.spacerNodeBottom : parent.childNodes[optionalIndex + 1]; // +1 to get past the spacerNode
             parent.insertBefore(item.domNode, sibling);
         }
         try {
@@ -1005,6 +1134,8 @@ dojo.declare("wm.List", wm.VirtualList, {
                 }
             }
         } catch (e) {}
+
+
         return item;
     },
     addSpacer: function(inIndex, avgItemHeight) {
@@ -1217,7 +1348,11 @@ dojo.declare("wm.List", wm.VirtualList, {
             node.style.border = "";
         });
 
-        if (startAddingFrom === undefined) { /* If there are rows showing, then use them as the basis from which we determine what rows to add */
+        
+        if (startAddingFrom !== undefined) {
+            currentHeight = this.getScrollTop();        
+        } else {
+            /* If there are rows showing, then use them as the basis from which we determine what rows to add */
             var lastItem = this.getLastItemNode();
 
             if (lastItem) {
@@ -1799,7 +1934,7 @@ wm.List.extend({
         }
 
         return value;
-    
+
     },
     dateFormatter: function(formatterProps, ignore1, ignore2, ignore3, inValue) {
         if (!inValue) {
@@ -1950,29 +2085,19 @@ wm.List.extend({
             item = inItemOrIndex;
         } else {
             index = inItemOrIndex;
-            item = this.getItem(index);
+            item = this.items[index];
         }
 
         /* See if we need to render the list in order to perform the selection task */
-        if (this._renderDojoObjSkipped || this.renderVisibleRowsOnly && (!item || !item.domNode || !item.domNode.parentNode) && !this._isDesignLoaded) {
+        if ((!this.isAncestorHidden() || this.renderVisibleRowsOnly) && !this._isDesignLoaded) {
             var renderHiddenGridWas = this._renderHiddenGrid;
             this._renderHiddenGrid = true;
-            if (this.renderVisibleRowsOnly) {
-                /* TODO: This is terrible: this will render all 10,000 items if the developer calls select().  Fix this... */
-                this.renderVisibleRowsOnly = false;
-                this._render();
-                this.renderVisibleRowsOnly = true;
-            } else {
-                this._render();
-            }
+            this.scrollToRow(index);
             this._renderHiddenGrid = renderHiddenGridWas;
             item = this.getItem(index); // item may have been regenerated
         }
-        this.inherited(arguments, [item]);
-        if (this.scrollToSelection) {
-            wm.onidle(this, function() {
-                this.scrollToRow(index);
-            });
+        if (item) {
+            this.inherited(arguments, [item]);        
         }
     },
     selectByIndex: function(inIndex) {

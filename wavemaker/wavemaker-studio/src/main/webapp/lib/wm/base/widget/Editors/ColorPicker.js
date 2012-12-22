@@ -25,7 +25,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     defaultColor: "",
     cancelValue: null,
     _empty: true,
-    regExp: "\\s*(\#[0-9a-fA-F]{6}|\{.*\}|\#[0-9a-fA-F]{3}|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow|rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\))\\s*",
+    regExp: "\\s*(\#[0-9a-fA-F]{6}|\{.*\}|\#[0-9a-fA-F]{3}|transparent|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow|rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\))\\s*",
     regExpOptions: "i",
     // could use a more precise regex for gradients
     showMessages: false,
@@ -86,12 +86,13 @@ dojo.declare("wm.ColorPicker", wm.Text, {
             if (inValue) {
             	var v1,v2,v3;
                 this.editorNode.style.backgroundColor = inValue;
+                inValue = this.editorNode.style.backgroundColor; // find the value ACTUALLY found by the browser
                 if (inValue.match(/^\#/)) {
                 	;
                 } else {
                 	var matches = inValue.match(/rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)/);
                 	if (matches) {
-                		inValue = "#" + parseInt(matches[1],16) + parseInt(matches[2],16) + parseInt(matches[3],16);
+                		inValue = "#" + Number(matches[1]).toString(16) + Number(matches[2]).toString(16) + Number(matches[3]).toString(16);
                 	} else {
                 		var colorObj = dojox.color.fromString(inValue);
                 		if (colorObj) {
@@ -99,8 +100,9 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 		}
                 	}
                 }
-
-                if (inValue.length > 5) {
+                if (inValue === "") {
+                    v1 = v2 = v3 = 255;
+                } else if (inValue.length > 5) {
                     v1 = parseInt(inValue.substr(1, 2), 16);
                     v2 = parseInt(inValue.substr(3, 2), 16);
                     v3 = parseInt(inValue.substr(5, 2), 16);
@@ -304,10 +306,11 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
     },
 
     reset: function() {
-	if (this.getValue() != this.owner.getDataValue()) {
-	    this.setDijitValue(this.owner.getDataValue());
-	}
-	this._initialValue = this.getValue();
+    	if (this.getValue() != this.owner.getDataValue()) {
+    	    this.setDijitValue(this.owner.getDataValue());
+    	}
+    	this._initialValue = this.getValue();
+    	this.owner.updateEditorColors();
     },
     getValue: function() {
         if (this.colorPicker) {
@@ -441,13 +444,14 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	this.owner.editor.closeDropDown();
     },
     reset: function() {
-	this._cupdating = true;
-	this.startColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.startColor : "");
-	this.endColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.endColor : "");
-	this.direction.setDataValue(this.owner.dataValue ? this.owner.dataValue.direction : "");
-	this.colorStop.setDataValue(this.owner.dataValue ? (this.direction.getDataValue() == "vertical" ? 100 - this.owner.dataValue.colorStop : this.owner.dataValue.colorStop) : "");
-	this._initialValue = dojo.clone(this.owner.dataValue);
-	this._cupdating = false;
+    	this._cupdating = true;
+    	this.startColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.startColor : "");
+    	this.endColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.endColor : "");
+    	this.direction.setDataValue(this.owner.dataValue ? this.owner.dataValue.direction : "");
+    	this.colorStop.setDataValue(this.owner.dataValue ? (this.direction.getDataValue() == "vertical" ? 100 - this.owner.dataValue.colorStop : this.owner.dataValue.colorStop) : "");
+    	this._initialValue = dojo.clone(this.owner.dataValue);
+    	this._cupdating = false;
+        this.updateColorDisplay();
     },
     onExecute: function() {}, // if this doesn't exist, _HasDropDown dismisses dialog onChange
 /*
@@ -478,25 +482,35 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	}
 	this._onChange();
     },
+    updateColorDisplay: function() {    
+        var v = this.getDataValue();
+    	var result = wm.getBackgroundStyle(v.startColor,v.endColor,v.colorStop,v.direction, "");
+    	if (dojo.isIE < 10) {
+    	    this.html.domNode.style.filter = result;
+    	} else {
+    	    this.html.domNode.style.background = result;
+    	}
+
+    
+    },
+    getDataValue: function() {
+
+    	var direction = this.direction.getDataValue();
+    	var colorStop = direction == "vertical" ? 100 - this.colorStop.getDataValue() : this.colorStop.getDataValue();
+    	var startColor = this.startColor.getDataValue();
+    	var endColor = this.endColor.getDataValue();
+    	var dataValue = {direction: direction,
+            		       startColor: startColor,
+            		       endColor: endColor,
+            		       colorStop:colorStop};
+        return dataValue;            		    
+    },
     _onChange: function() {
-
-	var direction = this.direction.getDataValue();
-	var colorStop = direction == "vertical" ? 100 - this.colorStop.getDataValue() : this.colorStop.getDataValue();
-	var startColor = this.startColor.getDataValue();
-	var endColor = this.endColor.getDataValue();
-
-	var result = wm.getBackgroundStyle(startColor,endColor,colorStop,direction, "");
-	if (dojo.isIE < 10) {
-	    this.html.domNode.style.filter = result;
-	} else {
-	    this.html.domNode.style.background = result;
-	}
-	if (!this._cupdating) {
-	this.owner.setEditorValue({direction: direction,
-		       startColor: startColor,
-		       endColor: endColor,
-		       colorStop:colorStop});
-	}
+        var v = this.getDataValue();
+        this.updateColorDisplay();
+    	if (!this._cupdating) {
+        	this.owner.setEditorValue(v);
+    	}
     },
 	/*
     brighten: function() {

@@ -566,12 +566,23 @@ dojo.declare("wm.Application", wm.Component, {
     },
     createPageContainer: function() {
         if (!this._isDesignLoaded) {
-        this.appRoot = new wm.AppRoot({owner: this, name: "appRoot"});
+        this.appRoot = new wm.AppRoot({owner: this, name: "appRoot", margin: "0", padding: "0", border: "0", borderColor: "0"});
         if (wm.isMobile) {
             dojo.addClass(document.body, "wmmobile")
         }
 
-        this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory, manageURL: this.manageURL, owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
+        this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory, 
+                                                    manageURL: this.manageURL, 
+                                                    owner: this, 
+                                                    parent: this.appRoot, 
+                                                    width: "100%", 
+                                                    height: "100%", 
+                                                    margin: wm.AppRoot.prototype.margin,
+                                                    padding: wm.AppRoot.prototype.padding,                                                    
+                                                    border: wm.AppRoot.prototype.border,                                                    
+                                                    borderColor: wm.AppRoot.prototype.borderColor,                                                    
+                                                    getRuntimeId: function() {return ""}
+                                                    });
         this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
         this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onPageChanged", this, "pageChanged");
         }

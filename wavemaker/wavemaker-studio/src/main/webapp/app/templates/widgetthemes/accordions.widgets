@@ -1,0 +1,7 @@
+{
+	layers: ["wm.AccordionLayers", {},{}, {
+	      l1: ["wm.Layer", {caption: "Layer 1"}],
+	      l2: ["wm.Layer", {caption: "Layer 2"}],
+	      l3: ["wm.Layer", {caption: "Layer 3"}]
+	      }]
+}

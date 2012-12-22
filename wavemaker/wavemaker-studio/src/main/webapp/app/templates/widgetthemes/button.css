@@ -14,14 +14,13 @@
 }
 
 /* GROUP: Active State */
+.wm_template   .wmbutton.toggleButtonDown,
 .wm_template   .wmbutton.Active,
 .wm_template   .wmbutton.Active:hover,
 .wm_template   .wmbutton:active,
 .wm_template   .wmbutton:active:hover {
 	color: #FFFFFF;
 	font-weight: bold;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
 	box-shadow: 4px 4px 4px black;
 	background-color: #333333;
 	background-image: none;
@@ -34,11 +33,7 @@
  .wm_template   .wmbutton:focus {
  	color: #FFFFFF;
 	font-weight: bold;
-
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	box-shadow: 4px 4px 4px black;
-
+        box-shadow: 0px 0px 0px black;    
 	background-color: #333333;
 	background-image: none;
 	background-position: left top;

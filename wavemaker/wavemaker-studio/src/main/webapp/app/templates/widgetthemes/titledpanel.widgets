@@ -1,0 +1,4 @@
+{
+   panel: ["wm.FancyPanel", {width: "100%", height: "300px", title: "Titled Panel"}]
+
+}

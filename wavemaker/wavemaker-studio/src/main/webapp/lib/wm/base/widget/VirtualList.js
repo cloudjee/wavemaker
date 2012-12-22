@@ -21,9 +21,9 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
     getRuntimeId: function() {
         return this.list.getRuntimeId() + "." + this.index;
     },
-    constructor: function(inList, inText, inImage, inDomNode) {
+    constructor: function(inList, inText, inImage, inDomNode, optionalIndex) {
         this.list = inList;
-        this.index = this.list._formatIndex;
+        this.index = optionalIndex === undefined ? this.list._formatIndex : optionalIndex;
         this._connections = [];
         this._subscriptions = [];
         this._debugSubscriptions = [];

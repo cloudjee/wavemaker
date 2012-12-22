@@ -1,0 +1,3 @@
+{
+selectEditor: ["wm.SelectMenu", {options: "Monday,Tuesday,Wednesday,Thursday,Friday", width: "100%", caption: "Select", captionSize: "80px"}]
+}

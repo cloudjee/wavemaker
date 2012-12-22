@@ -1,0 +1,3 @@
+{
+    label: ["wm.Label", {caption: "This is how default text will look", width: "100%"}]
+}

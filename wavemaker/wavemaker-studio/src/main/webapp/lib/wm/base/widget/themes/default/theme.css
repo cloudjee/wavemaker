@@ -927,7 +927,7 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 }
 
 html body.tundra .dijitMenuItem {
-ofont-family: "Nimbus Sans L", sans-serif;
+font-family: "Nimbus Sans L", sans-serif;
 }
 
 .tundra .dojoMenu .dijitMenu,
@@ -948,6 +948,8 @@ display:block;
 
 .accordionArrowNode {
 float: right;
+display: inline-block;
+margin-top: 4px;
 }
 div .accordionOnLeftArrowNode {
     position: relative;
@@ -956,7 +958,6 @@ div .accordionOnLeftArrowNode {
 }
 .accordionOnLeftArrowNode,
 .accordionArrowNode {
-    display: none;
     background-repeat: no-repeat;
     background-position: 50% 50%;
 
@@ -1434,7 +1435,7 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     font-size: 0.9em;
 }
 
-.dijitReset, .dijitReset.dijitTextBoxFocused {
+.dijitReset, .dijitTextBoxFocused {
     outline: none;
 }
 
@@ -1603,5 +1604,19 @@ height: 16px;
 /* End back button */
 
 .tundra .wmcolorpicker .dijitTextBox {
+    background-image: none;
+}
+
+
+/* Misc stuff moved from theme designer to standard theme file */
+.dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wmeditor .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitSelect .dijitArrowButton {
+    height: 100% !important;
+}
+.wmeditor .dijitSpinner .dijitArrowButton,
+.dojoxGrid .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitSelect .dijitArrowButton {
     background-image: none;
 }

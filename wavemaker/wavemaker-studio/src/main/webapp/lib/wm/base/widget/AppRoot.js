@@ -15,7 +15,7 @@
 dojo.provide("wm.base.widget.AppRoot");
 dojo.declare("wm.AppRoot", wm.Container, {
     // useful properties
-    classNames: '',
+    classNames: 'wmapproot',
     width: "",
     height: "",
         deviceSize: "",

@@ -24,6 +24,7 @@ dojo.require("wm.base.widget.Dialogs.Toast");
 dojo.require("wm.base.widget.Container_design");
 
 wm.Dialog.extend({
+    themeableProps: ["border", "borderColor"],
     themeableStyles: ["wm.Dialog_Inner-Radius"],
     // backward-compatibility fixups
 	afterPaletteDrop: function() {

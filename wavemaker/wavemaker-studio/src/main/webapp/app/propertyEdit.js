@@ -101,6 +101,8 @@ dojo.declare("wm.SetWireTask", null, {
 dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
     editorBorder: false,
     pxOnly: false,
+    allSizeTypes: false,
+    defaultValue: 100,
     validationEnabled: function() {
         return false;
     },
@@ -119,7 +121,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         });
         this.numberEditor = new wm.Text({
             owner: this,
-            regExp: "^\\d*(%|px|)",
+            regExp: this.allSizeTypes ? "^([0-9]*\\.?[0-9]+)*(%|px|pt|em|)" : "^\\d*(%|px|)",
             parent: this.editor,
             width: "100%",
             name: "numberEditor",
@@ -131,7 +133,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
             owner: this,
             parent: this.editor,
             name: "typeEditor",
-            options: "px,%",
+            options: this.allSizeTypes ? "px,pt,%,em" : "px,%",
             dataField: "dataValue",
             displayField: "dataValue",
             width: "50px",
@@ -158,6 +160,13 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         } else if (displayValue.match(/px$/)) {
             this.numberEditor.setDataValue(displayValue.replace(/px$/, ""));
             this.typeEditor.setDataValue("px");
+        } else if (displayValue.match(/pt$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/pt$/, ""));
+            this.typeEditor.setDataValue("pt");
+        } else if (displayValue.match(/em$/)) {
+            this.numberEditor.setDataValue(displayValue.replace(/em$/, ""));
+            this.typeEditor.setDataValue("em");
+            
         } else {
             this.changed();
         }
@@ -171,7 +180,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
             this.numberEditor.setDataValue(result[1]);
             this.typeEditor.setDataValue(result[2] || "px");
         } else {
-            this.numberEditor.setDataValue(100);
+            this.numberEditor.setDataValue(this.defaultValue);
             this.typeEditor.setDataValue("px");
         }
     },
@@ -2753,4 +2762,1289 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
         this.docsHtml.setHtml("Loading <a target='docs' href='" + url + "'>docs...</a>");
     }
     }
+});
+
+
+
+dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
+    dataValue: "0",
+    caption: "border-radius",
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.initialHeight = parseInt(this.height);
+        this.allEditor = new wm.Number({
+            owner: this,
+            parent: e,
+            name: "allCorners",
+            width: "35px",
+            padding: "0",
+            onchange: dojo.hitch(this, "changed", 0)
+        });
+        this.cornersPanel = new wm.Panel({
+            width: "60px",
+            height: "100%",
+            layoutKind: "top-to-bottom",
+            owner: this,
+            parent: e,
+            name: "cornersPanel",
+            horizontalAlign: "left",
+            verticalAlign: "top",
+            showing: false
+        });
+        this.row1 = new wm.Panel({
+            width: "100%",
+            height: "100%",
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this.cornersPanel,
+            name: "row1",
+            horizontalAlign: "left",
+            verticalAlign: "top"
+        });
+        this.topLeftEditor = new wm.Number({
+            owner: this,
+            parent: this.row1,
+            name: "topLeft",
+            width: "100%",
+            minWidth: "30",            
+            padding: "0",
+            emptyValue: "zero",
+            onchange: dojo.hitch(this, "changed", 0)
+        });
+        this.topRightEditor = new wm.Number({
+            owner: this,
+            parent: this.row1,
+            name: "topRight",
+            width: "100%",
+            minWidth: "30",     
+            padding: "0",       
+            emptyValue: "zero",            
+            onchange: dojo.hitch(this, "changed", 1)
+        });
+        
+        this.row2= new wm.Panel({
+            width: "100%",
+            height: "100%",
+            layoutKind: "left-to-right",
+            owner: this,
+            parent: this.cornersPanel,
+            name: "row2",
+            horizontalAlign: "left",
+            verticalAlign: "top"
+        });
+        
+        this.bottomLeftEditor = new wm.Number({
+            owner: this,
+            parent: this.row2,
+            name: "bottomLeft",
+            width: "100%",
+            minWidth: "30",            
+            padding: "0",      
+            emptyValue: "zero",            
+            onchange: dojo.hitch(this, "changed", 2)
+        });
+        
+
+        this.bottomRightEditor = new wm.Number({
+            owner: this,
+            parent: this.row2,
+            name: "bottomRight",
+            width: "100%",
+            minWidth: "30",            
+            padding: "0",            
+            emptyValue: "zero",            
+            onchange: dojo.hitch(this, "changed", 3)
+        });
+        this.toggleButton = new wm.ToggleButton({
+            _classes: {domNode: ["StudioButton"]},
+            owner: this,
+            parent: e,
+            name: "toggleButton",
+            width: "31px",
+            height: "20px",
+            margin: "0,0,0,10",
+            padding: "0",
+            captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
+            captionDown: "<img src='images/propertyEditors/expanded.png'/>",
+            onclick: dojo.hitch(this, "toggleClicked")
+        });        
+        return this.editor;
+    },
+    setInitialValue: function() {
+/*        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        if (this.dataValue.match(/\s/)) {
+            this.toggleButton.setClicked(true);
+            this.changed();
+        }        
+        this.endEditUpdate();
+        this.clearDirty(true);*/
+    },
+    setEditorValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);
+
+        var parts = v.split(/\s+/);
+        for (var i = 0; i < parts.length; i++) parts[i] = Number(parts[i].replace(/px/, ""));
+        if (parts.length == 1) {
+            this.allEditor.setDataValue(parts[0]);
+        } else if (parts.length == 2) {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[1]);
+            this.bottomLeftEditor.setDataValue(parts[1]);
+            this.bottomRightEditor.setDataValue(parts[0]);
+        } else if (parts.length == 3) {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[1]);
+            this.bottomLeftEditor.setDataValue(parts[1]);
+            this.bottomRightEditor.setDataValue(parts[3]);
+        } else {
+            this.topLeftEditor.setDataValue(parts[0]);
+            this.topRightEditor.setDataValue(parts[1]);
+            this.bottomLeftEditor.setDataValue(parts[2]);
+            this.bottomRightEditor.setDataValue(parts[3]);
+        }
+        this.toggleButton.setClicked(this.topLeftEditor.getDataValue() != this.topRightEditor.getDataValue() ||
+            this.topLeftEditor.getDataValue() != this.bottomRightEditor.getDataValue() ||
+            this.topLeftEditor.getDataValue() != this.bottomLeftEditor.getDataValue());
+        this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        var styleName = inStyleName.replace(/^.*border-/,"");
+        switch(styleName) {
+            case "radius":
+                this.setDataValue(inStyleValue);    
+                break;
+            case "top-left-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");
+                if (inStyleValue != this.topLeftEditor.getDataValue()) {
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
+                    this.topLeftEditor.setDataValue(inStyleValue);
+                }
+                break;
+            case "top-right-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");            
+                if (inStyleValue != this.topRightEditor.getDataValue()) {
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
+                    this.topRightEditor.setDataValue(inStyleValue);
+                }
+                break;
+            case "bottom-left-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");            
+                if (inStyleValue != this.bottomLeftEditor.getDataValue()) {            
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
+                    this.bottomLeftEditor.setDataValue(inStyleValue);
+                }
+                break;     
+            case "bottom-right-radius":
+                inStyleValue = inStyleValue.replace(/px/,"");            
+                if (inStyleValue != this.bottomRightEditor.getDataValue()) {
+                    if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
+                    this.bottomRightEditor.setDataValue(inStyleValue);
+                }
+                break;
+        }
+    },
+    getEditorValue: function() {
+        return this.dataValue;
+    },
+    setFullEditorShowing: function(inShowing) {
+        if (inShowing) {
+            this.cornersPanel.show();
+            this.allEditor.hide();
+            this.setHeight(this.initialHeight * 2 + "px");                        
+        } else {
+            this.cornersPanel.hide();
+            this.allEditor.show();
+            this.setHeight(this.initialHeight + "px");
+        }    
+        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
+            this.parent.setHeight(this.height);
+        }
+    },
+    toggleClicked: function() {
+        if (!this.toggleButton.clicked) {
+            this.allEditor.setDataValue(this.topLeftEditor.getDataValue());
+        }
+        this.changed();
+    },
+    changed: function() {
+        if (!this.toggleButton.clicked) {
+            this.setFullEditorShowing(false);
+            if (this.allEditor.getDisplayValue() === "") {
+                if (this.topLeftEditor.getDisplayValue() !== "") {
+                    this.allEditor.setDataValue(this.topLeftEditor.getDataValue());
+                }
+            }
+            var value = this.allEditor.getDataValue();
+            this.dataValue = value + "px";
+            this.topLeftEditor.setDataValue(value);
+            this.topRightEditor.setDataValue(value);
+            this.bottomLeftEditor.setDataValue(value);
+            this.bottomRightEditor.setDataValue(value);
+
+        } else {
+            this.setFullEditorShowing(true);
+            var values = [this.topLeftEditor.getDataValue(),
+                         this.topRightEditor.getDataValue(),                         
+                         this.bottomRightEditor.getDataValue(),
+                         this.bottomLeftEditor.getDataValue()];
+            if (values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
+                this.dataValue = values[0] + "px";
+            } else if (values[0] === values[2] && values[1] === values[3]) {
+                this.dataValue = values[0] + "px " + values[1] + "px";
+            } else if (values[1] === values[3]) {
+                this.dataValue = values[0] + "px " + values[1] + "px " + values[2] + "px";
+            } else {
+                this.dataValue = values.join("px ") + "px";
+            }   
+        }
+        this.onchange(this.dataValue, this.dataValue);
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+    updateCssLine: function(inStyleName) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/border-.*radius/)) {   
+             var value = this.getDataValue();
+             return "border-radius: " + value + ";\n\t-webkit-border-radius: " + value +";";        
+        }   
+    }
+});
+
+dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
+    dataValue: "solid 0px black",
+    caption: "border",
+    height: "24px",
+    buildPanel: function(inName, parent) {
+            var p = this[inName + "Panel"] = new wm.Panel({
+                name: inName + "Panel",
+                owner: this,
+                parent: parent,
+                width: "100%",
+                height: "24px",
+                layoutKind: "left-to-right",
+                verticalAlign: "top",
+                horizontalAlign: "left"
+        });
+        this[inName + "StyleEditor"] = new wm.SelectMenu({
+            name: inName + "StyleEditor",
+            owner: this,
+            parent: p,
+            width: "85px",
+            padding: "0",
+            options: "inherit,solid,dotted,dashed,double,groove,ridge,inset,outset",
+            dataValue: "solid",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this[inName + "WidthEditor"] = new wm.Number({
+            name: inName + "WidthEditor",
+            owner: this,
+            parent: p,
+            width: "55px",
+            padding: "0",
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });        
+        this[inName + "ColorEditor"] = new wm.ColorPicker({
+            name: inName + "ColorEditor",
+            owner: this,
+            parent: p,
+            width: "150px",
+            padding: "0",
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });        
+    },
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.testNode = new wm.Label({owner: this, parent: e,showing: false});
+        var parent = new wm.Panel({
+            owner: this,
+            parent: e,
+            width: "300px",
+            height: "100%",
+            layoutKind: "top-to-bottom"
+        });
+        this.buildPanel("all",parent);
+        this.buildPanel("top",parent);
+        this.buildPanel("right",parent);
+        this.buildPanel("bottom",parent);
+        this.buildPanel("left",parent);
+        this.toggleButton = new wm.ToggleButton({
+            _classes: {domNode: ["StudioButton"]},
+            owner: this,
+            parent: e,
+            name: "toggleButton",
+            width: "31px",
+            height: "20px",
+            margin: "0,0,0,10",
+            padding: "0",
+            captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
+            captionDown: "<img src='images/propertyEditors/expanded.png'/>",
+            onclick: dojo.hitch(this, "toggleClicked")
+        });        
+        return this.editor;
+    },
+    setInitialValue: function() {
+/*        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
+        this.clearDirty(true);*/
+    },
+    setEditorValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);
+        var s = this.testNode.domNode.style;
+        s.border = inValue;
+        this.getValuesFromTestNode();
+    },
+    getValuesFromTestNode: function() {
+        var s = this.testNode.domNode.style;
+        this.allStyleEditor.setDataValue(s.borderStyle   && s.borderStyle != "initial" ? s.borderStyle : "inherit")
+        this.topStyleEditor.setDataValue(s.borderTopStyle   && s.borderStyle != "initial" ? s.borderStyle : "inherit");
+        this.rightStyleEditor.setDataValue(s.borderRightStyle && s.borderRightStyle != "initial" ? s.borderRightStyle : "inherit");
+        this.bottomStyleEditor.setDataValue(s.borderBottomStyle&& s.borderBottomStyle != "initial" ? s.borderBottomStyle : "inherit");
+        this.leftStyleEditor.setDataValue(s.borderLeftStyle  && s.borderLeftStyle != "initial" ? s.borderLeftStyle : "inherit");        
+        
+        this.allWidthEditor.setDataValue(parseInt(s.borderWidth));
+        this.topWidthEditor.setDataValue(parseInt(s.borderTopWidth));
+        this.rightWidthEditor.setDataValue(parseInt(s.borderRightWidth));
+        this.bottomWidthEditor.setDataValue(parseInt(s.borderBottomWidth));
+        this.leftWidthEditor.setDataValue(parseInt(s.borderLeftWidth));        
+
+        this.allColorEditor.setDataValue(s.borderColor)
+        this.topColorEditor.setDataValue(s.borderTopColor);
+        this.rightColorEditor.setDataValue(s.borderRightColor);
+        this.bottomColorEditor.setDataValue(s.borderBottomColor);
+        this.leftColorEditor.setDataValue(s.borderLeftColor);        
+        
+        this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        if (!inStyleName.match(/^border/i) || inStyleName.match(/radius/)) return;
+        var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
+           return inLetter.substring(1).toUpperCase();
+        });
+
+        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        if (inStyleName.match(/(top|left|bottom|right)/)) this.toggleButton.setClicked(true);
+        this.getValuesFromTestNode();
+        
+        if (inStyleName.match(/outline/)) this.toggleButton.hide();
+    },
+    getEditorValue: function() {
+        return this.dataValue; // this value won't mean much if border colors/widths don't match
+    },
+    setFullEditorShowing: function(inShowing) {
+        if (inShowing) {
+            this.topPanel.show();
+            this.rightPanel.show();
+            this.leftPanel.show();
+            this.bottomPanel.show();            
+            this.allPanel.hide();
+            this.setHeight(24 * 4 + "px");
+        } else {
+            this.topPanel.hide();
+            this.rightPanel.hide();
+            this.leftPanel.hide();
+            this.bottomPanel.hide();
+            this.allPanel.show();
+            this.setHeight(24 + "px");
+        }    
+       if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
+            this.parent.setHeight(this.height);
+        }
+    },
+    toggleClicked: function() {
+        this.changed();
+    },
+    changed: function() {
+        if (!this.toggleButton.clicked) {
+            this.setFullEditorShowing(false);
+        } else {
+            this.setFullEditorShowing(true);
+        }
+        this.onchange(this.dataValue, this.dataValue);
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+    getBorderCssLine: function(inName, isOutline) {
+        var name = isOutline ? "outline" : "border";
+        var style = this[inName + "StyleEditor"].getDataValue();
+        var width = this[inName + "WidthEditor"].getDataValue();
+        var color = this[inName + "ColorEditor"].getDataValue();
+        var append = inName == "all" ? "" : "-" + inName ;
+        if (style != "inherit" && width !== undefined && color !== undefined) {
+            return name + append + ": " + style + " " + width + "px " + color + ";";
+        } else {
+            return name + append + "-style: " + style + ";\n\t" +
+                name + append + "-width: " + width + "px;\n\t" +
+                name + append + "-color: " + color + ";";
+        }        
+    },
+    updateCssLine: function(inStyleName) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/border/) && !inStyleName.match(/radius/) || inStyleName.match(/outline/)) {   
+             if (!this.toggleButton.clicked) {
+                return this.getBorderCssLine("all", inStyleName.match(/outline/));
+             } else {
+                return this.getBorderCssLine("top", inStyleName.match(/outline/)) + "\n\t" +
+                        this.getBorderCssLine("right", inStyleName.match(/outline/)) + "\n\t" +
+                        this.getBorderCssLine("bottom", inStyleName.match(/outline/)) + "\n\t" +
+                        this.getBorderCssLine("left", inStyleName.match(/outline/));                        
+             }
+        }   
+    }
+});
+
+dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
+    dataValue: "0px 0px 0px #000000",
+    caption: "box-shadow",
+    height: "43px",
+    
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.horizontalEditor = new wm.Number({
+            owner: this,
+            parent: e,
+            name: "horizontal",
+            height: "100%",
+            width: "70px",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Horizontal",
+            onchange: dojo.hitch(this, "horizontalChange")
+        });
+        this.verticalEditor = new wm.Number({
+            owner: this,
+            parent: e,
+            name: "vertical",
+            height: "100%",
+            width: "60px",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Vertical",
+            onchange: dojo.hitch(this, "verticalChange")
+        });
+        this.blurEditor = new wm.Number({
+            owner: this,
+            parent: e,
+            name: "blurEditor",
+            height: "100%",
+            width: "60px",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Blur",
+            onchange: dojo.hitch(this, "blurChange")
+        });
+        this.colorEditor = new wm.ColorPicker({
+            owner: this,
+            parent: e,
+            name: "colorEditor",
+            caption: "Color",
+            height: "100%",
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            width: "100px",
+            onchange: dojo.hitch(this, "colorChange")
+        });
+        return e;
+    },
+    horizontalChange: function(inDisplayValue, inDataValue) {
+        var parts = String(this.dataValue).split(/\s+/);
+        parts[0] = inDataValue +  "px";
+        this.dataValue = parts.join(" ");
+        this.changed();
+    },
+
+    verticalChange: function(inDisplayValue, inDataValue) {
+        var parts = String(this.dataValue).split(/\s+/);
+        parts[1] = inDataValue +  "px";
+        this.dataValue = parts.join(" ");
+        this.changed();
+    },
+
+    blurChange: function(inDisplayValue, inDataValue) {
+        var parts = String(this.dataValue).split(/\s+/);
+        parts[2] = inDataValue +  "px";
+        this.dataValue = parts.join(" ");
+        this.changed();
+    },
+
+    colorChange: function(inDisplayValue, inDataValue) {
+        var parts = String(this.dataValue).split(/\s+/);
+        parts[3] = inDataValue;
+        this.dataValue = parts.join(" ");
+        this.changed();
+    },
+
+
+    onchange: function(inDisplayValue, inDataValue) {},
+    setEditorValue: function(inValue) {
+        var v = this.dataValue = inValue;
+
+        var parts = String(v).split(/\s+/);
+        this.horizontalEditor.setDataValue(parseInt(parts[0]));
+        this.verticalEditor.setDataValue(parseInt(parts[1]));
+        this.blurEditor.setDataValue(parseInt(parts[2]));
+        this.colorEditor.setDataValue(parts[3]);
+    },
+    
+    updateCssLine: function(inStyleName) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/box-shadow/)) {   
+             var value = this.getDataValue();
+             return "box-shadow: " + value + ";\n\t-webkit-box-shadow: " + value +";";        
+        }   
+    }
+});
+
+/* TODO: Handle background-image: none; */
+dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
+    dataValue: "",
+    urlPlaceHolder: "",
+    height: "24px",
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.editor.setVerticalAlign("bottom");        
+        var groupName = this.getRuntimeId().replace(/\./,"_");
+
+        this.testNode = new wm.Label({owner: this, parent: this, showing: false});
+        this.backgroundChooser = new wm.SelectMenu({
+            owner: this,
+            parent: e,
+            width: "140px",
+            margin: "0,20,0,0",
+            padding: "0",
+            options: "Color/Gradient,Image,Transparent,Custom",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.layers = new wm.Layers({
+            owner: this,
+            parent: e,
+            width: "100%",
+            height: "100%"
+        });
+        
+        
+        this.colorPanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "left-to-right",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+                
+        this.colorEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorPanel,
+            captionSize: "50px",
+            captionAlign: "left",
+            caption: "Color",
+            width: "180px",   
+            padding: "0",            
+            gradient: false,
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+        this.gradientEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorPanel,
+            captionSize: "80px",
+            caption: "Gradient",
+            width: "200px",        
+            padding: "0",            
+            gradient: true,
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+
+        this.imagePanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom",
+            horizontalAlign: "left"
+        });
+        this.urlEditor = new wm.Text({
+            owner: this,
+            parent: this.imagePanel,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "URL",
+            width: "100%",
+            height: "100%",
+            padding: "0",            
+            placeHolder: this.urlPlaceHolder,      
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.imageRepeatEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Repeats?",
+            width: "80px",
+            height: "100%",
+            padding: "0",            
+            allowNone: true,
+            dataValue: "no-repeat",
+            options: "no-repeat,repeat,repeat-x,repeat-y",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.horizontalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Horizontal Position",
+            width: "120px",
+            height: "100%",
+            padding: "0",            
+            dataValue: "0%",
+            onchange: dojo.hitch(this, "changed")  
+        });
+        this.verticalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+
+            caption: "Vertical Position",
+            width: "120px",
+            height: "100%",
+            padding: "0",            
+            dataValue: "0%",            
+            onchange: dojo.hitch(this, "changed")
+        });                
+
+        this.transparentPanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom",
+            horizontalAlign: "left"
+        });
+        new wm.Label({
+            owner: this,
+            parent: this.transparentPanel,
+            width: "100%",
+            caption: "Background set to <i>transparent</i>",
+            _classes: {domNode: ["StudioLabel"]}            
+        });
+        this.customPanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom",
+            horizontalAlign: "left"
+        });
+        new wm.Label({
+            owner: this,
+            parent: this.customPanel,
+            width: "100%",
+            caption: "Use the source code editor to change this style",
+            _classes: {domNode: ["StudioLabel"]}
+        });        
+        return e;
+    },    
+    
+    setInitialValue: function() {
+/*        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
+        this.clearDirty(true);*/
+    },
+
+    /* Possible values that might come in (we do not handle every possibility) 
+     * 	background-color: <color-spec>;
+     *  background-image: <image-spec>;
+     *  background-image: <gradient-spec>
+     *  background-position: <position-spec>;
+     *  background-repeat: <repeat-spec>;
+     *  background: <color-spec> <image-spec|gradient-spec> <repeat-spec> <position-spec>; // any element can be left out but order must be maintained for those present
+     *  filter: progid:DXImageTransform.Microsoft.gradient(...); // ignore this one; the colors should already be extracted from a more standard-based statement
+     * color-spec: #xxx, #xxxxxx, rgb(x,y,z), color-name
+     * image-spec: url(xxx)
+     * gradient-spec: linear-gradient | radial-gradient | -webkit-gradient; // may have browser prefix; -webkit-gradient is deprecated but is only one supported on many android 2 devices     
+     */
+    
+    /* setEditorValue expects the full "backgroud: color image|gradient repeat position" value */
+    
+    getBackgroundObj: function(inValue) {
+        var s = this.testNode.domNode.style;
+        s.background = inValue;
+        var repeatX = s.backgroundRepeatX;
+        var repeatY = s.backgroundRepeatY;
+        if (repeatX == "initial" || repeatX == "no-repeat") repeatX = "";
+        if (repeatY == "initial" || repeatY == "no-repeat") repeatY = "";
+        var repeat;
+        if (repeatX && repeatY) {
+            repeat = "repeat";
+        } else if (repeatX) {
+            repeat = "repeat-x";
+        } else if (repeatY) {
+            repeat = "repeat-y";
+        } else {
+            repeat = "no-repeat";
+        }
+        var l = location.host + location.pathname;
+        var result = {
+            color: s.backgroundColor,
+            gradient: (s.backgroundImage||"").match(/gradient/) ? s.backgroundImage : "",
+            url: (s.backgroundImage||"").match(/^url/) ? s.backgroundImage.substring(s.backgroundImage.indexOf(l) + l.length).replace(/\)/,"") : "",
+            repeat: repeat,
+            positionX: s.backgroundPositionX,
+            positionY: s.backgroundPositionY
+        }; 
+        return result;
+    },
+    
+    /* Parse either of these options: 
+    * -browserPrefix-linear-gradient(top, #0101b7 0%,#011d65 46%,#011d65 100%); 
+    * -webkit-gradient(linear, center top, center bottom, from(#0101b7), color-stop(46%,#011d65), to(#011d65));
+    * If there are more than 3 colors in the first one, then switch to "custom".
+    * If there is more than one color-stop in the second one, switch to "custom"
+    */
+    parseGradient: function(inValue) {
+        var gradientObj = {};    
+        
+        // matches the -webkit-gradient which is deprecated but still only one supported on android 2 browsers
+        var matches = inValue.match(/-webkit-gradient\(linear,\s*(.*?),\s*(.*?),\s*from\((\#.*?|rgb\(.*?\))\),\s*color-stop\((.*?),\s*(\#.*?|rgb\(.*?\))\),\s*to\((\#.*?|rgb\(.*?\))\)/);
+
+            if (matches) {
+                gradientObj.direction  =  matches[1].match(/top/) && matches[2].match(/bottom/) || matches[1].match(/\%\s*0\%/) && matches[2].match(/\%\s*100\%/)  ? "vertical" : "horizontal";
+                gradientObj.startColor = matches[3];
+                gradientObj.endColor   = matches[6];
+                gradientObj.colorStop = matches[4];
+                if (gradientObj.colorStop.match(/\%/)) {
+                    gradientObj.colorStop = Number(gradientObj.colorStop.replace(/\%/,""));
+                } else {
+                    gradientObj.colorStop = Number(gradientObj.colorStop) * 100;
+                }
+                return gradientObj;
+            } else {
+                /* TODO: COLOR STOPS IN WEBKIT CAME BACK NOT AS PERCENTS, NEED TO TEST THIS ON OTHER BROWSERS TO SEE WHAT VALUES ARE REALLY RETURNED */
+                matches = inValue.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
+                if (matches) {
+                    gradientObj.direction = matches[1] == "top" ? "vertical" : "horizontal";
+                    gradientObj.startColor = matches[2];
+                    gradientObj.colorStop = matches[5];
+                    gradientObj.endColor = matches[6];
+                    return gradientObj;
+                }                    
+            }
+        return null; // failed to parse it
+    },
+    setEditorValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);        
+        var backgroundObj = this.getBackgroundObj(v);
+        if (backgroundObj.gradient && backgroundObj.gradient.match(/radial/)) {
+            this.backgroundChooser.setDataValue("Custom");
+        } else if (backgroundObj.color == "transparent") {
+            this.backgroundChooser.setDataValue("Transparent");
+            this.dataValue = "transparent";
+
+        } else if (backgroundObj.gradient) {
+           var gradientObj = this.parseGradient(backgroundObj.gradient);
+           if (gradientObj) {
+                this.backgroundChooser.setDataValue("Color/Gradient");
+                this.gradientEditor.setDataValue(gradientObj);
+            } else {
+                this.backgroundChooser.setDataValue("Custom");
+            }
+        } else if (backgroundObj.url) {
+            this.backgroundChooser.setDataValue("Image");
+            this.urlEditor.setDataValue(backgroundObj.url);
+            this.imageRepeatEditor.setDataValue(backgroundObj.repeat);
+            var x;
+            if (!backgroundObj.positionX || backgroundObj.positionX == "left") {
+                x = "0%";
+            } else if (backgroundObj.positionX == "center") {
+                x = "50%";
+            } else if (backgroundObj.positionX == "right") {
+                x = "100%";
+            } else {
+                x = backgroundObj.positionX;
+            }
+            if (x == "initial") x = "0%";
+            this.horizontalPosEditor.setDataValue(x);
+            
+            var y;
+            if (!backgroundObj.positionY || backgroundObj.positionY == "top") {
+                y = "0%";
+            } else if (backgroundObj.positionY == "center") {
+                y = "50%";
+            } else if (backgroundObj.positionY == "bottom") {
+                y = "100%";
+            } else {
+                y = backgroundObj.positionY;
+            }            
+            if (y == "initial") y = "0%";            
+            this.verticalPosEditor.setDataValue(y);
+        } else if (backgroundObj.color) {
+            this.backgroundChooser.setDataValue("Color/Gradient");        
+            this.colorEditor.setDataValue(backgroundObj.color);
+
+        }
+        //this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        if (!inStyleName.match(/^background/i)) return;
+        var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
+    		                  return inLetter.substring(1).toUpperCase();
+    		               });
+        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        this.setDataValue(this.testNode.domNode.style.background);
+    },
+    getEditorValue: function() {
+        return this.dataValue;
+    },
+    changed: function() {
+        var backgroundType = this.backgroundChooser.getDataValue();
+        switch(backgroundType) {
+            case "Color/Gradient":
+                this.dataValue = this.getColorDataValue();        
+                this.colorPanel.activate();
+                this.setHeight("24px");
+                break;
+            case "Image":
+                this.dataValue = this.getImageDataValue();
+                this.imagePanel.activate();                
+                this.setHeight("43px");                
+                break;
+            case "Transparent":
+                this.dataValue = "transparent";
+                this.transparentPanel.activate();
+                this.setHeight("24px");                
+                break;
+            case "Custom":
+                this.customPanel.activate();            
+                this.setHeight("24px");                
+                break;
+        }
+        if (backgroundType != "Custom") {
+            this.onchange(this.dataValue, this.dataValue);
+        }
+        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h < this.bounds.h) {
+            this.parent.setHeight(this.height);
+        }        
+    },
+    getImageDataValue: function() {
+        var value = this.urlEditor.getDataValue();
+        if (value) value = "url(" + value.replace(/\s*$/,"") + ")";
+        var repeat = this.imageRepeatEditor.getDataValue();
+        if (repeat) value += " " + repeat;
+        value += " " + this.horizontalPosEditor.getDataValue()
+              +  " " + this.verticalPosEditor.getDataValue();
+        return value;            
+    },
+    getColorDataValue: function() {
+        var value = "";
+        
+        var color = this.colorEditor.getDataValue();
+        if (color) {
+            value += color;
+        }
+        
+        var gradient = this.gradientEditor.getDataValue();
+        if (color && gradient) value += " ";
+        if (gradient) value += this.testNode.domNode.style.backgroundImage;
+        return value;    
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+    updateCssLine: function(inStyleName, inStyleValue) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/^background/) || inStyleName == "filter" && inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/)) {   
+
+            var backgroundType = this.backgroundChooser.getDataValue();
+            var value = "";
+            if (backgroundType != "Color/Gradient") {
+                value = "background: " + this.getDataValue();
+            } else {
+                if (this.colorEditor.getDataValue()) {
+                    value += "background-color: " + this.colorEditor.getDataValue() + ";";
+                }
+                if (value) value += "\n\t";                
+                if (this.gradientEditor.getDataValue()) {
+                    var styleValue = this.gradientEditor.getDataValue();
+                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
+                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";";
+                } else {
+                    value += "background-image: none;"
+                }
+            }
+            return value;
+        }   
+    }
+    
+});
+
+
+dojo.declare("wm.BackgroundEditor2", wm.AbstractEditorContainer, {
+    dataValue: "",
+    urlPlaceHolder: "",
+    height: "43px",
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.editor.setVerticalAlign("bottom");        
+        var groupName = this.getRuntimeId().replace(/\./,"_");
+
+        this.testNode = new wm.Label({owner: this, parent: this, showing: false});
+        this.colorPanel = new wm.Container({
+            owner: this,
+            parent: e,
+            width: "100%",
+            height: wm.AbstractEditor.prototype.height,
+            layoutKind: "left-to-right",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        this.colorChoice = new wm.RadioButton({
+            owner: this,
+            parent: this.colorPanel,
+            width: "24px",
+            margin: "0,8,0,0",
+            radioGroup: groupName,
+            checkedValue: "color",
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+        
+        this.colorEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorPanel,
+            captionSize: "50px",
+            captionAlign: "left",
+            caption: "Color",
+            width: "140px",   
+            gradient: false,
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+        this.gradientEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorPanel,
+            captionSize: "80px",
+            caption: "Gradient",
+            width: "200px",
+            height: "100%",            
+            gradient: true,
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+
+        this.imagePanel = new wm.Container({
+            owner: this,
+            parent: e,
+            width: "100%",
+            height: "43px",
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom",
+            horizontalAlign: "left"
+        });
+        this.imageChoice = new wm.RadioButton({
+            owner: this,
+            parent: this.imagePanel ,
+            width: "24px",
+            height: "20px",
+            margin: "0,8,4,0",
+            radioGroup: groupName,
+            checkedValue: "image",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.urlEditor = new wm.Text({
+            owner: this,
+            parent: this.imagePanel,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "URL",
+            width: "100%",
+            height: "100%",
+            placeHolder: this.urlPlaceHolder,      
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.imageRepeatEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Repeats?",
+            width: "60px",
+            height: "100%",
+            allowNone: true,
+            options: "no-repeat,repeat,repeat-x,repeat-y",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.horizontalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+            caption: "Horizontal Position",
+            width: "120px",
+            height: "100%",
+            dataValue: "0%",
+            onchange: dojo.hitch(this, "changed")  
+        });
+        this.verticalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "16px",
+            captionPosition: "top",
+            captionAlign: "left",
+
+            caption: "Vertical Position",
+            width: "120px",
+            height: "100%",
+            dataValue: "0%",            
+            onchange: dojo.hitch(this, "changed")
+        });                
+
+        this.transparentChoice = new wm.RadioButton({
+            owner: this,
+            parent: e ,
+            width: "100%",
+            captionSize: "100%",
+            captionPosition: "right",
+            captionAlign: "left",
+
+            radioGroup: groupName,
+            checkedValue: "transparent",
+            caption: "Transparent",
+            onchange: dojo.hitch(this, "changed")
+        });                
+       this.customChoice = new wm.RadioButton({
+            owner: this,
+            parent: e ,
+            width: "100%",
+            captionSize: "100%",            
+            captionPosition: "right",
+            captionAlign: "left",
+            radioGroup: groupName,
+            checkedValue: "custom",
+            caption: "Custom (use editor tab)",
+            onchange: dojo.hitch(this, "changed")
+        });                        
+        return e;
+    },    
+    
+    setInitialValue: function() {
+/*        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
+        this.clearDirty(true);*/
+    },
+
+    /* Possible values that might come in (we do not handle every possibility) 
+     * 	background-color: <color-spec>;
+     *  background-image: <image-spec>;
+     *  background-image: <gradient-spec>
+     *  background-position: <position-spec>;
+     *  background-repeat: <repeat-spec>;
+     *  background: <color-spec> <image-spec|gradient-spec> <repeat-spec> <position-spec>; // any element can be left out but order must be maintained for those present
+     *  filter: progid:DXImageTransform.Microsoft.gradient(...); // ignore this one; the colors should already be extracted from a more standard-based statement
+     * color-spec: #xxx, #xxxxxx, rgb(x,y,z), color-name
+     * image-spec: url(xxx)
+     * gradient-spec: linear-gradient | radial-gradient | -webkit-gradient; // may have browser prefix; -webkit-gradient is deprecated but is only one supported on many android 2 devices     
+     */
+    
+    /* setEditorValue expects the full "backgroud: color image|gradient repeat position" value */
+    
+    getBackgroundObj: function(inValue) {
+        var s = this.testNode.domNode.style;
+        s.background = inValue;
+        var repeatX = s.backgroundRepeatX;
+        var repeatY = s.backgroundRepeatY;
+        var repeat;
+        if (repeatX && repeatY) {
+            repeat = "repeat";
+        } else if (repeatX) {
+            repeat = "repeat-x";
+        } else if (repeatY) {
+            repeat = "repeat-y";
+        } else {
+            repeat = "no-repeat";
+        }
+
+        var result = {
+            color: s.backgroundColor,
+            gradient: (s.backgroundImage||"").match(/gradient/) ? s.backgroundImage : "",
+            url: (s.backgroundImage||"").match(/^url/) ? s.backgroundImage : "",
+            repeat: repeat,
+            positionX: s.backgroundPositionX,
+            positionY: s.backgroundPositionY
+        };
+        return result;
+    },
+    
+    /* Parse either of these options: 
+    * -browserPrefix-linear-gradient(top, #0101b7 0%,#011d65 46%,#011d65 100%); 
+    * -webkit-gradient(linear, center top, center bottom, from(#0101b7), color-stop(46%,#011d65), to(#011d65));
+    * If there are more than 3 colors in the first one, then switch to "custom".
+    * If there is more than one color-stop in the second one, switch to "custom"
+    */
+    parseGradient: function(inValue) {
+        var gradientObj = {};    
+        
+        // matches the -webkit-gradient which is deprecated but still only one supported on android 2 browsers
+        var matches = inValue.match(/-webkit-gradient\(linear,\s*(.*?),\s*(.*?),\s*from\((.*?)\),\s*color-stop\((.*?),(.*?)\),\s*to\((.*?)\)/)
+
+            if (matches) {
+                gradientObj.direction  =  matches[1].match(/top/) && matches[2].match(/bottom/) || matches[1].match(/\%\s*0\%/) && matches[2].match(/\%\s*100\%/)  ? "vertical" : "horizontal";
+                gradientObj.startColor = matches[3];
+                gradientObj.endColor   = matches[6];
+                gradientObj.colorStop = parseInt(matches[4]);
+                return gradientObj;
+            } else {
+                matches = g.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
+                if (matches) {
+                    gradientObj.direction = matches[1] == "top" ? "vertical" : "horizontal";
+                    gradientObj.startColor = matches[2];
+                    gradientObj.colorStop = matches[5];
+                    gradientObj.endColor = matches[6];
+                    return gradientObj;
+                }                    
+            }
+        return null; // failed to parse it
+    },
+    setEditorValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);        
+        var backgroundObj = this.getBackgroundObj(v);
+        if (backgroundObj.gradient && backgroundObj.gradient.match(/radial/)) {
+            this.customChoice.setChecked(true);
+        } else if (backgroundObj.color == "transparent") {
+            this.transparentChoice.setChecked(true);
+            this.dataValue = "transparent";
+
+        } else if (backgroundObj.gradient) {
+           var gradientObj = this.parseGradient(backgroundObj.gradient);
+           if (gradientObj) {
+                this.colorChoice.setChecked(true);
+                this.gradientEditor.setDataValue(gradientObj);
+            } else {
+                this.customChoice.setChecked(true);
+            }
+        } else if (backgroundObj.url) {
+            this.imageChoice.setChecked(true);
+            this.urlEditor.setDataValue(backgroundObj.url);
+            this.imageRepeatEditor.setDataValue(backgroundObj.repeat);
+            var x;
+            if (!backgroundObj.positionX || backgroundObj.positionX == "left") {
+                x = "0%";
+            } else if (backgroundObj.positionX == "center") {
+                x = "50%";
+            } else if (backgroundObj.positionX == "right") {
+                x = "100%";
+            } else {
+                x = backgroundObj.positionX;
+            }
+            this.horizontalPosEditor.setDataValue(x);
+            
+            var y;
+            if (!backgroundObj.positionY || backgroundObj.positionY == "top") {
+                y = "0%";
+            } else if (backgroundObj.positionY == "center") {
+                y = "50%";
+            } else if (backgroundObj.positionY == "bottom") {
+                y = "100%";
+            } else {
+                y = backgroundObj.positionY;
+            }            
+            this.verticalPosEditor.setDataValue(y);
+        } else if (backgroundObj.color) {
+            this.colorChoice.setChecked(true);
+            this.colorEditor.setDataValue(backgroundObj.color);
+
+        }
+        //this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        if (!inStyleName.match(/^background/i)) return;
+        var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
+    		                  return inLetter.substring(1).toUpperCase();
+    		               });
+        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        this.setDataValue(this.testNode.domNode.style.background);
+    },
+    getEditorValue: function() {
+        return this.dataValue;
+    },
+    changed: function() {
+        if (this.colorChoice.getChecked()) {
+            this.dataValue = this.getColorDataValue();        
+        } else if (this.imageChoice.getChecked()) {
+            this.dataValue = this.getImageDataValue();
+        } else if (this.transparentChoice.getChecked()) {
+            this.dataValue = "transparent";
+        } else if (this.customChoice.getChecked()) {
+            ;
+        }
+        if (!this.customChoice.getChecked()) {
+            this.onchange(this.dataValue, this.dataValue);
+        }
+    },
+    getImageDataValue: function() {
+        var value = this.urlEditor.getDataValue();
+        if (value) value = "url(" + value.replace(/\s*$/,"") + ")";
+        var repeat = this.imageRepeatEditor.getDataValue();
+        if (repeat) value += " " + repeat;
+        value += " " + this.horizontalPosEditor.getDataValue()
+              +  " " + this.verticalPosEditor.getDataValue();
+        return value;            
+    },
+    getColorDataValue: function() {
+        var value = "";
+        
+        var color = this.colorEditor.getDataValue();
+        if (color) {
+            value += color;
+        }
+        
+        var gradient = this.gradientEditor.getDataValue();
+        if (color && gradient) value += " ";
+        if (gradient) value += this.testNode.domNode.style.backgroundImage;
+        return value;    
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+    updateCssLine: function(inStyleName, inStyleValue) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/^background/) || inStyleName == "filter" && inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/)) {   
+            var value = "";
+            if (!this.colorChoice.getChecked()) {
+                value = "background: " + this.getDataValue();
+            } else {
+                if (this.colorEditor.getDataValue()) {
+                    value += "background-color: " + this.colorEditor.getDataValue() + ";";
+                }
+                if (this.gradientEditor.getDataValue()) {
+                    if (value) value += "\n\t";
+                    var styleValue = this.gradientEditor.getDataValue();
+                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
+                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+                }
+            }
+            return value;
+        }   
+    }
+    
 });

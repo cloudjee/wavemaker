@@ -1,0 +1,19 @@
+{
+
+	grid: ["wm.DojoGrid", {selectFirstRow: true, width: "100%", height: "100%", columns: [{show:true, title: "Day", id: "name", width: "100%"}, {show:true, title: "Day Number", id: "dataValue", width: "60px"}]}, {}, {
+	      binding: ["wm.Binding", {}, {}, {
+	      	       wird: ["wm.Wire", {source: "variable", targetProperty: "dataSet"}]
+	      }]
+        }],
+	list: ["wm.List", {selectFirstRow: true, width: "100%", height: "100%", columns: [{show:true, title: "Day", id: "name", width: "100%"}, {show:true, title: "Day Number", id: "dataValue", width: "60px"}]}, {}, {
+	      binding: ["wm.Binding", {}, {}, {
+	      	       wird: ["wm.Wire", {source: "variable", targetProperty: "dataSet"}]
+	      }]
+        }],
+	mlist: ["wm.List", {selectFirstRow: true, styleAsGrid: false, noHeader:1, width: "100%", height: "100%", columns: [{show:true, title: "Day", id: "name", width: "100%"}, {show:true, title: "Day Number", id: "dataValue", width: "60px"}]}, {}, {
+	      binding: ["wm.Binding", {}, {}, {
+	      	       wird: ["wm.Wire", {source: "variable", targetProperty: "dataSet"}]
+	      }]
+        }]
+
+}

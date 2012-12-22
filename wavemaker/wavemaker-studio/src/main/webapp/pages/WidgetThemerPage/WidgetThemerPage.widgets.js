@@ -1,4 +1,5 @@
 WidgetThemerPage.widgets = {
+    sampleDataSet: ["wm.Variable", {type: "EntryData", isList: true, json:"[{name: 'Sunday', dataValue: 0},{name: 'Monday', dataValue: 1},{name: 'Tuesday', dataValue: 2},{name: 'Wednesday', dataValue: 3},{name: 'Thursday', dataValue: 4},{name: 'Friday', dataValue: 5},{name: 'Saturday', dataValue: 6}]"}],
 	widgetListTypeDef: ["wm.TypeDefinition", {internal:1},{},{
 		widgetListTypeDefField1: ["wm.TypeDefinitionField", {fieldName: "name", type: "String"}],
 		widgetListTypeDefField2: ["wm.TypeDefinitionField", {fieldName: "templateFile", type: "String"}],
@@ -32,16 +33,22 @@ WidgetThemerPage.widgets = {
 					}]
 				}]
 			}],
-			outerEditorPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
-				editorPanelHeader: ["wm.Label", {width: "100%", _classes: {domNode: ["Header"]}}],
-				editorPanel: ["wm.Panel", {autoScroll:true,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{
-
-				}]
-			}],
-			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"300px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
+			tabs:["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
+			    editorLayer: ["wm.Layer", {caption: "Editors"},{onShow: "onGeneratedLayerShow"}, {
+    				editorPanelHeader: ["wm.Label", {width: "100%", _classes: {domNode: ["Header"]}}],
+    				editorPanel: ["wm.Panel", {autoScroll:true,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{	}],
+    			}],
+				cssLayer: ["wm.Layer", {caption: "Code"},{onShow: "onCssLayerShow"}, {
+				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"},{onChange: "editAreaChange"}]
+				}]    			
+    		}],
+			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"500px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 				demoPanelHeader: ["wm.Label", {width: "100%", caption: "Samples", _classes: {domNode: ["Header"]}}],
-				demoPanel: ["wm.Panel", {height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%", padding: "20"}, {}, {
-
+				demoPanelWithThemeName: ["wm.Panel", { height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
+				    demoPanelWithAppRoot: ["wm.Panel", {_classes: {domNode: ["wmapproot"]}, height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
+                        demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
+                        }]
+				    }]
 				}]
 			}]
 		}]

@@ -1,0 +1,10 @@
+{
+dojoMenu1: ["wm.DojoMenu", {_classes: {domNode: ["TestMenu"]}, "fullStructure":[
+	   {"label":"File","children":[{"label":"Save"},{"label":"Close"},{"label":"More", children: [{label: "item 1"},{"label":"item 2"}]}]},
+	   {"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},
+	   {"label":"Help"}]}],
+dojoMenu2: ["wm.DojoMenu", {_classes: {domNode: ["TestMenu"]}, vertical: true, height:"200px",width:"150px", "fullStructure":[
+	   {"label":"File","children":[{"label":"Save"},{"label":"Close"},{"label":"More", children: [{label: "item 1"},{"label":"item 2"}]}]},
+	   {"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},
+	   {"label":"Help"}]}]
+}

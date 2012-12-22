@@ -11,39 +11,197 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     defaultEditorProps: {
         _classes: {domNode: ["StudioEditor"]},
         width: "100%",
-        captionSize: "200px"
+        captionSize: "120px",
+        captionAlign: "left",
+        margin: "0,0,0,15"
     },
 
 
     templateFileData: [
         {
+            name: "Main Document",
+            templateFile: "document",
+            classList: [{dataValue: "wm.AppRoot"}]
+        },
+        {
             name: "Buttons",
             templateFile: "button",
             classList: [{dataValue: "wm.Button"},{dataValue: "wm.ToggleButton"}, {dataValue: "wm.PopupMenuButton"}]
+        },
+        {
+            name: "Editors",
+            templateFile: "editors",
+            classList: [{dataValue: "wm.Text"},
+                        {dataValue: "wm.LargeTextArea"}, 
+                        {dataValue: "wm.Number"},
+                        {dataValue: "wm.Currency"},                        
+                        {dataValue: "wm.SelectMenu"},
+                        {dataValue: "wm.Lookup"},
+                        {dataValue: "wm.FilteringLookup"},
+                        {dataValue: "wm.Date"},
+                        {dataValue: "wm.Time"},
+                        {dataValue: "wm.DateTime"},
+                        {dataValue: "wm.Checkbox"},
+                        {dataValue: "wm.RadioButton"},
+                        {dataValue: "wm.RichText"},
+                        {dataValue: "wm.Date"},
+                        {dataValue: "wm.CheckboxSet"},
+                        {dataValue: "wm.RadioSet"},
+                        {dataValue: "wm.ListSet"}
+                    ]
+        },
+        {
+            name: "Tabs",
+            templateFile: "tabs",
+            classList: [{dataValue: "wm.TabLayers"}]
+        },
+        {
+            name: "Accordions",
+            templateFile: "accordions",
+            classList: [{dataValue: "wm.AccordionLayers"}]
+        },
+        {
+            name: "Titled Panel",
+            templateFile: "titledpanel",
+            classList: [{dataValue: "wm.FancyPanel"}]
+        },
+        {
+            name: "Dialogs",
+            templateFile: "dialogs",
+            classList: [{dataValue: "wm.Dialog"},
+                        {dataValue: "wm.PageDialog"},
+                        {dataValue: "wm.GenericDialog"},                        
+                        {dataValue: "wm.DesignableDialog"}]
+            
+        },
+        {
+            name: "Grids",
+            templateFile: "grid",
+            classList: [{dataValue: "wm.DojoGrid"},
+                        {dataValue: "wm.List"}]
+            
+        },
+        {
+            name: "Menus",
+            templateFile: "menus",
+            classList: [{dataValue: "wm.DojoMenu"}]            
+        },
+        {
+            name: "Combobox Dropdowns",
+            templateFile: "combodropdowns",
+            classList: []            
         }
     ],
 
 	styleEditors: {
+	    "default": ["wm.Text", {}],
 		"font-family": ["wm.SelectMenu", {restrictValues: false, dataField: "dataValue", displayField: "dataValue"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {targetProperty: "dataSet", source: "fontFaceVar"}]
 			}]
 		}],
-		"font-size": ["wm.Text", {regExp: '\d+[px|pt|em]'}],
-		"color": ["wm.ColorPicker", {}],
+		"font-size": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 12}],
+		"width": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],		
+		"height": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],				
+		"color": ["wm.ColorPicker", {caption: "font color"}],
+		"border": ["wm.BorderEditor", {caption: "border"}],		
+		"outline": ["wm.BorderEditor", {caption: "outline"}],				
 		"font-weight": ["wm.SelectMenu", {options: "normal,bold"}],
-		"border-radius":["wm.BorderRadiusEditor", {}],
-		"box-shadow":   ["wm.BoxShadowEditor", {}],
-		"background": ["wm.BackgroundEditor", {}]
+		"border-radius":["wm.BorderRadiusEditor", {caption: "border-radius"}],
+		"box-shadow":   ["wm.BoxShadowEditor", {caption: "box-shadow"}],
+		"background": ["wm.BackgroundEditor", {caption: "background"}]
+
 	},
-
-
+    /* If the style name is not in the styleRules object, then check directly in the styleEditors object.
+     * Example: "font-family" isn't here, so check for font-family in the stylesEditor.
+     * This section of for rules that are more complicated
+     */
+    styleRules: {
+        "background": "background",
+        "background-color": "background",
+        "background-image": "background",
+        "background-position": "background",
+        "background-repeat": "background",
+        // should have filter here, but thats a screwy microsoft style.
+        
+        "border-radius": "border-radius",
+        "-webkit-border-radius": "border-radius",
+        "-moz-border-radius": "border-radius",        
+        "-o-border-radius": "border-radius",
+        "-ms-border-radius": "border-radius",
+        
+        "border-top-left-radius": "border-radius",
+        "-webkit-border-top-left-radius": "border-radius",
+        "-moz-border-top-left-radius": "border-radius",        
+        "-o-border-top-left-radius": "border-radius",
+        "-ms-border-top-left-radius": "border-radius",  
+        
+        "border-top-right-radius": "border-radius",
+        "-webkit-border-top-right-radius": "border-radius",
+        "-moz-border-top-right-radius": "border-radius",        
+        "-o-border-top-right-radius": "border-radius",
+        "-ms-border-top-right-radius": "border-radius", 
+        "border-bottom-left-radius": "border-radius",
+        "-webkit-border-bottom-left-radius": "border-radius",
+        "-moz-border-bottom-left-radius": "border-radius",        
+        "-o-border-bottom-left-radius": "border-radius",
+        "-ms-border-bottom-left-radius": "border-radius", 
+        "border-bottom-right-radius": "border-radius",
+        "-webkit-border-bottom-right-radius": "border-radius",
+        "-moz-border-bottom-right-radius": "border-radius",        
+        "-o-border-bottom-right-radius": "border-radius",
+        "-ms-border-bottom-right-radius": "border-radius", 
+        
+        "box-shadow": "box-shadow",
+        "-webkit-box-shadow": "box-shadow",
+        "-moz-box-shadow": "box-shadow",        
+        "-o-box-shadow": "box-shadow",        
+        "-ms-box-shadow": "box-shadow",
+        
+        "outline": "outline",
+        "outline-width": "outline",        
+        "outline-color": "outline",                
+        "outline-style": "outline",        
+        
+        "border": "border",
+        "border-width": "border",
+        "border-style": "border",
+        "border-color": "border",
+        "border-top":   "border",
+        "border-left":  "border",
+        "border-right":  "border",        
+        "border-bottom":  "border",                
+        "border-top-width":   "border",
+        "border-left-width":  "border",
+        "border-right-width":  "border",        
+        "border-bottom-width":  "border",                
+        "border-top-color":   "border",
+        "border-left-color":  "border",
+        "border-right-color":  "border",        
+        "border-bottom-color":  "border",                
+        "border-top-style":   "border",
+        "border-left-style":  "border",
+        "border-right-style":  "border",        
+        "border-bottom-style":  "border"
+    },
+    
     start: function() {
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
-        this.setupThemeList();
+        this.setupThemeList();    
+        this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");
     },
-
+    moveMenuNode: function(widget) {
+        if (!this.root.isAncestorHidden() && 
+            (this.currentWidgetTemplateFile == "menus" ||
+             this.currentWidgetTemplateFile == "combodropdowns")) {
+            this.connectOnce(widget, "onOpen", this, function() {                
+                this.demoPanelWithAppRoot.domNode.appendChild(widget.domNode.parentNode);
+                widget.domNode.parentNode.style.left = "20px";
+                widget.domNode.parentNode.style.top = "20px";                
+            });
+        }
+    },
 
 
     /* START SECTION: End of managing themes and theme selection */
@@ -59,6 +217,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.themeSelect.setDataValue(studio.application.theme);
     },
     themeselectChange: function(inSender) {
+    if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
         var currentTheme = inSender.getDataValue();
         if (!currentTheme) return;
         this.currentTheme = currentTheme;
@@ -73,7 +232,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.themesPageDeleteBtn.setDisabled(this.currentTheme.match(/^wm\./));
 
             /* Step 2: Set the class of the demo panel to the new theme so the demo widgets will get the proper classpath */
-            this.demoPanel.domNode.className = this.currentThemeName;
+            dojo.addClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
 
             /* Step 4: Find the path to the theme folder */
             var path = dojo.moduleUrl(this.currentTheme);
@@ -156,10 +315,15 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
 
         /* Step 2: Load the css file and the sample file and apply it to the demo panel */
-        this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + this.currentWidgetTemplateFile + ".css") ||
-                                    wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
+        if (!this.widgetCssFiles[this.currentWidgetTemplateFile]) {
+            this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + this.currentWidgetTemplateFile + ".css?" + (Math.floor(Math.random(new Date().getTime()) * 1000000))) ||
+                                        wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
+        }        
+        
         this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".widgets"));
+        
         this.regenerateDemoPanel();
+        this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);
 
         /* Generate the editors */
         this.editorPanel.removeAllControls();
@@ -172,29 +336,93 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* START SECTION: Edit the selected widget styles */
     generateCssEditors: function(filename) {
-        var parent = this.editorPanel;
+        this._generatingEditors = true;
+        try {
+            var parent = this.editorPanel;
 
-        var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
-        var currentGroup = "";
-        dojo.forEach(lines, function(l) {
-            var groupName = this.getGroupNameFromLine(l);
-            if (groupName) {
-                currentGroup = groupName;
-                var label = new wm.Label({width: "100%", caption: currentGroup, _classes: {domNode: ["SubHeading"]}, owner: this, parent: parent});
-            } else {
-                var styleObj = this.getStyleObjFromLine(l);
-                if (styleObj) {
-
-                    var e = new wm.Text(dojo.mixin({
-                        caption: styleObj.name,
-                        dataValue: styleObj.value,
-                        owner: this,
-                        parent: parent
-                    }, this.defaultEditorProps));
-                    e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, currentGroup, styleObj.name));
+            var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
+            var currentGroup = "";
+            dojo.forEach(lines, function(l) {
+                var groupName = this.getGroupNameFromLine(l);
+                if (groupName) {
+                    currentGroup = groupName;
+                    var label = new wm.Label({ width: "100%", 
+                                                height: "30px",
+                                                margin: "10,0,0,0",
+                                                caption: currentGroup, 
+                                                _classes: {domNode: ["SubHeading"]}, 
+                                                owner: this, 
+                                                parent: parent});
+                    this.currentEditorsHash = {};
+                } else {
+                
+                    var calcString = "THEMER: CALC:";
+                    var indexOfCalcString = l.indexOf(calcString);
+                    var hideString = "THEMER: HIDE";
+                    var indexOfHideString = l.indexOf(hideString);
+                    if (indexOfCalcString == -1 && indexOfHideString == -1) {
+                        var styleObj = this.getStyleObjFromLine(l);
+                        if (styleObj) {
+                            this.generateCssEditor(styleObj.name, styleObj.value, parent, currentGroup);
+                        }
+                    }
                 }
+            }, this);
+        } catch(e) {}
+        delete this._generatingEditors;
+    },
+    generateCssEditor: function(styleName, styleValue, parent, styleGroup) {
+        var styleEditorDef;
+        var styleRule = this.styleRules[styleName];
+        if (styleName == "filter" && styleValue.match(/Gradient/i)) {
+            styleRule = this.styleRules.background;
+        }
+        var editorExists = false;
+        if (styleRule) {
+            styleEditorDef =  this.styleEditors[styleRule];
+            editorExists = Boolean(this.currentEditorsHash[styleRule]);
+        } else {
+            styleEditorDef =  this.styleEditors[styleName];
+        }
+        if (!editorExists) {  
+            if (!styleEditorDef) styleEditorDef = this.styleEditors["default"];
+            styleEditorDef = dojo.clone(styleEditorDef);
+            
+            if (styleEditorDef[0] == "wm.BackgroundEditor") {
+                styleEditorDef[1].urlPlaceHolder = wm.dojoModuleToPath(this.currentTheme + ".images") + "/example.png";
             }
-        }, this);
+            
+            dojo.mixin(styleEditorDef[1], this.defaultEditorProps);
+            var caption = styleEditorDef[1] && styleEditorDef[1].caption || styleName;            
+            styleEditorDef[1].caption = "";
+            
+            var ctor = dojo.getObject(styleEditorDef[0]);
+            var defaultHeight = ctor ? ctor.prototype.height : "24px";
+            var p = parent.createComponents({
+                panel: ["wm.Panel", {width: "100%", height: defaultHeight, padding: "0", margin: "0,0,0,20",
+                                     layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+                                label: ["wm.Label", {width: "120px", caption:  caption}],
+                                checkbox: ["wm.Checkbox", {width: "16px", startChecked: styleValue && styleValue != "inherit" && styleValue != "initial"}],
+                                editor: styleEditorDef
+                        }]                        
+            })[0];
+            var e = p.c$[2];
+            var checkbox = p.c$[1];
+            if (e.editor instanceof wm.Container && e.editor.verticalAlign != "top") {
+                p.setVerticalAlign(e.editor.verticalAlign);
+            }
+            e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", checkbox, e, styleGroup, styleName)); 
+            checkbox.connect(checkbox, "onchange", this, dojo.hitch(this, "onEditorChange", checkbox, e, styleGroup, styleName));
+            this.currentEditorsHash[styleRule || styleName] = e;
+        }
+        if (styleValue && styleValue != "inherit") {
+            if (!e) e = this.currentEditorsHash[styleRule || styleName];
+            if (e.setPartialValue) {            
+                e.setPartialValue(styleName, styleValue);
+            } else {
+                e.setDataValue(styleValue);
+            }
+        }
     },
     getStyleObjFromLine: function(inLine) {
         var values = inLine.match(/\s*(.*?)\:\s*(.*);/);
@@ -206,24 +434,89 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         var values = inLine.match(/\*\sGROUP\:\s*(.*)\*\//);
         if (values) return values[1];
     },
-    onEditorChange: function(inEditor, inGroup, inStyleName, inDisplayValue, inDataValue) {
+
+    onEditorChange: function(inCheckbox, inEditor, inGroup, inStyleName) {
+        if (this._generatingEditors) return;
+        var isEditorEnabled = inCheckbox.getChecked();
+        inEditor.setDisabled(!isEditorEnabled);
+        var foundGroup = false;
         var currentGroup = "";
         var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
+        var updateCssLineFired = false;
+        var deleteRows = [];
         for (var i = 0; i < lines.length; i++) {
             var l = lines[i];
+            var isImportant = l.match(/\!important/);
             var groupName = this.getGroupNameFromLine(l);
             if (groupName) {
                 currentGroup = groupName;
             } else if (currentGroup == inGroup) {
-                var styleObj = this.getStyleObjFromLine(l);
-                if (styleObj && styleObj.name === inStyleName) {
-                    lines[i] = "\t" + inStyleName + ": " + inDataValue + ";";
-                    break;
+                foundGroup = true;
+                
+                var calcString = "THEMER: CALC:";
+                var indexOfCalcString = l.indexOf(calcString);
+                var hideString = "THEMER: HIDE";
+                var indexOfHideString = l.indexOf(hideString);                
+                if (indexOfHideString != -1) {
+                    ;
+                } else if (indexOfCalcString != -1) {
+                    /* TODO: Need to apply these expressions! */
+                    var expr = l.substring(indexOfCalcString, l.indexOf("*/", indexOfCalcString));
+                    console.log("EXPR:" + expr);
+                
+                } else {
+                    var styleObj = this.getStyleObjFromLine(l);
+                    if (styleObj) {
+                        var isImportant = styleObj.value.match(/\!important/);
+                        /* If its a complex editor (has updateCssLIne method) let it examine
+                         * every style in the group and update it if it chooses to 
+                         */
+                        if (inEditor.updateCssLine) {                        
+                            // value is sent in case of name "filter" and value "Gradient"
+                            // as thats the only way to know that a filter is for background gradient
+                            var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
+                            if (altLine) {
+                                if (!updateCssLineFired) {
+                                    if (isEditorEnabled) {
+                                        lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
+                                    } else {
+                                        lines[i] = "\t" + altLine.replace(/\:(.|\n|\r)*/m,"") + ": inherit;";
+                                    }
+                                    updateCssLineFired = true;
+                                } else {
+                                    lines[i] = "";
+                                    deleteRows.push(i);
+                                }
+                            } 
+                        } 
+                        
+                        /* Basic editors only edit a single line; exit loop after
+                         * making the change
+                         */
+                        else if (styleObj.name === inStyleName) {
+                            if (isEditorEnabled) {                        
+                                lines[i] = "\t" + inStyleName + ": " + inEditor.getDataValue() + ";";
+                            } else {
+                                lines[i] = "\t" + inStyleName + ": inherit;";
+                            }
+                            break;
+                        }
+                        if (isImportant) {
+                            lines[i] = lines[i].replace(/;/g, " !important;")
+                        }
+                    }
                 }
+            } else if (foundGroup) {
+                break;
             }
         }
+        for (var i = deleteRows.length-1; i >= 0; i--) wm.Array.removeElementAt(lines,deleteRows[i]);
         this.widgetCssFiles[this.currentWidgetTemplateFile] = lines.join("\n");
-        var startString = "/***** START SECTION: " + this.currentWidgetName + " *****/";
+        
+        this.updateCssText();
+    },
+    updateCssText: function() {
+            var startString = "/***** START SECTION: " + this.currentWidgetName + " *****/";
         var endString = "/***** END SECTION: " + this.currentWidgetName + " *****/";
         var startIndex = this.cssText.indexOf(startString);
         if (startIndex != -1) {
@@ -239,6 +532,23 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     /* END SECTION: Edit the selected widget styles */
 
+    /* START SECTION: Manage AceEditor */
+    /* TODO: Support user editing this file, OR make it readonly */
+    onCssLayerShow: function() {
+        this.editAreaChangedSinceLayerChange = false;
+        this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);
+    },
+    onGeneratedLayerShow: function() {
+        if (this.editAreaChangedSinceLayerChange) {
+            this.widgetCssFiles[this.currentWidgetTemplateFile] = this.editArea.getDataValue();
+            this.updateCssText();            
+            this.widgetGridSelect(this.widgetGrid);
+            this.editAreaChangedSinceLayerChange = false;
+        }
+    },
+    editAreaChange: function() {
+        this.editAreaChangedSinceLayerChange = this.editArea.isDirty;
+    },
 
     /* START SECTION: Edit the selected widget prototype */
     generatePrototypeEditors: function(currentClassList) {
@@ -291,17 +601,21 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         case "borderColor":
         case "clientBorderColor":
         case "labelBorderColor":
+        case "captionBorderColor":        
                     e = new wm.ColorPicker(props);
                     break;
         case "border":
         case "labelBorder":
         case "layerBorder":
+        case "captionBorder":        
                     props.regExp = "\\d+(\\s*,\\s*\\d+){0,3}";
                     e = new wm.Text(props);
                     break;
-        case "isMajorContent":
-                    e = new wm.Checkbox(props);
-                    e.setChecked(props.dataValue);
+        case "width":
+        case "height":        
+        case "mobileHeight":        
+        case "desktopHeight":                
+                    e = new wm.prop.SizeEditor(props);
                     break;
         default:
                     e = new wm.Text(props);
@@ -335,6 +649,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* START SECTION: Saving */
     saveThemeClick: function() {
+        if (this.cssLayer.isActive() && this.editArea.isDirty) {
+            this.widgetCssFiles[this.currentWidgetTemplateFile]= this.editArea.getDataValue();
+        }       
         var files = this._templateFilesToWrite = [];
         wm.forEachProperty(this.widgetCssFiles, function(inValue, inName) {
             files.push({fileName: inName, cssText: inValue});
@@ -367,9 +684,27 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.demoPanel.owner = this;
     },
     regenerateDemoPanel: function() {
-        this.demoPanel.removeAllControls();
-        this.demoPanel.createComponents(this.sampleWidgets);
-        this.demoPanel.reflow();
+        studio.beginWait("Loading...");
+        wm.onidle(this, function() {
+            wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
+                this.demoPanel.setValue(inName, inValue);
+            }));  
+
+            this.demoPanel.removeAllControls();                        
+            this.demoPanel.createComponents(this.sampleWidgets);
+            
+            /* Custom hacks needed to get the sample widgets to work */
+            switch(this.widgetGrid.selectedItem.getValue("templateFile")) {
+                case "grid":
+                    this.demoPanel.c$[0].setDataSet(this.sampleDataSet);
+                    this.demoPanel.c$[1].setDataSet(this.sampleDataSet);                
+                    this.demoPanel.c$[2].setDataSet(this.sampleDataSet);                                
+                    break;
+            }
+            
+            this.demoPanel.reflow();
+            studio.endWait();
+        });
     },
     /* END SECTION: Managing the Demo Panel */
 

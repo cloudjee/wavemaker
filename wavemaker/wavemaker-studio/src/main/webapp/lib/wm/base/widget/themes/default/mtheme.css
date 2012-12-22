@@ -687,7 +687,7 @@ display:block;
     float:left;
 }
 .accordionArrowNode {
-    display: none;
+    display: inline-block;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     float: right;
@@ -1374,4 +1374,18 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
 .dijitArrowButton .dijitArrowButtonInner {
 height: 100%;
 display: inline-block;
+}
+
+
+/* Misc stuff moved from theme designer to standard theme file */
+.dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wmeditor .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitSelect .dijitArrowButton {
+    height: 100% !important;
+}
+.wmeditor .dijitSpinner .dijitArrowButton,
+.dojoxGrid .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitComboBox .dijitArrowButton,
+.wmeditor .dijitSelect .dijitArrowButton {
+    background-image: none;
 }

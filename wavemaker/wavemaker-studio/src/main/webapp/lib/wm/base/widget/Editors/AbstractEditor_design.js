@@ -65,6 +65,7 @@ wm.updateFieldEditorProps = function(inEditor, inFieldInfo) {
 
 
 wm.AbstractEditor.extend({
+    themeableProps: ["border", "borderColor", "margin", "desktopHeight", "mobileHeight", "width", "captionSize", "captionPosition", "captionAlign", "editorBorder"],
     themeableDemoProps: {height: "24px"},
     themeableSharedStyles: ["-Editor Borders", "Editor-Border-Color", "Editor-Hover-Border-Color", "Editor-Focused-Border-Color",  "Editor-Radius",
                             "-Editor Backgrounds", "Editor-Background-Color", "Editor-Hover-Background-Color", "Editor-Focus-Background-Color",
