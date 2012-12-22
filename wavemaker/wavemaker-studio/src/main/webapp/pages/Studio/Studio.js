@@ -294,7 +294,7 @@ dojo.declare("Studio", wm.Page, {
         studio.endWait(); // if there was a beginWait call in progress, then we'd best close it in case there is no suitable error handler for the call
     },
     handleSessionExpiration: function(serviceVar) {
-        if (serviceVar.isDesignLoaded()) {
+        if (serviceVar.isDesignLoaded() || serviceVar.isAncestor(studio.page)) {
             this.statusBarLabel.setCaption("Security Error <span class='StudioHelpIcon'/>");
             var node = dojo.query(".StudioHelpIcon", this.statusBarLabel.domNode)[0];
             dojo.connect(node, "onmouseover", this, function(e) {
