@@ -458,7 +458,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         wm.onidle(this, function() {
             /* Step 1: Find out what theme was selected! */
             /* Step 1a: enable/disable delete button; this could go anywhere in the process */
-            studio.themesPageDeleteBtn.setDisabled(this.currentTheme.match(/^wm_/));
+            studio.themesPageDeleteBtn.setDisabled(this.currentTheme.match(/^wm\./));
 
             /* Step 2: Set the class of the demo panel to the new theme so the demo widgets will get the proper classpath */
 	    for (var i = 0; i < this.demoPanelTabLayers.layers.length; i++)
