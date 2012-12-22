@@ -33,6 +33,7 @@
  .wm_template   .wmbutton:focus {
  	color: #FFFFFF;
 	font-weight: bold;
+        box-shadow: 0px 0px 0px black;    
 	background-color: #333333;
 	background-image: none;
 	background-position: left top;

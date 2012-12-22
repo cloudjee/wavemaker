@@ -13,8 +13,8 @@
 	border-color: #666666;  
 	border-width: 1px;
 	font-family: sans-serif;
-	font-size: 12pt;
-	color: #FFFFFF;
+	font-size: 12px;
+	color: #000000;
 	font-weight: bold;
 	background-color: #444444;
 }
@@ -46,7 +46,7 @@
 .wm_template .wmeditor .RichTextEditable:hover iframe,
 .wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
 .wm_template .dijitTimePickerItem.dijitTimePickerItemHover {
-	color: #FFFFFF;
+	color: inherit;
 	border-color: #666666;
 	background-color: #444444;
 }
@@ -67,7 +67,7 @@
 .wm_template .isDirty.wmeditor .dijitTextArea,
 .wm_template .isDirty.wmeditor .dijitComboBox,
 .wm_template .wmeditor .RichTextEditable.Focused iframe {
-	color: #FFFFFF; 
+	color: inherit;
 	border-color: #666666; 
 	background-color: #444444; 
 }
@@ -76,7 +76,7 @@
 .wm_template .isDirty.wmeditor .dijitTextBox,
 .wm_template .isDirty.wmeditor .dijitTextArea,
 .wm_template .isDirty.wmeditor .dijitComboBox {
-	color: #FFFFFF; 
+	color: inherit;
 	border-color: #666666; 
 	background-color: #444444; 
 }
@@ -89,7 +89,7 @@
 .wm_template .wmeditor .dijitError.isDirty.dijitTextArea,
 .wm_template .wmeditor .dijitError.isDirty.dijitComboBox
 {
-	color: #FFFFFF; 
+	color: inherit;
 	border-color: #666666; 
 	background-color: #F9F7BA; 
 	background-image: none; 

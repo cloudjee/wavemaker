@@ -1,7 +1,11 @@
-/* GROUP: Main Dialog */
+/* GROUP: Dialog Frame */
 .wm_template .wmdialog {
     border-radius: 4px;
     box-shadow: 3px 3px 3px black;    
+}
+
+/* GROUP: Dialog Container */
+.wm_template .wmdialog {
     background-color: white;
     background-image: none;
     font-family: sans-serif;

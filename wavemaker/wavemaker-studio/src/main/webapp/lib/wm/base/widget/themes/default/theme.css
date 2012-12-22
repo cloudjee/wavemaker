@@ -927,7 +927,7 @@ v\:rect, v\:roundrect, v\:line, v\:polyline, v\:curve, v\:arc, v\:oval, v\:image
 }
 
 html body.tundra .dijitMenuItem {
-ofont-family: "Nimbus Sans L", sans-serif;
+font-family: "Nimbus Sans L", sans-serif;
 }
 
 .tundra .dojoMenu .dijitMenu,
@@ -1435,7 +1435,7 @@ html .tundra .dijitTimePickerTick.dijitTimePickerItemHover .dijitTimePickerItemI
     font-size: 0.9em;
 }
 
-.dijitReset, .dijitReset.dijitTextBoxFocused {
+.dijitReset, .dijitTextBoxFocused {
     outline: none;
 }
 

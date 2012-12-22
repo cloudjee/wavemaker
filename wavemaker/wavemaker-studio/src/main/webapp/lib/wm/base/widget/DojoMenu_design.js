@@ -28,7 +28,7 @@ wm.Object.extendSchema(wm.DojoMenu, {
     openOnHover: {group: "widgetName", subgroup: "behavior", advanced:1},
 
     /* Style group */
-    transparent: {group: "widgetName", subgroup: "display", order: 150, type: "Boolean"},
+    transparent: {group: "widgetName", subgroup: "display", order: 150, type: "Boolean", hidden: true},/* Deprecated as of WM 6.6 */
 
     /* Hidden group: These properties are generated through interactions and are not directly edited on the property panel; written but not shown */
     fullStructure: {hidden: true, nonlocalizable: true},

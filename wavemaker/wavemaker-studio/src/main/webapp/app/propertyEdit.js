@@ -2781,7 +2781,7 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             onchange: dojo.hitch(this, "changed", 0)
         });
         this.cornersPanel = new wm.Panel({
-            width: "75px",
+            width: "60px",
             height: "100%",
             layoutKind: "top-to-bottom",
             owner: this,
@@ -2860,12 +2860,12 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             owner: this,
             parent: e,
             name: "toggleButton",
-            width: "40px",
-            height: "100%",
-            margin: "0",
+            width: "31px",
+            height: "20px",
+            margin: "0,0,0,10",
             padding: "0",
-            captionUp: "->",
-            captionDown: "<-",
+            captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
+            captionDown: "<img src='images/propertyEditors/expanded.png'/>",
             onclick: dojo.hitch(this, "toggleClicked")
         });        
         return this.editor;
@@ -2957,7 +2957,7 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             this.allEditor.show();
             this.setHeight(this.initialHeight + "px");
         }    
-        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h < this.bounds.h) {
+        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
             this.parent.setHeight(this.height);
         }
     },
@@ -3075,12 +3075,12 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             owner: this,
             parent: e,
             name: "toggleButton",
-            width: "40px",
-            height: "100%",
-            margin: "0",
+            width: "31px",
+            height: "20px",
+            margin: "0,0,0,10",
             padding: "0",
-            captionUp: "->",
-            captionDown: "<-",
+            captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
+            captionDown: "<img src='images/propertyEditors/expanded.png'/>",
             onclick: dojo.hitch(this, "toggleClicked")
         });        
         return this.editor;
@@ -3128,6 +3128,8 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
         this.testNode.domNode.style[domStyleName] = inStyleValue;
         if (inStyleName.match(/(top|left|bottom|right)/)) this.toggleButton.setClicked(true);
         this.getValuesFromTestNode();
+        
+        if (inStyleName.match(/outline/)) this.toggleButton.hide();
     },
     getEditorValue: function() {
         return this.dataValue; // this value won't mean much if border colors/widths don't match
@@ -3148,7 +3150,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             this.allPanel.show();
             this.setHeight(24 + "px");
         }    
-       if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h < this.bounds.h) {
+       if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
             this.parent.setHeight(this.height);
         }
     },
@@ -3164,30 +3166,31 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
         this.onchange(this.dataValue, this.dataValue);
     },
     onchange: function(inDisplayValue, inDataValue) {},
-    getBorderCssLine: function(inName) {
+    getBorderCssLine: function(inName, isOutline) {
+        var name = isOutline ? "outline" : "border";
         var style = this[inName + "StyleEditor"].getDataValue();
         var width = this[inName + "WidthEditor"].getDataValue();
         var color = this[inName + "ColorEditor"].getDataValue();
         var append = inName == "all" ? "" : "-" + inName ;
         if (style != "inherit" && width !== undefined && color !== undefined) {
-            return "border" + append + ": " + style + " " + width + "px " + color + ";";
+            return name + append + ": " + style + " " + width + "px " + color + ";";
         } else {
-            return "border" + append + "-style: " + style + ";\n\t" +
-                "border" + append + "-width: " + width + "px;\n\t" +
-                "border" + append + "-color: " + color + ";";
+            return name + append + "-style: " + style + ";\n\t" +
+                name + append + "-width: " + width + "px;\n\t" +
+                name + append + "-color: " + color + ";";
         }        
     },
     updateCssLine: function(inStyleName) {
        
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/border/) && !inStyleName.match(/radius/)) {   
+        if (inStyleName.match(/border/) && !inStyleName.match(/radius/) || inStyleName.match(/outline/)) {   
              if (!this.toggleButton.clicked) {
-                return this.getBorderCssLine("all");
+                return this.getBorderCssLine("all", inStyleName.match(/outline/));
              } else {
-                return this.getBorderCssLine("top") + "\n\t" +
-                        this.getBorderCssLine("right") + "\n\t" +
-                        this.getBorderCssLine("bottom") + "\n\t" +
-                        this.getBorderCssLine("left");                        
+                return this.getBorderCssLine("top", inStyleName.match(/outline/)) + "\n\t" +
+                        this.getBorderCssLine("right", inStyleName.match(/outline/)) + "\n\t" +
+                        this.getBorderCssLine("bottom", inStyleName.match(/outline/)) + "\n\t" +
+                        this.getBorderCssLine("left", inStyleName.match(/outline/));                        
              }
         }   
     }

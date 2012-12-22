@@ -80,6 +80,16 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             classList: [{dataValue: "wm.DojoGrid"},
                         {dataValue: "wm.List"}]
             
+        },
+        {
+            name: "Menus",
+            templateFile: "menus",
+            classList: [{dataValue: "wm.DojoMenu"}]            
+        },
+        {
+            name: "Combobox Dropdowns",
+            templateFile: "combodropdowns",
+            classList: []            
         }
     ],
 
@@ -172,15 +182,26 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         "border-top-style":   "border",
         "border-left-style":  "border",
         "border-right-style":  "border",        
-        "border-bottom-style":  "border",                
+        "border-bottom-style":  "border"
     },
     
     start: function() {
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
-        this.setupThemeList();
+        this.setupThemeList();    
+        this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");
     },
-
+    moveMenuNode: function(widget) {
+        if (!this.root.isAncestorHidden() && 
+            (this.currentWidgetTemplateFile == "menus" ||
+             this.currentWidgetTemplateFile == "combodropdowns")) {
+            this.connectOnce(widget, "onOpen", this, function() {                
+                this.demoPanelWithAppRoot.domNode.appendChild(widget.domNode.parentNode);
+                widget.domNode.parentNode.style.left = "20px";
+                widget.domNode.parentNode.style.top = "20px";                
+            });
+        }
+    },
 
 
     /* START SECTION: End of managing themes and theme selection */
@@ -196,6 +217,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.themeSelect.setDataValue(studio.application.theme);
     },
     themeselectChange: function(inSender) {
+    if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
         var currentTheme = inSender.getDataValue();
         if (!currentTheme) return;
         this.currentTheme = currentTheme;
@@ -210,7 +232,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.themesPageDeleteBtn.setDisabled(this.currentTheme.match(/^wm\./));
 
             /* Step 2: Set the class of the demo panel to the new theme so the demo widgets will get the proper classpath */
-            this.demoPanel.domNode.className = this.currentThemeName;
+            dojo.addClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
 
             /* Step 4: Find the path to the theme folder */
             var path = dojo.moduleUrl(this.currentTheme);
@@ -445,6 +467,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 } else {
                     var styleObj = this.getStyleObjFromLine(l);
                     if (styleObj) {
+                        var isImportant = styleObj.value.match(/\!important/);
                         /* If its a complex editor (has updateCssLIne method) let it examine
                          * every style in the group and update it if it chooses to 
                          */
@@ -477,6 +500,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                 lines[i] = "\t" + inStyleName + ": inherit;";
                             }
                             break;
+                        }
+                        if (isImportant) {
+                            lines[i] = lines[i].replace(/;/g, " !important;")
                         }
                     }
                 }
@@ -657,26 +683,28 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     onHide: function() {
         this.demoPanel.owner = this;
     },
-    regenerateDemoPanel: function() {        
-        this.demoPanel.removeAllControls();
-        
-        this.demoPanel.createComponents(this.sampleWidgets);
-        
-        /* Custom hacks needed to get the sample widgets to work */
-        switch(this.widgetGrid.selectedItem.getValue("templateFile")) {
-            case "document":
-                wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
-                    this.demoPanel.c$[0].c$[0].setValue(inName, inValue);
-                }));        
-                break;
-            case "grid":
-                this.demoPanel.c$[0].setDataSet(this.sampleDataSet);
-                this.demoPanel.c$[1].setDataSet(this.sampleDataSet);                
-                this.demoPanel.c$[2].setDataSet(this.sampleDataSet);                                
-                break;
-        }
-        
-        this.demoPanel.reflow();
+    regenerateDemoPanel: function() {
+        studio.beginWait("Loading...");
+        wm.onidle(this, function() {
+            wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
+                this.demoPanel.setValue(inName, inValue);
+            }));  
+
+            this.demoPanel.removeAllControls();                        
+            this.demoPanel.createComponents(this.sampleWidgets);
+            
+            /* Custom hacks needed to get the sample widgets to work */
+            switch(this.widgetGrid.selectedItem.getValue("templateFile")) {
+                case "grid":
+                    this.demoPanel.c$[0].setDataSet(this.sampleDataSet);
+                    this.demoPanel.c$[1].setDataSet(this.sampleDataSet);                
+                    this.demoPanel.c$[2].setDataSet(this.sampleDataSet);                                
+                    break;
+            }
+            
+            this.demoPanel.reflow();
+            studio.endWait();
+        });
     },
     /* END SECTION: Managing the Demo Panel */
 

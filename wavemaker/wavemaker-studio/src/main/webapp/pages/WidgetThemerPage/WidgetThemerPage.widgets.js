@@ -42,10 +42,13 @@ WidgetThemerPage.widgets = {
 				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"},{onChange: "editAreaChange"}]
 				}]    			
     		}],
-			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"300px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
+			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"500px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 				demoPanelHeader: ["wm.Label", {width: "100%", caption: "Samples", _classes: {domNode: ["Header"]}}],
-				demoPanel: ["wm.Panel", {height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%", padding: "20"}, {}, {
-
+				demoPanelWithThemeName: ["wm.Panel", { height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
+				    demoPanelWithAppRoot: ["wm.Panel", {_classes: {domNode: ["wmapproot"]}, height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
+                        demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
+                        }]
+				    }]
 				}]
 			}]
 		}]

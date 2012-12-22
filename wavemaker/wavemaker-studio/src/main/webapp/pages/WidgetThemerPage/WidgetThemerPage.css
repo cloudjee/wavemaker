@@ -7,3 +7,10 @@
     font-weight: bold;
     font-size: 14px;
 }
+
+.WidgetThemerPage .WidgetThemerDemoPanel {
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;    
+
+}
