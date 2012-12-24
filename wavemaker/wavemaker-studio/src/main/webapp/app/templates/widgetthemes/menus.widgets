@@ -1,10 +1,10 @@
 {
 dojoMenu1: ["wm.DojoMenu", {_classes: {domNode: ["TestMenu"]}, "fullStructure":[
-	   {"label":"File","children":[{"label":"Save"},{"label":"Close"},{"label":"More", children: [{label: "item 1"},{"label":"item 2"}]}]},
+	   {"label":"File","children":[{"label":"Gandalf the Grey"},{"label":"Came out of the closet"},{"label":"More", children: [{label: "Gandalf the Grey1"},{"label":"item 2"}]}]},
 	   {"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},
 	   {"label":"Help"}]}],
 dojoMenu2: ["wm.DojoMenu", {_classes: {domNode: ["TestMenu"]}, vertical: true, height:"200px",width:"150px", "fullStructure":[
-	   {"label":"File","children":[{"label":"Save"},{"label":"Close"},{"label":"More", children: [{label: "item 1"},{"label":"item 2"}]}]},
+	   {"label":"File","children":[{"label":"Came out of the closet"},{"label":"Came out of the closet"},{"label":"More", children: [{label: "Gandalf the Grey"},{"label":"item 2"}]}]},
 	   {"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},
 	   {"label":"Help"}]}]
 }

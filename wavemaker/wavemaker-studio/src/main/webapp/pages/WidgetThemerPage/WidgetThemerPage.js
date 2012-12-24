@@ -90,6 +90,21 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Combobox Dropdowns",
             templateFile: "combodropdowns",
             classList: []            
+        },
+        {
+            name: "Progress Bar",
+            templateFile: "progressbar",
+            classList: [{dataValue: "wm.dijit.ProgressBar"}]            
+        },
+        {
+            name: "Splitter/Bevel",
+            templateFile: "splitterbevel",
+            classList: [{dataValue: "wm.Bevel"}]            
+        },
+        {
+            name: "Calendar",
+            templateFile: "calendar",
+            classList: [{dataValue: "wm.dijit.Calendar"}]            
         }
     ],
 
@@ -194,7 +209,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     moveMenuNode: function(widget) {
         if (!this.root.isAncestorHidden() && 
             (this.currentWidgetTemplateFile == "menus" ||
-             this.currentWidgetTemplateFile == "combodropdowns")) {
+             this.currentWidgetTemplateFile == "combodropdowns") &&
+             widget.domNode.innerHTML.match(/Gandalf the Grey/)) {
             this.connectOnce(widget, "onOpen", this, function() {                
                 this.demoPanelWithAppRoot.domNode.appendChild(widget.domNode.parentNode);
                 widget.domNode.parentNode.style.left = "20px";
@@ -372,6 +388,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         delete this._generatingEditors;
     },
     generateCssEditor: function(styleName, styleValue, parent, styleGroup) {
+        styleValue = String(styleValue).replace(/\s\!important/, "");
         var styleEditorDef;
         var styleRule = this.styleRules[styleName];
         if (styleName == "filter" && styleValue.match(/Gradient/i)) {
@@ -407,6 +424,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         }]                        
             })[0];
             var e = p.c$[2];
+            e.name = styleGroup + "_" + styleName;
             var checkbox = p.c$[1];
             if (e.editor instanceof wm.Container && e.editor.verticalAlign != "top") {
                 p.setVerticalAlign(e.editor.verticalAlign);
@@ -467,7 +485,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 } else {
                     var styleObj = this.getStyleObjFromLine(l);
                     if (styleObj) {
-                        var isImportant = styleObj.value.match(/\!important/);
                         /* If its a complex editor (has updateCssLIne method) let it examine
                          * every style in the group and update it if it chooses to 
                          */
@@ -481,6 +498,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                         lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
                                     } else {
                                         lines[i] = "\t" + altLine.replace(/\:(.|\n|\r)*/m,"") + ": inherit;";
+                                    }
+                                    if (isImportant) {
+                                        lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
                                     }
                                     updateCssLineFired = true;
                                 } else {
@@ -496,13 +516,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         else if (styleObj.name === inStyleName) {
                             if (isEditorEnabled) {                        
                                 lines[i] = "\t" + inStyleName + ": " + inEditor.getDataValue() + ";";
+                                if (isImportant) {
+                                    lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
+                                }
                             } else {
                                 lines[i] = "\t" + inStyleName + ": inherit;";
                             }
                             break;
-                        }
-                        if (isImportant) {
-                            lines[i] = lines[i].replace(/;/g, " !important;")
                         }
                     }
                 }

@@ -1,0 +1,19 @@
+{
+	panelHoriz: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "200px"},{},{
+	    b1: ["wm.Bevel", {}],
+	    label1: ["wm.Label", {width: "100%", caption: "Label"}],
+	    splitter1: ["wm.Splitter", {width: "100%"}],
+	    label1b: ["wm.Label", {width: "100px", caption: "Label"}],
+	    b1b: ["wm.Bevel", {}]
+	}],
+	panelVert: ["wm.Panel", {layoutKind: "top-to-bottom", height: "100%", width: "100%"},{},{
+	    b2: ["wm.Bevel", {}],
+	    label2: ["wm.Label", {width: "100%", caption: "Label"}],
+	    splitter2: ["wm.Splitter", {width: "100%"}],
+	    label2b: ["wm.Label", {width: "100px", caption: "Label"}],
+	    b2b: ["wm.Bevel", {}]
+	}]
+
+
+
+}

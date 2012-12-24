@@ -3124,8 +3124,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
         var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
            return inLetter.substring(1).toUpperCase();
         });
-
-        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
         if (inStyleName.match(/(top|left|bottom|right)/)) this.toggleButton.setClicked(true);
         this.getValuesFromTestNode();
         
@@ -3602,7 +3601,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
     		                  return inLetter.substring(1).toUpperCase();
     		               });
-        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
         this.setDataValue(this.testNode.domNode.style.background);
     },
     getEditorValue: function() {
@@ -3880,10 +3879,10 @@ dojo.declare("wm.BackgroundEditor2", wm.AbstractEditorContainer, {
             repeat = "repeat-y";
         } else {
             repeat = "no-repeat";
-        }
+        }        
 
         var result = {
-            color: s.backgroundColor,
+            color: s.backgroundColor == "initial" ? "" : s.backgroundColor,
             gradient: (s.backgroundImage||"").match(/gradient/) ? s.backgroundImage : "",
             url: (s.backgroundImage||"").match(/^url/) ? s.backgroundImage : "",
             repeat: repeat,
@@ -3979,7 +3978,7 @@ dojo.declare("wm.BackgroundEditor2", wm.AbstractEditorContainer, {
         var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
     		                  return inLetter.substring(1).toUpperCase();
     		               });
-        this.testNode.domNode.style[domStyleName] = inStyleValue;
+        this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
         this.setDataValue(this.testNode.domNode.style.background);
     },
     getEditorValue: function() {
