@@ -633,19 +633,23 @@ height: "29px", width: "420px",
 						        appsourceHtml: ["wm.Html", {width: "100%", height: "100%", border: 0, padding: "4, 0, 0, 4"}, {}]
 					    }],
                         themeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Themes", width: "100%", height: "100%"}, {}, {
-							themesRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
-							    themesPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
-							    themesPageAddBtn: ["wm.studio.ToolbarButton", {hint: "New Theme...", imageIndex: 25}, {onclick: "addNewThemeClick"}],
-							    themesPageCopyBtn: ["wm.studio.ToolbarButton", {hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}],
-							    themesPageDeleteBtn: ["wm.studio.ToolbarButton", {hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
-							    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert Theme", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
-							}],
-                            themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
-                                                              pageName: "ThemeDesigner"}]
-                        }],
-                        widgetThemeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "WidgetThemer", width: "100%", height: "100%"}, {}, {                        
-                            themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
-                                                              pageName: "WidgetThemerPage"}]
+                            themeTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}}, {}, {
+                                widgetThemeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Theme Designer", width: "100%", height: "100%"}, {}, {                        
+                                    themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
+                                                                      pageName: "WidgetThemerPage"}]
+                                }],
+                                themeGenerator: ["wm.Layer", {caption: "Theme Generator"}, {}, {
+        							themesRibbon: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
+        							    themesPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
+        							    themesPageAddBtn: ["wm.studio.ToolbarButton", {hint: "New Theme...", imageIndex: 25}, {onclick: "addNewThemeClick"}],
+        							    themesPageCopyBtn: ["wm.studio.ToolbarButton", {hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}],
+        							    themesPageDeleteBtn: ["wm.studio.ToolbarButton", {hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
+        							    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert Theme", imageIndex: 6, imageList: "canvasToolbarImageList16"}, {onclick: "revertThemeClick"}]
+        							}],
+                                    themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
+                                                                      pageName: "ThemeDesigner"}]
+                                }]
+                            }]
                         }],
                         /*
                         theme2Layer: ["wm.Layer", {_classes: {domNode: []}, caption: "Themes", width: "100%", height: "100%"}, {}, {
