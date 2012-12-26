@@ -392,10 +392,9 @@ dojo.declare("wm.Application", wm.Component, {
         for (var j in propHash) {
             wm.Control.prototype[j] = propHash[j];
         }
-
-        wm.Application.themePrototypeData = {
-            "wm.Control": this.theme
-        };
+        if (!wm.Application.themePrototypeData) wm.Application.themePrototypeData = {};
+        wm.Application.themePrototypeData["wm.Control"] = this.theme;
+        
 
         /*
     for (var i in themeData) {
@@ -418,56 +417,50 @@ dojo.declare("wm.Application", wm.Component, {
     },
     loadThemePrototypeForClass: function(ctor, optionalWidget) {
         if (!this.theme || !ctor) return;
-        if ((window["StudioApplication"]) && !wm.defaultPrototypeValues) {
-            wm.defaultPrototypeValues = {};
-        }
+        
         var declaredClass = ctor.prototype.declaredClass;
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
 
         var themeData = wm.Application.themeData[this.theme];
         var ctorData = themeData[ctor.prototype.declaredClass];
+        var p = ctor.prototype;        
 
-        if (!wm.Application.themePrototypeData[declaredClass] || wm.Application.themePrototypeData[declaredClass] != this.theme) {
-            var p = ctor.prototype;
-            var lastTheme = wm.Application.themePrototypeData[declaredClass];
-            var oldThemeData = wm.Application.themeData[lastTheme]; // app not this; if studio is loaded, we have multiple apps; just have one of them manage this global
-            // undo all changes from the last theme for this class
-            if (oldThemeData) {
-                var oldCtorData = oldThemeData[declaredClass];
-                if (oldCtorData) for (var j in oldCtorData) {
-                    if (wm.defaultPrototypeValues && wm.defaultPrototypeValues[declaredClass] && j in wm.defaultPrototypeValues[declaredClass]) {
-                        p[j] = wm.defaultPrototypeValues[declaredClass][j];
-                        delete wm.defaultPrototypeValues[declaredClass][j];
-                    } else {
-                        delete p[j]; // deleting it lets its parent class prototype value come through (only tested in chrome...)
-                    }
-                    // however, for purposes of reflection/property inspection, if there is no parent class value coming through, lets give it some value.  TODO: Check its type and assign it something based on the property's type.
-                    if (p[j] === undefined) p[j] = "";
-                    //if (optionalWidget) optionalWidget[j] = "";
-                }
-                if (wm.defaultPrototypeValues && wm.defaultPrototypeValues[declaredClass]) {
-                    delete wm.defaultPrototypeValues[declaredClass];
+        /* At design time, we cache the original state of the prototype because it may change as the developer changes themes, and 
+         * as we switch between studio's theme and user's theme
+         */
+        if ((window["StudioApplication"])) {
+            if (!wm.defaultPrototypeValues) {
+                wm.defaultPrototypeValues = {};
+            }
+            if (!wm.defaultPrototypeValues[declaredClass]) {
+                wm.defaultPrototypeValues[declaredClass] = {};
+                wm.forEachProperty(p, function(inValue, inName) {
+                    wm.defaultPrototypeValues[declaredClass][inName] = inValue;
+                });            
+            }
+        
+
+
+            /* Restore the prototype to untampered state if we've changed themes */
+            if (wm.Application.themePrototypeData[declaredClass] && wm.Application.themePrototypeData[declaredClass] != this.theme) {
+                var props = wm.defaultPrototypeValues[declaredClass];
+                wm.forEachProperty(props, function(inValue, inName) {                  
+                    p[inName] = inValue;                    
+                    if (optionalWidget) optionalWidget[inName] = inValue;
+                });
+            }
+        }
+
+
+        // make all changes need for this theme for this class
+        if (wm.Application.themePrototypeData[declaredClass] != this.theme && ctorData) {
+            for (var j in ctorData) {
+                p[j] = ctorData[j];
+                if (optionalWidget) {
+                    optionalWidget[j] = ctorData[j];
                 }
             }
-
-            // make all changes need for this theme for this class
-
-            if (ctorData) {
-                for (var j in ctorData) {
-                    if (wm.defaultPrototypeValues && !wm.defaultPrototypeValues[declaredClass]) {
-                        wm.defaultPrototypeValues[declaredClass] = {};
-                    }
-                    if (wm.defaultPrototypeValues) {
-                        wm.defaultPrototypeValues[declaredClass][j] = ctor.prototype[j];
-                    }
-                    ctor.prototype[j] = ctorData[j];
-                    if (optionalWidget && oldCtorData && (optionalWidget[j] === oldCtorData[j] || optionalWidget[j] === ctor.prototype[j])) {
-                        optionalWidget[j] = ctorData[j];
-                    }
-                }
-            }
-            wm.Application.themePrototypeData[declaredClass] = this.theme;
-
+            wm.Application.themePrototypeData[declaredClass] = this.theme;            
         }
 
 

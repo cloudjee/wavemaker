@@ -6,7 +6,7 @@ WidgetThemerPage.widgets = {
 		widgetListTypeDefField3: ["wm.TypeDefinitionField", {fieldName: "classList", isList: true, type: "StringData"}]
 	}],
 	templateListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],
-    themeListVar: ["wm.Variable", {type: "EntryData"}],
+    themeListVar: ["wm.Variable", {type: "themeListType"}],
     fontFaceVar: ["wm.Variable", {type: "StringData", isList: 1, json: "[{dataValue: 'Georgia, serif'}, {dataValue: '\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif'}, {dataValue: '\"Times New Roman\", Times, serif'}, {dataValue: 'Arial, Helvetica, sans-serif'}, {dataValue: '\"Arial Black\", Gadget, sans-serif'}, {dataValue: '\"Comic Sans MS\", cursive, sans-serif'}, {dataValue: 'Impact, Charcoal, sans-serif'}, {dataValue: '\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif'}, {dataValue: 'Tahoma, Geneva, sans-serif'}, {dataValue: '\"Trebuchet MS\", Helvetica, sans-serif'}, {dataValue: 'Verdana, Geneva, sans-serif'}, {dataValue: '\"Courier New\", Courier, monospace'}, {dataValue: '\"Lucida Console\", Monaco, monospace'}]"}],    
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","layoutKind":"top-to-bottom","verticalAlign":"top"}, {}, {
 		buttonBar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "studio.smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
@@ -17,7 +17,7 @@ WidgetThemerPage.widgets = {
 		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert Theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}],
 		    themeSelect: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, caption: "Theme:", captionAlign: "right", captionPosition: "left", captionSize: "80px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "name", dataField: "dataValue"}, {onchange: "themeselectChange"}, {
 			    binding: ["wm.Binding", {}, {}, {
-			        wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeListVar"}, {}]
+			        wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeListVar.queriedItems"}, {}]
 			    }]
 			}],
 			codeToggleLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, align: "right", caption: "View:",width: "80px", height: "100%"}],

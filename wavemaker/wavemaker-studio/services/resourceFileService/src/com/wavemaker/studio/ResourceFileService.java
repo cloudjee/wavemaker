@@ -155,6 +155,16 @@ public class ResourceFileService {
         return renamed.getName();
     }
 
+    public void copyFolder(@ParamName(name = "from") String from, @ParamName(name = "to") String to) throws IOException {
+
+        Folder source = getResource(from, Folder.class);
+	Folder dest = getResource(to, Folder.class);
+	if (dest.exists()) throw new IOException("Already Exists");
+	dest.createIfMissing();
+	source.copyContentsTo(dest);
+    }
+
+
     private String generateUniqueNumberedFileName(Folder folder, String name) {
         String ext = "";
         if (name.lastIndexOf(".") != -1) {

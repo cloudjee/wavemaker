@@ -208,8 +208,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     start: function() {
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
-        this.setupThemeList();    
+        this.setupThemeList(studio.application.theme);    
         this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");
+        this.themeListVar.setQuery({designer: "widgetthemer"});
     },
     moveMenuNode: function(widget) {
         if (!this.root.isAncestorHidden() && 
@@ -226,7 +227,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
 
     /* START SECTION: End of managing themes and theme selection */
-    setupThemeList: function() {
+    setupThemeList: function(inTheme) {
         var data = this.owner.owner.themesListVar.getData();
         for (var i = 0; i < data.length; i++) {
             if (data[i].dataValue == "wm_notheme") {
@@ -235,12 +236,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }
         }
         this.themeListVar.setDataSet(data);
-        this.themeSelect.setDataValue(studio.application.theme);
+        this.themeSelect.setDataValue(inTheme);
     },
     themeselectChange: function(inSender) {
-    if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
+        if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
         var currentTheme = inSender.getDataValue();
-        if (!currentTheme) return;
+        if (!currentTheme) {
+            this.mainPanel.setDisabled(true);
+            return;
+        } else if (this.mainPanel.disabled) {
+            this.mainPanel.setDisabled(false);
+        }
         this.currentTheme = currentTheme;
         this.currentThemeName = currentTheme.replace(/^.*\./,"");
         this.widgetCssFiles = {};
@@ -282,6 +288,54 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             studio.endWait();
         });
     },
+    copyThemeClick: function() {
+        app.prompt("Enter theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));    
+    },
+    copyTheme: function(inThemeName) {
+        inThemeName = inThemeName.replace(/[^a-zA-Z0-9_]/g,"");
+
+        /* TODO: Update this query once themeListVar stops being a StringData var */
+        if (this.themeListVar.query({dataValue: inThemeName}).getCount()) {
+            app.prompt(inThemeName + " is taken. Enter a different theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));
+            return;
+        }
+        studio.resourceManagerService.requestAsync("copyFolder", ["/common/themes/" + this.currentThemeName, "/common/themes/" + inThemeName]).then(
+            dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("getFolder", ["/common/themes/" + inThemeName]);
+            })
+        ).then(
+            dojo.hitch(this, function(inResult) {
+                this.filesToUpdate = dojo.filter(inResult.files, function(f) {
+                    return f.file.match(/\.css$/);
+                });
+                return this.updateClassNameInFiles(inThemeName);
+            })
+        ).then( 
+            dojo.hitch(this, function() {
+                return studio.loadThemeList();
+            })
+        ).then(
+            dojo.hitch(this, function() {
+                this.setupThemeList("common.themes." + inThemeName);
+            })
+        );
+    },
+    updateClassNameInFiles: function(inThemeName) {
+        if (!this.updateClassNameInFilesDeferred) {
+            this.updateClassNameInFilesDeferred = new dojo.Deferred();
+        }
+        if (this.filesToUpdate && this.filesToUpdate.length) {
+            var file = this.filesToUpdate.pop();
+        
+            var fileText = wm.load(dojo.moduleUrl("common.themes." + inThemeName) + file.file);
+            var r = new RegExp("." + this.currentThemeName, "g");
+            fileText = fileText.replace(r, "." + inThemeName);
+            studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/" + file.file, fileText]).then(dojo.hitch(this, "updateClassNameInFiles", inThemeName)); 
+        } else {
+            this.updateClassNameInFilesDeferred.callback();
+        }
+        return this.updateClassNameInFilesDeferred;
+    },
     addNewThemeClick: function() {
         app.prompt("Enter theme name", studio.project.projectName + "Theme", dojo.hitch(this, "addNewTheme"));
     },
@@ -298,6 +352,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         /* TODO: Need to have default theme.css file, presumably a compiled version of all of the individual theme templates */
         studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(            
             dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/themedesigner.css", ""]);
+            })
+        ).then(dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/theme.css", ""]);
             })
         ).then(
@@ -308,19 +365,34 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
             })
+        ).then(
+            dojo.hitch(this, function() {
+                return studio.loadThemeList();
+            })
+        ).then(
+            dojo.hitch(this, function() {
+                this.setupThemeList("common.themes." + inThemeName);
+            })
         );
     },
     deleteThemeClick: function() {
         app.confirm("Are you sure you want to delete the theme " + this.currentThemeName + "?", false, dojo.hitch(this, "deleteTheme"));
     },
     deleteTheme: function() {
-        studio.resourceManagerService.requestAsync("deleteFile", ["/common/themes/test"]).then(
+        studio.resourceManagerService.requestAsync("deleteFile", ["/common/themes/" + this.currentThemeName]).then(
             dojo.hitch(this, function() {
                 app.toastSuccess("Deleted");
-                this.setupThemeList();
+                return studio.loadThemeList();
+            })
+        ).then(
+            dojo.hitch(this, function() {                
+                this.setupThemeList(studio.application.theme || "");
             })
         );
     },
+    revertThemeClick: function() {
+        this.themeselectChange(this.themeSelect);       
+    },    
     /* END SECTION: End of managing themes and theme selection */
 
 

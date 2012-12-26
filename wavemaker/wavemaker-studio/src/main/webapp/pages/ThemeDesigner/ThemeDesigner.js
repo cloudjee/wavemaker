@@ -353,6 +353,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 break;
             }
         }
+        this.themeListVar.setQuery({designer: "themedesigner"});
         this.themeListVar.setDataSet(data);
 
         // Read in packages.js for a list of widgets that the user can edit when in "control freak" mode

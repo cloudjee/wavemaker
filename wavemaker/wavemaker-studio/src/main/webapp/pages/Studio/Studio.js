@@ -2085,20 +2085,29 @@ dojo.declare("Studio", wm.Page, {
         this.writeDocumentationMenuItem.set("checked",Boolean(studio.selected.documentation));
     },
     */
-        loadThemeList: function(optionalCallback) {
+    loadThemeList: function(optionalCallback) {
 
-            var d = studio.deploymentService.requestAsync("listThemes");
-            d.addCallback(dojo.hitch(this, function(inData) {
-                var d = [];
-                for (var i = 0; i < inData.length; i++)
-                    if (inData[i] != "wm_studio")
-                        d.push({name: inData[i],
-                                dataValue: inData[i].indexOf("wm_") == 0 ? "wm.base.widget.themes." + inData[i] : "common.themes." + inData[i]});
-                this.themesListVar.setData(d);
-            }));
-            if (optionalCallback)
-                d.addCallback(optionalCallback);
-        },
+        var d = studio.deploymentService.requestAsync("listThemes");
+        var d2 = new dojo.Deferred();
+        d.addCallback(dojo.hitch(this, function(inString) {
+            var inData = dojo.fromJson(inString);
+            var d = [];
+            wm.forEachProperty(inData, function(inValue, inName) {
+                if (inName != "wm_studio") {
+                    var designer = inValue.designer;
+                    var dojoPackage = inValue.package;
+                    d.push({name: inName,
+                            dataValue: dojoPackage + "." + inName,
+                            designer: designer});
+                }
+            });
+            this.themesListVar.setData(d);
+            d2.callback();
+        }));
+        if (optionalCallback)
+            d.addCallback(optionalCallback);
+        return d2;
+    },
     loadHelp: function(inType, inPropName, onSuccess) {
     var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
     var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
