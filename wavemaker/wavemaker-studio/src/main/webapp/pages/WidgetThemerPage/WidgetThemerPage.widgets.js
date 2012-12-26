@@ -10,11 +10,27 @@ WidgetThemerPage.widgets = {
     fontFaceVar: ["wm.Variable", {type: "StringData", isList: 1, json: "[{dataValue: 'Georgia, serif'}, {dataValue: '\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif'}, {dataValue: '\"Times New Roman\", Times, serif'}, {dataValue: 'Arial, Helvetica, sans-serif'}, {dataValue: '\"Arial Black\", Gadget, sans-serif'}, {dataValue: '\"Comic Sans MS\", cursive, sans-serif'}, {dataValue: 'Impact, Charcoal, sans-serif'}, {dataValue: '\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif'}, {dataValue: 'Tahoma, Geneva, sans-serif'}, {dataValue: '\"Trebuchet MS\", Helvetica, sans-serif'}, {dataValue: 'Verdana, Geneva, sans-serif'}, {dataValue: '\"Courier New\", Courier, monospace'}, {dataValue: '\"Lucida Console\", Monaco, monospace'}]"}],    
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","layoutKind":"top-to-bottom","verticalAlign":"top"}, {}, {
 		buttonBar: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, height: "29px", width: "100%", layoutKind: "left-to-right", imageList: "studio.smallToolbarImageList", padding: "0,4", border: "0,0,1,0", borderColor: "#959DAB", verticalAlign: "middle"}, {}, {
-		    themesPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}],
+		    themesPageSaveBtn: ["wm.studio.ToolbarButton", {hint: "Save", imageIndex: 8}, {onclick: "saveThemeClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
+        		}]
+		    }],
 		    themesPageAddBtn: ["wm.studio.ToolbarButton", {hint: "New Theme...", imageIndex: 25}, {onclick: "addNewThemeClick"}],
-		    themesPageCopyBtn: ["wm.studio.ToolbarButton", {hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}],
-		    themesPageDeleteBtn: ["wm.studio.ToolbarButton", {hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}],
-		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert Theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}],
+		    themesPageCopyBtn: ["wm.studio.ToolbarButton", {hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
+        		}]		    
+		    }],
+		    themesPageDeleteBtn: ["wm.studio.ToolbarButton", {hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
+        		}]		    
+		    }],
+		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert Theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
+        		}]		    
+		    }],
 		    themeSelect: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, caption: "Theme:", captionAlign: "right", captionPosition: "left", captionSize: "80px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "name", dataField: "dataValue"}, {onchange: "themeselectChange"}, {
 			    binding: ["wm.Binding", {}, {}, {
 			        wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeListVar.queriedItems"}, {}]
