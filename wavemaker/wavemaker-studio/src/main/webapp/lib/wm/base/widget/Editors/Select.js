@@ -697,13 +697,13 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
     startUpdate: true,
     maxResults: 500,
     ignoreCase: true,
-    init: function() {
-        this.inherited(arguments);
+    postInit: function() {
         if (this.autoDataSet && this.formField) {
             this.createDataSet();
         } else if (!this.autoDataSet) {
             this.startUpdate = false;
         }
+        this.inherited(arguments);        
     },
     createDataSet: function() {
         wm.fire(this.$.liveVariable, "destroy");
