@@ -105,6 +105,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Calendar",
             templateFile: "calendar",
             classList: [{dataValue: "wm.dijit.Calendar"}]            
+        },
+        {
+            name: "Main Content Panel",
+            templateFile: "panels",
+            classList: [{dataValue: "wm.MainContentPanel"}]            
         }
     ],
 
@@ -254,9 +259,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             var path = dojo.moduleUrl(this.currentTheme);
 
             /* Step 5: Load the theme.css file that we are going to edit */
-            this.cssText =  dojo.xhrGet({url:path + "theme.css", sync:true, preventCache:true}).results[0];
-            // TODO: this.fullOriginalMobileCss =  dojo.xhrGet({url:path + "mobile/theme.css", sync:true, preventCache:true}).results[0];
-
+            this.cssText = "";
+            try {
+                this.cssText =  dojo.xhrGet({url:path + "themedesigner.css", sync:true, preventCache:true}).results[0];
+            } catch(e) {}
+            if (!this.cssText) {
+                this.cssText =  dojo.xhrGet({url:path + "theme.css", sync:true, preventCache:true}).results[0];
+            }            
 
 
             /* Step 6: Load the Theme.js file, store it in this.themePrototype */
@@ -287,7 +296,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
         /* Step 1: Create the theme folder */
         /* TODO: Need to have default theme.css file, presumably a compiled version of all of the individual theme templates */
-        studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(
+        studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(            
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/theme.css", ""]);
             })
@@ -677,12 +686,100 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             files.push({fileName: inName, cssText: inValue});
         });
         studio.beginWait("Saving...");
-        studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/theme.css", this.cssText]).then(
+        studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/themedesigner.css", this.cssText]).then(
+            dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/theme.css", this.optimizeCss(this.cssText)]);
+            })
+        ).then(
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/Theme.js", dojo.toJson(this.themePrototype, true)]);
             })
+        ).then(
+            dojo.hitch(this, "writeMobileCss")
         ).then(dojo.hitch(this, "writeTemplateFiles"));
     },
+    writeMobileCss: function() {
+        var css = this.cssText;
+        var braceBlocks = [];
+        var index = 0;
+        while (true) {
+            var startIndex = css.indexOf("{",index);
+            if (startIndex == -1) break;
+            var endIndex = css.indexOf("}", startIndex);
+            if (endIndex == -1) break;
+            braceBlocks.push({start: startIndex, end: endIndex});
+            index = endIndex;
+        }
+        for (var i = 0; i < braceBlocks.length; i++) {
+            // find the first non-comment before start and after the last end
+            var start = braceBlocks[i].start;
+            var priorEnd = i == 0 ? 0 : braceBlocks[i-1].end+1;
+            var inComment = false;
+            for (var charIndex = priorEnd; charIndex < start; charIndex++) {
+                if (css.substr(charIndex,2) == "/*") {
+                    inComment = true;
+                } else if (css.substr(charIndex,2) == "*/") {
+                    inComment = false;
+                    charIndex++; // skip the "/"
+                } else if (!inComment && !css.substr(charIndex,1).match(/\s/m)) {
+                    braceBlocks[i].ruleStart = charIndex;
+                    break;
+                }
+            }
+        }
+        for (var i = 0; i < braceBlocks.length; i++) {
+            var rule = css.substring(braceBlocks[i].ruleStart, braceBlocks[i].start);
+            while(true) {
+                var index = rule.indexOf(".dojoxGrid");
+                if (index == -1) break;
+                var startOfRuleSegment = Math.max(rule.lastIndexOf("\n",index), rule.lastIndexOf("\r",index), rule.lastIndexOf(",",index));
+                if (startOfRuleSegment == -1) startOfRuleSegment = 0; // start of string is the start of the rule segment
+                var endIndex1 = rule.indexOf(",",index);
+                var endIndex2 = rule.indexOf("{", index);
+                var endIndex;
+                if (endIndex1 != -1 && endIndex2 != -1) {
+                    endIndex = Math.min(endIndex1,endIndex2);
+                } else if (endIndex1 == -1) {
+                    endIndex = endIndex2;
+                } else {
+                    endIndex = endIndex1;
+                }
+                if (startOfRuleSegment <= 0 && endIndex <= 0) {
+                    rule = "";
+                    break;
+                } else if (startOfRuleSegment <= 0) {
+                    rule = rule.substring(endIndex);
+                    rule = rule.substring(rule.indexOf(",")+1);
+                } else if (endIndex <= 0) {
+                    debugger;
+                    rule = rule.substring(0,startOfRuleSegment-1);
+                } else {
+                    rule = rule.substring(0,startOfRuleSegment-1) + rule.substring(endIndex);                        
+                }
+            }
+            braceBlocks[i].rule = rule;
+        }
+            debugger;                
+        for (var i = braceBlocks.length-1; i >= 0; i--) {
+            if (braceBlocks[i].rule) {
+                css = css.substring(0,braceBlocks[i].ruleStart) + braceBlocks[i].rule + css.substring(braceBlocks[i].start);
+            } else {
+                css = css.substring(0,braceBlocks[i].ruleStart) + css.substring(braceBlocks[i].end+1);
+            }
+        }
+        css = this.optimizeCss(css);                
+         return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/mtheme.css", css]);
+    },
+    optimizeCss: function(inText) {
+    	// strip out comments
+    	inText = inText.replace(/\/\*(.|\n|\r)*?\*\//gm,"")
+
+    	// strip out white space
+    	inText = inText.replace(/^\s*/gm,"").replace(/\s*$/gm,"");
+
+    	return inText;
+    },
+
     writeTemplateFiles: function() {
         if (this._templateFilesToWrite.length) {
             var fileObj = this._templateFilesToWrite.shift();
@@ -698,19 +795,22 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* START SECTION: Managing the Demo Panel */
     onShow: function() {
-        this.demoPanel.owner = studio.application;
+        this.demoPanelWithAppRoot.owner = studio.application;
     },
     onHide: function() {
-        this.demoPanel.owner = this;
+        this.demoPanelWithAppRoot.owner = this;
     },
     regenerateDemoPanel: function() {
         studio.beginWait("Loading...");
         wm.onidle(this, function() {
+            this.demoPanelWithAppRoot.removeAllControls();
+            this.demoPanel = this.demoPanelWithAppRoot.createComponents({
+                demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, layoutKind: "top-to-bottom", height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {}]
+            })[0];
+
             wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
                 this.demoPanel.setValue(inName, inValue);
-            }));  
-
-            this.demoPanel.removeAllControls();                        
+            }));               
             this.demoPanel.createComponents(this.sampleWidgets);
             
             /* Custom hacks needed to get the sample widgets to work */
@@ -722,7 +822,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     break;
             }
             
-            this.demoPanel.reflow();
+            this.demoPanelWithAppRoot.reflow();
             studio.endWait();
         });
     },
