@@ -99,7 +99,7 @@ public interface DeploymentManager {
 
     void deployTheme(String themename, String filename, String data) throws IOException;
 
-    String[] listThemes() throws IOException;
+    String listThemes() throws IOException;
 
     void copyTheme(String oldName, String newName) throws IOException;
 

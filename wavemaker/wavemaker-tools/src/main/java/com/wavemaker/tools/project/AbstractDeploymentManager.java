@@ -398,22 +398,27 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     }
 
     @Override
-    public String[] listThemes() throws IOException {
-        List<String> themes = new ArrayList<String>();
+    public String listThemes() throws IOException {
+	StringBuffer s = new StringBuffer();
+
 
         // Add common themes
         Folder commonThemes = this.fileSystem.getCommonFolder().getFolder(THEMES_DIR);
         for (Folder theme : commonThemes.list().folders().include(FilterOn.nonHidden())) {
-            themes.add(theme.getName());
+	    Resource r = theme.getFile("button.css");
+	    if (s.length() > 0) s.append(",");
+	    s.append("'" + theme.getName() + "': {'designer':'" + (r.exists() ? "widgetthemer" : "themedesigner") + "', 'package':'common.themes'}");
         }
 
         // Add studio themes
         Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
         for (Folder theme : widgetThemes.list().folders().include(FilterOn.names().starting("wm_"))) {
-            themes.add(theme.getName());
+	    Resource r = theme.getFile("button.css");
+	    if (s.length() > 0) s.append(",");
+	    s.append("'" + theme.getName() + "': {'designer':'" + (r.exists() ? "widgetthemer" : "themedesigner") + "', 'package':'wm.base.widget.themes'}");
         }
 
-        return themes.toArray(new String[themes.size()]);
+        return "{" + s + "}";
     }
 
     /**

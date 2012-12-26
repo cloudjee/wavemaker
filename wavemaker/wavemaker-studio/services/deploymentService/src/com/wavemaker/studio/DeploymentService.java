@@ -337,7 +337,7 @@ public class DeploymentService {
         this.deploymentManager.deployTheme(themename, filename, data);
     }
 
-    public String[] listThemes() throws IOException {
+    public String listThemes() throws IOException {
         return this.deploymentManager.listThemes();
     }
 

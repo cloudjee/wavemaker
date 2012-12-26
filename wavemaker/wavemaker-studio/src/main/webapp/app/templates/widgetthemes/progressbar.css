@@ -1,0 +1,35 @@
+/* GROUP: ProgressBar */
+.Project99Theme .wmprogressbar .dijitProgressBar {
+		border-radius: 8px;
+		-webkit-border-radius: 8px;
+}
+
+.Project99Theme .wmprogressbar .dijitProgressBarFull {
+    border-right-width: 0px;
+}
+.Project99Theme div .dijitProgressBarLabel {
+		font-family: sans-serif;
+		font-size: 12pt;
+		color: #FFFFFF;
+		font-weight: bold;
+}
+
+    .Project99Theme .wmprogressbar .dijitProgressBar {
+    background-color: rgb(68, 68, 68);
+    background-image: none;
+    }
+
+
+/* GROUP: Bar Background */
+    .Project99Theme .wmprogressbar .dijitProgressBarTile {
+    background-color: rgb(68, 68, 68);
+    background-image: -webkit-gradient(linear, center top, center bottom, from(#c4c4cb), color-stop(20%,#5c5d60), to(#5c5d60));
+    background-image: -moz-linear-gradient(top, #c4c4cb 0%,#5c5d60 20%,#5c5d60 100%);
+    background-image: -o-linear-gradient(top, #c4c4cb 0%,#5c5d60 20%,#5c5d60 100%);
+    background-image: -ms-linear-gradient(top, #c4c4cb 0%,#5c5d60 20%,#5c5d60 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c4c4cb', endColorstr='#5c5d60',GradientType=0);
+    border-radius: 8px 0px 0px 8px;
+    -webkit-border-radius: 8px 0px 0px 8px;
+    }
+
+

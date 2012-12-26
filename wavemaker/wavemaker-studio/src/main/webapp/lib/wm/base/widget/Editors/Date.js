@@ -339,7 +339,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
             use24Time: this.use24Time,
-            timePattern: this.timePattern,
+            timePattern: this.timePattern || wm.Time.prototype.timePattern,
             onchange: dojo.hitch(this, "changed")
         });
         if (this._disabled) this.setDisabled(this.disabled);

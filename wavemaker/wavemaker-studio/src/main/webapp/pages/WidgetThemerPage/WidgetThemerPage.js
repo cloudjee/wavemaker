@@ -90,6 +90,26 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Combobox Dropdowns",
             templateFile: "combodropdowns",
             classList: []            
+        },
+        {
+            name: "Progress Bar",
+            templateFile: "progressbar",
+            classList: [{dataValue: "wm.dijit.ProgressBar"}]            
+        },
+        {
+            name: "Splitter/Bevel",
+            templateFile: "splitterbevel",
+            classList: [{dataValue: "wm.Bevel"}]            
+        },
+        {
+            name: "Calendar",
+            templateFile: "calendar",
+            classList: [{dataValue: "wm.dijit.Calendar"}]            
+        },
+        {
+            name: "Main Content Panel",
+            templateFile: "panels",
+            classList: [{dataValue: "wm.MainContentPanel"}]            
         }
     ],
 
@@ -188,13 +208,15 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     start: function() {
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
-        this.setupThemeList();    
+        this.setupThemeList(studio.application.theme);    
         this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");
+        this.themeListVar.setQuery({designer: "widgetthemer"});
     },
     moveMenuNode: function(widget) {
         if (!this.root.isAncestorHidden() && 
             (this.currentWidgetTemplateFile == "menus" ||
-             this.currentWidgetTemplateFile == "combodropdowns")) {
+             this.currentWidgetTemplateFile == "combodropdowns") &&
+             widget.domNode.innerHTML.match(/Gandalf the Grey/)) {
             this.connectOnce(widget, "onOpen", this, function() {                
                 this.demoPanelWithAppRoot.domNode.appendChild(widget.domNode.parentNode);
                 widget.domNode.parentNode.style.left = "20px";
@@ -205,7 +227,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
 
     /* START SECTION: End of managing themes and theme selection */
-    setupThemeList: function() {
+    setupThemeList: function(inTheme) {
         var data = this.owner.owner.themesListVar.getData();
         for (var i = 0; i < data.length; i++) {
             if (data[i].dataValue == "wm_notheme") {
@@ -214,12 +236,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }
         }
         this.themeListVar.setDataSet(data);
-        this.themeSelect.setDataValue(studio.application.theme);
+        this.themeSelect.setDataValue(inTheme);
     },
     themeselectChange: function(inSender) {
-    if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
+        if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
         var currentTheme = inSender.getDataValue();
-        if (!currentTheme) return;
+        if (!currentTheme) {
+            this.mainPanel.setDisabled(true);
+            return;
+        } else if (this.mainPanel.disabled) {
+            this.mainPanel.setDisabled(false);
+        }
         this.currentTheme = currentTheme;
         this.currentThemeName = currentTheme.replace(/^.*\./,"");
         this.widgetCssFiles = {};
@@ -238,9 +265,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             var path = dojo.moduleUrl(this.currentTheme);
 
             /* Step 5: Load the theme.css file that we are going to edit */
-            this.cssText =  dojo.xhrGet({url:path + "theme.css", sync:true, preventCache:true}).results[0];
-            // TODO: this.fullOriginalMobileCss =  dojo.xhrGet({url:path + "mobile/theme.css", sync:true, preventCache:true}).results[0];
-
+            this.cssText = "";
+            try {
+                this.cssText =  dojo.xhrGet({url:path + "themedesigner.css", sync:true, preventCache:true}).results[0];
+            } catch(e) {}
+            if (!this.cssText) {
+                this.cssText =  dojo.xhrGet({url:path + "theme.css", sync:true, preventCache:true}).results[0];
+            }            
 
 
             /* Step 6: Load the Theme.js file, store it in this.themePrototype */
@@ -257,6 +288,54 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             studio.endWait();
         });
     },
+    copyThemeClick: function() {
+        app.prompt("Enter theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));    
+    },
+    copyTheme: function(inThemeName) {
+        inThemeName = inThemeName.replace(/[^a-zA-Z0-9_]/g,"");
+
+        /* TODO: Update this query once themeListVar stops being a StringData var */
+        if (this.themeListVar.query({dataValue: inThemeName}).getCount()) {
+            app.prompt(inThemeName + " is taken. Enter a different theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));
+            return;
+        }
+        studio.resourceManagerService.requestAsync("copyFolder", ["/common/themes/" + this.currentThemeName, "/common/themes/" + inThemeName]).then(
+            dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("getFolder", ["/common/themes/" + inThemeName]);
+            })
+        ).then(
+            dojo.hitch(this, function(inResult) {
+                this.filesToUpdate = dojo.filter(inResult.files, function(f) {
+                    return f.file.match(/\.css$/);
+                });
+                return this.updateClassNameInFiles(inThemeName);
+            })
+        ).then( 
+            dojo.hitch(this, function() {
+                return studio.loadThemeList();
+            })
+        ).then(
+            dojo.hitch(this, function() {
+                this.setupThemeList("common.themes." + inThemeName);
+            })
+        );
+    },
+    updateClassNameInFiles: function(inThemeName) {
+        if (!this.updateClassNameInFilesDeferred) {
+            this.updateClassNameInFilesDeferred = new dojo.Deferred();
+        }
+        if (this.filesToUpdate && this.filesToUpdate.length) {
+            var file = this.filesToUpdate.pop();
+        
+            var fileText = wm.load(dojo.moduleUrl("common.themes." + inThemeName) + file.file);
+            var r = new RegExp("." + this.currentThemeName, "g");
+            fileText = fileText.replace(r, "." + inThemeName);
+            studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/" + file.file, fileText]).then(dojo.hitch(this, "updateClassNameInFiles", inThemeName)); 
+        } else {
+            this.updateClassNameInFilesDeferred.callback();
+        }
+        return this.updateClassNameInFilesDeferred;
+    },
     addNewThemeClick: function() {
         app.prompt("Enter theme name", studio.project.projectName + "Theme", dojo.hitch(this, "addNewTheme"));
     },
@@ -271,8 +350,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
         /* Step 1: Create the theme folder */
         /* TODO: Need to have default theme.css file, presumably a compiled version of all of the individual theme templates */
-        studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(
+        studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(            
             dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/themedesigner.css", ""]);
+            })
+        ).then(dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/theme.css", ""]);
             })
         ).then(
@@ -283,19 +365,34 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
             })
+        ).then(
+            dojo.hitch(this, function() {
+                return studio.loadThemeList();
+            })
+        ).then(
+            dojo.hitch(this, function() {
+                this.setupThemeList("common.themes." + inThemeName);
+            })
         );
     },
     deleteThemeClick: function() {
         app.confirm("Are you sure you want to delete the theme " + this.currentThemeName + "?", false, dojo.hitch(this, "deleteTheme"));
     },
     deleteTheme: function() {
-        studio.resourceManagerService.requestAsync("deleteFile", ["/common/themes/test"]).then(
+        studio.resourceManagerService.requestAsync("deleteFile", ["/common/themes/" + this.currentThemeName]).then(
             dojo.hitch(this, function() {
                 app.toastSuccess("Deleted");
-                this.setupThemeList();
+                return studio.loadThemeList();
+            })
+        ).then(
+            dojo.hitch(this, function() {                
+                this.setupThemeList(studio.application.theme || "");
             })
         );
     },
+    revertThemeClick: function() {
+        this.themeselectChange(this.themeSelect);       
+    },    
     /* END SECTION: End of managing themes and theme selection */
 
 
@@ -372,6 +469,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         delete this._generatingEditors;
     },
     generateCssEditor: function(styleName, styleValue, parent, styleGroup) {
+        styleValue = String(styleValue).replace(/\s\!important/, "");
         var styleEditorDef;
         var styleRule = this.styleRules[styleName];
         if (styleName == "filter" && styleValue.match(/Gradient/i)) {
@@ -407,6 +505,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         }]                        
             })[0];
             var e = p.c$[2];
+            e.name = styleGroup + "_" + styleName;
             var checkbox = p.c$[1];
             if (e.editor instanceof wm.Container && e.editor.verticalAlign != "top") {
                 p.setVerticalAlign(e.editor.verticalAlign);
@@ -467,7 +566,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 } else {
                     var styleObj = this.getStyleObjFromLine(l);
                     if (styleObj) {
-                        var isImportant = styleObj.value.match(/\!important/);
                         /* If its a complex editor (has updateCssLIne method) let it examine
                          * every style in the group and update it if it chooses to 
                          */
@@ -481,6 +579,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                         lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
                                     } else {
                                         lines[i] = "\t" + altLine.replace(/\:(.|\n|\r)*/m,"") + ": inherit;";
+                                    }
+                                    if (isImportant) {
+                                        lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
                                     }
                                     updateCssLineFired = true;
                                 } else {
@@ -496,13 +597,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         else if (styleObj.name === inStyleName) {
                             if (isEditorEnabled) {                        
                                 lines[i] = "\t" + inStyleName + ": " + inEditor.getDataValue() + ";";
+                                if (isImportant) {
+                                    lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
+                                }
                             } else {
                                 lines[i] = "\t" + inStyleName + ": inherit;";
                             }
                             break;
-                        }
-                        if (isImportant) {
-                            lines[i] = lines[i].replace(/;/g, " !important;")
                         }
                     }
                 }
@@ -657,12 +758,100 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             files.push({fileName: inName, cssText: inValue});
         });
         studio.beginWait("Saving...");
-        studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/theme.css", this.cssText]).then(
+        studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/themedesigner.css", this.cssText]).then(
+            dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/theme.css", this.optimizeCss(this.cssText)]);
+            })
+        ).then(
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/Theme.js", dojo.toJson(this.themePrototype, true)]);
             })
+        ).then(
+            dojo.hitch(this, "writeMobileCss")
         ).then(dojo.hitch(this, "writeTemplateFiles"));
     },
+    writeMobileCss: function() {
+        var css = this.cssText;
+        var braceBlocks = [];
+        var index = 0;
+        while (true) {
+            var startIndex = css.indexOf("{",index);
+            if (startIndex == -1) break;
+            var endIndex = css.indexOf("}", startIndex);
+            if (endIndex == -1) break;
+            braceBlocks.push({start: startIndex, end: endIndex});
+            index = endIndex;
+        }
+        for (var i = 0; i < braceBlocks.length; i++) {
+            // find the first non-comment before start and after the last end
+            var start = braceBlocks[i].start;
+            var priorEnd = i == 0 ? 0 : braceBlocks[i-1].end+1;
+            var inComment = false;
+            for (var charIndex = priorEnd; charIndex < start; charIndex++) {
+                if (css.substr(charIndex,2) == "/*") {
+                    inComment = true;
+                } else if (css.substr(charIndex,2) == "*/") {
+                    inComment = false;
+                    charIndex++; // skip the "/"
+                } else if (!inComment && !css.substr(charIndex,1).match(/\s/m)) {
+                    braceBlocks[i].ruleStart = charIndex;
+                    break;
+                }
+            }
+        }
+        for (var i = 0; i < braceBlocks.length; i++) {
+            var rule = css.substring(braceBlocks[i].ruleStart, braceBlocks[i].start);
+            while(true) {
+                var index = rule.indexOf(".dojoxGrid");
+                if (index == -1) break;
+                var startOfRuleSegment = Math.max(rule.lastIndexOf("\n",index), rule.lastIndexOf("\r",index), rule.lastIndexOf(",",index));
+                if (startOfRuleSegment == -1) startOfRuleSegment = 0; // start of string is the start of the rule segment
+                var endIndex1 = rule.indexOf(",",index);
+                var endIndex2 = rule.indexOf("{", index);
+                var endIndex;
+                if (endIndex1 != -1 && endIndex2 != -1) {
+                    endIndex = Math.min(endIndex1,endIndex2);
+                } else if (endIndex1 == -1) {
+                    endIndex = endIndex2;
+                } else {
+                    endIndex = endIndex1;
+                }
+                if (startOfRuleSegment <= 0 && endIndex <= 0) {
+                    rule = "";
+                    break;
+                } else if (startOfRuleSegment <= 0) {
+                    rule = rule.substring(endIndex);
+                    rule = rule.substring(rule.indexOf(",")+1);
+                } else if (endIndex <= 0) {
+                    debugger;
+                    rule = rule.substring(0,startOfRuleSegment-1);
+                } else {
+                    rule = rule.substring(0,startOfRuleSegment-1) + rule.substring(endIndex);                        
+                }
+            }
+            braceBlocks[i].rule = rule;
+        }
+            debugger;                
+        for (var i = braceBlocks.length-1; i >= 0; i--) {
+            if (braceBlocks[i].rule) {
+                css = css.substring(0,braceBlocks[i].ruleStart) + braceBlocks[i].rule + css.substring(braceBlocks[i].start);
+            } else {
+                css = css.substring(0,braceBlocks[i].ruleStart) + css.substring(braceBlocks[i].end+1);
+            }
+        }
+        css = this.optimizeCss(css);                
+         return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/mtheme.css", css]);
+    },
+    optimizeCss: function(inText) {
+    	// strip out comments
+    	inText = inText.replace(/\/\*(.|\n|\r)*?\*\//gm,"")
+
+    	// strip out white space
+    	inText = inText.replace(/^\s*/gm,"").replace(/\s*$/gm,"");
+
+    	return inText;
+    },
+
     writeTemplateFiles: function() {
         if (this._templateFilesToWrite.length) {
             var fileObj = this._templateFilesToWrite.shift();
@@ -678,19 +867,22 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* START SECTION: Managing the Demo Panel */
     onShow: function() {
-        this.demoPanel.owner = studio.application;
+        this.demoPanelWithAppRoot.owner = studio.application;
     },
     onHide: function() {
-        this.demoPanel.owner = this;
+        this.demoPanelWithAppRoot.owner = this;
     },
     regenerateDemoPanel: function() {
         studio.beginWait("Loading...");
         wm.onidle(this, function() {
+            this.demoPanelWithAppRoot.removeAllControls();
+            this.demoPanel = this.demoPanelWithAppRoot.createComponents({
+                demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, layoutKind: "top-to-bottom", height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {}]
+            })[0];
+
             wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
                 this.demoPanel.setValue(inName, inValue);
-            }));  
-
-            this.demoPanel.removeAllControls();                        
+            }));               
             this.demoPanel.createComponents(this.sampleWidgets);
             
             /* Custom hacks needed to get the sample widgets to work */
@@ -702,7 +894,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     break;
             }
             
-            this.demoPanel.reflow();
+            this.demoPanelWithAppRoot.reflow();
             studio.endWait();
         });
     },

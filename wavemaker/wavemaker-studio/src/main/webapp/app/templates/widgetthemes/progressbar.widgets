@@ -1,0 +1,5 @@
+{
+		progressBar1: ["wm.dijit.ProgressBar", {"height":"48px","width":"360px"}, {}],
+	       progressBar2: ["wm.dijit.ProgressBar", {"height":"48px","width":"360px", progress: 50}, {}],
+   	       progressBar3: ["wm.dijit.ProgressBar", {"height":"48px","width":"360px", progress: 90}, {}]
+}
