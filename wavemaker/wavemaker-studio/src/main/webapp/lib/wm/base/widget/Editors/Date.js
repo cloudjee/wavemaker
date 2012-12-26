@@ -324,6 +324,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             datePattern: this.datePattern,
             maximum: this.maximum,
             minimum: this.minimum,
+            minHeight: 8,
             onchange: dojo.hitch(this, "changed")
         });
         this.timeEditor = new wm.Time({
@@ -340,6 +341,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             formatLength: this.formatLength,
             use24Time: this.use24Time,
             timePattern: this.timePattern || wm.Time.prototype.timePattern,
+            minHeight: 8,            
             onchange: dojo.hitch(this, "changed")
         });
         if (this._disabled) this.setDisabled(this.disabled);
