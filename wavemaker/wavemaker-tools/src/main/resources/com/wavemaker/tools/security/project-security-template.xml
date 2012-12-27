@@ -78,7 +78,7 @@
 	<security:authentication-manager id="authenticationManagerDemo" alias="authenticationManagerDemo">
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="admin" password="admim"
+				<security:user name="admin" password="admin"
 					authorities="admin,user" />
 				<security:user name="user" password="user"
 					authorities="user" />
