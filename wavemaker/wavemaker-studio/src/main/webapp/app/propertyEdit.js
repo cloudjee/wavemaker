@@ -3302,8 +3302,398 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     }
 });
 
-/* TODO: Handle background-image: none; */
+
 dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
+    dataValue: "",
+    urlPlaceHolder: "",
+    height: "28px",
+    containerLayoutKind: "top-to-bottom",
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        var groupName = this.getRuntimeId().replace(/\./,"_");
+
+        this.testNode = new wm.Label({owner: this, parent: this, showing: false});
+        this.backgroundChooser = new wm.SelectMenu({
+            owner: this,
+            parent: e,
+            width: "140px",
+            margin: "0,20,0,0",
+            padding: "0",
+            options: "Color/Gradient,Image,Custom",
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.layers = new wm.Layers({
+            owner: this,
+            parent: e,
+            width: "100%",
+            height: "100%",
+            margin: "0,0,0,50"
+        });
+        
+        
+        this.colorPanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "top-to-bottom",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        this.colorSubPanel = new wm.Panel({
+            owner: this,
+            parent: this.colorPanel,
+            width: "100%",
+            height: wm.SelectMenu.prototype.height,
+            layoutKind: "left-to-right"
+        });
+        this.colorEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorSubPanel,
+            captionSize: "80px",
+            captionAlign: "left",
+            caption: "Color",
+            width: "100%",   
+            gradient: false,
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.transparentCheckbox = new wm.Checkbox({
+            owner: this,
+            parent: this.colorSubPanel,
+            captionSize: "100%",
+            captionAlign: "left",
+            captionPosition: "right",
+            caption: "Transparent",
+            width: "180px",
+            margin: "0,0,0,20",
+            onchange: dojo.hitch(this, "changed")                
+        });
+        this.gradientEditor = new wm.ColorPicker({
+            owner: this,
+            parent: this.colorPanel,
+            captionSize: "80px",
+            caption: "Gradient",
+            captionAlign: "left",            
+            width: "100%",                
+            gradient: true,
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+
+        this.imagePanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "top-to-bottom",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
+        this.urlEditor = new wm.Text({
+            owner: this,
+            parent: this.imagePanel,
+            captionSize: "80px",
+            captionPosition: "left",
+            captionAlign: "left",
+            caption: "URL",
+            width: "100%",          
+            placeHolder: this.urlPlaceHolder,      
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.imageSubPanel = new wm.Panel({
+            owner: this,
+            parent: this.imagePanel,
+            layoutKind: "left-to-right",
+            verticalAlign: "top",
+            horizontalAlign: "left",
+            width: "100%",
+            height: wm.Text.prototype.height
+        });
+        this.horizontalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imageSubPanel ,
+            captionSize: "80px",
+            captionPosition: "left",
+            captionAlign: "left",
+            caption: "Horizontal",
+            width: "100%",
+            dataValue: "0%",
+            onchange: dojo.hitch(this, "changed")  
+        });
+        this.verticalPosEditor = wm.prop.SizeEditor({
+            owner: this,
+            parent: this.imageSubPanel ,
+            captionSize: "80px",
+            captionPosition: "left",
+            captionAlign: "left",
+            caption: "Vertical",
+            margin: "0,0,0,10",            
+            width: "100%",
+            dataValue: "0%",            
+            onchange: dojo.hitch(this, "changed")
+        });                
+        this.imageRepeatEditor = new wm.SelectMenu({
+            owner: this,
+            parent: this.imagePanel ,
+            captionSize: "80px",
+            captionPosition: "left",
+            captionAlign: "left",
+            caption: "Repeats?",
+            width: "200px",
+            allowNone: true,
+            dataValue: "no-repeat",
+            options: "no-repeat,repeat,repeat-x,repeat-y",
+            onchange: dojo.hitch(this, "changed")
+        });
+        
+        this.customPanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "left-to-right",
+            verticalAlign: "bottom",
+            horizontalAlign: "left"
+        });
+        new wm.Label({
+            owner: this,
+            parent: this.customPanel,
+            width: "100%",
+            caption: "Use the source code editor to change this style",
+            _classes: {domNode: ["StudioLabel"]}
+        });        
+        return e;
+    },    
+    
+    setInitialValue: function() {
+/*        this.beginEditUpdate();
+        this.setEditorValue(this.dataValue);
+        this.endEditUpdate();
+        this.clearDirty(true);*/
+    },
+
+    /* Possible values that might come in (we do not handle every possibility) 
+     * 	background-color: <color-spec>;
+     *  background-image: <image-spec>;
+     *  background-image: <gradient-spec>
+     *  background-position: <position-spec>;
+     *  background-repeat: <repeat-spec>;
+     *  background: <color-spec> <image-spec|gradient-spec> <repeat-spec> <position-spec>; // any element can be left out but order must be maintained for those present
+     *  filter: progid:DXImageTransform.Microsoft.gradient(...); // ignore this one; the colors should already be extracted from a more standard-based statement
+     * color-spec: #xxx, #xxxxxx, rgb(x,y,z), color-name
+     * image-spec: url(xxx)
+     * gradient-spec: linear-gradient | radial-gradient | -webkit-gradient; // may have browser prefix; -webkit-gradient is deprecated but is only one supported on many android 2 devices     
+     */
+    
+    /* setEditorValue expects the full "backgroud: color image|gradient repeat position" value */
+    
+    getBackgroundObj: function(inValue) {
+        var s = this.testNode.domNode.style;
+        s.background = inValue;
+        var repeatX = s.backgroundRepeatX;
+        var repeatY = s.backgroundRepeatY;
+        if (repeatX == "initial" || repeatX == "no-repeat") repeatX = "";
+        if (repeatY == "initial" || repeatY == "no-repeat") repeatY = "";
+        var repeat;
+        if (repeatX && repeatY) {
+            repeat = "repeat";
+        } else if (repeatX) {
+            repeat = "repeat-x";
+        } else if (repeatY) {
+            repeat = "repeat-y";
+        } else {
+            repeat = "no-repeat";
+        }
+        var l = location.host + location.pathname;
+        var result = {
+            color: s.backgroundColor,
+            gradient: (s.backgroundImage||"").match(/gradient/) ? s.backgroundImage : "",
+            url: (s.backgroundImage||"").match(/^url/) ? s.backgroundImage.substring(s.backgroundImage.indexOf(l) + l.length).replace(/\)/,"") : "",
+            repeat: repeat,
+            positionX: s.backgroundPositionX,
+            positionY: s.backgroundPositionY
+        }; 
+        return result;
+    },
+    
+    /* Parse either of these options: 
+    * -browserPrefix-linear-gradient(top, #0101b7 0%,#011d65 46%,#011d65 100%); 
+    * -webkit-gradient(linear, center top, center bottom, from(#0101b7), color-stop(46%,#011d65), to(#011d65));
+    * If there are more than 3 colors in the first one, then switch to "custom".
+    * If there is more than one color-stop in the second one, switch to "custom"
+    */
+    parseGradient: function(inValue) {
+        var gradientObj = {};    
+        
+        // matches the -webkit-gradient which is deprecated but still only one supported on android 2 browsers
+        var matches = inValue.match(/-webkit-gradient\(linear,\s*(.*?),\s*(.*?),\s*from\((\#.*?|rgb\(.*?\))\),\s*color-stop\((.*?),\s*(\#.*?|rgb\(.*?\))\),\s*to\((\#.*?|rgb\(.*?\))\)/);
+
+            if (matches) {
+                gradientObj.direction  =  matches[1].match(/top/) && matches[2].match(/bottom/) || matches[1].match(/\%\s*0\%/) && matches[2].match(/\%\s*100\%/)  ? "vertical" : "horizontal";
+                gradientObj.startColor = matches[3];
+                gradientObj.endColor   = matches[6];
+                gradientObj.colorStop = matches[4];
+                if (gradientObj.colorStop.match(/\%/)) {
+                    gradientObj.colorStop = Number(gradientObj.colorStop.replace(/\%/,""));
+                } else {
+                    gradientObj.colorStop = Number(gradientObj.colorStop) * 100;
+                }
+                return gradientObj;
+            } else {
+                /* TODO: COLOR STOPS IN WEBKIT CAME BACK NOT AS PERCENTS, NEED TO TEST THIS ON OTHER BROWSERS TO SEE WHAT VALUES ARE REALLY RETURNED */
+                matches = inValue.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
+                if (matches) {
+                    gradientObj.direction = matches[1] == "top" ? "vertical" : "horizontal";
+                    gradientObj.startColor = matches[2];
+                    gradientObj.colorStop = matches[5];
+                    gradientObj.endColor = matches[6];
+                    return gradientObj;
+                }                    
+            }
+        return null; // failed to parse it
+    },
+    setEditorValue: function(inValue) {
+        var v =  this.dataValue = String(inValue);        
+        var backgroundObj = this.getBackgroundObj(v);
+        var isTransparent = false;
+        if (backgroundObj.gradient && backgroundObj.gradient.match(/radial/)) {
+            this.backgroundChooser.setDataValue("Custom");
+        } else if (backgroundObj.color == "transparent") {
+            isTransparent = true;
+            this.dataValue = "transparent";
+
+        } else if (backgroundObj.gradient) {
+           var gradientObj = this.parseGradient(backgroundObj.gradient);
+           if (gradientObj) {
+                this.backgroundChooser.setDataValue("Color/Gradient");
+                this.gradientEditor.setDataValue(gradientObj);
+            } else {
+                this.backgroundChooser.setDataValue("Custom");
+            }
+        } else if (backgroundObj.url) {
+            this.backgroundChooser.setDataValue("Image");
+            this.urlEditor.setDataValue(backgroundObj.url);
+            this.imageRepeatEditor.setDataValue(backgroundObj.repeat);
+            var x;
+            if (!backgroundObj.positionX || backgroundObj.positionX == "left") {
+                x = "0%";
+            } else if (backgroundObj.positionX == "center") {
+                x = "50%";
+            } else if (backgroundObj.positionX == "right") {
+                x = "100%";
+            } else {
+                x = backgroundObj.positionX;
+            }
+            if (x == "initial") x = "0%";
+            this.horizontalPosEditor.setDataValue(x);
+            
+            var y;
+            if (!backgroundObj.positionY || backgroundObj.positionY == "top") {
+                y = "0%";
+            } else if (backgroundObj.positionY == "center") {
+                y = "50%";
+            } else if (backgroundObj.positionY == "bottom") {
+                y = "100%";
+            } else {
+                y = backgroundObj.positionY;
+            }            
+            if (y == "initial") y = "0%";            
+            this.verticalPosEditor.setDataValue(y);
+        } else if (backgroundObj.color) {
+            this.backgroundChooser.setDataValue("Color/Gradient");        
+            this.colorEditor.setDataValue(backgroundObj.color);
+
+        }
+        this.transparentCheckbox.setChecked(isTransparent);
+        //this.changed();
+    }, 
+    setPartialValue: function(inStyleName, inStyleValue) {
+        if (!inStyleName.match(/^background/i)) return;
+        var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
+    		                  return inLetter.substring(1).toUpperCase();
+    		               });
+        this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
+        this.setDataValue(this.testNode.domNode.style.background);
+    },
+    getEditorValue: function() {
+        return this.dataValue;
+    },
+    changed: function() {
+        var backgroundType = this.backgroundChooser.getDataValue();
+        switch(backgroundType) {
+            case "Color/Gradient":
+                this.colorEditor.setDisabled(this.transparentCheckbox.getChecked());
+                this.gradientEditor.setDisabled(this.transparentCheckbox.getChecked());                
+                this.dataValue = this.getColorDataValue();        
+                this.colorPanel.activate();
+                break;
+            case "Image":
+                this.dataValue = this.getImageDataValue();
+                this.imagePanel.activate();                
+                break;
+            
+            case "Custom":
+                this.customPanel.activate();            
+                break;
+        }
+        if (backgroundType != "Custom") {
+            this.onchange(this.dataValue, this.dataValue);
+        }
+        var l = this.layers.getActiveLayer();
+        l.setBestHeight();
+        this.layers.setHeight(l.height);
+        this.editor.setBestHeight();
+        this.setHeight(this.editor.height);
+        this.parent.setHeight(this.height);
+    },
+    getImageDataValue: function() {
+        var value = this.urlEditor.getDataValue();
+        if (value) value = "url(" + value.replace(/\s*$/,"") + ")";
+        var repeat = this.imageRepeatEditor.getDataValue();
+        if (repeat) value += " " + repeat;
+        value += " " + this.horizontalPosEditor.getDataValue()
+              +  " " + this.verticalPosEditor.getDataValue();
+        return value;            
+    },
+    getColorDataValue: function() {
+        var value = "";
+        if (this.transparentCheckbox.getChecked()) return "transparent";
+        var color = this.colorEditor.getDataValue();
+        if (color) {
+            value += color;
+        }
+        
+        var gradient = this.gradientEditor.getDataValue();
+        if (color && gradient) value += " ";
+        if (gradient) value += this.testNode.domNode.style.backgroundImage;
+        return value;    
+    },
+    onchange: function(inDisplayValue, inDataValue) {},
+    updateCssLine: function(inStyleName, inStyleValue) {
+       
+        /* Ignore styles that don't contain border-.*radius */
+        if (inStyleName.match(/^background/) || inStyleName == "filter" && inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/)) {   
+
+            var backgroundType = this.backgroundChooser.getDataValue();
+            var value = "";
+            if (backgroundType != "Color/Gradient" || this.transparentCheckbox.getChecked()) {
+                value = "background: " + this.getDataValue();
+            } else {
+                if (this.colorEditor.getDataValue()) {
+                    value += "background-color: " + this.colorEditor.getDataValue() + ";";
+                }
+                if (value) value += "\n\t";                
+                if (this.gradientEditor.getDataValue()) {
+                    var styleValue = this.gradientEditor.getDataValue();
+                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
+                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";";
+                } else {
+                    value += "background-image: none;"
+                }
+            }
+            return value;
+        }   
+    }
+    
+});
+dojo.declare("wm.BackgroundEditor3", wm.AbstractEditorContainer, {
     dataValue: "",
     urlPlaceHolder: "",
     height: "24px",

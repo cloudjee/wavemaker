@@ -435,8 +435,13 @@ dojo.declare("wm.Application", wm.Component, {
             if (!wm.defaultPrototypeValues[declaredClass]) {
                 wm.defaultPrototypeValues[declaredClass] = {};
                 wm.forEachProperty(p, function(inValue, inName) {
-                    wm.defaultPrototypeValues[declaredClass][inName] = inValue;
-                });            
+                    if (typeof inValue != "function") {
+                        wm.defaultPrototypeValues[declaredClass][inName] = inValue;
+                    }
+                });
+                if ("desktopHeight" in wm.defaultPrototypeValues[declaredClass] === false) {
+                     wm.defaultPrototypeValues[declaredClass].desktopHeight = undefined;
+                }
             }
         
 
@@ -449,26 +454,19 @@ dojo.declare("wm.Application", wm.Component, {
                     if (optionalWidget) optionalWidget[inName] = inValue;
                 });
             }
-        }
-
-
-        // make all changes need for this theme for this class
-        if (wm.Application.themePrototypeData[declaredClass] != this.theme && ctorData) {
-            for (var j in ctorData) {
-                p[j] = ctorData[j];
-                if (optionalWidget) {
-                    optionalWidget[j] = ctorData[j];
-                }
+            
+             // make all changes need for this theme for this class
+            if (wm.Application.themePrototypeData[declaredClass] != this.theme && ctorData) {                
+                wm.Application.themePrototypeData[declaredClass] = this.theme;            
             }
-            wm.Application.themePrototypeData[declaredClass] = this.theme;            
-        }
 
+        }
 
         /* Localization of default properties */
         if (wm.locale.props) {
             dojo.mixin(ctorData,wm.locale.props[declaredClass]);
         }
-        if (ctorData) {
+        if (wm.Application.themePrototypeData[declaredClass] != this.theme && ctorData) {
             for (var j in ctorData) {
                 ctor.prototype[j] = ctorData[j];
                 if (optionalWidget) optionalWidget[j] = ctorData[j];
