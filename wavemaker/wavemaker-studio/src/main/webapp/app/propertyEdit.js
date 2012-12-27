@@ -3317,7 +3317,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             owner: this,
             parent: e,
             width: "140px",
-            margin: "0,20,0,0",
+            margin: "0,10,0,0",
             padding: "0",
             options: "Color/Gradient,Image,Custom",
             onchange: dojo.hitch(this, "changed")
