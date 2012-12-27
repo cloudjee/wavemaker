@@ -408,7 +408,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         inSender.selectedItem.getValue("classList").forEach(function(inItem) {
             currentClassList.push(inItem.getValue("dataValue"));
         });
-        this.editorPanelHeader.setCaption(currentClassList.join(", "));
+        this.editorPanelHeader.setCaption(this.currentWidgetName);
 
 
         /* Step 2: Load the css file and the sample file and apply it to the demo panel */
