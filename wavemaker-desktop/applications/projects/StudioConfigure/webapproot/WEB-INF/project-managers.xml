@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <bean scope="singleton" parent="typeManagerBase" class="com.wavemaker.runtime.service.TypeManager" id="typeManager">
+<beans xsi:schemaLocation="http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean class="com.wavemaker.runtime.service.TypeManager" parent="typeManagerBase" scope="singleton" id="typeManager">
         <property name="types">
             <map merge="true">
-                <entry key="runtimeService">
+                <entry key="InstallService">
                     <list>
-                        <value>com.wavemaker.runtime.service.PagingOptions</value>
-                        <value>com.wavemaker.runtime.service.PropertyOptions</value>
+                        <value>java.io.File</value>
+                        <value>com.wavemaker.runtime.server.FileUploadResponse</value>
+                        <value>org.springframework.web.multipart.MultipartFile</value>
                     </list>
                 </entry>
             </map>

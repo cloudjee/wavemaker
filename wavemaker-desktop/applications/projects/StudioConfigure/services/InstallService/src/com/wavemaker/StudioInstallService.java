@@ -77,14 +77,14 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
           if (!outputFile.exists())
             throw new IOException("Insufficient permissions to save zip file");
           File zipFolder = unzipFile(outputFile);
-            moveFiles(zipFolder, outputFile);
+            moveFiles(zipFolder, outputFile); 
     }
     private void moveFiles(File zipFolder, File zipFile) throws Exception {
          File versionFile = new File(zipFolder, "version.txt");         
          if (!versionFile.exists())
             throw new IOException("This repo.zip file does not contain the correct version information.");
          String s = IOUtils.read(versionFile);
-         if (s.indexOf("6.5.1") != 0)
+         if (s.indexOf("6.5.2") != 0)
             throw new IOException("This repo.zip file is from the wrong version of studio");
          File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 

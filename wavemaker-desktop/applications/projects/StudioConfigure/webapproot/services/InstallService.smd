@@ -1,14 +1,28 @@
 {
 	"methods": [{
 		"name": "DownloadPackages",
+		"operationType": null,
 		"parameters": null,
 		"returnType": null
 	}, {
+		"name": "moveFiles",
+		"operationType": null,
+		"parameters": [{
+			"name": "zipFolder",
+			"type": "java.io.File"
+		}, {
+			"name": "zipFile",
+			"type": "java.io.File"
+		}],
+		"returnType": null
+	}, {
 		"name": "restartStudioApp",
+		"operationType": null,
 		"parameters": null,
 		"returnType": null
 	}, {
 		"name": "unzipFile",
+		"operationType": null,
 		"parameters": [{
 			"name": "zipfile",
 			"type": "java.io.File"
@@ -16,6 +30,7 @@
 		"returnType": "java.io.File"
 	}, {
 		"name": "uploadPackage",
+		"operationType": null,
 		"parameters": [{
 			"name": "file",
 			"type": "org.springframework.web.multipart.MultipartFile"

@@ -12,9 +12,9 @@ wm.types = {
 			"internal": true,
 			"primitiveType": "String"
 		},
-		"com.wavemaker.runtime.service.PagingOptions": {
+		"com.wavemaker.runtime.server.FileUploadResponse": {
 			"fields": {
-				"firstResult": {
+				"error": {
 					"exclude": [],
 					"fieldOrder": 0,
 					"fieldSubType": null,
@@ -22,9 +22,9 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": true,
-					"type": "java.lang.Long"
+					"type": "java.lang.String"
 				},
-				"maxResults": {
+				"height": {
 					"exclude": [],
 					"fieldOrder": 1,
 					"fieldSubType": null,
@@ -32,49 +32,32 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": true,
-					"type": "java.lang.Long"
+					"type": "java.lang.String"
 				},
-				"orderBy": {
+				"path": {
 					"exclude": [],
 					"fieldOrder": 2,
 					"fieldSubType": null,
 					"include": [],
-					"isList": true,
+					"isList": false,
 					"noChange": [],
 					"required": true,
 					"type": "java.lang.String"
-				}
-			},
-			"internal": true,
-			"liveService": false,
-			"service": "runtimeService"
-		},
-		"com.wavemaker.runtime.service.PropertyOptions": {
-			"fields": {
-				"filters": {
-					"exclude": [],
-					"fieldOrder": 1,
-					"fieldSubType": null,
-					"include": [],
-					"isList": true,
-					"noChange": [],
-					"required": true,
-					"type": "com.wavemaker.runtime.service.Filter"
 				},
-				"properties": {
+				"width": {
 					"exclude": [],
-					"fieldOrder": 0,
+					"fieldOrder": 3,
 					"fieldSubType": null,
 					"include": [],
-					"isList": true,
+					"isList": false,
 					"noChange": [],
 					"required": true,
 					"type": "java.lang.String"
 				}
 			},
-			"internal": true,
+			"internal": false,
 			"liveService": false,
-			"service": "runtimeService"
+			"service": "InstallService"
 		},
 		"double": {
 			"internal": true,
@@ -87,6 +70,213 @@ wm.types = {
 		"int": {
 			"internal": true,
 			"primitiveType": "Number"
+		},
+		"java.io.File": {
+			"fields": {
+				"absolute": {
+					"exclude": [],
+					"fieldOrder": 12,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				},
+				"absoluteFile": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.io.File"
+				},
+				"absolutePath": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"canonicalFile": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.io.File"
+				},
+				"canonicalPath": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"directory": {
+					"exclude": [],
+					"fieldOrder": 13,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				},
+				"executable": {
+					"exclude": [],
+					"fieldOrder": 16,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				},
+				"file": {
+					"exclude": [],
+					"fieldOrder": 14,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				},
+				"freeSpace": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "long"
+				},
+				"hidden": {
+					"exclude": [],
+					"fieldOrder": 15,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				},
+				"lastModified": {
+					"exclude": [],
+					"fieldOrder": 17,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "long"
+				},
+				"name": {
+					"exclude": [],
+					"fieldOrder": 5,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"parent": {
+					"exclude": [],
+					"fieldOrder": 6,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"parentFile": {
+					"exclude": [],
+					"fieldOrder": 7,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.io.File"
+				},
+				"path": {
+					"exclude": [],
+					"fieldOrder": 8,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"prefixLength": {
+					"exclude": [],
+					"fieldOrder": 9,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "int"
+				},
+				"readable": {
+					"exclude": [],
+					"fieldOrder": 18,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				},
+				"totalSpace": {
+					"exclude": [],
+					"fieldOrder": 10,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "long"
+				},
+				"usableSpace": {
+					"exclude": [],
+					"fieldOrder": 11,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "long"
+				},
+				"writable": {
+					"exclude": [],
+					"fieldOrder": 19,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "boolean"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "InstallService"
 		},
 		"java.lang.Boolean": {
 			"internal": false,
@@ -155,6 +345,43 @@ wm.types = {
 		"long": {
 			"internal": true,
 			"primitiveType": "Number"
+		},
+		"org.springframework.web.multipart.MultipartFile": {
+			"fields": {
+				"bytes": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": true,
+					"noChange": [],
+					"required": true,
+					"type": "byte"
+				},
+				"contentType": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"inputStream": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.io.InputStream"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "InstallService"
 		},
 		"short": {
 			"internal": true,
