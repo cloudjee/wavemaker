@@ -724,6 +724,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         e.connect(e, "onchange", dojo.hitch(this, "onPrototypeEditorChange", p, e));
     },
     onPrototypeEditorChange: function( inPropName, editor, inDisplayValue, inDataValue) {
+        if (!editor.isValid()) return;
         studio._themeDesignerChange = true;
         studio._reflowPageDesigner = true;
         studio.application.cacheWidgets();
@@ -873,7 +874,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.demoPanelWithAppRoot.owner = this;
     },
     regenerateDemoPanel: function() {
-        studio.beginWait("Loading...");
         wm.onidle(this, function() {
             this.demoPanelWithAppRoot.removeAllControls();
             this.demoPanel = this.demoPanelWithAppRoot.createComponents({
@@ -895,7 +895,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }
             
             this.demoPanelWithAppRoot.reflow();
-            studio.endWait();
         });
     },
     /* END SECTION: Managing the Demo Panel */
