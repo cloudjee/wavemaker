@@ -70,7 +70,7 @@
     <security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="dummy" password="dummy" authorities="dummy" />
+				<security:user name="dummy" password="dummy" authorities="ROLE_dummy" />
 			</security:user-service>	
 		</security:authentication-provider>	
 	</security:authentication-manager>
@@ -79,9 +79,9 @@
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="admin" password="admin"
-					authorities="admin,user" />
+					authorities="ROLE_admin" />
 				<security:user name="user" password="user"
-					authorities="user" />
+					authorities="ROLE_user" />
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
@@ -130,21 +130,18 @@
         </property>
     </bean>
 
-    <security:authentication-manager id="authenticationManagerLDAPwithDB" alias="authenticationManagerLDAPwithDB">
-        <security:authentication-provider ref="ldapAuthProvider"/>
-    </security:authentication-manager>
-	
 	<security:ldap-server url="ldap://localhost:389/dc=wavemaker,dc=vmware,dc=com"/>
 	 
     <security:authentication-manager id="authenticationManagerLDAP" alias="authenticationManagerLDAP">
         <security:ldap-authentication-provider user-search-filter="(cn={0})" role-prefix="ROLE_"/>
     </security:authentication-manager>
-	
+
+    <security:authentication-manager id="authenticationManagerLDAPwithDB" alias="authenticationManagerLDAPwithDB">
+        <security:authentication-provider ref="ldapAuthProvider"/>
+    </security:authentication-manager>	
 	
     <bean class="org.springframework.security.ldap.DefaultSpringSecurityContextSource" id="contextSource">
         <constructor-arg value="ldap://localhost:389/dc=wavemaker,dc=vmware,dc=com"/>
-        <property name="userDn" value="cn=admin,dc=wavemaker,dc=vmware,dc=com"/>
-        <property name="password" value="secret"/>
     </bean>
     <bean class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider" id="ldapAuthProvider">
         <constructor-arg>

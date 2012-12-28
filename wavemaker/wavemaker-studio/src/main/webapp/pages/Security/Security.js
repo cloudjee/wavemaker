@@ -141,22 +141,19 @@ dojo.declare(
         },
         resetLDAPInputs : function() {
             this.ldapUrlInput.setDataValue("ldap://localhost:389/dc=wavemaker,dc=com");
-            this.ldapManagerDnInput.setDataValue("cn=manager,dc=wavemaker,dc=com");
-            this.ldapManagerPasswordInput.setDataValue("manager");
+            this.ldapManagerDnInput.setDataValue("");
+            this.ldapManagerPasswordInput.setDataValue("");
             this.ldapUserDnPatternInput.setDataValue("cn={0},ou=people");
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapGroupSearchBaseInput.setDataValue("ou=groups");
             this.ldapGroupRoleAttributeInput.setDataValue("cn");
-            this.ldapGroupSearchFilterInput.setDataValue("(member={0})");
+            this.ldapGroupSearchFilterInput.setDataValue("(uniqueMember={0})");
             this.ldapConnectionResultLabel.setCaption("");
             // Added by Girish
             this.clearSelectInput(this.ldapRoleDbDataModelInput);
             this.clearSelectInput(this.ldapRoleDbEntityInput);
             this.clearSelectInput(this.ldapRoleDbRoleInput);
             this.clearSelectInput(this.ldapRoleDbUsernameInput);
-        },
-        resetJOSSOInputs : function() {
-            // TODO
         },
         secProviderInputChange : function(inSender, inValue) {
             if (inValue == "Demo") {
@@ -596,7 +593,7 @@ dojo.declare(
             this.setDirty();
         },
         ldapRoleProviderInputChange : function(inSender, inDisplayValue, inDataValue) {
-            this.ldapRoleLdapPanel.setShowing(inDataValue == "LDAP");
+            this.ldapRoleLdapPanel.setShowing(inDataValue == "LDAP" && this.ldapSearchRoleCheckbox.getDataValue());
             this.ldapRoleDBPanel.setShowing(inDataValue == "Database");
         },
         ldapConnectionButtonClick : function(inSender) {

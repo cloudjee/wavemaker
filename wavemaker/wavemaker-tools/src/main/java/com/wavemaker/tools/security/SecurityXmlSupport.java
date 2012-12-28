@@ -201,12 +201,15 @@ public class SecurityXmlSupport {
 		authMan.setRef(alias);		
 	}
 
-	public static void setLdapProviderProps(Beans beans, String userDnPattern, String groupSearchBase, String groupRoleAttribute, String groupSearchFilter){
+	public static void setLdapProviderProps(Beans beans, boolean groupSearchDisabled, String userDnPattern, String groupSearchBase, String groupRoleAttribute, String groupSearchFilter){
 		AuthenticationManager.LdapAuthenticationProvider ldapAuthProvider = getLdapAuthProvider(beans);
-		//ldapAuthProvider.setUserDnPattern(userDnPattern);
-		//ldapAuthProvider.setGroupSearchBase(groupSearchBase);
-		ldapAuthProvider.setGroupSearchFilter(groupSearchFilter);
-		} 
+		ldapAuthProvider.setUserSearchFilter("(" + userDnPattern + ")");
+		if(!groupSearchDisabled){
+			ldapAuthProvider.setGroupSearchBase(groupSearchBase);
+			ldapAuthProvider.setGroupSearchFilter(groupSearchFilter);
+			ldapAuthProvider.setGroupRoleAttribute(groupRoleAttribute);			
+		}
+	} 
 	
     static LdapServer getLdapServer(Beans beans){
         List<Object> importOrAliasOrBeanList = beans.getImportsAndAliasAndBean();

@@ -339,7 +339,8 @@ public class SecurityToolsManager {
         //sets manager. non-manager test connection would be better.
         //SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
         
-        SecuritySpringSupport.updateLDAAuthProvider(beans, "", userDnPattern, groupSearchDisabled, groupSearchBase,
+        //Passing empty string for SearchBase
+        SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, "", userDnPattern, groupSearchDisabled, groupSearchBase,
             groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
         saveSecuritySpringBeans(beans);

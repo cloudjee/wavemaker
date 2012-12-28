@@ -24,7 +24,6 @@ WAIT_TEST_LDAP: "Testing LDAP Connection...",
 TEST_LDAP_MESSAGE_SUCCESS: "Connection Successful.",
 
 ALERT_ROLE_EXISTS: "Role already exists, please type in another one!",
-ALERT_JOSSO_ONLY_ONE_ROLE: "JOSSO only allows one role.  Delete existing role before entering new one.",
 ALERT_NO_SECURITY_PROVIDER: "No Security Provider selected",
 ALERT_NO_ROLE_PROVIDER: "User Role is checked, but no User Role Provider selected",
 ALERT_ROLE_EMPTY: "Role field cannot be empty!",
@@ -42,7 +41,5 @@ WARN_NO_SERVICES: "No Project Services Found",
     SERVICE_TITLE_AND_NAME: "Service <b>${serviceName}</b> Settings",
     SERVICE_TITLE: "Service Settings",
     SERVICE_DEFAULT_SETTING: "Default",
-    SERVICE_DATABASE_SERVICES_NAME: "Database Services",
-
-    ALERT_JOSSO_ONE_ROLE: "JOSSO Setup requires there to be one role setup"
+    SERVICE_DATABASE_SERVICES_NAME: "Database Services"
 }
