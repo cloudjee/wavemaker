@@ -453,13 +453,7 @@ dojo.declare("wm.Application", wm.Component, {
                     p[inName] = inValue;                    
                     if (optionalWidget) optionalWidget[inName] = inValue;
                 });
-            }
-            
-             // make all changes need for this theme for this class
-            if (wm.Application.themePrototypeData[declaredClass] != this.theme && ctorData) {                
-                wm.Application.themePrototypeData[declaredClass] = this.theme;            
-            }
-
+            }                        
         }
 
         /* Localization of default properties */
@@ -471,6 +465,7 @@ dojo.declare("wm.Application", wm.Component, {
                 ctor.prototype[j] = ctorData[j];
                 if (optionalWidget) optionalWidget[j] = ctorData[j];
             }
+            wm.Application.themePrototypeData[declaredClass] = this.theme;            
         } /* End localization of default properties */
 
     },
