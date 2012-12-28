@@ -47,7 +47,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         {dataValue: "wm.Date"},
                         {dataValue: "wm.CheckboxSet"},
                         {dataValue: "wm.RadioSet"},
-                        {dataValue: "wm.ListSet"}
+                        {dataValue: "wm.ListSet"},
+                        {dataValue: "wm.Slider"}                        
                     ]
         },
         {
@@ -714,12 +715,30 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     break;
         case "width":
         case "height":        
-        case "mobileHeight":        
-        case "desktopHeight":                
-                    e = new wm.prop.SizeEditor(props);
-                    break;
+        case "mobileHeight":
+        case "desktopHeight":
+        case "captionSize":        
+        case "buttonBarHeight":
+            if (p == "desktopHeight" || p == "mobileHeight" && props.dataValue === undefined) {
+                props.dataValue = this.themePrototype[inClassName].height || ctor.prototype.height;
+            }
+            e = new wm.prop.SizeEditor(props);
+            break;
+        case "captionPosition":
+            props.options = "left,top,right,bottom";
+            e = new wm.SelectMenu(props);
+            break;
+        case "captionAlign":
+            props.options = "left,center,right";
+            e = new wm.SelectMenu(props);
+            break;            
         default:
-                    e = new wm.Text(props);
+            if (typeof props.dataValue == "boolean") {
+                e = new wm.Checkbox(props);
+                e.setChecked(props.dataValue);
+            } else {
+                e = new wm.Text(props);
+            }
         }
         e.connect(e, "onchange", dojo.hitch(this, "onPrototypeEditorChange", p, e));
     },
@@ -891,6 +910,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     this.demoPanel.c$[0].setDataSet(this.sampleDataSet);
                     this.demoPanel.c$[1].setDataSet(this.sampleDataSet);                
                     this.demoPanel.c$[2].setDataSet(this.sampleDataSet);                                
+                    break;
+                case "dialogs":
+                    var parent = this.demoPanel.c$[0].buttonBar;
+                    new wm.Button({owner: parent, parent: parent, caption: "OK"});
+                    new wm.Button({owner: parent, parent: parent, caption: "Cancel"});                    
+
                     break;
             }
             

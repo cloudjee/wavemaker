@@ -135,6 +135,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     titleBarButtonsOnRight: false,
     footerBorder: "1,0,0,0",
     containerPadding: "5",
+    buttonBarHeight: "32px",
 /*
 	contentWidth: 640,
 	contentHeight: 400,
@@ -314,7 +315,7 @@ dojo.declare("wm.Dialog", wm.Container, {
             mobileHeight: wm.Button.prototype.mobileHeight,
             enableTouchHeight: true,
             horizontalAlign: "right",
-            verticalAlign: "top",
+            verticalAlign: "justified", // let the height of this panel manage the height of its contents (typically that means buttons; if anything else, this setting is a problem)
             layoutKind: "left-to-right",
             border: this.footerBorder,
             borderColor: this.titlebarBorderColor
