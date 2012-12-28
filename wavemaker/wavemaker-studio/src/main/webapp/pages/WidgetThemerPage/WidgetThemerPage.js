@@ -8,6 +8,8 @@
 
 dojo.declare("WidgetThemerPage", wm.Page, {
     "preferredDevice": "desktop",
+    editorMargin: 20,
+    defaultEditorWidth: 200,
     defaultEditorProps: {
         _classes: {domNode: ["StudioEditor"]},
         width: "100%",
@@ -76,6 +78,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             
         },
         {
+            name: "Dialog Button Bars",
+            templateFile: "dialogbuttonbar",
+            classList: [{dataValue: "wm.ButtonBarPanel"}]
+            
+        },        
+        {
             name: "Grids",
             templateFile: "grid",
             classList: [{dataValue: "wm.DojoGrid"},
@@ -106,11 +114,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Calendar",
             templateFile: "calendar",
             classList: [{dataValue: "wm.dijit.Calendar"}]            
-        },
-        {
-            name: "Main Content Panel",
-            templateFile: "panels",
-            classList: [{dataValue: "wm.MainContentPanel"}]            
         }
     ],
 
@@ -125,12 +128,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 		"width": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],		
 		"height": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],				
 		"color": ["wm.ColorPicker", {caption: "font color"}],
-		"border": ["wm.BorderEditor", {caption: "border"}],		
+		"border": ["wm.BorderEditor", {caption: "border", width: "100%"}],		
 		"outline": ["wm.BorderEditor", {caption: "outline"}],				
 		"font-weight": ["wm.SelectMenu", {options: "normal,bold"}],
 		"border-radius":["wm.BorderRadiusEditor", {caption: "border-radius"}],
-		"box-shadow":   ["wm.BoxShadowEditor", {caption: "box-shadow"}],
-		"background": ["wm.BackgroundEditor", {caption: "background"}]
+		"box-shadow":   ["wm.BoxShadowEditor", {caption: "box-shadow", width: "100%"}],
+		"background": ["wm.BackgroundEditor", {caption: "background", width: "100%"}]
 
 	},
     /* If the style name is not in the styleRules object, then check directly in the styleEditors object.
@@ -366,6 +369,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
             })
+        ).then(        
+            dojo.hitch(this, function() {
+                /* Write button.css as that identifies this theme folder as one created by this theme designer */
+                var buttonCss = wm.load(dojo.moduleUrl("wm.studio.app.templates.widgetthemes") + "button.css").replace(/\.wm_template/g, "." + inThemeName);
+                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/button.css", buttonCss]);
+            })
         ).then(
             dojo.hitch(this, function() {
                 return studio.loadThemeList();
@@ -486,19 +495,19 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (!editorExists) {  
             if (!styleEditorDef) styleEditorDef = this.styleEditors["default"];
             styleEditorDef = dojo.clone(styleEditorDef);
-            
+            if (!styleEditorDef[1].width) styleEditorDef[1].width = this.defaultEditorWidth + "px";
             if (styleEditorDef[0] == "wm.BackgroundEditor") {
                 styleEditorDef[1].urlPlaceHolder = wm.dojoModuleToPath(this.currentTheme + ".images") + "/example.png";
             }
             
-            dojo.mixin(styleEditorDef[1], this.defaultEditorProps);
+            styleEditorDef[1] = dojo.mixin({}, this.defaultEditorProps,styleEditorDef[1]);
             var caption = styleEditorDef[1] && styleEditorDef[1].caption || styleName;            
             styleEditorDef[1].caption = "";
             
             var ctor = dojo.getObject(styleEditorDef[0]);
             var defaultHeight = ctor ? ctor.prototype.height : "24px";
             var p = parent.createComponents({
-                panel: ["wm.Panel", {width: "100%", height: defaultHeight, padding: "0", margin: "0,0,0,20",
+                panel: ["wm.Panel", {width: "100%", height: defaultHeight, padding: "0", margin: "0,0,0," + this.editorMargin,
                                      layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
                                 label: ["wm.Label", {width: "120px", caption:  caption}],
                                 checkbox: ["wm.Checkbox", {width: "16px", startChecked: styleValue && styleValue != "inherit" && styleValue != "initial"}],
@@ -685,7 +694,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                   width: "100%",
                   height: "24px",
                   parent: this.editorPanel,
-                  owner: this
+                  owner: this,
+                  _classes: {domNode: ["SubHeading"]}
             });
             dojo.forEach(editableProps, dojo.hitch(this, "generatePrototypeEditor", inClassName, ctor));
         }
@@ -698,6 +708,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             parent: this.editorPanel,
             name: p
         }, this.defaultEditorProps);
+        props.width = this.defaultEditorWidth + parseInt(props.captionSize) + "px";
+        props.margin = "0,0,0," + this.editorMargin;
         var e;
         switch(p) {
         case "borderColor":
@@ -719,7 +731,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         case "desktopHeight":
         case "captionSize":        
         case "buttonBarHeight":
-            if (p == "desktopHeight" || p == "mobileHeight" && props.dataValue === undefined) {
+            if ((p == "desktopHeight" || p == "mobileHeight") && props.dataValue === undefined) {
                 props.dataValue = this.themePrototype[inClassName].height || ctor.prototype.height;
             }
             e = new wm.prop.SizeEditor(props);
@@ -731,7 +743,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         case "captionAlign":
             props.options = "left,center,right";
             e = new wm.SelectMenu(props);
-            break;            
+            break;                                              
         default:
             if (typeof props.dataValue == "boolean") {
                 e = new wm.Checkbox(props);
@@ -912,6 +924,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     this.demoPanel.c$[2].setDataSet(this.sampleDataSet);                                
                     break;
                 case "dialogs":
+                case "dialogbuttonbar":                
                     var parent = this.demoPanel.c$[0].buttonBar;
                     new wm.Button({owner: parent, parent: parent, caption: "OK"});
                     new wm.Button({owner: parent, parent: parent, caption: "Cancel"});                    

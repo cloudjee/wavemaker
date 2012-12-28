@@ -1,0 +1,7 @@
+{
+   dialog1: ["wm.DesignableDialog", {width: "100%", margin: "10", height: "300px", title: "This is a dialog", modal: false,docked:true,showTitleButtonsWhenDocked:true, useButtonBar:true,fitToContentHeight:1}, {}, {
+   	containerWidget: ["wm.Panel", { width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "right"},{}, {
+	        label1: ["wm.Label", {caption: "Label in a dialog", width: "100%"}],
+	}]
+   }]
+}

@@ -169,3 +169,25 @@
     background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
     outline-width: 0;
 }
+
+/* GROUP: Slider Bar Progress */
+.wm_template .dijitSlider .dijitSliderProgressBarH,
+.wm_template .dijitSlider .dijitSliderLeftBumper,
+.wm_template .dijitSliderFocused.dijitSlider .dijitSliderProgressBarH,
+.wm_template .dijitSliderFocused.dijitSlider .dijitSliderLeftBumper {
+		background-color: white;
+		background-image: -webkit-gradient(linear, center top, center bottom, from(#0101b7), color-stop(48%,#011d65), to(#011d65));
+		background-image: -moz-linear-gradient(top, #0101b7 0%,#011d65 48%,#011d65 100%);
+		background-image: -o-linear-gradient(top, #0101b7 0%,#011d65 48%,#011d65 100%);
+		background-image: -ms-linear-gradient(top, #0101b7 0%,#011d65 48%,#011d65 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0101b7', endColorstr='#011d65',GradientType=0);
+}
+
+/* GROUP: Slider Bar Remainder */
+.wm_template .dijitSlider .dijitSliderRemainingBarH,
+.wm_template .dijitSlider .dijitSliderRightBumper,
+.wm_template .dijitSliderFocused.dijitSlider .dijitSliderRemainingBarH,
+.wm_template .dijitSliderFocused.dijitSlider .dijitSliderRightBumper {
+		background-color: #5c5252;
+		background-image: none;
+}    

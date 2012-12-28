@@ -171,7 +171,7 @@ dojo.declare(
 						dataValue:this.dataValue || {direction: "vertical",
 							      startColor: "#0101b7",
 							      endColor: "#011d65",
-									     colorStop: "20"},
+									     colorStop: "50"},
 					     destroyRecursive: function() {if (!this.isDestroyed) this.destroy();} // this === this.dropDown
 					    })
 	    } else {

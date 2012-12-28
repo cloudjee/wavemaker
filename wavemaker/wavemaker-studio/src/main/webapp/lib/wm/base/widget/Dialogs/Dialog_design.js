@@ -344,3 +344,8 @@ wm.Object.extendSchema(wm.LoadingDialog, {
     footerBorderColor: {ignore: 1},
     onEnterKeyPress: {ignore: 1}
 });
+
+wm.ButtonBarPanel.extend({
+    themeableProps: ["padding"],
+    _regenerateOnDeviceChange:true
+});

@@ -37,12 +37,12 @@ WidgetThemerPage.widgets = {
 			    }]
 			}],
 			codeToggleLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, align: "right", caption: "View:",width: "80px", height: "100%"}],
-		    codeTogglePanel: ["wm.ToggleButtonPanel", {width: "140px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, {
+		    codeTogglePanel: ["wm.ToggleButtonPanel", {width: "180px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":undefined,"source":"stylesToggleButton","targetProperty":"currentButton"}, {}]
         		}],
-				stylesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Styles", border: "0,1,0,0"}, {onclick: "editorLayer"}],		    
-				codeToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Code", border: "0,1,0,0"}, {onclick: "cssLayer"}]				
+				stylesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "80px", height: "100%", margin: "0", caption: "Styles", border: "0,1,0,0"}, {onclick: "editorLayer"}],		    
+				codeToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100px", height: "100%", margin: "0", caption: "Source Code", border: "0,1,0,0"}, {onclick: "cssLayer"}]				
 		    }]/*,
    			deviceToggleLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, align: "right", caption: "Device:",width: "80px", height: "100%"}],
 		    deviceTogglePanel: ["wm.ToggleButtonPanel", {width: "250px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {onChange: "deviceChange"}, {
@@ -72,12 +72,13 @@ WidgetThemerPage.widgets = {
 			tabs:["wm.Layers", {_classes: {domNode: ["StudioTabs"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 			    editorLayer: ["wm.Layer", {caption: "Editors"},{onShow: "onGeneratedLayerShow"}, {
     				editorPanelHeader: ["wm.Label", {width: "100%", _classes: {domNode: ["Header"]}}],
-    				editorPanel: ["wm.Panel", {autoScroll:true,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{	}],
+    				editorPanel: ["wm.Panel", {autoScroll:true,minWidth:500,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{	}],
     			}],
 				cssLayer: ["wm.Layer", {caption: "Code"},{onShow: "onCssLayerShow"}, {
 				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"},{onChange: "editAreaChange"}]
 				}] 				
     		}],
+    		splitter1: ["wm.Splitter", {}],
 			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"500px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 				demoPanelHeader: ["wm.Label", {width: "100%", caption: "Samples", _classes: {domNode: ["Header"]}}],
 				demoPanelWithThemeName: ["wm.Panel", { height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {

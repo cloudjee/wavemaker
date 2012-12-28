@@ -1752,16 +1752,23 @@ dojo.declare("Studio", wm.Page, {
         studio.page._loadingPage = true;
         var regenerated = false;
         var panels = [studio.page.root];
+        var showingDialogs = [];
         wm.forEachProperty(studio.page.$, function(inComponent) {
-            if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+            if (inComponent instanceof wm.DesignableDialog) {
+                if (inComponent.containerWidget) panels.push(inComponent.containerWidget);
+                if (inComponent.buttonBar) panels.push(inComponent.buttonBar);                
+            }
             if (inComponent instanceof wm.Dialog) {
+                if (inComponent.showing) showingDialogs.push(inComponent);
                 if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
                 if (inComponent.titleBar) inComponent.titleBar.resetDesignHeight();
             }
         });
         wm.forEachProperty(studio.application.$, function(inComponent) {
-            if (inComponent instanceof wm.DesignableDialog) panels.push(inComponent.containerWidget);
+            if (inComponent.containerWidget) panels.push(inComponent.containerWidget);
+            if (inComponent.buttonBar) panels.push(inComponent.buttonBar);                
             if (inComponent instanceof wm.Dialog) {
+                if (inComponent.showing) showingDialogs.push(inComponent);
                 if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
                 if (inComponent.titleBar) inComponent.titleBar.resetDesignHeight();
             }
@@ -1780,6 +1787,13 @@ dojo.declare("Studio", wm.Page, {
             }, false);
             if (panel.parent && panel.parent instanceof wm.Dialog) panel.parent.reflow();
         });
+        dojo.forEach(showingDialogs, function(w) {
+            wm.onidle(this, function() {
+                w.renderBounds();
+                w.reflow();
+            });
+        });
+
         studio.page._loadingPage = false;
         return regenerated;
     },
