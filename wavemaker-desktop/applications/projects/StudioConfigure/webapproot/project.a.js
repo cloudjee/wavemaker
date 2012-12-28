@@ -187,7 +187,7 @@ wm.JsonRpcService.smdCache['runtimeService.smd'] = {
 	"serviceType": "JSON-RPC",
 	"serviceURL": "runtimeService.json"
 };
-wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
+wm.JsonRpcService.smdCache['waveMakerService.smd'] = {
 	"methods": [{
 		"name": "echo",
 		"operationType": null,
@@ -203,56 +203,36 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 		}],
 		"returnType": "com.wavemaker.runtime.server.DownloadResponse"
 	}, {
-		"name": "getInternalRuntime",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.server.InternalRuntime"
-	}, {
 		"name": "getLocalHostIP",
 		"operationType": null,
 		"parameters": null,
 		"returnType": "java.lang.String"
-	}, {
-		"name": "getRuntimeAccess",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.RuntimeAccess"
 	}, {
 		"name": "getServerTimeOffset",
 		"operationType": null,
 		"parameters": null,
 		"returnType": "int"
 	}, {
-		"name": "getServiceEventNotifier",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.service.events.ServiceEventNotifier"
-	}, {
-		"name": "getServiceManager",
-		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.service.ServiceManager"
-	}, {
-		"name": "getServiceWire",
-		"operationType": null,
-		"parameters": [{
-			"name": "serviceName",
-			"type": "java.lang.String"
-		}, {
-			"name": "typeName",
-			"type": "java.lang.String"
-		}],
-		"returnType": "com.wavemaker.runtime.service.ServiceWire"
-	}, {
 		"name": "getSessionId",
 		"operationType": null,
 		"parameters": null,
 		"returnType": "java.lang.String"
 	}, {
-		"name": "getTypeManager",
+		"name": "hostToDomain",
 		"operationType": null,
-		"parameters": null,
-		"returnType": "com.wavemaker.runtime.service.TypeManager"
+		"parameters": [{
+			"name": "host",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.String"
+	}, {
+		"name": "proxyCheck",
+		"operationType": null,
+		"parameters": [{
+			"name": "remoteURL",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
 	}, {
 		"name": "remoteRESTCall",
 		"operationType": null,
@@ -267,46 +247,6 @@ wm.JsonRpcService.smdCache['wavemakerService.smd'] = {
 			"type": "java.lang.String"
 		}],
 		"returnType": "java.lang.String"
-	}, {
-		"name": "setInternalRuntime",
-		"operationType": null,
-		"parameters": [{
-			"name": "internalRuntime",
-			"type": "com.wavemaker.runtime.server.InternalRuntime"
-		}],
-		"returnType": null
-	}, {
-		"name": "setRuntimeAccess",
-		"operationType": null,
-		"parameters": [{
-			"name": "runtimeAccess",
-			"type": "com.wavemaker.runtime.RuntimeAccess"
-		}],
-		"returnType": null
-	}, {
-		"name": "setServiceEventNotifier",
-		"operationType": null,
-		"parameters": [{
-			"name": "serviceEventNotifier",
-			"type": "com.wavemaker.runtime.service.events.ServiceEventNotifier"
-		}],
-		"returnType": null
-	}, {
-		"name": "setServiceManager",
-		"operationType": null,
-		"parameters": [{
-			"name": "serviceManager",
-			"type": "com.wavemaker.runtime.service.ServiceManager"
-		}],
-		"returnType": null
-	}, {
-		"name": "setTypeManager",
-		"operationType": null,
-		"parameters": [{
-			"name": "typeManager",
-			"type": "com.wavemaker.runtime.service.TypeManager"
-		}],
-		"returnType": null
 	}],
 	"serviceType": "JSON-RPC",
 	"serviceURL": "waveMakerService.json"
@@ -490,9 +430,8 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"phoneMain": "", 
 	"projectSubVersion": 139, 
 	"projectVersion": 1, 
-	"saveCounter": 47, 
 	"showIOSPhoneGapBackButton": false, 
-	"studioVersion": "6.5.0.M4", 
+	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 
 	"theme": "wm_studio", 
 	"toastPosition": "br", 

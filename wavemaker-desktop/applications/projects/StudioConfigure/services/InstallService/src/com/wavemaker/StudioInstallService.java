@@ -105,9 +105,9 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate3.jar").getAbsolutePath());
          }
          
-         File jtds = new File(zipFolder, "jtds-1.2.1.jar");
-         if (!jtds.renameTo(new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.1.jar"))) {
-                         System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.1.jar").getAbsolutePath());
+         File jtds = new File(zipFolder, "jtds-1.2.2.jar");
+         if (!jtds.renameTo(new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.2.jar"))) {
+                         System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/jtds-1.2.2.jar").getAbsolutePath());
          }
          
          
