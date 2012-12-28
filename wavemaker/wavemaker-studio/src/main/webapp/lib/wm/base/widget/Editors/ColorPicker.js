@@ -67,6 +67,11 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         this.editor.onChange(this.dataValue);
     },*/
     onClose: function() {},
+    doChangeOnKey: function(inEvent) {
+        this.inherited(arguments);
+        this.editor.dropDown.reset();
+    },
+
     onchange: function(inValue) {
         this.updateEditorColors(inValue);
     },
@@ -307,7 +312,7 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
 
     reset: function() {
     	if (this.getValue() != this.owner.getDataValue()) {
-    	    this.setDijitValue(this.owner.getDataValue());
+    	    this.setDijitValue(this.owner.isValid() ? this.owner.getDataValue() : "#FFFFFF");
     	}
     	this._initialValue = this.getValue();
     	this.owner.updateEditorColors();
