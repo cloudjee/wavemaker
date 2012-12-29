@@ -84,7 +84,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          if (!versionFile.exists())
             throw new IOException("This repo.zip file does not contain the correct version information.");
          String s = IOUtils.read(versionFile);
-         if (s.indexOf("6.5.2") != 0)
+         if (s.indexOf("6.5") != 0)
             throw new IOException("This repo.zip file is from the wrong version of studio");
          File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
