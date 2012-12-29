@@ -3030,7 +3030,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             name: inName + "StyleEditor",
             owner: this,
             parent: p,
-            width: "85px",
+            width: "90px",
             padding: "0",
             options: "inherit,solid,dotted,dashed,double,groove,ridge,inset,outset",
             dataValue: "solid",
@@ -3040,7 +3040,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             name: inName + "WidthEditor",
             owner: this,
             parent: p,
-            width: "55px",
+            width: "60px",
             padding: "0",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
@@ -3327,7 +3327,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             parent: e,
             width: "100%",
             height: "100%",
-            margin: "0,0,0,50"
+            margin: "0,0,0,0"
         });
         
         
@@ -3348,7 +3348,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.colorEditor = new wm.ColorPicker({
             owner: this,
             parent: this.colorSubPanel,
-            captionSize: "80px",
+            captionSize: "65px",
             captionAlign: "left",
             caption: "Color",
             width: "100%",   
@@ -3369,7 +3369,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.gradientEditor = new wm.ColorPicker({
             owner: this,
             parent: this.colorPanel,
-            captionSize: "80px",
+            captionSize: "65px",
             caption: "Gradient",
             captionAlign: "left",            
             width: "100%",                
