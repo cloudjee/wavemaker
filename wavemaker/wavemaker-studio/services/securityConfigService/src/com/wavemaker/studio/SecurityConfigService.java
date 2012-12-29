@@ -41,12 +41,7 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.security.DatabaseOptions;
-import com.wavemaker.tools.security.DemoOptions;
-import com.wavemaker.tools.security.DemoUser;
-import com.wavemaker.tools.security.GeneralOptions;
-import com.wavemaker.tools.security.LDAPOptions;
-import com.wavemaker.tools.security.SecurityToolsManager;
+import com.wavemaker.tools.security.*;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
@@ -54,10 +49,6 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 @ExposeToClient
 public class SecurityConfigService {
-
-    private static final String IS_AUTHENTICATED_ANONYMOUSLY = "IS_AUTHENTICATED_ANONYMOUSLY";
-
-    private static final String IS_AUTHENTICATED_FULLY = "IS_AUTHENTICATED_FULLY";
 
     private ProjectManager projectMgr;
 
@@ -96,16 +87,12 @@ public class SecurityConfigService {
         return getSecToolsMgr().getGeneralOptions();
     }
 
-    public List<String> getJOSSOOptions() throws JAXBException, IOException {
-        return getSecToolsMgr().getJOSSOOptions();
-    }
-
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-        if (options != null) {
-            return options.isEnforceSecurity();
-        }
-        return false;
+//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
+//        if (options != null) {
+//            return options.isEnforceSecurity();
+//        }
+        return true;
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
@@ -114,7 +101,7 @@ public class SecurityConfigService {
 
     public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml) throws JAXBException, IOException {
         getSecToolsMgr().configDemo(demoUsers);
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+        //getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
@@ -332,49 +319,40 @@ public class SecurityConfigService {
      */
 
     public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchingDisabled,
-        String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleUsername,
-        String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml) throws IOException,
-        JAXBException {
+    		String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleUsername,
+    		String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml) throws IOException,
+    		JAXBException {
 
-        // GD: Get the schema name, if any, for the entity/table
-        // Probably have to do this only if "roleProvider" == "Database"
+    	// GD: Get the schema name, if any, for the entity/table
+    	// Probably have to do this only if "roleProvider" == "Database"
 
-        String roleTable = null;
+    	String roleTable = null;
 
-        if (roleProvider != null && roleProvider.equals("Database")) {
-            DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(roleModel);
-            EntityInfo entity = dataModel.getEntity(roleEntity);
-            roleTable = entity.getTableName();
-            String qualifiedTablePrefix = entity.getSchemaName() == null ? entity.getCatalogName() : entity.getSchemaName();
-            if (qualifiedTablePrefix != null && qualifiedTablePrefix.length() > 0) {
-                roleTable = qualifiedTablePrefix + "." + roleTable;
-            }
-        }
+    	if (roleProvider != null && roleProvider.equals(SecuritySpringSupport.ROLE_PROVIDER_DATABASE)) {
+    		DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(roleModel);
+    		EntityInfo entity = dataModel.getEntity(roleEntity);
+    		roleTable = entity.getTableName();
+    		String qualifiedTablePrefix = entity.getSchemaName() == null ? entity.getCatalogName() : entity.getSchemaName();
+    		if (qualifiedTablePrefix != null && qualifiedTablePrefix.length() > 0) {
+    			roleTable = qualifiedTablePrefix + "." + roleTable;
+    		}
 
-        getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute,
-            groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
-
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+    		getSecToolsMgr().configLDAPwithDB(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute,
+    				groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+    	}
+    	else {
+    		getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter);
+    	}
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) {
         SecurityToolsManager.testLDAPConnection(ldapUrl, managerDn, managerPassword);
     }
 
-    public void configJOSSO(boolean enforceSecurity, String primaryRole) throws JAXBException, IOException {
-        if (enforceSecurity) {
-            getSecToolsMgr().registerJOSSOSecurityService();
-            getSecToolsMgr().setJOSSOOptions(primaryRole);
-            // getSecToolsMgr().setGeneralOptions(enforceSecurity);
-        } else {
-            getSecToolsMgr().removeJOSSOConfig();
-
-        }
-    }
-
     public List<String> getRoles(Boolean isJoSSO) throws IOException, JAXBException {
         if (Boolean.valueOf("true")) {
-            return getSecToolsMgr().getJOSSORoles();
+        	throw new IOException("Unsupported");
         } else {
             return getSecToolsMgr().getRoles();
         }
@@ -384,16 +362,8 @@ public class SecurityConfigService {
         return getSecToolsMgr().getRoles();
     }
 
-    public List<String> getJOSSORoles() throws IOException, JAXBException {
-        return getSecToolsMgr().getJOSSORoles();
-    }
-
     public void setRoles(List<String> roles) throws IOException, JAXBException, ConfigurationException {
         getSecToolsMgr().setRoles(roles);
-    }
-
-    public void setJOSSORoles(List<String> roles) throws IOException, JAXBException {
-        getSecToolsMgr().setJOSSORoles(roles);
     }
 
     /**
@@ -403,8 +373,8 @@ public class SecurityConfigService {
      * @throws JAXBException
      * @throws IOException
      */
-    public List<SecurityURLMap> getSecurityFilterODS() throws JAXBException, IOException {
-        Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityFilterODS();
+    public List<SecurityURLMap> getSecurityInterceptUrls() throws JAXBException, IOException {
+        Map<String, List<String>> urlMap = getSecToolsMgr().getSecurityInterceptUrls();
         List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
         if (!(urlMap == null)) {
             for (String url : urlMap.keySet()) {
@@ -428,7 +398,7 @@ public class SecurityConfigService {
      * @throws IOException
      */
 
-    public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
+    public void setSecurityInterceptUrls(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
         throws JAXBException, IOException {
         Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
         Iterator<SecurityURLMap> itr = securityURLMap.iterator();
@@ -442,20 +412,20 @@ public class SecurityConfigService {
         if (enforceSecurity && !preserveMap) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
-                indexHtmlAuthz = IS_AUTHENTICATED_FULLY;
+                indexHtmlAuthz = SecuritySpringSupport.IS_AUTHENTICATED_FULLY;
             } else {
-                indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
+                indexHtmlAuthz = SecuritySpringSupport.IS_AUTHENTICATED_ANONYMOUSLY;
             }
             urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
             urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
             if (urlMap.get("/securityservice.json") != null) {
                 urlMap.remove("/securityservice.json");
             }
-            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+            urlMap.put("/securityservice.json", Arrays.asList(new String[] { SecuritySpringSupport.IS_AUTHENTICATED_ANONYMOUSLY }));
             if (urlMap.get("/pages/login/**") != null) {
                 urlMap.remove("/pages/login/**");
             }
-            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+            urlMap.put("/pages/login/**", Arrays.asList(new String[] { SecuritySpringSupport.IS_AUTHENTICATED_ANONYMOUSLY }));
             if (urlMap.get("/pages/**") != null) {
                 urlMap.remove("/pages/**");
             }
@@ -469,18 +439,18 @@ public class SecurityConfigService {
                 urlMap.put("/*/*.json", jsonEntry);
             }
         }
-        getSecToolsMgr().setSecurityFilterODS(urlMap);
+        getSecToolsMgr().setSecurityInterceptUrls(urlMap);
     }
 
     /**
      * Set a new Object Definition Source Filter. Replaces previous definition. Only a single attribute per URL is
      * supported Format is URL:Attributes
      * 
-     * @param securityURLMap List of colon delimited url, attribute pairs
+     * @param securityURLList List of colon delimited url, attribute pairs
      * @throws JAXBException
      * @throws IOException
      */
-    public void setSecurityFilterODS(List<String> securityURLList, Boolean enforceSecurity, Boolean enforceIndexHtml) throws JAXBException,
+    public void setSecurityInterceptUrls(List<String> securityURLList, Boolean enforceSecurity, Boolean enforceIndexHtml) throws JAXBException,
         IOException {
         List<SecurityURLMap> securityURLMap = new ArrayList<SecurityURLMap>();
         Iterator<String> itr = securityURLList.iterator();
@@ -491,7 +461,7 @@ public class SecurityConfigService {
             SecurityURLMap secURLRule = new SecurityURLMap(ruleArray[0], ruleArray[1]);
             securityURLMap.add(secURLRule);
         }
-        setSecurityFilterODS(securityURLMap, false, enforceSecurity, enforceIndexHtml);
+        setSecurityInterceptUrls(securityURLMap, false, enforceSecurity, enforceIndexHtml);
     }
 
     public class SecurityURLMap {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,12 +12,21 @@
  *  limitations under the License.
  */
 
-<%@page contentType="text/html; charset=UTF-8" language="java" session="true" %>
+package com.wavemaker.runtime.security;
 
-<!--
-  This jsp page simply redirects the user to the login page specified in web.xml.
--->
- 
-<%
-   response.sendRedirect(request.getContextPath() + "/josso_login/");
-%>
+import org.springframework.security.core.userdetails.UserDetails;
+
+/**
+ *
+ * @author Seung Lee
+ */
+public interface WMUserDetails extends UserDetails {
+    /**
+     * Returns the user's long name.
+     *
+     * @return the user's long name (never <code>null</code>)
+     */
+    String getUserLongName();
+
+    int getTenantId();
+}

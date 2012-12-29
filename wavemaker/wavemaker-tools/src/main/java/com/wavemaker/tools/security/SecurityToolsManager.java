@@ -15,6 +15,7 @@
 package com.wavemaker.tools.security;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -31,9 +32,9 @@ import javax.naming.directory.DirContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
-import org.acegisecurity.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.core.GrantedAuthority;
+//import org.Securitysecurity.ldap.DefaultInitialDirContextFactory;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -41,7 +42,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
-import com.wavemaker.runtime.security.JOSSOSecurityService;
 import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelConfiguration;
@@ -49,6 +49,7 @@ import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
@@ -70,14 +71,15 @@ import com.wavemaker.tools.webapp.schema.WebResourceCollectionType;
 
 /**
  * @author Jeremy Grelle
+ * @author Edward Callahan
  */
 public class SecurityToolsManager {
 
     static final Logger logger = Logger.getLogger(SecurityToolsManager.class);
 
-    private static final String ACEGI_SPRING_FILENAME = "project-security.xml";
+    private static final String SECURITY_SPRING_FILENAME = "project-security.xml";
 
-    private static final String ACEGI_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
+    private static final String SECURITY_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
 
     private static final String LOGIN_HTML_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/login-template.html";
 
@@ -93,10 +95,10 @@ public class SecurityToolsManager {
     }
 
     /**
-     * Returns the Acegi Spring template.
+     * Returns the Security Spring template.
      */
-    private Beans getAcegiSpringBeansTemplate() throws JAXBException, IOException {
-        ClassPathResource securityTemplateXml = new ClassPathResource(ACEGI_SPRING_TEMPLATE_CLASSPATH);
+    private Beans getSecuritySpringBeansTemplate() throws JAXBException, IOException {
+        ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CLASSPATH);
         Reader reader = new InputStreamReader(securityTemplateXml.getInputStream());
         Beans ret = SpringConfigSupport.readBeans(reader);
         reader.close();
@@ -104,43 +106,42 @@ public class SecurityToolsManager {
     }
 
     @Deprecated
-    public Resource getAcegiSpringResource() throws IOException {
-        return getAcegiSpringResource(this.projectMgr.getCurrentProject());
+    public Resource getSecuritySpringResource() throws IOException {
+        return getSecuritySpringResource(this.projectMgr.getCurrentProject());
     }
 
     @Deprecated
-    private Resource getAcegiSpringResource(Project currentProject) {
+    private Resource getSecuritySpringResource(Project currentProject) {
         try {
-            return currentProject.getWebInf().createRelative(ACEGI_SPRING_FILENAME);
+            return currentProject.getWebInf().createRelative(SECURITY_SPRING_FILENAME);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
     }
 
-    public File getAcegiSpringFile() throws IOException {
-        return getAcegiSpringFile(this.projectMgr.getCurrentProject());
+    public File getSecuritySpringFile() throws IOException {
+        return getSecuritySpringFile(this.projectMgr.getCurrentProject());
     }
 
-    private File getAcegiSpringFile(Project currentProject) {
-        return currentProject.getWebInfFolder().getFile(ACEGI_SPRING_FILENAME);
+    private File getSecuritySpringFile(Project currentProject) {
+        return currentProject.getWebInfFolder().getFile(SECURITY_SPRING_FILENAME);
     }
 
     /**
-     * Returns the Acegi Security Spring beans in the current project.
+     * Returns the Spring Security Spring beans in the current project.
      * 
-     * @param create If this is set to true, it will create the Spring file using the template if the Acegi Spring file
+     * @param create If this is set to true, it will create the Spring file using the template if the Security Spring file
      *        does not exist in current project.
      */
-    private Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
-        Project currentProject = this.projectMgr.getCurrentProject();
-        File securityXml = getAcegiSpringFile(currentProject);
+    private Beans getSecuritySpringBeans(boolean create) throws IOException, JAXBException {
+        File securityXml = getSecuritySpringFile();
         Beans beans = null;
         if (securityXml.exists()) {
             try {
-                beans = SpringConfigSupport.readBeans(securityXml, currentProject);
+                beans = SpringConfigSupport.readSecurityBeans(securityXml);
             } catch (JAXBException e) {
                 if (create) {
-                    beans = getAcegiSpringBeansTemplate();
+                    beans = getSecuritySpringBeansTemplate();
                 } else {
                     throw e;
                 }
@@ -148,7 +149,7 @@ public class SecurityToolsManager {
         }
         if (create) {
             if (beans == null || beans.getBeanList().isEmpty()) {
-                beans = getAcegiSpringBeansTemplate();
+                beans = getSecuritySpringBeansTemplate();
 
             }
             registerSecurityService();
@@ -157,12 +158,11 @@ public class SecurityToolsManager {
     }
 
     /**
-     * Saves the specified Acegi Spring beans to the current project.
+     * Saves the specified Security Spring beans to the current project.
      */
-    private synchronized void saveAcegiSpringBeans(Beans beans) throws JAXBException, IOException {
-        Project currentProject = this.projectMgr.getCurrentProject();
-        File securityXml = getAcegiSpringFile(currentProject);
-        SpringConfigSupport.writeBeans(beans, securityXml, currentProject);
+    private synchronized void saveSecuritySpringBeans(Beans beans) throws JAXBException, IOException {
+        File securityXml = getSecuritySpringFile();
+        SpringConfigSupport.writeSecurityBeans(beans, securityXml);
     }
 
     /**
@@ -193,53 +193,18 @@ public class SecurityToolsManager {
         }
     }
 
-    /**
-     * Registers JOSSOSecurityService to the current project.
-     */
-    public void registerJOSSOSecurityService() {
-        Set<Service> services = this.designServiceMgr.getServices();
-        boolean found = false;
-        for (Service service : services) {
-            if (service.getClazz().equals(JOSSOSecurityService.class.getName())) {
-                found = true;
-            }
-        }
-        if (!found) {
-            try {
-                String serviceId = JOSSOSecurityServiceDefinition.DEFAULT_SERVICE_ID;
-                Set<String> serviceIds = this.designServiceMgr.getServiceIds();
-                int i = 1;
-                while (serviceIds.contains(serviceId)) {
-                    serviceId = JOSSOSecurityServiceDefinition.DEFAULT_SERVICE_ID + i;
-                    i++;
-                }
-                JOSSOSecurityServiceDefinition def = new JOSSOSecurityServiceDefinition(serviceId);
-                this.designServiceMgr.defineService(def);
-            } catch (LinkageError e) {
-                throw new ConfigurationException(e);
-            }
-        }
-    }
-
     public GeneralOptions getGeneralOptions() throws JAXBException, IOException {
         Beans beans = null;
         try {
-            beans = getAcegiSpringBeans(false);
+            beans = getSecuritySpringBeans(false);
         } catch (UnmarshalException e) {
             return null; // project-security.xml must be setting to DTD
         }
+
         if (beans == null || beans.getBeanList().isEmpty()) { // project-security.xml
-                                                              // is empty
-            if (this.getJOSSORoles().isEmpty()) {
-                return null; // no JOSSO either
-            } else {
-                GeneralOptions optionsJOSSO = new GeneralOptions();
-                optionsJOSSO.setEnforceSecurity(true);
-                optionsJOSSO.setEnforceIndexHtml(false);
-                optionsJOSSO.setDataSourceType("JOSSO");
-                return optionsJOSSO;
-            }
+            return null;
         }
+
         GeneralOptions options = new GeneralOptions();
         options.setEnforceSecurity(SecuritySpringSupport.isSecurityEnforced(beans));
         options.setEnforceIndexHtml(SecuritySpringSupport.isIndexHtmlEnforced(beans));
@@ -250,9 +215,9 @@ public class SecurityToolsManager {
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
         this.lock.lock();
         try {
-            Beans beans = getAcegiSpringBeans(true);
+            Beans beans = getSecuritySpringBeans(true);
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
-            saveAcegiSpringBeans(beans);
+            saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();
         }
@@ -261,167 +226,43 @@ public class SecurityToolsManager {
     public void setGeneralOptions(boolean enforceSecurity) throws IOException, JAXBException {
         this.lock.lock();
         try {
-            Beans beans = getAcegiSpringBeans(false);
+            Beans beans = getSecuritySpringBeans(false);
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
-            saveAcegiSpringBeans(beans);
-        } finally {
-            this.lock.unlock();
-        }
-    }
-
-    public void setStandardOptions(boolean enforceSecurity) throws IOException, JAXBException {
-        this.lock.lock();
-        try {
-            Beans beans = getAcegiSpringBeans(false);
-            SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
-            SecuritySpringSupport.setSecurityFilterChain(beans);
-            saveAcegiSpringBeans(beans);
+            saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();
         }
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
-        Beans beans = getAcegiSpringBeans(false);
-        DemoOptions options = new DemoOptions();
-        options.setUsers(SecuritySpringSupport.getDemoUsers(beans));
-        return options;
-    }
-
-    public List<String> getJOSSOOptions() throws JAXBException, IOException {
-        List<String> jossoRoles = new ArrayList<String>();
-        Resource webXml = this.projectMgr.getCurrentProject().getWebXml();
-        WebAppType wat = WebXmlSupport.readWebXml(webXml);
-
-        List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
-        Iterator<Object> itr = watList.iterator();
-        while (itr.hasNext()) {
-            Object element = itr.next();
-            if (element instanceof SecurityConstraintType) {
-                SecurityConstraintType secCon = (SecurityConstraintType) element;
-                AuthConstraintType authCons = secCon.getAuthConstraint();
-                List<RoleNameType> theRoles = authCons.getRoleName();// .clear();
-                Iterator<RoleNameType> rIt = theRoles.iterator();
-                while (rIt.hasNext()) {
-                    RoleNameType thisRole = rIt.next();
-                    jossoRoles.add(thisRole.getValue());
-                }
-            }
-        }
-        return jossoRoles;
-    }
-
-    /**
-     * Adds the SecurityConstraint, login-config and security-role to web.xml
-     * 
-     * @param primaryRole The security-role role-name
-     */
-    public void setJOSSOOptions(String primaryRole) throws JAXBException, IOException {
-        boolean exists = false;
-        this.lock.lock();
-        try {
-            this.designServiceMgr.getDeploymentManager().generateRuntime();
-
-            Project project = this.projectMgr.getCurrentProject();
-            File webXml = project.getWebXmlFile();
-            WebAppType wat = WebXmlSupport.readWebXml(webXml.getContent().asInputStream());
-
-            List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
-            Iterator<Object> itr = watList.iterator();
-            while (itr.hasNext()) {
-                Object element = itr.next();
-                if (element instanceof SecurityConstraintType) {
-                    exists = true;
-                    SecurityConstraintType secCon = (SecurityConstraintType) element;
-                    AuthConstraintType authCons = secCon.getAuthConstraint();
-                    authCons.getRoleName().clear();
-                    RoleNameType roleName = new RoleNameType();
-                    roleName.setValue(primaryRole);
-                    authCons.getRoleName().add(roleName);
-                }
-                if (element instanceof SecurityRoleType) {
-                    exists = true;
-                    SecurityRoleType secRole = (SecurityRoleType) element;
-                    RoleNameType theRole = secRole.getRoleName();
-                    theRole.setValue(primaryRole);
-                    secRole.setRoleName(theRole);
-                }
-            }
-
-            if (exists) {
-                WebXmlSupport.writeWebXml(project, wat, webXml);
-                return;
-            }
-
-            SecurityConstraintType secCons = new SecurityConstraintType();
-            WebResourceCollectionType webResColl = new WebResourceCollectionType();
-
-            com.wavemaker.tools.webapp.schema.String webString = new com.wavemaker.tools.webapp.schema.String();
-            webString.setValue("protected-resource");
-
-            webResColl.setWebResourceName(webString);
-            UrlPatternType urlPat = new UrlPatternType();
-            urlPat.setValue("/*");
-            webResColl.getUrlPattern().add(urlPat);
-
-            List<HttpMethodType> methods = new ArrayList<HttpMethodType>();
-            HttpMethodType httpMetHead = new HttpMethodType();
-            httpMetHead.setValue("HEAD");
-            methods.add(httpMetHead);
-            HttpMethodType httpMetGet = new HttpMethodType();
-            httpMetGet.setValue("GET");
-            methods.add(httpMetGet);
-            HttpMethodType httpMetPost = new HttpMethodType();
-            httpMetPost.setValue("POST");
-            methods.add(httpMetPost);
-            HttpMethodType httpMetPut = new HttpMethodType();
-            httpMetPut.setValue("PUT");
-            methods.add(httpMetPut);
-            HttpMethodType httpMetDelete = new HttpMethodType();
-            httpMetDelete.setValue("DELETE");
-            methods.add(httpMetDelete);
-            webResColl.getHttpMethod().addAll(methods);
-            secCons.getWebResourceCollection().add(webResColl);
-
-            AuthConstraintType authCons = new AuthConstraintType();
-            RoleNameType roleName = new RoleNameType();
-            roleName.setValue(primaryRole);
-            authCons.getRoleName().add(roleName);
-
-            UserDataConstraintType userDataCons = new UserDataConstraintType();
-            TransportGuaranteeType transGuarantee = new TransportGuaranteeType();
-            transGuarantee.setValue("NONE");
-            userDataCons.setTransportGuarantee(transGuarantee);
-            secCons.setAuthConstraint(authCons);
-            secCons.setUserDataConstraint(userDataCons);
-            wat.getDescriptionAndDisplayNameAndIcon().add(secCons);
-
-            WebXmlSupport.writeWebXml(project, wat, webXml);
-        } finally {
-            this.lock.unlock();
-        }
+    	Beans beans = getSecuritySpringBeans(false);
+    	List<UserService.User> userList = SecurityXmlSupport.getUserSvcUsers(beans);
+    	DemoOptions options = new DemoOptions();
+    	options.setUsersByUserSvc(userList);
+    	return options;
     }
 
     public void configDemo(DemoUser[] demoUsers) throws JAXBException, IOException {
-        Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.IN_MEMORY_DAO_IMPL_BEAN_ID);
+        Beans beans = getSecuritySpringBeans(true);
+        //SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID);
         SecuritySpringSupport.setDemoUsers(beans, demoUsers);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
-        saveAcegiSpringBeans(beans);
+        saveSecuritySpringBeans(beans);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(false);
+        Beans beans = getSecuritySpringBeans(false);
         return SecuritySpringSupport.constructDatabaseOptions(beans);
     }
 
     public void configDatabase(String modelName, String tableName, String unameColumnName, String uidColumnName, String uidColumnSqlType,
         String pwColumnName, String roleColumnName, String rolesByUsernameQuery) throws JAXBException, IOException {
-        Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.JDBC_DAO_IMPL_BEAN_ID);
+        Beans beans = getSecuritySpringBeans(true);
+        //SecuritySpringSupport.updateAuthProviderUserDetailsService(beans, SecuritySpringSupport.JDBC_DAO_IMPL_BEAN_ID);
         SecuritySpringSupport.updateJdbcDaoImpl(beans, modelName, tableName, unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName,
             roleColumnName, rolesByUsernameQuery);
-        saveAcegiSpringBeans(beans);
+        SecuritySpringSupport.setDataSourceType(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_DB);
+        saveSecuritySpringBeans(beans);
     }
 
     public List<String> testRolesByUsernameQuery(DataModelConfiguration dataModel, String query, String username) {
@@ -451,7 +292,7 @@ public class SecurityToolsManager {
 
         @SuppressWarnings("unchecked")
         public List<String> loadUserRolesByUsername(String username) {
-            List<GrantedAuthority> dbAuths = this.authoritiesByUsernameMapping.execute(username);
+            List<GrantedAuthority> dbAuths = this.loadUserAuthorities(username);
             List<String> userRoles = new ArrayList<String>();
             for (GrantedAuthority dbAuth : dbAuths) {
                 String dbAuthString = dbAuth.getAuthority();
@@ -464,7 +305,7 @@ public class SecurityToolsManager {
     }
 
     public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(false);
+        Beans beans = getSecuritySpringBeans(false);
         return SecuritySpringSupport.constructLDAPOptions(beans);
     }
 
@@ -483,24 +324,40 @@ public class SecurityToolsManager {
      * @throws IOException
      * @throws JAXBException
      */
-    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+    public void configLDAPwithDB(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
         String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
-        configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter,
+        configLDAPwithDB(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter,
             "", "", "", "", "", "", "");
     }
 
-    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+    public void configLDAPwithDB(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
         String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable,
         String roleUsername, String roleProperty, String roleQuery, String roleProvider) throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.setAuthManagerProviderBeanId(beans, SecuritySpringSupport.LDAP_AUTH_PROVIDER_BEAN_ID);
-        SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
-        SecuritySpringSupport.updateLDAAuthProvider(beans, userDnPattern, groupSearchDisabled, groupSearchBase, groupRoleAttribute,
-            groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+        Beans beans = getSecuritySpringBeans(true);
+        SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB);
+        
+        //sets manager. non-manager test connection would be better.
+        //SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
+        
+        //Passing empty string for SearchBase
+        SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, "", userDnPattern, groupSearchDisabled, groupSearchBase,
+            groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
-        saveAcegiSpringBeans(beans);
+        saveSecuritySpringBeans(beans);
     }
 
+    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+            String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
+            Beans beans = getSecuritySpringBeans(true);
+            SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);
+        
+            //TODO: Non-manager connection test            
+            SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase,
+                groupRoleAttribute, groupSearchFilter);
+            SecuritySpringSupport.resetJdbcDaoImpl(beans);
+            saveSecuritySpringBeans(beans);
+        }
+    
     /**
      * Tests if the LDAP connection could be established successfully using the supplied parameters. An exception will
      * be thrown if it can't connect to the LDAP server.
@@ -508,78 +365,46 @@ public class SecurityToolsManager {
      * @param ldapUrl The LDAP URL like "ldap://localhost:389/dc=wavemaker,dc=com"
      * @param managerDn The manager DN
      * @param managerPassword The manager password
-     * @throws org.acegisecurity.BadCredentialsException
-     * @throws org.acegisecurity.ldap.LdapDataAccessException
+     * @throws org.Securitysecurity.BadCredentialsException
+     * @throws org.Securitysecurity.ldap.LdapDataAccessException
      */
     public static void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) {
-        DefaultInitialDirContextFactory dirContext = new DefaultInitialDirContextFactory(ldapUrl);
-        if (managerDn != null && managerDn.length() != 0) {
-            dirContext.setManagerDn(managerDn);
-            if (SystemUtils.isEncrypted(managerPassword)) {
-                managerPassword = SystemUtils.decrypt(managerPassword);
-            }
-            dirContext.setManagerPassword(managerPassword);
-        }
-        DirContext context = null;
-        try {
-            context = dirContext.newInitialDirContext();
-        } finally {
-            if (context != null) {
-                try {
-                    context.close();
-                } catch (NamingException e) {
-                    throw new ConfigurationException(e);
-                }
-            }
-        }
+//        DefaultInitialDirContextFactory dirContext = new DefaultInitialDirContextFactory(ldapUrl);
+//        if (managerDn != null && managerDn.length() != 0) {
+//            dirContext.setManagerDn(managerDn);
+//            if (SystemUtils.isEncrypted(managerPassword)) {
+//                managerPassword = SystemUtils.decrypt(managerPassword);
+//            }
+//            dirContext.setManagerPassword(managerPassword);
+//        }
+//        DirContext context = null;
+//        try {
+//            context = dirContext.newInitialDirContext();
+//        } finally {
+//            if (context != null) {
+//                try {
+//                    context.close();
+//                } catch (NamingException e) {
+//                    throw new ConfigurationException(e);
+//                }
+//            }
+//        }
     }
 
     public List<String> getRoles() throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(false);
+        Beans beans = getSecuritySpringBeans(false);
         if (beans == null || beans.getBeanList().isEmpty()) {
-            return getJOSSORoles();
+            return null;
         }
         return SecuritySpringSupport.getRoles(beans);
-    }
-
-    public List<String> getJOSSORoles() throws IOException, JAXBException {
-        List<String> roles = new ArrayList<String>();
-        try {
-            Resource webXml = this.projectMgr.getCurrentProject().getWebXml();
-            WebAppType wat = WebXmlSupport.readWebXml(webXml);
-            List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
-            Iterator<Object> itr = watList.iterator();
-            while (itr.hasNext()) {
-                Object element = itr.next();
-                if (element instanceof SecurityConstraintType) {
-                    SecurityConstraintType secCon = (SecurityConstraintType) element;
-                    AuthConstraintType authCons = secCon.getAuthConstraint();
-                    List<RoleNameType> roleTypes = authCons.getRoleName();
-                    Iterator<RoleNameType> roleItr = roleTypes.iterator();
-                    while (roleItr.hasNext()) {
-                        Object roleElement = roleItr.next();
-                        RoleNameType rnt = (RoleNameType) roleElement;
-                        roles.add(rnt.getValue());
-                    }
-                }
-            }
-            return roles;
-        } catch (java.io.FileNotFoundException FNE) {
-            return roles;
-        }
-
-    }
-
-    public void setJOSSORoles(List<String> roles) throws IOException, JAXBException {
-        throw new UnsupportedOperationException("Method Not Implemented");
     }
 
     public void setRoles(List<String> roles) throws IOException, JAXBException {
         this.lock.lock();
         try {
-            Beans beans = getAcegiSpringBeans(true);
+            Beans beans = getSecuritySpringBeans(true);
             SecuritySpringSupport.setRoles(beans, roles);
-            saveAcegiSpringBeans(beans);
+            saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();
         }
@@ -599,51 +424,6 @@ public class SecurityToolsManager {
         return new ClassPathFile(LOGIN_HTML_TEMPLATE_CLASSPATH);
     }
 
-    public void removeJOSSOConfig() throws JAXBException, IOException {
-        File webXml = this.projectMgr.getCurrentProject().getWebXmlFile();
-        WebAppType wat = WebXmlSupport.readWebXml(webXml.getContent().asInputStream());
-        List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
-        Iterator<Object> itr = watList.iterator();
-        SecurityConstraintType secCon = null;
-        while (itr.hasNext()) {
-            Object element = itr.next();
-            if (element instanceof SecurityConstraintType) {
-                secCon = (SecurityConstraintType) element;
-                secCon.getWebResourceCollection().clear();
-                AuthConstraintType authCons = null;
-                secCon.setAuthConstraint(authCons);
-                UserDataConstraintType userDataCons = null;
-                secCon.setUserDataConstraint(userDataCons);
-            }
-        }
-        wat.getDescriptionAndDisplayNameAndIcon().remove(secCon);
-        LoginConfigType loginCon = null;
-        Iterator<Object> itr2 = watList.iterator();
-        while (itr2.hasNext()) {
-            Object element2 = itr2.next();
-            if (element2 instanceof LoginConfigType) {
-                loginCon = (LoginConfigType) element2;
-                AuthMethodType authMeth = null;
-                loginCon.setAuthMethod(authMeth);
-                FormLoginConfigType form = null;
-                loginCon.setFormLoginConfig(form);
-            }
-        }
-        wat.getDescriptionAndDisplayNameAndIcon().remove(loginCon);
-        SecurityRoleType secRole = null;
-        Iterator<Object> itr3 = watList.iterator();
-        while (itr3.hasNext()) {
-            Object element3 = itr3.next();
-            if (element3 instanceof SecurityRoleType) {
-                secRole = (SecurityRoleType) element3;
-                RoleNameType roleName = null;
-                secRole.setRoleName(roleName);
-            }
-        }
-        wat.getDescriptionAndDisplayNameAndIcon().remove(secRole);
-        WebXmlSupport.writeWebXml(wat, webXml.getContent().asWriter());
-    }
-
     /**
      * Sets the project security filter object definition source map
      * 
@@ -651,16 +431,16 @@ public class SecurityToolsManager {
      * @throws IOException
      * @throws JAXBException
      */
-    public void setSecurityFilterODS(Map<String, List<String>> urlMap) throws IOException, JAXBException {
+    public void setSecurityInterceptUrls(Map<String, List<String>> urlMap) throws IOException, JAXBException {
         Beans beans = null;
         this.lock.lock();
         try {
-            beans = getAcegiSpringBeans(false);
+            beans = getSecuritySpringBeans(false);
             if (beans == null || beans.getBeanList().isEmpty()) {
                 throw new RuntimeException("Unable to get Security Bean");
             } else {
-                SecuritySpringSupport.setObjectDefinitionSource(beans, urlMap);
-                saveAcegiSpringBeans(beans);
+                SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
+                saveSecuritySpringBeans(beans);
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -669,17 +449,17 @@ public class SecurityToolsManager {
         }
     }
 
-    public Map<String, List<String>> getSecurityFilterODS() {
+    public Map<String, List<String>> getSecurityInterceptUrls() {
         Beans beans = null;
         try {
-            beans = getAcegiSpringBeans(false);
+            beans = getSecuritySpringBeans(false);
         } catch (Exception e) {
             return null;
         }
         if (beans == null || beans.getBeanList().isEmpty()) {
             return null;
         } else {
-            return SecuritySpringSupport.getObjectDefinitionSource(beans);
+            return SecuritySpringSupport.getSecurityInterceptUrls(beans);
         }
     }
 }

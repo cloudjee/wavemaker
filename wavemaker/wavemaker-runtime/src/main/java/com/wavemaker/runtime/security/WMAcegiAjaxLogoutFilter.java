@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.acegisecurity.ui.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 /**
  * Overrides standard Acegi filter's doFilter method, to

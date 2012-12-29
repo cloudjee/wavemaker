@@ -68,17 +68,18 @@ dojo.declare(
             this.servicesLayer.setShowing(true);
             this.rolesLayer.setShowing(true);
             this.showLoginPageInput.setChecked(true);
-            this.sessionExpirationHandler.setDataValue(studio.application.sessionExpirationHandler || "nothing");
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
             this.dbRoleBySQLCheckbox.setChecked(false);
             this.dbRoleBySQLCheckboxChange(this.dbRoleBySQLCheckbox);
             this.ldapRoleBySQLCheckbox.setChecked(false);
             this.ldapRoleBySQLCheckboxChange(this.ldapRoleBySQLCheckbox);
-            this.demoUserList.renderData([ {
-                userid : "demo",
-                password : "demo"
-            } ]);
+            this.demoUserList.renderData([ 
+				{userid : "admin",
+                password : "admin"},
+				{userid : "user",
+                password : "user"} 				
+				]);
             this.resetDatabaseInputs();
             this.resetLDAPInputs();
             this.populateGeneralOptions();
@@ -140,22 +141,19 @@ dojo.declare(
         },
         resetLDAPInputs : function() {
             this.ldapUrlInput.setDataValue("ldap://localhost:389/dc=wavemaker,dc=com");
-            this.ldapManagerDnInput.setDataValue("cn=manager,dc=wavemaker,dc=com");
-            this.ldapManagerPasswordInput.setDataValue("manager");
+            this.ldapManagerDnInput.setDataValue("");
+            this.ldapManagerPasswordInput.setDataValue("");
             this.ldapUserDnPatternInput.setDataValue("cn={0},ou=people");
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapGroupSearchBaseInput.setDataValue("ou=groups");
             this.ldapGroupRoleAttributeInput.setDataValue("cn");
-            this.ldapGroupSearchFilterInput.setDataValue("(member={0})");
+            this.ldapGroupSearchFilterInput.setDataValue("(uniqueMember={0})");
             this.ldapConnectionResultLabel.setCaption("");
             // Added by Girish
             this.clearSelectInput(this.ldapRoleDbDataModelInput);
             this.clearSelectInput(this.ldapRoleDbEntityInput);
             this.clearSelectInput(this.ldapRoleDbRoleInput);
             this.clearSelectInput(this.ldapRoleDbUsernameInput);
-        },
-        resetJOSSOInputs : function() {
-            // TODO
         },
         secProviderInputChange : function(inSender, inValue) {
             if (inValue == "Demo") {
@@ -595,8 +593,12 @@ dojo.declare(
             this.setDirty();
         },
         ldapRoleProviderInputChange : function(inSender, inDisplayValue, inDataValue) {
-            this.ldapRoleLdapPanel.setShowing(inDataValue == "LDAP");
+			var searchEnabled = this.ldapSearchRoleCheckbox.getChecked() === true;
+            this.ldapRoleLdapPanel.setShowing(inDataValue == "LDAP" && searchEnabled);
             this.ldapRoleDBPanel.setShowing(inDataValue == "Database");
+			if(!searchEnabled){
+				this.ldapRoleProviderInput.setDataValue(this.SELECT_ONE);
+			}
         },
         ldapConnectionButtonClick : function(inSender) {
             studio.beginWait(this.getDictionaryItem("WAIT_TEST_LDAP"));
@@ -939,7 +941,7 @@ dojo.declare(
         setupServicesLayer : function() {
             try {
                 var success = true;
-                studio.securityConfigService.requestSync("getSecurityFilterODS", null, dojo.hitch(this, "getSecurityFilterODSResult"), dojo.hitch(this, function(inError) {
+                studio.securityConfigService.requestSync("getSecurityInterceptUrls", null, dojo.hitch(this, "getSecurityInterceptUrlsResult"), dojo.hitch(this, function(inError) {
                     this._urlMap = [];
                 }));
                 /* Get the role list */
@@ -952,15 +954,15 @@ dojo.declare(
                     dataValue : ""
                 }, {
                     name : this.getDictionaryItem("SERVICE_ANONYMOUS_USERS"),
-                    dataValue : "IS_AUTHENTICATED_ANONYMOUSLY"
+					dataValue : "permitAll"
                 }, {
                     name : this.getDictionaryItem("SERVICE_AUTHENTICATED_USERS"),
-                    dataValue : "IS_AUTHENTICATED_FULLY"
+					dataValue : "isAnonymous()"
                 } ];
-                for ( var i = 0; i < d.length; i++) {
+				for ( var i = 0; i < d.length; i++) {
                     data.push({
                         name : d[i],
-                        dataValue : "ROLE_" + d[i]
+                        dataValue : "hasRole('" + "ROLE_" + d[i] + "')"
                     });
                 }
                 this.varRoleList.setData(data);
@@ -1009,7 +1011,7 @@ dojo.declare(
                 this.servicesSettingsPanel.hide();
             }
         },
-        getSecurityFilterODSResult : function(inResponse) {
+        getSecurityInterceptUrlsResult : function(inResponse) {
             this._urlMap = dojo.clone(inResponse);
             this.varUrlMap.setData(inResponse);
         },
@@ -1061,7 +1063,6 @@ dojo.declare(
             /* TODO: Remove from submission any "DEFAULT" values */
 
             // don't use the name as it will be localized
-
             var databaseServiceURL = "/services/runtimeservice.json"; 
             var data = this.varServList.getData();
             var sendData = [];
@@ -1073,11 +1074,11 @@ dojo.declare(
              */
             var starAttributes;
             if (!this.secEnableInput.getChecked()) {
-                starAttributes = "IS_AUTHENTICATED_ANONYMOUSLY";
+                starAttributes = "permitAll";
             } else if (!this.showLoginPageInput.getChecked()) {
-                starAttributes = "IS_AUTHENTICATED_FULLY";
+                starAttributes = "isAuthenticated()";
             } else {
-                starAttributes = "IS_AUTHENTICATED_FULLY";
+                starAttributes = "isAuthenticated()";
             }
 
             for ( var i = 0; i < data.length; i++) {
@@ -1103,7 +1104,7 @@ dojo.declare(
             sendData.push("/*.upload:" + starAttributes);
             sendData.push("/*.download:" + starAttributes);
 
-            studio.securityConfigService.requestSync("setSecurityFilterODS", [ sendData, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "saveServicesSetupSuccess"), dojo.hitch(this,
+            studio.securityConfigService.requestSync("setSecurityInterceptUrls", [ sendData, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "saveServicesSetupSuccess"), dojo.hitch(this,
                     "saveServicesSetupError"));
         },
         saveServicesSetupSuccess : function() {

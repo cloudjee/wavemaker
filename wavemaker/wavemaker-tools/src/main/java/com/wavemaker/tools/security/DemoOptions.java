@@ -14,10 +14,17 @@
 
 package com.wavemaker.tools.security;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
+
+import javax.annotation.security.RolesAllowed;
+
+import com.wavemaker.tools.security.schema.UserService;
 
 /**
+ * @author Ed Callahan
  * @author Frankie Fu
  */
 public class DemoOptions {
@@ -30,8 +37,28 @@ public class DemoOptions {
         }
         return this.users;
     }
-
+    
+    /*
+     * set the list of DemoUser type from the given list of UserService.User type
+     */
+    public void setUsersByUserSvc(List<UserService.User> users) {
+    	List<DemoUser> newUsers = new ArrayList<DemoUser>();
+    	for(UserService.User u : users){
+    		DemoUser user = new DemoUser();
+    		List<String> roles = new ArrayList<String>();
+    		user.setUserid(u.getName());
+    		user.setPassword(u.getPassword());
+    		StringTokenizer tokenizer = new StringTokenizer(u.getAuthorities(), ",");
+    		while(tokenizer.hasMoreTokens()){
+    			roles.add(tokenizer.nextToken());
+    		}
+    		user.setRoles(roles);
+    		newUsers.add(user);
+    	}
+    	setUsers(newUsers);
+    }
     public void setUsers(List<DemoUser> users) {
         this.users = users;
     }
+    
 }

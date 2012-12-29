@@ -16,6 +16,7 @@ package com.wavemaker.runtime.data.spring;
 
 import java.util.Iterator;
 
+import com.wavemaker.runtime.security.SecurityService;
 import org.dom4j.Element;
 import org.hibernate.MappingException;
 import org.hibernate.cfg.Configuration;
@@ -60,7 +61,7 @@ public class ConfigurationExt extends Configuration {
         QueryHandler qh = new QueryHandler(this);
         WMAppContext wmApp = WMAppContext.getInstance();
         String tFldName = wmApp.getTenantFieldName();
-        int tid = RuntimeAccess.getInstance().getTenantId();
+        int tid = SecurityService.getTenantId();
         if (tid == -1) {
             tid = wmApp.getDefaultTenantID();
         }

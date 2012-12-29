@@ -54,10 +54,6 @@ public class WMAppContext {
 
     private String appName;
 
-    private static HashMap<String, Integer> tenantIdMap = new HashMap<String, Integer>();
-
-    private static HashMap<String, String> userNameMap = new HashMap<String, String>();
-
     private JSONObject typesObj;
 
     private final CloudEnvironment cloudEnvironment = new CloudEnvironment();
@@ -229,22 +225,6 @@ public class WMAppContext {
 
     public CloudEnvironment getCloudEnvironment() {
         return this.cloudEnvironment;
-    }
-
-    public void setTenantIdForUser(String userName, int tenantId) {
-        tenantIdMap.put(userName, tenantId);
-    }
-
-    public int getTenantIdForUser(String userName) {
-        return tenantIdMap.get(userName);
-    }
-
-    public void setUserNameForUserID(String userId, String userName) {
-        userNameMap.put(userId, userName);
-    }
-
-    public String getUserNameForUserID(String userId) {
-        return userNameMap.get(userId);
     }
 
     public String getAppName() {

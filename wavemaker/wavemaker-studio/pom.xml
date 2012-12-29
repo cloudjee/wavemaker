@@ -38,7 +38,6 @@
 								<source>services/runtimeService/src</source>
 								<source>services/securityConfigService/src</source>
 								<source>services/securityService/src</source>
-								<source>services/securityServiceJOSSO/src</source>
 								<source>services/servicesService/src</source>
 								<source>services/studioService/src</source>
 								<source>services/waveMakerService/src</source>
@@ -128,12 +127,6 @@
 								</resource>
 								<resource>
 									<directory>services/securityService/src</directory>
-									<excludes>
-										<exclude>**/*.java</exclude>
-									</excludes>
-								</resource>
-								<resource>
-									<directory>services/securityServiceJOSSO/src</directory>
 									<excludes>
 										<exclude>**/*.java</exclude>
 									</excludes>
