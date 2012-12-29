@@ -596,9 +596,6 @@ dojo.declare(
 			var searchEnabled = this.ldapSearchRoleCheckbox.getChecked() === true;
             this.ldapRoleLdapPanel.setShowing(inDataValue == "LDAP" && searchEnabled);
             this.ldapRoleDBPanel.setShowing(inDataValue == "Database");
-			if(!searchEnabled){
-				this.ldapRoleProviderInput.setDataValue(this.SELECT_ONE);
-			}
         },
         ldapConnectionButtonClick : function(inSender) {
             studio.beginWait(this.getDictionaryItem("WAIT_TEST_LDAP"));
