@@ -157,7 +157,7 @@ public class ProjectManager {
     private void openProject(Project project, boolean noSession) throws IOException {
         closeProject();
         if (getProjectEventNotifier() != null) {
-            getProjectEventNotifier().executeOpenProject(this.currentProject);
+            getProjectEventNotifier().executeOpenProject(project);
         }
         setCurrentProject(project);
         if (!noSession) {
