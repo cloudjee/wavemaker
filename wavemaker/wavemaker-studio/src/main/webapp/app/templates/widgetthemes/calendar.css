@@ -42,7 +42,13 @@
 
 /* GROUP: Dates Not In Month */
 .wm_template .dijitCalendarContainer .dijitCalendarPreviousMonth,
-.wm_template .dijitCalendarContainer .dijitCalendarNextMonth,
+.wm_template .dijitCalendarContainer .dijitCalendarNextMonth {
+		background-color: #655f5f !important;
+		background-image: none !important;
+		color: #bab0b0;
+}
+
+/* GROUP: Column Headings */
 .wm_template .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
 		background-color: #655f5f !important;
 		background-image: none !important;

@@ -1,7 +1,7 @@
 {
 	text1: ["wm.Text", {caption: "Text", width: "100%", dataValue: "Sample"}],
 	largeText1: ["wm.LargeTextArea", {caption: "LargeText", width: "100%", height: "60px", dataValue: "Sample"}],
-	number1: ["wm.Number", {caption: "Number", width: "100%", dataValue: 1234567890}],
+	number1: ["wm.Number", {caption: "Number", width: "100%", dataValue: 1234567890, spinnerButtons:true}],
 	currency1:["wm.Currency", {caption: "Currency", width: "100%", dataValue: "1234567890"}],
 	select1:["wm.SelectMenu", {caption: "Select", width: "100%", option: "Text,Number,Currency,Select,Date", dataValue: "Select"}],
 	datetime1:["wm.DateTime", {caption: "DateTime", width: "100%", dataValue: 1234567890}],

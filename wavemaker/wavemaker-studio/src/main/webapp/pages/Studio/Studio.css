@@ -169,8 +169,8 @@
     filter: "";
 }
 
-body .StudioTabs .wmtablayers-tab:focus:not(.wmtablayers-selected),
-body .StudioTabs .wmtablayers-tab:active:not(.wmtablayers-selected) {
+body .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab:focus:not(.wmtablayers-selected),
+body .StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab:active:not(.wmtablayers-selected) {
     background-color: inherit !important;
     border: solid 1px #888;
 }

@@ -156,8 +156,12 @@ public class ResourceFileService {
     }
 
     public void copyFolder(@ParamName(name = "from") String from, @ParamName(name = "to") String to) throws IOException {
-
-        Folder source = getResource(from, Folder.class);
+	Folder source;
+	if (from.startsWith("app/templates")) {
+	    source = this.fileSystem.getStudioWebAppRootFolder().getFolder(from);
+	} else {
+	    source = getResource(from, Folder.class);
+	}
 	Folder dest = getResource(to, Folder.class);
 	if (dest.exists()) throw new IOException("Already Exists");
 	dest.createIfMissing();

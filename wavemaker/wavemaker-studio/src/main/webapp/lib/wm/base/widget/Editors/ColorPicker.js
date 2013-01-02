@@ -84,6 +84,13 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     	}
     	this.inherited(arguments);
     },
+    editorChanged: function() {        
+    	if (this.inherited(arguments)) {
+    	   this.updateEditorColors(this.dataValue);
+    	   return true;
+    	}
+    	return false;
+    },
     updateEditorColors: function(inValue) {
         if (this._inColorChange) return;
         this._inColorChange = true;
@@ -94,7 +101,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 inValue = this.editorNode.style.backgroundColor; // find the value ACTUALLY found by the browser
                 if (inValue.match(/^\#/)) {
                 	;
-                } else {
+                } else if (inValue) {
                 	var matches = inValue.match(/rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)/);
                 	if (matches) {
                 		inValue = "#" + Number(matches[1]).toString(16) + Number(matches[2]).toString(16) + Number(matches[3]).toString(16);

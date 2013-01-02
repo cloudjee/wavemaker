@@ -33,7 +33,7 @@ outline: 0px;
 
 /* GROUP: Horizontal Menu Bar Icon */
 .wm_template div.dijitMenuBar div.dijitMenuItem {
-   background-image: url(images/dropArrowBlack.png) !important; 
+   background-image: url(images/comboArrowDownDark.png) !important; 
    background-position: 90% 50% !important;
    background-repeat: no-repeat !important;
     padding-right: 25px !important;
@@ -45,33 +45,28 @@ outline: 0px;
 
 /* GROUP: Popup Menu Box */
 .wm_template .dijitMenuPopup .dijitMenuTable {
-    font-family: sans-serif;
-    color: #FFFFFF;
-    font-weight: bold;
     background-color: #444444;
     background-image: none;
     border: solid 1px black;
     border-top: solid 1px #999999;
+}
+.wm_template .dijitMenuPopup {
     box-shadow: 3px 3px 4px black;
 }
 
 /* GROUP: Popup Menu Item */
-.wm_template .dijitMenuTable .dijitMenuItem {
+.wm_template .dijitPopup .dijitMenuTable .dijitMenuItem {
+    font-family: sans-serif;
     color: #FFFFFF;
+    font-weight: bold;
     background-color: transparent; /* THEMER: IGNORE */
     border-bottom: solid 1px #AAAAAA;
 }
 
-/* GROUP: Popup Menu Item Hover */
-.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemHover {
-    color: #FFFFFF;
-    background-color: #444444;
-    background-image: none;
-    outline-width: 0;
-}
-
-/* GROUP: Popup Menu Item Selected */
-.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected {
+/* GROUP: Popup Menu Item Hover/Selected */
+/* NOTE: There is no good way with dojo menus to distinguish between hover and select */
+.wm_template .dijitPopup .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemFocused,
+.wm_template .dijitPopup .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected {
     color: #FFFFFF;
     background-color: #333333;
     background-image: none;

@@ -1,9 +1,13 @@
 /* GROUP: Standard Button */
-.wm_template .wmbutton {
+/* dijitReset needed for popupButton */
+.wm_template .wmbutton,
+.wm_template .wmbutton .dijitReset {
 	font-family: sans-serif;
 	font-size: 12pt;
 	color: #FFFFFF;
 	font-weight: bold;
+}
+.wm_template .wmbutton {
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
 	box-shadow: 4px 4px 4px black;

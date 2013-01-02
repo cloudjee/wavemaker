@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
@@ -121,7 +122,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         });
         this.numberEditor = new wm.Text({
             owner: this,
-            regExp: this.allSizeTypes ? "^([0-9]*\\.?[0-9]+)*(%|px|pt|em|)" : "^\\d*(%|px|)",
+            regExp: this.allSizeTypes ? "^\\-?([0-9]*\\.?[0-9]+)*(%|px|pt|em|)" : "^\\-?\\d*(%|px|)",
             parent: this.editor,
             width: "100%",
             name: "numberEditor",
@@ -175,7 +176,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         return this.numberEditor.getDataValue() + this.typeEditor.getDataValue();
     },
     setEditorValue: function(inValue) {
-        var result = String(inValue).match(/^(\d+)(.*)$/);
+        var result = String(inValue).match(/^(\-?\d+)(.*)$/);
         if (result) {
             this.numberEditor.setDataValue(result[1]);
             this.typeEditor.setDataValue(result[2] || "px");
@@ -2768,6 +2769,7 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 
 dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
     dataValue: "0",
+    padding: "0",
     caption: "border-radius",
     _createEditor: function() {
         var e = this.inherited(arguments);
@@ -3015,6 +3017,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
     dataValue: "solid 0px black",
     caption: "border",
     height: "24px",
+    padding: "0",
     buildPanel: function(inName, parent) {
             var p = this[inName + "Panel"] = new wm.Panel({
                 name: inName + "Panel",
@@ -3125,7 +3128,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
            return inLetter.substring(1).toUpperCase();
         });
         this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
-        if (inStyleName.match(/(top|left|bottom|right)/)) this.toggleButton.setClicked(true);
+        this.toggleButton.setClicked(Boolean(inStyleName.match(/(top|left|bottom|right)/)));
         this.getValuesFromTestNode();
         
         if (inStyleName.match(/outline/)) this.toggleButton.hide();
@@ -3199,7 +3202,7 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     dataValue: "0px 0px 0px #000000",
     caption: "box-shadow",
     height: "43px",
-    
+    padding: "0",
     _createEditor: function() {
         var e = this.inherited(arguments);
         this.horizontalEditor = new wm.Number({
@@ -3307,6 +3310,8 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
     dataValue: "",
     urlPlaceHolder: "",
     height: "28px",
+    padding: "0",
+    message: "",
     containerLayoutKind: "top-to-bottom",
     _createEditor: function() {
         var e = this.inherited(arguments);
@@ -3318,7 +3323,6 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             parent: e,
             width: "140px",
             margin: "0,10,0,0",
-            padding: "0",
             options: "Color/Gradient,Image,Custom",
             onchange: dojo.hitch(this, "changed")
         });
@@ -3366,9 +3370,11 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             margin: "0,0,0,20",
             onchange: dojo.hitch(this, "changed")                
         });
+
         this.gradientEditor = new wm.ColorPicker({
             owner: this,
             parent: this.colorPanel,
+            showing: this.message != "NO BACKGROUND IMAGE",
             captionSize: "65px",
             caption: "Gradient",
             captionAlign: "left",            
@@ -3376,7 +3382,6 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             gradient: true,
             onchange: dojo.hitch(this, "changed")
         });
-        
 
         this.imagePanel = new wm.Layer({
             owner: this,
@@ -3388,7 +3393,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.urlEditor = new wm.Text({
             owner: this,
             parent: this.imagePanel,
-            captionSize: "80px",
+            captionSize: "65px",
             captionPosition: "left",
             captionAlign: "left",
             caption: "URL",
@@ -3408,7 +3413,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.horizontalPosEditor = wm.prop.SizeEditor({
             owner: this,
             parent: this.imageSubPanel ,
-            captionSize: "80px",
+            captionSize: "65px",
             captionPosition: "left",
             captionAlign: "left",
             caption: "Horizontal",
@@ -3419,7 +3424,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.verticalPosEditor = wm.prop.SizeEditor({
             owner: this,
             parent: this.imageSubPanel ,
-            captionSize: "80px",
+            captionSize: "65px",
             captionPosition: "left",
             captionAlign: "left",
             caption: "Vertical",
@@ -3431,7 +3436,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.imageRepeatEditor = new wm.SelectMenu({
             owner: this,
             parent: this.imagePanel ,
-            captionSize: "80px",
+            captionSize: "65px",
             captionPosition: "left",
             captionAlign: "left",
             caption: "Repeats?",
@@ -3481,33 +3486,62 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
     
     /* setEditorValue expects the full "backgroud: color image|gradient repeat position" value */
     
-    getBackgroundObj: function(inValue) {
+    getBackgroundObj: function() {
         var s = this.testNode.domNode.style;
-        s.background = inValue;
-        var repeatX = s.backgroundRepeatX;
-        var repeatY = s.backgroundRepeatY;
-        if (repeatX == "initial" || repeatX == "no-repeat") repeatX = "";
-        if (repeatY == "initial" || repeatY == "no-repeat") repeatY = "";
-        var repeat;
-        if (repeatX && repeatY) {
-            repeat = "repeat";
-        } else if (repeatX) {
-            repeat = "repeat-x";
-        } else if (repeatY) {
-            repeat = "repeat-y";
+        var backX, backY;
+        /* TODO: See if we can get rid of the isWebkKit version */
+        if (dojo.isWebKit) {
+            var repeatX = s.backgroundRepeatX;
+            var repeatY = s.backgroundRepeatY;
+            if (repeatX == "initial" || repeatX == "no-repeat") repeatX = "";
+            if (repeatY == "initial" || repeatY == "no-repeat") repeatY = "";
+            var repeat;
+            if (repeatX && repeatY) {
+                repeat = "repeat";
+            } else if (repeatX) {
+                repeat = "repeat-x";
+            } else if (repeatY) {
+                repeat = "repeat-y";
+            } else {
+                repeat = "no-repeat";
+            }
+            backX = s.backgroundPositionX;
+            backY = s.backgroundPositionY;
         } else {
-            repeat = "no-repeat";
+            repeat = s.backgroundRepeat;
+            if (repeat == "initial") repeat = "no-repeat";
+            var backPos = s.backgroundPosition;
+            if (backPos) {
+                var posMatches = backPos.split(/\s+/);
+                backX = posMatches[0];
+                backY = posMatches[1];
+            }
         }
-        var l = location.host + location.pathname;
+        var l = "http://" + location.host + location.pathname;
+        var l2 = "https://" + location.host + location.pathname;
+        var image = s.backgroundImage;
+        if (image.match(/^url/)) {
+            image = image.replace(/(url|\(|\)|"|')/g,"");
+            if (image.indexOf(l) == 0) {
+                image = image.substring(l.length);
+            } else if (image.indexOf(l2) == 0) {
+                image = image.substring(l2.length);
+            }
+        } else {
+            image = "";
+        }
         var result = {
             color: s.backgroundColor,
             gradient: (s.backgroundImage||"").match(/gradient/) ? s.backgroundImage : "",
-            url: (s.backgroundImage||"").match(/^url/) ? s.backgroundImage.substring(s.backgroundImage.indexOf(l) + l.length).replace(/\)/,"") : "",
+            url: image,
             repeat: repeat,
-            positionX: s.backgroundPositionX,
-            positionY: s.backgroundPositionY
+            positionX: backX,
+            positionY: backY
         }; 
-        return result;
+        if (this.message == "NO BACKGROUND IMAGE") {
+            result.gradient = result.url = "";
+        }
+        return result;                
     },
     
     /* Parse either of these options: 
@@ -3535,9 +3569,9 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 return gradientObj;
             } else {
                 /* TODO: COLOR STOPS IN WEBKIT CAME BACK NOT AS PERCENTS, NEED TO TEST THIS ON OTHER BROWSERS TO SEE WHAT VALUES ARE REALLY RETURNED */
-                matches = inValue.match(/.*linear-gradient\((.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?),\s*(.*?)\s+(.*?)\)/);
+                matches = inValue.match(/.*linear-gradient\((.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?)\)/);
                 if (matches) {
-                    gradientObj.direction = matches[1] == "top" ? "vertical" : "horizontal";
+                    gradientObj.direction = matches[1] == "top" || matches[1].match(/\stop/) ? "vertical" : "horizontal";
                     gradientObj.startColor = matches[2];
                     gradientObj.colorStop = matches[5];
                     gradientObj.endColor = matches[6];
@@ -3546,16 +3580,13 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             }
         return null; // failed to parse it
     },
-    setEditorValue: function(inValue) {
-        var v =  this.dataValue = String(inValue);        
-        var backgroundObj = this.getBackgroundObj(v);
-        var isTransparent = false;
+    setEditorValue: function(backgroundObj) {
+        if (typeof backgroundObj != "object") return;
+        var v =  this.dataValue = backgroundObj;     
+        var isTransparent = backgroundObj.color == "transparent";
+        
         if (backgroundObj.gradient && backgroundObj.gradient.match(/radial/)) {
             this.backgroundChooser.setDataValue("Custom");
-        } else if (backgroundObj.color == "transparent") {
-            isTransparent = true;
-            this.dataValue = "transparent";
-
         } else if (backgroundObj.gradient) {
            var gradientObj = this.parseGradient(backgroundObj.gradient);
            if (gradientObj) {
@@ -3606,8 +3637,11 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
     		                  return inLetter.substring(1).toUpperCase();
     		               });
-        this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
-        this.setDataValue(this.testNode.domNode.style.background);
+        var s = this.testNode.domNode.style;
+        s[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
+        var result = this.getBackgroundObj();
+        this.dataValue = result;
+        this.setEditorValue(result);
     },
     getEditorValue: function() {
         return this.dataValue;
@@ -3670,22 +3704,24 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
 
             var backgroundType = this.backgroundChooser.getDataValue();
             var value = "";
+            var message = (!this.message) ? "" : " /* THEMER: " + this.message + " */";
             if (backgroundType != "Color/Gradient" || this.transparentCheckbox.getChecked()) {
                 value = "background: " + this.getDataValue();
             } else {
                 if (this.colorEditor.getDataValue()) {
-                    value += "background-color: " + this.colorEditor.getDataValue() + ";";
+                    value += "background-color: " + this.colorEditor.getDataValue() + ";" + message;
                 }
-                if (value) value += "\n\t";                
                 if (this.gradientEditor.getDataValue()) {
+                    if (value) value += "\n\t";                                
                     var styleValue = this.gradientEditor.getDataValue();
-                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
-                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
-                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
-                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
-                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";";
-                } else {
-                    value += "background-image: none;"
+                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";" + message + "\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";" + message + "\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";" + message + "\n";
+                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";" + message + "\n";
+                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";" + message;
+                } else if (this.message != "NO BACKGROUND IMAGE") {
+                    if (value) value += "\n\t";                                
+                    value += "background-image: none;" + message;
                 }
             }
             return value;

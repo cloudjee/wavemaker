@@ -4,6 +4,7 @@
     font-size: 12px;
 }
 
+.wm_template .GridListStyle  .wmlist-cell,
 .wm_template td.dojoxGridCell {
     border-left-width: 0px;
     border-top-width: 0px;
@@ -129,10 +130,9 @@
 
 
 /* GROUP: Mobile List */
-.wm_template .MobileListStyle div.wmlist-item/*
+.wm_template .MobileListStyle div.wmlist-item,
 .wm_template .Disabled.MobileListStyle div.wmlist-item,
-.wm_template .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over,
-.wm_template .MobileListStyle div.wmlist-item.wmlist-item-over*/ {
+.wm_template .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over {
    border-radius: 4px;
    margin: 5px;
    background-color: #b52727;
@@ -142,13 +142,10 @@
    min-height: 24px;
 }
 
-.wm_template .wmlist-cell {
+.wm_template .wmlist.MobileListStyle td.wmlist-cell {
     border-style: solid;
-    border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
-    border-left-width: 0px;
-    border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
-    border-top-width: 0px;
-    border-bottom-width: 0px;
+    border-color: #AAAAAA;
+    border-width: 0px;
 }
 
 /* GROUP: Mobile List Hover (Desktop only!) */

@@ -18,6 +18,7 @@ dojo.require("wm.base.widget.Layers.Decorator");
 dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 	decorationClass: "wmtablayers",
         decoratorPadding: "7, 0, 0, 0",
+        verticalDecoratorPadding: "0,0,0,7",
 	undecorate: function() {
 		this.inherited(arguments);
 		this.tabsControl.destroy();
@@ -30,14 +31,14 @@ dojo.declare("wm.TabsDecorator", [wm.LayersDecorator, wm.TouchMixinOptional], {
 		this.tabsControl = new wm.TabsControl({
 			parent: this.decoree,
 		        owner: this.decoree,
-		    padding: this.decoratorPadding,
+		    padding: this.decoree.verticalButtons ? this.verticalDecoratorPadding : this.decoratorPadding,
 		    name: "tabsControl"
 		});
 		this.decoree.moveControl(this.tabsControl, 0);
 		if (this.decoree.verticalButtons) {
 		  this.decoree.setLayoutKind("left-to-right");
 		}
-	    if (this.decoree.dndTargetName || this.decoree.isDesignLoaded()) {
+	    if (this.decoree.dndTargetName || this.decoree._designer) {
 		dojo.require("dojo.dnd.Source");
     		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
 		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
