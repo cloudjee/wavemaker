@@ -17,6 +17,7 @@
 	color: #000000;
 	font-weight: bold;
 	background-color: #444444;
+	background-image: none;
 }
 
 .wm_template  .wmeditor .dijitTextBox,
@@ -49,6 +50,7 @@
 	color: inherit;
 	border-color: #666666;
 	background-color: #444444;
+	background-image: none;
 }
 
 /* GROUP: Focus */
@@ -63,13 +65,14 @@
 .wm_template .wmeditor .dijitComboBox.dijitFocused.dijitHover,
 .wm_template .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
 .wm_template .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
-.wm_template .isDirty.wmeditor .dijitTextBox,
-.wm_template .isDirty.wmeditor .dijitTextArea,
-.wm_template .isDirty.wmeditor .dijitComboBox,
+.wm_template .isDirty.wmeditor .dijitTextBox.dijitFocused,
+.wm_template .isDirty.wmeditor .dijitTextArea.dijitFocused,
+.wm_template .isDirty.wmeditor .dijitComboBox.dijitFocused,
 .wm_template .wmeditor .RichTextEditable.Focused iframe {
 	color: inherit;
 	border-color: #666666; 
 	background-color: #444444; 
+	background-image: none;
 }
 
 /* GROUP: isDirty */
@@ -79,6 +82,7 @@
 	color: inherit;
 	border-color: #666666; 
 	background-color: #444444; 
+	background-image: none;
 }
 
 /* GROUP: Invalid */
@@ -113,7 +117,7 @@
 }
 
 
-/* GROUP: Drop Down Arrows */
+/* GROUP: Drop Down Boxes */
 .wm_template .wmeditor .dijitSpinner .dijitArrowButton,
 .wm_template .dojoxGrid .dijitComboBox .dijitArrowButton,
 .wm_template .wmeditor .dijitComboBox .dijitArrowButton,
@@ -138,7 +142,7 @@
     border-top-right-radius: 2px;
 }
 
-/* GROUP: Drop Down Background */
+/* GROUP: Drop Down Box Arrows */
 .wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
 .wm_template .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
     background-position: 50% 50%;
@@ -161,10 +165,6 @@
 
 
 /* GROUP: Sliders */
-.wm_template .dijitSlider .dijitProgressBarLabel {
-    color: white;
-}
-
 .wm_template .dijitSlider .dijitSliderImageHandleH {
     background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
     outline-width: 0;

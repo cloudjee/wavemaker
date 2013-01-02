@@ -14,7 +14,7 @@
 
 dojo.provide("wm.base.Component");
 dojo.require('wm.base.Object');
-
+if (!wm.Component ) {
 /**
     Base class for all palette objects.
     <br><br>Component:
@@ -1133,6 +1133,5 @@ dojo.mixin(wm.Component, {
     property: {
     }
 });
-
-
+}
 //window.$$ = wm.Component.byId;

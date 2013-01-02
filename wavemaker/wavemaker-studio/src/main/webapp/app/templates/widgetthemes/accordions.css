@@ -2,7 +2,7 @@
 /* GROUP: Accordion Header */
 .wm_template div.wmaccordion-header {
   font-family: sans-serif;
-  font-size: 12pt;
+  font-size: 12px;
   color: #FFFFFF;
   font-weight: bold;
   background-color: #444444;
@@ -19,7 +19,7 @@
 }
 
 /* GROUP: Header Hover */
-.wm_template div.wmaccordion wmaccordion-header.wmaccordion-collapsed:hover {
+.wm_template div.wmaccordion .wmaccordion-header.wmaccordion-collapsed:hover {
   color: #FFFFFF;
   background-color: #666666;
   background-image: none;
@@ -29,7 +29,12 @@
 
 /* GROUP: Accordion Arrow (Selected) */
 .wm_template .wmaccordion .accordionArrowNode {
+   float: none !important; /* THEMER: HIDE */
+   position: absolute; /* THEMER: HIDE */
+   right: 5px;
    background-image: url(images/comboArrowDownDark.png);
+   background-repeat: no-repeat;
+   background-position: 50% 50%;
 }
 
 /* GROUP: Accordion Arrow (Closed) */

@@ -6,28 +6,31 @@
 	font-weight: bold;
     font-size: 12px;
     background-color: red;
+    background-image: none;
 }
 .wm_template .wmtablayers-tab {
+
     height: 12px; 
     margin-left: 8px; 
     border-top-left-radius: 8px; 
     border-top-right-radius: 8px; 
     box-shadow: -1px 1px 1px #444444; 
-    border-top-left-radius: 8px; 
-    border-top-right-radius: 8px; 
 
-    border-width: 2px;
+    border-width: 1px 1px 0px 1px;
     border-style: solid;
 	border-bottom-color: transparent;
 	border-top-color: #444444; 
 	border-left-color:#444444; 
 	border-right-color: #444444;
 }
-
+.dj_ff .wm_template .wmtablayers-tab {
+       box-shadow: 0 0 0 black !important; /* THEMER: HIDE */
+}
 /* GROUP: First Tab */
 .wm_template .wmtablayers-tab:first-child {
     margin-left: 0px; 
 }
+
 
 /* GROUP: Standard Selected Tab Button */
 .wm_template .wmtablayers-verticaltab.wmtablayers-selected,
@@ -60,6 +63,7 @@
 }
 
 /* GROUP: Tab Button with Mouse Down */
+/* NOTE: This does not appear to work in firefox at design time but is fine at runtime */
 .wm_template .wmtablayers-tab:active,
 .wm_template .wmtablayers-verticaltab:active,
 .wm_template .wmtablayers-tab:active:focus,
@@ -70,8 +74,9 @@ background-image: none;
 }
 .wm_template .wmtablayers-tab:active,
 .wm_template .wmtablayers-tab:active:focus {
-    box-shadow: inherit;
+    box-shadow: 0px 0px 0px #444444; 
 }
+
 
 /* GROUP: Layer Borders */
 .wm_template  .wmTabLayers-client > .wmlayer {
@@ -86,15 +91,25 @@ background-image: none;
 
 
 /* GROUP: Vertical Tab Buttons */
-.wm_template .wmtablayers-verticaltab {
+.wm_template button.wmtablayers-verticaltab {
    font-size: 9; 
     width: 95%;
     margin-left: 5%;
     margin-bottom: 5px;
     border-bottom-left-radius: 4px; 
     border-top-left-radius: 4px; 
-    border-bottom-color: #444444; 
-    border-right-color: transparent;
+    border-width: 0px 1px 1px 1px;
+    border-style: solid;
+	border-bottom-color: #444444;
+	border-top-color: #444444; 
+	border-left-color:#444444; 
+	border-right-color: transparent;
+    box-shadow: -1px 1px 1px #444444; 
+}
+
+/* GROUP: First Vertical Tab */
+.wm_template .wmtablayers-verticaltab:first-child {
+    margin-top: 8px;
 }
 
 /* GROUP: Vertical Tab Buttons with Hover */
@@ -110,5 +125,5 @@ background-image: none;
 /* GROUP: Vertical Tab with Mouse Down */
 .wm_template .wmtablayers-verticaltab:active,
 .wm_template .wmtablayers-verticaltab:active:focus {
-    box-shadow: inherit;
+    box-shadow: 0px 0px 0px #444444; 
 }

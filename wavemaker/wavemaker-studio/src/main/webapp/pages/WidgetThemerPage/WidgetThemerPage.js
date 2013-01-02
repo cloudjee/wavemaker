@@ -108,7 +108,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         {
             name: "Splitter/Bevel",
             templateFile: "splitterbevel",
-            classList: [{dataValue: "wm.Bevel"}]            
+            classList: [{dataValue: "wm.Bevel"},{dataValue: "wm.Splitter"}]            
         },
         {
             name: "Calendar",
@@ -129,7 +129,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 		"height": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],				
 		"color": ["wm.ColorPicker", {caption: "font color"}],
 		"border": ["wm.BorderEditor", {caption: "border", width: "100%"}],		
-		"outline": ["wm.BorderEditor", {caption: "outline"}],				
+		"outline": ["wm.BorderEditor", {caption: "outline", width: "100%"}],				
 		"font-weight": ["wm.SelectMenu", {options: "normal,bold"}],
 		"border-radius":["wm.BorderRadiusEditor", {caption: "border-radius"}],
 		"box-shadow":   ["wm.BoxShadowEditor", {caption: "box-shadow", width: "100%"}],
@@ -303,7 +303,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             app.prompt(inThemeName + " is taken. Enter a different theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));
             return;
         }
-        studio.resourceManagerService.requestAsync("copyFolder", ["/common/themes/" + this.currentThemeName, "/common/themes/" + inThemeName]).then(
+        this._copyTheme(inThemeName, this.currentThemeName);
+    },
+    _copyTheme: function(inThemeName, inSourceThemeName) {
+        studio.resourceManagerService.requestAsync("copyFolder", [inSourceThemeName ? "/common/themes/" + inSourceThemeName : "app/templates/widgetthemes", "/common/themes/" + inThemeName]).then(
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("getFolder", ["/common/themes/" + inThemeName]);
             })
@@ -312,7 +315,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 this.filesToUpdate = dojo.filter(inResult.files, function(f) {
                     return f.file.match(/\.css$/);
                 });
-                return this.updateClassNameInFiles(inThemeName);
+                return this.updateClassNameInFiles(inThemeName, inSourceThemeName || "wm_template");
             })
         ).then( 
             dojo.hitch(this, function() {
@@ -324,7 +327,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             })
         );
     },
-    updateClassNameInFiles: function(inThemeName) {
+    updateClassNameInFiles: function(inThemeName, inSourceThemeName) {
         if (!this.updateClassNameInFilesDeferred) {
             this.updateClassNameInFilesDeferred = new dojo.Deferred();
         }
@@ -332,9 +335,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             var file = this.filesToUpdate.pop();
         
             var fileText = wm.load(dojo.moduleUrl("common.themes." + inThemeName) + file.file);
-            var r = new RegExp("." + this.currentThemeName, "g");
+            var r = new RegExp("." + inSourceThemeName, "g");
             fileText = fileText.replace(r, "." + inThemeName);
-            studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/" + file.file, fileText]).then(dojo.hitch(this, "updateClassNameInFiles", inThemeName)); 
+            studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/" + file.file, fileText]).then(dojo.hitch(this, "updateClassNameInFiles", inThemeName, inSourceThemeName)); 
         } else {
             this.updateClassNameInFilesDeferred.callback();
         }
@@ -351,7 +354,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             app.prompt(inThemeName + " is taken. Enter a different theme name", studio.project.projectName + "Theme", dojo.hitch(this, "addNewTheme"));
             return;
         }
-
+        this._copyTheme(inThemeName, "");
+        return;
+        
         /* Step 1: Create the theme folder */
         /* TODO: Need to have default theme.css file, presumably a compiled version of all of the individual theme templates */
         studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(            
@@ -369,6 +374,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
             })
+         ).then(
+            dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("copyFolder", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
+            })            
         ).then(        
             dojo.hitch(this, function() {
                 /* Write button.css as that identifies this theme folder as one created by this theme designer */
@@ -470,7 +479,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     if (indexOfCalcString == -1 && indexOfHideString == -1) {
                         var styleObj = this.getStyleObjFromLine(l);
                         if (styleObj) {
-                            this.generateCssEditor(styleObj.name, styleObj.value, parent, currentGroup);
+                            this.generateCssEditor(styleObj.name, styleObj.value, styleObj.disabled, styleObj.message, parent, currentGroup);
                         }
                     }
                 }
@@ -478,7 +487,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         } catch(e) {}
         delete this._generatingEditors;
     },
-    generateCssEditor: function(styleName, styleValue, parent, styleGroup) {
+    generateCssEditor: function(styleName, styleValue, isDisabled, inMessage, parent, styleGroup) {
         styleValue = String(styleValue).replace(/\s\!important/, "");
         var styleEditorDef;
         var styleRule = this.styleRules[styleName];
@@ -503,14 +512,15 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             styleEditorDef[1] = dojo.mixin({}, this.defaultEditorProps,styleEditorDef[1]);
             var caption = styleEditorDef[1] && styleEditorDef[1].caption || styleName;            
             styleEditorDef[1].caption = "";
-            
+            styleEditorDef[1].disabled = isDisabled;
+            styleEditorDef[1].message = inMessage;
             var ctor = dojo.getObject(styleEditorDef[0]);
             var defaultHeight = ctor ? ctor.prototype.height : "24px";
             var p = parent.createComponents({
                 panel: ["wm.Panel", {width: "100%", height: defaultHeight, padding: "0", margin: "0,0,0," + this.editorMargin,
                                      layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
                                 label: ["wm.Label", {width: "120px", caption:  caption}],
-                                checkbox: ["wm.Checkbox", {width: "16px", startChecked: styleValue && styleValue != "inherit" && styleValue != "initial"}],
+                                checkbox: ["wm.Checkbox", {width: "16px", startChecked: !isDisabled}],
                                 editor: styleEditorDef
                         }]                        
             })[0];
@@ -534,9 +544,18 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         }
     },
     getStyleObjFromLine: function(inLine) {
+        var disabled = false;
+        var message = "";
+        if (inLine.match(/\/\*.*THEMER:\s*DISABLED/i)) {
+            disabled = true;
+            inLine = inLine.replace(/\/\*/,"").replace(/;.*$/,";");
+        } else if (inLine.match(/THEMER:/)) {
+            var matches = inLine.match(/THEMER:\s*(.*?)\s*\*\//);
+            message = matches[1];
+        }
         var values = inLine.match(/\s*(.*?)\:\s*(.*);/);
         if (values) {
-            return {name: values[1], value: values[2]};
+            return {name: values[1], value: values[2], disabled: disabled, message: message};
         }
     },
     getGroupNameFromLine: function(inLine) {
@@ -585,14 +604,23 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                             var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
                             if (altLine) {
                                 if (!updateCssLineFired) {
-                                    if (isEditorEnabled) {
-                                        lines[i] = "\t" + altLine + (altLine.match(/;\s*$/) ? "" : ";");
-                                    } else {
-                                        lines[i] = "\t" + altLine.replace(/\:(.|\n|\r)*/m,"") + ": inherit;";
-                                    }
+                                    lines[i] = "\t" + altLine + (altLine.match(/;\s*(\/\*.*?\*\/)?\s*$/) ? "" : ";");
                                     if (isImportant) {
                                         lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
                                     }
+                                    if (!isEditorEnabled) {
+                                        var generatedLines = lines[i].split(/[\n\r]+/);
+                                        for (var j = 0; j < generatedLines.length; j++) {
+                                            if (generatedLines[j].match(/\/\*/)) {                                            
+                                                generatedLines[j] = "/* " + generatedLines[j].substring(0, generatedLines[j].indexOf("/*")) + " // THEMER: DISABLED */ " + generatedLines[j].substring(generatedLines[j].indexOf("/*"));
+                                            
+                                            } else {
+                                                generatedLines[j] = "/* " + generatedLines[j] + " // THEMER: DISABLED */";
+                                            }
+                                        }
+                                        lines[i] = generatedLines.join("\n");
+                                    }
+                                    
                                     updateCssLineFired = true;
                                 } else {
                                     lines[i] = "";
@@ -605,13 +633,16 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                          * making the change
                          */
                         else if (styleObj.name === inStyleName) {
-                            if (isEditorEnabled) {                        
-                                lines[i] = "\t" + inStyleName + ": " + inEditor.getDataValue() + ";";
-                                if (isImportant) {
-                                    lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
+                            lines[i] = "\t" + inStyleName + ": " + inEditor.getDataValue() + ";";
+                            if (isImportant) {
+                                lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
+                            }
+                            if (!isEditorEnabled) {           
+                                if (lines[i].match(/\/\*/)) {
+                                    lines[i] = "/* " + lines[i].substring(0,lines[i].indexOf("/*")) + " // THEMER: DISABLED */ " + lines[i].substring(lines[i].indexOf("/*"));
+                                } else {
+                                    lines[i] = "/* " + lines[i] + " // THEMER: DISABLED */";
                                 }
-                            } else {
-                                lines[i] = "\t" + inStyleName + ": inherit;";
                             }
                             break;
                         }
@@ -855,7 +886,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     rule = rule.substring(endIndex);
                     rule = rule.substring(rule.indexOf(",")+1);
                 } else if (endIndex <= 0) {
-                    debugger;
                     rule = rule.substring(0,startOfRuleSegment-1);
                 } else {
                     rule = rule.substring(0,startOfRuleSegment-1) + rule.substring(endIndex);                        
@@ -863,7 +893,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }
             braceBlocks[i].rule = rule;
         }
-            debugger;                
+
         for (var i = braceBlocks.length-1; i >= 0; i--) {
             if (braceBlocks[i].rule) {
                 css = css.substring(0,braceBlocks[i].ruleStart) + braceBlocks[i].rule + css.substring(braceBlocks[i].start);
