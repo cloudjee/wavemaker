@@ -2109,7 +2109,7 @@ dojo.declare("Studio", wm.Page, {
             wm.forEachProperty(inData, function(inValue, inName) {
                 if (inName != "wm_studio") {
                     var designer = inValue.designer;
-                    var dojoPackage = inValue.package;
+                    var dojoPackage = inValue["package"];
                     d.push({name: inName,
                             dataValue: dojoPackage + "." + inName,
                             designer: designer});
