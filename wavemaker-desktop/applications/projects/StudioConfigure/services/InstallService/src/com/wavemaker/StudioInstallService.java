@@ -14,13 +14,10 @@
 package com.wavemaker;
 import java.net.*;
 import java.io.*; 
-import java.util.*;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.common.util.IOUtils;
@@ -29,7 +26,6 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.DeploymentInfo;
-import com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget;
 
 
 /**
