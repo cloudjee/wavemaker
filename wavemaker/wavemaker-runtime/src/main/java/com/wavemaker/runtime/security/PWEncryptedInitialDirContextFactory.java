@@ -14,14 +14,14 @@
 
 package com.wavemaker.runtime.security;
 
-import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
+//import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
 
 import com.wavemaker.common.util.SystemUtils;
 
 /**
  * @author Frankie Fu
  */
-public class PWEncryptedInitialDirContextFactory extends DefaultInitialDirContextFactory {
+public class PWEncryptedInitialDirContextFactory { //extends DefaultInitialDirContextFactory {
 
     /**
      * Create and initialize an instance to the LDAP url provided
@@ -29,13 +29,13 @@ public class PWEncryptedInitialDirContextFactory extends DefaultInitialDirContex
      * @param providerUrl a String of the form <code>ldap://localhost:389/base_dn<code>
      */
     public PWEncryptedInitialDirContextFactory(String providerUrl) {
-        super(providerUrl);
+        //super(providerUrl);
     }
 
-    @Override
+    //@Override
     public void setManagerPassword(String managerPassword) {
         // check if the password is encrypted, if so, decrypt it
         String pw = SystemUtils.isEncrypted(managerPassword) ? SystemUtils.decrypt(managerPassword) : managerPassword;
-        super.setManagerPassword(pw);
+       // super.setManagerPassword(pw);
     }
 }

@@ -18,15 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.AuthenticationManager;
-import org.acegisecurity.BadCredentialsException;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.apache.log4j.Logger;
 
 import com.wavemaker.runtime.RuntimeAccess;
@@ -44,7 +45,7 @@ public class SecurityService {
 
     static final Logger logger = Logger.getLogger(SecurityService.class);
 
-    private AuthenticationManager authenticationManager;
+    //private AuthenticationManager authenticationManager;
 
     private String rolePrefix;
 
@@ -53,6 +54,10 @@ public class SecurityService {
     private List<String> roles;
 
     private Map<String, List<Rule>> roleMap;
+
+    public SecurityService() {
+        System.out.println("*** SecurityService is being instantiated ***");
+    }
 
     /**
      * Provides a simple username/password authentication. It uses the authentication provider(s) specified in the
@@ -64,7 +69,7 @@ public class SecurityService {
      * @throws InvalidCredentialsException If the supplied credentials are invalid.
      * @throws SecurityException if authentication failed for some reasons other than invalid credentials.
      */
-    public void authenticate(String username, String password) throws InvalidCredentialsException, SecurityException {
+    /*public void authenticate(String username, String password) throws InvalidCredentialsException, SecurityException {
         Authentication auth = null;
         try {
             auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -74,7 +79,7 @@ public class SecurityService {
             throw new SecurityException(e);
         }
         SecurityContextHolder.getContext().setAuthentication(auth);
-    }
+    }*/
 
     /**
      * Logs the current principal out. The principal is the one in the security context.
@@ -85,7 +90,7 @@ public class SecurityService {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-    private Authentication getAuthenticatedAuthentication() {
+    private static Authentication getAuthenticatedAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication instanceof AnonymousAuthenticationToken ? null : authentication;
     }
@@ -107,8 +112,12 @@ public class SecurityService {
      */
     @ExposeToClient
     public String getUserName() {
-        WMAppContext wmApp = WMAppContext.getInstance();
-        return wmApp.getUserNameForUserID(this.getUserId());
+        Authentication authentication = getAuthenticatedAuthentication();
+        if (authentication != null) {
+            WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
+            return principal.getUserLongName();
+        }
+        return null;
     }
 
     /**
@@ -136,7 +145,7 @@ public class SecurityService {
         if (authentication == null) {
             return new String[0];
         }
-        GrantedAuthority[] authorities = authentication.getAuthorities();
+        Collection<? extends GrantedAuthority>  authorities = authentication.getAuthorities(); 
         List<String> roleNames = new ArrayList<String>();
         for (GrantedAuthority authority : authorities) {
             String roleName = authority.getAuthority();
@@ -158,13 +167,22 @@ public class SecurityService {
             }
         }
 
-        WMAppContext wmApp = WMAppContext.getInstance();
-        if (wmApp != null && wmApp.isMultiTenant()) {
-            Integer tid = wmApp.getTenantIdForUser(getUserName());
-            RuntimeAccess.getInstance().setTenantId(tid);
-        }
-
         return roleNames.toArray(new String[0]);
+    }
+
+    /**
+     * Returns the tenant Id for the logged in user.
+     *
+     * @return The tenant Id.
+     */
+    @ExposeToClient
+    public static int getTenantId() {
+        Authentication authentication = getAuthenticatedAuthentication();
+        if (authentication != null) {
+            WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
+            return principal.getTenantId();
+        }
+        return -1;
     }
 
     /**
@@ -214,13 +232,13 @@ public class SecurityService {
         return true;
     }
 
-    public AuthenticationManager getAuthenticationManager() {
+    /*public AuthenticationManager getAuthenticationManager() {
         return this.authenticationManager;
     }
 
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-    }
+    }*/
 
     public String getRolePrefix() {
         return this.rolePrefix;

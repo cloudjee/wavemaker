@@ -23,9 +23,9 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.ldap.InitialDirContextFactory;
-import org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
 
 /**
  * @author Frankie Fu
@@ -50,8 +50,8 @@ public class LdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator {
 
     private DataSource dataSource;
 
-    public LdapAuthoritiesPopulator(InitialDirContextFactory initialDirContextFactory, String groupSearchBase) {
-        super(initialDirContextFactory, groupSearchBase);
+    public LdapAuthoritiesPopulator(ContextSource contextSource, String groupSearchBase) {
+        super(contextSource, groupSearchBase);
     }
 
     @Override

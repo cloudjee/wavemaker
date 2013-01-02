@@ -16,24 +16,27 @@ package com.wavemaker.tools.security;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.acegisecurity.ConfigAttributeDefinition;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.SecurityConfig;
-import org.acegisecurity.intercept.web.FilterInvocationDefinitionSourceEditor;
-import org.acegisecurity.intercept.web.PathBasedFilterInvocationDefinitionMap;
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.memory.UserMap;
-import org.acegisecurity.userdetails.memory.UserMapEditor;
+import com.wavemaker.tools.security.schema.AuthenticationManager;
+import com.wavemaker.tools.security.schema.Http;
+import com.wavemaker.tools.security.schema.LdapServer;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.memory.UserMap;
+import org.springframework.security.core.userdetails.memory.UserMapEditor;
 
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
@@ -51,26 +54,26 @@ public class SecuritySpringSupport {
     static final String ROLE_PREFIX = "ROLE_";
 
     private static final String DEFAULT_NO_ROLES_ROLE = "DEFAULT_NO_ROLES";
-
-    private static final String FILTER_SECURITY_INTERCEPTOR_BEAN_ID = "filterSecurityInterceptor";
-
-    private static final String OBJECT_DEFINITION_SOURCE_PROPERTY = "objectDefinitionSource";
-
-    private static final String FILTER_CHAIN_PROXY_BEAN_ID = "filterChainProxy";
-
-    private static final String FILTER_DEFINITION_SOURCE_PROPERTY = "filterInvocationDefinitionSource";
-
-    private static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
+    
+    static final String AUTHENTICATON_MANAGER_BEAN_ID = "authenticationManager";
+    
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_DEMO = "authenticationManagerDemo";
+    
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
+    
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP = "authenticationManagerLDAP";   
+    
+    static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB = "authenticationManagerLDAPwithDB";
+    
+    static final String USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID = "WMSecAuthFilter";
+    
+	public static final String WM_AUTH_ENTRY_POINT = "WMSecAuthEntryPoint";
 
     private static final String AUTH_PROVIDERS_PROPERTY = "providers";
 
     private static final String ANONYMOUS_AUTHENTICATION_PROVIDER_BEAN_ID = "anonymousAuthenticationProvider";
 
-    private static final String DAO_AUTHENTICATION_PROVIDER_BEAN_ID = "daoAuthenticationProvider";
-
     static final String LDAP_AUTH_PROVIDER_BEAN_ID = "ldapAuthProvider";
-
-    private static final String USER_DETAILS_SERVICE_PROPERTY = "userDetailsService";
 
     static final String IN_MEMORY_DAO_IMPL_BEAN_ID = "inMemoryDaoImpl";
 
@@ -82,13 +85,11 @@ public class SecuritySpringSupport {
 
     private static final String DATA_SOURCE_PROPERTY = "dataSource";
 
-    private static final String DEFAULT_DATA_SOURCE_BEAN_ID = "jdbcDataSource";
+    private static final String DEFAULT_DATA_SOURCE_BEAN_ID = "dummyDataSource";
 
     private static final String USERS_BY_USERNAME_QUERY_PROPERTY = "usersByUsernameQuery";
 
     private static final String AUTHORITIES_BY_USERNAME_QUERY_PROPERTY = "authoritiesByUsernameQuery";
-
-    private static final String AUTHORITIES_BY_USERNAME_QUERY_PARAM_TYPE_PROPERTY = "authoritiesByUsernameQueryParamType";
 
     private static final String TABLE_MARKER = "table";
 
@@ -112,15 +113,17 @@ public class SecuritySpringSupport {
 
     private static final String LDAP_DIR_CONTEXT_FACTORY_BEAN_ID = "initialDirContextFactory";
 
-    private static final String LDAP_BIND_AUTHENTICATOR_CLASSNAME = "org.acegisecurity.providers.ldap.authenticator.BindAuthenticator";
+    private static final String LDAP_BIND_AUTHENTICATOR_CLASSNAME = "org.springframework.security.ldap.authentication.BindAuthenticator";
 
     private static final String LDAP_AUTHORITIES_POPULATOR_CLASSNAME = "com.wavemaker.runtime.security.LdapAuthoritiesPopulator";
+    
+    private static final String LDAP_AUTHORITIES_POPULATOR = "LdapAuthoritiesPopulator";
 
     private static final String LDAP_MANAGER_DN_PROPERTY = "managerDn";
 
     private static final String LDAP_MANAGER_PASSWORD_PROPERTY = "managerPassword";
 
-    private static final String LDAP_USERDN_PATTERNS_PROPERTY = "userDnPatterns";
+    private static final String LDAP_USERSEARCH_PROPERTY = "userSearch";
 
     private static final String LDAP_GROUP_SEARCHING_DISABLED = "groupSearchDisabled";
 
@@ -141,65 +144,38 @@ public class SecuritySpringSupport {
     private static final String LDAP_ROLE_QUERY = "roleQuery";
 
     private static final String LDAP_ROLE_PROVIDER = "roleProvider";
+    
+    public static final String ROLE_PROVIDER_LDAP = "LDAP";
+    
+    public static final String ROLE_PROVIDER_DATABASE = "Database";
 
-    private static final String SPACES_12 = "            ";
+    public static final String IS_AUTHENTICATED_ANONYMOUSLY = "permitAll";
 
-    private static final String SPACES_16 = "                ";
-
-    private static final String OBJECT_DEFINITION_SOURCE_PREFIX = "\n" + SPACES_16 + "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON\n" + SPACES_16
-        + "PATTERN_TYPE_APACHE_ANT\n";
-
-    private static final String IS_AUTHENTICATED_ANONYMOUSLY = "IS_AUTHENTICATED_ANONYMOUSLY";
-
-    private static final String IS_AUTHENTICATED_FULLY = "IS_AUTHENTICATED_FULLY";
-
-    private static final String UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX = "\n" + SPACES_12;
-
-    private static final String STANDARD_FILTER_CHAIN_DEFINITION = "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON"
-        + "\n"
-        + "					PATTERN_TYPE_APACHE_ANT"
-        + "\n"
-        + "					/**=httpSessionContextIntegrationFilter,logoutFilter,formAuthenticationProcessingFilter,anonymousProcessingFilter,jsonExceptionTranslationFilter,filterSecurityInterceptor";
-
+    public static final String IS_AUTHENTICATED_FULLY = "isAuthenticated()";
+    
     private static final String SECURITY_SERVICE = "securityService";
 
     private static final String ROLES = "roles";
-
+    
+    public static final String CONTEXT_SOURCE = "contextSource";
+    
     private static List<String> getSecurityResourceAttrs(Beans beans, String url) {
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        FilterInvocationDefinitionSourceEditor e = new FilterInvocationDefinitionSourceEditor();
-        e.setAsText(getPropertyValueString(bean, OBJECT_DEFINITION_SOURCE_PROPERTY));
-        PathBasedFilterInvocationDefinitionMap map = (PathBasedFilterInvocationDefinitionMap) e.getValue();
-        ConfigAttributeDefinition attrs = map.lookupAttributes(url);
-        List<String> authzList = new ArrayList<String>();
-        if (attrs != null) {
-            Iterator<SecurityConfig> iter = CastUtils.cast(attrs.getConfigAttributes());
-            while (iter.hasNext()) {
-                authzList.add(iter.next().getAttribute());
-            }
-        }
-        return authzList;
+        Map<String, List<String>> urlMap = getSecurityInterceptUrls(beans);
+        return urlMap.get(url);
     }
 
-    static Map<String, List<String>> getObjectDefinitionSource(Beans beans) {
+    static Map<String, List<String>> getSecurityInterceptUrls(Beans beans) {
         Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        String odspFull = getPropertyValueString(bean, OBJECT_DEFINITION_SOURCE_PROPERTY);
-        String odspBody = "";
-        if (odspFull.startsWith(OBJECT_DEFINITION_SOURCE_PREFIX)) {
-            odspBody = odspFull.substring(OBJECT_DEFINITION_SOURCE_PREFIX.length()).trim();
-        }
-        String delim = "[=,\n]";
-        String[] odspArray = odspBody.split(delim);
-        List<String> odspList = new ArrayList<String>(Arrays.asList(odspArray));
-        Iterator<String> itr = odspList.iterator();
-        if (itr != null) {
-            while (itr.hasNext()) {
-                String key = itr.next().trim();
-                List<String> authzList = new ArrayList<String>();
-                authzList.add(itr.next().trim());
-                urlMap.put(key, authzList);
+        List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
+        for (Http.InterceptUrl url : urls) {
+            String key = url.getPattern();
+            List<String> authzList = new ArrayList<String>();
+            String accessStr = url.getAccess();
+            String[] accessArr = accessStr.split(",");
+            for (String access : accessArr) {
+                authzList.add(access);
             }
+            urlMap.put(key, authzList);
         }
         return urlMap;
     }
@@ -212,37 +188,25 @@ public class SecuritySpringSupport {
         return getSecurityResourceAttrs(beans, "/index.html").contains(IS_AUTHENTICATED_FULLY);
     }
 
-    static void setObjectDefinitionSource(Beans beans, Map<String, List<String>> urlMap) {
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        Property property = bean.getProperty(OBJECT_DEFINITION_SOURCE_PROPERTY);
-        StringBuilder objectDefSource = new StringBuilder();
-        objectDefSource.append(OBJECT_DEFINITION_SOURCE_PREFIX);
+    static void setSecurityInterceptUrls(Beans beans, Map<String, List<String>> urlMap) {
         for (String url : urlMap.keySet()) {
-            objectDefSource.append(SPACES_16);
-            objectDefSource.append(url);
-            objectDefSource.append("=");
+            String access = "";
+            Http.InterceptUrl iurl = new Http.InterceptUrl();
             List<String> authzList = urlMap.get(url);
             if (authzList.size() > 0) {
-                objectDefSource.append(authzList.get(0));
+                access = authzList.get(0);
                 for (int i = 1; i < authzList.size(); i++) {
-                    objectDefSource.append(",");
-                    objectDefSource.append(authzList.get(i));
+                    access = access + ",";
+                    access = access + authzList.get(i);
                 }
+                iurl.setPattern(url);
+                iurl.setAccess(access);
+                SecurityXmlSupport.setInterceptUrl(beans, iurl);
             }
-            objectDefSource.append("\n");
         }
-        objectDefSource.append(SPACES_12);
-        List<String> newContent = new ArrayList<String>();
-        newContent.add(objectDefSource.toString());
-        property.getValueElement().setContent(newContent);
     }
 
     static void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
-        Bean bean = beans.getBeanById(FILTER_SECURITY_INTERCEPTOR_BEAN_ID);
-        Property property = bean.getProperty(OBJECT_DEFINITION_SOURCE_PROPERTY);
-        List<String> newContent = new ArrayList<String>();
-        String value = null;
-        Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
         if (enforceSecurity) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
@@ -250,66 +214,55 @@ public class SecuritySpringSupport {
             } else {
                 indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
             }
-            urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            urlMap.put("/*.download", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-            urlMap.put("/*.upload", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-            urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-            urlMap.put("/*/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
-        }
-        value = generateObjectDefinitionSource(enforceSecurity, urlMap);
-        newContent.add(value);
-        property.getValueElement().setContent(newContent);
-    }
+            List<Http.InterceptUrl> urls = new ArrayList<Http.InterceptUrl>();
 
-    static void setSecurityFilterChain(Beans beans) {
-        Bean bean = beans.getBeanById(FILTER_CHAIN_PROXY_BEAN_ID);
-        Property property = bean.getProperty(FILTER_DEFINITION_SOURCE_PROPERTY);
-        List<String> newContent = new ArrayList<String>();
-        String value = STANDARD_FILTER_CHAIN_DEFINITION;
-        newContent.add(value);
-        property.getValueElement().setContent(newContent);
-    }
+            Http.InterceptUrl url = new Http.InterceptUrl();
+            url.setPattern("/index.html");
+            url.setAccess(indexHtmlAuthz);
+            urls.add(url);
 
-    private static String generateObjectDefinitionSource(boolean securityEnabled, Map<String, List<String>> urlMap) {
-        StringBuilder objectDefSource = new StringBuilder();
-        objectDefSource.append(OBJECT_DEFINITION_SOURCE_PREFIX);
-        if (securityEnabled) {
-            for (String url : urlMap.keySet()) {
-                objectDefSource.append(SPACES_16);
-                objectDefSource.append(url);
-                objectDefSource.append("=");
-                List<String> authzList = urlMap.get(url);
-                if (authzList.size() > 0) {
-                    objectDefSource.append(authzList.get(0));
-                    for (int i = 1; i < authzList.size(); i++) {
-                        objectDefSource.append(",");
-                        objectDefSource.append(authzList.get(i));
-                    }
-                }
-                objectDefSource.append("\n");
-            }
-            objectDefSource.append(SPACES_12);
-        } else {
-            objectDefSource.append(UNPROTECTED_OBJECT_DEFINITION_SOURCE_SUFFIX);
-        }
-        return objectDefSource.toString();
-    }
+            url = new Http.InterceptUrl();
+            url.setPattern("/");
+            url.setAccess(indexHtmlAuthz);
+            urls.add(url);
 
-    private static String[] getAuthManagerProviderBeanIds(Beans beans) {
-        Bean bean = beans.getBeanById(AUTHENTICATON_MANAGER_BEAN_ID);
-        Property property = bean.getProperty(AUTH_PROVIDERS_PROPERTY);
-        com.wavemaker.tools.spring.beans.List list = property.getList();
-        List<Object> refElements = list.getRefElement();
-        String[] pbids = new String[refElements.size()];
-        for (int i = 0; i < refElements.size(); i++) {
-            Ref ref = (Ref) refElements.get(i);
-            pbids[i] = ref.getBean();
+            url = new Http.InterceptUrl();
+            url.setPattern("/pages/login/**");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/securityservice.json");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.download");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.upload");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/pages/**");
+            url.setAccess(indexHtmlAuthz);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.json");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*/*.json");
+            url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            SecurityXmlSupport.setInterceptUrls(beans, urls);
         }
-        return pbids;
     }
 
     static void setAuthManagerProviderBeanId(Beans beans, String beanId) {
@@ -331,36 +284,27 @@ public class SecuritySpringSupport {
     }
 
     static String getDataSourceType(Beans beans) {
-        String[] authProviderBeanIds = getAuthManagerProviderBeanIds(beans);
-        for (String authProviderBeanId : authProviderBeanIds) {
-            if (authProviderBeanId.equals(DAO_AUTHENTICATION_PROVIDER_BEAN_ID)) {
-                Bean bean = beans.getBeanById(DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
-                Property property = bean.getProperty(USER_DETAILS_SERVICE_PROPERTY);
-                Ref refElement = property.getRefElement();
-                String beanId = refElement.getBean();
-                if (beanId.equals(IN_MEMORY_DAO_IMPL_BEAN_ID)) {
-                    return GeneralOptions.DEMO_TYPE;
-                } else if (beanId.equals(JDBC_DAO_IMPL_BEAN_ID)) {
-                    return GeneralOptions.DATABASE_TYPE;
-                } else {
-                    throw new ConfigurationException("Unrecognized bean Id " + beanId + " for userDetailsService property.");
-                }
-            } else if (authProviderBeanId.equals(LDAP_AUTH_PROVIDER_BEAN_ID)) {
-                return GeneralOptions.LDAP_TYPE;
-            }
+        Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
+        Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
+        String beanId = property.getRef();
+        if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_DEMO)) {
+            return GeneralOptions.DEMO_TYPE;
+        } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_DB)) {
+            return GeneralOptions.DATABASE_TYPE;
+        } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP) || beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB)) {
+            return GeneralOptions.LDAP_TYPE;
+        } else {
+            throw new ConfigurationException("Unable to get data source type!");
         }
-        throw new ConfigurationException("Unable to get data source type!");
     }
 
-    static void updateAuthProviderUserDetailsService(Beans beans, String refId) {
-        setAuthManagerProviderBeanId(beans, DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
-        Bean bean = beans.getBeanById(DAO_AUTHENTICATION_PROVIDER_BEAN_ID);
-        Property property = bean.getProperty(USER_DETAILS_SERVICE_PROPERTY);
-        Ref ref = new Ref();
-        ref.setBean(refId);
-        property.setRefElement(ref);
+    static void setDataSourceType(Beans beans, String authMgrName) {
+        Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
+        Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
+        property.setRef(authMgrName);
     }
 
+    @Deprecated
     static List<DemoUser> getDemoUsers(Beans beans) {
         Bean bean = beans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
         Property property = bean.getProperty(USER_MAP_PROPERTY);
@@ -385,8 +329,9 @@ public class SecuritySpringSupport {
                     UserDetails user = userMap.getUser(userid);
                     DemoUser demoUser = new DemoUser();
                     demoUser.setUserid(userid);
-                    demoUser.setPassword(user.getPassword());
-                    GrantedAuthority[] authorities = user.getAuthorities();
+                    demoUser.setPassword(user.getPassword());//TODO:This is empty
+                    Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                    //GrantedAuthority[] authorities = user.getAuthorities();
                     List<String> userRoles = new ArrayList<String>();
                     for (GrantedAuthority authority : authorities) {
                         String role = authority.getAuthority();
@@ -396,8 +341,8 @@ public class SecuritySpringSupport {
                                 userRoles.add(realRole);
                             }
                         } else {
-                            SecurityToolsManager.logger.warn("Skipping Role " + role + ". It should be prefix with " + ROLE_PREFIX
-                                + ". Something is wrong!");
+                            SecurityToolsManager.logger.warn("Skipping Role " + role + ". It should be prefixed with " + ROLE_PREFIX
+                                + ". This is probably an error !");
                         }
                     }
                     demoUser.setRoles(userRoles);
@@ -408,34 +353,36 @@ public class SecuritySpringSupport {
         return demoUsers;
     }
 
-    static void setDemoUsers(Beans beans, DemoUser[] demoUsers) {
-        Bean bean = beans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
-        StringBuilder sb = new StringBuilder();
-        for (DemoUser demoUser : demoUsers) {
-            sb.append("\n");
-            sb.append(SPACES_16);
-            sb.append(demoUser.getUserid());
-            sb.append("=");
-            sb.append(demoUser.getPassword());
-            List<String> roles = demoUser.getRoles();
-            if (roles.isEmpty()) {
-                sb.append(",");
-                sb.append(ROLE_PREFIX);
-                sb.append(DEFAULT_NO_ROLES_ROLE);
-            } else {
-                for (String role : roles) {
-                    sb.append(",");
-                    sb.append(ROLE_PREFIX);
-                    sb.append(role);
-                }
-            }
-        }
-        sb.append("\n");
-        sb.append(SPACES_12);
-
-        setPropertyValueString(bean, USER_MAP_PROPERTY, sb.toString());
+    static void setDemoUsers(Beans beans, DemoUser[] demoUsers) {	
+    	SecurityXmlSupport.setUserSvcUsers(beans, demoUsersToUsers(demoUsers));
     }
+    
 
+    static public List<UserService.User> demoUsersToUsers(DemoUser[] demoUsers){
+    	List<UserService.User> usersList = new ArrayList<UserService.User>();
+    	for(DemoUser u : demoUsers){
+    		UserService.User user = new UserService.User();
+    		String roles = new String();
+    		List<String> userRoles = u.getRoles();
+    		if(userRoles.isEmpty()){
+    			roles = "";
+    		}
+    		else if(userRoles.size() == 1){
+    			roles = ROLE_PREFIX + userRoles.get(0);
+    		}
+    		else{
+    			for(String r : u.getRoles() ){
+    				roles = ROLE_PREFIX + r + ",";
+    			}
+    		}
+    		user.setName(u.getUserid());
+    		user.setPassword(u.getPassword());
+    		user.setAuthorities(roles);
+    		usersList.add(user);
+    	}
+    	return usersList;
+    }
+	
     static DatabaseOptions constructDatabaseOptions(Beans beans) {
         DatabaseOptions options = new DatabaseOptions();
         Bean jdbcDaoBean = beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);
@@ -508,8 +455,6 @@ public class SecuritySpringSupport {
             setPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PROPERTY,
                 buildAuthoritiesByUsernameQuery(tableName, unameColumnName, uidColumnName, roleColumnName));
         }
-
-        setPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PARAM_TYPE_PROPERTY, uidColumnSqlType);
     }
 
     static void resetJdbcDaoImpl(Beans beans) {
@@ -544,65 +489,106 @@ public class SecuritySpringSupport {
         return queryString;
     }
 
+    /**
+     * Returns the current LDAP configuration in the form of a LDAPOptions Structure
+     * @param beans
+     * @return
+     */
     static LDAPOptions constructLDAPOptions(Beans beans) {
-        LDAPOptions options = new LDAPOptions();
-        Bean ldapDirContextBean = beans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
+    	LDAPOptions options = new LDAPOptions();
+    	String activeAuthManAlias = SecurityXmlSupport.getActiveAuthManAlias(beans);
+    	if(activeAuthManAlias.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP)){
+    		return getLdapConfig(beans, options);
+    	}
+    	else if(activeAuthManAlias.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB)){
+    		Bean ldapDirContextBean = beans.getBeanById(CONTEXT_SOURCE);
 
-        ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
-        String ldapUrl = arg.getValue();
-        options.setLdapUrl(ldapUrl);
+    		ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
+    		String ldapUrl = arg.getValue();
+    		options.setLdapUrl(ldapUrl);
 
-        options.setManagerDn(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_DN_PROPERTY));
-        options.setManagerPassword(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_PASSWORD_PROPERTY));
+    		//options.setManagerDn(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_DN_PROPERTY));
+    		//options.setManagerPassword(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_PASSWORD_PROPERTY));
 
-        Bean ldapAuthProviderBean = beans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
-        List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
-        for (ConstructorArg constructorArg : constructorArgs) {
-            if (constructorArg.getBean().getClazz().equals(LDAP_BIND_AUTHENTICATOR_CLASSNAME)) {
-                Bean bindAuthBean = constructorArg.getBean();
-                Property userDnPatternsProperty = bindAuthBean.getProperty(LDAP_USERDN_PATTERNS_PROPERTY);
-                Value v = (Value) userDnPatternsProperty.getList().getRefElement().get(0);
-                String userDnPattern = v.getContent().get(0);
-                options.setUserDnPattern(userDnPattern);
-            } else if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
-                Bean authzBean = constructorArg.getBean();
-                boolean isGroupSearchDisabled = Boolean.parseBoolean(getPropertyValueString(authzBean, LDAP_GROUP_SEARCHING_DISABLED));
-                options.setGroupSearchDisabled(isGroupSearchDisabled);
-                if (!isGroupSearchDisabled) {
-                    List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
-                    if (authzArgs.size() > 1) {
-                        Value valueElement = authzArgs.get(1).getValueElement();
-                        if (valueElement != null && valueElement.getContent() != null && !valueElement.getContent().isEmpty()) {
-                            String groupSearchBase = valueElement.getContent().get(0);
-                            options.setGroupSearchBase(groupSearchBase);
-                        }
-                    }
-                    options.setGroupRoleAttribute(getPropertyValueString(authzBean, LDAP_GROUP_ROLE_ATTRIBUTE));
-                    options.setGroupSearchFilter(getPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER));
-                    options.setRoleModel(getPropertyValueString(authzBean, LDAP_ROLE_MODEL));
+    		Bean ldapAuthProviderBean = beans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+    		List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
+    		for (ConstructorArg constructorArg : constructorArgs) {
+    			if (constructorArg.getBean().getClazz().equals(LDAP_BIND_AUTHENTICATOR_CLASSNAME)) {
+    				Bean bindAuthBean = constructorArg.getBean();
 
-                    //Get the table name and, if any, strip away any schema prefixes
-                    String tableName = getPropertyValueString(authzBean, LDAP_ROLE_TABLE);
-                    if (tableName != null) { 
-                    	int hasSchemaPrefix = tableName.indexOf('.');
-                    	if (hasSchemaPrefix > -1) {
-                    		tableName = tableName.substring(hasSchemaPrefix + 1);
-                    	}
-                    }
-                    options.setRoleTable(tableName);
+    				Property userSearchProperty = bindAuthBean.getProperty(LDAP_USERSEARCH_PROPERTY);
+    				Bean userSearchBean = userSearchProperty.getBean();
+    				List<ConstructorArg> userSearchCtorArgs = userSearchBean.getConstructorArgs();
+    				String userSearchFilter = userSearchCtorArgs.get(1).getValue();
+    				if(userSearchFilter.startsWith("(")){
+    					userSearchFilter = userSearchFilter.substring(1, userSearchFilter.length()-1);
+    				}    
+    				options.setUserDnPattern(userSearchFilter);
+    			} else if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
+    				Bean authzBean = constructorArg.getBean();
+    				boolean isGroupSearchDisabled = Boolean.parseBoolean(getPropertyValueString(authzBean, LDAP_GROUP_SEARCHING_DISABLED));
+    				options.setGroupSearchDisabled(isGroupSearchDisabled);
+    				if (!isGroupSearchDisabled) {
+    					List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
+    					if (authzArgs.size() > 1) {
+    						Value valueElement = authzArgs.get(1).getValueElement();
+    						if (valueElement != null && valueElement.getContent() != null && !valueElement.getContent().isEmpty()) {
+    							String groupSearchBase = valueElement.getContent().get(0);
+    							options.setGroupSearchBase(groupSearchBase);
+    						}
+    					}
+    					options.setGroupRoleAttribute(getPropertyValueString(authzBean, LDAP_GROUP_ROLE_ATTRIBUTE));
+    					options.setGroupSearchFilter(getPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER));
+    					options.setRoleModel(getPropertyValueString(authzBean, LDAP_ROLE_MODEL));
 
-                    options.setRoleUsername(getPropertyValueString(authzBean, LDAP_ROLE_USERNAME));
-                    options.setRoleProperty(getPropertyValueString(authzBean, LDAP_ROLE_PROPERTY));
-                    options.setRoleQuery(getPropertyValueString(authzBean, LDAP_ROLE_QUERY));
-                    options.setRoleProvider(getPropertyValueString(authzBean, LDAP_ROLE_PROVIDER));
-                }
-            }
-        }
-
-        return options;
+    					//Get the table name and, if any, strip away any schema prefixes
+    					String tableName = getPropertyValueString(authzBean, LDAP_ROLE_TABLE);
+    					if (tableName != null) { 
+    						int hasSchemaPrefix = tableName.indexOf('.');
+    						if (hasSchemaPrefix > -1) {
+    							tableName = tableName.substring(hasSchemaPrefix + 1);
+    						}
+    					}
+    					options.setRoleTable(tableName);
+    					options.setRoleUsername(getPropertyValueString(authzBean, LDAP_ROLE_USERNAME));
+    					options.setRoleProperty(getPropertyValueString(authzBean, LDAP_ROLE_PROPERTY));
+    					options.setRoleQuery(getPropertyValueString(authzBean, LDAP_ROLE_QUERY));
+    					options.setRoleProvider(getPropertyValueString(authzBean, LDAP_ROLE_PROVIDER));
+    				}
+    			}
+    		}
+    		return options;
+    	}
+    	else{
+    		new ConfigurationException("LDAP is not the configured authentication source");
+    	}
+    	return options;
     }
 
-    static void updateLDAPDirContext(Beans beans, String ldapUrl, String managerDn, String managerPassword) {
+    private static LDAPOptions getLdapConfig(Beans beans, LDAPOptions options) {
+    	LdapServer ldapServer = SecurityXmlSupport.getLdapServer(beans);
+    	options.setLdapUrl(ldapServer.getUrl());
+    	options.setManagerDn(ldapServer.getManagerDn());
+    	options.setManagerPassword(ldapServer.getManagerPassword());
+    	AuthenticationManager.LdapAuthenticationProvider ldapAuthProvider = SecurityXmlSupport.getLdapAuthProvider(beans);
+    	
+    	String userSearchFilter = ldapAuthProvider.getUserSearchFilter();
+    	if(userSearchFilter.startsWith("(")){
+    		 userSearchFilter = userSearchFilter.substring(1, userSearchFilter.length()-1);
+    	}
+    	options.setUserDnPattern(userSearchFilter);
+    	//TODO: option to add base restriction
+    	//ldapAuthProvider.getUserSearchBase();   	
+    	options.setGroupSearchFilter(ldapAuthProvider.getGroupSearchFilter());
+    	options.setGroupSearchBase(ldapAuthProvider.getGroupSearchBase());
+    	options.setGroupRoleAttribute(ldapAuthProvider.getGroupRoleAttribute());
+
+    	options.setGroupSearchDisabled(getGroupSearchDisabled(beans)); 
+    	options.setRoleProvider(ROLE_PROVIDER_LDAP);
+    	return options;
+	}
+
+	static void updateLDAPDirContext(Beans beans, String ldapUrl, String managerDn, String managerPassword) {
         Bean ldapDirContextBean = beans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
 
         ldapDirContextBean.getConstructorArgs().get(0).setValue(ldapUrl);
@@ -620,27 +606,80 @@ public class SecuritySpringSupport {
                 props.remove(prop);
             }
         }
-    }
+    }	
 
-    static void updateLDAAuthProvider(Beans beans, String userDnPattern, boolean groupSearchDisabled, String groupSearchBase,
-        String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable, String roleUsername,
-        String roleProperty, String roleQuery, String roleProvider) {
+	public static void setGroupSearchDisabled(Beans beans, boolean groupSearchDisabled){
+		Bean ldapAuthProviderBean = beans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+		List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
+		for (ConstructorArg constructorArg : constructorArgs) {
+			if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
+				Bean ldapAuthPop = constructorArg.getBean();
+				Property groupSearchDisabledPop = ldapAuthPop.getProperty(LDAP_GROUP_SEARCHING_DISABLED);
+				Boolean bGroupSearchDisabled = new Boolean(groupSearchDisabled);
+				Value newValue = new Value();
+				List<String> newContent = new ArrayList<String>();
+				newContent.add(bGroupSearchDisabled.toString());
+				newValue.setContent(newContent);
+				groupSearchDisabledPop.setValueElement(newValue);	
+			}
+		}
+	}
 
+	public static boolean getGroupSearchDisabled(Beans beans){
+		Bean ldapAuthProviderBean = beans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+		List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
+		for (ConstructorArg constructorArg : constructorArgs) {
+			if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
+				Bean ldapAuthPop = constructorArg.getBean();
+				Property groupSearchDisabledPop = ldapAuthPop.getProperty(LDAP_GROUP_SEARCHING_DISABLED);
+				Boolean bGroupSearchDisabled = new Boolean(groupSearchDisabledPop.getValueElement().getContent().get(0));
+				return bGroupSearchDisabled.booleanValue();		
+			}
+		}
+		return false;
+	}
+	
+	public static void updateLDAAuthProvider(Beans beans, String ldapUrl,
+			String managerDn, String managerPassword, String userDnPattern,
+			boolean groupSearchDisabled, String groupSearchBase,
+			String groupRoleAttribute, String groupSearchFilter) {
+		LdapServer ldapServer = SecurityXmlSupport.getLdapServer(beans);
+		ldapServer.setUrl(ldapUrl);
+		//ldapServer.setManagerDn(managerDn);
+		//ldapServer.setManagerPassword(managerPassword);
+		setGroupSearchDisabled(beans,groupSearchDisabled);
+		SecurityXmlSupport.setLdapProviderProps(beans, groupSearchDisabled, userDnPattern, groupSearchBase, groupRoleAttribute, groupSearchFilter);	
+	}
+
+	static void updateLDAAuthProvider(Beans beans, String ldapUrl, String userDnPattern, boolean groupSearchDisabled, String groupSearchBase,
+			String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable, String roleUsername,
+			String roleProperty, String roleQuery, String roleProvider) {
+		updateLDAAuthProvider(beans, ldapUrl, "", userDnPattern,
+				groupSearchDisabled, groupSearchBase, groupRoleAttribute,
+				groupSearchFilter, roleModel, roleEntity, roleTable,
+				roleUsername, roleProperty, roleQuery, roleProvider);
+	}
+
+	static void updateLDAAuthProvider(Beans beans, String ldapUrl, String searchBase, String userDnPattern, boolean groupSearchDisabled,
+        String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable,
+        String roleUsername, String roleProperty, String roleQuery, String roleProvider) {
+
+		Bean contextSource = beans.getBeanById(CONTEXT_SOURCE);
+		List<ConstructorArg> contextConstructorArgs = contextSource.getConstructorArgs();
+		contextConstructorArgs.get(0).setValue(ldapUrl);
+		
         Bean ldapAuthProviderBean = beans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
         List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
 
         for (ConstructorArg constructorArg : constructorArgs) {
             if (constructorArg.getBean().getClazz().equals(LDAP_BIND_AUTHENTICATOR_CLASSNAME)) {
                 Bean bindAuthBean = constructorArg.getBean();
-                Property userDnPatternsProperty = bindAuthBean.getProperty(LDAP_USERDN_PATTERNS_PROPERTY);
-                com.wavemaker.tools.spring.beans.List list = userDnPatternsProperty.getList();
-                List<Object> refElements = new ArrayList<Object>();
-                Value v = new Value();
-                List<String> content = new ArrayList<String>();
-                content.add(userDnPattern);
-                v.setContent(content);
-                refElements.add(v);
-                list.setRefElement(refElements);
+                Property userSearchProperty = bindAuthBean.getProperty(LDAP_USERSEARCH_PROPERTY);
+                Bean userSearchBean = userSearchProperty.getBean();
+                List<ConstructorArg> userSearchCtorArgs = userSearchBean.getConstructorArgs();
+                userSearchCtorArgs.get(0).setValue(searchBase);
+                userSearchCtorArgs.get(1).setValue("(" + userDnPattern + ")");
+                userSearchCtorArgs.get(2).setRef(CONTEXT_SOURCE);
             } else if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
                 Bean authzBean = constructorArg.getBean();
                 List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
@@ -660,10 +699,10 @@ public class SecuritySpringSupport {
                 setPropertyValueString(authzBean, LDAP_ROLE_PROVIDER, roleProvider);
                 if (groupSearchDisabled == false) { // if group search is not disabled, we need to populate where we are
                                                     // getting the roles from
-                    if (roleProvider.equals("LDAP")) {
+                    if (roleProvider.equals(ROLE_PROVIDER_LDAP)) {
                         setPropertyValueString(authzBean, LDAP_GROUP_ROLE_ATTRIBUTE, groupRoleAttribute);
                         setPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER, groupSearchFilter);
-                    } else if (roleProvider.equals("Database")) {
+                    } else if (roleProvider.equals(ROLE_PROVIDER_DATABASE)) {
                         // GD: Adding values needed to get roles from database
                         setPropertyValueString(authzBean, LDAP_ROLE_MODEL, roleModel);
                         setPropertyValueString(authzBean, LDAP_ROLE_ENTITY, roleEntity);
@@ -710,12 +749,14 @@ public class SecuritySpringSupport {
         Property rolesProperty = securityServiceBean.getProperty(ROLES);
         com.wavemaker.tools.spring.beans.List list = rolesProperty.getList();
         List<Object> refElements = new ArrayList<Object>();
-        for (String role : roles) {
-            Value v = new Value();
-            List<String> content = new ArrayList<String>();
-            content.add(role);
-            v.setContent(content);
-            refElements.add(v);
+        if (roles != null) {
+            for (String role : roles) {
+                Value v = new Value();
+                List<String> content = new ArrayList<String>();
+                content.add(role);
+                v.setContent(content);
+                refElements.add(v);
+            }
         }
         list.setRefElement(refElements);
     }
@@ -747,4 +788,5 @@ public class SecuritySpringSupport {
         valueElement.setContent(content);
         property.setValueElement(valueElement);
     }
+
 }

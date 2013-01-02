@@ -14,10 +14,10 @@
 
 package com.wavemaker.runtime.security;
 
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.acegisecurity.userdetails.memory.InMemoryDaoImpl;
-import org.acegisecurity.userdetails.memory.UserMap;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
+import org.springframework.security.core.userdetails.memory.UserMap;
 import org.springframework.dao.DataAccessException;
 
 import com.wavemaker.runtime.WMAppContext;
@@ -27,6 +27,7 @@ import com.wavemaker.runtime.WMAppContext;
  * 
  * @author Seung Lee
  */
+@Deprecated
 public class EnhancedInMemoryDaoImpl extends InMemoryDaoImpl {
 
     @Override
@@ -35,7 +36,7 @@ public class EnhancedInMemoryDaoImpl extends InMemoryDaoImpl {
 
         UserDetails details = userMap.getUser(username);
         if (details != null) {
-            WMAppContext.getInstance().setUserNameForUserID(username, username);
+            //WMAppContext.getInstance().setUserNameForUserID(username, username);
         }
 
         return details;

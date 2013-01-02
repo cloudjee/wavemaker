@@ -25,6 +25,8 @@ public class BeansNamespaceMapper extends NamespacePrefixMapper {
     public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
         if ("http://www.springframework.org/schema/beans".equals(namespaceUri)) {
             return "";
+        } else if ("http://www.springframework.org/schema/security".equals(namespaceUri)){
+        	return "security";
         } else if ("http://www.w3.org/2001/XMLSchema-instance".equals(namespaceUri)) {
             return "xsi";
         } else if ("http://schema.cloudfoundry.org/spring".equals(namespaceUri)) {

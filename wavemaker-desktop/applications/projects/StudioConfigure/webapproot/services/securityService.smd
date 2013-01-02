@@ -1,5 +1,10 @@
 {
 	"methods": [{
+		"name": "getTenantId",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "int"
+	}, {
 		"name": "getUserId",
 		"operationType": null,
 		"parameters": null,

@@ -22,14 +22,12 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
 	properties = {
 	    j_username : args[0],
 	    j_password : args[1]
-	};
+	    };
     }
-
-    properties.acegiAjaxLogin = 'true';
 
     var deferred = new dojo.Deferred();
 
-    var url = (projectName ? "/" + projectName + "/" : "") + "j_acegi_security_check";
+    var url = (projectName ? "/" + projectName + "/" : "") + "j_spring_security_check";
     if (wm.xhrPath) url = wm.xhrPath + url;
     var def= dojo.xhrPost({
 	url: url,

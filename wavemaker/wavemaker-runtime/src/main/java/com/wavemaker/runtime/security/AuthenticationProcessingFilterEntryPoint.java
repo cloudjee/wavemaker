@@ -17,7 +17,7 @@ package com.wavemaker.runtime.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.AuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 
 /**
  * This allows passing the query string from the original URL to the login URL. This is required since in debug mode,
@@ -26,16 +26,16 @@ import org.acegisecurity.AuthenticationException;
  * 
  * @author Frankie Fu
  */
-public class AuthenticationProcessingFilterEntryPoint extends org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint {
+public class AuthenticationProcessingFilterEntryPoint{ // extends org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint {
 
-    @Override
-    protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
-        String loginFormUrl = getLoginFormUrl();
-        String queryString = request.getQueryString();
-        if (queryString == null || queryString.length() == 0) {
-            return loginFormUrl;
-        } else {
-            return loginFormUrl + "?" + queryString;
-        }
-    }
+//    @Override
+//    protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
+//        String loginFormUrl = getLoginFormUrl();
+//        String queryString = request.getQueryString();
+//        if (queryString == null || queryString.length() == 0) {
+//            return loginFormUrl;
+//        } else {
+//            return loginFormUrl + "?" + queryString;
+//        }
+//    }
 }

@@ -148,7 +148,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
         if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(DataServiceSpringConfiguration.MYSQL_DIALECT)) {
-            addCloudDataSource(mgr, cfg, dbName);
+            addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         }
     }
 

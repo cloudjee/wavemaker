@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.acegisecurity.intercept.web.FilterSecurityInterceptor;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
  * Overrides standard Acegi filter's doFilter method, to
