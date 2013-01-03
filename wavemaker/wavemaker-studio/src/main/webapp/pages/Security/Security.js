@@ -147,7 +147,7 @@ dojo.declare(
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapGroupSearchBaseInput.setDataValue("ou=groups");
             this.ldapGroupRoleAttributeInput.setDataValue("cn");
-            this.ldapGroupSearchFilterInput.setDataValue("(uniqueMember={0})");
+            this.ldapGroupSearchFilterInput.setDataValue("uniqueMember={0}");
             this.ldapConnectionResultLabel.setCaption("");
             // Added by Girish
             this.clearSelectInput(this.ldapRoleDbDataModelInput);

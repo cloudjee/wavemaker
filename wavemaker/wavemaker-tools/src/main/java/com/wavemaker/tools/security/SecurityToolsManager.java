@@ -15,12 +15,10 @@
 package com.wavemaker.tools.security;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -30,7 +28,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import javax.naming.ldap.InitialLdapContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
@@ -57,20 +54,6 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.webapp.WebXmlSupport;
-import com.wavemaker.tools.webapp.schema.AuthConstraintType;
-import com.wavemaker.tools.webapp.schema.AuthMethodType;
-import com.wavemaker.tools.webapp.schema.FormLoginConfigType;
-import com.wavemaker.tools.webapp.schema.HttpMethodType;
-import com.wavemaker.tools.webapp.schema.LoginConfigType;
-import com.wavemaker.tools.webapp.schema.RoleNameType;
-import com.wavemaker.tools.webapp.schema.SecurityConstraintType;
-import com.wavemaker.tools.webapp.schema.SecurityRoleType;
-import com.wavemaker.tools.webapp.schema.TransportGuaranteeType;
-import com.wavemaker.tools.webapp.schema.UrlPatternType;
-import com.wavemaker.tools.webapp.schema.UserDataConstraintType;
-import com.wavemaker.tools.webapp.schema.WebAppType;
-import com.wavemaker.tools.webapp.schema.WebResourceCollectionType;
 
 /**
  * @author Jeremy Grelle
