@@ -2779,7 +2779,6 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             parent: e,
             name: "allCorners",
             width: "35px",
-            padding: "0",
             onchange: dojo.hitch(this, "changed", 0)
         });
         this.cornersPanel = new wm.Panel({
@@ -2809,7 +2808,6 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             name: "topLeft",
             width: "100%",
             minWidth: "30",            
-            padding: "0",
             emptyValue: "zero",
             onchange: dojo.hitch(this, "changed", 0)
         });
@@ -2819,7 +2817,6 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             name: "topRight",
             width: "100%",
             minWidth: "30",     
-            padding: "0",       
             emptyValue: "zero",            
             onchange: dojo.hitch(this, "changed", 1)
         });
@@ -2841,7 +2838,6 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             name: "bottomLeft",
             width: "100%",
             minWidth: "30",            
-            padding: "0",      
             emptyValue: "zero",            
             onchange: dojo.hitch(this, "changed", 2)
         });
@@ -2853,7 +2849,6 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             name: "bottomRight",
             width: "100%",
             minWidth: "30",            
-            padding: "0",            
             emptyValue: "zero",            
             onchange: dojo.hitch(this, "changed", 3)
         });
@@ -3017,7 +3012,6 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
     dataValue: "solid 0px black",
     caption: "border",
     height: "24px",
-    padding: "0",
     buildPanel: function(inName, parent) {
             var p = this[inName + "Panel"] = new wm.Panel({
                 name: inName + "Panel",
@@ -3033,8 +3027,9 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             name: inName + "StyleEditor",
             owner: this,
             parent: p,
+            captionPosition: "left",
+            captionAlign: "left",
             width: "90px",
-            padding: "0",
             options: "inherit,solid,dotted,dashed,double,groove,ridge,inset,outset",
             dataValue: "solid",
             onchange: dojo.hitch(this, "changed")
@@ -3044,7 +3039,6 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             owner: this,
             parent: p,
             width: "60px",
-            padding: "0",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
         });        
@@ -3053,7 +3047,6 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             owner: this,
             parent: p,
             width: "150px",
-            padding: "0",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
         });        
@@ -3569,9 +3562,15 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 return gradientObj;
             } else {
                 /* TODO: COLOR STOPS IN WEBKIT CAME BACK NOT AS PERCENTS, NEED TO TEST THIS ON OTHER BROWSERS TO SEE WHAT VALUES ARE REALLY RETURNED */
-                matches = inValue.match(/.*linear-gradient\((.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?)\)/);
+                matches = inValue.match(/.*linear-gradient\((.*?,)?\s*(\#.*?|rgb\(.*?\))\s+(.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?),\s*(\#.*?|rgb\(.*?\))\s+(.*?)\)/);
                 if (matches) {
-                    gradientObj.direction = matches[1] == "top" || matches[1].match(/\stop/) ? "vertical" : "horizontal";
+                    var direction = matches[1];
+                    if (!direction) {
+                        gradientObj.direction = direction = "vertical";
+                    } else {
+                        direction = direction.replace(/,.*$/,"");
+                        gradientObj.direction = direction == "top" || matches[1].match(/\stop/) ? "vertical" : "horizontal";
+                    }
                     gradientObj.startColor = matches[2];
                     gradientObj.colorStop = matches[5];
                     gradientObj.endColor = matches[6];
