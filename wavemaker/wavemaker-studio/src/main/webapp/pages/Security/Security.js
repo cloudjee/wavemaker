@@ -616,9 +616,13 @@ dojo.declare(
             studio.endWait();
             this.ldapConnectionResultLabel.domNode.style.color = "red";
 			var authException = "AuthenticationException: [LDAP:";
+			var notSuppException = "OperationNotSupportedException: [LDAP:";
 			var errMsg = inError.message.trim();
 			if(errMsg.indexOf(authException) >= 0){
 				errMsg = errMsg.substring(authException.length, errMsg.length-1);
+			}
+			if(errMsg.indexOf(notSuppException) >= 0){
+				errMsg = errMsg.substring(notSuppException.length, errMsg.length-1);
 			}			
             this.ldapConnectionResultLabel.setCaption(errMsg.trim());
         },
