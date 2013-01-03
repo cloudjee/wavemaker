@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.naming.NamingException;
 import javax.xml.bind.JAXBException;
 
 import com.wavemaker.common.CommonConstants;
@@ -346,7 +347,7 @@ public class SecurityConfigService {
     	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
-    public void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) {
+    public void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) throws NamingException {
         SecurityToolsManager.testLDAPConnection(ldapUrl, managerDn, managerPassword);
     }
 

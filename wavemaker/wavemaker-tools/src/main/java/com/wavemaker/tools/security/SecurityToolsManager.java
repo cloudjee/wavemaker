@@ -15,11 +15,10 @@
 package com.wavemaker.tools.security;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -27,8 +26,9 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.naming.Context;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
+import javax.naming.ldap.InitialLdapContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
@@ -54,20 +54,6 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.webapp.WebXmlSupport;
-import com.wavemaker.tools.webapp.schema.AuthConstraintType;
-import com.wavemaker.tools.webapp.schema.AuthMethodType;
-import com.wavemaker.tools.webapp.schema.FormLoginConfigType;
-import com.wavemaker.tools.webapp.schema.HttpMethodType;
-import com.wavemaker.tools.webapp.schema.LoginConfigType;
-import com.wavemaker.tools.webapp.schema.RoleNameType;
-import com.wavemaker.tools.webapp.schema.SecurityConstraintType;
-import com.wavemaker.tools.webapp.schema.SecurityRoleType;
-import com.wavemaker.tools.webapp.schema.TransportGuaranteeType;
-import com.wavemaker.tools.webapp.schema.UrlPatternType;
-import com.wavemaker.tools.webapp.schema.UserDataConstraintType;
-import com.wavemaker.tools.webapp.schema.WebAppType;
-import com.wavemaker.tools.webapp.schema.WebResourceCollectionType;
 
 /**
  * @author Jeremy Grelle
@@ -350,8 +336,7 @@ public class SecurityToolsManager {
             String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
             Beans beans = getSecuritySpringBeans(true);
             SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);
-        
-            //TODO: Non-manager connection test            
+                   
             SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase,
                 groupRoleAttribute, groupSearchFilter);
             SecuritySpringSupport.resetJdbcDaoImpl(beans);
@@ -363,32 +348,19 @@ public class SecurityToolsManager {
      * be thrown if it can't connect to the LDAP server.
      * 
      * @param ldapUrl The LDAP URL like "ldap://localhost:389/dc=wavemaker,dc=com"
-     * @param managerDn The manager DN
-     * @param managerPassword The manager password
+     * @param managerDn The test user DN
+     * @param managerPassword The test user password
+     * @throws NamingException 
      * @throws org.Securitysecurity.BadCredentialsException
-     * @throws org.Securitysecurity.ldap.LdapDataAccessException
      */
-    public static void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) {
-//        DefaultInitialDirContextFactory dirContext = new DefaultInitialDirContextFactory(ldapUrl);
-//        if (managerDn != null && managerDn.length() != 0) {
-//            dirContext.setManagerDn(managerDn);
-//            if (SystemUtils.isEncrypted(managerPassword)) {
-//                managerPassword = SystemUtils.decrypt(managerPassword);
-//            }
-//            dirContext.setManagerPassword(managerPassword);
-//        }
-//        DirContext context = null;
-//        try {
-//            context = dirContext.newInitialDirContext();
-//        } finally {
-//            if (context != null) {
-//                try {
-//                    context.close();
-//                } catch (NamingException e) {
-//                    throw new ConfigurationException(e);
-//                }
-//            }
-//        }
+    public static void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) throws NamingException {
+        Hashtable<String,String> env = new Hashtable<String,String>();
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_PRINCIPAL, managerDn);
+        env.put(Context.PROVIDER_URL, ldapUrl);
+        env.put(Context.SECURITY_CREDENTIALS, managerPassword);
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        InitialLdapContext ctx = new InitialLdapContext(env, null);
     }
 
     public List<String> getRoles() throws IOException, JAXBException {
