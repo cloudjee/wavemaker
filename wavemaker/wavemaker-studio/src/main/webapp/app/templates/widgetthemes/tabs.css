@@ -43,6 +43,11 @@
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-selected:hover {
     box-shadow: -1px 1px 1px #444444; 
+    top: 2px;
+    /* NOTE: To create different values of top for different browsers, use
+     .dj_ie .wm_template .wmtablayers-tab.wmtablayers-selected, 
+     .dj_ff .wm_template .wmtablayers-tab.wmtablayers-selected,
+     .dj_webkit .wm_template .wmtablayers-tab.wmtablayers-selected */
 }
 
 /* GROUP: Tab Button with Focus */

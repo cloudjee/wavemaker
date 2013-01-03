@@ -1,12 +1,14 @@
 /* GROUP: Main Document Styles */
-.wm_template  .wmapproot,
-.wm_template.wmapproot > .wmpagecontainer {
-    border-radius: 4px;
-    box-shadow: 4px 4px 4px black;
-    font-family: sans-serif;
+.wm_template  .wmapproot {
+   font-family: sans-serif;
     font-size: 12px;
     color: #FFFFFF;
     font-weight: bold;
+}
+.wm_template .wmapproot > .wmpagecontainer,
+.wm_template.wmapproot > .wmpagecontainer {
+    border-radius: 4px;
+    box-shadow: 4px 4px 4px black;
     background-color: #444444; /* Document-Styles-Background_Color */
     background-image: none;
 }

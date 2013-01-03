@@ -114,7 +114,22 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Calendar",
             templateFile: "calendar",
             classList: [{dataValue: "wm.dijit.Calendar"}]            
-        }
+        },
+        {
+            name: "Tool Tips",
+            templateFile: "tooltips",
+            classList: []
+        },
+        {
+            name: "Toast Dialogs",
+            templateFile: "toast",
+            classList: []
+        },
+        {
+            name: "Links",
+            templateFile: "links",
+            classList: []
+        }             
     ],
 
 	styleEditors: {
@@ -609,7 +624,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                         lines[i] = lines[i].replace(/(\\!simportant)?\s*;/g, " !important;");
                                     }
                                     if (!isEditorEnabled) {
-                                        var generatedLines = lines[i].split(/[\n\r]+/);
+                                        var generatedLines = lines[i].split(/\n+/);
                                         for (var j = 0; j < generatedLines.length; j++) {
                                             if (generatedLines[j].match(/\/\*/)) {                                            
                                                 generatedLines[j] = "/* " + generatedLines[j].substring(0, generatedLines[j].indexOf("/*")) + " // THEMER: DISABLED */ " + generatedLines[j].substring(generatedLines[j].indexOf("/*"));
@@ -671,6 +686,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.cssText += startString + "\n" + this.widgetCssFiles[this.currentWidgetTemplateFile] + "\n" + endString;
         }
         studio.application.loadThemeCss(studio.application.theme, true, this.cssText);
+        if (this.widgetGrid.selectedItem.getValue("templateFile") == "editors" && dojo.isIE == 10) {
+            this.regenerateDemoPanel(); // dojo directly manipulates the styles of the input node for ie 10, and must regenerate on style change
+        }
     },
     /* END SECTION: Edit the selected widget styles */
 
@@ -906,7 +924,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     optimizeCss: function(inText) {
     	// strip out comments
-    	inText = inText.replace(/\/\*(.|\n|\r)*?\*\//gm,"")
+    	inText = inText.replace(/\/\*(.|\n)*?\*\//gm,"")
 
     	// strip out white space
     	inText = inText.replace(/^\s*/gm,"").replace(/\s*$/gm,"");

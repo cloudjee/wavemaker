@@ -79,7 +79,7 @@ WidgetThemerPage.widgets = {
 				}] 				
     		}],
     		splitter1: ["wm.Splitter", {}],
-			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"500px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
+			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"400px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 				demoPanelHeader: ["wm.Label", {width: "100%", caption: "Samples", _classes: {domNode: ["Header"]}}],
 				demoPanelWithThemeName: ["wm.Panel", { height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {
 				    demoPanelWithAppRoot: ["wm.Panel", {_classes: {domNode: ["wmapproot"]}, height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {

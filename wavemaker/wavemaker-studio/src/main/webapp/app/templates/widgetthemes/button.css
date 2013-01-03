@@ -1,6 +1,7 @@
 /* GROUP: Standard Button */
 /* dijitReset needed for popupButton */
 .wm_template .wmbutton,
+.wm_template button.wmbutton, /* mostly to clobber .dj_ie .wmbutton in default/theme.css */
 .wm_template .wmbutton .dijitReset {
 	font-family: sans-serif;
 	font-size: 12pt;
@@ -17,6 +18,18 @@
 	background-repeat: no-repeat;
 }
 
+/* GROUP: Hover State */
+ .wm_template   .wmbutton:hover,
+ .wm_template   .wmbutton:focus {
+ 	color: #FFFFFF;
+	font-weight: bold;
+        box-shadow: 0px 0px 0px black;    
+	background-color: #333333;
+	background-image: none;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
 /* GROUP: Active State */
 .wm_template   .wmbutton.toggleButtonDown,
 .wm_template   .wmbutton.Active,
@@ -26,18 +39,6 @@
 	color: #FFFFFF;
 	font-weight: bold;
 	box-shadow: 4px 4px 4px black;
-	background-color: #333333;
-	background-image: none;
-	background-position: left top;
-	background-repeat: no-repeat;
-}
-
-/* GROUP: Hover State */
- .wm_template   .wmbutton:hover,
- .wm_template   .wmbutton:focus {
- 	color: #FFFFFF;
-	font-weight: bold;
-        box-shadow: 0px 0px 0px black;    
 	background-color: #333333;
 	background-image: none;
 	background-position: left top;
