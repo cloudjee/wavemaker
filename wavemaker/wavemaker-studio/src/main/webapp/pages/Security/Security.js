@@ -598,9 +598,14 @@ dojo.declare(
             this.ldapRoleDBPanel.setShowing(inDataValue == "Database");
         },
         ldapConnectionButtonClick : function(inSender) {
+			if(!this.ldapManagerDnInput.getDataValue()){
+				app.alert(this.getDictionaryItem("ALERT_TEST_USER_REQUIRED"));
+			}
+			else{
             studio.beginWait(this.getDictionaryItem("WAIT_TEST_LDAP"));
             studio.securityConfigService.requestAsync("testLDAPConnection", [ this.ldapUrlInput.getDataValue(), this.ldapManagerDnInput.getDataValue(), this.ldapManagerPasswordInput.getDataValue() ], dojo.hitch(this,
                     "testLDAPConnectionResult"), dojo.hitch(this, "testLDAPConnectionError"));
+			}		
         },
         testLDAPConnectionResult : function(inResponse) {
             studio.endWait();
@@ -610,7 +615,12 @@ dojo.declare(
         testLDAPConnectionError : function(inError) {
             studio.endWait();
             this.ldapConnectionResultLabel.domNode.style.color = "red";
-            this.ldapConnectionResultLabel.setCaption(inError.message);
+			var authException = "AuthenticationException: [LDAP:";
+			var errMsg = inError.message.trim();
+			if(errMsg.indexOf(authException) >= 0){
+				errMsg = errMsg.substring(authException.length, errMsg.length-1);
+			}			
+            this.ldapConnectionResultLabel.setCaption(errMsg.trim());
         },
         addRoleButtonClick : function(inSender) {
             var role = this.addRoleInput.getDataValue();

@@ -113,13 +113,13 @@ Security.widgets = {
 				    ldapLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"LDAP", autoScroll:true}, {"onShow":"showLDAPLayer"}, {
 					ldapMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 					    ldapUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"LDAP URL","emptyValue":"null","padding":"2",helpText: "The URL of the LDAP server to be used as the root node"}, {"onchange":"setDirty"}],
-					    ldapManagerDnInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Manager DN","emptyValue":"null","padding":"2","showing":false, helpText: "Manager account DN, used only for testing conection"}, {"onchange":"setDirty"}],
-					    ldapManagerPasswordInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Manager Password","emptyValue":"null","padding":"2","showing":false, password: true,helpText: "Manager account password"}, {"onchange":"setDirty"}],
+					    ldapManagerDnInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Test user DN","emptyValue":"null","padding":"2", helpText: "Full DN of user acount for testing conection URL<BR>Example: 'cn=admin,ou=people,ou=wavemaker,ou=com'"}, {"onchange":"setDirty"}],
+					    ldapManagerPasswordInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Test user Password","emptyValue":"emptyString","padding":"2", password: true,helpText: "Password of test user DN"}, {"onchange":"setDirty"}],
 					    ldapUserDnPatternInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"User Search Pattern","emptyValue":"null","padding":"2",helpText: "Filter used to find the user in the directory, starting from the URL base, above.<br>The only valid variable is {0} which is replaced with the user's login name. Common example: 'cn={0}' "}, {"onchange":"setDirty"}],
 					    panel5: ["wm.Panel", {"height":"24px", width: "500px", "layoutKind":"left-to-right"}, {}, {
 						ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px", width: "100%"}],
 						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
-						ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Connection","showing":false,"margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
+						ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
 						spacer4: ["wm.Spacer", {"width":"2px"}, {}]
 
 					    }],
