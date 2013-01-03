@@ -118,7 +118,7 @@ Security.widgets = {
 					    ldapUserDnPatternInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"User Search Pattern","emptyValue":"null","padding":"2",helpText: "Filter used to find the user in the directory, starting from the URL base, above.<br>The only valid variable is {0} which is replaced with the user's login name. Common example: 'cn={0}' "}, {"onchange":"setDirty"}],
 					    panel5: ["wm.Panel", {"height":"24px", width: "500px", "layoutKind":"left-to-right"}, {}, {
 						ldapConnectionResultLabel: ["wm.Label", {"caption":"ldapConnectionResultLabel","border":"0","height":"24px", width: "100%"}],
-						spacer7: ["wm.Spacer", {"width":"100%"}, {}],
+						spacer7: ["wm.Spacer", {"width":"50px"}, {}],
 						ldapConnectionButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Test Connection","margin":"2","width":"150px"}, {"onclick":"ldapConnectionButtonClick"}],
 						spacer4: ["wm.Spacer", {"width":"2px"}, {}]
 
