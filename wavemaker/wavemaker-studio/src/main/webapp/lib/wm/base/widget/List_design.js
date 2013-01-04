@@ -123,6 +123,7 @@ wm.List.extend({
         this.renderDojoObj();
     },
     set_dataSet: function(inDataSet) {
+        if (!this._isDesignLoaded) return this.setDataSet(inDataSet); // needed for showing lists in the WidgetThemerPage's demoPanel
         var typeWas = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
         this.setDataSet(inDataSet);
         var typeIs = this.dataSet && this.dataSet._dataSchema ? dojo.toJson(this.dataSet._dataSchema) : null;
