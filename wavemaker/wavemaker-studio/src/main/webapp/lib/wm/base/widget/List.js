@@ -149,7 +149,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                 column.expression = column.expression.replace(/\$\{wm\.runtimeId\}/g, this.getRuntimeId()).replace(/wm\.List\.prototype\./g, "app.getValueById('" + this.getRuntimeId() + "').");
             }
         }
-        if (!this.isDesignLoaded() && dojo.isIE <= 8) {
+        if (!this.isDesignLoaded() && dojo.isIE <= 10) {
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 var w = column.width;
