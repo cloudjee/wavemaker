@@ -10,9 +10,6 @@
                         <value>org.springframework.web.multipart.MultipartFile</value>
                     </list>
                 </entry>
-                <entry key="securityService">
-                    <list/>
-                </entry>
             </map>
         </property>
     </bean>
