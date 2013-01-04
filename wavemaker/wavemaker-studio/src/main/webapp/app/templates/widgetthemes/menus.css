@@ -20,6 +20,7 @@
 	color: #FFFFFF;
 	background-color: #444444; /* Document-ClickablesHover-Background_Color */
 	background-image: none;
+        filter: none;
 	outline: 0px;
 }
 
@@ -28,6 +29,7 @@
 color: #FFFFFF;
 background-color: #333333;
 background-image: none;
+filter: none;
 outline: 0px;
 }
 
@@ -47,6 +49,7 @@ outline: 0px;
 .wm_template .dijitMenuPopup .dijitMenuTable {
     background-color: #444444;
     background-image: none;
+    filter: none;
     border: solid 1px black;
     border-top: solid 1px #999999;
 }
@@ -70,6 +73,7 @@ outline: 0px;
     color: #FFFFFF;
     background-color: #333333;
     background-image: none;
+    filter: none;
     outline-width: 0;
 }
 

@@ -18,6 +18,7 @@
 	font-weight: bold;
 	background-color: #444444;
 	background-image: none;
+	filter: none;
 }
 
 .wm_template  .wmeditor .dijitTextBox,
@@ -51,6 +52,7 @@
 	border-color: #666666;
 	background-color: #444444;
 	background-image: none;
+	filter: none;
 }
 
 /* GROUP: Focus */
@@ -73,6 +75,7 @@
 	border-color: #666666; 
 	background-color: #444444; 
 	background-image: none;
+	filter: none;
 }
 
 /* GROUP: isDirty */
@@ -83,6 +86,7 @@
 	border-color: #666666; 
 	background-color: #444444; 
 	background-image: none;
+	filter: none;
 }
 
 /* GROUP: Invalid */
@@ -97,6 +101,7 @@
 	border-color: #666666; 
 	background-color: #F9F7BA; 
 	background-image: none; 
+	filter: none;
 }
 
 
@@ -188,6 +193,7 @@
 .wm_template .dijitSlider .dijitSliderRightBumper,
 .wm_template .dijitSliderFocused.dijitSlider .dijitSliderRemainingBarH,
 .wm_template .dijitSliderFocused.dijitSlider .dijitSliderRightBumper {
-		background-color: #5c5252;
-		background-image: none;
+	background-color: #5c5252;
+	background-image: none;
+	filter: none;
 }    

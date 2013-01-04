@@ -527,7 +527,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             styleEditorDef[1] = dojo.mixin({}, this.defaultEditorProps,styleEditorDef[1]);
             var caption = styleEditorDef[1] && styleEditorDef[1].caption || styleName;            
             styleEditorDef[1].caption = "";
-            styleEditorDef[1].disabled = isDisabled;
+
             styleEditorDef[1].message = inMessage;
             var ctor = dojo.getObject(styleEditorDef[0]);
             var defaultHeight = ctor ? ctor.prototype.height : "24px";
@@ -540,6 +540,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         }]                        
             })[0];
             var e = p.c$[2];
+            if (isDisabled) e.setDisabled(true);
             e.name = styleGroup + "_" + styleName;
             var checkbox = p.c$[1];
             if (e.editor instanceof wm.Container && e.editor.verticalAlign != "top") {

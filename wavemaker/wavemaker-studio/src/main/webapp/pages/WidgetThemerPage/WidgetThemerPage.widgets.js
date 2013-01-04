@@ -60,8 +60,7 @@ WidgetThemerPage.widgets = {
 			leftPanel: ["wm.Panel", {width: "150px", height: "100%", layoutKind: "top-to-bottom"}, {}, {
 				
 				widgetGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[
-							{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},
-							],
+							{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false}],
 							"dsType":"EntryData","height":"100%","localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true,"width":"150px"},
 							{"onSelect":"widgetGridSelect"}, {
 					binding: ["wm.Binding", {}, {}, {

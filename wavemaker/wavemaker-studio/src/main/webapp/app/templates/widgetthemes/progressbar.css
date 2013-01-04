@@ -13,10 +13,11 @@
 		font-weight: bold;
 }
 
-    .wm_template .wmprogressbar .dijitProgressBar {
+.wm_template .wmprogressbar .dijitProgressBar {
     background-color: rgb(68, 68, 68);
     background-image: none;
-    }
+    filter: none;
+}
 
 
 /* GROUP: Progress Indicator */

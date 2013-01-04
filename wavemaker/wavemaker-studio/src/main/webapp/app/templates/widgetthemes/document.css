@@ -11,4 +11,13 @@
     box-shadow: 4px 4px 4px black;
     background-color: #444444; /* Document-Styles-Background_Color */
     background-image: none;
+    filter: none;
+}
+
+/* IE9 has buggy display when combinding both gradients and radius.
+ * Gradients and not radius work on IE8, so we'll just do it the IE 8 way */
+.dj_ie9 .wm_template div,
+.dj_ie9 .wm_template input,
+.dj_ie9 .wm_template button {
+   border-radius: 0px !important; /* THEMER: HIDE */
 }

@@ -9,6 +9,7 @@
     border-bottom-right-radius: 4px;
     background-color: white;
     background-image: none;
+    filter: none;
 }
 
 
@@ -23,4 +24,5 @@
     color: #FFFFFF;
     background-color: #444444;
     background-image: none;
+    filter: none;
 }

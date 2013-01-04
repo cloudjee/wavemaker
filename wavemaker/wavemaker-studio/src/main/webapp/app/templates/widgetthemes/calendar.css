@@ -7,6 +7,7 @@
 .wm_template table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
 		background-color: #f8f8f8 !important;
 		background-image: none !important;
+		filter: none !important;
 		color: #030000;
 }
 
@@ -36,6 +37,7 @@
 .wm_template .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
 		background-color: #908a8a !important;
 		background-image: none !important;
+		filter: none !important;
 		color: #ebebe2;
 }
 
@@ -45,6 +47,7 @@
 .wm_template .dijitCalendarContainer .dijitCalendarNextMonth {
 		background-color: #655f5f !important;
 		background-image: none !important;
+		filter: none !important;
 		color: #bab0b0;
 }
 
@@ -52,6 +55,7 @@
 .wm_template .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
 		background-color: #655f5f !important;
 		background-image: none !important;
+		filter: none !important;
 		color: #bab0b0;
 }
 

@@ -137,6 +137,7 @@
    margin: 5px;
    background-color: #b52727;
    background-image: none;
+   filter: none;
    color: #000000;
    font-family: sans-serif;
    min-height: 24px;

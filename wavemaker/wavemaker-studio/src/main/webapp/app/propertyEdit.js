@@ -3699,7 +3699,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
     updateCssLine: function(inStyleName, inStyleValue) {
        
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/^background/) || inStyleName == "filter" && inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/)) {   
+        if (inStyleName.match(/^background/) || inStyleName == "filter" && (inStyleValue == "none" || inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/))) {   
 
             var backgroundType = this.backgroundChooser.getDataValue();
             var value = "";
@@ -3720,7 +3720,8 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                     value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";" + message;
                 } else if (this.message != "NO BACKGROUND IMAGE") {
                     if (value) value += "\n\t";                                
-                    value += "background-image: none;" + message;
+                    value += "background-image: none;" + message +"\n";
+                    value += "\tfilter: none;" + message;
                 }
             }
             return value;

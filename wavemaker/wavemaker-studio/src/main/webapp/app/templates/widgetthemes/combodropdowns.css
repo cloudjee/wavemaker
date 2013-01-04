@@ -3,6 +3,7 @@
 .wm_template  ul.dijitMenu {
     background-color: #444444;
     background-image: none;
+    filter: none;
     border: solid 1px black;
     border-top: solid 1px #999999;
     box-shadow: 3px 3px 4px black;

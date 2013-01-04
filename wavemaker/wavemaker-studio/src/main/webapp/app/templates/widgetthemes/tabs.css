@@ -7,6 +7,7 @@
     font-size: 12px;
     background-color: red;
     background-image: none;
+    filter: none;
 }
 .wm_template .wmtablayers-tab {
 
@@ -39,6 +40,7 @@
 .wm_template .wmtablayers-tab.wmtablayers-selected:hover {
     background-color: red;
     background-image: none;
+    filter: none;
 }
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-selected:hover {
@@ -62,6 +64,7 @@
 	color: #FFFFFF; 
 	background-color: #444444; 
 	background-image: none;
+        filter: none;
 }
 .wm_template .wmtablayers-tab:hover {
     box-shadow: inherit;
@@ -71,11 +74,12 @@
 /* NOTE: This does not appear to work in firefox at design time but is fine at runtime */
 .wm_template .wmtablayers-tab:active,
 .wm_template .wmtablayers-verticaltab:active,
-.wm_template .wmtablayers-tab:active:focus,
+.wm_template .wmtablayers-tab:active:.focus,
 .wm_template .wmtablayers-verticaltab:active:focus {
 color: #FFFFFF; 
 background-color: #444444; 
 background-image: none;
+filter: none;
 }
 .wm_template .wmtablayers-tab:active,
 .wm_template .wmtablayers-tab:active:focus {

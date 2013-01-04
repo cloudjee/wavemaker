@@ -14,35 +14,46 @@
 	box-shadow: 4px 4px 4px black;
 	background-color: #333333;
 	background-image: none;
+	filter: none;
 	background-position: left top;
 	background-repeat: no-repeat;
 }
 
 /* GROUP: Hover State */
- .wm_template   .wmbutton:hover,
- .wm_template   .wmbutton:focus {
+ .wm_template   .wmbutton:hover {
  	color: #FFFFFF;
 	font-weight: bold;
         box-shadow: 0px 0px 0px black;    
 	background-color: #333333;
 	background-image: none;
+	filter: none;
 	background-position: left top;
 	background-repeat: no-repeat;
 }
 
+
 /* GROUP: Active State */
-.wm_template   .wmbutton.toggleButtonDown,
+/* button.wmbutton required instead of .wmbutton for IE8 */
+.wm_template   button.wmbutton.toggleButtonDown,
 .wm_template   .wmbutton.Active,
 .wm_template   .wmbutton.Active:hover,
 .wm_template   .wmbutton:active,
-.wm_template   .wmbutton:active:hover {
+.wm_template   .wmbutton:hover:active {
 	color: #FFFFFF;
 	font-weight: bold;
 	box-shadow: 4px 4px 4px black;
 	background-color: #333333;
 	background-image: none;
+	filter: none;
 	background-position: left top;
 	background-repeat: no-repeat;
+}
+
+/* GROUP: Focus State */
+/* NOTE: This occurs when the user tabs to the button.
+  It may also occur when the user clicks the button */
+.wm_template   .wmbutton:focus {
+     outline: solid 1px #9999ff;
 }
 
 /* GROUP: Popup Menu */

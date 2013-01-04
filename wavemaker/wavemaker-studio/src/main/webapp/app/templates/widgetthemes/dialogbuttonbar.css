@@ -4,6 +4,7 @@
 .wm_template .wmpagedialog-controlspanel {
     background-color: #444444;
     background-image: none;
+    filter: none;
 }
 
 /* GROUP: Dialog Footer Buttons */
@@ -14,21 +15,22 @@
     font-weight: bold;
     background-color: #444444;
     background-image: none;
+    filter: none;
     box-shadow: 4px 4px 4px black;
     border-radius: 4px;
 }
 
 /* GROUP: Footer Buttons (Hover) */
-.wm_template .dialogfooter .wmbutton:focus,
 .wm_template .dialogfooter .wmbutton:hover {
     color: #FFFFFF; 
     background-color: #444444;
     background-image: none;
+    filter: none;
     box-shadow: 4px 4px 4px black;
 }
 
 /* GROUP: Footer Buttons (Active) */
-.wm_template .dialogfooter .wmbutton.toggleButtonDown,
+.wm_template .dialogfooter button.wmbutton.toggleButtonDown,
 .wm_template .dialogfooter .wmbutton.Active,
 .wm_template .dialogfooter .wmbutton:active,
 .wm_template .dialogfooter .wmbutton.Active:hover,
@@ -36,6 +38,7 @@
     color: #FFFFFF; 
     background-color: #444444;
     background-image: none;
+    filter: none;
     box-shadow: 4px 4px 4px black;
 }
 
