@@ -262,7 +262,7 @@ dojo.declare("wm.Component", wm.Object, {
         return this.isDesignLoaded(); // Doh!
         },
     isDesignLoaded: function() {
-        if (this._isDesignLoaded) return true;
+        if (this._isDesignLoaded !== undefined) return this._isDesignLoaded;
 
         if (!window.studio || !this.owner) return false;
         if (this.owner == studio.application || this.owner == studio._application) return true; // must come before test for !studio.page
