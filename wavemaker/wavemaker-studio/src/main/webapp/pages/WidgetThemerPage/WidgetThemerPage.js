@@ -20,18 +20,48 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
 
     templateFileData: [
+        { 
+            name: "Containers",
+            category: true
+        },
         {
             name: "Main Document",
+            category: false,            
             templateFile: "document",
             classList: [{dataValue: "wm.AppRoot"}]
         },
         {
+            name: "Tabs",
+            category: false,            
+            templateFile: "tabs",
+            classList: [{dataValue: "wm.TabLayers"}]
+        },
+        {
+            name: "Accordions",
+            category: false,            
+            templateFile: "accordions",
+            classList: [{dataValue: "wm.AccordionLayers"}]
+        },
+        {
+            name: "Titled Panel",
+            category: false,            
+            templateFile: "titledpanel",
+            classList: [{dataValue: "wm.FancyPanel"}]
+        },        
+        
+        { 
+            name: "Widgets",
+            category: true
+        },        
+        {
             name: "Buttons",
+            category: false,            
             templateFile: "button",
             classList: [{dataValue: "wm.Button"},{dataValue: "wm.ToggleButton"}, {dataValue: "wm.PopupMenuButton"}]
         },
         {
             name: "Editors",
+            category: false,            
             templateFile: "editors",
             classList: [{dataValue: "wm.Text"},
                         {dataValue: "wm.LargeTextArea"}, 
@@ -53,23 +83,45 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                         {dataValue: "wm.Slider"}                        
                     ]
         },
+         {
+            name: "Grids",
+            category: false,                        
+            templateFile: "grid",
+            classList: [{dataValue: "wm.DojoGrid"},
+                        {dataValue: "wm.List"}]
+            
+        },    
         {
-            name: "Tabs",
-            templateFile: "tabs",
-            classList: [{dataValue: "wm.TabLayers"}]
+            name: "Progress Bar",
+            category: false,                        
+            templateFile: "progressbar",
+            classList: [{dataValue: "wm.dijit.ProgressBar"}]            
         },
         {
-            name: "Accordions",
-            templateFile: "accordions",
-            classList: [{dataValue: "wm.AccordionLayers"}]
+            name: "Splitter/Bevel",
+            category: false,                        
+            templateFile: "splitterbevel",
+            classList: [{dataValue: "wm.Bevel"},{dataValue: "wm.Splitter"}]            
         },
         {
-            name: "Titled Panel",
-            templateFile: "titledpanel",
-            classList: [{dataValue: "wm.FancyPanel"}]
+            name: "Calendar",
+            category: false,                        
+            templateFile: "calendar",
+            classList: [{dataValue: "wm.dijit.Calendar"}]            
         },
+        {
+            name: "Links",
+            category: false,                        
+            templateFile: "links",
+            classList: []
+        },
+       { 
+            name: "Popups",
+            category: true
+        },        
         {
             name: "Dialogs",
+            category: false,                        
             templateFile: "dialogs",
             classList: [{dataValue: "wm.Dialog"},
                         {dataValue: "wm.PageDialog"},
@@ -79,57 +131,37 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         },
         {
             name: "Dialog Button Bars",
+            category: false,                        
             templateFile: "dialogbuttonbar",
             classList: [{dataValue: "wm.ButtonBarPanel"}]
             
         },        
-        {
-            name: "Grids",
-            templateFile: "grid",
-            classList: [{dataValue: "wm.DojoGrid"},
-                        {dataValue: "wm.List"}]
-            
-        },
+       
         {
             name: "Menus",
+            category: false,                        
             templateFile: "menus",
             classList: [{dataValue: "wm.DojoMenu"}]            
         },
         {
             name: "Combobox Dropdowns",
+            category: false,                        
             templateFile: "combodropdowns",
             classList: []            
         },
-        {
-            name: "Progress Bar",
-            templateFile: "progressbar",
-            classList: [{dataValue: "wm.dijit.ProgressBar"}]            
-        },
-        {
-            name: "Splitter/Bevel",
-            templateFile: "splitterbevel",
-            classList: [{dataValue: "wm.Bevel"},{dataValue: "wm.Splitter"}]            
-        },
-        {
-            name: "Calendar",
-            templateFile: "calendar",
-            classList: [{dataValue: "wm.dijit.Calendar"}]            
-        },
+        
         {
             name: "Tool Tips",
+            category: false,                        
             templateFile: "tooltips",
             classList: []
         },
         {
             name: "Toast Dialogs",
+            category: false,                        
             templateFile: "toast",
             classList: [{dataValue: "wm.Toast"}]
-        },
-        {
-            name: "Links",
-            templateFile: "links",
-            classList: []
-        }             
+        }          
     ],
 
 	styleEditors: {
@@ -305,7 +337,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.setDirty(false);
 
             this.widgetGrid.deselectAll();
-            this.widgetGrid.select(0);
+            this.widgetGrid.select(1);
 
             studio.endWait();
         });
@@ -400,8 +432,16 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* START SECTION: Edit the selected widget styles and properties */
     widgetGridSelect: function(inSender) {
-
+        if (inSender.selectedItem.getValue("category")) {
+            wm.onidle(this, function() {
+                this.widgetGrid.select(this.currentWidgetIndex);
+            });
+            return;
+        } else if (inSender.getSelectedIndex() == this.currentWidgetIndex) {
+            return;
+        }
         /* Step 1: Set the current widget data */
+        this.currentWidgetIndex = inSender.getSelectedIndex();
         this.currentWidgetName = inSender.selectedItem.getValue("name");
         this.currentWidgetTemplateFile = inSender.selectedItem.getValue("templateFile");
         var heading = "";
@@ -663,7 +703,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     /* END SECTION: Edit the selected widget styles */
 
     /* START SECTION: Manage AceEditor */
-    /* TODO: Support user editing this file, OR make it readonly */
     onCssLayerShow: function() {
         this.editAreaChangedSinceLayerChange = false;
         this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);

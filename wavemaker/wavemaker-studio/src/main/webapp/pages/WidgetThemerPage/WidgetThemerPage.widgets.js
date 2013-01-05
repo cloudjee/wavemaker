@@ -3,7 +3,8 @@ WidgetThemerPage.widgets = {
 	widgetListTypeDef: ["wm.TypeDefinition", {internal:1},{},{
 		widgetListTypeDefField1: ["wm.TypeDefinitionField", {fieldName: "name", type: "String"}],
 		widgetListTypeDefField2: ["wm.TypeDefinitionField", {fieldName: "templateFile", type: "String"}],
-		widgetListTypeDefField3: ["wm.TypeDefinitionField", {fieldName: "classList", isList: true, type: "StringData"}]
+		widgetListTypeDefField3: ["wm.TypeDefinitionField", {fieldName: "classList", isList: true, type: "StringData"}],
+		widgetListTypeDefField4: ["wm.TypeDefinitionField", {fieldName: "category", type: "Boolean"}]		
 	}],
 	templateListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],
     themeListVar: ["wm.Variable", {type: "themeListType"}],
@@ -59,8 +60,8 @@ WidgetThemerPage.widgets = {
 		mainPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			leftPanel: ["wm.Panel", {width: "150px", height: "100%", layoutKind: "top-to-bottom"}, {}, {
 				
-				widgetGrid: ["wm.DojoGrid", {_classes: {domNode: ["StudioGrid"]}, "columns":[
-							{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false}],
+				widgetGrid: ["wm.DojoGrid", {noHeader:true,_classes: {domNode: ["StudioGrid"]}, "columns":[
+							{"show":true,"field":"name","title":"Name","width":"100%","align":"left","cssClass":"${category} ? \"CategoryRow\" : \"StyleEntry\""}],
 							"dsType":"EntryData","height":"100%","localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true,"width":"150px"},
 							{"onSelect":"widgetGridSelect"}, {
 					binding: ["wm.Binding", {}, {}, {

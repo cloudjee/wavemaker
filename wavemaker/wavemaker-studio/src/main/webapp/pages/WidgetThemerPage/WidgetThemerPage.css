@@ -17,3 +17,22 @@
 .WidgetThemerPage .WidgetThemerPage-editorPanel .wmeditor-caption {
     font-weight: normal;
 }
+.WidgetThemerPage .CategoryRow {
+   background-color: #39414F !important;
+   color: white !important;
+   font-weight: bold;
+   font-size: 1.2Em;
+}
+
+.WidgetThemerPage .StyleEntry {
+    margin-left: 15px;
+}
+.WidgetThemerPage .WidgetThemerPage-widgetGrid .dojoxGridCell {
+   border-right: 0px !important;
+   border-left: 0px !important;
+ }
+ 
+.WidgetThemerPage .WidgetThemerPage-widgetGrid .dojoxGrid,
+.WidgetThemerPage .WidgetThemerPage-widgetGrid .dojoxGridScrollbox {
+    background-color: #39414F !important;
+}
