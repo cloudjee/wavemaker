@@ -337,8 +337,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.setDirty(false);
 
             this.widgetGrid.deselectAll();
-            this.widgetGrid.select(1);
-
+            this.widgetGrid.select(1);            
             studio.endWait();
         });
     },
@@ -468,6 +467,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.generatePrototypeEditors(this.currentClassList);
         this.generateCssEditors(this.currentWidgetTemplateFile);
         this.editorPanel.reflow();
+        if (this.mainPanel.disabled) {
+                // make disabled propagate down to the newly generated editors
+                this.mainPanel.setDisabled(false);
+                this.mainPanel.setDisabled(true);                
+            }        
         this.updateCssText();
     },
     /* END SECTION: Edit the selected widget styles and properties */
