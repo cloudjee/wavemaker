@@ -95,7 +95,13 @@ ondblclick: function(inEvent) {
             }
         }
 
-        if (this.link) c = ['<a ', (this.link.indexOf("#") == -1 && this.link.indexOf("javascript") == -1) ? 'target="_blank" ' : '', 'href="', this.link, '">', c, '</a>'].join('');
+        if (this.link) {
+            if (this._disabled) {
+                c = ['<a href="#">', c, '</a>'].join('');
+            } else {
+                c = ['<a ', (this.link.indexOf("#") == -1 && this.link.indexOf("javascript") == -1) ? 'target="_blank" ' : '', 'href="', this.link, '">', c, '</a>'].join('');
+            }
+        }
         if (this.domNode.innerHTML != c) this.sizeNode.innerHTML = c;
         var whitespace = (this.singleLine || this.autoSizeWidth) ? "nowrap" : "normal";
         if (this.domNode.style.whiteSpace != whitespace) this.domNode.style.whiteSpace = whitespace;
@@ -106,6 +112,12 @@ ondblclick: function(inEvent) {
         }
         //this.reflowParent();
         //this.doAutoSize();
+    },
+    setDisabled: function(inDisabled) {
+        this.inherited(arguments);
+        if (!this._cupdating) {
+            this.renderLabel();
+        }
     },
     setCaption: function(inCaption) {
         if (inCaption == undefined) inCaption = "";
