@@ -21,11 +21,11 @@
    background-color: #39414F !important;
    color: white !important;
    font-weight: bold;
-   font-size: 1.2Em;
+   font-size: 14px;
 }
 
 .WidgetThemerPage .StyleEntry {
-    margin-left: 15px;
+    /*padding-left: 15px;*/
 }
 .WidgetThemerPage .WidgetThemerPage-widgetGrid .dojoxGridCell {
    border-right: 0px !important;
