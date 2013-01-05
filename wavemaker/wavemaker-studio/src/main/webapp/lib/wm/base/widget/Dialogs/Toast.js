@@ -31,26 +31,29 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     corner: "br", // bottom right
     border: "2",
     margin: "0",
+    imgHeight: "100%",
+    imgWidth: "30px",
+    imgMargin: "4,0,0,4",
     prepare: function() {
         this.inherited(arguments);
         this.widgets_data = {
-	    img: ["wm.Picture", {_classes: {domNode: ["ToastLeft"]}, width: "30px", height: "100%",margin: "4,0,0,4"}],
-	    rightColumn: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", fitToContentHeight: true, padding: "0"},{},{
-		title: ["wm.Label", { height: "20px", width: "100%", singleLine: true}],
-		message: ["wm.Label", { height: "100px", width: "100%", singleLine: false, autoSizeHeight: true}]
-	    }]
-	};
+	    img: ["wm.Picture", {_classes: {domNode: ["ToastLeft"]}, width: this.imgWidth, height: this.imgHeight, margin: this.imgMargin}],
+    	    rightColumn: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", fitToContentHeight: true, padding: "0"},{},{
+        		title: ["wm.Label", { height: "20px", width: "100%", singleLine: true}],
+        		message: ["wm.Label", { height: "100px", width: "100%", singleLine: false, autoSizeHeight: true}]
+    	    }]
+    	};
     },
     postInit: function() {
-	this.inherited(arguments);
-	this.containerWidget.setLayoutKind("left-to-right");
-	this.containerWidget.setPadding("4");	
-        this.img = this.containerWidget.c$[0];
-        this.title = this.containerWidget.c$[1].c$[0];
-        this.message = this.containerWidget.c$[1].c$[1];
+    	this.inherited(arguments);
+    	this.containerWidget.setLayoutKind("left-to-right");
+    	this.containerWidget.setPadding("4");	
+            this.img = this.containerWidget.c$[0];
+            this.title = this.containerWidget.c$[1].c$[0];
+            this.message = this.containerWidget.c$[1].c$[1];
 
-	this.setContent(this.content);
-	this.connectEvents(this.domNode, ["click"]);
+    	this.setContent(this.content);
+    	this.connectEvents(this.domNode, ["click"]);
     },
     click: function() {
         this.hide();
@@ -58,46 +61,46 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     },
     onToastClick: function() {},
     setShowing: function(inShow, forceChange) {
-	if (!inShow) {
-	    window.clearTimeout(this._timeoutId);
-	    delete this._timeoutId;
-	}
+    	if (!inShow) {
+    	    window.clearTimeout(this._timeoutId);
+    	    delete this._timeoutId;
+    	}
 
         this.inherited(arguments);
         if (inShow) {
             this.renderBounds();
-	    this.domNode.style.zIndex = 1000;
-	}
+    	    this.domNode.style.zIndex = 1000;
+    	}
     },
     renderBounds: function() {
         this.renderBoundsByCorner();
     },
     setContent: function(inContent) {
-	this.content = inContent;
-        if (this.message)
+	   this.content = inContent;
+       if (this.message)
             this.message.setCaption(inContent);
     },
     setTitle: function(inTitle) {
-	if (this.title)
-	    this.title.setCaption(inTitle);
+    	if (this.title)
+    	    this.title.setCaption(inTitle);
     },
     // classes supported "Success", "Error", "Warning", "Info".  User may add their own classes via css file
     showToast: function(inContent,inDuration, inCssClasses, inPosition, optionalTitle) {
-	if (inContent instanceof Error) inContent = inContent.toString();
-	if (!inCssClasses)
-	    inCssClasses = "Info";
-        if (inPosition)
+	    if (inContent instanceof Error) inContent = inContent.toString();
+    	if (!inCssClasses) inCssClasses = "Info";
+        if (inPosition) {
             inPosition = inPosition.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
+        }
         this.corner = inPosition || app.toastPosition || "br";
-	if (this._timeoutId) {
-	    window.clearTimeout(this._timeoutId);
-	    this.hide();
-	    this._timeoutId = 0;
-	}
+    	if (this._timeoutId) {
+    	    window.clearTimeout(this._timeoutId);
+    	    this.hide();
+    	    this._timeoutId = 0;
+    	}
 
-	var localizedCssClasses = wm.getDictionaryItem("wm.Toast.STATUS_" + (inCssClasses||"").toUpperCase()) || "";
-
-	this.setTitle(optionalTitle || localizedCssClasses || inCssClasses);
+	    var localizedCssClasses = wm.getDictionaryItem("wm.Toast.STATUS_" + (inCssClasses||"").toUpperCase()) || "";
+    
+    	this.setTitle(optionalTitle || localizedCssClasses || inCssClasses);
         inCssClasses = inCssClasses || "Info";
         this._toastType = inCssClasses = inCssClasses || "Info";
         var classes = (inCssClasses) ? inCssClasses.split(" ") : [];
@@ -113,20 +116,20 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         }
 
         this.message.autoSizeHeight = false;
-	this.setContent(inContent);
+	   this.setContent(inContent);
         this.message.autoSizeHeight = true;
-	this.duration = inDuration || this.duration;
-	this.domNode.className = this.classNames + " " + ((inCssClasses) ? inCssClasses : "");
-	this.show();
+    	this.duration = inDuration || this.duration;
+	   this.domNode.className = this.classNames + " " + ((inCssClasses) ? inCssClasses : "");
+    	this.show();
 	//this.setContent(inContent);
         this.message.doAutoSize(true, true);
-	this.containerWidget.removeDelayedReflow()
-	this.containerWidget.reflow();
+	   this.containerWidget.removeDelayedReflow()
+    	this.containerWidget.reflow();
         this.setHeight((this.containerWidget.padBorderMargin.t + this.containerWidget.padBorderMargin.b + this.message.parent.bounds.h + this.padBorderMargin.t + this
 .padBorderMargin.b) + "px" );
 
         // After a timeout, animate the toast away
-	this._timeoutId = window.setTimeout(dojo.hitch(this, "hide"), this.duration);
+	   this._timeoutId = window.setTimeout(dojo.hitch(this, "hide"), this.duration);
 /*
 	this.domNode.style.opacity = "0.01";
 	this.show();
@@ -151,7 +154,7 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     */
     // this is what is called when you bind an event handler to a dialog; call showToast so that the timer is triggered
     update: function() {
-	this.showToast(this.content,this.duration, this.domNode.className);
+	   this.showToast(this.content,this.duration, this.domNode.className);
     }
 
 });

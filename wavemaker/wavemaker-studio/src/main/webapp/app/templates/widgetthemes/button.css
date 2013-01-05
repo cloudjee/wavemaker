@@ -4,7 +4,7 @@
 .wm_template button.wmbutton, /* mostly to clobber .dj_ie .wmbutton in default/theme.css */
 .wm_template .wmbutton .dijitReset {
 	font-family: sans-serif;
-	font-size: 12pt;
+	font-size: 12px;
 	color: #FFFFFF;
 	font-weight: bold;
 }

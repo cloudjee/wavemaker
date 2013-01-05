@@ -123,7 +123,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         {
             name: "Toast Dialogs",
             templateFile: "toast",
-            classList: []
+            classList: [{dataValue: "wm.Toast"}]
         },
         {
             name: "Links",
@@ -140,6 +140,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 			}]
 		}],
 		"font-size": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 12}],
+		"text-decoration": ["wm.SelectMenu", {options: "none, underline, line-through", restrictValues: false}],
+		"font-style": ["wm.SelectMenu", {options: "normal, italic, oblique", restrictValues: false}],		
+		"font-variant": ["wm.SelectMenu", {options: "normal, small-caps", restrictValues: false}],		
 		"width": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],		
 		"height": ["wm.prop.SizeEditor", {allSizeTypes:true, defaultValue: 20}],				
 		"color": ["wm.ColorPicker", {caption: "font color"}],
@@ -161,7 +164,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         "background-image": "background",
         "background-position": "background",
         "background-repeat": "background",
-        // should have filter here, but thats a screwy microsoft style.
+        //"filter": "background", // NOTE: This will be a problem if other filters are used such as opacity
         
         "border-radius": "border-radius",
         "-webkit-border-radius": "border-radius",
@@ -228,7 +231,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
         this.setupThemeList(studio.application.theme);    
-        this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");
+        this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");        
         this.themeListVar.setQuery({designer: "widgetthemer"});
     },
     moveMenuNode: function(widget) {
@@ -339,6 +342,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         ).then(
             dojo.hitch(this, function() {
                 this.setupThemeList("common.themes." + inThemeName);
+                this.themeselectChange(this.themeSelect);
             })
         );
     },
@@ -370,44 +374,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             return;
         }
         this._copyTheme(inThemeName, "");
-        return;
-        
-        /* Step 1: Create the theme folder */
-        /* TODO: Need to have default theme.css file, presumably a compiled version of all of the individual theme templates */
-        studio.resourceManagerService.requestAsync("createFolder", ["/common/themes/" + inThemeName]).then(            
-            dojo.hitch(this, function() {
-                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/themedesigner.css", ""]);
-            })
-        ).then(dojo.hitch(this, function() {
-                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/theme.css", ""]);
-            })
-        ).then(
-            dojo.hitch(this, function() {
-                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/mtheme.css", ""]);
-            })
-        ).then(
-            dojo.hitch(this, function() {
-                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
-            })
-         ).then(
-            dojo.hitch(this, function() {
-                return studio.resourceManagerService.requestAsync("copyFolder", ["/common/themes/" + inThemeName + "/Theme.js", "{}"]);
-            })            
-        ).then(        
-            dojo.hitch(this, function() {
-                /* Write button.css as that identifies this theme folder as one created by this theme designer */
-                var buttonCss = wm.load(dojo.moduleUrl("wm.studio.app.templates.widgetthemes") + "button.css").replace(/\.wm_template/g, "." + inThemeName);
-                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/button.css", buttonCss]);
-            })
-        ).then(
-            dojo.hitch(this, function() {
-                return studio.loadThemeList();
-            })
-        ).then(
-            dojo.hitch(this, function() {
-                this.setupThemeList("common.themes." + inThemeName);
-            })
-        );
+       
     },
     deleteThemeClick: function() {
         app.confirm("Are you sure you want to delete the theme " + this.currentThemeName + "?", false, dojo.hitch(this, "deleteTheme"));
@@ -461,6 +428,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.generatePrototypeEditors(this.currentClassList);
         this.generateCssEditors(this.currentWidgetTemplateFile);
         this.editorPanel.reflow();
+        this.updateCssText();
     },
     /* END SECTION: Edit the selected widget styles and properties */
 
@@ -506,7 +474,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         styleValue = String(styleValue).replace(/\s\!important/, "");
         var styleEditorDef;
         var styleRule = this.styleRules[styleName];
-        if (styleName == "filter" && styleValue.match(/Gradient/i)) {
+        if (styleName == "filter" && (styleValue.match(/Gradient/i) || styleValue == "none")) {
             styleRule = this.styleRules.background;
         }
         var editorExists = false;
@@ -687,7 +655,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.cssText += startString + "\n" + this.widgetCssFiles[this.currentWidgetTemplateFile] + "\n" + endString;
         }
         studio.application.loadThemeCss(studio.application.theme, true, this.cssText);
-        if (this.widgetGrid.selectedItem.getValue("templateFile") == "editors" && dojo.isIE == 10) {
+        if (this.widgetGrid.selectedItem.getValue("templateFile") == "editors" && dojo.isIE == 10 ||
+            this.widgetGrid.selectedItem.getValue("templateFile") == "tooltips") {
             this.regenerateDemoPanel(); // dojo directly manipulates the styles of the input node for ie 10, and must regenerate on style change
         }
     },
@@ -777,6 +746,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     break;
         case "width":
         case "height":        
+        case "imgWidth":        
+        case "imgHeight":                
         case "mobileHeight":
         case "desktopHeight":
         case "captionSize":        
@@ -843,6 +814,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/themedesigner.css", this.cssText]).then(
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/theme.css", this.optimizeCss(this.cssText)]);
+            })
+        ).then(
+            dojo.hitch(this, function() {
+                return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/mtheme.css", this.optimizeCss(this.cssText)]);
             })
         ).then(
             dojo.hitch(this, function() {
@@ -924,9 +899,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
          return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/mtheme.css", css]);
     },
     optimizeCss: function(inText) {
+        // strip out blocked content
+        inText = inText.replace(/\n.*?\/\* THEMER: REMOVE LINE .*?\n/g,"\n");
+
     	// strip out comments
     	inText = inText.replace(/\/\*(.|\n)*?\*\//gm,"")
-
+        
+      
     	// strip out white space
     	inText = inText.replace(/^\s*/gm,"").replace(/\s*$/gm,"");
 
@@ -965,6 +944,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }));               
             this.demoPanel.createComponents(this.sampleWidgets);
             
+            if (this._cacheRenderBoundsFunc) {
+                app.toolTipDialog.insureDialogVisible = this._cacheRenderBoundsFunc;
+                delete this._cacheRenderBoundsFunc;
+            }
+            
             /* Custom hacks needed to get the sample widgets to work */
             switch(this.widgetGrid.selectedItem.getValue("templateFile")) {
                 case "grid":
@@ -977,13 +961,79 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     var parent = this.demoPanel.c$[0].buttonBar;
                     new wm.Button({owner: parent, parent: parent, caption: "OK"});
                     new wm.Button({owner: parent, parent: parent, caption: "Cancel"});                    
+                    break;
+                case "tooltips":
+                    app.createToolTip("This is a tool tip.  Not just any ordinary tool tip.  This tool tip is one styled by you!", this.demoPanel.c$[1].domNode);
+                    this._cacheRenderBoundsFunc = app.toolTipDialog.insureDialogVisible;
+                    app.toolTipDialog.insureDialogVisible = function() {};
+                    wm.onidle(this, "fixToolTips");
+                    break;
+                case "toast":                
+                    studio.application.createToastDialog();      
+                    studio.application.toastDialog._designer = null;
+                    if (studio.application.toastDialog.designWrapper) {
+                        studio.application.toastDialog.designWrapper.destroy();
+                        delete studio.application.toastDialog.designWrapper;
+                    }
+                    wm.forEachProperty(this.themePrototype["wm.Toast"], dojo.hitch(this, function(inValue, inName) {
+                        studio.application.toastDialog.setValue(inName, "");
+                        studio.application.toastDialog.setValue(inName, inValue);
+                    }));
+                    var wasShowing = false;
+                    if (studio.application.toastDialog.showing) {
+                        studio.application.toastDialog.hide();                        
+                        wasShowing = true;
+                    }
+                    this.demoPanel.domNode.appendChild(studio.application.toastDialog.domNode);
+                    this.demoPanel.c$[0].connect(this.demoPanel.c$[0], "onclick", this, function() {
+                        studio.application.toastDialog.showToast("Your toast has popped up with a message indicating that you have finally been successful", 100000, "Success","tl");
 
+                    });
+                    this.demoPanel.c$[1].connect(this.demoPanel.c$[1], "onclick", this, function() {
+                        studio.application.toastDialog.showToast("Your toast has popped up with a message warning you that you might not want to have cheese with your toast.", 100000, "Warning", "tl");
+
+                    });
+                    this.demoPanel.c$[2].connect(this.demoPanel.c$[2], "onclick", this, function() {
+                        studio.application.toastDialog.showToast("Your toast has popped up with an error message telling you not to click that button again.", 100000, "Error", "tl");
+
+                    });
+                    this.demoPanel.c$[3].connect(this.demoPanel.c$[3], "onclick", this, function() {
+                        studio.application.toastDialog.showToast("Your toast has popped up with a message containing useful information; in this case, an indicator to you that your toast dialog has in fact been openned.", 100000, "Info", "tl", "Toasted");
+
+                    });
+                    if (wasShowing) {
+                        if (dojo.hasClass(studio.application.toastDialog.domNode, "Success")) {
+                            this.demoPanel.c$[0].click();
+                        } else if (dojo.hasClass(studio.application.toastDialog.domNode, "Warning")) {
+                            this.demoPanel.c$[1].click();
+                        } if (dojo.hasClass(studio.application.toastDialog.domNode, "Error")) {
+                            this.demoPanel.c$[2].click();
+                        } if (dojo.hasClass(studio.application.toastDialog.domNode, "Info")) {
+                            this.demoPanel.c$[3].click();
+                        }
+                    }
                     break;
             }
             
             this.demoPanelWithAppRoot.reflow();
         });
     },
+    fixToolTips: function() {
+        dojo.disconnect(app._testHintConnect);
+        this.demoPanel.domNode.appendChild(app.toolTipDialog.domNode);            
+        app.toolTipDialog.domNode.style.left = "20px";
+        app.toolTipDialog.domNode.style.top = "20px";
+        wm.onidle(this, function() {
+            app.toolTipDialog.html.doAutoSize(true, true);
+            wm.job("WidgetThemerTooltips", wm.Container.runDelayedReflow * 2, this, function() {
+                app.toolTipDialog.setBestHeight();
+                this.demoPanel.domNode.appendChild(app.toolTipDialog.domNode);            
+                app.toolTipDialog.domNode.style.left = "20px";
+                app.toolTipDialog.domNode.style.top = "20px";           
+            });
+        });
+    },
+                    
     /* END SECTION: Managing the Demo Panel */
 
 

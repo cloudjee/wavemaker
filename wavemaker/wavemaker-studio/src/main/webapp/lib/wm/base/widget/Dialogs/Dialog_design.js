@@ -210,8 +210,21 @@ wm.GenericDialog.extend({
 });
 
 
-
-
+wm.Toast.extend({
+    themeableProps: ["border", "borderColor", "imgHeight", "imgWidth", "imgMargin"],
+    setImgHeight: function(inValue) {
+        this.imgHeight = inValue;
+        this.img.setHeight(inValue);
+    },
+    setImgWidth: function(inValue) {
+        this.imgWidth= inValue;
+        this.img.setWidth(inValue);
+    },    
+    setImgMargin: function(inValue) {
+        this.imgMargin= inValue;
+        this.img.setMargin(inValue);
+    }
+});
 
 wm.Object.extendSchema(wm.Toast, {
     modal: {ignore: 1},

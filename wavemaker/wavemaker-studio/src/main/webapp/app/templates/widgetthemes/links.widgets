@@ -1,0 +1,4 @@
+{
+  link1: ["wm.Label", {caption: "http://dev.wavemaker.com", link: "http://dev.wavemaker.com", width: "100%"}],
+  link2: ["wm.Label", {caption: "http://dev.wavemaker.com", link: "http://dev.wavemaker.com", width: "100%", disabled: true}]
+}

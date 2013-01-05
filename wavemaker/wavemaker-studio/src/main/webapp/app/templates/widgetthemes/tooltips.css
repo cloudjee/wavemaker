@@ -1,0 +1,15 @@
+/* GROUP: Tool tips */
+.wm_template .AppToolTip {
+  font-family: sans-serif;
+  font-size: 12px;
+  color: black;
+  font-weight: bold;
+
+  background-color: #FFFECB;
+  background-image: none;
+  filter: none;
+
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  box-shadow: 2px 2px 2px #666;
+}

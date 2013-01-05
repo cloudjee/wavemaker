@@ -1,0 +1,67 @@
+/* GROUP: Toast Dialog */
+html.WMApp .wm_template div.wmtoast.wmtoastExtraSpecific {
+    background-color: rgb(40,40,40);
+    background-image: none;
+    filter: none;
+
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+     -webkit-box-shadow: 3px 4px 4px #222;
+     box-shadow: 3px 4px 4px #222;
+}
+
+/* GROUP: Success Graphic */
+ .wm_template .wmtoast.Success .ToastLeft {
+   background-image: url(images/OK.png);
+}
+
+/* GROUP: Warning Graphic */
+.wm_template .wmtoast.Warning .ToastLeft {
+   background-image: url(images/Caution.png);
+}
+
+/* GROUP: Error Graphic */
+.wm_template .wmtoast.Error .ToastLeft {
+   background-image: url(images/Close.png);
+}
+
+/* GROUP: Info Graphic */
+.wm_template .wmtoast.Info .ToastLeft {
+   background-image: url(images/Help\ Circle.png);
+}
+/* GROUP: Message */
+.wm_template .wmtoast .wmToast-message {
+    font-family: sans-serif;
+    font-size: 1Em;
+    color: white;
+    font-weight: bold;
+}
+
+/* GROUP: Title */
+.wm_template .wmtoast .wmToast-title {
+    font-family: sans-serif;
+    font-size: 1.2Em;
+    color: white;
+    font-weight: bold;
+}
+
+/* GROUP: Opacity */
+.wmtoastExtraSpecific.fadeInAnim {
+      -webkit-animation-name: toastFadeInKeyFrames; /* THEMER: HIDE */
+      -moz-animation-name: toastFadeInKeyFrames; /* THEMER: HIDE */
+      animation-name: toastFadeInKeyFrames; /* THEMER: HIDE */
+}
+
+@keyframes toastFadeInKeyFrames {
+   0% {
+       opacity: 0; /* THEMER: HIDE */
+   }
+   100% {
+       opacity: 0.9;
+   }
+ }
+
+/* GROUP: Opacity again */
+html.WMApp .wm_template div.wmtoast.wmtoastExtraSpecific {
+opacity: 0.9;
+}
