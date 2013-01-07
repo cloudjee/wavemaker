@@ -1798,6 +1798,11 @@ dojo.declare("Studio", wm.Page, {
         return regenerated;
     },
     designDesktopUI: function() {
+        this.currentDeviceType = "desktop";    
+        if (studio.application && studio.application.theme != studio.application._theme) {
+            studio.application._setTheme(studio.application.theme);
+        }
+    
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded) {
             studio.page.root.unfoldUI();
@@ -1809,7 +1814,6 @@ dojo.declare("Studio", wm.Page, {
         });
         this.deviceSizeSelect.setDataValue(this.deviceSizeVar.queriedItems.getItem(0).getData());
         this.orientationTogglePanel.hide();
-        this.currentDeviceType = "desktop";
         this.deviceSizeSelectChanged();
         app.addHistory({});
         dojo.removeClass(this.designer.domNode, "wmmobile");
@@ -1824,13 +1828,18 @@ dojo.declare("Studio", wm.Page, {
         if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "auto"
     },
     designTabletUI: function() {
+        this.currentDeviceType = "tablet";    
+        if (studio.application && (studio.application.tabletTheme && studio.application.tabletTheme != studio.application._theme || 
+            !studio.application.tabletTheme && studio.application._theme != studio.application.theme)) {
+            studio.application._setTheme(studio.application.tabletTheme || studio.application.theme);
+        }
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded) {
             studio.page.root.unfoldUI();
             studio.page.root.reflow();
             studio.refreshDesignTrees();
         }
-        this.currentDeviceType = "tablet";
+
         this.deviceSizeVar.setQuery({
             deviceType: "tablet"
         });
@@ -1854,13 +1863,19 @@ dojo.declare("Studio", wm.Page, {
         this.designPhoneUI(false);
     },
     designPhoneUI: function(inMobileFolding) {
+        this.currentDeviceType = "phone";
+        if (studio.application && (studio.application.phoneTheme && studio.application.phoneTheme != studio.application._theme || 
+            !studio.application.phoneTheme && studio.application._theme != studio.application.theme)) {
+            studio.application._setTheme(studio.application.phoneTheme || studio.application.theme);
+        }
+    
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded && !inMobileFolding) {
             studio.page.root.unfoldUI();
             studio.page.root.reflow();
             studio.refreshDesignTrees();
         }
-        this.currentDeviceType = "phone";
+
         this.deviceSizeVar.setQuery({
             deviceType: "phone"
         });
