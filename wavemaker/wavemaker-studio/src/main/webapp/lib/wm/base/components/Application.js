@@ -100,8 +100,16 @@ dojo.declare("wm.Application", wm.Component, {
 
         /* Load the theme */
         var themematch = window.location.search.match(/theme\=(.*?)\&/) || window.location.search.match(/theme\=(.*?)$/);
-        this.setTheme(themematch ? themematch[1] : this.theme, true);
-
+        if (themematch) {
+            this._setTheme(themematch[1], true);
+        } else if (wm.device == "phone" || window["studio"] && studio.currentDeviceType == "phone") {
+            this._setTheme(this.phoneTheme || this.theme, true);
+        } else if (wm.device == "tablet" || window["studio"] && studio.currentDeviceType == "tablet") {
+            this._setTheme(this.tabletTheme || this.theme, true);
+        } else {
+            this._setTheme(this.theme, true);
+        }
+        
         /* Load app.css */
         if (this._css) {
             this._cssLoader = new wm.CssLoader({
@@ -286,7 +294,19 @@ dojo.declare("wm.Application", wm.Component, {
             });
         }
     },
-    setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
+    setPhoneTheme: function(inTheme) {
+        this.phoneTheme = inTheme;
+        if (wm.device == "phone" || window["studio"] && studio.currentDeviceType == "phone") {
+            this._setTheme(inTheme || this.theme);// inTheme could be ""
+        }
+    },
+    setTabletTheme: function(inTheme) {
+        this.tabletTheme = inTheme;
+        if (wm.device == "tablet" || window["studio"] && studio.currentDeviceType == "tablet") {
+            this._setTheme(inTheme || this.theme);// inTheme could be ""
+        }
+    },    
+    _setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
         var themematch = window.location.search.match(/theme\=(.*?)\&/) || window.location.search.match(/theme\=(.*?)$/);
 
         var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
@@ -302,22 +322,22 @@ dojo.declare("wm.Application", wm.Component, {
             } catch (e) {}
         }
 
-        this._lastTheme = this.theme;
-        this.theme = inTheme;
+        this._lastTheme = this._theme;
+        this._theme = inTheme;
         this.themeName = inTheme.replace(/^.*\./,"");
         dojo.addClass(node, this.themeName);
 
 
         if (this._isDesignLoaded || !isInit || themematch) {
             try {
-                this.loadThemeCss(this.theme, this._isDesignLoaded, optionalCss);
-                this.loadThemePrototype(this.theme, optionalPrototype);
+                this.loadThemeCss(this._theme, this._isDesignLoaded, optionalCss);
+                this.loadThemePrototype(this._theme, optionalPrototype);
                 if (this._isDesignLoaded && !isInit && !noRegen) {
                     this.useWidgetCache();
                 }
             } catch (e) {
                 if (inTheme != "wm_notheme") {
-                    this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
+                    this._setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
                     app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_THEME", {
                         name: inTheme
                     }));
@@ -329,7 +349,7 @@ dojo.declare("wm.Application", wm.Component, {
                 return;
             }
         } else {
-            this.loadThemePrototype(this.theme, optionalPrototype);
+            this.loadThemePrototype(this._theme, optionalPrototype);
         }
 
     },
@@ -393,7 +413,7 @@ dojo.declare("wm.Application", wm.Component, {
             wm.Control.prototype[j] = propHash[j];
         }
         if (!wm.Application.themePrototypeData) wm.Application.themePrototypeData = {};
-        wm.Application.themePrototypeData["wm.Control"] = this.theme;
+        wm.Application.themePrototypeData["wm.Control"] = this._theme;
         
 
         /*
@@ -416,12 +436,12 @@ dojo.declare("wm.Application", wm.Component, {
             */
     },
     loadThemePrototypeForClass: function(ctor, optionalWidget) {
-        if (!this.theme || !ctor) return;
+        if (!this._theme || !ctor) return;
         
         var declaredClass = ctor.prototype.declaredClass;
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
 
-        var themeData = wm.Application.themeData[this.theme];
+        var themeData = wm.Application.themeData[this._theme];
         var ctorData = themeData[ctor.prototype.declaredClass];
         var p = ctor.prototype;        
 
@@ -447,7 +467,7 @@ dojo.declare("wm.Application", wm.Component, {
 
 
             /* Restore the prototype to untampered state if we've changed themes */
-            if (wm.Application.themePrototypeData[declaredClass] && wm.Application.themePrototypeData[declaredClass] != this.theme) {
+            if (wm.Application.themePrototypeData[declaredClass] && wm.Application.themePrototypeData[declaredClass] != this._theme) {
                 var props = wm.defaultPrototypeValues[declaredClass];
                 wm.forEachProperty(props, function(inValue, inName) {                  
                     p[inName] = inValue;                    
@@ -460,12 +480,12 @@ dojo.declare("wm.Application", wm.Component, {
         if (wm.locale.props) {
             dojo.mixin(ctorData,wm.locale.props[declaredClass]);
         }
-        if (wm.Application.themePrototypeData[declaredClass] != this.theme && ctorData) {
+        if (wm.Application.themePrototypeData[declaredClass] != this._theme && ctorData) {
             for (var j in ctorData) {
                 ctor.prototype[j] = ctorData[j];
                 if (optionalWidget) optionalWidget[j] = ctorData[j];
             }
-            wm.Application.themePrototypeData[declaredClass] = this.theme;            
+            wm.Application.themePrototypeData[declaredClass] = this._theme;            
         } /* End localization of default properties */
 
     },

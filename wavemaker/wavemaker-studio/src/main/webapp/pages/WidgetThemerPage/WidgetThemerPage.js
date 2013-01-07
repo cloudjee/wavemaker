@@ -331,7 +331,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             /* Step 6: Load the Theme.js file, store it in this.themePrototype */
             this.themePrototype =  dojo.fromJson(dojo.xhrGet({url:path + "Theme.js", sync:true, preventCache:true}).results[0]);
 
-            studio.application.setTheme(this.currentTheme, false, this.cssText || " ", this.themePrototype, true);
+            studio.application._setTheme(this.currentTheme, false, this.cssText || " ", this.themePrototype, true);
             this.onPrototypeChange();
             studio.application.cacheWidgets();
             this.setDirty(false);

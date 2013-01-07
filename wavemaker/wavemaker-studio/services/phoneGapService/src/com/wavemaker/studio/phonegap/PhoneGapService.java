@@ -76,13 +76,13 @@ public class PhoneGapService {
 	 */
 	@ExposeToClient
 
-	public void generateBuild(String xhrPath, String themePath, String configxml, boolean useProxy) {
+	    public void generateBuild(String xhrPath, String themePath, String tabletThemePath, String phoneThemePath, String configxml, boolean useProxy) {
 		try{
 			Project currentProject = this.projectManager.getCurrentProject();
 			currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
 			getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
 			setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
-			updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themePath, useProxy);
+			updatePhonegapFiles(xhrPath, FolderLayout.PHONEGAP_BUILD_SERVICE, themePath, tabletThemePath, phoneThemePath, useProxy);
 
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -128,13 +128,13 @@ public class PhoneGapService {
 	 * Update an existing phone gap project structure.
 	 */
 	@ExposeToClient
-	public void updatePhonegapFiles(int portNumb, String themePath) {
+	    public void updatePhonegapFiles(int portNumb, String themePath, String tabletThemePath, String phoneThemePath) {
 		setupPhonegapFiles();
 		String serverUrl = SystemUtils.getIP();
 		String projectName = this.projectManager.getCurrentProject().getProjectName();
 		for (FolderLayout layout : FolderLayout.values()) {
 			if (layout != FolderLayout.PHONEGAP_BUILD_SERVICE) {
-				updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themePath, false);
+			    updatePhonegapFiles("http://" + serverUrl + ":" + portNumb + "/" + projectName, layout, themePath, tabletThemePath, phoneThemePath, false);
 			}
 		}
 		fixupXCodeFilesFollowingUpdate();
@@ -241,7 +241,7 @@ public class PhoneGapService {
 		themes.list().include(FilterOn.names().notMatching("default")).delete();
 	}
 
-	private void updatePhonegapFiles(String url, FolderLayout layout, String themePath, boolean useProxy) {
+    private void updatePhonegapFiles(String url, FolderLayout layout, String themePath, String tabletThemePath, String phoneThemePath, boolean useProxy) {
 		Folder phoneGapFolder = getPhoneGapFolder(layout);
 		if (!phoneGapFolder.exists()) {
 			return;
@@ -258,17 +258,27 @@ public class PhoneGapService {
 
 		// Update index and login HTML files
 		String phonegapName = getPhoneGapScript(phoneGapFolder);
-		updateHtmlFile(phonegapName, phoneGapFolder.getFile("index.html"), themePath);
-		updateHtmlFile(phonegapName, phoneGapFolder.getFile("login.html"), themePath);
+		updateHtmlFile(phonegapName, phoneGapFolder.getFile("index.html"), themePath, tabletThemePath, phoneThemePath);
+		updateHtmlFile(phonegapName, phoneGapFolder.getFile("login.html"), themePath, tabletThemePath, phoneThemePath);
 
 		// Combine boot.js and config.js
 		phoneGapFolder.getFile("config.js").getContent().write(combineBootAndConfig(url, useProxy));
 
+		Folder themesFolder = phoneGapFolder.getFolder("themes");
+		themesFolder.createIfMissing();
+
 		// Copy theme
 		if (themePath.startsWith("wm.base.widget.themes") || themePath.startsWith("common.themes")) {
 		    Folder theme = getThemeFolder(themePath);
-		    theme.copyTo(phoneGapFolder);
-		    phoneGapFolder.getFolder(theme.getName()).rename("theme");
+		    theme.copyTo(themesFolder);
+		}
+		if (!tabletThemePath.equals("") && !tabletThemePath.equals(themePath)) {
+		    Folder theme = getThemeFolder(tabletThemePath);
+		    theme.copyTo(themesFolder);
+		}
+		if (!phoneThemePath.equals("") && !phoneThemePath.equals(themePath) && !phoneThemePath.equals(tabletThemePath)) {
+		    Folder theme = getThemeFolder(phoneThemePath);
+		    theme.copyTo(themesFolder);
 		}
 	}
 
@@ -280,7 +290,7 @@ public class PhoneGapService {
 		return "phonegap.js";
 	}
 
-        private void updateHtmlFile(String phoneGapScript, File file, String themePath) {
+        private void updateHtmlFile(String phoneGapScript, File file, String themePath, String tabletThemePath, String phoneThemePath) {
 		if (!file.exists()) {
 			return;
 		}
@@ -291,15 +301,32 @@ public class PhoneGapService {
 			content = content.replace(insertLocation, insertLocation + "\n" + phoneGapScriptTag);
 		}
 		content = content.replaceAll("/wavemaker/", "");
+		content = fixThemePath(content, themePath, "wmThemeUrl");
+		content = fixThemePath(content, tabletThemePath, "wmThemeTabletUrl");
+		content = fixThemePath(content, phoneThemePath, "wmThemePhoneUrl");
+
+		file.getContent().write(content);
+	}
+
+        private String fixThemePath(String content, String themePath, String varName) {
+	        /* If its not one of these, then we don't really know what it is and can't work with it */
+	        if (themePath.equals("")) return content;
 		if (themePath.startsWith("wm.base.widget") || themePath.startsWith("common.themes")) {
-		    String themeUrlVar = "var wmThemeUrl =";
+		    String themeUrlVar = "var " + varName + " =";
 		    if (content.contains(themeUrlVar)) {
 			int start = content.indexOf(themeUrlVar);
 			int end = content.indexOf(";", start);
-			content = content.substring(0, start) + themeUrlVar + " \"theme/theme.css\"" + content.substring(end);
+			if (end != -1) {
+			    String themeName = content.substring(start,end); // now string is "wmThemeUrl = aa/bb/cc/dd/theme.css" or "wmThemeUrl = "resources/mytheme/theme.css"
+			    themeName = themeName.substring(0, themeName.lastIndexOf("/")); // now string is "wmThemeUrl = aa/bb/cc/dd" or "wmThemeUrl = "resources/mytheme"
+			    themeName = themeName.substring(themeName.lastIndexOf("/") + 1); // now string is "dd" or "mytheme"
+			    if (!themeName.equals("") && themeName.indexOf("/") == -1) {
+				content = content.substring(0, start) + themeUrlVar + " \"themes/" + themeName + "/theme.css\"" + content.substring(end);
+			    }
+			}
 		    }
 		}
-		file.getContent().write(content);
+		return content;
 	}
 
 	private String combineBootAndConfig(String url, boolean useProxy) {

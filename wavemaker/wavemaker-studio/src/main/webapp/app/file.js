@@ -141,11 +141,14 @@ makeIndexHtml = function(inProjectName, themeUrl) {
 		d=data[i] || "";
 		t = t.replace(new RegExp(['{%', m, '}'].join(''), 'g'), d);
 	}
+	
     if (t.match(/var wmThemeUrl\s*=.*?;/)) {
-	t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+    	t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+    	themeUrl = "";
     } else {
-	t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
-    }
+        t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+    }    
+
     return t;
 }
 

@@ -581,7 +581,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 }
 	    }
 
-            studio.application.setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
+            studio.application._setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
             studio._themeDesignerChange = true;
             studio._reflowPageDesigner = true;
             studio.application.cacheWidgets();

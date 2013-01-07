@@ -168,10 +168,11 @@ Studio.extend({
 	},
 	appServicesToTree: function(inTree) {
 	    // app components
-	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}))
+	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}));
+
 	    this.setupContextMenu(inTree.root, studio.application);
-	    n.component = n.owner = this.application
-	    //this.application._studioTreeNode = n;
+	    n.component = n.owner = this.application;
+	    if (this.application) this.application._studioTreeNode = n;
 	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
 	    if (this.application) {
 		var svrComps = this.svrComps = dojo.mixin({},this.application.getServerComponents());

@@ -43,7 +43,7 @@ WidgetThemerPage.widgets = {
         			wire: ["wm.Wire", {"expression":undefined,"source":"stylesToggleButton","targetProperty":"currentButton"}, {}]
         		}],
 				stylesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "80px", height: "100%", margin: "0", caption: "Styles", border: "0,1,0,0"}, {onclick: "editorLayer"}],		    
-				codeToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100px", height: "100%", margin: "0", caption: "Source Code", border: "0,1,0,0"}, {onclick: "cssLayer"}]				
+				codeToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100px", height: "100%", margin: "0", caption: "Source Code", border: "0"}, {onclick: "cssLayer"}]				
 		    }]/*,
    			deviceToggleLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, align: "right", caption: "Device:",width: "80px", height: "100%"}],
 		    deviceTogglePanel: ["wm.ToggleButtonPanel", {width: "250px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {onChange: "deviceChange"}, {

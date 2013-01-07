@@ -211,7 +211,7 @@ dojo.declare("PhoneGapConfig", wm.Page, {
                              });
 
         studio.beginWait("Generating");
-        var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath, studio.application.theme, xmlfile, this.xhrServiceProxies.getChecked()]);
+        var d = studio.phoneGapService.requestAsync("generateBuild", [xhrPath, studio.application.theme, studio.application.tabletTheme || "", studio.application.phoneTheme || "", xmlfile, this.xhrServiceProxies.getChecked()]);
         d.addCallbacks(
             dojo.hitch(this, function() {
                 app.alert("After the zip file has downloaded, login at https://build.phonegap.com and upload the zip file");

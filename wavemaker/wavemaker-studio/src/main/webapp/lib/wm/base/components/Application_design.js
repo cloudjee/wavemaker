@@ -80,10 +80,12 @@ wm.Application.extend({
     makePropEdit: function(inName, inValue, inEditorProps) {
         switch (inName) {
         case "theme":
+        case "phoneTheme":
+        case "tabletTheme":
             var options = [];
             var values = [];
             var data = studio.themesListVar.getData();
-            if (inValue.indexOf(".") == -1) {
+            if (inValue && inValue.indexOf(".") == -1) {
                 if (inValue.indexOf("wm_") === 0) {
                     inValue = "wm.base.widget.themes." + inValue;
                 } else {
@@ -198,6 +200,8 @@ wm.Object.extendSchema(wm.Application, {
     values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
     i18n: {group: "widgetName", type: "boolean", order: 6},
     theme: {group: "widgetName", type: "string", order: 7},
+    phoneTheme: {group: "mobile", type: "string", order: 20},
+    tabletTheme: {group: "mobile", type: "string", order: 21},
     themeName: {ignore:1},
     currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
     hintDelay: {group: "widgetName", subgroup: "behavior", type: "number", order: 100},

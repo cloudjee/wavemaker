@@ -598,7 +598,7 @@ dojo.declare("wm.studio.Project", null, {
         return d;
    },
    updatePhonegapFiles: function() {
-       return studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
+       return studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme, studio.application.tabletTheme || "", studio.application.phoneTheme || ""]);
    },
 
     // finished saving the project files (but not necesarily the service files)
@@ -633,7 +633,7 @@ dojo.declare("wm.studio.Project", null, {
     },
     saveApplication: function(callback) {
         var f = [];
-        var themeUrl;
+        var themeUrl, phoneThemeUrl, tabletThemeUrl;
         try {
             studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
         } catch (e) {
@@ -692,11 +692,33 @@ dojo.declare("wm.studio.Project", null, {
                 var d = this.loadProjectData("types.js", true)
                 d.addCallback(function(inResult) {
                     allProjectJS += inResult + "\n";
-
+                    var themeText = "";
                     var theme = studio.application.theme;
                     var themeName = theme.replace(/^.*\./,"");
-
-                    allProjectJS += "wm.Application.themeData['" + theme + "'] = " + dojo.toJson(wm.Application.themeData[theme]) + ";\n"; // TODO need to utilize this data
+                    var path;
+                    if (studio.application.tabletTheme && studio.application.tabletTheme != theme) {
+                        path = dojo.moduleUrl(studio.application.tabletTheme) + "/Theme.js";                       
+                        var themeData = wm.load(path);
+                        themeText += "if (wm.device == 'tablet') {\n\t" +
+                                     "wm.Application.themeData['" + studio.application.tabletTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
+                    }
+                    
+                    // TODO: If phone and tablet are the same, we can optimize this
+                    if (studio.application.phoneTheme && studio.application.phoneTheme != theme) {
+                        path = dojo.moduleUrl(studio.application.phoneTheme) + "/Theme.js";                       
+                        var themeData = wm.load(path);
+                        themeText += "if (wm.device == 'phone') {\n\t" +
+                                     "wm.Application.themeData['" + studio.application.phoneTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
+                    }
+                    var closeParenNeeded = Boolean(themeText);
+                    if (themeText) {
+                        themeText += " {\n\t";
+                    }
+                    path = dojo.moduleUrl(theme) + "/Theme.js";                                           
+                    var themeData = wm.load(path);
+                    themeText += "wm.Application.themeData['" + theme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n";
+                    if (closeParenNeeded) themeText += "}\n";
+                    allProjectJS += themeText;                              
                     studio.incrementSaveProgressBar(1);
                 });
                 return d;
@@ -790,6 +812,28 @@ dojo.declare("wm.studio.Project", null, {
                         themeUrl = "../wavemaker/" + dojo.moduleUrl(theme) + "theme.css";
                     }
                 }
+                
+                var tabletTheme = studio.application.tabletTheme;
+                if (tabletTheme && tabletTheme != theme) {
+                    if (tabletTheme.indexOf("project.") == 0) {
+                      tabletThemeUrl = tabletTheme.replace(/^project\./,"").replace(/\./g,"/") + "/theme.css";
+                    } else if (this.deployingProject || wm.studioConfig.environment != "local") {
+                        tabletThemeUrl = dojo.moduleUrl(tabletTheme) + "/theme.css";
+                    } else {
+                        tabletThemeUrl = "../wavemaker/" + dojo.moduleUrl(tabletTheme ) + "theme.css";
+                    }
+                }
+                
+                var phoneTheme = studio.application.phoneTheme;
+                if (phoneTheme && phoneTheme != theme) {
+                    if (phoneTheme.indexOf("project.") == 0) {
+                      phoneThemeUrl = phoneTheme.replace(/^project\./,"").replace(/\./g,"/") + "/theme.css";
+                    } else if (this.deployingProject || wm.studioConfig.environment != "local") {
+                        phoneThemeUrl = dojo.moduleUrl(phoneTheme) + "/theme.css";
+                    } else {
+                        phoneThemeUrl = "../wavemaker/" + dojo.moduleUrl(phoneTheme ) + "theme.css";
+                    }
+                }
                 var d;
                 if (webFileExists(c.appIndexFileName)) {
                     d = this.loadProjectData(c.appIndexFileName, true);
@@ -797,18 +841,41 @@ dojo.declare("wm.studio.Project", null, {
                     var indexHtml = makeIndexHtml(this.projectName, themeUrl);
                     d = new dojo.Deferred();
                     d.callback(indexHtml);
-                }
+                }                
+    
                 return d;
-            }),onError
+            }),onError            
         ).then(
             /* Save step: Take the result of loading index.html, revise the file and save it */
             dojo.hitch(this, function(indexHtml) {
                 if (indexHtml.match(/var wmThemeUrl\s*=.*?;/)) {
                     indexHtml = indexHtml.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
                 } else {
-                    indexHtml = indexHtml.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+                    indexHtml = indexHtml.replace(/\<\/title\s*\>/, "</title>\n<script>\nvar wmThemeUrl = \"" + themeUrl + "\";\n</script>");
                 }
 
+
+                if (tabletThemeUrl) {
+                    if (indexHtml.match(/var wmThemeTabletUrl\s*=.*?;/)) {
+                    	indexHtml = indexHtml.replace(/var wmThemeTabletUrl\s*=.*?;/, "var wmThemeTabletUrl = \"" + tabletThemeUrl + "\";");
+                    } else {
+                       	indexHtml = indexHtml.replace(/(var wmThemeUrl.*?|var wmThemePhoneUrl.*?)[\s\n]*\<\/script\>/m, "$1\nvar wmThemeTabletUrl = \"" + tabletThemeUrl + "\";\n</script>");
+                    }
+                } else {
+                   	indexHtml = indexHtml.replace(/var wmThemeTabletUrl\s*=.*?;\s*\n/m, "");
+                }
+
+                if (phoneThemeUrl) {
+                    if (indexHtml.match(/var wmThemePhoneUrl\s*=.*?;/)) {
+                    	indexHtml = indexHtml.replace(/var wmThemePhoneUrl\s*=.*?;/, "var wmThemePhoneUrl = \"" + phoneThemeUrl + "\";");
+                    } else {
+                       	indexHtml = indexHtml.replace(/(var wmThemeUrl.*?|var wmThemeTabletUrl.*?)[\s\n]*\<\/script\>/m, "$1\nvar wmThemePhoneUrl = \"" + phoneThemeUrl + "\";\n</script>");
+                    }
+                } else {
+                   	indexHtml = indexHtml.replace(/var wmThemePhoneUrl\s*=.*?;\s*\n/m, "");
+                }
+                
+                
                 var d = this.saveProjectData(c.appIndexFileName, indexHtml, false, true);
                 return d;
             }),onError
@@ -827,9 +894,30 @@ dojo.declare("wm.studio.Project", null, {
                     if (t.match(/var wmThemeUrl\s*=.*?;/)) {
                         t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
                     } else {
-                        t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+                        t = t.replace(/\<\/title\s*\>/, "</title>\n<script>\nvar wmThemeUrl = \"" + themeUrl + "\";\n</script>");
                     }
 
+
+                    if (tabletThemeUrl) {
+                        if (t.match(/var wmThemeTabletUrl\s*=.*?;/)) {
+                        	indextHtml = t.replace(/var wmThemeTabletUrl\s*=.*?;/, "var wmThemeTabletUrl = \"" + tabletThemeUrl + "\";");
+                        } else {
+                           	t = t.replace(/(var wmThemeUrl.*?|var wmThemePhoneUrl.*?)[\s\n]*\<\/script\>/m, "$1\nvar wmThemeTabletUrl = \"" + tabletThemeUrl + "\";\n</script>");
+                        }
+                    } else {
+                       	t = t.replace(/var wmThemeTabletUrl\s*=.*?;\s*\n/m, "");
+                    }
+
+                    if (phoneThemeUrl) {
+                        if (t.match(/var wmThemePhoneUrl\s*=.*?;/)) {
+                        	t = t.replace(/var wmThemePhoneUrl\s*=.*?;/, "var wmThemePhoneUrl = \"" + phoneThemeUrl + "\";");
+                        } else {
+                           	t = t.replace(/(var wmThemeUrl.*?|var wmThemeTabletUrl.*?)[\s\n]*\<\/script\>/m, "$1\nvar wmThemePhoneUrl = \"" + phoneThemeUrl + "\";\n</script>");
+                        }
+                    } else {
+                       	t = t.replace(/var wmThemePhoneUrl\s*=.*?;\s*\n/m, "");
+                    }
+                                        
                     var theme = studio.application.theme;
                     var themeName = theme.replace(/^.*\./,"");
                     if (t.match(/wavemakerNode\",\s*theme\:/)) {
@@ -838,6 +926,22 @@ dojo.declare("wm.studio.Project", null, {
                         // first time we save login.html, it doesn't have a theme or projectName in the constructor
                         t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + theme + "\", name:\"" + studio.project.projectName + "\"}");
                     }
+                    
+                    if (t.match(/,\s*tabletTheme\:/)) {
+                        t = t.replace(/\s*tabletTheme\:\s*\".*?\"/, "tabletTheme: \"" + (studio.application.tabletTheme || "") + "\"");
+                    } else {
+                        // first time we save login.html, it doesn't have a theme or projectName in the constructor
+                        t = t.replace(/(wm\.Application.*?)name\:/, "$1tabletTheme: \"" + (studio.application.tabletTheme || "") + "\", name:");
+                    }
+                    
+                    if (t.match(/,\s*phoneTheme\:/)) {
+                        t = t.replace(/\s*phoneTheme\:\s*\".*?\"/, "phoneTheme: \"" + (studio.application.phoneTheme || "") + "\"");
+                    } else {
+                        // first time we save login.html, it doesn't have a theme or projectName in the constructor
+                        t = t.replace(/(wm\.Application.*?)name\:/, "$1phoneTheme: \"" + studio.application.phoneTheme + "\", name:");
+                    }
+                    
+                    
                     var d = this.saveProjectData("login.html", t, false, true);
                     return d;
                 }
