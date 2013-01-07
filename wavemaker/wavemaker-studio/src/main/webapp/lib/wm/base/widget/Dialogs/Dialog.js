@@ -1515,7 +1515,7 @@ dojo.require("wm.base.widget.Buttons.Button");
 dojo.declare("wm.ButtonBarPanel", wm.Panel, {
     classNames: "wmcontainer wmpanel dialogfooter",        
     width: "100%",
-    height: (wm.isMobile ? wm.Button.prototoype.mobileHeight : wm.Button.prototype.desktopHeight) || wm.Button.prototype.height,
+    height: (wm.isMobile ? wm.Button.prototype.mobileHeight : wm.Button.prototype.desktopHeight) || wm.Button.prototype.height,
     padding: "0",
     desktopHeight: wm.Button.prototype.desktopHeight || wm.Button.prototype.height,
     mobileHeight: wm.Button.prototype.mobileHeight || wm.Button.prototype.height,
