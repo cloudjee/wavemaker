@@ -22,6 +22,8 @@
 
 package com.wavemaker.tools.webapp.schema;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -36,23 +38,21 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 /**
  * 
  * 
- * 	The session-configType defines the session parameters
- * 	for this web application.
- * 
- * 	Used in: web-app
+ *       The handler-chains element defines the handlerchains associated with this
+ *       service or service endpoint.
  * 
  *       
  * 
- * <p>Java class for session-configType complex type.
+ * <p>Java class for service-ref_handler-chainsType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="session-configType">
+ * &lt;complexType name="service-ref_handler-chainsType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="session-timeout" type="{http://java.sun.com/xml/ns/javaee}xsdIntegerType" minOccurs="0"/>
+ *         &lt;element name="handler-chain" type="{http://java.sun.com/xml/ns/javaee}service-ref_handler-chainType" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}ID" />
  *     &lt;/restriction>
@@ -63,13 +63,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "session-configType", propOrder = {
-    "sessionTimeout"
+@XmlType(name = "service-ref_handler-chainsType", propOrder = {
+    "handlerChain"
 })
-public class SessionConfigType {
+public class ServiceRefHandlerChainsType {
 
-    @XmlElement(name = "session-timeout")
-    protected XsdIntegerType sessionTimeout;
+    @XmlElement(name = "handler-chain")
+    protected List<ServiceRefHandlerChainType> handlerChain;
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -77,27 +77,32 @@ public class SessionConfigType {
     protected java.lang.String id;
 
     /**
-     * Gets the value of the sessionTimeout property.
+     * Gets the value of the handlerChain property.
      * 
-     * @return
-     *     possible object is
-     *     {@link XsdIntegerType }
-     *     
-     */
-    public XsdIntegerType getSessionTimeout() {
-        return sessionTimeout;
-    }
-
-    /**
-     * Sets the value of the sessionTimeout property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the handlerChain property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link XsdIntegerType }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getHandlerChain().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ServiceRefHandlerChainType }
+     * 
+     * 
      */
-    public void setSessionTimeout(XsdIntegerType value) {
-        this.sessionTimeout = value;
+    public List<ServiceRefHandlerChainType> getHandlerChain() {
+        if (handlerChain == null) {
+            handlerChain = new ArrayList<ServiceRefHandlerChainType>();
+        }
+        return this.handlerChain;
     }
 
     /**

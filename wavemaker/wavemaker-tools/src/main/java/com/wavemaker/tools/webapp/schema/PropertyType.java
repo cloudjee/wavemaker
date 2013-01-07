@@ -36,23 +36,21 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 /**
  * 
  * 
- * 	The session-configType defines the session parameters
- * 	for this web application.
- * 
- * 	Used in: web-app
+ * 	Specifies a name/value pair.
  * 
  *       
  * 
- * <p>Java class for session-configType complex type.
+ * <p>Java class for propertyType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="session-configType">
+ * &lt;complexType name="propertyType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="session-timeout" type="{http://java.sun.com/xml/ns/javaee}xsdIntegerType" minOccurs="0"/>
+ *         &lt;element name="name" type="{http://java.sun.com/xml/ns/javaee}xsdStringType"/>
+ *         &lt;element name="value" type="{http://java.sun.com/xml/ns/javaee}xsdStringType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}ID" />
  *     &lt;/restriction>
@@ -63,13 +61,16 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "session-configType", propOrder = {
-    "sessionTimeout"
+@XmlType(name = "propertyType", propOrder = {
+    "name",
+    "value"
 })
-public class SessionConfigType {
+public class PropertyType {
 
-    @XmlElement(name = "session-timeout")
-    protected XsdIntegerType sessionTimeout;
+    @XmlElement(required = true)
+    protected XsdStringType name;
+    @XmlElement(required = true)
+    protected XsdStringType value;
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -77,27 +78,51 @@ public class SessionConfigType {
     protected java.lang.String id;
 
     /**
-     * Gets the value of the sessionTimeout property.
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
-     *     {@link XsdIntegerType }
+     *     {@link XsdStringType }
      *     
      */
-    public XsdIntegerType getSessionTimeout() {
-        return sessionTimeout;
+    public XsdStringType getName() {
+        return name;
     }
 
     /**
-     * Sets the value of the sessionTimeout property.
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
-     *     {@link XsdIntegerType }
+     *     {@link XsdStringType }
      *     
      */
-    public void setSessionTimeout(XsdIntegerType value) {
-        this.sessionTimeout = value;
+    public void setName(XsdStringType value) {
+        this.name = value;
+    }
+
+    /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link XsdStringType }
+     *     
+     */
+    public XsdStringType getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link XsdStringType }
+     *     
+     */
+    public void setValue(XsdStringType value) {
+        this.value = value;
     }
 
     /**

@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
@@ -38,29 +39,34 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 /**
  * 
  * 
- * 	The web-resource-collectionType is used to identify a subset
- * 	of the resources and HTTP methods on those resources within
- * 	a web application to which a security constraint applies. If
- * 	no HTTP methods are specified, then the security constraint
- * 	applies to all HTTP methods.
- * 
- * 	Used in: security-constraint
+ *       The handler-chain element defines the handlerchain.
+ *       Handlerchain can be defined such that the handlers in the
+ *       handlerchain operate,all ports of a service, on a specific
+ *       port or on a list of protocol-bindings. The choice of elements
+ *       service-name-pattern, port-name-pattern and protocol-bindings
+ *       are used to specify whether the handlers in handler-chain are
+ *       for a service, port or protocol binding. If none of these
+ *       choices are specified with the handler-chain element then the
+ *       handlers specified in the handler-chain will be applied on
+ *       everything.
  * 
  *       
  * 
- * <p>Java class for web-resource-collectionType complex type.
+ * <p>Java class for service-ref_handler-chainType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="web-resource-collectionType">
+ * &lt;complexType name="service-ref_handler-chainType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="web-resource-name" type="{http://java.sun.com/xml/ns/javaee}string"/>
- *         &lt;element name="description" type="{http://java.sun.com/xml/ns/javaee}descriptionType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="url-pattern" type="{http://java.sun.com/xml/ns/javaee}url-patternType" maxOccurs="unbounded"/>
- *         &lt;element name="http-method" type="{http://java.sun.com/xml/ns/javaee}http-methodType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;choice minOccurs="0">
+ *           &lt;element name="service-name-pattern" type="{http://java.sun.com/xml/ns/javaee}service-ref_qname-pattern"/>
+ *           &lt;element name="port-name-pattern" type="{http://java.sun.com/xml/ns/javaee}service-ref_qname-pattern"/>
+ *           &lt;element name="protocol-bindings" type="{http://java.sun.com/xml/ns/javaee}service-ref_protocol-bindingListType"/>
+ *         &lt;/choice>
+ *         &lt;element name="handler" type="{http://java.sun.com/xml/ns/javaee}service-ref_handlerType" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}ID" />
  *     &lt;/restriction>
@@ -71,22 +77,25 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "web-resource-collectionType", propOrder = {
-    "webResourceName",
-    "description",
-    "urlPattern",
-    "httpMethod"
+@XmlType(name = "service-ref_handler-chainType", propOrder = {
+    "serviceNamePattern",
+    "portNamePattern",
+    "protocolBindings",
+    "handler"
 })
-public class WebResourceCollectionType {
+public class ServiceRefHandlerChainType {
 
-    @XmlElement(name = "web-resource-name", required = true)
-    protected com.wavemaker.tools.webapp.schema.String webResourceName;
-    protected List<DescriptionType> description;
-    @XmlElement(name = "url-pattern", required = true)
-    protected List<UrlPatternType> urlPattern;
-    @XmlElement(name = "http-method")
+    @XmlElement(name = "service-name-pattern")
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected List<java.lang.String> httpMethod;
+    protected java.lang.String serviceNamePattern;
+    @XmlElement(name = "port-name-pattern")
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    protected java.lang.String portNamePattern;
+    @XmlList
+    @XmlElement(name = "protocol-bindings")
+    protected List<java.lang.String> protocolBindings;
+    @XmlElement(required = true)
+    protected List<ServiceRefHandlerType> handler;
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -94,100 +103,66 @@ public class WebResourceCollectionType {
     protected java.lang.String id;
 
     /**
-     * Gets the value of the webResourceName property.
+     * Gets the value of the serviceNamePattern property.
      * 
      * @return
      *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
+     *     {@link java.lang.String }
      *     
      */
-    public com.wavemaker.tools.webapp.schema.String getWebResourceName() {
-        return webResourceName;
+    public java.lang.String getServiceNamePattern() {
+        return serviceNamePattern;
     }
 
     /**
-     * Sets the value of the webResourceName property.
+     * Sets the value of the serviceNamePattern property.
      * 
      * @param value
      *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
+     *     {@link java.lang.String }
      *     
      */
-    public void setWebResourceName(com.wavemaker.tools.webapp.schema.String value) {
-        this.webResourceName = value;
+    public void setServiceNamePattern(java.lang.String value) {
+        this.serviceNamePattern = value;
     }
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the portNamePattern property.
      * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getDescription().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
-     * 
-     * 
+     * @return
+     *     possible object is
+     *     {@link java.lang.String }
+     *     
      */
-    public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
-        }
-        return this.description;
+    public java.lang.String getPortNamePattern() {
+        return portNamePattern;
     }
 
     /**
-     * Gets the value of the urlPattern property.
+     * Sets the value of the portNamePattern property.
      * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the urlPattern property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getUrlPattern().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link UrlPatternType }
-     * 
-     * 
+     * @param value
+     *     allowed object is
+     *     {@link java.lang.String }
+     *     
      */
-    public List<UrlPatternType> getUrlPattern() {
-        if (urlPattern == null) {
-            urlPattern = new ArrayList<UrlPatternType>();
-        }
-        return this.urlPattern;
+    public void setPortNamePattern(java.lang.String value) {
+        this.portNamePattern = value;
     }
 
     /**
-     * Gets the value of the httpMethod property.
+     * Gets the value of the protocolBindings property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the httpMethod property.
+     * This is why there is not a <CODE>set</CODE> method for the protocolBindings property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getHttpMethod().add(newItem);
+     *    getProtocolBindings().add(newItem);
      * </pre>
      * 
      * 
@@ -197,11 +172,40 @@ public class WebResourceCollectionType {
      * 
      * 
      */
-    public List<java.lang.String> getHttpMethod() {
-        if (httpMethod == null) {
-            httpMethod = new ArrayList<java.lang.String>();
+    public List<java.lang.String> getProtocolBindings() {
+        if (protocolBindings == null) {
+            protocolBindings = new ArrayList<java.lang.String>();
         }
-        return this.httpMethod;
+        return this.protocolBindings;
+    }
+
+    /**
+     * Gets the value of the handler property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the handler property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getHandler().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ServiceRefHandlerType }
+     * 
+     * 
+     */
+    public List<ServiceRefHandlerType> getHandler() {
+        if (handler == null) {
+            handler = new ArrayList<ServiceRefHandlerType>();
+        }
+        return this.handler;
     }
 
     /**

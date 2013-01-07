@@ -37,24 +37,49 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * 
+ * 	
  * 
- * 	This type is a general type that can be used to declare
- * 	parameter/value lists.
+ * 	  The persistence-unit-ref element contains a declaration
+ * 	  of Deployment Component's reference to a persistence unit
+ * 	  associated within a Deployment Component's
+ * 	  environment. It consists of:
  * 
+ * 		  - an optional description
+ * 		  - the persistence unit reference name
+ * 		  - an optional persistence unit name.  If not specified,
+ *                     the default persistence unit is assumed.
+ * 		  - optional injection targets
+ * 
+ * 	  Examples:
+ * 
+ *             <persistence-unit-ref>
+ *               <persistence-unit-ref-name>myPersistenceUnit
+ *               </persistence-unit-ref-name>
+ *             </persistence-unit-ref>
+ * 
+ *             <persistence-unit-ref>
+ *               <persistence-unit-ref-name>myPersistenceUnit
+ *                 </persistence-unit-ref-name>
+ *               <persistence-unit-name>PersistenceUnit1
+ *                 </persistence-unit-name>
+ *             </persistence-unit-ref>
+ * 
+ * 	  
  *       
  * 
- * <p>Java class for param-valueType complex type.
+ * <p>Java class for persistence-unit-refType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="param-valueType">
+ * &lt;complexType name="persistence-unit-refType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="description" type="{http://java.sun.com/xml/ns/javaee}descriptionType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="param-name" type="{http://java.sun.com/xml/ns/javaee}string"/>
- *         &lt;element name="param-value" type="{http://java.sun.com/xml/ns/javaee}xsdStringType"/>
+ *         &lt;element name="persistence-unit-ref-name" type="{http://java.sun.com/xml/ns/javaee}jndi-nameType"/>
+ *         &lt;element name="persistence-unit-name" type="{http://java.sun.com/xml/ns/javaee}string" minOccurs="0"/>
+ *         &lt;group ref="{http://java.sun.com/xml/ns/javaee}resourceGroup"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}ID" />
  *     &lt;/restriction>
@@ -65,18 +90,24 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "param-valueType", propOrder = {
+@XmlType(name = "persistence-unit-refType", propOrder = {
     "description",
-    "paramName",
-    "paramValue"
+    "persistenceUnitRefName",
+    "persistenceUnitName",
+    "mappedName",
+    "injectionTarget"
 })
-public class ParamValueType {
+public class PersistenceUnitRefType {
 
     protected List<DescriptionType> description;
-    @XmlElement(name = "param-name", required = true)
-    protected com.wavemaker.tools.webapp.schema.String paramName;
-    @XmlElement(name = "param-value", required = true)
-    protected XsdStringType paramValue;
+    @XmlElement(name = "persistence-unit-ref-name", required = true)
+    protected JndiNameType persistenceUnitRefName;
+    @XmlElement(name = "persistence-unit-name")
+    protected com.wavemaker.tools.webapp.schema.String persistenceUnitName;
+    @XmlElement(name = "mapped-name")
+    protected XsdStringType mappedName;
+    @XmlElement(name = "injection-target")
+    protected List<InjectionTargetType> injectionTarget;
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -113,51 +144,104 @@ public class ParamValueType {
     }
 
     /**
-     * Gets the value of the paramName property.
+     * Gets the value of the persistenceUnitRefName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JndiNameType }
+     *     
+     */
+    public JndiNameType getPersistenceUnitRefName() {
+        return persistenceUnitRefName;
+    }
+
+    /**
+     * Sets the value of the persistenceUnitRefName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JndiNameType }
+     *     
+     */
+    public void setPersistenceUnitRefName(JndiNameType value) {
+        this.persistenceUnitRefName = value;
+    }
+
+    /**
+     * Gets the value of the persistenceUnitName property.
      * 
      * @return
      *     possible object is
      *     {@link com.wavemaker.tools.webapp.schema.String }
      *     
      */
-    public com.wavemaker.tools.webapp.schema.String getParamName() {
-        return paramName;
+    public com.wavemaker.tools.webapp.schema.String getPersistenceUnitName() {
+        return persistenceUnitName;
     }
 
     /**
-     * Sets the value of the paramName property.
+     * Sets the value of the persistenceUnitName property.
      * 
      * @param value
      *     allowed object is
      *     {@link com.wavemaker.tools.webapp.schema.String }
      *     
      */
-    public void setParamName(com.wavemaker.tools.webapp.schema.String value) {
-        this.paramName = value;
+    public void setPersistenceUnitName(com.wavemaker.tools.webapp.schema.String value) {
+        this.persistenceUnitName = value;
     }
 
     /**
-     * Gets the value of the paramValue property.
+     * Gets the value of the mappedName property.
      * 
      * @return
      *     possible object is
      *     {@link XsdStringType }
      *     
      */
-    public XsdStringType getParamValue() {
-        return paramValue;
+    public XsdStringType getMappedName() {
+        return mappedName;
     }
 
     /**
-     * Sets the value of the paramValue property.
+     * Sets the value of the mappedName property.
      * 
      * @param value
      *     allowed object is
      *     {@link XsdStringType }
      *     
      */
-    public void setParamValue(XsdStringType value) {
-        this.paramValue = value;
+    public void setMappedName(XsdStringType value) {
+        this.mappedName = value;
+    }
+
+    /**
+     * Gets the value of the injectionTarget property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the injectionTarget property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getInjectionTarget().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link InjectionTargetType }
+     * 
+     * 
+     */
+    public List<InjectionTargetType> getInjectionTarget() {
+        if (injectionTarget == null) {
+            injectionTarget = new ArrayList<InjectionTargetType>();
+        }
+        return this.injectionTarget;
     }
 
     /**

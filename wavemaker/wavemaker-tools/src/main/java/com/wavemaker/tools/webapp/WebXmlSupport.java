@@ -38,7 +38,7 @@ import com.wavemaker.tools.webapp.schema.WebAppType;
  */
 public class WebXmlSupport {
 
-    public static final String WEBAPP_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd";
+    public static final String WEBAPP_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd";
 
     public static final String WEBAPP_PACKAGE = "com.wavemaker.tools.webapp.schema";
 

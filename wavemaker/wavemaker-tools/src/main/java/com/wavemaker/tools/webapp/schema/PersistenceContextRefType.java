@@ -39,57 +39,53 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  * 	
  * 
- * 	  The message-destination-ref element contains a declaration
- * 	  of Deployment Component's reference to a message destination
- * 	  associated with a resource in Deployment Component's
+ * 	  The persistence-context-ref element contains a declaration
+ * 	  of Deployment Component's reference to a persistence context
+ * 	  associated within a Deployment Component's
  * 	  environment. It consists of:
  * 
  * 		  - an optional description
- * 		  - the message destination reference name
- * 		  - an optional message destination type
+ * 		  - the persistence context reference name
+ * 		  - an optional persistence unit name.  If not specified,
+ *                     the default persistence unit is assumed.
  * 		  - an optional specification as to whether
- * 		    the destination is used for
- * 		    consuming or producing messages, or both.
- * 		    if not specified, "both" is assumed.
- * 		  - an optional link to the message destination
+ * 		    the persistence context type is Transaction or
+ * 		    Extended.  If not specified, Transaction is assumed.
+ *                   - an optional list of persistence properties
  * 		  - optional injection targets
- * 
- * 	  The message destination type must be supplied unless an
- * 	  injection target is specified, in which case the type
- * 	  of the target is used.  If both are specified, the type
- * 	  must be assignment compatible with the type of the injection
- * 	  target.
  * 
  * 	  Examples:
  * 
- * 	  <message-destination-ref>
- * 		  <message-destination-ref-name>jms/StockQueue
- * 		  </message-destination-ref-name>
- * 		  <message-destination-type>javax.jms.Queue
- * 		  </message-destination-type>
- * 		  <message-destination-usage>Consumes
- * 		  </message-destination-usage>
- * 		  <message-destination-link>CorporateStocks
- * 		  </message-destination-link>
- * 	  </message-destination-ref>
+ *             <persistence-context-ref>
+ *               <persistence-context-ref-name>myPersistenceContext
+ *               </persistence-context-ref-name>
+ *             </persistence-context-ref>
+ * 
+ *             <persistence-context-ref>
+ *               <persistence-context-ref-name>myPersistenceContext
+ *                 </persistence-context-ref-name>
+ *               <persistence-unit-name>PersistenceUnit1
+ *                 </persistence-unit-name>
+ *               <persistence-context-type>Extended</persistence-context-type>
+ *             </persistence-context-ref>
  * 
  * 	  
  *       
  * 
- * <p>Java class for message-destination-refType complex type.
+ * <p>Java class for persistence-context-refType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="message-destination-refType">
+ * &lt;complexType name="persistence-context-refType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="description" type="{http://java.sun.com/xml/ns/javaee}descriptionType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="message-destination-ref-name" type="{http://java.sun.com/xml/ns/javaee}jndi-nameType"/>
- *         &lt;element name="message-destination-type" type="{http://java.sun.com/xml/ns/javaee}message-destination-typeType" minOccurs="0"/>
- *         &lt;element name="message-destination-usage" type="{http://java.sun.com/xml/ns/javaee}message-destination-usageType" minOccurs="0"/>
- *         &lt;element name="message-destination-link" type="{http://java.sun.com/xml/ns/javaee}message-destination-linkType" minOccurs="0"/>
+ *         &lt;element name="persistence-context-ref-name" type="{http://java.sun.com/xml/ns/javaee}jndi-nameType"/>
+ *         &lt;element name="persistence-unit-name" type="{http://java.sun.com/xml/ns/javaee}string" minOccurs="0"/>
+ *         &lt;element name="persistence-context-type" type="{http://java.sun.com/xml/ns/javaee}persistence-context-typeType" minOccurs="0"/>
+ *         &lt;element name="persistence-property" type="{http://java.sun.com/xml/ns/javaee}propertyType" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;group ref="{http://java.sun.com/xml/ns/javaee}resourceGroup"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}ID" />
@@ -101,26 +97,26 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "message-destination-refType", propOrder = {
+@XmlType(name = "persistence-context-refType", propOrder = {
     "description",
-    "messageDestinationRefName",
-    "messageDestinationType",
-    "messageDestinationUsage",
-    "messageDestinationLink",
+    "persistenceContextRefName",
+    "persistenceUnitName",
+    "persistenceContextType",
+    "persistenceProperty",
     "mappedName",
     "injectionTarget"
 })
-public class MessageDestinationRefType {
+public class PersistenceContextRefType {
 
     protected List<DescriptionType> description;
-    @XmlElement(name = "message-destination-ref-name", required = true)
-    protected JndiNameType messageDestinationRefName;
-    @XmlElement(name = "message-destination-type")
-    protected MessageDestinationTypeType messageDestinationType;
-    @XmlElement(name = "message-destination-usage")
-    protected MessageDestinationUsageType messageDestinationUsage;
-    @XmlElement(name = "message-destination-link")
-    protected MessageDestinationLinkType messageDestinationLink;
+    @XmlElement(name = "persistence-context-ref-name", required = true)
+    protected JndiNameType persistenceContextRefName;
+    @XmlElement(name = "persistence-unit-name")
+    protected com.wavemaker.tools.webapp.schema.String persistenceUnitName;
+    @XmlElement(name = "persistence-context-type")
+    protected PersistenceContextTypeType persistenceContextType;
+    @XmlElement(name = "persistence-property")
+    protected List<PropertyType> persistenceProperty;
     @XmlElement(name = "mapped-name")
     protected XsdStringType mappedName;
     @XmlElement(name = "injection-target")
@@ -161,99 +157,104 @@ public class MessageDestinationRefType {
     }
 
     /**
-     * Gets the value of the messageDestinationRefName property.
+     * Gets the value of the persistenceContextRefName property.
      * 
      * @return
      *     possible object is
      *     {@link JndiNameType }
      *     
      */
-    public JndiNameType getMessageDestinationRefName() {
-        return messageDestinationRefName;
+    public JndiNameType getPersistenceContextRefName() {
+        return persistenceContextRefName;
     }
 
     /**
-     * Sets the value of the messageDestinationRefName property.
+     * Sets the value of the persistenceContextRefName property.
      * 
      * @param value
      *     allowed object is
      *     {@link JndiNameType }
      *     
      */
-    public void setMessageDestinationRefName(JndiNameType value) {
-        this.messageDestinationRefName = value;
+    public void setPersistenceContextRefName(JndiNameType value) {
+        this.persistenceContextRefName = value;
     }
 
     /**
-     * Gets the value of the messageDestinationType property.
+     * Gets the value of the persistenceUnitName property.
      * 
      * @return
      *     possible object is
-     *     {@link MessageDestinationTypeType }
+     *     {@link com.wavemaker.tools.webapp.schema.String }
      *     
      */
-    public MessageDestinationTypeType getMessageDestinationType() {
-        return messageDestinationType;
+    public com.wavemaker.tools.webapp.schema.String getPersistenceUnitName() {
+        return persistenceUnitName;
     }
 
     /**
-     * Sets the value of the messageDestinationType property.
+     * Sets the value of the persistenceUnitName property.
      * 
      * @param value
      *     allowed object is
-     *     {@link MessageDestinationTypeType }
+     *     {@link com.wavemaker.tools.webapp.schema.String }
      *     
      */
-    public void setMessageDestinationType(MessageDestinationTypeType value) {
-        this.messageDestinationType = value;
+    public void setPersistenceUnitName(com.wavemaker.tools.webapp.schema.String value) {
+        this.persistenceUnitName = value;
     }
 
     /**
-     * Gets the value of the messageDestinationUsage property.
+     * Gets the value of the persistenceContextType property.
      * 
      * @return
      *     possible object is
-     *     {@link MessageDestinationUsageType }
+     *     {@link PersistenceContextTypeType }
      *     
      */
-    public MessageDestinationUsageType getMessageDestinationUsage() {
-        return messageDestinationUsage;
+    public PersistenceContextTypeType getPersistenceContextType() {
+        return persistenceContextType;
     }
 
     /**
-     * Sets the value of the messageDestinationUsage property.
+     * Sets the value of the persistenceContextType property.
      * 
      * @param value
      *     allowed object is
-     *     {@link MessageDestinationUsageType }
+     *     {@link PersistenceContextTypeType }
      *     
      */
-    public void setMessageDestinationUsage(MessageDestinationUsageType value) {
-        this.messageDestinationUsage = value;
+    public void setPersistenceContextType(PersistenceContextTypeType value) {
+        this.persistenceContextType = value;
     }
 
     /**
-     * Gets the value of the messageDestinationLink property.
+     * Gets the value of the persistenceProperty property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MessageDestinationLinkType }
-     *     
-     */
-    public MessageDestinationLinkType getMessageDestinationLink() {
-        return messageDestinationLink;
-    }
-
-    /**
-     * Sets the value of the messageDestinationLink property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the persistenceProperty property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MessageDestinationLinkType }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPersistenceProperty().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link PropertyType }
+     * 
+     * 
      */
-    public void setMessageDestinationLink(MessageDestinationLinkType value) {
-        this.messageDestinationLink = value;
+    public List<PropertyType> getPersistenceProperty() {
+        if (persistenceProperty == null) {
+            persistenceProperty = new ArrayList<PropertyType>();
+        }
+        return this.persistenceProperty;
     }
 
     /**
