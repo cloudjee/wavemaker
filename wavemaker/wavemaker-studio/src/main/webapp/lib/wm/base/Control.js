@@ -533,6 +533,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
         this.doSetSizeBc();
         if (!this.showing) this.setShowing(false, true);
 
+        this._parentDisabled = this.parent ? this.parent.disabled || this.parent._parentDisabled : false;
         this.setDisabled(this.disabled);
 
         this.appendDOMNode(this.parent);
