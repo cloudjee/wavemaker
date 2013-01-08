@@ -192,8 +192,7 @@ dojo.declare("wm.studio.Project", null, {
     //=========================================================================
     // Open
     //=========================================================================
-    openProject: function(inProjectName, inPageName) {
-
+    openProject: function(inProjectName, inPageName) {    
         var deferred = new dojo.Deferred();
         if (this.projectName && this.projectName != inProjectName)
         this.closeProject();
@@ -232,95 +231,95 @@ dojo.declare("wm.studio.Project", null, {
         return deferred;
     },
     openProjectUpgradeDialog: function(inProjectName, inPageName, deferred) {
-    studio.openProjectOptionsDialog.show();
-    studio.endWait();
-    var d = new dojo.Deferred();
-    studio.openProjectOptionsDialog.page.setup(inProjectName, d);
-    d.addCallbacks(
-        dojo.hitch(this, function(newProjectName) {
-        studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
-        if (newProjectName == inProjectName) {
-            this.openProject1(inProjectName, inPageName, deferred);
-        } else {
-            studio.studioService.requestAsync("copyProject", [inProjectName, newProjectName],
-                              dojo.hitch(this, function() {
-                              this.openProject1(newProjectName, inPageName, deferred, true);
-                              }),
-                              dojo.hitch(this, function(e) {
-                              deferred.errback(e);
-                              })
-                             );
+        studio.openProjectOptionsDialog.show();
+        studio.endWait();
+        var d = new dojo.Deferred();
+        studio.openProjectOptionsDialog.page.setup(inProjectName, d);
+        d.addCallbacks(
+            dojo.hitch(this, function(newProjectName) {
+            studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
+            if (newProjectName == inProjectName) {
+                this.openProject1(inProjectName, inPageName, deferred);
+            } else {
+                studio.studioService.requestAsync("copyProject", [inProjectName, newProjectName],
+                                  dojo.hitch(this, function() {
+                                  this.openProject1(newProjectName, inPageName, deferred, true);
+                                  }),
+                                  dojo.hitch(this, function(e) {
+                                  deferred.errback(e);
+                                  })
+                                 );
 
 
-        }
-        }),
-        function(e) {
-        deferred.errback(e);
-        }
-    );
+            }
+            }),
+            function(e) {
+            deferred.errback(e);
+            }
+        );
     },
     openProject1: function(inProjectName, inPageName, deferred, skipUpgrade) {
-
+        studio._themeDesignerChange = false;
         studio.studioService.requestAsync("openProject", [inProjectName],
                               dojo.hitch(this, function(o) {
-                              studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
-                              studio._loadingApplication = true;
-                              this.projectName = inProjectName;
+                                  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
+                                  studio._loadingApplication = true;
+                                  this.projectName = inProjectName;
 
-                              // let openProject call cleanup before starting next set of calls
-                              wm.job("studio.openProject", 10, dojo.hitch(this, function() {
-                                  studio.updateServices();
+                                  // let openProject call cleanup before starting next set of calls
+                                  wm.job("studio.openProject", 10, dojo.hitch(this, function() {
+                                      studio.updateServices();
 
 
-                                  var f = function() {
-                                  this.projectChanging();
-                                  try {
-                                      this.loadingProject = true;
-                                      this.loadApplication();
-                                      var ctor = dojo.getObject(this.projectName);
-                                      this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
-                                      this.makeApplication();
-                                      this.openPage(this.pageName);
-                                      if (!wm.isEmpty(studio.neededJars)) {
-                                      /* onidle insures it gets the higher z-index than the start page */
-                                      wm.onidle(function() {
-                                          studio.jarDownloadDialog.show();
-                                      });
-                                      throw "Missing Jar files are required for this project";
+                                      var f = function() {
+                                      this.projectChanging();
+                                      try {
+                                          this.loadingProject = true;
+                                          this.loadApplication();
+                                          var ctor = dojo.getObject(this.projectName);
+                                          this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
+                                          this.makeApplication();
+                                          this.openPage(this.pageName);
+                                          if (!wm.isEmpty(studio.neededJars)) {
+                                          /* onidle insures it gets the higher z-index than the start page */
+                                          wm.onidle(function() {
+                                              studio.jarDownloadDialog.show();
+                                          });
+                                          throw "Missing Jar files are required for this project";
+                                          }
+                                          studio.startPageDialog.hide();
+                                      } catch(e) {
+                                          console.debug(e);
+                                          this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
+                                                              {projectName: this.projectName, error: e}));
+
+                                          this.projectName = "";
+                                          this.pageName = "";
+                                          studio.application = studio.page = null;
+                                      } finally {
+                                          studio._loadingApplication = false;
+                                          this.loadingProject = false;
+                                          this.projectChanged();
+                                          if (this.projectName) {
+                                          deferred.callback();
+                                          } else {
+                                          deferred.errback();
+                                          }
                                       }
-                                      studio.startPageDialog.hide();
-                                  } catch(e) {
-                                      console.debug(e);
-                                      this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
-                                                          {projectName: this.projectName, error: e}));
-
-                                      this.projectName = "";
-                                      this.pageName = "";
-                                      studio.application = studio.page = null;
-                                  } finally {
-                                      studio._loadingApplication = false;
-                                      this.loadingProject = false;
-                                      this.projectChanged();
-                                      if (this.projectName) {
-                                      deferred.callback();
+                                      };
+                                      if (o.upgradeMessages && !skipUpgrade) {
+                                      this.showUpgradeMessage(o.upgradeMessages);
+                                      app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
                                       } else {
-                                      deferred.errback();
+                                      dojo.hitch(this, f)();
                                       }
-                                  }
-                                  };
-                                  if (o.upgradeMessages && !skipUpgrade) {
-                                  this.showUpgradeMessage(o.upgradeMessages);
-                                  app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
-                                  } else {
-                                  dojo.hitch(this, f)();
-                                  }
-                              }));
+                                  }));
                               }),
                               dojo.hitch(this, function(err) {
-                              studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
-                              /* Localization: I assume we'll always have an error message */
-                              app.alert(err.toString() || "Failed to open project");
-                              this.closeProject();
+                                  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
+                                  /* Localization: I assume we'll always have an error message */
+                                  app.alert(err.toString() || "Failed to open project");
+                                  this.closeProject();
                               }));
         return deferred;
 /*
@@ -359,51 +358,50 @@ dojo.declare("wm.studio.Project", null, {
     },
     editProjectFiles: function() {
 
-    studio.sourceTab.activate();
-    studio.resourcesTab.activate();
-    studio.workspace.hide();
-    var layers = studio.sourceTabs.layers;
-    for (var i = 0; i < layers.length; i++) {
-        layers[i].setShowing(layers[i].name == "resourcesTab");
-    }
+        studio.sourceTab.activate();
+        studio.resourcesTab.activate();
+        studio.workspace.hide();
+        var layers = studio.sourceTabs.layers;
+        for (var i = 0; i < layers.length; i++) {
+            layers[i].setShowing(layers[i].name == "resourcesTab");
+        }
 
-    studio.startPageDialog.hide();
-    app.alert("There were errors in your project that prevent it from being openned; you may edit your files here to try and fix these problems");
-    studio.connectOnce(this, "closeProject", this, function() {
-    for (var i = 0; i < layers.length; i++) {
-        layers[i].setShowing(true);
-    }
-        studio.workspace.show();
-    });
+        studio.startPageDialog.hide();
+        app.alert("There were errors in your project that prevent it from being openned; you may edit your files here to try and fix these problems");
+        studio.connectOnce(this, "closeProject", this, function() {
+            for (var i = 0; i < layers.length; i++) {
+                layers[i].setShowing(true);
+            }
+            studio.workspace.show();
+        });
     },
     closeAllServicesTabs: function() {
-    var layers = studio.tabs.layers;
-    for (var i = layers.length-1; i >= 0; i--)
+        var layers = studio.tabs.layers;
+        for (var i = layers.length - 1; i >= 0; i--)
         if (layers[i].closable) {
-        var sublayers = layers[i].c$[0].layers;
-        for (var j = sublayers.length-1; j >= 0; j--) {
-            sublayers[j].destroy();
-        }
-        layers[i].hide();
+            var sublayers = layers[i].c$[0].layers;
+            for (var j = sublayers.length - 1; j >= 0; j--) {
+                sublayers[j].destroy();
+            }
+            layers[i].hide();
         }
     },
     closeAllDialogs: function() {
-    for (var i = wm.dialog.showingList.length-1; i >= 0; i--) {
-        var d = wm.dialog.showingList[i];
-        if (d._isDesignLoaded || d.owner && d.owner._isDesignLoaded || wm.isInstanceType(d,wm.ContextMenuDialog)) {
-        d.hide();
+        for (var i = wm.dialog.showingList.length - 1; i >= 0; i--) {
+            var d = wm.dialog.showingList[i];
+            if (d._isDesignLoaded || d.owner && d.owner._isDesignLoaded || wm.isInstanceType(d, wm.ContextMenuDialog)) {
+                d.hide();
+            }
         }
-    }
     },
     openPage: function(inName, unsavedChanges) {
-    this.closeAllServicesTabs();
-    this.closeAllDialogs();
-    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation)
-        studio.bindDialog.dismiss();
+        this.closeAllServicesTabs();
+        this.closeAllDialogs();
+        if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) studio.bindDialog.dismiss();
 
-    if (unsavedChanges) {
-        studio.restoreCleanApp();
-    }
+        if (unsavedChanges) {
+            studio.restoreCleanApp();
+        }
         this.pageChanging();
         this.pageName = inName;
         try {
@@ -411,21 +409,22 @@ dojo.declare("wm.studio.Project", null, {
             this.loadPage();
             this.makePage();
             this.pageChanged();
-                studio.pageSelect.setDataValue(inName);
-        } catch(e) {
+            studio.pageSelect.setDataValue(inName);
+        } catch (e) {
             console.debug(e);
-            this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PAGE_FAILED",
-                              {pageName: this.pageName, error: e}));
+            this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PAGE_FAILED", {
+                pageName: this.pageName,
+                error: e
+            }));
             this.pageName = "";
             studio.page = null;
-            if (studio.application && studio.application.main && studio.application.main != inName)
-            this.openPage(studio.application.main);
+            if (studio.application && studio.application.main && studio.application.main != inName) this.openPage(studio.application.main);
             else {
-            this.editProjectFiles();
-            //this.closeProject();
+                this.editProjectFiles();
+                //this.closeProject();
             }
         }
-    this.loadingPage = false;
+        this.loadingPage = false;
     },
     loadProjectData: function(inPath, async) {
         //return wm.load("projects/" + studio.projectPrefix + this.projectName + "/" + inPath);
