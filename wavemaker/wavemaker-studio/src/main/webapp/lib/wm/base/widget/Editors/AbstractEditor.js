@@ -304,6 +304,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         this.stopTimerWithName("CreateDijit", this.declaredClass);
         // If using html widgets and replacing them with dijits use  "if (this.editor && this.editor.declaredClass) "
         if (this.editor) {
+            if (this._disabled) this.setDisabled(this.disabled); // if its disabled, or if its parent is disabled, rerun its disabled logic without changing this.disabled
             this.styleEditor();
             if (this.validationEnabled()) this.validatorNode = this._getValidatorNode();
             this.sizeEditor();
