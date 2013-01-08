@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.security.schema.AuthenticationManager;
 import com.wavemaker.tools.security.schema.Http;
 import com.wavemaker.tools.security.schema.LdapServer;
@@ -43,6 +44,7 @@ import com.wavemaker.tools.spring.beans.ConstructorArg;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Ref;
 import com.wavemaker.tools.spring.beans.Value;
+import org.springframework.util.StringUtils;
 
 /**
  * @author $Author$
@@ -171,13 +173,45 @@ public class SecuritySpringSupport {
             String key = url.getPattern();
             List<String> authzList = new ArrayList<String>();
             String accessStr = url.getAccess();
-            String[] accessArr = accessStr.split(",");
-            for (String access : accessArr) {
-                authzList.add(access);
+            if (StringUtils.hasText(accessStr)) {
+                String[] accessArr = accessStr.split(",");
+                for (String access : accessArr) {
+                    authzList.add(access);
+                }
             }
+
             urlMap.put(key, authzList);
         }
         return urlMap;
+    }
+
+    static String getRequiresChannel(Beans beans) {
+        List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
+        for (Http.InterceptUrl url : urls) {
+            String key = url.getPattern();
+            if (key.equals("/**/*")) {
+                return url.getRequiresChannel();
+            }
+        }
+        return null;
+    }
+
+    static void setRequiresChannel(Beans beans, String requiresChannel, String sslPort) {
+        List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
+        for (Http.InterceptUrl url : urls) {
+            String key = url.getPattern();
+            if (key.equals("/**/*")) {
+                url.setRequiresChannel(requiresChannel);
+                return;
+            }
+        }
+
+        Http.InterceptUrl newUrl = new Http.InterceptUrl();
+        newUrl.setPattern("/**/*");
+        newUrl.setRequiresChannel(requiresChannel);
+        urls.add(newUrl);
+        SecurityXmlSupport.setInterceptUrls(beans, urls);
+        SecurityXmlSupport.setPortMapping(beans, RuntimeAccess.getInstance().getRequest().getLocalPort()+"", sslPort);
     }
 
     static boolean isSecurityEnforced(Beans beans) {

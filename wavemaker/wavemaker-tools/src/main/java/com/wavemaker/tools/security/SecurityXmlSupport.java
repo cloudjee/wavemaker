@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.hibernate.cfg.Mappings;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.security.schema.*;
@@ -272,11 +273,45 @@ public class SecurityXmlSupport {
                 Http.InterceptUrl url = (Http.InterceptUrl) obj;
                 if (interceptUrl.getPattern().equals(url.getPattern())) {
                     url.setAccess(interceptUrl.getAccess());
+                    url.setRequiresChannel(interceptUrl.getRequiresChannel());
                     return;
                 }
             }
         }
         objs.add(0, interceptUrl);
     }
-  
+
+    static void setPortMapping(Beans beans, String httpPort, String httpsPort) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        boolean mappingsExist = false;
+        Http.PortMappings mappings = null;
+        for (Object obj : objs) {
+            if (obj instanceof Http.PortMappings) {
+                mappingsExist = true;
+                mappings = (Http.PortMappings) obj;
+                for (Http.PortMappings.PortMapping mapping : mappings.getPortMapping()) {
+                    if (mapping.getHttp().equals(httpPort)) {
+                        mapping.setHttps(httpsPort);
+                        return;
+                    }
+                }
+                break;
+            }
+        }
+
+        Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
+        newMapping.setHttp(httpPort);
+        newMapping.setHttps(httpsPort);
+
+        List<Http.PortMappings.PortMapping> portMappings;
+        if (mappingsExist) {
+            portMappings = mappings.getPortMapping();
+            portMappings.add(newMapping);
+        } else {
+            mappings = new Http.PortMappings();
+            portMappings = mappings.getPortMapping();
+            portMappings.add(newMapping);
+            objs.add(0, mappings);
+        }
+    }
 }

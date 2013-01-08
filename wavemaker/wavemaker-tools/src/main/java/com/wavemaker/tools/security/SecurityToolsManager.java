@@ -195,14 +195,22 @@ public class SecurityToolsManager {
         options.setEnforceSecurity(SecuritySpringSupport.isSecurityEnforced(beans));
         options.setEnforceIndexHtml(SecuritySpringSupport.isIndexHtmlEnforced(beans));
         options.setDataSourceType(SecuritySpringSupport.getDataSourceType(beans));
+        String channel = SecuritySpringSupport.getRequiresChannel(beans);
+        options.setUseSSL(channel != null && channel.equals("https"));
         return options;
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
+        setGeneralOptions(enforceSecurity, enforceIndexHtml, false, "");
+    }
+
+    public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort) throws IOException, JAXBException {
         this.lock.lock();
         try {
             Beans beans = getSecuritySpringBeans(true);
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
+            String channel = useSSL ? "https" : "http";
+            SecuritySpringSupport.setRequiresChannel(beans, channel, sslPort);
             saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();

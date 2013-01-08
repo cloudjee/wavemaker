@@ -29,13 +29,17 @@ Security.widgets = {
 		securityLayer: ["wm.Layer", {caption: "Setup Security"}, {}, {
 		    label1a: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold","wm_Padding_4px"]},"border":"0","caption":"Security Configuration","padding":"4"}],
 		    panel1a: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left"}, {}, {
-			secConfigPanel: ["wm.Panel", {"border":"0","height":"98px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
+			secConfigPanel: ["wm.Panel", {"border":"0","height":"120px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
 			    secConfigControls: ["wm.Panel", {"border":"0","width":"638px"}, {}, {
 				panel16: ["wm.Panel", {"border":"0","height":"100%"}, {}, {
 				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,LDAP", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
-				    panel3: ["wm.Panel", {"border":"0","height":"84px"}, {}, {
+				    panel3: ["wm.Panel", {"border":"0","height":"95px"}, {}, {
 					secEnableInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
-					showLoginPageInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"180px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
+					showLoginPageInput: ["wm.Checkbox", {_classe4: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
+					panel131: ["wm.Panel", {"border":"0","height":"45px", "width":"100%","layoutKind":"left-to-right"}, {}, {
+						useSSLInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Use SSL","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
+						sslPortInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"SSL Port","captionAlign":"left","captionSize":"120px","displayValue":"8443","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
+					}],
 					sessionExpirationHandler: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Session Expiration Handler","captionAlign":"left","captionSize":"180px",options: "navigateToLogin,showLoginDialog,nothing","displayValue":"","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
 				    }]
 				}]
