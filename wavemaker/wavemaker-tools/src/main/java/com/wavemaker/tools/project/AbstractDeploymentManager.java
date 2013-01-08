@@ -412,7 +412,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
         // Add studio themes
         Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
-        for (Folder theme : widgetThemes.list().folders().include(FilterOn.names().starting("wm_"))) {
+        for (Folder theme : widgetThemes.list().folders().exclude(FilterOn.names().starting("default", "wm_studio"))) {
 	    Resource r = theme.getFile("button.css");
 	    if (s.length() > 0) s.append(",");
 	    s.append("'" + theme.getName() + "': {'designer':'" + (r.exists() ? "widgetthemer" : "themedesigner") + "', 'package':'wm.base.widget.themes'}");
