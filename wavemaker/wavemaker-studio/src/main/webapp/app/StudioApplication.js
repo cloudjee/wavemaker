@@ -45,7 +45,7 @@ dojo.declare("StudioApplication", wm.Application, {
         }
     },
     confirm: function() {
-        this.inherited(arguments);
+        var result = this.inherited(arguments);
         dojo.addClass(this.confirmDialog.domNode, "studiodialog");
         this.confirmDialog.$.genericInfoPanel.setBorder("5");
         this.confirmDialog.$.genericInfoPanel.setBorderColor("#313743");
@@ -53,6 +53,7 @@ dojo.declare("StudioApplication", wm.Application, {
         this.confirmDialog.$.button2.addUserClass("StudioButton");
         this.confirmDialog.$.button1.parent.setHeight("32px");
         //this.confirmDialog.$.genericInfoPanel.setBorderColor("#424A5A");
+        return result;
     },
     alert: function() {
         var hasAlert = this.alertDialog;

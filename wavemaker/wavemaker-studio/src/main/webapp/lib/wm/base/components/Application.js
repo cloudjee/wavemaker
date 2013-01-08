@@ -454,11 +454,13 @@ dojo.declare("wm.Application", wm.Component, {
             }
             if (!wm.defaultPrototypeValues[declaredClass]) {
                 wm.defaultPrototypeValues[declaredClass] = {};
-                wm.forEachProperty(p, function(inValue, inName) {
-                    if (typeof inValue != "function") {
-                        wm.defaultPrototypeValues[declaredClass][inName] = inValue;
+                var originalValues = wm.Object.getSchemaClass(ctor).prototype;
+                for (var inName in originalValues) {
+                    var inValue = originalValues[inName];
+                    if (typeof inValue == "object" && inValue && !inValue.method && !inValue.ignore && !inValue.readonly && !inValue.operation && !(typeof p[inName] == "function")) {
+                        wm.defaultPrototypeValues[declaredClass][inName] = p[inName];
                     }
-                });
+                }
                 if ("desktopHeight" in wm.defaultPrototypeValues[declaredClass] === false) {
                      wm.defaultPrototypeValues[declaredClass].desktopHeight = undefined;
                 }
@@ -480,10 +482,12 @@ dojo.declare("wm.Application", wm.Component, {
         if (wm.locale.props) {
             dojo.mixin(ctorData,wm.locale.props[declaredClass]);
         }
-        if (wm.Application.themePrototypeData[declaredClass] != this._theme && ctorData) {
-            for (var j in ctorData) {
-                ctor.prototype[j] = ctorData[j];
-                if (optionalWidget) optionalWidget[j] = ctorData[j];
+        if (wm.Application.themePrototypeData[declaredClass] != this._theme) {
+            if (ctorData) {
+                for (var j in ctorData) {
+                    ctor.prototype[j] = ctorData[j];
+                    if (optionalWidget) optionalWidget[j] = ctorData[j];
+                }
             }
             wm.Application.themePrototypeData[declaredClass] = this._theme;            
         } /* End localization of default properties */
@@ -1013,6 +1017,7 @@ dojo.declare("wm.Application", wm.Component, {
     confirmOKFunc: null,
     confirmCancelFunc: null,
     confirm: function(inText, nonmodal, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, noshow) {
+        var d = this.confirmDialogDeferred = new dojo.Deferred();
         if (!this.confirmDialog) {
             this.loadThemePrototypeForClass(wm.Dialog);
             this.confirmDialog = new wm.GenericDialog({
@@ -1044,6 +1049,7 @@ dojo.declare("wm.Application", wm.Component, {
         this.confirmDialog.setButton1Caption(optionalOKText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_OK"));
         this.confirmDialog.setButton2Caption(optionalCancelText || wm.getDictionaryItem("wm.Application.CAPTION_CONFIRM_CANCEL"));
         if (!noshow) this.confirmDialog.show();
+        return d;
     },
     prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText) {
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
@@ -1063,10 +1069,12 @@ dojo.declare("wm.Application", wm.Component, {
             if (this.confirmOKFunc)
                 this.confirmOKFunc();
         }
+        if (this.confirmDialogDeferred) this.confirmDialogDeferred.callback();
     },
     confirmDialogCancelClick: function() {
         if (this.confirmCancelFunc)
             this.confirmCancelFunc();
+        if (this.confirmDialogDeferred) this.confirmDialogDeferred.errback();            
     },
     createToastDialog: function() {
         if (!this.toastDialog) {
