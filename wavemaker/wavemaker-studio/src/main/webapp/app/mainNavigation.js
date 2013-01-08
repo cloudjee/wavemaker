@@ -22,8 +22,9 @@ Studio.extend({
 	        //this.disableCanvasOnlyMenuItems(false);
 	        //this.toggleCanvasSourceBtns(true, false);
 	    if (!this._dontNavOnPageChange) {
-		this.tabs.setLayer("workspace");
+    		this.tabs.setLayer("workspace");
 	    }
+	    if (studio.application) {
             if (this.page) {
                 if (this._themeDesignerChange) {
                     this._themeDesignerChange = false;
@@ -42,6 +43,7 @@ Studio.extend({
                 studio.selected instanceof wm.LiveView ||
                     studio.selected instanceof wm.Security))
                 studio.select(studio.page.root);
+        }
 		//this.mainAndResourcePalettes.setLayer("mainPalettes");
 		//wm.fire(this.page, "reflow");
 	},
@@ -165,27 +167,27 @@ Studio.extend({
 		return editor;
 	},
     updateServicesDirtyTabIndicators: function() {
-	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab];
-	for (var i = 0; i < tabs.length; i++) {
-	    var tab = tabs[i];
-	    var isDirty = false;
-	    for (var j = 0; j < tab.layers.length; j++) {
-		var layer = tab.layers[j];
-		if (layer.c$.length == 0) continue;
-		var page = layer.c$[0].page;
-		if (page && page.getDirty && page.getDirty()) {
-		    isDirty = true;
-		    break;
-		}
-	    }
-//	    var caption = tab.parent.caption.replace(/^\<.*?\>\s*/, "");
-//	    if (isDirty) caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
-//	    if (caption != tab.parent.caption)
-//		tab.parent.setCaption(caption);
-	    if (tab.parent) {
-		dojo.toggleClass(tab.parent.decorator.btns[tab.parent.getIndex()], "StudioDirtyIcon", isDirty);
-	    }
-	}
+    	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab, this.themeTabs];
+    	for (var i = 0; i < tabs.length; i++) {
+    	    var tab = tabs[i];
+    	    var isDirty = false;
+    	    for (var j = 0; j < tab.layers.length; j++) {
+    		var layer = tab.layers[j];
+    		if (layer.c$.length == 0) continue;
+    		var page = layer.c$[0].page;
+    		if (page && page.getDirty && page.getDirty()) {
+    		    isDirty = true;
+    		    break;
+    		}
+    	    }
+    //	    var caption = tab.parent.caption.replace(/^\<.*?\>\s*/, "");
+    //	    if (isDirty) caption = "<img class='StudioDirtyIcon'  src='images/blank.gif' /> " + caption;
+    //	    if (caption != tab.parent.caption)
+    //		tab.parent.setCaption(caption);
+    	    if (tab.parent) {
+    		dojo.toggleClass(tab.parent.decorator.btns[tab.parent.getIndex()], "StudioDirtyIcon", isDirty);
+    	    }
+    	}
     },
     closeServiceTab: function(inSender, inLayer) {
 	    var page = inLayer.c$[0].page;
