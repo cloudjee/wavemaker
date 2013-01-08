@@ -102,6 +102,13 @@
         <!-- Note : To disable connection timeouts, set connectionTimeout value
             to 0 -->
 
+		<!-- Define a SSL HTTP/1.1 Connector on port 8443 -->
+		<Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol" SSLEnabled="true"
+               maxThreads="150" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS" 
+			   keystoreFile="conf/keyStores/wmKeyStore"
+			   keystorePass="wavemaker"/>
+
         <!-- Define the top level container in our container hierarchy -->
         <Engine name="Catalina" defaultHost="localhost">
             <!-- Because this Realm is here, an instance will be shared globally -->
