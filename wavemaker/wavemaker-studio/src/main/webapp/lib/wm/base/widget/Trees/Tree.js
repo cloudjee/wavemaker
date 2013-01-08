@@ -846,7 +846,7 @@ dojo.declare("wm.Tree", wm.Box, {
             }
         }
     },
-    findNodeByCallack: function(inCallback) {
+    findNodeByCallback: function(inCallback) {
         return this.root.findDescendant(inCallback);
     },
     findDomNode: function(inDomNode) {
