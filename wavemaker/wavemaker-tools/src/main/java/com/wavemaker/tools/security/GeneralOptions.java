@@ -29,6 +29,8 @@ public class GeneralOptions {
 
     private boolean enforceIndexHtml;
 
+    private boolean useSSL;
+
     private String dataSourceType;
 
     public boolean isEnforceSecurity() {
@@ -41,6 +43,14 @@ public class GeneralOptions {
 
     public boolean isEnforceIndexHtml() {
         return this.enforceIndexHtml;
+    }
+
+    public void setUseSSL(boolean useSSL) {
+        this.useSSL = useSSL;
+    }
+
+    public boolean isSSLUsed() {
+        return this.useSSL;
     }
 
     public void setEnforceIndexHtml(boolean enforceIndexHtml) {

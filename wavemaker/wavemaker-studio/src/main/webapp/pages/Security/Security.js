@@ -68,6 +68,8 @@ dojo.declare(
             this.servicesLayer.setShowing(true);
             this.rolesLayer.setShowing(true);
             this.showLoginPageInput.setChecked(true);
+			this.useSSLInput.setChecked(true);
+			this.sslPortInput.setDataValue("8443");
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
             this.dbRoleBySQLCheckbox.setChecked(false);
@@ -204,6 +206,8 @@ dojo.declare(
                 this.servicesLayer.setShowing(inResponse.enforceSecurity);
                 this.rolesLayer.setShowing(inResponse.enforceSecurity);
                 this.showLoginPageInput.setChecked(inResponse.enforceIndexHtml || studio.application.isLoginPageEnabled);
+				this.useSSLInput.setChecked(inResponse.SSLUsed);
+				this.sslPortInput.setDataValue(inResponse.sslPort);
                 var t = inResponse.dataSourceType;
                 this.populatingOptions = true;
                 this.secProviderInput.setDataValue(t);
@@ -759,16 +763,22 @@ dojo.declare(
         showDemoLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
+			this.useSSLInput.setShowing(true);
+			this.sslPortInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
         showDBLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
+			this.useSSLInput.setShowing(true);
+			this.sslPortInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
         showLDAPLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
+			this.useSSLInput.setShowing(true);
+			this.sslPortInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
         securityCheckboxChange : function() {
@@ -776,12 +786,16 @@ dojo.declare(
             this.servicesLayer.setShowing(enabled);
             this.rolesLayer.setShowing(enabled);
             this.showLoginPageInput.setShowing(enabled);
+			this.useSSLInput.setShowing(enabled);
+			this.sslPortInput.setShowing(enabled);
             this.sessionExpirationHandler.setShowing(enabled);
             this.panel4a.setShowing(enabled);
             this.panelBottom.setShowing(enabled);
             this.panelBottom.setShowing(enabled);
             if (this.isJOSSO()) {
                 this.showLoginPageInput.setShowing(false);
+				this.useSSLInput.setShowing(false);
+				this.sslPortInput.setShowing(false);
                 this.sessionExpirationHandler.setShowing(false);
             }
             this.setDirty();
@@ -794,7 +808,8 @@ dojo.declare(
             if (this.dbRoleBySQLCheckbox.getChecked()) {
                 rolesQuery = this.dbRoleBySQLInput.getDataValue();
             }
-            var result = [ dojo.toJson(this.demoUserList._data), dojo.toJson(this.roleList._data), this.secProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
+            var result = [ dojo.toJson(this.demoUserList._data), dojo.toJson(this.roleList._data), this.secProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), this.useSSLInput.getChecked(),
+					this.sslPortInput.getDataValue(),
                     this.sessionExpirationHandler.getDataValue(),
                     this.dbRoleBySQLCheckbox.getChecked(), this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
                     this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput), this.getEditorDisplayValue(this.tenantIdField) || "",
@@ -891,7 +906,8 @@ dojo.declare(
                         }
                         studio.securityConfigService.requestSync("configDatabase", [ this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
                                 this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput),
-                                this.getEditorDisplayValue(this.tenantIdField) || "", this.defTenantId.getDataValue() || 0, rolesQuery, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this,
+                                this.getEditorDisplayValue(this.tenantIdField) || "", this.defTenantId.getDataValue() || 0, rolesQuery, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
+								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() ], dojo.hitch(this,
                                 "configDatabaseResult"), dojo.hitch(this, "saveError"));
 
                     } else if (t == "LDAP") {

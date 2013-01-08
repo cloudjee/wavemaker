@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.wavemaker.runtime.RuntimeAccess;
 import org.apache.catalina.ant.DeployTask;
 import org.apache.catalina.ant.UndeployTask;
 
@@ -337,7 +338,13 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         String port = (String) properties.get(TOMCAT_PORT_PROPERTY);
         String userName = (String) properties.get("tomcat.manager.username");
         String password = (String) properties.get("tomcat.manager.password");
-        String tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
+        Boolean isSecured = RuntimeAccess.getInstance().getRequest().isSecure();
+        String tomcatManagerUrl;
+        //if (isSecured) {
+        //    tomcatManagerUrl = "https://" + host + ":" + port + "/manager";
+        //} else {
+            tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
+        //}
         String deployName = (String) properties.get(DEPLOY_NAME_PROPERTY);
         task.setUrl(tomcatManagerUrl);
         task.setUsername(userName);
@@ -359,7 +366,13 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         String port = (String) properties.get(TOMCAT_PORT_PROPERTY);
         String userName = (String) properties.get("tomcat.manager.username");
         String password = (String) properties.get("tomcat.manager.password");
-        String tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
+        Boolean isSecured = RuntimeAccess.getInstance().getRequest().isSecure();
+        String tomcatManagerUrl;
+        //if (isSecured) {
+        //    tomcatManagerUrl = "https://" + host + ":" + port + "/manager";
+        //} else {
+            tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
+        //}
         String deployName = (String) properties.get(DEPLOY_NAME_PROPERTY);
         LocalFolder projectDir = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
         String tomcatConfigXmlPath = ((LocalFile) projectDir.getFile(deployName + ".xml")).getLocalFile().getAbsolutePath();
