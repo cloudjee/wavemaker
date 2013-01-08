@@ -32,6 +32,8 @@ import javax.naming.ldap.InitialLdapContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
+import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.security.schema.Http;
 import org.springframework.security.core.GrantedAuthority;
 //import org.Securitysecurity.ldap.DefaultInitialDirContextFactory;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
@@ -197,6 +199,8 @@ public class SecurityToolsManager {
         options.setDataSourceType(SecuritySpringSupport.getDataSourceType(beans));
         String channel = SecuritySpringSupport.getRequiresChannel(beans);
         options.setUseSSL(channel != null && channel.equals("https"));
+        Http.PortMappings.PortMapping mapping = SecurityXmlSupport.getPortMapping(beans, RuntimeAccess.getInstance().getRequest().getLocalPort()+"");
+        options.setSslPort(mapping == null ? "" : mapping.getHttps());
         return options;
     }
 
@@ -211,6 +215,7 @@ public class SecurityToolsManager {
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
             String channel = useSSL ? "https" : "http";
             SecuritySpringSupport.setRequiresChannel(beans, channel, sslPort);
+            SecurityXmlSupport.setPortMapping(beans, RuntimeAccess.getInstance().getRequest().getLocalPort()+"", sslPort);
             saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();

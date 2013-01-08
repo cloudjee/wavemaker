@@ -340,11 +340,11 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         String password = (String) properties.get("tomcat.manager.password");
         Boolean isSecured = RuntimeAccess.getInstance().getRequest().isSecure();
         String tomcatManagerUrl;
-        //if (isSecured) {
-        //    tomcatManagerUrl = "https://" + host + ":" + port + "/manager";
-        //} else {
+        if (isSecured) {
+            tomcatManagerUrl = "https://" + host + ":" + port + "/manager";
+        } else {
             tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
-        //}
+        }
         String deployName = (String) properties.get(DEPLOY_NAME_PROPERTY);
         task.setUrl(tomcatManagerUrl);
         task.setUsername(userName);
@@ -368,11 +368,11 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         String password = (String) properties.get("tomcat.manager.password");
         Boolean isSecured = RuntimeAccess.getInstance().getRequest().isSecure();
         String tomcatManagerUrl;
-        //if (isSecured) {
-        //    tomcatManagerUrl = "https://" + host + ":" + port + "/manager";
-        //} else {
+        if (isSecured) {
+            tomcatManagerUrl = "https://" + host + ":" + port + "/manager";
+        } else {
             tomcatManagerUrl = "http://" + host + ":" + port + "/manager";
-        //}
+        }
         String deployName = (String) properties.get(DEPLOY_NAME_PROPERTY);
         LocalFolder projectDir = (LocalFolder) properties.get(PROJECT_DIR_PROPERTY);
         String tomcatConfigXmlPath = ((LocalFile) projectDir.getFile(deployName + ".xml")).getLocalFile().getAbsolutePath();

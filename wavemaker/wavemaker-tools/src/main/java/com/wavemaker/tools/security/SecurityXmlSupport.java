@@ -314,4 +314,20 @@ public class SecurityXmlSupport {
             objs.add(0, mappings);
         }
     }
+
+    static Http.PortMappings.PortMapping getPortMapping(Beans beans, String httpPort) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        Http.PortMappings mappings = null;
+        for (Object obj : objs) {
+            if (obj instanceof Http.PortMappings) {
+                mappings = (Http.PortMappings) obj;
+                for (Http.PortMappings.PortMapping mapping : mappings.getPortMapping()) {
+                    if (mapping.getHttp().equals(httpPort)) {
+                        return mapping;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

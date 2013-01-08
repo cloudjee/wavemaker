@@ -907,7 +907,7 @@ dojo.declare(
                         studio.securityConfigService.requestSync("configDatabase", [ this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
                                 this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput),
                                 this.getEditorDisplayValue(this.tenantIdField) || "", this.defTenantId.getDataValue() || 0, rolesQuery, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
-								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() ], dojo.hitch(this,
+								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this,
                                 "configDatabaseResult"), dojo.hitch(this, "saveError"));
 
                     } else if (t == "LDAP") {

@@ -211,7 +211,6 @@ public class SecuritySpringSupport {
         newUrl.setRequiresChannel(requiresChannel);
         urls.add(newUrl);
         SecurityXmlSupport.setInterceptUrls(beans, urls);
-        SecurityXmlSupport.setPortMapping(beans, RuntimeAccess.getInstance().getRequest().getLocalPort()+"", sslPort);
     }
 
     static boolean isSecurityEnforced(Beans beans) {

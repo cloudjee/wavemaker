@@ -31,6 +31,8 @@ public class GeneralOptions {
 
     private boolean useSSL;
 
+    private String sslPort;
+
     private String dataSourceType;
 
     public boolean isEnforceSecurity() {
@@ -51,6 +53,14 @@ public class GeneralOptions {
 
     public boolean isSSLUsed() {
         return this.useSSL;
+    }
+
+    public void setSslPort(String sslPort) {
+        this.sslPort = sslPort;
+    }
+
+    public String getSslPort() {
+        return this.sslPort;
     }
 
     public void setEnforceIndexHtml(boolean enforceIndexHtml) {
