@@ -67,7 +67,7 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 });
 
 dojo.declare("wm.ToggleButtonPanel", wm.Container, {
-    border:"1",
+    border: "1",
     manageURL: false,
     manageHistory: false,
     classNames: "wmtogglebuttonpanel",
@@ -80,15 +80,15 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
     width: "100%",
     buttonMargins: "0",
     init: function() {
-	this._btns = [];
-	this.inherited(arguments);
+        this._btns = [];
+        this.inherited(arguments);
     },
     postInit: function() {
-	this.inherited(arguments);
-	if (this.manageURL && this.owner.locationState) {		
-	    this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
-	}
-/*
+        this.inherited(arguments);
+        if (this.manageURL && this.owner.locationState) {
+            this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
+        }
+        /*
 	for (var i = 0; i < this.c$.length; i++) {
 	    if (this.c$[i] instanceof wm.ToolButton) {
 		this.c$[i].connect(this.c$[i], "onclick", dojo.hitch(this, "changed", this.c$[i]));
@@ -98,93 +98,98 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	*/
     },
     addWidget: function(inWidget) {
-	this.inherited(arguments);
-	if (inWidget instanceof wm.ToolButton) {
-	    inWidget.setHeight("100%");
-	    this._btns.push(inWidget);
-	    inWidget.connect(inWidget, "onclick", dojo.hitch(this, "changed", inWidget));
-	    inWidget.setMargin(this.buttonMargins);
-	}
+        this.inherited(arguments);
+        if (inWidget instanceof wm.ToolButton) {
+            inWidget.setHeight("100%");
+            this._btns.push(inWidget);
+            inWidget.connect(inWidget, "onclick", dojo.hitch(this, "changed", inWidget));
+            inWidget.setMargin(this.buttonMargins);
+        }
     },
     removeWidget: function(inWidget) {
-	this.inherited(arguments);
-	wm.Array.removeElement(this._btns, inWidget);
+        this.inherited(arguments);
+        wm.Array.removeElement(this._btns, inWidget);
     },
     changed: function(inButton) {
-	var currentButtonWas = this.currentButton;
-	if (inButton instanceof wm.ToolButton) {
-	    this.currentButton = inButton;
-	    this.currentButtonName = inButton.name;
-	    this.currentButtonCaption = inButton.caption;
-	    if (inButton) {
-		dojo.addClass(inButton.domNode, "toggleButtonDown");
-	    }
-	    if (this.currentButton !== currentButtonWas) {
-		if (currentButtonWas instanceof wm.ToolButton) {
-		    currentButtonWas.setValue("clicked", false);
-		}
-		this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
-		this.onChange(this.currentButton);
-	    }
-	    this.currentButton.clicked = true; // there are paths where this fails to get set
-	} else {
-	    if (currentButtonWas instanceof wm.ToolButton) {
-		currentButtonWas.setValue("clicked", false);
-	    }
-	    this.currentButton = null;	    
-	    if (currentButtonWas instanceof wm.ToolButton) {
-		this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
-		this.onChange(this.currentButton);
-	    }	    
-	}
-	this.valueChanged("currentButtonName", this.currentButtonName);
-	this.valueChanged("currentButtonCaption", this.currentButtonCaption);
+        var currentButtonWas = this.currentButton;
+        if (inButton instanceof wm.ToolButton) {
+            this.currentButton = inButton;
+            this.currentButtonName = inButton.name;
+            this.currentButtonCaption = inButton.caption;
+            if (inButton) {
+                dojo.addClass(inButton.domNode, "toggleButtonDown");
+            }
+            if (this.currentButton !== currentButtonWas) {
+                if (currentButtonWas instanceof wm.ToolButton) {
+                    currentButtonWas.setValue("clicked", false);
+                }
+                this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
+                this.onChange(this.currentButton);
+            }
+            this.currentButton.clicked = true; // there are paths where this fails to get set
+        } else {
+            if (currentButtonWas instanceof wm.ToolButton) {
+                currentButtonWas.setValue("clicked", false);
+            }
+            this.currentButton = null;
+            if (currentButtonWas instanceof wm.ToolButton) {
+                this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
+                this.onChange(this.currentButton);
+            }
+        }
+        this.valueChanged("currentButtonName", this.currentButtonName);
+        this.valueChanged("currentButtonCaption", this.currentButtonCaption);
 
-	if (currentButtonWas instanceof wm.ToolButton && currentButtonWas != inButton) {
-	    dojo.removeClass(currentButtonWas.domNode, "toggleButtonDown");
-	    if (!this._isDesignLoaded && !this._inBack && this.manageHistory && inButton) {
-		app.addHistory({id: this.getRuntimeId(),
-				options: {name:currentButtonWas.name},
-				title: inButton.caption + " Selected"});
-	    }
+        if (currentButtonWas instanceof wm.ToolButton && currentButtonWas != inButton) {
+            dojo.removeClass(currentButtonWas.domNode, "toggleButtonDown");
+            if (!this._isDesignLoaded && !this._inBack && this.manageHistory && inButton) {
+                app.addHistory({
+                    id: this.getRuntimeId(),
+                    options: {
+                        name: currentButtonWas.name
+                    },
+                    title: inButton.caption + " Selected"
+                });
+            }
 
-	}
+        }
     },
     setCurrentButton: function(inButton) { // currentIndex is a bindTarget
-	// why wm.onidle? Without this, a button click event could be clicked before the layer or pagecontainer its trying trigger a navigation to is created
-	var self = this;
-	wm.job(this.getRuntimeId() + ".setCurrentButton", 1, function() {
-	    if (inButton instanceof wm.ToolButton) {
-		inButton.click({type: "click"});
-	    } else {
-		self.changed(null);
-	    }
-	});
+        // why wm.onidle? Without this, a button click event could be clicked before the layer or pagecontainer its trying trigger a navigation to is created
+        var self = this;
+        wm.job(this.getRuntimeId() + ".setCurrentButton", 1, function() {
+            if (inButton instanceof wm.ToolButton) {
+                inButton.click({type: "click"});
+            } else {
+                self.changed(null);
+            }
+        });
     },
 
 
     onChange: function(inButton) {},
     handleBack: function(inOptions) {
-	this._inBack = true;
-	var name = inOptions ? inOptions.name : null;
-	var button = this.owner[name];
-	if (button && this.currentButton != button) {
-	    button.click({type: "click"});
-	}
-	delete this._inBack;
-	return true;
+        this._inBack = true;
+        var name = inOptions ? inOptions.name : null;
+        var button = this.owner[name];
+        if (button && this.currentButton != button) {
+            button.click({
+                type: "click"
+            });
+        }
+        delete this._inBack;
+        return true;
     },
     restoreFromLocationHash: function(inValue) {
-	this.manageHistory = false;
-	if (inValue !== undefined) {
-	    if (this.owner[inValue]) {
-		this.setCurrentButton(this.owner[inValue]);
-	    }
-	}
-	this.manageHistory = true;
+        this.manageHistory = false;
+        if (inValue !== undefined) {
+            if (this.owner[inValue]) {
+                this.setCurrentButton(this.owner[inValue]);
+            }
+        }
+        this.manageHistory = true;
     },
     generateStateUrl: function(stateObj) {
-	if (this.currentButton)
-	    stateObj[this.getRuntimeId()] = this.currentButton.name;
+        if (this.currentButton) stateObj[this.getRuntimeId()] = this.currentButton.name;
     }
 });
