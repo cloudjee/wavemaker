@@ -3012,6 +3012,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
     dataValue: "solid 0px black",
     caption: "border",
     height: "24px",
+    padding: "0",
     buildPanel: function(inName, parent) {
             var p = this[inName + "Panel"] = new wm.Panel({
                 name: inName + "Panel",
