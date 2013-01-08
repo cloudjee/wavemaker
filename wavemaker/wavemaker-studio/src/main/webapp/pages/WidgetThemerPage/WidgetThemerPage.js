@@ -260,11 +260,18 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     
     start: function() {
+        this.themeListVar.setQuery({designer: "widgetthemer"});    
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.templateListVar.setData(this.templateFileData);
-        this.setupThemeList(studio.application.theme);    
+        this.setupThemeList(studio.application._theme);    
         this.connect(dijit.popup, "_createWrapper", this, "moveMenuNode");        
-        this.themeListVar.setQuery({designer: "widgetthemer"});
+        this.connect(studio, "projectChanging", this, "resetThemeDesigner");
+    },
+    resetThemeDesigner: function() {
+        this.currentTheme = "";
+        this.inCancelThemeChange = true;
+        this.themeSelect.setDataValue("");
+        this.inCancelThemeChange = false;
     },
     moveMenuNode: function(widget) {
         if (!this.root.isAncestorHidden() && 
@@ -291,16 +298,39 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         }
         this.themeListVar.setDataSet(data);
         this.themeSelect.setDataValue(inTheme);
+        if (!this.themeSelect.getDataValue()) {
+            app.alert("The theme " + inTheme + " can only be edited using the 'Theme Generator' and not the 'Theme Designer'");
+            this.mainPanel.setDisabled(true);
+        }
     },
-    themeselectChange: function(inSender) {
+    themeselectChange: function(inSender) {    
+        if (this.inCancelThemeChange) return;
+        if (this.currentTheme && this.isDirty && inSender.getDataValue() != this.currentTheme) {
+            app.confirm("You have unsaved changes to theme " + this.currentTheme + ", are you sure you want to lose these changes?").then(
+                dojo.hitch(this, function() {
+                    this.isDirty = false;
+                    this.themeselectChange(inSender);
+                }),
+                dojo.hitch(this, function() {
+                    this.inCancelThemeChange = true;
+                    this.themeSelect.setDataValue(this.currentTheme);
+                    this.inCancelThemeChange = false;                    
+                })
+            );
+            return;
+        }
         if (this.currentTheme) dojo.removeClass(this.demoPanelWithThemeName.domNode, this.currentThemeName);
         var currentTheme = inSender.getDataValue();
         if (!currentTheme) {
             this.mainPanel.setDisabled(true);
             return;
-        } else if (this.mainPanel.disabled) {
-            this.mainPanel.setDisabled(false);
-        }
+        } else if (currentTheme.match(/^wm\.base\.widget\.themes/)) {
+            if (this.mainPanel.disabled) this.mainPanel.setDisabled(false);
+            this.editorLayer.setDisabled(true);
+        } else {
+            if (this.mainPanel.disabled) this.mainPanel.setDisabled(false);
+            if (this.editorLayer.disabled) this.editorLayer.setDisabled(false);            
+        }        
         this.currentTheme = currentTheme;
         this.currentThemeName = currentTheme.replace(/^.*\./,"");
         this.widgetCssFiles = {};
@@ -326,16 +356,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             if (!this.cssText) {
                 this.cssText =  dojo.xhrGet({url:path + "theme.css", sync:true, preventCache:true}).results[0];
             }            
-
+            if (!this.cssText) this.cssText = "";
 
             /* Step 6: Load the Theme.js file, store it in this.themePrototype */
             this.themePrototype =  dojo.fromJson(dojo.xhrGet({url:path + "Theme.js", sync:true, preventCache:true}).results[0]);
-
+            this.resetCache();
+            this.updateDirty();
             studio.application._setTheme(this.currentTheme, false, this.cssText || " ", this.themePrototype, true);
             this.onPrototypeChange();
             studio.application.cacheWidgets();
-            this.setDirty(false);
 
+            this.currentWidgetIndex = -1;
             this.widgetGrid.deselectAll();
             this.widgetGrid.select(1);            
             studio.endWait();
@@ -418,12 +449,16 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             })
         ).then(
             dojo.hitch(this, function() {                
-                this.setupThemeList(studio.application.theme || "");
+                this.setupThemeList(studio.application._theme || "");
             })
         );
     },
     revertThemeClick: function() {
-        this.themeselectChange(this.themeSelect);       
+        app.confirm("This will lose any unsaved changes to your theme; continue?").then(
+            dojo.hitch(this, function() {
+                this.themeselectChange(this.themeSelect);       
+            })
+        );
     },    
     /* END SECTION: End of managing themes and theme selection */
 
@@ -553,6 +588,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             })[0];
             var e = p.c$[2];
             if (isDisabled) e.setDisabled(true);
+
             e.name = styleGroup + "_" + styleName;
             var checkbox = p.c$[1];
             if (e.editor instanceof wm.Container && e.editor.verticalAlign != "top") {
@@ -683,7 +719,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         for (var i = deleteRows.length-1; i >= 0; i--) wm.Array.removeElementAt(lines,deleteRows[i]);
         this.widgetCssFiles[this.currentWidgetTemplateFile] = lines.join("\n");
         
-        this.updateCssText();
+        this.updateCssText();        
     },
     updateCssText: function() {
             var startString = "/***** START SECTION: " + this.currentWidgetName + " *****/";
@@ -698,11 +734,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         } else {
             this.cssText += startString + "\n" + this.widgetCssFiles[this.currentWidgetTemplateFile] + "\n" + endString;
         }
-        studio.application.loadThemeCss(studio.application.theme, true, this.cssText);
+            studio.application._setTheme(this.currentTheme, false, this.cssText, this.themePrototype, true);
+//        studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
         if (this.widgetGrid.selectedItem.getValue("templateFile") == "editors" && dojo.isIE == 10 ||
             this.widgetGrid.selectedItem.getValue("templateFile") == "tooltips") {
             this.regenerateDemoPanel(); // dojo directly manipulates the styles of the input node for ie 10, and must regenerate on style change
         }
+        this.updateDirty();
     },
     /* END SECTION: Edit the selected widget styles */
 
@@ -823,7 +861,6 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         studio._themeDesignerChange = true;
         studio._reflowPageDesigner = true;
         studio.application.cacheWidgets();
-        this.setDirty(true);
 
         dojo.forEach(this.currentClassList, function(inClassName) {
             var ctor = dojo.getObject(inClassName);
@@ -836,6 +873,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         }, this);
         this.regenerateDemoPanel();
         this.onPrototypeChange();
+        this.updateDirty();        
     },
     onPrototypeChange: function() {
         studio._themeDesignerChange = true;
@@ -854,6 +892,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             files.push({fileName: inName, cssText: inValue});
         });
         studio.beginWait("Saving...");
+        this.resetCache();
         studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/themedesigner.css", this.cssText]).then(
             dojo.hitch(this, function() {
                 return studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + this.currentThemeName + "/theme.css", this.optimizeCss(this.cssText)]);
@@ -868,7 +907,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             })
         ).then(
             dojo.hitch(this, "writeMobileCss")
-        ).then(dojo.hitch(this, "writeTemplateFiles"));
+        ).then(dojo.hitch(this, "writeTemplateFiles")
+        ).then(dojo.hitch(this, "updateDirty"));
     },
     writeMobileCss: function() {
         var css = this.cssText;
@@ -971,12 +1011,23 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     /* START SECTION: Managing the Demo Panel */
     onShow: function() {
         this.demoPanelWithAppRoot.owner = studio.application;
+        dojo.toggleClass(this.demoPanelWithThemeName.domNode, "wmmobile", studio.currentDeviceType != "desktop");
+        
+        if (!this.currentTheme) this.setupThemeList(studio.application._theme);
+        
+        if (this.currentTheme && this.currentTheme != studio.application._theme) this.updateCssText();
+        
+        // mostly this is needed because the user may switch from desktop to mobile in the canvas
+        // and that requires regenerating the demo panel with mobileheights, and checkboxes and lists...
+        if (this.currentTheme && this.currentWidgetIndex > 1) this.regenerateDemoPanel();
+
     },
     onHide: function() {
         this.demoPanelWithAppRoot.owner = this;
     },
     regenerateDemoPanel: function() {
         wm.onidle(this, function() {
+            this.demoPanelHeader.setCaption("Samples (" + studio.currentDeviceType + ")");
             this.demoPanelWithAppRoot.removeAllControls();
             this.demoPanel = this.demoPanelWithAppRoot.createComponents({
                 demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, layoutKind: "top-to-bottom", height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {}]
@@ -1081,18 +1132,25 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
 
     /* START SECTION: Studio Integration Methods */
-    setDirty: function(dirty) {
-        this.isDirty = dirty;
+    resetCache: function() {
+            this._cache = {css: this.cssText,
+                            themePrototype: dojo.toJson(this.themePrototype)};
+    },
+    updateDirty: function() {
+        this.isDirty = (this.cssText != this._cache.css || dojo.toJson(this.themePrototype) != this._cache.themePrototype);
         wm.job("WidgetThemerPage.setDirty", 10, this, function() {
-            var layer = this.owner.parent;
-            if (dojo.hasClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon")) {
-                if (!dirty) {
+            var layer = this.owner.parent;    
+            if (!this.isDirty) {
                 dojo.removeClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
-                studio.updateServicesDirtyTabIndicators();
-                }
-            } else if (dirty) {
+                studio.updateServicesDirtyTabIndicators();                
+                studio.userLabel.setCaption(this._cacheUserLabel != "THEME NOT SAVED" ? this._cacheUserLabel : "");
+                studio.userLabel.domNode.style.backgroundColor = "";
+            } else {
                 dojo.addClass(layer.decorator.btns[layer.getIndex()], "StudioDirtyIcon");
                 studio.updateServicesDirtyTabIndicators();
+                this._cacheUserLabel = studio.userLabel.caption;                
+                studio.userLabel.setCaption("THEME NOT SAVED");        
+                studio.userLabel.domNode.style.backgroundColor = "red";                
             }
         });
     },

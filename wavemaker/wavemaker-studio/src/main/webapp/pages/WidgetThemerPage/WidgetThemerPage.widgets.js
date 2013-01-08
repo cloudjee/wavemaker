@@ -27,7 +27,7 @@ WidgetThemerPage.widgets = {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
         		}]		    
 		    }],
-		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert Theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}, {
+		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert to last saved theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
         		}]		    
