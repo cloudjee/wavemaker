@@ -1172,6 +1172,9 @@ dojo.declare("wm.Application", wm.Component, {
             dojo.removeClass(this.toolTipDialog.domNode, "NoWrap");
         }
 
+    	this.toolTipDialog.html.setWidth((6 + this.toolTipDialog.html.domNode.firstChild.clientWidth) + "px");
+    	this.toolTipDialog.setBestWidth();
+    	
         var self = this;
         if (this._testHintConnect) dojo.disconnect(this._testHintConnect);
 
