@@ -55,7 +55,7 @@ public class SecurityXmlSupport {
 		return demoUsers;		
 	}
 
-	static void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
+	static public void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
 		try{
 			UserService userSvc = getUserSvc(beans);
 			if(userSvc != null){
@@ -272,11 +272,61 @@ public class SecurityXmlSupport {
                 Http.InterceptUrl url = (Http.InterceptUrl) obj;
                 if (interceptUrl.getPattern().equals(url.getPattern())) {
                     url.setAccess(interceptUrl.getAccess());
+                    url.setRequiresChannel(interceptUrl.getRequiresChannel());
                     return;
                 }
             }
         }
         objs.add(0, interceptUrl);
     }
-  
+
+    static void setPortMapping(Beans beans, String httpPort, String httpsPort) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        boolean mappingsExist = false;
+        Http.PortMappings mappings = null;
+        for (Object obj : objs) {
+            if (obj instanceof Http.PortMappings) {
+                mappingsExist = true;
+                mappings = (Http.PortMappings) obj;
+                for (Http.PortMappings.PortMapping mapping : mappings.getPortMapping()) {
+                    if (mapping.getHttp().equals(httpPort)) {
+                        mapping.setHttps(httpsPort);
+                        return;
+                    }
+                }
+                break;
+            }
+        }
+
+        Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
+        newMapping.setHttp(httpPort);
+        newMapping.setHttps(httpsPort);
+
+        List<Http.PortMappings.PortMapping> portMappings;
+        if (mappingsExist) {
+            portMappings = mappings.getPortMapping();
+            portMappings.add(newMapping);
+        } else {
+            mappings = new Http.PortMappings();
+            portMappings = mappings.getPortMapping();
+            portMappings.add(newMapping);
+            objs.add(0, mappings);
+        }
+    }
+
+    static Http.PortMappings.PortMapping getPortMapping(Beans beans, String httpPort) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        Http.PortMappings mappings = null;
+        for (Object obj : objs) {
+            if (obj instanceof Http.PortMappings) {
+                mappings = (Http.PortMappings) obj;
+                for (Http.PortMappings.PortMapping mapping : mappings.getPortMapping()) {
+                    if (mapping.getHttp().equals(httpPort)) {
+                        return mapping;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -135,6 +135,7 @@ wm.Container.extend({
             app.confirm(studio.getDictionaryItem("wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_HEIGHT"), false, dojo.hitch(this, function() {
                 this.fitToContentHeight = false;
                 wm.Control.prototype.set_height.call(this, inHeight);
+                studio.reinspect();
             }));
         } else {
             this.inherited(arguments);
@@ -145,6 +146,7 @@ wm.Container.extend({
             app.confirm(studio.getDictionaryItem("wm.Container.CONFIRM_DISABLE_FIT_TO_CONTENT_WIDTH"), false, dojo.hitch(this, function() {
                 this.fitToContentWidth = false;
                 this.setWidth(inWidth);
+                studio.reinspect();                
             }));
         } else {
             this.setWidth(inWidth);

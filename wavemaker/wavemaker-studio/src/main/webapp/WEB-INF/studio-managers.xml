@@ -253,7 +253,13 @@
                             <property name="file" value="webapproot/WEB-INF/project-services.xml" />
                         </bean>
                     </list>
-                </entry> 
+                </entry>
+				<entry key="0.55">
+					<list>
+						<bean class="com.wavemaker.tools.project.upgrade.six_dot_six_dot_zero_dot_M2.AcegiToSpringSecurityUpgradeTask">
+						</bean>
+					</list>
+				</entry> 
             </map>
         </property>
         <property name="deploymentManager">

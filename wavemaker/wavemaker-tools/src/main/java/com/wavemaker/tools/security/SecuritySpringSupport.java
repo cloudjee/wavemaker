@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.security.schema.AuthenticationManager;
 import com.wavemaker.tools.security.schema.Http;
 import com.wavemaker.tools.security.schema.LdapServer;
@@ -43,6 +44,7 @@ import com.wavemaker.tools.spring.beans.ConstructorArg;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Ref;
 import com.wavemaker.tools.spring.beans.Value;
+import org.springframework.util.StringUtils;
 
 /**
  * @author $Author$
@@ -171,13 +173,44 @@ public class SecuritySpringSupport {
             String key = url.getPattern();
             List<String> authzList = new ArrayList<String>();
             String accessStr = url.getAccess();
-            String[] accessArr = accessStr.split(",");
-            for (String access : accessArr) {
-                authzList.add(access);
+            if (StringUtils.hasText(accessStr)) {
+                String[] accessArr = accessStr.split(",");
+                for (String access : accessArr) {
+                    authzList.add(access);
+                }
             }
+
             urlMap.put(key, authzList);
         }
         return urlMap;
+    }
+
+    static String getRequiresChannel(Beans beans) {
+        List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
+        for (Http.InterceptUrl url : urls) {
+            String key = url.getPattern();
+            if (key.equals("/**/*")) {
+                return url.getRequiresChannel();
+            }
+        }
+        return null;
+    }
+
+    static public void setRequiresChannel(Beans beans, String requiresChannel, String sslPort) {
+        List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
+        for (Http.InterceptUrl url : urls) {
+            String key = url.getPattern();
+            if (key.equals("/**/*")) {
+                url.setRequiresChannel(requiresChannel);
+                return;
+            }
+        }
+
+        Http.InterceptUrl newUrl = new Http.InterceptUrl();
+        newUrl.setPattern("/**/*");
+        newUrl.setRequiresChannel(requiresChannel);
+        urls.add(newUrl);
+        SecurityXmlSupport.setInterceptUrls(beans, urls);
     }
 
     static boolean isSecurityEnforced(Beans beans) {
@@ -206,7 +239,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
+    static public void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
         if (enforceSecurity) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
@@ -259,6 +292,56 @@ public class SecuritySpringSupport {
             url = new Http.InterceptUrl();
             url.setPattern("/*/*.json");
             url.setAccess(IS_AUTHENTICATED_FULLY);
+            urls.add(url);
+
+            SecurityXmlSupport.setInterceptUrls(beans, urls);
+        }
+        else{
+            List<Http.InterceptUrl> urls = new ArrayList<Http.InterceptUrl>();
+
+            Http.InterceptUrl url = new Http.InterceptUrl();
+            url.setPattern("/index.html");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/pages/login/**");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/securityservice.json");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.download");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.upload");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/pages/**");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*.json");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
+            urls.add(url);
+
+            url = new Http.InterceptUrl();
+            url.setPattern("/*/*.json");
+            url.setAccess(IS_AUTHENTICATED_ANONYMOUSLY);
             urls.add(url);
 
             SecurityXmlSupport.setInterceptUrls(beans, urls);
@@ -457,7 +540,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static void resetJdbcDaoImpl(Beans beans) {
+    static public void resetJdbcDaoImpl(Beans beans) {
         Bean jdbcDaoBean = beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);
         Property property = jdbcDaoBean.getProperty(DATA_SOURCE_PROPERTY);
         if (property == null) {

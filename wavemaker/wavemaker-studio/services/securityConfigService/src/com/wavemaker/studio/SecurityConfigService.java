@@ -89,10 +89,10 @@ public class SecurityConfigService {
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-//        if (options != null) {
-//            return options.isEnforceSecurity();
-//        }
+        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
+        if (options != null) {
+            return options.isEnforceSecurity();
+        }
         return true;
     }
 
@@ -102,7 +102,7 @@ public class SecurityConfigService {
 
     public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml) throws JAXBException, IOException {
         getSecToolsMgr().configDemo(demoUsers);
-        //getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
@@ -117,7 +117,8 @@ public class SecurityConfigService {
     }
 
     public void configDatabase(String modelName, String entityName, String unamePropertyName, String uidPropertyName, String pwPropertyName,
-        String rolePropertyName, String tenantIdField, int defTenantId, String rolesByUsernameQuery, boolean enforceSecurity, boolean enforceIndexHtml)
+        String rolePropertyName, String tenantIdField, int defTenantId, String rolesByUsernameQuery, boolean enforceSecurity, boolean enforceIndexHtml,
+        boolean useSSL, String sslPort)
         throws JAXBException, IOException {
         DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(modelName);
         EntityInfo entity = dataModel.getEntity(entityName);
@@ -140,9 +141,11 @@ public class SecurityConfigService {
             ColumnInfo roleColumn = getColumn(entity, rolePropertyName);
             roleColumnName = roleColumn.getName();
         }
-        getSecToolsMgr().configDatabase(modelName, tableName, unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName, roleColumnName,
+
+        SecurityToolsManager secToolsMgr = getSecToolsMgr();
+        secToolsMgr.configDatabase(modelName, tableName, unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName, roleColumnName,
             rolesByUsernameQuery);
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+        secToolsMgr.setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
 
         // only write Tenant information to file if the tenantIdField has a
         // value
@@ -382,7 +385,9 @@ public class SecurityConfigService {
                 SecurityURLMap secMap = new SecurityURLMap();
                 secMap.setURL(url);
                 List<String> attributes = urlMap.get(url);
-                secMap.setAttributes(attributes.get(0));
+                if (attributes != null && attributes.size() > 0) {
+                    secMap.setAttributes(attributes.get(0));
+                }
                 securityURLMap.add(secMap);
             }
         }

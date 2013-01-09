@@ -58,6 +58,21 @@ public class LocalDeploymentManager extends StageDeploymentManager {
 
     public static final String COMMON_DIR_NAME_PROPERTY = "common";
 
+    static {
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier (
+                new javax.net.ssl.HostnameVerifier() {
+
+                    public boolean verify(String hostname,
+                                          javax.net.ssl.SSLSession sslSession) {
+                        if (hostname.equals("localhost")) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+        );
+    }
+
     public class Undeployer implements HttpSessionBindingListener {
 
         private String projectName;
