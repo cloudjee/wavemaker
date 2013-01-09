@@ -129,6 +129,7 @@ filter: none;
 /* GROUP: Vertical Selected Tab Buttons */
 .wm_template .wmtablayers-verticaltab.wmtablayers-selected {
     box-shadow: inherit;
+/*  border: solid 1px black; // THEMER: DISABLED */
 }
 
 /* GROUP: Vertical Tab with Mouse Down */

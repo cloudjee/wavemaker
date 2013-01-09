@@ -36,3 +36,9 @@
 .WidgetThemerPage .WidgetThemerPage-widgetGrid .dojoxGridScrollbox {
     background-color: #39414F !important;
 }
+.WidgetThemerPage .link .wmSizeNode {
+    text-decoration: underline;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

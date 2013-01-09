@@ -9,5 +9,6 @@
 	radio1: ["wm.RadioButton", {caption: "Radio", width: "100%",group: "Sample", checkedValue:1}],
 	radio2: ["wm.RadioButton", {caption: "Radio", width: "100%",group: "Sample", checkedValue:2}],
 	slider: ["wm.Slider", {caption: "Slider", width: "100%", dataValue: 50}],
-	readonly: ["wm.Text", {caption: "Text", width: "100%", dataValue: "Sample", readonly:1}]
+	readonly: ["wm.Text", {caption: "Text", width: "100%", dataValue: "Sample", readonly:1}],
+	disabled: ["wm.Text", {caption: "Text", width: "100%", dataValue: "Sample", disabled:1}]
 }

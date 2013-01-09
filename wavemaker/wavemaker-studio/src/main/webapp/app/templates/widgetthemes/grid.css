@@ -126,7 +126,16 @@
   font-weight: bold;
 }
 
+/* GROUP: Grid Cells */
+.wm_template .dojoxGridCell,
+.wm_template .GridListStyle .wmlist-cell {
+    padding: 4px 8px;
+}
 
+/* GROUP: Focused Cell */
+.wm_template .dojoxGridCellFocus {
+/*   outline: solid 1px #5b9dd7; // THEMER: DISABLED */
+}
 
 
 /* GROUP: Mobile List */

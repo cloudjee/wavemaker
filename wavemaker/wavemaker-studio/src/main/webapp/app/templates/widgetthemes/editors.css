@@ -147,6 +147,29 @@
     border-top-right-radius: 2px;
 }
 
+
+/* GROUP: Drop Down Boxes Hover */ 
+.wm_template .wmeditor .dijitSpinner .dijitArrowButton:hover,
+.wm_template .dojoxGrid .dijitComboBox .dijitArrowButton:hover,
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton:hover,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton:hover {
+/* 		  background-color: rgb(255, 102, 102); // THEMER: DISABLED */
+/* 		  background-image: none; // THEMER: DISABLED */
+/* 		  filter: none; // THEMER: DISABLED */
+}
+
+/* GROUP: Drop Down Clicking */
+.wm_template .wmeditor .dijitSpinner .dijitArrowButton:active,
+.wm_template .dojoxGrid .dijitComboBox .dijitArrowButton:active,
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton:active,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton:active {
+/* 		  background-color: rgb(102, 102, 255); // THEMER: DISABLED */
+/* 		  background-image: none; // THEMER: DISABLED */
+/* 		  filter: none; // THEMER: DISABLED */
+		  
+}
+
+
 /* GROUP: Drop Down Box Arrows */
 .wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
 .wm_template .dijitSelect .dijitArrowButton .dijitArrowButtonInner {

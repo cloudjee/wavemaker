@@ -74,8 +74,9 @@ WidgetThemerPage.widgets = {
     				editorPanelHeader: ["wm.Label", {width: "100%", _classes: {domNode: ["Header"]}}],
     				editorPanel: ["wm.Panel", {autoScroll:true,minWidth:500,"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom"}, {},{	}],
     			}],
-				cssLayer: ["wm.Layer", {caption: "Code"},{onShow: "onCssLayerShow"}, {
-				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"},{onChange: "editAreaChange"}]
+				cssLayer: ["wm.Layer", {caption: "Code", verticalAlign: "top", horizontalAlign: "right"},{onShow: "onCssLayerShow"}, {
+				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"},{onChange: "editAreaChange"}],
+				    applyStylesButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Apply Styles", width: "120px"}, {onclick: "onGeneratedLayerShow"}]
 				}] 				
     		}],
     		splitter1: ["wm.Splitter", {}],

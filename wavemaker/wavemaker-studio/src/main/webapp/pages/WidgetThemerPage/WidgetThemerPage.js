@@ -115,6 +115,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             templateFile: "links",
             classList: []
         },
+        {
+            name: "Dashboard",
+            category: false,                        
+            templateFile: "dashboard",
+            classList: [{dataValue: "wm.Dashboard"}]            
+        },        
        { 
             name: "Popups",
             category: true
@@ -595,6 +601,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 p.setVerticalAlign(e.editor.verticalAlign);
             }
             e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", checkbox, e, styleGroup, styleName)); 
+            if (e["onCustomEvent"]) {                
+                e.connect(e, "onCustomEvent", this, dojo.hitch(this, "onCustomEvent", e, styleGroup, styleName));
+            }
+            
             checkbox.connect(checkbox, "onchange", this, dojo.hitch(this, "onEditorChange", checkbox, e, styleGroup, styleName));
             this.currentEditorsHash[styleRule || styleName] = e;
         }
@@ -606,6 +616,27 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 e.setDataValue(styleValue);
             }
         }
+    },
+    getIndexOfCss: function(inStyleGroup, inStyleName) {
+        var css = this.widgetCssFiles[this.currentWidgetTemplateFile];
+        var startIndex = css.indexOf("GROUP: " + inStyleGroup);
+        var startBlockIndex = css.indexOf("{", startIndex);
+        var styleIndex = css.indexOf(inStyleName, startBlockIndex);
+        return styleIndex;
+    },
+    onCustomEvent: function(inEditor, inStyleGroup, inStyleName, inEventName) {
+        if (inEditor instanceof wm.BackgroundEditor) {
+            if (inEventName == "onCustomLinkClick") {
+                this.codeTogglePanel.setCurrentButton(this.codeToggleButton);
+                wm.job("setThemeCursorPosition", 20, this, function() {
+                    var index = this.getIndexOfCss(inStyleGroup, inStyleName);
+                    this.editArea.setCursorPositionInText(index);
+                    this.editArea.focus();
+                });
+            }
+        
+        }
+    
     },
     getStyleObjFromLine: function(inLine) {
         var disabled = false;
@@ -753,6 +784,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (this.editAreaChangedSinceLayerChange) {
             this.widgetCssFiles[this.currentWidgetTemplateFile] = this.editArea.getDataValue();
             this.updateCssText();            
+            this.currentWidgetIndex = -1;
             this.widgetGridSelect(this.widgetGrid);
             this.editAreaChangedSinceLayerChange = false;
         }
@@ -816,14 +848,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         case "clientBorderColor":
         case "labelBorderColor":
         case "captionBorderColor":        
+        case "titlebarBorderColor":                
                     e = new wm.ColorPicker(props);
                     break;
         case "border":
         case "labelBorder":
         case "layerBorder":
-        case "captionBorder":        
-                    props.regExp = "\\d+(\\s*,\\s*\\d+){0,3}";
-                    e = new wm.Text(props);
+        case "captionBorder":    
+        case "footerBorder":        
+                    //props.regExp = "\\d+(\\s*,\\s*\\d+){0,3}";
+                    //e = new wm.Text(props);
+                    e = new wm.BorderWidthEditor(props);
                     break;
         case "width":
         case "height":        
@@ -1054,7 +1089,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 case "dialogbuttonbar":                
                     var parent = this.demoPanel.c$[0].buttonBar;
                     new wm.Button({owner: parent, parent: parent, caption: "OK"});
-                    new wm.Button({owner: parent, parent: parent, caption: "Cancel"});                    
+                    new wm.Button({owner: parent, parent: parent, caption: "Cancel"}); 
+                    this.demoPanel.c$[0].containerWidget.setPadding(wm.Dialog.prototype.containerPadding);
                     break;
                 case "tooltips":
                     app.createToolTip("This is a tool tip.  Not just any ordinary tool tip.  This tool tip is one styled by you!", this.demoPanel.c$[1].domNode);
