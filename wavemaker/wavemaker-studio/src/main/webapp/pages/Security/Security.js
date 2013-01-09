@@ -843,6 +843,9 @@ dojo.declare(
         getDirty : function() {
             return this.dirty;
         },
+		isInteger : function(val) {
+			return (parseInt(val,10)+"" === val);
+		},
         save : function() {
             if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
                 this.saveError({
@@ -861,6 +864,17 @@ dojo.declare(
             if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
                 return;
             }
+
+			if (this.useSSLInput.getChecked()) {
+				if (!this.isInteger(this.sslPortInput.getDataValue())) {
+					this.saveError({
+						owner : this,
+						message : this.getDictionaryItem("ALERT_INVALID_SSL_PORT")
+					});
+					return;
+				}
+			}
+
             /*
              * Localization changes the caption, so get the english
              * version of the caption from the layer name so that we

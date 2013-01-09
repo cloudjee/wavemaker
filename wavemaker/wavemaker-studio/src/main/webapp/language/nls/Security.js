@@ -28,6 +28,7 @@ ALERT_ROLE_EXISTS: "Role already exists, please type in another one!",
 ALERT_NO_SECURITY_PROVIDER: "No Security Provider selected",
 ALERT_NO_ROLE_PROVIDER: "User Role is checked, but no User Role Provider selected",
 ALERT_ROLE_EMPTY: "Role field cannot be empty!",
+ALERT_INVALID_SSL_PORT: "SSL is turned on.  Must enter a valid SSL port",
 
 DEMO_USER_USERNAME: "Username",
 DEMO_USER_PASSWORD: "Password",
