@@ -89,10 +89,10 @@ public class SecurityConfigService {
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-        if (options != null) {
-            return options.isEnforceSecurity();
-        }
+//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
+//        if (options != null) {
+//            return options.isEnforceSecurity();
+//        }
         return true;
     }
 
@@ -100,9 +100,10 @@ public class SecurityConfigService {
         return getSecToolsMgr().getDemoOptions();
     }
 
-    public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml) throws JAXBException, IOException {
+    public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml,
+                           boolean useSSL, String sslPort) throws JAXBException, IOException {
         getSecToolsMgr().configDemo(demoUsers);
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
@@ -324,7 +325,8 @@ public class SecurityConfigService {
 
     public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchingDisabled,
     		String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleUsername,
-    		String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml) throws IOException,
+    		String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml,
+            boolean useSSL, String sslPort) throws IOException,
     		JAXBException {
 
     	// GD: Get the schema name, if any, for the entity/table
@@ -347,7 +349,7 @@ public class SecurityConfigService {
     	else {
     		getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter);
     	}
-    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
     }
 
     public void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) throws NamingException {

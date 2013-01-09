@@ -896,7 +896,8 @@ dojo.declare(
                 this.copyLoginFiles();
                 wm.onidle(this, function() {
                     if (t == "Demo") {
-                        studio.securityConfigService.requestSync("configDemo", [ this.demoUserList._data, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "configDemoResult"), dojo
+                        studio.securityConfigService.requestSync("configDemo", [ this.demoUserList._data, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
+						this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configDemoResult"), dojo
                                 .hitch(this, "saveError"));
 
                     } else if (t == "Database") {
@@ -920,7 +921,8 @@ dojo.declare(
                                 this.ldapGroupSearchFilterInput.getDataValue(),
                                 // Added by Girish
                                 this.ldapRoleDbDataModelInput.getDataValue(), this.ldapRoleDbEntityInput.getDataValue(), this.ldapRoleDbUsernameInput.getDataValue(), this.ldapRoleDbRoleInput.getDataValue(), rolesQuery,
-                                this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
+                                this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
+								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
                     } else if (t == "JOSSO") {
                         var roles = this.roleList._data;
                         if (roles.length == 1 || !this.secEnableInput.getChecked()) {

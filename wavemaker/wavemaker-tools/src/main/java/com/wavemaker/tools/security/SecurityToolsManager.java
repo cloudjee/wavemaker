@@ -205,7 +205,7 @@ public class SecurityToolsManager {
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
-        setGeneralOptions(enforceSecurity, enforceIndexHtml, false, "8443");
+        setGeneralOptions(enforceSecurity, enforceIndexHtml, false, "");
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort) throws IOException, JAXBException {
@@ -215,7 +215,7 @@ public class SecurityToolsManager {
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
             String channel = useSSL ? "https" : "http";
             SecuritySpringSupport.setRequiresChannel(beans, channel, sslPort);
-            SecurityXmlSupport.setPortMapping(beans, RuntimeAccess.getInstance().getRequest().getLocalPort()+"", sslPort);
+            SecurityXmlSupport.setPortMapping(beans, useSSL, RuntimeAccess.getInstance().getRequest().getLocalPort()+"", sslPort);
             saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();
