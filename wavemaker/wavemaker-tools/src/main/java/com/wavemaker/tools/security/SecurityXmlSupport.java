@@ -313,6 +313,9 @@ public class SecurityXmlSupport {
         if (portMappingFound) {
             mappingList.remove(mappingList.size()-1);
             Collections.copy(mappingList, newMappingList);
+            if (mappingList.size() == 0) {
+                objs.remove(mappings);
+            }
             return;
         }
 
