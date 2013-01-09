@@ -3192,6 +3192,171 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
     }
 });
 
+
+dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
+    dataValue: "0",
+    caption: "border",
+    captionPosition: "left",
+    height: "24px",
+    padding: "0",
+    
+    _createEditor: function() {
+        var e = this.inherited(arguments);
+        this.allWidthEditor = new wm.Number({
+            name: "allWidthEditor",
+            owner: this,
+            parent: e,
+            width: "60px",
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });
+        var parent = this.multiBorderPanel = new wm.Panel({
+            owner: this,
+            parent: e,
+            width: "100%",
+            height: "96px",
+            layoutKind: "top-to-bottom"
+        });
+        this.topWidthEditor = new wm.Number({
+            name: "topWidthEditor",
+            owner: this,
+            parent: parent,
+            width: "100%",
+            caption: "Top",
+            captionSize: "50px",
+            captionPosition: "left",
+            captionAlign: "left",
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.rightWidthEditor = new wm.Number({
+            name: "rightWidthEditor",
+            owner: this,
+            parent: parent,
+            width: "100%",
+            caption: "Right",
+            captionSize: "50px",
+            captionPosition: "left",
+            captionAlign: "left",            
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.bottomWidthEditor = new wm.Number({
+            name: "bottomWidthEditor",
+            owner: this,
+            parent: parent,
+            width: "100%",
+            caption: "Bottom",
+            captionSize: "50px",
+            captionPosition: "left",
+            captionAlign: "left",            
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });
+        this.leftWidthEditor = new wm.Number({
+            name: "leftWidthEditor",
+            owner: this,
+            parent: parent,
+            width: "100%",
+            caption: "Left",
+            captionSize: "50px",
+            captionPosition: "left",
+            captionAlign: "left",            
+            dataValue: 0,
+            onchange: dojo.hitch(this, "changed")
+        });        
+        this.toggleButton = new wm.ToggleButton({
+            _classes: {domNode: ["StudioButton"]},
+            owner: this,
+            parent: e,
+            name: "toggleButton",
+            width: "31px",
+            height: "20px",
+            margin: "0,0,0,10",
+            padding: "0",
+            captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
+            captionDown: "<img src='images/propertyEditors/expanded.png'/>",
+            onclick: dojo.hitch(this, "toggleClicked")
+        });        
+        return this.editor;
+    },
+
+    setEditorValue: function(inValue) {
+        if (inValue === "" || inValue === undefined || inValue === null) inValue = "0";
+        var v =  this.dataValue = String(inValue);
+        this._inSetEditor = true;
+        if (v.match(/,/)) {
+            this.toggleButton.setClicked(true);
+            this.multiBorderPanel.show();
+            this.allWidthEditor.hide();
+            v = v.split(/,/);
+            this.topWidthEditor.setDataValue(v[0]);
+            this.rightWidthEditor.setDataValue(v.length > 1 ? v[1] : v[0]);
+            this.bottomWidthEditor.setDataValue(v.length > 2 ? v[2] : v[0]);
+            this.leftWidthEditor.setDataValue(v.length > 3 ? v[3] : v.length > 1 ? v[1] : v[0]);            
+            this.editor.setHeight("96px");
+            this.setHeight("96px");            
+            if (this.parent.layoutKind == "left-to-right") {
+                this.parent.setHeight("96px");
+            }
+        } else {
+            this.toggleButton.setClicked(false);        
+            this.multiBorderPanel.hide();
+            this.allWidthEditor.show();        
+            this.allWidthEditor.setDataValue(v);
+            this.editor.setHeight("24px");
+            this.setHeight("24px");            
+            if (this.parent.layoutKind == "left-to-right") {
+                this.parent.setHeight("24px");
+            }            
+        }
+        this._inSetEditor = false;        
+    },
+    getEditorValue: function() {
+        return this.dataValue; // this value won't mean much if border colors/widths don't match
+    },
+    setFullEditorShowing: function(inShowing) {
+        if (inShowing) {
+            this.multiBorderPanel.show();
+            this.allWidthEditor.hide();
+            this.editor.setHeight("96px");
+            this.setHeight("96px");            
+            if (this.parent.layoutKind == "left-to-right") {
+                this.parent.setHeight("96px");
+            }
+        } else {
+            this.multiBorderPanel.hide();
+            this.allWidthEditor.show();
+            this.editor.setHeight("24px");
+            this.setHeight("24px");            
+            if (this.parent.layoutKind == "left-to-right") {
+                this.parent.setHeight("24px");
+            }            
+        }    
+    },
+    toggleClicked: function() {
+        this.changed();
+    },
+    changed: function() {
+        if (this._inSetEditor) return;
+        if (!this.toggleButton.clicked) {
+            this.setFullEditorShowing(false);
+            this.dataValue = this.allWidthEditor.getDataValue();
+        } else {
+            this.setFullEditorShowing(true);
+            var v = [];
+            v.push(this.topWidthEditor.getDataValue() || "0");
+            v.push(this.rightWidthEditor.getDataValue() || "0");
+            v.push(this.bottomWidthEditor.getDataValue() || "0");
+            v.push(this.leftWidthEditor.getDataValue() || "0");
+            this.dataValue = v.join(",");
+        }
+        
+        this.onchange(this.dataValue, this.dataValue);
+    }
+    
+});
+
 dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     dataValue: "0px 0px 0px #000000",
     caption: "box-shadow",
@@ -3348,6 +3513,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             parent: this.colorSubPanel,
             captionSize: "65px",
             captionAlign: "left",
+            captionPosition: "left",
             caption: "Color",
             width: "100%",   
             gradient: false,
@@ -3372,6 +3538,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             captionSize: "65px",
             caption: "Gradient",
             captionAlign: "left",            
+            captionPosition: "left",            
             width: "100%",                
             gradient: true,
             onchange: dojo.hitch(this, "changed")
@@ -3448,15 +3615,19 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             verticalAlign: "bottom",
             horizontalAlign: "left"
         });
-        new wm.Label({
-            owner: this,
-            parent: this.customPanel,
-            width: "100%",
-            caption: "Use the source code editor to change this style",
-            _classes: {domNode: ["StudioLabel"]}
-        });        
+        if (this.getParentPage().name == "widgetThemerPage") {
+            new wm.Label({
+                owner: this,
+                parent: this.customPanel,
+                width: "100%",
+                caption: "Edit source code",
+                _classes: {domNode: ["StudioLabel", "link"]},
+                onclick: dojo.hitch(this, "onCustomEvent", "onCustomLinkClick")
+            });
+        }        
         return e;
     },    
+    onCustomEvent: function(inEventName) {},
     
     setInitialValue: function() {
 /*        this.beginEditUpdate();
