@@ -3482,7 +3482,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             parent: e,
             width: "140px",
             margin: "0,10,0,0",
-            options: "Color/Gradient,Image,Custom",
+            options: "Color,Gradient,Image,Custom",
             onchange: dojo.hitch(this, "changed")
         });
         this.layers = new wm.Layers({
@@ -3530,10 +3530,16 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             margin: "0,0,0,20",
             onchange: dojo.hitch(this, "changed")                
         });
-
+        this.gradientPanel = new wm.Layer({
+            owner: this,
+            parent: this.layers,
+            layoutKind: "top-to-bottom",
+            verticalAlign: "top",
+            horizontalAlign: "left"
+        });
         this.gradientEditor = new wm.ColorPicker({
             owner: this,
-            parent: this.colorPanel,
+            parent: this.gradientPanel,
             showing: this.message != "NO BACKGROUND IMAGE",
             captionSize: "65px",
             caption: "Gradient",
@@ -3761,7 +3767,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         } else if (backgroundObj.gradient) {
            var gradientObj = this.parseGradient(backgroundObj.gradient);
            if (gradientObj) {
-                this.backgroundChooser.setDataValue("Color/Gradient");
+                this.backgroundChooser.setDataValue("Gradient");
                 this.gradientEditor.setDataValue(gradientObj);
             } else {
                 this.backgroundChooser.setDataValue("Custom");
@@ -3796,10 +3802,9 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             if (y == "initial") y = "0%";            
             this.verticalPosEditor.setDataValue(y);
         } else if (backgroundObj.color) {
-            this.backgroundChooser.setDataValue("Color/Gradient");        
+            this.backgroundChooser.setDataValue("Color");        
             this.colorEditor.setDataValue(backgroundObj.color);
-
-        }
+        } 
         this.transparentCheckbox.setChecked(isTransparent);
         //this.changed();
     }, 
@@ -3820,11 +3825,14 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
     changed: function() {
         var backgroundType = this.backgroundChooser.getDataValue();
         switch(backgroundType) {
-            case "Color/Gradient":
+            case "Color":
                 this.colorEditor.setDisabled(this.transparentCheckbox.getChecked());
-                this.gradientEditor.setDisabled(this.transparentCheckbox.getChecked());                
-                this.dataValue = this.getColorDataValue();        
+                this.dataValue = this.getColorDataValue();
                 this.colorPanel.activate();
+                break;
+            case "Gradient":
+                this.dataValue = this.getColorDataValue();            
+                this.gradientPanel.activate();
                 break;
             case "Image":
                 this.dataValue = this.getImageDataValue();
@@ -3856,16 +3864,13 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
     },
     getColorDataValue: function() {
         var value = "";
-        if (this.transparentCheckbox.getChecked()) return "transparent";
-        var color = this.colorEditor.getDataValue();
-        if (color) {
-            value += color;
+        var backgroundType = this.backgroundChooser.getDataValue();        
+        if (backgroundType == "Color") {
+            if (this.transparentCheckbox.getChecked()) return "transparent";
+            return this.colorEditor.getDataValue() || "#FFFFFF";
+        } else if (this.gradientEditor.getDataValue()) {
+               return this.testNode.domNode.style.backgroundImage;        
         }
-        
-        var gradient = this.gradientEditor.getDataValue();
-        if (color && gradient) value += " ";
-        if (gradient) value += this.testNode.domNode.style.backgroundImage;
-        return value;    
     },
     onchange: function(inDisplayValue, inDataValue) {},
     updateCssLine: function(inStyleName, inStyleValue) {
@@ -3876,26 +3881,36 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             var backgroundType = this.backgroundChooser.getDataValue();
             var value = "";
             var message = (!this.message) ? "" : " /* THEMER: " + this.message + " */";
-            if (backgroundType != "Color/Gradient" || this.transparentCheckbox.getChecked()) {
-                value = "background: " + this.getDataValue();
-            } else {
-                if (this.colorEditor.getDataValue()) {
-                    value += "background-color: " + this.colorEditor.getDataValue() + ";" + message;
-                }
-                if (this.gradientEditor.getDataValue()) {
-                    if (value) value += "\n\t";                                
-                    var styleValue = this.gradientEditor.getDataValue();
-                    value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";" + message + "\n";
-                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";" + message + "\n";
-                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";" + message + "\n";
-                    value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";" + message + "\n";
-                    value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";" + message;
-                } else if (this.message != "NO BACKGROUND IMAGE") {
-                    if (value) value += "\n\t";                                
-                    value += "background-image: none;" + message +"\n";
-                    value += "\tfilter: none;" + message;
-                }
+            var hasImage = false;
+            switch(backgroundType) {
+                case "Color":
+                    value = "background-color: " + (this.transparentCheckbox.getChecked() || !this.colorEditor.getDataValue() ? "transparent" : this.colorEditor.getDataValue()) + ";" + message;
+                    break;
+                case "Image":
+                    value = "background: " + this.getDataValue() + ";" + message;
+                    hasImage = true;
+                    break;
+                case "Gradient":        
+                    if (this.gradientEditor.getDataValue()) {
+                        var styleValue = this.gradientEditor.getDataValue();
+                        value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";" + message + "\n";
+                        value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";" + message + "\n";
+                        value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";" + message + "\n";
+                        value += "\tbackground-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";" + message + "\n";
+                        value += "\tfilter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";" + message;
+                        hasImage = true;
+                    }
+                    break;
+                case "Custom":
+                    return "";
+            }                
+            
+            if (this.message != "NO BACKGROUND IMAGE" && !hasImage) {
+                if (value) value += "\n\t";                                
+                value += "background-image: none;" + message +"\n";
+                value += "\tfilter: none;" + message;
             }
+            
             return value;
         }   
     }
