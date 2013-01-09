@@ -24,16 +24,21 @@ import javax.xml.bind.JAXBException;
 
 import org.springframework.core.io.ClassPathResource;
 
+import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.security.SecuritySpringSupport;
-import com.wavemaker.tools.security.SecurityToolsManager;
 import com.wavemaker.tools.security.SecurityXmlSupport;
 import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.spring.SpringConfigSupport;
+import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.spring.beans.ConstructorArg;
+import com.wavemaker.tools.spring.beans.Property;
+import com.wavemaker.tools.spring.beans.Ref;
+import com.wavemaker.tools.spring.beans.Value;
 
 /**
  * @author Edward "EdC" Callahan
@@ -41,11 +46,13 @@ import com.wavemaker.tools.spring.beans.Beans;
 
 public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
-	private SecurityToolsManager secToolsMan = null;
-
 	private File secXmlFile = null;
 
 	private String content = null;
+	
+	private Beans acegiBeans = null;
+	
+	private UpgradeInfo upgradeInfo = null;
 
 	private boolean securityEnabled = false;
 
@@ -71,13 +78,13 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
 	private static final String USER_DETAILS_SVC = "<property name=\"userDetailsService\">";
 
-	private static final String SECURITY_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
+    private static final String IN_MEMORY_DAO_IMPL_BEAN_ID = "inMemoryDaoImpl";
+    
+    private static final String USER_MAP_PROPERTY = "userMap";
+    
+    static final String ROLE_PREFIX = "ROLE_";
 
-	public AcegiToSpringSecurityUpgradeTask(){
-		super();
-		//REMOVE ME if we never use sec tools manager
-		this.secToolsMan = new SecurityToolsManager(null, null);
-	}
+	private static final String SECURITY_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
 
 	@Override
 	/**
@@ -86,26 +93,23 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	 * Sends off to provider specific function for upgrade. 
 	 */
 	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-		secXmlFile = project.getSecurityXmlFile();
-		content = secXmlFile.getContent().asString();
+		this.upgradeInfo = upgradeInfo;
+		this.secXmlFile = project.getSecurityXmlFile();
+		this.content = secXmlFile.getContent().asString();
 		if(!(content.length()>1)){
-			System.out.println("Problem getting project-security.xml file !!!");
-			upgradeInfo.addMessage("Problem getting project-security.xml file !!!");
-			return;
-		} 
-		File backupFile = project.getRootFolder().getFile(BACKUP_FILE_NAME);
-		backupFile.createIfMissing();
-		backupFile.getContent().write(content);
-		System.out.println("Acegi version of project-security.xml has been backed up as: " + BACKUP_FILE_NAME);
-		upgradeInfo.addMessage("Acegi version of project-security.xml has been backed up as: " + BACKUP_FILE_NAME);	
+			throw new ConfigurationException("Problem getting project-security.xml file !!!");
+		} 		
+		
 		if(!(content.contains(AUTH_MAN))){
 			//security was never enabled
 			this.setNoSecurityConfig();
 			return;
 		}
+		this.acegiBeans = getAcegiSpringBeans();
+		
 		securityEnabled = this.isSecurityEnabled();
 		usingLoginPage = this.isUsingLoginHtml();
-
+		try{
 		//ldap also contains a DAO ref, check for ldap first
 		if(content.contains(LDAP_PROVIDER)){
 			if(content.contains(ROLE_PROVIDER)){
@@ -118,8 +122,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 				}
 			}
 			else{
-				System.out.println("Unable to determine role provider !!!");
-				upgradeInfo.addMessage("Unable to determine role provider  !!!");
+				throw new ConfigurationException("Unable to determine role provider !!!");
 			}
 		}
 		else if(content.contains(DAO_PROVIDER)){
@@ -133,15 +136,30 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 				}
 			}
 			else{
-				System.out.println("Unable to determine DAO provider type !!!");
-				upgradeInfo.addMessage("Unable to determine DAO provider type !!!");
+				throw new ConfigurationException("Unable to determine DAO provider type !!!");
 			}
 		}
 		else{
-			System.out.println("Woah! Project security authentiation provider could not be determined or is not supported.\nSecurity Disabled!");
-			upgradeInfo.addMessage("Woah! Project security authentiation provider could not be determined or is not supported.\nSecurity Disabled!");
 			this.setNoSecurityConfig();
+			throw new ConfigurationException("Unable to determine authentication provider - Security DISABLED!");
 		}
+		} catch(ConfigurationException e){
+			createAcegiBackup(project);
+			this.setNoSecurityConfig();			
+			System.out.println("Problem upgrading Security - Security has been Disabled!\n" + e.getMessage());
+			this.upgradeInfo.addMessage("Problem upgrading Security - Security has been Disabled!\n " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
+	private void createAcegiBackup(Project project) {
+		File backupFile = project.getRootFolder().getFolder("export").getFile(BACKUP_FILE_NAME);
+		backupFile.createIfMissing();
+		backupFile.getContent().write(content);
+		System.out.println("Acegi version of project-security.xml has been backed up as: " + BACKUP_FILE_NAME);
+		this.upgradeInfo.addMessage("Acegi version of project-security.xml has been backed up as: export/" + BACKUP_FILE_NAME );	
+		
 	}
 
 
@@ -157,30 +175,29 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		Beans beans = getNewSecuritySpringBeansFromTemplate();
 		SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
 		SecuritySpringSupport.setRequiresChannel(beans, "http", "8443");
-		SecurityXmlSupport.setUserSvcUsers(beans, getDemoUsers());
+		List<UserService.User> userList =  getAcegiDemoUsers();
+		if(userList.isEmpty()){
+			System.out.print("No Users found !!! Adding demo user");
+			UserService.User demoUser = new UserService.User();
+			demoUser.setName("demo");
+			demoUser.setPassword("demo");
+			userList.add(demoUser);
+		}
+		SecurityXmlSupport.setUserSvcUsers(beans, userList);
 	    SecuritySpringSupport.resetJdbcDaoImpl(beans);
 		saveSecuritySpringBeans(beans);
 	}
 
 
-	private List<UserService.User> getDemoUsers() {
-		List<UserService.User> demoUsers = new ArrayList<UserService.User>();
-		int userMapStartIndex = content.indexOf("<property name=\"userMap\">");
-		int userMapEndIndex = content.indexOf("</value>", userMapStartIndex);
-		String userMapSubString = content.substring(userMapStartIndex, userMapEndIndex).trim();
-		System.out.println(userMapSubString);
-		return demoUsers;
-	}
-
 	private void saveSecuritySpringBeans(Beans beans) {
 		try {
 			SpringConfigSupport.writeSecurityBeans(beans, secXmlFile);
 		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ConfigurationException(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ConfigurationException(e.getMessage());
 		}
 
 	}
@@ -227,15 +244,71 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 			ret = SpringConfigSupport.readSecurityBeans(reader);
 			reader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ConfigurationException(e.getMessage());
 		}catch (JAXBException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ConfigurationException(e.getMessage());
 		}
 		return ret;
 	}
 
+	private Beans getAcegiSpringBeans() {
+		Beans beans = null;
+		try {
+			beans = SpringConfigSupport.readBeans(this.secXmlFile);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(beans == null){
+			throw new ConfigurationException("Problem getting Acegi Beans !!!");
+		}
+		return beans;
+	}
+		
+	List<UserService.User> getAcegiDemoUsers() {
+		List<UserService.User> demoUsers = new ArrayList<UserService.User>();
+		Bean bean = this.acegiBeans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
+		Property property = bean.getProperty(USER_MAP_PROPERTY);
+		Value valueElement = property.getValueElement();
+		List<String> content = valueElement.getContent();
 
+		if (content.size() == 1) {
+			String value = content.get(0);
+			value = value.trim();
 
+			String[] userStringArray = value.split("\n");
+			for (String userString : userStringArray) {
+				UserService.User user = new UserService.User();
+				userString = userString.trim();
+				int i = userString.indexOf('=');	         
+				if (i > 0) {
+					String userid = userString.substring(0, i);
+					user.setName(userid);
+				}
+				int p = userString.indexOf(",", i + 1 );
+				if(p > 0){
+					String pass = userString.substring(i + 1, p);
+					user.setPassword(pass);
+				}
+				String roles = userString.substring(p+1);
+				if(roles.length() > 0){
+					if(roles.indexOf(",") > 0) {
+						throw new ConfigurationException("Multiple roles for user: " + user.getName()  + " !!!");
+					}
+					if(roles.startsWith(ROLE_PREFIX)){
+						String role = roles.substring(ROLE_PREFIX.length());
+						if(role.equals("DEFAULT_NO_ROLES")){
+							role = "";
+						}
+						user.setAuthorities(role);
+					}
+				}
+				demoUsers.add(user);
+			} 
+		}    
+		return demoUsers;
+	}
 }
