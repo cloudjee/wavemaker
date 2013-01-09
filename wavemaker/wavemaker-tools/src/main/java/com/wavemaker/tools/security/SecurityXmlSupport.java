@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.hibernate.cfg.Mappings;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.security.schema.*;
@@ -56,7 +55,7 @@ public class SecurityXmlSupport {
 		return demoUsers;		
 	}
 
-	static void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
+	static public void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
 		try{
 			UserService userSvc = getUserSvc(beans);
 			if(userSvc != null){

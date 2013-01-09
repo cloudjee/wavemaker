@@ -89,10 +89,10 @@ public class SecurityConfigService {
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-//        if (options != null) {
-//            return options.isEnforceSecurity();
-//        }
+        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
+        if (options != null) {
+            return options.isEnforceSecurity();
+        }
         return true;
     }
 
@@ -102,7 +102,7 @@ public class SecurityConfigService {
 
     public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml) throws JAXBException, IOException {
         getSecToolsMgr().configDemo(demoUsers);
-        //getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {

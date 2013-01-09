@@ -205,7 +205,7 @@ public class SecurityToolsManager {
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
-        setGeneralOptions(enforceSecurity, enforceIndexHtml, false, "");
+        setGeneralOptions(enforceSecurity, enforceIndexHtml, false, "8443");
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort) throws IOException, JAXBException {
