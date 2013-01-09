@@ -681,13 +681,13 @@
          }
      }
 
-         if (value instanceof wm.Component) {
-             if (value === inComponent || value.isOwnedBy(inComponent)) {
-                 // don't show the value if the value is self or is something being managed internally; binding
-                 // is for connecting to a different component's properties.
-                 value = "";
-             }
+     if (value instanceof wm.Component) {
+         if (value === inComponent || value.isOwnedBy(inComponent)) {
+             // don't show the value if the value is self or is something being managed internally; binding
+             // is for connecting to a different component's properties.
+             value = "";
          }
+     }
 
 
      /**********************************************************
@@ -726,6 +726,10 @@
          e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, inProp, inComponent));
      }
 
+    // Ugh.  Make sure that captionPosition value isn't there through the prototype
+    // because theme changes could change the prototype's captionPosition
+    if (e.captionPosition == "left") e.captionPosition = "left";
+    
      /* Cache a refernce to the editor so that reinspect can quickly find it */
      this.editorHash[hashId] = e;
 

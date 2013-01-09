@@ -890,6 +890,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }
         }
         e.connect(e, "onchange", dojo.hitch(this, "onPrototypeEditorChange", p, e));
+        
+        // Sometimes the theme clobbers this, so force it to be set
+        e.setCaptionPosition("left");
     },
     onPrototypeEditorChange: function( inPropName, editor, inDisplayValue, inDataValue) {
         if (!editor.isValid()) return;
