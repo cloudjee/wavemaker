@@ -1052,24 +1052,32 @@ dojo.declare("wm.Application", wm.Component, {
         return d;
     },
     prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText) {
+        var d = this.confirmDialogDeferred = new dojo.Deferred();
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
         this.confirmDialog.setShowInput(true);
         this.confirmDialog.setTitle(wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
         this.confirmDialog.setInputDataValue(inDefaultValue || "");
         this.confirmDialog.show();
+        return d;
     },
     confirmDialogOKClick: function() {
         if (this.confirmDialog.showInput) {
             var val = this.confirmDialog.getInputDataValue();
-            if (!val)
+            if (!val) {
+                this.confirmDialogDeferred.errback();            
                 return this.confirmDialogCancelClick();
-            else if (this.confirmOKFunc)
+            }
+            else if (this.confirmOKFunc) {
                 this.confirmOKFunc(val);
+            }
+            this.confirmDialogDeferred.callback(val);                            
         } else {
-            if (this.confirmOKFunc)
+            if (this.confirmOKFunc) {
                 this.confirmOKFunc();
+            }
+            this.confirmDialogDeferred.callback(val);
         }
-        if (this.confirmDialogDeferred) this.confirmDialogDeferred.callback();
+
     },
     confirmDialogCancelClick: function() {
         if (this.confirmCancelFunc)
