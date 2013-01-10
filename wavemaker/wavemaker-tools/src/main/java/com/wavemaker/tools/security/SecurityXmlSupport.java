@@ -193,7 +193,7 @@ public class SecurityXmlSupport {
 
 	}
 
-	static void setActiveAuthMan(Beans beans, String alias){
+	static public void setActiveAuthMan(Beans beans, String alias){
 		if(alias.equals(getActiveAuthManAlias(beans))){
 			return;
 		}

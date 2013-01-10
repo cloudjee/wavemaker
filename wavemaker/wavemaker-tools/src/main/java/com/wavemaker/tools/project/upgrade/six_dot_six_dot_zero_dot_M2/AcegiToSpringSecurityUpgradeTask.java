@@ -37,7 +37,6 @@ import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
 import com.wavemaker.tools.spring.beans.Property;
-import com.wavemaker.tools.spring.beans.Ref;
 import com.wavemaker.tools.spring.beans.Value;
 
 /**
@@ -53,10 +52,6 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	private Beans acegiBeans = null;
 	
 	private UpgradeInfo upgradeInfo = null;
-
-	private boolean securityEnabled = false;
-
-	private boolean usingLoginPage = false;
 
 	private static final String BACKUP_FILE_NAME = "Acegi-Project-Security-Backup.xml";
 
@@ -80,6 +75,38 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
     private static final String IN_MEMORY_DAO_IMPL_BEAN_ID = "inMemoryDaoImpl";
     
+    private static final String LDAP_DIR_CONTEXT_FACTORY_BEAN_ID = "initialDirContextFactory";
+    
+    private static final String LDAP_BIND_AUTHENTICATOR_CLASSNAME = 
+            "org.acegisecurity.providers.ldap.authenticator.BindAuthenticator";
+    
+    private static final String LDAP_AUTHORITIES_POPULATOR_CLASSNAME = 
+            "com.wavemaker.runtime.security.LdapAuthoritiesPopulator";
+    
+    private static final String LDAP_AUTH_PROVIDER_BEAN_ID = "ldapAuthProvider";
+    
+    private static final String LDAP_USERDN_PATTERNS_PROPERTY = "userDnPatterns";
+
+    private static final String LDAP_GROUP_SEARCHING_DISABLED = "groupSearchDisabled";
+
+    private static final String LDAP_GROUP_ROLE_ATTRIBUTE = "groupRoleAttribute";
+    
+    private static final String LDAP_GROUP_SEARCH_FILTER = "groupSearchFilter";
+    
+    private static final String LDAP_ROLE_MODEL = "roleModel";
+    
+    private static final String LDAP_ROLE_ENTITY = "roleEntity";
+    
+    private static final String LDAP_ROLE_TABLE = "roleTable";
+    
+    private static final String LDAP_ROLE_USERNAME = "roleUsername";
+    
+    private static final String LDAP_ROLE_PROPERTY = "roleProperty";
+    
+    private static final String LDAP_ROLE_QUERY = "roleQuery";
+    
+    private static final String LDAP_ROLE_PROVIDER = "roleProvider";
+    
     private static final String USER_MAP_PROPERTY = "userMap";
     
     static final String ROLE_PREFIX = "ROLE_";
@@ -88,7 +115,6 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
 	@Override
 	/**
-	 * Makes backup of file before changing.
 	 * Determines previous security provider type.
 	 * Sends off to provider specific function for upgrade. 
 	 */
@@ -101,14 +127,13 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		} 		
 		
 		if(!(content.contains(AUTH_MAN))){
-			//security was never enabled
+			//security was never enabled, this is the mini config 
 			this.setNoSecurityConfig();
 			return;
 		}
 		this.acegiBeans = getAcegiSpringBeans();
-		
-		securityEnabled = this.isSecurityEnabled();
-		usingLoginPage = this.isUsingLoginHtml();
+		Boolean securityEnabled = this.isSecurityEnabled();
+		Boolean usingLoginPage = this.isUsingLoginHtml();
 		try{
 		//ldap also contains a DAO ref, check for ldap first
 		if(content.contains(LDAP_PROVIDER)){
@@ -141,13 +166,13 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 		else{
 			this.setNoSecurityConfig();
-			throw new ConfigurationException("Unable to determine authentication provider - Security DISABLED!");
+			throw new ConfigurationException("Unable to determine authentication provider");
 		}
 		} catch(ConfigurationException e){
 			createAcegiBackup(project);
 			this.setNoSecurityConfig();			
-			System.out.println("Problem upgrading Security - Security has been Disabled!\n" + e.getMessage());
-			this.upgradeInfo.addMessage("Problem upgrading Security - Security has been Disabled!\n " + e.getMessage());
+			System.out.println("Problem upgrading Security - Security has been DISABLED!\n" + e.getMessage());
+			this.upgradeInfo.addMessage("Problem upgrading Security - Security has been DISABLED!\n " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -203,14 +228,114 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	}
 
 	private void ldapWithDbUpgrade(boolean securityEnabled, boolean usingLoginPage) {
-		// TODO Auto-generated method stub
+		Bean ldapDirContextBean = this.acegiBeans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
+		ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
+        String ldapUrl = arg.getValue();
+        
+        Bean ldapAuthProviderBean =  this.acegiBeans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+        List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
+        
+        String userDnPattern = "";
+        boolean isGroupSearchDisabled = false;
+        String groupSearchBase = "";
+        String groupRoleAttribute  = "";
+        String groupSearchFilter = "";
+        String roleModel = "";
+        String roleEntity  = "";
+        String roleTable = "";
+        String roleUsername = "";
+        String roleProperty  = "";
+        String roleQuery = "";
+        String roleProvider = "";
+        
+        for (ConstructorArg constructorArg : constructorArgs) {
+            if (constructorArg.getBean().getClazz().equals(LDAP_BIND_AUTHENTICATOR_CLASSNAME)) {
+                Bean bindAuthBean = constructorArg.getBean();
+                Property userDnPatternsProperty = bindAuthBean.getProperty(LDAP_USERDN_PATTERNS_PROPERTY);
+                Value v = (Value) userDnPatternsProperty.getList().getRefElement().get(0);
+                userDnPattern = v.getContent().get(0);
+            } else if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
+                Bean authzBean = constructorArg.getBean();
+                isGroupSearchDisabled = Boolean.parseBoolean(getPropertyValueString(authzBean,LDAP_GROUP_SEARCHING_DISABLED));
+                if (!isGroupSearchDisabled) {
+                    List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
+                    if (authzArgs.size() > 1) {
+                        Value valueElement = authzArgs.get(1).getValueElement();
+                        if (valueElement != null && valueElement.getContent() != null  && !valueElement.getContent().isEmpty()) {
+                            groupSearchBase = valueElement.getContent().get(0);
+                            }
+                    }
+                    groupRoleAttribute = (getPropertyValueString(authzBean, LDAP_GROUP_ROLE_ATTRIBUTE));
+                    groupSearchFilter = (getPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER));
+                    roleModel = (getPropertyValueString(authzBean, LDAP_ROLE_MODEL));
 
+                    String tableName = getPropertyValueString(authzBean, LDAP_ROLE_TABLE);
+                    int hasSchemaPrefix = tableName.indexOf('.');
+                    if (hasSchemaPrefix > -1) {
+                    	tableName = tableName.substring(hasSchemaPrefix + 1);
+                    }
+                    roleTable = tableName; 
+                    roleEntity = getPropertyValueString(authzBean, LDAP_ROLE_ENTITY);
+                    roleUsername = getPropertyValueString(authzBean, LDAP_ROLE_USERNAME);
+                    roleProperty = getPropertyValueString(authzBean, LDAP_ROLE_PROPERTY);
+                    roleQuery = getPropertyValueString(authzBean, LDAP_ROLE_QUERY);
+                    roleProvider = getPropertyValueString(authzBean, LDAP_ROLE_PROVIDER);                    
+                }
+            }
+        }
+            
+		Beans beans = getNewSecuritySpringBeansFromTemplate();
+		SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB);     
+        SecuritySpringSupport.updateLdapAuthProvider(beans, ldapUrl, "", userDnPattern, isGroupSearchDisabled, groupSearchBase,
+                groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
+        SecuritySpringSupport.resetJdbcDaoImpl(beans);
+		saveSecuritySpringBeans(beans);
 	}
 
 
 	private void ldapUpgrade(boolean securityEnabled, boolean usingLoginPage) {
-		// TODO Auto-generated method stub
-
+		Bean ldapDirContextBean = this.acegiBeans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
+		ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
+        String ldapUrl = arg.getValue();
+        
+        Bean ldapAuthProviderBean =  this.acegiBeans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+        List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
+        
+        String userDnPattern = "";
+        boolean isGroupSearchDisabled = false;
+        String groupSearchBase = "";
+        String groupRoleAttribute  = "";
+        String groupSearchFilter = "";
+        
+        for (ConstructorArg constructorArg : constructorArgs) {
+            if (constructorArg.getBean().getClazz().equals(LDAP_BIND_AUTHENTICATOR_CLASSNAME)) {
+                Bean bindAuthBean = constructorArg.getBean();
+                Property userDnPatternsProperty = bindAuthBean.getProperty(LDAP_USERDN_PATTERNS_PROPERTY);
+                Value v = (Value) userDnPatternsProperty.getList().getRefElement().get(0);
+                userDnPattern = v.getContent().get(0);
+            } else if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
+                Bean authzBean = constructorArg.getBean();
+                isGroupSearchDisabled = Boolean.parseBoolean(getPropertyValueString(authzBean,LDAP_GROUP_SEARCHING_DISABLED));
+                if (!isGroupSearchDisabled) {
+                    List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
+                    if (authzArgs.size() > 1) {
+                        Value valueElement = authzArgs.get(1).getValueElement();
+                        if (valueElement != null && valueElement.getContent() != null  && !valueElement.getContent().isEmpty()) {
+                            groupSearchBase = valueElement.getContent().get(0);
+                        }
+                    }
+                    groupRoleAttribute =(getPropertyValueString(authzBean, LDAP_GROUP_ROLE_ATTRIBUTE));
+                    groupSearchFilter = (getPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER));
+                }
+            }
+        }
+            
+		Beans beans = getNewSecuritySpringBeansFromTemplate();
+		SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);     
+        SecuritySpringSupport.updateLdapAuthProvider(beans, ldapUrl, userDnPattern, isGroupSearchDisabled, groupSearchBase,
+            groupRoleAttribute, groupSearchFilter);
+        SecuritySpringSupport.resetJdbcDaoImpl(beans);
+		saveSecuritySpringBeans(beans);
 	}
 
 
@@ -311,4 +436,18 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}    
 		return demoUsers;
 	}
+	
+	
+    private String getPropertyValueString(Bean bean, String propertyName) {
+        Property property = bean.getProperty(propertyName);
+        if (property == null) {
+            return null;
+        }
+        Value valueElement = property.getValueElement();
+        if(valueElement.getContent().isEmpty() == false){ // GD: Added this check because sometimes the value in project-security.xml can be null
+        	return valueElement.getContent().get(0);	
+        }else{
+        	return null;
+        }        
+    }
 }
