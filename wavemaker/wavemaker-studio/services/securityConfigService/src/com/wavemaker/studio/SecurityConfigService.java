@@ -347,7 +347,7 @@ public class SecurityConfigService {
     				groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
     	}
     	else {
-    		getSecToolsMgr().configLDAP(ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter);
+    		getSecToolsMgr().configLDAP(ldapUrl, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter);
     	}
     	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
     }

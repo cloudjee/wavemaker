@@ -289,7 +289,6 @@ public class SecurityToolsManager {
             initDao();
         }
 
-        @SuppressWarnings("unchecked")
         public List<String> loadUserRolesByUsername(String username) {
             List<GrantedAuthority> dbAuths = this.loadUserAuthorities(username);
             List<String> userRoles = new ArrayList<String>();
@@ -334,23 +333,20 @@ public class SecurityToolsManager {
         String roleUsername, String roleProperty, String roleQuery, String roleProvider) throws IOException, JAXBException {
         Beans beans = getSecuritySpringBeans(true);
         SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB);
-        
-        //sets manager. non-manager test connection would be better.
-        //SecuritySpringSupport.updateLDAPDirContext(beans, ldapUrl, managerDn, managerPassword);
-        
+               
         //Passing empty string for SearchBase
-        SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, "", userDnPattern, groupSearchDisabled, groupSearchBase,
+        SecuritySpringSupport.updateLdapAuthProvider(beans, ldapUrl, "", userDnPattern, groupSearchDisabled, groupSearchBase,
             groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
         saveSecuritySpringBeans(beans);
     }
 
-    public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchDisabled,
+    public void configLDAP(String ldapUrl, String userDnPattern, boolean groupSearchDisabled,
             String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
             Beans beans = getSecuritySpringBeans(true);
             SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);
                    
-            SecuritySpringSupport.updateLDAAuthProvider(beans, ldapUrl, managerDn, managerPassword, userDnPattern, groupSearchDisabled, groupSearchBase,
+            SecuritySpringSupport.updateLdapAuthProvider(beans, ldapUrl, userDnPattern, groupSearchDisabled, groupSearchBase,
                 groupRoleAttribute, groupSearchFilter);
             SecuritySpringSupport.resetJdbcDaoImpl(beans);
             saveSecuritySpringBeans(beans);
@@ -373,7 +369,8 @@ public class SecurityToolsManager {
         env.put(Context.PROVIDER_URL, ldapUrl);
         env.put(Context.SECURITY_CREDENTIALS, managerPassword);
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        InitialLdapContext ctx = new InitialLdapContext(env, null);
+        @SuppressWarnings("unused")
+		InitialLdapContext ctx = new InitialLdapContext(env, null);
     }
 
     public List<String> getRoles() throws IOException, JAXBException {
