@@ -94,27 +94,28 @@
 /* GROUP: Grid Header */
 .wm_template .wmlist-header th,
 .wm_template .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
-			      font-size: 14px;
+      font-size: 14px;
 }
 
 .wm_template .wmlist-header .wmlist-cell,
 .wm_template div.dojoxGridHeader .dojoxGridCell {
-				    border-top: solid 0px rgb(251, 251, 251);
-				    		border-right: solid 1px rgb(170, 170, 170);
-							      border-bottom: solid 0px rgb(251, 251, 251);
-							      		     border-left: solid 0px rgb(251, 251, 251);
+    border-top: solid 0px rgb(251, 251, 251);
+    border-right: solid 1px rgb(170, 170, 170);
+    border-bottom: solid 0px rgb(251, 251, 251);
+    border-left: solid 0px rgb(251, 251, 251);
 }
 
 
 
 .wm_template .wmlist-header,
 .wm_template div.dojoxGridHeader {
-		background-color: #575050;
-		background-image: -webkit-gradient(linear, center top, center bottom, from(#bcbcc3), color-stop(51%,#262728), to(#262728));
-		background-image: -moz-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
-		background-image: -o-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
-		background-image: -ms-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcbcc3', endColorstr='#262728',GradientType=0);
+  background-color: #575050;
+  background-image: -webkit-gradient(linear, center top, center bottom, from(#bcbcc3), color-stop(51%,#262728), to(#262728));
+  background-image: -moz-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
+  background-image: -o-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
+  background-image: -ms-linear-gradient(top, #bcbcc3 0%,#262728 51%,#262728 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcbcc3', endColorstr='#262728',GradientType=0);
+  border-bottom: solid 1px #666666;
 }
 .wm_template .wmlist-header th,
 .wm_template div.dojoxGridHeader th.dojoxGridCell,
