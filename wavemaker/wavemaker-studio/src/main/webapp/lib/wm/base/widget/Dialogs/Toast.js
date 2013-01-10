@@ -39,8 +39,8 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         this.widgets_data = {
 	    img: ["wm.Picture", {_classes: {domNode: ["ToastLeft"]}, width: this.imgWidth, height: this.imgHeight, margin: this.imgMargin}],
     	    rightColumn: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%", fitToContentHeight: true, padding: "0"},{},{
-        		title: ["wm.Label", { height: "20px", width: "100%", singleLine: true}],
-        		message: ["wm.Label", { height: "100px", width: "100%", singleLine: false, autoSizeHeight: true}]
+        		title: ["wm.Label", {_classes: {domNode: ["wmtoasttitle"]}, height: "20px", width: "100%", singleLine: true}],
+        		message: ["wm.Label", {_classes: {domNode: ["wmtoastmessage"]}, height: "100px", width: "100%", singleLine: false, autoSizeHeight: true}]
     	    }]
     	};
     },
