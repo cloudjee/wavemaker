@@ -63,6 +63,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 				return i;
 	},
 	deactivateLayer: function(inLayer) {
+	    if (inLayer.header) inLayer.header.setMargin("0,0,2,0");
 		var newIndex = this.getNewLayerIndex(inLayer);
 		if (newIndex != undefined || inLayer.parent.multiActive || inLayer.parent._allowClickClose) {
 			this.setLayerActive(inLayer, false);
@@ -72,6 +73,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		}
 	},
 	activateLayer: function(inLayer) {
+	    if (inLayer.header) inLayer.header.setMargin("0");
 		var d = this.decoree;
 		if (d.multiActive && !d._loading) {
 			this.setLayerActive(inLayer, true);
