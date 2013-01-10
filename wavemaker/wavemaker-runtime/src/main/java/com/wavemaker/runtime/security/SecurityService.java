@@ -45,8 +45,6 @@ public class SecurityService {
 
     static final Logger logger = Logger.getLogger(SecurityService.class);
 
-    //private AuthenticationManager authenticationManager;
-
     private String rolePrefix;
 
     private String noRolesMarkerRole;
@@ -56,30 +54,8 @@ public class SecurityService {
     private Map<String, List<Rule>> roleMap;
 
     public SecurityService() {
-        System.out.println("*** SecurityService is being instantiated ***");
     }
 
-    /**
-     * Provides a simple username/password authentication. It uses the authentication provider(s) specified in the
-     * security spring config file. Upon successful authentication, the Authentication object would be set into
-     * SecurityContext and could be accessible thru SecurityContext.getAuthentication() later on.
-     * 
-     * @param username The user name.
-     * @param password The user password.
-     * @throws InvalidCredentialsException If the supplied credentials are invalid.
-     * @throws SecurityException if authentication failed for some reasons other than invalid credentials.
-     */
-    /*public void authenticate(String username, String password) throws InvalidCredentialsException, SecurityException {
-        Authentication auth = null;
-        try {
-            auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (BadCredentialsException e) {
-            throw new InvalidCredentialsException(e);
-        } catch (AuthenticationException e) {
-            throw new SecurityException(e);
-        }
-        SecurityContextHolder.getContext().setAuthentication(auth);
-    }*/
 
     /**
      * Logs the current principal out. The principal is the one in the security context.
@@ -231,14 +207,6 @@ public class SecurityService {
         }
         return true;
     }
-
-    /*public AuthenticationManager getAuthenticationManager() {
-        return this.authenticationManager;
-    }
-
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }*/
 
     public String getRolePrefix() {
         return this.rolePrefix;
