@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.annotation.security.RolesAllowed;
-
 import com.wavemaker.tools.security.schema.UserService;
 
 /**
@@ -57,8 +55,12 @@ public class DemoOptions {
     	}
     	setUsers(newUsers);
     }
+
     public void setUsers(List<DemoUser> users) {
         this.users = users;
     }
-    
+   
+    public List<DemoUser> setUsers() {
+        return this.users;
+    }
 }
