@@ -454,18 +454,23 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 					user.setPassword(pass);
 				}
 				String roles = userString.substring(p+1);
+				String role = "";		
 				if(roles.length() > 0){
 					if(roles.indexOf(",") > 0) {
 						throw new ConfigurationException("Multiple roles for user: " + user.getName()  + " !!!");
 					}
 					if(roles.startsWith(ROLE_PREFIX)){
-						String role = roles.substring(ROLE_PREFIX.length());
-						if(role.equals("DEFAULT_NO_ROLES")){
+						if(roles.equals(ROLE_PREFIX + "DEFAULT_NO_ROLES")){
 							role = "";
 						}
-						user.setAuthorities(role);
+						else{
+							role = roles;
+						}
+					} else{
+						role = ROLE_PREFIX + roles;
 					}
 				}
+				user.setAuthorities(role);
 				demoUsers.add(user);
 			} 
 		}    
@@ -478,7 +483,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
             return null;
         }
         Value valueElement = property.getValueElement();
-        if(valueElement.getContent().isEmpty() == false){ // GD: Added this check because sometimes the value in project-security.xml can be null
+        if(valueElement.getContent().isEmpty() == false){ 
         	return valueElement.getContent().get(0);	
         }else{
         	return null;
