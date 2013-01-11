@@ -52,15 +52,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
 	private static final String BACKUP_FILE_NAME = "Acegi-Project-Security-Backup.xml";
 
-	private static final String AUTH_MAN = "<bean class=\"org.acegisecurity.providers.ProviderManager\" id=\"authenticationManager\">";
-
-	private static final String SERVICES_PROTECTED  = "/*/*.json=IS_AUTHENTICATED_FULLY";
-
-	private static final String SERVICES_PROTECTED2 = "/*.json=IS_AUTHENTICATED_FULLY";
-
-	private static final String PROTECTED_INDEX ="/index.html=IS_AUTHENTICATED_FULLY";
-
-	private static final String PROTECTED_ROOT = "/=IS_AUTHENTICATED_FULLY";			
+	private static final String AUTH_MAN = "<bean class=\"org.acegisecurity.providers.ProviderManager\" id=\"authenticationManager\">";		
 
 	private static final String DAO_PROVIDER = "<ref bean=\"daoAuthenticationProvider\"/>";
 
@@ -135,18 +127,19 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 		Beans acegiBeans = getAcegiSpringBeans();
         Beans beans = getNewSecuritySpringBeansFromTemplate();
-		//Boolean securityEnabled = this.isSecurityEnabled();
-		//Boolean usingLoginPage = this.isUsingLoginHtml();
 		try{
             //ldap also contains a DAO ref, check for ldap first
             if(content.contains(LDAP_PROVIDER)){
                 if(content.contains(ROLE_PROVIDER)){
                     int providerIndex = content.indexOf(ROLE_PROVIDER);
-                    if(content.indexOf("<value>LDAP</value>",providerIndex)>1){
+                    if((content.indexOf("<value>LDAP</value>",providerIndex)>1)  || ( (content.indexOf("<value>- Select One -</value>", providerIndex)>1))){
                         this.ldapUpgrade(acegiBeans, beans);
                     }
                     else if(content.indexOf("<value>Database</value>",providerIndex)>1){
                         this.ldapWithDbUpgrade(acegiBeans, beans);
+                    }
+                    else{
+                        throw new ConfigurationException("Unable to determine LDAP role provider !!!");
                     }
                 }
                 else{
@@ -382,12 +375,12 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
 	}
 
-	private boolean isUsingLoginHtml() {
-		if(content.contains(PROTECTED_INDEX) && content.contains(PROTECTED_ROOT)){
-			return true;
-		}
-		return false;
-	}
+//	private boolean isUsingLoginHtml() {
+//		if(content.contains(PROTECTED_INDEX) && content.contains(PROTECTED_ROOT)){
+//			return true;
+//		}
+//		return false;
+//	}
 
 	private void setNoSecurityConfig() {
 		Beans beans = getNewSecuritySpringBeansFromTemplate();
@@ -396,12 +389,12 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		saveSecuritySpringBeans(beans);
 	}
 
-	private boolean isSecurityEnabled() {
-		if(content.contains(SERVICES_PROTECTED) && content.contains(SERVICES_PROTECTED2)){
-			return true;
-		}
-		return false;
-	}
+//	private boolean isSecurityEnabled() {
+//		if(content.contains(SERVICES_PROTECTED) && content.contains(SERVICES_PROTECTED2)){
+//			return true;
+//		}
+//		return false;
+//	}
 
 	private Beans getNewSecuritySpringBeansFromTemplate() {
 		ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CLASSPATH);
