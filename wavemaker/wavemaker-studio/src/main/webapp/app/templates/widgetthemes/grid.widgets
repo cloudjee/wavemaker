@@ -1,18 +1,18 @@
 {
 
-	label1: ["wm.Label", {caption: "wm.DojoGrid", width: "100%"}],
+	label1: ["wm.Label", {styles: {backgroundColor: "black", color: "white"}, caption: "wm.DojoGrid", width: "100%"}],
 	grid: ["wm.DojoGrid", {selectFirstRow: true, width: "100%", height: "100%", columns: [{show:true, title: "Day", id: "name", width: "100%"}, {show:true, title: "Day Number", id: "dataValue", width: "60px"}]}, {}, {
 	      binding: ["wm.Binding", {}, {}, {
 	      	       wird: ["wm.Wire", {source: "variable", targetProperty: "dataSet"}]
 	      }]
         }],
-	label2: ["wm.Label", {caption: "wm.List", width: "100%"}],
+	label2: ["wm.Label", {styles: {backgroundColor: "black", color: "white"}, caption: "wm.List", width: "100%"}],
 	list: ["wm.List", {selectFirstRow: true, width: "100%", height: "100%",_isDesignLoaded:false,_designer:false, columns: [{show:true, title: "Day", id: "name", width: "100%"}, {show:true, title: "Day Number", id: "dataValue", width: "60px"}]}, {}, {
 	      binding: ["wm.Binding", {}, {}, {
 	      	       wird: ["wm.Wire", {source: "variable", targetProperty: "dataSet"}]
 	      }]
         }],
-	label3: ["wm.Label", {caption: "Mobile List Style", width: "100%"}],
+	label3: ["wm.Label", {styles: {backgroundColor: "black", color: "white"}, caption: "Mobile List Style", width: "100%"}],
 	mlist: ["wm.List", {selectFirstRow: true, styleAsGrid: false, noHeader:1, width: "100%", height: "100%",_isDesignLoaded:false,_designer:false, columns: [{show:true, title: "Day", id: "name", width: "100%"}, {show:true, title: "Day Number", id: "dataValue", width: "60px"}]}, {}, {
 	      binding: ["wm.Binding", {}, {}, {
 	      	       wird: ["wm.Wire", {source: "variable", targetProperty: "dataSet"}]
