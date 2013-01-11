@@ -17,8 +17,7 @@ package com.wavemaker.tools.project.upgrade.six_dot_six_dot_zero_dot_M2;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.bind.JAXBException;
 
@@ -48,8 +47,6 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	private File secXmlFile = null;
 
 	private String content = null;
-	
-	private Beans acegiBeans = null;
 	
 	private UpgradeInfo upgradeInfo = null;
 
@@ -113,7 +110,12 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
 	private static final String SECURITY_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
 
-	@Override
+    private static final String SPACES_16 = "                ";
+
+    private static final String OBJECT_DEFINITION_SOURCE_PREFIX = "\n" + SPACES_16 + "CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON\n" + SPACES_16
+            + "PATTERN_TYPE_APACHE_ANT\n";
+
+    @Override
 	/**
 	 * Determines previous security provider type.
 	 * Sends off to provider specific function for upgrade. 
@@ -125,49 +127,53 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		if(!(content.length()>1)){
 			throw new ConfigurationException("Problem getting project-security.xml file !!!");
 		} 		
-		
+
 		if(!(content.contains(AUTH_MAN))){
 			//security was never enabled, this is the mini config 
 			this.setNoSecurityConfig();
 			return;
 		}
-		this.acegiBeans = getAcegiSpringBeans();
-		Boolean securityEnabled = this.isSecurityEnabled();
-		Boolean usingLoginPage = this.isUsingLoginHtml();
+		Beans acegiBeans = getAcegiSpringBeans();
+        Beans beans = getNewSecuritySpringBeansFromTemplate();
+		//Boolean securityEnabled = this.isSecurityEnabled();
+		//Boolean usingLoginPage = this.isUsingLoginHtml();
 		try{
-		//ldap also contains a DAO ref, check for ldap first
-		if(content.contains(LDAP_PROVIDER)){
-			if(content.contains(ROLE_PROVIDER)){
-				int providerIndex = content.indexOf(ROLE_PROVIDER);
-				if(content.indexOf("<value>LDAP</value>",providerIndex)>1){
-					this.ldapUpgrade(securityEnabled,usingLoginPage);
-				}
-				else if(content.indexOf("<value>Database</value>",providerIndex)>1){
-					this.ldapWithDbUpgrade(securityEnabled,usingLoginPage);
-				}
-			}
-			else{
-				throw new ConfigurationException("Unable to determine role provider !!!");
-			}
-		}
-		else if(content.contains(DAO_PROVIDER)){
-			if(content.contains(USER_DETAILS_SVC)){
-				int userSvcIndx = content.indexOf(USER_DETAILS_SVC);
-				if(content.indexOf("<ref bean=\"inMemoryDaoImpl\"/>",userSvcIndx)>1){
-					this.demoUpgrade(securityEnabled,usingLoginPage);
-				}
-				else if(content.indexOf("<ref bean=\"jdbcDaoImpl\"/>",userSvcIndx)>1){
-					this.databaseUpgrade(securityEnabled,usingLoginPage);
-				}
-			}
-			else{
-				throw new ConfigurationException("Unable to determine DAO provider type !!!");
-			}
-		}
-		else{
-			this.setNoSecurityConfig();
-			throw new ConfigurationException("Unable to determine authentication provider");
-		}
+            //ldap also contains a DAO ref, check for ldap first
+            if(content.contains(LDAP_PROVIDER)){
+                if(content.contains(ROLE_PROVIDER)){
+                    int providerIndex = content.indexOf(ROLE_PROVIDER);
+                    if(content.indexOf("<value>LDAP</value>",providerIndex)>1){
+                        this.ldapUpgrade(acegiBeans, beans);
+                    }
+                    else if(content.indexOf("<value>Database</value>",providerIndex)>1){
+                        this.ldapWithDbUpgrade(acegiBeans, beans);
+                    }
+                }
+                else{
+                    throw new ConfigurationException("Unable to determine role provider !!!");
+                }
+            }
+            else if(content.contains(DAO_PROVIDER)){
+                if(content.contains(USER_DETAILS_SVC)){
+                    int userSvcIndx = content.indexOf(USER_DETAILS_SVC);
+                    if(content.indexOf("<ref bean=\"inMemoryDaoImpl\"/>",userSvcIndx)>1){
+                        this.demoUpgrade(acegiBeans, beans);
+                    }
+                    else if(content.indexOf("<ref bean=\"jdbcDaoImpl\"/>",userSvcIndx)>1){
+                        this.databaseUpgrade(acegiBeans, beans);
+                    }
+                }
+                else{
+                    throw new ConfigurationException("Unable to determine DAO provider type !!!");
+                }
+            }
+            else{
+                this.setNoSecurityConfig();
+                throw new ConfigurationException("Unable to determine authentication provider");
+            }
+
+            convertSecurityByUrlPattern(acegiBeans, beans);
+            saveSecuritySpringBeans(beans);
 		} catch(ConfigurationException e){
 			createAcegiBackup(project);
 			this.setNoSecurityConfig();			
@@ -177,30 +183,76 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 	}
 
+    private void convertSecurityByUrlPattern(Beans acegiBeans, Beans beans) {
+        Map<String, List<String>> urlMap = getObjectDefinitionSource(acegiBeans);
+        urlMap = convertAuth(urlMap);
+        SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
+    }
+
+    private Map<String, List<String>> convertAuth(Map<String, List<String>> urlMap) {
+        Map<String, List<String>> newUrlMap = new LinkedHashMap<String, List<String>>();
+        for (Map.Entry<String, List<String>> e : urlMap.entrySet()) {
+            List<String> authList = e.getValue();
+            List<String> newAuthList = new ArrayList<String>();
+            for (String auth : authList) {
+                String newAuth;
+                if (auth.equals("IS_AUTHENTICATED_FULLY")) {
+                    newAuth = "isAuthenticated()";
+                } else if (auth.equals("IS_AUTHENTICATED_ANONYMOUSLY")) {
+                    newAuth = "permitAll";
+                } else {
+                    newAuth = auth;
+                }
+                newAuthList.add(newAuth);
+            }
+            newUrlMap.put(e.getKey(), newAuthList);
+        }
+
+        return newUrlMap;
+    }
 
 	private void createAcegiBackup(Project project) {
 		File backupFile = project.getRootFolder().getFolder("export").getFile(BACKUP_FILE_NAME);
 		backupFile.createIfMissing();
 		backupFile.getContent().write(content);
 		System.out.println("Acegi version of project-security.xml has been backed up as: " + BACKUP_FILE_NAME);
-		this.upgradeInfo.addMessage("Acegi version of project-security.xml has been backed up as: export/" + BACKUP_FILE_NAME );	
-		
+		this.upgradeInfo.addMessage("Acegi version of project-security.xml has been backed up as: export/" + BACKUP_FILE_NAME );
 	}
 
+	private void databaseUpgrade(Beans acegiBeans, Beans beans) {
+        Bean daoBean = beans.getBeanById("jdbcDaoImpl");
+        Bean daoBean_acegi = acegiBeans.getBeanById("jdbcDaoImpl");
 
-	private void databaseUpgrade(boolean securityEnabled, boolean usingLoginPage) {
-		// TODO Auto-generated method stub
+        Property dataSource = daoBean.getProperty("dataSource");
+        Property dataSource_acegi = daoBean_acegi.getProperty("dataSource");
+        dataSource.getRefElement().setBean(dataSource_acegi.getRefElement().getBean());
 
+        Property rolePrefix = daoBean.getProperty("rolePrefix");
+        Property rolePrefix_acegi = daoBean_acegi.getProperty("rolePrefix");
+        rolePrefix.setValue(rolePrefix_acegi.getValue());
+
+        Property usersByUsernameQuery = daoBean.getProperty("usersByUsernameQuery");
+        Property usersByUsernameQuery_acegi = daoBean_acegi.getProperty("usersByUsernameQuery");
+        usersByUsernameQuery.getValueElement().getContent().set(0,usersByUsernameQuery_acegi.getValueElement().getContent().get(0));
+
+        Property authoritiesByUsernameQuery = daoBean.getProperty("authoritiesByUsernameQuery");
+        Property authoritiesByUsernameQuery_acegi = daoBean_acegi.getProperty("authoritiesByUsernameQuery");
+        authoritiesByUsernameQuery.getValueElement().getContent().set(0, authoritiesByUsernameQuery_acegi.getValueElement().getContent().get(0));
+
+        Property usernameBasedPrimaryKey = daoBean.getProperty("usernameBasedPrimaryKey");
+        Property usernameBasedPrimaryKey_acegi = daoBean_acegi.getProperty("usernameBasedPrimaryKey");
+        usernameBasedPrimaryKey.getValueElement().getContent().set(0, usernameBasedPrimaryKey_acegi.getValueElement().getContent().get(0));
+
+        SecuritySpringSupport.setDataSourceType(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_DB);
 	}
 
 	/**
 	 * See SecurityConfigService.configDemo
 	 */
-	private void demoUpgrade(boolean enforceSecurity, boolean enforceIndexHtml) {
-		Beans beans = getNewSecuritySpringBeansFromTemplate();
-		SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
+	private void demoUpgrade(Beans acegiBeans, Beans beans/*, boolean enforceSecurity, boolean enforceIndexHtml*/) {
+		//SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
 		SecuritySpringSupport.setRequiresChannel(beans, "http", "8443");
-		List<UserService.User> userList =  getAcegiDemoUsers();
+		List<UserService.User> userList =  getAcegiDemoUsers(acegiBeans);
 		if(userList.isEmpty()){
 			System.out.print("No Users found !!! Adding demo user");
 			UserService.User demoUser = new UserService.User();
@@ -210,9 +262,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 		SecurityXmlSupport.setUserSvcUsers(beans, userList);
 	    SecuritySpringSupport.resetJdbcDaoImpl(beans);
-		saveSecuritySpringBeans(beans);
 	}
-
 
 	private void saveSecuritySpringBeans(Beans beans) {
 		try {
@@ -224,15 +274,14 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 			e.printStackTrace();
 			throw new ConfigurationException(e.getMessage());
 		}
-
 	}
 
-	private void ldapWithDbUpgrade(boolean securityEnabled, boolean usingLoginPage) {
-		Bean ldapDirContextBean = this.acegiBeans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
+	private void ldapWithDbUpgrade(Beans acegiBeans, Beans beans) {
+		Bean ldapDirContextBean = acegiBeans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
 		ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
         String ldapUrl = arg.getValue();
         
-        Bean ldapAuthProviderBean =  this.acegiBeans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+        Bean ldapAuthProviderBean =  acegiBeans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
         List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
         
         String userDnPattern = "";
@@ -283,22 +332,19 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                 }
             }
         }
-            
-		Beans beans = getNewSecuritySpringBeansFromTemplate();
+
 		SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB);     
         SecuritySpringSupport.updateLdapAuthProvider(beans, ldapUrl, "", userDnPattern, isGroupSearchDisabled, groupSearchBase,
                 groupRoleAttribute, groupSearchFilter, roleModel, roleEntity, roleTable, roleUsername, roleProperty, roleQuery, roleProvider);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
-		saveSecuritySpringBeans(beans);
 	}
 
-
-	private void ldapUpgrade(boolean securityEnabled, boolean usingLoginPage) {
-		Bean ldapDirContextBean = this.acegiBeans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
+	private void ldapUpgrade(Beans acegiBeans, Beans beans) {
+		Bean ldapDirContextBean = acegiBeans.getBeanById(LDAP_DIR_CONTEXT_FACTORY_BEAN_ID);
 		ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
         String ldapUrl = arg.getValue();
         
-        Bean ldapAuthProviderBean =  this.acegiBeans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
+        Bean ldapAuthProviderBean =  acegiBeans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
         List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
         
         String userDnPattern = "";
@@ -329,15 +375,12 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                 }
             }
         }
-            
-		Beans beans = getNewSecuritySpringBeansFromTemplate();
+
 		SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_LDAP);     
         SecuritySpringSupport.updateLdapAuthProvider(beans, ldapUrl, userDnPattern, isGroupSearchDisabled, groupSearchBase,
             groupRoleAttribute, groupSearchFilter);
         SecuritySpringSupport.resetJdbcDaoImpl(beans);
-		saveSecuritySpringBeans(beans);
 	}
-
 
 	private boolean isUsingLoginHtml() {
 		if(content.contains(PROTECTED_INDEX) && content.contains(PROTECTED_ROOT)){
@@ -359,7 +402,6 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 		return false;
 	}
-  
 
 	private Beans getNewSecuritySpringBeansFromTemplate() {
 		ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CLASSPATH);
@@ -393,9 +435,9 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		return beans;
 	}
 		
-	List<UserService.User> getAcegiDemoUsers() {
+	List<UserService.User> getAcegiDemoUsers(Beans acegiBeans) {
 		List<UserService.User> demoUsers = new ArrayList<UserService.User>();
-		Bean bean = this.acegiBeans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
+		Bean bean = acegiBeans.getBeanById(IN_MEMORY_DAO_IMPL_BEAN_ID);
 		Property property = bean.getProperty(USER_MAP_PROPERTY);
 		Value valueElement = property.getValueElement();
 		List<String> content = valueElement.getContent();
@@ -436,9 +478,8 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}    
 		return demoUsers;
 	}
-	
-	
-    private String getPropertyValueString(Bean bean, String propertyName) {
+
+    private static String getPropertyValueString(Bean bean, String propertyName) {
         Property property = bean.getProperty(propertyName);
         if (property == null) {
             return null;
@@ -449,5 +490,28 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
         }else{
         	return null;
         }        
+    }
+
+    static Map<String, List<String>> getObjectDefinitionSource(Beans beans) {
+        Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
+        Bean bean = beans.getBeanById("filterSecurityInterceptor");
+        String odspFull = getPropertyValueString(bean, "objectDefinitionSource");
+        String odspBody = "";
+        if (odspFull.startsWith(OBJECT_DEFINITION_SOURCE_PREFIX)) {
+            odspBody = odspFull.substring(OBJECT_DEFINITION_SOURCE_PREFIX.length()).trim();
+        }
+        String delim = "[=,\n]";
+        String[] odspArray = odspBody.split(delim);
+        List<String> odspList = new ArrayList<String>(Arrays.asList(odspArray));
+        Iterator<String> itr = odspList.iterator();
+        if (itr != null) {
+            while (itr.hasNext()) {
+                String key = itr.next().trim();
+                List<String> authzList = new ArrayList<String>();
+                authzList.add(itr.next().trim());
+                urlMap.put(key, authzList);
+            }
+        }
+        return urlMap;
     }
 }
