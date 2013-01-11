@@ -1,6 +1,6 @@
 /* GROUP: Standard Tab Button */
-.wm_template .wmtablayers-tab,
-.wm_template button.wmtablayers-verticaltab {
+.wm_template .wmtablayers .wmtablayers-tab,
+.wm_template .wmtablayers button.wmtablayers-verticaltab {
 	font-family: sans-serif; 
 	color: #FFFFFF; 
 	font-weight: bold;
@@ -9,7 +9,7 @@
     background-image: none;
     filter: none;
 }
-.wm_template .wmtablayers-tab {
+.wm_template .wmtablayers .wmtablayers-tab {
 
     height: 12px; 
     margin-left: 8px; 
@@ -24,7 +24,7 @@
 	border-left-color:#444444; 
 	border-right-color: #444444;
 }
-.dj_ff .wm_template .wmtablayers-tab {
+.dj_ff .wm_template .wmtablayers .wmtablayers-tab {
        box-shadow: 0 0 0 black !important; /* THEMER: HIDE */
 }
 /* GROUP: First Tab */
@@ -34,73 +34,73 @@
 
 
 /* GROUP: Standard Selected Tab Button */
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected,
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected:hover,
-.wm_template .wmtablayers-tab.wmtablayers-selected,
-.wm_template .wmtablayers-tab.wmtablayers-selected:hover {
+.wm_template .wmtablayers .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_template .wmtablayers .wmtablayers-verticaltab.wmtablayers-selected:hover,
+.wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected,
+.wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected:hover {
     background-color: red;
     background-image: none;
     filter: none;
 }
-.wm_template .wmtablayers-tab.wmtablayers-selected,
-.wm_template .wmtablayers-tab.wmtablayers-selected:hover {
+.wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected,
+.wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected:hover {
     box-shadow: -1px 1px 1px #444444; 
     top: 2px;
     /* NOTE: To create different values of top for different browsers, use
-     .dj_ie .wm_template .wmtablayers-tab.wmtablayers-selected, 
-     .dj_ff .wm_template .wmtablayers-tab.wmtablayers-selected,
-     .dj_webkit .wm_template .wmtablayers-tab.wmtablayers-selected */
+     .dj_ie .wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected, 
+     .dj_ff .wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected,
+     .dj_webkit .wm_template .wmtablayers .wmtablayers-tab.wmtablayers-selected */
 }
 
 /* GROUP: Tab Button with Focus */
-.wm_template .wmtablayers-verticaltab:focus,
-.wm_template .wmtablayers-tab:focus {
+.wm_template .wmtablayers .wmtablayers-verticaltab:focus,
+.wm_template .wmtablayers .wmtablayers-tab:focus {
    outline-width: 0;
 }
 
 /* GROUP: Tab Button with Hover */
-.wm_template .wmtablayers-tab:hover,
-.wm_template .wmtablayers-verticaltab:hover {
+.wm_template .wmtablayers .wmtablayers-tab:hover,
+.wm_template .wmtablayers .wmtablayers-verticaltab:hover {
 	color: #FFFFFF; 
 	background-color: #444444; 
 	background-image: none;
         filter: none;
 }
-.wm_template .wmtablayers-tab:hover {
+.wm_template .wmtablayers .wmtablayers-tab:hover {
     box-shadow: inherit;
 }
 
 /* GROUP: Tab Button with Mouse Down */
 /* NOTE: This does not appear to work in firefox at design time but is fine at runtime */
-.wm_template .wmtablayers-tab:active,
-.wm_template .wmtablayers-verticaltab:active,
-.wm_template .wmtablayers-tab:active:.focus,
-.wm_template .wmtablayers-verticaltab:active:focus {
+.wm_template .wmtablayers .wmtablayers-tab:active,
+.wm_template .wmtablayers .wmtablayers-verticaltab:active,
+.wm_template .wmtablayers .wmtablayers-tab:active:.focus,
+.wm_template .wmtablayers .wmtablayers-verticaltab:active:focus {
 color: #FFFFFF; 
 background-color: #444444; 
 background-image: none;
 filter: none;
 }
-.wm_template .wmtablayers-tab:active,
-.wm_template .wmtablayers-tab:active:focus {
+.wm_template .wmtablayers .wmtablayers-tab:active,
+.wm_template .wmtablayers .wmtablayers-tab:active:focus {
     box-shadow: 0px 0px 0px #444444; 
 }
 
 
 /* GROUP: Layer Borders */
-.wm_template  .wmTabLayers-client > .wmlayer {
+.wm_template .wmtablayers  .wmTabLayers-client > .wmlayer {
     border-radius: 4px !important;
 }
 
 /* GROUP: Tab Bar */
-.wm_template div.wmtablayers-tabbar {
+.wm_template .wmtablayers div.wmtablayers-tabbar {
    background: transparent;
 }
 
 
 
 /* GROUP: Vertical Tab Buttons */
-.wm_template button.wmtablayers-verticaltab {
+.wm_template .wmtablayers button.wmtablayers-verticaltab {
    font-size: 9; 
     width: 95%;
     margin-left: 5%;
@@ -117,23 +117,23 @@ filter: none;
 }
 
 /* GROUP: First Vertical Tab */
-.wm_template .wmtablayers-verticaltab:first-child {
+.wm_template .wmtablayers .wmtablayers-verticaltab:first-child {
     margin-top: 8px;
 }
 
 /* GROUP: Vertical Tab Buttons with Hover */
-.wm_template .wmtablayers-verticaltab:hover {
+.wm_template .wmtablayers .wmtablayers-verticaltab:hover {
     box-shadow: inherit;
 }
 
 /* GROUP: Vertical Selected Tab Buttons */
-.wm_template .wmtablayers-verticaltab.wmtablayers-selected {
+.wm_template .wmtablayers .wmtablayers-verticaltab.wmtablayers-selected {
     box-shadow: inherit;
 /*  border: solid 1px black; // THEMER: DISABLED */
 }
 
 /* GROUP: Vertical Tab with Mouse Down */
-.wm_template .wmtablayers-verticaltab:active,
-.wm_template .wmtablayers-verticaltab:active:focus {
+.wm_template .wmtablayers .wmtablayers-verticaltab:active,
+.wm_template .wmtablayers .wmtablayers-verticaltab:active:focus {
     box-shadow: 0px 0px 0px #444444; 
 }

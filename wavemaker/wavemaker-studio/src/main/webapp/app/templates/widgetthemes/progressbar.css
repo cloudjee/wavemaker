@@ -6,7 +6,7 @@
 }
 
 
-.wm_template div .dijitProgressBarLabel {
+.wm_template .wmprogressbar .dijitProgressBarLabel {
 		font-family: sans-serif;
 		font-size: 12px;
 		color: #FFFFFF;
