@@ -333,10 +333,10 @@ dojo.declare("wm.PageContainer", wm.Control, {
     generateStateUrl: function(stateObj) {
         if (this.page && this._pageName !== this._initialPageName) {
             stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
-            if (this.page.generateStateUrl) {
-                this.page.generateStateUrl(stateObj);
-            }
         }
+        if (this.page.generateStateUrl) {
+            this.page.generateStateUrl(stateObj);
+        }    
     },
     forEachWidget: function(inFunc) {
         if (this.page) return this.page.forEachWidget(inFunc);
