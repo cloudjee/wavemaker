@@ -135,8 +135,8 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 		Beans acegiBeans = getAcegiSpringBeans();
         Beans beans = getNewSecuritySpringBeansFromTemplate();
-		Boolean securityEnabled = this.isSecurityEnabled();
-		Boolean usingLoginPage = this.isUsingLoginHtml();
+		//Boolean securityEnabled = this.isSecurityEnabled();
+		//Boolean usingLoginPage = this.isUsingLoginHtml();
 		try{
             //ldap also contains a DAO ref, check for ldap first
             if(content.contains(LDAP_PROVIDER)){
@@ -157,7 +157,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                 if(content.contains(USER_DETAILS_SVC)){
                     int userSvcIndx = content.indexOf(USER_DETAILS_SVC);
                     if(content.indexOf("<ref bean=\"inMemoryDaoImpl\"/>",userSvcIndx)>1){
-                        this.demoUpgrade(acegiBeans);
+                        this.demoUpgrade(acegiBeans, beans);
                     }
                     else if(content.indexOf("<ref bean=\"jdbcDaoImpl\"/>",userSvcIndx)>1){
                         this.databaseUpgrade(acegiBeans, beans);
@@ -249,8 +249,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	/**
 	 * See SecurityConfigService.configDemo
 	 */
-	private void demoUpgrade(Beans acegiBeans/*, boolean enforceSecurity, boolean enforceIndexHtml*/) {
-		Beans beans = getNewSecuritySpringBeansFromTemplate();
+	private void demoUpgrade(Beans acegiBeans, Beans beans/*, boolean enforceSecurity, boolean enforceIndexHtml*/) {
 		//SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
 		SecuritySpringSupport.setRequiresChannel(beans, "http", "8443");
 		List<UserService.User> userList =  getAcegiDemoUsers(acegiBeans);
