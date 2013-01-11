@@ -611,7 +611,7 @@
          layoutKind: "left-to-right",
          width: "100%",
          height: "30px", /* This height is ignored; we call setBestHeight after we're done */
-         verticalAlign: "middle",
+         verticalAlign: "top",
          horizontalAlign: "left"});
 
      },
