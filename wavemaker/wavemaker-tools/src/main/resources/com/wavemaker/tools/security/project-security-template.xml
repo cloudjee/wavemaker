@@ -106,6 +106,9 @@
         <property name="authoritiesByUsernameQuery">
             <value>select u.userid, ur.role from user u, user_roles ur where u.id = ur.userid and u.userid = ?</value>
         </property>
+		<property name="usernameBasedPrimaryKey">
+            <value>true</value>
+        </property>
     </bean>
 
 	<bean id="dummyDataSource"

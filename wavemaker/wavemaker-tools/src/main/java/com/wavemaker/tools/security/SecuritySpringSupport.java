@@ -61,7 +61,7 @@ public class SecuritySpringSupport {
     
     static final String AUTHENTICATON_MANAGER_BEAN_ID_DEMO = "authenticationManagerDemo";
     
-    static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
     
     public static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP = "authenticationManagerLDAP";   
     
@@ -221,7 +221,7 @@ public class SecuritySpringSupport {
         return getSecurityResourceAttrs(beans, "/index.html").contains(IS_AUTHENTICATED_FULLY);
     }
 
-    static void setSecurityInterceptUrls(Beans beans, Map<String, List<String>> urlMap) {
+    public static void setSecurityInterceptUrls(Beans beans, Map<String, List<String>> urlMap) {
         for (String url : urlMap.keySet()) {
             String access = "";
             Http.InterceptUrl iurl = new Http.InterceptUrl();
@@ -239,7 +239,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static public void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
+    public static void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
         if (enforceSecurity) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
@@ -381,7 +381,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static void setDataSourceType(Beans beans, String authMgrName) {
+    public static void setDataSourceType(Beans beans, String authMgrName) {
         Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
         Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
         property.setRef(authMgrName);
