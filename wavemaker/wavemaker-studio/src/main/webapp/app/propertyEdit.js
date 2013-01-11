@@ -1625,6 +1625,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
                 studio.inspector.beginHelp(e.caption, e.domNode, this.inspected.declaredClass);
             });
             this.editors[styleProp.name] = e;
+            e.captionPosition = "left"; // theme sometimes clobbers studio's behaviors, force it to left
         }));
         form.setBestHeight();
 
@@ -3199,7 +3200,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
     captionPosition: "left",
     height: "24px",
     padding: "0",
-    
+    singleLine: false,
     _createEditor: function() {
         var e = this.inherited(arguments);
         this.allWidthEditor = new wm.Number({
@@ -3298,6 +3299,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             this.setHeight("96px");            
             if (this.parent.layoutKind == "left-to-right") {
                 this.parent.setHeight("96px");
+                this.updatePropertyPanelHeights();                
             }
         } else {
             this.toggleButton.setClicked(false);        
@@ -3311,6 +3313,15 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             }            
         }
         this._inSetEditor = false;        
+    },
+    updatePropertyPanelHeights: function() {
+        var parent = this.isAncestorInstanceOf(wm.prop.StyleEditor);
+        if (parent) {
+            var height = parent.tabs.getActiveLayer().getPreferredFitToContentHeight();
+            parent.tabs.setHeight(height + "px");
+            parent.setBestHeight();
+            parent.parent.setBestHeight();
+        }
     },
     getEditorValue: function() {
         return this.dataValue; // this value won't mean much if border colors/widths don't match
@@ -3333,6 +3344,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
                 this.parent.setHeight("24px");
             }            
         }    
+        this.updatePropertyPanelHeights();                
     },
     toggleClicked: function() {
         this.changed();
