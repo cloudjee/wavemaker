@@ -278,7 +278,7 @@ div .StudioGrid td,
     border-radius: 0px 0px 4px 4px;
     border-color: #959DAB;
 }
-.StudioTabs.StudioDarkLayers.StudioDarkerLayers .wmlayer {
+.StudioTabs.StudioDarkLayers.StudioDarkerLayers > div > .wmlayer {
     -webkit-border-top-left-radius: 0px;
     border-top-left-radius: 0px;
 }

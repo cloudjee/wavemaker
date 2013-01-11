@@ -39,6 +39,6 @@
 .WidgetThemerPage .link .wmSizeNode {
     text-decoration: underline;
     color: white;
-    font-weight: bold;
+    font-weight: normal;
     cursor: pointer;
 }

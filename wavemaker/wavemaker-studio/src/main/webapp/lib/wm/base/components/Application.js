@@ -312,6 +312,8 @@ dojo.declare("wm.Application", wm.Component, {
         var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
         if (this.themeName) dojo.removeClass(node, this.themeName);
 
+        if (this._isDesignLoaded) studio.themeChanged(inTheme);
+
         if (this._isDesignLoaded && !isInit) {
             try {
                 // write before we change the prototype so defaults are left blank

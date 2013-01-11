@@ -1,0 +1,7 @@
+{
+   container1: ["wm.Container", {width: "100%", height: "100%", padding: "20", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+     panel1: ["wm.Panel", {width: "200px", height: "200px", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+       label: ["wm.Label", {caption: "This is how text will look", width: "100%", height: "100%", singleLine: false}]
+     }]
+   }]
+}

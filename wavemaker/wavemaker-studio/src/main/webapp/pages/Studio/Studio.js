@@ -698,7 +698,7 @@ dojo.declare("Studio", wm.Page, {
         palette.clearSection(caption);
         for (var i = 0, current = studio.page ? studio.page.declaredClass : "", p; (p = list[i]); i++)
             if (current != p) {
-                var n = p.toLowerCase() + "Page", props = { name: n, pageName: p }
+                var n = p.toLowerCase() + "Page", props = { name: n, pageName: p };
                 palette.addItem(caption, n, desc, image, "wm.PageContainer", "wm.base.widget.PageContainer", props);
             }
     },
@@ -718,6 +718,23 @@ dojo.declare("Studio", wm.Page, {
                 palette.addItem(caption, d.caption + " (" + i + ")", desc, image, "wm.LivePanel", "wm.base.components.DataModel", {name: name, liveDataName: liveDataName, liveSource: d.type});
             });
         });
+    },
+    themeChanged: function(inThemePackage) {
+        var palette = studio.palette;
+        try {
+            palette.clearSection("Theme Widgets");
+            var widgets = wm.load(dojo.moduleUrl(inThemePackage) + "packages.js");
+            if (widgets) {
+                widgets = eval("[" + widgets + "]");
+                if (widgets.length) {
+                    palette.makeGroup("Theme Widgets", 1);
+                }
+                installPackages(widgets);
+                if (widgets.length) {
+                    studio.palette.findItemByName("Theme Widgets").setOpen(true);
+                }
+            }
+        } catch(e) {}
     },
     /* if isCloud, this will return -1 (true but needs to be updated), 0 (false, redeploy), or 1 (true)
      * if not isCloud this will return true or false (redeploy)

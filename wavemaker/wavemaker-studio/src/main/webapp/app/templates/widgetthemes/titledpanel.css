@@ -1,5 +1,5 @@
 /* GROUP: Container */
-.wm_template .wmFancyPanel-containerWidget {
+.wm_template .wmfancypanel .wmFancyPanel-containerWidget {
     border-top-left-radius: 0px !important; /* THEMER: HIDE */
     border-top-right-radius: 0px !important;/* THEMER: HIDE */
     -webkit-border-top-left-radius: 0px !important;/* THEMER: HIDE */
@@ -14,7 +14,7 @@
 
 
 /* GROUP: Panel Title */
-.wm_template .wmFancyPanel-labelWidget {
+.wm_template .wmfancypanel .wmFancyPanel-labelWidget {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 
