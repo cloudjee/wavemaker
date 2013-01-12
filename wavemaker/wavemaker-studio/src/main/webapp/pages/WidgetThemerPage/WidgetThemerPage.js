@@ -59,7 +59,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             category: false,            
             templateFile: "accordions",
             classList: [{dataValue: "wm.AccordionLayers"}],
-            customWidgetAddClass: "wmaccordions"            
+            customWidgetAddClass: "wmaccordion"            
         },
         {
             name: "Titled Panel",
@@ -110,7 +110,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             category: false,                        
             templateFile: "grid",
             classList: [{dataValue: "wm.DojoGrid"},
-                        {dataValue: "wm.List"}]
+                        {dataValue: "wm.List"}],
+            customWidgetAddClass: "GridListStyle"
             
         },    
         {
@@ -170,7 +171,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             name: "Menus",
             category: false,                        
             templateFile: "menus",
-            classList: [{dataValue: "wm.DojoMenu"}]            
+            classList: [{dataValue: "wm.DojoMenu"}],
+            customWidgetAddClass: "dojoMenu"
         },
         {
             name: "Combobox Dropdowns",
@@ -536,9 +538,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + templateFile+ ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
                     var replaceName = item.getValue("customWidgetAddClass");
                     if (itemData.parentName && replaceName) {
-                        var reg = new RegExp("\\." + replaceName, "g");
+                        var reg = new RegExp("\\." + replaceName +"(,|\\.|\\s+)", "g");                        
                         this.widgetCssFiles[this.currentWidgetTemplateFile] = 
-                            this.widgetCssFiles[this.currentWidgetTemplateFile].replace(reg, "." + itemData.name + "." + replaceName);
+                            this.widgetCssFiles[this.currentWidgetTemplateFile].replace(reg, "." + itemData.name + "." + replaceName + "$1").replace(/\/\*\s*THEMER\: DO NOT SUBCLASS START(.|\n)*?THEMER\: DO NOT SUBCLASS END\s*\*\//gm,"");
                     }
                 }
             }
@@ -898,7 +900,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 var name = this.widgetGrid.selectedItem.getValue("name");
                 var customWidgets = [];
                 var removedWidget;
-                
+                delete this.widgetCssFiles[name];
                 /* STEP 1: Remove the item from customWidgets and the Grid */
                 dojo.forEach(this.customWidgets, function(customWidget) {
                     if (customWidget.name != name) customWidgets.push(customWidget);
@@ -1270,9 +1272,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }));               
             this.demoPanel.createComponents(this.sampleWidgets);
             
+            var widgetTemplateFile = this.widgetGrid.selectedItem.getValue("templateFile");
             var selectedItem = this.widgetGrid.selectedItem.getData();
             if (selectedItem.parentName) {                
                 var parentItem = this.templateListVar.query({name: selectedItem.parentName}).getItem(0);                                
+                widgetTemplateFile = parentItem.getValue("templateFile");
                 dojo.query("." + parentItem.getValue("customWidgetAddClass"), this.demoPanel.domNode.id).addClass(selectedItem.name);
                 var defaultProps = this.getCurrentCustomWidgetItem().customProps;
                 var widgetClassList = parentItem.getValue("classList").map(function(inItem) {
@@ -1293,7 +1297,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             }
             
             /* Custom hacks needed to get the sample widgets to work */
-            switch(this.widgetGrid.selectedItem.getValue("templateFile")) {
+            switch(widgetTemplateFile) {
                 case "grid":
                     this.demoPanel.c$[1].setDataSet(this.sampleDataSet);
                     this.demoPanel.c$[3].setDataSet(this.sampleDataSet);                
