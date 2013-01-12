@@ -432,7 +432,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
             }
         } else {
             result = this.selectedItem.getData();
-            if (!dojo.isArray(result)) result = [result];
+            if (result !== null && !dojo.isArray(result)) result = [result];
         }
         if (!this._multiSelect && result) {
             var result = result[0];
