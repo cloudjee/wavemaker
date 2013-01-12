@@ -25,7 +25,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         },
         {
             name: "SubmitButton",
-            parentName: "Buttons"
+            parentName: "Buttons",
+            classList: [{dataValue: "wm.Button"}]
         }
     ],
     templateFileData: [
@@ -548,19 +549,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         this.removeClassButton.setDisabled(!itemData.parentName);
         
         var currentClassList = this.currentClassList = [];
+        inSender.selectedItem.getValue("classList").forEach(function(inItem) {
+            currentClassList.push(inItem.getValue("dataValue"));
+        });
+        
         if (itemData.parentName) {
             var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
             this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + item.getValue("templateFile") + ".widgets"));
-            item.getValue("classList").forEach(function(inItem) {
-                currentClassList.push(inItem.getValue("dataValue"));
-            });
         } else {
             this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".widgets"));
-            inSender.selectedItem.getValue("classList").forEach(function(inItem) {
-                currentClassList.push(inItem.getValue("dataValue"));
-            });
         }
-        
+
         this.regenerateDemoPanel();
         this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);
 
@@ -877,7 +876,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (this.templateListVar.query({name: newClassName}).getCount() > 0) return app.alert("That name is already taken, please select a new name");
         this.customClassDialog.hide();
         /* STEP 1: Update custom Widgets and write it to the file system */
-        this.customWidgets.push({name: newClassName, parentName: parentClassName});
+        this.customWidgets.push({name: newClassName, parentName: parentClassName, classList: this.subclassCheckboxSet.getDataValue()});
         studio.resourceManagerService.requestAsync("writeFile", 
             ["/common/themes/" + this.currentThemeName + "/customwidgets.json", 
             dojo.toJson(this.customWidgets,true)]).then(dojo.hitch(this, function() {
@@ -1113,18 +1112,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         var packages = [];
         dojo.forEach(this.customWidgets, function(customWidget) {
             if (customWidget.category) return;
-            var parentItem = this.templateListVar.query({name: customWidget.parentName}).getItem(0);                                
-            var parentClassNames = parentItem.getValue("classList").map(function(item) {
-                return item.getValue("dataValue");
+            var classNames = dojo.map(customWidget.classList, function(item) {
+                return item.dataValue;
             });
-            dojo.forEach(parentClassNames, function(parentClassName) {
+            dojo.forEach(classNames, function(className) {
                 var parentPaletteNode = studio.palette.findNodeByCallback(function(n) {
-                    if (n.data.klass == parentClassName) return true;
+                    if (n.data.klass == className) return true;
                 });
                 var elements = [];
                 elements.push("'Theme Widgets'");                
-                elements.push("'" + (parentClassNames.length == 1 ? customWidget.name : customWidget.name + wm.capitalize(parentClassName.replace(/^.*\./,""))) + "'");
-                elements.push("'" + parentClassName + "'"); 
+                elements.push("'" + (classNames.length == 1 ? customWidget.name : customWidget.name + wm.capitalize(className.replace(/^.*\./,""))) + "'");
+                elements.push("'" + className + "'"); 
                 elements.push("'" + parentPaletteNode.module + "'");
                 elements.push("'" + parentPaletteNode.image + "'");
                 elements.push("''");

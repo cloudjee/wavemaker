@@ -13,15 +13,26 @@ WidgetThemerPage.widgets = {
 	templateListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],
 	parentClassListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],	
     themeListVar: ["wm.Variable", {type: "themeListType"}],
+    currentClassListVar: ["wm.Variable", {type: "StringData", isList:1},{}, {
+                binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"source":"parentClassSelect.selectedItem.classList","targetProperty":"dataSet"}, {}]
+        		}]    
+    }],
     fontFaceVar: ["wm.Variable", {type: "StringData", isList: 1, json: "[{dataValue: 'Georgia, serif'}, {dataValue: '\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif'}, {dataValue: '\"Times New Roman\", Times, serif'}, {dataValue: 'Arial, Helvetica, sans-serif'}, {dataValue: '\"Arial Black\", Gadget, sans-serif'}, {dataValue: '\"Comic Sans MS\", cursive, sans-serif'}, {dataValue: 'Impact, Charcoal, sans-serif'}, {dataValue: '\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif'}, {dataValue: 'Tahoma, Geneva, sans-serif'}, {dataValue: '\"Trebuchet MS\", Helvetica, sans-serif'}, {dataValue: 'Verdana, Geneva, sans-serif'}, {dataValue: '\"Courier New\", Courier, monospace'}, {dataValue: '\"Lucida Console\", Monaco, monospace'}]"}],    
-    customClassDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, title: "Add Custom Widget Style", "height":"120px","width":"400px","containerWidgetId":"containerWidget","buttonBarId":"buttonBar"}, {}, {
+    customClassDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, title: "Add Custom Widget Style", "height":"220px","width":"400px","containerWidgetId":"containerWidget","buttonBarId":"buttonBar"}, {}, {
     	containerWidget: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"height":"100%","horizontalAlign":"left","padding":"5","verticalAlign":"top","width":"100%"}, {"onEnterKeyPress": "customClassOKButtonClick"}, {
+    		newCustomClassNameEditor: ["wm.Text", {emptyValue: "emptyString", "caption":"Name of Class","captionAlign":"left","captionPosition":"left","captionSize":"150px","dataValue":undefined,"displayValue":"","width":"100%"}, {}],
     		parentClassSelect: ["wm.SelectMenu", {emptyValue: "emptyString", dataField: "name", displayField: "name", "caption":"Select Parent Class","captionAlign":"left","captionPosition":"left","captionSize":"150px","dataValue":undefined,"displayValue":"","width":"100%"}, {}, {
                 binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"source":"parentClassListVar","targetProperty":"dataSet"}, {}]
         		}]
     		}],
-    		newCustomClassNameEditor: ["wm.Text", {emptyValue: "emptyString", "caption":"Name of Class","captionAlign":"left","captionPosition":"left","captionSize":"150px","dataValue":undefined,"displayValue":"","width":"100%"}, {}]
+    		subclassCheckboxSet: ["wm.CheckboxSet", {width: "100%", height: "100%", disabled:1, displayField: "dataValue", dataField: "", "captionAlign":"left","captionPosition":"left","captionSize":"150px",caption: "Add to Palette"},{}, {
+                binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"source":"currentClassListVar","targetProperty":"dataSet"}, {}],
+        			wire1:["wm.Wire", {"expression":"!${currentClassListVar.count}","targetProperty":"disabled"}, {}]
+        		}]           		
+    		}]
     	}],
     	buttonBar: ["wm.ButtonBarPanel", {"border":"1,0,0,0","borderColor":"black","height":"109px"}, {}, {
     		customClassCancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "border":"1","caption":"Cancel","height":"100px","margin":"4"}, {"onclick":"customClassCancelButtonClick"}],
