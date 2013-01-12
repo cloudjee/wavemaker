@@ -43,6 +43,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     columns:null,
     selectFirstRow: false,
     caseSensitiveSort:true,
+    classNames: "wmdojogrid GridListStyle",
     requiredLibs: ["dojox.grid.DataGrid",
            "dojox.grid.cells.dijit",
            "dojo.data.ItemFileWriteStore",
