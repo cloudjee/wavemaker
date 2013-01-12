@@ -600,10 +600,10 @@ wm.Object.extendSchema(wm.Control, {
     bounds: {ignore: 1},
 
     /* These 4 are marked as hidden but are actually handled by the StyleInspector */
-    border: {group: "style", order: 100},
+    border: {group: "style", order: 100, editor: "wm.BorderWidthEditor"},
     borderColor: {group: "style", editor: "wm.ColorPicker", order: 101},
-    padding: {group: "style", order: 102},
-    margin: {group: "style", order: 103},
+    padding: {group: "style", order: 102, editor: "wm.BorderWidthEditor"},
+    margin: {group: "style", order: 103, editor: "wm.BorderWidthEditor"},
 
         //backgroundColor: {group: "style"},
         backgroundColor: {ignore: 1},
