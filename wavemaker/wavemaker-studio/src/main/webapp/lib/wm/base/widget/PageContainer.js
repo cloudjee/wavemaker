@@ -42,10 +42,12 @@ dojo.declare("wm.PageContainer", wm.Control, {
         this._initialPageName = this._pageName;
         if (this.manageURL && app && app.locationState && app.locationState[this.getRuntimeId()]) {
             this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
-            this._locationState = app.locationState;
             this._restoringLocationState = true;
         }
-
+        if (app && app.locationState) {
+            this._locationState = app.locationState;
+        }
+        
         if (!this.deferLoad || !this.isAncestorHidden()) this.loadPage(this._pageName);
         //this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
         dojo.addOnWindowUnload(this, 'destroy');
