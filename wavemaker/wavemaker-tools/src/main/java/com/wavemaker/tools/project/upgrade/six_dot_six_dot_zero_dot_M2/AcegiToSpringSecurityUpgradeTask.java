@@ -21,6 +21,7 @@ import java.util.*;
 
 import javax.xml.bind.JAXBException;
 
+import com.wavemaker.tools.io.Folder;
 import org.springframework.core.io.ClassPathResource;
 
 import com.wavemaker.tools.common.ConfigurationException;
@@ -165,7 +166,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                 throw new ConfigurationException("Unable to determine authentication provider");
             }
 
-            convertSecurityByUrlPattern(acegiBeans, beans);
+            convertSecurityByUrlPattern(project, acegiBeans, beans);
             saveSecuritySpringBeans(beans);
 		} catch(ConfigurationException e){
 			createAcegiBackup(project);
@@ -176,13 +177,13 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 	}
 
-    private void convertSecurityByUrlPattern(Beans acegiBeans, Beans beans) {
+    private void convertSecurityByUrlPattern(Project project, Beans acegiBeans, Beans beans) {
         Map<String, List<String>> urlMap = getObjectDefinitionSource(acegiBeans);
-        urlMap = convertAuth(urlMap);
+        urlMap = convertAuth(project, urlMap);
         SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
     }
 
-    private Map<String, List<String>> convertAuth(Map<String, List<String>> urlMap) {
+    private Map<String, List<String>> convertAuth(Project project, Map<String, List<String>> urlMap) {
         Map<String, List<String>> newUrlMap = new LinkedHashMap<String, List<String>>();
         for (Map.Entry<String, List<String>> e : urlMap.entrySet()) {
             List<String> authList = e.getValue();
@@ -193,15 +194,33 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                     newAuth = "isAuthenticated()";
                 } else if (auth.equals("IS_AUTHENTICATED_ANONYMOUSLY")) {
                     newAuth = "permitAll";
+                } else if (auth.startsWith(ROLE_PREFIX)) {
+                    newAuth = "hasRole('" + auth + "')";
                 } else {
                     newAuth = auth;
                 }
                 newAuthList.add(newAuth);
             }
-            newUrlMap.put(e.getKey(), newAuthList);
+            newUrlMap.put(modifyServiceUrl(project, e.getKey()), newAuthList);
         }
 
         return newUrlMap;
+    }
+
+    private String modifyServiceUrl(Project project, String url) {
+        int len = url.length();
+        if (len < 6 || !url.substring(len - 5).equals(".json")) {
+            return url;
+        }
+
+        int len1 = url.substring(0, len - 5).lastIndexOf("/");
+        String serviceName = len1 < 0 ? url :  url.substring(len1 + 1, len - 5);
+
+        Folder serviceFolder = project.getRootFolder().getFolder("services").getFolder(serviceName);
+        if ((serviceFolder.exists() && !serviceName.equals("securityservice")) || serviceName.equals("runtimeservice")) {
+            url = "/services" + url;
+        }
+        return url;
     }
 
 	private void createAcegiBackup(Project project) {
