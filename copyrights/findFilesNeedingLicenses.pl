@@ -50,16 +50,16 @@ sub searchFile {
   my $f = `cat $file`;
 
  if ($f =~ /Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VM[wW]are/) {
-    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VM[wW]are/Copyright (C) 20$1-2012 ${2}VMware/;
+    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VM[wW]are/Copyright (C) 20$1-2013 ${2}VMware/;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/ && $f !~ /Copyright \(C\) 2012 (Infoteria Corporation and )?VM[wW]are/) {
-    $f =~ s/Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/Copyright (C) 20$1-2012 ${2}VM[wW]are/;
+  } elsif ($f =~ /Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/ && $f !~ /Copyright \(C\) 2013 (Infoteria Corporation and )?VM[wW]are/) {
+    $f =~ s/Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/Copyright (C) 20$1-2013 ${2}VM[wW]are/;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2012 VM[wW]are/) {
+  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2013 VM[wW]are/) {
     ;
   } elsif ($f =~ /(Copyright .*)/) {
     push(@FOREIGN, "$file has foreign copyright: $1");
