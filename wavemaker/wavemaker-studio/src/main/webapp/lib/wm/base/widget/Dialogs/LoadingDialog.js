@@ -116,7 +116,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     },    
     show: function() {
 	this._getWidgetToCover();
-	if (this.widgetToCover && !this.widgetToCover.isAncestorHidden()) {
+	if (this.widgetToCover && this.widgetToCover instanceof wm.Control && !this.widgetToCover.isAncestorHidden()) {
 	    this.inherited(arguments);
 	}
     },

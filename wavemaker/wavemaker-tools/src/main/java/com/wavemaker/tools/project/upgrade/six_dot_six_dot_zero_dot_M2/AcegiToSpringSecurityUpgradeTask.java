@@ -18,9 +18,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.*;
+import java.util.List;
+import java.util.Map;
 
+import javax.security.auth.RefreshFailedException;
 import javax.xml.bind.JAXBException;
 
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.spring.beans.*;
 import org.springframework.core.io.ClassPathResource;
 
 import com.wavemaker.tools.common.ConfigurationException;
@@ -32,11 +37,6 @@ import com.wavemaker.tools.security.SecuritySpringSupport;
 import com.wavemaker.tools.security.SecurityXmlSupport;
 import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.spring.SpringConfigSupport;
-import com.wavemaker.tools.spring.beans.Bean;
-import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.spring.beans.ConstructorArg;
-import com.wavemaker.tools.spring.beans.Property;
-import com.wavemaker.tools.spring.beans.Value;
 
 /**
  * @author Edward "EdC" Callahan
@@ -52,17 +52,25 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 
 	private static final String BACKUP_FILE_NAME = "Acegi-Project-Security-Backup.xml";
 
-	private static final String AUTH_MAN = "<bean class=\"org.acegisecurity.providers.ProviderManager\" id=\"authenticationManager\">";		
+	//private static final String AUTH_MAN = "<bean class=\"org.acegisecurity.providers.ProviderManager\" id=\"authenticationManager\">";
 
-	private static final String DAO_PROVIDER = "<ref bean=\"daoAuthenticationProvider\"/>";
+    private static final String AUTH_MAN_BEAN_ID = "authenticationManager";
 
-	private static final String LDAP_PROVIDER = "<ref bean=\"ldapAuthProvider\"/>";
+    private static final String AUTH_MAN_BEAN_CLASS = "org.acegisecurity.providers.ProviderManager";
+
+    //private static final String DAO_PROVIDER = "<ref bean=\"daoAuthenticationProvider\"/>";
+
+    private static final String DAO_PROVIDER_BEAN_ID = "daoAuthenticationProvider";
+
+	//private static final String LDAP_PROVIDER = "<ref bean=\"ldapAuthProvider\"/>";
 
 	private static final String ROLE_PROVIDER = "<property name=\"roleProvider\">";
 
-	private static final String USER_DETAILS_SVC = "<property name=\"userDetailsService\">";
+	private static final String USER_DETAILS_SVC = "userDetailsService";
 
     private static final String IN_MEMORY_DAO_IMPL_BEAN_ID = "inMemoryDaoImpl";
+
+    private static final String JDBC_DAO_IMPL_BEAN_ID = "jdbcDaoImpl";
     
     private static final String LDAP_DIR_CONTEXT_FACTORY_BEAN_ID = "initialDirContextFactory";
     
@@ -118,18 +126,34 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		this.content = secXmlFile.getContent().asString();
 		if(!(content.length()>1)){
 			throw new ConfigurationException("Problem getting project-security.xml file !!!");
-		} 		
+		}
 
-		if(!(content.contains(AUTH_MAN))){
-			//security was never enabled, this is the mini config 
+        Beans acegiBeans = getAcegiSpringBeans();
+        Beans beans = getNewSecuritySpringBeansFromTemplate();
+
+        Bean authManagerBean = acegiBeans.getBeanById(AUTH_MAN_BEAN_ID);
+        if (authManagerBean == null || !authManagerBean.getClazz().equals(AUTH_MAN_BEAN_CLASS)) {
+			//security was never enabled, this is the mini config
 			this.setNoSecurityConfig();
 			return;
 		}
-		Beans acegiBeans = getAcegiSpringBeans();
-        Beans beans = getNewSecuritySpringBeansFromTemplate();
+
+        String provider = null;
+
 		try{
             //ldap also contains a DAO ref, check for ldap first
-            if(content.contains(LDAP_PROVIDER)){
+            List<Object> refList = authManagerBean.getProperty("providers").getList().getRefElement();
+            for (Object obj : refList) {
+                if (obj instanceof Ref) {
+                    Ref ref = (Ref)obj;
+                    provider = ref.getBean();
+                    if (provider.equals(LDAP_AUTH_PROVIDER_BEAN_ID) || provider.equals(DAO_PROVIDER_BEAN_ID)) {
+                        break;
+                    }
+                }
+            }
+
+            if (provider.equals(LDAP_AUTH_PROVIDER_BEAN_ID)) {
                 if(content.contains(ROLE_PROVIDER)){
                     int providerIndex = content.indexOf(ROLE_PROVIDER);
                     if((content.indexOf("<value>LDAP</value>",providerIndex)>1)  || ( (content.indexOf("<value>- Select One -</value>", providerIndex)>1))){
@@ -146,17 +170,15 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                     throw new ConfigurationException("Unable to determine role provider !!!");
                 }
             }
-            else if(content.contains(DAO_PROVIDER)){
-                if(content.contains(USER_DETAILS_SVC)){
-                    int userSvcIndx = content.indexOf(USER_DETAILS_SVC);
-                    if(content.indexOf("<ref bean=\"inMemoryDaoImpl\"/>",userSvcIndx)>1){
-                        this.demoUpgrade(acegiBeans, beans);
-                    }
-                    else if(content.indexOf("<ref bean=\"jdbcDaoImpl\"/>",userSvcIndx)>1){
-                        this.databaseUpgrade(acegiBeans, beans);
-                    }
-                }
-                else{
+            else if (provider.equals(DAO_PROVIDER_BEAN_ID)) {
+                Bean daoProviderBean = acegiBeans.getBeanById(DAO_PROVIDER_BEAN_ID);
+                String daoImplBeanId = daoProviderBean.getProperty(USER_DETAILS_SVC).getRefElement().getBean();
+
+                if (daoImplBeanId.equals(IN_MEMORY_DAO_IMPL_BEAN_ID)) {
+                    this.demoUpgrade(acegiBeans, beans);
+                } else if (daoImplBeanId.equals(JDBC_DAO_IMPL_BEAN_ID)) {
+                    this.databaseUpgrade(acegiBeans, beans);
+                } else {
                     throw new ConfigurationException("Unable to determine DAO provider type !!!");
                 }
             }
@@ -165,7 +187,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                 throw new ConfigurationException("Unable to determine authentication provider");
             }
 
-            convertSecurityByUrlPattern(acegiBeans, beans);
+            convertSecurityByUrlPattern(project, acegiBeans, beans);
             saveSecuritySpringBeans(beans);
 		} catch(ConfigurationException e){
 			createAcegiBackup(project);
@@ -176,13 +198,13 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		}
 	}
 
-    private void convertSecurityByUrlPattern(Beans acegiBeans, Beans beans) {
+    private void convertSecurityByUrlPattern(Project project, Beans acegiBeans, Beans beans) {
         Map<String, List<String>> urlMap = getObjectDefinitionSource(acegiBeans);
-        urlMap = convertAuth(urlMap);
+        urlMap = convertAuth(project, urlMap);
         SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
     }
 
-    private Map<String, List<String>> convertAuth(Map<String, List<String>> urlMap) {
+    private Map<String, List<String>> convertAuth(Project project, Map<String, List<String>> urlMap) {
         Map<String, List<String>> newUrlMap = new LinkedHashMap<String, List<String>>();
         for (Map.Entry<String, List<String>> e : urlMap.entrySet()) {
             List<String> authList = e.getValue();
@@ -193,15 +215,33 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
                     newAuth = "isAuthenticated()";
                 } else if (auth.equals("IS_AUTHENTICATED_ANONYMOUSLY")) {
                     newAuth = "permitAll";
+                } else if (auth.startsWith(ROLE_PREFIX)) {
+                    newAuth = "hasRole('" + auth + "')";
                 } else {
                     newAuth = auth;
                 }
                 newAuthList.add(newAuth);
             }
-            newUrlMap.put(e.getKey(), newAuthList);
+            newUrlMap.put(modifyServiceUrl(project, e.getKey()), newAuthList);
         }
 
         return newUrlMap;
+    }
+
+    private String modifyServiceUrl(Project project, String url) {
+        int len = url.length();
+        if (len < 6 || !url.substring(len - 5).equals(".json")) {
+            return url;
+        }
+
+        int len1 = url.substring(0, len - 5).lastIndexOf("/");
+        String serviceName = len1 != 0 ? url :  url.substring(len1 + 1, len - 5);
+
+        Folder serviceFolder = project.getRootFolder().getFolder("services").getFolder(serviceName);
+        if ((serviceFolder.exists() && !serviceName.equals("securityservice")) || serviceName.equals("runtimeservice")) {
+            url = "/services" + url;
+        }
+        return url;
     }
 
 	private void createAcegiBackup(Project project) {
