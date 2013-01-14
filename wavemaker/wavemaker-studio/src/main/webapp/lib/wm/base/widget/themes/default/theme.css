@@ -182,7 +182,7 @@ th {
 	/*border: 1px solid #939fb6;*/
 	background-image: none;
 	margin: 0px 0px 0px 3px;
-	z-index: 10;
+	z-index: 1;
     top: 1px;
 }
 
