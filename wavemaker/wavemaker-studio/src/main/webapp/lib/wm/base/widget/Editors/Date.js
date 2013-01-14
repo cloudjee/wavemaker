@@ -101,6 +101,8 @@ dojo.declare("wm.Date", wm.Text, {
         this.useLocalTime = tmp;
     },
     setEditorValue: function(inValue) {
+        if (inValue === null || inValue === undefined) return this.inherited(arguments);
+        
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
 
         // don't modify the source data as the caller may still need it
