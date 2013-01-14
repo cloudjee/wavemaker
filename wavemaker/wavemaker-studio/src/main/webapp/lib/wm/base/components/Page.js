@@ -729,6 +729,9 @@ dojo.mixin(wm.Page, {
             return page[inIndex];
         }
     },
+    getPages: function(inName) {
+        return wm.Page.byName[wm.capitalize(inName)];
+    },
     registerPage: function(inPage) {
         // We'll need the page to
         if (!wm.Page.byName[inPage.declaredClass]) wm.Page.byName[inPage.declaredClass] = [];
