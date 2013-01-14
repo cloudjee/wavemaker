@@ -129,41 +129,18 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
         if (p) p = p.page;
         if (this._dataModelName || p && p.dataModelName) {
             var n = this._dataModelName || p.dataModelName;
-            var c = new wm.DataModel({name: n, dataModelName: n});
-            studio.application.addServerComponent(c);
-            studio.application.loadServerComponents("wm.Query");
-                var layers = studio.tabs.layers;
-            var done;
-            for (var i = 0; !done && i < layers.length; i++) {
-            var l = layers[i];
-            var widgets = l.c$;
-            for (var j = 0; j < widgets.length; j++)
-                if (widgets[j] instanceof wm.PageContainer) {
-                done = true;
-                if (widgets[j].page instanceof QueryEditor)
-                    widgets[j].page.updateDataModelInput();
-                break;
-                }
-            }
-            studio.refreshServiceTree();
+            var c = wm.registerNewDatabaseService(n);
 
             // If designing a data model
             if (this._dataModelName) {
-            //studio.select(c);
-            studio.navGotoComponentsTreeClick();
-            studio.tree.select(c._studioTreeNode);
-/*
-            c.editView();
-            studio.navGotoComponentsTreeClick();
-            wm.fire(studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page, "newDataModelResult");
-            var page = studio.getEditor("DataObjectsEditor", studio.databaseTab, true, c.getLayerName(), c.getLayerCaption()).page;
-            page.objectPages.setLayer(page.DEFAULT_PAGE);
-            */
+                //studio.select(c);
+                studio.navGotoComponentsTreeClick();
+                studio.tree.select(c._studioTreeNode);
             }
 
             // else we're importing a datamodel
             else {
-            app.toastSuccess(studio.getDictionaryItem("wm.DataModel.TOAST_IMPORT_SUCCESS", {dataModel: n}));
+                app.toastSuccess(studio.getDictionaryItem("wm.DataModel.TOAST_IMPORT_SUCCESS", {dataModel: n}));
             }
         }
 

@@ -441,3 +441,21 @@ selectFirstChildNode = function(tree) {
 askSaveChanges = function() {
     return  confirm(studio.getDictionaryItem("CONFIRM_GENERIC_DISCARD_UNSAVED"));
 }
+
+
+
+wm.registerNewDatabaseService = function(inServiceName) {
+    if (inServiceName) {
+        var c = new wm.DataModel({name: inServiceName, dataModelName: inServiceName});
+        studio.application.addServerComponent(c);
+    }
+    studio.application.loadServerComponents("wm.Query");
+    var pages = wm.Page.getPages("QueryEditor");
+    dojo.forEach(pages, function(p) {
+        p.updateDataModelInput();
+    });
+    studio.refreshServiceTree();
+    return c;
+};
+    
+    
