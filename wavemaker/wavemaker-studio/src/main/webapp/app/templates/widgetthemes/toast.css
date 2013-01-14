@@ -30,7 +30,7 @@ html.WMApp .wm_template div.wmtoast.wmtoastExtraSpecific {
    background-image: url(images/Help\ Circle.png);
 }
 /* GROUP: Message */
-.wm_template .wmtoast .wmToast-message {
+.wm_template .wmtoast .wmtoastmessage {
     font-family: sans-serif;
     font-size: 1Em;
     color: white;
@@ -38,7 +38,7 @@ html.WMApp .wm_template div.wmtoast.wmtoastExtraSpecific {
 }
 
 /* GROUP: Title */
-.wm_template .wmtoast .wmToast-title {
+.wm_template .wmtoast .wmtoasttitle {
     font-family: sans-serif;
     font-size: 1.2Em;
     color: white;

@@ -1046,7 +1046,10 @@ dojo.declare("wm.Variable", wm.Component, {
                         b = Number(b);
                     } else if (typeof a == "string") {
                         b = b.toLowerCase();
-                    }
+                    } else if (typeof a == "boolean" || typeof a == "undefined") {
+                        b = b == "false" || b == "null" || b == "undefined" ? false : Boolean(b);
+                        if (a && b || !a && !b) return false;
+                    } 
                     var invert = true;
                 }
             }

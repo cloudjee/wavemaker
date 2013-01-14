@@ -954,7 +954,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     updateIsDirty: function() {
         var wasDirty = this.isDirty;
         var isDirty = true;
-        if (!this.calcIsDirty(this.dataValue, this._lastValue)) {
+        if (this._initializing) {
+            isDirty = false;
+            this._lastValueReported = this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
+        } else if (!this.calcIsDirty(this.dataValue, this._lastValue)) {
             isDirty = false;
         } else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) && (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
             isDirty = false;

@@ -18,28 +18,19 @@ dojo.require("wm.base.components.Application");
 
 wm.Application.extend({
     firstThemeChange: true,
-/*
+
     set_theme: function(inTheme) {
-        if (this.firstThemeChange) {
-            app.confirm("Sometimes data can be lost when changing themes.  Do you want to save your project before changing themes?", true,
-            dojo.hitch(this, function() {
-                studio.project.saveProject();
-                this.firstThemeChange = false;
-                this.setTheme(inTheme);
-            }),
-            dojo.hitch(this, function() {
-                this.firstThemeChange = false;
-                this.setTheme(inTheme);
-            }),
-            "Save and Change",
-            "Change Only");
-
-    } else {
-        this.setTheme(inTheme);
-    }
+        this.theme = inTheme;
+        if (studio.currentDeviceType == "desktop") this._setTheme(inTheme);
     },
-*/
-
+    set_phoneTheme: function(inTheme) {
+        this.phoneTheme = inTheme;
+        if (studio.currentDeviceType == "phone") this._setTheme(inTheme);
+    },
+    set_tabletTheme: function(inTheme) {
+        this.tabletTheme = inTheme;
+        if (studio.currentDeviceType == "tablet") this._setTheme(inTheme);
+    },
     write: function(inIndent) {
         var props = dojo.toJson(this.writeProps(),true);
         props = props.substring(1,props.length-2);

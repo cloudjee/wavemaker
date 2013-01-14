@@ -72,17 +72,14 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         this.editor.dropDown.reset();
     },
 
-    onchange: function(inValue) {
-        this.updateEditorColors(inValue);
-    },
     changed: function() {
     	if (!this.gradient) {
 	    	var newValue = this.editor.get('value') || "";
             if (newValue.match(/[A-Z]/)) {
             	this.editor.set('value', newValue.toLowerCase(), false);
 			}
-    	}
-    	this.inherited(arguments);
+    	}    	
+    	this.inherited(arguments);        
     },
     editorChanged: function() {        
     	if (this.inherited(arguments)) {
@@ -92,9 +89,8 @@ dojo.declare("wm.ColorPicker", wm.Text, {
     	return false;
     },
     updateEditorColors: function(inValue) {
-        if (this._inColorChange) return;
-        this._inColorChange = true;
-        if (!this.gradient) {
+        if (!this.gradient || this.gradient && inValue && inValue.endColor) {
+            if (this.gradient) inValue = inValue.endColor;
             if (inValue) {
             	var v1,v2,v3;
                 this.editorNode.style.backgroundColor = inValue;
@@ -141,9 +137,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
                 this.editorNode.style.background = style;
             }
         }
-        wm.job(this.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
-            this._inColorChange = false;
-        });
+      
     }
 
 });

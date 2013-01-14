@@ -16,7 +16,7 @@
 /* Don't touch djConfig.locale if the user isn't overriding its behavior via the URL; leave it to system default behavior */
     try {
 if (location.search.indexOf("dojo.locale=") != -1) {
-    djConfig.locale = location.search.indexOf("dojo.locale=") + "dojo.locale=".length; // avoid unlocalized variables    
+    djConfig.locale = location.search.indexOf("dojo.locale=") + "dojo.locale=".length; // avoid unlocalized variables
     djConfig.locale = location.search.substr(djConfig.locale);
     if (djConfig.locale.indexOf("&") != -1) {
 	djConfig.locale = djConfig.locale.substring(0, djConfig.locale.indexOf("&"));
@@ -28,19 +28,19 @@ if (location.search.indexOf("dojo.locale=") != -1) {
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.5.0.RC1';
+wm.version = '6.5.2.Release';
 
+wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window || navigator.msMaxTouchPoints > 0;
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     wm.device = location.search.match(/(\?|\&)wmmobile=([^&]*)/)[2] || "desktop";
     wm.device = wm.device.replace(/\&.*$/,"");
+    wm.isFakeMobile = !wm.isMobile && wm.device != "desktop";
     wm.isMobile = wm.device != "desktop";
-    wm.isFakeMobile = wm.isMobile;
 } else {
-    wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window || navigator.msMaxTouchPoints > 0;
     if (!wm.isMobile) {
-	wm.device = "desktop";
+    	wm.device = "desktop";
     } else {
-	wm.device =  (window.screen && (window.screen.width > 450 && window.screen.height > 450)) ? "tablet" : "phone";
+	   wm.device =  (window.screen && (window.screen.width > 450 && window.screen.height > 450)) ? "tablet" : "phone";
     }
 }
 
@@ -106,7 +106,7 @@ wm.writeCssTag = function(inUrl) {
 
 // load JS
 wm.loadScript = function(inUrl, inPreferHeadLoad) {
-	// FIXME: FF 3 appears to load script tags appended to head asynchronously 
+	// FIXME: FF 3 appears to load script tags appended to head asynchronously
 	// and potentially after dojo.addOnLoad is fired. Therefore not using this method for FF3.
 	// NOTE: argh! FF3 requires head mode for files that rely on script tag inspection (EditArea)
 	if (wm.isMoz && (wm.isFF < 3 || inPreferHeadLoad))
@@ -200,6 +200,6 @@ if (window["wmThemeUrl"]) {
 	//var d = djConfig.debugBoot ? "dojo/dojo/dojo.js" : "build/dojo.js";
 	var d = djConfig.debugBoot ? "dojo/dojo/dojo.js" : "dojo/dojo/dojo_build.js";
 	djConfig.baseUrl = wm.relativeLibPath + "dojo/dojo/";
-	
+
 	wm.writeJsTag(wm.relativeLibPath + d);
 })();

@@ -29,49 +29,6 @@
     filter: none;
 }
 
-/* GROUP: Dialog Footer */
-.wm_template .dialogfooter,
-.wm_template .wmpagedialog-controlspanel {
-    background-color: #444444;
-    background-image: none;
-    filter: none;
-}
-
-/* GROUP: Dialog Footer Buttons */
-.wm_template .dialogfooter .wmbutton {
-    font-family: sans-serif;
-    font-size: 12px;
-    color: #FFFFFF; 
-    font-weight: bold;
-    background-color: #444444;
-    background-image: none;
-    filter: none;
-    box-shadow: 4px 4px 4px black;
-    border-radius: 4px;
-}
-
-/* GROUP: Footer Buttons (Hover) */
-.wm_template .dialogfooter .wmbutton:focus,
-.wm_template .dialogfooter .wmbutton:hover {
-    color: #FFFFFF; 
-    background-color: #444444;
-    background-image: none;
-    filter: none;
-    box-shadow: 4px 4px 4px black;
-}
-
-/* GROUP: Footer Buttons (Active) */
-.wm_template .dialogfooter .wmbutton.toggleButtonDown,
-.wm_template .dialogfooter .wmbutton.Active,
-.wm_template .dialogfooter .wmbutton:active,
-.wm_template .dialogfooter .wmbutton.Active:hover,
-.wm_template .dialogfooter .wmbutton:active:hover {
-    color: #FFFFFF; 
-    background-color: #444444;
-    background-image: none;
-    filter: none;
-    box-shadow: 4px 4px 4px black;
-}
 
 /* GROUP: Titlebar Buttons: Close Button */
 .wm_template .dialogtitlebar .dialogclosebutton {

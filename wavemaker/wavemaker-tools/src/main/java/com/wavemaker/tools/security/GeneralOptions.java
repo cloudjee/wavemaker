@@ -47,6 +47,10 @@ public class GeneralOptions {
         return this.enforceIndexHtml;
     }
 
+    public boolean getUseSSL() {
+        return this.useSSL;
+    }
+
     public void setUseSSL(boolean useSSL) {
         this.useSSL = useSSL;
     }

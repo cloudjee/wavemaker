@@ -61,11 +61,11 @@ public class SecuritySpringSupport {
     
     static final String AUTHENTICATON_MANAGER_BEAN_ID_DEMO = "authenticationManagerDemo";
     
-    static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
     
-    static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP = "authenticationManagerLDAP";   
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP = "authenticationManagerLDAP";   
     
-    static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB = "authenticationManagerLDAPwithDB";
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB = "authenticationManagerLDAPwithDB";
     
     static final String USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID = "WMSecAuthFilter";
     
@@ -221,7 +221,7 @@ public class SecuritySpringSupport {
         return getSecurityResourceAttrs(beans, "/index.html").contains(IS_AUTHENTICATED_FULLY);
     }
 
-    static void setSecurityInterceptUrls(Beans beans, Map<String, List<String>> urlMap) {
+    public static void setSecurityInterceptUrls(Beans beans, Map<String, List<String>> urlMap) {
         for (String url : urlMap.keySet()) {
             String access = "";
             Http.InterceptUrl iurl = new Http.InterceptUrl();
@@ -239,7 +239,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static public void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
+    public static void setSecurityResources(Beans beans, boolean enforceSecurity, boolean enforceIndexHtml) {
         if (enforceSecurity) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
@@ -381,7 +381,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static void setDataSourceType(Beans beans, String authMgrName) {
+    public static void setDataSourceType(Beans beans, String authMgrName) {
         Bean userPasswordAuthFilter = beans.getBeanById(USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
         Property property = userPasswordAuthFilter.getProperty(AUTHENTICATON_MANAGER_BEAN_ID);
         property.setRef(authMgrName);
@@ -722,28 +722,25 @@ public class SecuritySpringSupport {
 		return false;
 	}
 	
-	public static void updateLDAAuthProvider(Beans beans, String ldapUrl,
-			String managerDn, String managerPassword, String userDnPattern,
+	public static void updateLdapAuthProvider(Beans beans, String ldapUrl, String userDnPattern,
 			boolean groupSearchDisabled, String groupSearchBase,
 			String groupRoleAttribute, String groupSearchFilter) {
 		LdapServer ldapServer = SecurityXmlSupport.getLdapServer(beans);
 		ldapServer.setUrl(ldapUrl);
-		//ldapServer.setManagerDn(managerDn);
-		//ldapServer.setManagerPassword(managerPassword);
 		setGroupSearchDisabled(beans,groupSearchDisabled);
 		SecurityXmlSupport.setLdapProviderProps(beans, groupSearchDisabled, userDnPattern, groupSearchBase, groupRoleAttribute, groupSearchFilter);	
 	}
 
-	static void updateLDAAuthProvider(Beans beans, String ldapUrl, String userDnPattern, boolean groupSearchDisabled, String groupSearchBase,
+	static void updateLdapAuthProvider(Beans beans, String ldapUrl, String userDnPattern, boolean groupSearchDisabled, String groupSearchBase,
 			String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable, String roleUsername,
 			String roleProperty, String roleQuery, String roleProvider) {
-		updateLDAAuthProvider(beans, ldapUrl, "", userDnPattern,
+		updateLdapAuthProvider(beans, ldapUrl, "", userDnPattern,
 				groupSearchDisabled, groupSearchBase, groupRoleAttribute,
 				groupSearchFilter, roleModel, roleEntity, roleTable,
 				roleUsername, roleProperty, roleQuery, roleProvider);
 	}
 
-	static void updateLDAAuthProvider(Beans beans, String ldapUrl, String searchBase, String userDnPattern, boolean groupSearchDisabled,
+	public static void updateLdapAuthProvider(Beans beans, String ldapUrl, String searchBase, String userDnPattern, boolean groupSearchDisabled,
         String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleTable,
         String roleUsername, String roleProperty, String roleQuery, String roleProvider) {
 

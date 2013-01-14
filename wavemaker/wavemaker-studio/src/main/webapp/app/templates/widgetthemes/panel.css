@@ -1,0 +1,12 @@
+/* GROUP: Panel */
+.wm_template .wmpanel {
+/*    border-radius: 8px; // THEMER: DISABLED */
+    background-color: #aaaaaa;
+    background-image: none;
+    filter: none;
+
+/*    font-family: sans-serif;  // THEMER: DISABLED */
+/*    font-size: 12px;  // THEMER: DISABLED */
+/*    font-weight: normal;  // THEMER: DISABLED */
+/*    color: #FFFFFF;  // THEMER: DISABLED */
+}

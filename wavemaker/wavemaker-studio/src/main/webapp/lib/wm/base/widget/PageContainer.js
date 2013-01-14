@@ -42,10 +42,12 @@ dojo.declare("wm.PageContainer", wm.Control, {
         this._initialPageName = this._pageName;
         if (this.manageURL && app && app.locationState && app.locationState[this.getRuntimeId()]) {
             this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
-            this._locationState = app.locationState;
             this._restoringLocationState = true;
         }
-
+        if (app && app.locationState) {
+            this._locationState = app.locationState;
+        }
+        
         if (!this.deferLoad || !this.isAncestorHidden()) this.loadPage(this._pageName);
         //this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
         dojo.addOnWindowUnload(this, 'destroy');
@@ -333,10 +335,10 @@ dojo.declare("wm.PageContainer", wm.Control, {
     generateStateUrl: function(stateObj) {
         if (this.page && this._pageName !== this._initialPageName) {
             stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
-            if (this.page.generateStateUrl) {
-                this.page.generateStateUrl(stateObj);
-            }
         }
+        if (this.page.generateStateUrl) {
+            this.page.generateStateUrl(stateObj);
+        }    
     },
     forEachWidget: function(inFunc) {
         if (this.page) return this.page.forEachWidget(inFunc);

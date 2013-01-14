@@ -2,16 +2,16 @@
 .wm_template .dojoMenu .dijitMenu,
 .wm_template .dojoMenu .dijitMenuBar,
 .wm_template .dojoMenu .dijitMenuItem {
-  font-family: sans-serif;
-  font-size: 12px; 
+/*  font-family: sans-serif; // THEMER: DISABLED */
+/*  font-size: 12px; // THEMER: DISABLED */
   font-weight: bold;
-  color: inherit;
+/*  color: black; // THEMER: DISABLED */
 
-  background-color: transparent; /* THEMER: HIDE */
-  background-image: none; /* THEMER: HIDE */
+  background-color: transparent;
+  background-image: none;
 }
 
-.wm_template .dijitMenuBar .dijitMenuItem {
+.wm_template .dojoMenu .dijitMenuBar .dijitMenuItem {
   margin-right: 10px;
 }
 
@@ -34,17 +34,18 @@ outline: 0px;
 }
 
 /* GROUP: Horizontal Menu Bar Icon */
-.wm_template div.dijitMenuBar div.dijitMenuItem {
+.wm_template .dojoMenu div.dijitMenuBar div.dijitMenuItem {
    background-image: url(images/comboArrowDownDark.png) !important; 
    background-position: 90% 50% !important;
    background-repeat: no-repeat !important;
     padding-right: 25px !important;
 }
-.Project99Theme .dijitMenuBar .dijitMenuItem:last-child {
+.Project99Theme .dojoMenu .dijitMenuBar .dijitMenuItem:last-child {
     padding-right: 0px !important; /* THEMER: HIDE */
 }
 
 
+/* THEMER: DO NOT SUBCLASS START */
 /* GROUP: Popup Menu Box */
 .wm_template .dijitMenuPopup .dijitMenuTable {
     background-color: #444444;
@@ -76,4 +77,4 @@ outline: 0px;
     filter: none;
     outline-width: 0;
 }
-
+/* THEMER: DO NOT SUBCLASS END */

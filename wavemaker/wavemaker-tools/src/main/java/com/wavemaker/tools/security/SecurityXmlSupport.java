@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.hibernate.cfg.Mappings;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.security.schema.*;
@@ -55,7 +56,7 @@ public class SecurityXmlSupport {
 		return demoUsers;		
 	}
 
-	static public void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
+	public static void setUserSvcUsers(Beans beans, List<UserService.User> demoUsersNew){
 		try{
 			UserService userSvc = getUserSvc(beans);
 			if(userSvc != null){
@@ -192,7 +193,7 @@ public class SecurityXmlSupport {
 
 	}
 
-	static void setActiveAuthMan(Beans beans, String alias){
+	static public void setActiveAuthMan(Beans beans, String alias){
 		if(alias.equals(getActiveAuthManAlias(beans))){
 			return;
 		}
@@ -280,37 +281,59 @@ public class SecurityXmlSupport {
         objs.add(0, interceptUrl);
     }
 
-    static void setPortMapping(Beans beans, String httpPort, String httpsPort) {
+    static void setPortMapping(Beans beans, boolean useSSL, String httpPort, String httpsPort) {
         List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
         boolean mappingsExist = false;
+        boolean portMappingFound = false;
+        List<Http.PortMappings.PortMapping> mappingList = null;
+        List<Http.PortMappings.PortMapping> newMappingList = null;
         Http.PortMappings mappings = null;
         for (Object obj : objs) {
             if (obj instanceof Http.PortMappings) {
                 mappingsExist = true;
                 mappings = (Http.PortMappings) obj;
-                for (Http.PortMappings.PortMapping mapping : mappings.getPortMapping()) {
+                mappingList = mappings.getPortMapping();
+                newMappingList = new ArrayList<Http.PortMappings.PortMapping>(mappingList);
+                for (Http.PortMappings.PortMapping mapping : mappingList) {
                     if (mapping.getHttp().equals(httpPort)) {
-                        mapping.setHttps(httpsPort);
-                        return;
+                        portMappingFound = true;
+                        if (useSSL) {
+                            mapping.setHttps(httpsPort);
+                            return;
+                        } else {
+                            newMappingList.remove(mapping);
+                            break;
+                        }
                     }
                 }
                 break;
             }
         }
 
-        Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
-        newMapping.setHttp(httpPort);
-        newMapping.setHttps(httpsPort);
+        if (portMappingFound) {
+            mappingList.remove(mappingList.size()-1);
+            Collections.copy(mappingList, newMappingList);
+            if (mappingList.size() == 0) {
+                objs.remove(mappings);
+            }
+            return;
+        }
 
-        List<Http.PortMappings.PortMapping> portMappings;
-        if (mappingsExist) {
-            portMappings = mappings.getPortMapping();
-            portMappings.add(newMapping);
-        } else {
-            mappings = new Http.PortMappings();
-            portMappings = mappings.getPortMapping();
-            portMappings.add(newMapping);
-            objs.add(0, mappings);
+        if (useSSL) {
+            Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
+            newMapping.setHttp(httpPort);
+            newMapping.setHttps(httpsPort);
+
+            List<Http.PortMappings.PortMapping> portMappings;
+            if (mappingsExist) {
+                portMappings = mappings.getPortMapping();
+                portMappings.add(newMapping);
+            } else {
+                mappings = new Http.PortMappings();
+                portMappings = mappings.getPortMapping();
+                portMappings.add(newMapping);
+                objs.add(0, mappings);
+            }
         }
     }
 

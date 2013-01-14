@@ -843,6 +843,9 @@ dojo.declare(
         getDirty : function() {
             return this.dirty;
         },
+		isInteger : function(val) {
+			return (parseInt(val,10)+"" === val);
+		},
         save : function() {
             if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
                 this.saveError({
@@ -861,6 +864,17 @@ dojo.declare(
             if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
                 return;
             }
+
+			if (this.useSSLInput.getChecked()) {
+				if (!this.isInteger(this.sslPortInput.getDataValue())) {
+					this.saveError({
+						owner : this,
+						message : this.getDictionaryItem("ALERT_INVALID_SSL_PORT")
+					});
+					return;
+				}
+			}
+
             /*
              * Localization changes the caption, so get the english
              * version of the caption from the layer name so that we
@@ -896,7 +910,8 @@ dojo.declare(
                 this.copyLoginFiles();
                 wm.onidle(this, function() {
                     if (t == "Demo") {
-                        studio.securityConfigService.requestSync("configDemo", [ this.demoUserList._data, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "configDemoResult"), dojo
+                        studio.securityConfigService.requestSync("configDemo", [ this.demoUserList._data, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
+						this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configDemoResult"), dojo
                                 .hitch(this, "saveError"));
 
                     } else if (t == "Database") {
@@ -920,7 +935,8 @@ dojo.declare(
                                 this.ldapGroupSearchFilterInput.getDataValue(),
                                 // Added by Girish
                                 this.ldapRoleDbDataModelInput.getDataValue(), this.ldapRoleDbEntityInput.getDataValue(), this.ldapRoleDbUsernameInput.getDataValue(), this.ldapRoleDbRoleInput.getDataValue(), rolesQuery,
-                                this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked() ], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
+                                this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
+								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
                     } else if (t == "JOSSO") {
                         var roles = this.roleList._data;
                         if (roles.length == 1 || !this.secEnableInput.getChecked()) {

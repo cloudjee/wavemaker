@@ -475,7 +475,7 @@ height: "29px", width: "420px",
 				}],
 				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerWrapper: ["wm.Panel", {width: "100%", height: "100%", autoScroll: true, horizontalAlign:"center", verticalAlign: "middle"}, {}, {
-                        designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}]
+                        designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget", "wmapproot"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}]
                     }],
 				    benchbevel: ["wm.Bevel", {border: ""}, {}],
 						    statusPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "24px", border: "1,0,0,0", borderColor: "#666E80", backgroundColor: "#424A5A", horizontalAlign: "left", verticalAlign: "top"},{}, {

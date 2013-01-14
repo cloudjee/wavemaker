@@ -309,8 +309,10 @@ dojo.declare("wm.Application", wm.Component, {
     _setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
         var themematch = window.location.search.match(/theme\=(.*?)\&/) || window.location.search.match(/theme\=(.*?)$/);
 
-        var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
+        var node = this._isDesignLoaded ? studio.designerWrapper.domNode : document.body;
         if (this.themeName) dojo.removeClass(node, this.themeName);
+
+        if (this._isDesignLoaded) studio.themeChanged(inTheme);
 
         if (this._isDesignLoaded && !isInit) {
             try {
@@ -1052,24 +1054,32 @@ dojo.declare("wm.Application", wm.Component, {
         return d;
     },
     prompt: function(inText, inDefaultValue, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText) {
+        var d = this.confirmDialogDeferred = new dojo.Deferred();
         this.confirm(inText, false, onOKFunc, onCancelFunc, optionalOKText, optionalCancelText, true);
         this.confirmDialog.setShowInput(true);
         this.confirmDialog.setTitle(wm.getDictionaryItem("wm.Application.TITLE_CONFIRM"));
         this.confirmDialog.setInputDataValue(inDefaultValue || "");
         this.confirmDialog.show();
+        return d;
     },
     confirmDialogOKClick: function() {
         if (this.confirmDialog.showInput) {
             var val = this.confirmDialog.getInputDataValue();
-            if (!val)
+            if (!val) {
+                this.confirmDialogDeferred.errback();            
                 return this.confirmDialogCancelClick();
-            else if (this.confirmOKFunc)
+            }
+            else if (this.confirmOKFunc) {
                 this.confirmOKFunc(val);
+            }
+            this.confirmDialogDeferred.callback(val);                            
         } else {
-            if (this.confirmOKFunc)
+            if (this.confirmOKFunc) {
                 this.confirmOKFunc();
+            }
+            this.confirmDialogDeferred.callback(val);
         }
-        if (this.confirmDialogDeferred) this.confirmDialogDeferred.callback();
+
     },
     confirmDialogCancelClick: function() {
         if (this.confirmCancelFunc)

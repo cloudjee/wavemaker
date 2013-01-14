@@ -164,6 +164,8 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
          */
         if (this.dataSet && this.dataSet.getCount()) {
             return this.inherited(arguments);
+        } else if (this.isDirty) {
+            this.clearDirty();
         }
     },
 /* selectmenu only

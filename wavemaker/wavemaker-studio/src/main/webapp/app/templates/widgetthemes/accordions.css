@@ -1,6 +1,6 @@
 
 /* GROUP: Accordion Header */
-.wm_template div.wmaccordion-header {
+.wm_template .wmaccordion div.wmaccordion-header {
   font-family: sans-serif;
   font-size: 12px;
   color: #FFFFFF;
@@ -12,7 +12,7 @@
 }
 
 /* GROUP: Closed Header */
-.wm_template div.wmaccordion-header.wmaccordion-collapsed {
+.wm_template .wmaccordion div.wmaccordion-header.wmaccordion-collapsed {
   color: #FFFFFF;
   font-weight: bold;
   background-color: #555555; /* Document-ClickablesDefault-Background_Color */
