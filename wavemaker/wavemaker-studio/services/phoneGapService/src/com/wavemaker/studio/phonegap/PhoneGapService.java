@@ -287,7 +287,7 @@ public class PhoneGapService {
 		for (Resource resource : files) {
 			return resource.getName();
 		}
-		return "phonegap.js";
+		return "cordova.js";
 	}
 
         private void updateHtmlFile(String phoneGapScript, File file, String themePath, String tabletThemePath, String phoneThemePath) {

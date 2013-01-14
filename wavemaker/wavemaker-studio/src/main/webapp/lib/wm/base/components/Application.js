@@ -724,7 +724,7 @@ dojo.declare("wm.Application", wm.Component, {
     },
     doRun: function() {
         if (wm.isPhonegap) {
-            if (!window["PhoneGap"]) {
+            if (!window["cordova"] && !window["PhoneGap"]) {
                 wm.job("doRun", 100, this, "doRun");
                 return;
             }
