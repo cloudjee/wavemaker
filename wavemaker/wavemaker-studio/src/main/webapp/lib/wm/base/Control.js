@@ -1362,13 +1362,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 					var prefix = "";
 			   		   		if (dojo.isWebKit) {
 								prefix = "-webkit-";
-			   		   		} else if (dojo.isFF) {
-			   		   			prefix = "-moz-" ;
-			   		   		} else if (dojo.isIE) {
-			   		   			prefix = "-ms-" ;
-				   		   	} else if (dojo.isOpera) {
-			   		   			prefix = "-o-";
-				   		   	}
+			   		   		} 
 
 				   		   	var values = String(styleValue).split(/\s+/);
 				           	inValue = "";
@@ -1797,14 +1791,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		   case "borderRadius":
 				var prefix;
    		   		if (dojo.isWebKit) {
-   		   			prefix = "Webkit";
-   		   		} else if (dojo.isFF) {
-   		   			prefix = "Moz";
-   		   		} else if (dojo.isIE) {
-	   		   		prefix = "Ms" ;
-	   		   	} else if (dojo.isOpera) {
-	   		   		prefix = "O";
-	   		   	}
+   		   			prefix = "Webkit"; /* Mostly here for android 2 browser */
+   		   		} 
+	   		   	if (prefix) prefix += "B";
+	   		   	else prefix = "b";
 	           	var values = String(inValue).split(/\s+/);
 	           	inValue = "";
 				for (var i = 0; i < values.length; i++) {
@@ -1818,10 +1808,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 				if (values.length == 3) {
 					values[3] = "0px";
 				}
-		   		 this.domNode.style[prefix + "BorderTopLeftRadius"] = values[0];
-		   		 this.domNode.style[prefix + "BorderTopRightRadius"] = values[1];
-		   		 this.domNode.style[prefix + "BorderBottomLeftRadius"] = values[2];
-		   		 this.domNode.style[prefix + "BorderBottomRightRadius"] = values[3];
+		   		 this.domNode.style[prefix + "orderTopLeftRadius"] = values[0];
+		   		 this.domNode.style[prefix + "orderTopRightRadius"] = values[1];
+		   		 this.domNode.style[prefix + "orderBottomLeftRadius"] = values[2];
+		   		 this.domNode.style[prefix + "orderBottomRightRadius"] = values[3];
 		   		 break;
 		   case "backgroundImage":
         		if (this._isDesignLoaded && (inValue.indexOf("url") != 0 && inValue.indexOf("http") !=0 && inValue.indexOf("/") != 0)) {
