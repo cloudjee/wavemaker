@@ -89,11 +89,11 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	var containerClasses = {domNode:[]};
 	for (var i = classes.domNode.length-1; i >= 0; i--) {
 	    if (classes.domNode[i].match(/^wm_Border_(Bottom|Drop)/)) {
-		containerClasses.domNode.push(classes.domNode[i]);
-		wm.Array.removeElementAt(classes.domNode,i);
+    		containerClasses.domNode.push(classes.domNode[i]);
+    		wm.Array.removeElementAt(classes.domNode,i);
 	    }
 	}
-	this._classes = {domNode:[]};
+
         try {
 	    //var classes = this.captionClasses.split(/\s+/);
 	    this.layout = wm.layout.cache["top-to-bottom"];
