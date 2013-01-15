@@ -701,12 +701,14 @@ dojo.declare("QueryEditor", wm.Page, {
 		      list:this.isInputListCheckBox.getChecked(),
 		      value: this.bindParamInput.getDataValue()};
         var selectedIndex = this.queryInputsList.getSelectedIndex();
-	    this.queryInputsList._data[selectedIndex] = bp;
-	    this.queryInputsList._render();
-	    this.setDirty();
-		var item = this.queryInputsList.getItem(selectedIndex);
-        if (item)
-			this.queryInputsList.eventSelect(item);
+        if (selectedIndex >= 0) {
+    	    this.queryInputsList._data[selectedIndex] = bp;
+    	    this.queryInputsList._render();
+    	    this.setDirty();
+    		var item = this.queryInputsList.getItem(selectedIndex);
+            if (item)
+    			this.queryInputsList.eventSelect(item);
+    	}
    },
 /*
     parmDblClick: function(inSender,inEvent,inItem) {

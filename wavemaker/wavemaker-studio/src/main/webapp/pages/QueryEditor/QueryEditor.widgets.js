@@ -76,7 +76,7 @@ QueryEditor.widgets = {
                                                 }],*/
 
 					    paramsPanel: ["wm.Panel", { border: "0", height: "100%", width:"100%", padding: "4"}, {}, {
-						queryInputsList: ["wm.List", {_classes: {domNode: ["StudioList"]}, height: "100%", width: "100%", border: "0"}, {onselect: "parmSelected"}],
+						queryInputsList: ["wm.List", {renderVisibleRowsOnly:false,_classes: {domNode: ["StudioList"]}, height: "100%", width: "100%", border: "0"}, {onselect: "parmSelected"}],
 
 						addNewParamPanel: ["wm.Panel", {border: "0", height: "28px", width:"100%", layoutKind: "left-to-right", padding: "0", verticalAlign: "center", horizontalAlign: "left"}, {}, {
 								addBindParamLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, caption: "Add bind parameter:", border: "0", height: "100%", width: "125px"}, {}, {
