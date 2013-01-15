@@ -335,8 +335,8 @@ wm.define("wm.Container", wm.Control, {
     },
     moveControl: function(inControl, inIndex) {
         var i0 = this.removeControl(inControl);
-        if (i0 < inIndex)
-            inIndex--;
+       /* if (i0 < inIndex)
+            inIndex--;*/
         this.c$.splice(inIndex, 0, inControl);
     },
     indexOfControl: function(inControl) {
