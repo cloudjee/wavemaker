@@ -176,6 +176,7 @@ wm.Object.extendSchema(wm.NotificationCall,{
     onError: {ignore:1},
     onSuccess: {ignore:1},
     onBeforeUpdate: {ignore:1},
-    onCanUpdate: {ignore:1}
+    onCanUpdate: {ignore:1},
+    onResult: {ignore:1}
 });
 
