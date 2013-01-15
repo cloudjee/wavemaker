@@ -336,7 +336,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (this.page && this._pageName !== this._initialPageName) {
             stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
         }
-        if (this.page.generateStateUrl) {
+        if (this.page && this.page.generateStateUrl) {
             this.page.generateStateUrl(stateObj);
         }    
     },
