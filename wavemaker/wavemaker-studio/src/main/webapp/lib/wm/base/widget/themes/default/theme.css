@@ -1163,15 +1163,22 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     width: 100%;
 }
 
-.dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
-        height: 50% !important;
+.tundra .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+        height: 16px;
 }
 .dijitSpinner .dijitDownArrowButton .dijitArrowButtonInner {
-    background-position-x: 0px;
+    background-position: 0px 0px;
 }
 .dijitSpinner .dijitUpArrowButton .dijitArrowButtonInner {
-    background-position-x: -21px;
+    background-position: -21px 0px;
 }
+.dijitSpinner .dijitSpinnerButtonContainer {
+    height: 100%;
+}
+.tundra .dijitSpinner.dijitTextBox .dijitArrowButton {
+    height: 50% !important;
+}
+
 .dojoxGridHeader th.dojoxGridCell {
     border-top: 0px;
     border-left: 0px;
