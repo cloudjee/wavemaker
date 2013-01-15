@@ -35,7 +35,6 @@ import javax.xml.bind.UnmarshalException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.security.schema.Http;
 import org.springframework.security.core.GrantedAuthority;
-//import org.Securitysecurity.ldap.DefaultInitialDirContextFactory;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;

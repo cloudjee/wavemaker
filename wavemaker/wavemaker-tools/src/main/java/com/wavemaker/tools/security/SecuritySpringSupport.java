@@ -15,26 +15,21 @@
 package com.wavemaker.tools.security;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.security.schema.AuthenticationManager;
 import com.wavemaker.tools.security.schema.Http;
 import com.wavemaker.tools.security.schema.LdapServer;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.memory.UserMap;
 import org.springframework.security.core.userdetails.memory.UserMapEditor;
 
-import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.security.schema.UserService;
@@ -119,7 +114,6 @@ public class SecuritySpringSupport {
 
     private static final String LDAP_AUTHORITIES_POPULATOR_CLASSNAME = "com.wavemaker.runtime.security.LdapAuthoritiesPopulator";
     
-    private static final String LDAP_AUTHORITIES_POPULATOR = "LdapAuthoritiesPopulator";
 
     private static final String LDAP_MANAGER_DN_PROPERTY = "managerDn";
 
@@ -810,7 +804,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    static List<String> getRoles(Beans beans) {
+    public static List<String> getRoles(Beans beans) {
         Bean securityServiceBean = beans.getBeanById(SECURITY_SERVICE);
         Property rolesProperty = securityServiceBean.getProperty(ROLES);
         if (rolesProperty == null || rolesProperty.getList() == null) {
@@ -824,7 +818,7 @@ public class SecuritySpringSupport {
         return roles;
     }
 
-    static void setRoles(Beans beans, List<String> roles) {
+    public static void setRoles(Beans beans, List<String> roles) {
         Bean securityServiceBean = beans.getBeanById(SECURITY_SERVICE);
         Property rolesProperty = securityServiceBean.getProperty(ROLES);
         com.wavemaker.tools.spring.beans.List list = rolesProperty.getList();
