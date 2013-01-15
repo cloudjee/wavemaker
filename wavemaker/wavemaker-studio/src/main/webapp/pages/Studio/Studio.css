@@ -1869,3 +1869,10 @@ color: rgb(0,270,0);
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+
+.Studio .StudioLink .wmSizeNode {
+    text-decoration: underline;
+    font-weight: bold;
+    color: white;
+}
