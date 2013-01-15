@@ -89,11 +89,7 @@ public class SecurityConfigService {
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-//        if (options != null) {
-//            return options.isEnforceSecurity();
-//        }
-        return true;
+    	return getSecToolsMgr().isSecurityEnabled();
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
@@ -397,7 +393,7 @@ public class SecurityConfigService {
     }
 
     /**
-     * Set a new Object Definition Source Filter. Replaces previous definition. Only a single attribute per URL is
+     * Set a new security intercept url Filter. Replaces previous definition. Only a single attribute per URL is
      * supported by this interface.
      * 
      * @param securityURLMap The new Object Definition Source URL map

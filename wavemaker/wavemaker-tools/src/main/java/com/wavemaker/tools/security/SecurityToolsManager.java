@@ -180,6 +180,10 @@ public class SecurityToolsManager {
         }
     }
 
+    public boolean isSecurityEnabled() throws JAXBException, IOException {
+    	return SecuritySpringSupport.getSecurityEnforced(getSecuritySpringBeans(false));
+    }
+    
     public GeneralOptions getGeneralOptions() throws JAXBException, IOException {
         Beans beans = null;
         try {
@@ -188,13 +192,13 @@ public class SecurityToolsManager {
             return null; // project-security.xml must be setting to DTD
         }
 
-        if (beans == null || beans.getBeanList().isEmpty()) { // project-security.xml
+        if (beans == null || beans.getBeanList().isEmpty()) { 
             return null;
         }
 
         GeneralOptions options = new GeneralOptions();
-        options.setEnforceSecurity(SecuritySpringSupport.isSecurityEnforced(beans));
-        options.setEnforceIndexHtml(SecuritySpringSupport.isIndexHtmlEnforced(beans));
+        options.setEnforceSecurity(SecuritySpringSupport.getSecurityEnforced(beans));
+        options.setEnforceIndexHtml(SecuritySpringSupport.getIndexHtmlEnforced(beans));
         options.setDataSourceType(SecuritySpringSupport.getDataSourceType(beans));
         String channel = SecuritySpringSupport.getRequiresChannel(beans);
         options.setUseSSL(channel != null && channel.equals("https"));
@@ -421,6 +425,7 @@ public class SecurityToolsManager {
                 throw new RuntimeException("Unable to get Security Bean");
             } else {
                 SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
+                SecuritySpringSupport.setSecurityEnforced(beans,true);
                 saveSecuritySpringBeans(beans);
             }
         } catch (Exception e) {
