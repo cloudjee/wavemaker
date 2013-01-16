@@ -183,9 +183,11 @@ dojo.declare("wm.AceEditor", wm.Control, {
             this._editor.getSelection().setSelectionRange({start: {row: startRow, column: startColumn},
                                    end: {row: endRow, column: endColumn}});
     },
-    setCursorPosition: function(row, column) {
-        if (this._editor)
+    setCursorPosition: function(row, column) {    
+        if (this._editor) {
+            this._editor.getSelection().clearSelection();
             this._editor.moveCursorTo(row,column);
+        }
     },
     setCursorPositionInText: function(index) {
         if (this._editor) {
