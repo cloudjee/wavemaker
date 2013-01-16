@@ -305,7 +305,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     
     start: function() {        
-        this.templateListVar.setQuery({hide: "!true"});
+        this.templateListVar.setQuery({hide: false});
         this.themeListVar.setQuery({designer: "widgetthemer"});    
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.parentClassListVar.setData(dojo.filter(this.templateFileData, function(inItem) {
