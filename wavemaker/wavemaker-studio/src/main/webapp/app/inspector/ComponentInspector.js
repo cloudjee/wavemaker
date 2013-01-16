@@ -122,7 +122,7 @@
         if (wm.Array.equals(this.inspected,inComponents) && !forceInspect) {
             return this.reinspect();
         }
-        this.propComponentList = this.gatherPropComponents(inComponents);
+        this.propComponentList = this.gatherPropComponents(inComponents[0]);
 
         this._inspecting = true;
         this._inspectedName = inComponents[0].name;
@@ -246,7 +246,7 @@
             return;
         }
 
-        this.propComponentList = this.gatherPropComponents(inComponents);
+        this.propComponentList = this.gatherPropComponents(inComponents[0]);
 
         this._inspecting = true;
         try {
@@ -459,63 +459,65 @@
         return newprops;
      },
      addSubGroupIndicator: function(inName, inParent, inShowing, inBigSeparator) {
-     this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]},
-                            parent: inParent,
-                            owner: this,
-                            caption:inName,
-                            width: "100%",
-                            height: this.defaultEditorHeight,
-                            singleLine: true,
-                            //border: "0,0,1,0",
-                            border: "0",
-                            borderColor: inBigSeparator ? "#959DAB" : "#444444",
-                            showing: inShowing,
-                            padding: "0",
-                            margin: "0,0,0,2"}));
+         this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]},
+                                parent: inParent,
+                                owner: this,
+                                caption:inName,
+                                width: "100%",
+                                height: this.defaultEditorHeight,
+                                singleLine: true,
+                                //border: "0,0,1,0",
+                                border: "0",
+                                borderColor: inBigSeparator ? "#959DAB" : "#444444",
+                                showing: inShowing,
+                                padding: "0",
+                                margin: "0,0,0,2"}));
      },
      generateEditors: function(inComponent, inGroup, inLayer) {
-     var inGroupName = inGroup.name;
+         var inGroupName = inGroup.name;
 
-     var self = this;
-     if (inGroup) {
-         //wm.forEachProperty(inGroup.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
-         var count = 0;
-         dojo.forEach(inGroup.subgroups, function(subgroup) {
-         if (subgroup.props.length && (subgroup.props.length > 1 || subgroup.props[0].editor != "wm.prop.FieldGroupEditor") && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
-             count++;
-             this.addSubGroupIndicator(/*(inGroup.displayName || inGroup.name) + " - " + */(subgroup.displayName || subgroup.name),
-                           inLayer,
-                           this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}),
-                           false);
+         var self = this;
+         if (inGroup) {
+             //wm.forEachProperty(inGroup.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
+             var count = 0;
+             dojo.forEach(inGroup.subgroups, function(subgroup) {
+                 if (subgroup.props.length && (subgroup.props.length > 1 || subgroup.props[0].editor != "wm.prop.FieldGroupEditor") && !subgroup.noDisplayName && (subgroup.name != "widgetName" || count > 0)) {
+                     count++;
+                     this.addSubGroupIndicator( /*(inGroup.displayName || inGroup.name) + " - " + */ (subgroup.displayName || subgroup.name),
+                     inLayer,
+                     this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {
+                         return !prop.ignoretmp && self.isEditableProp(prop);
+                     }),
+                     false);
+                 }
+                 if (subgroup.props.length || subgroup.subgroups.length) {
+                     this.generateEditors(inComponent, subgroup, inLayer);
+                 }
+             }, this);
+             this.processingRequiredGroup = inGroupName == "required";
+             if (inGroup.props) {
+                 this._generateEditors(inComponent, inLayer, inGroup.props);
+             }
+             delete this.processingRequiredGroup;
+         } else if (inPropList) {
+             this._generateEditors(inComponent, inLayer, this.props);
          }
-         if (subgroup.props.length || subgroup.subgroups.length) {
-             this.generateEditors(inComponent, subgroup, inLayer);
-         }
-         }, this);
-         this.processingRequiredGroup = inGroupName == "required";
-         if (inGroup.props) {
-         this._generateEditors(inComponent, inLayer, inGroup.props);
-         }
-         delete this.processingRequiredGroup;
-     } else if (inPropList) {
-         this._generateEditors(inComponent, inLayer, this.props);
-     }
-     inLayer.setShowing(inLayer.c$.length);
+         inLayer.setShowing(inLayer.c$.length);
      },
 
      _generateEditors: function(inComponent, inLayer, inPropList) {
-     for (var i = 0; i < inPropList.length; i++) {
-         var p = inPropList[i];
-         var propName = p.name;
-         if (this.propComponentList[this.inspected[0].getId() + "." + p.name]) {
-         p.isPublished = true;
+         for (var i = 0; i < inPropList.length; i++) {
+             var p = inPropList[i];
+             var propName = p.name;
+             if (this.propComponentList[this.inspected[0].getId() + "." + p.name]) {
+                 p.isPublished = true;
+             }
+             if (p.operation) {
+                 this.generateButton(inComponent, p, inLayer);
+             } else {
+                 var e = this.generateEditor(inComponent,p, inLayer);
+             }
          }
-         if (p.operation) {
-         this.generateButton(inComponent, p, inLayer);
-         } else {
-         var e = this.generateEditor(inComponent,p, inLayer);
-         }
-     }
      },
      /*
      updateCaptionSizes: function() {
@@ -574,7 +576,7 @@
          name: "wminspector-" + inLayer.name + "-" + inProp.name,
          width: "150px",//this.captionSize.match(/\%/) ? (100 - parseInt(this.captionSize)) + "%" : "100%",
          //height: "30px",
-         caption: (inProp.shortname || inProp.name),
+         caption: (inProp.shortname || inProp.name) + (inProp.isPublished ? " <img src='lib/images/silkIcons/arrow_up.png'/>" : ""),
          _classes: {domNode: ["StudioButton", "wmPropertyButton", "wmPropertyButton" + inProp.name, inProp.isPublished ? "isPublishedProp":""]},
          margin: "4,2,4,2",
          propDef: inProp,
@@ -696,9 +698,11 @@
      var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel, hashId);
      editorProps.showing = !isBound || inProp.editor == "wm.prop.FieldGroupEditor";
 
-         if (inProp.editorProps) {
-             editorProps = dojo.mixin(editorProps, inProp.editorProps);
-         }
+     if (inProp.editorProps) {
+         editorProps = dojo.mixin(editorProps, inProp.editorProps);
+     }
+
+     
 
      /**********************************************************
       * Create the Editor Widget
@@ -1708,7 +1712,7 @@
          captionSize: this.captionSize,
          captionPosition: "left",
          captionAlign: "left",
-         caption: (inProp.shortname || inProp.name)   + (inProp.requiredGroup ? '&nbsp;<span class="wmeditor-required">*</span>' : ""),
+         caption: (inProp.shortname || inProp.name)   + (inProp.requiredGroup ? '&nbsp;<span class="wmeditor-required">*</span>' : "") + (inProp.isPublished ? " <img src='lib/images/silkIcons/arrow_up.png'/>" : ""),
          _classes: {domNode: ["StudioEditor"]},
          dataValue: inValue,
          inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
