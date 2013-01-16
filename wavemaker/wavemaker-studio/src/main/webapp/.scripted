@@ -19,5 +19,13 @@
       "indent_size": 4,
       "indent_char": " "
     }
+  },
+  search: {
+     exclude: [
+	"**/build",
+	"**/compressed",
+        "**/dojo",
+        "**/ace"
+     ]
   }
 }
