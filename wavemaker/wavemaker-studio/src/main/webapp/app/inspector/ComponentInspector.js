@@ -1017,7 +1017,7 @@
          var e = new ctor(editorProps);
          if (e.forceCaptionPositionTop) {
              e.setCaptionPosition("top");
-             e.setCaptionSize("20px");
+             e.setCaptionSize(inProp.editorProps && inProp.editorProps.captionSize || "20px");
          }
          return e;
      },

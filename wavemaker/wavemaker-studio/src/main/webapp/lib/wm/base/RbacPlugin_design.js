@@ -65,12 +65,13 @@ wm.Component.extend({
 
 
 wm.Object.extendSchema(wm.Control, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor"},
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "60px", height: "240px"}, shortname: "Visibile to which roles<div class='NotTrueSecurity'>NOTE: This restricts visibility, but does not prevent hacking. Reliable security is done from the server.</div>"},
     deviceSizes: {group: "mobile", subgroup: "devices", shortname: "showForDeviceSizes", editor: "wm.prop.DeviceSizeEditor", order: 101},
     deviceType: {group: "mobile",  subgroup: "devices", editor: "wm.prop.DeviceListEditor",  order: 100}
 }, true);
+
 wm.Object.extendSchema(wm.ServiceVariable, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "60px", height: "240px"}, advanced: 1, shortname: "Fires for which roles<div class='NotTrueSecurity'>NOTE: As a client-side security measure, it can be hacked. <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>Reliable security is done from the server</a>.</div>"}
 }, true);
 
 
