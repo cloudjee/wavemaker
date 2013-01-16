@@ -61,6 +61,10 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         }
         this.inherited(arguments);
     },
+    calcIsDirty: function(val1, val2) {
+        if (typeof val1 == "object" && typeof val2 == "object") return dojo.toJson(val1) != dojo.toJson(val2);
+        return this.inherited(arguments);
+    },     
     /*    doChangeOnKey: function(inEvent) {
     this.changed();
     if (this.editor)
