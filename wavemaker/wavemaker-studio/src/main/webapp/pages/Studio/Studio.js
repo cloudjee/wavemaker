@@ -722,18 +722,25 @@ dojo.declare("Studio", wm.Page, {
     themeChanged: function(inThemePackage) {
         var palette = studio.palette;
         try {
-            palette.clearSection("Theme Widgets");
+            var themeNode;
+            studio.palette.root.forEachChild(function(n) {
+                if (n.data == "Theme Widgets") themeNode = n;
+            });
+            if (themeNode) themeNode.removeChildren();
             var widgets = wm.load(dojo.moduleUrl(inThemePackage) + "packages.js");
             if (widgets) {
                 widgets = eval("[" + widgets + "]");
-                if (widgets.length) {
-                    palette.makeGroup("Theme Widgets", 1);
+                if (widgets.length && !themeNode) {
+                    themeNode = palette.makeGroup("Theme Widgets", 1);
                 }
                 installPackages(widgets);
                 if (widgets.length) {
                     studio.palette.findItemByName("Theme Widgets").setOpen(true);
-                }
+                }                
             }
+            if (themeNode) {
+                themeNode.setContent(wm.capitalize(inThemePackage.replace(/^.*\./,"")) + " Widgets");
+            }            
         } catch(e) {}
     },
     /* if isCloud, this will return -1 (true but needs to be updated), 0 (false, redeploy), or 1 (true)
