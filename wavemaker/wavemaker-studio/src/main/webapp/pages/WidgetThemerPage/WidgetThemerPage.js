@@ -546,17 +546,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (!this.widgetCssFiles[this.currentWidgetTemplateFile]) {
             this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + (itemData.parentName ? itemData.name : this.currentWidgetTemplateFile) + ".css?" + (Math.floor(Math.random(new Date().getTime()) * 1000000)));
             if (!this.widgetCssFiles[this.currentWidgetTemplateFile] && itemData.parentName) {
-                var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
-                if (item) {
-                    var templateFile = item.getValue("templateFile");
-                    this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + templateFile+ ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
-                    var replaceName = item.getValue("customWidgetAddClass");
-                    if (itemData.parentName && replaceName) {
-                        var reg = new RegExp("\\." + replaceName +"(,|\\.|\\s+)", "g");                        
-                        this.widgetCssFiles[this.currentWidgetTemplateFile] = 
-                            this.widgetCssFiles[this.currentWidgetTemplateFile].replace(reg, "." + itemData.name + "." + replaceName + "$1").replace(/\/\*\s*THEMER\: DO NOT SUBCLASS START(.|\n)*?THEMER\: DO NOT SUBCLASS END\s*\*\//gm,"");
-                    }
-                }
+                this.setupCustomWidgetTemplate(itemData);
             }
         }
         this.removeClassButton.setDisabled(!itemData.parentName);
@@ -871,11 +861,52 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     
     /* START SECTION: Create new subclasses */
     addCustomClassClick: function() {
-        this.customClassDialog.show();
+        this.customClassDialog.show();        
     },
     customClassCancelButtonClick: function() {
         this.customClassDialog.hide();
     },
+    parentClassSelectChange: function() {
+        if (this.subclassCheckboxSet.dataSet.getCount() == 1) {
+            this.subclassCheckboxSet.setDataValue(this.subclassCheckboxSet.dataSet.getItem(0).getValue("dataValue"));
+        }    
+    },
+    subclassNameChange: function() {
+        // update the display values of the checkboxes
+        var dataValue = dojo.clone(this.subclassCheckboxSet.getDataValue());
+        this.subclassCheckboxSet.setDataSet(this.subclassCheckboxSet.dataSet);
+        this.subclassCheckboxSet.setDataValue(dataValue);
+    },
+    setupCustomWidgetTemplate: function(itemData) {
+        var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
+        if (item) {
+            var templateFile = item.getValue("templateFile");
+            this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + templateFile+ ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
+            var replaceName = item.getValue("customWidgetAddClass");
+            if (itemData.parentName && replaceName) {
+                var reg = new RegExp("\\." + replaceName +"(,|\\.|\\s+)", "g");                        
+                this.widgetCssFiles[this.currentWidgetTemplateFile] = 
+                    this.widgetCssFiles[this.currentWidgetTemplateFile].replace(reg, "." + itemData.name + "." + replaceName + "$1").replace(/\/\*\s*THEMER\: DO NOT SUBCLASS START(.|\n)*?THEMER\: DO NOT SUBCLASS END\s*\*\//gm,"");
+
+                /* Disable all css within the template */
+                var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
+                for (var i = 0; i < lines.length; i++) {
+                    var l = lines[i];
+                    var calcString = "THEMER: CALC:";
+                    var indexOfCalcString = l.indexOf(calcString);
+                    var hideString = "THEMER: HIDE";
+                    var indexOfHideString = l.indexOf(hideString);
+                    if (indexOfCalcString == -1 && indexOfHideString == -1) {
+                        var styleObj = this.getStyleObjFromLine(l);
+                        if (styleObj && !styleObj.disabled) {
+                            lines[i] = "/* " + styleObj.name + ": " + styleObj.value + "; // THEMER: DISABLED */" + (styleObj.message ? " // THEMER: " + styleObj.message : "");
+                        }
+                    }
+                }
+                this.widgetCssFiles[this.currentWidgetTemplateFile] = lines.join("\n");
+            }
+        }
+    },    
     customClassOKButtonClick: function() {
         var parentClassName = this.parentClassSelect.getDataValue();
         var newClassName = this.newCustomClassNameEditor.getDataValue();
