@@ -685,42 +685,50 @@ dojo.declare("wm.studio.Project", null, {
                 return d;
             }),onError
         ).then(
-            /* Save Step: Load theme data and add it to project.js */
+            /* Save Step: Load types.js so it can be added to project.a.js */
             dojo.hitch(this, function() {
-
-                var d = this.loadProjectData("types.js", true)
-                d.addCallback(function(inResult) {
-                    allProjectJS += inResult + "\n";
-                    var themeText = "";
-                    var theme = studio.application.theme;
-                    var themeName = theme.replace(/^.*\./,"");
-                    var path;
-                    if (studio.application.tabletTheme && studio.application.tabletTheme != theme) {
-                        path = dojo.moduleUrl(studio.application.tabletTheme) + "/Theme.js";                       
-                        var themeData = wm.load(path);
-                        themeText += "if (wm.device == 'tablet') {\n\t" +
-                                     "wm.Application.themeData['" + studio.application.tabletTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
-                    }
-                    
-                    // TODO: If phone and tablet are the same, we can optimize this
-                    if (studio.application.phoneTheme && studio.application.phoneTheme != theme) {
-                        path = dojo.moduleUrl(studio.application.phoneTheme) + "/Theme.js";                       
-                        var themeData = wm.load(path);
-                        themeText += "if (wm.device == 'phone') {\n\t" +
-                                     "wm.Application.themeData['" + studio.application.phoneTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
-                    }
-                    var closeParenNeeded = Boolean(themeText);
-                    if (themeText) {
-                        themeText += " {\n\t";
-                    }
-                    path = dojo.moduleUrl(theme) + "/Theme.js";                                           
+                return this.loadProjectData("types.js", true)
+            })
+        ).then(
+            dojo.hitch(this, function(inResult) {
+                /* Save Step: Make sure we got types.js; doesn't exist when first creating a project*/            
+                if (!inResult) {
+                    return wm.load("app/templates/project/types.js",true);
+                }
+                var d = new dojo.Deferred();
+                d.callback(inResult);
+            })
+        ).then(
+            dojo.hitch(this, function(inResult) {        
+                allProjectJS += inResult + "\n";
+                var themeText = "";
+                var theme = studio.application.theme;
+                var themeName = theme.replace(/^.*\./,"");
+                var path;
+                if (studio.application.tabletTheme && studio.application.tabletTheme != theme) {
+                    path = dojo.moduleUrl(studio.application.tabletTheme) + "/Theme.js";                       
                     var themeData = wm.load(path);
-                    themeText += "wm.Application.themeData['" + theme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n";
-                    if (closeParenNeeded) themeText += "}\n";
-                    allProjectJS += themeText;                              
-                    studio.incrementSaveProgressBar(1);
-                });
-                return d;
+                    themeText += "if (wm.device == 'tablet') {\n\t" +
+                                 "wm.Application.themeData['" + studio.application.tabletTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
+                }
+                
+                // TODO: If phone and tablet are the same, we can optimize this
+                if (studio.application.phoneTheme && studio.application.phoneTheme != theme) {
+                    path = dojo.moduleUrl(studio.application.phoneTheme) + "/Theme.js";                       
+                    var themeData = wm.load(path);
+                    themeText += "if (wm.device == 'phone') {\n\t" +
+                                 "wm.Application.themeData['" + studio.application.phoneTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
+                }
+                var closeParenNeeded = Boolean(themeText);
+                if (themeText) {
+                    themeText += " {\n\t";
+                }
+                path = dojo.moduleUrl(theme) + "/Theme.js";                                           
+                var themeData = wm.load(path);
+                themeText += "wm.Application.themeData['" + theme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n";
+                if (closeParenNeeded) themeText += "}\n";
+                allProjectJS += themeText;                              
+                studio.incrementSaveProgressBar(1);
             }), onError
         ).then(
             /* Save Step: Load from lib/boot.js and write a copy to project/webapproot/boot.js */
