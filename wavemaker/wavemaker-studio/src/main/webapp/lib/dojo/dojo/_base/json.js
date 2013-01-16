@@ -95,7 +95,7 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
      * WaveMaker: Added special meaning to prettyPrint === -1 */
 	var sep = prettyPrint && prettyPrint != -1 ? " " : "";
-    var newLine = prettyPrint === -1 && dojo.isArray(it) || prettyPrint && prettyPrint !== -1 ? "\n" : "";
+    var newLine = prettyPrint === -1 && dojo.isArray(it) && it.length > 0 && typeof it[0] == "object" || prettyPrint && prettyPrint !== -1 ? "\n" : "";
 	// array
 	if(dojo.isArray(it)){
 		var res = dojo.map(it, function(obj){
