@@ -40,6 +40,7 @@ import com.wavemaker.tools.spring.SpringConfigSupport;
 
 /**
  * @author Edward "EdC" Callahan
+ * @author Seung Lee
  */
 
 public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
@@ -139,7 +140,6 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 		String provider = null;
 
 		try{
-			//ldap also contains a DAO ref, check for ldap first
 			List<Object> refList = authManagerBean.getProperty("providers").getList().getRefElement();
 			for (Object obj : refList) {
 				if (obj instanceof Ref) {
@@ -215,7 +215,8 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	private void convertSecurityByUrlPattern(Project project, Beans acegiBeans, Beans beans) {
 		Map<String, List<String>> urlMap = getObjectDefinitionSource(acegiBeans);
 		urlMap = convertAuth(project, urlMap);
-		SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
+  	  	SecuritySpringSupport.setSecurityEnforced(beans,true);
+	    SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
 	}
 
 	private Map<String, List<String>> convertAuth(Project project, Map<String, List<String>> urlMap) {
@@ -296,8 +297,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	/**
 	 * See SecurityConfigService.configDemo
 	 */
-	private void demoUpgrade(Beans acegiBeans, Beans beans/*, boolean enforceSecurity, boolean enforceIndexHtml*/) {
-		//SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
+	private void demoUpgrade(Beans acegiBeans, Beans beans) {
 		SecuritySpringSupport.setRequiresChannel(beans, "http", "8443");
 		List<UserService.User> userList =  getAcegiDemoUsers(acegiBeans);
 		if(userList.isEmpty()){

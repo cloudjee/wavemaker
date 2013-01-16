@@ -187,5 +187,12 @@
             </bean>
         </constructor-arg>
     </bean>
-    
+	<bean class="com.wavemaker.runtime.security.WMSecurityConfigStore" id="WMSecurityConfigStore">
+	    <property name="enforceSecurity">
+            <value>false</value>
+        </property>
+        <property name="enforceIndexHtml">
+            <value>true</value>
+        </property>
+	</bean>    
 </beans> 
