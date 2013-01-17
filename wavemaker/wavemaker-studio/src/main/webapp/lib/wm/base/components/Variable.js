@@ -627,7 +627,7 @@ dojo.declare("wm.Variable", wm.Component, {
     forEach: function(inCallback) {
         var count = this.getCount();
         for (var i = 0; i < count; i++) {
-            inCallback(this.getItem(i), i);
+            if (inCallback(this.getItem(i), i) === true) break;
         }
     },
     map: function(inCallback) {
