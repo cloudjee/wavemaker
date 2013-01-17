@@ -518,5 +518,11 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
   color: white;
 }
 .NotTrueSecurity {
-
+    color: #ccc;
+    //font-size: 0.9Em;   
+    margin-bottom:10px;
+}
+.NotTrueSecurity .SecurityNote {
+    width:40px;
+    vertical-align: top;
 }

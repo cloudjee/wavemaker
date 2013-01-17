@@ -65,13 +65,13 @@ wm.Component.extend({
 
 
 wm.Object.extendSchema(wm.Control, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "60px", height: "240px"}, shortname: "Visibile to which roles<div class='NotTrueSecurity'>NOTE: This restricts visibility, but does not prevent hacking. Reliable security is done from the server.</div>"},
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Visibile to which roles"},
     deviceSizes: {group: "mobile", subgroup: "devices", shortname: "showForDeviceSizes", editor: "wm.prop.DeviceSizeEditor", order: 101},
     deviceType: {group: "mobile",  subgroup: "devices", editor: "wm.prop.DeviceListEditor",  order: 100}
 }, true);
 
 wm.Object.extendSchema(wm.ServiceVariable, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "60px", height: "240px"}, advanced: 1, shortname: "Fires for which roles<div class='NotTrueSecurity'>NOTE: As a client-side security measure, it can be hacked. <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>Reliable security is done from the server</a>.</div>"}
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, advanced: 1, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Fires for which roles"}
 }, true);
 
 
