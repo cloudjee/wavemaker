@@ -27,7 +27,7 @@ public class InvalidServerConfigurationException extends Exception {
     private static final long serialVersionUID = 155181345858558693L;
 
     public static enum Parameter {
-        SERIVCE_PORT, SHUTDOWN_PORT
+        SERIVCE_PORT, SHUTDOWN_PORT, SSL_PORT
     };
 
     // Variables
