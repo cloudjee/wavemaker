@@ -163,13 +163,13 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     onGeocodeError: function(inResponse, inData) {},
 
     geocode: function(inData) {
-	this._dataToGeocode.push(inData);
-	this.geocodeNext();
+    	this._dataToGeocode.push(inData);
+    	this.geocodeNext();
     },
     geocodeNext: function() {
-	if (this._geocoding) return;
-	this._geocoding = true;
-	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
+    	if (this._geocoding) return;
+    	this._geocoding = true;
+    	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
         this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
     },
 
@@ -187,30 +187,30 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
     onGeocodeError: function(inResponse, inData) {},
 
-    _geocode: function(inData, onCompleteFunc) {
+    _geocode: function(inItem, onCompleteFunc) {
         var self = this;
         var icon;
 	if (!this.geocoder) {
 	    this.geocoder = new google.maps.Geocoder();
 	}
         this.geocoder.geocode({
-            'address': inData[this.addressField]
+            'address': inItem.getValue(this.addressField)
         }, function(results, status) {
 	    self._geocoding = false;
             if (status == google.maps.GeocoderStatus.OK) {
                 var location = results[0].geometry.location;
-		inData[self.latitudeField] = location.lat();
-		inData[self.longitudeField] = location.lng();
-		self.generateMarker(inData);
-		self.onGeocodeSuccess(inData);
+		inItem.setValue(self.latitudeField, location.lat());
+		inItem.setValue(self.longitudeField, location.lng());
+		self.generateMarker(inItem);
+		self.onGeocodeSuccess(inItem);
             } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
-                self._dataToGeocode.push(inData);
+                console.log("GEOCODING: " + status + ". DELAY and then redo " + inItem.getValue(self.addressField));
+                self._dataToGeocode.push(inItem);
                 wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
                 return;
             } else {
-                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
-		self.onGeocodeError(status, inData);
+                console.error("Failed to geocode " + inItem.getValue(self.addressField) + "; " + status);
+		self.onGeocodeError(status, inItem);
             }
             if (onCompleteFunc) {
                 onCompleteFunc();
@@ -218,19 +218,22 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
         });
     },
     generateMarkers: function() {
-        
-	var data = this.dataSet.getData();
-	if (data) {
-	    for (var i = 0; i < data.length; i++) {
-		data[i]._index = i+1; // one based indexing for end users
-		this.generateMarker(data[i]);
-	    }
-	    if (this._dataToGeocode.length) {
-		this.geocodeNext();
-	    }
-	}
+            
+    	//var data = this.dataSet.getData();
+    	var count = this.dataSet.getCount();
+    	if (count) {
+    	    for (var i = 0; i < count; i++) {
+    		  var item = this.dataSet.getItem(i);
+    		  item._index = i+1; // one based indexing for end users
+    		  this.generateMarker(item);
+    	    }
+    	    if (this._dataToGeocode.length) {
+    	       	this.geocodeNext();
+    	    }
+    	}
     },
-    generateMarker: function(d) {
+    generateMarker: function(item) {
+        var d = item.getData();
 		var lat = d[this.latitudeField];
 		var lon = d[this.longitudeField];
 	var address = d[this.addressField];
@@ -238,7 +241,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		var desc = d[this.descriptionField];
 		var icon = d[this.iconField];
 	if (address && !lat && !lon) {
-	    this._dataToGeocode.push(d);
+	    this._dataToGeocode.push(item);
 	    return;
 	}
 	switch(icon) {
