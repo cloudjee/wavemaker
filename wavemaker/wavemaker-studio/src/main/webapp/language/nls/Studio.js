@@ -255,6 +255,7 @@
     TITLE_IMPORT_PROJECT: "Import Project",
     TITLE_IMPORT_COMPONENT: "Import Component",
     TITLE_IMPORT_TEMPLATE: "Import Template",
+    TITLE_IMPORT_THEME: "Import Theme",    
     TITLE_CREATE_LIVE_VIEW: "New LiveView",
     //TOAST_IMPORT_PROJECT: "Successfully imported project ${inResponse}",
     //ALERT_IMPORT_PROJECT_FAILED: "Error occurred while importing project!\n${error}",
@@ -268,6 +269,9 @@
     ALERT_IMPORT_COMPONENT_FAILED: "Component Import Failed: ${inError}",
     ALERT_IMPORT_TEMPLATE_SUCCESS: "Import Complete.  Use 'New Project' to use the new template",
     ALERT_IMPORT_TEMPLATE_FAILED: "Template Import Failed: ${inError}",
+    ALERT_IMPORT_THEME_SUCCESS: "Theme Import Complete",
+    ALERT_IMPORT_THEME_FAILED: "ThemeImport Failed: ${inError}",
+
     TOAST_CODE_VALIDATION_SUCCESS: "No errors found",
     TITLE_CODE_VALIDATION_DIALOG: "Compiler Results",
     TITLE_IMPORT_JAVASCRIPT: "Script Importer",

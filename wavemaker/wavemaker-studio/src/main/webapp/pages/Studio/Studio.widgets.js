@@ -206,7 +206,10 @@ height: "29px", width: "420px",
 								   onClick: "importComponent"},
 								   {"defaultLabel": "Import Template...",
 								    idInPage: "importTemplateItem",
-								   onClick: "importTemplate"}
+								   onClick: "importTemplate"},
+								   {"defaultLabel": "Import Theme...",
+								    idInPage: "importThemeItem",
+								   onClick: "importMultiple"}								   
 							      ]
 							     }
 							 ]},

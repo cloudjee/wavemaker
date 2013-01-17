@@ -29,6 +29,8 @@ import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.StudioFileSystem;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
+import com.wavemaker.runtime.server.Downloadable;
+import com.wavemaker.tools.project.DownloadableFile;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.WMRuntimeException;
@@ -351,6 +353,48 @@ public class DeploymentService {
 
     public String[] listThemeImages(String themename) throws IOException {
         return this.deploymentManager.listThemeImages(themename);
+    }
+
+    /**
+     * @param folderpath The folder
+     * @param filename
+     * @return
+     * @throws IOException
+     */
+    public Downloadable exportTheme(String themename) throws IOException {
+	Folder common = this.fileSystem.getCommonFolder();
+	Folder themes = common.getFolder("themes");
+	Folder f = themes.getFolder(themename);
+	Folder themeexports = this.fileSystem.getCommonFolder().getFolder("themeexports");
+	themeexports.createIfMissing();
+	Folder tmp = themeexports.getFolder("tmp");
+	tmp.createIfMissing();
+	Folder destF = tmp.getFolder("themes");
+	destF.createIfMissing();
+	f.copyTo(destF);
+        InputStream inputStream = ZipArchive.compress(tmp);
+        com.wavemaker.tools.io.File exportFile = themeexports.getFile(themename + ".zip");
+        exportFile.getContent().write(inputStream);
+	tmp.delete();
+	return new DownloadableFile(exportFile);
+    }
+
+    public FileUploadResponse uploadMultiFile(MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        fileName = fileName.substring(0, fileName.lastIndexOf(".zip"));
+        FileUploadResponse ret = new FileUploadResponse();
+        Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(CLIENT_COMPONENTS_STAGE);
+        ZipArchive.unpack(file.getInputStream(), componentStage);
+
+	com.wavemaker.tools.io.Folder themes = componentStage.getFolder("themes");
+	System.out.println("THEMES: " + themes.exists());
+	if (themes.exists()) {
+	    Folder common = this.fileSystem.getCommonFolder();
+	    Folder commonThemes = common.getFolder("themes");
+	    themes.list().folders().copyTo(commonThemes);
+	}
+	componentStage.delete();
+        return ret;
     }
 
     public FileUploadResponse uploadClientComponent(MultipartFile file) throws IOException {

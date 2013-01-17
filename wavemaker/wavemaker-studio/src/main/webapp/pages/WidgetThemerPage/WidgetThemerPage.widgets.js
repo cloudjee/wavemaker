@@ -25,7 +25,11 @@ WidgetThemerPage.widgets = {
 	}],
 	templateListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],
 	parentClassListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],	
-    themeListVar: ["wm.Variable", {type: "themeListType"}],
+    themeListVar: ["wm.Variable", {type: "themeListType"}, {}, {
+                binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"source":"studio.themesListVar","targetProperty":"dataSet"}, {}]
+        		}]    
+    }],
     currentClassListVar: ["wm.Variable", {type: "StringData", isList:1},{}, {
                 binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"source":"parentClassSelect.selectedItem.classList","targetProperty":"dataSet"}, {}]
@@ -71,6 +75,11 @@ WidgetThemerPage.widgets = {
         		}]		    
 		    }],
 		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert to last saved theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}, {
+				binding: ["wm.Binding", {}, {}, {
+        			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
+        		}]		    
+		    }],
+		    themesPageExportBtn: ["wm.studio.ToolbarButton", {hint: "Export theme so you can share it",  iconUrl: "images/resourceManagerIcons/download16.png"}, {onclick: "exportThemeClick"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
         		}]		    

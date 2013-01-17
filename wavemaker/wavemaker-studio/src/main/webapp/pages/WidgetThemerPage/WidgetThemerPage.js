@@ -307,6 +307,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     start: function() {        
         this.templateListVar.setQuery({hide: false});
         this.themeListVar.setQuery({designer: "widgetthemer"});    
+        //this.themeListVar.setDataSet(studio.themesListVar);
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.parentClassListVar.setData(dojo.filter(this.templateFileData, function(inItem) {
             return inItem.customWidgetAddClass;
@@ -1282,6 +1283,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             app.toastSuccess("Saved");
         }
 
+    },
+    exportThemeClick: function() {
+//        var path = wm.dojoModuleToPath(this.currentTheme).replace(/^.*\/common\//, "/common/");
+        studio.downloadInIFrame("services/deploymentService.download?method=exportTheme&themename=" + this.currentThemeName);
     },
 
     /* START SECTION: Managing the Demo Panel */
