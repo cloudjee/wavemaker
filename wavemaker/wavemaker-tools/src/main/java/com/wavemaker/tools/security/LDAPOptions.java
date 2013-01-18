@@ -18,8 +18,10 @@ package com.wavemaker.tools.security;
  * @author Frankie Fu
  */
 public class LDAPOptions {
-
-    private String ldapUrl;
+	
+	private String domain;
+	
+    private String url;
 
     private String managerDn;
 
@@ -48,13 +50,21 @@ public class LDAPOptions {
     private String roleQuery;
 
     private String roleProvider;
-
-    public String getLdapUrl() {
-        return this.ldapUrl;
+    
+    public String getDomain() {
+    	return domain;
     }
 
-    public void setLdapUrl(String ldapUrl) {
-        this.ldapUrl = ldapUrl;
+    public void setDomain(String domain) {
+    	this.domain = domain;
+    }
+
+    public String getUrl() {
+        return this.url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getManagerDn() {

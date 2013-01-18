@@ -305,6 +305,11 @@ public class SecurityToolsManager {
         }
     }
 
+    public LDAPOptions getAdOptions() throws IOException, JAXBException {
+        Beans beans = getSecuritySpringBeans(false);
+        return SecuritySpringSupport.constructAdOptions(beans);
+    }
+
     public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
         Beans beans = getSecuritySpringBeans(false);
         return SecuritySpringSupport.constructLDAPOptions(beans);
@@ -344,6 +349,14 @@ public class SecurityToolsManager {
         saveSecuritySpringBeans(beans);
     }
 
+    public void configAD(String Domain, String ServerUrl) throws IOException, JAXBException {
+        Beans beans = getSecuritySpringBeans(true);
+        SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_AD);
+        SecuritySpringSupport.updateAdAuthProvider(beans, ServerUrl, Domain);
+            //SecuritySpringSupport.resetJdbcDaoImpl(beans);
+            saveSecuritySpringBeans(beans);
+    }
+    
     public void configLDAP(String ldapUrl, String userDnPattern, boolean groupSearchDisabled,
             String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
             Beans beans = getSecuritySpringBeans(true);

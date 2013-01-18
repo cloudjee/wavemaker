@@ -63,6 +63,7 @@ dojo.declare(
             this.initSecProviderInput();
             this.initLdapRoleProviderInput(); // added by Girish
             this.databaseOptions = {};
+            this.adOptions = {};
             this.ldapOptions = {};
             this.secEnableInput.setChecked(true);
             this.servicesLayer.setShowing(true);
@@ -181,9 +182,9 @@ dojo.declare(
                 if (!this.populatingOptions) {
                     this.getDataModelList();
                 }
-            } else if (inValue == "JOSSO") {
-                this.layers.setLayer("jossoLayer");
-                this.servicesLayer.setShowing(false);
+            } else if (inValue == "AD") {
+                this.layers.setLayer("adLayer");
+                this.servicesLayer.setShowing(true);
 		this.rolesLayer.setShowing(this.secEnableInput.getChecked());
                 this.secEnableInput.setShowing(true);
                 this.securityCheckboxChange();
@@ -218,8 +219,8 @@ dojo.declare(
                     this.populateDatabaseOptions();
                 } else if (t == "LDAP") {
                     this.populateLDAPOptions();
-                } else if (t == "JOSSO") {
-                    this.populateJOSSOOptions();
+                } else if (t == "AD") {
+                    this.populateADOptions();
                 }
                 this.populatingOptions = false;
             } else {
@@ -228,11 +229,13 @@ dojo.declare(
             }
             this.secProviderInputChange(this.secProviderInput, this.secProviderInput.getDataValue());
         },
-        populateJOSSOOptions : function() {
-            studio.securityConfigService.requestAsync("getJOSSOOptions", null, dojo.hitch(this, "getJOSSOOptionsResult"));
+        populateADOptions : function() {
+            studio.securityConfigService.requestAsync("getADOptions", null, dojo.hitch(this, "getADOptionsResult"));
         },
-        getJOSSOOptionsResult : function(inResponse) {
-            this.roleList.renderData(inResponse);
+        getADOptionsResult : function(inResponse) {
+			this.adOptions = inResponse;
+            this.adDomainInput.setDataValue(inResponse.domain);
+			this.adUrlInput.setDataValue(inResponse.url);
         },
         populateDemoOptions : function() {
             studio.securityConfigService.requestSync("getDemoOptions", null, dojo.hitch(this, "getDemoOptionsResult"));
@@ -253,7 +256,7 @@ dojo.declare(
         },
         getLDAPOptionsResult : function(inResponse) {
             this.ldapOptions = inResponse;
-            this.ldapUrlInput.setDataValue(inResponse.ldapUrl);
+            this.ldapUrlInput.setDataValue(inResponse.url);
             this.ldapManagerDnInput.setDataValue(inResponse.managerDn);
             this.ldapManagerPasswordInput.setDataValue(inResponse.managerPassword);
             this.ldapUserDnPatternInput.setDataValue(inResponse.userDnPattern);
@@ -293,7 +296,7 @@ dojo.declare(
             this.updateStudioServices();
             this.toastToSuccess();
         },
-        configJOSSOResult : function(inResponse) {
+        configADResult : function(inResponse) {
             this.updateStudioServices();
             this.toastToSuccess();
         },
@@ -317,7 +320,7 @@ dojo.declare(
                 if (!(this.ldapUrlInput.getDataValue() && this.ldapUserDnPatternInput.getDataValue())) {
                     err = this.getDictionaryItem("ERROR_LDAP_INPUT_REQUIRED");
                 }
-            } else if (dataSourceType == "JOSSO") {
+            } else if (dataSourceType == "AD") {
                 // To do
             }
             return err;
@@ -646,10 +649,6 @@ dojo.declare(
                         return;
                     }
                 }
-                if (d.length && this.isJOSSO()) {
-                    app.alert(this.getDictionaryItem("ALERT_JOSSO_ONLY_ONE_ROLE"));
-                    return;
-                }
                 d.push(role);
 
                 this.roleList.renderData(d);
@@ -693,21 +692,12 @@ dojo.declare(
                                                     // security page
         },
         saveRolesSetup : function() {
-            if (this.isJOSSO())
-                studio.securityConfigService.requestAsync("setJOSSORoles", [ this.roleList._data ], dojo.hitch(this, "setRolesResult"));
-            else
                 studio.securityConfigService.requestAsync("setRoles", [ this.roleList._data ], dojo.hitch(this, "setRolesResult"));
         },
         setRolesResult : function() {
             wm.roles = this.roleList._data || [];
         },
         copyLoginFiles : function() {
-            if (this.isJOSSO()) {
-                if (!webFileExists("login-redirect.jsp")) {
-                    var loginhtml = "<%--\n  ~ JOSSO: Java Open Single Sign-On\n  ~\n  ~ Copyright 2004-2009, Atricore, Inc.\n  ~\n  ~ This is free software; you can redistribute it and/or modify it\n  ~ under the terms of the GNU Lesser General Public License as\n  ~ published by the Free Software Foundation; either version 2.1 of  \n~ the License, or (at your option) any later version.  \n~  \n~ This software is distributed in the hope that it will be useful,  \n~ but WITHOUT ANY WARRANTY; without even the implied warranty of  \n~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU  \n~ Lesser General Public License for more details.  \n~  ~ You should have received a copy of the GNU Lesser General Public  \n~ License along with this software; if not, write to the Free  \n~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  \n~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.  \n~  \n--%>\n\n<%@page contentType=\"text/html; charset=UTF-8\" language=\"java\" session=\"true\" %>\n<%\n response.sendRedirect(request.getContextPath() + \"/josso_login/\");\n%>";
-                    studio.project.saveProjectData("login-redirect.jsp", loginhtml);
-                }
-            } else {
                 if (!webFileExists("login.html")) {
                     var loginhtml = loadDataSync(this.loginTemplateFolder + "login.html");
                     studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName));
@@ -729,7 +719,6 @@ dojo.declare(
                                                         // request
                     studio.project.pagesChanged();
                 }
-            }
         },
 
         demoUserListFormat : function(inSender, ioData, inColumn, inData, inHeader) {
@@ -749,12 +738,11 @@ dojo.declare(
         getRolesUpdateResult : function(inData) {
             wm.roles = inData || [];
         },
-        showJossoLayer : function() {
+        showAdLayer : function() {
             this.secEnableInput.setChecked(true);
             this.servicesLayer.setShowing(false);
             this.rolesLayer.setShowing(true);
             this.securityCheckboxChange();
-
             var roles = this.roleList._data;
             if (roles && roles.length) {
                 this.roleList._render();
@@ -801,7 +789,7 @@ dojo.declare(
             this.setDirty();
         },
         isJOSSO : function() {
-            return this.secProviderInput.getDataValue() == "JOSSO";
+            return false
         },
         getCachedData : function() {
             var rolesQuery = null;
@@ -895,8 +883,8 @@ dojo.declare(
             case "ldapLayer":
                 t = "LDAP";
                 break;
-            case "jossoLayer":
-                t = "JOSSO";
+            case "adLayer":
+                t = "AD";
                 break;
             }
             var err = this.checkErrorOnInputFields(t)
@@ -937,26 +925,16 @@ dojo.declare(
                                 this.ldapRoleDbDataModelInput.getDataValue(), this.ldapRoleDbEntityInput.getDataValue(), this.ldapRoleDbUsernameInput.getDataValue(), this.ldapRoleDbRoleInput.getDataValue(), rolesQuery,
                                 this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
 								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
-                    } else if (t == "JOSSO") {
+                    } else if (t == "AD") {
                         var roles = this.roleList._data;
-                        if (roles.length == 1 || !this.secEnableInput.getChecked()) {
-                            studio.securityConfigService.requestSync("configJOSSO",
-                                [ this.secEnableInput.getChecked(), roles[0] || "test"],
-                                dojo.hitch(this, "configJOSSOResult"));
+                            studio.securityConfigService.requestSync("configAD",
+                                [this.adUrlInput.getDataValue(), this.adDomainInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""],
+                                dojo.hitch(this, "configADResult"));
                             studio.application.loadServerComponents();
                             studio.refreshServiceTree();
-
-                        } else {
-                            app.alert(this.getDictionaryItem("ALERT_JOSSO_ONE_ROLE"));
-                            studio.progressDialog.hide();
-                            return;
-
-                        }
                     }
-                    if (t != "JOSSO") {
                         this.saveRolesSetup();
                         this.saveServicesSetup();
-                    }
                     studio.application.loadServerComponents();
                     studio.refreshServiceTree();
                     studio.project.saveApplication(); // Seems redundant but insures that securityEnabled and loginpageEnabled properties are updated and written
