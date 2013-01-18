@@ -117,6 +117,7 @@ dojo.declare("wm.Splitter", wm.Bevel, {
         this.sizeControl = this.getSizeControl();
         if (!this.sizeControl)
             return;
+        var otherControl = this.sizeControl.getIndexInParent() > this.getIndexInParent() ? this.sizeControl.parent.c$[this.sizeControl.getIndexInParent()-2] : this.sizeControl.parent.c$[this.sizeControl.getIndexInParent()+2];
         //this.size = dojo._getMarginBox(this.sizeNode);
         //this.containerSize = dojo._getContentBox(this.sizeNode.parentNode);
         this.size = this.sizeControl.cloneBounds();
@@ -128,13 +129,13 @@ dojo.declare("wm.Splitter", wm.Bevel, {
         switch (this.layout) {
             case "top":
             case "bottom":
-                this._boundsMax = this.sizeControl.parent.bounds.h - this.sizeControl.parent.getPreferredFitToContentHeight() + this.sizeControl.bounds.h;
+                this._boundsMax = this.sizeControl.parent.bounds.h - otherControl.getPreferredFitToContentHeight() + this.sizeControl.bounds.h;
                 this._boundsMin = this.sizeControl.getPreferredFitToContentHeight ? this.sizeControl.getPreferredFitToContentHeight() : this.sizeControl.getMinHeightProp();
 
                 break;
             case "left":
             case "right":
-                this._boundsMax = this.sizeControl.parent.bounds.w - this.sizeControl.parent.getPreferredFitToContentWidth() + this.sizeControl.bounds.w;
+                this._boundsMax = this.sizeControl.parent.bounds.w - otherControl.getPreferredFitToContentWidth() + this.sizeControl.bounds.w;
                 this._boundsMin = this.sizeControl.getPreferredFitToContentWidth ? this.sizeControl.getPreferredFitToContentWidth() : this.sizeControl.getMinWidthProp();
                 break;
         }
