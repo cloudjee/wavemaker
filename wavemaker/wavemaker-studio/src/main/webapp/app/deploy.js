@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -361,6 +361,22 @@ Studio.extend({
         d.page.setService("deploymentService", "uploadTemplateZipFile");
 	    d.show();
 	},
+	importMultiple: function() {
+		var d = this.getImportProjectDialog();
+	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_THEME"));
+	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inSender, inResponse) {
+		    d.dismiss();
+	       app.alert(this.getDictionaryItem("ALERT_IMPORT_THEME_SUCCESS"));
+	       studio.loadThemeList();
+	    });
+        d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
+    	       app.alert(this.getDictionaryItem("ALERT_IMPORT_THEME_FAILED", {inError: inError}));
+    	       if (app.toastDialog) app.toastDialog.hide();
+        });
+        d.page.setService("deploymentService", "uploadMultiFile");
+	    d.show();
+	},	
+	
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {
         this.project.saveProject(true);

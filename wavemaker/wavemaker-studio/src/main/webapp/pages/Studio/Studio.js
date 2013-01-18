@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -385,9 +385,9 @@ dojo.declare("Studio", wm.Page, {
         this.propertiesDialog.hide();
         */
         if (!this._loadingApplication) {
-        wm.typeManager.clearTypes();
-        wm.services.clear();
-        wm.roles = [];
+            wm.typeManager.clearTypes();
+            wm.services.clear();
+            wm.roles = [];
         }
         this.updateProjectDirty();
         //
@@ -422,7 +422,12 @@ dojo.declare("Studio", wm.Page, {
                     }
                     options.push("other");
                     this.languageSelect.setOptions(options.join(","));
-                }));
+                })).then(function() {
+                    studio.securityConfigService.requestSync("getRoles", [], function(inData) {
+                        wm.roles = inData;
+                        studio.application._roles = inData;
+                    });
+                });
                 this.disableMenuBar(false);
                 if (this.currentDeviceType == "phone") {
                     this.designPhoneUI(false);
@@ -722,17 +727,24 @@ dojo.declare("Studio", wm.Page, {
     themeChanged: function(inThemePackage) {
         var palette = studio.palette;
         try {
-            palette.clearSection("Theme Widgets");
+            var themeNode;
+            studio.palette.root.forEachChild(function(n) {
+                if (n.data == "Theme Widgets") themeNode = n;
+            });
+            if (themeNode) themeNode.removeChildren();
             var widgets = wm.load(dojo.moduleUrl(inThemePackage) + "packages.js");
             if (widgets) {
                 widgets = eval("[" + widgets + "]");
-                if (widgets.length) {
-                    palette.makeGroup("Theme Widgets", 1);
+                if (widgets.length && !themeNode) {
+                    themeNode = palette.makeGroup("Theme Widgets", 1);
                 }
                 installPackages(widgets);
                 if (widgets.length) {
                     studio.palette.findItemByName("Theme Widgets").setOpen(true);
                 }
+            }
+            if (themeNode) {
+                themeNode.setContent(wm.capitalize(inThemePackage.replace(/^.*\./,"")) + " Widgets");
             }
         } catch(e) {}
     },
@@ -1773,7 +1785,7 @@ dojo.declare("Studio", wm.Page, {
         wm.forEachProperty(studio.page.$, function(inComponent) {
             if (inComponent instanceof wm.DesignableDialog) {
                 if (inComponent.containerWidget) panels.push(inComponent.containerWidget);
-                if (inComponent.buttonBar) panels.push(inComponent.buttonBar);                
+                if (inComponent.buttonBar) panels.push(inComponent.buttonBar);
             }
             if (inComponent instanceof wm.Dialog) {
                 if (inComponent.showing) showingDialogs.push(inComponent);
@@ -1783,7 +1795,7 @@ dojo.declare("Studio", wm.Page, {
         });
         wm.forEachProperty(studio.application.$, function(inComponent) {
             if (inComponent.containerWidget) panels.push(inComponent.containerWidget);
-            if (inComponent.buttonBar) panels.push(inComponent.buttonBar);                
+            if (inComponent.buttonBar) panels.push(inComponent.buttonBar);
             if (inComponent instanceof wm.Dialog) {
                 if (inComponent.showing) showingDialogs.push(inComponent);
                 if (inComponent.buttonBar) inComponent.buttonBar.resetDesignHeight();
@@ -1815,11 +1827,11 @@ dojo.declare("Studio", wm.Page, {
         return regenerated;
     },
     designDesktopUI: function() {
-        this.currentDeviceType = "desktop";    
+        this.currentDeviceType = "desktop";
         if (studio.application && studio.application.theme != studio.application._theme) {
             studio.application._setTheme(studio.application.theme);
         }
-    
+
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded) {
             studio.page.root.unfoldUI();
@@ -1845,8 +1857,8 @@ dojo.declare("Studio", wm.Page, {
         if (this.page && this.page.root) this.page.root.domNode.style.overflowX = "auto"
     },
     designTabletUI: function() {
-        this.currentDeviceType = "tablet";    
-        if (studio.application && (studio.application.tabletTheme && studio.application.tabletTheme != studio.application._theme || 
+        this.currentDeviceType = "tablet";
+        if (studio.application && (studio.application.tabletTheme && studio.application.tabletTheme != studio.application._theme ||
             !studio.application.tabletTheme && studio.application._theme != studio.application.theme)) {
             studio.application._setTheme(studio.application.tabletTheme || studio.application.theme);
         }
@@ -1881,11 +1893,11 @@ dojo.declare("Studio", wm.Page, {
     },
     designPhoneUI: function(inMobileFolding) {
         this.currentDeviceType = "phone";
-        if (studio.application && (studio.application.phoneTheme && studio.application.phoneTheme != studio.application._theme || 
+        if (studio.application && (studio.application.phoneTheme && studio.application.phoneTheme != studio.application._theme ||
             !studio.application.phoneTheme && studio.application._theme != studio.application.theme)) {
             studio.application._setTheme(studio.application.phoneTheme || studio.application.theme);
         }
-    
+
         this.widgetsTree.dragEnabled = true;
         if (studio.page && studio.page.root._mobileFolded && !inMobileFolding) {
             studio.page.root.unfoldUI();

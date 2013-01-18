@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -728,6 +728,9 @@ dojo.mixin(wm.Page, {
             if (inIndex === undefined) inIndex = page.length - 1;
             return page[inIndex];
         }
+    },
+    getPages: function(inName) {
+        return wm.Page.byName[wm.capitalize(inName)];
     },
     registerPage: function(inPage) {
         // We'll need the page to

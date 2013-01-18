@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -183,9 +183,11 @@ dojo.declare("wm.AceEditor", wm.Control, {
             this._editor.getSelection().setSelectionRange({start: {row: startRow, column: startColumn},
                                    end: {row: endRow, column: endColumn}});
     },
-    setCursorPosition: function(row, column) {
-        if (this._editor)
+    setCursorPosition: function(row, column) {    
+        if (this._editor) {
+            this._editor.getSelection().clearSelection();
             this._editor.moveCursorTo(row,column);
+        }
     },
     setCursorPositionInText: function(index) {
         if (this._editor) {

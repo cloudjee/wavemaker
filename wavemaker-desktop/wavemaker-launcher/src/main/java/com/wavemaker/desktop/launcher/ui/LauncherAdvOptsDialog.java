@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
         this.ckbSubPageDisplay.setSelected(this.console.prefs.getBoolean(MainConsole.OPTION_ENABLE_SUBPAGES, true));
         this.tfNewServerPort.setText(String.valueOf(this.console.tomcatConfig.getServicePort()));
         this.tfNewShutdownPort.setText(String.valueOf(this.console.tomcatConfig.getShutdownPort()));
+        this.tfNewSslPort.setText(String.valueOf(this.console.tomcatConfig.getSslPort()));
 
         this.ckbProxyEnabled.setSelected(this.console.prefs.getBoolean(MainConsole.OPTION_PROXY_ENABLED, false));
         this.tfNewProxyServer.setText(this.console.prefs.get(MainConsole.OPTION_PROXY_SERVER, null));
@@ -92,7 +93,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
 
         this.console.optionsSave.put(MainConsole.OPTION_SERVER_PORT, String.valueOf(this.console.tomcatConfig.getServicePort()));
 
-        this.console.optionsSave.put(MainConsole.OPTION_SHUTDOWN_PORT, String.valueOf(this.console.tomcatConfig.getShutdownPort()));
+        this.console.optionsSave.put(MainConsole.OPTION_SSL_PORT, String.valueOf(this.console.tomcatConfig.getSslPort()));
 
         this.console.optionsSave.put(MainConsole.OPTION_PROXY_ENABLED,
             String.valueOf(this.console.prefs.getBoolean(MainConsole.OPTION_PROXY_ENABLED, true)));
@@ -132,6 +133,8 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
         this.tfNewServerPort = new javax.swing.JTextField();
         this.lblNewShutdownPort = new javax.swing.JLabel();
         this.tfNewShutdownPort = new javax.swing.JTextField();
+        this.lblNewSslPort = new javax.swing.JLabel();
+        this.tfNewSslPort = new javax.swing.JTextField();
         this.pnlProxy = new javax.swing.JPanel();
         this.ckbProxyEnabled = new javax.swing.JCheckBox();
         this.lblNewProxyServer = new javax.swing.JLabel();
@@ -339,6 +342,34 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 10, 93, 18);
         this.pnlPorts.add(this.tfNewShutdownPort, gridBagConstraints);
+
+        this.lblNewSslPort.setLabelFor(this.tfNewSslPort);
+        this.lblNewSslPort.setText(bundle.getString("LauncherAdvOptsDialog.lblNewSslPort.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(9, 18, 0, 0);
+        this.pnlPorts.add(this.lblNewSslPort, gridBagConstraints);
+
+        this.tfNewSslPort.setText("8443");
+        this.tfNewSslPort.setToolTipText(bundle.getString("LauncherAdvOptsDialog.tfNewSslPort.toolTipText")); // NOI18N
+        this.tfNewSslPort.addFocusListener(new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfNewSslPortFocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 34;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 70, 18);
+        this.pnlPorts.add(this.tfNewSslPort, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -589,13 +620,11 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
                 this.console.tomcatConfig.setShutdownPort(newPort);
             }
 
-            /*
-             * newPort = Integer.parseInt(tfNewProxyPort.getText()); if (newPort != console.tomcatConfig.getProxyPort())
-             * { console.tomcatConfig.setProxyPort(newPort); }
-             * 
-             * byte[] newPwd = new String(tfNewProxyPassword.getPassword()).getBytes(); if (newPort !=
-             * console.tomcatConfig.getProxyPassword()) { console.tomcatConfig.setProxyPassword(newPwd); }
-             */
+            newPort = Integer.parseInt(this.tfNewSslPort.getText());
+            if (newPort != this.console.tomcatConfig.getSslPort()) {
+                this.console.tomcatConfig.setSslPort(newPort);
+            }
+
             Main.setDefaultTomcatConfiguration(this.console.tomcatConfig);
         } catch (IOException e) {
             e.printStackTrace();
@@ -632,6 +661,8 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
 
         this.console.tomcatConfig.setShutdownPort(Integer.parseInt(this.console.optionsSave.get(MainConsole.OPTION_SHUTDOWN_PORT)));
 
+        this.console.tomcatConfig.setSslPort(Integer.parseInt(this.console.optionsSave.get(MainConsole.OPTION_SSL_PORT)));
+
         this.console.prefs.putBoolean(MainConsole.OPTION_PROXY_ENABLED,
             Boolean.parseBoolean(this.console.optionsSave.get(MainConsole.OPTION_PROXY_ENABLED)));
 
@@ -663,6 +694,15 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
             this.tfNewShutdownPort.setText(Integer.toString(this.console.tomcatConfig.getShutdownPort()));
         }
     }// GEN-LAST:event_tfNewShutdownPortFocusLost
+
+    private void tfNewSslPortFocusLost(java.awt.event.FocusEvent evt)// GEN-FIRST:event_tfNewSslPortFocusLost
+    {// GEN-HEADEREND:event_tfNewSslPortFocusLost
+        try {
+            Integer.parseInt(this.tfNewSslPort.getText());
+        } catch (NumberFormatException e) {
+            this.tfNewSslPort.setText(Integer.toString(this.console.tomcatConfig.getSslPort()));
+        }
+    }// GEN-LAST:event_tfNewSslPortFocusLost
 
     private void btnFileChooserActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnFileChooserActionPerformed
     {// GEN-HEADEREND:event_btnFileChooserActionPerformed
@@ -778,6 +818,8 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
 
     private javax.swing.JLabel lblNewShutdownPort;
 
+    private javax.swing.JLabel lblNewSslPort;
+
     private javax.swing.JPanel pnlButtons;
 
     private javax.swing.JPanel pnlCheckboxes;
@@ -799,6 +841,8 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField tfNewServerPort;
 
     private javax.swing.JTextField tfNewShutdownPort;
+
+    private javax.swing.JTextField tfNewSslPort;
     // End of variables declaration//GEN-END:variables
 
 }

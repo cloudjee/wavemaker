@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2009-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -335,8 +335,8 @@ wm.define("wm.Container", wm.Control, {
     },
     moveControl: function(inControl, inIndex) {
         var i0 = this.removeControl(inControl);
-        if (i0 < inIndex)
-            inIndex--;
+       /* if (i0 < inIndex)
+            inIndex--;*/
         this.c$.splice(inIndex, 0, inControl);
     },
     indexOfControl: function(inControl) {

@@ -9,11 +9,9 @@
     text-decoration: underline;
 }
 
-#studio_PIContents .isPublishedProp label,
-#studio_PIContents .isPublishedProp.wmlabel {
-    background-image: url(../../lib/images/silkIcons/arrow_up.png);
-    background-repeat: no-repeat;
-    background-position: 100% 50%;
+#studio_PIContents .isPublishedProp img {
+width: 16px;
+height: 16px;
 }
 
 #studio_PIContents .Disabled .isAdvancedProp label {
@@ -518,4 +516,13 @@ background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArr
 .studio_propertiesMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
   background-color: #586981;
   color: white;
+}
+.NotTrueSecurity {
+    color: #ccc;
+    //font-size: 0.9Em;   
+    margin-bottom:10px;
+}
+.NotTrueSecurity .SecurityNote {
+    width:40px;
+    vertical-align: top;
 }

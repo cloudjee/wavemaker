@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2007-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,12 +48,25 @@ public class DemoOptions {
     		user.setPassword(u.getPassword());
     		StringTokenizer tokenizer = new StringTokenizer(u.getAuthorities(), ",");
     		while(tokenizer.hasMoreTokens()){
-    			roles.add(tokenizer.nextToken());
+    			String role = tokenizer.nextToken();
+    			if(role.startsWith(SecuritySpringSupport.ROLE_PREFIX)){
+    			       role = role.substring(SecuritySpringSupport.ROLE_PREFIX.length());
+    			}
+    			roles.add(role);
     		}
     		user.setRoles(roles);
     		newUsers.add(user);
     	}
     	setUsers(newUsers);
+    }
+    
+    /**
+     * Exists only to suppress no getter warning
+     * @return empty list
+     */
+    List<UserService.User> getUsersByUserSvc(){
+    	List<UserService.User> users = new ArrayList<UserService.User>();
+    	return users;
     }
 
     public void setUsers(List<DemoUser> users) {

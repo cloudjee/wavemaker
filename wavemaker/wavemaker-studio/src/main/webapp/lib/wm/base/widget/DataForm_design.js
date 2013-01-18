@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -358,21 +358,18 @@ wm.FormPanel.extend({
         }
     },
     placeEditor: function(inEditor) {
-        var editors = this.getEditorsArray(true); // getEditorsArray includes the newly created editor which screws with what should be obvious math...
-        if (editors.length == 1) {
-            this.moveControl(inEditor, 0); // in case it was put after the button panel
+        var parent;
+        if (wm.isInstanceType(inEditor, [wm.SubForm, wm.OneToMany])) {
+            parent = this;
         } else {
-            for (var i = editors.length - 1; i >= 0; i--) {
-                if (editors[i] != inEditor) {
-                    var parent = editors[i].parent;
-                    if (parent != inEditor.parent) {
-                        inEditor.setParent(parent);
-                    }
-                    parent.moveControl(inEditor, i + 1);
-                    break;
-                }
-            }
+            parent = dojo.filter(this.c$, function(c) {
+                return c instanceof wm.FormPanel;
+            })[0];
         }
+        var editors = this.getEditorsArray(true); // getEditorsArray includes the newly created editor which screws with what should be obvious math...
+        if (!parent) parent = editors[0].parent;
+        if (inEditor.parent != parent) inEditor.setParent(parent);
+
     },    /****************
      * METHOD: _getFormField (DESIGNTIME)
      * DESCRIPTION: This form can have this.firstname or this.manager, but can NOT have this.manager.firstname.

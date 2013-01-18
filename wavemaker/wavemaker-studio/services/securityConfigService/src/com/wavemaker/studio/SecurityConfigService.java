@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2007-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -89,11 +89,7 @@ public class SecurityConfigService {
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {
-//        GeneralOptions options = getSecToolsMgr().getGeneralOptions();
-//        if (options != null) {
-//            return options.isEnforceSecurity();
-//        }
-        return true;
+    	return getSecToolsMgr().isSecurityEnabled();
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
@@ -296,6 +292,18 @@ public class SecurityConfigService {
         return options;
     }
 
+    public LDAPOptions getADOptions() throws IOException, JAXBException {
+        LDAPOptions options = getSecToolsMgr().getAdOptions();
+        return options;
+    }
+
+
+    public void configAD(String url, String domain, boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort)
+    		throws IOException, JAXBException {
+    	getSecToolsMgr().configAD(url, domain);
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
+    }
+
     public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
         LDAPOptions options = getSecToolsMgr().getLDAPOptions();
         options = populateJavaSpecificLDAPParams(options);
@@ -397,7 +405,7 @@ public class SecurityConfigService {
     }
 
     /**
-     * Set a new Object Definition Source Filter. Replaces previous definition. Only a single attribute per URL is
+     * Set a new security intercept url Filter. Replaces previous definition. Only a single attribute per URL is
      * supported by this interface.
      * 
      * @param securityURLMap The new Object Definition Source URL map

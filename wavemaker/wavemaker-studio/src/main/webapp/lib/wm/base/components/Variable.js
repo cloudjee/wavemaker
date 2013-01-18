@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -627,7 +627,7 @@ dojo.declare("wm.Variable", wm.Component, {
     forEach: function(inCallback) {
         var count = this.getCount();
         for (var i = 0; i < count; i++) {
-            inCallback(this.getItem(i), i);
+            if (inCallback(this.getItem(i), i) === true) break;
         }
     },
     map: function(inCallback) {
@@ -971,6 +971,15 @@ dojo.declare("wm.Variable", wm.Component, {
     },
     */
     _queryItem: function(inItem, inSample, inIndex) {
+        if (dojo.isArray(inSample)) {
+            return dojo.some(inSample, function(inSampleElement) {
+                return this._queryItem2(inItem, inSampleElement, inIndex);
+            }, this);
+        } else {
+            return this._queryItem2(inItem, inSample, inIndex);
+        }
+    },
+    _queryItem2: function(inItem, inSample, inIndex) {
         var w = "*";
 
         for (var key in inSample) {
@@ -996,7 +1005,12 @@ dojo.declare("wm.Variable", wm.Component, {
                     continue;
                 }
 
-
+            } 
+            
+            /* NOTE: there is no "!true", rather, your query is either {a: true} or {a: false} to query on "truthiness" */
+            else if (typeof b == "boolean") {
+                if (Boolean(b) != Boolean(a)) return false;
+                else continue; // all other tests beyond this if/else block are for strings
             } else {
                 var stringB = String(b);
                 if (stringB.charAt(0) == w) {
@@ -1046,9 +1060,6 @@ dojo.declare("wm.Variable", wm.Component, {
                         b = Number(b);
                     } else if (typeof a == "string") {
                         b = b.toLowerCase();
-                    } else if (typeof a == "boolean" || typeof a == "undefined") {
-                        b = b == "false" || b == "null" || b == "undefined" ? false : Boolean(b);
-                        if (a && b || !a && !b) return false;
                     } 
                     var invert = true;
                 }

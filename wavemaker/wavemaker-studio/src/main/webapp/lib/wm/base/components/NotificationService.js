@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -176,6 +176,7 @@ wm.Object.extendSchema(wm.NotificationCall,{
     onError: {ignore:1},
     onSuccess: {ignore:1},
     onBeforeUpdate: {ignore:1},
-    onCanUpdate: {ignore:1}
+    onCanUpdate: {ignore:1},
+    onResult: {ignore:1}
 });
 

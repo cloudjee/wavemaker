@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -85,9 +85,20 @@ public class Server {
         }
         Main.printlnToLog("\tSelected Service Port: " + servicePort);
 
+        // ssl port
+        Main.printlnToLog("\tScanning for SSL Port: ");
+        int sslPort = FindOpenPort(config.getSslPort(), firstPort, lastPort, new int[] { shutdownPort, servicePort });
+        if (sslPort == -1) {
+            throw new InvalidServerConfigurationException(InvalidServerConfigurationException.Parameter.SSL_PORT,
+                    "Unable to locate an available port.");
+        }
+        Main.printlnToLog("\tSelected SSL Port: " + sslPort);
+
         // Update Config
         config.setShutdownPort(shutdownPort);
         config.setServicePort(servicePort);
+        config.setSslPort(sslPort);
+
 
         return;
     }

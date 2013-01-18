@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -287,7 +287,7 @@ public class PhoneGapService {
 		for (Resource resource : files) {
 			return resource.getName();
 		}
-		return "phonegap.js";
+		return "cordova.js";
 	}
 
         private void updateHtmlFile(String phoneGapScript, File file, String themePath, String tabletThemePath, String phoneThemePath) {

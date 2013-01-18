@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2007-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import javax.xml.bind.UnmarshalException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.security.schema.Http;
 import org.springframework.security.core.GrantedAuthority;
-//import org.Securitysecurity.ldap.DefaultInitialDirContextFactory;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
@@ -181,6 +180,10 @@ public class SecurityToolsManager {
         }
     }
 
+    public boolean isSecurityEnabled() throws JAXBException, IOException {
+    	return SecuritySpringSupport.getSecurityEnforced(getSecuritySpringBeans(false));
+    }
+    
     public GeneralOptions getGeneralOptions() throws JAXBException, IOException {
         Beans beans = null;
         try {
@@ -189,13 +192,13 @@ public class SecurityToolsManager {
             return null; // project-security.xml must be setting to DTD
         }
 
-        if (beans == null || beans.getBeanList().isEmpty()) { // project-security.xml
+        if (beans == null || beans.getBeanList().isEmpty()) { 
             return null;
         }
 
         GeneralOptions options = new GeneralOptions();
-        options.setEnforceSecurity(SecuritySpringSupport.isSecurityEnforced(beans));
-        options.setEnforceIndexHtml(SecuritySpringSupport.isIndexHtmlEnforced(beans));
+        options.setEnforceSecurity(SecuritySpringSupport.getSecurityEnforced(beans));
+        options.setEnforceIndexHtml(SecuritySpringSupport.getIndexHtmlEnforced(beans));
         options.setDataSourceType(SecuritySpringSupport.getDataSourceType(beans));
         String channel = SecuritySpringSupport.getRequiresChannel(beans);
         options.setUseSSL(channel != null && channel.equals("https"));
@@ -302,6 +305,11 @@ public class SecurityToolsManager {
         }
     }
 
+    public LDAPOptions getAdOptions() throws IOException, JAXBException {
+        Beans beans = getSecuritySpringBeans(false);
+        return SecuritySpringSupport.constructAdOptions(beans);
+    }
+
     public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
         Beans beans = getSecuritySpringBeans(false);
         return SecuritySpringSupport.constructLDAPOptions(beans);
@@ -341,6 +349,14 @@ public class SecurityToolsManager {
         saveSecuritySpringBeans(beans);
     }
 
+    public void configAD(String Domain, String ServerUrl) throws IOException, JAXBException {
+        Beans beans = getSecuritySpringBeans(true);
+        SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_AD);
+        SecuritySpringSupport.updateAdAuthProvider(beans, ServerUrl, Domain);
+            //SecuritySpringSupport.resetJdbcDaoImpl(beans);
+            saveSecuritySpringBeans(beans);
+    }
+    
     public void configLDAP(String ldapUrl, String userDnPattern, boolean groupSearchDisabled,
             String groupSearchBase, String groupRoleAttribute, String groupSearchFilter) throws IOException, JAXBException {
             Beans beans = getSecuritySpringBeans(true);
@@ -422,6 +438,7 @@ public class SecurityToolsManager {
                 throw new RuntimeException("Unable to get Security Bean");
             } else {
                 SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
+                SecuritySpringSupport.setSecurityEnforced(beans,true);
                 saveSecuritySpringBeans(beans);
             }
         } catch (Exception e) {

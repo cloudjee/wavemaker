@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -63,14 +64,22 @@ public class TomcatConfig {
 
     public static final String PROPERTY_SERVICE_PORT = "ServicePort";
 
+    public static final String PROPERTY_SSL_PORT = "SSLPort";
+
     // Members
     protected Document source;
 
-    protected Node serviceConnectorNode;
+    protected NodeList serviceConnectorNodeList;
 
     protected Node servicePortNode;
 
     protected Node shutdownPortNode;
+
+    protected Node sslServicePortNode;
+
+    protected Node connectorNode;
+
+    protected Node sslConnectorNode;
 
     // event Handling
     protected ArrayList<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
@@ -111,7 +120,7 @@ public class TomcatConfig {
         tc.setShutdownPort(5555);
         System.out.println("Service Port: " + tc.getServicePort());
         System.out.println("Shutdown Port: " + tc.getShutdownPort());
-        System.out.println("Service Encoding: " + tc.getServiceAttribute("URIEncoding"));
+        System.out.println("Service Encoding: " + tc.getServiceAttribute("URIEncoding", false));
     }
 
     /** Instance Methods */
@@ -129,12 +138,29 @@ public class TomcatConfig {
         }
     }
 
-    public String getServiceAttribute(String attribute) {
+    public String getServiceAttribute(String attribute, Boolean sslEnabled) {
         String result = null;
-        NamedNodeMap map = this.serviceConnectorNode.getAttributes();
-        Node target = map.getNamedItem(attribute);
-        if (target != null) {
-            result = target.getNodeValue();
+        int len = this.serviceConnectorNodeList.getLength();
+        Node targetNode = null;
+        for (int i=0; i<len; i++) {
+            Node node = this.serviceConnectorNodeList.item(i);
+            Node sslEnabledNode = node.getAttributes().getNamedItem("SSLEnabled");
+            if (sslEnabled) {
+                if (sslEnabledNode == null || !sslEnabledNode.getNodeValue().equals("true")) {
+                    continue;
+                } else {
+                    targetNode = node;
+                    break;
+                }
+            }
+        }
+
+        if (targetNode != null) {
+            NamedNodeMap map = targetNode.getAttributes();
+            Node target = map.getNamedItem(attribute);
+            if (target != null) {
+                result = target.getNodeValue();
+            }
         }
         return result;
     }
@@ -153,6 +179,13 @@ public class TomcatConfig {
         return Integer.parseInt(this.shutdownPortNode.getNodeValue());
     }
 
+    /**
+     * @return the sslPort
+     */
+    public int getSslPort() {
+        return Integer.parseInt(this.sslServicePortNode.getNodeValue());
+    }
+
     protected void parseSourceXML(InputStream source) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -160,9 +193,18 @@ public class TomcatConfig {
             this.source = builder.parse(source);
             XPathFactory pathFactory = XPathFactory.newInstance();
             XPath path = pathFactory.newXPath();
-            this.serviceConnectorNode = (Node) path.evaluate("/Server/Service[@name='Catalina']/Connector", this.source, XPathConstants.NODE);
+            this.serviceConnectorNodeList = (NodeList) path.evaluate("/Server/Service[@name='Catalina']/Connector", this.source, XPathConstants.NODESET);
+            int len = this.serviceConnectorNodeList.getLength();
+            for (int i=0; i<len; i++) {
+                Node node = this.serviceConnectorNodeList.item(i);
+                Node sslEnabledNode = node.getAttributes().getNamedItem("SSLEnabled");
+                if (sslEnabledNode == null || !sslEnabledNode.getNodeValue().equals("true")) {
+                    servicePortNode = node.getAttributes().getNamedItem("port");
+                } else {
+                    sslServicePortNode = node.getAttributes().getNamedItem("port");
+                }
+            }
             this.shutdownPortNode = (Node) path.evaluate("/Server/@port", this.source, XPathConstants.NODE);
-            this.servicePortNode = (Node) path.evaluate("/Server/Service[@name='Catalina']/Connector/@port", this.source, XPathConstants.NODE);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -177,29 +219,28 @@ public class TomcatConfig {
     /**
      * @param servicePort the servicePort to set
      */
-    public void setServicePort(int newValue) {
+    public void setServicePort(int servicePort) {
         Integer oldValue = new Integer(this.getServicePort());
-        this.servicePortNode.setNodeValue(Integer.toString(newValue));
-        this.notifyListeners(PROPERTY_SERVICE_PORT, oldValue, newValue);
+        this.servicePortNode.setNodeValue(Integer.toString(servicePort));
+        this.notifyListeners(PROPERTY_SERVICE_PORT, oldValue, servicePort);
+    }
+
+    /**
+     * @param sslPort the servicePort to set
+     */
+    public void setSslPort(int sslPort) {
+        Integer oldValue = new Integer(this.getServicePort());
+        this.sslServicePortNode.setNodeValue(Integer.toString(sslPort));
+        this.notifyListeners(PROPERTY_SSL_PORT, oldValue, sslPort);
     }
 
     /**
      * @param shutdownPort the shutdownPort to set
      */
-    public void setShutdownPort(int newValue) {
+    public void setShutdownPort(int shutdownPort) {
         Integer oldValue = new Integer(this.getShutdownPort());
-        this.shutdownPortNode.setNodeValue(Integer.toString(newValue));
-        this.notifyListeners(PROPERTY_SHUTDOWN_PORT, oldValue, newValue);
-    }
-
-    public void setServiceAttribute(String attribute, String newValue) {
-        NamedNodeMap map = this.serviceConnectorNode.getAttributes();
-        Node target = map.getNamedItem(attribute);
-        if (target != null) {
-            String oldValue = target.getNodeValue();
-            target.setNodeValue(newValue);
-            this.notifyListeners(attribute, oldValue, newValue);
-        }
+        this.shutdownPortNode.setNodeValue(Integer.toString(shutdownPort));
+        this.notifyListeners(PROPERTY_SHUTDOWN_PORT, oldValue, shutdownPort);
     }
 
     public void serialize(OutputStream os) {

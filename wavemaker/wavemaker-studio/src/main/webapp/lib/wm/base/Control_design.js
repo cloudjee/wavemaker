@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2009-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -160,6 +160,7 @@ wm.Control.extend({
     set_height: function(inHeight) {
         if (inHeight.match(/\%/)) {
             this.desktopHeight = this.mobileHeight = inHeight;
+            this.setSizeProp("height", inHeight, this.minHeight);
         } else {
             var isMobile = studio.currentDeviceType != "desktop";
             if (isMobile && this.enableTouchHeight) {
@@ -170,8 +171,12 @@ wm.Control.extend({
             } else {
                 this.desktopHeight = inHeight;
             }
+            this.setSizeProp("height", inHeight, this.minHeight);
+            if (this.bounds.h > parseInt(inHeight)) {
+                this[isMobile && this.enableTouchHeight ? "mobileHeight" : "desktopHeight"] = this.height;
+            }
         }
-        this.setSizeProp("height", inHeight, this.minHeight);
+        
     },
     set_minHeight: function(inHeight) {
         var height = inHeight ? parseInt(inHeight) : 0;
@@ -185,10 +190,12 @@ wm.Control.extend({
     },
     resetDesignHeight: function() {
         this._doingAutoSize = true;
-        this.setHeight(studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.mobileHeight || this.desktopHeight || this.height : this.desktopHeight || this.height);
+        wm.Control.prototype.set_height.call(this, studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.mobileHeight || this.desktopHeight || this.height : this.desktopHeight || this.height);
+        //this.setHeight(studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.mobileHeight || this.desktopHeight || this.height : this.desktopHeight || this.height);
         this._doingAutoSize = false;
 
-        this.setMinHeight(studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
+        wm.Control.prototype.set_minHeight.call(this, studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
+        //this.setMinHeight(studio.currentDeviceType != "desktop" && this.enableTouchHeight ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
     },
     // Begin design border
     /*

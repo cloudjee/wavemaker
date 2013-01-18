@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,6 +78,8 @@ public class MainConsole extends javax.swing.JFrame {
 
     public static String OPTION_SHUTDOWN_PORT = "shutdownport";
 
+    public static String OPTION_SSL_PORT = "sslport";
+
     public static String OPTION_STUDIO_BROWSER = "studioBrowser";
 
     public static String OPTION_PROXY_ENABLED = "proxyEnabled";
@@ -145,6 +147,8 @@ public class MainConsole extends javax.swing.JFrame {
                 } else if (evt.getPropertyName().equals(TomcatConfig.PROPERTY_SERVICE_PORT)) {
                     MainConsole.this.lblCurrentServerPortVal.setText(Integer.toString(MainConsole.this.tomcatConfig.getServicePort()));
                     // tfNewServerPort.setText(Integer.toString(tomcatConfig.getServicePort()));
+                } else if (evt.getPropertyName().equals(TomcatConfig.PROPERTY_SSL_PORT)) {
+                    MainConsole.this.lblCurrentSslPortVal.setText(Integer.toString(MainConsole.this.tomcatConfig.getSslPort()));
                 }
             }
         });
@@ -216,9 +220,11 @@ public class MainConsole extends javax.swing.JFrame {
         this.pnlPortLbls = new javax.swing.JPanel();
         this.lblCurrentServerPort = new javax.swing.JLabel();
         this.lblCurrentShutdownPort = new javax.swing.JLabel();
+        this.lblCurrentSslPort = new javax.swing.JLabel();
         this.pnlPortVals = new javax.swing.JPanel();
         this.lblCurrentServerPortVal = new javax.swing.JLabel();
         this.lblCurrentShutdownPortVal = new javax.swing.JLabel();
+        this.lblCurrentSslPortVal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter()
@@ -348,7 +354,7 @@ public class MainConsole extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipadx = 35;
         gridBagConstraints.ipady = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         this.pnlPortLbls.add(this.lblCurrentServerPort, gridBagConstraints);
@@ -361,11 +367,25 @@ public class MainConsole extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipadx = 35;
         gridBagConstraints.ipady = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 310, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 130, 0, 0);
         this.pnlPortLbls.add(this.lblCurrentShutdownPort, gridBagConstraints);
+
+        this.lblCurrentSslPort.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        this.lblCurrentSslPort.setLabelFor(this.lblCurrentSslPortVal);
+        this.lblCurrentSslPort.setText(bundle.getString("MainConsole.lblCurrentSslPort.text")); // NOI18N
+        this.lblCurrentSslPort.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        this.lblCurrentSslPort.setPreferredSize(new java.awt.Dimension(60, 14));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 35;
+        gridBagConstraints.ipady = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 130, 0, 0);
+        this.pnlPortLbls.add(this.lblCurrentSslPort, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -383,7 +403,7 @@ public class MainConsole extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 60;
+        gridBagConstraints.ipadx = 50;
         gridBagConstraints.ipady = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         this.pnlPortVals.add(this.lblCurrentServerPortVal, gridBagConstraints);
@@ -393,11 +413,22 @@ public class MainConsole extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipady = 15;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 140, 0, 0);
+        this.pnlPortVals.add(this.lblCurrentShutdownPortVal, gridBagConstraints);
+
+        this.lblCurrentSslPortVal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        this.lblCurrentSslPortVal.setText(bundle.getString("MainConsole.lblCurrentSslPortVal.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.ipadx = 60;
         gridBagConstraints.ipady = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 340, 0, 0);
-        this.pnlPortVals.add(this.lblCurrentShutdownPortVal, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 150, 0, 0);
+        this.pnlPortVals.add(this.lblCurrentSslPortVal, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
@@ -584,6 +615,10 @@ public class MainConsole extends javax.swing.JFrame {
 
     private javax.swing.JLabel lblCurrentShutdownPortVal;
 
+    private javax.swing.JLabel lblCurrentSslPort;
+
+    private javax.swing.JLabel lblCurrentSslPortVal;
+
     private javax.swing.JLabel lblStatus;
 
     private javax.swing.JLabel lblWMTitleLogo;
@@ -637,5 +672,6 @@ public class MainConsole extends javax.swing.JFrame {
     private void updatePortValues() {
         this.lblCurrentServerPortVal.setText(String.valueOf(this.tomcatConfig.getServicePort()));
         this.lblCurrentShutdownPortVal.setText(String.valueOf(this.tomcatConfig.getShutdownPort()));
+        this.lblCurrentSslPortVal.setText(String.valueOf(this.tomcatConfig.getSslPort()));
     }
 }

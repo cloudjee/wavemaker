@@ -1,6 +1,6 @@
 
 /*
- * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1519,7 +1519,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         {name: "fontFamily", editor: "wm.Text", editorProps: {placeHolder: "Arial, Geneva, Helvetica, sans-serif"}},
         {name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
         {name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
-        {name: "borderRadius", editor: "wm.Text", editorProps:{placeHolder: "8 or 8 8 4 4"}},
+        {name: "borderRadius", editor: "wm.BorderRadiusEditor", editorProps:{placeHolder: "8 or 8 8 4 4"}},
         /*{name: "borderTopLeftRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},
         {name: "borderBottomRightRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},
         {name: "borderBottomLeftRadius", editor: "wm.Number", editorProps:{options: {minimum:0, maximum:100, placeHolder: "Number from 0-100"}}},        */
@@ -2957,6 +2957,17 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
         }    
         if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
             this.parent.setHeight(this.height);
+        }
+
+        var styleInspector = this.isAncestorInstanceOf(wm.prop.StyleEditor);
+        if (styleInspector) {
+            var topLayer = styleInspector.isAncestorInstanceOf(wm.Layer)
+            var parent = this.parent;
+            while (parent != topLayer) {
+                parent.setBestHeight();
+                parent = parent.parent;
+            }
+            parent.setBestHeight();
         }
     },
     toggleClicked: function() {

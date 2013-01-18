@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -89,11 +89,11 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	var containerClasses = {domNode:[]};
 	for (var i = classes.domNode.length-1; i >= 0; i--) {
 	    if (classes.domNode[i].match(/^wm_Border_(Bottom|Drop)/)) {
-		containerClasses.domNode.push(classes.domNode[i]);
-		wm.Array.removeElementAt(classes.domNode,i);
+    		containerClasses.domNode.push(classes.domNode[i]);
+    		wm.Array.removeElementAt(classes.domNode,i);
 	    }
 	}
-	this._classes = {domNode:[]};
+
         try {
 	    //var classes = this.captionClasses.split(/\s+/);
 	    this.layout = wm.layout.cache["top-to-bottom"];

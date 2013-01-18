@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2010-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1868,4 +1868,11 @@ color: rgb(0,270,0);
     max-height: 80%;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+
+.Studio .StudioLink .wmSizeNode {
+    text-decoration: underline;
+    font-weight: bold;
+    color: white;
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -336,7 +336,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (this.page && this._pageName !== this._initialPageName) {
             stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
         }
-        if (this.page.generateStateUrl) {
+        if (this.page && this.page.generateStateUrl) {
             this.page.generateStateUrl(stateObj);
         }    
     },

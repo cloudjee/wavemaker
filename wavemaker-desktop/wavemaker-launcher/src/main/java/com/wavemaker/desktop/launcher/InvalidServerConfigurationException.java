@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2011-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public class InvalidServerConfigurationException extends Exception {
     private static final long serialVersionUID = 155181345858558693L;
 
     public static enum Parameter {
-        SERIVCE_PORT, SHUTDOWN_PORT
+        SERIVCE_PORT, SHUTDOWN_PORT, SSL_PORT
     };
 
     // Variables

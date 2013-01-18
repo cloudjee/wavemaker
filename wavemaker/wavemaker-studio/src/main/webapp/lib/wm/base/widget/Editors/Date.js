@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -101,6 +101,8 @@ dojo.declare("wm.Date", wm.Text, {
         this.useLocalTime = tmp;
     },
     setEditorValue: function(inValue) {
+        if (inValue === null || inValue === undefined) return this.inherited(arguments);
+        
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
 
         // don't modify the source data as the caller may still need it

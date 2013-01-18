@@ -1,3 +1,16 @@
+/*
+ *  Copyright (C) 2013 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 /* TODO:
   * 1. License files
   * 2. How to handle upgrades that add new css
@@ -25,7 +38,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         },
         {
             name: "SubmitButton",
-            parentName: "Buttons"
+            parentName: "Buttons",
+            classList: [{dataValue: "wm.Button"}]
         }
     ],
     templateFileData: [
@@ -291,8 +305,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     
     start: function() {        
-        this.templateListVar.setQuery({hide: "!true"});
+        this.templateListVar.setQuery({hide: false});
         this.themeListVar.setQuery({designer: "widgetthemer"});    
+        //this.themeListVar.setDataSet(studio.themesListVar);
         this.connect(studio.project, "projectChanging", this, "onHide");
         this.parentClassListVar.setData(dojo.filter(this.templateFileData, function(inItem) {
             return inItem.customWidgetAddClass;
@@ -532,35 +547,23 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (!this.widgetCssFiles[this.currentWidgetTemplateFile]) {
             this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + (itemData.parentName ? itemData.name : this.currentWidgetTemplateFile) + ".css?" + (Math.floor(Math.random(new Date().getTime()) * 1000000)));
             if (!this.widgetCssFiles[this.currentWidgetTemplateFile] && itemData.parentName) {
-                var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
-                if (item) {
-                    var templateFile = item.getValue("templateFile");
-                    this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + templateFile+ ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
-                    var replaceName = item.getValue("customWidgetAddClass");
-                    if (itemData.parentName && replaceName) {
-                        var reg = new RegExp("\\." + replaceName +"(,|\\.|\\s+)", "g");                        
-                        this.widgetCssFiles[this.currentWidgetTemplateFile] = 
-                            this.widgetCssFiles[this.currentWidgetTemplateFile].replace(reg, "." + itemData.name + "." + replaceName + "$1").replace(/\/\*\s*THEMER\: DO NOT SUBCLASS START(.|\n)*?THEMER\: DO NOT SUBCLASS END\s*\*\//gm,"");
-                    }
-                }
+                this.setupCustomWidgetTemplate(itemData);
             }
         }
         this.removeClassButton.setDisabled(!itemData.parentName);
         
         var currentClassList = this.currentClassList = [];
+        inSender.selectedItem.getValue("classList").forEach(function(inItem) {
+            currentClassList.push(inItem.getValue("dataValue"));
+        });
+        
         if (itemData.parentName) {
             var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
             this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + item.getValue("templateFile") + ".widgets"));
-            item.getValue("classList").forEach(function(inItem) {
-                currentClassList.push(inItem.getValue("dataValue"));
-            });
         } else {
             this.sampleWidgets =  dojo.fromJson(wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + this.currentWidgetTemplateFile + ".widgets"));
-            inSender.selectedItem.getValue("classList").forEach(function(inItem) {
-                currentClassList.push(inItem.getValue("dataValue"));
-            });
         }
-        
+
         this.regenerateDemoPanel();
         this.editArea.setDataValue(this.widgetCssFiles[this.currentWidgetTemplateFile]);
 
@@ -859,11 +862,52 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     
     /* START SECTION: Create new subclasses */
     addCustomClassClick: function() {
-        this.customClassDialog.show();
+        this.customClassDialog.show();        
     },
     customClassCancelButtonClick: function() {
         this.customClassDialog.hide();
     },
+    parentClassSelectChange: function() {
+        if (this.subclassCheckboxSet.dataSet.getCount() == 1) {
+            this.subclassCheckboxSet.setDataValue(this.subclassCheckboxSet.dataSet.getItem(0).getValue("dataValue"));
+        }    
+    },
+    subclassNameChange: function() {
+        // update the display values of the checkboxes
+        var dataValue = dojo.clone(this.subclassCheckboxSet.getDataValue());
+        this.subclassCheckboxSet.setDataSet(this.subclassCheckboxSet.dataSet);
+        this.subclassCheckboxSet.setDataValue(dataValue);
+    },
+    setupCustomWidgetTemplate: function(itemData) {
+        var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
+        if (item) {
+            var templateFile = item.getValue("templateFile");
+            this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("wm.studio.app.templates") + "widgetthemes/" + templateFile+ ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
+            var replaceName = item.getValue("customWidgetAddClass");
+            if (itemData.parentName && replaceName) {
+                var reg = new RegExp("\\." + replaceName +"(,|\\.|\\s+)", "g");                        
+                this.widgetCssFiles[this.currentWidgetTemplateFile] = 
+                    this.widgetCssFiles[this.currentWidgetTemplateFile].replace(reg, "." + itemData.name + "." + replaceName + "$1").replace(/\/\*\s*THEMER\: DO NOT SUBCLASS START(.|\n)*?THEMER\: DO NOT SUBCLASS END\s*\*\//gm,"");
+
+                /* Disable all css within the template */
+                var lines = this.widgetCssFiles[this.currentWidgetTemplateFile].split(/\n/);
+                for (var i = 0; i < lines.length; i++) {
+                    var l = lines[i];
+                    var calcString = "THEMER: CALC:";
+                    var indexOfCalcString = l.indexOf(calcString);
+                    var hideString = "THEMER: HIDE";
+                    var indexOfHideString = l.indexOf(hideString);
+                    if (indexOfCalcString == -1 && indexOfHideString == -1) {
+                        var styleObj = this.getStyleObjFromLine(l);
+                        if (styleObj && !styleObj.disabled) {
+                            lines[i] = "/* " + styleObj.name + ": " + styleObj.value + "; // THEMER: DISABLED */" + (styleObj.message ? " // THEMER: " + styleObj.message : "");
+                        }
+                    }
+                }
+                this.widgetCssFiles[this.currentWidgetTemplateFile] = lines.join("\n");
+            }
+        }
+    },    
     customClassOKButtonClick: function() {
         var parentClassName = this.parentClassSelect.getDataValue();
         var newClassName = this.newCustomClassNameEditor.getDataValue();
@@ -877,7 +921,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (this.templateListVar.query({name: newClassName}).getCount() > 0) return app.alert("That name is already taken, please select a new name");
         this.customClassDialog.hide();
         /* STEP 1: Update custom Widgets and write it to the file system */
-        this.customWidgets.push({name: newClassName, parentName: parentClassName});
+        this.customWidgets.push({name: newClassName, parentName: parentClassName, classList: this.subclassCheckboxSet.getDataValue()});
         studio.resourceManagerService.requestAsync("writeFile", 
             ["/common/themes/" + this.currentThemeName + "/customwidgets.json", 
             dojo.toJson(this.customWidgets,true)]).then(dojo.hitch(this, function() {
@@ -1113,18 +1157,17 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         var packages = [];
         dojo.forEach(this.customWidgets, function(customWidget) {
             if (customWidget.category) return;
-            var parentItem = this.templateListVar.query({name: customWidget.parentName}).getItem(0);                                
-            var parentClassNames = parentItem.getValue("classList").map(function(item) {
-                return item.getValue("dataValue");
+            var classNames = dojo.map(customWidget.classList, function(item) {
+                return item.dataValue;
             });
-            dojo.forEach(parentClassNames, function(parentClassName) {
+            dojo.forEach(classNames, function(className) {
                 var parentPaletteNode = studio.palette.findNodeByCallback(function(n) {
-                    if (n.data.klass == parentClassName) return true;
+                    if (n.data.klass == className) return true;
                 });
                 var elements = [];
                 elements.push("'Theme Widgets'");                
-                elements.push("'" + (parentClassNames.length == 1 ? customWidget.name : customWidget.name + wm.capitalize(parentClassName.replace(/^.*\./,""))) + "'");
-                elements.push("'" + parentClassName + "'"); 
+                elements.push("'" + (classNames.length == 1 ? customWidget.name : customWidget.name + wm.capitalize(className.replace(/^.*\./,""))) + "'");
+                elements.push("'" + className + "'"); 
                 elements.push("'" + parentPaletteNode.module + "'");
                 elements.push("'" + parentPaletteNode.image + "'");
                 elements.push("''");
@@ -1240,6 +1283,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             app.toastSuccess("Saved");
         }
 
+    },
+    exportThemeClick: function() {
+//        var path = wm.dojoModuleToPath(this.currentTheme).replace(/^.*\/common\//, "/common/");
+        studio.downloadInIFrame("services/deploymentService.download?method=exportTheme&themename=" + this.currentThemeName);
     },
 
     /* START SECTION: Managing the Demo Panel */

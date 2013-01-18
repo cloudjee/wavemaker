@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2012 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,6 +61,10 @@ dojo.declare("wm.ColorPicker", wm.Text, {
         }
         this.inherited(arguments);
     },
+    calcIsDirty: function(val1, val2) {
+        if (typeof val1 == "object" && typeof val2 == "object") return dojo.toJson(val1) != dojo.toJson(val2);
+        return this.inherited(arguments);
+    },     
     /*    doChangeOnKey: function(inEvent) {
     this.changed();
     if (this.editor)

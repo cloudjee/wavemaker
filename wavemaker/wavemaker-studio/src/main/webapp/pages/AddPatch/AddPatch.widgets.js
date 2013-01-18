@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
+ * Copyright (C) 2011-2013 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ AddPatch.widgets = {
 	}],
 	buttonBar: ["wm.Panel", {_classes: {domNode: ["dialogfooter"]}, width: "100%", height: "34px", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 	    loadPatchesButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, width: "120px", caption: "Load Patches", hint: "Don't use if behind firewall"}, {onclick: "loadPatchesClick"}],
-	    findCodeLabel: ["wm.Label", {caption: "Get patches manually", align: "right",singleLine: true,height: "100%", width: "160px", margin: "0,0,0,20", link:"#"},{onclick: "findCodeButtonClick"}],
+	    findCodeLabel: ["wm.Label", {_classes: {domNode: ["StudioLink"]}, caption: "Get patches manually", align: "right",singleLine: true,height: "100%", width: "160px", margin: "0,0,0,20"},{onclick: "findCodeButtonClick"}],
 	    spacer1: ["wm.Spacer", {width: "100%"}],
 	    saveButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Apply"}, {onclick: "saveButtonClick"}],
 	    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Cancel"}, {onclick: "cancelButtonClick"}]
