@@ -1069,11 +1069,16 @@ dojo.declare("wm.Variable", wm.Component, {
                 else continue;
             }
             if (dojo.isString(a) && dojo.isString(b)) {
-                if (b.charAt(b.length - 1) == w) b = b.slice(0, -1);
+                if (b.charAt(b.length - 1) == w) {
+                    b = b.slice(0, -1);
+                } else {
+                    matchStart = false;
+                }
                 a = a.toLowerCase();
                 b = b.toLowerCase();
+
                 var matchIndex = a.indexOf(b);
-                if (matchIndex == -1 || matchIndex > 0 && matchStart) {
+                if (matchIndex == -1 || matchIndex > 0 && matchStart || !matchStart && a != b) {
                     if (!invert) return false;
                 } else if (invert) {
                     return false;
