@@ -14,19 +14,63 @@
  
 
 ImportFile.widgets = {
-    layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: {domNode: ["StudioDarkPanel"]}}, {}, {
-        mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-            instructionLabel: ["wm.Html", {width: "100%", height: "100%", html: "<div class='InstructionHeader'>Use this dialog to import</div><ul><li>Projects</li><li>Project Templates</li><li>Themes</li><li>Custom Components</li></ul>"}]            
-    	}],
-        footer: ["wm.studio.DialogButtonPanel", {}, {}, {            				 
-				 fileUploader: ["wm.DojoFileUpload", {  width: "100px",
-									height: "32px",
-									margin: "2",
-									useList: false,
-									buttonCaption: "Select Zipfile",
-									service: "deploymentService",
-									operation: "uploadProjectZipFile"},
-						{onChange: "onChange", onSuccess: "onSuccess", onError: "onError"}]
-		}]    	
+    ImportFileTypeDef: ["wm.TypeDefinition", {"internal": 1}, {}, {
+        typefield1: ["wm.TypeDefinitionField", {fieldName: "name", fieldType: "string"}],
+        typefield2: ["wm.TypeDefinitionField", {fieldName: "type", fieldType: "string"}],
+        typefield3: ["wm.TypeDefinitionField", {fieldName: "exists", fieldType: "string"}],
+        typefield4: ["wm.TypeDefinitionField", {fieldName: "dataValue", fieldType: "string"}]
+    }],
+    variable: ["wm.Variable", {type: "ImportFileTypeDef", isList: true}],
+    layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: {domNode: ["StudioDarkPanel"]}}, {}, {    
+        layers: ["wm.Layers", {width: "100%", height: "100%"},{}, {
+            introLayer: ["wm.Layer", {}, {}, {
+                mainPanel1: ["wm.studio.DialogMainPanel", {},{}, {
+                    instructionLabel: ["wm.Html", {width: "100%", height: "100%", html: "<div class='InstructionHeader'>Use this dialog to import</div><ul><li>Projects</li><li>Project Templates</li><li>Themes</li><li>Custom Components</li></ul>"}]
+                }],
+                footer1: ["wm.studio.DialogButtonPanel", {}, {}, {            				 
+                    cancelButton2: ["wm.Button", {caption: "Cancel", width: "100px", _classes: {domNode: ["StudioButton"]}}, {onclick: "owner.owner.hide"}],
+    				 fileUploader: ["wm.DojoFileUpload", {  width: "100px",
+    									height: "32px",
+    									margin: "2",
+    									useList: false,
+    									buttonCaption: "Select Zipfile",
+    									service: "deploymentService",
+    									operation: "uploadProjectZipFile"},
+    						{onChange: "onChange", onSuccess: "onSuccess", onError: "onError"}]
+        		}]    	
+        	}],
+            confirmLayer: ["wm.Layer", {}, {}, {
+                mainPanel2: ["wm.studio.DialogMainPanel", {},{}, {            
+                    checkboxSet: ["wm.CheckboxSet", {_classes: {domNode: ["StudioEditor"]},
+                                                    width: "100%", height: "100%", 
+                                                    caption: "The zip file contained the following; pick which ones you want to import",
+                                                    singleLine: false,
+                                                    captionPosition: "top", captionAlign: "left", captionSize: "32px", 
+                                                    dataField: "dataValue",
+                                                    displayExpression: "(${newName} ? 'Rename imported project from ' + ${name} + ' to ' + ${newName} : (${exists} ? 'Overwrite ' : 'Import ') + wm.capitalize(${dataValue}) + ': ' + ${name})"}, {}, {
+                        binding: ["wm.Binding", {}, {}, {
+                            wire: ["wm.Wire", {targetProperty: "dataSet", source: "variable"}]                        
+                        }]                    
+                    }],
+                    radioPanel: ["wm.Panel", {height: "92px", width: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {                        
+                        radioRename: ["wm.RadioButton", {_classes: {domNode: ["StudioEditor"]},radioGroup: "ImportProjectOverwrite", width: "100%", caption: "-", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],                        
+                        renameEditorPanel: ["wm.Panel", {height: "24px", width: "100%", margin: "0,0,0,30",horizontalAlign: "left", verticalAlign: "top", layoutKind: "left-to-right"}, {}, {
+                            renameEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "", width: "200px", changeOnKey:true}, {onchange: "updateProjectTakenLabel"}, {
+                                binding: ["wm.Binding", {}, {}, {
+                                    wire: ["wm.Wire", {targetProperty: "disabled", expression: "!${radioRename.checked}"}]                        
+                                }]    
+                            }],                        
+                            projectTakenLabel: ["wm.Label", {caption: "Project name already taken", _classes: {domNode: ["ProjectNameTaken"]}, width: "100%", showing: false}]
+                        }],
+                        radioOverwrite: ["wm.RadioButton", {_classes: {domNode: ["StudioEditor"]},radioGroup: "ImportProjectOverwrite", width:"100%",caption: "-", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],                                                
+                        radioNoImport: ["wm.RadioButton", {_classes: {domNode: ["StudioEditor"]},radioGroup: "ImportProjectOverwrite", width:"100%",caption: "Do not import project", captionSize: "100%", captionPosition: "right", captionAlign: "left"}]
+                    }]
+                }],
+                footer2: ["wm.studio.DialogButtonPanel", {}, {}, {
+                    cancelButton1: ["wm.Button", {caption: "Cancel", width: "100px", _classes: {domNode: ["StudioButton"]}}, {onclick: "owner.owner.hide"}],
+                    okButton2: ["wm.Button", {caption: "OK", width: "100px", _classes: {domNode: ["StudioButton"]}}, {onclick: "finishImport"}]
+                }]
+            }]
+        }]
     }]
 }

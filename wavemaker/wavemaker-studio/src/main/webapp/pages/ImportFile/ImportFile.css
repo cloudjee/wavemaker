@@ -33,10 +33,9 @@
     cursor: pointer !important;
 }
 
-
-.ImportFile .wmeditor .dijitInputInner,
-.ImportFile .wmeditor .dijitPlaceHolder {
-    font-size: 18px !important;
+.ImportFile .ProjectNameTaken {
+    color: red;
+    font-weight: bold;
 }
 .ImportFile .InstructionHeader {
     font-weight: bold;

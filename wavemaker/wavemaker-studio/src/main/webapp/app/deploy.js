@@ -188,17 +188,17 @@ Studio.extend({
 	},
 
 	//=====================================================================
-	// Import
+	// Importi
 	//=====================================================================
 	getImportProjectDialog: function() {
 	  if (!this.importProjectDialog) {
 	      this.importProjectDialog = new wm.PageDialog({_classes: {domNode: ["studiodialog"]},
 							    owner: studio,
 							    pageName: "ImportFile",
-							    width: "500px",
-							    height: "200px",
+							    width: "650px",
+							    height: "400px",
 							    hideControls: true,
-							    title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"),
+							    title: this.getDictionaryItem("TITLE_IMPORT"),
 							    modal: false});
 	  }
 	    return this.importProjectDialog;
@@ -373,62 +373,8 @@ Studio.extend({
 	},
 	*/
 	importMultiple: function() {
-		var d = this.getImportProjectDialog();
-	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_THEME"));
-	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inSender, inResponse) {
-            var result = dojo.fromJson(inResponse[0].path);
-            var confirmString = "<ol>";
-            if (result.components && result.components.length) {
-                dojo.forEach(result.components, function(modulePath) {
-
-                    try {
-                        dojo.require(modulePath);
-
-                        /* Needed in case items added to menubar */
-                		wm.job("studio.navigation.setFullStructure", 50, function() {
-                		      studio.navigationMenu.renderDojoObj();
-                		});
-
-                        var path = modulePath.split(/\./);
-                		if (path[0] == "common" && path[1] == "packages") {
-                			path.shift();
-                			path.shift();
-                		}
-                		if (path.length > 1 && path[path.length-1] === path[path.length-2]) {
-                			path.pop();
-                		}
-                        confirmString += "<li>The component '" + path.join(".") + "' has been added to Studio</li>";                        
-                    } catch(e) {
-                        console.error(e);
-                        confirmString += "<li>The component '" + modulePath + "' FAILED to load!!</li>";                        
-                    }
-                }, this);
-
-            }
-            if (result.projecttemplate && result.projecttemplate.length) {
-                dojo.forEach(result.projecttemplate, function(templateName) {
-                    confirmString += "<li>The project template '" + templateName + "' has been added to the New Project Dialog</li>";
-                });
-            }
-            if (result.themes && result.themes.length) {
-                studio.loadThemeList();
-                dojo.forEach(result.themes, function(themeName) {
-                    confirmString += "<li>The theme '" + themeName + "' has been added to Studio</li>";
-                });
-            }
-            if (result.project) {
-   				this.project.openProject(result.project);         
-   				confirmString += "<li>Imported project " + result.project + "</li>";
-            }
-            confirmString += "</ol>";
-		    d.dismiss();
-	       app.alert(confirmString);
-	    });
-        d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
-    	       app.alert(this.getDictionaryItem("ALERT_IMPORT_THEME_FAILED", {inError: inError}));
-    	       if (app.toastDialog) app.toastDialog.hide();
-        });
-        d.page.setService("deploymentService", "uploadMultiFile");
+		var d = this.getImportProjectDialog();	    
+        d.page.setService("deploymentService", "testMultiFile");
 	    d.show();
 	},	
 	

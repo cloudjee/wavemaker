@@ -379,22 +379,292 @@ public class DeploymentService {
 	return new DownloadableFile(exportFile);
     }
 
-    public FileUploadResponse uploadMultiFile(MultipartFile file) throws IOException {
+    /* TODO: Currently flags what actions will be taken, but also we must flag which actions will result in overwrites */
+    public FileUploadResponse testMultiFile(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         fileName = fileName.substring(0, fileName.lastIndexOf(".zip"));
-        FileUploadResponse ret = new FileUploadResponse();
-        Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("common/packages").getFolder(CLIENT_COMPONENTS_STAGE);
-        ZipArchive.unpack(file.getInputStream(), componentStage);
+	Folder common = this.fileSystem.getCommonFolder();
+	Folder commonThemes = common.getFolder("themes");
+	Folder projectRootFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("projects");
 
-	com.wavemaker.tools.io.Folder themes = componentStage.getFolder("themes");
-	System.out.println("THEMES: " + themes.exists());
+        FileUploadResponse ret = new FileUploadResponse();
+	Folder tmp = this.fileSystem.getWaveMakerHomeFolder().getFolder("tmp");
+	tmp.createIfMissing();
+        Folder componentStage = tmp.getFolder(CLIENT_COMPONENTS_STAGE + new java.util.Date().getTime());
+        ZipArchive.unpack(file.getInputStream(), componentStage);
+	String response = "{'file':'" + componentStage.getName() + "',";
+
+	boolean isOldStyleExport = true;
+
+	Folder themes = componentStage.getFolder("themes");
 	if (themes.exists()) {
-	    Folder common = this.fileSystem.getCommonFolder();
-	    Folder commonThemes = common.getFolder("themes");
-	    themes.list().folders().copyTo(commonThemes);
+	    isOldStyleExport = false;
+	    boolean first = true;
+	    response += "'themes':[";
+	    for (com.wavemaker.tools.io.Resource resource : themes.list().folders()) {
+		if (!first) response += ",";
+		first = false;
+		response +="{'name':'" + resource.getName() + "', 'exists':" + commonThemes.getFolder(resource.getName()).exists() + "}";
+	    }
+	    response += "],";
 	}
-	componentStage.delete();
+	
+	Folder project = componentStage.getFolder("project");	
+	if (project.exists()) {
+	    isOldStyleExport = false;
+	    for (com.wavemaker.tools.io.Folder resource : project.list().folders()) {
+		Folder projectFolder = projectRootFolder.getFolder(resource.getName());
+		boolean exists = projectFolder.exists();
+		Folder projectFolderAlt = projectRootFolder.getFolder(resource.getName());
+		for (int i = 1; i < 1000 && projectFolderAlt.exists(); i++) {
+		    projectFolderAlt = projectRootFolder.getFolder(resource.getName() + i);
+		}
+		response += "'project':{'name':'" + resource.getName() + "', 'exists':" + exists + ",'alt':'" + projectFolderAlt.getName() + "'},";
+	       
+	    }
+	}
+
+	Folder projecttemplate = componentStage.getFolder("projecttemplate");
+	if (projecttemplate.exists()) {
+	    isOldStyleExport = false;
+	    response += "'projecttemplates':[";
+	    boolean first = true;
+	    for (com.wavemaker.tools.io.Resource resource : projecttemplate.list().folders()) {
+		if (!first) response += ",";
+		first = false;
+		response += "{'name':" + resource.getName() + "', 'exists':" + commonThemes.getFolder(resource.getName()).exists()  + "}";
+	    }
+	    response += "],";
+	}
+
+	Folder componentsFolder = componentStage.getFolder("components");
+	if (componentsFolder.exists()) {
+	    isOldStyleExport = false;
+	    com.wavemaker.tools.io.Resources<com.wavemaker.tools.io.Resource> files = componentsFolder.list();
+	    response += "'components':[";
+	    boolean first = true;
+	    for (com.wavemaker.tools.io.Resource resource : files) {
+		String packageName = null;
+		com.wavemaker.tools.io.File afile;
+		String componentFileName;
+		if (resource instanceof com.wavemaker.tools.io.File) {
+		    afile = (com.wavemaker.tools.io.File)resource;
+		    packageName = getClientComponentPackageString(afile);
+		    componentFileName = afile.getName();
+		} else {
+		    com.wavemaker.tools.io.Folder f = (com.wavemaker.tools.io.Folder)resource;
+		    afile = f.getFile(resource.getName() + ".js");
+		    if (afile.exists()) {
+			packageName = getClientComponentPackageString(afile);
+		    }
+		    componentFileName = resource.getName();
+		}
+		/* If we can't find the package name, then we can't import it, but what we pass around is the folder name */
+		if (packageName != null) {
+		    if (!first) response += ",";
+		    first = false;
+		    String className = packageName.substring(packageName.lastIndexOf(".") + 1);
+		    String packageStr = packageName.substring(0, packageName.lastIndexOf("." + className));
+		    Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder(StringUtils.packageToSrcFilePath(packageStr));
+		    boolean exists =  componentFolder.getFile(className + ".js").exists();
+		    response += "{'name':'" + componentFileName + "', 'exists':" + exists + "}";
+		}
+	    }
+	    response += "],";
+	}
+
+	if (isOldStyleExport) {
+	    com.wavemaker.tools.io.File indexhtml = componentStage.getFile("webapproot/index.html");
+	    if (indexhtml.exists()) {
+		String indexstring = indexhtml.getContent().asString();
+		int endIndex = indexstring.lastIndexOf("({domNode: \"wavemakerNode\"");
+		int startIndex = indexstring.lastIndexOf(" ", endIndex);
+		String newProjectName = indexstring.substring(startIndex + 1, endIndex);
+
+		Folder projectFolderAlt = projectRootFolder.getFolder(newProjectName);	
+		for (int i = 1; i < 1000 && projectFolderAlt.exists(); i++) {
+		    projectFolderAlt = projectRootFolder.getFolder(newProjectName + i);
+		}
+
+		response += "'project':{'name':'" + newProjectName + "', 'exists':" + projectRootFolder.getFolder(newProjectName).exists() + ",'alt':'" + projectFolderAlt.getName() + "'},";
+		 
+	    }
+	}
+
+	response += "'_end':0}";
+	ret.setPath(response);
         return ret;
+
+    }
+    public String uploadMultiFile(String file, String[] importList) throws IOException {
+	String response = "";
+
+        Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("tmp").getFolder(file);
+	Folder common = this.fileSystem.getCommonFolder();
+
+	boolean isOldStyleExport = true;
+
+	Folder themes = componentStage.getFolder("themes");
+	Folder commonThemes = common.getFolder("themes");
+
+	Folder importProjectTemplateFolder = componentStage.getFolder("projecttemplate");
+	Folder templatesFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("templates");
+
+	Folder componentsFolder = componentStage.getFolder("components");
+	Folder packagesFolder = common.getFolder("packages");
+
+	Folder project = componentStage.getFolder("project");
+	Folder projectFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("projects");
+
+	for (int i = 0; i < importList.length; i++) {
+	    String type = importList[i].substring(0, importList[i].indexOf(":"));
+	    String value = importList[i].substring(1 + importList[i].indexOf(":"));
+	    System.out.println("TYPE:" + type + ", VALUE: " + value);
+	    if (type.equals("theme")) {
+		if (themes.exists()) {
+		    Folder themeFolder = themes.getFolder(value);
+		    if (themeFolder.exists()) {
+			themeFolder.copyTo(commonThemes);
+		    }
+		}
+	    } else if (type.equals("projecttemplate")) {
+		if (importProjectTemplateFolder.exists()) {
+		    Folder pFolder = importProjectTemplateFolder.getFolder(value);
+		    if (pFolder.exists()) {
+			pFolder.copyTo(templatesFolder);
+		    }
+		}
+	    } else if (type.equals("component")) {
+		if (componentsFolder.exists()) {
+		    com.wavemaker.tools.io.Resource componentFile;
+		    System.out.println("VALUE: " + value);
+		    if (value.indexOf(".js") != -1) {
+			componentFile = componentsFolder.getFile(value);
+		    } else {
+			componentFile = componentsFolder.getFolder(value);
+		    }
+		    System.out.println(componentFile.toString() + " : " + componentFile.exists());
+		    if (componentFile.exists()) {
+			String s= uploadClientComponent(componentFile);
+		    }
+		}
+	    } else if (type.equals("project")) {
+		String originalName = value.substring(0, value.indexOf(":"));
+		String newName = value.substring(value.indexOf(":") + 1);
+		if (project.exists()) {
+		    project = project.getFolder(originalName);
+		}
+		if (!project.exists()) {		    
+		    project = componentStage;
+		}
+		if (project.exists() && project.getFile("webapproot/index.html").exists()) {
+		    Folder destFolder = projectFolder.getFolder(newName);
+		    destFolder.createIfMissing();
+		    project.copyContentsTo(destFolder);
+		    response = destFolder.getName();
+		    if (!newName.equals(originalName)) {
+			updateProjectFilesToMatchName(destFolder, originalName, newName);
+		    }
+
+		}
+	    }
+	}
+
+	componentStage.delete();
+        return response;
+    }
+    public String exportMultiFile(String zipFileName, boolean buildProject, boolean buildProjectTemplate, String templateJson, String[] themeList, String[] componentList ) throws IOException {
+	return deploymentManager.exportMultiFile(zipFileName, buildProject, buildProjectTemplate, templateJson, themeList, componentList);
+    }
+
+    public DownloadResponse downloadClientComponent(String file) {
+	Folder common = this.fileSystem.getCommonFolder();
+	Folder packages = common.getFolder("packages");
+	Folder componentFolder = packages.getFolder(file);
+	Folder tmpMainFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder("tmp");
+	Folder tmpFolder = tmpMainFolder.getFolder("tmp" + new java.util.Date().getTime());	
+	tmpFolder.createIfMissing();
+	Folder components = tmpFolder.getFolder("components");
+	components.createIfMissing();
+	componentFolder.copyTo(components);
+
+        InputStream inputStream = ZipArchive.compress(tmpFolder.find().files());
+
+
+	int startIndex = 0;
+	int lastIndex = file.length();
+	if (file.indexOf("/") != -1) {
+	    startIndex = file.lastIndexOf("/") + 1;
+	} else if (file.indexOf("\\") != -1) {
+	    startIndex = file.lastIndexOf("\\") + 1;
+	} 
+	System.out.println("FILE:" + file + ", START: " + startIndex + ", END: " + lastIndex);
+	String fileName = file.substring(startIndex,lastIndex) + ".zip";
+	
+	com.wavemaker.tools.io.File exportFile = tmpMainFolder.getFile(fileName);
+        exportFile.getContent().write(inputStream);
+	//	tmpFolder.delete();
+	return getAsDownloadResponse(exportFile);
+    }
+
+    public String uploadClientComponent(com.wavemaker.tools.io.Resource componentResource) throws IOException {
+	String packageName = null;
+	if (componentResource instanceof com.wavemaker.tools.io.File) {
+	    com.wavemaker.tools.io.File f = (com.wavemaker.tools.io.File)componentResource;
+	    packageName = getClientComponentPackageString(f);
+	    if (packageName == null) throw new IOException("dojo.provide line missing in " + componentResource.toString());
+	} else {
+	    com.wavemaker.tools.io.Folder f = (com.wavemaker.tools.io.Folder)componentResource;
+	    com.wavemaker.tools.io.File afile = f.getFile(componentResource.getName() + ".js");
+	    if (afile.exists()) {
+		packageName = getClientComponentPackageString(afile);
+		if (packageName == null) throw new IOException("dojo.provide line missing in " + afile.toString());
+	    }
+	}
+	System.out.println("PACKAGE NAME: " + packageName);
+	if (packageName == null) throw new IOException("Could not find javascript file for " + componentResource.toString());
+	String className = packageName.substring(packageName.lastIndexOf(".") + 1);
+        String packageStr = packageName.substring(0, packageName.lastIndexOf("." + className));
+
+        Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder(StringUtils.packageToSrcFilePath(packageStr));
+        componentFolder.createIfMissing();
+	componentFolder.list().delete(); // delete older version of the composite
+	if (componentResource instanceof com.wavemaker.tools.io.File) {
+	    componentResource.copyTo(componentFolder);
+	} else {
+	    com.wavemaker.tools.io.Folder f = (com.wavemaker.tools.io.Folder)componentResource;
+	    f.copyContentsTo(componentFolder);
+	}
+	this.deploymentManager.writeModuleToLibJs(packageStr + "." + className);
+	return packageStr + "." + className;
+    }
+
+    private void updateProjectFilesToMatchName(com.wavemaker.tools.io.Folder projectFolder, String originalName, String newName) {
+	// Correction 1: Rename the js file
+	System.out.println("Project:" + this.fileSystem.getWaveMakerHomeFolder().getFolder("projects").getFolder(projectFolder.getName()).toString());
+	com.wavemaker.tools.project.Project finalProject = new com.wavemaker.tools.project.Project(projectFolder, projectFolder.getName());
+	com.wavemaker.tools.io.File jsFile = finalProject.getWebAppRootFolder().getFile(originalName + ".js");
+	com.wavemaker.tools.io.File newJsFile = finalProject.getWebAppRootFolder().getFile(newName + ".js");
+
+	jsFile.rename(newJsFile.getName());
+
+                // Correction 2: Change the class name in the js file
+                com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, newJsFile, originalName, newName);
+
+                // Corection3: Change the constructor in index.html
+                com.wavemaker.tools.io.File index_html = finalProject.getWebAppRootFolder().getFile("index.html");
+                com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, index_html, "new " + originalName
+                    + "\\(\\{domNode", "new " + newName + "({domNode");
+
+                // Correction 4: Change the pointer to the js script read in by
+                // index.html
+                com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, index_html, "\\\"" + originalName
+                    + "\\.js\\\"", '"' + newName + ".js\"");
+
+                // Correction 5: Change the title
+                com.wavemaker.tools.project.ResourceManager.ReplaceTextInProjectFile(finalProject, index_html, "\\<title\\>" + originalName
+                    + "\\<\\/title\\>", "<title>" + newName + "</title>");
+
     }
 
     public FileUploadResponse uploadClientComponent(MultipartFile file) throws IOException {
