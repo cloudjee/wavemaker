@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean scope="singleton" parent="typeManagerBase" class="com.wavemaker.runtime.service.TypeManager" id="typeManager">
+        <property name="types">
+            <map merge="true">
+                <entry key="FeedService">
+                    <list>
+                        <value>com.wavemaker.runtime.ws.Feed</value>
+                        <value>com.wavemaker.runtime.ws.Entry</value>
+                        <value>com.sun.syndication.feed.synd.SyndLink</value>
+                        <value>com.sun.syndication.feed.synd.SyndContent</value>
+                        <value>com.sun.syndication.feed.synd.SyndImage</value>
+                    </list>
+                </entry>
+                <entry key="runtimeService">
+                    <list>
+                        <value>com.wavemaker.runtime.service.PagingOptions</value>
+                        <value>com.wavemaker.runtime.service.PropertyOptions</value>
+                    </list>
+                </entry>
+                <entry key="securityService">
+                    <list/>
+                </entry>
+                <entry key="userdb">
+                    <list>
+                        <value>com.data.Users</value>
+                    </list>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

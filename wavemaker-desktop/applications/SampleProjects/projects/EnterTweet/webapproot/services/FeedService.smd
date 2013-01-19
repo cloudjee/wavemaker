@@ -1,0 +1,28 @@
+{
+	"methods": [{
+		"name": "getFeed",
+		"parameters": [{
+			"name": "feedURL",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.wavemaker.runtime.ws.Feed"
+	}, {
+		"name": "getFeedWithHttpConfig",
+		"parameters": [{
+			"name": "feedURL",
+			"type": "java.lang.String"
+		}, {
+			"name": "httpBasicAuthUsername",
+			"type": "java.lang.String"
+		}, {
+			"name": "httpBasicAuthPassword",
+			"type": "java.lang.String"
+		}, {
+			"name": "connectionTimeout",
+			"type": "int"
+		}],
+		"returnType": "com.wavemaker.runtime.ws.Feed"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "FeedService.json"
+}

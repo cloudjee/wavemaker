@@ -1,0 +1,15 @@
+CREATE SCHEMA PUBLIC AUTHORIZATION DBA
+CREATE MEMORY TABLE USERS(USERNAME VARCHAR(40) NOT NULL PRIMARY KEY,PASSWORD VARCHAR(40),ROLE VARCHAR(40),FIRSTNAME VARCHAR(40),LASTNAME VARCHAR(40),PHONE VARCHAR(40),TWITTERNAME VARCHAR(40),TENANTID INTEGER)
+CREATE USER SA PASSWORD ""
+GRANT DBA TO SA
+SET WRITE_DELAY 10
+SET SCHEMA PUBLIC
+INSERT INTO USERS VALUES('admin','admin','admin','Mr','Admin','413-523-4123','wavemaker',1)
+INSERT INTO USERS VALUES('admin2','admin2','admin','Mr.','Admin','415-324-1523','wavemaker',2)
+INSERT INTO USERS VALUES('eharris','emmylou','user','Emmylou','Harris','514-234-1423','emmylouharris',1)
+INSERT INTO USERS VALUES('elvis','epresley','user','Elvis','Presley','413-656-4234','elvis',2)
+INSERT INTO USERS VALUES('jfarrar','jay','user','Jay','Farrar','413-535-1323','jfarrar',1)
+INSERT INTO USERS VALUES('jtweedy','jeff','user','Jeff','Tweedy','524-314-5412','jefftweedy',2)
+INSERT INTO USERS VALUES('searle','searle','user','Steve','Earle','413-656-4234','steveearle',2)
+INSERT INTO USERS VALUES('user','user','user','Sir','User','534-646-5243','amazonec2',1)
+INSERT INTO USERS VALUES('user2','user2','user','Sir','User2','414-534-5253','rightscale',2)
