@@ -729,6 +729,69 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return exportFile.toString().substring(1);
     }
 
+    public String exportMultiFile(String zipFileName, boolean buildProject, boolean buildProjectTemplate, String templateJson, String[] themeList, String[] componentList ) throws IOException {
+	Project project = getProjectManager().getCurrentProject();
+	Folder tmpFolder = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT).getFolder("tmp" + new java.util.Date().getTime());
+	tmpFolder.createIfMissing();
+	File zipFile = project.getRootFolder().getFolder(EXPORT_DIR_DEFAULT).getFile(zipFileName);
+	Folder commonFolder = this.fileSystem.getCommonFolder();
+
+	if (buildProject || buildProjectTemplate) {
+	    Resources<?> export = project.getRootFolder().find();
+	    export = export.exclude(FilterOn.antPattern("/export/**", "/dist/**", "/webapproot/WEB-INF/classes/**", "/webapproot/WEB-INF/lib/**",
+							"/phonegap/**", "/.git/**"));
+
+	    export = export.exclude(new ResourceFilter() {
+		    @Override
+			public boolean match(ResourceFilterContext context, Resource resource) {
+			return resource instanceof File && resource.getParent().getParent() == null && resource.getName().toLowerCase().endsWith(".xml");
+		    }
+		});
+	    
+	    Folder projectFolder = buildProject ? tmpFolder.getFolder("project") : tmpFolder.getFolder("projecttemplate");
+	    projectFolder.createIfMissing();
+	    Folder destFolder = projectFolder.getFolder(project.getProjectName());
+	    destFolder.createIfMissing();
+	    export.files().copyTo(destFolder);
+	    if (buildProjectTemplate && templateJson.length() > 0) {
+		File templateJsonFile = destFolder.getFile("template.json");
+		templateJsonFile.getContent().write(templateJson);
+	    }
+	}
+	
+	if (themeList.length > 0) {
+	    Folder themesFolder = tmpFolder.getFolder("themes");
+	    themesFolder.createIfMissing();
+
+	    for (int i = 0; i < themeList.length; i++) {
+		Folder theme = commonFolder.getFolder("themes/" + themeList[i]);
+		theme.copyTo(themesFolder);
+	    }
+	}
+
+	if (componentList.length > 0) {
+	    Folder componentDestFolder = tmpFolder.getFolder("components");
+	    componentDestFolder.createIfMissing();
+
+	    for (int i = 0; i < componentList.length; i++) {
+		Folder componentFolder = commonFolder.getFolder("packages/" + componentList[i]);
+		if (componentFolder.exists()) {
+		    componentFolder.copyTo(componentDestFolder);
+		} else {
+		    File componentFile = commonFolder.getFile("packages/" + componentList[i] + ".js");
+		    if (componentFile.exists()) {
+			componentFile.copyTo(componentDestFolder);
+		    }
+		}
+	    }
+	}
+
+        InputStream inputStream = ZipArchive.compress(tmpFolder);
+        zipFile.getContent().write(inputStream);
+	tmpFolder.delete();
+	return zipFile.toString();
+    }
+
     protected LocalFolder getProjectDir(com.wavemaker.tools.project.Project project) {
         return (LocalFolder) project.getRootFolder();
     }

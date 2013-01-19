@@ -384,7 +384,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 		});
 	},
     download: function() {
-        studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=/common/packages/" + (this.namespace ? this.namespace.replace(/\./g,"/") + "/" : "") + this.publishName);
+        studio.downloadInIFrame("services/deploymentService.download?method=downloadClientComponent&file=" + (this.namespace ? this.namespace.replace(/\./g,"/") + "/" : "") + this.publishName);
     }
 });
 

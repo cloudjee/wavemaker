@@ -14,46 +14,19 @@
  
 
 ImportFile.widgets = {
-    layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: ["wm-darksnazzy"]}, {}, {
+    layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: {domNode: ["StudioDarkPanel"]}}, {}, {
         mainPanel: ["wm.studio.DialogMainPanel", {},{}, {
-	    panel: ["wm.Panel", {_classes: ["wm_Padding_16px"], 
-				 layoutKind: "left-to-right", 
-				 width: "100%", 
-				 height: "100%", 
-				 padding: "16",
-				 horizontalAlign: "left", 
-				 verticalAlign: "top"}, {}, {
-					 fileUploader: ["wm.DojoFileUpload", {  width: "100px",
-										height: "32px",
-										margin: "2",
-										useList: false,
-										buttonCaption: "Select Zipfile",
-										service: "deploymentService",
-										operation: "uploadProjectZipFile"},
-							{onChange: "onChange", onSuccess: "onSuccess", onError: "onError"}],
-				     filename: ["wm.Text", {width: "100%",
-							    height: "32px",
-							    disabled: true,
-							    caption: "",
-							   },{}, {
-							       binding: ["wm.Binding", {}, {}, {
-								   wire: ["wm.Wire", {"targetProperty":"dataValue", source: "fileUploader.variable.name"}, {}]
-							       }]
-							   }]/*,
-					 openButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},
-								    caption: "Open Project",
-								     height: "32px",
-								     padding: "0",
-								     margin: "2",
-								     width: "120px"},
-						      {onclick: "openProject"},
-						      {
-							  binding: ["wm.Binding", {}, {}, {
-							      wire: ["wm.Wire", {"targetProperty":"disabled", expression: "!${filename.dataValue}"}, {}]
-							  }]
-						      }]*/
-
-				 }]
-	}]
+            instructionLabel: ["wm.Html", {width: "100%", height: "100%", html: "<div class='InstructionHeader'>Use this dialog to import</div><ul><li>Projects</li><li>Project Templates</li><li>Themes</li><li>Custom Components</li></ul>"}]            
+    	}],
+        footer: ["wm.studio.DialogButtonPanel", {}, {}, {            				 
+				 fileUploader: ["wm.DojoFileUpload", {  width: "100px",
+									height: "32px",
+									margin: "2",
+									useList: false,
+									buttonCaption: "Select Zipfile",
+									service: "deploymentService",
+									operation: "uploadProjectZipFile"},
+						{onChange: "onChange", onSuccess: "onSuccess", onError: "onError"}]
+		}]    	
     }]
 }

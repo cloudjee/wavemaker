@@ -135,8 +135,28 @@ Studio.extend({
 	// Export
 	//=====================================================================
 	exportClick: function(inSender) {
-	    studio.beginWait("Building ZIP File...");
-	    studio.deploymentService.requestAsync("exportProject", [studio.project.projectName + "." + studio.application.getFullVersionNumber() + ".zip"], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
+        this.showProjectExportDialog();   
+	},
+	showProjectExportDialog: function() {
+	   var d = this.getProjectExportDialog();
+	   d.show();
+	   d.page.reset();
+	},
+	getProjectExportDialog: function() {
+	   if (!studio.projectExportDialog) {
+	       studio.projectExportDialog = new wm.PageDialog({
+	           owner: studio,
+	           name: "projectExportDialog",
+	           width: "500px",
+	           height: "400px",
+	           title: "Export Project",
+	           hideControls: true,
+	           pageName: "ExportProjectPage",
+	           _classes: {domNode: ["studiodialog"]},
+	           deferLoad: false // load now, don't wait for showing
+	       });
+	   }
+	   return studio.projectExportDialog;
 	},
 	exportClickCallback: function(inResponse) {
 	    studio.endWait("Building ZIP File...");
@@ -176,7 +196,7 @@ Studio.extend({
 							    owner: studio,
 							    pageName: "ImportFile",
 							    width: "500px",
-							    height: "120px",
+							    height: "200px",
 							    hideControls: true,
 							    title: this.getDictionaryItem("TITLE_IMPORT_PROJECT"),
 							    modal: false});
@@ -199,6 +219,8 @@ Studio.extend({
 	  return this.importFileDialog;
     },
     */
+    
+    /* Replaced with importMultiple
     importClick: function(inSender) {
         var f = dojo.hitch(this, function() {
             var d = this.getImportProjectDialog();
@@ -225,21 +247,7 @@ Studio.extend({
         }
           //this.importFileDialog = this.getImportFileDialog().show();
     },
-/*
-   importProjectClickCallback: function(inSource, inResponse) {
-      studio.endWait();
-      var d = studio.startPageDialog.page.refreshProjectList();
-
-       app.toastDialog.showToast(this.getDictionaryItem("TOAST_IMPORT_PROJECT", {inResponse: inResponse}), 3000, "Success");
-      wm.fire(this.owner, "dismiss");
-      studio.project.openProject(inResponse);
-      },
-
-   importProjectClickError: function(inSource,inError) {
-      studio.endWait();
-       app.alert(this.getDictionaryItem("ALERT_IMPORT_PROJECT_FAILED", {error: inError}));
-    },
-      */
+    */
 	//=====================================================================
 	// Widget Deploy
 	//=====================================================================
@@ -304,6 +312,8 @@ Studio.extend({
 	    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED2", {error: inError}));
 
 	},
+	
+	/* Now handled by importMultiple
 	importComponent: function() {
 		var d = this.getImportProjectDialog();
 	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_COMPONENT"));
@@ -320,7 +330,7 @@ Studio.extend({
 		    dojo["require"](module);
     		// if we get here, no exceptions occured
 
-            /* Needed in case items added to menubar */
+            / * Needed in case items added to menubar * /
     		wm.job("studio.navigation.setFullStructure", 50, function() {
     		      studio.navigationMenu.renderDojoObj();
     		});
@@ -343,9 +353,9 @@ Studio.extend({
         });
 	    d.page.setService("deploymentService", "uploadClientComponent");
 	    d.show();
-
-
 	},
+    */	
+	/* Now handled by importMultiple
 	importTemplate: function() {
 		var d = this.getImportProjectDialog();
 	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_TEMPLATE"));
@@ -361,13 +371,58 @@ Studio.extend({
         d.page.setService("deploymentService", "uploadTemplateZipFile");
 	    d.show();
 	},
+	*/
 	importMultiple: function() {
 		var d = this.getImportProjectDialog();
 	    d.setTitle(this.getDictionaryItem("TITLE_IMPORT_THEME"));
 	    d.page._onSuccessConnect = d.connect(d.page, "onSuccess", this, function(inSender, inResponse) {
+            var result = dojo.fromJson(inResponse[0].path);
+            var confirmString = "<ol>";
+            if (result.components && result.components.length) {
+                dojo.forEach(result.components, function(modulePath) {
+
+                    try {
+                        dojo.require(modulePath);
+
+                        /* Needed in case items added to menubar */
+                		wm.job("studio.navigation.setFullStructure", 50, function() {
+                		      studio.navigationMenu.renderDojoObj();
+                		});
+
+                        var path = modulePath.split(/\./);
+                		if (path[0] == "common" && path[1] == "packages") {
+                			path.shift();
+                			path.shift();
+                		}
+                		if (path.length > 1 && path[path.length-1] === path[path.length-2]) {
+                			path.pop();
+                		}
+                        confirmString += "<li>The component '" + path.join(".") + "' has been added to Studio</li>";                        
+                    } catch(e) {
+                        console.error(e);
+                        confirmString += "<li>The component '" + modulePath + "' FAILED to load!!</li>";                        
+                    }
+                }, this);
+
+            }
+            if (result.projecttemplate && result.projecttemplate.length) {
+                dojo.forEach(result.projecttemplate, function(templateName) {
+                    confirmString += "<li>The project template '" + templateName + "' has been added to the New Project Dialog</li>";
+                });
+            }
+            if (result.themes && result.themes.length) {
+                studio.loadThemeList();
+                dojo.forEach(result.themes, function(themeName) {
+                    confirmString += "<li>The theme '" + themeName + "' has been added to Studio</li>";
+                });
+            }
+            if (result.project) {
+   				this.project.openProject(result.project);         
+   				confirmString += "<li>Imported project " + result.project + "</li>";
+            }
+            confirmString += "</ol>";
 		    d.dismiss();
-	       app.alert(this.getDictionaryItem("ALERT_IMPORT_THEME_SUCCESS"));
-	       studio.loadThemeList();
+	       app.alert(confirmString);
 	    });
         d.page._onErrorConnect = d.connect(d.page, "onError", this, function(inSender, inError) {
     	       app.alert(this.getDictionaryItem("ALERT_IMPORT_THEME_FAILED", {inError: inError}));

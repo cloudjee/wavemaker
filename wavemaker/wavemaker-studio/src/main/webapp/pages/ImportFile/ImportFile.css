@@ -38,3 +38,6 @@
 .ImportFile .wmeditor .dijitPlaceHolder {
     font-size: 18px !important;
 }
+.ImportFile .InstructionHeader {
+    font-weight: bold;
+}

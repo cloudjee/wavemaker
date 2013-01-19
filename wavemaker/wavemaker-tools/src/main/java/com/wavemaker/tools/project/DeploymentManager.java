@@ -86,6 +86,8 @@ public interface DeploymentManager {
      */
     String exportProject(String zipFileName);
 
+    String exportMultiFile(String zipFileName, boolean buildProject, boolean buildProjectTemplate, String templateJson, String[] themeList, String[] componentList ) throws IOException;
+
     /**
      * This function takes a zip file as input, unzips it and moves it into the projects folder.
      */
