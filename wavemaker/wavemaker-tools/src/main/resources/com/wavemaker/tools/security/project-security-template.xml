@@ -132,6 +132,17 @@
         </property>
     </bean>
 
+	<bean class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider"
+		id="adAuthProvider">
+		<constructor-arg value="wavemaker.com" />
+		<constructor-arg value="ldap://adserver.wavemaker.com/" />
+		<property name="convertSubErrorCodesToExceptions" value="true"/>
+	</bean>
+
+    <security:authentication-manager id="authenticationManagerAD" alias="authenticationManagerAD">
+        <security:authentication-provider ref="adAuthenticationProvider"/>
+    </security:authentication-manager>
+
 	<security:ldap-server url="ldap://localhost:389/dc=wavemaker,dc=vmware,dc=com"/>
 	 
     <security:authentication-manager id="authenticationManagerLDAP" alias="authenticationManagerLDAP">

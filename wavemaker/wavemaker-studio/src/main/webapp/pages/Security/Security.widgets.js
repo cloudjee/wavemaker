@@ -32,7 +32,7 @@ Security.widgets = {
 			secConfigPanel: ["wm.Panel", {"border":"0","height":"120px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
 			    secConfigControls: ["wm.Panel", {"border":"0","width":"638px"}, {}, {
 				panel16: ["wm.Panel", {"border":"0","height":"100%"}, {}, {
-				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,LDAP", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
+				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,AD,LDAP", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
 				    panel3: ["wm.Panel", {"border":"0","height":"95px"}, {}, {
 					secEnableInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
 					showLoginPageInput: ["wm.Checkbox", {_classe4: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
@@ -150,8 +150,11 @@ Security.widgets = {
 					    }]
 					}]
 				    }],
-				    jossoLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"JOSSO"}, {"onShow":"showJossoLayer"}, {
-					   userNotice: ["wm.Html", {"border":"0","height":"100%","html":"<H3>Setting up JOSSO</H3><ol><li>Before saving this security panel, you must set up exactly one role using the Roles tab above</li><li>Edit web.xml<ul><li>Register as partner app in agent config</li><li>Copy jsp to webapproot</li></ul></li><li>Read more about JOSSO Setup in the <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/Authentication#HUsingJOSSOAuthentication'>Authentication Page</a> of the wiki</li></ol>","width":"359px", padding: "5"}, {}]
+				    adLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"AD"}, {"onShow":"showADLayer"}, {
+					adMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+					    adDomainInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Domain","emptyValue":"null","padding":"2",helpText: "The AD domain name"}, {"onchange":"setDirty"}],
+					    adUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"URL","emptyValue":"null","padding":"2",helpText: "The URL of the AD server"}, {"onchange":"setDirty"}]
+					}]
 				    }]
 				}]
 			    }]

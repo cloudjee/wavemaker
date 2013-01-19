@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="userdb.spring.xml" type="DataService" CRUDService="true" class="com.Userdb" id="userdb">
+    <operation name="getUsersById">
+        <parameter isList="false" typeRef="java.lang.String" name="id"/>
+        <return isList="false" typeRef="com.data.Users"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="true" javaType="com.data.Users">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="username">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="password"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="role"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="firstname"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="lastname"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="phone"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="twittername"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.Integer" name="tenantid"/>
+        </dataobject>
+    </dataobjects>
+</service>

@@ -292,6 +292,18 @@ public class SecurityConfigService {
         return options;
     }
 
+    public LDAPOptions getADOptions() throws IOException, JAXBException {
+        LDAPOptions options = getSecToolsMgr().getAdOptions();
+        return options;
+    }
+
+
+    public void configAD(String url, String domain, boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort)
+    		throws IOException, JAXBException {
+    	getSecToolsMgr().configAD(url, domain);
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
+    }
+
     public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
         LDAPOptions options = getSecToolsMgr().getLDAPOptions();
         options = populateJavaSpecificLDAPParams(options);

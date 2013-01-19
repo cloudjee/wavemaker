@@ -60,6 +60,8 @@ public class SecuritySpringSupport {
     public static final String CONTEXT_SOURCE = "contextSource";
 
     public static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
+
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_AD = "authenticationManagerAD";
     
     public static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP = "authenticationManagerLDAP";   
     
@@ -80,6 +82,8 @@ public class SecuritySpringSupport {
     private static final String AUTH_PROVIDERS_PROPERTY = "providers";
 
     private static final String ANONYMOUS_AUTHENTICATION_PROVIDER_BEAN_ID = "anonymousAuthenticationProvider";
+
+    private static final String AD_AUTH_PROVIDER_BEAN_ID = "adAuthProvider";
 
     private static final String LDAP_AUTH_PROVIDER_BEAN_ID = "ldapAuthProvider";
 
@@ -601,7 +605,17 @@ public class SecuritySpringSupport {
         return queryString;
     }
 
-    /**
+    public static LDAPOptions constructAdOptions(Beans beans) {
+    	LDAPOptions options = new LDAPOptions();
+    	Bean adAuthBean = beans.getBeanById(AD_AUTH_PROVIDER_BEAN_ID);
+    	String domain = adAuthBean.getConstructorArgs().get(0).getValue();
+    	options.setDomain(domain);
+    	String url = adAuthBean.getConstructorArgs().get(1).getValue();
+    	options.setUrl(url);
+    	return options;
+    }
+
+	/**
      * Returns the current LDAP configuration in the form of a LDAPOptions Structure
      * @param beans
      * @return
@@ -617,7 +631,7 @@ public class SecuritySpringSupport {
 
     		ConstructorArg arg = ldapDirContextBean.getConstructorArgs().get(0);
     		String ldapUrl = arg.getValue();
-    		options.setLdapUrl(ldapUrl);
+    		options.setUrl(ldapUrl);
 
     		//options.setManagerDn(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_DN_PROPERTY));
     		//options.setManagerPassword(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_PASSWORD_PROPERTY));
@@ -676,14 +690,13 @@ public class SecuritySpringSupport {
     	}
     	return options;
     }
-
+    
     private static LDAPOptions getLdapConfig(Beans beans, LDAPOptions options) {
     	LdapServer ldapServer = SecurityXmlSupport.getLdapServer(beans);
-    	options.setLdapUrl(ldapServer.getUrl());
+    	options.setUrl(ldapServer.getUrl());
     	options.setManagerDn(ldapServer.getManagerDn());
     	options.setManagerPassword(ldapServer.getManagerPassword());
     	AuthenticationManager.LdapAuthenticationProvider ldapAuthProvider = SecurityXmlSupport.getLdapAuthProvider(beans);
-    	
     	String userSearchFilter = ldapAuthProvider.getUserSearchFilter();
     	if(userSearchFilter.startsWith("(")){
     		 userSearchFilter = userSearchFilter.substring(1, userSearchFilter.length()-1);
@@ -751,6 +764,13 @@ public class SecuritySpringSupport {
 		return false;
 	}
 	
+	public static void updateAdAuthProvider(Beans beans, String serverUrl,String domain) {
+		Bean adAuthProviderBean = beans.getBeanById(AD_AUTH_PROVIDER_BEAN_ID);
+		List<ConstructorArg> ctorArgs = adAuthProviderBean.getConstructorArgs();
+        	ctorArgs.get(0).setValue(domain);
+        	ctorArgs.get(1).setValue(serverUrl);
+	}
+
 	public static void updateLdapAuthProvider(Beans beans, String ldapUrl, String userDnPattern,
 			boolean groupSearchDisabled, String groupSearchBase,
 			String groupRoleAttribute, String groupSearchFilter) {
@@ -900,5 +920,6 @@ public class SecuritySpringSupport {
         valueElement.setContent(content);
         property.setValueElement(valueElement);
     }
+
 
 }
