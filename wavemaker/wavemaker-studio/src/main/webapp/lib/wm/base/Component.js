@@ -220,12 +220,23 @@ dojo.declare("wm.Component", wm.Object, {
         this._isDesignLoaded = true;
 
         if (this.manageURL) {
-        var connectTo = app ? app : this.getRoot();
-        if (wm.Application && connectTo instanceof wm.Application) {
-            this.connect(connectTo, "_generateStateUrl", this, "generateStateUrl");
-        }
+            var connectTo = app ? app : this.getRoot();
+            if (wm.Application && connectTo instanceof wm.Application) {
+                this.connect(connectTo, "_generateStateUrl", this, "generateStateUrl");
+            }
         }
 
+        /* Insure that properties redefined by the theme get the value written to the property
+         * rather than just using the prototype's value.  When running studio, a change in the theme
+         * can cause properties to change AFTER the component was initialized.
+         */
+        if (window["studio"] && this.themeableProps) {
+            dojo.forEach(this.themeableProps, function(inName) {
+                var tmp = this[inName];
+                delete this[inName];
+                this[inName] = tmp;
+            }, this);
+        }
     },
     postInit: function() {
         this.valueChanged("", this);
