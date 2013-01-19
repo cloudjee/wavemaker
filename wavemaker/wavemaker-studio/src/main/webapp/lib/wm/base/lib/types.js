@@ -238,7 +238,9 @@ wm.typeManager = {
 			this._publicTypes[inName] = inTypeInfo;
 	},
 	removeType: function(inName) {
-	    delete this._publicTypes[inName];
+	   if (this._publicTypes) {
+	       delete this._publicTypes[inName];
+	   }	   
         delete this.types[inName];
 	},
 	addDefaultTypes: function() {
