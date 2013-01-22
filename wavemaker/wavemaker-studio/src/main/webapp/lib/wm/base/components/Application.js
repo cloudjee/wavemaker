@@ -728,6 +728,7 @@ dojo.declare("wm.Application", wm.Component, {
                 wm.job("doRun", 100, this, "doRun");
                 return;
             }
+            if (!window["PhoneGap"]) window["PhoneGap"] = true;
             /* IFrame added by phonegap build server seems to disrupt touch events */
             if (document.body.nextSibling && document.body.nextSibling.tagName == "IFRAME") {
                 dojo.destroy(document.body.nextSibling);
