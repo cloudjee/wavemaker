@@ -70,7 +70,6 @@ dojo.declare(
             this.rolesLayer.setShowing(true);
             this.showLoginPageInput.setChecked(true);
 			this.useSSLInput.setChecked(true);
-			this.sslPortInput.setDataValue("8443");
             this.ldapSearchRoleCheckbox.setChecked(false);
             this.ldapSearchRoleCheckboxChange(this.ldapSearchRoleCheckbox);
             this.dbRoleBySQLCheckbox.setChecked(false);
@@ -208,7 +207,6 @@ dojo.declare(
                 this.rolesLayer.setShowing(inResponse.enforceSecurity);
                 this.showLoginPageInput.setChecked(inResponse.enforceIndexHtml || studio.application.isLoginPageEnabled);
 				this.useSSLInput.setChecked(inResponse.SSLUsed);
-				this.sslPortInput.setDataValue(inResponse.sslPort);
                 var t = inResponse.dataSourceType;
                 this.populatingOptions = true;
                 this.secProviderInput.setDataValue(t);
@@ -752,21 +750,18 @@ dojo.declare(
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
 			this.useSSLInput.setShowing(true);
-			this.sslPortInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
         showDBLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
 			this.useSSLInput.setShowing(true);
-			this.sslPortInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
         showLDAPLayer : function() {
             this.secEnableInput.setDisabled(false);
             this.showLoginPageInput.setShowing(true);
 			this.useSSLInput.setShowing(true);
-			this.sslPortInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
         securityCheckboxChange : function() {
@@ -775,7 +770,6 @@ dojo.declare(
             this.rolesLayer.setShowing(enabled);
             this.showLoginPageInput.setShowing(enabled);
 			this.useSSLInput.setShowing(enabled);
-			this.sslPortInput.setShowing(enabled);
             this.sessionExpirationHandler.setShowing(enabled);
             this.panel4a.setShowing(enabled);
             this.panelBottom.setShowing(enabled);
@@ -783,7 +777,6 @@ dojo.declare(
             if (this.isJOSSO()) {
                 this.showLoginPageInput.setShowing(false);
 				this.useSSLInput.setShowing(false);
-				this.sslPortInput.setShowing(false);
                 this.sessionExpirationHandler.setShowing(false);
             }
             this.setDirty();
@@ -797,7 +790,6 @@ dojo.declare(
                 rolesQuery = this.dbRoleBySQLInput.getDataValue();
             }
             var result = [ dojo.toJson(this.demoUserList._data), dojo.toJson(this.roleList._data), this.secProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), this.useSSLInput.getChecked(),
-					this.sslPortInput.getDataValue(),
                     this.sessionExpirationHandler.getDataValue(),
                     this.dbRoleBySQLCheckbox.getChecked(), this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
                     this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput), this.getEditorDisplayValue(this.tenantIdField) || "",
@@ -853,16 +845,6 @@ dojo.declare(
                 return;
             }
 
-			if (this.useSSLInput.getChecked()) {
-				if (!this.isInteger(this.sslPortInput.getDataValue())) {
-					this.saveError({
-						owner : this,
-						message : this.getDictionaryItem("ALERT_INVALID_SSL_PORT")
-					});
-					return;
-				}
-			}
-
             /*
              * Localization changes the caption, so get the english
              * version of the caption from the layer name so that we
@@ -899,7 +881,7 @@ dojo.declare(
                 wm.onidle(this, function() {
                     if (t == "Demo") {
                         studio.securityConfigService.requestSync("configDemo", [ this.demoUserList._data, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
-						this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configDemoResult"), dojo
+						this.useSSLInput.getChecked()], dojo.hitch(this, "configDemoResult"), dojo
                                 .hitch(this, "saveError"));
 
                     } else if (t == "Database") {
@@ -910,7 +892,7 @@ dojo.declare(
                         studio.securityConfigService.requestSync("configDatabase", [ this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
                                 this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput),
                                 this.getEditorDisplayValue(this.tenantIdField) || "", this.defTenantId.getDataValue() || 0, rolesQuery, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
-								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this,
+								this.useSSLInput.getChecked()], dojo.hitch(this,
                                 "configDatabaseResult"), dojo.hitch(this, "saveError"));
 
                     } else if (t == "LDAP") {
@@ -924,11 +906,11 @@ dojo.declare(
                                 // Added by Girish
                                 this.ldapRoleDbDataModelInput.getDataValue(), this.ldapRoleDbEntityInput.getDataValue(), this.ldapRoleDbUsernameInput.getDataValue(), this.ldapRoleDbRoleInput.getDataValue(), rolesQuery,
                                 this.ldapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
-								this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
+								this.useSSLInput.getChecked()], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
                     } else if (t == "AD") {
                         var roles = this.roleList._data;
                             studio.securityConfigService.requestSync("configAD",
-                                [this.adUrlInput.getDataValue(), this.adDomainInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), this.useSSLInput.getChecked(), this.sslPortInput.getDataValue() || ""],
+                                [this.adUrlInput.getDataValue(), this.adDomainInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), this.useSSLInput.getChecked()],
                                 dojo.hitch(this, "configADResult"));
                             studio.application.loadServerComponents();
                             studio.refreshServiceTree();

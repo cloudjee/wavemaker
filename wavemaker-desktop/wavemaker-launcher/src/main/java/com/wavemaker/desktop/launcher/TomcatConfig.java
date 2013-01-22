@@ -77,10 +77,6 @@ public class TomcatConfig {
 
     protected Node sslServicePortNode;
 
-    protected Node connectorNode;
-
-    protected Node sslConnectorNode;
-
     // event Handling
     protected ArrayList<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
 

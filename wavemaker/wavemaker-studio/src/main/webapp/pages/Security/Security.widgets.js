@@ -37,8 +37,7 @@ Security.widgets = {
 					secEnableInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
 					showLoginPageInput: ["wm.Checkbox", {_classe4: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
 					panel131: ["wm.Panel", {"border":"0","height":"45px", verticalAlign: "top", horizontalAlign: "left", "width":"100%","layoutKind":"left-to-right"}, {}, {
-						useSSLInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Use SSL","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
-						sslPortInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"SSL Port","captionAlign":"left","captionSize":"120px","displayValue":"8443","margin":"0,0,0,60","padding":"2","width":"100%", "height":"24px"}, {"onchange":"setDirty"}]
+						useSSLInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Use SSL","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
 					}],
 					sessionExpirationHandler: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Session Expiration Handler","captionAlign":"left","captionSize":"180px",options: "navigateToLogin,showLoginDialog,nothing","displayValue":"","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
 				    }]
