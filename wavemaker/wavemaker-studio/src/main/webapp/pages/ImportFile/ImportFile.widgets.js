@@ -18,7 +18,8 @@ ImportFile.widgets = {
         typefield1: ["wm.TypeDefinitionField", {fieldName: "name", fieldType: "string"}],
         typefield2: ["wm.TypeDefinitionField", {fieldName: "type", fieldType: "string"}],
         typefield3: ["wm.TypeDefinitionField", {fieldName: "exists", fieldType: "string"}],
-        typefield4: ["wm.TypeDefinitionField", {fieldName: "dataValue", fieldType: "string"}]
+        typefield4: ["wm.TypeDefinitionField", {fieldName: "dataValue", fieldType: "string"}],
+        typefield5: ["wm.TypeDefinitionField", {fieldName: "moduleName", fieldType: "string"}]        
     }],
     variable: ["wm.Variable", {type: "ImportFileTypeDef", isList: true}],
     layoutBox1: ["wm.Layout", {layoutKind: "top-to-bottom", width: "100%", height: "100%", _classes: {domNode: ["StudioDarkPanel"]}}, {}, {    
