@@ -665,6 +665,15 @@ dojo.declare("wm.studio.Project", null, {
                 return d;
             }),onError
         ).then(
+            dojo.hitch(this, function() {
+				studio.incrementSaveProgressBar(1);
+                var d = studio.securityConfigService.requestAsync("getGeneralOptions", []);
+                d.addCallback(dojo.hitch(this, function(inResult) {
+                    studio.application.isSSLUsed = inResult.SSLUsed;
+                }));
+                return d;
+            }),onError
+        ).then(
             /* Save Step: Load the SMD files and add them to project.js */
             dojo.hitch(this, function() {
                 studio.incrementSaveProgressBar(1);

@@ -56,11 +56,6 @@ public class TomcatConfig {
     protected Node sslServicePortNode;
 
     protected TomcatConfig(InputStream source) {
-        try {
-            Thread.sleep(5000);
-        } catch (Exception e) {
-
-        }
         this.parseSourceXML(source);
     }
 

@@ -14,6 +14,7 @@
 {
 HSQLDB_DATABASE_NAME_CAPTION: "File name",
 DATABASE_BOX_TITLE: "Database: ${databaseName}",
+PORT_MAPPING_BOX_TITLE: "Port Mapping",
 CONFIRM_DELETE_HEADER: "Are you sure you want to delete this deployment?",
 SYNOPSIS_NAME: "Name:",
 SYNOPSIS_TARGET: "Target:",

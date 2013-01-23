@@ -55,6 +55,10 @@ public class DeploymentInfo {
 
     private Boolean destroyAllData;
 
+    private int httpPort;
+
+    private int httpsPort;
+
     public String getDeploymentId() {
         return this.deploymentId;
     }
@@ -133,6 +137,22 @@ public class DeploymentInfo {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public int getHttpPort() {
+        return this.httpPort;
+    }
+
+    public void setHttpPort(int httpPort) {
+        this.httpPort = httpPort;
+    }
+
+    public int getHttpsPort() {
+        return this.httpsPort;
+    }
+
+    public void setHttpsPort(int httpsPort) {
+        this.httpsPort = httpsPort;
     }
 
     public String getTarget() {
