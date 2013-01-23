@@ -389,7 +389,7 @@ wm.Object.extendSchema(wm.WizardLayers, {
 
 wm.TabLayers.extend({
     themeable: true,
-    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight", "mobileHeaderHeight", "margin"],
+    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight", "mobileHeaderHeight", "headerWidth", "margin"],
     themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}],
 
     set_conditionalTabButtons: function(inValue) {
