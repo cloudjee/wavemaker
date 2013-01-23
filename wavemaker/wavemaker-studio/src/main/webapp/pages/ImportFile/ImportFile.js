@@ -86,7 +86,7 @@ dojo.declare("ImportFile", wm.Page, {
         var selectedData = [];
         if (result.components) {
             dojo.forEach(result.components, function(item) {
-                data.push({name: item.name, type: "component", exists: item.exists, dataValue: "component:" + item.name});
+                data.push({name: item.name, type: "component", exists: item.exists, dataValue: "component:" + item.name, moduleName: item.moduleName});
                 if (!item.exists) selectedData.push(data[data.length-1]);
             });
         }
@@ -148,7 +148,21 @@ dojo.declare("ImportFile", wm.Page, {
     onImportSuccess: function(inResult) {
         this.owner.owner.hide();
 	    app.toastSuccess("Import Successful");
-	    if (inResult) {
+
+        var importedItems = this.checkboxSet.selectedItem;
+        
+        if (importedItems.query({type:"theme"}).getCount() > 0) {
+            studio.loadThemeList();
+        }
+        
+        importedItems.query({type: "component"}).forEach(function(inItem) {
+            var moduleName = inItem.getValue("moduleName");
+            delete dojo._loadedModules[moduleName];
+            var uri = dojo.moduleUrl(moduleName.replace(/\.[^.]+$/,"")) + moduleName.replace(/^.*\./,"") + ".js";
+            delete dojo._loadedUrls[uri];
+            dojo.require(moduleName);
+        });
+	    if (inResult) {	    
 	       studio.project.openProject(inResult);
 	    }
 	    delete this.serverFileName;
