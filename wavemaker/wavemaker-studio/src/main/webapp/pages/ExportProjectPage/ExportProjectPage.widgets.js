@@ -27,7 +27,9 @@ ExportProjectPage.widgets = {
                     wire: ["wm.Wire", {targetProperty: "dataSet", source: "variable"}]
                 }]
             }],
-            templateExportCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, caption: "Export a project template?", captionPosition: "right", captionAlign: "left", captionSize: "100%"}],
+            templateExportCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, caption: "Export a project template?", 
+                                                    captionPosition: "right", captionAlign: "left", captionSize: "100%", width: "100%",
+                                                    helpText: "Users who import this project will have it show up in the New Project dialog instead of in their project list"}],
             templateExportPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100px", verticalAlign: "top", horizontalAlign: "left"}, {}, {
                 binding: ["wm.Binding", {}, {}, {
                     wire: ["wm.Wire", {targetProperty: "showing", source: "templateExportCheckbox.checked"}]
@@ -42,7 +44,8 @@ captionAlign: "left", allowNone: true, width: "100%", displayField: "name", data
     			    }]
     			}],
                 templateThumbnail: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "Thumbnail", captionPosition: "left", 
-helpText: "This icon is shown for your template in New Project Dialog.  Path is relative to project root, so if the image is in your resources folder, enter 'webapproot/resources/images/myimage.png'.", captionSize: "150px", captionAlign: "left", width: "100%", placeHolder: "webapproot/resources/images/sample.png"}]
+                                                helpText: "This icon is shown for your template in New Project Dialog.  Path is relative to project root, so if the image is in your resources folder, enter 'webapproot/resources/images/myimage.png'.", 
+                                                captionSize: "150px", captionAlign: "left", width: "100%", placeHolder: "webapproot/resources/images/sample.png"}]
             }]
     	}],
             footer: ["wm.studio.DialogButtonPanel", {}, {}, {            
