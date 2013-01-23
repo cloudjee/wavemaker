@@ -42,6 +42,7 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.security.*;
 import com.wavemaker.tools.service.DesignServiceManager;
 
@@ -59,6 +60,8 @@ public class SecurityConfigService {
 
     private SecurityToolsManager securityToolsMgr;
 
+    private StudioFileSystem fileSystem;
+
     public void setProjectManager(ProjectManager projectMgr) {
         this.projectMgr = projectMgr;
     }
@@ -71,6 +74,10 @@ public class SecurityConfigService {
         this.dataModelMgr = dataModelMgr;
     }
 
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
     private SecurityToolsManager getSecToolsMgr() {
         if (this.securityToolsMgr == null) {
             if (this.projectMgr == null) {
@@ -79,7 +86,7 @@ public class SecurityConfigService {
             if (this.designServiceMgr == null) {
                 SpringUtils.throwSpringNotInitializedError(DesignServiceManager.class);
             }
-            this.securityToolsMgr = new SecurityToolsManager(this.projectMgr, this.designServiceMgr);
+            this.securityToolsMgr = new SecurityToolsManager(this.projectMgr, this.designServiceMgr, this.fileSystem);
         }
         return this.securityToolsMgr;
     }
@@ -97,9 +104,9 @@ public class SecurityConfigService {
     }
 
     public void configDemo(DemoUser[] demoUsers, boolean enforceSecurity, boolean enforceIndexHtml,
-                           boolean useSSL, String sslPort) throws JAXBException, IOException {
+                           boolean useSSL) throws JAXBException, IOException {
         getSecToolsMgr().configDemo(demoUsers);
-        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
+        getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL);
     }
 
     public DatabaseOptions getDatabaseOptions() throws IOException, JAXBException {
@@ -115,7 +122,7 @@ public class SecurityConfigService {
 
     public void configDatabase(String modelName, String entityName, String unamePropertyName, String uidPropertyName, String pwPropertyName,
         String rolePropertyName, String tenantIdField, int defTenantId, String rolesByUsernameQuery, boolean enforceSecurity, boolean enforceIndexHtml,
-        boolean useSSL, String sslPort)
+        boolean useSSL)
         throws JAXBException, IOException {
         DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(modelName);
         EntityInfo entity = dataModel.getEntity(entityName);
@@ -142,7 +149,7 @@ public class SecurityConfigService {
         SecurityToolsManager secToolsMgr = getSecToolsMgr();
         secToolsMgr.configDatabase(modelName, tableName, unameColumnName, uidColumnName, uidColumnSqlType, pwColumnName, roleColumnName,
             rolesByUsernameQuery);
-        secToolsMgr.setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
+        secToolsMgr.setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL);
 
         // only write Tenant information to file if the tenantIdField has a
         // value
@@ -298,10 +305,10 @@ public class SecurityConfigService {
     }
 
 
-    public void configAD(String url, String domain, boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort)
+    public void configAD(String url, String domain, boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL)
     		throws IOException, JAXBException {
     	getSecToolsMgr().configAD(url, domain);
-    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
     }
 
     public LDAPOptions getLDAPOptions() throws IOException, JAXBException {
@@ -334,7 +341,7 @@ public class SecurityConfigService {
     public void configLDAP(String ldapUrl, String managerDn, String managerPassword, String userDnPattern, boolean groupSearchingDisabled,
     		String groupSearchBase, String groupRoleAttribute, String groupSearchFilter, String roleModel, String roleEntity, String roleUsername,
     		String roleProperty, String roleQuery, String roleProvider, boolean enforceSecurity, boolean enforceIndexHtml,
-            boolean useSSL, String sslPort) throws IOException,
+            boolean useSSL) throws IOException,
     		JAXBException {
 
     	// GD: Get the schema name, if any, for the entity/table
@@ -357,7 +364,7 @@ public class SecurityConfigService {
     	else {
     		getSecToolsMgr().configLDAP(ldapUrl, userDnPattern, groupSearchingDisabled, groupSearchBase, groupRoleAttribute, groupSearchFilter);
     	}
-    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL, sslPort);
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml, useSSL);
     }
 
     public void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) throws NamingException {

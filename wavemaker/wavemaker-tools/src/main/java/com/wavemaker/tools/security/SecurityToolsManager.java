@@ -33,6 +33,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.security.schema.Http;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
@@ -76,9 +77,12 @@ public class SecurityToolsManager {
 
     private final DesignServiceManager designServiceMgr;
 
-    public SecurityToolsManager(ProjectManager projectMgr, DesignServiceManager designServiceMgr) {
+    private final StudioFileSystem fileSystem;
+
+    public SecurityToolsManager(ProjectManager projectMgr, DesignServiceManager designServiceMgr, StudioFileSystem fileSystem) {
         this.projectMgr = projectMgr;
         this.designServiceMgr = designServiceMgr;
+        this.fileSystem = fileSystem;
     }
 
     /**
@@ -208,17 +212,27 @@ public class SecurityToolsManager {
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
-        setGeneralOptions(enforceSecurity, enforceIndexHtml, false, "");
+        setGeneralOptions(enforceSecurity, enforceIndexHtml, false);
     }
 
-    public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL, String sslPort) throws IOException, JAXBException {
+    public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL) throws IOException, JAXBException {
         this.lock.lock();
+        String servicePort;
+        String sslPort;
+        TomcatConfig tomcatConfig = TomcatConfig.GetDefaultConfig(this.fileSystem);
+        if (tomcatConfig == null) {
+            servicePort = RuntimeAccess.getInstance().getRequest().getLocalPort()+"";
+            sslPort = "8443";
+        } else {
+            servicePort = tomcatConfig.getServicePort()+"";
+            sslPort = tomcatConfig.getSslPort()+"";
+        }
         try {
             Beans beans = getSecuritySpringBeans(true);
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
             String channel = useSSL ? "https" : "http";
             SecuritySpringSupport.setRequiresChannel(beans, channel, sslPort);
-            SecurityXmlSupport.setPortMapping(beans, useSSL, RuntimeAccess.getInstance().getRequest().getLocalPort()+"", sslPort);
+            SecurityXmlSupport.setPortMapping(beans, useSSL, servicePort, sslPort);
             saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();
@@ -375,8 +389,7 @@ public class SecurityToolsManager {
      * @param ldapUrl The LDAP URL like "ldap://localhost:389/dc=wavemaker,dc=com"
      * @param managerDn The test user DN
      * @param managerPassword The test user password
-     * @throws NamingException 
-     * @throws org.Securitysecurity.BadCredentialsException
+     * @throws NamingException
      */
     public static void testLDAPConnection(String ldapUrl, String managerDn, String managerPassword) throws NamingException {
         Hashtable<String,String> env = new Hashtable<String,String>();
@@ -438,7 +451,7 @@ public class SecurityToolsManager {
                 throw new RuntimeException("Unable to get Security Bean");
             } else {
                 SecuritySpringSupport.setSecurityInterceptUrls(beans, urlMap);
-                SecuritySpringSupport.setSecurityEnforced(beans,true);
+                SecuritySpringSupport.setSecurityEnforced(beans, true);
                 saveSecuritySpringBeans(beans);
             }
         } catch (Exception e) {
