@@ -379,7 +379,30 @@ public class DeploymentService {
 	return new DownloadableFile(exportFile);
     }
 
-    /* TODO: Currently flags what actions will be taken, but also we must flag which actions will result in overwrites */
+    public void cleanupImportTmp(String file) throws IOException {
+	if (!file.equals("")) {
+	    Folder componentStage = this.fileSystem.getWaveMakerHomeFolder().getFolder("tmp").getFolder(file);
+	    if (componentStage.exists()) {
+		componentStage.delete();
+	    }
+	}
+
+	/* Delete any old stuff from the tmp folder */
+	Folder tmp = this.fileSystem.getWaveMakerHomeFolder().getFolder("tmp");
+	for (com.wavemaker.tools.io.Folder f : tmp.list().folders()) {	
+	    com.wavemaker.tools.io.File timestamp = f.getFile("timestamp.txt");
+	    if (timestamp.exists()) {
+		long time = Long.valueOf(timestamp.getContent().asString().trim()).longValue();
+		/* If the file has been there for over 12 hours, then its probably gotten lost, and is not just sitting there for 12 hours
+		 * uploading and waiting for the user
+		 */
+		if (time + 1000 * 3600 * 12 < new java.util.Date().getTime()) {
+		    f.delete();
+		}
+	    }
+	}
+    }
+
     public FileUploadResponse testMultiFile(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         fileName = fileName.substring(0, fileName.lastIndexOf(".zip"));
@@ -390,8 +413,13 @@ public class DeploymentService {
         FileUploadResponse ret = new FileUploadResponse();
 	Folder tmp = this.fileSystem.getWaveMakerHomeFolder().getFolder("tmp");
 	tmp.createIfMissing();
+	
         Folder componentStage = tmp.getFolder(CLIENT_COMPONENTS_STAGE + new java.util.Date().getTime());
         ZipArchive.unpack(file.getInputStream(), componentStage);
+
+	com.wavemaker.tools.io.File timestamp = componentStage.getFile("timestamp.txt");
+	timestamp.getContent().write("" + new java.util.Date().getTime());
+
 	String response = "{'file':'" + componentStage.getName() + "',";
 
 	boolean isOldStyleExport = true;

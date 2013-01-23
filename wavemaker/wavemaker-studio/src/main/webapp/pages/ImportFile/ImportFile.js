@@ -18,17 +18,36 @@ dojo.provide("wm.studio.pages.ImportFile.ImportFile");
 dojo.declare("ImportFile", wm.Page, {
     i18n: true,
     start: function() {
-    	dojo.addClass(this.fileUploader.button.domNode, "StudioButton");
+        var d = this.fileUploader.button.domNode;
+    	dojo.addClass(d, "StudioButton");
+    	this.fileUploader.connect(this.fileUploader, "createButton", this, "styleUploader");
+    	this.fileUploader.connect(this.fileUploader, "adjustButtonHeight", this, "styleUploader2");    	
+    	this.styleUploader();
+    }, 
+    styleUploader: function() {
+        var b = this.fileUploader.button;
+        b.setBorder("1");
+        b.setBorderColor(this.cancelButton2.borderColor);
+        b.setMargin("4px");
+    },
+    styleUploader2: function() {    
+        var d = this.fileUploader.button.domNode;
+        d.style.margin = "4px";
+        d.style.border = this.cancelButton2.domNode.style.border;
     },
     onShow: function() {
         this.introLayer.activate();
         this.projectTakenLabel.hide();
         this.radioPanel.hide();
+        this.cleanupTmpFolder();        
     },
     
     onHide: function() {
-    	if (this._onSuccessConnect) dojo.disconnect(this._onSuccessConnect);
-    	if (this._onErrorConnect) dojo.disconnect(this._onErrorConnect);    	
+        this.cleanupTmpFolder();
+    },
+    cleanupTmpFolder: function() {
+   		studio.deploymentService.requestAsync("cleanupImportTmp", [this.serverFileName || ""]);
+   		delete this.serverFileName;
     },
     /*
     openProject: function() {
@@ -132,6 +151,7 @@ dojo.declare("ImportFile", wm.Page, {
 	    if (inResult) {
 	       studio.project.openProject(inResult);
 	    }
+	    delete this.serverFileName;
     },
     
     onError: function() {},
