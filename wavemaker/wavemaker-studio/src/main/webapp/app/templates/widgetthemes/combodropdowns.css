@@ -12,6 +12,7 @@
 /* GROUP: ComboBox Drop-down Items */
 .wm_template .dijitPopup .dijitCalendarMonthLabel .dijitMenuItem,
 .wm_template  ul.dijitMenu .dijitMenuItem {
+    font-size: 12px;
     font-family: sans-serif;
     color: #FFFFFF;
     font-weight: bold;
