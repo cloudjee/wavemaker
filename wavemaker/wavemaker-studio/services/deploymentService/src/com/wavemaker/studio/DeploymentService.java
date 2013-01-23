@@ -495,7 +495,7 @@ public class DeploymentService {
 		    String packageStr = packageName.substring(0, packageName.lastIndexOf("." + className));
 		    Folder componentFolder = this.fileSystem.getWaveMakerHomeFolder().getFolder(StringUtils.packageToSrcFilePath(packageStr));
 		    boolean exists =  componentFolder.getFile(className + ".js").exists();
-		    response += "{'name':'" + componentFileName + "', 'exists':" + exists + "}";
+		    response += "{'name':'" + componentFileName + "', 'exists':" + exists + ",'moduleName':'" + packageName +"'}";
 		}
 	    }
 	    response += "],";
