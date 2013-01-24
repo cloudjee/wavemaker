@@ -135,7 +135,7 @@
 
 
 /* Menu Item icons */
-.dijitMenuItemIcon {
+.studio_navigationMenu_PopupMenu img {
     vertical-align: middle;
     -moz-background-clip: border;
     -moz-background-origin: padding;
@@ -574,63 +574,62 @@ div .StudioGrid td,
     background-image: url(images/wm/press.png)
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lightbox_16 {
+.studio_navigationMenu_PopupMenu img.lightbox_16 {
    background: transparent url(images/wm/lightbox_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.fisheye {
+.studio_navigationMenu_PopupMenu img.fisheye {
    background: transparent url(images/wm/fisheye.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.variable_24 {
+.studio_navigationMenu_PopupMenu img.variable_24 {
    background: transparent url(images/wm/variable_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.servicevar_24 {
+.studio_navigationMenu_PopupMenu img.servicevar_24 {
    background: transparent url(images/wm/serviceVar_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.livevar_24 {
+.studio_navigationMenu_PopupMenu img.livevar_24 {
    background: transparent url(images/wm/livevar_16.png) no-repeat;
-
 }
 
 .Studio .picture {
    background: transparent url(images/wm/picture_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.navigation_24 {
+.studio_navigationMenu_PopupMenu img.navigation_24 {
    background: transparent url(images/wm/navigation_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.flash {
+.studio_navigationMenu_PopupMenu img.flash {
    background: transparent url(images/flash_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.data_blue {
+.studio_navigationMenu_PopupMenu img.data_blue {
    background: transparent url(images/wm/dataBlue_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.component {
+.studio_navigationMenu_PopupMenu img.component {
    background: transparent url(images/wm/component_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.liveview_16 {
+.studio_navigationMenu_PopupMenu img.liveview_16 {
    background: transparent url(images/wm/liveview_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.operation {
+.studio_navigationMenu_PopupMenu img.operation {
    background: transparent url(images/wm/operation_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lock_16 {
+.studio_navigationMenu_PopupMenu img.lock_16 {
    background: transparent url(images/lock_16.png) no-repeat;
 }
 
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.service,
-.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
+.studio_navigationMenu_PopupMenu img.service,
+.studio_navigationMenu_PopupMenu img.PartnerService
  {
-   background: transparent url(images/wm/service_16.png) no-repeat;
+   background: transparent url(images/wm/service_16.png) no-repeat; 
 }
 
 /* For BC compat with typo in wavemaker.css  */
