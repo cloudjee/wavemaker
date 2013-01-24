@@ -95,7 +95,11 @@ public class TomcatConfig {
      * @return the sslPort
      */
     public int getSslPort() {
-        return Integer.parseInt(this.sslServicePortNode.getNodeValue());
+        if (this.sslServicePortNode == null) {
+            return -99;
+        } else {
+            return Integer.parseInt(this.sslServicePortNode.getNodeValue());
+        }
     }
 
     protected void parseSourceXML(InputStream source) {

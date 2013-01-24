@@ -202,7 +202,7 @@ public class SecuritySpringSupport {
         return null;
     }
 
-    static public void setRequiresChannel(Beans beans, String requiresChannel, String sslPort) {
+    static public void setRequiresChannel(Beans beans, String requiresChannel) {
         List<Http.InterceptUrl> urls = SecurityXmlSupport.getInterceptUrls(beans);
         for (Http.InterceptUrl url : urls) {
             String key = url.getPattern();

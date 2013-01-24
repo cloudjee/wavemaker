@@ -236,22 +236,26 @@ public class SecurityToolsManager {
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL) throws IOException, JAXBException {
         this.lock.lock();
-        String servicePort;
-        String sslPort;
-        TomcatConfig tomcatConfig = TomcatConfig.GetDefaultConfig(this.fileSystem);
-        if (tomcatConfig == null) {
-            servicePort = RuntimeAccess.getInstance().getRequest().getLocalPort()+"";
-            sslPort = "8443";
-        } else {
-            servicePort = tomcatConfig.getServicePort()+"";
-            sslPort = tomcatConfig.getSslPort()+"";
-        }
+
+
         try {
             Beans beans = getSecuritySpringBeans(true);
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
             String channel = useSSL ? "https" : "http";
-            SecuritySpringSupport.setRequiresChannel(beans, channel, sslPort);
-            SecurityXmlSupport.setPortMapping(beans, useSSL, servicePort, sslPort);
+            SecuritySpringSupport.setRequiresChannel(beans, channel);
+            if (useSSL) {
+                String servicePort;
+                String sslPort;
+                TomcatConfig tomcatConfig = TomcatConfig.GetDefaultConfig(this.fileSystem);
+                if (tomcatConfig == null) {
+                    servicePort = RuntimeAccess.getInstance().getRequest().getLocalPort()+"";
+                    sslPort = "8443";
+                } else {
+                    servicePort = tomcatConfig.getServicePort()+"";
+                    sslPort = tomcatConfig.getSslPort() == -99 ? "8443" : tomcatConfig.getSslPort()+"";
+                }
+                SecurityXmlSupport.setPortMapping(beans, useSSL, servicePort, sslPort);
+            }
             saveSecuritySpringBeans(beans);
         } finally {
             this.lock.unlock();
