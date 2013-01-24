@@ -337,6 +337,42 @@ public class SecurityXmlSupport {
         }
     }
 
+    /*
+     * Delete all existing port mapping info and re-create a single mapping line using the port info passed in.
+     * This method is mostly used to configure the SSL port mapping info when deploying an application.
+     */
+    static void recreatePortMapping(Beans beans, String httpPort, String httpsPort) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        boolean mappingsExist = false;
+        boolean portMappingFound = false;
+        List<Http.PortMappings.PortMapping> mappingList = null;
+        List<Http.PortMappings.PortMapping> newMappingList = null;
+        Http.PortMappings mappings = null;
+        for (Object obj : objs) {
+            if (obj instanceof Http.PortMappings) {
+                mappingsExist = true;
+                mappings = (Http.PortMappings) obj;
+                mappingList = mappings.getPortMapping();
+                break;
+            }
+        }
+
+        if (mappingsExist) {
+            objs.remove(mappings);
+        }
+
+        Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
+        newMapping.setHttp(httpPort);
+        newMapping.setHttps(httpsPort);
+
+        List<Http.PortMappings.PortMapping> portMappings;
+
+        mappings = new Http.PortMappings();
+        portMappings = mappings.getPortMapping();
+        portMappings.add(newMapping);
+        objs.add(0, mappings);
+    }
+
     static Http.PortMappings.PortMapping getPortMapping(Beans beans, String httpPort) {
         List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
         Http.PortMappings mappings = null;
@@ -348,6 +384,21 @@ public class SecurityXmlSupport {
                         return mapping;
                     }
                 }
+            }
+        }
+        return null;
+    }
+    /*
+     * When there are multiple lines of port mapping defined in the project-security.xml, get the first mapping.
+     *
+     */
+    static Http.PortMappings.PortMapping getFirstPortMapping(Beans beans) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        Http.PortMappings mappings = null;
+        for (Object obj : objs) {
+            if (obj instanceof Http.PortMappings) {
+                mappings = (Http.PortMappings) obj;
+                return mappings.getPortMapping().get(0);
             }
         }
         return null;

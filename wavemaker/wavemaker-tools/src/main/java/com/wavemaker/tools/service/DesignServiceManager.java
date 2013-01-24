@@ -537,6 +537,15 @@ public class DesignServiceManager {
     }
 
     /**
+     * Return the project's web app root folder
+     *
+     * @return
+     */
+    public File getProjectSecurityXML() {
+        return getProjectWebAppRoot().getFile("WEB-INF/project-security.xml");
+    }
+
+    /**
      * Return the service directory.
      * 
      * @param serviceId

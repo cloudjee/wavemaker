@@ -29,6 +29,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     hsqldbDatabaseBoxes: [],
     cfDatabaseNameList: [],
     _currentDeploymentIndex: -1,
+	currentPortMappingBox: null,
 
     /* Extra Widgets */
     hsqldbBox: {
@@ -65,6 +66,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
             }]
         }]
+        }]
+    }]
+    },
+
+	portMappingBox: {
+    portMappingPanel: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {
+        portMappingInnerPanel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top",			horizontalAlign: "left", margin: "5,50,5,50"},{}, {
+        httpPortEditor: ["wm.Text", {"border":"0","caption":"Http Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}],	
+		httpsPortEditor: ["wm.Text", {"border":"0","caption":"Https Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "httpsPortChanged"}],  
         }]
     }]
     },
@@ -204,6 +214,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
         data.username = this.tcUserEditor.getDataValue();
         data.password = this.tcPasswordEditor.getDataValue();
 
+		if (studio.application.isSSLUsed) {
+			data.httpPort = this.httpPortEditor.getDataValue();
+			data.httpsPort = this.httpsPortEditor.getDataValue();
+		}
+
         /* Delete the old databases and replace it with a new databases structure */
         data.databases = this.generateStandardDatabaseStruct();
         return data;
@@ -235,6 +250,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var data = this.deploymentList.selectedItem.getValue("dataValue");
         data.name = this.fileDeploymentNameEditor.getDataValue();
         data.archiveType = this.warRadioButton.getGroupValue();
+
+		if (studio.application.isSSLUsed) {
+			data.httpPort = this.httpPortEditor.getDataValue();
+			data.httpsPort = this.httpsPortEditor.getDataValue();
+		}
 
         /* Delete the old databases and replace it with a new databases structure */
         data.databases = this.generateStandardDatabaseStruct();
@@ -1050,6 +1070,24 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
         return this.currentDatabaseBoxes;
     },
+	generatePortMappingBox: function() {
+		if (this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.CF_DEPLOY ||
+			!studio.application.isSSLUsed) {
+			return null;
+		}
+
+        //this.currentPortMappingBox.destroy();
+
+        //this.currentPortMappingBox = {};
+		if (!this.currentPortMappingBox) {
+			var box = this.editPanel.createComponents(this.portMappingBox, this)[0];
+			box.setTitle(this.getDictionaryItem("PORT_MAPPING_BOX_TITLE"));		
+			this.currentPortMappingBox = box;
+		}
+		// TODO: set readonly true/false on port editor based on whether its a tomcat or generate war deployment
+
+		return this.currentPortMappingBox;
+    },
     populateDataModelBoxesStandard: function() {
         dojo.forEach(this.currentDatabaseBoxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;
@@ -1125,6 +1163,20 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.editPanel.reflow();
     },
 
+	populatePortMappingBoxStandard: function() {
+		studio.securityConfigService.requestAsync("getPortMapping", null,
+				dojo.hitch(this, function(inResult) {
+					this.httpPortEditor.setDataValue(inResult.http);
+					this.httpsPortEditor.setDataValue(inResult.https);
+				}));
+					
+	},
+
+	populatePortMappingBox: function(inData) {
+		this.httpPortEditor.setDataValue(inData.httpPort);
+		this.httpsPortEditor.setDataValue(inData.httpsPort);
+	},
+
     newTomcatDeploy: function() {
         this.editLayer.activate();
         this.tomcatLayer.activate();
@@ -1135,6 +1187,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.tcUserEditor.setDataValue("manager");
         this.tcPasswordEditor.setDataValue("manager");
 
+		var box = this.generatePortMappingBox();
+		this.populatePortMappingBoxStandard();
         var boxes = this.generateDataModelBoxes();
         this.populateDataModelBoxesStandard();
     },
@@ -1149,7 +1203,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.tcUserEditor.setDataValue(inData.username);
         this.tcPasswordEditor.setDataValue(inData.password);
 
-        var boxes = this.generateDataModelBoxes();
+        var box = this.generatePortMappingBox();
+		this.populatePortMappingBox(inData);
+		var boxes = this.generateDataModelBoxes();
         this.populateDataModelBoxes(inData.databases);
     },
 
@@ -1160,6 +1216,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.appFileLayer.activate();
         var targetName = this.setUniqueDeploymentName("File 1", this.fileDeploymentNameEditor, this.FILE_DEPLOY);
         this.warRadioButton.setChecked(true);
+		var box = this.generatePortMappingBox();
+		this.populatePortMappingBoxStandard();
         var boxes = this.generateDataModelBoxes();
         this.populateDataModelBoxesStandard();
 
@@ -1169,6 +1227,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.appFileLayer.activate();
         this.fileDeploymentNameEditor.setDataValue(inData.name);
         this.warRadioButton.setGroupValue(inData.archiveType);
+		var box = this.generatePortMappingBox();
+		this.populatePortMappingBox(inData);
         var boxes = this.generateDataModelBoxes();
         this.populateDataModelBoxes(inData.databases);
     },
@@ -1181,7 +1241,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cfNameEditor.setDataValue(studio.project.projectName);
         this.cfUrlEditor.setDataValue("http://" + studio.project.projectName + "." + this.cfHostEditor.getDataValue().replace(/^.*?api\./,""));
 
-        var boxes = this.generateDataModelBoxes();
+		var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;
             var connection = b.dataConnection;

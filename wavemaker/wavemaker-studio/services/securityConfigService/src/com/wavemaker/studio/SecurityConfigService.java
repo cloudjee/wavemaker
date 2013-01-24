@@ -44,6 +44,7 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.security.*;
+import com.wavemaker.tools.security.schema.Http;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
@@ -93,6 +94,10 @@ public class SecurityConfigService {
 
     public GeneralOptions getGeneralOptions() throws JAXBException, IOException {
         return getSecToolsMgr().getGeneralOptions();
+    }
+
+    public Http.PortMappings.PortMapping getPortMapping() throws IOException, JAXBException {
+        return getSecToolsMgr().getPortMapping();
     }
 
     public boolean isSecurityEnabled() throws JAXBException, IOException {

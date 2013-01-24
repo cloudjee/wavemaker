@@ -148,11 +148,15 @@ public class SecurityToolsManager {
         return beans;
     }
 
+    private synchronized void saveSecuritySpringBeans(Beans beans) throws JAXBException, IOException {
+        File securityXml = getSecuritySpringFile();
+        saveSecuritySpringBeans(securityXml, beans);
+    }
+
     /**
      * Saves the specified Security Spring beans to the current project.
      */
-    private synchronized void saveSecuritySpringBeans(Beans beans) throws JAXBException, IOException {
-        File securityXml = getSecuritySpringFile();
+    private static synchronized void saveSecuritySpringBeans(File securityXml, Beans beans) throws JAXBException, IOException {
         SpringConfigSupport.writeSecurityBeans(beans, securityXml);
     }
 
@@ -211,6 +215,21 @@ public class SecurityToolsManager {
         return options;
     }
 
+    public Http.PortMappings.PortMapping getPortMapping() throws IOException, JAXBException {
+        Beans beans;
+        try {
+            beans = getSecuritySpringBeans(false);
+        } catch (UnmarshalException e) {
+            return null; // project-security.xml must be setting to DTD
+        }
+
+        if (beans == null || beans.getBeanList().isEmpty()) {
+            return null;
+        }
+
+        return SecurityXmlSupport.getFirstPortMapping(beans);
+    }
+
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
         setGeneralOptions(enforceSecurity, enforceIndexHtml, false);
     }
@@ -237,6 +256,12 @@ public class SecurityToolsManager {
         } finally {
             this.lock.unlock();
         }
+    }
+
+    public static void recreatePortMapping(File securityXml, String httpPort, String httpsPort) throws IOException, JAXBException {
+        Beans beans = SpringConfigSupport.readSecurityBeans(securityXml);
+        SecurityXmlSupport.recreatePortMapping(beans, httpPort, httpsPort);
+        saveSecuritySpringBeans(securityXml, beans);
     }
 
     public void setGeneralOptions(boolean enforceSecurity) throws IOException, JAXBException {

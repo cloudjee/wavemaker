@@ -37,9 +37,13 @@ import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.security.GeneralOptions;
+import com.wavemaker.tools.security.SecurityToolsManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
+
+import javax.xml.bind.JAXBException;
 
 /**
  * @author Simon Toens
@@ -63,11 +67,7 @@ public class ServiceDeploymentManager {
     }
 
     public com.wavemaker.tools.io.File generateWebapp(DeploymentInfo info, java.io.File tempWebAppRoot) {
-        Map<String, String> allDbProps = new HashMap<String, String>();
-        for (DeploymentDB db : info.getDatabases()) {
-            allDbProps.putAll(db.asProperties());
-        }
-        return generateWebapp(getProjectRoot(), allDbProps, tempWebAppRoot,
+        return generateWebapp(info, getProjectRoot(), tempWebAppRoot,
                 info.getArchiveType().equals(ArchiveType.EAR), info.getDeploymentType());
     }
 
@@ -81,7 +81,7 @@ public class ServiceDeploymentManager {
      * ignore) { } } }
      */
 
-    private com.wavemaker.tools.io.File generateWebapp(Folder projectRoot, Map<String, String> properties, java.io.File tempWebAppRoot,
+    private com.wavemaker.tools.io.File generateWebapp(DeploymentInfo info, Folder projectRoot, java.io.File tempWebAppRoot,
         boolean includeEar, DeploymentType type) {
         File stagingProjectDir = null;
 
@@ -90,9 +90,9 @@ public class ServiceDeploymentManager {
             Folder stagingProjectDirFolder = new LocalFolder(stagingProjectDir);
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
-            prepareForDeployment(mgr, properties, type);
+            prepareForDeployment(info, mgr, type);
             return buildWar(mgr.getProjectManager(), getWarFile(), tempWebAppRoot, includeEar);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new ConfigurationException(ex);
         } finally {
             try {
@@ -165,7 +165,17 @@ public class ServiceDeploymentManager {
         return war;
     }
 
-    private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties, DeploymentType type) {
+    private void prepareForDeployment(DeploymentInfo info, DesignServiceManager mgr, DeploymentType type) throws IOException, JAXBException {
+
+        //Update port mapping info
+        com.wavemaker.tools.io.File securityXml = mgr.getProjectSecurityXML();
+        SecurityToolsManager.recreatePortMapping(securityXml, info.getHttpPort()+"", info.getHttpsPort()+"");
+
+        //Update DB config info
+        Map<String, String> allDbProps = new HashMap<String, String>();
+        for (DeploymentDB db : info.getDatabases()) {
+            allDbProps.putAll(db.asProperties());
+        }
 
         for (Service service : mgr.getServices()) {
             // hack: only run for dataservices for now
@@ -173,9 +183,9 @@ public class ServiceDeploymentManager {
                 continue;
             }
 
-            storeProperties(properties);
+            storeProperties(allDbProps);
 
-            Map<String, String> m = getServiceProperties(properties, service.getId());
+            Map<String, String> m = getServiceProperties(allDbProps, service.getId());
 
             int indx = 0;
             for (ServiceDeployment sd : this.serviceDeployments) {
