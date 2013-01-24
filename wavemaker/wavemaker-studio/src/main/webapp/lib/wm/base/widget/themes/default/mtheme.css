@@ -686,6 +686,9 @@ display:block;
     margin-right: 5px;
     float:left;
 }
+.tundra .dijitMenuPopup .dijitMenu {
+    border-width: 0px;
+}
 .accordionArrowNode {
     display: inline-block;
     background-repeat: no-repeat;

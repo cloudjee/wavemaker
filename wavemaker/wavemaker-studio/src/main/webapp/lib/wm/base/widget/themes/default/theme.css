@@ -941,6 +941,9 @@ display:block;
    margin-right: 0px;
    padding-right: 20px;
 }
+.tundra .dijitMenuPopup .dijitMenu {
+    border-width: 0px;
+}
 .dijitMenuBarItemIcon {
     margin-right: 5px;
     float:left;
