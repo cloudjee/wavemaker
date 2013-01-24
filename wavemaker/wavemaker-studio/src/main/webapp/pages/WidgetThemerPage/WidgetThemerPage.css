@@ -55,3 +55,6 @@
     font-weight: normal;
     cursor: pointer;
 }
+.WidgetThemerPage .Disabled .link .wmSizeNode {
+    color: #aaa;
+}

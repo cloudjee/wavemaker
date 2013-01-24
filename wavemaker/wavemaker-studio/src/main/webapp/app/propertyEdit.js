@@ -3926,7 +3926,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                     }
                     break;
                 case "Custom":
-                    return "";
+                    return true;
             }                
             
             if (this.message != "NO BACKGROUND IMAGE" && !hasImage) {

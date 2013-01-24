@@ -765,6 +765,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                             // as thats the only way to know that a filter is for background gradient
                             var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
                             if (altLine) {
+                                if (altLine === true) {
+                                    altLine = dojo.trim(lines[i]);
+                                } else {
+                                    updateCssLineFired = true;
+                                }
                                 if (!updateCssLineFired) {
                                     lines[i] = "\t" + altLine + (altLine.match(/;\s*(\/\*.*?\*\/)?\s*$/) ? "" : ";");
                                     if (isImportant) {
@@ -781,14 +786,16 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                             }
                                         }
                                         lines[i] = generatedLines.join("\n");
+                                    } else if (lines[i].match(/DISABLED/)) {
+                                        // this happens when updateCssLine returns true (matches, but don't try to update it)
+                                        lines[i] = lines[i].replace(/\/\*\s*(.*)\/\/ THEMER: DISABLED\s*\*\//, "$1");
                                     }
-                                    
-                                    updateCssLineFired = true;
+                                        
                                 } else {
                                     lines[i] = "";
                                     deleteRows.push(i);
-                                }
-                            } 
+                                }                             
+                            }
                         } 
                         
                         /* Basic editors only edit a single line; exit loop after
