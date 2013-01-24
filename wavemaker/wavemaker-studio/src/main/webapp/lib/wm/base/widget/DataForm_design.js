@@ -1104,6 +1104,7 @@ wm.DBForm.extend({
     generateSaveButton: function(buttonPanel, noRefresh) {
     if (!buttonPanel) buttonPanel = this._findButtonPanel();
     var saveButton = new wm.Button({owner: this.owner,
+		                          _classes: {domNode: ["SubmitButton"]},
                     name: studio.page.getUniqueName(this.name + "SaveButton"),
                     parent: buttonPanel,
                     showing: this.readonlyManager ? false : true,

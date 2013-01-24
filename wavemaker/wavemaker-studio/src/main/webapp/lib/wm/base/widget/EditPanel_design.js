@@ -65,7 +65,7 @@ wm.EditPanel.extend({
 		var
 			n = this.getId(),
 			sb = this.owner.loadComponent("saveButton1", p, this.editPanelStyle, 
-						      {caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION"), height: "100%"}, 
+						      {caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION"), height: "100%", _classes: {domNode: ["SubmitButton"]}}, 
 						      {onclick: n + ".saveData"});
 		this.owner.loadComponent("cancelButton1", p, this.editPanelStyle, 
 					 {caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION"), height: "100%"}, 

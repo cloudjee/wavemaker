@@ -91,7 +91,7 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
             if (caption) {
                 captionFound = true;
                 button.setCaption(caption);
-                if (this["button" + i + "Close"]) button.addUserClass("wmSubmitButton");
+                if (this["button" + i + "Close"]) button.addUserClass("SubmitButton");
                 button.show();
             }
             if (this.buttonBar) this.buttonBar.setShowing(captionFound);

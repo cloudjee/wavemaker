@@ -602,6 +602,7 @@ wm.LiveFormBase.extend({
 
 		/* Generate a save button that is only enabled if data is valid and calls saveDataIfValid */
 		var saveButton = this.saveButton = new wm.Button({owner: studio.page,
+		                          _classes: {domNode: ["SubmitButton"]},
 								  name: studio.page.getUniqueName(this.name + "SaveButton"),
 								  parent: panel,
 								  height: "100%",
