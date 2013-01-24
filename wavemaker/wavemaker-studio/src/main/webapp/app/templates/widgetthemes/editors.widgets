@@ -5,6 +5,8 @@
 	currency1:["wm.Currency", {caption: "Currency", width: "100%", dataValue: "1234567890"}],
 	select1:["wm.SelectMenu", {caption: "Select", width: "100%", options: "Text,Number,Currency,Select,Date", dataValue: "Select"}],
 	datetime1:["wm.DateTime", {caption: "DateTime", width: "100%", dataValue: 1234567890}],
+	date1:["wm.Date", {caption: "Date", width: "100%", dataValue: 1234567890}],
+	time1:["wm.Date", {caption: "Time", width: "100%", dataValue: 1234567890}],
 	checkbox1: ["wm.Checkbox", {caption: "Checkbox", width: "100%"}],
 	radio1: ["wm.RadioButton", {caption: "Radio", width: "100%",group: "Sample", checkedValue:1}],
 	radio2: ["wm.RadioButton", {caption: "Radio", width: "100%",group: "Sample", checkedValue:2}],
