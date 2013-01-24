@@ -1734,6 +1734,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
                         cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
                         cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
                         cssText += "filter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+                        cssText += "background-color: " + styleValue.startColor + ";\n";
 					} else if (styleName == "borderRadius") {
 						var values = String(styleValue).split(/\s+/);
 
