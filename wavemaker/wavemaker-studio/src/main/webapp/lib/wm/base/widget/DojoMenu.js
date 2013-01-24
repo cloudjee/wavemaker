@@ -327,7 +327,11 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		{
 
   	        var prepend = data.iconClass ? '<img src="../wavemaker/lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuBarItemIcon dijitMenuItemIcon ' + data.iconClass + '" dojoattachpoint="iconNode">' : "";
-		    menuObj = new dijit.PopupMenuBarItem({label: prepend + data.label, data: data});
+  	        if (this.vertical) {
+  	           menuObj = new dijit.MenuItem({label: prepend + data.label, data: data});
+  	        } else {
+    		    menuObj = new dijit.PopupMenuBarItem({label: prepend + data.label, data: data});
+    		}
 		}
 		else if (data.separator === true)
 		{
