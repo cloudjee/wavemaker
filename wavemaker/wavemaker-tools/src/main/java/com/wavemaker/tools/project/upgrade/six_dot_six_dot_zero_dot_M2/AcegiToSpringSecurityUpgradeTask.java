@@ -298,7 +298,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	 * See SecurityConfigService.configDemo
 	 */
 	private void demoUpgrade(Beans acegiBeans, Beans beans) {
-		SecuritySpringSupport.setRequiresChannel(beans, "http", "8443");
+		SecuritySpringSupport.setRequiresChannel(beans, "http");
 		List<UserService.User> userList =  getAcegiDemoUsers(acegiBeans);
 		if(userList.isEmpty()){
 			System.out.print("No Users found !!! Adding demo user with pass demo.");
@@ -432,7 +432,7 @@ public class AcegiToSpringSecurityUpgradeTask implements UpgradeTask {
 	private void setNoSecurityConfig() {
 		Beans beans = getNewSecuritySpringBeansFromTemplate();
 		SecuritySpringSupport.setSecurityResources(beans, false, false);
-		SecuritySpringSupport.setRequiresChannel(beans, "http", "8443");
+		SecuritySpringSupport.setRequiresChannel(beans, "http");
 		saveSecuritySpringBeans(beans);
 	}
 
