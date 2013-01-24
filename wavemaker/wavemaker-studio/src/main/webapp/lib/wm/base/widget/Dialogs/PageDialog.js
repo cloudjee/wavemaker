@@ -77,7 +77,7 @@ dojo.declare("wm.pageContainerMixin", null, {
         return this.pageContainer.forEachWidget(inFunc);
     },
     createControls: function() {
-        var cp = this.controlsPanel = new wm.Panel({ parent: this,
+        var cp = this.controlsPanel = new wm.ButtonBarPanel({ parent: this,
                              owner: this,
                              layoutKind: "top-to-bottom",
                              horizontalAlign: "left",
@@ -87,15 +87,15 @@ dojo.declare("wm.pageContainerMixin", null, {
                                  border: this.footerBorder || "",
                              borderColor: this.footerBorderColor || "",
                              flags: {notInspectable: true}});
-        if (!this.noBevel)
-        this.controlsBevel = new wm.Bevel({ parent: cp, owner: this });
-        var bp = this.buttonPanel = new wm.Panel({ parent: cp, owner: this, width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "right"});
+        if (!this.noBevel) {
+            this.controlsBevel = new wm.Bevel({ parent: cp, owner: this });
+        }
+        var bp = this.buttonPanel = new wm.Panel({ parent: cp, owner: this, width: "100%", height: "100%", layoutKind: "left-to-right", horizontalAlign: "right", fitToContentHeight:true});
         dojo.addClass(bp.domNode, "wmpagedialog-controlspanel");
         this.closeButton = new wm.Button({ parent: bp,
                            owner: this,
                            caption:  wm.getDictionaryItem("wm.PageDialog.CAPTION_CLOSE"),
-                           width: "80px",
-                           height: "100%"});
+                           width: "80px"});
         this._connections.push(this.connect(this.closeButton, "onclick", this, "dismiss"));
         cp.setShowing(!this.hideControls);
         cp = null;
