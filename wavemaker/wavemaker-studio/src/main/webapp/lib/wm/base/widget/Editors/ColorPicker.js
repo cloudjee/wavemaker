@@ -220,8 +220,15 @@ dojo.declare(
 		    }
 		});
 	    }
+	},
+	destroy: function() {
+	   if (this.dropDown) {
+	       this.dropDown.destroy();
+	       delete this.dropDown;
+	   }
+	   this.inherited(arguments);
 	}
-    });
+});
 
 
 dojo.declare("wm.ColorPickerPanel", wm.Container, {
@@ -237,6 +244,10 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
     init: function() {
 	this.inherited(arguments);
         dojo.require("dojox.widget.ColorPicker");
+    },
+    destroy: function() {
+        if (this.colorPicker) this.colorPicker.destroy();
+        this.inherited(arguments);
     },
     postInit: function() {
 	this.inherited(arguments);
