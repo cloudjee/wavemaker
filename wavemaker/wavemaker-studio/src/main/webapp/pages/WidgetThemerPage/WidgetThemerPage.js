@@ -736,6 +736,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         for (var i = 0; i < lines.length; i++) {
             var l = lines[i];
             var isImportant = l.match(/\!important/);
+            l = l.replace(/\s*!important\s*/,"");
             var groupName = this.getGroupNameFromLine(l);
             if (groupName) {
                 currentGroup = groupName;
@@ -919,6 +920,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         if (!parentClassName) return app.alert("Please select a parent class first");
         if (!newClassName) return app.alert("Please enter a name for your new class");
         if (this.templateListVar.query({name: newClassName}).getCount() > 0) return app.alert("That name is already taken, please select a new name");
+        if (!this.subclassCheckboxSet.getDataValue()) return app.alert("Please select a widget to subclass");
+
         this.customClassDialog.hide();
         /* STEP 1: Update custom Widgets and write it to the file system */
         this.customWidgets.push({name: newClassName, parentName: parentClassName, classList: this.subclassCheckboxSet.getDataValue()});
@@ -1311,7 +1314,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             this.demoPanelHeader.setCaption("Samples (" + studio.currentDeviceType + ")");
             this.demoPanelWithAppRoot.removeAllControls();
             this.demoPanel = this.demoPanelWithAppRoot.createComponents({
-                demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, layoutKind: "top-to-bottom", height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {}]
+                demoPanel:  ["wm.Panel", {_classes: {domNode: ["wmpagecontainer"]}, autoScroll:true, layoutKind: "top-to-bottom", height: "100%", horizontalAlign: "left", verticalAlign: "top", width: "100%"}, {}, {}]
             })[0];
 
             wm.forEachProperty(this.themePrototype["wm.AppRoot"], dojo.hitch(this, function(inValue, inName) {
