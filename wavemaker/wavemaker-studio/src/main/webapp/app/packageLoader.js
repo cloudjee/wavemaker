@@ -15,6 +15,7 @@
 dojo.provide("wm.studio.app.packageLoader");
 
 wm.packageImages = {};
+wm.packageNames = {};
 _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inProps, isBeta, inIndex) {
 	var
 		n=inName,
@@ -22,7 +23,10 @@ _import = function(inTab, inName, inClass, inModule, inImage, inDescription, inP
 		m=inModule||c,
 		i=inImage||"images/wm/widget.png";
     if (i.indexOf(".") == -1) // only add classes, not paths
-	wm.packageImages[inClass] = i;
+    if (inTab != "Theme Widgets") {
+        wm.packageImages[inClass] = i;
+        wm.packageNames[inClass] = inName;
+    }
 	try{
 	    /* Removing to improve studio loading performance in cloud */
 	    // trips up build system to have a dojo.require here
