@@ -1563,9 +1563,14 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
             }]
         }, this)[0];
         this.connect(this.tabs, "onchange", this, function() {
-            if (this.parent._isDestroying) return;
-            this.setHeight(this.getPreferredFitToContentHeight());
-            this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
+            if (this.parent._isDestroying) return; 
+            var panel = this;
+
+            while(true) {
+                panel.setHeight(panel.getPreferredFitToContentHeight() + "px");
+                panel = panel.parent;
+                if (panel instanceof wm.Layer) break;
+            }
             dojo.cookie("wm.prop.StyleEditor.layerIndex", this.tabs.layerIndex);
         });
 
@@ -2981,17 +2986,15 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
         if (!this.toggleButton.clicked) {
             this.setFullEditorShowing(false);
             if (this.allEditor.getDisplayValue() === "") {
-                if (this.topLeftEditor.getDisplayValue() !== "") {
-                    this.allEditor.setDataValue(this.topLeftEditor.getDataValue());
-                }
+                this.dataValue = "";
+            } else {
+                var value = this.allEditor.getDataValue();
+                this.dataValue = value + "px";
+                this.topLeftEditor.setDataValue(value);
+                this.topRightEditor.setDataValue(value);
+                this.bottomLeftEditor.setDataValue(value);
+                this.bottomRightEditor.setDataValue(value);
             }
-            var value = this.allEditor.getDataValue();
-            this.dataValue = value + "px";
-            this.topLeftEditor.setDataValue(value);
-            this.topRightEditor.setDataValue(value);
-            this.bottomLeftEditor.setDataValue(value);
-            this.bottomRightEditor.setDataValue(value);
-
         } else {
             this.setFullEditorShowing(true);
             var values = [this.topLeftEditor.getDataValue(),
@@ -3384,7 +3387,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
 dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     dataValue: "0px 0px 0px #000000",
     caption: "box-shadow",
-    height: "43px",
+    height: "40px",
     padding: "0",
     _createEditor: function() {
         var e = this.inherited(arguments);
