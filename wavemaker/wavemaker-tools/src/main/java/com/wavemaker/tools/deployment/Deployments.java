@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -75,7 +72,7 @@ public class Deployments {
         }
         List<DeploymentInfo> deployments = forProject(projectName);
         if (!StringUtils.hasText(deployment.getDeploymentId())) {
-            deployment.setDeploymentId(projectName + deployments.size());
+            deployment.setDeploymentId(projectName + getLastDeploymentId(deployments, projectName)+"");
         }
 
         DeploymentInfo existing = forId(projectName, deployment.getDeploymentId());
@@ -85,9 +82,24 @@ public class Deployments {
         deployments.add(deployment);
     }
 
+    private int getLastDeploymentId(List<DeploymentInfo> deployments, String projectName) {
+        if (deployments == null || deployments.size() == 0) {
+            return 0;
+        }
+
+        List<Integer> list = new ArrayList<Integer>();
+        for (DeploymentInfo info : deployments) {
+            String id = info.getDeploymentId();
+            Integer intId = Integer.parseInt(id.substring(projectName.length()));
+            list.add(intId);
+        }
+
+        return (Collections.max(list) + 1);
+    }
+
     /**
      * @param projectName
-     * @param deploymentInfo
+     * @param deploymentId
      */
     public DeploymentInfo remove(String projectName, String deploymentId) {
         List<DeploymentInfo> deployments = forProject(projectName);
