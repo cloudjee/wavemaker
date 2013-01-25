@@ -1,5 +1,5 @@
 /* GROUP: ComboBox Drop-down Box */
-.wm_template .dijitPopup .dijitCalendarMonthLabel,
+.wm_template .dijitPopup .dijitCalendarMonthMenu,
 .wm_template  ul.dijitMenu {
     background-color: #444444;
     background-image: none;
@@ -10,8 +10,10 @@
 }
 
 /* GROUP: ComboBox Drop-down Items */
-.wm_template .dijitPopup .dijitCalendarMonthLabel .dijitMenuItem,
+.wm_template .dijitPopup .dijitCalendarMonthLabel,
 .wm_template  ul.dijitMenu .dijitMenuItem {
+    padding: 4px 5px;
+    text-align: left;
     font-size: 12px;
     font-family: sans-serif;
     color: #FFFFFF;

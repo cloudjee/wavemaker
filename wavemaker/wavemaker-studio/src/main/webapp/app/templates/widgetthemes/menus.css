@@ -40,10 +40,6 @@ outline: 0px;
    background-repeat: no-repeat !important;
     padding-right: 25px !important;
 }
-.Project99Theme .dojoMenu .dijitMenuBar .dijitMenuItem:last-child {
-    padding-right: 0px !important; /* THEMER: HIDE */
-}
-
 
 /* THEMER: DO NOT SUBCLASS START */
 /* GROUP: Popup Menu Box */
@@ -60,6 +56,7 @@ outline: 0px;
 
 /* GROUP: Popup Menu Item */
 .wm_template .dijitPopup .dijitMenuTable .dijitMenuItem {
+    font-size: 12px;
     font-family: sans-serif;
     color: #FFFFFF;
     font-weight: bold;

@@ -9,10 +9,39 @@ html.WMApp .wm_template div.wmtoast.wmtoastExtraSpecific {
      -webkit-box-shadow: 3px 4px 4px #222;
      box-shadow: 3px 4px 4px #222;
 }
+.wm_template .wmtoast .wmtoastmessage {
+    font-family: sans-serif;
+    font-size: 1Em;
+    color: black;
+    font-weight: bold;
+}
+
+/* GROUP: Success Styling */
+html.WMApp .wm_template div.wmtoast.Success.wmtoastExtraSpecific {
+    background-color: #ffffff;
+    background-image: none;
+    filter: none;
+}
+.wm_template .wmtoast .wmtoasttitle,
+.wm_template .wmtoast.Success .wmtoastmessage {
+    color: black;
+}
+
 
 /* GROUP: Success Graphic */
- .wm_template .wmtoast.Success .ToastLeft {
+.wm_template .wmtoast.Success .ToastLeft {
    background-image: url(images/OK.png);
+}
+
+/* GROUP: Warning Styling */
+html.WMApp .wm_template div.wmtoast.Warning.wmtoastExtraSpecific {
+    background-color: #ffffff;
+    background-image: none;
+    filter: none;
+}
+.wm_template .wmtoast .wmtoasttitle,
+.wm_template .wmtoast.Warning .wmtoastmessage {
+    color: black;
 }
 
 /* GROUP: Warning Graphic */
@@ -20,28 +49,43 @@ html.WMApp .wm_template div.wmtoast.wmtoastExtraSpecific {
    background-image: url(images/Caution.png);
 }
 
+/* GROUP: Error Styling */
+html.WMApp .wm_template div.wmtoast.Error.wmtoastExtraSpecific {
+    background-color: #ffffff;
+    background-image: none;
+    filter: none;
+}
+.wm_template .wmtoast .wmtoasttitle,
+.wm_template .wmtoast.Error .wmtoastmessage {
+    color: black;
+}
+
 /* GROUP: Error Graphic */
 .wm_template .wmtoast.Error .ToastLeft {
    background-image: url(images/Close.png);
+}
+
+/* GROUP: Info Styling */
+html.WMApp .wm_template div.wmtoast.Info.wmtoastExtraSpecific {
+    background-color: #ffffff;
+    background-image: none;
+    filter: none;
+}
+.wm_template .wmtoast .wmtoasttitle,
+.wm_template .wmtoast.Info .wmtoastmessage {
+    color: black;
 }
 
 /* GROUP: Info Graphic */
 .wm_template .wmtoast.Info .ToastLeft {
    background-image: url(images/Help\ Circle.png);
 }
-/* GROUP: Message */
-.wm_template .wmtoast .wmtoastmessage {
-    font-family: sans-serif;
-    font-size: 1Em;
-    color: white;
-    font-weight: bold;
-}
 
 /* GROUP: Title */
 .wm_template .wmtoast .wmtoasttitle {
     font-family: sans-serif;
     font-size: 1.2Em;
-    color: white;
+    color: black;
     font-weight: bold;
 }
 
