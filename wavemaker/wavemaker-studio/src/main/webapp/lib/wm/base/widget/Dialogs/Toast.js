@@ -17,6 +17,7 @@ dojo.provide("wm.base.widget.Dialogs.Toast");
 dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog");
 
 dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
+    autoSetBorderColor: true,
     manageHistory: false,
     manageURL: false,
     classNames: "wmtoast wmtoastExtraSpecific",
@@ -105,16 +106,18 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
         this._toastType = inCssClasses = inCssClasses || "Info";
         var classes = (inCssClasses) ? inCssClasses.split(" ") : [];
 
-        if (dojo.indexOf(classes, "Success") != -1) {
-            this.setBorderColor("rgb(0,120,0)");
-        } else if (dojo.indexOf(classes, "Error") != -1) {
-            this.setBorderColor("rgb(120,0,0)");
-        } else if (dojo.indexOf(classes, "Warning") != -1) {
-            this.setBorderColor("#f9a215");
-        } else {
-            this.setBorderColor("rgb(0,0,0)");
+        if (this.autoSetBorderColor) {
+            if (dojo.indexOf(classes, "Success") != -1) {
+                this.setBorderColor("rgb(0,120,0)");
+            } else if (dojo.indexOf(classes, "Error") != -1) {
+                this.setBorderColor("rgb(120,0,0)");
+            } else if (dojo.indexOf(classes, "Warning") != -1) {
+                this.setBorderColor("#f9a215");
+            } else {
+                this.setBorderColor("rgb(0,0,0)");
+            }
         }
-
+        
         this.message.autoSizeHeight = false;
 	   this.setContent(inContent);
         this.message.autoSizeHeight = true;

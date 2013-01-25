@@ -211,7 +211,7 @@ wm.GenericDialog.extend({
 
 
 wm.Toast.extend({
-    themeableProps: ["border", "borderColor", "imgHeight", "imgWidth", "imgMargin"],
+    themeableProps: ["border", "borderColor", "autoSetBorderColor", "imgHeight", "imgWidth", "imgMargin"],
     setImgHeight: function(inValue) {
         this.imgHeight = inValue;
         this.img.setHeight(inValue);
