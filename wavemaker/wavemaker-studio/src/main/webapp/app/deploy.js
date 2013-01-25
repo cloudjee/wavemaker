@@ -94,21 +94,7 @@ Studio.extend({
 			}
 		}
 	},
-/*
-	isSecurityEnabled: function() {
-		//With the new enhancement to allow displaying live data in designer regardless the security setup, don't need to
-		//check if security is enabled.
-		return;
-		//studio.securityConfigService.requestAsync("isSecurityEnabled", null, dojo.hitch(this, "isSecurityEnabledResult"));
-	},
-	isSecurityEnabledResult: function(inResponse) {
-		if (inResponse) {
-		    app.alert(this.getDictionaryItem("ALERT_LIVE_LAYOUT_SECURITY_WARNING"));
 
-
-		}
-	},
-	*/
         downloadInIFrame: function(url) {
 
 		      var iframe = dojo.byId("downloadFrame");
