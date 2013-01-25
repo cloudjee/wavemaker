@@ -1,0 +1,7 @@
+{
+	togglePanel: ["wm.ToggleButtonPanel", {width: "100%", currentButton:0}, {}, {
+		button1: ["wm.Button", {caption: "Button", width: "100%"}],
+		button2: ["wm.Button", {caption: "Button", width: "100%"}],
+		button3: ["wm.Button", {caption: "Button", width: "100%"}]
+	}]
+}

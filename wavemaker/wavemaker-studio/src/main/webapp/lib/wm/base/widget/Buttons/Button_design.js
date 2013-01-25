@@ -206,6 +206,7 @@ wm.PopupMenuButton.extend({
 });
 
 wm.ToggleButtonPanel.extend({
+    themeableProps: ["border", "borderColor", "margin", "padding", "desktopHeight", "mobileHeight", "width", "buttonBorder", "buttonBorderColor", "lastButtonBorder", "buttonMargins"],
     afterPaletteDrop: function() {
         this.inherited(arguments);
         new wm.Button({
@@ -232,7 +233,16 @@ wm.ToggleButtonPanel.extend({
             inButton.setWidth("100%");
             inButton.setMargin("0");
             inButton.setPadding("0");
-            inButton.setBorder("0,1,0,0");
+            if (this.buttonBorder || this.lastButtonBorder) {
+                dojo.forEach(this.c$, function(button,i) {
+                    button.setBorder(i == this.c$.length - 1 ? this.lastButtonBorder || this.buttonBorder : this.buttonBorder);                    
+                }, this);
+            }
+            if (this.buttonBorderColor) {
+                dojo.forEach(this.c$, function(button,i) {
+                    button.setBorderColor(this.buttonBorderColor);                    
+                }, this);
+            }            
         } else {
             app.toastWarning(studio.getDictionaryItem("wm.ToggleButtonPanel.BUTTON_ONLY", {name: inButton.declaredClass}));
         }

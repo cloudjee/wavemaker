@@ -95,6 +95,13 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             customWidgetAddClass: "wmbutton"
         },
         {
+            name: "Toggle Button Panel",
+            category: false,            
+            templateFile: "togglebuttonpanel",
+            classList: [{dataValue: "wm.ToggleButtonPanel"}],
+            customWidgetAddClass: "wmtogglebuttonpanel"
+        },        
+        {
             name: "Editors",
             category: false,            
             templateFile: "editors",
@@ -546,8 +553,12 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         var itemData = inSender.selectedItem.getData();
         if (!this.widgetCssFiles[this.currentWidgetTemplateFile]) {
             this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("common.themes." + this.currentThemeName) + (itemData.parentName ? itemData.name : this.currentWidgetTemplateFile) + ".css?" + (Math.floor(Math.random(new Date().getTime()) * 1000000)));
-            if (!this.widgetCssFiles[this.currentWidgetTemplateFile] && itemData.parentName) {
-                this.setupCustomWidgetTemplate(itemData);
+            if (!this.widgetCssFiles[this.currentWidgetTemplateFile]) {
+                if (itemData.parentName) {
+                    this.setupCustomWidgetTemplate(itemData);
+                } else {
+                    this.widgetCssFiles[this.currentWidgetTemplateFile] = wm.load(dojo.moduleUrl("wm.studio.app.templates.widgetthemes") + this.currentWidgetTemplateFile + ".css").replace(/\.wm_template/g, "." + this.currentThemeName);
+                }
             }
         }
         this.removeClassButton.setDisabled(!itemData.parentName);
@@ -1044,6 +1055,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         case "labelBorderColor":
         case "captionBorderColor":        
         case "titlebarBorderColor":                
+        case "buttonBorderColor":        
                     e = new wm.ColorPicker(props);
                     break;
         case "border":
@@ -1180,7 +1192,8 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                 });
                 var elements = [];
                 elements.push("'Theme Widgets'");                
-                elements.push("'" + (classNames.length == 1 ? customWidget.name : customWidget.name + wm.capitalize(className.replace(/^.*\./,""))) + "'");
+//                elements.push("'" + (classNames.length == 1 ? customWidget.name : customWidget.name + wm.capitalize(className.replace(/^.*\./,""))) + "'");
+                elements.push("'" + customWidget.name + "<span class=\"ThemeSubclassName\">" + wm.packageNames[className] + "</span>'");
                 elements.push("'" + className + "'"); 
                 elements.push("'" + parentPaletteNode.module + "'");
                 elements.push("'" + parentPaletteNode.image + "'");
@@ -1370,6 +1383,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                     new wm.Button({owner: parent, parent: parent, caption: "OK"});
                     new wm.Button({owner: parent, parent: parent, caption: "Cancel"}); 
                     this.demoPanel.c$[0].containerWidget.setPadding(wm.Dialog.prototype.containerPadding);
+                    break;
+                case "togglebuttonpanel":
+                    this.demoPanel.c$[0].setCurrentButton(this.demoPanel.c$[0].c$[0]);
                     break;
                 case "tooltips":
                     app.createToolTip("This is a tool tip.  Not just any ordinary tool tip.  This tool tip is one styled by you!", this.demoPanel.c$[1].domNode);

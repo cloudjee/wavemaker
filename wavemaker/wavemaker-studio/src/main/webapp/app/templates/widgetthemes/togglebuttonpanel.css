@@ -1,0 +1,53 @@
+/* GROUP: Toggle Panel */
+.wm_template .wmtogglebuttonpanel {
+border-radius: 8px;
+-webkit-border-radius: 8px;
+}
+
+/* GROUP: First Button Radius */
+.wm_template .wmtogglebuttonpanel .wmbutton:first-child {
+border-top-left-radius: 8px;
+border-bottom-left-radius: 8px;
+border-top-left-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
+}
+
+/* GROUP: Last Button Radius */
+.wm_template .wmtogglebuttonpanel .wmbutton:last-child {
+border-top-right-radius: 8px;
+border-bottom-right-radius: 8px;
+border-top-right-radius: 8px;
+-webkit-border-bottom-right-radius: 8px;
+}
+
+/* GROUP: Middle Buttons Radius */
+.wm_template .wmapproot .wmtogglebuttonpanel .wmbutton {
+border-radius: 0px;
+-webkit-border-radius: 0px;
+}
+
+
+/* GROUP: Buttons */
+.wm_template .wmtogglebuttonpanel .wmbutton {
+/*	font-family: sans-serif; // THEMER: DISABLED */
+/*	font-size: 12px;// THEMER: DISABLED */
+/*	color: #FFFFFF;// THEMER: DISABLED */
+/*	font-weight: bold;// THEMER: DISABLED */
+
+/*	background-color: #333333;// THEMER: DISABLED */
+/*	background-image: none;// THEMER: DISABLED */
+/*	filter: none;// THEMER: DISABLED */
+}
+
+
+/* GROUP: Selected Button */
+.wm_template .wmtogglebuttonpanel .wmbutton.toggleButtonDown {
+/*	font-family: sans-serif;// THEMER: DISABLED */
+/*	font-size: 12px;// THEMER: DISABLED */
+/*	color: #FFFFFF;// THEMER: DISABLED */
+/*	font-weight: bold;// THEMER: DISABLED */
+
+/*	background-color: #333333;// THEMER: DISABLED */
+/*	background-image: none;// THEMER: DISABLED */
+/*	filter: none;// THEMER: DISABLED */
+}

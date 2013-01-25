@@ -68,6 +68,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 
 dojo.declare("wm.ToggleButtonPanel", wm.Container, {
     border: "1",
+    buttonBorder: "0,1,0,0",
+    lastButtonBorder: "0",
     manageURL: false,
     manageHistory: false,
     classNames: "wmtogglebuttonpanel",
@@ -88,6 +90,22 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
         if (this.manageURL && this.owner.locationState) {
             this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
         }
+        if (this.buttonBorder || this.lastButtonBorder) {
+            dojo.forEach(this.c$, function(button,i) {
+                var border = i == this.c$.length - 1 ? this.lastButtonBorder || this.buttonBorder : this.buttonBorder;
+                if (button.border != border) {
+                    button.setBorder(border);
+                }
+            }, this);
+        }
+        if (this.buttonBorderColor) {
+            dojo.forEach(this.c$, function(button,i) {
+                if (button.borderColor != this.buttonBorderColor) {
+                    button.setBorderColor(this.buttonBorderColor);                    
+                }
+            }, this);
+        }            
+
         /*
 	for (var i = 0; i < this.c$.length; i++) {
 	    if (this.c$[i] instanceof wm.ToolButton) {
@@ -103,7 +121,7 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
             inWidget.setHeight("100%");
             this._btns.push(inWidget);
             inWidget.connect(inWidget, "onclick", dojo.hitch(this, "changed", inWidget));
-            inWidget.setMargin(this.buttonMargins);
+            inWidget.setMargin(this.buttonMargins);            
         }
     },
     removeWidget: function(inWidget) {

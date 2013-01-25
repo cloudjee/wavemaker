@@ -365,6 +365,17 @@ div .StudioGrid td,
     background-color: #414B5C;
     color: white;
 }
+
+.ThemeSubclassName {
+    margin-left: 10px;
+    font-size: 9px;
+}
+.ThemeSubclassName:before {
+   content: "(";
+}
+.ThemeSubclassName:after {
+   content: ")";
+}
 /* End Palette */
 
 /* Start Dialogs */
@@ -1875,3 +1886,4 @@ color: rgb(0,270,0);
     font-weight: bold;
     color: white;
 }
+
