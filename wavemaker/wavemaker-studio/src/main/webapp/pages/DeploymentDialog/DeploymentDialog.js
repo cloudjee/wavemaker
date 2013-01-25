@@ -73,8 +73,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	portMappingBox: {
     portMappingPanel: ["wm.FancyPanel", {"borderColor":"black","innerBorder":"1", "fitToContentHeight":true,"height":"149px","margin":"10,10,10,0","title":"Database 1", labelHeight: "24"}, {}, {
         portMappingInnerPanel1: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top",			horizontalAlign: "left", margin: "5,50,5,50"},{}, {
-        httpPortEditor: ["wm.Text", {"border":"0","caption":"Http Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}],	
-		httpsPortEditor: ["wm.Text", {"border":"0","caption":"Https Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString"}, {onchange: "httpsPortChanged"}],  
+        httpPortEditor: ["wm.Text", {"border":"0","caption":"Http Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString", helpText: "If you are setting an https port, and want to automatically redirect http requests to that port, enter the port that http requests are received on (e.g. 80 or 8094)", placeHolder: "80"}],	
+		httpsPortEditor: ["wm.Text", {"border":"0","caption":"Https Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", emptyValue: "emptyString", helpText: "Port that https requests go to (e.g. 443)", placeHolder: 443}, {onchange: "httpsPortChanged"}],  
         }]
     }]
     },
@@ -1073,6 +1073,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	generatePortMappingBox: function() {
 		if (this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.CF_DEPLOY ||
 			!studio.application.isSSLUsed) {
+			if (this.currentPortMappingBox) this.currentPortMappingBox.hide();
 			return null;
 		}
 
@@ -1085,7 +1086,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 			this.currentPortMappingBox = box;
 		}
 		// TODO: set readonly true/false on port editor based on whether its a tomcat or generate war deployment
-
+        this.currentPortMappingBox.show();
+        this.httpPortEditor.setReadonly(this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.TC_DEPLOY);
 		return this.currentPortMappingBox;
     },
     populateDataModelBoxesStandard: function() {
@@ -1173,10 +1175,16 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	},
 
 	populatePortMappingBox: function(inData) {
-		this.httpPortEditor.setDataValue(inData.httpPort);
-		this.httpsPortEditor.setDataValue(inData.httpsPort);
+	   if (this.httpsPortEditor && inData.httpsPort) {
+    		this.httpPortEditor.setDataValue(this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.TC_DEPLOY ? inData.port : inData.httpPort);
+    		this.httpsPortEditor.setDataValue(inData.httpsPort);    		
+    	}
 	},
-
+    portChanged: function(inSender, inDisplayValue, inDataValue) {
+        if (this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.TC_DEPLOY && this.httpPortEditor && studio.application.isSSLUsed) {
+            this.httpPortEditor.setDataValue(inDataValue);
+        }
+    },
     newTomcatDeploy: function() {
         this.editLayer.activate();
         this.tomcatLayer.activate();
@@ -1257,8 +1265,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this["databaseCloudFoundryType" + (i + 1)].setDataValue(connection.dbtype);
             this["databaseConnectionEditor" + (i + 1)].hide();
         }));
-        this.editPanel.reflow();
+        
+        if (this.portMappingPanel) this.portMappingPanel.hide();
 
+        this.editPanel.reflow();
+        
         /* onidle insures that this dialog is on top */
         wm.onidle(this, function() {
             this.loginDialogTargetEditor.setReadonly(false);
@@ -1291,7 +1302,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 this["databaseConnectionEditor" + (i + 1)].hide();
             }
         }));
-        this.editPanel.reflow();
+
+        if (this.portMappingPanel) this.portMappingPanel.hide();
+
+        this.editPanel.reflow();            
         var target = this.cfHostEditor.getDataValue();
         var token = this.getTokenCookie(target);
         this.confirmToken(token, target, dojo.hitch(this, "loadDatabaseServices"));
