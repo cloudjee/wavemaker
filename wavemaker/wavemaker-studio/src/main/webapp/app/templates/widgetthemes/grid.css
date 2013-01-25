@@ -81,6 +81,12 @@
    color: #FFFFFF;
 }
 
+/* GROUP: Selected Cell */
+.wm_template .dojoxGridCellFocus {
+	   outline: solid 0px #ae0909;
+    outline-offset: -1px; /* Change this to match outline width (but negative). Not supported by IE */ /* THEMER: HIDE */
+}
+
 /* GROUP: Hover row */
 .wm_template .GridListStyle .wmlist-item.wmlist-item-over,
 .wm_template .GridListStyle .dojoxGridRow.dojoxGridRowOver,
