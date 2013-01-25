@@ -706,6 +706,7 @@ dojo.declare("wm.studio.Project", null, {
                 }
                 var d = new dojo.Deferred();
                 d.callback(inResult);
+                return d;
             })
         ).then(
             dojo.hitch(this, function(inResult) {        
