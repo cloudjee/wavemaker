@@ -308,8 +308,17 @@ dojo.declare("wm.Application", wm.Component, {
     },    
     _setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
         var themematch = window.location.search.match(/theme\=(.*?)\&/) || window.location.search.match(/theme\=(.*?)$/);
+        var node;
+        if (this._isDesignLoaded) {
+            if (studio.themesListVar.query({dataValue: inTheme, designer: "themedesigner"}).getCount()) {
+                node = studio.designer.domNode;
+            } else {
+                node = studio.designerWrapper.domNode;
+            }
+        } else {
+            node = document.body;
+        }
 
-        var node = this._isDesignLoaded ? studio.designerWrapper.domNode : document.body;
         if (this.themeName) dojo.removeClass(node, this.themeName);
 
         if (this._isDesignLoaded) studio.themeChanged(inTheme);
