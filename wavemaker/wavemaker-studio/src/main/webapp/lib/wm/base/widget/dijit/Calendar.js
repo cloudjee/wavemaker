@@ -104,7 +104,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
         this.dijit._setStyleAttr({
             width: this.bounds.w + "px",
             height: this.bounds.h + "px"
-        })
+        });
     },
     focus: function() {
         this.dijit.focus();
@@ -117,8 +117,13 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
             this.dijit._setStyleAttr({
                 width: this.bounds.w + "px",
                 height: this.bounds.h + "px"
-            })
+            });
         }
+    },
+    initDijit: function(inNode) {
+        var result = this.inherited(arguments);
+        dojo.query(".dijitButtonNode", this.domNode).addClass("wmbutton");
+        return result;
     },
     prepare: function() {
         this.inherited(arguments);
