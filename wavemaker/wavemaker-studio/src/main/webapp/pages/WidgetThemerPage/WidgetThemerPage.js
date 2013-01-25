@@ -765,10 +765,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                             // as thats the only way to know that a filter is for background gradient
                             var altLine = inEditor.updateCssLine(styleObj.name, styleObj.value);
                             if (altLine) {
+                                var doNotChange = false;
                                 if (altLine === true) {
+                                    doNotChange = true;
                                     altLine = dojo.trim(lines[i]);
-                                } else {
-                                    updateCssLineFired = true;
                                 }
                                 if (!updateCssLineFired) {
                                     lines[i] = "\t" + altLine + (altLine.match(/;\s*(\/\*.*?\*\/)?\s*$/) ? "" : ";");
@@ -790,7 +790,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
                                         // this happens when updateCssLine returns true (matches, but don't try to update it)
                                         lines[i] = lines[i].replace(/\/\*\s*(.*)\/\/ THEMER: DISABLED\s*\*\//, "$1");
                                     }
-                                        
+                                    if (!doNotChange) {
+                                        updateCssLineFired = true;
+                                    }
                                 } else {
                                     lines[i] = "";
                                     deleteRows.push(i);
@@ -1135,7 +1137,9 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     /* START SECTION: Saving */
     saveThemeClick: function() {
         if (this.cssLayer.isActive() && this.editArea.isDirty) {
+            this.onGeneratedLayerShow();
             this.widgetCssFiles[this.currentWidgetTemplateFile]= this.editArea.getDataValue();
+            this.updateCssText();
         }       
         var files = this._templateFilesToWrite = [];
         wm.forEachProperty(this.widgetCssFiles, function(inValue, inName) {
