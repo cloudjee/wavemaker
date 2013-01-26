@@ -44,19 +44,8 @@ ImportFile.widgets = {
         		}]    	
         	}],
             confirmLayer: ["wm.Layer", {}, {}, {
-                mainPanel2: ["wm.studio.DialogMainPanel", {},{}, {            
-                    checkboxSet: ["wm.CheckboxSet", {_classes: {domNode: ["StudioEditor"]},
-                                                    width: "100%", height: "100%", 
-                                                    caption: "The zip file contained the following; pick which ones you want to import",
-                                                    singleLine: false,
-                                                    captionPosition: "top", captionAlign: "left", captionSize: "32px", 
-                                                    dataField: "dataValue",
-                                                    displayExpression: "(${newName} ? 'Rename imported project from ' + ${name} + ' to ' + ${newName} : (${exists} ? 'Overwrite ' : 'Import ') + wm.capitalize(${dataValue}) + ': ' + ${name})"}, {}, {
-                        binding: ["wm.Binding", {}, {}, {
-                            wire: ["wm.Wire", {targetProperty: "dataSet", source: "variable"}]                        
-                        }]                    
-                    }],
-                    radioPanel: ["wm.Panel", {height: "92px", width: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {                        
+                mainPanel2: ["wm.studio.DialogMainPanel", {padding: "0"},{}, {            
+                    radioPanel: ["wm.Panel", {height: "112px",  margin: "10", width: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left"}, {}, {                        
                         radioRename: ["wm.RadioButton", {_classes: {domNode: ["StudioEditor"]},radioGroup: "ImportProjectOverwrite", width: "100%", caption: "-", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],                        
                         renameEditorPanel: ["wm.Panel", {height: "24px", width: "100%", margin: "0,0,0,30",horizontalAlign: "left", verticalAlign: "top", layoutKind: "left-to-right"}, {}, {
                             renameEditor: ["wm.Text", {_classes: {domNode: ["StudioEditor"]},caption: "", width: "200px", changeOnKey:true}, {onchange: "updateProjectTakenLabel"}, {
@@ -68,7 +57,22 @@ ImportFile.widgets = {
                         }],
                         radioOverwrite: ["wm.RadioButton", {_classes: {domNode: ["StudioEditor"]},radioGroup: "ImportProjectOverwrite", width:"100%",caption: "-", captionSize: "100%", captionPosition: "right", captionAlign: "left"}],                                                
                         radioNoImport: ["wm.RadioButton", {_classes: {domNode: ["StudioEditor"]},radioGroup: "ImportProjectOverwrite", width:"100%",caption: "Do not import project", captionSize: "100%", captionPosition: "right", captionAlign: "left"}]
+                    }],       
+
+                    bevel1: ["wm.Bevel", {}],
+                    checkboxSet: ["wm.CheckboxSet", {_classes: {domNode: ["StudioEditor"]},
+                                                    width: "100%", height: "100%", margin: "10",
+                                                    caption: "The zip file contained the following; pick which ones you want to import",
+                                                    singleLine: false,
+                                                    captionPosition: "top", captionAlign: "left", captionSize: "20px", 
+                                                    dataField: "dataValue",
+                                                    editorBorder: false,
+                                                    displayExpression: "(${newName} ? 'Rename imported project from ' + ${name} + ' to ' + ${newName} : (${exists} ? 'Overwrite ' : 'Import ') + wm.capitalize(${dataValue}) + ': ' + ${name})"}, {}, {
+                        binding: ["wm.Binding", {}, {}, {
+                            wire: ["wm.Wire", {targetProperty: "dataSet", source: "variable"}]                        
+                        }]                    
                     }]
+
                 }],
                 footer2: ["wm.studio.DialogButtonPanel", {}, {}, {
                     cancelButton1: ["wm.Button", {caption: "Cancel", width: "100px", _classes: {domNode: ["StudioButton"]}}, {onclick: "owner.owner.hide"}],

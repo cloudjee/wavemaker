@@ -40,3 +40,6 @@
 .ImportFile .InstructionHeader {
     font-weight: bold;
 }
+.ImportFile .wmbevel {
+    background-color: #313743;
+}
