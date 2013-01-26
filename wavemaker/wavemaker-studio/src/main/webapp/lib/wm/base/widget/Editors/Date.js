@@ -107,13 +107,13 @@ dojo.declare("wm.Date", wm.Text, {
 
         // don't modify the source data as the caller may still need it
         v = new Date(v);
-        v.setHours(0,0,0);
+        v.setHours(0,0);
 
         // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
         if (!this.useLocalTime && v) {
              /* See WM-4490 to understand this calculation. */
             var adjustTwoHours = (this.owner instanceof wm.DateTime == false || this.owner.dateMode == "Date") ? 120 : 0;
-            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustTwoHours,0,0);
+            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset + adjustTwoHours);
         }
         this.inherited(arguments, [v]);
     },
