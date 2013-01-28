@@ -940,7 +940,8 @@ public class DataModelConfiguration {
 
         if (updateService) {
             if (compile) {
-                this.projectCompiler.compile();
+                this.projectCompiler.compile(null,  Collections.singleton(this.cfgFile.getParent()),
+                        this.cfgFile.getParent(), this.projectCompiler.getClasspath(projMgr.getCurrentProject()));
             }
             reloadModifiedClasses();
             updateService(callback);
@@ -1957,7 +1958,7 @@ public class DataModelConfiguration {
         }
 
         List<Folder> classesFolder = new ArrayList<Folder>();
-        classesFolder.add(getProjectRootFolder().getFolder("webapproot/WEB-INF/classes"));
+        classesFolder.add(this.cfgFile.getParent());
         ClassLoader cl = ResourceClassLoaderUtils.getClassLoaderForResources(true, Thread.currentThread().getContextClassLoader(),
                 classesFolder.toArray(new Resource[1]));
         Thread.currentThread().setContextClassLoader(cl);
