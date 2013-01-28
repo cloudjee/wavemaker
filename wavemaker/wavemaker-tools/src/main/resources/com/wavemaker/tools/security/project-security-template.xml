@@ -140,7 +140,7 @@
 	</bean>
 
     <security:authentication-manager id="authenticationManagerAD" alias="authenticationManagerAD">
-        <security:authentication-provider ref="adAuthenticationProvider"/>
+        <security:authentication-provider ref="adAuthProvider"/>
     </security:authentication-manager>
 
 	<security:ldap-server url="ldap://localhost:389/dc=wavemaker,dc=vmware,dc=com"/>
