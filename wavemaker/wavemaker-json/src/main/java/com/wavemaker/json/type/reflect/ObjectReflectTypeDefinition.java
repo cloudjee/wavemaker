@@ -29,6 +29,8 @@ public class ObjectReflectTypeDefinition extends ReflectTypeDefinition implement
      */
     private LinkedHashMap<String, FieldDefinition> fields = new LinkedHashMap<String, FieldDefinition>();
 
+    private String rootTypeName;
+
     @Override
     public LinkedHashMap<String, FieldDefinition> getFields() {
         return this.fields;
@@ -36,5 +38,13 @@ public class ObjectReflectTypeDefinition extends ReflectTypeDefinition implement
 
     public void setFields(LinkedHashMap<String, FieldDefinition> fields) {
         this.fields = fields;
+    }
+
+    public String getRootTypeName() {
+        return this.rootTypeName;
+    }
+
+    public void setRootTypeName(String rootTypeName) {
+        this.rootTypeName = rootTypeName;
     }
 }
