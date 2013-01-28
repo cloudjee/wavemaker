@@ -409,6 +409,8 @@ public class SecuritySpringSupport {
             return GeneralOptions.DATABASE_TYPE;
         } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP) || beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB)) {
             return GeneralOptions.LDAP_TYPE;
+        } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_AD)){
+        	return GeneralOptions.AD_TYPE;
         } else {
             throw new ConfigurationException("Unable to get data source type!");
         }

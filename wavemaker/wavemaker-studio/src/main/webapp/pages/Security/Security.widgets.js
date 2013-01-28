@@ -151,8 +151,8 @@ Security.widgets = {
 				    }],
 				    adLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"AD"}, {"onShow":"showADLayer"}, {
 					adMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					    adDomainInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Domain","emptyValue":"null","padding":"2",helpText: "The AD domain name"}, {"onchange":"setDirty"}],
-					    adUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"URL","emptyValue":"null","padding":"2",helpText: "The URL of the AD server"}, {"onchange":"setDirty"}]
+					    adDomainInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Domain","emptyValue":"null","padding":"2",helpText: "The AD domain name, e.g. 'mydomain.com'"}, {"onchange":"setDirty"}],
+					    adUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"URL","emptyValue":"null","padding":"2",helpText: "The URL of the AD server, e.g. 'ldap://adserver.mydomain.com/'"}, {"onchange":"setDirty"}]
 					}]
 				    }]
 				}]

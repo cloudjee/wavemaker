@@ -24,6 +24,8 @@ public class GeneralOptions {
     public static final String DATABASE_TYPE = "Database";
 
     public static final String LDAP_TYPE = "LDAP";
+    
+    public static final String AD_TYPE = "AD";
 
     private boolean enforceSecurity;
 
