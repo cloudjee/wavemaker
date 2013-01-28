@@ -392,7 +392,7 @@ public class SecurityToolsManager {
         saveSecuritySpringBeans(beans);
     }
 
-    public void configAD(String Domain, String ServerUrl) throws IOException, JAXBException {
+    public void configAD(String ServerUrl, String Domain) throws IOException, JAXBException {
         Beans beans = getSecuritySpringBeans(true);
         SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_AD);
         SecuritySpringSupport.updateAdAuthProvider(beans, ServerUrl, Domain);
