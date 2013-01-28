@@ -47,21 +47,4 @@ public interface TypeState {
      * @param typeDefinition The TypeDefinition to add.
      */
     public void addType(TypeDefinition typeDefinition);
-
-    /**
-     * Get the base bean class name. Base bean class is the lowest level bean class that is directly referenced
-     * in the java service class. Retrieval of properties defined all super calsses start from the base bean class.
-     *
-     * @return The corresponding TypeDefinition.
-     */
-    public String getBaseClassName();
-
-
-    /**
-     * Set the base bean class name. Base bean class is the lowest level bean class that is directly referenced
-     * in the java service class. Retrieval of properties defined all super calsses start from the base bean class.
-     *
-     * @param baseClassName The base bean class name
-     */
-    public void setBaseClassName(String baseClassName);
 }

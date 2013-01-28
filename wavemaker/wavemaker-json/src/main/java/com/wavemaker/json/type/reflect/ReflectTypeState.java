@@ -71,13 +71,4 @@ public class ReflectTypeState implements TypeState {
     public Map<String, TypeDefinition> getKnownTypes() {
         return this.knownTypes;
     }
-
-    @Override
-    public String getBaseClassName() {
-        return null;
-    }
-
-    @Override
-    public void setBaseClassName(String baseClassName) {
-    }
 }

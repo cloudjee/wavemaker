@@ -162,9 +162,9 @@ public class CompileTypeUtils {
 
         ObjectReflectTypeDefinition def = new ObjectReflectTypeDefinition();
         def.setTypeName(type.toString());
+        def.setRootTypeName(type.toString());
         def.setShortName(type.asElement().getSimpleName().toString());
         typeState.addType(def);
-        typeState.setBaseClassName(type.toString());
         type.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
         typeDefForParentBeans(processingEnv, typeState, type);
         return def;
@@ -175,6 +175,14 @@ public class CompileTypeUtils {
         List<DeclaredType> allParentTypes = retrieveAllParentTypes(processingEnv, type);
         for (TypeMirror typeMirror : allParentTypes) {
             DeclaredType dt = (DeclaredType) typeMirror;
+            ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(dt.toString());
+            if (def == null) {
+                def = new ObjectReflectTypeDefinition();
+                def.setTypeName(dt.toString());
+                def.setRootTypeName(type.toString());
+                def.setShortName(dt.asElement().getSimpleName().toString());
+                typeState.addType(def);
+            }
             dt.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
         }
     }
@@ -314,17 +322,23 @@ public class CompileTypeUtils {
             if (!method.getSimpleName().toString().endsWith("Class") ||
                     method.getEnclosingElement().toString().equals("java.lang.reflect.TypeVariable")) {
 
-                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(typeState.getBaseClassName());
+                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(method.getEnclosingElement().asType().toString());
+
                 if (def != null) {
-                    String propName = getPropertyName(method);
-                    if (!def.getFields().containsKey(propName)) {
-                        if (isGetter(method)) {
-                            def.getFields().put(propName,
-                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getReturnType(), propName));
-                        } else if (isSetter(method)) {
-                            def.getFields().put(
-                                propName,
-                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getParameters().get(0).asType(), propName));
+                    if (!def.getTypeName().equals(def.getRootTypeName())) {
+                        def = (ObjectReflectTypeDefinition) typeState.getType(def.getRootTypeName());
+                    }
+                    if (def != null) {
+                        String propName = getPropertyName(method);
+                        if (!def.getFields().containsKey(propName)) {
+                            if (isGetter(method)) {
+                                def.getFields().put(propName,
+                                        CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getReturnType(), propName));
+                            } else if (isSetter(method)) {
+                                def.getFields().put(
+                                        propName,
+                                        CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getParameters().get(0).asType(), propName));
+                            }
                         }
                     }
                 }
