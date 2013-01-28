@@ -134,7 +134,8 @@ public class SecurityService {
                     realRoleName = roleName.substring(this.rolePrefix.length());
 
                 } else {
-                    logger.warn("Skipping Role " + roleName + ". It should be prefix with " + this.rolePrefix + ". Something is wrong!");
+                    logger.warn("Role " + roleName + " does not use the prefix " + this.rolePrefix + ". This may cause problems");
+                    realRoleName = roleName;
                 }
             }
             // make sure the role is not the maker for no roles
