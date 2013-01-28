@@ -635,9 +635,6 @@ public class SecuritySpringSupport {
     		String ldapUrl = arg.getValue();
     		options.setUrl(ldapUrl);
 
-    		//options.setManagerDn(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_DN_PROPERTY));
-    		//options.setManagerPassword(getPropertyValueString(ldapDirContextBean, LDAP_MANAGER_PASSWORD_PROPERTY));
-
     		Bean ldapAuthProviderBean = beans.getBeanById(LDAP_AUTH_PROVIDER_BEAN_ID);
     		List<ConstructorArg> constructorArgs = ldapAuthProviderBean.getConstructorArgs();
     		for (ConstructorArg constructorArg : constructorArgs) {
