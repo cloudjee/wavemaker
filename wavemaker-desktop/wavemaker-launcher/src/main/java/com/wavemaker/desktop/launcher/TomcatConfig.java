@@ -44,10 +44,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -179,7 +176,8 @@ public class TomcatConfig {
      * @return the sslPort
      */
     public int getSslPort() {
-        return Integer.parseInt(this.sslServicePortNode.getNodeValue());
+        int mySslPort = this.sslServicePortNode == null ? 8443 : Integer.parseInt(this.sslServicePortNode.getNodeValue());
+        return mySslPort;
     }
 
     protected void parseSourceXML(InputStream source) {
@@ -195,12 +193,13 @@ public class TomcatConfig {
                 Node node = this.serviceConnectorNodeList.item(i);
                 Node sslEnabledNode = node.getAttributes().getNamedItem("SSLEnabled");
                 if (sslEnabledNode == null || !sslEnabledNode.getNodeValue().equals("true")) {
-                    servicePortNode = node.getAttributes().getNamedItem("port");
+                    this.servicePortNode = node.getAttributes().getNamedItem("port");
                 } else {
-                    sslServicePortNode = node.getAttributes().getNamedItem("port");
+                    this.sslServicePortNode = node.getAttributes().getNamedItem("port");
                 }
             }
             this.shutdownPortNode = (Node) path.evaluate("/Server/@port", this.source, XPathConstants.NODE);
+            this.sslServicePortNode = this.sslServicePortNode == null ? this.createSslConnectorNode().getAttributes().getNamedItem("port") : this.sslServicePortNode;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -210,6 +209,38 @@ public class TomcatConfig {
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
+    }
+
+    private Node createSslConnectorNode() {
+        NodeList serviceNodeList = this.source.getElementsByTagName("Service");
+        Node catalinaServiceNode = null;
+        for (int i=0; i < serviceNodeList.getLength(); i++) {
+            Node serviceNode = serviceNodeList.item(i);
+            Node nameNode = serviceNode.getAttributes().getNamedItem("name");
+            if (nameNode.getNodeValue().equals("Catalina")) {
+                catalinaServiceNode = serviceNode;
+                break;
+            }
+        }
+
+        if (catalinaServiceNode == null) {
+            RuntimeException ex = new RuntimeException("*** Your server.xml is corrupted. No \"Service\" element exists ***");
+            ex.printStackTrace();
+            throw ex;
+        }
+
+        Element sslConnector = this.source.createElement("Connector");
+        catalinaServiceNode.appendChild(sslConnector);
+
+        sslConnector.setAttribute("port", "8443");
+        sslConnector.setAttribute("protocol", "org.apache.coyote.http11.Http11Protocol");
+        sslConnector.setAttribute("SSLEnabled", "true");
+        sslConnector.setAttribute("clientAuth", "false");
+        sslConnector.setAttribute("sslProtocol", "TLS");
+        sslConnector.setAttribute("keystoreFile", "conf/keyStores/wmKeyStore");
+        sslConnector.setAttribute("keystorePass", "wavemaker");
+
+        return sslConnector;
     }
 
     /**
@@ -222,10 +253,10 @@ public class TomcatConfig {
     }
 
     /**
-     * @param sslPort the servicePort to set
+     * @param sslPort the SSL Port to set
      */
     public void setSslPort(int sslPort) {
-        Integer oldValue = new Integer(this.getServicePort());
+        Integer oldValue = new Integer(this.getSslPort());
         this.sslServicePortNode.setNodeValue(Integer.toString(sslPort));
         this.notifyListeners(PROPERTY_SSL_PORT, oldValue, sslPort);
     }
