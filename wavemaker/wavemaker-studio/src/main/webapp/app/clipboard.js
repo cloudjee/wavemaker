@@ -37,7 +37,7 @@ Studio.extend({
     },
     pasteControl: function(inParent) {
         if (!inParent) inParent = studio.selected[0];
-        while ((inParent instanceof wm.Container === false || wm.isInstanceType(inParent, [wm.PageContainer, wm.Composite])) && inParent.parent) inParent = inParent.parent;
+        while (inParent && (inParent instanceof wm.Container === false || wm.isInstanceType(inParent, [wm.PageContainer, wm.Composite])) && inParent.parent) inParent = inParent.parent;
         /* If we are pasting into a wm.Layers, and ANY of the components being pasted is not a wm.Layer, then generate a wm.Layer to
          * put them all in
          */
@@ -52,8 +52,12 @@ Studio.extend({
             dojo.forEach(this.clipboard, function(clip, i) {
                 var c;
                 var p = inParent;
-                if (inParent instanceof wm.Layers && this.clipboardClasses[i] != "wm.Layer") {
+                var ctor = dojo.getObject(this.clipboardClasses[i]);
+                var prototype = (ctor) ? ctor.prototype : null;
+                if (inParent instanceof wm.Layers && prototype instanceof wm.Layer) {
                     p = altParent;
+                } else if (prototype instanceof wm.Dialog) {
+                    p = null;
                 }
                 c = this._pasteControl(p, clip, this.clipboardClasses[i]);
                 if (c) components.push(c);
