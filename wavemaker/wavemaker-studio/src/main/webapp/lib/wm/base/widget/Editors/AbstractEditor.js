@@ -390,7 +390,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                 labelHeight = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * height / 100);
                 if (labelHeight > height) {
                     labelHeight = height - 16;
-                    if (this.captionSize.match(/px/)) this.captionSize = labelHeight + "px";
+                    //if (this.captionSize.match(/px/)) this.captionSize = labelHeight + "px";
                 }
                 editorHeight = (height - labelHeight);
                 labelWidth = (w) ? w : "";

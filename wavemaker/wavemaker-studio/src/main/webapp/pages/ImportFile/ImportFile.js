@@ -122,7 +122,7 @@ dojo.declare("ImportFile", wm.Page, {
         this.variable.setData(data);
         this.checkboxSet.setDataValue(selectedData);
         this.checkboxSet.setShowing(data.length);
-        
+        this.bevel1.setShowing(this.checkboxSet.showing && this.radioPanel.showing);
         if (result.project && !result.project.exists && data.length == 1) {
             this.finishImport();
         } else {

@@ -225,6 +225,27 @@ wm.getComponentStructure = function(inType) {
         });
     });
 */
+
+/**************
+// So why do we need to pass in wm_dojo_grid when thats indexed by the wm.componentList hash?
+// Because there might be more than one thing that causes a given widget class to load;
+// sometimes interdependencies can cause less obvious packages to cause wm.DojoGrid to be loaded
+wm.addFrameworkFix("wm.DojoGrid", ['build.Gzipped.wm_dojo_grid'], function() {
+   wm.DojoGrid.extend({
+      ...
+   })
+});
+   
+// So why not just do wm.PageContainer.extend without wm.addFrameworkFix?  Because for a phonegap
+// build, wm.PageContainer isn't defined until after the patches have loaded.  Use null or [] for
+// the second parameter so that it gets added to the phonegap's fix list
+wm.addFrameworkFix("wm.PageContainer", null, function() {
+   wm.PageContainer.extend({
+      ...
+   })
+});
+
+**************/
 wm.addFrameworkFix = function(className, packageList, inFunc) {
     /* All classes are preloaded in debug mode; just fire inFunc */
     if (djConfig.isDebug && !wm.studioConfig) {
@@ -234,7 +255,7 @@ wm.addFrameworkFix = function(className, packageList, inFunc) {
         /* If the class has already been loaded, call inFunc() */
         if (ctor) {
             inFunc();
-        } else if (packageList) {
+        } else if (packageList && packageList.length) {
             dojo.forEach(packageList, function(packageName) {
                 if (!wm.componentFixList[packageName]) {
                     wm.componentFixList[packageName] = [inFunc];
