@@ -591,7 +591,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnSaveActionPerformed
     {// GEN-HEADEREND:event_btnSaveActionPerformed
-        System.out.println("*** start btnSaveActionPerformed");
+        // System.out.println("*** start btnSaveActionPerformed");
         // if (JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
         // "Save current Studio launch options for future sessions?",
         // "Save Launch Options", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
@@ -635,9 +635,9 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
         }
 
         initOptions();
-        System.out.println("    about to dispose of advanced dialog");
+        //System.out.println("    about to dispose of advanced dialog");
         dispose();
-        System.out.println("--- end btnSaveActionPerformed");
+        //System.out.println("--- end btnSaveActionPerformed");
         // }
     }// GEN-LAST:event_btnSaveActionPerformed
 
