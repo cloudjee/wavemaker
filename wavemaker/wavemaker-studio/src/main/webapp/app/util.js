@@ -134,11 +134,12 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 // open a url and present user with a dialog if popups are blocked.
 wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
     var w = window.open(inUrl, inWindowName, inWindowOptions);
-        if (dojo.isChrome) {
-        wm.job(inWindowName, 1, function() {
-        if (w.closed) wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
-        if (w.document && w.document.body && w.outerWidth == 0)
-            wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
+    if (dojo.isChrome) {
+        wm.job(inWindowName, 20, function() {
+            if (w.closed) wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
+            if (w.document && w.document.body && w.outerWidth == 0) {
+                wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
+            }
         });
     } else if (!w) {
         wm.openUrlDialog(inUrl,inTitle,inWindowName);
