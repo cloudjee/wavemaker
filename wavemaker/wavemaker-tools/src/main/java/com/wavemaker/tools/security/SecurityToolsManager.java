@@ -241,7 +241,7 @@ public class SecurityToolsManager {
         try {
             Beans beans = getSecuritySpringBeans(true);
             SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
-            String channel = useSSL ? "https" : "http";
+            String channel = enforceSecurity && useSSL ? "https" : "http";
             SecuritySpringSupport.setRequiresChannel(beans, channel);
             if (useSSL) {
                 String servicePort;
