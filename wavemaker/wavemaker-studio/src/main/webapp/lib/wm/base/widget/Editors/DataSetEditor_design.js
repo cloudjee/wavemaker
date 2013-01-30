@@ -92,7 +92,7 @@ wm.DataSetEditor.extend({
             this.setDataSet(inDataSet);
 
             /* If there is no displayExpression, and either no displayField or an invalid displayField, get a new displayField */
-            if (!this.displayExpression && inDataSet && inDataSet.type && (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields || !wm.typeManager.getType(inDataSet.type).fields[this.displayField])) {
+            if (!this.displayExpression && inDataSet && inDataSet.type && (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields || !wm.typeManager.typeHasField(inDataSet.type,this.displayField))) {
                 this._setDisplayField();
             } else if (!this._cupdating && oldDataSet && inDataSet && inDataSet != this.$.liveVariable && (!this.displayField && !this.displayExpression || this._lastType != inDataSet.type)) {
                 if (wm.defaultTypes[inDataSet.type]) {

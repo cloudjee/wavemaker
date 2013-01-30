@@ -116,6 +116,20 @@ wm.typeManager = {
 	isType: function(inTypeName) {
 		return Boolean(this.getType(inTypeName));
 	},
+	typeHasField: function(inTypeName, inFieldName) {
+	   var typeDef = this.types[inTypeName];
+	   if (!typeDef) return false;
+	   var fieldNames = inFieldName.split(/\./);
+	   for (var i = 0; i < fieldNames.length; i++) {
+	       var fieldDef = typeDef.fields[fieldNames[i]];
+	       if (!fieldDef) return false;
+	       if (i + 1 < fieldNames.length) {
+	           typeDef = this.types[fieldDef.type];
+	           if (!typeDef) return false;
+	       }
+	   }	
+	   return true;
+	},
 	getPropertyInfoFromSchema: function(inTypeSchema, inPropName) {
 		var
 			s = inTypeSchema,
