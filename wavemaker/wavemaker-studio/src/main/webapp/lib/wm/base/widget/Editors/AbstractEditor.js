@@ -423,7 +423,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
             // if height changes, then lineHeight may have to change
             s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
-            var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing) : bounds.l;
+            //var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing) : bounds.l;
+            var captionLeft = (position == "right") ? (bounds.l + editorWidth + captionEditorSpacing) : bounds.l;            
             if (position == "right" && allocateHelpIconSpace) captionLeft -= helpIconSize + helpIconMargin;
             s.left = captionLeft + "px";
             s.top = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px";
