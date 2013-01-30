@@ -346,14 +346,12 @@ wm.LivePanel.extend({
             owner: studio.page,
             name: studio.page.getUniqueName(this.liveDataName + "SaveButton"),
             parent: dialog.buttonBar,
-            height: "100%",
             caption: studio.getDictionaryItem("wm.EditPanel.SAVE_CAPTION")
         });
         var cancelButton = new wm.Button({
             owner: studio.page,
             name: studio.page.getUniqueName(this.liveDataName + "CancelButton"),
             parent: dialog.buttonBar,
-            height: "100%",
             caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")
         });
 
