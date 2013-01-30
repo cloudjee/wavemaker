@@ -84,6 +84,7 @@ dojo.declare(
 				]);
             this.resetDatabaseInputs();
             this.resetLDAPInputs();
+            this.resetADInputs();
             this.populateGeneralOptions();
             this.populateRolesSetup();
         },
@@ -157,6 +158,10 @@ dojo.declare(
             this.clearSelectInput(this.ldapRoleDbRoleInput);
             this.clearSelectInput(this.ldapRoleDbUsernameInput);
         },
+        resetADInputs : function() {
+            this.adUrlInput.setDataValue("ldap://adserver.mydomain.com");
+            this.adDomainInput.setDataValue("mydomain.com");
+            },
         secProviderInputChange : function(inSender, inValue) {
             if (inValue == "Demo") {
                 this.layers.setLayer("demoLayer");
@@ -181,7 +186,7 @@ dojo.declare(
                 if (!this.populatingOptions) {
                     this.getDataModelList();
                 }
-            } else if (inValue == "AD") {
+            } else if (inValue == "Active Directory") {
                 this.layers.setLayer("adLayer");
                 this.servicesLayer.setShowing(true);
 		this.rolesLayer.setShowing(this.secEnableInput.getChecked());
@@ -217,7 +222,7 @@ dojo.declare(
                     this.populateDatabaseOptions();
                 } else if (t == "LDAP") {
                     this.populateLDAPOptions();
-                } else if (t == "AD") {
+                } else if (t == "Active Directory") {
                     this.populateADOptions();
                 }
                 this.populatingOptions = false;
@@ -318,8 +323,10 @@ dojo.declare(
                 if (!(this.ldapUrlInput.getDataValue() && this.ldapUserDnPatternInput.getDataValue())) {
                     err = this.getDictionaryItem("ERROR_LDAP_INPUT_REQUIRED");
                 }
-            } else if (dataSourceType == "AD") {
-                // To do
+            } else if (dataSourceType == "Active Directory") {
+                if (!(this.adDomainInput.getDataValue() && this.adUrlInput.getDataValue())) {
+                    err = this.getDictionaryItem("ERROR_LDAP_INPUT_REQUIRED");
+                }
             }
             return err;
         },

@@ -32,7 +32,7 @@ Security.widgets = {
 			secConfigPanel: ["wm.Panel", {"border":"0","height":"120px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
 			    secConfigControls: ["wm.Panel", {"border":"0","width":"638px"}, {}, {
 				panel16: ["wm.Panel", {"border":"0","height":"100%"}, {}, {
-				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,AD,LDAP", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
+				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,LDAP,Active Directory", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
 				    panel3: ["wm.Panel", {"border":"0","height":"95px"}, {}, {
 					secEnableInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
 					showLoginPageInput: ["wm.Checkbox", {_classe4: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],

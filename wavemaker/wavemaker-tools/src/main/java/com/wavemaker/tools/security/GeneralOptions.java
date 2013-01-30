@@ -25,7 +25,7 @@ public class GeneralOptions {
 
     public static final String LDAP_TYPE = "LDAP";
     
-    public static final String AD_TYPE = "AD";
+    public static final String AD_TYPE = "Active Directory";
 
     private boolean enforceSecurity;
 
