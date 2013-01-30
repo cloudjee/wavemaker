@@ -942,6 +942,7 @@ body .AppToolTip {
 }
 .wmmobile .wmeditor .wmCheckboxSetItem .dijitReset {
     display: inline-block;
+    margin-right: 6px;
 }
 .wmmobile .wmeditor .wmCheckboxSetItem .dijitReset.dijitCheckBoxActive {
     background-color: #00A;

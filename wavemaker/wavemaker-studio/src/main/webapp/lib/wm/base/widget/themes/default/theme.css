@@ -1344,6 +1344,7 @@ cursor: pointer;
 }
 .wmeditor .wmCheckboxSetItem .dijitReset {
     float: left;
+    margin-right: 6px;
 }
 .wmeditor .wmCheckboxSetItem label {
     display: block;
