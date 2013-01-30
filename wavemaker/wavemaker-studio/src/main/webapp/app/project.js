@@ -1287,7 +1287,7 @@ dojo.declare("wm.studio.Project", null, {
         wm.fire(studio._deployer, "cancel");
         this.pageChanging();
         this.projectChanging();
-        studio.studioService.requestAsync("closeProject");
+        studio.studioService.requestSync("closeProject");
         this.pageList = [];
         this.projectName = this.pageName = "";
         studio.application = studio.page = null;
