@@ -482,8 +482,9 @@ dojo.declare("wm.Application", wm.Component, {
             /* Restore the prototype to untampered state if we've changed themes */
             if (wm.Application.themePrototypeData[declaredClass] && wm.Application.themePrototypeData[declaredClass] != this._theme) {
                 var props = wm.defaultPrototypeValues[declaredClass];
-                wm.forEachProperty(props, function(inValue, inName) {                  
-                    p[inName] = inValue;                    
+                wm.forEachProperty(props, function(inValue, inName) {
+                    if (inValue && typeof inValue == "object") inValue = dojo.clone(inValue); // else all instances will share this object as a property; happens with _classes
+                    p[inName] = inValue;
                     if (optionalWidget) optionalWidget[inName] = inValue;
                 });
             }                        
