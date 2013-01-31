@@ -37,9 +37,11 @@ public class TomcatUtils {
      *
      */
     public static File getTomcatServerXML(StudioFileSystem fileSystem) throws URISyntaxException {
-        File wmHomeConf = getWaveMakerHomeFolder(fileSystem).getFile("server.xml");
-        if (wmHomeConf.exists()) {
-            return wmHomeConf;
+        if (embeddedTomcat()) {
+            File wmHomeConf = getWaveMakerHomeFolder(fileSystem).getFile("server.xml");
+            if (wmHomeConf.exists()) {
+                return wmHomeConf;
+            }
         }
 
         Folder catalinaHome = getCatalinaHome();
@@ -74,5 +76,15 @@ public class TomcatUtils {
 
     private static Folder getWaveMakerHomeFolder(StudioFileSystem fileSystem) {
         return fileSystem.getWaveMakerHomeFolder();
+    }
+
+    //Indicates if Studio is installed from a downloaded package and tomcat is embedded in the installation package
+    private static boolean embeddedTomcat() {
+        URL resource = TomcatUtils.class.getClassLoader().getResource("catalina.home.marker");
+        if (resource != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
