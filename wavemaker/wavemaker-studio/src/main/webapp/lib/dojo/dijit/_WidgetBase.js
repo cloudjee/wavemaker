@@ -380,8 +380,14 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 			dun(handle);
 		});
 
+	    /* Copyright (C) 2013 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker added all references to self to fix infinite recursion bug
+	     */
+
 		// destroy widgets created as part of template, etc.
+	        var self = this;
 		dfe(this._supportingWidgets || [], function(w){
+		        if (w == self) return;
 			if(w.destroyRecursive){
 				w.destroyRecursive();
 			}else if(w.destroy){
