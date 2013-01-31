@@ -51,7 +51,7 @@
 }
 
 /* GROUP: Popup Menu */
-.wm_template .wmPopupButton .popupIcon {
+.wm_template .wmbutton.wmPopupButton .popupIcon {
    background-image: url(lib/wm/base/widget/themes/wm_default/images/comboArrowDownDark.png);
    background-position: 0% 50%;
 }
