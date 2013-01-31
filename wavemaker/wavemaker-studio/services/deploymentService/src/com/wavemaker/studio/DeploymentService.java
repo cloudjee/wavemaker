@@ -503,6 +503,12 @@ public class DeploymentService {
 
 	if (isOldStyleExport) {
 	    com.wavemaker.tools.io.File indexhtml = componentStage.getFile("webapproot/index.html");
+	    if (!indexhtml.exists()) {
+		for (com.wavemaker.tools.io.Folder folder : componentStage.list().folders()) {
+		    indexhtml = folder.getFile("webapproot/index.html");
+		    if (indexhtml.exists()) break;
+		}
+	    }
 	    if (indexhtml.exists()) {
 		String indexstring = indexhtml.getContent().asString();
 		int endIndex = indexstring.lastIndexOf("({domNode: \"wavemakerNode\"");
@@ -582,10 +588,21 @@ public class DeploymentService {
 		if (project.exists()) {
 		    project = project.getFolder(originalName);
 		}
+		com.wavemaker.tools.io.File indexhtml = project.getFile("webapproot/index.html");
 		if (!project.exists()) {		    
 		    project = componentStage;
+		    indexhtml = componentStage.getFile("webapproot/index.html");
+		    if (!indexhtml.exists()) {
+			for (com.wavemaker.tools.io.Folder folder : componentStage.list().folders()) {
+			    indexhtml = folder.getFile("webapproot/index.html");
+			    if (indexhtml.exists()) {
+				project = folder;
+				break;
+			    }
+			}
+		    }
 		}
-		if (project.exists() && project.getFile("webapproot/index.html").exists()) {
+		if (project.exists() && indexhtml.exists()) {
 		    Folder destFolder = projectFolder.getFolder(newName);
 		    destFolder.createIfMissing();
 		    project.copyContentsTo(destFolder);
