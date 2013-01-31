@@ -546,7 +546,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         }
         var heading = "";
 
-        this.editorPanelHeader.setCaption(this.currentWidgetName);
+        this.editorPanelHeader.setCaption(this.currentTheme.match(/^wm\.base\.widget\.themes/) ? "Theme is Read-only; Copy theme to modify it." : this.currentWidgetName);
 
 
         /* Step 2: Load the css file and the sample file and apply it to the demo panel */
