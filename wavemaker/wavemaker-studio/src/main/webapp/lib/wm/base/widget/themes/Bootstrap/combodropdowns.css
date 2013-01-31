@@ -1,0 +1,29 @@
+/* GROUP: ComboBox Drop-down Box  */
+.Bootstrap .dijitPopup .dijitCalendarMonthMenu, 
+.Bootstrap  ul.dijitMenu {
+    background-color: #ffffff;
+    background-image: none;
+    filter: none;
+    border: solid 1px #e6e6e6;
+}
+
+/* GROUP: ComboBox Drop-down Items */
+/* GROUP: ComboBox Drop-down Items */
+.Bootstrap .dijitPopup .dijitCalendarMonthLabel,
+.Bootstrap  ul.dijitMenu .dijitMenuItem {
+    padding: 4px 5px;
+    text-align: left;
+}
+
+
+/* GROUP: ComboBox Item Hover */
+.Bootstrap .dijitPopup .dijitCalendarMonthLabel .dijitMenuItemSelected,
+.Bootstrap  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected {
+	color: #ffffff;
+	background-image: -webkit-gradient(linear, center top, center bottom, from(rgb(0, 136, 204)), color-stop(50%,rgb(0, 119, 179)), to(rgb(0, 119, 179))); /* THEMER: IGNORE */
+	background-image: -moz-linear-gradient(top, rgb(0, 136, 204) 0%,rgb(0, 119, 179) 50%,rgb(0, 119, 179) 100%); /* THEMER: IGNORE */
+	background-image: -o-linear-gradient(top, rgb(0, 136, 204) 0%,rgb(0, 119, 179) 50%,rgb(0, 119, 179) 100%); /* THEMER: IGNORE */
+	background-image: -ms-linear-gradient(top, rgb(0, 136, 204) 0%,rgb(0, 119, 179) 50%,rgb(0, 119, 179) 100%); /* THEMER: IGNORE */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(0, 136, 204)', endColorstr='rgb(0, 119, 179)',GradientType=0); /* THEMER: IGNORE */
+	border: solid 0px #ffffff;
+}

@@ -1,0 +1,13 @@
+{
+	tabs: ["wm.TabLayers", {},{}, {
+	      l1: ["wm.Layer", {caption: "Layer 1"}],
+	      l2: ["wm.Layer", {caption: "Layer 2"}],
+	      l3: ["wm.Layer", {caption: "Layer 3"}]
+	      }],
+	      spacer: ["wm.Spacer", {height: "20px"}],
+	vtabs:["wm.TabLayers", {verticalButtons:1},{}, {
+	      v1: ["wm.Layer", {caption: "Layer 1"}],
+	      v2: ["wm.Layer", {caption: "Layer 2"}],
+	      v3: ["wm.Layer", {caption: "Layer 3"}]
+	      }]
+}

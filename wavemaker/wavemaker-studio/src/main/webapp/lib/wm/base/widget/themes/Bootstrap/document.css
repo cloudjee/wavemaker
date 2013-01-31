@@ -1,0 +1,222 @@
+/* GROUP: Main Document Styles */
+.Bootstrap  .wmapproot {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+    color: #333333;
+	font-weight: normal;
+    line-height: 20px;
+}
+.Bootstrap .wmapproot > .wmpagecontainer,
+.Bootstrap.wmapproot > .wmpagecontainer {
+/* 	border-radius: 4px; // THEMER: DISABLED */
+/* 	-webkit-border-radius: 4px; // THEMER: DISABLED */
+/* 	box-shadow: 0px 0px 0px black; // THEMER: DISABLED */
+/* 	-webkit-box-shadow: 0px 0px 0px black; // THEMER: DISABLED */
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+}
+
+/* IE9 has buggy display when combinding both gradients and radius.
+ * Gradients and not radius work on IE8, so we'll just do it the IE 8 way */
+.dj_ie9 .Bootstrap div,
+.dj_ie9 .Bootstrap input,
+.dj_ie9 .Bootstrap button {
+   border-radius: 0px !important; /* THEMER: HIDE */
+}
+
+/* Typography from bootstrap.css */
+p {
+  margin: 0 0 10px; /* THEMER: HIDE */
+}
+
+small {
+  font-size: 85%; /* THEMER: HIDE */
+}
+
+strong {
+  font-weight: bold; /* THEMER: HIDE */
+}
+
+em {
+  font-style: italic; /* THEMER: HIDE */
+}
+
+cite {
+  font-style: normal; /* THEMER: HIDE */
+}
+
+.text-warning {
+  color: #c09853; /* THEMER: HIDE */
+}
+
+a.text-warning:hover {
+  color: #a47e3c; /* THEMER: HIDE */
+}
+
+.text-error {
+  color: #b94a48; /* THEMER: HIDE */
+}
+
+a.text-error:hover {
+  color: #953b39; /* THEMER: HIDE */
+}
+
+.text-info {
+  color: #3a87ad; /* THEMER: HIDE */
+}
+
+a.text-info:hover {
+  color: #2d6987; /* THEMER: HIDE */
+}
+
+.text-success {
+  color: #468847; /* THEMER: HIDE */
+}
+
+a.text-success:hover {
+  color: #356635; /* THEMER: HIDE */
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 10px 0; /* THEMER: HIDE */
+  font-family: inherit; /* THEMER: HIDE */
+  font-weight: bold; /* THEMER: HIDE */
+  line-height: 20px; /* THEMER: HIDE */
+  color: inherit; /* THEMER: HIDE */
+  text-rendering: optimizelegibility; /* THEMER: HIDE */
+}
+
+h1,h2,h3 {
+  line-height: 40px; /* THEMER: HIDE */
+}
+
+h1 {
+  font-size: 38.5px; /* THEMER: HIDE */
+}
+
+h2 {
+  font-size: 31.5px; /* THEMER: HIDE */
+}
+
+h3 {
+  font-size: 24.5px; /* THEMER: HIDE */
+}
+
+h4 {
+  font-size: 17.5px; /* THEMER: HIDE */
+}
+
+h5 {
+  font-size: 14px; /* THEMER: HIDE */
+}
+
+h6 {
+  font-size: 11.9px; /* THEMER: HIDE */
+}
+
+blockquote {
+  padding: 0 0 0 15px; /* THEMER: HIDE */
+  margin: 0 0 20px; /* THEMER: HIDE */
+  border-left: 5px solid #eeeeee; /* THEMER: HIDE */
+}
+
+blockquote p {
+  margin-bottom: 0; /* THEMER: HIDE */
+  font-size: 16px; /* THEMER: HIDE */
+  font-weight: 300; /* THEMER: HIDE */
+  line-height: 25px; /* THEMER: HIDE */
+}
+
+blockquote small {
+  display: block; /* THEMER: HIDE */
+  line-height: 20px; /* THEMER: HIDE */
+  color: #999999; /* THEMER: HIDE */
+}
+
+blockquote small:before {
+  content: '\2014 \00A0'; /* THEMER: HIDE */
+}
+
+blockquote.pull-right {
+  float: right; /* THEMER: HIDE */
+  padding-right: 15px; /* THEMER: HIDE */
+  padding-left: 0; /* THEMER: HIDE */
+  border-right: 5px solid #eeeeee; /* THEMER: HIDE */
+  border-left: 0; /* THEMER: HIDE */
+}
+
+blockquote.pull-right p,
+blockquote.pull-right small {
+  text-align: right; /* THEMER: HIDE */
+}
+
+blockquote.pull-right small:before {
+  content: ''; /* THEMER: HIDE */
+}
+
+blockquote.pull-right small:after {
+  content: '\00A0 \2014'; /* THEMER: HIDE */
+}
+
+code,
+pre {
+  padding: 0 3px 2px; /* THEMER: HIDE */
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace; /* THEMER: HIDE */
+  font-size: 12px; /* THEMER: HIDE */
+  color: #333333; /* THEMER: HIDE */
+  -webkit-border-radius: 3px; /* THEMER: HIDE */
+     -moz-border-radius: 3px; /* THEMER: HIDE */
+          border-radius: 3px; /* THEMER: HIDE */
+}
+
+code {
+  padding: 2px 4px; /* THEMER: HIDE */
+  color: #d14; /* THEMER: HIDE */
+  white-space: nowrap; /* THEMER: HIDE */
+  background-color: #f7f7f9; /* THEMER: HIDE */
+  border: 1px solid #e1e1e8; /* THEMER: HIDE */
+}
+
+pre {
+  display: block; /* THEMER: HIDE */
+  padding: 9.5px; /* THEMER: HIDE */
+  margin: 0 0 10px; /* THEMER: HIDE */
+  font-size: 13px; /* THEMER: HIDE */
+  line-height: 20px; /* THEMER: HIDE */
+  word-break: break-all; /* THEMER: HIDE */
+  word-wrap: break-word; /* THEMER: HIDE */
+  white-space: pre; /* THEMER: HIDE */
+  white-space: pre-wrap; /* THEMER: HIDE */
+  background-color: #f5f5f5; /* THEMER: HIDE */
+  border: 1px solid #ccc; /* THEMER: HIDE */
+  border: 1px solid rgba(0, 0, 0, 0.15); /* THEMER: HIDE */
+  -webkit-border-radius: 4px; /* THEMER: HIDE */
+     -moz-border-radius: 4px; /* THEMER: HIDE */
+          border-radius: 4px; /* THEMER: HIDE */
+}
+
+pre.prettyprint {
+  margin-bottom: 20px; /* THEMER: HIDE */
+}
+
+pre code {
+  padding: 0; /* THEMER: HIDE */
+  color: inherit; /* THEMER: HIDE */
+  white-space: pre; /* THEMER: HIDE */
+  white-space: pre-wrap; /* THEMER: HIDE */
+  background-color: transparent; /* THEMER: HIDE */
+  border: 0; /* THEMER: HIDE */
+}
+
+.pre-scrollable {
+  max-height: 340px; /* THEMER: HIDE */
+  overflow-y: scroll; /* THEMER: HIDE */
+}
+
+hr {
+  margin: 20px 0; /* THEMER: HIDE */
+  border: 0; /* THEMER: HIDE */
+  border-top: 1px solid #eeeeee; /* THEMER: HIDE */
+  border-bottom: 1px solid #ffffff; /* THEMER: HIDE */
+}

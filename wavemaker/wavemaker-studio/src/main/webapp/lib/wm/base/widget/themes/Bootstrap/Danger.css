@@ -1,0 +1,99 @@
+/* GROUP: Standard Button */
+/* dijitReset needed for popupButton */
+.Bootstrap .Danger.wmbutton,
+.Bootstrap button.Danger.wmbutton, /* mostly to clobber .dj_ie .Danger.wmbutton in default/theme.css */
+.Bootstrap .Danger.wmbutton .dijitReset {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+	font-weight: normal;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-align: center;
+}
+.Bootstrap .Danger.wmbutton {
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    background-color: #da4f49;
+	background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+    background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+    background-repeat: repeat-x;
+    border: 1px solid;
+    border-color: #bd362f #bd362f #802420;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    cursor: pointer;
+}
+
+/* GROUP: Hover State */
+ .Bootstrap   .Danger.wmbutton:hover {
+    color: #ffffff;
+	font-weight: normal;
+/* 	box-shadow: 0px 0px 0px black; // THEMER: DISABLED */
+/* 	-webkit-box-shadow: 0px 0px 0px black; // THEMER: DISABLED */
+    background-color: #bd362f;
+	background-image: none;
+	filter: none;
+    background-position: 0 -15px;
+    -webkit-transition: background-position 0.1s linear; /* THEMER: HIDE */
+     -moz-transition: background-position 0.1s linear; /* THEMER: HIDE */
+       -o-transition: background-position 0.1s linear; /* THEMER: HIDE */
+          transition: background-position 0.1s linear; /* THEMER: HIDE */
+}
+
+
+/* GROUP: Active State */
+/* button.Danger.wmbutton required instead of .Danger.wmbutton for IE8 */
+.Bootstrap   button.Danger.wmbutton.toggleButtonDown,
+.Bootstrap   .Danger.wmbutton.Active,
+.Bootstrap   .Danger.wmbutton.Active:hover,
+.Bootstrap   .Danger.wmbutton:active,
+.Bootstrap   .Danger.wmbutton:hover:active {
+    color: #ffffff;
+	font-weight: normal;
+/* 	box-shadow: 4px 4px 4px black; // THEMER: DISABLED */
+/* 	-webkit-box-shadow: 4px 4px 4px black; // THEMER: DISABLED */
+	background-color: #942a25 \9;
+	background-image: none;
+	filter: none;
+    outline: 0;
+    -webkit-transition: background-position 0.1s linear; /* THEMER: HIDE */
+     -moz-transition: background-position 0.1s linear; /* THEMER: HIDE */
+       -o-transition: background-position 0.1s linear; /* THEMER: HIDE */
+          transition: background-position 0.1s linear; /* THEMER: HIDE */
+    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+       -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* GROUP: Focus State */
+/* NOTE: This occurs when the user tabs to the button.
+  It may also occur when the user clicks the button */
+.Bootstrap   .Danger.wmbutton:focus {
+    outline: thin dotted #333;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+/* GROUP: Disabled State */
+.Bootstrap   .Danger.wmbutton:disabled {
+  cursor: default;
+  background-image: none;
+  opacity: 0.65; /* THEMER: HIDE */
+  filter: alpha(opacity=65); /* THEMER: HIDE */
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+/* GROUP: Popup Menu */
+.Bootstrap .Danger.wmbutton.wmPopupButton .popupIcon {
+/* background-image: url(lib/wm/base/widget/themes/wm_default/images/comboArrowDownDark.png); // THEMER: DISABLED */
+/* background-position: 0% 50%; // THEMER: DISABLED */
+}

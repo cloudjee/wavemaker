@@ -1,0 +1,9 @@
+{
+	button1: ["wm.Button", {caption: "Button"}],
+	toggleButton1: ["wm.ToggleButton", {captionUp: "Off", captionDown: "On"}],
+	popupMenuButton1: ["wm.PopupMenuButton", {caption: "Popup",
+		"fullStructure":[{"label":"File","children":[{"label":"Popup Button"},{"label":"Close"}]},
+						 {"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},
+						 {"label":"Help"}
+						]}]
+}

@@ -1,0 +1,6 @@
+{
+  button1: ["wm.Button", {caption: "Success"}],
+  button2: ["wm.Button", {caption: "Warn"}],
+  button3: ["wm.Button", {caption: "Error"}],
+  button4: ["wm.Button", {caption: "Info"}]
+}

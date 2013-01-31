@@ -1,0 +1,52 @@
+/* GROUP: Links */
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .wmlabel > .wmSizeNode a, /* THEMER: REMOVE LINE */ /* Theme designer needs to override studio's stylesheet, but running app does not need this */
+.Bootstrap .wmapproot a,
+.Bootstrap  #wavemakerNode  .wmapproot a,
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .wmlabel > .wmSizeNode a:visited, /* THEMER: REMOVE LINE */ /* Theme designer needs to override studio's stylesheet, but running app does not need this */
+#studio_designer.Bootstrap .wmapproot a:visited,
+.Bootstrap  #wavemakerNode  .wmapproot a:visited {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+	color: #0088cc;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+/* GROUP: Visited */
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .wmlabel > .wmSizeNode a:visited, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot a:visited {
+	color: #0088cc;
+  text-decoration: none;
+}
+
+/* GROUP: Hover */
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .wmlabel > .wmSizeNode a:hover, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot a:hover,
+.Bootstrap  #wavemakerNode  .wmapproot a:hover:visited {
+	color: #005580;
+  text-decoration:underline;
+}
+
+/* GROUP: Links being Clicked */
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .wmlabel > .wmSizeNode a:active, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot a:active,
+.Bootstrap  #wavemakerNode  .wmapproot a:hover:active,
+.Bootstrap  #wavemakerNode  .wmapproot a:hover:visited:active {
+	color: #005580;
+	text-decoration: underline;
+}
+
+/* GROUP: Disabled Links */
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .Disabled.wmlabel > .wmSizeNode a, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot .Disabled a,
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .Disabled.wmlabel > .wmSizeNode a:hover, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot .Disabled a:hover,
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .Disabled.wmlabel > .wmSizeNode a:active, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot .Disabled a:active,
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .Disabled.wmlabel > .wmSizeNode a:hover:active, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot .Disabled a:hover:active,
+.Bootstrap .wmapproot.WidgetThemerPage-demoPanelWithAppRoot > div > .Disabled.wmlabel > .wmSizeNode a:hover:visited:active, /* THEMER: REMOVE LINE */
+.Bootstrap  #wavemakerNode  .wmapproot .Disabled a:hover:visited:active {
+  color: #999999;
+  text-decoration: none;
+}

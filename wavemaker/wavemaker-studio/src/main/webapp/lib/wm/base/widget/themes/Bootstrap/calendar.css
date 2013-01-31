@@ -1,0 +1,91 @@
+/* GROUP: Calendar Cells */
+.Bootstrap .dijitCalendarDayLabel,
+.Bootstrap .dijitCalendarDateLabel {
+    	font-size: 12px;
+}
+
+.Bootstrap table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+	background-color: #ffffff !important;
+	background-image: none !important;
+	filter: none !important;
+	color: #333333;
+}
+
+.Bootstrap .dijitCalendarBodyContainer td {
+	border: solid 1px #e6e6e6;
+}
+
+/* GROUP: Selected Cell */
+.Bootstrap .dijitCalendarContainer td.dijitCalendarSelectedDate,
+.Bootstrap .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth {
+	background-color: #b3e0ff !important;
+	background-image: none !important;
+	filter: none !important;
+	color: #333333 !important;
+}
+
+/* GROUP: Hover Cell */
+.Bootstrap .dijitCalendarContainer td.dijitCalendarHoveredDate,
+.Bootstrap .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
+.Bootstrap .dijitCalendarContainer .dijitCalendarHoveredYear,
+.Bootstrap .dijitCalendarContainer .dijitCalendarNextYear:hover,
+.Bootstrap .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
+	background-color: #d1ecff !important;
+	background-image: none !important;
+	filter: none !important;
+	color: #333333;
+}
+
+
+/* GROUP: Dates Not In Month */
+.Bootstrap .dijitCalendarContainer .dijitCalendarPreviousMonth,
+.Bootstrap .dijitCalendarContainer .dijitCalendarNextMonth {
+	background-color: #f5f5f5 !important;
+	background-image: none !important;
+	filter: none !important;
+	color: #666666;
+    font-weight: normal;
+}
+
+/* GROUP: Column Headings */
+.Bootstrap .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
+	background-color: #e6e6e6 !important;
+	background-image: none !important;
+	filter: none !important;
+	color: #333333;
+}
+
+/* GROUP: Header */
+.Bootstrap tr.dijitCalendarMonthContainer th {    
+	background-image: -webkit-gradient(linear, center top, center bottom, from(#ffffff), color-stop(NaN%,#f2f2f2), to(#f2f2f2));
+	background-image: -moz-linear-gradient(top, #ffffff 0%,#f2f2f2 NaN%,#f2f2f2 100%);
+	background-image: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 NaN%,#f2f2f2 100%);
+	background-image: -ms-linear-gradient(top, #ffffff 0%,#f2f2f2 NaN%,#f2f2f2 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0);
+}
+
+/* GROUP: Month Container */
+.Bootstrap tr.dijitCalendarMonthContainer th {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	color: #333333;
+	font-weight: normal;
+}
+
+/* GROUP: Month Label */
+.Bootstrap tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #333333;
+	font-weight: bold;
+    border: solid 0px rgb(251, 251, 251); /* THEMER: HIDE */
+    box-shadow: 0px 0px 0px black; /* THEMER: HIDE */
+}
+
+/* GROUP: Outer Widget */
+.Bootstrap table.dijitCalendarContainer {
+	border: solid 1px #e6e6e6;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+

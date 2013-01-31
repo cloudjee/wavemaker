@@ -1,0 +1,102 @@
+/* GROUP: Menu Bar Styling */
+.Bootstrap .dojoMenu .dijitMenu,
+.Bootstrap .dojoMenu .dijitMenuBar,
+.Bootstrap .dojoMenu .dijitMenuItem {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px; 
+	font-weight: normal;
+	color: #333333;
+
+  background-color: #ffffff; /* THEMER: HIDE */
+  background-image: none; /* THEMER: HIDE */
+}
+
+.Bootstrap .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px;
+}
+
+/* GROUP: Menu Bar Hover */
+.Bootstrap .dojoMenu .dijitMenuItem.dijitMenuItemHover {
+	color: #ffffff;
+	filter: none;
+	outline: 0px;
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #0081c2;
+    background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+    background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+    background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
+
+/* GROUP: Menu Bar Select */
+.Bootstrap .dojoMenu .dijitMenuItem.dijitMenuItemSelected {
+	filter: none;
+    outline: 0px;
+	color: #ffffff;
+    text-decoration: none;
+    background-color: #0081c2;
+    background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+    background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+    background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
+
+/* GROUP: Horizontal Menu Bar Icon */
+.Bootstrap div.dijitMenuBar div.dijitMenuItem {
+   background-image: url(images/comboArrowDownDark.png) !important; 
+   background-position: 90% 50% !important;
+   background-repeat: no-repeat !important;
+	padding-right: 18px !important;
+}
+
+/* GROUP: Popup Menu Box */
+.Bootstrap .dijitMenuPopup .dijitMenuTable {
+	
+}
+.Bootstrap .dijitMenuPopup {
+    margin: 2px 0 0;
+	list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	-webkit-background-clip: padding-box; /* THEMER: HIDE */
+	-moz-background-clip: padding; /* THEMER: HIDE */
+	background-clip: padding-box; /* THEMER: HIDE */
+}
+
+/* GROUP: Popup Menu Item */
+.Bootstrap .dijitPopup .dijitMenuTable .dijitMenuItem {
+	font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+	color: #333333;
+	font-weight: normal;
+	background-color: #ffffff; /* THEMER: IGNORE */
+	background-image: none; /* THEMER: IGNORE */
+	filter: none; /* THEMER: IGNORE */
+	border: solid 0px #ffffff;
+}
+
+/* GROUP: Popup Menu Item Hover/Selected */
+/* NOTE: There is no good way with dojo menus to distinguish between hover and select */
+.Bootstrap .dijitPopup .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemFocused,
+.Bootstrap .dijitPopup .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected {
+    color: #FFFFFF;
+	background-image: -webkit-gradient(linear, center top, center bottom, from(#0088cc), color-stop(50%,#0077b3), to(#0077b3));
+	background-image: -moz-linear-gradient(top, #0088cc 0%,#0077b3 50%,#0077b3 100%);
+	background-image: -o-linear-gradient(top, #0088cc 0%,#0077b3 50%,#0077b3 100%);
+	background-image: -ms-linear-gradient(top, #0088cc 0%,#0077b3 50%,#0077b3 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0088cc', endColorstr='#0077b3',GradientType=0);
+    outline-width: 0;
+}
+

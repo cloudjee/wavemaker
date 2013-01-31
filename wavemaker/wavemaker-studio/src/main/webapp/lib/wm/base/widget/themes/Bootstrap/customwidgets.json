@@ -1,0 +1,102 @@
+[
+	{
+		"name": "Custom Widgets", 
+		"category": true
+	}, 
+	{
+		"name": "Primary", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		], 
+		"customProps": {
+			"width": "100px", 
+			"borderColor": "#0044cc"
+		}
+	}, 
+	{
+		"name": "Danger", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		], 
+		"customProps": {
+			"padding": "4,12", 
+			"desktopHeight": "30px", 
+			"borderColor": "#bd362f"
+		}
+	}, 
+	{
+		"name": "Warning", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		], 
+		"customProps": {
+			"borderColor": "#f89406"
+		}
+	}, 
+	{
+		"name": "Success", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		], 
+		"customProps": {
+			"borderColor": "#51a351"
+		}
+	}, 
+	{
+		"name": "Info", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		], 
+		"customProps": {
+			"borderColor": "#2f96b4"
+		}
+	}, 
+	{
+		"name": "Inverse", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		], 
+		"customProps": {
+			"borderColor": "#222222"
+		}
+	}, 
+	{
+		"name": "Striped", 
+		"parentName": "Grids", 
+		"classList": [
+			{
+				"dataValue": "wm.DojoGrid"
+			}, 
+			{
+				"dataValue": "wm.List"
+			}
+		]
+	}, 
+	{
+		"name": "SubmitButton", 
+		"parentName": "Buttons", 
+		"classList": [
+			{
+				"dataValue": "wm.Button"
+			}
+		]
+	}
+]

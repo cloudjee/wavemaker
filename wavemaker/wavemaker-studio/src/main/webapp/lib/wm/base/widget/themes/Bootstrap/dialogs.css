@@ -1,0 +1,57 @@
+/* GROUP: Dialog Frame */
+.Bootstrap .wmdialog {
+	border-radius: 6px;
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+         -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+              box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        -webkit-background-clip: padding-box; /* THEMER: HIDE */
+           -moz-background-clip: padding-box; /* THEMER: HIDE */
+                background-clip: padding-box; /* THEMER: HIDE */
+    background-color: #ffffff;
+    border: 1px solid #999;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/* GROUP: Dialog Container */
+.Bootstrap .wmdialog {
+    background-color: white;
+    background-image: none;
+    filter: none;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+	color: #333333;
+	font-weight: normal;
+}
+
+/* GROUP: Dialog Titlebar */
+.Bootstrap .dialogtitlebar .wmlabel{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 24px;
+	color: #333333;
+	font-weight: bold;
+}
+
+.Bootstrap .dialogtitlebar {
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+	border-top: solid 0px rgb(251, 251, 251);
+	border-right: solid 0px rgb(251, 251, 251);
+	border-bottom: solid 1px #eeeeee;
+	border-left: solid 0px rgb(251, 251, 251);
+	height: 40px;
+}
+
+/* GROUP: Titlebar Buttons: Close Button */
+.Bootstrap .dialogtitlebar .dialogclosebutton {
+     background: url(images/images_portlet_close_down.png) no-repeat 0% 50%;
+}
+
+/* GROUP: Titlebar Buttons: Minify Button */
+.Bootstrap .dialogtitlebar .dialogminifybutton {
+     background: url(images/images_portlet_minimize.png) no-repeat 0px 50%;
+}
+/* GROUP: Titlebar Buttons: Maxify Button */
+.Bootstrap .dialogtitlebar .dialogmaxifybutton {
+     background: url(images/images_portlet_maximize.png) no-repeat 0% 50%;
+}

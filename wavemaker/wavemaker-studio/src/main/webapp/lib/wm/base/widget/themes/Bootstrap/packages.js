@@ -1,0 +1,9 @@
+['Theme Widgets','Primary<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"width":"100px","borderColor":"#0044cc","_classes":{"domNode":["Primary"]}}],
+['Theme Widgets','Danger<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"padding":"4,12","desktopHeight":"30px","borderColor":"#bd362f","_classes":{"domNode":["Danger"]}}],
+['Theme Widgets','Warning<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"borderColor":"#f89406","_classes":{"domNode":["Warning"]}}],
+['Theme Widgets','Success<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"borderColor":"#51a351","_classes":{"domNode":["Success"]}}],
+['Theme Widgets','Info<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"borderColor":"#2f96b4","_classes":{"domNode":["Info"]}}],
+['Theme Widgets','Inverse<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"borderColor":"#222222","_classes":{"domNode":["Inverse"]}}],
+['Theme Widgets','Striped<span class="ThemeSubclassName">Grid</span>','wm.DojoGrid','wm.base.widget.DojoGrid','Studio_paletteImageList_8','',{"_classes":{"domNode":["Striped"]}}],
+['Theme Widgets','Striped<span class="ThemeSubclassName">List</span>','wm.List','wm.base.widget.DojoGrid','Studio_paletteImageList_8','',{"_classes":{"domNode":["Striped"]}}],
+['Theme Widgets','SubmitButton<span class="ThemeSubclassName">Button</span>','wm.Button','wm.base.widget.Buttons.Button','Studio_paletteImageList_4','',{"_classes":{"domNode":["SubmitButton"]}}]

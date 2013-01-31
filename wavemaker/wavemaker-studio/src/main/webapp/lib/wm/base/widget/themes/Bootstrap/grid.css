@@ -1,0 +1,181 @@
+/* GROUP: Grid Rows */
+.Bootstrap div.dojoxGrid, 
+.Bootstrap .wmlist {
+	font-size: 14px;
+}
+
+.Bootstrap .GridListStyle  .wmlist-cell,
+.Bootstrap td.dojoxGridCell {
+	border-top: solid 0px rgb(153, 153, 153);
+	border-right: solid 0px rgb(230, 230, 230);
+	border-bottom: solid 1px #e6e6e6;
+	border-left: solid 0px rgb(251, 251, 251);
+}
+
+.Bootstrap div.dojoxGridRow,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOver,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOver td.dojoxGridCell,
+.Bootstrap .GridListStyle div.wmlist-item,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.wmlist-item-over  {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    line-height: 36px;
+}
+
+.Bootstrap div.dojoxGridContent .dojoxGridCell {
+   background-color: transparent; /* THEMER: HIDE */
+}
+
+.Bootstrap div.dojoxGridContent .dojoxGridCellFocus,
+.Bootstrap div.dojoxGridContent .dojoxGrid-cell-focus {
+   border: 1px dashed transparent !important; /* THEMER: HIDE */
+}
+
+
+/* GROUP: Odd Numbered Rows */
+.Bootstrap div.dojoxGridRow,
+.Bootstrap .GridListStyle div.wmlist-item,
+
+/* Disabled grid rows */
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOver,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowSelected,
+.Bootstrap .Disabled .dojoxGridRowOver td.dojoxGridCell,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.wmlist-item-over,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.wmlist-item-selected,
+
+/* Disabled odd    rows */
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-selected   {
+	color: #333333;
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+}
+
+
+/* GROUP: Even Numbered Rows */
+.Bootstrap div.dojoxGrid-row.dojoxGrid-row-odd,
+.Bootstrap div.dojoxGridRow.dojoxGridRowOdd,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+.Bootstrap .Disabled div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver td.dojoxGridCell,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-over,
+.Bootstrap .GridListStyle.Disabled div.wmlist-item.Odd.wmlist-item-selected,
+.Bootstrap .GridListStyle .wmlist-item.Odd {
+	color: #333333;
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+}
+
+/* GROUP: Selected Row */
+.Bootstrap .dojoxGridRow.dojoxGridRowSelected,
+.Bootstrap .Disabled .dojoxGridRow.dojoxGridRowSelected,
+.Bootstrap .dojoxGridRow.dojoxGridRowSelected td.dojoxGridCell,
+.Bootstrap .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+.Bootstrap .dojoxGridRow.dojoxGridRowOver.dojoxGridRowSelected,
+.Bootstrap .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver.dojoxGridRowSelected,
+.Bootstrap .GridListStyle .wmlist-item.wmlist-item-selected,
+.Bootstrap .Disabled.GridListStyle .wmlist-item.wmlist-item-selected,
+.Bootstrap .GridListStyle .wmlist-item.wmlist-item-selected.wmlist-item-over {
+	background-color: #b3e0ff;
+	background-image: none;
+	filter: none;
+	color: #333333;
+}
+
+/* GROUP: Hover row */
+.Bootstrap .GridListStyle .wmlist-item.wmlist-item-over,
+.Bootstrap .dojoxGridRow.dojoxGridRowOver,
+.Bootstrap .dojoxGridRow.dojoxGridRowOdd.dojoxGridRowOver,
+.Bootstrap .dojoxGridRowOver a,
+.Bootstrap .dojoxGridRowOver td.dojoxGridCell {
+	background-color: #d1ecff;
+	background-image: none;
+	filter: none;
+	color: #333333;
+}
+
+/* GROUP: Grid Header */
+.Bootstrap .wmlist-header th,
+.Bootstrap .wmNoFontSize div.dojoxGridHeader .dojoxGridCell {
+	font-size: 14px;
+    vertical-align: middle; 
+}
+
+.Bootstrap .wmlist-header .wmlist-cell,
+.Bootstrap div.dojoxGridHeader .dojoxGridCell {
+	border-top: solid 0px rgb(251, 251, 251);
+	border-right: solid 0px rgb(216, 216, 216);
+	border-bottom: solid 1px #e6e6e6;
+	border-left: solid 0px rgb(251, 251, 251);
+	height: 24px;
+}
+
+
+
+.Bootstrap .wmlist-header,
+.Bootstrap div.dojoxGridHeader {
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+}
+.Bootstrap .wmlist-header th,
+.Bootstrap div.dojoxGridHeader th.dojoxGridCell,
+.Bootstrap div.dojoxGridHeader th.dojoxGridCell.dojoxGridCellOver {	
+  background: transparent none !important; /* THEMER: HIDE */
+
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #333333;
+	font-weight: bold;
+}
+
+/* GROUP: Selected Cell */
+.Bootstrap .dojoxGridCellFocus {
+    outline: solid 0px #ae0909;
+    outline-offset: -1px; /* Change this to match outline width (but negative). Not supported by IE */ /* THEMER: HIDE */
+}
+
+
+/* GROUP: Mobile List */
+.Bootstrap .MobileListStyle div.wmlist-item,
+.Bootstrap .Disabled.MobileListStyle div.wmlist-item,
+.Bootstrap .Disabled.MobileListStyle div.wmlist-item.wmlist-item-over {
+   border-radius: 4px;
+	margin: 4px;
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+	color: #333333;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	min-height: 36px;
+    line-height: 36px;
+    vertical-align: middle;
+    border: solid 1px #e6e6e6;
+}
+
+.Bootstrap .wmlist.MobileListStyle td.wmlist-cell {
+	border: solid 0px #ffffff;
+}
+
+/* GROUP: Mobile List Hover (Desktop only!) */
+.Bootstrap .MobileListStyle div.wmlist-item.wmlist-item-over,
+.Bootstrap .MobileListStyle div.wmlist-item.Odd.wmlist-item-over {
+	background-color: #d1ecff;
+	background-image: none;
+	filter: none;
+	color: #333333;
+}
+
+/* GROUP: Mobile List Selected Row */
+.Bootstrap .MobileListStyle div.wmlist-item.wmlist-item-selected,
+.Bootstrap .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected,
+.Bootstrap .MobileListStyle div.wmlist-item.wmlist-item-selected.wmlist-item-over,
+.Bootstrap .MobileListStyle div.wmlist-item.Odd.wmlist-item-selected.wmlist-item-over {
+	background-color: #b3e0ff;
+	background-image: none;
+	filter: none;
+	color: #333333;
+}

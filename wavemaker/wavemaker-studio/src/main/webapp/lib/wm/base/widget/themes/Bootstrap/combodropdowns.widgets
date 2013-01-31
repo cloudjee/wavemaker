@@ -1,0 +1,3 @@
+{
+selectEditor: ["wm.SelectMenu", {options: "Gandalf the Grey,Came out of the closet,He's really a hobit,but too tall,to live in a hobit hole", width: "100%", caption: "Select", captionSize: "80px"}]
+}

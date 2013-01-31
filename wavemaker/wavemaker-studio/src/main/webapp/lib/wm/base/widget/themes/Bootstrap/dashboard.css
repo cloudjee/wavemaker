@@ -1,0 +1,69 @@
+/* GROUP: Portlet Titlebar */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	min-height: 30px;
+	line-height: 30px;
+    padding-left: 10px;
+}
+
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle .dijitTitlePaneTextNode {
+    color: #333333;
+}
+
+.Bootstrap .dojoxPortlet {
+	border: solid 1px #e6e6e6;
+	border-radius: 4px 4px 0px 0px;
+	-webkit-border-radius: 4px 4px 0px 0px;
+}
+
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle {
+	background-color: #f5f5f5;
+	background-image: none;
+	filter: none;
+}
+
+/* GROUP: Portlet Titlebar Icons */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon {
+	border: solid 0px #e6e6e6;
+    width: 16px;
+    height: 20px;
+    margin-right: 4px;
+}
+
+/* GROUP: Portlet Close Icon */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxCloseNode {
+	background: url(images/images_portlet_close_down.png) no-repeat 0px 0px;
+    position: relative;
+    top: 8px;
+    height: 16px;
+}
+/* GROUP: Portlet Close Icon Hover */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxCloseNode:hover {
+/* background-position: 0px -16px; // THEMER: DISABLED */
+}
+
+/* GROUP: Portlet Minify Icon */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxArrowDown {
+	background: url(images/images_portlet_minimize.png) no-repeat 0px 0px;
+    position: relative;
+	top: 8px;
+    height: 16px;
+}
+
+/* GROUP: Portlet Minify Icon Hover */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle .dojoxPortletIcon.dojoxArrowDown:hover {
+/*  background-position: -16px -16px; // THEMER: DISABLED */
+}
+
+/* GROUP: Portlet Unminify Icon */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle.dijitClosed .dojoxPortletIcon.dojoxArrowDown {
+    background-image: url(images/DialogIconsGray.png);
+    background-position: -32px 0px;
+}
+
+/* GROUP: Portlet Unminify Icon Hover */
+.Bootstrap .dojoxPortlet div.dijitTitlePaneTitle.dijitClosed .dojoxPortletIcon.dojoxArrowDown:hover {
+/*  background-position: -16px -16px; // THEMER: DISABLED */
+}

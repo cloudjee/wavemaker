@@ -1,0 +1,13 @@
+{
+	text1: ["wm.Text", {caption: "Text", width: "100%", dataValue: "Sample"}],
+	largeText1: ["wm.LargeTextArea", {caption: "LargeText", width: "100%", height: "60px", dataValue: "Sample"}],
+	number1: ["wm.Number", {caption: "Number", width: "100%", dataValue: 1234567890, spinnerButtons:true}],
+	currency1:["wm.Currency", {caption: "Currency", width: "100%", dataValue: "1234567890"}],
+	select1:["wm.SelectMenu", {caption: "Select", width: "100%", options: "Text,Number,Currency,Select,Date", dataValue: "Select"}],
+	datetime1:["wm.DateTime", {caption: "DateTime", width: "100%", dataValue: 1234567890}],
+	checkbox1: ["wm.Checkbox", {caption: "Checkbox", width: "100%"}],
+	radio1: ["wm.RadioButton", {caption: "Radio", width: "100%",group: "Sample", checkedValue:1}],
+	radio2: ["wm.RadioButton", {caption: "Radio", width: "100%",group: "Sample", checkedValue:2}],
+	slider: ["wm.Slider", {caption: "Slider", width: "100%", dataValue: 50}],
+	readonly: ["wm.Text", {caption: "Text", width: "100%", dataValue: "Sample", readonly:1}]
+}

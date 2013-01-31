@@ -1,0 +1,168 @@
+/* GROUP: Standard Tab Button */
+.Bootstrap .wmtablayers-tab,
+.Bootstrap button.wmtablayers-verticaltab {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;;
+	color: rgb(0, 136, 204);
+	font-weight: normal;
+	font-size: 14px;
+	background-color: transparent;
+	background-image: none;
+	filter: none;
+}
+.Bootstrap .wmtablayers-tab {
+
+	height: 36px;
+	margin-left: 8px;
+	border-radius: 4px 4px 0px 0px;
+	-webkit-border-radius: 4px 4px 0px 0px;
+	box-shadow: 0px 0px 0px #ffffff;
+	-webkit-box-shadow: 0px 0px 0px #ffffff;
+
+	border: solid 0px rgb(148, 148, 148);
+	top: 2px !important;
+    padding-right: 12px;
+    padding-left: 12px;
+    margin-right: 2px;
+    line-height: 14px;
+}
+.dj_ff .Bootstrap .wmtablayers-tab {
+       box-shadow: 0 0 0 black !important; /* THEMER: HIDE */
+}
+/* GROUP: First Tab */
+.Bootstrap .wmtablayers-tab:first-child {
+	margin-left: 8px;
+}
+
+
+/* GROUP: Standard Selected Tab Button */
+.Bootstrap .wmtablayers-verticaltab.wmtablayers-selected,
+.Bootstrap .wmtablayers-verticaltab.wmtablayers-selected:hover,
+.Bootstrap .wmtablayers-tab.wmtablayers-selected,
+.Bootstrap .wmtablayers-tab.wmtablayers-selected:hover {
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+    color:#555555;
+}
+.Bootstrap .wmtablayers-tab.wmtablayers-selected,
+.Bootstrap .wmtablayers-tab.wmtablayers-selected:hover {
+/* 	box-shadow: -1px 1px 1px #444444; // THEMER: DISABLED */
+/* 	-webkit-box-shadow: -1px 1px 1px #444444; // THEMER: DISABLED */
+	top: 2px;
+    /* NOTE: To create different values of top for different browsers, use
+     .dj_ie .Bootstrap .wmtablayers-tab.wmtablayers-selected, 
+     .dj_ff .Bootstrap .wmtablayers-tab.wmtablayers-selected,
+     .dj_webkit .Bootstrap .wmtablayers-tab.wmtablayers-selected */
+	border-top: solid 1px #cfcfcf;
+	border-right: solid 1px #cfcfcf;
+	border-bottom: solid 0px #ffffff;
+	border-left: solid 1px #cfcfcf;
+}
+
+/* GROUP: Tab Button with Focus */
+.Bootstrap .wmtablayers-verticaltab:focus,
+.Bootstrap .wmtablayers-tab:focus {
+/* 	outline: solid 0px ; // THEMER: DISABLED */
+}
+
+/* GROUP: Tab Button with Hover */
+.Bootstrap .wmtablayers-tab:hover,
+.Bootstrap .wmtablayers-verticaltab:hover {
+	color: rgb(0,85,128);
+	background-color: #eeeeee;
+	background-image: none;
+	filter: none;
+}
+.Bootstrap .wmtablayers-tab:hover {
+	box-shadow: 0px 0px 0px;
+	-webkit-box-shadow: 0px 0px 0px;
+	top: 2px !important;
+}
+
+/* GROUP: Tab Button with Mouse Down */
+/* NOTE: This does not appear to work in firefox at design time but is fine at runtime */
+.Bootstrap .wmtablayers-tab:active,
+.Bootstrap .wmtablayers-verticaltab:active,
+.Bootstrap .wmtablayers-tab:active:.focus,
+.Bootstrap .wmtablayers-verticaltab:active:focus {
+	color: #555555;
+/* 	background-color: rgb(255, 255, 255); // THEMER: DISABLED */
+/* 	background-image: none; // THEMER: DISABLED */
+/* 	filter: none; // THEMER: DISABLED */
+}
+.Bootstrap .wmtablayers-tab:active,
+.Bootstrap .wmtablayers-tab:active:focus {
+	box-shadow: 0px 0px 0px #444444;
+	-webkit-box-shadow: 0px 0px 0px #444444;
+	top: 2px !important;
+}
+
+
+/* GROUP: Layer Borders */
+.Bootstrap  .wmTabLayers-client > .wmlayer {
+	border-radius: 0px !important;
+	-webkit-border-radius: 0px !important;
+}
+
+/* GROUP: Tab Bar */
+.Bootstrap div.wmtablayers-tabbar {
+	background-color: #ffffff;
+	background-image: none;
+	filter: none;
+	border-top: solid 0px rgb(255, 255, 255);
+	border-right: solid 0px rgb(255, 255, 255);
+	border-bottom: solid 1px rgb(207, 207, 207);
+	border-left: solid 0px rgb(255, 255, 255);
+}
+
+
+
+/* GROUP: Vertical Tab Buttons */
+.Bootstrap button.wmtablayers-verticaltab {
+	font-size: 14px;
+	font-weight: normal;
+	width: 95%;
+    margin-left: 5%;
+    margin-bottom: 5px;
+    border-bottom-left-radius: 4px; 
+    border-top-left-radius: 4px; 
+	border: solid 0px #ffffff;
+	box-shadow: 0px 0px 0px #ffffff;
+	-webkit-box-shadow: 0px 0px 0px #ffffff;
+	left: 0;
+    padding: 8px 0 8px 0;
+
+}
+
+/* GROUP: First Vertical Tab */
+.Bootstrap .wmtablayers-verticaltab:first-child {
+	margin-top: 8px;
+}
+
+/* GROUP: Vertical Tab Buttons with Hover */
+.Bootstrap .wmtablayers-verticaltab:hover {
+	box-shadow: 0px 0px 0px;
+	-webkit-box-shadow: 0px 0px 0px;
+	left: 0;
+
+}
+
+/* GROUP: Vertical Selected Tab Buttons */
+.Bootstrap .wmtablayers-verticaltab.wmtablayers-selected {
+	box-shadow: 0px 0px 0px;
+	-webkit-box-shadow: 0px 0px 0px;
+    border-top: solid 1px #cfcfcf;
+	border-right: solid 0px #ffffff;
+	border-bottom: solid 1px #cfcfcf;
+	border-left: solid 1px #cfcfcf;
+	left: 0;
+}
+
+/* GROUP: Vertical Tab with Mouse Down */
+.Bootstrap .wmtablayers-verticaltab:active,
+.Bootstrap .wmtablayers-verticaltab:active:focus {
+	box-shadow: 0px 0px 0px ;
+	-webkit-box-shadow: 0px 0px 0px ;
+	left: 0;
+
+}
