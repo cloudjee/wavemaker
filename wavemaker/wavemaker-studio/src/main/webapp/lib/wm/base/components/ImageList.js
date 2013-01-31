@@ -60,41 +60,37 @@ dojo.declare("wm.ImageList", wm.Component, {
 	setCss(style, text);
     },
     destroy: function() {
-	dojo.destroy(this.domNode);
-	this.inherited(arguments);
+        dojo.destroy(this.domNode);
+        this.inherited(arguments);
     },
     getImageClass: function(inIndex) {
-	var id = "";
-	if (this.owner instanceof wm.Application) {
-	    id += "app";
-	} else if (this.isDesignLoaded() && this.owner == studio.page) {
-	    id += studio.project.pageName;  // pageName: "Main"
-	} else if (this.owner instanceof wm.Page) {
-	    id += this.owner.declaredClass; // name: "main", declaredClass: "Main"; don't use name
-	} else {
-	    id += this.owner.getRuntimeId().replace(/\./g,"_");
-	}
-	id += "_" + this.name;
-	if (inIndex == undefined)
-	    return id;
-	else 
-	    return id + "_" + inIndex;
+        var id = "";
+        if (this.owner instanceof wm.Application) {
+            id += "app";
+        } else if (this.isDesignLoaded() && this.owner == studio.page) {
+            id += studio.project.pageName; // pageName: "Main"
+        } else if (this.owner instanceof wm.Page) {
+            id += this.owner.declaredClass; // name: "main", declaredClass: "Main"; don't use name
+        } else {
+            id += this.owner.getRuntimeId().replace(/\./g, "_");
+        }
+        id += "_" + this.name;
+        if (inIndex == undefined) return id;
+        else return id + "_" + inIndex;
     },
 	getImageHtml: function(inIndex) {
-		var col = inIndex % this.colCount;
-		var row = Math.floor(inIndex / this.colCount);
-	        var url = this.url;
-	        if (this.url.indexOf("lib/") == 0) 
-		    url = dojo.moduleUrl("lib").path.replace(/lib\/$/, "") + url;
-	        else if(this.isDesignLoaded() && this.owner != studio) {
-		    url = "/" + studio.projectPrefix + studio.project.getProjectPath() + "/" + url;
-		}
-		return '<image src="' + wm.theme.getImagesPath() + 'blank.gif"' +
-		        ' width="' + this.width  + '"' + 
-			' height="' + this.height + '"' + 
-			' style="' +
-			'vertical-align: middle; ' + 
-		        'background:url(' + url + ') no-repeat ' + (-this.width * col) + 'px ' + (-this.height * row) + 'px;"' +
-			'>';
-	}    
+	    var col = inIndex % this.colCount;
+	    var row = Math.floor(inIndex / this.colCount);
+	    var url = this.url;
+	    if (this.url.indexOf("lib/") == 0) {
+	       url = dojo.moduleUrl("lib").path.replace(/lib\/$/, "") + url;
+	    } else if (this.isDesignLoaded() && this.owner != studio) {
+	        if (url.match(/^resources/)) {
+	           url = "projects/" + studio.project.projectName + "/" + url;
+	        } else {
+    	        url = "/" + studio.project.getProjectPath() + "/" + url;
+    	    }
+	    }
+	    return '<image src="' + wm.theme.getImagesPath() + 'blank.gif"' + ' width="' + this.width + '"' + ' height="' + this.height + '"' + ' style="' + 'vertical-align: middle; ' + 'background:url(' + url + ') no-repeat ' + (-this.width * col) + 'px ' + (-this.height * row) + 'px;"' + '>';
+	}
 });
