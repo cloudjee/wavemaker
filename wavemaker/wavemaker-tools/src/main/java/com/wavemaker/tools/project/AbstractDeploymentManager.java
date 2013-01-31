@@ -693,7 +693,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         Project project = getProjectManager().getCurrentProject();
         Resources<?> export = project.getRootFolder().find();
         export = export.exclude(FilterOn.antPattern("/export/**", "/dist/**", "/webapproot/WEB-INF/classes/**", "/webapproot/WEB-INF/lib/**",
-            "/phonegap/**"));
+            "/phonegap/**", "/.git/**"));
         export = export.exclude(new ResourceFilter() {
 
             @Override
