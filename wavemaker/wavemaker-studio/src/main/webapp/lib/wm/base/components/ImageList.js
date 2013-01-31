@@ -86,6 +86,8 @@ dojo.declare("wm.ImageList", wm.Component, {
 	       url = dojo.moduleUrl("lib").path.replace(/lib\/$/, "") + url;
 	    } else if (this.isDesignLoaded() && this.owner != studio) {
 	        if (url.match(/^resources/)) {
+	           // loading from / studio.project.getProjectPath() is bad because on openning the project, we load these images
+	           // before the app has deployed.  Where we are sure its in the resources folder, use this shortcut instead.
 	           url = "projects/" + studio.project.projectName + "/" + url;
 	        } else {
     	        url = "/" + studio.project.getProjectPath() + "/" + url;
