@@ -563,8 +563,12 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 				     */
 				    else if (inValue instanceof Date)
 					inValue = inValue.getTime();
-				    else
-					inValue = isNaN(inValue) ? inValue : parseFloat(inValue);
+				    else {
+				    /* Copyright (C) 2013 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				     * WaveMaker: isNaN now returns null; WM-3991
+				     */
+					inValue = isNaN(inValue) || inValue === null ? null : parseFloat(inValue);
+				    }
 				}else if(typeof oldValue == 'boolean'){
 					inValue = inValue == 'true' ? true : inValue == 'false' ? false : inValue;
 				}else if(oldValue instanceof Date){

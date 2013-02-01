@@ -297,12 +297,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.cancelEdit();
     },
     cellEditted: function(inValue, inRowIndex, inFieldName) { /* Sometimes the grid cancels editing in a wierd state */
-        if (typeof inValue == "number" && isNaN(inValue)) {
-            try {
-                this.setCell(inRowIndex, inFieldName, this.getCell(inRowIndex, "_wmVariable").getValue(inFieldName));
-            } catch (e) {}
-            return;
-        } else if (inValue && typeof inValue == "object" && inValue instanceof Date === false && this.dojoObj.edit.info.cell.widget.store) {
+        debugger;
+        if (inValue && typeof inValue == "object" && inValue instanceof Date === false && this.dojoObj.edit.info.cell.widget.store) {
             /* We need to work with an object that lacks the wm.DojoStoreId because we're using dojo.toJson for comparing values */
             inValue = this.itemToJSONObject(this.dojoObj.edit.info.cell.widget.store, inValue)
             delete inValue.wmDojoStoreId;
@@ -2467,7 +2463,13 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
 
 
 dojo.declare("dojox.grid.cells.NumberTextBox", dojox.grid.cells._Widget, {
-    widgetClass: dijit.form.NumberTextBox
+    widgetClass: dijit.form.NumberTextBox,
+    apply: function(inRowIndex) {
+        var value = this.getValue(inRowIndex);
+        if (isNaN(value)) value = null;
+        this.applyEdit(value, inRowIndex);
+        this._finish(inRowIndex);
+    }    
 });
 dojox.grid.cells.NumberTextBox.markupFactory = function(node, cell) {
     dojox.grid.cells._Widget.markupFactory(node, cell);
