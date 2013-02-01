@@ -113,7 +113,8 @@ wm.Container.extend({
         var container = this.containerWidget || this;
         if(inControl.parent == container) {
             // inDropInfo.index 'i' may be counting inControl
-            container.moveControl(inControl, info.i || 0);
+            var indexInParent = inControl instanceof wm.Layer ? inControl.getIndex() : inControl.getIndexInParent();
+            container.moveControl(inControl, info.i > indexInParent ? info.i - 1 : info.i || 0);
         } else {
             var p = inControl.parent;
             inControl.setParent(container);

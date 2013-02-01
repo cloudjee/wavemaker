@@ -158,8 +158,9 @@ dojo.declare("wm.DropTask", wm.ComponentTaskMixin, {
         this.targetIds = dojo.map(inComponents, function(c) {return c.parent ? c.parent.getRuntimeId() : c.owner.getRuntimeId();});
         this.siblingIds = dojo.map(inComponents, function(c) {
             var sibling;
-            if (c.parent) {
-                sibling = c.parent.nextSibling(c);
+            var parent = (c instanceof wm.Layer) ? c.parent.client : c.parent;
+            if (parent) {
+                sibling = parent.nextSibling(c);
             }
             return  sibling ? sibling.getRuntimeId() : "";
         });

@@ -451,6 +451,7 @@ dojo.declare("wm.Layers", wm.Container, {
         if (inControl instanceof wm.Layer) {
             if (dojo.indexOf(this.layers, inControl) != -1) {
                 this.moveLayerIndex(inControl, inIndex);
+                this.client.moveControl(inControl, inControl.getIndex());
             } else {
 
             }
@@ -680,6 +681,7 @@ dojo.declare("wm.Layers", wm.Container, {
             this.setLayerIndex(p);
     },
     moveLayerIndex: function(inLayer, inIndex) {
+        if (inIndex == -1) inIndex = this.layers.length-1;
         var i = inLayer.getIndex(), inIndex = Math.max(0, Math.min(inIndex, this.getCount()-1));
         if (i == inIndex)
             return;

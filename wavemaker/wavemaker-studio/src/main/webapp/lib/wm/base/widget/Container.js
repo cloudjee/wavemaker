@@ -337,7 +337,11 @@ wm.define("wm.Container", wm.Control, {
         var i0 = this.removeControl(inControl);
        /* if (i0 < inIndex)
             inIndex--;*/
-        this.c$.splice(inIndex, 0, inControl);
+        if (inIndex == -1) {
+            this.c$.push(inControl);
+        } else {
+            this.c$.splice(inIndex, 0, inControl);
+        }
     },
     indexOfControl: function(inControl) {
         for (var i=0, c; c=this.c$[i]; i++){

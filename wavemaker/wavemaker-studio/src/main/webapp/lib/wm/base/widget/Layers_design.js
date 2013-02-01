@@ -82,14 +82,17 @@ wm.Layer.extend({
     moveLayer: function(inDelta) {
         var l = this.parent, i = this.getIndex();
         l.moveLayerIndex(this, i + inDelta);
+        l.client.moveControl(this,this.getIndex());
     },
     moveNext: function() {
+        new wm.DropTask([this]);
         this.moveLayer(1);
         studio.refreshComponentOnTree(this.parent);
         studio.select(null);
         studio.select(this);
     },
     movePrevious: function() {
+        new wm.DropTask([this]);
         this.moveLayer(-1);
         studio.refreshComponentOnTree(this.parent);
         studio.select(null);
@@ -300,6 +303,7 @@ wm.Layers.extend({
         // FIXME: need to refresh tree and select layer
         studio.refreshVisualTree();
         studio.select(l);
+        new wm.AddTask(l);
     },
     listProperties: function() {
         var props = this.inherited(arguments);

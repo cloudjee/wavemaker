@@ -110,7 +110,16 @@ dojo.declare("wm.Designer", wm.Surface, {
         // hide wrapper handles
         w.showHideHandles(false);
         // move control to target
-        var i = inNextSibling ? t.indexOfControl(inNextSibling) : t.c$.length;
+        var i;
+        if (inNextSibling) {
+            if (inControl instanceof wm.Layer) {
+                i = inNextSibling.getIndex();
+            } else {
+                i = t.indexOfControl(inNextSibling);
+            }
+        } else {
+            i = -1;
+        }
         t.designMoveControl(c, {
             i: i
         });
