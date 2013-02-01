@@ -1857,7 +1857,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         csvArray.pop(); // this pops the last comma.
         csvArray.push('\n');
     },
-    showCSVData: function(){
+    showCSVData: function(showHiddenColumns){
 /*
         if (!this.csvDialog){
             this.csvDialog = new dijit.Dialog({ title: "CSV Data for " + this.name});
@@ -1868,7 +1868,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.csvDialog.attr('content', this.toCSV());
         this.csvDialog.show();
 */
-        app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
+        app.echoFile(this.toCSV(showHiddenColumns), "text/csv", this.name + ".csv");
     },
     toHtml: function() {
         if (this._renderDojoObjSkipped) {
@@ -1959,7 +1959,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     },
 
 
-    toCSV: function(){
+    toCSV: function(showHiddenColumns){
         if (this._renderDojoObjSkipped) {
             this._renderHiddenGrid = true;
             this.renderDojoObj();
@@ -1967,7 +1967,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }
         var csvData = [];
         dojo.forEach(this.columns, function(col, idx){
-            if (!col.show)
+            if (!col.show && !showHiddenColumns || col.field == "PHONE COLUMN")
                 return;
             this.addColumnToCSV(csvData, col.title, col.formatFunc);
         }, this);
@@ -1981,20 +1981,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         var dataList = this.variable.getData();
             dojo.forEach(dataList, function(obj, rowId){
             dojo.forEach(this.columns, function(col, idx){
-                if (!col.show)
+                if (!col.show && !showHiddenColumns || col.field == "PHONE COLUMN")
                     return;
                 try {
                 var value = obj[col.field ];
                 if (!value) {
-                var value = obj;
-                var colid = col.field;
-                while(colid.indexOf(".") != -1) {
-                    var index = colid.indexOf(".");
-                    value = value[colid.substring(0,index)];
-                    colid = colid.substring(index+1);
+                    var value = obj;
+                    var colid = col.field;
+                    while(colid.indexOf(".") != -1) {
+                        var index = colid.indexOf(".");
+                        value = value[colid.substring(0,index)];
+                        colid = colid.substring(index+1);
 
-                }
-                value = value[colid];
+                    }
+                    value = value[colid];
                 }
                 if (col.expression){
                     value = this.getExpressionValue(col.expression, idx, obj, true);
