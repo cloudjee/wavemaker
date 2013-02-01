@@ -44,6 +44,11 @@ dojo.declare("ExportProjectPage", wm.Page, {
        this.variable.setData(items);
        this.includeList.setShowing(items.length > 0);
        this.owner.owner.setHeight(items.length > 0 ? "400px" : "230px");
+       studio.studioService.requestSync("getPreferences", null, dojo.hitch(this, "getPreferencesCallBack"));
+    },
+    getPreferencesCallBack: function(inResult) {
+    debugger;
+        this.currentWaveMakerHome = inResult['wavemakerHome'];    
     },
     cancelClick: function() {
         this.owner.owner.hide();
@@ -87,7 +92,15 @@ dojo.declare("ExportProjectPage", wm.Page, {
     },
     exportClickCallback: function(inResponse) {
         studio.endWait("Building ZIP File...");
-        app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", {inResponse: inResponse}));
+        if (studio.isCloud()) {
+            app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_CLOUD_SUCCESS", 
+                                                {inResponse: inResponse}));
+        
+        } else {
+            app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", 
+                                                {inResponse: inResponse,
+                                                 projectPath: this.currentWaveMakerHome + "/Projects/" + studio.project.projectName}));
+        }
         app.alertDialog.setWidth("600px");
         var b = new wm.Button({owner: this,
                                _classes: {domNode: ["StudioButton"]},
@@ -107,7 +120,7 @@ dojo.declare("ExportProjectPage", wm.Page, {
 
         studio.application.incSubversionNumber();
         var src = studio.project.generateApplicationSource();
-        studio.project.saveProjectData(this.projectName + ".js", src);
+        studio.project.saveProjectData(studio.project.projectName + ".js", src); // save incremented version
         this.owner.owner.hide();
     },
     exportClickError: function(inError) {

@@ -247,7 +247,8 @@
 
     WAIT_BUILDING_WAR: "Building WAR file. It may take several minutes. Please wait.",
     ALERT_LIVE_LAYOUT_SECURITY_WARNING: "In order for Live Layout to work, project security needs to be disabled.<br/>Please uncheck the 'Enable Security' check box in the Security Editor to disable security.<br/>To disable Live Layout, launch Studio in 'nolive' mode.",
-    ALERT_BUILDING_ZIP_SUCCESS: "Successfully exported project to zip file into your Project Folder at <ul><li>${inResponse}</li></ul>To import this project unzip it into the projects directory of another studio.",
+    ALERT_BUILDING_ZIP_SUCCESS: "Successfully exported project to zip file into your Project Folder at <ul><li>${inResponse}</li></ul><p>To import this project unzip it into the projects directory of another studio.</p><p>NOTE: Your project folder is at: ${projectPath}</p>",
+    ALERT_BUILDING_ZIP_CLOUD_SUCCESS: "Successfully exported project to zip file into your Project Folder at <ul><li>${inResponse}</li></ul><p>To import this project unzip it into the projects directory of another studio.</p>",    
     ALERT_DOWNLOAD_BUTTON_CAPTION: "Download Now",
     ALERT_BUILDING_ZIP_FAILED: "Error occurred while building ZIP FILE!<br/>${error}",
     ALERT_BUILDING_WAR_SUCCESS: "Successfully generated WAR file: <ul><li>${inResponse}</li></ul>",
