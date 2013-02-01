@@ -715,6 +715,13 @@ dojo.declare("wm.studio.Project", null, {
                 allProjectJS += inResult + "\n";
                 var themeText = "";
                 var theme = studio.application.theme;
+                if (theme.indexOf(".") == -1) {
+                    if (theme.indexOf("wm_") == 0) {
+                        theme = "wm.base.widget.themes." + theme;
+                    } else {
+                        theme = "common.themes" + theme;
+                    }
+                }
                 var themeName = theme.replace(/^.*\./,"");
                 var path;
                 if (studio.application.tabletTheme && studio.application.tabletTheme != theme) {
@@ -737,7 +744,7 @@ dojo.declare("wm.studio.Project", null, {
                 }
                 path = dojo.moduleUrl(theme) + "/Theme.js";                                           
                 var themeData = wm.load(path);
-                themeText += "wm.Application.themeData['" + theme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n";
+                themeText += "wm.Application.themeData['" + studio.application.theme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n";
                 if (closeParenNeeded) themeText += "}\n";
                 allProjectJS += themeText;                              
                 studio.incrementSaveProgressBar(1);
