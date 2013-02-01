@@ -302,7 +302,7 @@ wm.fullTemplates.phoneLayout = {
 			navButton3: ["wm.Button", {"border":"0","borderColor":"#ABB8CF","caption":"Page Three","desktopHeight":"100%","height":"40px","margin":"0","width":"100%"}, {"onclick":"layer3"}]
 		}],
 		layers1: ["wm.Layers", {"margin":"3,0,0,0","transition":"slide"}, {}, {
-			layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"left-to-right","themeStyleType":"","verticalAlign":"top"}, {}, {
+			layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"top-to-bottom","themeStyleType":"","verticalAlign":"top"}, {}, {
 			}],
 			layer2: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				label4: ["wm.Label", {"caption":"Page Container One","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
