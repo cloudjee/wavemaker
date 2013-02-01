@@ -14,7 +14,7 @@
 
 dojo.provide("wm.base.widget.Picture");
 
-dojo.declare("wm.Picture", wm.Control, {
+dojo.declare("wm.Picture", [wm.Control, wm.TouchMixinOptional], {
 	aspect: "none",
 	hint: "",
 	width: "100px",
@@ -22,26 +22,25 @@ dojo.declare("wm.Picture", wm.Control, {
 	link: "",
 	source: "",
 	init: function() {
-		this.inherited(arguments);
-		var d=this.domNode;
-		d.innerHTML = '<a><img></a>';
-		dojo.addClass(d, "wmpicture");
-		this.linkNode = d.firstChild;
-		this.img = this.linkNode.firstChild;
-		dojo.addClass(this.img, "wmpicture-image");
-		//this.connect(this.img, "load", this, "imageLoaded");
+	    this.inherited(arguments);
+	    var d = this.domNode;
+	    d.innerHTML = '<a><img></a>';
+	    dojo.addClass(d, "wmpicture");
+	    this.linkNode = d.firstChild;
+	    this._touchNode = this.img = this.linkNode.firstChild;
+	    dojo.addClass(this.img, "wmpicture-image");
+	    //this.connect(this.img, "load", this, "imageLoaded");
 	    this.connect(this.img, "click", this, "_onclick");
 	    this.connect(this.linkNode, "click", this, "_onclick");
-		this.setSource(this.source);
-		this.setAspect(this.aspect);
-		this.setLink(this.link);
-	        if (this.imageList)
-		    this.imageListChanged();
+	    this.setSource(this.source);
+	    this.setAspect(this.aspect);
+	    this.setLink(this.link);
+	    if (this.imageList) this.imageListChanged();
 	},
-        postInit: function() {
+	postInit: function() {
 	    this.inherited(arguments);
 	    if (this.onclick != this.constructor.prototype.onclick) {
-		dojo.addClass(this.domNode, "onClickEvent");
+	        dojo.addClass(this.domNode, "onClickEvent");
 	    }
 	},
 	setSource: function(inSource) {
@@ -50,31 +49,49 @@ dojo.declare("wm.Picture", wm.Control, {
 	    this.img.style.display = this.source ? "" : "none"; // hiding now done by className
 	    var root;
 	    if (this.source.slice(0, 4) == "http" || this.source.slice(0, 1) == "/") {
-		root = "";
+	        root = "";
 	    } else if (this.source.indexOf("lib/") == 0) {
-		root = dojo.moduleUrl("lib").path.replace(/lib\/$/, "");
+	        root = dojo.moduleUrl("lib").path.replace(/lib\/$/, "");
 	    } else {
-		root = this.getPath();
+	        root = this.getPath();
 	    }
-		this.img.src = root + this.source;
+	    this.img.src = root + this.source;
 	},
 
 	setAspect: function(inAspect) {
-		var s=this.img.style, w="width", h="height", a=this.aspect=inAspect;
-		s.width = (a=="v" ? "100%" : "");
-		s.height = (a=="h" ? "100%" : "");
+	    var s = this.img.style,
+	        w = "width",
+	        h = "height",
+	        a = this.aspect = inAspect;
+	    s.width = (a == "v" ? "100%" : "");
+	    s.height = (a == "h" ? "100%" : "");
 	},
 	setLink: function(inLink) {
 	    this.link = inLink;
 	    if (inLink) {
-		this.linkNode.target = "_blank";
-		this.linkNode.href = inLink;
-	    } else
-		this.linkNode.removeAttribute("href");
+	        this.linkNode.target = "_blank";
+	        this.linkNode.href = inLink;
+	    } else this.linkNode.removeAttribute("href");
 
 	    /* Make it bindable */
 	    this.valueChanged("link", inLink);
 	},
+	onTouchEnd: function(evt, isMove) {
+		if (isMove) return;		
+		/* Force inputs to fire onchange events and update bound service var inputs if they have focus.
+		 * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
+		 * triggering its dijit's onBlur, and delivering new values.
+		 */
+		if (document.activeElement.tagName == "INPUT") {
+			var id = document.activeElement.id;
+			var d = dijit.byId(id);
+			if (d) d._onBlur();
+			else document.activeElement.blur();
+		}
+		if (!this._disabled) {
+    		this.click(evt);
+    	}
+	},  	
     _onclick: function(inEvent) {
         dojo.stopEvent(inEvent);
         if (this._disabled) return;

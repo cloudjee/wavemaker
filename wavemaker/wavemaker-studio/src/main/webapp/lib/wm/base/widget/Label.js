@@ -14,7 +14,7 @@
 dojo.provide("wm.base.widget.Label");
 dojo.require("wm.base.widget.Formatters");
 
-dojo.declare("wm.Label", wm.Control, {
+dojo.declare("wm.Label", [wm.Control, wm.TouchMixinOptional], {
     width: "200px",
     height: "24px",
     caption: 'Label',
@@ -40,6 +40,22 @@ dojo.declare("wm.Label", wm.Control, {
             this.sizeNode = this.domNode;
         }
     },
+	onTouchEnd: function(evt, isMove) {
+		if (isMove) return;		
+		/* Force inputs to fire onchange events and update bound service var inputs if they have focus.
+		 * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
+		 * triggering its dijit's onBlur, and delivering new values.
+		 */
+		if (document.activeElement.tagName == "INPUT") {
+			var id = document.activeElement.id;
+			var d = dijit.byId(id);
+			if (d) d._onBlur();
+			else document.activeElement.blur();
+		}
+		if (!this._disabled) {
+    		this.click(evt);
+    	}
+	},    
     _onclick: function(inEvent) {
         if (this._disabled) return;
         var pseudoEvt = dojo.isIE && inEvent ? {
