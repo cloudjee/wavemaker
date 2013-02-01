@@ -43,6 +43,7 @@ dojo.declare("Services", wm.Page, {
         studio.refreshServiceTree();
     },
     setDirty: function() {
+        debugger;
         wm.job(this.getRuntimeId() + "_hasChanged", 500, dojo.hitch(this, function() {
         if (this.isDestroyed) return;
         var changed = this._cachedData != this.getCachedData();
@@ -165,6 +166,7 @@ dojo.declare("Services", wm.Page, {
         this.endpointAddressInput.setShowing(!isFeedSrv);
         this.wsdlSpacing.setShowing(!isFeedSrv);
         this.feedDescInput.setShowing(isFeedSrv);
+        this._cachedData = this.getCachedData();        
         this.setDirty();
         if (!isFeedSrv) {
             studio.webService.requestAsync("getBindingProperties", [this.tree.serviceId],
