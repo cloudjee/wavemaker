@@ -135,7 +135,7 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
     var w = window.open(inUrl, inWindowName, inWindowOptions);
     if (dojo.isChrome) {
-        wm.job(inWindowName, 20, function() {
+        wm.job(inWindowName, 200, function() {
             if (w.closed) wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
             if (w.document && w.document.body && w.outerWidth == 0) {
                 wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
