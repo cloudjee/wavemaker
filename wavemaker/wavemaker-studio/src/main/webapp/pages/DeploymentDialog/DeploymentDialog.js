@@ -1587,6 +1587,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
             }
         }), selectName);
     },
+    cloudFoundryTargetChange: function(inSender, inDisplayValue, inDataValue) {
+        if (inDisplayValue.match(/^https\:\/\/api\./)) {
+            var hostname = (inDisplayValue||"").substring("https://api.".length);
+            this.cfUrlEditor.setDataValue((this.cfUrlEditor.getDataValue() || "").replace(/\..*$/,"." + hostname));
+        }
+    },
     cloudFoundryApplicationNameChanged: function() {
 
     },
