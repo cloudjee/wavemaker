@@ -102,13 +102,25 @@ dojo.declare("wm.ServiceCall", null, {
             this._service = wm.services.getService(this.service, owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
             wm.fire(this._service, "setServiceCall", [this]);
             this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
-
         } catch (e) {
         } finally {
             delete this._inSetService;
         }
     },
-
+    set_service: function(inService) {
+        this.setService(inService);
+        
+        var s = this._service;
+        var valueOk = s && s.getOperation(this.operation);
+        if (!valueOk) {
+            var methods = s && s.getOperationsList();
+            var newValue = methods ? methods[0] : "";
+            if (newValue && newValue != this.operation) {
+                this.set_operation(newValue);
+            }
+        }
+        studio.inspector.refocusEditor();
+    },
     /* If the types have changed, reobtain our type and input type and operations info.  Design time only */
     wmTypesChanged: function() {
         var owner = this.getOwnerApp();
@@ -547,7 +559,7 @@ wm.ServiceCall.extend({
                 this.startUpdate = inOperation != "logout";
             }
 
-            studio.inspector.inspect(studio.selected);
+            studio.inspector.refocusEditor();
         }
     },
     getServicesList: function() {
