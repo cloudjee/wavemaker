@@ -72,15 +72,19 @@
         buttonHandlersVar: ["wm.Variable", {isList: true, type: "EntryData"}],
         liveSourceVar:  ["wm.Variable", {isList: true, type: "StringData"}],
         layoutBox1: ["wm.Layout", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-            mainPanel: ["wm.studio.DialogMainPanel", {layoutKind: "left-to-right"},{}, {
-            panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"185px"}, {}, {
+            mainPanel: ["wm.studio.DialogMainPanel", {layoutKind: "left-to-right", padding: "0"},{}, {
+            panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"215px", margin: "10", styles: {backgroundColor: "#FAFAFA"}}, {}, {
+            /*checkboxPanel: ["wm.Panel", {margin: "0,4,0,4", width: "100%", height: "18px", layoutKind: "left-to-right", verticalAlign: "bottom", horizontalAlign: "left"}, {}, {
+                desktopCheckbox: ["wm.Checkbox", {width: "60px"}, {onchange: "desktopCheckboxChange"}],
+                mobileCheckbox: ["wm.Checkbox", {width: "30px"}, {onchange: "mobileCheckboxChange"}]
+            }],*/
             grid: ["wm.DojoGrid",
 {
     "columns": [{
         "show": true,
         "id": "show",
-        "title": "Desktop",
-        "width": "50px",
+        "title": "<input type='checkbox' class='tenpxcheckbox desktopcheckbox' id='GridDesignerDesktopChk'/>Desktop",
+        "width": "60px",
         "displayType": "Text",
         "noDelete": true,
         "align": "left",
@@ -89,8 +93,8 @@
     }, {
         "show": true,
         "id": "mobileColumn",
-        "title": "Phone",
-        "width": "30px",
+        "title": "<input type='checkbox' class='tenpxcheckbox phonecheckbox' id='GridDesignerPhoneChk'/>Phone",
+        "width": "50px",
         "displayType": "Text",
         "noDelete": true,
         "align": "left",
@@ -109,8 +113,8 @@
     selectFirstRow: true,
     "height": "100%",
     "localizationStructure": {},
-    "margin": "4",
-    border: "1",
+    "margin": "0",
+    border: "0",
     borderColor: "#959DAB"
 }, {
     onCellEdited: "onCellEdited",
@@ -147,7 +151,7 @@
             }]
             }],
                         splitter: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]}}],
-            form: ["wm.DataForm", {width: "100%", height: "100%", layoutKind: "top-to-bottom",confirmChangeOnDirty: ""}, {}, {
+            form: ["wm.DataForm", {width: "100%", height: "100%", margin: "10,10,10,0", layoutKind: "top-to-bottom",confirmChangeOnDirty: ""}, {}, {
             binding: ["wm.Binding", {}, {}, {
                 wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem","targetProperty":"dataSet"}, {}]
             }],

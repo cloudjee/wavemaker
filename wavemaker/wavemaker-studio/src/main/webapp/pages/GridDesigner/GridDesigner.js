@@ -54,55 +54,62 @@ dojo.declare("GridDesigner", wm.Page, {
         }
     },
     setGrid: function(inGrid) {
-        this.currentGrid = inGrid;
-        this.currentGridOwnerId = inGrid.owner.getRuntimeId();
-        this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
-        this.currentDataSet = inGrid.dataSet;
-        this.initialColumns = inGrid.columns;
+        this._inSetGrid = true;
+        try {
+            this.currentGrid = inGrid;
+            this.currentGridOwnerId = inGrid.owner.getRuntimeId();
+            this.editorPanels.setShowing(inGrid instanceof wm.DojoGrid); // hide if its wm.List
+            this.currentDataSet = inGrid.dataSet;
+            this.initialColumns = inGrid.columns;
 
-        var columns = dojo.clone(inGrid.columns);
-        columns = dojo.filter(columns, function(col) {
-            return !col.controller;
-        });
-        var phoneIndex = -1;
-        var hasPhoneColumn = false;
-        for (var i = 0; i < columns.length; i++) {
-            if (columns[i].field == "PHONE COLUMN") {
-                phoneIndex = i;
-                hasPhoneColumn = true;
-            } else if (columns[i].mobileColumn) {
-                hasPhoneColumn = true;
-            } else {
-                columns[i].mobileColumn = false;
+            var columns = dojo.clone(inGrid.columns);
+            columns = dojo.filter(columns, function(col) {
+                return !col.controller;
+            });
+            var phoneIndex = -1;
+            var hasPhoneColumn = false;
+            var isDesktopChecked = false;
+            var isMobileChecked = false;
+            for (var i = 0; i < columns.length; i++) {        
+                if (columns[i].field == "PHONE COLUMN") {
+                    phoneIndex = i;
+                    hasPhoneColumn = true;
+                } else if (columns[i].mobileColumn) {
+                    hasPhoneColumn = true;
+                } else {
+                    columns[i].mobileColumn = false;
+                }
             }
-        }
-        /* Only needed for upgraded projects from before we had PHONE COLUMN */
-        var updateGrid = false;
-        if (!hasPhoneColumn) {
-            updateGrid = true;
-            columns.push({
-                show: false,
-                // does NOT show on desktop
-                field: "PHONE COLUMN",
-                title: "-",
-                width: "100%",
-                align: "left",
-                expression: "",
-                mobileColumn: true
-            }); // DOES show on phone
-            phoneIndex = columns.length - 1;
-        }
-        this.columnsVar.setData(columns);
-        if (phoneIndex != -1) {
-            this.phoneColumn = this.columnsVar.getItem(phoneIndex);
-        }
-        if (updateGrid) {
-            this.updateGrid();
-        } else {
-            this.regenerateMobileColumn();
-        }
-        this.updateFormatterList();
-        this.updateDataSets();
+            /* Only needed for upgraded projects from before we had PHONE COLUMN */
+            var updateGrid = false;
+            if (!hasPhoneColumn) {
+                updateGrid = true;
+                columns.push({
+                    show: false,
+                    // does NOT show on desktop
+                    field: "PHONE COLUMN",
+                    title: "-",
+                    width: "100%",
+                    align: "left",
+                    expression: "",
+                    mobileColumn: true
+                }); // DOES show on phone
+                phoneIndex = columns.length - 1;
+            }
+            this.columnsVar.setData(columns);
+            if (phoneIndex != -1) {
+                this.phoneColumn = this.columnsVar.getItem(phoneIndex);
+            }
+            if (updateGrid) {
+                this.updateGrid();
+            } else {
+                this.regenerateMobileColumn();
+            }
+            this.updateFormatterList();
+            this.updateDataSets();
+            
+        } catch(e) {}
+        delete this._inSetGrid;
     },
     regenerateMobileColumn: function() {
         if (!this.phoneColumn || this.phoneColumn.getValue("isCustomField")) return;
@@ -669,7 +676,47 @@ dojo.declare("GridDesigner", wm.Page, {
     }
     },
     onRenderData: function() {
-    this.grid.dojoObj.canSort = function() {return false;}
+        this.grid.dojoObj.canSort = function() {return false;}
+        this.desktopCheckbox = dojo.byId("GridDesignerDesktopChk");
+        this.phoneCheckbox = dojo.byId("GridDesignerPhoneChk");        
+        this.connect(this.desktopCheckbox, "onchange", this, "desktopCheckboxChange");
+        this.connect(this.phoneCheckbox, "onchange", this, "mobileCheckboxChange");        
+
+        var isDesktopChecked = false;
+        var isMobileChecked = false;
+        this.columnsVar.forEach(function(inItem) {        
+                if (inItem.getValue("show")) isDesktopChecked = true;
+                if (inItem.getValue("mobileColumn")) isMobileChecked = true;
+        });
+        this.desktopCheckbox.checked = isDesktopChecked;
+        this.phoneCheckbox.checked = isMobileChecked;
+            
     },
+    desktopCheckboxChange: function(inSender) {
+        if (this._inSetGrid) return;
+        this.columnsVar.beginUpdate();
+        this.columnsVar.forEach(dojo.hitch( this, function(inItem) {
+            if (inItem.getValue("field") != "PHONE COLUMN") {
+                inItem.setValue("show", this.desktopCheckbox.checked);
+            }
+        }));
+        this.columnsVar.endUpdate();
+        this.columnsVar.notify();        
+        this.onCellEdited();
+    },
+    mobileCheckboxChange: function(inSender) {
+        if (this._inSetGrid) return;
+        this.columnsVar.beginUpdate();
+        this.columnsVar.forEach(dojo.hitch( this, function(inItem) {
+            /* If users are clicking on/off all, they don't have an interest in phone column except for turning it off */
+            if (!this.phoneCheckbox.checked || inItem.getValue("field") != "PHONE COLUMN") {
+                inItem.setValue("mobileColumn", this.phoneCheckbox.checked);
+            }
+        }));
+        this.columnsVar.endUpdate();
+        this.columnsVar.notify();          
+        this.onCellEdited();
+    },
+        
   _end: 0
 });

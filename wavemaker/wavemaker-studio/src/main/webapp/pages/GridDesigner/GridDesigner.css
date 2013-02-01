@@ -15,3 +15,12 @@
 	float: left;
 	margin-left: 6px;
 }
+
+.GridDesigner .tenpxcheckbox {
+    width: 10px;
+    height: 10px;
+    margin-left: 2px;
+}
+.GridDesigner .tenpxcheckbox.desktopcheckbox{
+    margin-left: 1px;
+}
