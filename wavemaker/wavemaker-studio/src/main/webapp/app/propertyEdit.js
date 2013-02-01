@@ -1510,7 +1510,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
         {name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
         {name: "color", editor: "wm.ColorPicker", editorProps: {placeHolder: "#abcdef"}},
         {name: "fontWeight", editor: "wm.SelectMenu", editorProps: {options: ["normal","bold","bolder","lighter"]}},
-        {name: "fontSize", editor: "wm.Number", postFix: "px", editorProps: {placeHolder: "Integer from 4-100", minimum: 4, maximum: 100, spinnerButtons: 1}},
+        {name: "fontSize", editor: "wm.Number", postFix: "px", editorProps: {placeHolder: "From 4-100", minimum: 4, maximum: 100, spinnerButtons: 1}},
         {name: "textAlign", editor: "wm.SelectMenu", editorProps: {options: ["left","center","right"]}},
         {name: "verticalAlign", editor: "wm.SelectMenu", editorProps: {options: ["baseline","sub","super", "top","text-top","middle","bottom","text-bottom"]}, advanced:1},
         {name: "textDecoration", editor: "wm.SelectMenu", editorProps: {options: ["none", "underline", "overline", "line-through", "blink"]}},
