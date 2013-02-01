@@ -361,7 +361,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     themeselectChange: function(inSender) {    
         if (this.inCancelThemeChange) return;
-        if (this.currentTheme && this.isDirty && inSender.getDataValue() != this.currentTheme) {
+        if (this.currentTheme && this.isDirty && !this.currentTheme.match(/wm\.base\.widget\.themes/) && inSender.getDataValue() != this.currentTheme) {
             app.confirm("You have unsaved changes to theme " + this.currentTheme + ", are you sure you want to lose these changes?").then(
                 dojo.hitch(this, function() {
                     this.isDirty = false;
@@ -387,6 +387,10 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             if (this.mainPanel.disabled) this.mainPanel.setDisabled(false);
             if (this.editorLayer.disabled) this.editorLayer.setDisabled(false);            
         }        
+        this.themesPageSaveBtn.setDisabled(this.mainPanel.disabled);
+        this.themesPageDeleteBtn.setDisabled(this.mainPanel.disabled);
+        this.themesPageRevertBtn.setDisabled(this.mainPanel.disabled);
+        
         this.currentTheme = currentTheme;
         this.currentThemeName = currentTheme.replace(/^.*\./,"");
         this.widgetCssFiles = {};
@@ -436,22 +440,31 @@ dojo.declare("WidgetThemerPage", wm.Page, {
         });
     },
     copyThemeClick: function() {
-        app.prompt("Enter theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));    
+        var themeName = this.currentThemeName + 1;
+        for (var i = 2; i < 1000 && this.themeListVar.query({name: themeName}).getCount(); i++) {
+            themeName = this.currentThemeName + i;
+        }
+        app.prompt("Enter theme name", themeName, dojo.hitch(this, "copyTheme"));    
     },
     copyTheme: function(inThemeName) {
         inThemeName = inThemeName.replace(/[^a-zA-Z0-9_]/g,"");
 
-        /* TODO: Update this query once themeListVar stops being a StringData var */
-        if (this.themeListVar.query({dataValue: inThemeName}).getCount()) {
+        if (this.themeListVar.query({name: inThemeName}).getCount()) {
             app.prompt(inThemeName + " is taken. Enter a different theme name", studio.project.projectName + "Theme", dojo.hitch(this, "copyTheme"));
             return;
         }
-        this._copyTheme(inThemeName, this.currentThemeName);
+        this._copyTheme(inThemeName, this.currentTheme);
     },
-    _copyTheme: function(inThemeName, inSourceThemeName) {
-        studio.resourceManagerService.requestAsync("copyFolder", [inSourceThemeName ? "/common/themes/" + inSourceThemeName : "app/templates/widgetthemes", "/common/themes/" + inThemeName]).then(
+    _copyTheme: function(inThemeName, inSourceThemePath) {
+        if (inSourceThemePath) {
+            var inSourceThemeName = inSourceThemePath.replace(/^.*\./,"");
+            var inSourceThemeUrl = wm.dojoModuleToPath(inSourceThemePath);
+            inSourceThemeUrl = inSourceThemeUrl.replace(/^lib\/wm\/common\//, "/common/");
+            if (inSourceThemePath.match(/wm\.base\.widget\.theme/)) inSourceThemeUrl = "app/templates/../../" + inSourceThemeUrl; // stupid hack to help the resource manager find the folder
+        }
+        studio.resourceManagerService.requestAsync("copyFolder", [inSourceThemeUrl || "app/templates/widgetthemes", "/common/themes/" + inThemeName]).then(
             dojo.hitch(this, function() {
-                return studio.resourceManagerService.requestAsync("getFolder", ["/common/themes/" + inThemeName]);
+        		return studio.resourceManagerService.requestAsync("getFolder", ["/common/themes/" + inThemeName]);
             })
         ).then(
             dojo.hitch(this, function(inResult) {
@@ -484,6 +497,7 @@ dojo.declare("WidgetThemerPage", wm.Page, {
             studio.resourceManagerService.requestAsync("writeFile", ["/common/themes/" + inThemeName + "/" + file.file, fileText]).then(dojo.hitch(this, "updateClassNameInFiles", inThemeName, inSourceThemeName)); 
         } else {
             this.updateClassNameInFilesDeferred.callback();
+            delete this.updateClassNameInFilesDeferred;
         }
         return this.updateClassNameInFilesDeferred;
     },
