@@ -21,7 +21,7 @@ dojo.require("wm.base.widget.Buttons.Button");
 dojo.require("wm.base.drag.drag");
 dojo.require("dojo.dnd.Moveable");
 
-wm.dialog = {showingList: []};
+wm.dialog = {showingList: [], tabIndexChanges: {}};
 
 wm.dialog.getNextZIndex = function(isDesignLoaded, optionalThis) {
     var index = 30;
@@ -990,7 +990,19 @@ dojo.declare("wm.Dialog", wm.Container, {
 
         if (this.designWrapper) this.designWrapper.setShowing(inShowing);
 
-
+        // block tab from focusing on covered elements
+        if (inShowing && this.modal && wm.isEmpty(wm.dialog.tabIndexChanges)) {
+            dojo.query("input, button", main.root.domNode).forEach(function(input) {
+                wm.dialog.tabIndexChanges[input.id] = input.tabIndex;
+                input.tabIndex = -1;
+            });
+        } else if (!inShowing && this.modal) {
+            wm.forEachProperty(wm.dialog.tabIndexChanges, function(inIndex, inId) {
+                var node = dojo.byId(inId);
+                if (node) node.tabIndex = inIndex || 0;
+            });
+            wm.dialog.tabIndexChanges = {};
+        }
 
         // add to history whether we show or hide so that the URL updates
         if (!this._initializing && !this._isDesignLoaded && showingChanging && this.manageHistory) {
