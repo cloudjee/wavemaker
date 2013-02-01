@@ -100,7 +100,9 @@ wm.expression.getValue(exp, app.main);
 				    var v = inRoot[inSource];
 				}
 				// objects cannot be returned directly since they are eval'd.
-				if (v instanceof wm.Object || v === undefined)
+				if (v instanceof wm.Component) {
+				    return v.getRuntimeId();
+				} else if (v instanceof wm.Object || v === undefined)
 					v = "";
 				
 			    if (v instanceof Date)
