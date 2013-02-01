@@ -991,8 +991,8 @@ dojo.declare("wm.Dialog", wm.Container, {
         if (this.designWrapper) this.designWrapper.setShowing(inShowing);
 
         // block tab from focusing on covered elements
-        if (inShowing && this.modal && wm.isEmpty(wm.dialog.tabIndexChanges)) {
-            dojo.query("input, button", main.root.domNode).forEach(function(input) {
+        if (inShowing && this.modal && app && app._page && wm.isEmpty(wm.dialog.tabIndexChanges)) {
+            dojo.query("input, button", app._page.root.domNode).forEach(function(input) {
                 wm.dialog.tabIndexChanges[input.id] = input.tabIndex;
                 input.tabIndex = -1;
             });
