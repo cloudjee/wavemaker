@@ -3444,6 +3444,7 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     horizontalChange: function(inDisplayValue, inDataValue) {
         var parts = String(this.dataValue).split(/\s+/);
         parts[0] = inDataValue +  "px";
+        while (parts.length > 4) parts.pop(); // deal with overwriting custom boxshadows with one editted by the user
         this.dataValue = parts.join(" ");
         this.changed();
     },
@@ -3451,6 +3452,7 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     verticalChange: function(inDisplayValue, inDataValue) {
         var parts = String(this.dataValue).split(/\s+/);
         parts[1] = inDataValue +  "px";
+        while (parts.length > 4) parts.pop();
         this.dataValue = parts.join(" ");
         this.changed();
     },
@@ -3458,6 +3460,7 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     blurChange: function(inDisplayValue, inDataValue) {
         var parts = String(this.dataValue).split(/\s+/);
         parts[2] = inDataValue +  "px";
+        while (parts.length > 4) parts.pop();
         this.dataValue = parts.join(" ");
         this.changed();
     },
@@ -3465,6 +3468,7 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
     colorChange: function(inDisplayValue, inDataValue) {
         var parts = String(this.dataValue).split(/\s+/);
         parts[3] = inDataValue;
+        while (parts.length > 4) parts.pop();
         this.dataValue = parts.join(" ");
         this.changed();
     },
@@ -3475,10 +3479,12 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
         var v = this.dataValue = inValue;
 
         var parts = String(v).split(/\s+/);
-        this.horizontalEditor.setDataValue(parseInt(parts[0]));
-        this.verticalEditor.setDataValue(parseInt(parts[1]));
-        this.blurEditor.setDataValue(parseInt(parts[2]));
-        this.colorEditor.setDataValue(parts[3]);
+        if (parts.length == 4) {
+            this.horizontalEditor.setDataValue(parseInt(parts[0]));
+            this.verticalEditor.setDataValue(parseInt(parts[1]));
+            this.blurEditor.setDataValue(parseInt(parts[2]));
+            this.colorEditor.setDataValue(parts[3]);
+        }
     },
     
     updateCssLine: function(inStyleName) {
