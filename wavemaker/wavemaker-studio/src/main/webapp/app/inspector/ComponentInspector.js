@@ -1165,7 +1165,20 @@
          }
            return true;
        },
+        refocusEditor: function() {
+        
+                var activeElement = document.activeElement;
+        while (activeElement.tagName != "BODY" && !activeElement.id.match(/^studio_inspector_propEdit/)) activeElement = activeElement.parentNode;
+        if (activeElement && activeElement.tagName != "BODY") {
+            activeElement = activeElement.id;
+            this.connectOnce(this, "_reinspect", this, function() {
+                var element = dojo.byId(activeElement);
+                if (element) element = dojo.query("input[role='textbox']", element)[0];
+                if (element) element.focus();
+            });
+        }
 
+    },
 
 
      getHelpDialog: function() {
