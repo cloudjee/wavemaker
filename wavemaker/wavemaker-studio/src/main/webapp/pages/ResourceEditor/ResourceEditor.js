@@ -146,7 +146,10 @@ dojo.declare("ResourceEditor", wm.Page, {
         }
     },
     onProjectChange: function(inPath, inContents) {
-
+        var tmp = studio.application;
+        studio.project.openApplication();
+        tmp.destroy();
+        studio.refreshWidgetsTree();
     },
     onCommonChange: function(inPath, inContents) {
 

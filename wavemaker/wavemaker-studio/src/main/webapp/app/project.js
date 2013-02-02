@@ -275,11 +275,10 @@ dojo.declare("wm.studio.Project", null, {
                                       this.projectChanging();
                                       try {
                                           this.loadingProject = true;
-                                          this.loadApplication();
-                                          var ctor = dojo.getObject(this.projectName);
+                                          var ctor = this.openApplication();
                                           this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
-                                          this.makeApplication();
-                                          this.openPage(this.pageName);
+                                          this.openPage(this.pageName);    
+
                                           if (!wm.isEmpty(studio.neededJars)) {
                                           /* onidle insures it gets the higher z-index than the start page */
                                           wm.onidle(function() {
@@ -355,6 +354,12 @@ dojo.declare("wm.studio.Project", null, {
             this.closeProject();
         }
         */
+    },
+    openApplication: function(inPageName) {
+      this.loadApplication();
+      var ctor = dojo.getObject(this.projectName);
+      this.makeApplication();
+      return ctor;
     },
     editProjectFiles: function() {
 

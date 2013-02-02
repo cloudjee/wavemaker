@@ -55,7 +55,7 @@ ResourceManager.widgets = {
             }],
     	mainPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 		leftPanel: ["wm.Panel", {width: "180px", height: "100%",layoutKind: "top-to-bottom"}, {}, {
-		    shortcutList: ["wm.SelectMenu", {caption: "Folder Shortcuts", captionSize: "18px", captionAlign: "left", captionPosition: "top", height: "45px", width: "100%", dataField: "dataValue", displayField: "name"}, {onchange: "onShortcutSelect"}, {
+		    shortcutList: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, caption: "Folder Shortcuts", captionSize: "18px", captionAlign: "left", captionPosition: "top", height: "45px", width: "100%", dataField: "dataValue", displayField: "name"}, {onchange: "onShortcutSelect"}, {
 			binding: ["wm.Binding", {}, {}, {
 			    wire: ["wm.Wire", {targetProperty: "dataSet", source: "shortcutListVar"}]
 			}]
