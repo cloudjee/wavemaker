@@ -151,7 +151,6 @@ wm.loadLibs([
 	"wm.studio.pages.ImportFile.ImportFile",
 	"wm.studio.pages.ImportPageDialog.ImportPageDialog",
 	"wm.studio.pages.ImportDatabase.ImportDatabase",
-	"wm.studio.pages.WidgetThemerPage.WidgetThemerPage",	
 	"wm.studio.pages.RestServiceBuilder.RestServiceBuilder",
 	"wm.studio.pages.RestUrlDialog.RestUrlDialog",
 	"wm.studio.pages.Security.Security",
