@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.wavemaker.common.WMRuntimeException;
 import org.apache.commons.logging.Log;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -294,7 +295,35 @@ public class SpringDataServiceManager implements DataServiceManager {
                 }
             }
         }
-        Object rtn = txTemplate.execute(tx);
+        Object rtn = null;
+        try {
+            rtn = txTemplate.execute(tx);
+        } catch (Throwable ex) {
+            //The following logic intends to display a sensible message for the user when a column contains a value whose length
+            //exceeds the maximum length allowed in the database.  The logic has been tested on MySQL, Postgres, Oracle and
+            //SQLServer so far.
+            if (ex.getCause() instanceof java.sql.BatchUpdateException) { //Oracle
+                String msg = ((java.sql.BatchUpdateException)ex.getCause()).getNextException().getMessage();
+                if (msg != null) {
+                    ex.printStackTrace();
+                    throw new WMRuntimeException(msg);
+                }
+            } else if (ex.getCause().getCause() instanceof java.sql.BatchUpdateException) { //Postgres
+                java.sql.BatchUpdateException e = (java.sql.BatchUpdateException)ex.getCause().getCause();
+                if (e != null && e.getMessage() != null) {
+                    ex.printStackTrace();
+                    throw new WMRuntimeException(e.getNextException().getMessage());
+                }
+            } else if (ex.getCause().getCause() != null) { //MySQL, SQLServer
+                String msg = ex.getCause().getCause().getMessage();
+                if (msg != null) {
+                    ex.printStackTrace();
+                    throw new WMRuntimeException(msg);
+                }
+            } else {
+                throw new WMRuntimeException(ex);
+            }
+        }
         if (txLogger.isInfoEnabled()) {
             if (isTxRunning()) {
                 txLogger.info("tx is running after execution of \"" + task.getName() + "\"");
