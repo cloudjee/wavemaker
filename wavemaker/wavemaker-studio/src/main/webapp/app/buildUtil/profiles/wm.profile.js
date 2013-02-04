@@ -582,6 +582,7 @@ dependencies = {
 				"dojox.charting.action2d.Shake",
 				"dojox.charting.action2d.Tooltip",
 				"dojo.fx.easing",
+				"dojox.gfx.svg"
 			        "wm.base.widget.DojoChart",
 			        "wm.base.widget.DojoGauge"
 			]
