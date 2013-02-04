@@ -73,12 +73,27 @@ wm.Object.extendSchema(wm.Variable, {
 
 
 wm.Variable.extend({
+    wmTypesChanged: function() {
+        if (this.owner instanceof wm.Variable) {
+            this.beginUpdate();
+        }
+        if (this.isPrimitive || wm.typeManager.isType(this.type)) {
+            this.setType(this.type);
+        }
+        if (studio.isSelected(this)) {
+            studio.inspect(this);
+        }
+        if (this.owner instanceof wm.Variable) {
+            this.endUpdate();
+        }
+    },
+
     listProperties: function() {
-	var props = this.inherited(arguments);
-	props.queriedItems.type = this.type;
-	props.queriedItems.isList = true;
-	props.queriedItems.bindSource = this.isList;
-	return props;
+    	var props = this.inherited(arguments);
+    	props.queriedItems.type = this.type;
+    	props.queriedItems.isList = true;
+    	props.queriedItems.bindSource = this.isList;
+    	return props;
     },
     editJson: function() {
         studio.editVariableDialog.show();

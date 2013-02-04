@@ -1011,6 +1011,11 @@ dojo.declare("Studio", wm.Page, {
     setInspectedCaption: function(inComponent) {
         this.PIContents.setTitle(inComponent ? inComponent.name + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
     },
+    isSelected: function(inComponent) {
+        if (dojo.indexOf(this.selected, inComponent) != -1) return true;
+        if (dojo.indexOf(this.inspector.inspected, inComponent) != -1) return true;
+        return false;
+    },
     select: function(inComponentOrArray, isNew) {
         if (this.inSelect) return;
         this.inSelect = true;

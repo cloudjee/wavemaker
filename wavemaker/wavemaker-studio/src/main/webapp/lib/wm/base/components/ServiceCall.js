@@ -128,6 +128,9 @@ dojo.declare("wm.ServiceCall", null, {
         wm.fire(this._service, "setServiceCall", [this]);
         this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
         if (this.setType) this.setType(this.type);
+        if (studio.isSelected(this)) {
+            studio.inspect(this);
+        }        
     },
 
     /* Set the operation and update the inputs */
