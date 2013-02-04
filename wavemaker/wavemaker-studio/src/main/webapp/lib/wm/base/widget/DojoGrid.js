@@ -1182,7 +1182,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             if (this._isDesignLoaded && this.columns.length && inValue && inValue.type ) {
                 if (this._typeChangedConnect) dojo.disconnect(this._typeChangedConnect);
                 this._typeChangedConnect = this.connect(inValue, "typeChanged", this, function() {
-                	wm.job(this.getRuntimeId() + ".typeChanged", this, function() {
+                	wm.job(this.getRuntimeId() + ".typeChanged", 50, this, function() {
 	                    this.updateColumnData(); // if the type changes for this.variable, reapply this variable's new type info
 	                    this.setDojoStore();
 	                    this.renderDojoObj();
