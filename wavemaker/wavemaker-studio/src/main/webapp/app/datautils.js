@@ -58,7 +58,7 @@ buildConnectionUrl = function(dbtype, host, port, extra, extra2) {
 	var rtn = "jdbc:";
 
 	if (isMySQL(dbtype)) {
-		rtn += "mysql://" + host + ":" + port + "/" + extra;
+		rtn += "mysql://" + host + ":" + port + "/" + extra + "?" + (extra2 || "useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
 	} else if (isHSQLDB(dbtype)) {
 	    if (extra2 == false) {
 		    rtn += "hsqldb:file:" + extra + ";shutdown=true;ifexists=true;"

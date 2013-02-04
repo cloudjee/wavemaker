@@ -191,8 +191,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     onConUsernameKeyPress: function() {
         setTimeout(dojo.hitch(this, "conUsernameChanged"), 0);
     },
-    conUsernameChanged: function() {
-        if (this._disableChangeEvents) return;
+    conUsernameChanged: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (this._disableChangeEvents || inSetByCode) return;
         var db = this.conDBdropdown.getDisplayValue();
         var username = this.conUserInput.getDataValue();
         this._updateSchemaFilter(db, username,
@@ -203,8 +203,8 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     },
     conPasswordChanged: function() {
     },
-    conDBdropdownChanged: function(inSender, inValue) {
-        if (this._disableChangeEvents) return;
+    conDBdropdownChanged: function(inSender, inValue, inDataValue, inSetByCode) {        
+        if (this._disableChangeEvents || inSetByCode) return;
         setupWidgetsForDatabaseType(inValue,
                         this.ip,
                         //this.conHostLabel,
@@ -238,27 +238,35 @@ dojo.declare("DBConnectionSettings", wm.Page, {
     onConHostKeyPress: function(inSender) {
         setTimeout(dojo.hitch(this, "conHostChanged", inSender), 0);
     },
-    conHostChanged: function(inSender) {
-        this._updateConConnectionUrl();
-        this.connectionSettingsChanged = true;
+    conHostChanged: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (!inSetByCode) {
+            this._updateConConnectionUrl();
+            this.connectionSettingsChanged = true;
+        }
     },
     onConPortKeyPress: function() {
         setTimeout(dojo.hitch(this, "conPortChanged"), 0);
     },
-    conPortChanged: function() {
-        this._updateConConnectionUrl();
+    conPortChanged: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (!inSetByCode) {
+            this._updateConConnectionUrl();
+        }
     },
     onConExtraKeyPress: function() {
         setTimeout(dojo.hitch(this, "conExtraChanged"), 0);
     },
-    conExtraChanged: function() {
-        this._updateConConnectionUrl();
+    conExtraChanged: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (!inSetByCode) {
+            this._updateConConnectionUrl();
+        }
     },
     onConExtra2KeyPress: function() {
         setTimeout(dojo.hitch(this, "conExtra2Changed"), 0);
     },
-    conExtra2Changed: function() {
-        this._updateConConnectionUrl();
+    conExtra2Changed: function(inSender, inDisplayValue, inDataValue, inSetByCode) {
+        if (!inSetByCode) {
+            this._updateConConnectionUrl();
+        }
     },
     onConConnectionUrlKeyPress: function() {
         setTimeout(dojo.hitch(this, "conConnectionUrlChanged"), 0);
@@ -440,8 +448,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
         var e2;
         if (isHSQLDB(dbtype))
             e2 = this.overrideFlagInput.getChecked();
-        else
+        else if (this.conExtra2Input.showing) {
             e2 = this.conExtra2Input.getDataValue();
+        } else if (this.conConnectionUrlInput.getDisplayValue().match(/\?/)) {
+            e2 = this.conConnectionUrlInput.getDisplayValue().replace(/^.*\?/,"");
+        }
 
         var s = buildConnectionUrl(dbtype, h, p, e, e2);
 
@@ -571,11 +582,11 @@ dojo.declare("DBConnectionSettings", wm.Page, {
             this.conUserInput.setDataValue(inData.username);
             this.conPasswordInput.setDataValue(inData.password);
             if (l) {
-                if (this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb") {
+//                if (this.conDBdropdown.getDataValue().toLowerCase() == "hsqldb") {
                     this.conConnectionUrlInput.setDataValue(buildInitialCxnUrl(l[0], l[3], inData.connectionUrl, this.overrideFlagInput.getChecked()));
-                } else {
+/*                } else {
                     this._updateConConnectionUrl();
-                }
+                }*/
             } else {
                 this.conConnectionUrlInput.setDataValue(inData.connectionUrl);
             }

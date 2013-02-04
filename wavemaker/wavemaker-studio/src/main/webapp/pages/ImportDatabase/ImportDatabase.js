@@ -188,7 +188,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 		var h = this.hostInput.getDataValue();
 		var p = this.portInput.getDataValue();
 		var e = this.extraInput.getDataValue();
-		var e2 = this.extra2Input.getDataValue();
+		var e2 = this.extra2Input.showing ? this.extra2Input.getDataValue() : this.connectionUrlInput.getDisplayValue().match(/\?/) ? this.connectionUrlInput.getDisplayValue().replace(/^.*\?/,"") : "";
 
 		var s = buildConnectionUrl(dbtype, h, p, e, e2);
 
