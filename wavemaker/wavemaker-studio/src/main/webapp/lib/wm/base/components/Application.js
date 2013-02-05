@@ -1295,181 +1295,182 @@ dojo.declare("wm.Application", wm.Component, {
         }
     },
     dockDialog: function(inDialog, inEdge) {
-    if (inEdge == "l" || inEdge == "r") {
-        this.createLeftToRightDockingPanel();
-    }
-    var parentPanel;
-    var created = false;
-    switch(inEdge) {
-    case "t":
-        if (this._topDock) {
-        parentPanel = this._topDock;
-        } else {
-        created = true;
-        parentPanel = this._topDock = new wm.Panel({owner: this, name: "_topDock", width: "100%", height: "100px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot});
-        this.appRoot.moveControl(parentPanel,0);
-        this._topSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
-        this.appRoot.moveControl(this._topSplitter,1);
-        this._topSplitter.findLayout();
+        if (inEdge == "l" || inEdge == "r") {
+            this.createLeftToRightDockingPanel();
         }
-        break;
-    case "b":
-        if (this._bottomDock) {
-        parentPanel = this._bottomDock;
-        } else {
-        created = true;
-        parentPanel = this._bottomDock = new wm.Panel({owner: this, name: "_bottomDock", width: "100%", height: "100px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot});
-        if (this.wmMinifiedDialogPanel) {
-            this.appRoot.moveControl(parentPanel, this.wmMinifiedDialogPanel.getIndexInParent());
-        }
-        this._bottomSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
-        this.appRoot.moveControl(this._bottomSplitter,parentPanel.getIndexInParent());
-        this._bottomSplitter.findLayout();
-        }
-        break;
-    case "l":
-        if (this._leftDock) {
-        parentPanel = this._leftDock;
-        } else {
-        created = true;
-        parentPanel = this._leftDock = new wm.Panel({owner: this, name: "_leftDock", width: "150px", height: "100%", border: "0", padding: "", layoutKind: "top-to-bottom", parent: this._leftToRightDockingPanel});
-        this._leftToRightDockingPanel.moveControl(parentPanel,0);
-        this._leftSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this._leftToRightDockingPanel});
-        this._leftToRightDockingPanel.moveControl(this._leftSplitter,1);
-        this._leftSplitter.findLayout();
-        }
-        break;
-    case "r":
-        if (this._rightDock) {
-        parentPanel = this._rightDock;
-        } else {
-        created = true;
-        this._rightSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this._leftToRightDockingPanel});
-        parentPanel = this._rightDock = new wm.Panel({owner: this, name: "_rightDock", width: "150px", height: "100%", border: "0", padding: "", layoutKind: "top-to-bottom", parent: this._leftToRightDockingPanel});
+        var parentPanel;
+        var created = false;
+        switch (inEdge) {
+            case "t":
+                if (this._topDock) {
+                    parentPanel = this._topDock;
+                } else {
+                    created = true;
+                    parentPanel = this._topDock = new wm.Panel({
+                        owner: this,
+                        name: "_topDock",
+                        width: "100%",
+                        height: "100px",
+                        border: "0",
+                        padding: "",
+                        layoutKind: "left-to-right",
+                        parent: this.appRoot
+                    });
+                    this.appRoot.moveControl(parentPanel, 0);
+                    this._topSplitter = new wm.Splitter({
+                        _classes: {
+                            domNode: ["docksplitter"]
+                        },
+                        owner: this,
+                        parent: this.appRoot
+                    });
+                    this.appRoot.moveControl(this._topSplitter, 1);
+                    this._topSplitter.findLayout();
+                }
+                break;
+            case "b":
+                if (this._bottomDock) {
+                    parentPanel = this._bottomDock;
+                } else {
+                    created = true;
+                    parentPanel = this._bottomDock = new wm.Panel({
+                        owner: this,
+                        name: "_bottomDock",
+                        width: "100%",
+                        height: "100px",
+                        border: "0",
+                        padding: "",
+                        layoutKind: "left-to-right",
+                        parent: this.appRoot
+                    });
+                    if (this.wmMinifiedDialogPanel) {
+                        this.appRoot.moveControl(parentPanel, this.wmMinifiedDialogPanel.getIndexInParent());
+                    }
+                    this._bottomSplitter = new wm.Splitter({
+                        _classes: {
+                            domNode: ["docksplitter"]
+                        },
+                        owner: this,
+                        parent: this.appRoot
+                    });
+                    this.appRoot.moveControl(this._bottomSplitter, parentPanel.getIndexInParent());
+                    this._bottomSplitter.findLayout();
+                }
+                break;
+            case "l":
+                if (this._leftDock) {
+                    parentPanel = this._leftDock;
+                } else {
+                    created = true;
+                    parentPanel = this._leftDock = new wm.Panel({
+                        owner: this,
+                        name: "_leftDock",
+                        width: "150px",
+                        height: "100%",
+                        border: "0",
+                        padding: "",
+                        layoutKind: "top-to-bottom",
+                        parent: this._leftToRightDockingPanel
+                    });
+                    this._leftToRightDockingPanel.moveControl(parentPanel, 0);
+                    this._leftSplitter = new wm.Splitter({
+                        _classes: {
+                            domNode: ["docksplitter"]
+                        },
+                        owner: this,
+                        parent: this._leftToRightDockingPanel
+                    });
+                    this._leftToRightDockingPanel.moveControl(this._leftSplitter, 1);
+                    this._leftSplitter.findLayout();
+                }
+                break;
+            case "r":
+                if (this._rightDock) {
+                    parentPanel = this._rightDock;
+                } else {
+                    created = true;
+                    this._rightSplitter = new wm.Splitter({
+                        _classes: {
+                            domNode: ["docksplitter"]
+                        },
+                        owner: this,
+                        parent: this._leftToRightDockingPanel
+                    });
+                    parentPanel = this._rightDock = new wm.Panel({
+                        owner: this,
+                        name: "_rightDock",
+                        width: "150px",
+                        height: "100%",
+                        border: "0",
+                        padding: "",
+                        layoutKind: "top-to-bottom",
+                        parent: this._leftToRightDockingPanel
+                    });
 
-        this._rightSplitter.findLayout();
+                    this._rightSplitter.findLayout();
 
+                }
+                break;
         }
-        break;
-    }
-    inDialog.setParent(parentPanel);
-    switch(inEdge) {
-    case "t":
-    case "b":
-        if (inDialog.minHeight > parentPanel.bounds.h)
-        parentPanel.setHeight(inDialog.minHeight + "px");
-        inDialog.setWidth("100%");
-        break;
-    case "l":
-    case "r":
-        if (inDialog.minWidth > parentPanel.bounds.w)
-        parentPanel.setWidth(inDialog.minWidth + "px");
-        inDialog.setHeight("100%");
-        break;
-    }
-    if (created) {
-        this.appRoot.reflow();
-    } else if (!parentPanel.showing) {
-        parentPanel.show();
-        if (parentPanel == this._topDock)
-        this._topSplitter.show();
-        else if (parentPanel == this._bottomDock)
-        this._bottomSplitter.show();
-        else if (parentPanel == this._rightDock)
-        this._rightSplitter.show();
-        else if (parentPanel == this._leftDock)
-        this._leftSplitter.show();
+        inDialog.setParent(parentPanel);
+        switch (inEdge) {
+            case "t":
+            case "b":
+                if (inDialog.minHeight > parentPanel.bounds.h) parentPanel.setHeight(inDialog.minHeight + "px");
+                inDialog.setWidth("100%");
+                break;
+            case "l":
+            case "r":
+                if (inDialog.minWidth > parentPanel.bounds.w) parentPanel.setWidth(inDialog.minWidth + "px");
+                inDialog.setHeight("100%");
+                break;
+        }
+        if (created) {
+            this.appRoot.reflow();
+        } else if (!parentPanel.showing) {
+            parentPanel.show();
+            if (parentPanel == this._topDock) this._topSplitter.show();
+            else if (parentPanel == this._bottomDock) this._bottomSplitter.show();
+            else if (parentPanel == this._rightDock) this._rightSplitter.show();
+            else if (parentPanel == this._leftDock) this._leftSplitter.show();
 
-    } else {
-        parentPanel.reflow();
-    }
+        } else {
+            parentPanel.reflow();
+        }
     },
     removeDockedDialog: function(inDialog) {
-    var parent = inDialog.parent;
-    inDialog.setParent(null);
-    if (parent.c$.length == 0) {
-        parent.hide();
-        if (parent == this._topDock)
-        this._topSplitter.hide();
-        else if (parent == this._bottomDock)
-        this._bottomSplitter.hide();
-        else if (parent == this._rightDock)
-        this._rightSplitter.hide();
-        else if (parent == this._leftDock)
-        this._leftSplitter.hide();
-    }
+        var parent = inDialog.parent;
+        inDialog.setParent(null);
+        if (parent.c$.length == 0) {
+            parent.hide();
+            if (parent == this._topDock) this._topSplitter.hide();
+            else if (parent == this._bottomDock) this._bottomSplitter.hide();
+            else if (parent == this._rightDock) this._rightSplitter.hide();
+            else if (parent == this._leftDock) this._leftSplitter.hide();
+        }
     },
     getDeviceSize: function() {
-    return this.appRoot ? this.appRoot.deviceSize : "1000";
+        return this.appRoot ? this.appRoot.deviceSize : "1000";
     },
-    /* Code from early in WM 6.5 mobile development that didn't make it to the end of WM 6.5:
-    addMobileTab: function(inLayer, inCaption) {
-    / * Watch out for the case where _bottomDock was created when we had a wider display, but now we've switched to a phone UI due to orientation change and need a different sort of _bottomDock * /
-    if (this._bottomDock && this._bottomDock instanceof wm.ToggleButtonPanel == false) {
-        this._bottomDock.destroy();
-        delete this._bottomDock;
-    }
-    if (!this._bottomDock) {
-        this._bottomDock = new wm.ToggleButtonPanel({owner: this, name: "_bottomDock", width: "100%", height: "40px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot, showing:false});
-        this.appRoot.moveControl(this._bottomDock,this.appRoot.indexOfControl(this.pageContainer) + 1);
-    } else if (this._bottomDock.height != "40px") {
-        this._bottomDock.setHeight("40px");
-    }
-    dojo.addClass(this._bottomDock.domNode,"wmMobileToolBar");
-    if (this._bottomSplitter && this._bottomSplitter.showing) this._bottomSplitter.setShowing(false);
-    if (!inLayer._appRootButton) {
-        inLayer._appRootButton = new wm.ToolButton({owner: this,
-                            parent: this._bottomDock,
-                            _classes: {domNode: ["wmbutton"]},
-                            width: "100%",
-                            hieght: "100%",
-                            caption: inCaption || inLayer.caption,
-                            border: "1",
-                            onclick: dojo.hitch(inLayer, "activateAllParents")
-                               });
-    }
-    var show = this._bottomDock.c$.length > 1;
-    if (show != this._bottomDock.showing) {
-        this._bottomDock.setShowing(show);
-    } else {
-        this._bottomDock.reflow();
-    }
-    inLayer.connect(inLayer, "onShow", dojo.hitch(this, function(inButton) {
-        if (inButton) {
-        inButton.onclick();
-        }
-    }, inLayer._appRootButton));
 
-    // can't do inLayer.connect(inLayer, "destroy") because first thing we destroy is all connections
-    this.connectOnce(inLayer, "destroy", this, function() {
-        this.removeMobileTab(inLayer);
-    });
-    },
-    removeMobileTab: function(inLayer) {
-    if (inLayer._appRootButton) {
-        inLayer._appRootButton.destroy();
-        delete inLayer._appRootButton;
-    }
-    this._bottomDock.setShowing(this._bottomDock.c$.length > 1);
-    },
-*/
     addHistory: function(state, noBack) {
-    if (this.history && !this._handlingBack) {
-        try {
-            if (!noBack)
-                this.history.push({id: state.id, options: state.options});
+        if (this.history && !this._handlingBack) {
+            try {
+                if (!noBack) this.history.push({
+                    id: state.id,
+                    options: state.options
+                });
 
-        var currentState = {};
-        this._handlingBack = true;
-        this._generateStateUrl(currentState);
-        delete this._handlingBack;
+                var currentState = {};
+                this._handlingBack = true;
+                this._generateStateUrl(currentState);
+                delete this._handlingBack;
 
-        /* Using state.title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
+                /* Using state.title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
 
-        if (window.history.pushState)
-            window.history.pushState(null, "" /*state.title*/, wm.isEmpty(currentState) ? "#" : "#" + dojo.toJson(currentState));
+                if (window.history.pushState) window.history.pushState(null, "" /*state.title*/ , wm.isEmpty(currentState) ? "#" : "#" + dojo.toJson(currentState));
 
-        /* No longer updating the title; this is great for populating the back history, but as we don't support jumping around the back history,
+                /* No longer updating the title; this is great for populating the back history, but as we don't support jumping around the back history,
          * more misleading than helpful.
         if (state.title) {
             var title = dojo.query("title")[0];
@@ -1481,35 +1482,34 @@ dojo.declare("wm.Application", wm.Component, {
         */
 
 
-        } catch(e) {}
-    }
+            } catch (e) {}
+        }
     },
     _generateStateUrl: function() {},
     generateStateUrl: function(currentState) {
     },
     _onBack: function(inEvent) {
-    /* onBack is called as a result of loading the page as well as from hitting the back button */
-    if (this._initializingBack) {
-        delete this._initializingBack;
-        return;
-    }
-    var state = this.history.pop();
-    try {
-        if (state) {
-        var id = state.id;
-        var c = this.getValueById(id);
-        if (c instanceof wm.Component && c.handleBack) {
-            try {
-            this._handlingBack = true;
-            if (!c.handleBack(state.options))
-                this._onBack();
-            } catch(e) {}
-            delete this._handlingBack ;
-        } else if (this.history.length) {
-            this._onBack();
+        /* onBack is called as a result of loading the page as well as from hitting the back button */
+        if (this._initializingBack) {
+            delete this._initializingBack;
+            return;
         }
-        }
-    } catch(e) {}
+        var state = this.history.pop();
+        try {
+            if (state) {
+                var id = state.id;
+                var c = this.getValueById(id);
+                if (c instanceof wm.Component && c.handleBack) {
+                    try {
+                        this._handlingBack = true;
+                        if (!c.handleBack(state.options)) this._onBack();
+                    } catch (e) {}
+                    delete this._handlingBack;
+                } else if (this.history.length) {
+                    this._onBack();
+                }
+            }
+        } catch (e) {}
 
     }
 });
