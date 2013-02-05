@@ -307,6 +307,10 @@ dojo.declare("wm.Application", wm.Component, {
         }
     },    
     _setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
+        /* Adapt themes from before inTheme was a full package path */
+        if (inTheme.indexOf(".") == -1) {
+            inTheme = inTheme.indexOf("wm_") == 0 ? "wm.base.widget.themes." + inTheme : "common.themes." + inTheme;
+        }
         var themematch = window.location.search.match(/theme\=(.*?)\&/) || window.location.search.match(/theme\=(.*?)$/);
         var node;
         if (this._isDesignLoaded) {
