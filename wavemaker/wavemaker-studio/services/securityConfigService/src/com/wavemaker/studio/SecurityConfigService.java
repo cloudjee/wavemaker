@@ -384,6 +384,16 @@ public class SecurityConfigService {
         }
     }
 
+    public String getCustomAuthOptions() throws IOException, JAXBException {
+    	return getSecToolsMgr().getCustomAuthOptions();
+    }
+    
+    public void configCustomAuth(String config, boolean enforceSecurity, boolean enforceIndexHtml, boolean useSSL) throws IOException, JAXBException {
+    	getSecToolsMgr().configCustomAuth(config);
+    	getSecToolsMgr().setGeneralOptions(enforceSecurity, enforceIndexHtml);
+    }
+    
+    
     public List<String> getRoles() throws IOException, JAXBException {
         return getSecToolsMgr().getRoles();
     }

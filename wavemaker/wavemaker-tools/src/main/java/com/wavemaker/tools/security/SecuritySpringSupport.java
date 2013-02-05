@@ -59,6 +59,8 @@ public class SecuritySpringSupport {
     
     public static final String CONTEXT_SOURCE = "contextSource";
 
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_CUSTOM = "authenticationManagerCustom";
+    
     public static final String AUTHENTICATON_MANAGER_BEAN_ID_DB = "authenticationManagerDB";
 
     public static final String AUTHENTICATON_MANAGER_BEAN_ID_AD = "authenticationManagerAD";
@@ -919,6 +921,5 @@ public class SecuritySpringSupport {
         valueElement.setContent(content);
         property.setValueElement(valueElement);
     }
-
 
 }

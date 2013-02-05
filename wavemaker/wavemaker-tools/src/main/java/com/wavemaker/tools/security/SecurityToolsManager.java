@@ -66,6 +66,8 @@ public class SecurityToolsManager {
     static final Logger logger = Logger.getLogger(SecurityToolsManager.class);
 
     private static final String SECURITY_SPRING_FILENAME = "project-security.xml";
+    
+    private static final String SECURITY_CUSTOM_SPRING_FILENAME = "project-custom-security.xml";
 
     private static final String SECURITY_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
 
@@ -117,7 +119,19 @@ public class SecurityToolsManager {
     private File getSecuritySpringFile(Project currentProject) {
         return currentProject.getWebInfFolder().getFile(SECURITY_SPRING_FILENAME);
     }
+    
+    public File getCustomSecuritySpringFile() throws IOException {
+        return getCustomSecuritySpringFile(this.projectMgr.getCurrentProject());
+    }
 
+    private File getCustomSecuritySpringFile(Project currentProject) {
+        return currentProject.getWebInfFolder().getFile(SECURITY_CUSTOM_SPRING_FILENAME);
+    }
+
+    private void setCustomSecurityContent(String content) throws IOException, JAXBException {
+		File customSecurityXmlFile = getCustomSecuritySpringFile();
+		customSecurityXmlFile.getContent().write(content);
+    }
     /**
      * Returns the Spring Security Spring beans in the current project.
      * 
@@ -357,7 +371,18 @@ public class SecurityToolsManager {
         Beans beans = getSecuritySpringBeans(false);
         return SecuritySpringSupport.constructLDAPOptions(beans);
     }
-
+    
+	public String getCustomAuthOptions() throws IOException, JAXBException {
+		File customSecurityXmlFile = getCustomSecuritySpringFile();
+		return customSecurityXmlFile.getContent().asString();
+	}
+	
+	public void configCustomAuth(String customConfig) throws IOException, JAXBException {
+		setCustomSecurityContent(customConfig);
+		Beans beans = getSecuritySpringBeans(true);
+		SecurityXmlSupport.setActiveAuthMan(beans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_CUSTOM);
+		saveSecuritySpringBeans(beans);
+	}
     /**
      * Function for backwards compatibility (for functions that call this function without the DB authorization
      * parameters)
@@ -503,4 +528,5 @@ public class SecurityToolsManager {
             return SecuritySpringSupport.getSecurityInterceptUrls(beans);
         }
     }
+
 }
