@@ -198,7 +198,10 @@ public class PhoneGapService {
 		phoneGapLibFolder.getFile("github/beautify.js").delete();
 		Folder dojo = phoneGapLibFolder.getFolder("dojo");
 		dojo.getFolder("util").delete();
-		dojo.getFolder("dojox").delete();
+		dojo.getFolder("util").delete();
+		dojo.getFolder("dojox").list().include(FilterOn.names().notMatching("charting")).delete();
+
+		dojo.getFolder("dojox/charting/tests").delete();
 		dojo.getFolder("dojo").list().files().include(FilterOn.names().notMatching("dojo_build.js")).delete();
 		dojo.getFolder("dojo/_base").delete();
 		dojo.getFolder("dojo/_firebug").delete();

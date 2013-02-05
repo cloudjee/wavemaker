@@ -15,6 +15,16 @@
 dojo.provide("wm.base.widget.DojoChart");
 dojo.require("wm.base.widget.Formatters");
 
+dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.widget.Legend");
+dojo.require("dojox.charting.widget.SelectableLegend");
+dojo.require("dojox.charting.action2d.Highlight");
+dojo.require("dojox.charting.action2d.Magnify");
+dojo.require("dojox.charting.action2d.MoveSlice");
+dojo.require("dojox.charting.action2d.Shake");
+dojo.require("dojox.charting.action2d.Tooltip");
+dojo.require("dojo.fx.easing");
+
 dojo.declare("wm.DojoChart", wm.Control, {
     chartTitle: "",
     yAxisTitle: "",
@@ -58,15 +68,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	init: function() {
 		if (this.showAddSilverlight())
 			return;
-		dojo['require']("dojox.charting.Chart2D");
-		dojo['require']("dojox.charting.widget.Legend");
-	        dojo['require']("dojox.charting.widget.SelectableLegend");
-		dojo['require']("dojox.charting.action2d.Highlight");
-		dojo['require']("dojox.charting.action2d.Magnify");
-		dojo['require']("dojox.charting.action2d.MoveSlice");
-		dojo['require']("dojox.charting.action2d.Shake");
-		dojo['require']("dojox.charting.action2d.Tooltip");
-		dojo['require']("dojo.fx.easing");
+
 		this.inherited(arguments);
 	},
 	postInit: function() {

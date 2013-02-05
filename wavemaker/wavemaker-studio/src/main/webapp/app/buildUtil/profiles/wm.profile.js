@@ -574,6 +574,9 @@ dependencies = {
 			resourceName: "wm.compressed.wm_charts",
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
+				"dojox.gfx._base",
+				"dojox.gfx.shape",
+				"dojox.gfx.svg",			
 				"dojox.charting.Chart2D",
 				"dojox.charting.widget.Legend",
 				"dojox.charting.action2d.Highlight",
@@ -582,8 +585,8 @@ dependencies = {
 				"dojox.charting.action2d.Shake",
 				"dojox.charting.action2d.Tooltip",
 				"dojo.fx.easing",
-			        "wm.base.widget.DojoChart",
-			        "wm.base.widget.DojoGauge"
+		        "wm.base.widget.DojoChart",
+		        "wm.base.widget.DojoGauge"
 			]
 		},
 		{
