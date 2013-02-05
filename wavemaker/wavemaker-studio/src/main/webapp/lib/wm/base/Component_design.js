@@ -662,6 +662,7 @@ wm.Component.extend({
            }),
            onClick: dojo.hitch(this, function() {
                var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
+                   studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
                    className: this.declaredClass.replace(/^.*\./, "")
                });
                window.open(url);
