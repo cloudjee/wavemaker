@@ -79,8 +79,8 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 	description: {group: "widgetName", order: 50},
     width: {group: "display", subgroup: "layout", order: 20, editor: "wm.prop.SizeEditor"},
 	height: {group: "display", subgroup: "layout", order: 30, editor: "wm.prop.SizeEditor"},
-    deploy: {group: "widgetName", order: 100, operation: "doDeploy"},
-    undeploy: {group: "widgetName", order: 110, operation: true},
+    deploy: {group: "widgetName", order: 100, shortname: "Publish to Palette", operation: "doDeploy"},
+    undeploy: {group: "widgetName", order: 110, shortname: "Remove from Palette", operation: true},
 	owner: {ignore: 1}
 });
 
