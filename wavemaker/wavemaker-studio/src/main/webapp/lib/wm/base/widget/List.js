@@ -380,7 +380,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         } else {
             top = inTop;
         }
-        
+
         if (wm.isMobile) { // should always be true for touch events
             var topWas = this._scrollTop;
             top = Math.min(top, Math.max(0,this.listNode.clientHeight - this.listNodeWrapper.clientHeight));
@@ -418,14 +418,14 @@ dojo.declare("wm.List", wm.VirtualList, {
         // then its fully visible
         if (box.t >= scrollTop && box.b <= scrollBottom) {
             return 2; // fully showing
-        } 
-        
+        }
+
         // If bottom of the box is greater than the scrolltop but the top is not, then its partially visible on top
         // return 1
         else if (box.b >= scrollTop && box.t < scrollTop) {
             return 1;
         }
-        
+
         // If the top of the box is less than the bottom, but the bottom of the box is greater than the bottom,
         // then its partially visible on the bottom; return -1
         else if (box.t <= scrollBottom && box.b > scrollBottom) {
@@ -439,7 +439,7 @@ dojo.declare("wm.List", wm.VirtualList, {
         var hadItem = Boolean(this.items[inIndex]);
         var item = this.getItem(inIndex);
         var top, itemHeight;
-                        
+
         /* Get the height WITH margin, border and padding */
         if (item.domNode.parentNode) {
             var box = dojo.marginBox(item.domNode);
@@ -448,12 +448,12 @@ dojo.declare("wm.List", wm.VirtualList, {
         } else {
             itemHeight = this.avgHeight;
         }
-        
+
         var isShowing = !hadItem ? 0 : this.isItemShowing(item);
         switch(isShowing) {
             case 2:
                 break; // do nothing, its already fully visible
-                
+
             case 1:
                 /* Set the top to match the item's top; add in margin/padding/border
                  * via itemHeight - clientHeight
@@ -461,7 +461,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                 top = item.domNode.offsetTop;
                 this.setScrollTop(top - (itemHeight - item.domNode.clientHeight));
                 break;
-                
+
             case -1:
                 /* Set the top so that the bottom of the item lines up with the bottom of
                  * the listNode
@@ -475,7 +475,7 @@ dojo.declare("wm.List", wm.VirtualList, {
                  */
                 var initialScrollTop = this.getScrollTop();
                 var scrollHeight = this.spacerNodeBottom.clientHeight + this.spacerNodeTop.clientHeight + this.getListNodeHeight();
-                
+
                 /* If the there is not a gap in the items array prior to this item, then its offsetTop should be reliable */
                 if (item && item.domNode.parentNode && (inIndex == 0 || this.items[inIndex-1])) {
                     top = item.domNode.offsetTop;
@@ -503,9 +503,9 @@ dojo.declare("wm.List", wm.VirtualList, {
                     node.parentNode.removeChild(node);
                 });
 
-                this.scrollDownAddItems(Math.max(0,inIndex-1));   
+                this.scrollDownAddItems(Math.max(0,inIndex-1));
                 this._lastScrollTop = this.getScrollTop();
-                
+
                 /* If we're showing the end of the list try to put the last item in the bottom of the view area */
                 var lastItem = this.items[this._data.length-1];
                 if (lastItem && this.isItemShowing(lastItem)) {
@@ -1348,9 +1348,9 @@ dojo.declare("wm.List", wm.VirtualList, {
             node.style.border = "";
         });
 
-        
+
         if (startAddingFrom !== undefined) {
-            currentHeight = this.getScrollTop();        
+            currentHeight = this.getScrollTop();
         } else {
             /* If there are rows showing, then use them as the basis from which we determine what rows to add */
             var lastItem = this.getLastItemNode();
@@ -2023,7 +2023,7 @@ wm.List.extend({
         if (inValue && inValue != '') {
             var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
             var eventText = this.getRuntimeId() + ".gridButtonClicked(event,\"" + field + "\"," + rowId + ")' ";
-            if (wm.isMobile) {
+            if (wm.isMobile && !wm.isFakeMobile) {
                 eventText = "ontouchstart='" + this.getRuntimeId() + ".gridButtonTouchStart(event)' ontouchmove='" + this.getRuntimeId() + ".gridButtonTouchMove(event)' ontouchend='" + eventText + "'";
             } else {
                 eventText = "onclick='" + eventText + "'";
@@ -2097,7 +2097,7 @@ wm.List.extend({
             item = this.getItem(index); // item may have been regenerated
         }
         if (item) {
-            this.inherited(arguments, [item]);        
+            this.inherited(arguments, [item]);
         }
     },
     selectByIndex: function(inIndex) {
