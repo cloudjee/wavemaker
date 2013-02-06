@@ -1362,7 +1362,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 					var prefix = "";
 			   		   		if (dojo.isWebKit) {
 								prefix = "-webkit-";
-			   		   		} 
+			   		   		}
 
 				   		   	var values = String(styleValue).split(/\s+/);
 				           	inValue = "";
@@ -1632,13 +1632,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	},
     getIndexInParent: function() {
-	if (this.parent)
-	    return this.parent.indexOfControl(this);
-	return -1;
+    	if (this.parent && this.parent instanceof wm.Container) // wm.Designer is not a container
+    	    return this.parent.indexOfControl(this);
+    	return -1;
     },
     setIndexInParent: function(inIndex) {
-	if (this.parent)
-	    this.parent.moveControl(this, inIndex);
+    	if (this.parent)
+    	    this.parent.moveControl(this, inIndex);
     },
 	canChangeShowing: function() {
 	    return true;
@@ -1670,7 +1670,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    wm.forEachProperty(this.widgets, dojo.hitch(this, function(w, name) {
     		w.setParentDisabled(this._disabled);
 	    }));
-	    
+
 	    /* foreach property fails on unnamed widgets; but not all widgets have a this.c$ */
 	    if (this.c$) {
             dojo.forEach(this.c$, function(w) {
@@ -1792,7 +1792,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 				var prefix;
    		   		if (dojo.isWebKit) {
    		   			prefix = "Webkit"; /* Mostly here for android 2 browser */
-   		   		} 
+   		   		}
 	   		   	if (prefix) prefix += "B";
 	   		   	else prefix = "b";
 	           	var values = String(inValue).split(/\s+/);
