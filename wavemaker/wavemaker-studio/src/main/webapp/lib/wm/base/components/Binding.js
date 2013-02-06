@@ -181,53 +181,63 @@ dojo.declare("wm.Wire", wm.Component, {
 		this._disconnect();
 		this._unsubscribe();
 	},
-	_watch: function(inSource, inRid) {
-		wm.logging && console.info("Wire._watch: ", this.target.getId() + "." + this.targetProperty, "watching", inSource);
-		// Rule 1: listen to "changed" on our source
-	    if (inSource.match(/^\[.*\]\./)) {
-		var pre = "";
-		inSource = inSource.replace(/^\[(.*?)\]/, "$1");
-	    } else {
-		var pre = inSource.indexOf("app.") == 0 ? "" : inRid;
-	    }
-
-		var topic = pre + inSource + "-changed";
-	    this.subscribe(topic, this, "sourceValueChanged");
-		wm.logging && console.info("***", " subscribed to [", topic, "]");
+    _watch: function(inSource, inRid) {
+        wm.logging && console.info("Wire._watch: ", this.target.getId() + "." + this.targetProperty, "watching", inSource);
+        // Rule 1: listen to "changed" on our source
+        if(inSource.match(/^\[.*\]\./)) {
+            var pre = "";
+            inSource = inSource.replace(/^\[(.*?)\]/, "$1");
+        } else {
+            var pre = inSource.indexOf("app.") == 0 ? "" : inRid;
+        }
+        if (inSource.indexOf(".owner.") != -1 || inSource.indexOf("owner.") == 0) {
+            var source = this.getValueById(inSource);
+            var sourceTrimmed = false;
+            if (!source) {
+                source = this.getValueById(inSource.substring(0,inSource.lastIndexOf(".")));
+                sourceTrimmed = true;
+            }
+            if (source) inSource = source.getRuntimeId() + (sourceTrimmed ? inSource.substring(inSource.lastIndexOf(".")) : "");
+            pre = "";
+        }
+        var topic = pre + inSource + "-changed";
+        this.subscribe(topic, this, "sourceValueChanged");
+        wm.logging && console.info("***", " subscribed to [", topic, "]");
 
         topic = pre + inSource + "-ownerChanged";
         this.subscribe(topic, this, "refreshValue");
         wm.logging && console.info("***", " subscribed to [", topic, "]");
-		/*
-		var p = inSource.split("."), top = p.shift();
-		if (top == "app" && p.length)
-			top += "." + p.shift();
-		topic = pre + top + "-ownerChanged"
-		*/
-		// Rule 2: listen to "ownerChanged" on source's owner
-		// (should be only for Variable sources, which we can't actually identify right now)
-		var oid = inSource.split(".");
-		oid.pop();
-		oid = oid.join(".");
-		if (oid && oid != "app") {
-		    topic = pre + oid + "-ownerChanged";
-		    this.subscribe(topic, this, "sourceTopUpdated");
-		    wm.logging && console.info("***", " subscribed to [", topic, "]");
+        /*
+        var p = inSource.split("."), top = p.shift();
+        if (top == "app" && p.length)
+            top += "." + p.shift();
+        topic = pre + top + "-ownerChanged"
+        */
+        // Rule 2: listen to "ownerChanged" on source's owner
+        // (should be only for Variable sources, which we can't actually identify right now)
+        var oid = inSource.split(".");
+        oid.pop();
+        oid = oid.join(".");
+        if(oid && oid != "app") {
+            topic = pre + oid + "-ownerChanged";
+            this.subscribe(topic, this, "sourceTopUpdated");
+            wm.logging && console.info("***", " subscribed to [", topic, "]");
 
-			//
-			// Rule 3: listen to "rootChanged" on source's owner root
-			// (again, should be only for Variable sources, to make sure objects exist for lazy loading...)
-			var p = inSource.split("."), rootId = p.shift();
-			if (rootId == "app" && p.length)
-				rootId += "." + p.shift();
-			if (rootId != oid) {
-				topic = pre + rootId + "-rootChanged"
-				this.subscribe(topic, this, "sourceRootUpdated")
-				wm.logging && console.info("Wire._watch: ", this.source, " subscribed to ", topic);
-			}
-			//
-		}
-	},
+            //
+            // Rule 3: listen to "rootChanged" on source's owner root
+            // (again, should be only for Variable sources, to make sure objects exist for lazy loading...)
+            var p = inSource.split("."),
+                rootId = p.shift();
+            if(rootId == "app" && p.length) rootId += "." + p.shift();
+            if(rootId != oid) {
+                topic = pre + rootId + "-rootChanged"
+                this.subscribe(topic, this, "sourceRootUpdated")
+                wm.logging && console.info("Wire._watch: ", this.source, " subscribed to ", topic);
+            }
+            //
+        }
+    },
+
 	connectWire: function() {
 		this.disconnectWire();
 		this.target = this.target || (this.targetId ? this.getRoot().getValueById(this.targetId) : this.owner.owner);
