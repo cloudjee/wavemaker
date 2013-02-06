@@ -16,6 +16,7 @@ dojo.provide("wm.base.widget.DojoGrid");
 
 dojo.declare("wm.DojoGrid", wm.Control, {
     _regenerateOnDeviceChange: 1,
+    resortOnDataUpdate: true,
     manageHistory: true,
     deleteConfirm: "Are you sure you want to delete this?",
     deleteColumn: false,
@@ -1008,10 +1009,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, queryOptions: this.queryOptions, query: this.query || {}, updateDelay: 0};
         this.addDojoProps(props);
         this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%'}, this.domNode));
+
         if (this._disabled) this.dojoObj.set("disabled",true);
         this.connectDojoEvents();
         this.setSelectionMode(this.selectionMode);
         this.dojoRenderer();
+        if (this._lastSortFieldName && this.resortOnDataUpdate) {
+            this.setSortField(this._lastSortFieldName, this._lastSortAsc);
+        }
 
         var selectedData = this.selectedItem.getData();
         var isSelectedDataArray = dojo.isArray(selectedData);
@@ -1784,6 +1789,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         var structure = this.dojoObj.structure[0];
         var fieldName = structure[Math.abs(this.dojoObj.sortInfo)-1].field;
         this.onSort(fieldName);
+        this._lastSortFieldName = fieldName;
+        this._lastSortAsc = this.dojoObj.sortInfo > 0;
     },
     onSort: function(inSortField) {
     },
@@ -2469,7 +2476,7 @@ dojo.declare("dojox.grid.cells.NumberTextBox", dojox.grid.cells._Widget, {
         if (isNaN(value)) value = null;
         this.applyEdit(value, inRowIndex);
         this._finish(inRowIndex);
-    }    
+    }
 });
 dojox.grid.cells.NumberTextBox.markupFactory = function(node, cell) {
     dojox.grid.cells._Widget.markupFactory(node, cell);

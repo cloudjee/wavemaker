@@ -212,7 +212,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
 
     /* Behaviors */
     primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
-
+    resortOnDataUpdate: {group: "widgetName", subgroup: "behavior", order: 19, advanced: 1, type: "boolean"},
 
     /* Display group; layout subgroup */
     //noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},
