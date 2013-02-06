@@ -19,7 +19,7 @@ wm.isDesignable = function(inControl) {
         // return inControl.owner && !(inControl.owner instanceof wm.Control);
     // warning: can't use inControl.owner == studio.application as studio.application may not have been set yet if we're still creating app level dialogs and components
     if (inControl.isAncestor(studio.sourceTabs)) return false;
-    return inControl.owner && inControl.owner == studio.page || 
+    return inControl.owner && inControl.owner == studio.page ||
             inControl.owner instanceof wm.Application && (inControl instanceof wm.Dialog || inControl.isAncestorInstanceOf(wm.DesignableDialog));
 }
 wm.Control.extend({
@@ -176,7 +176,7 @@ wm.Control.extend({
                 this[isMobile && this.enableTouchHeight ? "mobileHeight" : "desktopHeight"] = this.height;
             }
         }
-        
+
     },
     set_minHeight: function(inHeight) {
         var height = inHeight ? parseInt(inHeight) : 0;
@@ -525,6 +525,7 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
+    indexInParent: {ignore:1},
     imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
     imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
     editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},
