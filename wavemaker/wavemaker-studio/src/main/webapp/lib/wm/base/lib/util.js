@@ -428,15 +428,19 @@ wm.getValidJsName = function(inName) {
      * characters until we have a valid name
      */
     var isInvalid = true;
+    if (inName.match(/^[0-9]/)) {
+        inName = ["zero","one","two","three","four","five","six","seven","eight","nine"][inName[0]] + inName.substring(1);
+    }
     for (var i = 0; i < inName.length && isInvalid; i++) {
         try { /* Declare var inName in an inner function so it doesn't polute the window object's name space */
-            var result = eval("(function() {var " + inName + " = 5; return " + inName + ";})()")
+            var result = eval("(function() {var " + inName + " = 5; return " + inName + ";})()");
             if (result == 5) {
                 isInvalid = false;
             }
         } catch (e) {};
         if (isInvalid) {
             inName = inName.substring(0, i) + inName.substring(i, i + 1).replace(/[^a-zA-Z0-9]+/g, '') + inName.substring(i + 1);
+            var result = eval("(function() {var " + inName + " = 5; return " + inName + ";})()"); // if the name is still invalid, throw an error
         }
     }
 

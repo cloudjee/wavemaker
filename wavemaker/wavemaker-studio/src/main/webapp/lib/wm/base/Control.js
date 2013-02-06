@@ -1962,6 +1962,14 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this._imageList = iln ? iln instanceof wm.ImageList ? iln : this.owner.getValueById(iln) : null;
 	        this.invalidCss = true;
 	    this.render(true,true);
+        if (this._isDesignLoaded && this._imageList && !this._renameSubscription) {
+            this._renameSubscription = this.subscribe("wmwidget-rename", dojo.hitch(this, function(inNewName, inOldName, inComponent) {
+                if (inComponent == this._imageList) {
+                    this.imageList = inComponent.getId();
+                    this.imageListChanged();
+                }
+            }));
+        }
 	},
     getCurrentImageIndex: function() {
 	    return this.imageIndex;
