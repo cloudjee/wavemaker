@@ -745,6 +745,7 @@ dojo.declare("Studio", wm.Page, {
             }
             if (themeNode) {
                 themeNode.setContent(wm.capitalize(inThemePackage.replace(/^.*\./,"")) + " Widgets");
+                themeNode.domNode.style.display = themeNode.kids.length ? "" : "none";
             }
         } catch(e) {}
     },
