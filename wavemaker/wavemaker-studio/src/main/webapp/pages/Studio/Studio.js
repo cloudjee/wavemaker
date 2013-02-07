@@ -1140,6 +1140,15 @@ dojo.declare("Studio", wm.Page, {
         });
     },
     selectParent: function() {
+        // Ignore calls to selectParent if a Combobox is open; typically the user hits escape to close
+        // the combobox and not to select the parent widget
+        var comboboxDropdown = dojo.query(".dijitComboBoxMenuPopup")[0];
+        if (comboboxDropdown && comboboxDropdown.style.display != "none") {
+            var e = dijit.byId(dojo.attr(comboboxDropdown,"dijitpopupparent"));
+            if (e) e.closeDropDown();
+            return;
+        }
+
         if (this.targetMode)
             this.selectProperty()
         else
@@ -1354,44 +1363,37 @@ dojo.declare("Studio", wm.Page, {
     keydown: function(e) {
         // return if there are any showing dialogs owned by StudioApplication; dialogs intercept ESC and other keyboard
         // events using their own event handlers
-        if (dojo.some(wm.dialog.showingList, dojo.hitch(this,function(dialog) {
-        return dialog.getOwnerApp() == this.owner.owner && (dialog.modal || e.keyCode === dojo.keys.ESCAPE && dojo.isDescendant(document.activeElement, dialog.domNode));
-        })))
-        return true;
+        if(dojo.some(wm.dialog.showingList, dojo.hitch(this, function(dialog) {
+            return dialog.getOwnerApp() == this.owner.owner && (dialog.modal || e.keyCode === dojo.keys.ESCAPE && dojo.isDescendant(document.activeElement, dialog.domNode));
+        }))) return true;
 
-        if (e._wmstop)
-        return true;
+        if(e._wmstop) return true;
 
 
         // only act on CTRL keys (but not SHIFT-CTRL); accepts command/alt as alternative to ctrl key.
         var ctrlKey = e.ctrlKey || e.metaKey;
         var hotkey = (ctrlKey && !(ctrlKey && e.shiftKey));
-        var         kc = e.keyCode,
-                        isEsc = kc == dojo.keys.ESCAPE,
+        var kc = e.keyCode,
+            isEsc = kc == dojo.keys.ESCAPE,
             chr = String.fromCharCode(kc),
             normalKey = !isEsc && ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
             handled = false;
-        if (e.metaKey && chr.toLowerCase() == "r") return false; // don't block reload commands
+        if(e.metaKey && chr.toLowerCase() == "r") return false; // don't block reload commands
         // hotkey
-        if (hotkey)
-            handled = this.processKey(chr, wm.studioConfig.hotkeyMap, !normalKey);
+        if(hotkey) handled = this.processKey(chr, wm.studioConfig.hotkeyMap, !normalKey);
 
-                // if its not a hotkey, and the target is a text or password field, let the browser handle it
-                if (!hotkey && !isEsc) {
-                if (e.target && e.target.nodeName.toLowerCase() == "input" && (dojo.attr(e.target, "type") == "text" || dojo.attr(e.target, "type") == "password") || e.target && e.target.nodeName.toLowerCase() == "textarea")
-                        return;
-                }
+        // if its not a hotkey, and the target is a text or password field, let the browser handle it
+        if(!hotkey && !isEsc) {
+            if(e.target && e.target.nodeName.toLowerCase() == "input" && (dojo.attr(e.target, "type") == "text" || dojo.attr(e.target, "type") == "password") || e.target && e.target.nodeName.toLowerCase() == "textarea") return;
+        }
 
         // key codes
-        if (!handled)
-            handled = this.processKey(kc, wm.studioConfig.hotkeyCodeMap, !normalKey);
+        if(!handled) handled = this.processKey(kc, wm.studioConfig.hotkeyCodeMap, !normalKey);
         // if we've handled the key, stop the event
-        if (handled)
-            dojo.stopEvent(e);
+        if(handled) dojo.stopEvent(e);
     },
-        // Support keypress event that should do nothing and NOT bubble up to the window level
-        nullAction: function() {
-        ;
+    // Support keypress event that should do nothing and NOT bubble up to the window level
+    nullAction: function() {;
     },
     /*topLayersChange: function(inSender) {
         if (inSender.getLayerCaption() == "Welcome")
