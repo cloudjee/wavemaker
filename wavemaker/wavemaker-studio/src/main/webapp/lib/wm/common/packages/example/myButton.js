@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 
-
+/*
 myButton - An example Custom Widget 
 
 Button changes color and cursor while being hovered without defining CSS classes.
