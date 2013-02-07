@@ -172,10 +172,19 @@ wm.RelatedEditor.extend({
                 if (this.editingMode == "lookup")
                     lookupAdded = this.makeLookup(fieldSchema);
                 if (!lookupAdded){
-                    var lv = this.findLiveVariable(),
-                        fields = wm.getDefaultView((this.dataSet || 0).type);
+                    var lv = this.findLiveVariable();
+                    var fields = wm.getDefaultView((this.dataSet || 0).type);
+                    var dbFieldDefs = {};
+                    if (lv) {
+                        var typeDef = wm.typeManager.getType(lv.type);
+                        studio.dataService.requestSync("getEntity", [typeDef.service, lv.type.replace(/^.*\./,"")], function(inResult) {
+                             dojo.forEach(inResult.properties, function(field) {
+                                 dbFieldDefs[field.name] = field;
+                             });
+                        });
+                    }
                     for (var i = 0; i < fields.length; i++) {
-                        if (this.makeEditor(fields[i]) && this.editingMode != "editable subform" && i > 3)
+                        if (this.makeEditor(dbFieldDefs, fields[i]) && this.editingMode != "editable subform" && i > 3)
                             break;
                     }
                 }
