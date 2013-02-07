@@ -113,38 +113,33 @@ dojo.declare("wm.Variable", wm.Component, {
     },
     setType: function(inType, noNotify) {
         this._hasChanged = false;
-        if (inType == this.declaredClass || this.owner instanceof wm.Variable && inType == this.owner.declaredClass) inType = "";
+        if(inType == this.declaredClass || this.owner instanceof wm.Variable && inType == this.owner.declaredClass) inType = "";
 
-            //this.unsubscribe("TypeChange-" + this.type);
-        if (!this.canSetType(inType))
-            return;
+        //this.unsubscribe("TypeChange-" + this.type);
+        if(!this.canSetType(inType)) return;
 
         var t = inType;
-        if (wm.isListType(t)) {
+        if(wm.isListType(t)) {
             this.isList = true;
-            if (t.substring(t.length-1) == "]") {
+            if(t.substring(t.length - 1) == "]") {
                 t = t.slice(1, -1);
             }
-        // don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should
-        // not lose the user's isList setting
-        } else if (!(this.data && this.data._list) && !this._inPostInit)
-            this.isList = false;
+            // don't reset isList if we have data; also don't reset isList if we're in postInit; the setType call in postInit should
+            // not lose the user's isList setting
+        } else if(!(this.data && this.data._list) && !this._inPostInit) this.isList = false;
 
-            var hasChanged;
-        if (this.type != t)
-        hasChanged = true;
-        else if (this._isDesignLoaded) {
-        hasChanged = dojo.toJson(this._getSchemaForType(inType)) != dojo.toJson(this._dataSchema);
+        var hasChanged;
+        if(this.type != t) hasChanged = true;
+        else if(this._isDesignLoaded) {
+            hasChanged = dojo.toJson(this._getSchemaForType(inType)) != dojo.toJson(this._dataSchema);
         }
         this._hasChanged = hasChanged;
         this.type = t;
         //
-        if (this._proxy)
-            this._proxy.setType(this.type);
+        if(this._proxy) this._proxy.setType(this.type);
         this.typeChanged(this.type);
-        if (this.json & hasChanged)
-        this.setJson(this.json);
-/*
+        if(this.json & hasChanged) this.setJson(this.json);
+        /*
             if (this._isDesignLoaded) {
                 this.subscribe("TypeChange-" + inType, dojo.hitch(this, function() {
                     this.setType(inType); // reset the type if the type definition has changed
@@ -154,14 +149,13 @@ dojo.declare("wm.Variable", wm.Component, {
                 }));
             }
         */
-            if (!noNotify && hasChanged && inType && inType != "any")
-        this.dataChanged();//  this will cause anyone bound to this object to treat a change of type as a change in its dataSet
+        if(!noNotify && hasChanged && inType && inType != "any") this.notify(); //  this will cause anyone bound to this object to treat a change of type as a change in its dataSet
     },
     /* Design time only */
     set_type: function(inType) {
-    this.setType(inType);
-    studio.reinspect();
-/*
+        this.setType(inType);
+        studio.reinspect();
+        /*
     var oldType = this.type;
     this.setType(inType);
     if (oldType != inType) {
@@ -994,8 +988,8 @@ dojo.declare("wm.Variable", wm.Component, {
                     continue;
                 }
 
-            } 
-            
+            }
+
             /* NOTE: there is no "!true", rather, your query is either {a: true} or {a: false} to query on "truthiness" */
             else if (typeof b == "boolean") {
                 if (Boolean(b) != Boolean(a)) return false;
@@ -1049,7 +1043,7 @@ dojo.declare("wm.Variable", wm.Component, {
                         b = Number(b);
                     } else if (typeof a == "string") {
                         b = b.toLowerCase();
-                    } 
+                    }
                     var invert = true;
                 }
             }
