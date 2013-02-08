@@ -461,52 +461,50 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      * DESCRIPTION: Pass in a dataSet; editors should be updated to show that dataSet.
      ***************/
     setDataSet: function(inDataSet) {
-	/* I don't know what this test is for, but something to do with RelatedEditors testing
-	 * to see if they are in a parent form with its own operation.  Probably not needed
-	 if (this.parent && this.parent.operation){
-	 return;
-	 }*/
+        /* I don't know what this test is for, but something to do with RelatedEditors testing
+     * to see if they are in a parent form with its own operation.  Probably not needed
+     if (this.parent && this.parent.operation){
+     return;
+     }*/
 
-	this._inDataSet = true;
-	try {
-	    if (this.doConfirmChangeOnDirty(inDataSet))
-		return;
+        this._inDataSet = true;
+        try {
+            if(this.doConfirmChangeOnDirty(inDataSet)) return;
 
-	    if (inDataSet) {
-		this.onDataSetChanging(inDataSet.getCursorItem().getData());
-	    }
+            if(inDataSet) {
+                this.onDataSetChanging(inDataSet.getCursorItem().getData());
+            }
 
-	    /* It used to be we'd pass in the entire dataSet, and then the developer could use the cursor to edit different items
-	     * in the dataSet.  But that was when this.dataSet == page.liveVariable1; instead we are copying all of the data from
-	     * page.liveVariable1 INTO this.dataSet, and we don't need to copy 500 items to edit just the one item.
-	     */
-	    this.dataSet.setDataSet(inDataSet ? inDataSet.getCursorItem() : null);
-	    if (inDataSet && this.dataOutput.type != inDataSet.type)
-		this.dataOutput.setType(this.dataSet.type);
+            /* It used to be we'd pass in the entire dataSet, and then the developer could use the cursor to edit different items
+             * in the dataSet.  But that was when this.dataSet == page.liveVariable1; instead we are copying all of the data from
+             * page.liveVariable1 INTO this.dataSet, and we don't need to copy 500 items to edit just the one item.
+             */
+            this.dataSet.setDataSet(inDataSet ? inDataSet.getCursorItem() : null);
+            if(inDataSet && this.dataOutput.type != inDataSet.type) this.dataOutput.setType(this.dataSet.type);
 
-	    /* Get the current wm.Variable item */
-	    var d = this.dataSet;
+            /* Get the current wm.Variable item */
+            var d = this.dataSet;
 
-	    /* Disable binding and onchange events, put data in the editors and then reenable bindings/change events */
-	    if (!this.generateInputBindings) {
-		this.beginEditUpdate();
-		this.populateEditors();
-		this.endEditUpdate();
-		this.liveFormChanged();
-	    }
+            /* Disable binding and onchange events, put data in the editors and then reenable bindings/change events */
+            if(!this.generateInputBindings) {
+                this.beginEditUpdate();
+                this.populateEditors();
+                this.endEditUpdate();
+                this.liveFormChanged();
+            }
 
-	    /* The outputData is the value of all of the editors; at the time of setDataSet, the outputData is either the same
-	     * as inDataSet, or its an item from inDataSet... until the user starts making changes
-	     */
-	    if (!this.generateOutputBindings) {
-		this.dataOutput.setData(d);
-	    }
-	    this.valueChanged("noDataSet", this.noDataSet = d.isEmpty());
-	    this.onDataSetChanged(this.dataSet.getData());
-	} catch(e) {
-	} finally {
-	    delete this._inDataSet;
-	}
+            /* The outputData is the value of all of the editors; at the time of setDataSet, the outputData is either the same
+             * as inDataSet, or its an item from inDataSet... until the user starts making changes
+             */
+            if(!this.generateOutputBindings) {
+                //this.dataOutput.setData(d);
+                this.populateDataOutput();
+            }
+            this.valueChanged("noDataSet", this.noDataSet = d.isEmpty());
+            this.onDataSetChanged(this.dataSet.getData());
+        } catch(e) {} finally {
+            delete this._inDataSet;
+        }
     },
 /*
     updateNoDataSet: function(inData) {
@@ -1323,23 +1321,28 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    break;
 	}
 
-	/* Any wm.SubForm in a DBForm must be a composite primary key;
+	/* Any wm.SubForm in a DBForm might be a composite primary key;
 	 * currently the server does not support updates on composite primary keys, such entries must be deleted and reinserted.
 	 * Check to see if its dirty and in need of reinsertion.
 	*/
-	var isDirtySubForm = false;
+	var isDirtyCompositeIdForm = false;
 	if (this.operation == "update") {
 	    var subforms = this.getRelatedEditorsArray();
 	    dojo.forEach(subforms, dojo.hitch(this, function(form) {
-		if (form.getIsDirty()) {
-		    isDirtySubForm = true;
-		}
+            var currentTypeDef = wm.typeManager.getType(this.type);
+            if (currentTypeDef) var formTypeObj = currentTypeDef.fields[form.formField];
+            if (formTypeObj) var formTypeName = formTypeObj.type;
+            if (formTypeName) var formTypeDef = wm.typeManager.getType(formTypeName);
+
+    		if (formTypeDef && currentTypeDef && currentTypeDef.liveService && !formTypeDef.liveService && form.getIsDirty()) {
+    		    isDirtyCompositeIdForm = true;
+    		}
 	    }));
 	}
 
 	this.setServerParams(data);
 
-    	if (!isDirtySubForm) {
+    	if (!isDirtyCompositeIdForm) {
 	    this.serviceVariable.update();
 	} else {
 	    /* Can't update forms with composite IDs; delete the current entry, and then insert a new entry */
