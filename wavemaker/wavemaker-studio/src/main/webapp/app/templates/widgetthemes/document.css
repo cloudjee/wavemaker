@@ -6,7 +6,8 @@
     font-weight: bold;
 }
 .wm_template .wmapproot > .wmpagecontainer,
-.wm_template.wmapproot > .wmpagecontainer {
+.wm_template.wmapproot > .wmpagecontainer,
+.wm_template #studio_designer > .wmlayout {
     border-radius: 4px;
     box-shadow: 4px 4px 4px black;
     background-color: #444444; /* Document-Styles-Background_Color */
