@@ -109,7 +109,7 @@ dojo.declare("wm.Application", wm.Component, {
         } else {
             this._setTheme(this.theme, true);
         }
-        
+
         /* Load app.css */
         if (this._css) {
             this._cssLoader = new wm.CssLoader({
@@ -305,7 +305,7 @@ dojo.declare("wm.Application", wm.Component, {
         if (wm.device == "tablet" || window["studio"] && studio.currentDeviceType == "tablet") {
             this._setTheme(inTheme || this.theme);// inTheme could be ""
         }
-    },    
+    },
     _setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
         /* Adapt themes from before inTheme was a full package path */
         if (inTheme.indexOf(".") == -1) {
@@ -323,7 +323,10 @@ dojo.declare("wm.Application", wm.Component, {
             node = document.body;
         }
 
-        if (this.themeName) dojo.removeClass(node, this.themeName);
+        if (this.themeName) {
+            dojo.removeClass(studio.designer.domNode, this.themeName);
+            dojo.removeClass(studio.designerWrapper.domNode, this.themeName);
+        }
 
         if (this._isDesignLoaded) studio.themeChanged(inTheme);
 
@@ -429,7 +432,7 @@ dojo.declare("wm.Application", wm.Component, {
         }
         if (!wm.Application.themePrototypeData) wm.Application.themePrototypeData = {};
         wm.Application.themePrototypeData["wm.Control"] = this._theme;
-        
+
 
         /*
     for (var i in themeData) {
@@ -452,15 +455,15 @@ dojo.declare("wm.Application", wm.Component, {
     },
     loadThemePrototypeForClass: function(ctor, optionalWidget) {
         if (!this._theme || !ctor) return;
-        
+
         var declaredClass = ctor.prototype.declaredClass;
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
 
         var themeData = wm.Application.themeData[this._theme];
         var ctorData = themeData[ctor.prototype.declaredClass];
-        var p = ctor.prototype;        
+        var p = ctor.prototype;
 
-        /* At design time, we cache the original state of the prototype because it may change as the developer changes themes, and 
+        /* At design time, we cache the original state of the prototype because it may change as the developer changes themes, and
          * as we switch between studio's theme and user's theme
          */
         if ((window["StudioApplication"])) {
@@ -480,7 +483,7 @@ dojo.declare("wm.Application", wm.Component, {
                      wm.defaultPrototypeValues[declaredClass].desktopHeight = undefined;
                 }
             }
-        
+
 
 
             /* Restore the prototype to untampered state if we've changed themes */
@@ -491,7 +494,7 @@ dojo.declare("wm.Application", wm.Component, {
                     p[inName] = inValue;
                     if (optionalWidget) optionalWidget[inName] = inValue;
                 });
-            }                        
+            }
         }
 
         /* Localization of default properties */
@@ -505,7 +508,7 @@ dojo.declare("wm.Application", wm.Component, {
                     if (optionalWidget) optionalWidget[j] = ctorData[j];
                 }
             }
-            wm.Application.themePrototypeData[declaredClass] = this._theme;            
+            wm.Application.themePrototypeData[declaredClass] = this._theme;
         } /* End localization of default properties */
 
     },
@@ -597,16 +600,16 @@ dojo.declare("wm.Application", wm.Component, {
             dojo.addClass(document.body, "wmmobile")
         }
 
-        this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory, 
-                                                    manageURL: this.manageURL, 
-                                                    owner: this, 
-                                                    parent: this.appRoot, 
-                                                    width: "100%", 
-                                                    height: "100%", 
+        this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory,
+                                                    manageURL: this.manageURL,
+                                                    owner: this,
+                                                    parent: this.appRoot,
+                                                    width: "100%",
+                                                    height: "100%",
                                                     margin: wm.AppRoot.prototype.margin,
-                                                    padding: wm.AppRoot.prototype.padding,                                                    
-                                                    border: wm.AppRoot.prototype.border,                                                    
-                                                    borderColor: wm.AppRoot.prototype.borderColor,                                                    
+                                                    padding: wm.AppRoot.prototype.padding,
+                                                    border: wm.AppRoot.prototype.border,
+                                                    borderColor: wm.AppRoot.prototype.borderColor,
                                                     getRuntimeId: function() {return ""}
                                                     });
         this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
@@ -1081,13 +1084,13 @@ dojo.declare("wm.Application", wm.Component, {
         if (this.confirmDialog.showInput) {
             var val = this.confirmDialog.getInputDataValue();
             if (!val) {
-                this.confirmDialogDeferred.errback();            
+                this.confirmDialogDeferred.errback();
                 return this.confirmDialogCancelClick();
             }
             else if (this.confirmOKFunc) {
                 this.confirmOKFunc(val);
             }
-            this.confirmDialogDeferred.callback(val);                            
+            this.confirmDialogDeferred.callback(val);
         } else {
             if (this.confirmOKFunc) {
                 this.confirmOKFunc();
@@ -1099,7 +1102,7 @@ dojo.declare("wm.Application", wm.Component, {
     confirmDialogCancelClick: function() {
         if (this.confirmCancelFunc)
             this.confirmCancelFunc();
-        if (this.confirmDialogDeferred) this.confirmDialogDeferred.errback();            
+        if (this.confirmDialogDeferred) this.confirmDialogDeferred.errback();
     },
     createToastDialog: function() {
         if (!this.toastDialog) {
@@ -1199,7 +1202,7 @@ dojo.declare("wm.Application", wm.Component, {
 
     	this.toolTipDialog.html.setWidth((6 + this.toolTipDialog.html.domNode.firstChild.clientWidth) + "px");
     	this.toolTipDialog.setBestWidth();
-    	
+
         var self = this;
         if (this._testHintConnect) dojo.disconnect(this._testHintConnect);
 
