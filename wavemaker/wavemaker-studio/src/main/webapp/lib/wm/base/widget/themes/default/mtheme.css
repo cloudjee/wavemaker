@@ -1133,9 +1133,6 @@ body .wmmobile button.wmtablayers-tab {
 .wmmobile .dijitCalendarYearContainer {
     display:none;
 }
-.wmmobile .dijitCalendarDateTemplate .dijitCalendarDateLabel {
-    font-size: 9px !important;
-}
 
 .tundra.wmmobile .dijitCheckBox .wmcheckbox_x,
 .tundra.wmmobile .dijitCheckBoxIcon .wmcheckbox_x,
