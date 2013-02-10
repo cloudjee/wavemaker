@@ -172,8 +172,8 @@ dojo.declare("wm.NavigationService", wm.Service, {
 		This method is available as a configurable operation on this service.
 		@param {String} inPageName The page to load.
 	*/
-        gotoPage: function(inPageName, inOwner) {
-	    var page = inOwner.getParentPage();
+    gotoPage: function(inPageName, inOwner) {
+	    var page = inOwner == app ? app._page : inOwner.getParentPage();
 	    // If no app level page exists yet (untested condition that probably never arises)
 	    // Or if inOwner has no page (untested condition that implies the owner is app level or has an improperly set owner)
 	    // Or if the page of inOwner is the app level page, then change the app level page
