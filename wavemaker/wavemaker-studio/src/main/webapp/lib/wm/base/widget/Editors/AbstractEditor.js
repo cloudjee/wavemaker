@@ -288,9 +288,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         this.startTimerWithName("CreateDijit", this.declaredClass);
         this.editor = this._createEditor(n, inProps);
         dojo.attr(this.captionNode, "for", this.editor.id);
-        if (this.editor instanceof wm.Control == false && this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) { /* TODO: add a nice ontouchstart effect, and use wm.TouchMixin to determine when/if to open the popup */
+        /* TODO: add a nice ontouchstart effect, and use wm.TouchMixin to determine when/if to open the popup
+        if (this.editor instanceof wm.Control == false && this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
             dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
-        }
+        }*/
         /*
             if (this.editor._onChangeHandle) {
                 window.clearTimeout(this.editor._onChangeHandle);
@@ -424,7 +425,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
             // if height changes, then lineHeight may have to change
             s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
             //var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing) : bounds.l;
-            var captionLeft = (position == "right") ? (bounds.l + editorWidth + captionEditorSpacing) : bounds.l;            
+            var captionLeft = (position == "right") ? (bounds.l + editorWidth + captionEditorSpacing) : bounds.l;
             if (position == "right" && allocateHelpIconSpace) captionLeft -= helpIconSize + helpIconMargin;
             s.left = captionLeft + "px";
             s.top = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px";
@@ -1122,7 +1123,7 @@ wm.AbstractEditor.captionPaddingHeight = 2;
 dojo.declare("wm.AbstractEditorContainer", wm.AbstractEditor, {
     containerLayoutKind: "left-to-right",
     editorBorder: false,
-    /* Sublcasses should override this, but should create the container using this.inherited(arguments) 
+    /* Sublcasses should override this, but should create the container using this.inherited(arguments)
      * For a single row of controls, use padding: "0" on any editors.
      */
     _createEditor: function(inNode, inProps) {
@@ -1149,7 +1150,7 @@ dojo.declare("wm.AbstractEditorContainer", wm.AbstractEditor, {
     sizeEditor: function() {
         this.inherited(arguments);
         this.flow();
-    },    
+    },
     flow: function() {
         if (this.editor) {
             this.editor.flow();
