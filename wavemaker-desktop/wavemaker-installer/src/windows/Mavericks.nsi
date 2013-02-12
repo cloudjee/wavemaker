@@ -15,7 +15,7 @@ SetCompressor /FINAL LZMA
 !define COMPANY "WaveMaker Software, Inc"
 !define URL http://www.wavemaker.com
 !define DESCRIPTION "${PRODUCT_NAME} Studio and Runtime"
-!define COPYRIGHT "WaveMaker Software, Inc, 2012."
+!define COPYRIGHT "WaveMaker Software, Inc, 2013."
 /* 
  * The WaveMaker platform consists of two components: 
  * WaveMaker Studio for developing rich internet applications and 
@@ -95,7 +95,7 @@ Var ProjectsDialog
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "${LICENSEFILE}"
-!insertmacro MUI_PAGE_LICENSE "${BUILDSUPPORTDIR}\Oracle_Binary_Code_Licence.txt"
+# !insertmacro MUI_PAGE_LICENSE "${BUILDSUPPORTDIR}\Oracle_Binary_Code_Licence.txt"
 !define MUI_PAGE_CUSTOMFUNCTION_PRE Components_PreFunction
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
@@ -155,23 +155,23 @@ RequestExecutionLevel admin
 
 # Installer sections
 SectionGroup Prerequisites core
-    Section "Sun JDK 1.6+" java
-        SectionIn RO
-        Push $R0
-        ; Extract Binary Distribution
-        DetailPrint "Installing ${__SECTION__}..."
-        SetOutpath $INSTDIR
-        File /r "${SOURCEDIR}\jdk-1.6.0_24"
-        WriteRegStr HKLM "${REGKEY}" JavaHome '$INSTDIR\jdk-1.6.0_24'
-        WriteRegStr HKLM "${REGKEY}\Components" "Sun Java Development Kit" 1
-        Pop $R0
-    SectionEnd
+#    Section "Sun JDK 1.6+" java
+#        SectionIn RO
+#        Push $R0
+#        ; Extract Binary Distribution
+#        DetailPrint "Installing ${__SECTION__}..."
+#        SetOutpath $INSTDIR
+#        File /r "${SOURCEDIR}\jdk-1.6.0_24"
+#        WriteRegStr HKLM "${REGKEY}" JavaHome '$INSTDIR\jdk-1.6.0_24'
+#        WriteRegStr HKLM "${REGKEY}\Components" "Sun Java Development Kit" 1
+#        Pop $R0
+#    SectionEnd
 
     Section "Launcher" launcher
     /* Bundled launcher
     */
     Push $R0    ; Generic Return Value
-    Push $0     ; Path to installed JDK
+#   Push $0     ; Path to installed JDK
 
     ; Extract Tomcat
     DetailPrint "Installing ${__SECTION__}..."
@@ -207,7 +207,7 @@ Section WaveMaker main
     DeleteRegKey HKU ".DEFAULT\SOFTWARE\JavaSoft\Prefs\com\activegrid"
     ClearErrors
     DetailPrint "Studio projects directory set to: $DeployDir\Projects"
-    ExecWait '"$OUTDIR\jdk-1.6.0_24\bin\javaw.exe" -cp "$OUTDIR\studio\WEB-INF\lib\wmtools.jar" com.wavemaker.tools.project.StudioConfiguration set wavemakerHome "$DeployDir"' $0
+    ExecWait 'javaw.exe -cp "$OUTDIR\studio\WEB-INF\lib\wmtools.jar" com.wavemaker.tools.project.StudioConfiguration set wavemakerHome "$DeployDir"' $0
     ${If} ${Errors}
         DetailPrint "Error($0) writing Studio configuration."
         ClearErrors
@@ -312,7 +312,7 @@ Section -post SEC0001
     WriteUninstaller $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath '$SMPROGRAMS\$StartMenuGroup'
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}-${Version}.lnk" "$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" '-Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"' "$INSTDIR\${PRODUCT_NAME}.ico" "" SW_SHOWNORMAL "" "${PRODUCT_NAME}: Web-Fast™ development of CIO-Safe™ applications."
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${PRODUCT_NAME}-${Version}.lnk" "javaw.exe" '-Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"' "$INSTDIR\${PRODUCT_NAME}.ico" "" SW_SHOWNORMAL "" "${PRODUCT_NAME}: Web-Fast™ development of CIO-Safe™ applications."
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Uninstall ${PRODUCT_NAME}.lnk" $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_END
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${VERSION}" DisplayName "${PRODUCT_NAME}-${Version}"
@@ -351,12 +351,12 @@ done${UNSECTION_ID}:
 # Section Descriptions
 
   ;Language strings
-  ; LangString DESC_SecJava ${LANG_ENGLISH} "Install Sun Java Runtime Environment."
+# ; LangString DESC_SecJava ${LANG_ENGLISH} "Install Sun Java Runtime Environment."
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${core} "Install the basic components required to run ${PRODUCT_NAME}."
-    !insertmacro MUI_DESCRIPTION_TEXT ${java} "Install the Sun Java Development Kit."
+#   !insertmacro MUI_DESCRIPTION_TEXT ${java} "Install the Sun Java Development Kit."
     !insertmacro MUI_DESCRIPTION_TEXT ${tomcat} "Install and Deploy on Apache Tomcat Application Server."
     !insertmacro MUI_DESCRIPTION_TEXT ${main} "Installs the ${PRODUCT_NAME} application files."
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
@@ -386,10 +386,10 @@ Section /o "un.Tomcat" UNSEC0000
     DeleteRegValue HKLM "${REGKEY}\Components" "Apache Tomcat"
 SectionEnd
 
-Section /o "un.Sun Java 1.6+" UNSEC0001
-    RmDir /r /REBOOTOK "$INSTDIR\jdk-1.6.0_24"
-    DeleteRegValue HKLM "${REGKEY}\Components" "Sun Java Development Kit"
-SectionEnd
+#Section /o "un.Sun Java 1.6+" UNSEC0001
+#    RmDir /r /REBOOTOK "$INSTDIR\jdk-1.6.0_24"
+#    DeleteRegValue HKLM "${REGKEY}\Components" "Sun Java Development Kit"
+#SectionEnd
 
 Section -un.post UNSEC0003
     DetailPrint "Completing Uninstall:"
@@ -528,7 +528,7 @@ Function .onInit
 FunctionEnd
 
 Function Components_PreFunction
-    !insertmacro SelectSection ${java}
+#   !insertmacro SelectSection ${java}
     !insertmacro SelectSection ${tomcat}
     abort
 FunctionEnd
@@ -600,7 +600,7 @@ FunctionEnd
 
 Function RunLauncherPageFunction
 #		MessageBox MB_USERICON|MB_TOPMOST|MB_OK 'Launching configuration tool. The configuration tool will help you install dependencies required to complete installation '
-		Exec '"$INSTDIR\jdk-1.6.0_24\bin\javaw.exe" -Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"'
+		Exec 'javaw.exe -Xms256m -Xmx512m -XX:MaxPermSize=256m  -jar "$TomcatDir\launcher.jar"'
 FunctionEnd
 
 
