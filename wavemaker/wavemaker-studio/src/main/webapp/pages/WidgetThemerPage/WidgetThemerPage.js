@@ -904,14 +904,15 @@ dojo.declare("WidgetThemerPage", wm.Page, {
     },
     parentClassSelectChange: function() {
         if (this.subclassCheckboxSet.dataSet.getCount() == 1) {
-            this.subclassCheckboxSet.setDataValue([{dataValue: this.subclassCheckboxSet.dataSet.getItem(0).getValue("dataValue")}]);
+            this.subclassCheckboxSet.selectItem(0);
+            this.subclassCheckboxSet.changed();
         }
     },
     subclassNameChange: function() {
         // update the display values of the checkboxes
         var dataValue = dojo.clone(this.subclassCheckboxSet.getDataValue());
         this.subclassCheckboxSet.setDataSet(this.subclassCheckboxSet.dataSet);
-        this.subclassCheckboxSet.setDataValue(dataValue);
+        this.parentClassSelectChange();
     },
     setupCustomWidgetTemplate: function(itemData) {
         var item = this.templateListVar.query({name: itemData.parentName}).getItem(0);
@@ -1475,6 +1476,11 @@ dojo.declare("WidgetThemerPage", wm.Page, {
 
     /* END SECTION: Managing the Demo Panel */
 
+
+    themeHelp: function() {
+         window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "ThemeDesigner");
+
+    },
 
     /* START SECTION: Studio Integration Methods */
     resetCache: function() {

@@ -20,22 +20,22 @@ WidgetThemerPage.widgets = {
 		widgetListTypeDefField4: ["wm.TypeDefinitionField", {fieldName: "category", type: "Boolean"}],
 		widgetListTypeDefField5: ["wm.TypeDefinitionField", {fieldName: "parentName", type: "String"}],
 		widgetListTypeDefField6: ["wm.TypeDefinitionField", {fieldName: "customWidgetAddClass", type: "String"}],
-		widgetListTypeDefField7: ["wm.TypeDefinitionField", {fieldName: "hide", type: "Boolean"}],		
-		widgetListTypeDefField8: ["wm.TypeDefinitionField", {fieldName: "customProps", type: "any"}]		
+		widgetListTypeDefField7: ["wm.TypeDefinitionField", {fieldName: "hide", type: "Boolean"}],
+		widgetListTypeDefField8: ["wm.TypeDefinitionField", {fieldName: "customProps", type: "any"}]
 	}],
 	templateListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],
-	parentClassListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],	
+	parentClassListVar: ["wm.Variable", {"isList":true,"type":"widgetListTypeDef"}, {}],
     themeListVar: ["wm.Variable", {type: "themeListType"}, {}, {
                 binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"source":"studio.themesListVar","targetProperty":"dataSet"}, {}]
-        		}]    
+        		}]
     }],
     currentClassListVar: ["wm.Variable", {type: "StringData", isList:1},{}, {
                 binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"source":"parentClassSelect.selectedItem.classList","targetProperty":"dataSet"}, {}]
-        		}]    
+        		}]
     }],
-    fontFaceVar: ["wm.Variable", {type: "StringData", isList: 1, json: "[{dataValue: 'Georgia, serif'}, {dataValue: '\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif'}, {dataValue: '\"Times New Roman\", Times, serif'}, {dataValue: 'Arial, Helvetica, sans-serif'}, {dataValue: '\"Arial Black\", Gadget, sans-serif'}, {dataValue: '\"Comic Sans MS\", cursive, sans-serif'}, {dataValue: 'Impact, Charcoal, sans-serif'}, {dataValue: '\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif'}, {dataValue: 'Tahoma, Geneva, sans-serif'}, {dataValue: '\"Trebuchet MS\", Helvetica, sans-serif'}, {dataValue: 'Verdana, Geneva, sans-serif'}, {dataValue: '\"Courier New\", Courier, monospace'}, {dataValue: '\"Lucida Console\", Monaco, monospace'}]"}],    
+    fontFaceVar: ["wm.Variable", {type: "StringData", isList: 1, json: "[{dataValue: 'Georgia, serif'}, {dataValue: '\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif'}, {dataValue: '\"Times New Roman\", Times, serif'}, {dataValue: 'Arial, Helvetica, sans-serif'}, {dataValue: '\"Arial Black\", Gadget, sans-serif'}, {dataValue: '\"Comic Sans MS\", cursive, sans-serif'}, {dataValue: 'Impact, Charcoal, sans-serif'}, {dataValue: '\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif'}, {dataValue: 'Tahoma, Geneva, sans-serif'}, {dataValue: '\"Trebuchet MS\", Helvetica, sans-serif'}, {dataValue: 'Verdana, Geneva, sans-serif'}, {dataValue: '\"Courier New\", Courier, monospace'}, {dataValue: '\"Lucida Console\", Monaco, monospace'}]"}],
     customClassDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, title: "Add Custom Widget Style", "height":"220px","width":"500px","containerWidgetId":"containerWidget","buttonBarId":"buttonBar"}, {}, {
     	containerWidget: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"height":"100%","horizontalAlign":"left","padding":"5","verticalAlign":"top","width":"100%"}, {"onEnterKeyPress": "customClassOKButtonClick"}, {
     		newCustomClassNameEditor: ["wm.Text", {emptyValue: "emptyString", "caption":"Name of Class","captionAlign":"left","captionPosition":"left","captionSize":"150px","dataValue":undefined,"displayValue":"","width":"100%", changeOnKey: true}, {onchange: "subclassNameChange"}],
@@ -48,7 +48,7 @@ WidgetThemerPage.widgets = {
                 binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"source":"currentClassListVar","targetProperty":"dataSet"}, {}],
         			wire1:["wm.Wire", {"expression":"${currentClassListVar.count} <= 1","targetProperty":"disabled"}, {}]
-        		}]           		
+        		}]
     		}]
     	}],
     	buttonBar: ["wm.ButtonBarPanel", {"border":"1,0,0,0","borderColor":"black","height":"109px"}, {}, {
@@ -67,23 +67,24 @@ WidgetThemerPage.widgets = {
 		    themesPageCopyBtn: ["wm.studio.ToolbarButton", {hint: "Copy Theme...", imageIndex: 1}, {onclick: "copyThemeClick"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
-        		}]		    
+        		}]
 		    }],
 		    themesPageDeleteBtn: ["wm.studio.ToolbarButton", {hint: "Delete Theme", imageIndex: 0}, {onclick: "deleteThemeClick"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
-        		}]		    
+        		}]
 		    }],
 		    themesPageRevertBtn: ["wm.studio.ToolbarButton", {hint: "Revert to last saved theme", imageIndex: 6, imageList: "studio.canvasToolbarImageList16"}, {onclick: "revertThemeClick"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
-        		}]		    
+        		}]
 		    }],
 		    themesPageExportBtn: ["wm.studio.ToolbarButton", {hint: "Export theme so you can share it",  iconUrl: "images/resourceManagerIcons/download16.png"}, {onclick: "exportThemeClick"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":"!${themeSelect.dataValue}","targetProperty":"disabled"}, {}]
-        		}]		    
+        		}]
 		    }],
+            themesHelpBtn: ["wm.studio.ToolbarButton", {margin: "6,4,4,4", hint: "Help", caption: "",_classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "themeHelp"}],
 		    themeSelect: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, caption: "Theme:", captionAlign: "right", captionPosition: "left", captionSize: "80px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "name", dataField: "dataValue"}, {onchange: "themeselectChange"}, {
 			    binding: ["wm.Binding", {}, {}, {
 			        wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeListVar.queriedItems"}, {}]
@@ -94,26 +95,26 @@ WidgetThemerPage.widgets = {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":undefined,"source":"stylesToggleButton","targetProperty":"currentButton"}, {}]
         		}],
-				stylesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "80px", height: "100%", margin: "0", caption: "Styles", border: "0,1,0,0"}, {onclick: "editorLayer"}],		    
-				codeToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100px", height: "100%", margin: "0", caption: "Source Code", border: "0"}, {onclick: "cssLayer"}]				
+				stylesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "80px", height: "100%", margin: "0", caption: "Styles", border: "0,1,0,0"}, {onclick: "editorLayer"}],
+				codeToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100px", height: "100%", margin: "0", caption: "Source Code", border: "0"}, {onclick: "cssLayer"}]
 		    }]/*,
    			deviceToggleLabel: ["wm.Label", {_classes: {domNode: ["StudioLabel"]}, align: "right", caption: "Device:",width: "80px", height: "100%"}],
 		    deviceTogglePanel: ["wm.ToggleButtonPanel", {width: "250px", height: "100%", layoutKind: "left-to-right", buttonMargins: "5,0,5,0", border: "0"}, {onChange: "deviceChange"}, {
 				binding: ["wm.Binding", {}, {}, {
         			wire: ["wm.Wire", {"expression":undefined,"source":"allDevicesToggleButton","targetProperty":"currentButton"}, {}]
         		}],
-				allDevicesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "All", border: "0,1,0,0"}, {onclick: "deviceTypeChange"}],		    
+				allDevicesToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "All", border: "0,1,0,0"}, {onclick: "deviceTypeChange"}],
 				desktopToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Desktop", border: "0,1,0,0"}, {onclick: "deviceTypeChange"}],
 				tabletToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Tablet", border: "0,1,0,0"}, {onclick: "deviceTypeChange"}],
-				phoneToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Phone", border: "0,1,0,0"}, {onclick: "deviceTypeChange"}]				
+				phoneToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Phone", border: "0,1,0,0"}, {onclick: "deviceTypeChange"}]
 		    }]*/
-   			
+
 		}],
 		mainPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			leftPanel: ["wm.Panel", {width: "180px", height: "100%", layoutKind: "top-to-bottom"}, {}, {
-				
+
 				widgetGrid: ["wm.DojoGrid", {noHeader:true,_classes: {domNode: ["StudioGrid"]}, "columns":[
-							{"show":true,"field":"name","title":"Name","width":"100%","align":"left","cssClass":"${category} ? \"CategoryRow\" : \"StyleEntry\"", expression: "${parentName} ? ${parentName} + ': ' + ${name} : ${name}"}],							
+							{"show":true,"field":"name","title":"Name","width":"100%","align":"left","cssClass":"${category} ? \"CategoryRow\" : \"StyleEntry\"", expression: "${parentName} ? ${parentName} + ': ' + ${name} : ${name}"}],
 							"dsType":"EntryData","height":"100%","localizationStructure":{},"margin":"4","minDesktopHeight":60,"singleClickEdit":true,"width":"150px"},
 							{"onSelect":"widgetGridSelect"}, {
 					binding: ["wm.Binding", {}, {}, {
@@ -121,7 +122,7 @@ WidgetThemerPage.widgets = {
 					}]
 				}],
 				addClassButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Add Custom Class", width: "120px"}, {onclick: "addCustomClassClick"}],
-				removeClassButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Remove Class", width: "120px"}, {onclick: "removeCustomClassClick"}]				
+				removeClassButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Remove Class", width: "120px"}, {onclick: "removeCustomClassClick"}]
 			}],
 			tabs:["wm.Layers", {_classes: {domNode: ["StudioTabs"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
 			    editorLayer: ["wm.Layer", {caption: "Editors"},{onShow: "onGeneratedLayerShow"}, {
@@ -131,7 +132,7 @@ WidgetThemerPage.widgets = {
 				cssLayer: ["wm.Layer", {caption: "Code", verticalAlign: "top", horizontalAlign: "right"},{onShow: "onCssLayerShow"}, {
 				    editArea: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%"},{onChange: "editAreaChange"}],
 				    applyStylesButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Apply Styles", width: "120px"}, {onclick: "onGeneratedLayerShow"}]
-				}] 				
+				}]
     		}],
     		splitter1: ["wm.Splitter", {}],
 			demoOuterPanel:["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"400px",layoutKind: "top-to-bottom", border: "1", borderColor: "black"}, {},{
