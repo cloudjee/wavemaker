@@ -47,7 +47,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         if (app && app.locationState) {
             this._locationState = app.locationState;
         }
-        
+
         if (!this.deferLoad || !this.isAncestorHidden()) this.loadPage(this._pageName);
         //this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
         dojo.addOnWindowUnload(this, 'destroy');
@@ -116,7 +116,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
             if (prop) {
                 if (inValue instanceof wm.Component === false) this[inName] = inValue;
                 if (prop.indexOf(".") == -1 && this.page.getValue(prop) instanceof wm.Variable) {
-                    return this.page.getValue(prop).setDataSet(inValue);   
+                    return this.page.getValue(prop).setDataSet(inValue);
                 } else {
                     return this.page.setValue(prop, inValue);
                 }
@@ -288,8 +288,8 @@ dojo.declare("wm.PageContainer", wm.Control, {
                 if (v instanceof wm.Component && v.isDestroyed) {
                     v = this[propName] = undefined;
                 }
-                    
-                if (v !== undefined) {                                            
+
+                if (v !== undefined) {
                     this.setProp(propName, this[propName]);
                 }
                 var propDef = this.page[propName];
@@ -301,7 +301,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
                         target = this.page.getRuntimeId() + "." + propDef.property.substring(0,lastIndex);
                         this.subscribe(target + "-changed", dojo.hitch(this, "setBoundProp", propName));
                     }
-                    
+
                 }
             }
             if (this.$.binding) this.$.binding.refresh(); // update all bound values
@@ -338,7 +338,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         }
         if (this.page && this.page.generateStateUrl) {
             this.page.generateStateUrl(stateObj);
-        }    
+        }
     },
     forEachWidget: function(inFunc) {
         if (this.page) return this.page.forEachWidget(inFunc);
@@ -414,7 +414,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
         wm.fire(this.parent, "updateIsDirty");
     },
     getIsDirty: function() {
-        if (this.page) return this.page.root.getIsDirty();
+        if (this.page && !this.page.isDestroyed) return this.page.root.getIsDirty();
     },
     getOrderedWidgets: function() {
         if (this._isDesignLoaded) return [];
