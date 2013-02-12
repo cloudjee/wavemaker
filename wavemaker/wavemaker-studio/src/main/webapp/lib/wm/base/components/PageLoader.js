@@ -81,11 +81,13 @@ dojo.declare("wm.PageLoader", wm.Component, {
     },
     testForSecurityErrrors: function(path) {
         if (app.isSecurityEnabled) {
-            var result = dojo._getText(path);
-            if (result.match(/^\<\!DOCTYPE/) && result.match(/new\s*wm\.Application\(/)) {
-                this.isSecurityError = true;
-                throw "SecurityError";
-            }
+            try {
+                var result = dojo._getText(path);
+                if (result.match(/^\<\!DOCTYPE/) && result.match(/new\s*wm\.Application\(/)) {
+                    this.isSecurityError = true;
+                    throw "SecurityError";
+                }
+            } catch(e) {}
         }
     },
     loadCombinedFiles: function(inName, inPath) {
