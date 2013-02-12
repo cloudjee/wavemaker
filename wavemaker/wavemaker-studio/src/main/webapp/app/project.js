@@ -192,7 +192,7 @@ dojo.declare("wm.studio.Project", null, {
     //=========================================================================
     // Open
     //=========================================================================
-    openProject: function(inProjectName, inPageName) {    
+    openProject: function(inProjectName, inPageName) {
         var deferred = new dojo.Deferred();
         if (this.projectName && this.projectName != inProjectName)
         this.closeProject();
@@ -277,7 +277,7 @@ dojo.declare("wm.studio.Project", null, {
                                           this.loadingProject = true;
                                           var ctor = this.openApplication();
                                           this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
-                                          this.openPage(this.pageName);    
+                                          this.openPage(this.pageName);
 
                                           if (!wm.isEmpty(studio.neededJars)) {
                                           /* onidle insures it gets the higher z-index than the start page */
@@ -498,6 +498,11 @@ dojo.declare("wm.studio.Project", null, {
             studio.application = new ctor(dojo.mixin({
                 _designer: studio.designer
             }, inProps));
+
+            /* Upgrading theme to WM 6.6 */
+            if (studio.application.theme && studio.application.theme.indexOf(".") == -1) {
+                studio.application.theme = studio.application.theme.match(/wm_/) ? "wm.base.widget.themes." + studio.application.theme : "common.themes." + studio.application.theme;
+            }
             studio.application.loadComponents(studio.application.constructor.widgets || studio.application.widgets); // loadComponents happens in doRun; we don't want to call doRun.
 
             delete studio._application; // temporary property set in Application.init as placeholder for studio.application until the app has finished creating
@@ -678,7 +683,7 @@ dojo.declare("wm.studio.Project", null, {
                         studio.application.isSSLUsed = inResult.SSLUsed;
                     }));
                     return d;
-                }                 
+                }
             }),onError
         ).then(
             /* Save Step: Load the SMD files and add them to project.js */
@@ -707,7 +712,7 @@ dojo.declare("wm.studio.Project", null, {
             })
         ).then(
             dojo.hitch(this, function(inResult) {
-                /* Save Step: Make sure we got types.js; doesn't exist when first creating a project*/            
+                /* Save Step: Make sure we got types.js; doesn't exist when first creating a project*/
                 if (!inResult) {
                     return wm.load("app/templates/project/types.js",true);
                 }
@@ -716,7 +721,7 @@ dojo.declare("wm.studio.Project", null, {
                 return d;
             })
         ).then(
-            dojo.hitch(this, function(inResult) {        
+            dojo.hitch(this, function(inResult) {
                 allProjectJS += inResult + "\n";
                 var themeText = "";
                 var theme = studio.application.theme;
@@ -730,15 +735,15 @@ dojo.declare("wm.studio.Project", null, {
                 var themeName = theme.replace(/^.*\./,"");
                 var path;
                 if (studio.application.tabletTheme && studio.application.tabletTheme != theme) {
-                    path = dojo.moduleUrl(studio.application.tabletTheme) + "/Theme.js";                       
+                    path = dojo.moduleUrl(studio.application.tabletTheme) + "/Theme.js";
                     var themeData = wm.load(path);
                     themeText += "if (wm.device == 'tablet') {\n\t" +
                                  "wm.Application.themeData['" + studio.application.tabletTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
                 }
-                
+
                 // TODO: If phone and tablet are the same, we can optimize this
                 if (studio.application.phoneTheme && studio.application.phoneTheme != theme) {
-                    path = dojo.moduleUrl(studio.application.phoneTheme) + "/Theme.js";                       
+                    path = dojo.moduleUrl(studio.application.phoneTheme) + "/Theme.js";
                     var themeData = wm.load(path);
                     themeText += "if (wm.device == 'phone') {\n\t" +
                                  "wm.Application.themeData['" + studio.application.phoneTheme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n} else ";
@@ -747,11 +752,11 @@ dojo.declare("wm.studio.Project", null, {
                 if (themeText) {
                     themeText += " {\n\t";
                 }
-                path = dojo.moduleUrl(theme) + "/Theme.js";                                           
+                path = dojo.moduleUrl(theme) + "/Theme.js";
                 var themeData = wm.load(path);
                 themeText += "wm.Application.themeData['" + studio.application.theme + "'] = " + dojo.toJson(dojo.fromJson(themeData)) + ";\n";
                 if (closeParenNeeded) themeText += "}\n";
-                allProjectJS += themeText;                              
+                allProjectJS += themeText;
                 studio.incrementSaveProgressBar(1);
             }), onError
         ).then(
@@ -843,7 +848,7 @@ dojo.declare("wm.studio.Project", null, {
                         themeUrl = "../wavemaker/" + dojo.moduleUrl(theme) + "theme.css";
                     }
                 }
-                
+
                 var tabletTheme = studio.application.tabletTheme;
                 if (tabletTheme && tabletTheme != theme) {
                     if (tabletTheme.indexOf("project.") == 0) {
@@ -854,7 +859,7 @@ dojo.declare("wm.studio.Project", null, {
                         tabletThemeUrl = "../wavemaker/" + dojo.moduleUrl(tabletTheme ) + "theme.css";
                     }
                 }
-                
+
                 var phoneTheme = studio.application.phoneTheme;
                 if (phoneTheme && phoneTheme != theme) {
                     if (phoneTheme.indexOf("project.") == 0) {
@@ -872,10 +877,10 @@ dojo.declare("wm.studio.Project", null, {
                     var indexHtml = makeIndexHtml(this.projectName, themeUrl);
                     d = new dojo.Deferred();
                     d.callback(indexHtml);
-                }                
-    
+                }
+
                 return d;
-            }),onError            
+            }),onError
         ).then(
             /* Save step: Take the result of loading index.html, revise the file and save it */
             dojo.hitch(this, function(indexHtml) {
@@ -905,8 +910,8 @@ dojo.declare("wm.studio.Project", null, {
                 } else {
                    	indexHtml = indexHtml.replace(/var wmThemePhoneUrl\s*=.*?;\s*\n/m, "");
                 }
-                
-                
+
+
                 var d = this.saveProjectData(c.appIndexFileName, indexHtml, false, true);
                 return d;
             }),onError
@@ -948,7 +953,7 @@ dojo.declare("wm.studio.Project", null, {
                     } else {
                        	t = t.replace(/var wmThemePhoneUrl\s*=.*?;\s*\n/m, "");
                     }
-                                        
+
                     var theme = studio.application.theme;
                     var themeName = theme.replace(/^.*\./,"");
                     if (t.match(/wavemakerNode\",\s*theme\:/)) {
@@ -957,22 +962,22 @@ dojo.declare("wm.studio.Project", null, {
                         // first time we save login.html, it doesn't have a theme or projectName in the constructor
                         t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + theme + "\", name:\"" + studio.project.projectName + "\"}");
                     }
-                    
+
                     if (t.match(/,\s*tabletTheme\:/)) {
                         t = t.replace(/\s*tabletTheme\:\s*\".*?\"/, "tabletTheme: \"" + (studio.application.tabletTheme || "") + "\"");
                     } else {
                         // first time we save login.html, it doesn't have a theme or projectName in the constructor
                         t = t.replace(/(wm\.Application.*?)name\:/, "$1tabletTheme: \"" + (studio.application.tabletTheme || "") + "\", name:");
                     }
-                    
+
                     if (t.match(/,\s*phoneTheme\:/)) {
                         t = t.replace(/\s*phoneTheme\:\s*\".*?\"/, "phoneTheme: \"" + (studio.application.phoneTheme || "") + "\"");
                     } else {
                         // first time we save login.html, it doesn't have a theme or projectName in the constructor
                         t = t.replace(/(wm\.Application.*?)name\:/, "$1phoneTheme: \"" + studio.application.phoneTheme + "\", name:");
                     }
-                    
-                    
+
+
                     var d = this.saveProjectData("login.html", t, false, true);
                     return d;
                 }
