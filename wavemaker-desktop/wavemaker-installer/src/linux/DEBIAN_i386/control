@@ -4,7 +4,7 @@ Section: devel
 Priority: optional
 Architecture: i386
 Maintainer: Ed Callahan <community@wavemaker.com>
-Depends: openjdk-6-jdk | sun-java6-jdk
+Suggests: openjdk-6-jdk | sun-java6-jdk
 Provides: wavemaker
 Installed-Size: 130000
 Homepage: http://dev.wavemaker.com/
