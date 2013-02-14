@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="jsUtil.spring.xml" type="JavaService" CRUDService="false" class="dev.wavemaker.JSUtil" id="jsUtil">
+    <operation name="retPrefix">
+        <parameter isList="false" typeRef="int" name="inID"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="createAccNumber">
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="retUName">
+        <parameter isList="false" typeRef="java.lang.String" name="inUName"/>
+        <return isList="false" typeRef="java.lang.Boolean"/>
+    </operation>
+    <operation name="validateEmail">
+        <parameter isList="false" typeRef="java.lang.String" name="inEmail"/>
+        <return isList="false" typeRef="boolean"/>
+    </operation>
+    <operation name="retAccount">
+        <parameter isList="false" typeRef="java.lang.Integer" name="inAcNo"/>
+        <return isList="false" typeRef="java.lang.Boolean"/>
+    </operation>
+    <operation name="retEmail">
+        <parameter isList="false" typeRef="java.lang.String" name="inEmail"/>
+        <return isList="false" typeRef="java.lang.Boolean"/>
+    </operation>
+    <dataobjects/>
+</service>

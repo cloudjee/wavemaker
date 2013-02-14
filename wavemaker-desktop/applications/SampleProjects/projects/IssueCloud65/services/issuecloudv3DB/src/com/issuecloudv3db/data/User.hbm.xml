@@ -1,0 +1,54 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.issuecloudv3db.data.User" table="user" dynamic-insert="false" dynamic-update="false">
+        <id name="uid" type="integer">
+            <column name="uID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="tid" type="integer">
+            <column name="tID" not-null="true"/>
+        </property>
+        <property name="firstname" type="string">
+            <column name="firstname" length="40"/>
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="40"/>
+        </property>
+        <property name="username" type="string">
+            <column name="username" length="40"/>
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="40" not-null="true"/>
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="40" not-null="true"/>
+        </property>
+        <property name="createdate" type="date">
+            <column name="createdate" length="10" not-null="true"/>
+        </property>
+        <property name="role" type="string">
+            <column name="role" length="20" not-null="true"/>
+        </property>
+        <property name="flag" type="integer">
+            <column name="flag" not-null="true"/>
+        </property>
+        <set name="issuesForReportedUid" inverse="true">
+            <key>
+                <column name="reportedUID"/>
+            </key>
+            <one-to-many class="com.issuecloudv3db.data.Issue"/>
+        </set>
+        <set name="issuesForAssignUid" inverse="true">
+            <key>
+                <column name="assignUID"/>
+            </key>
+            <one-to-many class="com.issuecloudv3db.data.Issue"/>
+        </set>
+        <set name="comments" inverse="true">
+            <key>
+                <column name="uID" not-null="true"/>
+            </key>
+            <one-to-many class="com.issuecloudv3db.data.Comment"/>
+        </set>
+    </class>
+</hibernate-mapping>

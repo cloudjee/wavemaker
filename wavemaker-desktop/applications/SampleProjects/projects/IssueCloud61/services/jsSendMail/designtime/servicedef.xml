@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="jsSendMail.spring.xml" type="JavaService" CRUDService="false" class="dev.wavemaker.JSSendMail" id="jsSendMail">
+    <operation name="sendEmailNotification">
+        <parameter isList="false" typeRef="java.lang.String" name="email"/>
+        <parameter isList="false" typeRef="java.lang.String" name="username"/>
+        <parameter isList="false" typeRef="java.lang.String" name="password"/>
+        <return isList="false" typeRef="int"/>
+    </operation>
+    <operation name="initEmail">
+        <parameter isList="false" typeRef="java.lang.String" name="inMailType"/>
+        <parameter isList="false" typeRef="int" name="inID"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inUrl"/>
+    </operation>
+    <operation name="getInvolved">
+        <parameter isList="false" typeRef="int" name="inID"/>
+        <return isList="true" typeRef="java.lang.String"/>
+    </operation>
+    <dataobjects/>
+</service>

@@ -1,0 +1,200 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <meta attribute="@design.default-queries"/>
+    <query name="getUserByEmail" comment="USED BY JAVA CLASS JSUtil">
+        <query-param name="email" type="java.lang.String"/>
+        FROM User AS user
+WHERE user.email = :email
+    </query>
+    <query name="getVerifiedEmail" comment="USED BY USER ACCOUNTS">
+        <query-param name="id" type="java.lang.Integer"/>
+        FROM User AS user
+    </query>
+    <query name="setTenantID" comment="USED BY JAVA CLASS Registration">
+        <query-param name="tid" type="java.lang.Integer"/>
+        <query-param name="uid" type="java.lang.Integer"/>
+        UPDATE User AS user
+SET user.tid = :tid
+WHERE user.uid = :uid
+    </query>
+    <query name="getAccountNo" comment="USED BY JAVA CLASS JSUtil">
+        <query-param name="acno" type="java.lang.Integer"/>
+        FROM Tenant AS tenant
+WHERE tenant.accountnumber = :acno
+    </query>
+    <query name="getUserByUserName" comment="USED BY JAVA CLASS JSUtil">
+        <query-param name="username" type="java.lang.String"/>
+        FROM User AS user
+WHERE user.username = :username
+    </query>
+    <query name="getTenantById" comment="USED BY JAVA CLASS JSRegistration">
+        <query-param name="id" type="java.lang.Integer"/>
+        FROM Tenant AS tenant
+WHERE tenant.tid = :id
+    </query>
+    <query name="setNewPass" comment="USED BY JAVA CLASS Registration">
+        <query-param name="newPass" type="java.lang.String"/>
+        <query-param name="uId" type="java.lang.Integer"/>
+        UPDATE User AS user
+SET user.password = :newPass
+WHERE user.uid = :uId
+    </query>
+    <query name="getProjectById" comment="USED BY JAVA CLASS JSUTIL">
+        <query-param name="id" type="java.lang.Integer"/>
+        FROM Project AS project
+WHERE project.pid = :id
+    </query>
+    <query name="getProjectPrefix" comment="USED BY JAVA CLASS JSUtil">
+        <query-param name="id" type="java.lang.Integer"/>
+        SELECT project.prefix AS pfx
+FROM Project AS project
+WHERE project.pid =:id
+    </query>
+    <query name="getTenantByUser" comment="USED BY USER ACCOUNTS">
+        <query-param name="uid" type="java.lang.Integer"/>
+        SELECT user.tid AS tenant
+FROM User AS user
+WHERE user.uid = :uid
+    </query>
+    <query name="checkPrefix" comment="USED BY PROJECT PAGE">
+        <query-param name="pfx" type="java.lang.String"/>
+        FROM Project AS project
+WHERE project.prefix =:pfx
+    </query>
+    <query name="searchIssue" comment="USED BY SEARCH ISSUE PAGE">
+        <query-param name="quickvar" type="java.lang.String"/>
+        <query-param name="priorityvar" type="java.lang.String"/>
+        <query-param name="typevar" type="java.lang.String"/>
+        <query-param name="statusvar" type="java.lang.String"/>
+        <query-param name="projectvar" type="java.lang.Integer"/>
+        <query-param name="userreportedvar" type="java.lang.Integer"/>
+        <query-param name="userassignedvar" type="java.lang.Integer"/>
+        <query-param name="descriptionvar" type="java.lang.String"/>
+        <query-param name="createdbeforevar" type="java.util.Date"/>
+        <query-param name="createdaftervar" type="java.util.Date"/>
+        <query-param name="summaryvar" type="java.lang.String"/>
+        <query-param name="closedbeforevar" type="java.util.Date"/>
+        <query-param name="closedaftervar" type="java.util.Date"/>
+        <query-param name="versionreportedvar" type="java.lang.Integer"/>
+        <query-param name="versionfixedvar" type="java.lang.Integer"/>
+        FROM Issue AS issue
+LEFT OUTER JOIN issue.rel2Project AS project
+LEFT OUTER JOIN issue.rel2UserReported AS reportedUser
+LEFT OUTER JOIN issue.rel2UserAssigned AS assignedUser
+LEFT OUTER JOIN issue.rel2VersionReported AS reportedVersion
+LEFT OUTER JOIN issue.rel2VersionFixed AS fixedVersion
+WHERE
+(:quickvar is NULL OR issue.summary LIKE &apos;%&apos; || :quickvar || &apos;%&apos; OR issue.description LIKE &apos;%&apos; || :quickvar || &apos;%&apos; OR issue.name LIKE &apos;%&apos; || :quickvar || &apos;%&apos;) AND
+(:summaryvar is null OR issue.summary LIKE &apos;%&apos; || :summaryvar || &apos;%&apos;)  AND
+(:projectvar is null OR project.pid = :projectvar) AND
+(:priorityvar is NULL OR issue.priority = :priorityvar) AND
+(:typevar is NULL OR issue.issuetype = :typevar) AND
+(:statusvar is NULL OR issue.status = :statusvar) AND
+(:userreportedvar is NULL OR reportedUser.uid = :userreportedvar) AND
+(:userassignedvar is NULL OR assignedUser.uid = :userassignedvar) AND
+(:descriptionvar is NULL OR issue.description LIKE &apos;%&apos; || :descriptionvar || &apos;%&apos;) AND
+(:createdbeforevar is null OR issue.createdate &gt; :createdbeforevar) AND
+(:createdaftervar is null OR issue.createdate &lt; :createdaftervar) AND
+(:closedbeforevar is null OR issue.closedate &gt; :closedbeforevar) AND
+(:closedaftervar is null OR issue.closedate  &lt; :closedaftervar)   AND
+(:versionreportedvar is null OR reportedVersion.vid = :versionreportedvar)   AND
+(:versionfixedvar is null OR fixedVersion.vid = :versionfixedvar) AND
+issue.flag = 1
+    </query>
+    <query name="getUserById" comment="USED BY ISSUE PAGE">
+        <query-param name="id" type="java.lang.Integer"/>
+        SELECT user.firstname AS firstname, user.lastname AS lastname, user.email AS email
+FROM User AS user
+WHERE user.uid = :id AND
+user.flag = 1
+    </query>
+    <query name="getIssueByPriority" comment="USED BY MAIN PAGE">
+        <query-param name="projectvar" type="java.lang.Integer"/>
+        SELECT issue.priority AS priority, COUNT(issue.priority) AS number
+FROM Issue AS issue
+LEFT OUTER JOIN issue.rel2Project AS project
+WHERE issue.status = &apos;Open&apos;
+AND (:projectvar is null OR project.pid = :projectvar)
+GROUP BY issue.priority
+ORDER BY (CASE WHEN issue.priority = &apos;Minor&apos; THEN 0
+WHEN issue.priority = &apos;Major&apos; THEN 1
+WHEN issue.priority = &apos;Critical&apos; THEN 2 END)
+    </query>
+    <query name="getIssueByCritical" comment="USED BY MAIN PAGE">
+        <query-param name="projectvar" type="java.lang.Integer"/>
+        SELECT issue.name AS name, issue.summary AS summary, issue.iid AS issueId
+FROM Issue AS issue
+LEFT OUTER JOIN issue.rel2Project AS project
+WHERE issue.status = &apos;Open&apos;
+AND (issue.priority = &apos;Critical&apos;
+OR issue.priority = &apos;Major&apos;
+OR issue.priority = &apos;Blocker&apos;)
+AND (:projectvar is null OR project.pid = :projectvar)
+ORDER  BY issue.name
+    </query>
+    <query name="getIssueByType" comment="USED BY MAIN PAGE">
+        <query-param name="projectvar" type="java.lang.Integer"/>
+        SELECT issue.issuetype AS type, COUNT(issue.issuetype) AS number
+FROM Issue AS issue
+LEFT OUTER JOIN issue.rel2Project AS project
+WHERE issue.status = &apos;Open&apos;
+AND (:projectvar is null OR project.pid = :projectvar)
+GROUP BY issue.issuetype
+    </query>
+    <query name="getMAxIssuesByProject" comment="USED BY JAVA CLASS JSUtil">
+        <query-param name="projectid" type="java.lang.Integer"/>
+        SELECT COUNT(issue.iid) AS max
+FROM Issue As issue
+LEFT OUTER JOIN issue.rel2Project AS project
+WHERE project.pid = :projectid
+    </query>
+    <query name="getCommentContent" comment="USED BY JAVA CLASS JSSendMail">
+        <query-param name="issueid" type="java.lang.Integer"/>
+        SELECT
+CONCAT(comment.rel2User.firstname,&apos; &apos;,comment.rel2User.lastname) AS reporter,
+comment.createdate AS date,
+comment.description AS comment
+FROM Comment AS comment
+LEFT OUTER JOIN comment.rel2Issue AS issue
+WHERE issue.iid = :issueid
+    </query>
+    <query name="getIssueContent" comment="USED BY CLASS JSSendMail">
+        <query-param name="issueid" type="java.lang.Integer"/>
+        SELECT
+issue.summary AS summary,
+issue.name AS key,
+issue.rel2Project.name AS project,
+issue.issuetype AS type,
+issue.rel2VersionReported.name AS reportedversion,
+issue.rel2VersionFixed.name AS fixedversion,
+CONCAT(issue.rel2UserReported.firstname,&apos; &apos;,issue.rel2UserReported.lastname) AS reporter,
+CONCAT(issue.rel2UserAssigned.firstname,&apos; &apos;,issue.rel2UserAssigned.lastname) AS assignee,
+issue.description AS description,
+issue.status AS status
+FROM Issue AS issue
+WHERE issue.iid = :issueid
+    </query>
+    <query name="getVersionByProject" comment="USED BY ISSUE SEARCH PAGE">
+        <query-param name="projectvar" type="java.lang.Integer"/>
+        SELECT version.name AS name
+FROM Version AS version
+LEFT OUTER JOIN version.rel2Project AS project
+WHERE project.pid = :projectvar
+AND version.flag = 1
+    </query>
+    <query name="getCommentEmails" comment="USED BY JAVA CLASS JSSendMail">
+        <query-param name="issueid" type="java.lang.Integer"/>
+        SELECT comment.rel2User.email AS email
+FROM Comment AS comment
+WHERE comment.rel2Issue.iid = :issueid
+AND comment.rel2User.flag = 1
+    </query>
+    <query name="getIssueEmails" comment="USED BY JAVA CLASS JSSendMail">
+        <query-param name="issueid" type="java.lang.Integer"/>
+        SELECT DISTINCT issue.rel2UserReported.email AS reporter, issue.rel2UserAssigned.email AS assignee
+FROM Issue AS issue
+WHERE issue.iid = :issueid
+AND issue.rel2UserReported.flag = 1
+AND issue.rel2UserAssigned.flag = 1
+    </query>
+</hibernate-mapping>

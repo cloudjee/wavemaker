@@ -1,0 +1,53 @@
+{
+	"methods": [{
+		"name": "createTenant",
+		"parameters": [{
+			"name": "inFirst",
+			"type": "java.lang.String"
+		}, {
+			"name": "inLast",
+			"type": "java.lang.String"
+		}, {
+			"name": "inEmail",
+			"type": "java.lang.String"
+		}, {
+			"name": "inCompName",
+			"type": "java.lang.String"
+		}, {
+			"name": "inPhone",
+			"type": "java.lang.String"
+		}, {
+			"name": "inAddress",
+			"type": "java.lang.String"
+		}],
+		"returnType": "int"
+	}, {
+		"name": "createUser",
+		"parameters": [{
+			"name": "inTenant",
+			"type": "int"
+		}, {
+			"name": "inFirst",
+			"type": "java.lang.String"
+		}, {
+			"name": "inLast",
+			"type": "java.lang.String"
+		}, {
+			"name": "inEmail",
+			"type": "java.lang.String"
+		}, {
+			"name": "inChoice",
+			"type": "int"
+		}],
+		"returnType": "int"
+	}, {
+		"name": "resetEmail",
+		"parameters": [{
+			"name": "inEmail",
+			"type": "java.lang.String"
+		}],
+		"returnType": "int"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "jsRegistration.json"
+}

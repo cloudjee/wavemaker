@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="issuecloudv3DB" class="com.issuecloudv3db.Issuecloudv3DB" CRUDService="true" type="DataService" springFile="issuecloudv3DB.spring.xml">
+    <operation operationType="hqlquery" name="getVersionById">
+        <parameter name="id" typeRef="java.lang.Integer" isList="false"/>
+        <return typeRef="com.issuecloudv3db.data.Version" isList="false"/>
+    </operation>
+    <dataobjects>
+        <dataobject javaType="com.issuecloudv3db.data.Comment" supportsQuickData="true">
+            <element name="cid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="tid" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="createdate" typeRef="java.util.Date" isList="false" allowNull="false"/>
+            <element name="flag" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="description" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="issue" typeRef="com.issuecloudv3db.data.Issue" isList="false" allowNull="false"/>
+            <element name="user" typeRef="com.issuecloudv3db.data.User" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.issuecloudv3db.data.Issue" supportsQuickData="true">
+            <element name="iid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="tid" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="createdate" typeRef="java.util.Date" isList="false" allowNull="false"/>
+            <element name="closedate" typeRef="java.util.Date" isList="false" allowNull="true"/>
+            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="summary" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="issuetype" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="priority" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="path" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="status" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="flag" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
+            <element name="project" typeRef="com.issuecloudv3db.data.Project" isList="false" allowNull="false"/>
+            <element name="versionByReportedVid" typeRef="com.issuecloudv3db.data.Version" isList="false" allowNull="true"/>
+            <element name="versionByFixedVid" typeRef="com.issuecloudv3db.data.Version" isList="false" allowNull="true"/>
+            <element name="userByAssignUid" typeRef="com.issuecloudv3db.data.User" isList="false" allowNull="true"/>
+            <element name="userByReportedUid" typeRef="com.issuecloudv3db.data.User" isList="false" allowNull="true"/>
+            <element name="comments" typeRef="com.issuecloudv3db.data.Comment" isList="true" allowNull="true"/>
+        </dataobject>
+        <dataobject javaType="com.issuecloudv3db.data.Project" supportsQuickData="true">
+            <element name="pid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="tid" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="url" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="prefix" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="flag" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="versions" typeRef="com.issuecloudv3db.data.Version" isList="true" allowNull="true"/>
+            <element name="issues" typeRef="com.issuecloudv3db.data.Issue" isList="true" allowNull="true"/>
+        </dataobject>
+        <dataobject javaType="com.issuecloudv3db.data.Status" supportsQuickData="true">
+            <element name="sid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.issuecloudv3db.data.Tenant" supportsQuickData="true">
+            <element name="tid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="billcode" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
+            <element name="companyname" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="accountnumber" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="address" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="phone" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="createdate" typeRef="java.util.Date" isList="false" allowNull="false"/>
+            <element name="flag" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.issuecloudv3db.data.User" supportsQuickData="true">
+            <element name="uid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="tid" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="firstname" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="lastname" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="username" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="password" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="email" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="createdate" typeRef="java.util.Date" isList="false" allowNull="false"/>
+            <element name="role" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="flag" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="issuesForReportedUid" typeRef="com.issuecloudv3db.data.Issue" isList="true" allowNull="true"/>
+            <element name="issuesForAssignUid" typeRef="com.issuecloudv3db.data.Issue" isList="true" allowNull="true"/>
+            <element name="comments" typeRef="com.issuecloudv3db.data.Comment" isList="true" allowNull="true"/>
+        </dataobject>
+        <dataobject javaType="com.issuecloudv3db.data.Version" supportsQuickData="true">
+            <element name="vid" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="tid" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="releasedate" typeRef="java.util.Date" isList="false" allowNull="true"/>
+            <element name="status" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="flag" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="project" typeRef="com.issuecloudv3db.data.Project" isList="false" allowNull="false"/>
+            <element name="issuesForFixedVid" typeRef="com.issuecloudv3db.data.Issue" isList="true" allowNull="true"/>
+            <element name="issuesForReportedVid" typeRef="com.issuecloudv3db.data.Issue" isList="true" allowNull="true"/>
+        </dataobject>
+    </dataobjects>
+</service>

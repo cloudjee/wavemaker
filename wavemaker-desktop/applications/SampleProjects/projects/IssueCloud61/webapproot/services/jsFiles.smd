@@ -1,0 +1,40 @@
+{
+	"methods": [{
+		"name": "deleteAllFiles",
+		"parameters": [{
+			"name": "inFileNames",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
+	}, {
+		"name": "deleteFile",
+		"parameters": [{
+			"name": "inFileName",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
+	}, {
+		"name": "download",
+		"parameters": [{
+			"name": "filename",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.wavemaker.runtime.server.DownloadResponse"
+	}, {
+		"name": "fSize",
+		"parameters": [{
+			"name": "inFileName",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.String"
+	}, {
+		"name": "upload",
+		"parameters": [{
+			"name": "file",
+			"type": "org.springframework.web.multipart.MultipartFile"
+		}],
+		"returnType": null
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "jsFiles.json"
+}

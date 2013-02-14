@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.issuecloudv3db.data.Tenant" table="tenant" dynamic-insert="false" dynamic-update="false">
+        <id name="tid" type="integer">
+            <column name="tID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="billcode" type="integer">
+            <column name="billcode"/>
+        </property>
+        <property name="companyname" type="string">
+            <column name="companyname" length="40" not-null="true"/>
+        </property>
+        <property name="accountnumber" type="integer">
+            <column name="accountnumber" not-null="true"/>
+        </property>
+        <property name="address" type="string">
+            <column name="address" length="120"/>
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="40"/>
+        </property>
+        <property name="createdate" type="date">
+            <column name="createdate" length="10" not-null="true"/>
+        </property>
+        <property name="flag" type="integer">
+            <column name="flag" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+.Login .Login-loginErrorMsg {
+	font-size: 12px; color: red
+}
+
+.Login .Login-wmTitle {
+    font-size: 20px;
+}
+
+.wmmobile .Login .wmeditor .wmlabel {
+    font-size: 16px;
+}
+
+.wmmobile .Login .wmeditor input {
+    font-size: 20px;
+}
+
+.Login div .rounded {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}

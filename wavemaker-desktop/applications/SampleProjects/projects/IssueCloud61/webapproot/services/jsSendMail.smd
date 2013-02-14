@@ -1,0 +1,38 @@
+{
+	"methods": [{
+		"name": "getInvolved",
+		"parameters": [{
+			"name": "inID",
+			"type": "int"
+		}],
+		"returnType": "[java.lang.String]"
+	}, {
+		"name": "initEmail",
+		"parameters": [{
+			"name": "inMailType",
+			"type": "java.lang.String"
+		}, {
+			"name": "inID",
+			"type": "int"
+		}, {
+			"name": "inUrl",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
+	}, {
+		"name": "sendEmailNotification",
+		"parameters": [{
+			"name": "email",
+			"type": "java.lang.String"
+		}, {
+			"name": "username",
+			"type": "java.lang.String"
+		}, {
+			"name": "password",
+			"type": "java.lang.String"
+		}],
+		"returnType": "int"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "jsSendMail.json"
+}

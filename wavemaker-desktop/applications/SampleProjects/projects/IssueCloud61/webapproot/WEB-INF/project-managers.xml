@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean scope="singleton" parent="typeManagerBase" class="com.wavemaker.runtime.service.TypeManager" id="typeManager">
+        <property name="types">
+            <map merge="true">
+                <entry key="issuecloudv2">
+                    <list>
+                        <value>com.data.Comment</value>
+                        <value>com.data.Issue</value>
+                        <value>com.data.Project</value>
+                        <value>com.data.Role</value>
+                        <value>com.data.Status</value>
+                        <value>com.data.Tenant</value>
+                        <value>com.data.User</value>
+                        <value>com.data.Version</value>
+                        <value>com.data.output.GetUserByIdRtnType</value>
+                        <value>com.data.output.GetVersionByProjectRtnType</value>
+                        <value>com.data.output.GetProjectPrefixRtnType</value>
+                        <value>com.data.output.GetCommentContentRtnType</value>
+                        <value>com.data.output.GetIssueByTypeRtnType</value>
+                        <value>com.data.output.GetIssueContentRtnType</value>
+                        <value>com.data.output.GetMAxIssuesByProjectRtnType</value>
+                        <value>com.data.output.GetIssueEmailsRtnType</value>
+                        <value>com.data.output.GetCommentEmailsRtnType</value>
+                        <value>com.data.output.GetIssueByPriorityRtnType</value>
+                        <value>com.data.output.GetIssueByCriticalRtnType</value>
+                        <value>com.data.output.GetTenantByUserRtnType</value>
+                    </list>
+                </entry>
+                <entry key="jsFiles">
+                    <list>
+                        <value>com.wavemaker.runtime.server.DownloadResponse</value>
+                        <value>org.springframework.web.multipart.MultipartFile</value>
+                    </list>
+                </entry>
+                <entry key="jsPassGenerator">
+                    <list/>
+                </entry>
+                <entry key="jsRegistration">
+                    <list/>
+                </entry>
+                <entry key="jsSendMail">
+                    <list/>
+                </entry>
+                <entry key="jsUtil">
+                    <list/>
+                </entry>
+                <entry key="runtimeService">
+                    <list>
+                        <value>com.wavemaker.runtime.service.PagingOptions</value>
+                        <value>com.wavemaker.runtime.service.PropertyOptions</value>
+                    </list>
+                </entry>
+                <entry key="securityService">
+                    <list/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

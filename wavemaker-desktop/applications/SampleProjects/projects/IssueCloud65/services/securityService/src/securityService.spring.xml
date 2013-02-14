@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean class="com.wavemaker.runtime.security.SecurityService" scope="singleton" lazy-init="true" id="securityService"/>
+    <bean class="com.wavemaker.runtime.service.reflect.ReflectServiceWire" scope="singleton" lazy-init="false">
+        <property name="serviceId" value="securityService"/>
+        <property name="serviceType" ref="JavaService"/>
+    </bean>
+</beans>

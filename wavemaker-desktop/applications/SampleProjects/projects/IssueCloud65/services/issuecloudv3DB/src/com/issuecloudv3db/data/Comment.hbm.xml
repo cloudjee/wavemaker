@@ -1,0 +1,27 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.issuecloudv3db.data.Comment" table="comment" dynamic-insert="false" dynamic-update="false">
+        <id name="cid" type="integer">
+            <column name="cID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="tid" type="integer">
+            <column name="tID" not-null="true"/>
+        </property>
+        <property name="createdate" type="date">
+            <column name="createdate" length="10" not-null="true"/>
+        </property>
+        <property name="flag" type="integer">
+            <column name="flag" not-null="true"/>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" not-null="true"/>
+        </property>
+        <many-to-one name="issue" class="com.issuecloudv3db.data.Issue">
+            <column name="iID" not-null="true"/>
+        </many-to-one>
+        <many-to-one name="user" class="com.issuecloudv3db.data.User">
+            <column name="uID" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

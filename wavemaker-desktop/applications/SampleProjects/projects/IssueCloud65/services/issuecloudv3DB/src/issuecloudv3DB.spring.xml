@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+
+<!-- Generated 03/28/2012 16:03:03
+
+Configuration for 'issuecloudv3DB' database service
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+
+    <bean 
+        id="issuecloudv3DB"
+        class="com.issuecloudv3db.Issuecloudv3DB"
+        scope="singleton"
+        lazy-init="true">
+        <property name="dataServiceManager">
+            <ref bean="issuecloudv3DBDataService"/>
+        </property>
+        <property name="taskManager">
+            <ref bean="issuecloudv3DBTaskMgr"/>
+        </property>
+    </bean>
+
+
+    <bean 
+        class="com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:issuecloudv3DB.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean 
+        id="issuecloudv3DBDataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+        <property name="driverClassName" value="${issuecloudv3DB.driverClassName}"/>
+        <property name="url" value="${issuecloudv3DB.connectionUrl}"/>
+        <property name="username" value="${issuecloudv3DB.username}"/>
+        <property name="password" value="${issuecloudv3DB.password}"/>
+    </bean>
+
+
+    <bean 
+        id="issuecloudv3DBTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+        <property name="sessionFactory">
+            <ref bean="issuecloudv3DBSessionFactory"/>
+        </property>
+    </bean>
+
+
+    <bean 
+        id="issuecloudv3DBHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+        <property name="sessionFactory"> 
+            <ref bean="issuecloudv3DBSessionFactory"/>
+        </property>
+    </bean>  
+
+
+    <bean 
+        id="issuecloudv3DBSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+        <!-- A unique name for this SessionFactory's configuration -->
+        <property name="name" value="issuecloudv3DB"/>
+        <property name="dataSource" ref="issuecloudv3DBDataSource"/>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${issuecloudv3DB.dialect}</prop>
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.transaction.JDBCTransactionFactory
+                </prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+            </props> 
+        </property>
+
+        <property name="mappingResources">
+            <list>
+
+<value>com/issuecloudv3db/data/Version.hbm.xml</value>
+<value>com/issuecloudv3db/data/Status.hbm.xml</value>
+<value>com/issuecloudv3db/data/Comment.hbm.xml</value>
+<value>com/issuecloudv3db/data/Tenant.hbm.xml</value>
+<value>com/issuecloudv3db/data/Project.hbm.xml</value>
+<value>com/issuecloudv3db/data/User.hbm.xml</value>
+<value>com/issuecloudv3db/data/Issue.hbm.xml</value>
+
+<value>com/issuecloudv3db/data/Version.ql.xml</value>
+<value>com/issuecloudv3db/data/app-queries.ql.xml</value>
+
+            </list>
+        </property>
+
+    </bean>
+
+
+    <!-- the data service bean instance is injected into the service bean -->
+    <bean 
+        id="issuecloudv3DBDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+        <constructor-arg>
+            <!-- the value of the "name" property of the SessionFactory -->
+            <value>issuecloudv3DB</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="issuecloudv3DBHibernateTemplate"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="issuecloudv3DBTxMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="issuecloudv3DBTaskMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <map>
+                <entry key="useIndividualCRUDOperations" value="false"/>
+                <entry key="refreshEntities" value=""/> 
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <bean 
+        id="issuecloudv3DBTaskMgr"
+        class="com.wavemaker.runtime.data.DefaultTaskManager"
+        lazy-init="true"/>
+
+    <bean class="com.wavemaker.runtime.service.events.EventWire"
+        lazy-init="false">
+        <property name="serviceWire" ref="issuecloudv3DBServiceWire"/>
+        <property name="eventListener">
+            <bean class="com.wavemaker.runtime.data.DataServiceEventListener"/>
+        </property>
+    </bean>
+
+    <bean id="issuecloudv3DBServiceWire"
+        class="com.wavemaker.runtime.service.reflect.ReflectServiceWire"
+        lazy-init="false" scope="singleton">
+        <property name="serviceId" value="issuecloudv3DB"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+
+</beans>

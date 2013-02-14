@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.data.Project" table="project" catalog="issuecloudv2" dynamic-insert="false" dynamic-update="false">
+        <id name="pid" type="integer">
+            <column name="pID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="tid" type="integer">
+            <column name="tID" not-null="true"/>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="65535" not-null="true"/>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="url" type="string">
+            <column name="url" length="65535"/>
+        </property>
+        <property name="prefix" type="string">
+            <column name="prefix" length="65535" not-null="true"/>
+        </property>
+        <property name="flag" type="integer">
+            <column name="flag" not-null="true"/>
+        </property>
+        <set name="versions" inverse="true">
+            <key>
+                <column name="pID" not-null="true"/>
+            </key>
+            <one-to-many class="com.data.Version"/>
+        </set>
+        <set name="issues" inverse="true">
+            <key>
+                <column name="pID" not-null="true"/>
+            </key>
+            <one-to-many class="com.data.Issue"/>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+.Login .Login-loginErrorMsg {
+  font-size: 12px; color: red
+}
+.Login .Login-CenteredLayout {
+    background: #C8C8C8
+}
+
+.Login .Login-labLogin {
+  color: #51a3d2
+}
+
+.Login .Login-labRegister {
+    color: #51a3d2
+}
+
+.Login .Login-labReset {
+   color: #51a3d2
+}.Login .Login-labRegError {
+	color: #E00000 
+}
+

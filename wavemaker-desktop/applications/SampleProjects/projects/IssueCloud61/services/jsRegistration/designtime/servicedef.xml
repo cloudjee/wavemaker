@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="jsRegistration.spring.xml" type="JavaService" CRUDService="false" class="dev.wavemaker.JSRegistration" id="jsRegistration">
+    <operation name="resetEmail">
+        <parameter isList="false" typeRef="java.lang.String" name="inEmail"/>
+        <return isList="false" typeRef="int"/>
+    </operation>
+    <operation name="createTenant">
+        <parameter isList="false" typeRef="java.lang.String" name="inFirst"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inLast"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inEmail"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inCompName"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inPhone"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inAddress"/>
+        <return isList="false" typeRef="int"/>
+    </operation>
+    <operation name="createUser">
+        <parameter isList="false" typeRef="int" name="inTenant"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inFirst"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inLast"/>
+        <parameter isList="false" typeRef="java.lang.String" name="inEmail"/>
+        <parameter isList="false" typeRef="int" name="inChoice"/>
+        <return isList="false" typeRef="int"/>
+    </operation>
+    <dataobjects/>
+</service>

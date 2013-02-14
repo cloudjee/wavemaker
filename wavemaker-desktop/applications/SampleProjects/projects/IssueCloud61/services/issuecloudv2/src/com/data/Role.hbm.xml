@@ -1,0 +1,12 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.data.Role" table="role" catalog="issuecloudv2" dynamic-insert="false" dynamic-update="false">
+        <id name="rid" type="integer">
+            <column name="rID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="role" type="string">
+            <column name="role" length="65535" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xsi:schemaLocation="http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean class="com.wavemaker.runtime.service.TypeManager" parent="typeManagerBase" scope="singleton" id="typeManager">
+        <property name="types">
+            <map merge="true">
+                <entry key="issuecloudv3DB">
+                    <list>
+                        <value>com.issuecloudv3db.data.Comment</value>
+                        <value>com.issuecloudv3db.data.Issue</value>
+                        <value>com.issuecloudv3db.data.Project</value>
+                        <value>com.issuecloudv3db.data.Status</value>
+                        <value>com.issuecloudv3db.data.Tenant</value>
+                        <value>com.issuecloudv3db.data.User</value>
+                        <value>com.issuecloudv3db.data.Version</value>
+                    </list>
+                </entry>
+                <entry key="securityService">
+                    <list/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

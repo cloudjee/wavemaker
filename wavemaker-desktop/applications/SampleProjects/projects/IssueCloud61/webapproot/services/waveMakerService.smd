@@ -1,0 +1,64 @@
+{
+	"methods": [{
+		"name": "echo",
+		"operationType": null,
+		"parameters": [{
+			"name": "contents",
+			"type": "java.lang.String"
+		}, {
+			"name": "contentType",
+			"type": "java.lang.String"
+		}, {
+			"name": "fileName",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.wavemaker.runtime.server.DownloadResponse"
+	}, {
+		"name": "getLocalHostIP",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
+		"name": "getServerTimeOffset",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "int"
+	}, {
+		"name": "getSessionId",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "java.lang.String"
+	}, {
+		"name": "hostToDomain",
+		"operationType": null,
+		"parameters": [{
+			"name": "host",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.String"
+	}, {
+		"name": "proxyCheck",
+		"operationType": null,
+		"parameters": [{
+			"name": "remoteURL",
+			"type": "java.lang.String"
+		}],
+		"returnType": null
+	}, {
+		"name": "remoteRESTCall",
+		"operationType": null,
+		"parameters": [{
+			"name": "remoteURL",
+			"type": "java.lang.String"
+		}, {
+			"name": "params",
+			"type": "java.lang.String"
+		}, {
+			"name": "method",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.String"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "waveMakerService.json"
+}

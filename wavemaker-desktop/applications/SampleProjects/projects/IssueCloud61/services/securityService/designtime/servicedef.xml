@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="securityService.spring.xml" type="JavaService" CRUDService="false" class="com.wavemaker.runtime.security.SecurityService" id="securityService">
+    <operation name="isAuthenticated">
+        <return isList="false" typeRef="boolean"/>
+    </operation>
+    <operation name="getUserRoles">
+        <return isList="true" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="logout"/>
+    <operation name="getUserId">
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="getUserName">
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <dataobjects/>
+</service>

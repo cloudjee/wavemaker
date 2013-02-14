@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="issuecloudv2.spring.xml" type="DataService" CRUDService="true" class="com.Issuecloudv2" id="issuecloudv2">
+    <operation name="getMAxIssuesByProject">
+        <parameter isList="false" typeRef="java.lang.Integer" name="projectid"/>
+        <return isList="false" typeRef="com.data.output.GetMAxIssuesByProjectRtnType"/>
+    </operation>
+    <operation name="getIssueByType">
+        <parameter isList="false" typeRef="java.lang.Integer" name="projectvar"/>
+        <return isList="true" typeRef="com.data.output.GetIssueByTypeRtnType"/>
+    </operation>
+    <operation name="searchIssue">
+        <parameter isList="false" typeRef="java.lang.String" name="quickvar"/>
+        <parameter isList="false" typeRef="java.lang.String" name="priorityvar"/>
+        <parameter isList="false" typeRef="java.lang.String" name="typevar"/>
+        <parameter isList="false" typeRef="java.lang.String" name="statusvar"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="projectvar"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="userreportedvar"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="userassignedvar"/>
+        <parameter isList="false" typeRef="java.lang.String" name="descriptionvar"/>
+        <parameter isList="false" typeRef="java.util.Date" name="createdbeforevar"/>
+        <parameter isList="false" typeRef="java.util.Date" name="createdaftervar"/>
+        <parameter isList="false" typeRef="java.lang.String" name="summaryvar"/>
+        <parameter isList="false" typeRef="java.util.Date" name="closedbeforevar"/>
+        <parameter isList="false" typeRef="java.util.Date" name="closedaftervar"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="versionreportedvar"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="versionfixedvar"/>
+        <return isList="true" typeRef="com.data.Issue"/>
+    </operation>
+    <operation name="getIssueContent">
+        <parameter isList="false" typeRef="java.lang.Integer" name="issueid"/>
+        <return isList="false" typeRef="com.data.output.GetIssueContentRtnType"/>
+    </operation>
+    <operation name="getProjectPrefix">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="false" typeRef="com.data.output.GetProjectPrefixRtnType"/>
+    </operation>
+    <operation name="getVersionByProject">
+        <parameter isList="false" typeRef="java.lang.Integer" name="projectvar"/>
+        <return isList="true" typeRef="com.data.output.GetVersionByProjectRtnType"/>
+    </operation>
+    <operation name="checkPrefix">
+        <parameter isList="false" typeRef="java.lang.String" name="pfx"/>
+        <return isList="true" typeRef="com.data.Project"/>
+    </operation>
+    <operation name="getUserByEmail">
+        <parameter isList="false" typeRef="java.lang.String" name="email"/>
+        <return isList="false" typeRef="com.data.User"/>
+    </operation>
+    <operation name="getIssueByPriority">
+        <parameter isList="false" typeRef="java.lang.Integer" name="projectvar"/>
+        <return isList="true" typeRef="com.data.output.GetIssueByPriorityRtnType"/>
+    </operation>
+    <operation name="getVerifiedEmail">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="true" typeRef="com.data.User"/>
+    </operation>
+    <operation name="setTenantID">
+        <parameter isList="false" typeRef="java.lang.Integer" name="tid"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="uid"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="getAccountNo">
+        <parameter isList="false" typeRef="java.lang.Integer" name="acno"/>
+        <return isList="false" typeRef="com.data.Tenant"/>
+    </operation>
+    <operation name="getUserByUserName">
+        <parameter isList="false" typeRef="java.lang.String" name="username"/>
+        <return isList="false" typeRef="com.data.User"/>
+    </operation>
+    <operation name="getCommentEmails">
+        <parameter isList="false" typeRef="java.lang.Integer" name="issueid"/>
+        <return isList="true" typeRef="com.data.output.GetCommentEmailsRtnType"/>
+    </operation>
+    <operation name="getCommentContent">
+        <parameter isList="false" typeRef="java.lang.Integer" name="issueid"/>
+        <return isList="true" typeRef="com.data.output.GetCommentContentRtnType"/>
+    </operation>
+    <operation name="getIssueEmails">
+        <parameter isList="false" typeRef="java.lang.Integer" name="issueid"/>
+        <return isList="true" typeRef="com.data.output.GetIssueEmailsRtnType"/>
+    </operation>
+    <operation name="setNewPass">
+        <parameter isList="false" typeRef="java.lang.String" name="newPass"/>
+        <parameter isList="false" typeRef="java.lang.Integer" name="uId"/>
+        <return isList="false" typeRef="java.lang.Integer"/>
+    </operation>
+    <operation name="getTenantById">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="false" typeRef="com.data.Tenant"/>
+    </operation>
+    <operation name="getProjectById">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="false" typeRef="com.data.Project"/>
+    </operation>
+    <operation name="getUserById">
+        <parameter isList="false" typeRef="java.lang.Integer" name="id"/>
+        <return isList="false" typeRef="com.data.output.GetUserByIdRtnType"/>
+    </operation>
+    <operation name="getTenantByUser">
+        <parameter isList="false" typeRef="java.lang.Integer" name="uid"/>
+        <return isList="false" typeRef="com.data.output.GetTenantByUserRtnType"/>
+    </operation>
+    <operation name="getIssueByCritical">
+        <parameter isList="false" typeRef="java.lang.Integer" name="projectvar"/>
+        <return isList="true" typeRef="com.data.output.GetIssueByCriticalRtnType"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="true" javaType="com.data.Comment">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="cid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tid"/>
+            <element allowNull="false" isList="false" typeRef="java.util.Date" name="createdate"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="description"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="flag"/>
+            <element allowNull="false" isList="false" typeRef="com.data.Issue" name="rel2Issue"/>
+            <element allowNull="false" isList="false" typeRef="com.data.User" name="rel2User"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.Issue">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="iid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tid"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+            <element allowNull="false" isList="false" typeRef="java.util.Date" name="createdate"/>
+            <element allowNull="true" isList="false" typeRef="java.util.Date" name="closedate"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="description"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="summary"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="issuetype"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="priority"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="status"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="flag"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="path"/>
+            <element allowNull="false" isList="false" typeRef="com.data.Project" name="rel2Project"/>
+            <element allowNull="true" isList="false" typeRef="com.data.Version" name="rel2VersionReported"/>
+            <element allowNull="true" isList="false" typeRef="com.data.Version" name="rel2VersionFixed"/>
+            <element allowNull="true" isList="false" typeRef="com.data.User" name="rel2UserReported"/>
+            <element allowNull="true" isList="false" typeRef="com.data.User" name="rel2UserAssigned"/>
+            <element allowNull="true" isList="true" typeRef="com.data.Comment" name="comments"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.Project">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="pid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tid"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="description"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="url"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="prefix"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="flag"/>
+            <element allowNull="true" isList="true" typeRef="com.data.Version" name="versions"/>
+            <element allowNull="true" isList="true" typeRef="com.data.Issue" name="issues"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.Role">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="rid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="role"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.Status">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="sid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.Tenant">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="true" isList="false" typeRef="java.lang.Integer" name="billcode"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="companyname"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="accountnumber"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="address"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="phone"/>
+            <element allowNull="false" isList="false" typeRef="java.util.Date" name="createdate"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="flag"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.User">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="uid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tid"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="firstname"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="lastname"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="username"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="password"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="email"/>
+            <element allowNull="false" isList="false" typeRef="java.util.Date" name="createdate"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="role"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="flag"/>
+            <element allowNull="true" isList="true" typeRef="com.data.Comment" name="comments"/>
+            <element allowNull="true" isList="true" typeRef="com.data.Issue" name="issues"/>
+        </dataobject>
+        <dataobject supportsQuickData="true" javaType="com.data.Version">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="vid">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tid"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+            <element allowNull="true" isList="false" typeRef="java.lang.String" name="description"/>
+            <element allowNull="true" isList="false" typeRef="java.util.Date" name="releasedate"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="status"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="flag"/>
+            <element allowNull="false" isList="false" typeRef="com.data.Project" name="rel2Project"/>
+            <element allowNull="true" isList="true" typeRef="com.data.Issue" name="issues"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetUserByIdRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="firstname"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="lastname"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="email"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetVersionByProjectRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetProjectPrefixRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="pfx"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetCommentContentRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="reporter"/>
+            <element allowNull="false" isList="false" typeRef="java.util.Date" name="date"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="comment"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetIssueByTypeRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="type"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Long" name="number"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetIssueContentRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="summary"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="key"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="project"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="type"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="reportedversion"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="fixedversion"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="reporter"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="assignee"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="description"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="status"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetMAxIssuesByProjectRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.Long" name="max"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetIssueEmailsRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="reporter"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="assignee"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetCommentEmailsRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="email"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetIssueByPriorityRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="priority"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Long" name="number"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetIssueByCriticalRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="summary"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="issueId"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" javaType="com.data.output.GetTenantByUserRtnType">
+            <element allowNull="false" isList="false" typeRef="java.lang.Integer" name="tenant"/>
+        </dataobject>
+    </dataobjects>
+</service>

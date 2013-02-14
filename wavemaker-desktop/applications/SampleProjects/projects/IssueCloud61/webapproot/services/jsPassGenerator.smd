@@ -1,0 +1,12 @@
+{
+	"methods": [{
+		"name": "generate",
+		"parameters": [{
+			"name": "passLength",
+			"type": "int"
+		}],
+		"returnType": "java.lang.String"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "jsPassGenerator.json"
+}

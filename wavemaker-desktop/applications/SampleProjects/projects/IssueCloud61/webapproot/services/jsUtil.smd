@@ -1,0 +1,44 @@
+{
+	"methods": [{
+		"name": "createAccNumber",
+		"parameters": null,
+		"returnType": "java.lang.Integer"
+	}, {
+		"name": "retAccount",
+		"parameters": [{
+			"name": "inAcNo",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "java.lang.Boolean"
+	}, {
+		"name": "retEmail",
+		"parameters": [{
+			"name": "inEmail",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.Boolean"
+	}, {
+		"name": "retPrefix",
+		"parameters": [{
+			"name": "inID",
+			"type": "int"
+		}],
+		"returnType": "java.lang.String"
+	}, {
+		"name": "retUName",
+		"parameters": [{
+			"name": "inUName",
+			"type": "java.lang.String"
+		}],
+		"returnType": "java.lang.Boolean"
+	}, {
+		"name": "validateEmail",
+		"parameters": [{
+			"name": "inEmail",
+			"type": "java.lang.String"
+		}],
+		"returnType": "boolean"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "jsUtil.json"
+}

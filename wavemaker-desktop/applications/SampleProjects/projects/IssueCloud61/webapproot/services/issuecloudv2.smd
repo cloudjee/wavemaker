@@ -1,0 +1,207 @@
+{
+	"methods": [{
+		"name": "checkPrefix",
+		"parameters": [{
+			"name": "pfx",
+			"type": "java.lang.String"
+		}],
+		"returnType": "[com.data.Project]"
+	}, {
+		"name": "getAccountNo",
+		"parameters": [{
+			"name": "acno",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.Tenant"
+	}, {
+		"name": "getCommentContent",
+		"parameters": [{
+			"name": "issueid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetCommentContentRtnType]"
+	}, {
+		"name": "getCommentEmails",
+		"parameters": [{
+			"name": "issueid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetCommentEmailsRtnType]"
+	}, {
+		"name": "getIssueByCritical",
+		"parameters": [{
+			"name": "projectvar",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetIssueByCriticalRtnType]"
+	}, {
+		"name": "getIssueByPriority",
+		"parameters": [{
+			"name": "projectvar",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetIssueByPriorityRtnType]"
+	}, {
+		"name": "getIssueByType",
+		"parameters": [{
+			"name": "projectvar",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetIssueByTypeRtnType]"
+	}, {
+		"name": "getIssueContent",
+		"parameters": [{
+			"name": "issueid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.output.GetIssueContentRtnType"
+	}, {
+		"name": "getIssueEmails",
+		"parameters": [{
+			"name": "issueid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetIssueEmailsRtnType]"
+	}, {
+		"name": "getMAxIssuesByProject",
+		"parameters": [{
+			"name": "projectid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.output.GetMAxIssuesByProjectRtnType"
+	}, {
+		"name": "getProjectById",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.Project"
+	}, {
+		"name": "getProjectPrefix",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.output.GetProjectPrefixRtnType"
+	}, {
+		"name": "getTenantById",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.Tenant"
+	}, {
+		"name": "getTenantByUser",
+		"parameters": [{
+			"name": "uid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.output.GetTenantByUserRtnType"
+	}, {
+		"name": "getUserByEmail",
+		"parameters": [{
+			"name": "email",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.data.User"
+	}, {
+		"name": "getUserById",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "com.data.output.GetUserByIdRtnType"
+	}, {
+		"name": "getUserByUserName",
+		"parameters": [{
+			"name": "username",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.data.User"
+	}, {
+		"name": "getVerifiedEmail",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.User]"
+	}, {
+		"name": "getVersionByProject",
+		"parameters": [{
+			"name": "projectvar",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.output.GetVersionByProjectRtnType]"
+	}, {
+		"name": "searchIssue",
+		"parameters": [{
+			"name": "quickvar",
+			"type": "java.lang.String"
+		}, {
+			"name": "priorityvar",
+			"type": "java.lang.String"
+		}, {
+			"name": "typevar",
+			"type": "java.lang.String"
+		}, {
+			"name": "statusvar",
+			"type": "java.lang.String"
+		}, {
+			"name": "projectvar",
+			"type": "java.lang.Integer"
+		}, {
+			"name": "userreportedvar",
+			"type": "java.lang.Integer"
+		}, {
+			"name": "userassignedvar",
+			"type": "java.lang.Integer"
+		}, {
+			"name": "descriptionvar",
+			"type": "java.lang.String"
+		}, {
+			"name": "createdbeforevar",
+			"type": "java.util.Date"
+		}, {
+			"name": "createdaftervar",
+			"type": "java.util.Date"
+		}, {
+			"name": "summaryvar",
+			"type": "java.lang.String"
+		}, {
+			"name": "closedbeforevar",
+			"type": "java.util.Date"
+		}, {
+			"name": "closedaftervar",
+			"type": "java.util.Date"
+		}, {
+			"name": "versionreportedvar",
+			"type": "java.lang.Integer"
+		}, {
+			"name": "versionfixedvar",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.data.Issue]"
+	}, {
+		"name": "setNewPass",
+		"parameters": [{
+			"name": "newPass",
+			"type": "java.lang.String"
+		}, {
+			"name": "uId",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "java.lang.Integer"
+	}, {
+		"name": "setTenantID",
+		"parameters": [{
+			"name": "tid",
+			"type": "java.lang.Integer"
+		}, {
+			"name": "uid",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "java.lang.Integer"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "issuecloudv2.json"
+}

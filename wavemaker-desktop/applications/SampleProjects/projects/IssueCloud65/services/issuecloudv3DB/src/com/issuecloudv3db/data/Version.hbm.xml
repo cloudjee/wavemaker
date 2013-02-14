@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.issuecloudv3db.data.Version" table="version" dynamic-insert="false" dynamic-update="false">
+        <id name="vid" type="integer">
+            <column name="vID"/>
+            <generator class="identity"/>
+        </id>
+        <property name="tid" type="integer">
+            <column name="tID" not-null="true"/>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="40" not-null="true"/>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="releasedate" type="date">
+            <column name="releasedate" length="10"/>
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="40" not-null="true"/>
+        </property>
+        <property name="flag" type="integer">
+            <column name="flag" not-null="true"/>
+        </property>
+        <many-to-one name="project" class="com.issuecloudv3db.data.Project">
+            <column name="pID" not-null="true"/>
+        </many-to-one>
+        <set name="issuesForFixedVid" inverse="true">
+            <key>
+                <column name="fixedVID"/>
+            </key>
+            <one-to-many class="com.issuecloudv3db.data.Issue"/>
+        </set>
+        <set name="issuesForReportedVid" inverse="true">
+            <key>
+                <column name="reportedVID"/>
+            </key>
+            <one-to-many class="com.issuecloudv3db.data.Issue"/>
+        </set>
+    </class>
+</hibernate-mapping>

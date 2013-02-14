@@ -1,0 +1,30 @@
+.Issues .Issues-labManageHeader {
+    color: #FF9933
+}
+
+.Issues .Issues-labDashboard {
+	color: #326dcf
+}
+
+.Issues .dojoxGrid-header .dojoxGrid-cell {
+  -moz-background-clip:border;
+  -moz-background-inline-policy:continuous;
+  -moz-background-origin:padding;
+  background:#656565 none repeat-x scroll center top;
+  background-image: url('resources/images/header/gridbar.png');
+  background-repeat: repeat-x;
+  border:1px solid #FFFFFF;
+  color:#FFFFFF;
+  font-size:12px;
+}
+
+.Issues .dojoxGrid-header {
+  background-color:#FFFFFF;
+}.Issues .Issues-labComment {
+     color: #326dcf
+}
+
+.Issues .Issues-labSearchIssue {
+	color: #326dcf
+}
+

@@ -1,0 +1,15 @@
+.Chart .dojoxGrid-header .dojoxGrid-cell {
+  -moz-background-clip:border;
+  -moz-background-inline-policy:continuous;
+  -moz-background-origin:padding;
+  background:#656565 none repeat-x scroll center top;
+  background-image: url('resources/images/header/gridbar.png');
+  background-repeat: repeat-x;
+  border:1px solid #FFFFFF;
+  color:#FFFFFF;
+  font-size:12px;
+}
+
+.Chart .dojoxGrid-header {
+  background-color:#FFFFFF;
+}

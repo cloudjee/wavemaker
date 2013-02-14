@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" springFile="jsFiles.spring.xml" type="JavaService" CRUDService="false" class="dev.wavemaker.JSFiles" id="jsFiles">
+    <operation name="deleteAllFiles">
+        <parameter isList="false" typeRef="java.lang.String" name="inFileNames"/>
+    </operation>
+    <operation name="download">
+        <parameter isList="false" typeRef="java.lang.String" name="filename"/>
+        <return isList="false" typeRef="com.wavemaker.runtime.server.DownloadResponse"/>
+    </operation>
+    <operation name="fSize">
+        <parameter isList="false" typeRef="java.lang.String" name="inFileName"/>
+        <return isList="false" typeRef="java.lang.String"/>
+    </operation>
+    <operation name="deleteFile">
+        <parameter isList="false" typeRef="java.lang.String" name="inFileName"/>
+    </operation>
+    <operation name="upload">
+        <parameter isList="false" typeRef="org.springframework.web.multipart.MultipartFile" name="file"/>
+    </operation>
+    <dataobjects>
+        <dataobject supportsQuickData="false" name="DownloadResponse" javaType="com.wavemaker.runtime.server.DownloadResponse">
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="contentType"/>
+            <element allowNull="false" isList="false" typeRef="java.io.InputStream" name="contents"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="fileName"/>
+        </dataobject>
+        <dataobject supportsQuickData="false" name="MultipartFile" javaType="org.springframework.web.multipart.MultipartFile">
+            <element allowNull="false" isList="true" typeRef="byte" name="bytes"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="contentType"/>
+            <element allowNull="false" isList="false" typeRef="boolean" name="empty"/>
+            <element allowNull="false" isList="false" typeRef="java.io.InputStream" name="inputStream"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="name"/>
+            <element allowNull="false" isList="false" typeRef="java.lang.String" name="originalFilename"/>
+            <element allowNull="false" isList="false" typeRef="long" name="size"/>
+        </dataobject>
+    </dataobjects>
+</service>

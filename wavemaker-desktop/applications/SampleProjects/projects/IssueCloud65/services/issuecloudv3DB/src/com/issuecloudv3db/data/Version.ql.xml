@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!-- Generated 03/28/2012 16:03:03
+
+Queries for entity: Version.
+
+@design.generated: Marks a generated query.
+
+-->
+
+<hibernate-mapping>
+
+    <query 
+        name="getVersionById"
+        comment="Example HQL Query
+                 @design.generated">
+                 
+        <query-param name="id" type="java.lang.Integer"/>
+
+            from Version _a where _a.id=:id 
+
+    </query>
+
+</hibernate-mapping>
