@@ -105,7 +105,7 @@ Security.widgets = {
 							dbTestSQLResultList: ["wm.List", {"border":"1","width":"100%", height: "100%"}, {}],
 						    }],
 						    dbTestSQLErrorPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
-							dbTestSQLErrorPanelLabel: ["wm.Label", {caption: "Errors from Query:", width: "100%", height: "18px"}],
+							dbTestSQLErrorPanelLabel: ["wm.Label", {singleLine: false, caption: "Errors from Query:", width: "100%", height: "18px"}],
 							dbTestSQLErrorLabel: ["wm.Label", {"border":"1","caption":"dbTestSQLErrorLabel","padding":"4","width":"100%", height: "100%"}]
 						    }],
 						    spacer569: ["wm.Spacer", {"width":"20px"}, {}],
