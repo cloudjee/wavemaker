@@ -707,7 +707,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
         } else if (!this.autoDataSet) {
             this.startUpdate = false;
         }
-        this.inherited(arguments);        
+        this.inherited(arguments);
     },
     createDataSet: function() {
         wm.fire(this.$.liveVariable, "destroy");
@@ -1059,18 +1059,22 @@ dojo.declare(
                     height: "100%",
                        onchange: dojo.hitch(this, function(inDisplayValue, inDataValue, inSetByCode) {
                         if (this._cupdating || inSetByCode) return;
-                        var data = this.listSet.grid.selectedItem.getData();
-                        if (data) {
-                        var value = this.owner._getDisplayData(data);
-                        this.set("value", value);
-                        data.name = this.listSet.grid.getCell(this.listSet.grid.getSelectedIndex(),"name");
+                        var data = this.owner.allowNone && this.listSet.grid.getSelectedIndex() == 0 ? null : this.listSet.grid.selectedItem.getData();
+                        var value = data ? this.owner._getDisplayData(data) : null;
 
-                        this.set("item", data);
-                        this.displayedValue = value;
-                        this.owner.changed();
+                        if (data || this.listSet.grid.getSelectedIndex() == 0) {
+                            this.set("value", value);
+                            if (data) {
+                                data.name = this.listSet.grid.getCell(this.listSet.grid.getSelectedIndex(),"name");
+                            }
 
-                        this.closeDropDown();
-                        this.dropDown.hide();
+                            this.set("item", data);
+                            this.displayedValue = value;
+                            this.owner.changed();
+
+                            this.closeDropDown();
+                            this.dropDown.hide();
+
                         }
                     })
                        });
