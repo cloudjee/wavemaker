@@ -51,7 +51,7 @@ dojo.declare("Login", wm.Page, {
     // i+1 because the first tabIndex should be 1 not 0
     edArr = this.regEditor();
     for(i=0;i<=6;i++) {
-      edArr[i].editor.editor.setAttribute("tabIndex",i+1);
+      edArr[i].editor.setAttribute("tabIndex",i+1);
     }
     
   },

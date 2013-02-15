@@ -1541,7 +1541,7 @@ dojo.declare("IssueCloud61", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": 3, 
+	"projectSubVersion": 5, 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 

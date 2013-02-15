@@ -101,15 +101,9 @@ Login.widgets = {
 									loginErrorMsg: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_12px"]},"caption":" ","height":"50px","padding":"4","singleLine":false,"width":"215px"}, {}, {
 										format: ["wm.DataFormatter", {}, {}]
 									}],
-									usernameInput: ["wm.Editor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Email ","captionSize":"80px","height":"28px","padding":"2","width":"224px"}, {}, {
-										editor: ["wm._TextEditor", {"required":true}, {}]
-									}],
-									passwordInput: ["wm.Editor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Password","captionSize":"80px","height":"28px","padding":"2"}, {}, {
-										editor: ["wm._TextEditor", {"password":true,"required":true}, {}]
-									}],
-									seRemember: ["wm.SelectEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontColor_Black"]},"caption":"Remember Username","captionAlign":"left","captionPosition":"right","captionSize":"223px","display":"CheckBox","displayValue":true,"height":"25px","padding":"2","width":"259px"}, {}, {
-										editor: ["wm._CheckBoxEditor", {"dataType":"boolean","startChecked":true}, {}]
-									}],
+									usernameInput: ["wm.Text", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Email ","captionSize":"80px","dataValue":undefined,"desktopHeight":"28px","displayValue":"","height":"28px","required":true,"width":"224px"}, {}],
+									passwordInput: ["wm.Text", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Password","captionSize":"80px","dataValue":undefined,"desktopHeight":"28px","displayValue":"","height":"28px","password":true,"required":true}, {}],
+									seRemember: ["wm.Checkbox", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontColor_Black"]},"caption":"Remember Username","captionAlign":"left","captionPosition":"right","captionSize":"223px","desktopHeight":"25px","displayValue":true,"height":"25px","margin":"0,0,0,80","startChecked":true,"width":"259px"}, {}],
 									panLoginBtn: ["wm.Panel", {"height":"45px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 										loginButton: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_12px","wm_FontColor_White","wm_BackgroundChromeBar_Graphite"]},"caption":"Login","iconHeight":"18px","iconMargin":"0 10px 1 0","iconWidth":"20px","margin":"4","width":"90px"}, {"onclick":"loginButtonClick"}, {
 											binding: ["wm.Binding", {}, {}, {
@@ -147,20 +141,12 @@ Login.widgets = {
 								spacer1: ["wm.Spacer", {"height":"20px","width":"100%"}, {}],
 								panDetail: ["wm.Panel", {"height":"55px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"530px"}, {}, {
 									panDetailLeft: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-										teFirstName: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"First Name:","captionSize":"100px","height":"25px","padding":"2","width":"100%"}, {}, {
-											editor: ["wm._TextAreaEditor", {"promptMessage":"Mandatory field!","required":true}, {}]
-										}],
-										teEmail: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Email:","captionSize":"100px","height":"25px","padding":"2","width":"100%"}, {}, {
-											editor: ["wm._TextAreaEditor", {"required":true}, {}]
-										}]
+										teFirstName: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"First Name:","captionSize":"3px","dataValue":undefined,"desktopHeight":"25px","displayValue":"","height":"25px","required":true,"width":"100%"}, {}],
+										teEmail: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Email:","captionSize":"3px","dataValue":undefined,"desktopHeight":"25px","displayValue":"","height":"25px","required":true,"width":"100%"}, {}]
 									}],
 									panDetailRight: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-										teLastName: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Last Name:","captionSize":"100px","height":"25px","padding":"2","width":"100%"}, {}, {
-											editor: ["wm._TextAreaEditor", {"required":true}, {}]
-										}],
-										teUsername: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"User Name:","captionSize":"100px","height":"25px","padding":"2","showing":false,"width":"100%"}, {}, {
-											editor: ["wm._TextAreaEditor", {"required":true}, {}]
-										}]
+										teLastName: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Last Name:","captionSize":"3px","dataValue":undefined,"desktopHeight":"25px","displayValue":"","height":"25px","required":true,"width":"100%"}, {}],
+										teUsername: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"User Name:","captionSize":"3px","dataValue":undefined,"desktopHeight":"25px","displayValue":"","height":"25px","required":true,"showing":false,"width":"100%"}, {}]
 									}]
 								}],
 								labRegError: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","wm_TextAlign_Center"]},"height":"30px","padding":"4","width":"100%"}, {}, {
@@ -172,19 +158,13 @@ Login.widgets = {
 								spacer3: ["wm.Spacer", {"height":"20px","width":"100%"}, {}],
 								panCompany: ["wm.Panel", {"height":"27px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"530px"}, {}, {
 									panCompLeft: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-										teCompany: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Company Name:","captionSize":"120px","height":"25px","padding":"2","width":"100%"}, {}, {
-											editor: ["wm._TextAreaEditor", {}, {}]
-										}]
+										teCompany: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Company Name:","captionSize":"3px","dataValue":undefined,"desktopHeight":"25px","displayValue":"","height":"25px","width":"100%"}, {}]
 									}],
 									panCompRight: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-										tePhone: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Phone Number:","captionSize":"120px","height":"25px","padding":"2","width":"100%"}, {}, {
-											editor: ["wm._TextAreaEditor", {}, {}]
-										}]
+										tePhone: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Phone Number:","captionSize":"3px","dataValue":undefined,"desktopHeight":"25px","displayValue":"","height":"25px","width":"100%"}, {}]
 									}]
 								}],
-								teAddress: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Company Address:","captionSize":"122px","height":"80px","padding":"2","singleLine":false,"width":"100%"}, {}, {
-									editor: ["wm._TextAreaEditor", {}, {}]
-								}],
+								teAddress: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Company Address:","captionSize":"58px","dataValue":undefined,"desktopHeight":"80px","displayValue":"","height":"80px","width":"100%"}, {}],
 								spacer4: ["wm.Spacer", {"height":"20px","width":"100%"}, {}],
 								panBtn: ["wm.Panel", {"height":"35px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 									btnSubmit: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_12px","wm_FontColor_White","wm_BackgroundChromeBar_Graphite"]},"caption":"Submit","height":"100%","iconHeight":"18px","iconMargin":"0 10px 1 0","iconWidth":"20px","margin":"4","width":"90px"}, {"onclick":"svSetTenant"}, {
@@ -206,9 +186,7 @@ Login.widgets = {
 							conReset: ["wm.Content", {"border":"0,0,3,0","content":"Reset","height":"151px","width":"550px"}, {}],
 							spacer6: ["wm.Spacer", {"height":"20px","width":"550px"}, {}],
 							panReset: ["wm.Panel", {"height":"37px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"middle","width":"550px"}, {}, {
-								teResetEmail: ["wm.TextAreaEditor", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"caption":"Email:","captionSize":"100px","height":"28px","padding":"2","width":"300px"}, {}, {
-									editor: ["wm._TextAreaEditor", {"required":true}, {}]
-								}],
+								teResetEmail: ["wm.LargeTextArea", {"_classes":{"domNode":["wm_FontSizePx_12px"],"captionNode":["wm_FontSizePx_12px","wm_FontColor_Black"]},"border":"0","caption":"Email:","captionSize":"6px","dataValue":undefined,"desktopHeight":"28px","displayValue":"","height":"28px","required":true}, {}],
 								btnReset: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_12px","wm_FontColor_White","wm_BackgroundChromeBar_Graphite"]},"caption":"Reset","iconHeight":"18px","iconMargin":"0 10px 1 0","iconWidth":"20px","margin":"4","width":"90px"}, {"onclick":"svResetPass"}, {
 									binding: ["wm.Binding", {}, {}, {
 										wire: ["wm.Wire", {"expression":"\"resources/images/buttons/update.png\"","targetProperty":"iconUrl"}, {}]
