@@ -31,7 +31,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	openOnHover:false,
 	eventList:[],
 	menuItems: [],
-	
+
 
 	init: function() {
 	    this._menuConnects = [];
@@ -92,9 +92,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			this.dojoObj = new dijit.MenuBar({openOnHover:this.openOnHover});
 	dojo.addClass(this.dojoObj.domNode, this.getRuntimeId().replace(/\./g,"_") + '_CSS');
 		if (this.openOnHover && !this.vertical){
-		  this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');	
+		  this.hoverConnect = dojo.connect(this.dojoObj, 'onItemHover', this, '_onItemHover');
 		}
-		
+
 	return this.dojoObj;
     },
     forEachMenuItem: function(inStruct, inCallback) {
@@ -135,9 +135,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    if (this.hoverConnect)
 			dojo.disconnect(this.hoverConnect);
 	  }
-		
+
 		this.menuItems = [];
-	        
+
 	    this.dojoObj = this.createMenuBar();
 
 	    dojo.addClass(this.dojoObj.domNode, this.getRuntimeId().replace(/\./g,"_") + '_CSS');
@@ -145,7 +145,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	        if (!this.isPopupMenu)
 		    this.dojoObj.placeAt(this.domNode);
 
-	        if (this.fullStructureStr) 
+	        if (this.fullStructureStr)
 		    this.setFullStructureStr(this.fullStructureStr, 0);
 
 	    // This block will upgrade menus built using the freetext "menu" property to use
@@ -181,7 +181,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 				this.menuItems[this.menuItems.length] = menuItem;
 			}
 		}
-		
+
 		this.dojoRenderer();
 	    this.blockRightClickOnMenu(this.dojoObj.domNode);
 
@@ -242,7 +242,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		}
 
 		var evtObj = this.getEventObj(this.getEventName(data.defaultLabel || data.label));
-		
+
 	        if (!this.isDesignLoaded() && evtObj && evtObj.onClick && evtObj.onClick != '')
 		{
 		    if (dojo.isFunction(evtObj.onClick)) {
@@ -252,7 +252,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			menuObj.onClick = this.owner.makeEvent(f, evtObj.onClick, this, "onClick");
 		    }
 		}
-		
+
 		if (data.children && data.children.length > 0)
 		{
 	                var subMenu = new dijit.Menu({});
@@ -261,18 +261,18 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			for (var i = 0; i < data.children.length; i++)
 			{
 				var subMenuData = data.children[i];
-				var menuItem = this.addMenuChildren(subMenu, subMenuData, false);	
+				var menuItem = this.addMenuChildren(subMenu, subMenuData, false);
 				this.menuItems[this.menuItems.length] = menuItem;
 			}
-			
+
 			// Dojo upgrade TODO: menu items that have sub-menu does not show arrow (>) when creating dojo menu programmtically.
 			// Fixed it using this hack but should be removed when this bug is resolved in dojo's newer version.
 			if (menuObj.arrowWrapper)
 				menuObj.arrowWrapper.style.visibility = '';
-			
+
 			menuObj.popup = subMenu;
 		}
-	    
+
 	        parentObj.addChild(menuObj);
 	        dojo.addClass(menuObj.domNode, this.getRuntimeId().replace(/\./g,"_")+ '_CSS');
 		return menuObj;
@@ -281,7 +281,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	/*
 	* data can take any parameter that dijit.MenuItem can take; additional parameters and notes:
 	* onClick: is supported, but is assumed to be executing a method on the current page object
-	* idInPage: added parameter that specifies the name/property to set in the page object to directly refer to this menu item. 
+	* idInPage: added parameter that specifies the name/property to set in the page object to directly refer to this menu item.
 	*           Useful for enable/disable of individual menu items
 	* separator: Sets a MenuSeparator instead of a MenuItem
 	* children: array of submenu data objects
@@ -310,7 +310,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    }
 		}
 	    }
-		
+
 
 		var idInPage = data.idInPage;
 		delete data.idInPage;
@@ -322,21 +322,26 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		    data.label = data.defaultLabel;
 	    }
 
+        if (isTop && !this._neverIsTop)
+        {
 
-		if (isTop && !this._neverIsTop)
-		{
-		    menuObj = new dijit.PopupMenuBarItem({label: data.label, data: data});
-		}
+            var prepend = data.iconClass ? '<img src="../wavemaker/lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuBarItemIcon dijitMenuItemIcon ' + data.iconClass + '" dojoattachpoint="iconNode">' : "";
+            if (this.vertical) {
+               menuObj = new dijit.MenuItem({label: prepend + data.label, data: data});
+            } else {
+                menuObj = new dijit.PopupMenuBarItem({label: prepend + data.label, data: data});
+            }
+        }
 		else if (data.separator === true)
 		{
 			menuObj = new dijit.MenuSeparator();
 		}
-	        else if (data.isCheckbox === true) 
+	        else if (data.isCheckbox === true)
 	        {
 		    menuObj = new dijit.CheckedMenuItem(data);
 		    dojo.addClass(menuObj.iconNode, "dijitMenuItemIcon dijitCheckedMenuItemIcon"); // stupid hack to fix broken template handler in dojo 1.6
 		}
-		else 
+		else
 		{
 		        menuObj = new dijit.MenuItem(data);
 		}
@@ -373,7 +378,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		  this.owner[idInPage] = menuObj;
 		}
 
-		if (data.children && data.children.length > 0) 
+		if (data.children && data.children.length > 0)
 		{
 		  var subMenu = new dijit.Menu({});
 		    this.blockRightClickOnMenu(subMenu.domNode);
@@ -381,12 +386,12 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		  dojo.addClass(subMenu.domNode, this.owner.name + "_" + idInPage  + "_PopupMenu");
 		  for (var i = 0; i < data.children.length; i++) {
 		      var subMenuData = data.children[i];
-		      this.addAdvancedMenuChildren(subMenu, subMenuData, false);	
+		      this.addAdvancedMenuChildren(subMenu, subMenuData, false);
 		  }
-		  
+
 		  menuObj.popup = subMenu;
-		    // shouldn't be needed, but is needed when I right click 
-		    // on a layer and get the contextual menu with a submenu 
+		    // shouldn't be needed, but is needed when I right click
+		    // on a layer and get the contextual menu with a submenu
 		    // of layers
 		    var arrowNode = dojo.query(".dijitMenuArrowCell div", menuObj.domNode)[0];
 		    if (arrowNode) arrowNode.style.visibility = "visible";
@@ -415,7 +420,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	},
     setFullStructureStr: function(inStruct, setByDesigner) {
 	    this.fullStructureStr = inStruct;
-	    this.setFullStructure(dojo.fromJson(inStruct));	    
+	    this.setFullStructure(dojo.fromJson(inStruct));
 	    if (setByDesigner)
 		this.renderDojoObj();
 
@@ -427,7 +432,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
     /* setStructure/getStructure are deprecated; use fullStructure instead */
 	getStructure: function(){
-	  return this.structure == '' ? {items:[]} : dojo.fromJson(this.structure); 
+	  return this.structure == '' ? {items:[]} : dojo.fromJson(this.structure);
 	},
 	setStructure: function(strStructure){
 	        if (this.fullStructure && this.fullStructure.length > 0) return;
@@ -435,7 +440,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		{
 			return;
 		}
-		
+
 		var tempAllItems = [];
 		var allMenuItems = [];
 		var items = [];
@@ -451,7 +456,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			{
 				tempAllItems[tempAllItems.length] = obj;
 			}
-			
+
 			this.addToEventList(obj);
 			var children = [];
 			if (nArr.length > 1)
@@ -468,7 +473,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 				obj.children = children;
 			}
-			
+
 			if (parent != null)
 			{
 				parent.children = children;
@@ -499,7 +504,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 			if (this.eventList[i].label == obj.label)
 				return;
 		}
-		
+
 		this.eventList[this.eventList.length] = obj;
 	},
 	removeOldEvents: function(newList){
@@ -514,7 +519,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 					updatedEventList[updatedEventList.length] = eventObj;
 			}
 		}
-		
+
 		this.eventList = updatedEventList;
 	},
 	/**
@@ -523,15 +528,15 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	 * 	MenuItem
 	 * 	MenuHover
 	 * 	MenuPassiveHover
-	 * 
+	 *
 	 * style is the css style that you want to add/change.
-	 * 
+	 *
 	 * Example: I want to change the background color of MenuBar to #787878 (shade of gray)
-	 * Solution: overrideCSS('MenuBar', 'background-color:#787878; padding:10px;'); 
-	 * 
+	 * Solution: overrideCSS('MenuBar', 'background-color:#787878; padding:10px;');
+	 *
 	 */
 	overrideCSS:function(menuType, style){
-		dojox.html.insertCssRule(this.getCSSMenuTypeClass(menuType) + this.id + '_CSS', style);	
+		dojox.html.insertCssRule(this.getCSSMenuTypeClass(menuType) + this.id + '_CSS', style);
 	},
 	getCSSMenuTypeClass: function(menuType){
 		switch(menuType)
@@ -571,7 +576,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 });
 
 
-dojo.declare("wm.PopupMenu", wm.DojoMenu, { 
+dojo.declare("wm.PopupMenu", wm.DojoMenu, {
     classNames: "wmpopupmenu",
     _neverIsTop:true,
     width: "0px",
@@ -617,7 +622,7 @@ dojo.declare("wm.PopupMenu", wm.DojoMenu, {
 	}
     },
     setShowing: function(inShowing, inNode) {
-	if (inShowing) 
+	if (inShowing)
 	    this.dojoObj._scheduleOpen(inNode);
     },
     setLabel: function(inIndex, inText) {

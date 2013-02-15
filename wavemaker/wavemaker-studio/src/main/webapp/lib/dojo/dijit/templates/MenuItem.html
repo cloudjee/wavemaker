@@ -1,7 +1,9 @@
 <tr class="dijitReset dijitMenuItem" dojoAttachPoint="focusNode" role="menuitem" tabIndex="-1"
 		dojoAttachEvent="onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick">
 	<td class="dijitReset dijitMenuItemIconCell" role="presentation">
-		<img src="${_blankGif}" alt="" class="dijitIcon dijitMenuItemIcon" dojoAttachPoint="iconNode"/>
+	<!-- Copyright (C) 2013 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+        WaveMaker: removed class which caused vertical menus to show icon space even when no icon was specified. -->
+            <img src="${_blankGif}" alt="" class="dijitIcon" dojoAttachPoint="iconNode"/>
 	</td>
 	<td class="dijitReset dijitMenuItemLabel" colspan="2" dojoAttachPoint="containerNode"></td>
 	<td class="dijitReset dijitMenuItemAccelKey" style="display: none" dojoAttachPoint="accelKeyNode"></td>
