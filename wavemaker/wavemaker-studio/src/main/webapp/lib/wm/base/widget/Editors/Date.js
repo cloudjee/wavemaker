@@ -101,8 +101,9 @@ dojo.declare("wm.Date", wm.Text, {
         this.useLocalTime = tmp;
     },
     setEditorValue: function(inValue) {
+        if (inValue === "") inValue = null;
         if (inValue === null || inValue === undefined) return this.inherited(arguments);
-        
+
         var v = this.convertValue(inValue); // if inValue is just a date, returns unmodified date
 
         // don't modify the source data as the caller may still need it
@@ -343,7 +344,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             formatLength: this.formatLength,
             use24Time: this.use24Time,
             timePattern: this.timePattern || wm.Time.prototype.timePattern,
-            minHeight: 8,            
+            minHeight: 8,
             onchange: dojo.hitch(this, "changed")
         });
         if (this._disabled) this.setDisabled(this.disabled);
