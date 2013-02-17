@@ -14,36 +14,9 @@
 
 package com.wavemaker.tools.security;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.ldap.InitialLdapContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
-
-import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.project.StudioFileSystem;
-import com.wavemaker.tools.security.schema.Http;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
-import org.apache.log4j.Logger;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelConfiguration;
@@ -51,11 +24,36 @@ import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.security.schema.CustomFilter;
+import com.wavemaker.tools.security.schema.Http;
+import com.wavemaker.tools.security.schema.NamedSecurityFilter;
 import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
-import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.spring.beans.*;
+import org.apache.log4j.Logger;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.ldap.InitialLdapContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Jeremy Grelle
@@ -67,9 +65,13 @@ public class SecurityToolsManager {
 
     private static final String SECURITY_SPRING_FILENAME = "project-security.xml";
     
+    private static final String SECURITY_CAS_SPRING_FILENAME = "project-security-cas.xml";
+
     private static final String SECURITY_CUSTOM_SPRING_FILENAME = "project-custom-security.xml";
 
     private static final String SECURITY_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
+
+    private static final String SECURITY_SPRING_TEMPLATE_CAS_CLASSPATH = "com/wavemaker/tools/security/project-security-template-cas.xml";
 
     private static final String LOGIN_HTML_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/login-template.html";
 
@@ -92,6 +94,17 @@ public class SecurityToolsManager {
      */
     private Beans getSecuritySpringBeansTemplate() throws JAXBException, IOException {
         ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CLASSPATH);
+        Reader reader = new InputStreamReader(securityTemplateXml.getInputStream());
+        Beans ret = SpringConfigSupport.readSecurityBeans(reader);
+        reader.close();
+        return ret;
+    }
+
+    /**
+     * Returns the CAS Security Spring template.
+     */
+    private Beans getCASSecuritySpringBeansTemplate() throws JAXBException, IOException {
+        ClassPathResource securityTemplateXml = new ClassPathResource(SECURITY_SPRING_TEMPLATE_CAS_CLASSPATH);
         Reader reader = new InputStreamReader(securityTemplateXml.getInputStream());
         Beans ret = SpringConfigSupport.readSecurityBeans(reader);
         reader.close();
@@ -128,10 +141,19 @@ public class SecurityToolsManager {
         return currentProject.getWebInfFolder().getFile(SECURITY_CUSTOM_SPRING_FILENAME);
     }
 
+    public File getCASSecuritySpringFile() throws IOException {
+        return getCASSecuritySpringFile(this.projectMgr.getCurrentProject());
+    }
+
+    private File getCASSecuritySpringFile(Project currentProject) {
+        return currentProject.getWebInfFolder().getFile(SECURITY_CAS_SPRING_FILENAME);
+    }
+
     private void setCustomSecurityContent(String content) throws IOException, JAXBException {
 		File customSecurityXmlFile = getCustomSecuritySpringFile();
 		customSecurityXmlFile.getContent().write(content);
     }
+
     /**
      * Returns the Spring Security Spring beans in the current project.
      * 
@@ -162,8 +184,42 @@ public class SecurityToolsManager {
         return beans;
     }
 
+    /**
+     * Returns the CAS Spring Security Spring beans in the current project.
+     *
+     * @param create If this is set to true, it will create the Spring file using the template if
+     *               the CAS Security Spring file does not exist in current project.
+     */
+    private Beans getCASSecuritySpringBeans(boolean create) throws IOException, JAXBException {
+        File securityXml = getCASSecuritySpringFile();
+        Beans beans = null;
+        if (securityXml.exists()) {
+            try {
+                beans = SpringConfigSupport.readSecurityBeans(securityXml);
+            } catch (JAXBException e) {
+                if (create) {
+                    beans = getCASSecuritySpringBeansTemplate();
+                } else {
+                    throw e;
+                }
+            }
+        }
+        if (create) {
+            if (beans == null || beans.getBeanList().isEmpty()) {
+                beans = getCASSecuritySpringBeansTemplate();
+
+            }
+        }
+        return beans;
+    }
+
     private synchronized void saveSecuritySpringBeans(Beans beans) throws JAXBException, IOException {
         File securityXml = getSecuritySpringFile();
+        saveSecuritySpringBeans(securityXml, beans);
+    }
+
+    private synchronized void saveCASSecuritySpringBeans(Beans beans) throws JAXBException, IOException {
+        File securityXml = getCASSecuritySpringFile();
         saveSecuritySpringBeans(securityXml, beans);
     }
 
@@ -454,6 +510,91 @@ public class SecurityToolsManager {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         @SuppressWarnings("unused")
 		InitialLdapContext ctx = new InitialLdapContext(env, null);
+    }
+
+    public CASOptions getCASOptions() throws IOException, JAXBException {
+        Beans standardBeans = getSecuritySpringBeans(false);
+        Beans casBeans = getCASSecuritySpringBeans(false);
+        return SecuritySpringSupport.constructCASOptions(standardBeans, casBeans);
+    }
+
+    public void configCAS(String casUrl, String projectUrl, String userDetailsProvider) throws IOException, JAXBException {
+        Beans casBeans = getCASSecuritySpringBeans(true);
+        // Set properties
+        Bean bean = casBeans.getBeanById(SecuritySpringSupport.CAS_PROPERTY_PLACEHOLDER_CONFIGURER_ID);
+        if (bean != null) {
+            Property property = bean.getProperty("properties");
+            if (property != null) {
+                Props props = property.getProps();
+                if (props != null) {
+                    for (Prop prop : props.getProps()) {
+                        String key = prop.getKey();
+                        if (key.equals("cas.url")) {
+                            prop.setContent(Arrays.asList(casUrl));
+                        } else if (key.equals("project.url")) {
+                            prop.setContent(Arrays.asList(projectUrl));
+                        } else if (key.equals("userdetails.ref")) {
+                            if (userDetailsProvider.equals(SecuritySpringSupport.CAS_USERDETAILS_PROVIDER_DATABASE)) {
+                                prop.setContent(Arrays.asList(SecuritySpringSupport.CAS_USERDETAILS_SERVICE_DATABASE_ID));
+                            } else if (userDetailsProvider.equals(SecuritySpringSupport.CAS_USERDETAILS_PROVIDER_LDAP)) {
+                                prop.setContent(Arrays.asList(SecuritySpringSupport.CAS_USERDETAILS_SERVICE_LDAP_ID));
+                            }
+                        }
+                    }
+
+                    // Check and add import to main spring security file...
+                    Beans standardBeans = getSecuritySpringBeans(true);
+                    List<Object> importsAndAliases = standardBeans.getImportsAndAliasAndBean();
+                    boolean found = false;
+                    for (Object entry : importsAndAliases) {
+                        if (entry instanceof Import) {
+                            String resource = ((Import) entry).getResource();
+                            if (resource != null && resource.equalsIgnoreCase(SECURITY_CAS_SPRING_FILENAME)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        Import casImport = new Import();
+                        casImport.setResource(SECURITY_CAS_SPRING_FILENAME);
+                        importsAndAliases.add(casImport);
+                    }
+
+                    // Point to CAS entry-point...
+                    Http http = SecurityXmlSupport.getHttp(standardBeans);
+                    http.setEntryPointRef(SecuritySpringSupport.CAS_AUTH_ENTRY_POINT);
+
+                    // Remove custom-filter FORM_LOGIN_FILTER...
+                    CustomFilter filter = new CustomFilter();
+                    filter.setPosition(NamedSecurityFilter.FORM_LOGIN_FILTER);
+                    filter.setRef(SecuritySpringSupport.USER_PASSWORD_AUTHENTICATION_FILTER_BEAN_ID);
+                    SecurityXmlSupport.removeCustomFilter(standardBeans, filter);
+
+                    // Add custom filters to http element...
+                    List<CustomFilter> filters = new ArrayList<CustomFilter>();
+                    filter = new CustomFilter();
+                    filter.setBefore(NamedSecurityFilter.LOGOUT_FILTER);
+                    filter.setRef(SecuritySpringSupport.CAS_REQUEST_SINGLE_LOGOUT_FILTER);
+                    filters.add(filter);
+                    filter = new CustomFilter();
+                    filter.setBefore(NamedSecurityFilter.CAS_FILTER);
+                    filter.setRef(SecuritySpringSupport.CAS_SINGLE_SIGN_OUT_FILTER);
+                    filters.add(filter);
+                    filter = new CustomFilter();
+                    filter.setPosition(NamedSecurityFilter.CAS_FILTER);
+                    filter.setRef(SecuritySpringSupport.CAS_AUTHENTICATION_FILTER);
+                    filters.add(filter);
+                    SecurityXmlSupport.setCustomFilters(standardBeans, filters);
+
+                    // Set marker value. This bean is not used for CAS, just to allow system to decide which security provider we are using.
+                    SecuritySpringSupport.setDataSourceType(standardBeans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_CAS);
+
+                    saveCASSecuritySpringBeans(casBeans);
+                    saveSecuritySpringBeans(standardBeans);
+                }
+            }
+        }
     }
 
     public List<String> getRoles() throws IOException, JAXBException {

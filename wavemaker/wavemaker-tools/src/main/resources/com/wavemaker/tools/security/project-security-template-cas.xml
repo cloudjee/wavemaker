@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is a Studio Managed File. If you customize this file by hand, use 
+	of Studio Security tooling may revert your customizations -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                    http://www.springframework.org/schema/security 
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <!-- One stop shop for all configurable properties...-->
+    <bean id="casPropertyPlaceholderConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="properties">
+            <props>
+                <!-- URL of CAS service -->
+                <prop key="cas.url">http://localhost:8080/cas</prop>
+                <!-- Base url of this application. This is required to pass on to CAS for it to execute callbacks -->
+                <prop key="project.url">http://localhost:8080/Project</prop>
+                <!-- The reference of a bean that provides the UserDetails object for the CAS authenticated username -->
+                <prop key="userdetails.ref">jdbcDaoImpl</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Authentication -->
+    <security:authentication-manager alias="authenticationManagerCAS">
+        <security:authentication-provider ref="casAuthenticationProvider"/>
+    </security:authentication-manager>
+
+    <!-- The service (application) that am I authenticating -->
+    <bean id="casServiceProperties" class="org.springframework.security.cas.ServiceProperties">
+        <property name="service" value="${project.url}/j_spring_cas_security_check"/>
+        <property name="authenticateAllArtifacts" value="true"/>
+    </bean>
+
+    <!-- Where I go when I need authentication -->
+    <bean id="casEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+        <property name="loginUrl" value="${cas.url}/login"/>
+        <property name="serviceProperties" ref="casServiceProperties"/>
+    </bean>
+
+    <!-- Authentication filters -->
+    <bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManagerCAS"/>
+        <property name="serviceProperties" ref="casServiceProperties"/>
+        <property name="authenticationDetailsSource">
+            <bean class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource"/>
+        </property>
+        <property name="authenticationFailureHandler">
+            <bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+                <property name="defaultFailureUrl" value="/errorPage.jsp"/>
+            </bean>
+        </property>
+        <property name="authenticationSuccessHandler">
+            <bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+                <property name="defaultTargetUrl" value="/"/>
+            </bean>
+        </property>
+        <property name="proxyGrantingTicketStorage" ref="casProxyGrantingTicketStorage"/>
+        <property name="proxyReceptorUrl" value="/j_spring_cas_security_proxyreceptor"/>
+    </bean>
+
+    <!-- Authentication providers -->
+    <bean id="casAuthenticationProvider"
+          class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <property name="serviceProperties" ref="casServiceProperties"/>
+        <property name="authenticationUserDetailsService">
+            <bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+                <constructor-arg ref="${userdetails.ref}"/>
+            </bean>
+        </property>
+        <property name="ticketValidator">
+            <bean class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
+                <constructor-arg value="${cas.url}"/>
+                <property name="proxyGrantingTicketStorage" ref="casProxyGrantingTicketStorage"/>
+                <property name="proxyCallbackUrl" value="${project.url}/j_spring_cas_security_proxyreceptor"/>
+                <property name="acceptAnyProxy" value="true"/>
+            </bean>
+        </property>
+        <property name="statelessTicketCache">
+            <bean class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
+                <property name="cache">
+                    <bean class="net.sf.ehcache.Cache" init-method="initialise" destroy-method="dispose">
+                        <constructor-arg value="casTickets"/>
+                        <constructor-arg value="50"/>
+                        <constructor-arg value="true"/>
+                        <constructor-arg value="false"/>
+                        <constructor-arg value="3600"/>
+                        <constructor-arg value="900"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="key" value="casAuthenticationProviderKey"/>
+    </bean>
+
+    <!-- Cache for any ProxyGrantingTickets used -->
+    <bean id="casProxyGrantingTicketStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/>
+
+    <!-- SignOut filters -->
+    <bean id="casSingleSignOutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+    <bean id="casRequestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <constructor-arg value="${cas.url}/logout"/>
+        <constructor-arg>
+            <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+        </constructor-arg>
+        <property name="filterProcessesUrl" value="/j_spring_cas_security_logout"/>
+    </bean>
+
+    <!-- JDBC UserDetailsService is reused from main project-security.xml -->
+
+    <!-- LDAP UserDetailsService -->
+    <bean id="casLdapUserDetailsService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
+        <constructor-arg index="0" ref="userSearch"/>
+        <constructor-arg index="1" ref="LdapAuthoritiesPopulator"/>
+    </bean>
+</beans>
