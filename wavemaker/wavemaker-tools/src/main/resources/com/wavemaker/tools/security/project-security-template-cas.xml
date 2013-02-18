@@ -28,7 +28,7 @@
     </bean>
 
     <!-- Authentication -->
-    <security:authentication-manager alias="authenticationManagerCAS">
+    <security:authentication-manager id="authenticationManagerCAS" alias="authenticationManagerCAS">
         <security:authentication-provider ref="casAuthenticationProvider"/>
     </security:authentication-manager>
 
