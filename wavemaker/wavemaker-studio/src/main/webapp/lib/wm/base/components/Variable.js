@@ -129,17 +129,24 @@ dojo.declare("wm.Variable", wm.Component, {
         } else if(!(this.data && this.data._list) && !this._inPostInit) this.isList = false;
 
         var hasChanged;
-        if(this.type != t) hasChanged = true;
-        else if(this._isDesignLoaded) {
+        if (this.type != t) {
+            hasChanged = true;
+        } else if (this._isDesignLoaded) {
             hasChanged = dojo.toJson(this._getSchemaForType(inType)) != dojo.toJson(this._dataSchema);
         }
         this._hasChanged = hasChanged;
         this.type = t;
         //
-        if(this._proxy) this._proxy.setType(this.type);
+
+        if (this._proxy) {
+            this._proxy.setType(this.type);
+        }
         this.typeChanged(this.type);
-        if(this.json & hasChanged) this.setJson(this.json);
-        /*
+        if (this._query && hasChanged) this._query.setType(this.type);
+        if (this.json & hasChanged) {
+            this.setJson(this.json);
+        }
+/*
             if (this._isDesignLoaded) {
                 this.subscribe("TypeChange-" + inType, dojo.hitch(this, function() {
                     this.setType(inType); // reset the type if the type definition has changed
@@ -801,10 +808,25 @@ dojo.declare("wm.Variable", wm.Component, {
         }
         return this.queriedItems;
     },
+    createQueryVar: function() {
+        if (this.owner instanceof wm.Variable == false) {
+            this._query = new wm.Variable({type:this.type, isList:false, owner: this, name: "queryVar"});
+        }
+    },
+
+    // property is named queryVar so getter and setter must be getQueryVar/setQueryVar.  Why not getQuery/setQuery?
+    // Because in WM 6.5 we defined a setQuery method and query method, and getQuery/setQuery implies a query property
+    // rather than a query method, and the query method is public.
+    getQueryVar: function() {
+        if (!this._query) this.createQueryVar();
+        return this._query;
+    },
+    setQueryVar: function(query) {return this.setQuery(query);},
     setQuery: function(query) {
-        this._query = query;
+        if (!this._query) this.createQueryVar();
+        this._query.setData(query);
         if (query) {
-            return this.query(query, true);
+            return this.query(this._query.getData(), true);
         } else {
             this.getQueriedItems().setDataSet(this);
         }

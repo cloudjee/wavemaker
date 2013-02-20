@@ -32,6 +32,7 @@ wm.Object.extendSchema(wm.Variable, {
 
     /* Data group; custom subgroup */
     dataSet: { bindTarget: 1, group: "dataSet", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor", doNotPublish:1},
+    queryVar: { group: "dataSet", order: 1, operation: "setupQueryVar", doNotPublish:1},
     isEmpty: {ignore: 1, bindSource: 1, type: "boolean"},
     count: {ignore: 1, bindSource: 1, type: "number"},
     queriedItems: {ignore: 1, bindSource: 1},
@@ -93,11 +94,16 @@ wm.Variable.extend({
     	props.queriedItems.type = this.type;
     	props.queriedItems.isList = true;
     	props.queriedItems.bindSource = this.isList;
+    	if (!this.queryVar) this.createQueryVar();
     	return props;
     },
     editJson: function() {
         studio.editVariableDialog.show();
         studio.editVariableDialog.page.reset(this);
+    },
+    setupQueryVar: function() {
+        studio.editQueryDialog.show();
+        studio.editQueryDialog.page.reset(this);
     },
     isListBindable: function() {
         return this.isList;
