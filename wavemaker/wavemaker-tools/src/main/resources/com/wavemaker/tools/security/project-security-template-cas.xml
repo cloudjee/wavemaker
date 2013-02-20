@@ -11,7 +11,7 @@
                     http://www.springframework.org/schema/security 
                     http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <!-- One stop shop for all configurable properties...-->
+    <!-- One stop shop for all configurable properties... -->
     <bean id="casPropertyPlaceholderConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
@@ -114,9 +114,11 @@
 
     <!-- JDBC UserDetailsService is reused from main project-security.xml -->
 
-    <!-- LDAP UserDetailsService -->
-    <bean id="casLdapUserDetailsService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
-        <constructor-arg index="0" ref="userSearch"/>
-        <constructor-arg index="1" ref="LdapAuthoritiesPopulator"/>
-    </bean>
+    <!-- LDAP UserDetailsService (Reference beans from main project-security.xml if/when they are converted to top level beans)-->
+    <!--
+        <bean id="casLdapUserDetailsService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
+            <constructor-arg index="0" ref="userSearch"/>
+            <constructor-arg index="1" ref="LdapAuthoritiesPopulator"/>
+        </bean>
+    -->
 </beans>

@@ -10,7 +10,6 @@
                     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                     http://www.springframework.org/schema/security 
                     http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-
 	<security:global-method-security
 		pre-post-annotations="enabled" />
 
@@ -160,39 +159,44 @@
         <constructor-arg>
             <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
                 <constructor-arg ref="contextSource"/>
-                <property name="userSearch" ref="userSearch"/>
+                <property name="userSearch">
+                    <bean class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch" id="userSearch">
+                        <constructor-arg index="0" value=""/>
+                        <constructor-arg index="1" value="(cn={0})"/>
+                        <constructor-arg index="2" ref="contextSource"/>
+                    </bean>
+                </property>
             </bean>
         </constructor-arg>
-        <constructor-arg ref="LdapAuthoritiesPopulator"/>
+        <constructor-arg>
+            <bean class="com.wavemaker.runtime.security.LdapAuthoritiesPopulator" id="LdapAuthoritiesPopulator">
+                <constructor-arg>
+                    <ref local="contextSource"/>
+                </constructor-arg>
+                <constructor-arg>
+                    <value>ou=Groups</value>
+                </constructor-arg>
+                <property name="groupSearchDisabled">
+                    <value>false</value>
+                </property>
+                <property name="groupRoleAttribute">
+                    <value>cn</value>
+                </property>
+                <property name="groupSearchFilter">
+                    <value>(uniqueMember={0})</value>
+                </property>
+                <property name="defaultRole">
+                    <value>ROLE_DEFAULT_NO_ROLES</value>
+                </property>
+                <property name="rolePrefix">
+                    <value>ROLE_</value>
+                </property>
+                <property name="convertToUpperCase">
+                    <value>false</value>
+                </property>
+            </bean>
+        </constructor-arg>
     </bean>
-    <bean class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch" id="userSearch">
-            <constructor-arg index="0" value=""/>
-            <constructor-arg index="1" value="(cn={0})"/>
-            <constructor-arg index="2" ref="contextSource"/>
-    </bean>
-    <bean class="com.wavemaker.runtime.security.LdapAuthoritiesPopulator" id="LdapAuthoritiesPopulator">
-        <constructor-arg ref="contextSource"/>
-        <constructor-arg value="ou=Groups"/>
-        <property name="groupSearchDisabled">
-            <value>false</value>
-        </property>
-        <property name="groupRoleAttribute">
-            <value>cn</value>
-        </property>
-        <property name="groupSearchFilter">
-            <value>(uniqueMember={0})</value>
-        </property>
-        <property name="defaultRole">
-            <value>ROLE_DEFAULT_NO_ROLES</value>
-        </property>
-        <property name="rolePrefix">
-            <value>ROLE_</value>
-        </property>
-        <property name="convertToUpperCase">
-            <value>false</value>
-        </property>
-    </bean>
-
 	<bean class="com.wavemaker.runtime.security.WMSecurityConfigStore" id="WMSecurityConfigStore">
 	    <property name="enforceSecurity">
             <value>false</value>
