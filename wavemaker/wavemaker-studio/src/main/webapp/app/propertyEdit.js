@@ -167,7 +167,7 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
         } else if (displayValue.match(/em$/)) {
             this.numberEditor.setDataValue(displayValue.replace(/em$/, ""));
             this.typeEditor.setDataValue("em");
-            
+
         } else {
             this.changed();
         }
@@ -1563,7 +1563,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
             }]
         }, this)[0];
         this.connect(this.tabs, "onchange", this, function() {
-            if (this.parent._isDestroying) return; 
+            if (this.parent._isDestroying) return;
             var panel = this;
 
             while(true) {
@@ -1947,7 +1947,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
             dataValue: className || ""
         }, true);
     },
-    editClass: function(className) {
+    editClass: function(className, setupOnly) {
         studio.editCodeDialog.show();
 
         var cssText = studio.cssEditArea.getDataValue();
@@ -1975,6 +1975,9 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
         }
         if (!code) {
             code = this.getClassRuleName(className) + " {\n\n}";
+        }
+        if (setupOnly) {
+            code = studio.editCodeDialog.page.editor.getDataValue();
         }
         studio.editCodeDialog.page.update("Edit " + className, code, "css", dojo.hitch(this, function(inCode) {
             var editArea;
@@ -2008,6 +2011,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
                 }
                 editArea.setDataValue(cssText);
                 studio.cssChanged();
+                this.editClass(className, true);
             }
         }));
     },
@@ -2814,7 +2818,7 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             parent: this.row1,
             name: "topLeft",
             width: "100%",
-            minWidth: "30",            
+            minWidth: "30",
             emptyValue: "zero",
             onchange: dojo.hitch(this, "changed", 0)
         });
@@ -2823,11 +2827,11 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             parent: this.row1,
             name: "topRight",
             width: "100%",
-            minWidth: "30",     
-            emptyValue: "zero",            
+            minWidth: "30",
+            emptyValue: "zero",
             onchange: dojo.hitch(this, "changed", 1)
         });
-        
+
         this.row2= new wm.Panel({
             width: "100%",
             height: "100%",
@@ -2838,25 +2842,25 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             horizontalAlign: "left",
             verticalAlign: "top"
         });
-        
+
         this.bottomLeftEditor = new wm.Number({
             owner: this,
             parent: this.row2,
             name: "bottomLeft",
             width: "100%",
-            minWidth: "30",            
-            emptyValue: "zero",            
+            minWidth: "30",
+            emptyValue: "zero",
             onchange: dojo.hitch(this, "changed", 2)
         });
-        
+
 
         this.bottomRightEditor = new wm.Number({
             owner: this,
             parent: this.row2,
             name: "bottomRight",
             width: "100%",
-            minWidth: "30",            
-            emptyValue: "zero",            
+            minWidth: "30",
+            emptyValue: "zero",
             onchange: dojo.hitch(this, "changed", 3)
         });
         this.toggleButton = new wm.ToggleButton({
@@ -2871,7 +2875,7 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
             captionDown: "<img src='images/propertyEditors/expanded.png'/>",
             onclick: dojo.hitch(this, "toggleClicked")
-        });        
+        });
         return this.editor;
     },
     setInitialValue: function() {
@@ -2880,7 +2884,7 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
         if (this.dataValue.match(/\s/)) {
             this.toggleButton.setClicked(true);
             this.changed();
-        }        
+        }
         this.endEditUpdate();
         this.clearDirty(true);*/
     },
@@ -2911,12 +2915,12 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
             this.topLeftEditor.getDataValue() != this.bottomRightEditor.getDataValue() ||
             this.topLeftEditor.getDataValue() != this.bottomLeftEditor.getDataValue());
         this.changed();
-    }, 
+    },
     setPartialValue: function(inStyleName, inStyleValue) {
         var styleName = inStyleName.replace(/^.*border-/,"");
         switch(styleName) {
             case "radius":
-                this.setDataValue(inStyleValue);    
+                this.setDataValue(inStyleValue);
                 break;
             case "top-left-radius":
                 inStyleValue = inStyleValue.replace(/px/,"");
@@ -2926,21 +2930,21 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
                 }
                 break;
             case "top-right-radius":
-                inStyleValue = inStyleValue.replace(/px/,"");            
+                inStyleValue = inStyleValue.replace(/px/,"");
                 if (inStyleValue != this.topRightEditor.getDataValue()) {
                     if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.topRightEditor.setDataValue(inStyleValue);
                 }
                 break;
             case "bottom-left-radius":
-                inStyleValue = inStyleValue.replace(/px/,"");            
-                if (inStyleValue != this.bottomLeftEditor.getDataValue()) {            
+                inStyleValue = inStyleValue.replace(/px/,"");
+                if (inStyleValue != this.bottomLeftEditor.getDataValue()) {
                     if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.bottomLeftEditor.setDataValue(inStyleValue);
                 }
-                break;     
+                break;
             case "bottom-right-radius":
-                inStyleValue = inStyleValue.replace(/px/,"");            
+                inStyleValue = inStyleValue.replace(/px/,"");
                 if (inStyleValue != this.bottomRightEditor.getDataValue()) {
                     if (!this.toggleButton.clicked) this.toggleButton.setClicked(true);
                     this.bottomRightEditor.setDataValue(inStyleValue);
@@ -2955,12 +2959,12 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
         if (inShowing) {
             this.cornersPanel.show();
             this.allEditor.hide();
-            this.setHeight(this.initialHeight * 2 + "px");                        
+            this.setHeight(this.initialHeight * 2 + "px");
         } else {
             this.cornersPanel.hide();
             this.allEditor.show();
             this.setHeight(this.initialHeight + "px");
-        }    
+        }
         if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
             this.parent.setHeight(this.height);
         }
@@ -2998,7 +3002,7 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
         } else {
             this.setFullEditorShowing(true);
             var values = [this.topLeftEditor.getDataValue(),
-                         this.topRightEditor.getDataValue(),                         
+                         this.topRightEditor.getDataValue(),
                          this.bottomRightEditor.getDataValue(),
                          this.bottomLeftEditor.getDataValue()];
             if (values[0] === values[1] && values[0] === values[2] && values[0] === values[3]) {
@@ -3009,18 +3013,18 @@ dojo.declare("wm.BorderRadiusEditor", wm.AbstractEditorContainer, {
                 this.dataValue = values[0] + "px " + values[1] + "px " + values[2] + "px";
             } else {
                 this.dataValue = values.join("px ") + "px";
-            }   
+            }
         }
         this.onchange(this.dataValue, this.dataValue);
     },
     onchange: function(inDisplayValue, inDataValue) {},
     updateCssLine: function(inStyleName) {
-       
+
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/border-.*radius/)) {   
+        if (inStyleName.match(/border-.*radius/)) {
              var value = this.getDataValue();
-             return "border-radius: " + value + ";\n\t-webkit-border-radius: " + value +";";        
-        }   
+             return "border-radius: " + value + ";\n\t-webkit-border-radius: " + value +";";
+        }
     }
 });
 
@@ -3058,7 +3062,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             width: "60px",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
-        });        
+        });
         this[inName + "ColorEditor"] = new wm.ColorPicker({
             name: inName + "ColorEditor",
             owner: this,
@@ -3066,7 +3070,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             width: "150px",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
-        });        
+        });
     },
     _createEditor: function() {
         var e = this.inherited(arguments);
@@ -3095,7 +3099,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
             captionDown: "<img src='images/propertyEditors/expanded.png'/>",
             onclick: dojo.hitch(this, "toggleClicked")
-        });        
+        });
         return this.editor;
     },
     setInitialValue: function() {
@@ -3116,22 +3120,22 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
         this.topStyleEditor.setDataValue(s.borderTopStyle   && s.borderStyle != "initial" ? s.borderStyle : "inherit");
         this.rightStyleEditor.setDataValue(s.borderRightStyle && s.borderRightStyle != "initial" ? s.borderRightStyle : "inherit");
         this.bottomStyleEditor.setDataValue(s.borderBottomStyle&& s.borderBottomStyle != "initial" ? s.borderBottomStyle : "inherit");
-        this.leftStyleEditor.setDataValue(s.borderLeftStyle  && s.borderLeftStyle != "initial" ? s.borderLeftStyle : "inherit");        
-        
+        this.leftStyleEditor.setDataValue(s.borderLeftStyle  && s.borderLeftStyle != "initial" ? s.borderLeftStyle : "inherit");
+
         this.allWidthEditor.setDataValue(parseInt(s.borderWidth));
         this.topWidthEditor.setDataValue(parseInt(s.borderTopWidth));
         this.rightWidthEditor.setDataValue(parseInt(s.borderRightWidth));
         this.bottomWidthEditor.setDataValue(parseInt(s.borderBottomWidth));
-        this.leftWidthEditor.setDataValue(parseInt(s.borderLeftWidth));        
+        this.leftWidthEditor.setDataValue(parseInt(s.borderLeftWidth));
 
         this.allColorEditor.setDataValue(s.borderColor)
         this.topColorEditor.setDataValue(s.borderTopColor);
         this.rightColorEditor.setDataValue(s.borderRightColor);
         this.bottomColorEditor.setDataValue(s.borderBottomColor);
-        this.leftColorEditor.setDataValue(s.borderLeftColor);        
-        
+        this.leftColorEditor.setDataValue(s.borderLeftColor);
+
         this.changed();
-    }, 
+    },
     setPartialValue: function(inStyleName, inStyleValue) {
         if (!inStyleName.match(/^border/i) || inStyleName.match(/radius/)) return;
         var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
@@ -3140,7 +3144,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
         this.testNode.domNode.style[domStyleName] = String(inStyleValue).replace(/\s\!important/,"");
         this.toggleButton.setClicked(Boolean(inStyleName.match(/(top|left|bottom|right)/)));
         this.getValuesFromTestNode();
-        
+
         if (inStyleName.match(/outline/)) this.toggleButton.hide();
     },
     getEditorValue: function() {
@@ -3151,7 +3155,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             this.topPanel.show();
             this.rightPanel.show();
             this.leftPanel.show();
-            this.bottomPanel.show();            
+            this.bottomPanel.show();
             this.allPanel.hide();
             this.setHeight(24 * 4 + "px");
         } else {
@@ -3161,7 +3165,7 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             this.bottomPanel.hide();
             this.allPanel.show();
             this.setHeight(24 + "px");
-        }    
+        }
        if (this.parent.layoutKind == "left-to-right" && this.parent.bounds.h != this.bounds.h) {
             this.parent.setHeight(this.height);
         }
@@ -3190,21 +3194,21 @@ dojo.declare("wm.BorderEditor", wm.AbstractEditorContainer, {
             return name + append + "-style: " + style + ";\n\t" +
                 name + append + "-width: " + width + "px;\n\t" +
                 name + append + "-color: " + color + ";";
-        }        
+        }
     },
     updateCssLine: function(inStyleName) {
-       
+
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/border/) && !inStyleName.match(/radius/) || inStyleName.match(/outline/)) {   
+        if (inStyleName.match(/border/) && !inStyleName.match(/radius/) || inStyleName.match(/outline/)) {
              if (!this.toggleButton.clicked) {
                 return this.getBorderCssLine("all", inStyleName.match(/outline/));
              } else {
                 return this.getBorderCssLine("top", inStyleName.match(/outline/)) + "\n\t" +
                         this.getBorderCssLine("right", inStyleName.match(/outline/)) + "\n\t" +
                         this.getBorderCssLine("bottom", inStyleName.match(/outline/)) + "\n\t" +
-                        this.getBorderCssLine("left", inStyleName.match(/outline/));                        
+                        this.getBorderCssLine("left", inStyleName.match(/outline/));
              }
-        }   
+        }
     }
 });
 
@@ -3253,7 +3257,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             caption: "Right",
             captionSize: "50px",
             captionPosition: "left",
-            captionAlign: "left",            
+            captionAlign: "left",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
         });
@@ -3265,7 +3269,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             caption: "Bottom",
             captionSize: "50px",
             captionPosition: "left",
-            captionAlign: "left",            
+            captionAlign: "left",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
         });
@@ -3277,10 +3281,10 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             caption: "Left",
             captionSize: "50px",
             captionPosition: "left",
-            captionAlign: "left",            
+            captionAlign: "left",
             dataValue: 0,
             onchange: dojo.hitch(this, "changed")
-        });        
+        });
         this.toggleButton = new wm.ToggleButton({
             _classes: {domNode: ["StudioButton"]},
             owner: this,
@@ -3293,7 +3297,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             captionUp: "<img src='images/propertyEditors/collapsed.png'/>",
             captionDown: "<img src='images/propertyEditors/expanded.png'/>",
             onclick: dojo.hitch(this, "toggleClicked")
-        });        
+        });
         return this.editor;
     },
 
@@ -3309,25 +3313,25 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             this.topWidthEditor.setDataValue(v[0]);
             this.rightWidthEditor.setDataValue(v.length > 1 ? v[1] : v[0]);
             this.bottomWidthEditor.setDataValue(v.length > 2 ? v[2] : v[0]);
-            this.leftWidthEditor.setDataValue(v.length > 3 ? v[3] : v.length > 1 ? v[1] : v[0]);            
+            this.leftWidthEditor.setDataValue(v.length > 3 ? v[3] : v.length > 1 ? v[1] : v[0]);
             this.editor.setHeight("96px");
-            this.setHeight("96px");            
+            this.setHeight("96px");
             if (this.parent.layoutKind == "left-to-right") {
                 this.parent.setHeight("96px");
-                this.updatePropertyPanelHeights();                
+                this.updatePropertyPanelHeights();
             }
         } else {
-            this.toggleButton.setClicked(false);        
+            this.toggleButton.setClicked(false);
             this.multiBorderPanel.hide();
-            this.allWidthEditor.show();        
+            this.allWidthEditor.show();
             this.allWidthEditor.setDataValue(v);
             this.editor.setHeight("24px");
-            this.setHeight("24px");            
+            this.setHeight("24px");
             if (this.parent.layoutKind == "left-to-right") {
                 this.parent.setHeight("24px");
-            }            
+            }
         }
-        this._inSetEditor = false;        
+        this._inSetEditor = false;
     },
     updatePropertyPanelHeights: function() {
         var parent = this.isAncestorInstanceOf(wm.prop.StyleEditor);
@@ -3346,7 +3350,7 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             this.multiBorderPanel.show();
             this.allWidthEditor.hide();
             this.editor.setHeight("96px");
-            this.setHeight("96px");            
+            this.setHeight("96px");
             if (this.parent.layoutKind == "left-to-right") {
                 this.parent.setHeight("96px");
             }
@@ -3354,12 +3358,12 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             this.multiBorderPanel.hide();
             this.allWidthEditor.show();
             this.editor.setHeight("24px");
-            this.setHeight("24px");            
+            this.setHeight("24px");
             if (this.parent.layoutKind == "left-to-right") {
                 this.parent.setHeight("24px");
-            }            
-        }    
-        this.updatePropertyPanelHeights();                
+            }
+        }
+        this.updatePropertyPanelHeights();
     },
     toggleClicked: function() {
         this.changed();
@@ -3378,10 +3382,10 @@ dojo.declare("wm.BorderWidthEditor", wm.AbstractEditorContainer, {
             v.push(this.leftWidthEditor.getDataValue() || "0");
             this.dataValue = v.join(",");
         }
-        
+
         this.onchange(this.dataValue, this.dataValue);
     }
-    
+
 });
 
 dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
@@ -3486,14 +3490,14 @@ dojo.declare("wm.BoxShadowEditor", wm.AbstractEditorContainer, {
             this.colorEditor.setDataValue(parts[3]);
         }
     },
-    
+
     updateCssLine: function(inStyleName) {
-       
+
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/box-shadow/)) {   
+        if (inStyleName.match(/box-shadow/)) {
              var value = this.getDataValue();
-             return "box-shadow: " + value + ";\n\t-webkit-box-shadow: " + value +";";        
-        }   
+             return "box-shadow: " + value + ";\n\t-webkit-box-shadow: " + value +";";
+        }
     }
 });
 
@@ -3525,8 +3529,8 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             height: "100%",
             margin: "0,0,0,0"
         });
-        
-        
+
+
         this.colorPanel = new wm.Layer({
             owner: this,
             parent: this.layers,
@@ -3548,7 +3552,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             captionAlign: "left",
             captionPosition: "left",
             caption: "Color",
-            width: "100%",   
+            width: "100%",
             gradient: false,
             onchange: dojo.hitch(this, "changed")
         });
@@ -3561,7 +3565,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             caption: "Transparent",
             width: "180px",
             margin: "0,0,0,20",
-            onchange: dojo.hitch(this, "changed")                
+            onchange: dojo.hitch(this, "changed")
         });
         this.gradientPanel = new wm.Layer({
             owner: this,
@@ -3576,9 +3580,9 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             showing: this.message != "NO BACKGROUND IMAGE",
             captionSize: "65px",
             caption: "Gradient",
-            captionAlign: "left",            
-            captionPosition: "left",            
-            width: "100%",                
+            captionAlign: "left",
+            captionPosition: "left",
+            width: "100%",
             gradient: true,
             onchange: dojo.hitch(this, "changed")
         });
@@ -3597,8 +3601,8 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             captionPosition: "left",
             captionAlign: "left",
             caption: "URL",
-            width: "100%",          
-            placeHolder: this.urlPlaceHolder,      
+            width: "100%",
+            placeHolder: this.urlPlaceHolder,
             onchange: dojo.hitch(this, "changed")
         });
         this.imageSubPanel = new wm.Panel({
@@ -3619,7 +3623,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             caption: "Horizontal",
             width: "100%",
             dataValue: "0%",
-            onchange: dojo.hitch(this, "changed")  
+            onchange: dojo.hitch(this, "changed")
         });
         this.verticalPosEditor = wm.prop.SizeEditor({
             owner: this,
@@ -3628,11 +3632,11 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             captionPosition: "left",
             captionAlign: "left",
             caption: "Vertical",
-            margin: "0,0,0,10",            
+            margin: "0,0,0,10",
             width: "100%",
-            dataValue: "0%",            
+            dataValue: "0%",
             onchange: dojo.hitch(this, "changed")
-        });                
+        });
         this.imageRepeatEditor = new wm.SelectMenu({
             owner: this,
             parent: this.imagePanel ,
@@ -3646,7 +3650,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             options: "no-repeat,repeat,repeat-x,repeat-y",
             onchange: dojo.hitch(this, "changed")
         });
-        
+
         this.customPanel = new wm.Layer({
             owner: this,
             parent: this.layers,
@@ -3663,11 +3667,11 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 _classes: {domNode: ["StudioLabel", "link"]},
                 onclick: dojo.hitch(this, "onCustomEvent", "onCustomLinkClick")
             });
-        }        
+        }
         return e;
-    },    
+    },
     onCustomEvent: function(inEventName) {},
-    
+
     setInitialValue: function() {
 /*        this.beginEditUpdate();
         this.setEditorValue(this.dataValue);
@@ -3675,7 +3679,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         this.clearDirty(true);*/
     },
 
-    /* Possible values that might come in (we do not handle every possibility) 
+    /* Possible values that might come in (we do not handle every possibility)
      * 	background-color: <color-spec>;
      *  background-image: <image-spec>;
      *  background-image: <gradient-spec>
@@ -3685,11 +3689,11 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
      *  filter: progid:DXImageTransform.Microsoft.gradient(...); // ignore this one; the colors should already be extracted from a more standard-based statement
      * color-spec: #xxx, #xxxxxx, rgb(x,y,z), color-name
      * image-spec: url(xxx)
-     * gradient-spec: linear-gradient | radial-gradient | -webkit-gradient; // may have browser prefix; -webkit-gradient is deprecated but is only one supported on many android 2 devices     
+     * gradient-spec: linear-gradient | radial-gradient | -webkit-gradient; // may have browser prefix; -webkit-gradient is deprecated but is only one supported on many android 2 devices
      */
-    
+
     /* setEditorValue expects the full "backgroud: color image|gradient repeat position" value */
-    
+
     getBackgroundObj: function() {
         var s = this.testNode.domNode.style;
         var backX, backY;
@@ -3741,22 +3745,22 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             repeat: repeat,
             positionX: backX,
             positionY: backY
-        }; 
+        };
         if (this.message == "NO BACKGROUND IMAGE") {
             result.gradient = result.url = "";
         }
-        return result;                
+        return result;
     },
-    
-    /* Parse either of these options: 
-    * -browserPrefix-linear-gradient(top, #0101b7 0%,#011d65 46%,#011d65 100%); 
+
+    /* Parse either of these options:
+    * -browserPrefix-linear-gradient(top, #0101b7 0%,#011d65 46%,#011d65 100%);
     * -webkit-gradient(linear, center top, center bottom, from(#0101b7), color-stop(46%,#011d65), to(#011d65));
     * If there are more than 3 colors in the first one, then switch to "custom".
     * If there is more than one color-stop in the second one, switch to "custom"
     */
     parseGradient: function(inValue) {
-        var gradientObj = {};    
-        
+        var gradientObj = {};
+
         // matches the -webkit-gradient which is deprecated but still only one supported on android 2 browsers
         var matches = inValue.match(/-webkit-gradient\(linear,\s*(.*?),\s*(.*?),\s*from\((\#.*?|rgb\(.*?\))\),\s*color-stop\((.*?),\s*(\#.*?|rgb\(.*?\))\),\s*to\((\#.*?|rgb\(.*?\))\)/);
 
@@ -3786,15 +3790,15 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                     gradientObj.colorStop = matches[5];
                     gradientObj.endColor = matches[6];
                     return gradientObj;
-                }                    
+                }
             }
         return null; // failed to parse it
     },
     setEditorValue: function(backgroundObj) {
         if (typeof backgroundObj != "object") return;
-        var v =  this.dataValue = backgroundObj;     
+        var v =  this.dataValue = backgroundObj;
         var isTransparent = backgroundObj.color == "transparent";
-        
+
         if (backgroundObj.gradient && backgroundObj.gradient.match(/radial/)) {
             this.backgroundChooser.setDataValue("Custom");
         } else if (backgroundObj.gradient) {
@@ -3821,7 +3825,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
             }
             if (x == "initial") x = "0%";
             this.horizontalPosEditor.setDataValue(x);
-            
+
             var y;
             if (!backgroundObj.positionY || backgroundObj.positionY == "top") {
                 y = "0%";
@@ -3831,18 +3835,18 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 y = "100%";
             } else {
                 y = backgroundObj.positionY;
-            }            
-            if (y == "initial") y = "0%";            
+            }
+            if (y == "initial") y = "0%";
             this.verticalPosEditor.setDataValue(y);
         } else if (backgroundObj.color) {
-            this.backgroundChooser.setDataValue("Color");        
+            this.backgroundChooser.setDataValue("Color");
             this.colorEditor.setDataValue(backgroundObj.color);
         } else {
             this.backgroundChooser.setDataValue("Custom");
         }
         this.transparentCheckbox.setChecked(isTransparent);
         //this.changed();
-    }, 
+    },
     setPartialValue: function(inStyleName, inStyleValue) {
         if (!inStyleName.match(/^background/i)) return;
         var domStyleName = inStyleName.replace(/-[a-zA-Z]/g, function(inLetter) {
@@ -3866,16 +3870,16 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                 this.colorPanel.activate();
                 break;
             case "Gradient":
-                this.dataValue = this.getColorDataValue();            
+                this.dataValue = this.getColorDataValue();
                 this.gradientPanel.activate();
                 break;
             case "Image":
                 this.dataValue = this.getImageDataValue();
-                this.imagePanel.activate();                
+                this.imagePanel.activate();
                 break;
-            
+
             case "Custom":
-                this.customPanel.activate();            
+                this.customPanel.activate();
                 break;
         }
         if (backgroundType != "Custom") {
@@ -3895,23 +3899,23 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
         if (repeat) value += " " + repeat;
         value += " " + this.horizontalPosEditor.getDataValue()
               +  " " + this.verticalPosEditor.getDataValue();
-        return value;            
+        return value;
     },
     getColorDataValue: function() {
         var value = "";
-        var backgroundType = this.backgroundChooser.getDataValue();        
+        var backgroundType = this.backgroundChooser.getDataValue();
         if (backgroundType == "Color") {
             if (this.transparentCheckbox.getChecked()) return "transparent";
             return this.colorEditor.getDataValue() || "#FFFFFF";
         } else if (this.gradientEditor.getDataValue()) {
-               return this.testNode.domNode.style.backgroundImage;        
+               return this.testNode.domNode.style.backgroundImage;
         }
     },
     onchange: function(inDisplayValue, inDataValue) {},
     updateCssLine: function(inStyleName, inStyleValue) {
-       
+
         /* Ignore styles that don't contain border-.*radius */
-        if (inStyleName.match(/^background/) || inStyleName == "filter" && (inStyleValue == "none" || inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/))) {   
+        if (inStyleName.match(/^background/) || inStyleName == "filter" && (inStyleValue == "none" || inStyleValue.match(/DXImageTransform\.Microsoft\.gradient/))) {
 
             var backgroundType = this.backgroundChooser.getDataValue();
             var value = "";
@@ -3925,7 +3929,7 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                     value = "background: " + this.getDataValue() + ";" + message;
                     hasImage = true;
                     break;
-                case "Gradient":        
+                case "Gradient":
                     if (this.gradientEditor.getDataValue()) {
                         var styleValue = this.gradientEditor.getDataValue();
                         value += "background-image: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";" + message + "\n";
@@ -3938,16 +3942,16 @@ dojo.declare("wm.BackgroundEditor", wm.AbstractEditorContainer, {
                     break;
                 case "Custom":
                     return true;
-            }                
-            
+            }
+
             if (this.message != "NO BACKGROUND IMAGE" && !hasImage) {
-                if (value) value += "\n\t";                                
+                if (value) value += "\n\t";
                 value += "background-image: none;" + message +"\n";
                 value += "\tfilter: none;" + message;
             }
-            
+
             return value;
-        }   
+        }
     }
-    
+
 });
