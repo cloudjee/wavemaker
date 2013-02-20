@@ -109,7 +109,7 @@ dojo.declare("wm.ServiceCall", null, {
     },
     set_service: function(inService) {
         this.setService(inService);
-        
+
         var s = this._service;
         var valueOk = s && s.getOperation(this.operation);
         if (!valueOk) {
@@ -174,6 +174,9 @@ dojo.declare("wm.ServiceCall", null, {
     connectStartUpdate: function() {
         if (this.owner && this.owner.start)
             this.connectOnce(this.owner, "onStart", this, "doStartUpdate");
+        else if (this.owner instanceof wm.Application) {
+            this.doStartUpdate();
+        }
     },
 
     /* Changes autoUpdate, and optionally calls update() */
