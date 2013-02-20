@@ -365,10 +365,14 @@ dojo.declare("wm.PageContainer", wm.Control, {
         }
 
         this.pageLoadedDeferred = new dojo.Deferred();
-        if (o != this._pageName || !this.page) this.loadPage(this._pageName);
+        if (o != this._pageName || !this.page) {
+            this.loadPage(this._pageName);
+        } else {
+            this.pageChangeIgnored();
+        }
         this.valueChanged("pageName", this._pageName);
     },
-
+    pageChangeIgnored: function() {}, // NavigationCall connects to this method
     // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
     forceReloadPage: function() {
         var pageName = this._pageName;
