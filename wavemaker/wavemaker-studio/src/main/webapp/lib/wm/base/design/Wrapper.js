@@ -253,7 +253,12 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
             this.handles.setParentNode(this.domNode.parentNode);
     },
     setScrim: function(inScrim) {
-        this.domNode.style.visibility = (inScrim ? 'visible' : 'hidden');
+        if (inScrim) {
+            this.scrimNode = document.createElement("div");
+            this.domNode.appendChild(this.scrimNode);
+            dojo.addClass(this.scrimNode, "wmdesign-wrapper-scrim");
+        }
+        //this.domNode.style.visibility = (inScrim ? 'visible' : 'hidden');
     },
     setDesignNode: function(inNode) {
         this.disconnect();
@@ -297,6 +302,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
         //this.marker.setBounds(b);
     },
     setLabelPosition: function() {
+        return;
     if (this.isDestroyed) return;
         if (studio.selected == this.control) {
         this.label.parentNode.style.right =
@@ -460,12 +466,13 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
     this.control.showContextMenu(e);
     }
 });
+/*
 if (dojo.isIE && dojo.isIE <= 10 && dojo.isIE > 8) {
     wm.DesignWrapper.extend({
         styles: {backgroundColor: "white",opacity:"0.01"}// Used to just have transparent background, but IE10 sometimes let clicks go through, so has to have color with very low opacity
     });
 }
-
+*/
 
 dojo.declare("wm.ComponentWrapper", null, {
     setDesignNode: function() {

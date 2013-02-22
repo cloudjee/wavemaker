@@ -640,7 +640,7 @@ div .StudioGrid td,
 .studio_navigationMenu_PopupMenu img.service,
 .studio_navigationMenu_PopupMenu img.PartnerService
  {
-   background: transparent url(images/wm/service_16.png) no-repeat; 
+   background: transparent url(images/wm/service_16.png) no-repeat;
 }
 
 /* For BC compat with typo in wavemaker.css  */
@@ -1527,6 +1527,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 .openPageContainerDesignWrapperButton {
     display: none;
+    visibility: visible;
     position: absolute;
     top: 5px;
     left: 5px;

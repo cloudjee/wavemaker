@@ -21,7 +21,7 @@
 }
 
 .wmsurfacehint {
-	position: absolute; 
+	position: absolute;
 }
 
 .wmdesign-droptarget {
@@ -73,6 +73,20 @@
 	height: 0;
 }
 
+.wmdesign-wrapper {
+    visibility: hidden;
+}
+.wmdesign-wrapper .wmdesign-wrapper-scrim {
+    visibility: visible;
+    opacity: 0.01;
+    background-color: white; /* required by IE 10 */
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    cursor: default;
+}
 .wmdesign-wrapper-selected .wmdesign-label {
 	visibility: visible;
 }
