@@ -155,7 +155,6 @@ dojo.declare("wm.WrapperResizer", wm.design.Resizer, {
 wm.wrapperResizer = new wm.WrapperResizer();
 
 dojo.declare("wm.DesignWrapper", wm.Designable, {
-    styles: {backgroundColor: "white",opacity:"0.01"},// Used to just have transparent background, but IE10 sometimes let clicks go through, so has to have color with very low opacity
     //buffer: 6,
     _isDesignLoaded: false,
     border: 0,
@@ -461,6 +460,12 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
     this.control.showContextMenu(e);
     }
 });
+if (dojo.isIE && dojo.isIE <= 10 && dojo.isIE > 8) {
+    wm.DesignWrapper.extend({
+        styles: {backgroundColor: "white",opacity:"0.01"}// Used to just have transparent background, but IE10 sometimes let clicks go through, so has to have color with very low opacity
+    });
+}
+
 
 dojo.declare("wm.ComponentWrapper", null, {
     setDesignNode: function() {
