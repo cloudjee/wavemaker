@@ -532,7 +532,7 @@ dojo.declare("wm.ListViewer", wm.Container, {
         }
         this.setLoadingImageShowing(false);
         delete this._renderingRows;
-
+        this.domNode.style.overflowY = "auto";
     },
     _ontouchstart: function(e) {
         if (this.domNode.clientHeight < this.domNode.scrollHeight) this._xscrollY = true;
