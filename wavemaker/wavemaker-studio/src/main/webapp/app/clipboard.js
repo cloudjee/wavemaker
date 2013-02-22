@@ -43,7 +43,10 @@ Studio.extend({
          */
          var altParent = inParent;
         if (inParent instanceof wm.Layers && this.clipboard.length > 1 &&
-            dojo.some(this.clipboardClasses, function(inClass) { return inClass.prototype != wm.Layer;}))
+            dojo.some(this.clipboardClasses, function(inClassName) {
+                var ctor = dojo.getObject(inClassName);
+                return inClassName !=  "wm.Layer" && ctor.prototype instanceof wm.Control;
+            }))
         {
             altParent = inParent.addLayer("Pasted Layer");
         }
@@ -58,6 +61,8 @@ Studio.extend({
                     p = altParent;
                 } else if (prototype instanceof wm.Dialog) {
                     p = null;
+                } else if (prototype instanceof wm.Control === false) {
+                    p = null; // nonvisual components
                 }
                 c = this._pasteControl(p, clip, this.clipboardClasses[i]);
                 if (c) components.push(c);
