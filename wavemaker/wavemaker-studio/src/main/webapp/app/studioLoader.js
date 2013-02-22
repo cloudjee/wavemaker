@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.require("dojo.cookie");
 var authToken = dojo.cookie("wavemaker_authentication_token");
 dojo.cookie("wavemaker_authentication_token", authToken, {expires: 30});
@@ -44,7 +44,8 @@ dojo.registerModulePath("wm.packages", wm.libPath + "/wm/common/packages");
 dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
 dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 
-
+wm.isMobile = false; // needed for running studio in IE 10 on touch screen
+wm.device = "desktop";
 wm.locale = {};
 dojo.requireLocalization("wm.language", "components");
 wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
@@ -57,7 +58,7 @@ window.bundlePackage = dojo.i18n.getLocalization("language", "package");
 
 dojo.requireLocalization("language", "schema");
 wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
-if (!wm.extendSchemaDictionary) 
+if (!wm.extendSchemaDictionary)
     wm.extendSchemaDictionary = {};
 
 // make sure package registration is available up front
