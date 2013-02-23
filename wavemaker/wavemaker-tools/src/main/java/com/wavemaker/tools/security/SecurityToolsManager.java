@@ -587,6 +587,11 @@ public class SecurityToolsManager {
                     filters.add(filter);
                     SecurityXmlSupport.setCustomFilters(standardBeans, filters);
 
+                    // Add or alter the logout entry...
+                    Http.Logout logout = new Http.Logout();
+                    logout.setLogoutSuccessUrl("/j_spring_cas_security_logout");
+                    SecurityXmlSupport.setLogout(standardBeans, logout);
+
                     // Set marker value. This bean is not used for CAS, just to allow system to decide which security provider we are using.
                     SecuritySpringSupport.setDataSourceType(standardBeans, SecuritySpringSupport.AUTHENTICATON_MANAGER_BEAN_ID_CAS);
 

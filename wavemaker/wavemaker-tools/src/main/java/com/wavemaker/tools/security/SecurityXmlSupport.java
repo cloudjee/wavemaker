@@ -330,6 +330,31 @@ public class SecurityXmlSupport {
         return null;
     }
 
+    static Http.Logout getLogout(Beans beans) {
+        return getLogout(getHttp(beans));
+    }
+
+    static Http.Logout getLogout(Http http) {
+        Http.Logout logout = null;
+        List<Object> objs = http.getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        for (Object obj : objs) {
+            if (obj instanceof Http.Logout) {
+                logout = (Http.Logout) obj;
+                break;
+            }
+        }
+        return logout;
+    }
+
+    static void setLogout(Beans beans, Http.Logout logout) {
+        Http.Logout lo = getLogout(beans);
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        if (lo != null)
+            objs.remove(lo);
+        if (logout != null)
+            objs.add(logout);
+    }
+
     static void setPortMapping(Beans beans, boolean useSSL, String httpPort, String httpsPort) {
         List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
         boolean mappingsExist = false;
