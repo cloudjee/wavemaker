@@ -6,8 +6,7 @@ Architecture: amd64
 Maintainer: Ed Callahan <community@wavemaker.com>
 Provides: wavemaker
 Installed-Size: 130000
-Depends: ia32-libs, openjdk-6-jdk | sun-java6-jdk
-Suggests: lib32nss-mdns
+Suggests: lib32nss-mdns, openjdk-6-jdk | sun-java6-jdk
 Homepage: http://dev.wavemaker.com/
 Description: Web 2.0 WSYWIG AJAX Development
  WaveMaker provides for the Web-Fast development of CIO-Safe
