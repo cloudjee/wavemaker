@@ -61,6 +61,10 @@ public class ProjectCompiler {
     private final Log logger = LogFactory.getLog(getClass());
 
     private static final ResourceFilter JAR_FILE_FILTER = FilterOn.names().ending(".jar");
+    
+    private static final ResourceFilter SVN_FILTER = FilterOn.antPattern("**/.svn/**");
+    
+    private static final ResourceFilter JAVA_FILE_FILTER = FilterOn.names().ending(".java");
 
     private static final List<String> RUNTIME_SERVICE_NAMES;
 
@@ -145,7 +149,7 @@ public class ProjectCompiler {
      */
     private void copyResources(final Project project) {
         for (Folder sourceFolder : project.getSourceFolders()) {
-            sourceFolder.find().files().exclude(FilterOn.names().ending(".java")).copyTo(project.getClassOutputFolder());
+            sourceFolder.find().files().exclude(SVN_FILTER,JAVA_FILE_FILTER).copyTo(project.getClassOutputFolder());
         }
     }
 
