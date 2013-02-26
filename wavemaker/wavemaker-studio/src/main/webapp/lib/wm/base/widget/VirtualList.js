@@ -87,7 +87,7 @@ dojo.declare("wm.VirtualListItem", wm.TouchMixin, {
             }
             this.list._touchedItem = this;
         }
-        this.list._ontouchstart(evt);
+        this.list._ontouchstart(evt, this.index, this.getData ? this.getData() : null);
     },
     /* _onTouchMove only calls onTouchMove if we've moved at least 5px */
     onTouchMove: function(evt, yPos, yChangeFromInitial, yChangeFromLast) {
