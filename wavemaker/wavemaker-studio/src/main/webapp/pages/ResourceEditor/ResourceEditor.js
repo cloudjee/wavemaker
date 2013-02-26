@@ -33,7 +33,11 @@ dojo.declare("ResourceEditor", wm.Page, {
             path = path.replace(/\/webapproot/, "");
             path = "projects/" + studio.project.getProjectPath() + path;
             this.picture.setSource(path);
-        } else if (this.item instanceof wm.ZipResourceItem) {} else if (this.item instanceof wm.JarResourceItem) {} else {
+        } else if (this.item instanceof wm.ZipResourceItem) {
+
+        } else if (this.item instanceof wm.JarResourceItem) {
+
+        } else {
             studio.resourceManagerService.requestAsync("readFile", [this.item.getFilePath()], dojo.hitch(this, "receiveItem"));
         }
         this.fullPath.setCaption(this._fullPath);
@@ -56,7 +60,7 @@ dojo.declare("ResourceEditor", wm.Page, {
             this.editor.setSyntax("css");
         } else if (this.item instanceof wm.JSONResourceItem) {
             this.formatBtn.show();
-            this.editor.setSyntax("json");            
+            this.editor.setSyntax("json");
         } else if (this.item instanceof wm.JSResourceItem) {
             this.formatBtn.show();
             this.editor.setSyntax("javascript");
