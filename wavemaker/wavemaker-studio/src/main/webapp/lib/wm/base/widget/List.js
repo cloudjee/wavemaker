@@ -1873,7 +1873,7 @@ wm.List.extend({
         return inValue;
     },
     buttonFormatter: function(field, formatterProps, ignore1, ignore2, ignore3, inValue, rowId, cellObj) {
-        if (inValue && inValue != '') {
+        if (inValue !== null && inValue !== undefined && inValue !== '') {
             var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
             var eventText = this.getRuntimeId() + ".gridButtonClicked(event,\"" + field + "\"," + rowId + ")' ";
             if (wm.isMobile) {
