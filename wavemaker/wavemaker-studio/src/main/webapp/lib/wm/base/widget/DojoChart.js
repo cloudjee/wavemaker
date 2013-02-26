@@ -147,7 +147,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	    //dojo.place(this.legendDiv, this.domNode, "first");
 	    this.domNode.appendChild(this.legendDiv);
             try {
-		if (wm.isMobile && (this.xAxis.match(/,/) || this.yAxis.match(/,/))) {
+		if (!wm.isMobile && (this.xAxis.match(/,/) || this.yAxis.match(/,/))) {
 		    this.legend = new dojox.charting.widget.SelectableLegend({chart: this.dojoObj, horizontal:!this.verticalLegend}, this.legendDiv);
 		} else {
 		    this.legend = new dojox.charting.widget.Legend({chart: this.dojoObj, horizontal:!this.verticalLegend}, this.legendDiv);
