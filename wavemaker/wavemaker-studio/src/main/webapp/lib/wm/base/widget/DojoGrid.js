@@ -2191,10 +2191,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     /* Can't support this for mobile because "this" is required */
     buttonFormatter: function(field, formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
         this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
-        if (inValue && inValue != '') {
-        var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
-        var onclick = "onclick='app.getValueById(\"" + this.getRuntimeId() + "\").gridButtonClicked(event,\"" + field + "\"," + rowIdx + ")' ";
-        return '<button ' + onclick + formatterProps.buttonclick  + classList + '>' + inValue + '</button>';
+        if (inValue !== null && inValue !== undefined && inValue !== '') {
+            var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
+            var onclick = "onclick='app.getValueById(\"" + this.getRuntimeId() + "\").gridButtonClicked(event,\"" + field + "\"," + rowIdx + ")' ";
+            return '<button ' + onclick + formatterProps.buttonclick  + classList + '>' + inValue + '</button>';
         }
         return inValue;
     },
